@@ -108,6 +108,7 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1005, TR_CONFIG_SMOOTH_SCROLLING},
     {20, 216, 20, 20, toggle_switch_t, button_none, 0x1006, TR_CONFIG_DRAW_WALKER_WAYPOINTS},
     {20, 240, 20, 20, toggle_switch_t, button_none, 0x1007, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
+    {20, 264, 20, 20, toggle_switch_t, button_none, 0x1008, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
@@ -115,10 +116,9 @@ static generic_button checkbox_buttons[] = {
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
-    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
     {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_ZOOM_STEPPED, TR_CONFIG_ZOOM_STEPPED},
-    {20, 264, 20, 20, toggle_switch, button_none, CONFIG_UI_COMPLETE_RATING_COLUMNS, TR_CONFIG_COMPLETE_RATING_COLUMNS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
@@ -229,7 +229,7 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CLAY, TR_CONFIG_RESOURCE_CLAY},
 };
 
-static int options_per_page[] = {8, 9, 3, 14, 14, 14, 4, 5, 14, 14, 13};
+static int options_per_page[] = {9, 8, 3, 14, 14, 14, 4, 5, 14, 14, 13};
 
 static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
 
