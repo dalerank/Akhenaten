@@ -414,7 +414,7 @@ void building_house::merge() {
         return;
     }
 
-    if (!g_ankh_config.get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {
+    if (!game_features::gameplay_change_all_houses_merge) {
         if ((map_random_get(base.tile) & 7) >= 5)
             return;
     }
