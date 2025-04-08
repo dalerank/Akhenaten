@@ -423,8 +423,9 @@ int city_population_percent_in_workforce(void) {
     if (!city_data.population.current)
         return 0;
 
-    if (g_ankh_config.get(CONFIG_GP_CH_FIXED_WORKERS))
+    if (!!game_features::gameplay_change_fixed_workers) {
         return 38;
+    }
 
     return calc_percentage(city_data.labor.workers_available, city_data.population.current);
 }

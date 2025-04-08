@@ -224,7 +224,7 @@ int formation_get_num_forts() {
 }
 
 int formation_get_max_forts() {
-    if (g_ankh_config.get(CONFIG_GP_CH_EXTRA_FORTS))
+    if (!!game_features::gameplay_enable_extra_forts)
         return MAX_LEGIONS + 4;
     else {
         return MAX_LEGIONS;

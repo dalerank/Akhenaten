@@ -36,6 +36,8 @@ namespace game_features {
     extern game_feature gameplay_change_global_labour;
     extern game_feature gameplay_change_school_walkers;
     extern game_feature gameplay_change_retire_at_60;
+    extern game_feature gameplay_change_fixed_workers;
+    extern game_feature gameplay_enable_extra_forts;
 
     custom_span<game_feature*> features();
 }
@@ -60,8 +62,8 @@ enum e_config_key {
     CONFIG_RESERVED_16,
     CONFIG_RESERVED_17,
     CONFIG_RESERVED_18,
-    CONFIG_GP_CH_FIXED_WORKERS,
-    CONFIG_GP_CH_EXTRA_FORTS,
+    CONFIG_RESERVED_19,
+    CONFIG_RESERVED_20,
     CONFIG_GP_CH_WOLVES_BLOCK,
     CONFIG_GP_CH_DYNAMIC_GRANARIES,
     CONFIG_GP_CH_MORE_STOCKPILE,
