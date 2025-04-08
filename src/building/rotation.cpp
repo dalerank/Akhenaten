@@ -22,7 +22,7 @@ int building_rotation_global_rotation() {
 }
 
 void building_rotation_rotate_by_hotkey() {
-    if (g_ankh_config.get(CONFIG_UI_ROTATE_MANUALLY)) {
+    if (!!game_features::gameui_rotate_manually) {
         building_rotation_rotate();
         road_orientation = road_orientation == 1 ? 2 : 1;
     }
@@ -38,7 +38,7 @@ void building_rotation_force_two_orientations() { // for composite buildings lik
 }
 
 void building_rotation_update_road_orientation() {
-    if (!g_ankh_config.get(CONFIG_UI_ROTATE_MANUALLY)) {
+    if (!game_features::gameui_rotate_manually) {
         if (time_get_millis() - road_last_update > 1500) {
             road_last_update = time_get_millis();
             road_orientation = road_orientation == 1 ? 2 : 1;

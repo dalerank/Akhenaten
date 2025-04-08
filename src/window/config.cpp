@@ -113,12 +113,12 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x100A, TR_CONFIG_ZOOM_STEPPED},
     {20, 336, 20, 20, toggle_switch_t, button_none, 0x100B, TR_CONFIG_COMPLETE_RATING_COLUMNS},
     {20, 360, 20, 20, toggle_switch_t, button_none, 0x100C, TR_CONFIG_HIGHLIGHT_LEGIONS},
+    {20, 384, 20, 20, toggle_switch_t, button_none, 0x100D, TR_CONFIG_ROTATE_MANUALLY},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
-    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_ROTATE_MANUALLY, TR_CONFIG_ROTATE_MANUALLY},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},

@@ -30,6 +30,7 @@ namespace game_features {
     extern game_feature gameui_zoom;
     extern game_feature gameui_complete_ratings_columns;
     extern game_feature gameui_highlight_legions;
+    extern game_feature gameui_rotate_manually;
 
     custom_span<game_feature*> features();
 }
@@ -48,7 +49,7 @@ enum e_config_key {
     CONFIG_RESERVED_10,
     CONFIG_RESERVED_11,
     CONFIG_RESERVED_12,
-    CONFIG_UI_ROTATE_MANUALLY,
+    CONFIG_RESERVED_13,
     CONFIG_GP_CH_GRANDFESTIVAL,
     CONFIG_GP_CH_JEALOUS_GODS,
     CONFIG_GP_CH_GLOBAL_LABOUR,

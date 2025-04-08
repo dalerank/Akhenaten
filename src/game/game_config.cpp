@@ -36,6 +36,7 @@ namespace game_features {
     game_feature gameui_zoom{ "gameui_zoom", true };
     game_feature gameui_complete_ratings_columns{ "gameui_complete_ratings_columns", true };
     game_feature gameui_highlight_legions{ "gameui_highlight_legions", true };
+    game_feature gameui_rotate_manually{ "gameui_rotate_manually", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -69,7 +70,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_10", true},
     {"reserved_11", false},
     {"reserved_12", true},
-    {"ui_rotate_manually", false},
+    {"reserved_13", false},
     {"gameplay_change_grandfestival", false},
     {"gameplay_change_jealous_gods", false},
     {"gameplay_change_global_labour", false},
