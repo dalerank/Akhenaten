@@ -38,6 +38,8 @@ namespace game_features {
     game_feature gameui_highlight_legions{ "gameui_highlight_legions", true };
     game_feature gameui_rotate_manually{ "gameui_rotate_manually", true };
     game_feature gameplay_change_grandfestival{ "gameplay_change_grandfestival", true };
+    game_feature gameplay_change_jealous_gods{ "gameplay_change_jealous_godsk", true };
+    game_feature gameplay_change_global_labour{ "gameplay_change_global_labour", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -73,8 +75,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_12", true},
     {"reserved_13", false},
     {"reserved_14", false},
-    {"gameplay_change_jealous_gods", false},
-    {"gameplay_change_global_labour", false},
+    {"reserved_15", false},
+    {"reserved_16", false},
     {"gameplay_change_school_walkers", false},
     {"gameplay_change_retire_at_60", false},
     {"gameplay_change_fixed_workers", false},

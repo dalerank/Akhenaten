@@ -685,8 +685,8 @@ void building::common_spawn_labor_seeker(int min_houses) {
         return;
     }
 
-    if (g_ankh_config.get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
-        // If it can access Rome
+    if (!!game_features::gameplay_change_global_labour) {
+        // If it can access kingdome
         houses_covered = std::min(300, distance_from_entry ? 2 * min_houses : 0);
         return;
     }

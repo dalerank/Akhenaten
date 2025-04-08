@@ -32,6 +32,8 @@ namespace game_features {
     extern game_feature gameui_highlight_legions;
     extern game_feature gameui_rotate_manually;
     extern game_feature gameplay_change_grandfestival;
+    extern game_feature gameplay_change_jealous_gods;
+    extern game_feature gameplay_change_global_labour;
 
     custom_span<game_feature*> features();
 }
@@ -52,8 +54,8 @@ enum e_config_key {
     CONFIG_RESERVED_12,
     CONFIG_RESERVED_13,
     CONFIG_RESERVED_14,
-    CONFIG_GP_CH_JEALOUS_GODS,
-    CONFIG_GP_CH_GLOBAL_LABOUR,
+    CONFIG_RESERVED_15,
+    CONFIG_RESERVED_16,
     CONFIG_GP_CH_SCHOOL_WALKERS,
     CONFIG_GP_CH_RETIRE_AT_60,
     CONFIG_GP_CH_FIXED_WORKERS,
