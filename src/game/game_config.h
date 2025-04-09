@@ -56,6 +56,8 @@ namespace game_features {
     extern game_feature gameplay_change_houses_dont_expand_into_gardens;
     extern game_feature gameplay_fix_irrigation_range;
     extern game_feature gameplay_fix_farm_produce_quantity;
+    extern game_feature gameui_keep_camera_inertia;
+    extern game_feature gameplay_change_understaffed_accept_goods;
 
     custom_span<game_feature*> features();
 }
@@ -103,10 +105,10 @@ enum e_config_key {
 
     CONFIG_RESERVED_37,
     CONFIG_RESERVED_38,
-    CONFIG_UI_SCROLL_KEEP_INERTIA,
-    CONFIG_GP_CH_WATER_CARRIER_FIREFIGHT,
-    CONFIG_GP_CH_INSTANT_UNLOAD,
-    CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS,
+    CONFIG_RESERVED_39,
+    CONFIG_RESERVED_40,
+    CONFIG_RESERVED_41,
+    CONFIG_RESERVED_42,
     CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES,
     CONFIG_GP_CH_MULTIPLE_MONUMENTS,
     CONFIG_GP_CH_SOIL_DEPLETION,

@@ -394,8 +394,10 @@ static int get_alignment_delta(int direction, int camera_max_offset, int camera_
 
 static bool set_scroll_speed_from_input(const mouse* m, scroll_type type) {
     auto &data = g_input_scroll_data;
-    if (set_scroll_speed_from_drag(g_ankh_config.get(CONFIG_UI_SCROLL_KEEP_INERTIA) ? true : false))
+    const bool keep_inertia = !!game_features::gameui_keep_camera_inertia;
+    if (set_scroll_speed_from_drag(keep_inertia)) {
         return true;
+    }
 
     int direction = get_direction(m);
     if (direction == DIR_8_NONE) {

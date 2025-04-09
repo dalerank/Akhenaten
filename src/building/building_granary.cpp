@@ -188,7 +188,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
             continue;
 
-        if (!g_ankh_config.get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+        if (!game_features::gameplay_change_understaffed_accept_goods) {
             int pct_workers = granary->worker_percentage();
             if (pct_workers < 75) {
                 if (understaffed)

@@ -313,7 +313,7 @@ int building_storage_yard_for_storing(tile2i tile, e_resource resource, int dist
             continue;
         }
 
-        if (!g_ankh_config.get(CONFIG_GP_CH_UNDERSTAFFED_ACCEPT_GOODS)) {
+        if (!game_features::gameplay_change_understaffed_accept_goods) {
             int pct_workers = warehouse->pct_workers();
             if (pct_workers < 100) {
                 if (understaffed)

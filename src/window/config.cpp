@@ -143,15 +143,19 @@ static generic_button checkbox_buttons[] = {
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 36, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS},
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 37, TR_CONFIG_FIX_IRRIGATION_RANGE},
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x1000 | 38, TR_CONFIG_FIX_FARM_PRODUCING},
-    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
-    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
+    {20, 336, 20, 20, toggle_switch_t, button_none, 0x1000 | 39, TR_CONFIG_CAMERA_KEEP_INERTIA},
+    {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 40, TR_NO_PATCH_TITLE},
+    {20, 384, 20, 20, toggle_switch_t, button_none, 0x1000 | 41, TR_NO_PATCH_TITLE},
 
     //
-    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
+    {20, 72, 20, 20, toggle_switch_t, button_none, 0x1000 | 42, TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_FPS, TR_CONFIG_DRAW_FPS},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FIREMAN_RETUNING, TR_CONFIG_FIREMAN_RETURNING},
+    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_CART_SPEED_QUANTITY, TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY},
 
     //
