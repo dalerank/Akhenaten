@@ -107,7 +107,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     house->runtime_data().population = 0;
                 }
 
-                if (building_is_floodplain_farm(*b) && g_ankh_config.get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+                if (building_is_floodplain_farm(*b) && !!game_features::gameplay_change_soil_depletion) {
                     b->dcast_farm()->deplete_soil();
                 }
 

@@ -66,6 +66,7 @@ namespace game_features {
     game_feature gameplay_change_understaffed_accept_goods{ "gameplay_change_understaffed_accept_goods", false };
     game_feature gameplay_change_multiple_temple_complexes{ "gameplay_change_multiple_temple_complexes", false };
     game_feature gameplay_change_multiple_monuments{ "gameplay_change_multiple_monuments", false };
+    game_feature gameplay_change_soil_depletion{ "gameplay_change_soil_depletion", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -132,7 +133,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_42", false},
     {"reserved_43", false},
     {"reserved_44", false},
-    {"gameplay_change_soil_depletion", true},
+    {"reserved_45", true},
     {"gameplay_change_multiple_gatherers", false},
     {"gameplay_change_fireman_returning", true},
     {"ui_draw_fps", true},

@@ -60,6 +60,7 @@ namespace game_features {
     extern game_feature gameplay_change_understaffed_accept_goods;
     extern game_feature gameplay_change_multiple_temple_complexes;
     extern game_feature gameplay_change_multiple_monuments;
+    extern game_feature gameplay_change_soil_depletion;
 
     custom_span<game_feature*> features();
 }
@@ -113,7 +114,7 @@ enum e_config_key {
     CONFIG_RESERVED_42,
     CONFIG_RESERVED_43,
     CONFIG_RESERVED_44,
-    CONFIG_GP_CH_SOIL_DEPLETION,
+    CONFIG_RESERVED_45,
     CONFIG_GP_CH_MULTIPLE_GATHERERS,
     CONFIG_GP_CH_FIREMAN_RETUNING,
     CONFIG_UI_DRAW_FPS,

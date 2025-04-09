@@ -592,7 +592,7 @@ void building_farm::update_tiles_image() {
 
 void building_farm::deplete_soil() {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
-    if (g_ankh_config.get(CONFIG_GP_CH_SOIL_DEPLETION)) {
+    if (!!game_features::gameplay_change_soil_depletion) {
         int malus = (float)progress() / (float)MAX_PROGRESS_FARM_PH * (float)-100;
         for (int _y = tiley(); _y < tiley() + size(); _y++) {
             for (int _x = tilex(); _x < tilex() + size(); _x++) {
