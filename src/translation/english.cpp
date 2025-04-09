@@ -78,6 +78,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_FIX_FARM_PRODUCING, "Fix farm producing"},
      {TR_CONFIG_CAMERA_KEEP_INERTIA, "Camera keep inertia"},
      {TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS, "Understaffed accept goods"},
+     {TR_CONFIG_MULTIPLE_TEMPLE_COMPLEXES, "Multiple temple complexes"},
      {TR_CONFIG_FIREMAN_RETURNING, "Fireman returning after fight fire"},
      {TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY, "Cart speed depends from quantity resource"},
      {TR_CONFIG_CH_CITIZEN_ROAD_OFFSET, "Use different offsets for citizens in road"},

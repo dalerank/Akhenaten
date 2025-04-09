@@ -64,6 +64,7 @@ namespace game_features {
     game_feature gameplay_fix_farm_produce_quantity{ "gameplay_fix_farm_produce_quantity", true };
     game_feature gameui_keep_camera_inertia{ "gameui_keep_camera_inertia", true };
     game_feature gameplay_change_understaffed_accept_goods{ "gameplay_change_understaffed_accept_goods", false };
+    game_feature gameplay_change_multiple_temple_complexes{ "gameplay_change_multiple_temple_complexes", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -128,7 +129,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_40", true},
     {"reserved_41", false},
     {"reserved_42", false},
-    {"gameplay_change_multiple_temple_complexes", false},
+    {"reserved_43", false},
     {"gameplay_change_multiple_monuments", false},
     {"gameplay_change_soil_depletion", true},
     {"gameplay_change_multiple_gatherers", false},

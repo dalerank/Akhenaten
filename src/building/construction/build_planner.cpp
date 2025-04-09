@@ -816,8 +816,9 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         //        case BUILDING_TEMPLE_COMPLEX_ALTAR:
         //        case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (g_city.buildings.has_temple_complex() && !g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_TEMPLE_COMPLEXES))
+        if (g_city.buildings.has_temple_complex() && !game_features::gameplay_change_multiple_temple_complexes) {
             unique_already_placed = true;
+        }
         break;
     }
 
