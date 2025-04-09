@@ -59,6 +59,7 @@ namespace game_features {
     extern game_feature gameui_keep_camera_inertia;
     extern game_feature gameplay_change_understaffed_accept_goods;
     extern game_feature gameplay_change_multiple_temple_complexes;
+    extern game_feature gameplay_change_multiple_monuments;
 
     custom_span<game_feature*> features();
 }
@@ -111,7 +112,7 @@ enum e_config_key {
     CONFIG_RESERVED_41,
     CONFIG_RESERVED_42,
     CONFIG_RESERVED_43,
-    CONFIG_GP_CH_MULTIPLE_MONUMENTS,
+    CONFIG_RESERVED_44,
     CONFIG_GP_CH_SOIL_DEPLETION,
     CONFIG_GP_CH_MULTIPLE_GATHERERS,
     CONFIG_GP_CH_FIREMAN_RETUNING,
