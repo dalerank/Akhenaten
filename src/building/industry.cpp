@@ -84,39 +84,6 @@ float get_farm_produce_uptick_per_day(building &b) {
 //     }
 // }
 
-int farm_expected_produce(building* b) {
-    auto farm = b->dcast_farm();
-    if (!farm) {
-        return 0;
-    }
-
-    auto &d = farm->runtime_data();
-    int progress = d.ready_production > 0
-                        ? d.ready_production
-                        : d.progress;
-
-    if (!game_features::gameplay_fix_farm_produce_quantity) {
-        progress = (progress / 20) * 20;
-    }
-    // In OG Pharaoh, the progress value gets counted as if it was rounded
-    // down to the lowest 20 points. No idea why! But here's as an option.
-
-    float modifier = 1.f;
-    const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
-    if (building_is_floodplain_farm(*b)) {
-        if (osiris_blessing) {
-            modifier = 2.f;
-        } else {
-            modifier = (1.f + d.produce_multiplier / 100.f);
-        }
-    } else {
-        modifier = (1.f + d.produce_multiplier / 100.f);
-    }
-    d.produce_multiplier = 0.f;
-
-    return int((progress / 2.5f) * modifier);
-}
-
 void building_industry_update_production(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
     buildings_valid_do([] (building &b) {

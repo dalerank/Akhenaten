@@ -480,6 +480,36 @@ void building_farm::add_tiles() {
     map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
 }
 
+int building_farm::expected_produce() {
+    auto &d = runtime_data();
+
+    int progress = d.ready_production > 0
+        ? d.ready_production
+        : d.progress;
+
+    if (!game_features::gameplay_fix_farm_produce_quantity) {
+        progress = (progress / 20) * 20;
+    }
+    // In OG Pharaoh, the progress value gets counted as if it was rounded
+    // down to the lowest 20 points. No idea why! But here's as an option.
+
+    float modifier = 1.f;
+    const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
+    if (building_is_floodplain_farm(base)) {
+        if (osiris_blessing) {
+            modifier = 2.f;
+        } else {
+            modifier = (1.f + d.produce_multiplier / 100.f);
+        }
+    } else {
+        modifier = (1.f + d.produce_multiplier / 100.f);
+    }
+    d.produce_multiplier = 0.f;
+
+    return int((progress / 2.5f) * modifier);
+}
+
+
 void building_farm::spawn_figure_harvests() {
     if (is_floodplain_farm()) { // floodplain farms
                                 // In OG Pharaoh, farms can NOT send out a cartpusher if the cartpusher
@@ -495,7 +525,7 @@ void building_farm::spawn_figure_harvests() {
             int farm_fertility = map_get_fertility_for_farm(tile());
 
             d.ready_production = d.progress * farm_fertility / 100;
-            int expected_produce = farm_expected_produce(&base);
+            const int expected_produce = this->expected_produce();
             {
                 figure *f = create_cartpusher(base.output_resource_first_id, expected_produce);
                 building_farm *farm = dcast_farm();
@@ -524,7 +554,9 @@ void building_farm::spawn_figure_harvests() {
             if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
                 return;
             }
-            create_cartpusher(base.output_resource_first_id, farm_expected_produce(&base));
+
+            const int amount = expected_produce();
+            create_cartpusher(base.output_resource_first_id, amount);
             start_production();
         }
     }

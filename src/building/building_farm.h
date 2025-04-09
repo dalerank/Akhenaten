@@ -67,6 +67,7 @@ public:
 
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
+    int expected_produce();
 
     runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
     const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
