@@ -75,6 +75,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
      {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
      {TR_CONFIG_FIX_IRRIGATION_RANGE, "Fix irrigation range"},
+     {TR_CONFIG_FIX_FARM_PRODUCING, "Fix farm producing"},
      {TR_CONFIG_FIREMAN_RETURNING, "Fireman returning after fight fire"},
      {TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY, "Cart speed depends from quantity resource"},
      {TR_CONFIG_CH_CITIZEN_ROAD_OFFSET, "Use different offsets for citizens in road"},

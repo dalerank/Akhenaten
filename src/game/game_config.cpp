@@ -61,6 +61,7 @@ namespace game_features {
     game_feature gameplay_change_warehouses_dont_accept{ "gameplay_change_warehouses_dont_accept", false };
     game_feature gameplay_change_houses_dont_expand_into_gardens{ "gameplay_change_houses_dont_expand_into_gardens", false };
     game_feature gameplay_fix_irrigation_range{ "gameplay_fix_irrigation_range", true };
+    game_feature gameplay_fix_farm_produce_quantity{ "gameplay_fix_farm_produce_quantity", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -120,7 +121,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_36", false},
     ///
     {"reserved_37", true},
-    {"gameplay_fix_farm_produce_quantity", true},
+    {"reserved_38", true},
     {"ui_keep_camera_inertia", true},
     {"gameplay_change_watercarriers_firefight", true},
     {"gameplay_change_cart_instant_unload", false},
