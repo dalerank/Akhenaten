@@ -75,6 +75,7 @@ namespace game_features {
     extern game_feature gameplay_change_religion_coverage_influence_sentiment;
     extern game_feature gameplay_change_monuments_influence_sentiment;
     extern game_feature gameplay_change_well_radius_depends_moisture;
+    extern game_feature gameplay_change_enter_point_on_nearest_tile;
 
     custom_span<game_feature*> features();
 }
@@ -144,7 +145,7 @@ enum e_config_key {
     CONFIG_RESERVED_58,
     CONFIG_RESERVED_59,
     CONFIG_RESERVED_60,
-    CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE,
+    CONFIG_RESERVED_61,
 
     CONFIG_GP_CH_GOD_OSIRIS_DISABLED,
     CONFIG_GP_CH_GOD_RA_DISABLED,

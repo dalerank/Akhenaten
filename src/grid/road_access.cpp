@@ -39,7 +39,7 @@ bool road_tile_valid_access(int grid_offset) {
 
 bool map_road_find_minimum_tile_xy(tile2i tile, int sizex, int sizey, int *min_value, int *min_grid_offset) {
     bool found = false;
-    if (g_ankh_config.get(CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE)) {
+    if (!!game_features::gameplay_change_enter_point_on_nearest_tile) {
         found = map_road_find_minimum_tile_xy_nearest(tile, sizex, sizey, min_value, min_grid_offset);
     }
 

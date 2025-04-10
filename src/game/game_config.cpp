@@ -81,6 +81,7 @@ namespace game_features {
     game_feature gameplay_change_religion_coverage_influence_sentiment{ "gameplay_change_religion_coverage_influence_sentiment", true };
     game_feature gameplay_change_monuments_influence_sentiment{ "gameplay_change_monuments_influence_sentiment", true };
     game_feature gameplay_change_well_radius_depends_moisture{ "gameplay_change_well_radius_depends_moisture", true };
+    game_feature gameplay_change_enter_point_on_nearest_tile{ "gameplay_change_enter_point_on_nearest_tile", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -163,7 +164,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_58", true},
     {"reserved_59", true},
     {"reserved_60", true},
-    {"gameplay_change_enter_point_on_nearest_tile", true},
+    {"reserved_61", true},
     ///
     {"#god_osiris_disabled", false},
     {"#god_ra_disabled", false},
