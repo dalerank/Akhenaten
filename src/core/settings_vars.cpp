@@ -25,6 +25,7 @@ class settings_vars_impl_t {
 	}
 
 	using variants_map_t = std::unordered_map<xstring, setting_variant>;
+
 public:
 	void reset() {
 		{
@@ -146,6 +147,9 @@ public:
 		WRITER_LOCK(writeLock);
 		_variantsDirty = true;
 		_variants[name] = setting_variant(value);
+		if (_sync_task) {
+            _sync_task(name);
+        }
 	}
 
 	void initialize() {
@@ -252,6 +256,7 @@ private:
 	bool _syncScheduled = false;
 	bool _initialized = false;
 	bool _finalized = false;
+	std::function<void(xstring)> _sync_task;
 };
 
 settings_vars_t::settings_vars_t() {
@@ -269,6 +274,10 @@ void settings_vars_t::init() {
 
 void settings_vars_t::sync(pcstr filename) {
 	impl().sync(filename);
+}
+
+void settings_vars_t::set_sync_task(std::function<void(xstring)> task) {
+	impl()._sync_task = task;
 }
 
 void settings_vars_t::set_autosync_delay(const delay_t delay) {

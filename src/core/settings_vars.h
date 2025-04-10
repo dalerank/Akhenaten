@@ -11,7 +11,7 @@ class settings_vars_impl_t;
 
 using setting_variant = std::variant<bool, float, vec2i, xstring>;
 class settings_vars_t final {
-	char _data[96];
+	char _data[160];
 	settings_vars_impl_t *_impl = nullptr;
 
 	inline settings_vars_impl_t &impl() { return *_impl; }
@@ -25,6 +25,7 @@ public:
 
 	// call if you need certainly immediatly sync, better to make task in thread
 	void sync(pcstr filename);
+	void set_sync_task(std::function<void(xstring)> task);
 
 	// settup pause before saving data to file
 	using delay_t = std::chrono::duration<int64_t, std::milli>;

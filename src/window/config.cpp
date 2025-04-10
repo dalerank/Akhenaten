@@ -65,6 +65,13 @@ struct window_config_ext_data_t {
     } config_values[CONFIG_MAX_ENTRIES];
 
     struct {
+        int original_value;
+        int new_value;
+        std::function<int(int key)> change_action;
+        std::function<int()> get_value;
+    } scenario_values[2];
+
+    struct {
         xstring original_value;
         xstring new_value;
         int (*change_action)(int key);
@@ -91,7 +98,7 @@ static void toggle_resource(int id, int param2);
 static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
-
+static void toggle_scenario_option(int key, int param2);
 
 static void toggle_switch_t(int key, int param2) {
     auto &data = g_window_config_ext_data;
@@ -159,7 +166,7 @@ static generic_button checkbox_buttons[] = {
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 50, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 51, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x1000 | 52, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
-    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 336, 20, 20, toggle_scenario_option, button_none, 0x1000 | 0, TR_CONFIG_CITY_HAS_ANIMALS},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
 
@@ -167,7 +174,7 @@ static generic_button checkbox_buttons[] = {
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, 0, 0},
-    {20, 144, 20, 20, toggle_city_option, button_none, CONFIG_GP_CH_CITY_HAS_ANIMALS, TR_CONFIG_CITY_HAS_ANIMALS},
+    {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
     {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
@@ -440,9 +447,13 @@ static void toggle_god_disabled(int key, int param2) {
     g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
 }
 
+static void toggle_scenario_option(int key, int param2) {
+    auto &data = g_window_config_ext_data;
+    data.scenario_values[key].new_value = !data.config_values[key].new_value;
+}
+
 static void toggle_city_option(int key, int param2) {
     switch (key) {
-    case CONFIG_GP_CH_CITY_HAS_ANIMALS: g_scenario.env.has_animals = !g_scenario.env.has_animals; break;
     case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario.env.flotsam_enabled = !g_scenario.env.flotsam_enabled; break;
     }
 }
@@ -540,6 +551,9 @@ static void init(void (*close_callback)()) {
         data.config_values[i].get_value = [i] () -> int { return game_features::features()[i]->to_bool(); };
     }
 
+    data.scenario_values[0].get_value = [] () -> int { return g_scenario.env.has_animals; };
+    data.scenario_values[0].change_action = [] (int key) -> int { return g_scenario.env.has_animals = g_window_config_ext_data.scenario_values[0].new_value; };
+
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
         int index = parameter1 < 0xff ? parameter1 : i;
@@ -586,7 +600,6 @@ static void init(void (*close_callback)()) {
 static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
-    case CONFIG_GP_CH_CITY_HAS_ANIMALS: return g_scenario.env.has_animals;
     case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario.env.flotsam_enabled;
     case CONFIG_GP_CH_RESOURCE_TIMBER: return g_city.can_produce_resource(RESOURCE_TIMBER);
     case CONFIG_GP_CH_RESOURCE_COPPER: return g_city.can_produce_resource(RESOURCE_COPPER);

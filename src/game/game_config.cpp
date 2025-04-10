@@ -148,7 +148,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_50", true},
     {"reserved_51", true},
     {"reserved_52", true},
-    {"gameplay_change_has_animals", true},
+    {"reserved_53", true},
     {"gameplay_change_goldmine_twice_production", true},
     {"gameplay_change_new_tax_collection_system", false},
     {"gameplay_change_small_hut_not_create_emigrant", true},
