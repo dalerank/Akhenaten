@@ -74,6 +74,7 @@ namespace game_features {
     extern game_feature gameplay_change_delivery_boy_goes_to_market_alone;
     extern game_feature gameplay_change_religion_coverage_influence_sentiment;
     extern game_feature gameplay_change_monuments_influence_sentiment;
+    extern game_feature gameplay_change_well_radius_depends_moisture;
 
     custom_span<game_feature*> features();
 }
@@ -142,7 +143,7 @@ enum e_config_key {
     CONFIG_RESERVED_57,
     CONFIG_RESERVED_58,
     CONFIG_RESERVED_59,
-    CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE,
+    CONFIG_RESERVED_60,
     CONFIG_GP_CH_ENTER_POINT_ON_NEAREST_TILE,
 
     CONFIG_GP_CH_GOD_OSIRIS_DISABLED,
