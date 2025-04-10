@@ -24,7 +24,7 @@ void city_t::government_distribute_treasury() {
     int units = palace_units * (vil_palace_count + town_palace_count + city_palace_count);
                     //+ greate_palace_units * palace_up_count;
 
-    if (!g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+    if (!game_features::gameplay_change_new_tax_collection_system) {
         units += tax_collector_units * tax_col_count 
                     + tax_collectpr_up_units * tax_col_up_count;
     }
@@ -61,7 +61,7 @@ void city_t::government_distribute_treasury() {
             break;
 
         case BUILDING_TAX_COLLECTOR_UPGRADED:
-            if (!g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+            if (!game_features::gameplay_change_new_tax_collection_system) {
                 auto collector = b.dcast_tax_collector();
                 collector->runtime_data().tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
                 remainder = 0;
@@ -69,7 +69,7 @@ void city_t::government_distribute_treasury() {
             break;
 
         case BUILDING_TAX_COLLECTOR:
-            if (!g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+            if (!game_features::gameplay_change_new_tax_collection_system) {
                 auto collector = b.dcast_tax_collector();
                 collector->runtime_data().tax_income_or_storage = amount_per_unit + remainder;
                 remainder = 0;

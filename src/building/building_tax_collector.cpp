@@ -65,7 +65,7 @@ void building_tax_collector::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 void building_tax_collector::update_month() {
-    if (!g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+    if (!game_features::gameplay_change_new_tax_collection_system) {
         return;
     }
 

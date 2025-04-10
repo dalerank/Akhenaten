@@ -168,7 +168,7 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x1000 | 52, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
     {20, 336, 20, 20, toggle_scenario_option, button_none, 0, TR_CONFIG_CITY_HAS_ANIMALS},
     {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 54, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+    {20, 384, 20, 20, toggle_switch_t, button_none, 0x1000 | 55, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
@@ -176,7 +176,7 @@ static generic_button checkbox_buttons[] = {
     {20, 120, 20, 20, toggle_switch, button_none, 0, 0},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
     {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
-    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
+    {20, 192, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
     {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE, TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE},
     {20, 264, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT, TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT},

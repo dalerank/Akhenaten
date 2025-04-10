@@ -177,7 +177,7 @@ void city_finance_t::collect_monthly_taxes() {
     }
 
     std::map<int, uint32_t> tax_collectors; 
-    if (g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+    if (!!game_features::gameplay_change_new_tax_collection_system) {
         svector<building *, 64> buildings;
         buildings_get(buildings, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
         for (auto &b : buildings) {
@@ -206,7 +206,7 @@ void city_finance_t::collect_monthly_taxes() {
                 city_data.taxes.monthly.collected_citizens += tax;
             }
 
-            if (g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+            if (!!game_features::gameplay_change_new_tax_collection_system) {
                 tax_collectors[housed.tax_collector_id] += tax;
                 housed.tax_collector_id = 0;
             }
@@ -233,7 +233,7 @@ void city_finance_t::collect_monthly_taxes() {
     city_data.taxes.yearly.uncollected_nobles += calc_adjust_with_percentage<int>(city_data.taxes.monthly.uncollected_nobles / tax_city_divider, city_data.finance.tax_percentage);
     city_data.taxes.yearly.uncollected_citizens += calc_adjust_with_percentage<int>(city_data.taxes.monthly.uncollected_citizens / tax_city_divider, city_data.finance.tax_percentage);
 
-    if (g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM)) {
+    if (!!game_features::gameplay_change_new_tax_collection_system) {
         for (auto &it : tax_collectors) {
             building *b = building_get(it.first);
             b->deben_storage += calc_adjust_with_percentage<uint32_t>(it.second / tax_city_divider, city_data.finance.tax_percentage);

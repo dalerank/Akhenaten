@@ -26,7 +26,7 @@ void taxcollector_info_window::init(object_info &c) {
         return;
     }
 
-    int amount = g_ankh_config.get(CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM) ? collector->deben_storage() : collector->tax_storage();
+    int amount = !!game_features::gameplay_change_new_tax_collection_system ? collector->deben_storage() : collector->tax_storage();
     ui["money_text"].text_var("%s %d %s", ui::str(c.group_id, 2), amount, ui::str(8, 0));
 
     ui["dec_tax"].onclick([] {
