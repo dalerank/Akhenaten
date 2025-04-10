@@ -67,6 +67,7 @@ namespace game_features {
     extern game_feature gameplay_change_cart_speed_depends_quntity;
     extern game_feature gameplay_change_citizen_road_offset;
     extern game_feature gameplay_change_work_camp_one_worker_per_month;
+    extern game_feature gameplay_change_fire_risk_clay_pit_reduced;
 
     custom_span<game_feature*> features();
 }
@@ -127,7 +128,7 @@ enum e_config_key {
     CONFIG_RESERVED_49,
     CONFIG_RESERVED_50,
     CONFIG_RESERVED_51,
-    CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED,
+    CONFIG_RESERVED_52,
     CONFIG_GP_CH_CITY_HAS_ANIMALS,
     CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION,
     CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM,

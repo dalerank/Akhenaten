@@ -70,7 +70,7 @@ bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags f
 }
 
 int building_clay_pit::get_fire_risk(int value) const {
-    if (g_ankh_config.get(CONFIG_GP_CH_CLAY_PIT_FIRE_RISK_REDUCED)) {
+    if (!!game_features::gameplay_change_fire_risk_clay_pit_reduced) {
         return value / 2;
     }
 
