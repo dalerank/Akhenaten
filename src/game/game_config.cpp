@@ -67,6 +67,7 @@ namespace game_features {
     game_feature gameplay_change_multiple_temple_complexes{ "gameplay_change_multiple_temple_complexes", false };
     game_feature gameplay_change_multiple_monuments{ "gameplay_change_multiple_monuments", false };
     game_feature gameplay_change_soil_depletion{ "gameplay_change_soil_depletion", true };
+    game_feature gameplay_change_multiple_gatherers{ "gameplay_change_multiple_gatherers", false };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -134,7 +135,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_43", false},
     {"reserved_44", false},
     {"reserved_45", true},
-    {"gameplay_change_multiple_gatherers", false},
+    {"reserved_46", false},
     {"gameplay_change_fireman_returning", true},
     {"ui_draw_fps", true},
     {"gameplay_change_cart_speed_depends_quntity", true},

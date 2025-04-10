@@ -62,7 +62,7 @@ void figure_reed_gatherer::figure_action() {
                 advance_action(ACTION_11_REED_GATHERER_RETURN_HOME);
             }
             // progress faster with multiple people on one spot
-            if (g_ankh_config.get(CONFIG_GP_CH_MULTIPLE_GATHERERS)) {
+            if (!!game_features::gameplay_change_multiple_gatherers) {
                 base.wait_ticks += gatherers_harvesting_point(tile());
             } else {
                 base.wait_ticks++;

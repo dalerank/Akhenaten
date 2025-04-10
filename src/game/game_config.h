@@ -61,6 +61,7 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_temple_complexes;
     extern game_feature gameplay_change_multiple_monuments;
     extern game_feature gameplay_change_soil_depletion;
+    extern game_feature gameplay_change_multiple_gatherers;
 
     custom_span<game_feature*> features();
 }
@@ -115,7 +116,7 @@ enum e_config_key {
     CONFIG_RESERVED_43,
     CONFIG_RESERVED_44,
     CONFIG_RESERVED_45,
-    CONFIG_GP_CH_MULTIPLE_GATHERERS,
+    CONFIG_RESERVED_46,
     CONFIG_GP_CH_FIREMAN_RETUNING,
     CONFIG_UI_DRAW_FPS,
     CONFIG_GP_CH_CART_SPEED_QUANTITY,

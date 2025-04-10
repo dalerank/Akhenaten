@@ -81,6 +81,7 @@ static translation_string all_strings[] = {
      {TR_CONFIG_MULTIPLE_TEMPLE_COMPLEXES, "Multiple temple complexes"},
      {TR_CONFIG_MULTIPLE_MONUMENTS, "Multiple monuments"},
      {TR_CONFIG_SOIL_DEPLETION, "Soil depletion"},
+     {TR_CONFIG_MULTIPLE_GATHERERS, "Multiple gatherers"},
      {TR_CONFIG_FIREMAN_RETURNING, "Fireman returning after fight fire"},
      {TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY, "Cart speed depends from quantity resource"},
      {TR_CONFIG_CH_CITIZEN_ROAD_OFFSET, "Use different offsets for citizens in road"},
