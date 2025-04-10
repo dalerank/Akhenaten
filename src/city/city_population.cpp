@@ -129,7 +129,7 @@ int city_population_t::create_emigrants(int num_people) {
         }
 
         const int level = house->house_level();
-        if (g_ankh_config.get(CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT) && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
+        if (!game_features::gameplay_change_small_hut_not_create_emigrant && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
             continue;
         }
 
