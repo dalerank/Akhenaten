@@ -166,11 +166,11 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_60", true},
     {"reserved_61", true},
     ///
-    {"#god_osiris_disabled", false},
-    {"#god_ra_disabled", false},
-    {"#god_ptah_disabled", false},
-    {"#god_seth_disabled", false},
-    {"#god_bast_disabled", false},
+    {"reserved_62", false},
+    {"reserved_63", false},
+    {"reserved_64", false},
+    {"reserved_65", false},
+    {"reserved_66", false},
     ///
     {"city_building_wood_cutters", true},
     {"city_produce_timber", true},

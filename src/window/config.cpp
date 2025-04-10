@@ -72,6 +72,13 @@ struct window_config_ext_data_t {
     } scenario_values[2];
 
     struct {
+        int original_value;
+        int new_value;
+        std::function<int(int key)> change_action;
+        std::function<int()> get_value;
+    } god_values[5];
+
+    struct {
         xstring original_value;
         xstring new_value;
         int (*change_action)(int key);
@@ -193,11 +200,11 @@ static generic_button checkbox_buttons[] = {
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW, TR_CONFIG_FLOODPLAIN_RANDOM_GROW},
     
     // GODS
-    {20, 72, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_OSIRIS_DISABLED, TR_CONFIG_GOD_OSIRIS_DISABLED},
-    {20, 96, 20, 20,  toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_RA_DISABLED, TR_CONFIG_GOD_RA_DISABLED},
-    {20, 120, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_PTAH_DISABLED, TR_CONFIG_GOD_PTAH_DISABLED},
-    {20, 144, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_SETH_DISABLED, TR_CONFIG_GOD_SETH_DISABLED},
-    {20, 168, 20, 20, toggle_god_disabled, button_none, CONFIG_GP_CH_GOD_BAST_DISABLED, TR_CONFIG_GOD_BAST_DISABLED},
+    {20, 72, 20, 20,  toggle_god_disabled, button_none, 0, TR_CONFIG_GOD_OSIRIS_DISABLED},
+    {20, 96, 20, 20,  toggle_god_disabled, button_none, 1, TR_CONFIG_GOD_RA_DISABLED},
+    {20, 120, 20, 20, toggle_god_disabled, button_none, 2, TR_CONFIG_GOD_PTAH_DISABLED},
+    {20, 144, 20, 20, toggle_god_disabled, button_none, 3, TR_CONFIG_GOD_SETH_DISABLED},
+    {20, 168, 20, 20, toggle_god_disabled, button_none, 4, TR_CONFIG_GOD_BAST_DISABLED},
 
     //
     {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
@@ -439,12 +446,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 static void toggle_god_disabled(int key, int param2) {
     auto& data = g_window_config_ext_data;
-    data.config_values[key].new_value = 1 - data.config_values[key].new_value;
-
-    e_god god = (e_god)(key - CONFIG_GP_CH_GOD_OSIRIS_DISABLED);
-    bool known = !data.config_values[key].new_value;
-    building_menu_update_gods_available(god, known);
-    g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
+    data.god_values[key].new_value = 1 - data.god_values[key].new_value;
 }
 
 static void toggle_scenario_option(int key, int param2) {
@@ -553,6 +555,18 @@ static void init(void (*close_callback)()) {
 
     data.scenario_values[0].get_value = [] () -> int { return g_scenario.env.has_animals; };
     data.scenario_values[0].change_action = [] (int key) -> int { return g_scenario.env.has_animals = g_window_config_ext_data.scenario_values[0].new_value; };
+
+    for (int i = 0; i < 5; i++) {
+        data.god_values[i].original_value = g_city.religion.is_god_known((e_god)i);
+        data.god_values[i].new_value = g_city.religion.is_god_known((e_god)i);
+        data.god_values[i].change_action = [] (int key) -> int {
+            e_god god = (e_god)(key);
+            bool known = !g_window_config_ext_data.god_values[key].new_value;
+            building_menu_update_gods_available(god, known);
+            g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
+            return 1;
+        };
+    }
 
     for (int i = 0; i < std::size(checkbox_buttons); i++) {
         int parameter1 = checkbox_buttons[i].parameter1;
