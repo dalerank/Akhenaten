@@ -53,7 +53,7 @@ bool building_mine::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 }
 
 int building_mine_gold::get_produce_uptick_per_day() const {
-    if (g_ankh_config.get(CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION)) {
+    if (!!game_features::gameplay_change_goldmine_twice_production) {
         return base.num_workers / 5.f;
     } else {
         return base.num_workers / 10.f;

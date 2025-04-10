@@ -166,8 +166,8 @@ static generic_button checkbox_buttons[] = {
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 50, TR_CONFIG_CH_CITIZEN_ROAD_OFFSET},
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 51, TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH},
     {20, 312, 20, 20, toggle_switch_t, button_none, 0x1000 | 52, TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED},
-    {20, 336, 20, 20, toggle_scenario_option, button_none, 0x1000 | 0, TR_CONFIG_CITY_HAS_ANIMALS},
-    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 336, 20, 20, toggle_scenario_option, button_none, 0, TR_CONFIG_CITY_HAS_ANIMALS},
+    {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 54, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
 
     //
@@ -175,7 +175,7 @@ static generic_button checkbox_buttons[] = {
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 120, 20, 20, toggle_switch, button_none, 0, 0},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
-    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_GOLDMINE_TWICE_PRODUCTION, TR_CONFIG_GOLDMINE_TWICE_PRODUCTION},
+    {20, 168, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 192, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_NEW_TAX_COLLECTION_SYSTEM, TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM},
     {20, 216, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_SMALL_HUT_NIT_CREATE_EMIGRANT, TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT},
     {20, 240, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE, TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE},

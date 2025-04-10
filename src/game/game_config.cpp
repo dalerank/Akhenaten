@@ -74,6 +74,7 @@ namespace game_features {
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", true };
     game_feature gameplay_change_work_camp_one_worker_per_month{ "gameplay_change_work_camp_one_worker_per_month", true };
     game_feature gameplay_change_fire_risk_clay_pit_reduced{ "gameplay_change_fire_risk_clay_pit_reduced", true };
+    game_feature gameplay_change_goldmine_twice_production{ "gameplay_change_goldmine_twice_production", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -149,7 +150,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_51", true},
     {"reserved_52", true},
     {"reserved_53", true},
-    {"gameplay_change_goldmine_twice_production", true},
+    {"reserved_54", true},
     {"gameplay_change_new_tax_collection_system", false},
     {"gameplay_change_small_hut_not_create_emigrant", true},
     {"gameplay_change_delivery_boy_goes_to_market_alone", true},
