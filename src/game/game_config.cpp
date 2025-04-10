@@ -71,6 +71,7 @@ namespace game_features {
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", true };
     game_feature gameui_draw_fps{ "gameui_draw_fps", true };
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", true };
+    game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -142,7 +143,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_47", true},
     {"reserved_48", true},
     {"reserved_49", true},
-    {"gameplay_change_citizen_road_offset", true},
+    {"reserved_50", true},
     {"gameplay_change_work_camp_one_worker_per_month", true},
     {"gameplay_change_fire_risk_clay_pit_reduced", true},
     {"gameplay_change_has_animals", true},
