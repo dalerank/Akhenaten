@@ -102,7 +102,7 @@ int city_sentiment_t::calc_sentiment_contribution_wages() {
 }
 
 int city_sentiment_t::calc_contribution_religion_coverage() {
-    if (!g_ankh_config.get(CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT)) {
+    if (!game_features::gameplay_change_religion_coverage_influence_sentiment) {
         return 0;
     }
 
@@ -144,7 +144,7 @@ int city_sentiment_t::calc_contribution_employment() {
 }
 
 int city_sentiment_t::calc_contribution_monuments() {
-    if (!g_ankh_config.get(CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT)) {
+    if (!game_features::gameplay_change_monuments_influence_sentiment) {
         return 0;
     }
 
