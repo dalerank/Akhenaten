@@ -62,6 +62,7 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_monuments;
     extern game_feature gameplay_change_soil_depletion;
     extern game_feature gameplay_change_multiple_gatherers;
+    extern game_feature gameplay_change_fireman_returning;
 
     custom_span<game_feature*> features();
 }
@@ -117,7 +118,7 @@ enum e_config_key {
     CONFIG_RESERVED_44,
     CONFIG_RESERVED_45,
     CONFIG_RESERVED_46,
-    CONFIG_GP_CH_FIREMAN_RETUNING,
+    CONFIG_RESERVED_47,
     CONFIG_UI_DRAW_FPS,
     CONFIG_GP_CH_CART_SPEED_QUANTITY,
     CONFIG_GP_CH_CITIZEN_ROAD_OFFSET,
