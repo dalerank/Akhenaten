@@ -438,7 +438,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     cart->base.immigrant_home_building_id = 0;
 
     set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
-    if (g_ankh_config.get(CONFIG_GP_CH_CART_SPEED_QUANTITY)) {
+    if (!!game_features::gameplay_change_cart_speed_depends_quntity) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
     }
     cart->base.wait_ticks = 30;
