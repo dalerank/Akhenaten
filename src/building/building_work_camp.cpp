@@ -92,7 +92,7 @@ void building_work_camp::spawn_figure() {
         return;
     }
 
-    if (g_ankh_config.get(CONFIG_GP_CH_WORK_CAMP_ONE_WORKER_PER_MONTH) && base.spawned_worker_this_month) {
+    if (!!game_features::gameplay_change_work_camp_one_worker_per_month && base.spawned_worker_this_month) {
         return;
     }
 
