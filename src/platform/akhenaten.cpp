@@ -462,7 +462,7 @@ static void run_and_draw() {
         game.fps.frame_count = 0;
     }
 
-    if (g_ankh_config.get(CONFIG_UI_DRAW_FPS) && (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR))) {
+    if (!!game_features::gameui_draw_fps && (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY) || window_is(WINDOW_SLIDING_SIDEBAR))) {
         int y_offset = screen_height() - 24;
         int y_offset_text = y_offset + 5;
  
