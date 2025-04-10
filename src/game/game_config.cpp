@@ -77,6 +77,7 @@ namespace game_features {
     game_feature gameplay_change_goldmine_twice_production{ "gameplay_change_goldmine_twice_production", true };
     game_feature gameplay_change_new_tax_collection_system{ "gameplay_change_new_tax_collection_system", false };
     game_feature gameplay_change_small_hut_not_create_emigrant{ "gameplay_change_small_hut_not_create_emigrant", true };
+    game_feature gameplay_change_delivery_boy_goes_to_market_alone{ "gameplay_change_delivery_boy_goes_to_market_alone", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -155,7 +156,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_54", true},
     {"reserved_55", false},
     {"reserved_56", true},
-    {"gameplay_change_delivery_boy_goes_to_market_alone", true},
+    {"reserved_57", true},
     {"gameplay_change_religion_coverage_influence_sentiment", true},
     {"gameplay_change_monuments_influence_sentiment", true},
     {"gameplay_change_well_radius_depends_moisture", true},

@@ -71,6 +71,7 @@ namespace game_features {
     extern game_feature gameplay_change_goldmine_twice_production;
     extern game_feature gameplay_change_new_tax_collection_system;
     extern game_feature gameplay_change_small_hut_not_create_emigrant;
+    extern game_feature gameplay_change_delivery_boy_goes_to_market_alone;
 
     custom_span<game_feature*> features();
 }
@@ -136,7 +137,7 @@ enum e_config_key {
     CONFIG_RESERVED_54,
     CONFIG_RESERVED_55,
     CONFIG_RESERVED_56,
-    CONFIG_GP_CH_DELIVERY_BOY_GOES_TO_MARKET_ALONE,
+    CONFIG_RESERVED_57,
     CONFIG_GP_CH_RELIGION_COVERAGE_INFLUENCE_SENTIMENT,
     CONFIG_GP_CH_MONUMENTS_INFLUENCE_SENTIMENT,
     CONFIG_GP_CH_WELL_RADIUS_DEPENDS_MOISTURE,
