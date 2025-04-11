@@ -120,7 +120,7 @@ void building_fishing_wharf::spawn_figure() {
 
 
                 int dock_tile = d.dock_tiles[0];
-                if (g_ankh_config.get(CONFIG_GP_CH_FISHING_WHARF_SPAWN_BOATS) && dock_tile > 0) {
+                if (!!game_features::gameplay_fishing_wharf_spawn_boats && dock_tile > 0) {
                     tile2i dtile(dock_tile);
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
                     f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;

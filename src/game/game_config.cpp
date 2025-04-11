@@ -82,6 +82,7 @@ namespace game_features {
     game_feature gameplay_change_monuments_influence_sentiment{ "gameplay_change_monuments_influence_sentiment", true };
     game_feature gameplay_change_well_radius_depends_moisture{ "gameplay_change_well_radius_depends_moisture", true };
     game_feature gameplay_change_enter_point_on_nearest_tile{ "gameplay_change_enter_point_on_nearest_tile", true };
+    game_feature gameplay_fishing_wharf_spawn_boats{ "gameplay_fishing_wharf_spawn_boats", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -189,7 +190,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_79", true},
     {"reserved_80", true},
     {"reserved_81", true},
-    {"fishing_wharf_spawn_boats", false},
+    {"reserved_82", false},
     {"city_flotsam_enabled", false},
     {"chickpeas_farm_enabled", true},
     {"lettuce_farm_enabled", true},
