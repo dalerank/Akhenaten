@@ -207,7 +207,7 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_god_disabled, button_none, 4, TR_CONFIG_GOD_BAST_DISABLED},
 
     //
-    {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WOOD_CUTTER, TR_CONFIG_BUILDING_WOOD_CUTTER},
+    {20, 72, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WOOD_CUTTERS, TR_CONFIG_BUILDING_WOOD_CUTTER},
     {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
     {20, 120, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
     {20, 144, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
@@ -239,7 +239,7 @@ static generic_button checkbox_buttons[] = {
     //
 
     //
-    {20, 72, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
+    {20, 72, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
     {20, 96, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
     {20, 120, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_REED, TR_CONFIG_RESOURCE_REED},
     {20, 144, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
@@ -461,9 +461,8 @@ static void toggle_city_option(int key, int param2) {
 }
 
 static void toggle_building(int id, int param2) {
-    e_building_type type = BUILDING_NONE;
+    e_building_type type = (e_building_type)BUILDING_NONE;
     switch (id) {
-    case CONFIG_GP_CH_BUILDING_WOOD_CUTTER: type = BUILDING_WOOD_CUTTERS; break;
     case CONFIG_GP_CH_BUILDING_COPPER_MINE: type = BUILDING_COPPER_MINE; break;
     case CONFIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
     case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
@@ -500,9 +499,8 @@ static void toggle_building(int id, int param2) {
 }
 
 static void toggle_resource(int id, int param2) {
-    e_resource resource = RESOURCE_NONE;
+    e_resource resource = e_resource(id);
     switch (id) {
-    case CONFIG_GP_CH_RESOURCE_TIMBER: resource = RESOURCE_TIMBER; break;
     case CONFIG_GP_CH_RESOURCE_COPPER: resource = RESOURCE_COPPER; break;
     case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; break;
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; break;
@@ -615,7 +613,6 @@ static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
     case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario.env.flotsam_enabled;
-    case CONFIG_GP_CH_RESOURCE_TIMBER: return g_city.can_produce_resource(RESOURCE_TIMBER);
     case CONFIG_GP_CH_RESOURCE_COPPER: return g_city.can_produce_resource(RESOURCE_COPPER);
     case CONFIG_GP_CH_RESOURCE_REED: return g_city.can_produce_resource(RESOURCE_REEDS);
     case CONFIG_GP_CH_RESOURCE_FISH: return g_city.can_produce_resource(RESOURCE_FISH);
@@ -628,7 +625,6 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_PAPYRUS: return g_city.can_produce_resource(RESOURCE_PAPYRUS);
     case CONFIG_GP_CH_RESOURCE_BRICKS: return g_city.can_produce_resource(RESOURCE_BRICKS);
 
-    case CONFIG_GP_CH_BUILDING_WOOD_CUTTER: return building_menu_is_building_enabled(BUILDING_WOOD_CUTTERS);
     case CONFIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
     case CONFIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
     case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
@@ -682,7 +678,17 @@ static void draw_background(int) {
     for (int i = 0; i < options_per_page[data.page]; i++) {
         int value = i + data.starting_option;
         generic_button &btn = checkbox_buttons[value];
-        if (is_config_option_enabled(btn.parameter1 & 0xff)) {
+        if ((btn.parameter1 & 0xf000) == 0x4000) {
+            bool can_produce = g_city.can_produce_resource(e_resource(btn.parameter1 & 0xff));
+            if (can_produce) {
+                text_draw(string_from_ascii("x"), btn.x + 6, btn.y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+            }
+        } else if ((btn.parameter1 & 0xf000) == 0x2000) {
+            bool can_build = building_menu_is_building_enabled(btn.parameter1 & 0xfff);
+            if (can_build) {
+                text_draw(string_from_ascii("x"), btn.x + 6, btn.y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+            }
+        } else if (is_config_option_enabled(btn.parameter1 & 0xff)) {
             text_draw(string_from_ascii("x"), btn.x + 6, btn.y + 3, FONT_NORMAL_BLACK_ON_LIGHT, 0);
         }
     }

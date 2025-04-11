@@ -172,7 +172,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_65", false},
     {"reserved_66", false},
     ///
-    {"city_building_wood_cutters", true},
+    {"reserved_67", true},
     {"city_produce_timber", true},
     {"city_produce_chickpeas", true},
     {"city_produce_pomegranades", true},
