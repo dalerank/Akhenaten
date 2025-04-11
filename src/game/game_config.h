@@ -82,6 +82,7 @@ namespace game_features {
     extern game_feature gameplay_recruiter_not_need_forts;
     extern game_feature gameui_highlight_top_menu_hover;
     extern game_feature gameui_empire_city_old_names;
+    extern game_feature gameplay_draw_cloud_shadows;
 
     custom_span<game_feature*> features();
 }
@@ -204,18 +205,18 @@ enum e_config_key {
     CONFIG_RESERVED_106,
     CONFIG_RESERVED_107,
     CONFIG_RESERVED_108,
-    CONFIG_UI_DRAW_CLOUD_SHADOWS,
-    CONFIG_GP_CH_BUILDING_SMALL_MASTABA,
-    CONFIG_GP_CH_BUILDING_BRICKLAYERS,
+    CONFIG_RESERVED_109,
+    CONFIG_RESERVED_110,
+    CONFIG_RESERVED_111,
     CONFIG_GP_CH_BUILDING_CLOSEST_ROAD,
     CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW,
-    CONFIG_GP_CH_BUILDING_BOOTH,
-    CONFIG_GP_CH_BUILDING_BANDSTAND,
+    CONFIG_RESERVED_114,
+    CONFIG_RESERVED_115,
 
     CONFIG_UI_HIDE_NEW_GAME_TOP_MENU,
     CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING,
 
-    CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA,
+    CONFIG_RESERVED_119,
 
     CONFIG_MAX_ENTRIES
 };

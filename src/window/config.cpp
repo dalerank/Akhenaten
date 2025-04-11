@@ -189,8 +189,8 @@ static generic_button checkbox_buttons[] = {
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 64, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
     {20, 312, 20, 20, toggle_switch_t, button_none,  0x1000 | 65, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 336, 20, 20, toggle_switch_t, button_none,  0x1000 | 66, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
-    {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 67, TR_CONFIG_DRAW_CLOUD_SHADOWS},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, 0, 0},
@@ -206,8 +206,8 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_god_disabled, button_none, 4, TR_CONFIG_GOD_BAST_DISABLED},
 
     //
-    {20, 72, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WOOD_CUTTERS, TR_CONFIG_BUILDING_WOOD_CUTTER},
-    {20, 96, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
+    {20, 72, 20, 20, toggle_building, button_none,  0x2000 | BUILDING_WOOD_CUTTERS, TR_CONFIG_BUILDING_WOOD_CUTTER},
+    {20, 96, 20, 20, toggle_building, button_none,  0x2000 | BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
     {20, 120, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
     {20, 144, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_PAPYRUS_WORKSHOP, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
     {20, 168, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
@@ -230,16 +230,16 @@ static generic_button checkbox_buttons[] = {
     {20, 216, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
     {20, 240, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WEAPONSMITH, TR_CONFIG_BUILDING_WEAPONSMITH},
     {20, 264, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_RECRUITER, TR_CONFIG_BUILDING_RECRUTER},
-    {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
-    {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
-    {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BOOTH, TR_CONFIG_BUILDING_BOOTH},
-    {20, 360, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BANDSTAND, TR_CONFIG_BUILDING_BANDSTAND},
-    {20, 384, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA, TR_CONFIG_BUILDING_MEDIUM_MASTABA },
+    {20, 288, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
+    {20, 312, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_BRICKLAYERS_GUILD, TR_CONFIG_BUILDING_BRICKLAYERS},
+    {20, 336, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_BOOTH, TR_CONFIG_BUILDING_BOOTH},
+    {20, 360, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_BANDSTAND, TR_CONFIG_BUILDING_BANDSTAND},
+    {20, 384, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_MEDIUM_MASTABA, TR_CONFIG_BUILDING_MEDIUM_MASTABA },
     //
 
     //
-    {20, 72, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
-    {20, 96, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
+    {20, 72, 20, 20, toggle_resource, button_none,  0x4000 | RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
+    {20, 96, 20, 20, toggle_resource, button_none,  0x4000 | RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
     {20, 120, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_REEDS, TR_CONFIG_RESOURCE_REED},
     {20, 144, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
     {20, 168, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
@@ -455,14 +455,6 @@ static void toggle_scenario_option(int key, int param2) {
 
 static void toggle_building(int id, int param2) {
     e_building_type type = (e_building_type)BUILDING_NONE;
-    switch (id) {
-    case CONFIG_GP_CH_BUILDING_BOOTH: type = BUILDING_BOOTH; break;
-    case CONFIG_GP_CH_BUILDING_BANDSTAND: type = BUILDING_BANDSTAND; break;
-    case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: type = BUILDING_SMALL_MASTABA; break;
-    case CONFIG_GP_CH_BUILDING_BRICKLAYERS: type = BUILDING_BRICKLAYERS_GUILD; break;
-    default:
-        return;
-    }
 
     bool can_build = building_menu_is_building_enabled(type);
     building_menu_toggle_building(type, !can_build);
@@ -562,13 +554,6 @@ static void init(void (*close_callback)()) {
 
 static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
-    switch (option) {
-    case CONFIG_GP_CH_BUILDING_BOOTH: return building_menu_is_building_enabled(BUILDING_BOOTH);
-    case CONFIG_GP_CH_BUILDING_BANDSTAND: return building_menu_is_building_enabled(BUILDING_BANDSTAND);
-    case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);
-    case CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA: return building_menu_is_building_enabled(BUILDING_MEDIUM_MASTABA);
-    case CONFIG_GP_CH_BUILDING_BRICKLAYERS: return building_menu_is_building_enabled(BUILDING_BRICKLAYERS_GUILD);
-    }
 
     return data.config_values[option].new_value;
 }

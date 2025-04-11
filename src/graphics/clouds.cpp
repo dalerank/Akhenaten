@@ -250,7 +250,7 @@ void draw_cloud(painter &ctx, const image_t *img, const int x, const int y, cons
 
 void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const vec2i limit)
 {
-   if (!g_ankh_config.get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
+   if (!game_features::gameplay_draw_cloud_shadows) {
        return;
    }
 
