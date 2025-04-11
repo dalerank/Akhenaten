@@ -208,10 +208,10 @@ static generic_button checkbox_buttons[] = {
 
     //
     {20, 72, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WOOD_CUTTERS, TR_CONFIG_BUILDING_WOOD_CUTTER},
-    {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
-    {20, 120, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
-    {20, 144, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
-    {20, 168, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
+    {20, 96, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_COPPER_MINE, TR_CONFIG_BUILDING_COPPE_MINE},
+    {20, 120, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_REED_GATHERER, TR_CONFIG_BUILDING_REED_GATHERER},
+    {20, 144, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_PAPYRUS_WORKSHOP, TR_CONFIG_BUILDING_PAPYRUS_MAKER},
+    {20, 168, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
     {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SHIPYARD, TR_CONFIG_BUILDING_SHIPYARD},
     {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_FISHING_WHARF, TR_CONFIG_BUILDING_FISHING_WHARF},
     {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM, TR_CONFIG_BUILDING_CHICKPEAS_FARM},
@@ -240,13 +240,13 @@ static generic_button checkbox_buttons[] = {
 
     //
     {20, 72, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_TIMBER, TR_CONFIG_RESOURCE_TIMBER},
-    {20, 96, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
-    {20, 120, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_REED, TR_CONFIG_RESOURCE_REED},
-    {20, 144, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
+    {20, 96, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_COPPER, TR_CONFIG_RESOURCE_COPPER},
+    {20, 120, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_REEDS, TR_CONFIG_RESOURCE_REED},
+    {20, 144, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_PAPYRUS, TR_CONFIG_RESOURCE_PAPYRUS},
     {20, 168, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FISH, TR_CONFIG_RESOURCE_FISH},
-    {20, 192, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_CHICKPEAS, TR_CONFIG_RESOURCE_CHICKPEAS},
-    {20, 216, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_POMEGRANADES, TR_CONFIG_RESOURCE_POMEGRANADES},
-    {20, 240, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_LETTUCE, TR_CONFIG_RESOURCE_LETTUCE},
+    {20, 192, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_CHICKPEAS, TR_CONFIG_RESOURCE_CHICKPEAS},
+    {20, 216, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_POMEGRANATES, TR_CONFIG_RESOURCE_POMEGRANADES},
+    {20, 240, 20, 20, toggle_resource, button_none, 0x4000 | RESOURCE_LETTUCE, TR_CONFIG_RESOURCE_LETTUCE},
     {20, 264, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_FIGS, TR_CONFIG_RESOURCE_FIGS},
     {20, 288, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_GRAIN, TR_CONFIG_RESOURCE_GRAIN},
     {20, 312, 20, 20, toggle_resource, button_none, CONFIG_GP_CH_RESOURCE_MEAT, TR_CONFIG_RESOURCE_MEAT},
@@ -463,10 +463,6 @@ static void toggle_city_option(int key, int param2) {
 static void toggle_building(int id, int param2) {
     e_building_type type = (e_building_type)BUILDING_NONE;
     switch (id) {
-    case CONFIG_GP_CH_BUILDING_COPPER_MINE: type = BUILDING_COPPER_MINE; break;
-    case CONFIG_GP_CH_BUILDING_REED_GATHERER: type = BUILDING_REED_GATHERER; break;
-    case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: type = BUILDING_PAPYRUS_WORKSHOP; break;
-    case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: type = BUILDING_SCRIBAL_SCHOOL; break;
     case CONFIG_GP_CH_BUILDING_SHIPYARD: type = BUILDING_SHIPWRIGHT; break;
     case CONFIG_GP_CH_BUILDING_FISHING_WHARF: type = BUILDING_FISHING_WHARF; break;
     case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: type = BUILDING_CHICKPEAS_FARM; break;
@@ -501,13 +497,7 @@ static void toggle_building(int id, int param2) {
 static void toggle_resource(int id, int param2) {
     e_resource resource = e_resource(id);
     switch (id) {
-    case CONFIG_GP_CH_RESOURCE_COPPER: resource = RESOURCE_COPPER; break;
-    case CONFIG_GP_CH_RESOURCE_REED: resource = RESOURCE_REEDS; break;
-    case CONFIG_GP_CH_RESOURCE_PAPYRUS: resource = RESOURCE_PAPYRUS; break;
     case CONFIG_GP_CH_RESOURCE_FISH: resource = RESOURCE_FISH; break;
-    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: resource = RESOURCE_CHICKPEAS; break;
-    case CONFIG_GP_CH_RESOURCE_LETTUCE: resource = RESOURCE_LETTUCE; break;
-    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: resource = RESOURCE_POMEGRANATES; break;
     case CONFIG_GP_CH_RESOURCE_FIGS: resource = RESOURCE_FIGS; break;
     case CONFIG_GP_CH_RESOURCE_GRAIN: resource = RESOURCE_GRAIN; break;
     case CONFIG_GP_CH_RESOURCE_MEAT: resource = RESOURCE_MEAT; break;
@@ -613,22 +603,12 @@ static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
     case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario.env.flotsam_enabled;
-    case CONFIG_GP_CH_RESOURCE_COPPER: return g_city.can_produce_resource(RESOURCE_COPPER);
-    case CONFIG_GP_CH_RESOURCE_REED: return g_city.can_produce_resource(RESOURCE_REEDS);
     case CONFIG_GP_CH_RESOURCE_FISH: return g_city.can_produce_resource(RESOURCE_FISH);
-    case CONFIG_GP_CH_RESOURCE_CHICKPEAS: return g_city.can_produce_resource(RESOURCE_CHICKPEAS);
-    case CONFIG_GP_CH_RESOURCE_POMEGRANADES: return g_city.can_produce_resource(RESOURCE_POMEGRANATES);
-    case CONFIG_GP_CH_RESOURCE_LETTUCE: return g_city.can_produce_resource(RESOURCE_LETTUCE);
     case CONFIG_GP_CH_RESOURCE_FIGS: return g_city.can_produce_resource(RESOURCE_FIGS);
     case CONFIG_GP_CH_RESOURCE_GRAIN: return g_city.can_produce_resource(RESOURCE_GRAIN);
     case CONFIG_GP_CH_RESOURCE_MEAT: return g_city.can_produce_resource(RESOURCE_MEAT);
-    case CONFIG_GP_CH_RESOURCE_PAPYRUS: return g_city.can_produce_resource(RESOURCE_PAPYRUS);
     case CONFIG_GP_CH_RESOURCE_BRICKS: return g_city.can_produce_resource(RESOURCE_BRICKS);
 
-    case CONFIG_GP_CH_BUILDING_COPPER_MINE: return building_menu_is_building_enabled(BUILDING_COPPER_MINE);
-    case CONFIG_GP_CH_BUILDING_REED_GATHERER: return building_menu_is_building_enabled(BUILDING_REED_GATHERER);
-    case CONFIG_GP_CH_BUILDING_PAPYRUS_MAKER: return building_menu_is_building_enabled(BUILDING_PAPYRUS_WORKSHOP);
-    case CONFIG_GP_CH_BUILDING_SCRIBAL_SCHOOL: return building_menu_is_building_enabled(BUILDING_SCRIBAL_SCHOOL);
     case CONFIG_GP_CH_BUILDING_SHIPYARD: return building_menu_is_building_enabled(BUILDING_SHIPWRIGHT);
     case CONFIG_GP_CH_BUILDING_FISHING_WHARF: return building_menu_is_building_enabled(BUILDING_FISHING_WHARF);
     case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: return building_menu_is_building_enabled(BUILDING_POMEGRANATES_FARM);
