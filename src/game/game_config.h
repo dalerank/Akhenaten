@@ -85,6 +85,7 @@ namespace game_features {
     extern game_feature gameplay_draw_cloud_shadows;
     extern game_feature gameplay_building_road_closest;
     extern game_feature gameplay_floodplain_random_grow;
+    extern game_feature gameui_hide_new_game_top_menu;
 
     custom_span<game_feature*> features();
 }
@@ -215,7 +216,7 @@ enum e_config_key {
     CONFIG_RESERVED_114,
     CONFIG_RESERVED_115,
 
-    CONFIG_UI_HIDE_NEW_GAME_TOP_MENU,
+    CONFIG_RESERVED_116,
     CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING,
 
     CONFIG_RESERVED_119,

@@ -634,7 +634,7 @@ void top_menu_widget::sub_menu_init() {
 
     auto *file = headers["file"].dcast_menu_header();
     if (file) {
-        file->item("new_game").hidden = g_ankh_config.get(CONFIG_UI_HIDE_NEW_GAME_TOP_MENU);
+        file->item("new_game").hidden = !!game_features::gameui_hide_new_game_top_menu;
         file->onclick([this] (auto &h) { file_handle(h); });
     }
 

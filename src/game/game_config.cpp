@@ -91,6 +91,7 @@ namespace game_features {
     game_feature gameplay_draw_cloud_shadows{ "gameplay_draw_cloud_shadows", true };
     game_feature gameplay_building_road_closest{ "gameplay_building_road_closest", true };
     game_feature gameplay_floodplain_random_grow{ "gameplay_floodplain_random_grow", true };
+    game_feature gameui_hide_new_game_top_menu{ "gameui_hide_new_game_top_menu", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -230,11 +231,11 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_111", true},
     {"reserved_112", true},
     {"reserved_113", true},
-    {"city_building_booth", true},
-    {"city_building_bandstand", true},
-    {"ui_hide_new_game_top_menu", true},
+    {"reserved_114", true},
+    {"reserved_115", true},
+    {"reserved_116", true},
     {"city_save_year_kingdome_rating", false},
-    {"city_building_mastaba", true },
+    {"reserved_118", true },
 };
 
 static pcstr ini_string_keys[] = {
