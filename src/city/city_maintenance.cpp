@@ -154,7 +154,7 @@ void city_maintenance_t::check_kingdome_access() {
             }
 
             b.distance_from_entry = 0;
-            const bool closest_road = g_ankh_config.get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
+            const bool closest_road = !!game_features::gameplay_building_road_closest;
             tile2i road = map_road_to_largest_network_rotation(b.orientation, b.tile, 3, closest_road);
             if (road.x() >= 0) {
                 b.road_network_id = map_road_network_get(road);
@@ -195,7 +195,7 @@ void city_maintenance_t::check_kingdome_access() {
         } else { // other building
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Other");
             b.distance_from_entry = 0;
-            bool closest_road = g_ankh_config.get(CONFIG_GP_CH_BUILDING_CLOSEST_ROAD) > 0;
+            bool closest_road = !!game_features::gameplay_building_road_closest;
             tile2i road = map_road_to_largest_network(b.tile, b.size, closest_road);
             if (road.valid()) {
                 b.road_network_id = map_road_network_get(road);

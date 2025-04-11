@@ -190,12 +190,12 @@ static generic_button checkbox_buttons[] = {
     {20, 312, 20, 20, toggle_switch_t, button_none,  0x1000 | 65, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
     {20, 336, 20, 20, toggle_switch_t, button_none,  0x1000 | 66, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 360, 20, 20, toggle_switch_t, button_none, 0x1000 | 67, TR_CONFIG_DRAW_CLOUD_SHADOWS},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
+    {20, 384, 20, 20, toggle_switch_t, button_none, 0x1000 | 68, TR_CONFIG_BUILDING_CLOSEST_ROAD},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, 0, 0},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
-    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_BUILDING_CLOSEST_ROAD, TR_CONFIG_BUILDING_CLOSEST_ROAD},
+    {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW, TR_CONFIG_FLOODPLAIN_RANDOM_GROW},
     
     // GODS

@@ -83,6 +83,7 @@ namespace game_features {
     extern game_feature gameui_highlight_top_menu_hover;
     extern game_feature gameui_empire_city_old_names;
     extern game_feature gameplay_draw_cloud_shadows;
+    extern game_feature gameplay_building_road_closest;
 
     custom_span<game_feature*> features();
 }
@@ -208,7 +209,7 @@ enum e_config_key {
     CONFIG_RESERVED_109,
     CONFIG_RESERVED_110,
     CONFIG_RESERVED_111,
-    CONFIG_GP_CH_BUILDING_CLOSEST_ROAD,
+    CONFIG_RESERVED_112,
     CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW,
     CONFIG_RESERVED_114,
     CONFIG_RESERVED_115,
