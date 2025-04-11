@@ -90,6 +90,7 @@ namespace game_features {
     game_feature gameui_empire_city_old_names{ "gameui_empire_city_old_names", true };
     game_feature gameplay_draw_cloud_shadows{ "gameplay_draw_cloud_shadows", true };
     game_feature gameplay_building_road_closest{ "gameplay_building_road_closest", true };
+    game_feature gameplay_floodplain_random_grow{ "gameplay_floodplain_random_grow", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -228,7 +229,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_110", true},
     {"reserved_111", true},
     {"reserved_112", true},
-    {"floodplain_random_grow", true},
+    {"reserved_113", true},
     {"city_building_booth", true},
     {"city_building_bandstand", true},
     {"ui_hide_new_game_top_menu", true},
