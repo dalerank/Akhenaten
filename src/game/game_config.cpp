@@ -85,6 +85,7 @@ namespace game_features {
     game_feature gameplay_fishing_wharf_spawn_boats{ "gameplay_fishing_wharf_spawn_boats", true };
     game_feature gameplay_city_flotsam_enabled{ "gameplay_city_flotsam_enabled", true };
     game_feature gameplay_copper_mine_can_build_near_mountains{ "gameplay_copper_mine_can_build_near_mountains", true };
+    game_feature gameplay_recruiter_not_need_forts{ "gameplay_recruiter_not_need_forts", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -215,8 +216,8 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_102", true},
     {"reserved_103", true},
     {"reserved_104", false},
-    {"city_building_recruter", false},
-    {"recruiter_not_need_forts", false},
+    {"reserved_105", false},
+    {"reserved_106", false},
     {"ui_highlight_top_menu_hover", true},
     {"ui_empire_city_old_names", true},
     {"ui_draw_cloud_shadows", false},

@@ -79,6 +79,7 @@ namespace game_features {
     extern game_feature gameplay_fishing_wharf_spawn_boats;
     extern game_feature gameplay_city_flotsam_enabled;
     extern game_feature gameplay_copper_mine_can_build_near_mountains;
+    extern game_feature gameplay_recruiter_not_need_forts;
 
     custom_span<game_feature*> features();
 }
@@ -197,8 +198,8 @@ enum e_config_key {
     CONFIG_RESERVED_102,
     CONFIG_RESERVED_103,
     CONFIG_RESERVED_104,
-    CONFIG_GP_CH_BUILDING_RECRUTER,
-    CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS,
+    CONFIG_RESERVED_105,
+    CONFIG_RESERVED_106,
     CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER,
     CONFIG_UI_EMPIRE_CITY_OLD_NAMES,
     CONFIG_UI_DRAW_CLOUD_SHADOWS,

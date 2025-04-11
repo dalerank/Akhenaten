@@ -497,7 +497,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const bool need_weapons = (g_city.military.has_infantry_batalions() || g_ankh_config.get(CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS));
+    const bool need_weapons = (g_city.military.has_infantry_batalions() || !!game_features::gameplay_recruiter_not_need_forts);
     if (!need_weapons) {
         return { STORAGEYARD_TASK_NONE };
     }

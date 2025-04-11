@@ -185,8 +185,8 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1000 | 61, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
     {20, 218, 20, 20, toggle_switch_t, button_none, 0x1000 | 62, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
     {20, 240, 20, 20, toggle_scenario_option, button_none, 1, TR_CONFIG_CITY_FLOTSAM_ENABLED},
-    {20, 264, 20, 20, toggle_switch, button_none, 0x1000 | 63, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
-    {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
+    {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 63, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
+    {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 64, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
@@ -194,7 +194,7 @@ static generic_button checkbox_buttons[] = {
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, 0, 0},
-    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
+    {20, 96, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_BUILDING_CLOSEST_ROAD, TR_CONFIG_BUILDING_CLOSEST_ROAD},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW, TR_CONFIG_FLOODPLAIN_RANDOM_GROW},
     
@@ -229,7 +229,7 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_LIMESTONE_QUARRY, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
     {20, 216, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
     {20, 240, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WEAPONSMITH, TR_CONFIG_BUILDING_WEAPONSMITH},
-    {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_RECRUTER, TR_CONFIG_BUILDING_RECRUTER},
+    {20, 264, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_RECRUITER, TR_CONFIG_BUILDING_RECRUTER},
     {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
     {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
     {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BOOTH, TR_CONFIG_BUILDING_BOOTH},
@@ -458,7 +458,6 @@ static void toggle_building(int id, int param2) {
     switch (id) {
     case CONFIG_GP_CH_BUILDING_BOOTH: type = BUILDING_BOOTH; break;
     case CONFIG_GP_CH_BUILDING_BANDSTAND: type = BUILDING_BANDSTAND; break;
-    case CONFIG_GP_CH_BUILDING_RECRUTER: type = BUILDING_RECRUITER; break;
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: type = BUILDING_SMALL_MASTABA; break;
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: type = BUILDING_BRICKLAYERS_GUILD; break;
     default:
@@ -572,7 +571,6 @@ static bool is_config_option_enabled(int option) {
     switch (option) {
     case CONFIG_GP_CH_BUILDING_BOOTH: return building_menu_is_building_enabled(BUILDING_BOOTH);
     case CONFIG_GP_CH_BUILDING_BANDSTAND: return building_menu_is_building_enabled(BUILDING_BANDSTAND);
-    case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);
     case CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA: return building_menu_is_building_enabled(BUILDING_MEDIUM_MASTABA);
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: return building_menu_is_building_enabled(BUILDING_BRICKLAYERS_GUILD);
