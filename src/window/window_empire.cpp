@@ -35,6 +35,7 @@
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
 #include "window/autoconfig_window.h"
+#include "game/game_config.h"
 #include "window/trade_opened.h"
 #include "game/game.h"
 
@@ -532,7 +533,7 @@ void empire_window::draw_empire_object(const empire_object* obj) {
             draw_trade_route(city->route_id, state);
         }
 
-        int text_group = (g_settings.city_names_style == CITIES_OLD_NAMES)  ? text_group_old_names : text_group_new_names;
+        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
         int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
         vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height)/2};
 
@@ -678,7 +679,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     ui["button_close"].enabled = !!city;
     ui["button_advisor"].enabled = !!city;
     if (city) {
-        int text_group = g_settings.city_names_style == CITIES_OLD_NAMES ? text_group_old_names : text_group_new_names;
+        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
         ui["city_name"] = ui::str(text_group, city->name_id);
     }
 

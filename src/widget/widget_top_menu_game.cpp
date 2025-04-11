@@ -312,7 +312,7 @@ static void button_rotate_right(int param1, int param2) {
 
 void top_menu_widget::draw_elements_impl() {
     vec2i cur_offset = offset;
-    const e_font hightlight_font = g_ankh_config.get(CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
+    const e_font hightlight_font = !!game_features::gameui_highlight_top_menu_hover ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto &it : headers.elements) {
         ui::emenu_header *header = it->dcast_menu_header();
 

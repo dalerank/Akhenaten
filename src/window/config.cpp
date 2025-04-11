@@ -187,10 +187,10 @@ static generic_button checkbox_buttons[] = {
     {20, 240, 20, 20, toggle_scenario_option, button_none, 1, TR_CONFIG_CITY_FLOTSAM_ENABLED},
     {20, 264, 20, 20, toggle_switch_t, button_none, 0x1000 | 63, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
     {20, 288, 20, 20, toggle_switch_t, button_none, 0x1000 | 64, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
-    {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
-    {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
+    {20, 312, 20, 20, toggle_switch_t, button_none,  0x1000 | 65, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 336, 20, 20, toggle_switch_t, button_none,  0x1000 | 66, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
-    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, 0, 0},
@@ -486,12 +486,6 @@ static void toggle_resource(int id, int param2) {
 static void toggle_switch(int key, int param2) {
     auto& data = g_window_config_ext_data;
     data.config_values[key].new_value = !data.config_values[key].new_value;
-
-    switch (key) {
-    case CONFIG_UI_EMPIRE_CITY_OLD_NAMES: 
-        g_settings.city_names_style = data.config_values[key].new_value;
-        break;
-    }
 }
 
 static void init(void (*close_callback)()) {

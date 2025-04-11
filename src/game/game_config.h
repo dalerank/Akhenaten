@@ -80,6 +80,8 @@ namespace game_features {
     extern game_feature gameplay_city_flotsam_enabled;
     extern game_feature gameplay_copper_mine_can_build_near_mountains;
     extern game_feature gameplay_recruiter_not_need_forts;
+    extern game_feature gameui_highlight_top_menu_hover;
+    extern game_feature gameui_empire_city_old_names;
 
     custom_span<game_feature*> features();
 }
@@ -200,8 +202,8 @@ enum e_config_key {
     CONFIG_RESERVED_104,
     CONFIG_RESERVED_105,
     CONFIG_RESERVED_106,
-    CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER,
-    CONFIG_UI_EMPIRE_CITY_OLD_NAMES,
+    CONFIG_RESERVED_107,
+    CONFIG_RESERVED_108,
     CONFIG_UI_DRAW_CLOUD_SHADOWS,
     CONFIG_GP_CH_BUILDING_SMALL_MASTABA,
     CONFIG_GP_CH_BUILDING_BRICKLAYERS,

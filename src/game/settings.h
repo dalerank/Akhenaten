@@ -66,7 +66,6 @@ struct game_settings {
     bool victory_video;
     // pharaoh settings
     int popup_messages;
-    int city_names_style;
     bool pyramid_speedup;
     // persistent game state
     int last_advisor;
@@ -128,7 +127,6 @@ struct game_settings {
     void toggle_tooltips();
     void toggle_warnings() { warnings = !warnings; }
     void toggle_monthly_autosave() { monthly_autosave = !monthly_autosave; }
-    void toggle_city_names_style() { city_names_style = !city_names_style; }
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
     void toggle_gods_enabled() { gods_enabled = !gods_enabled; }

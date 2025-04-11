@@ -43,7 +43,6 @@ void game_settings::load_default_settings() {
     last_advisor = ADVISOR_LABOR;
 
     popup_messages = 0;
-    city_names_style = CITIES_OLD_NAMES;
     pyramid_speedup = false;
 
     g_settings.clear_personal_savings();
