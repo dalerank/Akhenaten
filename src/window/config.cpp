@@ -221,14 +221,14 @@ static generic_button checkbox_buttons[] = {
     {20, 360, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
     {20, 384, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
     //
-    {20, 72, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
-    {20, 96, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
-    {20, 120, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE, TR_CONFIG_BUILDING_QUARRY_SANDSTONE},
-    {20, 144, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_GRANITE, TR_CONFIG_BUILDING_QUARRY_GRANITE},
-    {20, 168, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_STONE, TR_CONFIG_BUILDING_QUARRY_STONE},
-    {20, 192, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
-    {20, 216, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
-    {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_WEAPONSMITH, TR_CONFIG_BUILDING_WEAPONSMITH},
+    {20, 72, 20, 20, toggle_building, button_none,  0x2000 | BUILDING_WORK_CAMP, TR_CONFIG_BUILDING_WORK_CAMP},
+    {20, 96, 20, 20, toggle_building, button_none,  0x2000 | BUILDING_GOLD_MINE, TR_CONFIG_BUILDING_GOLD_MINE},
+    {20, 120, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SANDSTONE_QUARRY, TR_CONFIG_BUILDING_QUARRY_SANDSTONE},
+    {20, 144, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_GRANITE_QUARRY, TR_CONFIG_BUILDING_QUARRY_GRANITE},
+    {20, 168, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_STONE_QUARRY, TR_CONFIG_BUILDING_QUARRY_STONE},
+    {20, 192, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_LIMESTONE_QUARRY, TR_CONFIG_BUILDING_QUARRY_LIMESTONE},
+    {20, 216, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_CLAY_PIT, TR_CONFIG_BUILDING_CLAY_PIT},
+    {20, 240, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_WEAPONSMITH, TR_CONFIG_BUILDING_WEAPONSMITH},
     {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_RECRUTER, TR_CONFIG_BUILDING_RECRUTER},
     {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_SMALL_MASTABA, TR_CONFIG_BUILDING_SMALL_MASTABA},
     {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKLAYERS, TR_CONFIG_BUILDING_BRICKLAYERS},
@@ -456,16 +456,8 @@ static void toggle_scenario_option(int key, int param2) {
 static void toggle_building(int id, int param2) {
     e_building_type type = (e_building_type)BUILDING_NONE;
     switch (id) {
-    case CONFIG_GP_CH_BUILDING_WORK_CAMP: type = BUILDING_WORK_CAMP; break;
-    case CONFIG_GP_CH_BUILDING_GOLD_MINE: type = BUILDING_GOLD_MINE; break;
-    case CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE: type = BUILDING_SANDSTONE_QUARRY; break;
-    case CONFIG_GP_CH_BUILDING_QUARRY_GRANITE: type = BUILDING_GRANITE_QUARRY; break;
-    case CONFIG_GP_CH_BUILDING_QUARRY_STONE: type = BUILDING_STONE_QUARRY; break;
-    case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: type = BUILDING_LIMESTONE_QUARRY; break;
-    case CONFIG_GP_CH_BUILDING_CLAY_PIT: type = BUILDING_CLAY_PIT; break;
     case CONFIG_GP_CH_BUILDING_BOOTH: type = BUILDING_BOOTH; break;
     case CONFIG_GP_CH_BUILDING_BANDSTAND: type = BUILDING_BANDSTAND; break;
-    case CONFIG_GP_CH_BUILDING_WEAPONSMITH: type = BUILDING_WEAPONSMITH; break;
     case CONFIG_GP_CH_BUILDING_RECRUTER: type = BUILDING_RECRUITER; break;
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: type = BUILDING_SMALL_MASTABA; break;
     case CONFIG_GP_CH_BUILDING_BRICKLAYERS: type = BUILDING_BRICKLAYERS_GUILD; break;
@@ -578,16 +570,8 @@ static void init(void (*close_callback)()) {
 static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
-    case CONFIG_GP_CH_BUILDING_WORK_CAMP: return building_menu_is_building_enabled(BUILDING_WORK_CAMP);
-    case CONFIG_GP_CH_BUILDING_GOLD_MINE: return building_menu_is_building_enabled(BUILDING_GOLD_MINE);
-    case CONFIG_GP_CH_BUILDING_QUARRY_SANDSTONE: return building_menu_is_building_enabled(BUILDING_SANDSTONE_QUARRY);
-    case CONFIG_GP_CH_BUILDING_QUARRY_GRANITE: return building_menu_is_building_enabled(BUILDING_GRANITE_QUARRY);
-    case CONFIG_GP_CH_BUILDING_QUARRY_STONE: return building_menu_is_building_enabled(BUILDING_STONE_QUARRY);
-    case CONFIG_GP_CH_BUILDING_QUARRY_LIMESTONE: return building_menu_is_building_enabled(BUILDING_LIMESTONE_QUARRY);
-    case CONFIG_GP_CH_BUILDING_CLAY_PIT: return building_menu_is_building_enabled(BUILDING_CLAY_PIT);
     case CONFIG_GP_CH_BUILDING_BOOTH: return building_menu_is_building_enabled(BUILDING_BOOTH);
     case CONFIG_GP_CH_BUILDING_BANDSTAND: return building_menu_is_building_enabled(BUILDING_BANDSTAND);
-    case CONFIG_GP_CH_BUILDING_WEAPONSMITH: return building_menu_is_building_enabled(BUILDING_WEAPONSMITH);
     case CONFIG_GP_CH_BUILDING_RECRUTER: return building_menu_is_building_enabled(BUILDING_RECRUITER);
     case CONFIG_GP_CH_BUILDING_SMALL_MASTABA: return building_menu_is_building_enabled(BUILDING_SMALL_MASTABA);
     case CONFIG_GP_CH_BUILDING_MEDIUM_MASTABA: return building_menu_is_building_enabled(BUILDING_MEDIUM_MASTABA);
