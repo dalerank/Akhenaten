@@ -213,10 +213,10 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SCRIBAL_SCHOOL, TR_CONFIG_BUILDING_SCRIBAL_SCHOOL},
     {20, 192, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_SHIPWRIGHT, TR_CONFIG_BUILDING_SHIPYARD},
     {20, 216, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_FISHING_WHARF, TR_CONFIG_BUILDING_FISHING_WHARF},
-    {20, 240, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM, TR_CONFIG_BUILDING_CHICKPEAS_FARM},
-    {20, 264, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_LETTUCE_FARM, TR_CONFIG_BUILDING_LETTUCE_FARM},
-    {20, 288, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM, TR_CONFIG_BUILDING_POMEGRANATES_FARM},
-    {20, 312, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
+    {20, 240, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_CHICKPEAS_FARM, TR_CONFIG_BUILDING_CHICKPEAS_FARM},
+    {20, 264, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_LETTUCE_FARM, TR_CONFIG_BUILDING_LETTUCE_FARM},
+    {20, 288, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_POMEGRANATES_FARM, TR_CONFIG_BUILDING_POMEGRANATES_FARM},
+    {20, 312, 20, 20, toggle_building, button_none, 0x2000 | BUILDING_FIGS_FARM, TR_CONFIG_BUILDING_FIGS_FARM},
     {20, 336, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_GRAIN_FARM, TR_CONFIG_BUILDING_GRAIN_FARM},
     {20, 360, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_CATTLE_RANCH, TR_CONFIG_BUILDING_CATTLE_RANCH},
     {20, 384, 20, 20, toggle_building, button_none, CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP, TR_CONFIG_BUILDING_BRICKS_WORKSHOP},
@@ -456,10 +456,6 @@ static void toggle_scenario_option(int key, int param2) {
 static void toggle_building(int id, int param2) {
     e_building_type type = (e_building_type)BUILDING_NONE;
     switch (id) {
-    case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: type = BUILDING_CHICKPEAS_FARM; break;
-    case CONFIG_GP_CH_BUILDING_LETTUCE_FARM: type = BUILDING_LETTUCE_FARM; break;
-    case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: type = BUILDING_POMEGRANATES_FARM; break;
-    case CONFIG_GP_CH_BUILDING_FIGS_FARM: type = BUILDING_FIGS_FARM; break;
     case CONFIG_GP_CH_BUILDING_GRAIN_FARM: type = BUILDING_GRAIN_FARM; break;
     case CONFIG_GP_CH_BUILDING_CATTLE_RANCH: type = BUILDING_CATTLE_RANCH; break;
     case CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP: type = BUILDING_BRICKS_WORKSHOP; break;
@@ -600,10 +596,6 @@ static bool is_config_option_enabled(int option) {
     case CONFIG_GP_CH_RESOURCE_MEAT: return g_city.can_produce_resource(RESOURCE_MEAT);
     case CONFIG_GP_CH_RESOURCE_BRICKS: return g_city.can_produce_resource(RESOURCE_BRICKS);
 
-    case CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM: return building_menu_is_building_enabled(BUILDING_POMEGRANATES_FARM);
-    case CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM: return building_menu_is_building_enabled(BUILDING_CHICKPEAS_FARM);
-    case CONFIG_GP_CH_BUILDING_LETTUCE_FARM: return building_menu_is_building_enabled(BUILDING_LETTUCE_FARM);
-    case CONFIG_GP_CH_BUILDING_FIGS_FARM: return building_menu_is_building_enabled(BUILDING_FIGS_FARM);
     case CONFIG_GP_CH_BUILDING_GRAIN_FARM: return building_menu_is_building_enabled(BUILDING_GRAIN_FARM);
     case CONFIG_GP_CH_BUILDING_CATTLE_RANCH: return building_menu_is_building_enabled(BUILDING_CATTLE_RANCH);
     case CONFIG_GP_CH_BUILDING_BRICKS_WORKSHOP: return building_menu_is_building_enabled(BUILDING_BRICKS_WORKSHOP);
