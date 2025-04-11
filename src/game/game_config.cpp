@@ -92,6 +92,7 @@ namespace game_features {
     game_feature gameplay_building_road_closest{ "gameplay_building_road_closest", true };
     game_feature gameplay_floodplain_random_grow{ "gameplay_floodplain_random_grow", true };
     game_feature gameui_hide_new_game_top_menu{ "gameui_hide_new_game_top_menu", true };
+    game_feature gameplay_save_year_kingdome_rating{ "gameplay_save_year_kingdome_rating", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -234,7 +235,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_114", true},
     {"reserved_115", true},
     {"reserved_116", true},
-    {"city_save_year_kingdome_rating", false},
+    {"reserved_117", false},
     {"reserved_118", true },
 };
 

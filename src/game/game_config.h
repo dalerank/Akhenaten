@@ -86,6 +86,7 @@ namespace game_features {
     extern game_feature gameplay_building_road_closest;
     extern game_feature gameplay_floodplain_random_grow;
     extern game_feature gameui_hide_new_game_top_menu;
+    extern game_feature gameplay_save_year_kingdome_rating;
 
     custom_span<game_feature*> features();
 }
@@ -217,7 +218,7 @@ enum e_config_key {
     CONFIG_RESERVED_115,
 
     CONFIG_RESERVED_116,
-    CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING,
+    CONFIG_RESERVED_117,
 
     CONFIG_RESERVED_119,
 
