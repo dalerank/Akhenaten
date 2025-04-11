@@ -93,7 +93,6 @@ window_config_ext_data_t g_window_config_ext_data;
 
 static void toggle_switch(int id, int param2);
 static void toggle_god_disabled(int id, int param2);
-static void toggle_city_option(int id, int param2);
 static void button_language_select(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
@@ -185,13 +184,13 @@ static generic_button checkbox_buttons[] = {
     {20, 168, 20, 20, toggle_switch_t, button_none, 0x1000 | 60, TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE},
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1000 | 61, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
     {20, 218, 20, 20, toggle_switch_t, button_none, 0x1000 | 62, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
-    {20, 240, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
+    {20, 240, 20, 20, toggle_scenario_option, button_none, 1, TR_CONFIG_CITY_FLOTSAM_ENABLED},
     {20, 264, 20, 20, toggle_switch, button_none, 0, 0},
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
     {20, 360, 20, 20, toggle_switch, button_none, CONFIG_GP_CHANGE_SAVE_YEAR_KINGDOME_RATING, TR_CONFIG_SAVE_YEAR_KINGDOME_RATING},
-    {20, 384, 20, 20, toggle_city_option, button_none, CONFIG_GP_CH_FLOTSAM_ENABLED, TR_CONFIG_CITY_FLOTSAM_ENABLED},
+    {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
 
     //
     {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
@@ -454,12 +453,6 @@ static void toggle_scenario_option(int key, int param2) {
     data.scenario_values[key].new_value = !data.config_values[key].new_value;
 }
 
-static void toggle_city_option(int key, int param2) {
-    switch (key) {
-    case CONFIG_GP_CH_FLOTSAM_ENABLED: g_scenario.env.flotsam_enabled = !g_scenario.env.flotsam_enabled; break;
-    }
-}
-
 static void toggle_building(int id, int param2) {
     e_building_type type = (e_building_type)BUILDING_NONE;
     switch (id) {
@@ -541,6 +534,9 @@ static void init(void (*close_callback)()) {
     data.scenario_values[0].get_value = [] () -> int { return g_scenario.env.has_animals; };
     data.scenario_values[0].change_action = [] (int key) -> int { return g_scenario.env.has_animals = g_window_config_ext_data.scenario_values[0].new_value; };
 
+    data.scenario_values[1].get_value = [] () -> int { return g_scenario.env.flotsam_enabled; };
+    data.scenario_values[1].change_action = [] (int key) -> int { return g_scenario.env.flotsam_enabled = g_window_config_ext_data.scenario_values[1].new_value; };
+
     for (int i = 0; i < 5; i++) {
         data.god_values[i].original_value = g_city.religion.is_god_known((e_god)i);
         data.god_values[i].new_value = g_city.religion.is_god_known((e_god)i);
@@ -599,7 +595,6 @@ static void init(void (*close_callback)()) {
 static bool is_config_option_enabled(int option) {
     auto& data = g_window_config_ext_data;
     switch (option) {
-    case CONFIG_GP_CH_FLOTSAM_ENABLED: return g_scenario.env.flotsam_enabled;
     case CONFIG_GP_CH_RESOURCE_FIGS: return g_city.can_produce_resource(RESOURCE_FIGS);
     case CONFIG_GP_CH_RESOURCE_GRAIN: return g_city.can_produce_resource(RESOURCE_GRAIN);
     case CONFIG_GP_CH_RESOURCE_MEAT: return g_city.can_produce_resource(RESOURCE_MEAT);

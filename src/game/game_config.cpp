@@ -83,6 +83,7 @@ namespace game_features {
     game_feature gameplay_change_well_radius_depends_moisture{ "gameplay_change_well_radius_depends_moisture", true };
     game_feature gameplay_change_enter_point_on_nearest_tile{ "gameplay_change_enter_point_on_nearest_tile", true };
     game_feature gameplay_fishing_wharf_spawn_boats{ "gameplay_fishing_wharf_spawn_boats", true };
+    game_feature gameplay_city_flotsam_enabled{ "gameplay_city_flotsam_enabled", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -191,7 +192,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_80", true},
     {"reserved_81", true},
     {"reserved_82", false},
-    {"city_flotsam_enabled", false},
+    {"reserved_83", false},
     {"chickpeas_farm_enabled", true},
     {"lettuce_farm_enabled", true},
     {"pomegranates_farm_enabled", true},

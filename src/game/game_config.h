@@ -77,6 +77,7 @@ namespace game_features {
     extern game_feature gameplay_change_well_radius_depends_moisture;
     extern game_feature gameplay_change_enter_point_on_nearest_tile;
     extern game_feature gameplay_fishing_wharf_spawn_boats;
+    extern game_feature gameplay_city_flotsam_enabled;
 
     custom_span<game_feature*> features();
 }
@@ -172,7 +173,7 @@ enum e_config_key {
     CONFIG_RESERVED_80,
     CONFIG_RESERVED_81,
     CONFIG_RESERVED_82,
-    CONFIG_GP_CH_FLOTSAM_ENABLED,
+    CONFIG_RESERVED_83,
     CONFIG_GP_CH_BUILDING_CHICKPEAS_FARM,
     CONFIG_GP_CH_BUILDING_LETTUCE_FARM,
     CONFIG_GP_CH_BUILDING_POMEGRANATES_FARM,
