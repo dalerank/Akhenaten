@@ -186,9 +186,9 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_77", true},
     {"reserved_78", true},
 
-    {"city_building_shipyard", true},
-    {"city_building_fishing_wharf", true},
-    {"city_produce_fish", true},
+    {"reserved_79", true},
+    {"reserved_80", true},
+    {"reserved_81", true},
     {"fishing_wharf_spawn_boats", false},
     {"city_flotsam_enabled", false},
     {"chickpeas_farm_enabled", true},
