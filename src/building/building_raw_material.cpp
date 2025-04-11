@@ -63,7 +63,7 @@ int building_mine_gold::get_produce_uptick_per_day() const {
 bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
     case e_building_flag::Ore:
-        return !g_ankh_config.get(CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS) && needs.ore;
+        return !game_features::gameplay_copper_mine_can_build_near_mountains && needs.ore;
     }
 
     return building_industry::static_params::planer_is_need_flag(flag);

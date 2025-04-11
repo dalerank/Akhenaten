@@ -78,6 +78,7 @@ namespace game_features {
     extern game_feature gameplay_change_enter_point_on_nearest_tile;
     extern game_feature gameplay_fishing_wharf_spawn_boats;
     extern game_feature gameplay_city_flotsam_enabled;
+    extern game_feature gameplay_copper_mine_can_build_near_mountains;
 
     custom_span<game_feature*> features();
 }
@@ -195,7 +196,7 @@ enum e_config_key {
     CONFIG_RESERVED_101,
     CONFIG_RESERVED_102,
     CONFIG_RESERVED_103,
-    CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS,
+    CONFIG_RESERVED_104,
     CONFIG_GP_CH_BUILDING_RECRUTER,
     CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS,
     CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER,

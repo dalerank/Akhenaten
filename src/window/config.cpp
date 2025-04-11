@@ -185,7 +185,7 @@ static generic_button checkbox_buttons[] = {
     {20, 192, 20, 20, toggle_switch_t, button_none, 0x1000 | 61, TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE},
     {20, 218, 20, 20, toggle_switch_t, button_none, 0x1000 | 62, TR_CONFIG_FISHING_WHARF_SPAWN_BOATS},
     {20, 240, 20, 20, toggle_scenario_option, button_none, 1, TR_CONFIG_CITY_FLOTSAM_ENABLED},
-    {20, 264, 20, 20, toggle_switch, button_none, 0, 0},
+    {20, 264, 20, 20, toggle_switch, button_none, 0x1000 | 63, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
     {20, 288, 20, 20, toggle_switch, button_none, CONFIG_UI_HIDE_NEW_GAME_TOP_MENU, TR_CONFIG_HIDE_NEW_GAME_TOP_MENU},
     {20, 312, 20, 20, toggle_switch, button_none, CONFIG_UI_DRAW_CLOUD_SHADOWS, TR_CONFIG_DRAW_CLOUD_SHADOWS},
     {20, 336, 20, 20, toggle_switch, button_none, CONFIG_UI_EMPIRE_CITY_OLD_NAMES, TR_CONFIG_EMPIRE_CITY_OLD_NAMES},
@@ -193,7 +193,7 @@ static generic_button checkbox_buttons[] = {
     {20, 384, 20, 20, toggle_switch, button_none, CONFIG_UI_HIGHLIGHT_TOP_MENU_HOVER, TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER},
 
     //
-    {20, 72, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_COPPER_NEAR_MOUNTAINS, TR_CONFIG_COPPER_NEAR_MOUNTAINS},
+    {20, 72, 20, 20, toggle_switch, button_none, 0, 0},
     {20, 96, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_RECRUITER_NOT_NEED_FORTS, TR_CONFIG_RECRUITER_NOT_NEED_FORTS},
     {20, 120, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_BUILDING_CLOSEST_ROAD, TR_CONFIG_BUILDING_CLOSEST_ROAD},
     {20, 144, 20, 20, toggle_switch, button_none, CONFIG_GP_CH_FLOODPLAIN_RANDOM_GROW, TR_CONFIG_FLOODPLAIN_RANDOM_GROW},

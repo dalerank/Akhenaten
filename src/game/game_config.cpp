@@ -84,6 +84,7 @@ namespace game_features {
     game_feature gameplay_change_enter_point_on_nearest_tile{ "gameplay_change_enter_point_on_nearest_tile", true };
     game_feature gameplay_fishing_wharf_spawn_boats{ "gameplay_fishing_wharf_spawn_boats", true };
     game_feature gameplay_city_flotsam_enabled{ "gameplay_city_flotsam_enabled", true };
+    game_feature gameplay_copper_mine_can_build_near_mountains{ "gameplay_copper_mine_can_build_near_mountains", true };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -213,7 +214,7 @@ enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
     {"reserved_101", true},
     {"reserved_102", true},
     {"reserved_103", true},
-    {"copper_mine_can_build_near_mountains", false},
+    {"reserved_104", false},
     {"city_building_recruter", false},
     {"recruiter_not_need_forts", false},
     {"ui_highlight_top_menu_hover", true},
