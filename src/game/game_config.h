@@ -91,140 +91,6 @@ namespace game_features {
     custom_span<game_feature*> features();
 }
 
-enum e_config_key {
-    CONFIG_RESERVED_0 = 0,
-    CONFIG_RESERVED_1,
-    CONFIG_RESERVED_2,
-    CONFIG_RESERVED_3,
-    CONFIG_RESERVED_4,
-    CONFIG_RESERVED_5,
-    CONFIG_RESERVED_6,
-    CONFIG_RESERVED_7,
-    CONFIG_RESERVED_8,
-    CONFIG_RESERVED_9,
-    CONFIG_RESERVED_10,
-    CONFIG_RESERVED_11,
-    CONFIG_RESERVED_12,
-    CONFIG_RESERVED_13,
-    CONFIG_RESERVED_14,
-    CONFIG_RESERVED_15,
-    CONFIG_RESERVED_16,
-    CONFIG_RESERVED_17,
-    CONFIG_RESERVED_18,
-    CONFIG_RESERVED_19,
-    CONFIG_RESERVED_20,
-    CONFIG_RESERVED_21,
-    CONFIG_RESERVED_22,
-    CONFIG_RESERVED_23,
-    CONFIG_RESERVED_24,
-    CONFIG_RESERVED_25,
-    CONFIG_RESERVED_26,
-    CONFIG_RESERVED_27,
-    CONFIG_RESERVED_28,
-    CONFIG_RESERVED_29,
-    CONFIG_RESERVED_30,
-    CONFIG_RESERVED_31,
-    CONFIG_RESERVED_32,
-    CONFIG_RESERVED_33,
-    CONFIG_RESERVED_34,
-    CONFIG_RESERVED_35,
-    CONFIG_RESERVED_36,
-
-    ///
-
-    CONFIG_RESERVED_37,
-    CONFIG_RESERVED_38,
-    CONFIG_RESERVED_39,
-    CONFIG_RESERVED_40,
-    CONFIG_RESERVED_41,
-    CONFIG_RESERVED_42,
-    CONFIG_RESERVED_43,
-    CONFIG_RESERVED_44,
-    CONFIG_RESERVED_45,
-    CONFIG_RESERVED_46,
-    CONFIG_RESERVED_47,
-    CONFIG_RESERVED_48,
-    CONFIG_RESERVED_49,
-    CONFIG_RESERVED_50,
-    CONFIG_RESERVED_51,
-    CONFIG_RESERVED_52,
-    CONFIG_RESERVED_53,
-    CONFIG_RESERVED_54,
-    CONFIG_RESERVED_55,
-    CONFIG_RESERVED_56,
-    CONFIG_RESERVED_57,
-    CONFIG_RESERVED_58,
-    CONFIG_RESERVED_59,
-    CONFIG_RESERVED_60,
-    CONFIG_RESERVED_61,
-
-    CONFIG_RESERVED_62,
-    CONFIG_RESERVED_63,
-    CONFIG_RESERVED_64,
-    CONFIG_RESERVED_65,
-    CONFIG_RESERVED_66,
-    ///
-    CONFIG_RESERVED_67,
-    CONFIG_RESERVED_68,
-    CONFIG_RESERVED_69,
-    CONFIG_RESERVED_70,
-    CONFIG_RESERVED_71,
-    CONFIG_RESERVED_72,
-    CONFIG_RESERVED_73,
-
-    CONFIG_RESERVED_74,
-    CONFIG_RESERVED_75,
-    CONFIG_RESERVED_76,
-    CONFIG_RESERVED_77,
-    CONFIG_RESERVED_78,
-    
-    CONFIG_RESERVED_79,
-    CONFIG_RESERVED_80,
-    CONFIG_RESERVED_81,
-    CONFIG_RESERVED_82,
-    CONFIG_RESERVED_83,
-    CONFIG_RESERVED_84,
-    CONFIG_RESERVED_85,
-    CONFIG_RESERVED_86,
-    CONFIG_RESERVED_87,
-    CONFIG_RESERVED_88,
-    CONFIG_RESERVED_89,
-    CONFIG_RESERVED_90,
-    CONFIG_RESERVED_91,
-    CONFIG_RESERVED_92,
-    CONFIG_RESERVED_93,
-    CONFIG_RESERVED_94,
-    CONFIG_RESERVED_95,
-
-    CONFIG_RESERVED_96,
-    CONFIG_RESERVED_97,
-    CONFIG_RESERVED_98,
-    CONFIG_RESERVED_99,
-    CONFIG_RESERVED_100,
-    CONFIG_RESERVED_101,
-    CONFIG_RESERVED_102,
-    CONFIG_RESERVED_103,
-    CONFIG_RESERVED_104,
-    CONFIG_RESERVED_105,
-    CONFIG_RESERVED_106,
-    CONFIG_RESERVED_107,
-    CONFIG_RESERVED_108,
-    CONFIG_RESERVED_109,
-    CONFIG_RESERVED_110,
-    CONFIG_RESERVED_111,
-    CONFIG_RESERVED_112,
-    CONFIG_RESERVED_113,
-    CONFIG_RESERVED_114,
-    CONFIG_RESERVED_115,
-
-    CONFIG_RESERVED_116,
-    CONFIG_RESERVED_117,
-
-    CONFIG_RESERVED_119,
-
-    CONFIG_MAX_ENTRIES
-};
-
 enum e_config_str {
     CONFIG_STRING_UI_LANGUAGE_DIR,
     CONFIG_STRING_LAST_SAVE,
@@ -236,11 +102,7 @@ enum e_config_str {
 
 struct ankh_config_t {
     settings_vars_t settings;
-    std::array<bool, CONFIG_MAX_ENTRIES> opts;
     std::array<xstring, CONFIG_STRING_MAX_ENTRIES> string_values;
-
-    int get(e_config_key key);
-    void set(e_config_key key, int value);
 
     xstring get(e_config_str key);
     void set(e_config_str key, const xstring value);
@@ -255,15 +117,8 @@ struct ankh_config_t {
 extern ankh_config_t g_ankh_config;
 
 /**
- * Set a default config value
- * @param key Integer key
- * @return Default config value
- */
-bool config_get_default_value(e_config_key key);
-
-/**
  * Get a string default config value
  * @param key String key
  * @return Default config value, is always non-NULL but may be an empty string
  */
-const char* config_get_default_string_value(e_config_key key);
+const char* config_get_default_string_value(int key);

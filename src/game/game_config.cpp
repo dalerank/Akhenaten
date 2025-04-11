@@ -14,12 +14,6 @@ void config_load_game_settings() {
     g_ankh_config.load();
 }
 
-// Keep this in the same order as the ints in config.h
-struct enhanced_option_t {
-    const char* name;
-    const bool enabled;
-};
-
 namespace game_features {
     svector<game_feature*, 64> _features;
 
@@ -112,132 +106,6 @@ void game_features::game_feature::set(bool value) {
     g_ankh_config.settings.set_bool(name, value);
 }
 
-enhanced_option_t ini_keys_defaults[CONFIG_MAX_ENTRIES] = {
-    {"reserved_0", false},
-    {"reserved_1", true},
-    {"reserved_2", true},
-    {"reserved_3", true},
-    {"reserved_4", false},
-    {"reserved_5", true},
-    {"reserved_6", false},
-    {"reserved_7", true},
-    {"reserved_8", true},
-    {"reserved_9", true},
-    {"reserved_10", true},
-    {"reserved_11", false},
-    {"reserved_12", true},
-    {"reserved_13", false},
-    {"reserved_14", false},
-    {"reserved_15", false},
-    {"reserved_16", false},
-    {"reserved_17", false},
-    {"reserved_18", false},
-    {"reserved_19", false},
-    {"reserved_20", false},
-    {"reserved_21", false},
-    {"reserved_22", false},
-    {"reserved_23", false},
-    {"reserved_24", true},
-    {"reserved_25", false},
-    {"reserved_26", false},
-    {"reserved_27", false},
-    {"reserved_28", false},
-    {"reserved_29", false},
-    {"reserved_30", false},
-    {"reserved_31", false},
-    {"reserved_32", false},
-    {"reserved_33", false},
-    {"reserved_34", false},
-    {"reserved_35", false},
-    {"reserved_36", false},
-    ///
-    {"reserved_37", true},
-    {"reserved_38", true},
-    {"reserved_39", true},
-    {"reserved_40", true},
-    {"reserved_41", false},
-    {"reserved_42", false},
-    {"reserved_43", false},
-    {"reserved_44", false},
-    {"reserved_45", true},
-    {"reserved_46", false},
-    {"reserved_47", true},
-    {"reserved_48", true},
-    {"reserved_49", true},
-    {"reserved_50", true},
-    {"reserved_51", true},
-    {"reserved_52", true},
-    {"reserved_53", true},
-    {"reserved_54", true},
-    {"reserved_55", false},
-    {"reserved_56", true},
-    {"reserved_57", true},
-    {"reserved_58", true},
-    {"reserved_59", true},
-    {"reserved_60", true},
-    {"reserved_61", true},
-    ///
-    {"reserved_62", false},
-    {"reserved_63", false},
-    {"reserved_64", false},
-    {"reserved_65", false},
-    {"reserved_66", false},
-    ///
-    {"reserved_67", true},
-    {"reserved_68", true},
-    {"reserved_69", true},
-    {"reserved_70", true},
-    {"reserved_71", true},
-    {"reserved_72", true},
-    {"reserved_73", true},
-
-    {"reserved_74", true},
-    {"reserved_75", true},
-    {"reserved_76", true},
-    {"reserved_77", true},
-    {"reserved_78", true},
-
-    {"reserved_79", true},
-    {"reserved_80", true},
-    {"reserved_81", true},
-    {"reserved_82", false},
-    {"reserved_83", false},
-    {"reserved_84", true},
-    {"reserved_85", true},
-    {"reserved_86", true},
-    {"reserved_87", true},
-    {"reserved_88", true},
-    {"reserved_89", true},
-    {"reserved_90", true},
-    {"reserved_91", true},
-    {"reserved_92", true},
-    {"reserved_93", true},
-    {"reserved_94", true},
-    {"reserved_95", true},
-    {"reserved_96", true},
-    {"reserved_97", true},
-    {"reserved_98", true},
-    {"reserved_99", true},
-    {"reserved_100", true},
-    {"reserved_101", true},
-    {"reserved_102", true},
-    {"reserved_103", true},
-    {"reserved_104", false},
-    {"reserved_105", false},
-    {"reserved_106", false},
-    {"reserved_107", true},
-    {"reserved_108", true},
-    {"reserved_109", false},
-    {"reserved_110", true},
-    {"reserved_111", true},
-    {"reserved_112", true},
-    {"reserved_113", true},
-    {"reserved_114", true},
-    {"reserved_115", true},
-    {"reserved_116", true},
-    {"reserved_117", false},
-    {"reserved_118", true },
-};
 
 static pcstr ini_string_keys[] = {
   "ui_language_dir",
@@ -247,13 +115,6 @@ static pcstr ini_string_keys[] = {
 };
 
 pcstr default_string_values[CONFIG_STRING_MAX_ENTRIES];
-
-int ankh_config_t::get(e_config_key key) {
-    return opts[key];
-}
-void ankh_config_t::set(e_config_key key, int value) {
-    opts[key] = value;
-}
 
 xstring ankh_config_t::get(e_config_str key) {
     return string_values[key];
@@ -267,18 +128,11 @@ void ankh_config_t::set(e_config_str key, pcstr value) {
     string_values[key] = value;
 }
 
-bool config_get_default_value(e_config_key key) {
-    return ini_keys_defaults[key].enabled;
-}
-
-const char* config_get_default_string_value(e_config_key key) {
+const char* config_get_default_string_value(int key) {
     return default_string_values[key];
 }
 
 void ankh_config_t::reset_defaults() {
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        g_ankh_config.opts[i] = ini_keys_defaults[i].enabled;
-    }
     string_values[CONFIG_STRING_UI_LANGUAGE_DIR] = default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR];
 }
 
@@ -302,14 +156,6 @@ void ankh_config_t::load() {
         char* equals = strchr(line, '=');
         if (equals) {
             *equals = 0;
-            for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
-                if (strcmp(ini_keys_defaults[i].name, line) == 0) {
-                    int value = atoi(&equals[1]);
-                    logs::info("Config key %s [%d]", ini_keys_defaults[i].name, value);
-                    g_ankh_config.opts[i] = value;
-                    break;
-                }
-            }
             for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
                 if (strcmp(ini_string_keys[i], line) == 0) {
                     pcstr value = &equals[1];
@@ -333,10 +179,6 @@ void ankh_config_t::save() {
         logs::error("Unable to write configuration file %s", INI_FILENAME);
         return;
     }
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
-        fprintf(fp, "%s=%d\n", ini_keys_defaults[i].name, g_ankh_config.opts[i]);
-    }
-
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
         fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i].c_str());
     }

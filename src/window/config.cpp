@@ -57,12 +57,14 @@ struct window_config_ext_data_t {
     int starting_option;
     void (*close_callback)(void);
 
-    struct {
+    struct config_value_t {
         int original_value;
         int new_value;
         std::function<int(int key)> change_action;
         std::function<int()> get_value;
-    } config_values[CONFIG_MAX_ENTRIES];
+    };
+    
+    svector<config_value_t, 128> config_values;
 
     struct {
         int original_value;
@@ -100,8 +102,6 @@ static void button_close(int save, int param2);
 static void button_page(int param1, int param2);
 static void toggle_building(int id, int param2);
 static void toggle_resource(int id, int param2);
-// static int config_change_zoom(int key);
-static int config_change_basic(int key);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 static void toggle_scenario_option(int key, int param2);
@@ -293,7 +293,7 @@ static void set_language(int index) {
 
 static void cancel_values(void) {
     auto& data = g_window_config_ext_data;
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
+    for (int i = 0; i < data.config_values.size(); i++) {
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
 
@@ -302,7 +302,7 @@ static void cancel_values(void) {
     }
 }
 
-static int config_changed(e_config_key key) {
+static int config_changed(int key) {
     auto& data = g_window_config_ext_data;
     return data.config_values[key].original_value != data.config_values[key].new_value;
 }
@@ -310,13 +310,6 @@ static int config_changed(e_config_key key) {
 static int config_string_changed(int key) {
     auto& data = g_window_config_ext_data;
     return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
-}
-
-static int config_change_basic(int key) {
-    auto& data = g_window_config_ext_data;
-    g_ankh_config.set((e_config_key)key, data.config_values[key].new_value);
-    data.config_values[key].original_value = data.config_values[key].new_value;
-    return 1;
 }
 
 template<typename T>
@@ -351,8 +344,8 @@ static int config_change_string_language(int key) {
 
 static bool apply_changed_configs() {
     auto& data = g_window_config_ext_data;
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        if (config_changed((e_config_key)i)) {
+    for (int i = 0; i < data.config_values.size(); ++i) {
+        if (config_changed(i)) {
             if (!data.config_values[i].change_action)
                 logs::error("Change action is not available for index: %d", i);
             else if (!data.config_values[i].change_action(i))
@@ -386,11 +379,11 @@ static void button_language_select(int param1, int param2) {
 static void button_reset_defaults(int param1, int param2) {
     auto& data = g_window_config_ext_data;
 
-    for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
-        data.config_values[i].new_value = config_get_default_value((e_config_key)i);
+    for (int i = 0; i < data.config_values.size(); ++i) {
+        data.config_values[i].new_value = game_features::features()[i]->to_bool();
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        data.config_string_values[i].new_value = config_get_default_string_value((e_config_key)i);
+        data.config_string_values[i].new_value = config_get_default_string_value(i);
     }
     set_language(0);
 }
@@ -489,6 +482,10 @@ static void init(void (*close_callback)()) {
     auto features = game_features::features();
     for (int i = 0; i < features.size(); ++i) {
         data.config_values[i].get_value = [i] () -> int { return game_features::features()[i]->to_bool(); };
+        const bool value = data.config_values[i].get_value();
+        data.config_values[i].original_value = value;
+        data.config_values[i].new_value = value;
+        data.config_values[i].change_action = [i] (int key) -> int { return config_change_basic_t(key, *game_features::features()[i]); };
     }
 
     data.scenario_values[0].get_value = [] () -> int { return g_scenario.env.has_animals; };
@@ -507,20 +504,6 @@ static void init(void (*close_callback)()) {
             g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
             return 1;
         };
-    }
-
-    for (int i = 0; i < std::size(checkbox_buttons); i++) {
-        int parameter1 = checkbox_buttons[i].parameter1;
-        int index = parameter1 < 0xff ? parameter1 : i;
-        e_config_key key = (e_config_key)parameter1;
-        const bool value = (parameter1 < 0xff) ? g_ankh_config.get(key) : data.config_values[index].get_value();
-        data.config_values[index].original_value = value;
-        data.config_values[index].new_value = value;
-        data.config_values[index].change_action = config_change_basic;
-    }
-
-    for (int i = 0; i < features.size(); ++i) {
-        data.config_values[i].change_action = [i] (int key) -> int { return config_change_basic_t(key, *game_features::features()[i]); };
     }
 
     for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
