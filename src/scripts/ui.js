@@ -49,7 +49,7 @@ function close_button(config) { var i = image_button({margin:{right:-40, bottom:
 function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
 function advisor_button(config) { var i = image_button({pack:PACK_GENERAL, id:106, offset:12, tooltip:[68, 41]}); return __extend(i, config) }
 
-uioptions = {
+var uioptions = {
 	resource_icons  : {pack:PACK_EXPANSION, id:3},
 	advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0},
 }
@@ -802,7 +802,7 @@ window info_window_house = {
 	}
 }
 
-hold_festival_window = {
+window hold_festival_window = {
 	pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
 	ui : { 
 		background_image: background({pack:PACK_UNLOADED, id:11}),
@@ -1794,6 +1794,67 @@ window window_warnings = {
 	timeout_ms : 15000,
 	top_offset : 30,
 	message_interval : 25,
+}
+
+window window_features = {
+	pos: [(sw(0) - px(40))/2, (sh(0) - px(30))/2],
+	ui : {
+		background_image: background({pack:PACK_UNLOADED, id:8}),
+		background    : outer_panel({size: [40, 30] }),
+
+		title 				: text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT}),
+
+		btn_prev 			: button({pos:[20, 16], size:[25, 25], text:"<"}),
+ 		btn_next      : button({pos:[50, 16], size:[25, 25], text:">"}),
+
+		bfeature0     : button({pos:[32, 72], size:[23, 23]}),
+		tfeature0     : text({pos: [64, 72], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature1     : button({pos:[32, 96], size:[23, 23]}),
+		tfeature1     : text({pos: [64, 96], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature2     : button({pos:[32, 120], size:[23, 23]}),
+		tfeature2     : text({pos: [64, 120], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		
+		bfeature3     : button({pos:[32, 144], size:[23, 23]}),
+		tfeature3     : text({pos: [64, 144], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		
+		bfeature4     : button({pos:[32, 168], size:[23, 23]}),
+		tfeature4     : text({pos: [64, 168], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		
+		bfeature5     : button({pos:[32, 192], size:[23, 23]}),
+		tfeature5     : text({pos: [64, 192], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+		
+		bfeature6     : button({pos:[32, 216], size:[23, 23]}),
+		tfeature6     : text({pos: [64, 216], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature7     : button({pos:[32, 240], size:[23, 23]}),
+		tfeature7     : text({pos: [64, 240], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature8     : button({pos:[32, 264], size:[23, 23]}),
+		tfeature8     : text({pos: [64, 264], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature9     : button({pos:[32, 288], size:[23, 23]}),
+		tfeature9     : text({pos: [64, 288], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature10     : button({pos:[32, 312], size:[23, 23]}),
+		tfeature10     : text({pos: [64, 312], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature11     : button({pos:[32, 336], size:[23, 23]}),
+		tfeature11     : text({pos: [64, 336], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature12     : button({pos:[32, 360], size:[23, 23]}),
+		tfeature12     : text({pos: [64, 360], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		bfeature13     : button({pos:[32, 384], size:[23, 23]}),
+		tfeature13     : text({pos: [64, 384], font : FONT_NORMAL_BLACK_ON_LIGHT }),
+
+		btn_defaults   : button({pos:[250, 436], size:[150, 30], text:"${loc.TR_BUTTON_RESET_DEFAULTS}"}),
+		btn_hotkeys    : button({pos:[250, 436], size:[150, 30], text:"${loc.TR_BUTTON_CONFIGURE_HOTKEYS}"}),
+
+		btn_close 		 : button({pos:[410, 436], size:[100, 30], text:"${loc.TR_BUTTON_CANCEL}"}),
+    btn_save 			 : button({pos:[520, 436], size:[100, 30], text:"${loc.TR_BUTTON_OK}"})
+	}
 }
 
 window info_window_education = {

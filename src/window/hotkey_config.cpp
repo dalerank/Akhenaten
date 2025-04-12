@@ -191,7 +191,7 @@ static void draw_background(int) {
     auto& data = g_hotkeys_window_data;
     graphics_clear_screen();
 
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_CONFIG_BACKGROUND));
+    ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 8));
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{0, 0}, 40, 30);
 

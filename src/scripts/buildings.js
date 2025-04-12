@@ -1848,7 +1848,7 @@ building building_water_lift = {
 }
 
 
-building_firehouse = {
+building building_firehouse = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:78 },

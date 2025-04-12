@@ -1,6 +1,6 @@
 log_info("akhenaten: figures info started")
 
-figure_fireman = {
+figure figure_fireman = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false },

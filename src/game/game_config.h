@@ -9,9 +9,10 @@
 namespace game_features {
     struct game_feature {
         const xstring name;
+        const xstring text;
         const setting_variant defaultv;
 
-        game_feature(const xstring &n, setting_variant def);
+        game_feature(const xstring &n, const xstring &t, setting_variant def);
         bool to_bool() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);

@@ -27,7 +27,7 @@
 #include "window/advisors.h"
 #include "window/window_city.h"
 #include "window/difficulty_options.h"
-#include "window/config.h"
+#include "window/window_features.h"
 #include "window/game_menu.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
@@ -594,7 +594,7 @@ void top_menu_widget::options_handle(menu_item &item) {
         window_hotkey_config_show([] {});
     }
     else if (item.id == "enhanced_options") { 
-        window_config_show([] {});
+        ui::window_features::show([] {});
     }
 }
 

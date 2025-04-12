@@ -56,7 +56,7 @@ static void arrow_button_gods(int param1, int param2) {
 }
 
 void window_difficulty_options_show(void (*close_callback)(void)) {
-    window_type window = {
+    static window_type window = {
         WINDOW_DIFFICULTY_OPTIONS,
         window_draw_underlying_window,
         draw_foreground,

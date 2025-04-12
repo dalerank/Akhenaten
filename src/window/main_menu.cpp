@@ -16,7 +16,7 @@
 #include "window/popup_dialog.h"
 #include "window/player_selection.h"
 #include "window/file_dialog.h"
-#include "window/config.h"
+#include "window/window_features.h"
 #include "window/window_city.h"
 #include "sound/sound.h"
 #include "io/gamestate/boilerplate.h"
@@ -129,9 +129,7 @@ void main_menu_screen::init() {
     });
 
     ui["show_config"].onclick([] {
-        window_config_show([] {
-
-        });
+        ui::window_features::show([] {});
     });
 
     ui["quit_game"].onclick([] {

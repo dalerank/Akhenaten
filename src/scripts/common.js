@@ -9,7 +9,6 @@ var _format = function() {
 };
 
 // buildings
-var building_firehouse = {}
 var building_police_station = {}
 var building_courthouse = {}
 var building_temple_osiris = {}
@@ -86,7 +85,6 @@ var empire_window = {}
 var empire_images_remap = []
 
 // ui
-var uioptions = {}
 var advisor_chief_window = {}
 var advisor_ratings_window = {}
 var advisor_labors_window = {}
@@ -95,7 +93,6 @@ var advisor_imperial_window = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var roadblock_info_window = {}
-var hold_festival_window = {}
 var empty_info_window = {}
 var advisors_window = {}
 var advisor_military_window = {}
@@ -111,7 +108,6 @@ var sidebar_window_extra = {}
 var dock_info_window = {}
 
 //figures
-var figure_fireman = {}
 var figure_hippo = {}
 var figure_crocodile = {}
 var figure_immigrant = {}
