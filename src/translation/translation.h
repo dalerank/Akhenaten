@@ -1,11 +1,10 @@
-#ifndef TRANSLATION_TRANSLATION_H
-#define TRANSLATION_TRANSLATION_H
+#pragma once
 
 #include "core/locale.h"
 
 #include <stdint.h>
 
-enum {
+enum e_translate_key {
     TR_NO_PATCH_TITLE,
     TR_NO_PATCH_MESSAGE,
     TR_MISSING_FONTS_TITLE,
@@ -184,6 +183,7 @@ enum {
     TR_ADVISOR_BIRTHS_LAST_YEAR,
     TR_ADVISOR_DEATHS_LAST_YEAR,
     TR_ADVISOR_TOTAL_POPULATION,
+
     TRANSLATION_MAX_KEY
 };
 
@@ -217,5 +217,3 @@ void translation_spanish(const translation_string** strings, int* num_strings);
 void translation_simplified_chinese(const translation_string** strings, int* num_strings);
 
 void translation_traditional_chinese(const translation_string** strings, int* num_strings);
-
-#endif // TRANSLATION_TRANSLATION_H

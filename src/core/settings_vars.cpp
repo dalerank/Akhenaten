@@ -157,7 +157,6 @@ public:
 
 		_initialized = true;
 		_variantsDirty = false;
-		_variants.clear();
 
 		g_config_arch.r_objects("game_settings", [&] (pcstr key, archive arch) {
 			auto value = arch.r_variant("value");

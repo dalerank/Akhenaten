@@ -32,19 +32,6 @@
 #include <string.h>
 #include <numeric>
 
-#define FIRST_BUTTON_Y 72
-#define BUTTON_SPACING 24
-#define TEXT_Y_OFFSET 4
-
-#define CHECKBOX_CHECK_SIZE 20
-#define CHECKBOX_HEIGHT 20
-#define CHECKBOX_WIDTH 560
-
-#define NUM_VISIBLE_ITEMS 15
-
-#define ITEM_Y_OFFSET 60
-#define ITEM_HEIGHT 24
-
 ui::window_features g_features_window;
 
 static void button_language_select(int param1, int param2);
@@ -231,11 +218,11 @@ void ui::window_features::init(std::function<void()> cb) {
     int page_index = 0;
 
     pages.emplace_back();
-    pages.back().title = "${loc.TR_CONFIG_HEADER_GAMEPLAY_CHANGES}";
+    pages.back().title = "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES";
     for (int i = 0; i < gfeatures.size(); ++i) {
         if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
             pages.emplace_back();
-            pages.back().title = "${loc.TR_CONFIG_HEADER_GAMEPLAY_CHANGES}";
+            pages.back().title = "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES";
         }
 
         auto &pageref = pages.back();
@@ -270,7 +257,7 @@ void ui::window_features::init(std::function<void()> cb) {
 
     {
         auto &pageref = pages.emplace_back();
-        pageref.title = "${loc.TR_CONFIG_HEADER_GODS_CHANGES}";
+        pageref.title = "#TR_CONFIG_HEADER_GODS_CHANGES";
         for (int i = 0; i < 5; i++) {
             auto &alias = pageref.features.emplace_back();
 
@@ -293,7 +280,7 @@ void ui::window_features::init(std::function<void()> cb) {
         for (int i = 1; i < resource_list::all.size(); ++i) {
             if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
                 pages.emplace_back();
-                pages.back().title = "${loc.TR_CONFIG_HEADER_RESOURCES}";
+                pages.back().title = "#TR_CONFIG_HEADER_RESOURCES";
             }
 
             auto &pageref = pages.back();

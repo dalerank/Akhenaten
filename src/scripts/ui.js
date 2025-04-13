@@ -1849,11 +1849,11 @@ window window_features = {
 		bfeature13     : button({pos:[32, 384], size:[23, 23]}),
 		tfeature13     : text({pos: [64, 384], font : FONT_NORMAL_BLACK_ON_LIGHT }),
 
-		btn_defaults   : button({pos:[250, 436], size:[150, 30], text:"${loc.TR_BUTTON_RESET_DEFAULTS}"}),
-		btn_hotkeys    : button({pos:[250, 436], size:[150, 30], text:"${loc.TR_BUTTON_CONFIGURE_HOTKEYS}"}),
+		btn_defaults   : button({pos:[250, 436], size:[150, 30], text:"#TR_BUTTON_RESET_DEFAULTS"}),
+		btn_hotkeys    : button({pos:[90, 436], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS"}),
 
-		btn_close 		 : button({pos:[410, 436], size:[100, 30], text:"${loc.TR_BUTTON_CANCEL}"}),
-    btn_save 			 : button({pos:[520, 436], size:[100, 30], text:"${loc.TR_BUTTON_OK}"})
+		btn_close 		 : button({pos:[410, 436], size:[100, 30], text:"#TR_BUTTON_CANCEL"}),
+    btn_save 			 : button({pos:[520, 436], size:[100, 30], text:"#TR_BUTTON_OK"})
 	}
 }
 

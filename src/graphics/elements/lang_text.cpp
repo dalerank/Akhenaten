@@ -5,6 +5,7 @@
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
+#include "translation/translation.h"
 
 #include <map>
 
@@ -28,16 +29,30 @@ textid loc_text_from_key(pcstr key) {
     return (it != g_localization.end()) ? it->second : textid{0, 0};
 }
 
+const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
 pcstr lang_text_from_key(pcstr key) {
     if (!key) {
         return "";
     }
 
     auto it = g_localization.find(key);
-    pcstr str = (it != g_localization.end())
-                    ? (pcstr)lang_get_string(it->second.group, it->second.id)
-                    : key;
-    return str;
+    if (it != g_localization.end()) {
+        pcstr str = (pcstr)lang_get_string(it->second.group, it->second.id);
+        return str;
+    }
+
+    if (strncmp(key, "#TR_", 4) == 0) {
+        const auto &values = e_translation_tokens.values;
+        auto rIt = std::find_if(values.begin(), values.end(), [key] (auto &p) { 
+            return p.name && strcmp(p.name, key+1) == 0; // remove the # prefix
+        });
+        if (rIt != values.end()) {
+            pcstr str = (pcstr)translation_for(rIt->id);
+            return str;
+        }
+    }
+
+    return key;
 }
 
 int lang_text_get_width(int group, int number, e_font font) {
