@@ -30,7 +30,7 @@ namespace ui {
             std::function<int()> change_action;
             std::function<int()> get_value;
 
-            bool is_changed() const { return new_value == original_value; }
+            bool is_changed() const { return new_value != original_value; }
         };
 
         struct features_page_t {
@@ -64,7 +64,7 @@ namespace ui {
         bool apply_changed_configs();
         void cancel_values();
         void toggle_resource(e_resource resource);
-        int config_change_basic(feature_t &alias, game_features::game_feature &feature);
+        int config_change_basic(feature_t &alias, const xstring feature);
         void init(std::function<void()> callback);
 
         static void show(std::function<void()> callback);

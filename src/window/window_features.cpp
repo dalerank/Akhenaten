@@ -66,8 +66,12 @@ static int config_string_changed(int key) {
     return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
 }
 
-int ui::window_features::config_change_basic(feature_t &alias, game_features::game_feature &feature) {
-    g_ankh_config.settings.set_bool(feature.name, alias.new_value);
+int ui::window_features::config_change_basic(feature_t &alias, const xstring feature) {
+    if (!alias.is_changed()) {
+        return 1;
+    }
+
+    g_ankh_config.settings.set_bool(feature, alias.new_value);
     alias.original_value = alias.new_value;
     return 1;
 }
@@ -233,18 +237,20 @@ void ui::window_features::init(std::function<void()> cb) {
         const bool value = alias.get_value();
         alias.original_value = value;
         alias.new_value = value;
-        alias.change_action = [&] () -> int { return config_change_basic(alias, *feature); };
+        alias.change_action = [&,name = feature->name] () -> int { return config_change_basic(alias, name); };
         alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
         alias.text = game_features::features()[i]->text;
     }
 
     {
         auto &pageref = pages.emplace_back();
+        pages.back().title = "#TR_CONFIG_HEADER_SCENARIO_CHANGES";
         {
             auto &alias = pageref.features.emplace_back();
             alias.get_value = [] () -> int { return g_scenario.env.has_animals; };
             alias.change_action = [&] () -> int { return g_scenario.env.has_animals = alias.new_value; };
             alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+            alias.text = "#TR_CONFIG_ANIMALS";
         }
 
         {
@@ -252,6 +258,7 @@ void ui::window_features::init(std::function<void()> cb) {
             alias.get_value = [] () -> int { return g_scenario.env.flotsam_enabled; };
             alias.change_action = [&] () -> int { return g_scenario.env.flotsam_enabled = alias.new_value; };
             alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+            alias.text = "#TR_CONFIG_FLOTSAM";
         }
     }
 
@@ -265,6 +272,9 @@ void ui::window_features::init(std::function<void()> cb) {
             alias.original_value = g_city.religion.is_god_known((e_god)i);
             alias.new_value = g_city.religion.is_god_known((e_god)i);
             alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+
+            bstring64 text; text.printf("God disabled %s", e_god_tokens.name((e_god)i));
+            alias.text = text;
             alias.change_action = [alias, god = e_god(i)] () -> int {
                 bool known = !alias.new_value;
                 building_menu_update_gods_available(god, known);
@@ -276,6 +286,7 @@ void ui::window_features::init(std::function<void()> cb) {
 
     {
         auto &pageref = pages.emplace_back();
+        pages.back().title = "#TR_CONFIG_HEADER_RESOURCES";
         const resource_list city_resources = g_city.resource.available();
         for (int i = 1; i < resource_list::all.size(); ++i) {
             if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
