@@ -97,12 +97,13 @@ namespace game_features {
     extern game_feature gameui_hide_new_game_top_menu;
     extern game_feature gameplay_save_year_kingdome_rating;
     extern game_feature gameopt_last_player;
+    extern game_feature gameopt_language_dir;
 
     custom_span<game_feature*> features();
 }
 
 enum e_config_str {
-    CONFIG_STRING_UI_LANGUAGE_DIR,
+    RESERVED_0,
     CONFIG_STRING_LAST_SAVE,
     RESERVED_2,
     CONFIG_STRING_LAST_VERSION,

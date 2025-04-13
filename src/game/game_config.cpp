@@ -87,7 +87,8 @@ namespace game_features {
     game_feature gameplay_floodplain_random_grow{ "gameplay_floodplain_random_grow", "#TR_CONFIG_FLOODPLAIN_RANDOM_GROW", true };
     game_feature gameui_hide_new_game_top_menu{ "gameui_hide_new_game_top_menu", "#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", true };
     game_feature gameplay_save_year_kingdome_rating{ "gameplay_save_year_kingdome_rating", "#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", true };
-    game_feature gameopt_last_player{ "gameopt_last_playerg", "#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", "" };
+    game_feature gameopt_last_player{ "gameopt_last_playerg", "", "" };
+    game_feature gameopt_language_dir{ "gameopt_language_dir", "", "" };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -120,7 +121,7 @@ setting_variant_type game_features::game_feature::type() const {
 }
 
 static pcstr ini_string_keys[] = {
-  "ui_language_dir",
+  "reserved_0",
   "last_save_filename",
   "reserved_2",
   "0",
@@ -145,7 +146,6 @@ const char* config_get_default_string_value(int key) {
 }
 
 void ankh_config_t::reset_defaults() {
-    string_values[CONFIG_STRING_UI_LANGUAGE_DIR] = default_string_values[CONFIG_STRING_UI_LANGUAGE_DIR];
 }
 
 void ankh_config_t::load() {

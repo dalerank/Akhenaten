@@ -44,7 +44,7 @@ static generic_button language_button = {120, 50, 200, 24, button_language_selec
 static void set_language(int index) {
     auto& data = g_features_window;
     const char* dir = (index == 0 ? "" : data.language_options_utf8[index]);
-    data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value = dir;
+    game_features::gameopt_language_dir = dir;
 
     data.selected_language_option = index;
 }
@@ -86,15 +86,15 @@ static int config_change_string_basic(int key) {
 
 static int config_change_string_language(int key) {
     auto& data = g_features_window;
-    g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
+    //game_features::gameopt_language_dir = , data.config_string_values[key].new_value);
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
         window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
-        g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
+        //g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
         game_reload_language();
         return 0;
     }
-    data.config_string_values[key].original_value = data.config_string_values[key].new_value;
+    //data.config_string_values[key].original_value = data.config_string_values[key].new_value;
     return 1;
 }
 
@@ -340,7 +340,7 @@ void ui::window_features::init(std::function<void()> cb) {
             bstring256 buffer;
             encoding_from_utf8(subdirs->files[i], (uint8_t*)buffer.data(), ui::window_features::CONFIG_STRING_VALUE_MAX);
             language_options.push_back( buffer.c_str() );
-            if (config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value == subdirs->files[i]) {
+            if (game_features::gameopt_language_dir.to_string() == subdirs->files[i]) {
                 selected_language_option = i;
             }
         }
