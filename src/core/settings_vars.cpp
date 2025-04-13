@@ -85,7 +85,7 @@ public:
 		return _variants.find(name) != _variants.end();
 	}
 
-	std::optional<setting_variant> get_variant(xstring &name) {
+	std::optional<setting_variant> get_variant(const xstring &name) {
 		READER_LOCK(readLock);
 		//if (!IsInitialized(readLock)) {
 		//	return {};
@@ -269,6 +269,11 @@ bool settings_vars_t::is_defined(const xstring &name) {
 
 void settings_vars_t::init() {
 	impl().initialize();
+}
+
+setting_variant_type settings_vars_t::type(const xstring &name) {
+	auto var = impl().get_variant(name);
+	return (var.has_value() ? (setting_variant_type)var.value().index() : setting_none);
 }
 
 void settings_vars_t::sync(pcstr filename) {

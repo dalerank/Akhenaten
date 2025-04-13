@@ -106,6 +106,10 @@ void game_features::game_feature::set(bool value) {
     g_ankh_config.settings.set_bool(name, value);
 }
 
+setting_variant_type game_features::game_feature::type() const {
+    return g_ankh_config.settings.type(name);
+}
+
 
 static pcstr ini_string_keys[] = {
   "ui_language_dir",

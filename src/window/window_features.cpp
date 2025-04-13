@@ -224,14 +224,18 @@ void ui::window_features::init(std::function<void()> cb) {
     pages.emplace_back();
     pages.back().title = "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES";
     for (int i = 0; i < gfeatures.size(); ++i) {
-        if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
+        auto *feature = game_features::features()[i];
+        if (feature->type() != setting_bool) {
+           continue;
+        }
+
+        if (page_index != 0 && (page_index % FEATURES_PER_PAGE) == 0) {
             pages.emplace_back();
             pages.back().title = "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES";
         }
 
         auto &pageref = pages.back();
         auto &alias = pageref.features.emplace_back();
-        auto *feature = game_features::features()[i];
         
         alias.get_value = [feature] () -> int { return feature->to_bool(); };
         const bool value = alias.get_value();
@@ -239,7 +243,9 @@ void ui::window_features::init(std::function<void()> cb) {
         alias.new_value = value;
         alias.change_action = [&,name = feature->name] () -> int { return config_change_basic(alias, name); };
         alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
-        alias.text = game_features::features()[i]->text;
+        alias.text = feature->text;
+
+        page_index++;
     }
 
     {

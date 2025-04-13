@@ -16,6 +16,7 @@ namespace game_features {
         bool to_bool() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
+        setting_variant_type type() const;
     };
 
     extern game_feature gameplay_fix_immigration;

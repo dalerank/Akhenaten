@@ -9,6 +9,14 @@
 
 class settings_vars_impl_t;
 
+enum setting_variant_type {
+    setting_bool,
+    setting_float,
+    setting_vec2i,
+    setting_string,
+	setting_none,
+};;
+
 using setting_variant = std::variant<bool, float, vec2i, xstring>;
 class settings_vars_t final {
 	char _data[160];
@@ -22,6 +30,8 @@ public:
 	bool is_defined(const xstring &name);
 
 	void init();
+
+	setting_variant_type type(const xstring &name);
 
 	// call if you need certainly immediatly sync, better to make task in thread
 	void sync(pcstr filename);
