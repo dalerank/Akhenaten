@@ -255,3 +255,57 @@ bool archive::r_desc(pcstr name, image_desc &desc) {
     js_pop(vm, 1);
     return ok;
 }
+
+void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
+    auto J = (js_State *)state;
+    getglobal(name);
+    if (js_isundefined(J, -1)) {
+        pop(1);
+        js_newobject(J);
+    }
+
+    js_pushstring(J, value.c_str());
+    js_setproperty(J, -2, prop);
+    js_setglobal(J, name);
+}
+
+void g_archive::w_property(pcstr name, pcstr prop, bool value) {
+    auto J = (js_State *)state;
+    getglobal(name);
+    if (js_isundefined(J, -1)) {
+        pop(1);
+        js_newobject(J);
+    }
+
+    js_pushboolean(J, value);
+    js_setproperty(J, -2, prop);
+    js_setglobal(J, name);
+}
+
+void g_archive::w_property(pcstr name, pcstr prop, float value) {
+    auto J = (js_State *)state;
+    getglobal(name);
+    if (js_isundefined(J, -1)) {
+        pop(1);
+        js_newobject(J);
+    }
+
+    js_pushnumber(J, value);
+    js_setproperty(J, -2, prop);
+    js_setglobal(J, name);
+}
+
+void g_archive::w_property(pcstr name, pcstr prop, vec2i value) {
+    auto J = (js_State *)state;
+    getglobal(name);
+    if (js_isundefined(J, -1)) {
+        pop(1);
+        js_newobject(J);
+    }
+
+    js_newobject(J);
+    js_pushnumber(J, value.x); js_setproperty(J, -2, "x");
+    js_pushnumber(J, value.y); js_setproperty(J, -2, "y");
+    js_setproperty(J, -2, prop);
+    js_setglobal(J, name);
+}

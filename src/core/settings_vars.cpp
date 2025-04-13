@@ -152,6 +152,26 @@ public:
         }
 	}
 
+	void sync_with_js(const xstring &name, const setting_variant& value) {
+		switch (value.index()) {
+		case setting_bool:
+			g_config_arch.w_property("game_settings", name.c_str(), std::get<bool>(value));
+			break;
+
+		case setting_float:
+			g_config_arch.w_property("game_settings", name.c_str(), std::get<float>(value));
+			break;
+
+		case setting_vec2i:
+            g_config_arch.w_property("game_settings", name.c_str(), std::get<vec2i>(value));
+            break;
+
+		case setting_string:
+            g_config_arch.w_property("game_settings", name.c_str(), std::get<xstring>(value));
+            break;
+		}
+	}
+
 	void initialize() {
 		WRITER_LOCK(writeLock);
 

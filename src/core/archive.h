@@ -280,6 +280,11 @@ struct g_archive : public archive {
         pop(1);
     }
 
+    void w_property(pcstr name, pcstr prop, const xstring& value);
+    void w_property(pcstr name, pcstr prop, bool value);
+    void w_property(pcstr name, pcstr prop, float value);
+    void w_property(pcstr name, pcstr prop, vec2i value);
+
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         if (!state) {

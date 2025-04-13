@@ -113,7 +113,7 @@ void main_menu_screen::init() {
 
     ui["continue_game"].onclick([] {
         const xstring last_save = g_ankh_config.get(CONFIG_STRING_LAST_SAVE);
-        const xstring last_player = g_ankh_config.get(CONFIG_STRING_LAST_PLAYER);
+        const xstring last_player = game_features::gameopt_last_player.to_string();
         g_settings.set_player_name((const uint8_t *)last_player.c_str());
         if (GamestateIO::load_savegame(last_save.c_str())) {
             window_city_show();

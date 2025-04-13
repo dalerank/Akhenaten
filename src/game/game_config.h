@@ -14,9 +14,16 @@ namespace game_features {
 
         game_feature(const xstring &n, const xstring &t, setting_variant def);
         bool to_bool() const;
+        const xstring& to_string() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
+        void set(const xstring &value);
         setting_variant_type type() const;
+
+        inline game_feature& operator=(const char* value) {
+            set(value);
+            return *this;
+        }
     };
 
     extern game_feature gameplay_fix_immigration;
@@ -89,6 +96,7 @@ namespace game_features {
     extern game_feature gameplay_floodplain_random_grow;
     extern game_feature gameui_hide_new_game_top_menu;
     extern game_feature gameplay_save_year_kingdome_rating;
+    extern game_feature gameopt_last_player;
 
     custom_span<game_feature*> features();
 }
@@ -96,7 +104,7 @@ namespace game_features {
 enum e_config_str {
     CONFIG_STRING_UI_LANGUAGE_DIR,
     CONFIG_STRING_LAST_SAVE,
-    CONFIG_STRING_LAST_PLAYER,
+    RESERVED_2,
     CONFIG_STRING_LAST_VERSION,
 
     CONFIG_STRING_MAX_ENTRIES
