@@ -14,13 +14,14 @@ namespace game_features {
 
         game_feature(const xstring &n, const xstring &t, setting_variant def);
         bool to_bool() const;
-        const xstring& to_string() const;
+        xstring to_string() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
         void set(const xstring &value);
+        void set(pcstr value);
         setting_variant_type type() const;
 
-        inline game_feature& operator=(const char* value) {
+        inline game_feature& operator=(pcstr value) {
             set(value);
             return *this;
         }
@@ -98,13 +99,14 @@ namespace game_features {
     extern game_feature gameplay_save_year_kingdome_rating;
     extern game_feature gameopt_last_player;
     extern game_feature gameopt_language_dir;
+    extern game_feature gameopt_last_save_filename;
 
     custom_span<game_feature*> features();
 }
 
 enum e_config_str {
     RESERVED_0,
-    CONFIG_STRING_LAST_SAVE,
+    reserved_1,
     RESERVED_2,
     CONFIG_STRING_LAST_VERSION,
 

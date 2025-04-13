@@ -84,7 +84,7 @@ float get_farm_produce_uptick_per_day(building &b) {
 //     }
 // }
 
-void building_industry_update_production(void) {
+void building_industry_update_production() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
     buildings_valid_do([] (building &b) {
         if (!b.output_resource_first_id) {
@@ -99,7 +99,12 @@ void building_industry_update_production(void) {
             return;
         }
 
-        auto& industryd = b.dcast_industry()->runtime_data();
+        auto industry = b.dcast_industry();
+        if (!industry) {
+            return;
+        }
+
+        auto& industryd = industry->runtime_data();
         industryd.has_raw_materials = false;
         if (b.num_workers <= 0) {
             return;
@@ -112,7 +117,7 @@ void building_industry_update_production(void) {
                 b.blessing_days_left--;
             }
 
-            int progress_per_day = b.dcast()->get_produce_uptick_per_day();
+            int progress_per_day = industry->get_produce_uptick_per_day();
             industryd.progress += progress_per_day;
 
             if (b.blessing_days_left) {
@@ -129,11 +134,9 @@ void building_industry_update_farms(void) {
     OZZY_PROFILER_SECTION("Game/Update/Farms");
 
     buildings_valid_farms_do([] (building &b) {
-        if (!b.output_resource_first_id) {
-            return;
-        }
-
         building_farm *farm = b.dcast_farm();
+        assert(b.output_resource_first_id != RESOURCE_NONE);
+
         if (!farm) {
             return;
         }

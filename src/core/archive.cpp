@@ -257,6 +257,10 @@ bool archive::r_desc(pcstr name, image_desc &desc) {
 }
 
 void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
+    if (!state) {
+        return;
+    }
+
     auto J = (js_State *)state;
     getglobal(name);
     if (js_isundefined(J, -1)) {
@@ -270,6 +274,10 @@ void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
 }
 
 void g_archive::w_property(pcstr name, pcstr prop, bool value) {
+    if (!state) {
+        return;
+    }
+
     auto J = (js_State *)state;
     getglobal(name);
     if (js_isundefined(J, -1)) {
@@ -283,6 +291,10 @@ void g_archive::w_property(pcstr name, pcstr prop, bool value) {
 }
 
 void g_archive::w_property(pcstr name, pcstr prop, float value) {
+    if (!state) {
+        return;
+    }
+
     auto J = (js_State *)state;
     getglobal(name);
     if (js_isundefined(J, -1)) {
@@ -296,6 +308,10 @@ void g_archive::w_property(pcstr name, pcstr prop, float value) {
 }
 
 void g_archive::w_property(pcstr name, pcstr prop, vec2i value) {
+    if (!state) {
+        return;
+    }
+
     auto J = (js_State *)state;
     getglobal(name);
     if (js_isundefined(J, -1)) {

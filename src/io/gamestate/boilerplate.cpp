@@ -87,12 +87,12 @@
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
-bstring256 fullpath_saves(const char* filename) {
+vfs::path fullpath_saves(const char* filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
-        return bstring256(filename);
+        return vfs::path(filename);
     }
 
-    return bstring256(vfs::SAVE_FOLDER, "/", (const char*)g_settings.player_name, "/", filename);
+    return vfs::path(vfs::SAVE_FOLDER, "/", (const char*)g_settings.player_name, "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -570,8 +570,9 @@ bool GamestateIO::write_mission(const int scenario_id) {
     // TODO?
     return false;
 }
+
 bool GamestateIO::write_savegame(pcstr filename_short) {
-    bstring256 full = fullpath_saves(filename_short);
+    vfs::path full = fullpath_saves(filename_short);
 
     // write file
     e_file_format format = get_format_from_file(filename_short);
@@ -579,7 +580,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
     bool save_ok = FILEIO.serialize(full, 0, format, latest_save_version, file_schema);
     if (save_ok) {
         //vfs::path fs_path = vfs::content_path(full);
-        g_ankh_config.set(CONFIG_STRING_LAST_SAVE, full.c_str());
+        game_features::gameopt_last_save_filename = full.c_str();
         game_features::gameopt_last_player = g_settings.player_name.c_str();
         g_ankh_config.save();
     }

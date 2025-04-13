@@ -106,7 +106,7 @@ bool ui::window_features::apply_changed_configs() {
             }
 
             if (!feature.change_action) {
-                logs::error("Change action is not available for index: %s", feature.text);
+                logs::error("Change action is not available for index: %s", feature.text.c_str());
                 continue;
             }
 

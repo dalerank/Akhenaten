@@ -87,8 +87,9 @@ namespace game_features {
     game_feature gameplay_floodplain_random_grow{ "gameplay_floodplain_random_grow", "#TR_CONFIG_FLOODPLAIN_RANDOM_GROW", true };
     game_feature gameui_hide_new_game_top_menu{ "gameui_hide_new_game_top_menu", "#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", true };
     game_feature gameplay_save_year_kingdome_rating{ "gameplay_save_year_kingdome_rating", "#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", true };
-    game_feature gameopt_last_player{ "gameopt_last_playerg", "", "" };
+    game_feature gameopt_last_player{ "gameopt_last_player", "", "" };
     game_feature gameopt_language_dir{ "gameopt_language_dir", "", "" };
+    game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
@@ -104,7 +105,7 @@ bool game_features::game_feature::to_bool() const {
     return g_ankh_config.settings.get_bool(name);
 }
 
-const xstring &game_features::game_feature::to_string() const {
+xstring game_features::game_feature::to_string() const {
     return g_ankh_config.settings.get_string(name);
 }
 
@@ -116,13 +117,17 @@ void game_features::game_feature::set(const xstring &value) {
     g_ankh_config.settings.set_string(name, value);
 }
 
+void game_features::game_feature::set(pcstr value) {
+    g_ankh_config.settings.set_string(name, value);
+}
+
 setting_variant_type game_features::game_feature::type() const {
     return g_ankh_config.settings.type(name);
 }
 
 static pcstr ini_string_keys[] = {
   "reserved_0",
-  "last_save_filename",
+  "reserved_1",
   "reserved_2",
   "0",
 };

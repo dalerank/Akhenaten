@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "core/bstring.h"
+#include "content/dir.h"
 
 // file versions found so far:
 //  144 (Bridges.map only)
@@ -17,7 +17,7 @@
 //  165 akhenaten: save house health option
 constexpr uint32_t latest_save_version = 166;
 
-bstring256 fullpath_saves(const char* filename);
+vfs::path fullpath_saves(const char* filename);
 void fullpath_maps(char* full, const char* filename);
 
 namespace GamestateIO {

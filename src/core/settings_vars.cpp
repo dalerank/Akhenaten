@@ -150,6 +150,7 @@ public:
 		if (_sync_task) {
             _sync_task(name);
         }
+		sync_with_js(name, _variants[name]);
 	}
 
 	void sync_with_js(const xstring &name, const setting_variant& value) {
