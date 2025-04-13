@@ -1804,8 +1804,8 @@ window window_features = {
 
 		title 				: text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT}),
 
-		btn_prev 			: button({pos:[20, 16], size:[25, 25], text:"<"}),
- 		btn_next      : button({pos:[50, 16], size:[25, 25], text:">"}),
+		btn_prev 			: button({pos:[20, 16], size:[25, 25], text:"<<"}),
+ 		btn_next      : button({pos:[50, 16], size:[25, 25], text:">>"}),
 
 		bfeature0     : button({pos:[32, 72], size:[23, 23]}),
 		tfeature0     : text({pos: [64, 72], font : FONT_NORMAL_BLACK_ON_LIGHT }),

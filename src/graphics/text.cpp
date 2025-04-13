@@ -267,7 +267,11 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
             int letter_id = font_letter_id(def, str, &num_bytes);
             int width;
 
-            if (*str == ' ' || *str == '_' || letter_id < 0) {
+            if (letter_id < 0) {
+                letter_id = font_letter_id(def, (uint8_t*)"?", &num_bytes);
+            }
+
+            if (*str == ' ' || *str == '_') {
                 width = (def->space_width * scale);
             } else {
                 const image_t* img = image_letter(letter_id);
