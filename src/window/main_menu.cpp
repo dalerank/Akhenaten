@@ -97,7 +97,7 @@ void main_menu_screen::init() {
             return;
         }
 
-        const xstring last_version_str = g_ankh_config.get(CONFIG_STRING_LAST_VERSION);
+        const xstring last_version_str = game_features::gameopt_last_game_version.to_string();
         const int last_version = std::atoi(last_version_str.c_str());
 
         if (last_version == current_commit) {
@@ -108,7 +108,7 @@ void main_menu_screen::init() {
         ui["new_version"].enabled = true;
         ui["update_game"].enabled = true;
         ui["new_version"] = bstring32(current_commit);
-        g_ankh_config.set(CONFIG_STRING_LAST_VERSION, bstring32(current_commit));
+        game_features::gameopt_last_game_version.set(current_commit);
     });
 
     ui["continue_game"].onclick([] {

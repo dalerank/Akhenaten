@@ -100,38 +100,11 @@ namespace game_features {
     extern game_feature gameopt_last_player;
     extern game_feature gameopt_language_dir;
     extern game_feature gameopt_last_save_filename;
+    extern game_feature gameopt_last_game_version;
 
     custom_span<game_feature*> features();
-}
-
-enum e_config_str {
-    RESERVED_0,
-    reserved_1,
-    RESERVED_2,
-    CONFIG_STRING_LAST_VERSION,
-
-    CONFIG_STRING_MAX_ENTRIES
-};
-
-struct ankh_config_t {
-    settings_vars_t settings;
-    std::array<xstring, CONFIG_STRING_MAX_ENTRIES> string_values;
-
-    xstring get(e_config_str key);
-    void set(e_config_str key, const xstring value);
-    void set(e_config_str key, pcstr value);
-
-    void reset_defaults();
+    game_feature* find(const xstring& name);
 
     void load();
     void save();
-};
-
-extern ankh_config_t g_ankh_config;
-
-/**
- * Get a string default config value
- * @param key String key
- * @return Default config value, is always non-NULL but may be an empty string
- */
-const char* config_get_default_string_value(int key);
+}

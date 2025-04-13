@@ -582,7 +582,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
         //vfs::path fs_path = vfs::content_path(full);
         game_features::gameopt_last_save_filename = full.c_str();
         game_features::gameopt_last_player = g_settings.player_name.c_str();
-        g_ankh_config.save();
+        game_features::save();
     }
 
     return save_ok;

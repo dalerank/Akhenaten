@@ -5,17 +5,16 @@
 #include "core/svector.h"
 #include "js/js_game.h"
 
-static const char* INI_FILENAME = "akhenaten.ini";
 static const char* CONF_FILENAME = "akhenaten.conf";
-ankh_config_t g_ankh_config;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings);
 void config_load_game_settings() {
-    g_ankh_config.load();
+    game_features::load();
 }
 
 namespace game_features {
     svector<game_feature*, 128> _features;
+    settings_vars_t _settings;
 
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", "#TR_CONFIG_FIX_IMMIGRATION_BUG", false };
     game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", "#TR_CONFIG_FIX_100_YEAR_GHOSTS", true };
@@ -90,117 +89,56 @@ namespace game_features {
     game_feature gameopt_last_player{ "gameopt_last_player", "", "" };
     game_feature gameopt_language_dir{ "gameopt_language_dir", "", "" };
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
+    game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
 
     custom_span<game_feature*> features() {
         return { _features.data(), _features.size() };
+    }
+
+    game_feature *find(const xstring &name) {
+        for (auto &feature : _features) {
+            if (feature->name == name) {
+                return feature;
+            }
+        }
+        return nullptr;
     }
 }
 
 game_features::game_feature::game_feature(const xstring &n, const xstring &t, setting_variant def) : name(n), text(t), defaultv(def) {
     _features.push_back(this);
-    g_ankh_config.settings.set(name, defaultv);
+    _settings.set(name, defaultv);
 }
 
 bool game_features::game_feature::to_bool() const {
-    return g_ankh_config.settings.get_bool(name);
+    return _settings.get_bool(name);
 }
 
 xstring game_features::game_feature::to_string() const {
-    return g_ankh_config.settings.get_string(name);
+    return _settings.get_string(name);
 }
 
 void game_features::game_feature::set(bool value) {
-    g_ankh_config.settings.set_bool(name, value);
+    _settings.set_bool(name, value);
 }
 
 void game_features::game_feature::set(const xstring &value) {
-    g_ankh_config.settings.set_string(name, value);
+    _settings.set_string(name, value);
 }
 
 void game_features::game_feature::set(pcstr value) {
-    g_ankh_config.settings.set_string(name, value);
+    _settings.set_string(name, value);
 }
 
 setting_variant_type game_features::game_feature::type() const {
-    return g_ankh_config.settings.type(name);
+    return _settings.type(name);
 }
 
-static pcstr ini_string_keys[] = {
-  "reserved_0",
-  "reserved_1",
-  "reserved_2",
-  "0",
-};
-
-pcstr default_string_values[CONFIG_STRING_MAX_ENTRIES];
-
-xstring ankh_config_t::get(e_config_str key) {
-    return string_values[key];
+void game_features::load() {
+    _settings.init();
 }
 
-void ankh_config_t::set(e_config_str key, const xstring value) {
-    string_values[key] = value;
-}
-
-void ankh_config_t::set(e_config_str key, pcstr value) {
-    string_values[key] = value;
-}
-
-const char* config_get_default_string_value(int key) {
-    return default_string_values[key];
-}
-
-void ankh_config_t::reset_defaults() {
-}
-
-void ankh_config_t::load() {
-    reset_defaults();
-    vfs::path fs_file = vfs::content_path(INI_FILENAME);
-
-    vfs::reader fp = vfs::file_open(fs_file);
-    if (!fp) {
-        return;
-    }
-
-    bstring128 line_buffer;
-    char* line;
-    while ((line = fp->readline(line_buffer, line_buffer.capacity))) {
-        // Remove newline from string
-        size_t size = strlen(line);
-        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
-            line[--size] = 0;
-        }
-        char* equals = strchr(line, '=');
-        if (equals) {
-            *equals = 0;
-            for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-                if (strcmp(ini_string_keys[i], line) == 0) {
-                    pcstr value = &equals[1];
-                    logs::info("Config key %s", ini_string_keys[i]);
-                    logs::info("Config value %s", value);
-                    string_values[i] = value;
-                    break;
-                }
-            }
-        }
-    }
-
-    settings.init();
-}
-
-void ankh_config_t::save() {
-    vfs::path fs_file = vfs::content_path(INI_FILENAME);
-
-    FILE* fp = vfs::file_open_os(fs_file, "wt");
-    if (!fp) {
-        logs::error("Unable to write configuration file %s", INI_FILENAME);
-        return;
-    }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        fprintf(fp, "%s=%s\n", ini_string_keys[i], string_values[i].c_str());
-    }
-    vfs::file_close(fp);
+void game_features::save() {
     vfs::sync_em_fs();
-
-    settings.sync(CONF_FILENAME);
+    _settings.sync(CONF_FILENAME);
 }

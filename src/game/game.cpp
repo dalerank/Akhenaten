@@ -368,7 +368,7 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     update_encoding();
     g_settings.load(); // c3.inf
-    g_ankh_config.load();   // akhenaten.ini
+    game_features::load();   // akhenaten.ini
     hotkey_config_load();
     scenario_settings_init();
     random_init();
@@ -503,6 +503,6 @@ void game_t::handle_input_frame() {
 void game_t::exit() {
     video_shutdown();
     g_settings.save();
-    g_ankh_config.save();
+    game_features::save();
     g_sound.shutdown();
 }

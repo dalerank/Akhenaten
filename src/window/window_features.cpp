@@ -55,10 +55,6 @@ void ui::window_features::cancel_values() {
             feature.new_value = feature.original_value;
         }
     }
-
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        config_string_values[i].new_value = config_string_values[i].original_value; // memcpy required to fix warning on Switch build
-    }
 }
 
 static int config_string_changed(int key) {
@@ -66,19 +62,22 @@ static int config_string_changed(int key) {
     return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
 }
 
-int ui::window_features::config_change_basic(feature_t &alias, const xstring feature) {
+int ui::window_features::config_change_basic(feature_t &alias, const xstring fname) {
     if (!alias.is_changed()) {
         return 1;
     }
 
-    g_ankh_config.settings.set_bool(feature, alias.new_value);
+    auto feature = game_features::find(fname);
+    assert(feature);
+    if (feature) {
+        feature->set(alias.new_value ? 1 : 0);
+    }
     alias.original_value = alias.new_value;
     return 1;
 }
 
 static int config_change_string_basic(int key) {
     auto& data = g_features_window;
-    g_ankh_config.set((e_config_str)key, data.config_string_values[key].new_value);
     data.config_string_values[key].original_value = data.config_string_values[key].new_value;
 
     return 1;
@@ -116,13 +115,6 @@ bool ui::window_features::apply_changed_configs() {
         }
     }
 
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        if (config_string_changed(i)) {
-            if (!config_string_values[i].change_action(i))
-                return false;
-        }
-    }
-
     return true;
 }
 
@@ -139,10 +131,6 @@ void ui::window_features::button_reset_defaults() {
         for (auto &feature: p.features) {
             feature.new_value = feature.original_value;
         }
-    }
-
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
-        config_string_values[i].new_value = config_get_default_string_value(i);
     }
 
     set_language(0);
@@ -316,12 +304,6 @@ void ui::window_features::init(std::function<void()> cb) {
             bstring64 text; text.printf("City allow %s", ui::resource_name(r.type));
             feature.text = text;
         }
-    }
-
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
-        const xstring value = g_ankh_config.get((e_config_str)i);
-        config_string_values[i].original_value = value;
-        config_string_values[i].new_value = value;
     }
 
     config_string_values[0].change_action = config_change_string_language;
