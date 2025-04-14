@@ -31,14 +31,23 @@ FILE * file_open_os(pcstr filename, pcstr mode) {
 }
 
 reader file_open(path path, pcstr mode) {
+    const bool is_text_file = !!strstr(mode, "t");
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
-            void *mem = malloc(data.second);
+            const int addb = is_text_file ? 1 : 0;
+            void *mem = malloc(data.second + is_text_file);
             memcpy(mem, data.first, data.second);
+            if (is_text_file) {
+                ((char *)mem)[data.second] = 0; // null-terminate the string
+            }
             return std::make_shared<data_reader>(path.c_str(), mem, data.second);
         }
-    } if (strstr(mode, "t")) { // text mode
+
+        return reader();
+    } 
+
+    if (is_text_file) { // text mode
         std::ifstream file(path.c_str());
         if (file.is_open()) {
             std::ostringstream buffer;
@@ -49,18 +58,21 @@ reader file_open(path path, pcstr mode) {
             ((char *)mem)[str.size()] = 0; // null-terminate the string
             return std::make_shared<data_reader>(path.c_str(), mem, str.size());
         }
-    } else {
-        FILE *f = file_open_os(path.c_str(), mode);
-        if (f) {
-            fseek(f, 0, SEEK_END);
-            uint32_t size = ftell(f);
-            fseek(f, 0, SEEK_SET);
-            void *mem = malloc(size);
-            fread(mem, 1, size, f);
-            fclose(f);
-            return std::make_shared<data_reader>(path.c_str(), mem, size);
-        }
+
+        return reader();
     }
+
+    FILE *f = file_open_os(path.c_str(), mode);
+    if (f) {
+        fseek(f, 0, SEEK_END);
+        uint32_t size = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        void *mem = malloc(size);
+        fread(mem, 1, size, f);
+        fclose(f);
+        return std::make_shared<data_reader>(path.c_str(), mem, size);
+    }
+
     return reader();
 }
 

@@ -71,6 +71,9 @@ int js_vm_load_file_and_exec(pcstr path) {
     } 
 
     vfs::reader reader = vfs::file_open(rpath, "rt");
+    if (!reader) {
+        reader = vfs::file_open(path, "rt");
+    }
 
     if (!reader) {
         logs::info("!!! Cant find script at %s", rpath.c_str());
@@ -286,7 +289,11 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
     }
 
     buffer = vfs::content_path(path);
-    return buffer;
+    if (std::filesystem::exists(buffer.c_str())) {
+        return buffer;
+    }
+
+    return path;
 }
 
 void js_vm_setup() {
