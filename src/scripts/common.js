@@ -85,7 +85,6 @@ var empire_window = {}
 var empire_images_remap = []
 
 // ui
-var advisor_chief_window = {}
 var advisor_ratings_window = {}
 var advisor_labors_window = {}
 var advisor_trade_window = {}
@@ -101,7 +100,6 @@ var advisor_health_window = {}
 var advisor_education_window = {}
 var advisor_entertainment_window = {}
 var advisor_financial_window = {}
-var display_options_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
 var sidebar_window_extra = {}

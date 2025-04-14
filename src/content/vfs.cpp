@@ -38,7 +38,7 @@ void log_io(pcstr fmt, Args ... args) {
 }
 
 reader file_open(path path, pcstr mode) {
-    log_io("[b file_open %s", path.c_str());
+    log_io("[begn] file_open %s", path.c_str());
     const bool is_text_file = !!strstr(mode, "t");
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
