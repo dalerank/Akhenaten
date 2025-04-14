@@ -26,17 +26,24 @@ EM_ASYNC_JS(void, __sync_em_fs, (), {
 
 namespace vfs{
 
+bool g_verbose_log = false;
+
 FILE * file_open_os(pcstr filename, pcstr mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
+template<typename ... Args>
+void log_io(pcstr fmt, Args ... args) {
+    logs::info(fmt, args...);
+}
+
 reader file_open(path path, pcstr mode) {
-    logs::info("[begn] file_open %s", path.c_str());
+    log_io("[b file_open %s", path.c_str());
     const bool is_text_file = !!strstr(mode, "t");
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
-            logs::info("[intr] loaded from %s", path.c_str());
+            log_io("[intr] loaded from %s", path.c_str());
             const int addb = is_text_file ? 1 : 0;
             void *mem = malloc(data.second + is_text_file);
             memcpy(mem, data.first, data.second);
@@ -52,7 +59,7 @@ reader file_open(path path, pcstr mode) {
     if (is_text_file) { // text mode
         std::ifstream file(path.c_str());
         if (file.is_open()) {
-            logs::info("[text] loaded from %s", path.c_str());
+            log_io("[text] loaded from %s", path.c_str());
             std::ostringstream buffer;
             buffer << file.rdbuf();      // read entire file into stream
             std::string str = buffer.str(); // str holds the content of the file
@@ -67,7 +74,7 @@ reader file_open(path path, pcstr mode) {
 
     FILE *f = file_open_os(path.c_str(), mode);
     if (f) {
-        logs::info("[binr] file_open %s", path.c_str());
+        log_io("[binr] file_open %s", path.c_str());
         fseek(f, 0, SEEK_END);
         uint32_t size = ftell(f);
         fseek(f, 0, SEEK_SET);
@@ -169,6 +176,7 @@ void sync_em_fs() {
 #if defined( __EMSCRIPTEN__ )
     __sync_em_fs();
     logs::info("em fs synced");
+    g_verbose_log = true;
 #endif
 }
 
