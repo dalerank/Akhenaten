@@ -31,10 +31,12 @@ FILE * file_open_os(pcstr filename, pcstr mode) {
 }
 
 reader file_open(path path, pcstr mode) {
+    logs::info("[begn] file_open %s", path.c_str());
     const bool is_text_file = !!strstr(mode, "t");
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
+            logs::info("[intr] loaded from %s", path.c_str());
             const int addb = is_text_file ? 1 : 0;
             void *mem = malloc(data.second + is_text_file);
             memcpy(mem, data.first, data.second);
@@ -50,6 +52,7 @@ reader file_open(path path, pcstr mode) {
     if (is_text_file) { // text mode
         std::ifstream file(path.c_str());
         if (file.is_open()) {
+            logs::info("[text] loaded from %s", path.c_str());
             std::ostringstream buffer;
             buffer << file.rdbuf();      // read entire file into stream
             std::string str = buffer.str(); // str holds the content of the file
@@ -64,6 +67,7 @@ reader file_open(path path, pcstr mode) {
 
     FILE *f = file_open_os(path.c_str(), mode);
     if (f) {
+        logs::info("[binr] file_open %s", path.c_str());
         fseek(f, 0, SEEK_END);
         uint32_t size = ftell(f);
         fseek(f, 0, SEEK_SET);
