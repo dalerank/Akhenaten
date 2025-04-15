@@ -34,6 +34,9 @@ FILE * file_open_os(pcstr filename, pcstr mode) {
 
 template<typename ... Args>
 void log_io(pcstr fmt, Args ... args) {
+    if (!g_verbose_log) {
+       return;
+    }
     logs::info(fmt, args...);
 }
 

@@ -180,7 +180,7 @@ public:
 		_variantsDirty = false;
 
 		g_config_arch.r_objects("game_settings", [&] (pcstr key, archive arch) {
-			auto value = arch.r_variant("value");
+			auto value = arch.r_variant(key);
 			switch (value.index()) {
 			case archive::e_variant_type::vt_none:
 				// logs::error("Unable to load settings %s", key);
@@ -218,6 +218,9 @@ public:
 				break;
 
 			case archive::e_variant_type::vt_object:
+				{
+					
+				}
 				break;
 			}
 		});		

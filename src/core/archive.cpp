@@ -115,7 +115,6 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
 
 archive::variant_t archive::r_variant(pcstr name) {
     auto vm = (js_State *)state;
-    js_getproperty(vm, -1, name);
 
     variant_t result;
     if (js_isundefined(vm, -1)) {
@@ -134,7 +133,7 @@ archive::variant_t archive::r_variant(pcstr name) {
     } else if (js_isarray(vm, -1)) {
         result = variant_t(variant_array_t{ name });
     }
-    js_pop(vm, 1);
+
     return result;
 }
 

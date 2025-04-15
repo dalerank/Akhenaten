@@ -177,9 +177,8 @@ struct archive {
 
             for (const auto &key : keys) {
                 getproperty(s_arch, -1, key.c_str());
-                if (isobject(s_arch, -1)) {
-                    read_func(key.c_str(), s_arch);
-                }
+                //const bool isobj = isobject(s_arch, -1);
+                read_func(key.c_str(), s_arch);
                 pop(s_arch, 1);
             }
         });
@@ -285,6 +284,10 @@ struct g_archive : public archive {
     void w_property(pcstr name, pcstr prop, float value);
     void w_property(pcstr name, pcstr prop, vec2i value);
 
+    bool p_isobject() {
+        return state ? isobject(-1) : false;
+    }
+
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         if (!state) {
@@ -305,9 +308,8 @@ struct g_archive : public archive {
 
             for (const auto &key : keys) {
                 getproperty(state, -1, key.c_str());
-                if (isobject(state, -1)) {
-                    read_func(key.c_str(), state);
-                }
+                //const bool isobj = isobject(state, -1);
+                read_func(key.c_str(), state);
                 pop(state, 1);
             }
         }
