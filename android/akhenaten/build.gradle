@@ -67,7 +67,7 @@ task getVersion {
 android {
     compileSdkVersion 33
     buildToolsVersion "34.0.0"
-    ndkVersion "25.2.9519653"
+    ndkVersion "27.2.12479018"
 
     defaultConfig {
         applicationId "com.github.dalerank.akhenaten"
