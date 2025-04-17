@@ -564,11 +564,13 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
     arch.r_section("margin", [this] (archive m) {
-        margin.bottom = m.r_int("bottom", recti::nomargin);
-        margin.left = m.r_int("left", recti::nomargin);
-        margin.right = m.r_int("right", recti::nomargin);
-        margin.top = m.r_int("top", recti::nomargin);
-        margin.centerx = m.r_int("centerx", recti::nomargin);
+        margin.bottom = m.r_int("bottom", margini::nomargin);
+        margin.left = m.r_int("left", margini::nomargin);
+        margin.right = m.r_int("right", margini::nomargin);
+        margin.top = m.r_int("top", margini::nomargin);
+        margin.centerx = m.r_int("centerx", margini::nomargin);
+        margin.centery = m.r_int("centery", margini::nomargin);
+        int i = 0;
     });
 
     load_elements(arch, "ui", this, items);
@@ -578,12 +580,13 @@ pcstr ui::element::text_from_key(pcstr key) {
     return lang_text_from_key(key);
 }
 
-void ui::element::update_pos(const recti &r) {
-    if (margin.left > recti::nomargin) { pos.x = r.left + margin.left; }
-    if (margin.bottom > recti::nomargin) { pos.y = r.bottom + margin.bottom; }
-    if (margin.right > recti::nomargin) { pos.x = r.right + margin.right; }
-    if (margin.top > recti::nomargin) { pos.y = r.top + margin.top; }
-    if (margin.centerx > recti::nomargin) { pos.x = (r.right - r.left) / 2 + margin.centerx; }
+void ui::element::update_pos(const margini &r) {
+    if (margin.left > margini::nomargin) { pos.x = r.left + margin.left; }
+    if (margin.bottom > margini::nomargin) { pos.y = r.bottom + margin.bottom; }
+    if (margin.right > margini::nomargin) { pos.x = r.right + margin.right; }
+    if (margin.top > margini::nomargin) { pos.y = r.top + margin.top; }
+    if (margin.centerx > margini::nomargin) { pos.x = (r.right - r.left) / 2 + margin.centerx; }
+    if (margin.centery > margini::nomargin) { pos.y = (r.top - r.bottom) / 2 + margin.centery; }
 }
 
 vec2i ui::element::screen_pos() const {
@@ -615,9 +618,9 @@ void ui::einner_panel::load(archive arch, element *parent, items &elems) {
 
 void ui::widget::draw(UiFlags flags) {
     vec2i bsize = ui["background"].pxsize();
-    recti rect{ 0, 0, bsize.x, bsize.y };
+    margini current_margin{ 0, 0, bsize.x, bsize.y };
     for (auto &e : elements) {
-        e->update_pos(rect);
+        e->update_pos(current_margin);
         if (e->enabled) {
             e->draw(flags);
         }

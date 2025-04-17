@@ -85,21 +85,13 @@ var empire_window = {}
 var empire_images_remap = []
 
 // ui
-var advisor_ratings_window = {}
 var advisor_labors_window = {}
-var advisor_trade_window = {}
-var advisor_imperial_window = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var roadblock_info_window = {}
 var empty_info_window = {}
 var advisors_window = {}
 var advisor_military_window = {}
-var advisor_population_window = {}
-var advisor_health_window = {}
-var advisor_education_window = {}
-var advisor_entertainment_window = {}
-var advisor_financial_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
 var sidebar_window_extra = {}

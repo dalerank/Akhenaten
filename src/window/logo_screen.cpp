@@ -16,8 +16,7 @@
 
 struct logo_screen : autoconfig_window_t<logo_screen> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual int draw_background(UiFlags flags) override { return 0; }
-
+    
     virtual void draw_foreground(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }

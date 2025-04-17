@@ -25,7 +25,7 @@
 #include "popup_dialog.h"
 #include "window/window_city.h"
 #include "window/editor/map.h"
-#include "window/game_menu.h"
+#include "window/window_dynasty_menu.h"
 #include "window/new_career.h"
 #include "game/game.h"
 #include "game/settings.h"
@@ -183,7 +183,7 @@ static void button_click(int param1, int param2) {
         if (!is_valid_selected_player()) {
             popup_dialog::show_ok("#popup_dialog_no_dynasty");
         } else {
-            window_game_menu_show();
+            ui::window_dinasty_menu::show();
         }
         break;
 

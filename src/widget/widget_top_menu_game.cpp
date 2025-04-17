@@ -28,7 +28,7 @@
 #include "window/window_city.h"
 #include "window/difficulty_options.h"
 #include "window/window_features.h"
-#include "window/game_menu.h"
+#include "window/window_dynasty_menu.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
@@ -63,7 +63,6 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     ui::widget headers;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override {}
     virtual int get_tooltip_text() override { return 0; }
@@ -517,7 +516,7 @@ void top_menu_widget::file_handle(menu_item &item) {
             g_city_planner.reset();
             game_undo_disable();
             game_state_reset_overlay();
-            window_game_menu_show();
+            ui::window_dinasty_menu::show();
         });
     }
     else if (item.id == "replay_map") { 

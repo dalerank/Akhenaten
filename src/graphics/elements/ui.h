@@ -98,13 +98,14 @@ pcstr resource_name(e_resource r);
 struct emenu_header;
 struct eimage_button;
 
-struct recti {
+struct margini {
     static constexpr int nomargin = -99999;
-    int left = 0;
-    int top = 0;
-    int right = 0;
-    int bottom = 0;
-    int centerx = 0;
+    int left = nomargin;
+    int top = nomargin;
+    int right = nomargin;
+    int bottom = nomargin;
+    int centerx = nomargin;
+    int centery = nomargin;
 };
 
 struct element {
@@ -115,7 +116,7 @@ struct element {
     xstring id;
     vec2i pos;
     vec2i size;
-    recti margin = { recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin, recti::nomargin };
+    margini margin = {};
     bool readonly = false;
     bool enabled = true;
     uint8_t darkened = 0;
@@ -161,7 +162,7 @@ struct element {
     inline void operator=(const xstring &t) { text(t.c_str()); }
     inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
     inline void operator=(const image_desc &t) { image(t); }
-    void update_pos(const recti &r);
+    void update_pos(const margini &r);
     vec2i screen_pos() const;
 
     template<class T>
