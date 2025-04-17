@@ -134,7 +134,11 @@ static void jsP_next(js_State *J)
 
 #define jsP_accept(J,x) (J->lookahead == x ? (jsP_next(J), 1) : 0)
 
-#define jsP_expect(J,x) if (!jsP_accept(J, x)) jsP_error(J, "unexpected token: %s (expected %s)", jsY_tokenstring(J->lookahead), jsY_tokenstring(x))
+static void jsP_expect(js_State *J, char x) {
+	if (!jsP_accept(J, x)) {
+		jsP_error(J, "unexpected token: %s (expected %s)", jsY_tokenstring(J->lookahead), jsY_tokenstring(x));
+	}
+}
 
 static void semicolon(js_State *J)
 {
@@ -265,7 +269,7 @@ static js_Ast *objectliteral(js_State *J)
 	if (J->lookahead == '}')
 		return NULL;
 	head = tail = LIST(propassign(J));
-	while (jsP_accept(J, ',')) {
+	while (jsP_accept(J, ',') || J->newline) {
 		if (J->lookahead == '}')
 			break;
 		tail = tail->b = LIST(propassign(J));
@@ -354,9 +358,15 @@ static js_Ast *primary(js_State *J)
 	if (jsP_accept(J, TK_NULL)) return EXP0(NULL);
 	if (jsP_accept(J, TK_TRUE)) return EXP0(TRUE);
 	if (jsP_accept(J, TK_FALSE)) return EXP0(FALSE);
-	if (jsP_accept(J, '{')) { a = EXP1(OBJECT, objectliteral(J)); jsP_expect(J, '}'); return a; }
-	if (jsP_accept(J, '[')) { a = EXP1(ARRAY, arrayliteral(J)); jsP_expect(J, ']'); return a; }
-	if (jsP_accept(J, '(')) { a = expression(J, 0); jsP_expect(J, ')'); return a; }
+	if (jsP_accept(J, '{')) { 
+		a = EXP1(OBJECT, objectliteral(J)); jsP_expect(J, '}'); return a; 
+	}
+	if (jsP_accept(J, '[')) { 
+		a = EXP1(ARRAY, arrayliteral(J)); jsP_expect(J, ']'); return a; 
+	}
+	if (jsP_accept(J, '(')) { 
+		a = expression(J, 0); jsP_expect(J, ')'); return a; 
+	}
 
 	jsP_error(J, "unexpected token in expression: %s", jsY_tokenstring(J->lookahead));
 }
