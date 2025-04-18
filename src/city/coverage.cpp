@@ -42,7 +42,9 @@ void city_average_coverage_t::update() {
 }
 
 void city_coverage_t::save(buffer *buf) {
-    buf->write_i32(booth);
+    buf->write_u8(booth);
+    buf->write_u8(0);
+    buf->write_u16(0);
     buf->write_i32(bandstand);
     buf->write_i32(pavilion);
     buf->write_u8(physician);
@@ -65,7 +67,9 @@ void city_coverage_t::save(buffer *buf) {
 }
 
 void city_coverage_t::load(buffer *buf) {
-    booth = buf->read_i32();
+    booth = buf->read_u8();
+    buf->read_u8();
+    buf->read_u16();
     bandstand = buf->read_i32();
     pavilion = buf->read_i32();
     physician = buf->read_u8();
@@ -88,7 +92,9 @@ void city_coverage_t::update() {
     int pop = g_city.population.current;
 
     // entertainment
-    booth = std::min(calc_percentage(400 * g_city.buildings.count_active(BUILDING_BOOTH), pop), 100);
+    const int active_booth = g_city.buildings.count_active(BUILDING_BOOTH);
+    booth = std::min(calc_percentage(400 * active_booth, pop), 100);
+
     bandstand = std::min(calc_percentage(700 * g_city.buildings.count_active(BUILDING_BANDSTAND), pop), 100);
     pavilion = std::min(calc_percentage(1200 * g_city.buildings.count_active(BUILDING_PAVILLION), pop), 100);
     senet_house = g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
