@@ -131,7 +131,7 @@ void js_importfile(js_State *J, const char *filename) {
 	}
 }
 
-void js_registerimport(js_State *J, js_Import importFunc) {
+int js_registerimport(js_State *J, js_Import importFunc) {
 	js_Import old = J->jscimport;
 	J->jscimport = importFunc;
 	return old;
