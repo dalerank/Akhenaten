@@ -567,6 +567,10 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
     auto warehouse = b->dcast_storage_yard();
     auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_SCRIBAL_SCHOOL, RESOURCE_PAPYRUS, warehouse->road_network(), warehouse->distance_from_entry());
     auto scribal_school = building_get_ex<building_scribal_school>(result.building_id);
+    if (!scribal_school) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
     const int school_want = scribal_school->need_resource_amount(RESOURCE_PAPYRUS);
 
     if (school_want > 0 && warehouse->road_network() == scribal_school->road_network()) {
