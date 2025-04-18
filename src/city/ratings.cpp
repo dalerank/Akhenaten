@@ -10,6 +10,7 @@
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -18,6 +19,33 @@ declare_console_command_p(addprosperity, game_cheat_add_prosperity)
 declare_console_command_p(updatekingdome, game_cheat_update_kingdome)
 declare_console_command_p(addkingdome, game_cheat_add_kingdome)
 declare_console_command_p(addculture, game_cheat_add_culture)
+
+struct rating_points {
+    using points_t = svector<city_ratings_t::point, 32>;
+    points_t points;
+
+    void load(pcstr section) {
+        points.clear();
+        g_config_arch.r_array(section, [this] (archive arch) {
+            auto &step = points.emplace_back();
+            step.coverage = arch.r_int("coverage");
+            step.points = arch.r_int("points");
+        });
+        assert(!points.empty());
+    }
+
+    int find(int coverage) {
+        for (const auto &p : points) {
+            if (coverage >= p.coverage) {
+                return p.points;
+            }
+        }
+        return 0;
+    }
+};
+
+rating_points ANK_VARIABLE(culture_religion_rating_points);
+rating_points ANK_VARIABLE(culture_booth_rating_points);
 
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
@@ -215,36 +243,10 @@ void city_ratings_t::update_culture_rating() {
         return;
     }
 
-    const int pct_booth = g_city.coverage.booth;
-    if (pct_booth >= 100) {
-        culture_points.entertainment = 25;
-    } else if (pct_booth > 85) {
-        culture_points.entertainment = 18;
-    } else if (pct_booth > 70) {
-        culture_points.entertainment = 12;
-    } else if (pct_booth > 50) {
-        culture_points.entertainment = 8;
-    } else if (pct_booth > 30) {
-        culture_points.entertainment = 3;
-    } else {
-        culture_points.entertainment = 0;
-    }
+    culture_points.entertainment = culture_booth_rating_points.find(g_city.coverage.booth);
     culture += culture_points.entertainment;
 
-    int pct_religion = g_city.religion.coverage_common;
-    if (pct_religion >= 100) {
-        culture_points.religion = 30;
-    } else if (pct_religion > 85) {
-        culture_points.religion = 22;
-    } else if (pct_religion > 70) {
-        culture_points.religion = 14;
-    } else if (pct_religion > 50) {
-        culture_points.religion = 9;
-    } else if (pct_religion > 30) {
-        culture_points.religion = 3;
-    } else {
-        culture_points.religion = 0;
-    }
+    culture_points.religion = culture_religion_rating_points.find(g_city.religion.coverage_common);
     culture += culture_points.religion;
 
     const int pct_school = g_city.coverage.school;

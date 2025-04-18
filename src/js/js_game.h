@@ -27,3 +27,10 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 #define ANK_REGISTER_CONFIG_ITERATOR(func) void func(); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func)
+
+#define ANK_REGISTER_CONFIG_VARIABLE(a) \
+    ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
+    void config_load_ ## a() { a.load(#a); }
+
+#define ANK_VARIABLE(a) a; \
+    ANK_REGISTER_CONFIG_VARIABLE(a)

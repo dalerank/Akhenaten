@@ -18,6 +18,11 @@ enum e_rating_change {
 };
 
 struct city_ratings_t {
+    struct point {
+        uint8_t coverage;
+        uint8_t points;
+    };
+
     int32_t culture;
     int32_t prosperity;
     int32_t monument; // peace

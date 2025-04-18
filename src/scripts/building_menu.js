@@ -1,3 +1,5 @@
+log_info("akhenaten: building menu started")
+
 var building_menu = [
 	{
 		id: BUILDING_MENU_VACANT_HOUSE,
