@@ -460,6 +460,17 @@ static void cassignop(JF, js_Ast *exp, int opcode)
 	cassignop2(J, F, lhs, 0);
 }
 
+static void cimport(JF, js_Ast *exp) {
+	switch (exp->type) {
+	case EXP_IDENTIFIER:
+		js_importfile(J, exp->string);
+		emit(J, F, OP_NULL);
+		break;
+	default:
+		jsC_error(J, exp, "invalid l-value in delete expression");
+	}
+}
+
 static void cdelete(JF, js_Ast *exp)
 {
 	switch (exp->type) {
@@ -587,6 +598,10 @@ static void cexp(JF, js_Ast *exp)
 
 	case EXP_DELETE:
 		cdelete(J, F, exp->a);
+		break;
+
+	case EXP_IMPORT:
+		cimport(J, F, exp->a);
 		break;
 
 	case EXP_PREINC:

@@ -208,6 +208,7 @@ struct js_State
 	js_Function *gcfun;
 	js_Object *gcobj;
 	js_String *gcstr;
+	js_Import jscimport;
 	void (*dumpfunction)(js_State *J, const char *);
 
 	/* environments on the call stack but currently not in scope */

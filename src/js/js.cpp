@@ -208,6 +208,13 @@ void js_game_panic(js_State *J) {
     logs::info("JSE !!! Uncaught exception: %s", js_tostring(J, -1));
 }
 
+int js_game_import(js_State *J, const char* filename) {
+    vm.files2load[vm.files2load_num] = vfs::path(":", filename, ".js");
+    vm.files2load_num++;
+
+    return 0;
+}
+
 void js_register_vm_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_vm_load_module, "include", 1);
 }
@@ -226,6 +233,7 @@ void js_reset_vm_state() {
 
     vm.J = js_newstate(NULL, NULL, JS_STRICT);
     js_atpanic(vm.J, js_game_panic);
+    js_registerimport(vm.J, js_game_import);
 
     js_register_vm_functions(vm.J);
     js_register_game_functions(vm.J);

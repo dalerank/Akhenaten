@@ -54,27 +54,6 @@ var uioptions = {
 	advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0},
 }
 
-window main_menu_screen = {
-	ui : {
-		background    : { type:"background", pack:PACK_UNLOADED, id:14, offset:0 }
-		continue_game : large_button({ pos:mbutton(0), size:[256, 25], text:[13, 5]}),
-		select_player : large_button({ pos:mbutton(1), size:[256, 25], text:[30, 0]}),
-		show_records  : large_button({ pos:mbutton(2), size:[256, 25], text:[30, 5]}),
-		show_config   : large_button({ pos:mbutton(3), size:[256, 25], text:[2,  0]}),
-		quit_game     : large_button({ pos:mbutton(4), size:[256, 25], text:[30, 4]}),
-		discord 			: image_button({ pos:[sw(-100), sh(-50)], size:[48, 48], icon_texture:"!discord", scale:0.75 }),
-		patreon 			: image_button({ pos:[sw(-50), sh(-50)], size:[48, 48], icon_texture:":patreon_48.png", scale:0.75 }),
-		version_number: text({pos:[18, sh(-30)], text: game.version, font: FONT_SMALL_PLAIN, color: 0xffb3b3b3}),
-
-		update_panel 	: outer_panel({size:[20, 27], enabled:false,
-			ui : {
-				update_game : large_button({ pos:[32, 16], size:[256, 25], text:"update now", enabled: false}),
-				new_version : text({pos:[18, 53], text: game.version, font: FONT_SMALL_PLAIN, enabled: false}),
-			}
-		}),
-	}
-}
-
 window build_menu_widget = {
 	ui : {
 		item : dummy({size:[-1, 24]}),
@@ -419,43 +398,6 @@ window advisor_financial_window = {
 
 		incomes_base  : text({pos:[10, 150]}),
 		expenses_base  : text({pos:[10, 240]}),
-	}
-}
-
-window advisor_education_window = {
-	ui : {
-		background   : outer_panel({size:[40, 16]}),
-		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:7, pos:[10, 10] }),
-		title 	     : header({pos:[60, 17], text:[57, 0]}),
-	  population   : text_center({pos:[20, 50], size:[200, 20],  font: FONT_NORMAL_BLACK_ON_LIGHT}),
-	  school_age   : text_center({pos:[220, 50], size:[200, 20], font: FONT_NORMAL_BLACK_ON_LIGHT}),
-	  academy_age  : text_center({pos:[420, 50], size:[200, 20], font: FONT_NORMAL_BLACK_ON_LIGHT}),
-
-	  // table headers
-    header1 	   : text({text:[57, 4], pos:[180, 86], font:FONT_SMALL_PLAIN}),
-    header2 	   : text({text:[57, 5], pos:[290, 86], font:FONT_SMALL_PLAIN}),
-    header3 	   : text({text:[57, 6], pos:[478, 86], font:FONT_SMALL_PLAIN}),
-
-		inner_panel  : inner_panel({pos:[32, 108], size:[36, 4],
-    	ui : {
-    		school_total     : text({pos:[5, 5], size:[100, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		school_active    : text_center({pos:[100, 5], size:[150, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		school_care      : text_center({pos:[280, 5], size:[40, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-    		school_covg      : text_center({pos:[440, 5], size:[60, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-
-    		academies_total  : text({pos:[5, 23], size:[100, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		academies_active : text_center({pos:[100, 23], size:[150, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		academies_care   : text_center({pos:[280, 23], size:[40, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-    		academies_covg   : text_center({pos:[440, 23], size:[60, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-
-    		libraries_total  : text({pos:[5, 42], size:[100, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		libraries_active : text_center({pos:[100, 42], size:[150, 20],  font: FONT_NORMAL_WHITE_ON_DARK}),
-    		libraries_care   : text_center({pos:[280, 42], size:[40, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-    		libraries_covg   : text_center({pos:[440, 42], size:[60, 20], font:FONT_NORMAL_WHITE_ON_DARK}),
-    	}
-    }),
-
-    education_advice : multiline({pos:[60, 180], wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
 	}
 }
 

@@ -125,6 +125,18 @@ void js_loadfile(js_State *J, const char *filename)
 	js_endtry(J);
 }
 
+void js_importfile(js_State *J, const char *filename) {
+	if (J->jscimport) {
+		J->jscimport(J, filename);
+	}
+}
+
+void js_registerimport(js_State *J, js_Import importFunc) {
+	js_Import old = J->jscimport;
+	J->jscimport = importFunc;
+	return old;
+}
+
 int js_dostring(js_State *J, const char *source)
 {
 	if (js_try(J)) {

@@ -132,7 +132,9 @@ static void jsP_next(js_State *J)
 	J->lookahead = jsY_lex(J);
 }
 
-#define jsP_accept(J,x) (J->lookahead == x ? (jsP_next(J), 1) : 0)
+static int jsP_accept(js_State *J, int x) {
+	return (J->lookahead == x ? (jsP_next(J), 1) : 0);
+}
 
 static void jsP_expect(js_State *J, char x) {
 	if (!jsP_accept(J, x)) {
@@ -140,7 +142,7 @@ static void jsP_expect(js_State *J, char x) {
 	}
 }
 
-static void semicolon(js_State *J)
+static void jsP_semicolon(js_State *J)
 {
 	if (J->lookahead == ';') {
 		jsP_next(J);
@@ -154,7 +156,7 @@ static void semicolon(js_State *J)
 /* Literals */
 
 static const char *futurewords[] = {
-	"class", "const", "enum", "export", "extends", "import", "super",
+	"class", "const", "enum", "export", "extends", "super",
 };
 
 static const char *strictfuturewords[] = {
@@ -164,10 +166,13 @@ static const char *strictfuturewords[] = {
 
 static void checkfutureword(js_State *J, const char *s)
 {
-	if (jsY_findword(s, futurewords, nelem(futurewords)) >= 0)
+	if (jsY_findword(s, futurewords, nelem(futurewords)) >= 0) {
 		jsP_error(J, "'%s' is a future reserved word", s);
-	if (J->strict && jsY_findword(s, strictfuturewords, nelem(strictfuturewords)) >= 0)
+	}
+
+	if (J->strict && jsY_findword(s, strictfuturewords, nelem(strictfuturewords)) >= 0) {
 		jsP_error(J, "'%s' is a strict mode future reserved word", s);
+	}
 }
 
 static js_Ast *identifier(js_State *J)
@@ -433,6 +438,7 @@ static js_Ast *postfix(js_State *J)
 static js_Ast *unary(js_State *J)
 {
 	if (jsP_accept(J, TK_DELETE)) return EXP1(DELETE, unary(J));
+	if (jsP_accept(J, TK_IMPORT)) return EXP1(IMPORT, unary(J));
 	if (jsP_accept(J, TK_VOID)) return EXP1(VOID, unary(J));
 	if (jsP_accept(J, TK_TYPEOF)) return EXP1(TYPEOF, unary(J));
 	if (jsP_accept(J, TK_INC)) return EXP1(PREINC, unary(J));
@@ -705,7 +711,7 @@ static js_Ast *statement(js_State *J)
 
 	if (jsP_accept(J, TK_VAR) || jsP_accept(J, TK_WINDOWIF) || jsP_accept(J, TK_FIGUREIF) || jsP_accept(J, TK_BUILDINGIF)) {
 		a = vardeclist(J, 0);
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM1(VAR, a);
 	}
 
@@ -732,7 +738,7 @@ static js_Ast *statement(js_State *J)
 		jsP_expect(J, '(');
 		b = expression(J, 0);
 		jsP_expect(J, ')');
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM2(DO, a, b);
 	}
 
@@ -750,13 +756,13 @@ static js_Ast *statement(js_State *J)
 
 	if (jsP_accept(J, TK_CONTINUE)) {
 		a = identifieropt(J);
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM1(CONTINUE, a);
 	}
 
 	if (jsP_accept(J, TK_BREAK)) {
 		a = identifieropt(J);
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM1(BREAK, a);
 	}
 
@@ -765,7 +771,7 @@ static js_Ast *statement(js_State *J)
 			a = expression(J, 0);
 		else
 			a = NULL;
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM1(RETURN, a);
 	}
 
@@ -791,7 +797,7 @@ static js_Ast *statement(js_State *J)
 
 	if (jsP_accept(J, TK_THROW)) {
 		a = expression(J, 0);
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM1(THROW, a);
 	}
 
@@ -813,7 +819,7 @@ static js_Ast *statement(js_State *J)
 	}
 
 	if (jsP_accept(J, TK_DEBUGGER)) {
-		semicolon(J);
+		jsP_semicolon(J);
 		return STM0(DEBUGGER);
 	}
 
@@ -830,13 +836,13 @@ static js_Ast *statement(js_State *J)
 			b = statement(J);
 			return STM2(LABEL, a, b);
 		}
-		semicolon(J);
+		jsP_semicolon(J);
 		return a;
 	}
 
 	/* expression statement */
 	a = expression(J, 0);
-	semicolon(J);
+	jsP_semicolon(J);
 	return a;
 }
 

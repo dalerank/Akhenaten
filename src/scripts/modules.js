@@ -1,7 +1,10 @@
 log_info("akhenaten: load modules started")
 
 include(":akhenaten.conf")
-include(":math.js")
+
+import math
+import ui_common
+import ui_main_menu
 include(":common.js")
 include(":images.js")
 include(":city_sounds.js")
@@ -22,4 +25,5 @@ include(":ui.js")
 include(":ui_top_menu_widget.js")
 include(":ui_advisor_religion.js")
 include(":ui_advisor_chief.js")
+include(":ui_advisor_education.js")
 include(":music.js")

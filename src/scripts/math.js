@@ -15,4 +15,3 @@ Math.percentage = function(value, base) {
 }
 
 log_info("!!! Module Math Loaded")
-
