@@ -46,6 +46,9 @@ struct rating_points {
 
 rating_points ANK_VARIABLE(culture_religion_rating_points);
 rating_points ANK_VARIABLE(culture_booth_rating_points);
+rating_points ANK_VARIABLE(culture_school_rating_points);
+rating_points ANK_VARIABLE(culture_academy_rating_points);
+rating_points ANK_VARIABLE(culture_library_rating_points);
 
 void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
     std::string args; is >> args;
@@ -249,52 +252,13 @@ void city_ratings_t::update_culture_rating() {
     culture_points.religion = culture_religion_rating_points.find(g_city.religion.coverage_common);
     culture += culture_points.religion;
 
-    const int pct_school = g_city.coverage.school;
-    if (pct_school >= 100)
-        culture_points.school = 15;
-    else if (pct_school > 85)
-        culture_points.school = 10;
-    else if (pct_school > 70)
-        culture_points.school = 6;
-    else if (pct_school > 50)
-        culture_points.school = 4;
-    else if (pct_school > 30)
-        culture_points.school = 1;
-    else {
-        culture_points.school = 0;
-    }
+    culture_points.school = culture_school_rating_points.find(g_city.coverage.school);
     culture += culture_points.school;
 
-    const int pct_academy = g_city.coverage.academy;
-    if (pct_academy >= 100)
-        culture_points.academy = 10;
-    else if (pct_academy > 85)
-        culture_points.academy = 7;
-    else if (pct_academy > 70)
-        culture_points.academy = 4;
-    else if (pct_academy > 50)
-        culture_points.academy = 2;
-    else if (pct_academy > 30)
-        culture_points.academy = 1;
-    else {
-        culture_points.academy = 0;
-    }
+    culture_points.academy = culture_academy_rating_points.find(g_city.coverage.academy);
     culture += culture_points.academy;
 
-    const int pct_library = g_city.coverage.library;
-    if (pct_library >= 100)
-        culture_points.library = 20;
-    else if (pct_library > 85)
-        culture_points.library = 14;
-    else if (pct_library > 70)
-        culture_points.library = 8;
-    else if (pct_library > 50)
-        culture_points.library = 4;
-    else if (pct_library > 30)
-        culture_points.library = 2;
-    else {
-        culture_points.library = 0;
-    }
+    culture_points.library = culture_library_rating_points.find(g_city.coverage.library);
     culture += culture_points.library;
 
     culture = calc_bound(culture, 0, 100);
