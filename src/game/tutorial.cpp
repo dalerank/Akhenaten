@@ -36,9 +36,7 @@ static void set_all_tut_flags_null() {
     tutorial_3::reset();
     tutorial_4::reset();
     tutorial_5::reset();
-
-    // tutorial 6
-    g_tutorials_flags.tutorial_6.started = 0;
+    tutorial_6::reset();
 
     //
     g_tutorials_flags.pharaoh.tut7_start = 0;
@@ -197,6 +195,7 @@ xstring tutorial_get_immediate_goal_text() {
     if (g_scenario.is_scenario_id(3))  return tutorial_3::goal_text();
     if (g_scenario.is_scenario_id(4))  return tutorial_4::goal_text();
     if (g_scenario.is_scenario_id(5))  return tutorial_5::goal_text();
+    if (g_scenario.is_scenario_id(6))  return tutorial_6::goal_text();
 
     return "#unknown_tutoral_goal";
 }
@@ -212,6 +211,9 @@ void tutorial_update_step(xstring s) {
     tutorial_1::update_step(s);
     tutorial_2::update_step(s);
     tutorial_3::update_step(s);
+    //tutorial_4::update_step(s);
+    tutorial_5::update_step(s);
+    tutorial_6::update_step(s);
 }
 
 void tutorial_flags_t::update_starting_message() {

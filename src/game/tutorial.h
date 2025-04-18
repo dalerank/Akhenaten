@@ -59,6 +59,13 @@ struct tutorial_5 {
     static xstring goal_text();
 };
 
+struct tutorial_6 {
+    static void init();
+    static void reset();
+    static void update_step(xstring s);
+    static xstring goal_text();
+};
+
 struct tutorial_flags_t {
     struct {
         bool started;

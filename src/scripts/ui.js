@@ -23,11 +23,11 @@ window build_menu_widget = {
 
 window trade_prices_window = {
 	pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
-  next_row_offset : [0, 90], 
-  next_item_offset : [42, 0], 
-  receive_offset : [0, 50], 
-  buyer_offset : [0, 30], 
-  next : 18,
+	next_row_offset : [0, 90], 
+	next_item_offset : [42, 0], 
+	receive_offset : [0, 50], 
+	buyer_offset : [0, 30], 
+	next : 18,
 	ui : {
 		background    : outer_panel({pos:[0, 0], size:[56, 16]}),
 		title 				: text_center({pos:[0, 12], size:[px(56), 20], text:[54, 21], font : FONT_LARGE_BLACK_ON_LIGHT }),

@@ -84,6 +84,10 @@ void tutorial_5::init() {
     g_city.victory_state.add_condition(&tutorial5_is_success);
 }
 
+void tutorial_5::update_step(xstring s) {
+
+}
+
 xstring tutorial_5::goal_text() {
     if (!g_tutorials_flags.tutorial_5.spacious_apartment) {
         return lang_get_xstring(62, 31);
