@@ -274,7 +274,7 @@ static js_Ast *objectliteral(js_State *J)
 	if (J->lookahead == '}')
 		return NULL;
 	head = tail = LIST(propassign(J));
-	while (jsP_accept(J, ',') || J->newline) {
+	while (jsP_accept(J, ',') || jsP_accept(J, ';') || J->newline) {
 		if (J->lookahead == '}')
 			break;
 		tail = tail->b = LIST(propassign(J));
