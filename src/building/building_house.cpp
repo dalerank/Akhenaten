@@ -1043,7 +1043,8 @@ void building_house::on_place_checks() {
     }
 
     construction_warnings warnings;
-    const bool need_more_food = (city_population() >= 200 && !scenario_property_kingdom_supplies_grain() && g_city.resource.food_percentage_produced() <= 95);
+    const int city_population = g_city.population.current;
+    const bool need_more_food = (city_population >= 200 && !scenario_property_kingdom_supplies_grain() && g_city.resource.food_percentage_produced() <= 95);
     warnings.add_if(need_more_food, "#people_eat_more_than_produce");
 }
 

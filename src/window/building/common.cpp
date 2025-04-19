@@ -55,9 +55,11 @@ int window_building_get_vertical_offset(object_info* c, int new_window_height) {
 
 textid get_employment_info_text_id(object_info* c, building* b, int consider_house_covering) {
     uint8_t text_id;
+    const int city_population = g_city.population.current;
+
     if (b->num_workers >= model_get_building(b->type)->laborers)
         text_id = 0;
-    else if (city_population() <= 0)
+    else if (city_population <= 0)
         text_id = 16; // no people in city
     else if (!consider_house_covering)
         text_id = 19;

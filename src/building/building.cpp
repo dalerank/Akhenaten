@@ -680,7 +680,7 @@ bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_ful
 }
 
 void building::common_spawn_labor_seeker(int min_houses) {
-    if (city_population() <= 0) {
+    if (g_city.population.current <= 0) {
         return;
     }
 

@@ -28,15 +28,12 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 
                                                                 {0, 0, 0, 0, 0, 0, 0, 2, 5, 10}};
 
 static auto &city_data = g_city;
-int city_population(void) {
-    return city_data.population.current;
-}
 
-int city_population_school_age(void) {
+int city_population_school_age() {
     return city_data.population.school_age;
 }
 
-int city_population_academy_age(void) {
+int city_population_academy_age() {
     return city_data.population.academy_age;
 }
 
@@ -196,7 +193,6 @@ int city_population_t::create_immigrants(int num_people) {
 }
 
 void city_population_t::reached_milestone(bool force) {
-    const int population = city_population();
     int message = 0;
 
     struct popm {
@@ -216,7 +212,7 @@ void city_population_t::reached_milestone(bool force) {
     };
 
     for (const auto& ms: milestones) {
-        if (population >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
+        if (current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
             message = ms.message;
         }
     }

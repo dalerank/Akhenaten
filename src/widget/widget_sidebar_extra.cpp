@@ -153,7 +153,7 @@ bool sidebar_window_extra::update(int is_background) {
         changed |= update_extra_info_value(g_city.ratings.prosperity, prosperity.value);
         changed |= update_extra_info_value(g_city.ratings.monument, monument.value);
         changed |= update_extra_info_value(g_city.ratings.kingdom, kingdom.value);
-        changed |= update_extra_info_value(city_population(), population.value);
+        changed |= update_extra_info_value(g_city.population.current, population.value);
     }
     return changed;
 }

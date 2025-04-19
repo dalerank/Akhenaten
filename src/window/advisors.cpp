@@ -125,6 +125,7 @@ static void set_advisor_window() {
         data.current_advisor_window = data.sub_advisors[data.current_advisor];
         data.current_advisor_window->pos = screen_dialog_offset();
         data.current_advisor_window->init();
+        data.current_advisor_window->format_all(&g_city);
     } else {
         data.current_advisor_window = nullptr;
     }

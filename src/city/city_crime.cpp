@@ -19,7 +19,7 @@ static void generate_rioter(building* b) {
 
     g_city.sentiment.criminals++;
     int people_in_mob;
-    int population = city_population();
+    const int population = g_city.population.current;
     if (population <= 150)
         people_in_mob = 1;
     else if (population <= 300)

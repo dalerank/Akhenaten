@@ -359,8 +359,10 @@ int ui::advisor_population_window::draw_background(UiFlags flags) {
     if (graph_order < 2) { titlestr = { 55, 0 }; } 
     else if (graph_order < 4) { titlestr = { 55, 1 }; }
 
+    const int city_population = g_city.population.current;
+
     ui["title"] = titlestr;
-    ui["population"].text_var("%u %s", city_population(), translation_for(TR_ADVISOR_TOTAL_POPULATION));
+    ui["population"].text_var("%u %s", city_population, translation_for(TR_ADVISOR_TOTAL_POPULATION));
 
     struct {
         int big, top, bot;

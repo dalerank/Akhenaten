@@ -2,6 +2,7 @@
 
 #include "city/city_population.h"
 #include "city/city_resource.h"
+#include "city/city.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -88,7 +89,8 @@ int ui::advisor_housing_window::draw_background(UiFlags flags) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{10, 10});
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{555, 265});
 
-    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
+    const int city_population = g_city.population.current;
+    width = text_draw_number(city_population, '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < 58; i++) {

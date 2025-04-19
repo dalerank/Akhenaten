@@ -286,7 +286,8 @@ void city_ratings_t::update_monument_rating() {
     monument_num_rioters = 0;
     monument_destroyed_buildings = 0;
 
-    int max_population_limit = std::min<int>(city_population(), 4000);
+    const int city_population = g_city.population.current;
+    int max_population_limit = std::min<int>(city_population, 4000);
     int monument_ratings_cap = std::max(1, max_population_limit / 1000) * 25;
 
     monument = calc_bound(monument + change, 0, monument_ratings_cap);

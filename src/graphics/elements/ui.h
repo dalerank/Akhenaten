@@ -113,7 +113,6 @@ struct element {
     using ptr = std::shared_ptr<element>;
     using items = std::vector<ptr>;
     using draw_callback = std::function<void(element*, UiFlags)>;
-    using groups = svector<xstring, 4>;
 
     xstring id;
     vec2i pos;
@@ -123,7 +122,6 @@ struct element {
     bool enabled = true;
     uint8_t darkened = 0;
     draw_callback _draw_callback;
-    groups _groups;
 
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);

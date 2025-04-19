@@ -213,6 +213,8 @@ int get_max_raw_stock_for_population(e_resource resource) {
 }
 
 int get_max_food_stock_for_population(e_resource resource) {
+    const int city_population = g_city.population.current;
+
     switch (resource) {
     case RESOURCE_GRAIN:
     case RESOURCE_MEAT:
@@ -222,7 +224,7 @@ int get_max_food_stock_for_population(e_resource resource) {
     case RESOURCE_LUXURY_GOODS:
     case RESOURCE_OIL:
     case RESOURCE_BEER:
-        return std::max(100, (city_population() / 100) * 100);
+        return std::max(100, (city_population / 100) * 100);
 
     default:
         assert(false);
@@ -299,6 +301,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
+    const int city_population = g_city.population.current;
     int in_stock = g_city.resource.yards_stored(resource);
     int max_in_stock = 0;
 
@@ -332,12 +335,12 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
             break;
 
         case RESOURCE_BRICKS:
-            max_in_stock = std::max(100, (city_population() / 100) * 100);
+            max_in_stock = std::max(100, (city_population / 100) * 100);
             break;
 
         case RESOURCE_POTTERY:
         case RESOURCE_LUXURY_GOODS:
-            max_in_stock = std::max(100, (city_population() / 100) * 50);
+            max_in_stock = std::max(100, (city_population / 100) * 50);
             break;
 
         case RESOURCE_PAPYRUS:

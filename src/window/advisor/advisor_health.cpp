@@ -29,8 +29,9 @@ int ui::advisor_health_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
     const auto &coverage = g_city.coverage;
+    const int city_population = g_city.population.current;
 
-    ui["city_health"] = (city_population() >= 200) 
+    ui["city_health"] = (city_population >= 200) 
                             ? ui::str(56, g_city.health.value / 10 + 16)
                             : ui::str(56, 15);
 

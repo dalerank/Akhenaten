@@ -66,7 +66,8 @@ static void disrupt_sea_trade(void) {
 
 static void contaminate_water(void) {
     if (g_scenario.random_events.contaminated_water) {
-        if (city_population() > 200) {
+        const int city_population = g_city.population.current;
+        if (city_population > 200) {
             int change;
             int health_rate = g_city.health.value;
             if (health_rate > 80)

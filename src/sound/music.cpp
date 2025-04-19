@@ -121,10 +121,10 @@ void sound_manager_t::music_update(bool force) {
         track = g_music.combat_short;
     } else {
         track = g_music.pop_tracks.front().track;
-        const int population = city_population();
+        const int city_population = g_city.population.current;
 
         for (const auto &p : g_music.pop_tracks) {
-            if (p.pop > population) {
+            if (p.pop > city_population) {
                 break;
             }
             track = p.track;

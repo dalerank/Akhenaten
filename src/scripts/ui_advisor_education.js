@@ -19,7 +19,7 @@ window advisor_education_window = {
 			size:[36, 5]
 	    	default_font: FONT_NORMAL_WHITE_ON_DARK
 	    	ui : { 
-	    		school_total     : text({pos:[5, 5], size:[100, 20], groups:"school"})
+	    		school_total     : text({pos:[5, 5], size:[100, 20]})
 	    		school_active    : text_center({pos:[100, 5], size:[150, 20]})
 	    		school_care      : text_center({pos:[280, 5], size:[40, 20]})
 	    		school_covg      : text_center({pos:[440, 5], size:[60, 20]})
