@@ -98,6 +98,7 @@ pcstr resource_name(e_resource r);
 struct emenu_header;
 struct eimage_button;
 
+
 struct margini {
     static constexpr int nomargin = -99999;
     int left = nomargin;
@@ -112,6 +113,7 @@ struct element {
     using ptr = std::shared_ptr<element>;
     using items = std::vector<ptr>;
     using draw_callback = std::function<void(element*, UiFlags)>;
+    using groups = svector<xstring, 4>;
 
     xstring id;
     vec2i pos;
@@ -121,6 +123,7 @@ struct element {
     bool enabled = true;
     uint8_t darkened = 0;
     draw_callback _draw_callback;
+    groups _groups;
 
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);
@@ -382,6 +385,7 @@ struct eimage_button : public element {
 struct widget {
     vec2i pos;
     bool check_errors;
+    e_font default_font = FONT_INVALID;
     element::items elements;
     widget &ui;
 

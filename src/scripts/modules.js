@@ -7,9 +7,9 @@ import ui_common
 import ui_main_menu
 import rating_points
 import common
-include(":images.js")
-include(":city_sounds.js")
-include(":walker_sounds.js")
+import images
+import city_sounds
+import walker_sounds
 include(":buildings.js")
 include(":overlays.js")
 include(":building_sounds.js")

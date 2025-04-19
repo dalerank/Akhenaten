@@ -184,6 +184,9 @@ static ui::element::ptr create_element(const xstring type) {
 }
 
 static void load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
+    e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
+    
+    const int last_index = elements.size();
     arch.r_objects(section, [&elements, parent] (pcstr key, archive elem) {
         const xstring type = elem.r_string("type");
         ui::element::ptr elm = create_element(type);
@@ -194,6 +197,14 @@ static void load_elements(archive arch, pcstr section, ui::element *parent, ui::
             elm->load(elem, parent, elements);
         }
     });
+
+    if (default_font != FONT_INVALID) {
+        for (size_t i = last_index; i < elements.size(); ++i) {
+            if (elements[i]->font() == FONT_INVALID) {
+                elements[i]->font(default_font);
+            }
+        }
+    }
 }
 
 void ui::begin_widget(vec2i offset, bool relative) {
@@ -563,6 +574,7 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
     pos = arch.r_vec2i("pos") + parent_offset;
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
+
     arch.r_section("margin", [this] (archive m) {
         margin.bottom = m.r_int("bottom", margini::nomargin);
         margin.left = m.r_int("left", margini::nomargin);
@@ -572,6 +584,7 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
         margin.centery = m.r_int("centery", margini::nomargin);
         int i = 0;
     });
+
 
     load_elements(arch, "ui", this, items);
 }
@@ -630,8 +643,15 @@ void ui::widget::draw(UiFlags flags) {
 void ui::widget::load(archive arch, pcstr section) {
     elements.clear();
     pos = arch.r_vec2i("pos");
+    e_font default_font = arch.r_type<e_font>("default_font", FONT_NORMAL_BLACK_ON_LIGHT);
     
     load_elements(arch, section, nullptr, elements);
+
+    for (auto &e:  elements) {
+        if (e->font() == FONT_INVALID) {
+            e->font(default_font);
+        }
+    }
 }
 
 void ui::widget::load(pcstr section) {
@@ -787,7 +807,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     if (strchr(_text.c_str(), '{')) {
         _format = _text.c_str();
     }
-    _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _font = arch.r_type<e_font>("font", FONT_INVALID);
     _font_link = arch.r_type<e_font>("font_link", FONT_NORMAL_YELLOW);
     _font_hover = arch.r_type< e_font>("font_hover", FONT_INVALID);
     _body = arch.r_size2i("body");
@@ -1001,7 +1021,7 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     pcstr type = arch.r_string("type");
     assert(!strcmp(type, "menu_header"));
 
-    _font = (e_font)arch.r_int("font", FONT_NORMAL_BLACK_ON_LIGHT);
+    _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
 
     impl.text = arch.r_string("text");

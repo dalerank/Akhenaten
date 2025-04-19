@@ -244,6 +244,7 @@ int text_draw(const uint8_t *str, int x, int y, e_font font, color color) {
 int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color, float scale) {
     y = y - 3;
 
+
     const font_definition* def = font_definition_for(font);
     if (!def) {
         return 0;
