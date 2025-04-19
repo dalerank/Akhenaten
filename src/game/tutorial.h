@@ -109,7 +109,6 @@ bool tutorial_init(bool clear_all_flags, bool custom);
 e_availability mission_empire_availability(int mission);
 
 void tutorial_map_update(int tut);
-bool tutorial_menu_update(int tut);
 
 xstring tutorial_get_immediate_goal_text();
 

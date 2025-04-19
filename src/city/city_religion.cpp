@@ -62,7 +62,7 @@ declare_console_command_p(godmajorcurse) {
     events::emit(event_city_warning{ "Casted upset" });
 }
 
-declare_console_command_p(ranotrade, game_cheat_ranotrade) {
+declare_console_command_p(ranotrade) {
     std::string args; is >> args;
     int nomonth = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 

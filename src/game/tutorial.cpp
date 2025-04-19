@@ -83,8 +83,14 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
     memset_if(4 < scenario_id, 1, g_tutorials_flags.tutorial_5);
     memset_if(5 < scenario_id, 1, g_tutorials_flags.tutorial_6);
 
-    tutorial_map_update(scenario_id + 1);
-    return tutorial_menu_update(scenario_id + 1);
+    for (auto t : tutorial_t::list()) {
+        if (t->missionid() == (scenario_id + 1)) {
+            t->init();
+            return true;
+        }
+    }
+
+    return false;
 }
 e_availability mission_empire_availability(int mission) {
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
@@ -111,29 +117,6 @@ void tutorial_map_update(int tut) {
     } else if (tut == 2) {
         g_scenario.env.has_animals = true;
     }
-}
-
-bool tutorial_menu_update(int tut) {
-    for (auto t: tutorial_t::list()) {
-        if (t->missionid() == tut) {
-            t->init();
-            return true;
-        }
-    }
-       
-    if (tut == 6) {
-        return true;
-    } 
-    
-    if (tut == 7) {
-        return true;
-    } 
-    
-    if (tut == 8) {
-        return true;
-    }
-
-    return false;
 }
 
 xstring tutorial_get_immediate_goal_text() {
