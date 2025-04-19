@@ -8,6 +8,16 @@
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 
+struct tutorial_4 : public tutorial_t {
+    virtual int missionid() const override { return 4; }
+    virtual void init() override;
+    virtual void reset() override;
+    virtual void update_step(xstring s) override {}
+    virtual xstring goal_text() override;
+};
+
+tutorial_4 g_tutorial_4;
+
 void tutorial_4::reset() {
     g_tutorials_flags.tutorial_4.started = 0;
     g_tutorials_flags.tutorial_4.beer_made = 0;
