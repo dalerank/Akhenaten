@@ -62,6 +62,11 @@ void tutorial_2::init() {
 
     g_city.victory_state.add_condition(tutorial2_is_success);
     g_city.migration.add_condition(tutorial2_population_cap);
+
+    const auto advisors = { ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION };
+    for (auto a: advisors) {
+        g_city.set_advisor_available(a, AVAILABLE);
+    }
 }
 
 xstring tutorial_2::goal_text() {

@@ -130,10 +130,6 @@ static void set_advisor_window() {
     }
 }
 
-bool is_advisor_available(e_advisor advisor) {
-    return (mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1) == AVAILABLE);
-}
-
 void window_advisors::set_advisor(int advisor) {
     current_advisor = advisor;
     g_settings.last_advisor = advisor;
@@ -170,7 +166,7 @@ void window_advisors::init() {
     set_advisor_window();
 
     for (auto &btn: btns) {
-        ui[btn.id].readonly = !is_advisor_available(btn.adv);
+        ui[btn.id].readonly = !g_city.is_advisor_available(btn.adv);
     }
 
     ui["back_btn"].enabled = true;
@@ -246,7 +242,7 @@ int window_advisors_get_advisor(void) {
 }
 
 void window_advisors_show_checked() {
-    e_availability avail = mission_advisor_availability(ADVISOR_LABOR, scenario_campaign_scenario_id() + 1);
+    e_availability avail = g_city.is_advisor_available(ADVISOR_LABOR);
     if (avail == AVAILABLE) {
         g_window_advisors.set_advisor(g_settings.last_advisor);
         window_advisors_show();
@@ -257,7 +253,7 @@ void window_advisors_show_checked() {
 }
 
 int window_advisors_show_advisor(e_advisor advisor) {
-    e_availability avail = mission_advisor_availability(advisor, scenario_campaign_scenario_id() + 1);
+    e_availability avail = g_city.is_advisor_available(advisor);
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
         events::emit(event_city_warning{ text });

@@ -74,42 +74,6 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
     tutorial_map_update(scenario_id + 1);
     return tutorial_menu_update(scenario_id + 1);
 }
-
-e_availability mission_advisor_availability(e_advisor advisor, int mission) {
-    svector<e_advisor, ADVISOR_MAX> advisors;
-    switch (mission) {
-    case 1:
-        return NOT_AVAILABLE;
-    case 2:
-        advisors = {ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
-        break;
-    case 3: 
-        advisors = {ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION};
-        break;
-    case 4:
-        advisors = {ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL};
-        break;
-    case 5:
-        advisors = {ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF};
-        if (g_tutorials_flags.tutorial_5.spacious_apartment) {
-            advisors.push_back(ADVISOR_EDUCATION);
-        }
-
-        if (g_tutorials_flags.tutorial_5.papyrus_made) {
-            advisors.push_back(ADVISOR_TRADE);
-        }
-        break;
-    case 6:
-        return AVAILABLE;
-    }
-
-    return advisors.empty() 
-                ? AVAILABLE 
-                : (std::find(advisors.begin(), advisors.end(), advisor) != advisors.end())
-                    ? AVAILABLE
-                    : NOT_AVAILABLE;
-}
-
 e_availability mission_empire_availability(int mission) {
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (is_custom_map) {

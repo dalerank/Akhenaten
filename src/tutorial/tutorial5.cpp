@@ -26,6 +26,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
     }
 
     g_tutorials_flags.tutorial_5.spacious_apartment = true;
+    g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
     events::unsubscribe(&tutorial5_handle_spacious_apartment);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_education);
@@ -45,6 +46,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
     events::unsubscribe(&tutorial5_handle_papyrus);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_trading);
+    g_city.set_advisor_available(ADVISOR_TRADE, AVAILABLE);
     messages::popup(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES, 0, 0);
 }
 
@@ -72,16 +74,27 @@ bool tutorial5_is_success() {
 }
 
 void tutorial_5::init() {
-    if (g_tutorials_flags.tutorial_5.spacious_apartment) building_menu_update(tutorial_stage.tutorial_education);
+    if (g_tutorials_flags.tutorial_5.spacious_apartment) {
+        building_menu_update(tutorial_stage.tutorial_education);
+        g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
+    }
     else events::subscribe(&tutorial5_handle_spacious_apartment);
 
-    if (g_tutorials_flags.tutorial_5.papyrus_made) building_menu_update(tutorial_stage.tutorial_trading);
+    if (g_tutorials_flags.tutorial_5.papyrus_made) {
+        building_menu_update(tutorial_stage.tutorial_trading);
+        g_city.set_advisor_available(ADVISOR_TRADE, AVAILABLE);
+    }
     else events::subscribe(&tutorial5_handle_papyrus);
 
     if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
     else events::subscribe(&tutorial5_handle_bricks);
 
     g_city.victory_state.add_condition(&tutorial5_is_success);
+
+    const auto advisors = { ADVISOR_LABOR, ADVISOR_IMPERIAL, ADVISOR_RATINGS, ADVISOR_POPULATION, ADVISOR_HEALTH, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL, ADVISOR_CHIEF };
+    for (auto a : advisors) {
+        g_city.set_advisor_available(a, AVAILABLE);
+    }
 }
 
 void tutorial_5::update_step(xstring s) {

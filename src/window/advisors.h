@@ -14,7 +14,6 @@ template<typename T>
 using advisor_window_t = autoconfig_window_t<T>;
 
 int window_advisors_get_advisor();
-bool is_advisor_available(e_advisor advisor);
 void window_advisors_show();
 void window_advisors_show_checked();
 int window_advisors_show_advisor(e_advisor advisor);

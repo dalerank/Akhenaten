@@ -66,6 +66,11 @@ void tutorial_3::update_step(xstring s) {
         building_menu_update(s);
         messages::popup(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
     }
+
+    const auto advisors = { ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION };
+    for (auto a : advisors) {
+        g_city.set_advisor_available(a, AVAILABLE);
+    }
 }
 
 void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {

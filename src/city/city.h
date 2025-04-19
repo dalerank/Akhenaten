@@ -42,6 +42,7 @@ struct city_t {
     city_military_t military;
     victory_state_t victory_state;
     city_maintenance_t maintenance;
+    e_availability advisors[ADVISOR_MAX];
 
     struct {
         uint8_t city;
@@ -223,6 +224,9 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_day();
+
+    e_availability is_advisor_available(e_advisor advisor) const;
+    void set_advisor_available(e_advisor advisor, e_availability available);
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 };

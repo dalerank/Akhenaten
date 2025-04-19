@@ -117,6 +117,14 @@ void city_t::ratings_update(bool is_yearly_update) {
     }
 }
 
+void city_t::set_advisor_available(e_advisor advisor, e_availability available) {
+    advisors[advisor] = available;
+}
+
+e_availability city_t::is_advisor_available(e_advisor advisor) const {
+    return advisors[advisor];
+}
+
 void city_t::init_campaign_mission() {
     finance.treasury = g_scenario.startup_funds();
     finance.last_year.income.gold_extracted = 0;

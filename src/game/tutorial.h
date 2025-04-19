@@ -132,7 +132,6 @@ extern const tutorial_stage_t tutorial_stage;
 
 bool tutorial_init(bool clear_all_flags, bool custom);
 
-e_availability mission_advisor_availability(e_advisor advisor, int mission);
 e_availability mission_empire_availability(int mission);
 
 void tutorial_map_update(int tut);

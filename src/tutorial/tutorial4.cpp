@@ -73,4 +73,9 @@ void tutorial_4::init() {
     }
     
     g_city.victory_state.add_condition(&tutorial4_is_success);
+
+    const auto advisors = { ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION, ADVISOR_FINANCIAL };
+    for (auto a : advisors) {
+        g_city.set_advisor_available(a, AVAILABLE);
+    }
 }
