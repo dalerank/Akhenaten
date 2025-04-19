@@ -7,7 +7,7 @@
 constexpr uint8_t MAX_COVERAGE = 96;
 
 template<typename T>
-inline int figure_provide_service(tile2i tile, figure* f, int &data, T callback) {
+inline int figure_provide_service(tile2i tile, figure* f, T callback) {
     int serviced = 0;
     grid_area area = map_grid_get_area(tile, 1, 2);
 
@@ -16,7 +16,7 @@ inline int figure_provide_service(tile2i tile, figure* f, int &data, T callback)
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *b = building_get(building_id);
-            callback(b, f, data);
+            callback(b, f);
             serviced++;
         }
     });
@@ -25,6 +25,5 @@ inline int figure_provide_service(tile2i tile, figure* f, int &data, T callback)
 
 template<typename T>
 static int figure_provide_culture(tile2i tile, figure* f, T callback) {
-    int none_service = 0;
-    return figure_provide_service(tile, f, none_service, callback);
+    return figure_provide_service(tile, f, callback);
 }

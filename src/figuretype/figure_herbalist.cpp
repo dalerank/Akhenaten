@@ -61,7 +61,7 @@ sound_key figure_herbalist::phrase_key() const {
 
 int figure_herbalist::provide_service() {
     int minmax = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, minmax, [] (building *b, figure *f, int &) {
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         f->data.herbalist.see_low_health += (b->common_health < 20) ? 1 : 0;
         b->common_health = std::max<uint8_t>(b->common_health, 50);
 
@@ -71,5 +71,6 @@ int figure_herbalist::provide_service() {
             housed.apothecary = MAX_COVERAGE;
         }
     });
+
     return houses_serviced;
 }

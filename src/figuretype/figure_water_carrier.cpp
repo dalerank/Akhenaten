@@ -100,8 +100,7 @@ const animations_t &figure_water_carrier::anim() const {
 
 
 int figure_water_carrier::provide_service() {
-    int none_service;
-    int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+    int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = ((building *)b)->dcast_house();
 
         if (house) {

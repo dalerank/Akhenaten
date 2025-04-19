@@ -37,9 +37,8 @@ sound_key figure_market_trader::phrase_key() const {
 }
 
 int figure_market_trader::provide_service() {
-    int none_service;
     int houses_serviced = provide_market_goods(home(), tile());
-    figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
+    figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = b->dcast_house();
 
         if (!house) {

@@ -124,7 +124,7 @@ void figure_tax_collector::figure_before_action() {
 
 int figure_tax_collector::provide_service() {
     int max_tax_rate = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_tax_rate, [] (building *b, figure *f, int &max_tax_multiplier) {
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         auto house = b->dcast_house();
         if (!house) {
             return;
@@ -132,8 +132,8 @@ int figure_tax_collector::provide_service() {
 
         if (house->house_population() > 0) {
             int tax_multiplier = model_get_house(house->house_level()).tax_multiplier;
-            if (tax_multiplier > max_tax_multiplier) {
-                max_tax_multiplier = tax_multiplier;
+            if (tax_multiplier > max_tax_rate) {
+                max_tax_rate = tax_multiplier;
             }
 
             if (house->house_level() < HOUSE_ORDINARY_COTTAGE) {

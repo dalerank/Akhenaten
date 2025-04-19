@@ -95,7 +95,7 @@ sound_key figure_constable::phrase_key() const {
 
 int figure_constable::provide_service() {
     int max_criminal_active = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_criminal_active, [] (building* b, figure *f, int &max_anger_seen) {
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building* b, figure *f) {
         auto house = b->dcast_house();
         if (!house) {
             return;
@@ -105,8 +105,8 @@ int figure_constable::provide_service() {
         housed.criminal_active -= 1;
         housed.criminal_active = std::max<int>(0, housed.criminal_active);
 
-        if (housed.criminal_active > max_anger_seen) {
-            max_anger_seen = housed.criminal_active;
+        if (housed.criminal_active > max_criminal_active) {
+            max_criminal_active = housed.criminal_active;
         }
     });
 

@@ -9,7 +9,7 @@
 figures::model_t<figure_librarian> librarian_m;
 
 int figure_librarian::provide_service() {
-    int houses_serviced = figure_provide_culture(tile(), &base, [] (building* b, figure *f, int&) {
+    int houses_serviced = figure_provide_culture(tile(), &base, [] (building* b, figure *f) {
         auto house = ((building *)b)->dcast_house();
 
         if (house) {

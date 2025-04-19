@@ -23,7 +23,7 @@ static int provide_missionary_coverage(int x, int y) {
     return 1;
 }
 
-static void mortuary_coverage(building* b, figure *f, int&) {
+static void mortuary_coverage(building* b, figure *f) {
     auto house = ((building *)b)->dcast_house();
 
     if (house) {
@@ -49,7 +49,7 @@ int figure::figure_service_provide_coverage() {
         break;
 
     case FIGURE_CHARIOR_RACER:
-        houses_serviced = figure_provide_culture(tile, this, [] (building *b, figure *f, int &) {
+        houses_serviced = figure_provide_culture(tile, this, [] (building *b, figure *f) {
             auto house = ((building *)b)->dcast_house();
 
             if (house) {

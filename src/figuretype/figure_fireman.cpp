@@ -246,13 +246,13 @@ bool figure_fireman::fight_fire() {
 
 int figure_fireman::provide_service() {
     int min_happiness;
-    int result = figure_provide_service(tile(), &base, min_happiness, [] (building *b, figure *f, int &min_happiness_seen) {
+    int result = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         b = b->main();
         b->fire_risk = 0;
 
         auto house = b->dcast_house();
         if (house) {
-            min_happiness_seen = std::max<short>(house->runtime_data().house_happiness, min_happiness_seen);
+            min_happiness = std::max<short>(house->runtime_data().house_happiness, min_happiness);
         }
     });
     base.min_max_seen = min_happiness;

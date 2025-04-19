@@ -80,7 +80,7 @@ sound_key figure_senet_player::phrase_key() const {
 
 int figure_senet_player::provide_service() {
     int houses_serviced = 0;
-    houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f, int &) {
+    houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f) {
         auto house = ((building *)b)->dcast_house();
 
         if (house) {

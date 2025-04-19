@@ -32,7 +32,7 @@ sound_key figure_juggler::phrase_key() const {
 
     int houses_in_disease = 0;
     buildings_house_do([&] (auto house) {
-        if (!house->house_population() <= 0) {
+        if (house->house_population() <= 0) {
             return;
         }
 
@@ -86,7 +86,7 @@ int figure_juggler::provide_service() {
     building* b = home();
 
     if (b->type == BUILDING_BOOTH) {
-        houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f, int &) {
+        houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f) {
             auto house = b->dcast_house();
             if (house) {
                 house->runtime_data().booth_juggler = MAX_COVERAGE;

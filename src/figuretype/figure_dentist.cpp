@@ -30,7 +30,7 @@ void figure_dentist::figure_before_action() {
 }
 
 int figure_dentist::provide_service() {
-    int houses_serviced = figure_provide_culture(tile(), &base, [] (building* b, figure *f, int&) {
+    int houses_serviced = figure_provide_culture(tile(), &base, [] (building* b, figure *f) {
         auto house = b->dcast_house();
         if (!house) {
             return;

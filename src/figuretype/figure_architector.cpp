@@ -93,9 +93,9 @@ figure_sound_t figure_architector::get_sound_reaction(xstring key) const {
 
 int figure_architector::provide_service() {
     int max_damage = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, max_damage, [] (building *b, figure *f, int &max_damage_seen) {
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         b = b->main();
-        max_damage_seen = std::max<short>(b->damage_risk, max_damage_seen);
+        max_damage = std::max<short>(b->damage_risk, max_damage);
         b->damage_risk = 0;
     });
 

@@ -22,7 +22,7 @@ void figure_scriber::figure_action() {
     }
 }
 
-void academy_coverage(building* b, figure *f, int&) {
+void academy_coverage(building* b, figure *f) {
     auto house = ((building *)b)->dcast_house();
 
     if (house) {

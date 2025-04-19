@@ -76,8 +76,7 @@ sound_key figure_teacher::phrase_key() const {
 }
 
 int figure_teacher::provide_service() {
-    int none_value;
-    int houses_serviced = figure_provide_service(tile(), &base, none_value, [] (building *b, figure *f, int &) {
+    int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = b->dcast_house();
         if (!house) {
             return;

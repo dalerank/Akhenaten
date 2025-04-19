@@ -94,7 +94,7 @@ sound_key figure_labor_seeker::phrase_key() const {
 
 int figure_labor_seeker::provide_service() {
     int houses_serviced = 0;
-    figure_provide_service(tile(), &base, houses_serviced, [] (building *b, figure *f, int &houses_serviced) {
+    figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         auto house = b->dcast_house();
         if (!house) {
             return;
