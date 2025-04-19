@@ -9,6 +9,16 @@
 #include "city/city.h"
 #include "city/city_events.h"
 
+struct tutorial_5 : public tutorial_t {
+    virtual int missionid() const override { return 5; }
+    virtual void init() override;
+    virtual void reset() override;
+    virtual void update_step(xstring s) override;
+    virtual xstring goal_text() override;
+};
+
+tutorial_5 g_tutorial_5;
+
 void tutorial_5::reset() {
     g_tutorials_flags.tutorial_5.started = 0;
     g_tutorials_flags.tutorial_5.spacious_apartment = 0;
