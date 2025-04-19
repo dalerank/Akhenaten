@@ -93,9 +93,22 @@ sound_key figure_labor_seeker::phrase_key() const {
 }
 
 int figure_labor_seeker::provide_service() {
-    int none_service;
-    int houses_serviced = figure_provide_service(tile(), &base, none_service, [] (building *b, figure *f, int &) {
-        // nothing here yet, the labor seeker works simply via the `houses_covered` variable
+    int houses_serviced = 0;
+    figure_provide_service(tile(), &base, houses_serviced, [] (building *b, figure *f, int &houses_serviced) {
+        auto house = b->dcast_house();
+        if (!house) {
+            return;
+        }
+
+        if (house->house_population() <= 0) {
+            return;
+        }
+
+        if (house->is_nobles()) {
+            return;
+        }
+
+        houses_serviced++;
     });
     return houses_serviced;
 }

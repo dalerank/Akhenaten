@@ -94,6 +94,7 @@ public:
     inline void change_population(short delta) { runtime_data().population += delta; }
     inline e_house_level house_level() const { return (e_house_level)(type() - BUILDING_HOUSE_CRUDE_HUT); }
     inline uint8_t hsize() const { return runtime_data().hsize; }
+    inline bool is_nobles() const { return (house_level() >= HOUSE_COMMON_MANOR); }
 
     void determine_evolve_text();
     void determine_worst_desirability_building();

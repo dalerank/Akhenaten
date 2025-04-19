@@ -138,11 +138,10 @@ void city_finance_t::update_estimate_taxes() {
             return;
         }
 
-        const bool is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
         const int house_tax_multiplier = house->model().tax_multiplier;
         const int scenario_tax_rate_multiplier = g_scenario.house_tax_multiplier(house_tax_multiplier);
 
-        if (is_nobles) {
+        if (house->is_nobles()) {
             taxes.monthly.collected_nobles += housed.population * scenario_tax_rate_multiplier;
         } else {
             taxes.monthly.collected_citizens += housed.population * scenario_tax_rate_multiplier;
