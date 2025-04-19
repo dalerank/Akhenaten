@@ -17,6 +17,8 @@ namespace game_features {
         xstring to_string() const;
         inline bool operator!() const { return !to_bool(); }
         void set(bool value);
+        void set(float value);
+        void set(int value);
         void set(const xstring &value);
         void set(pcstr value);
         setting_variant_type type() const;

@@ -10,8 +10,9 @@ import common
 import images
 import city_sounds
 import walker_sounds
-include(":buildings.js")
-include(":overlays.js")
+import ui_window_features
+import buildings
+import overlays
 include(":building_sounds.js")
 include(":images.js")
 include(":images_remap.js")

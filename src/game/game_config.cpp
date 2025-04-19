@@ -122,6 +122,15 @@ void game_features::game_feature::set(bool value) {
     _settings.set_bool(name, value);
 }
 
+void game_features::game_feature::set(int value) {
+    _settings.set_int(name, value);
+}
+
+
+void game_features::game_feature::set(float value) {
+    _settings.set_float(name, value);
+}
+
 void game_features::game_feature::set(const xstring &value) {
     _settings.set_string(name, value);
 }
