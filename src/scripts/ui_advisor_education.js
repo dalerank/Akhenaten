@@ -7,7 +7,7 @@ window advisor_education_window = {
 		title 	     : header({pos:[60, 17], text:[57, 0]})
 	  	population   : text_center({pos:[20, 50], size:[200, 20], text:"${city.population} ${57.6}", font: FONT_NORMAL_BLACK_ON_LIGHT})
 	  	school_age   : text_center({pos:[220, 50], size:[200, 20], text: "${city.population_kids} ${57.4}", font: FONT_NORMAL_BLACK_ON_LIGHT})
-	  	academy_age  : text_center({pos:[420, 50], size:[200, 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
+	  	academy_age  : text_center({pos:[420, 50], size:[200, 20], text: "${city.population_youngs} ${57.6}", font: FONT_NORMAL_BLACK_ON_LIGHT})
 
 	  	// table headers
     	header1 	 : text({text:[57, 4], pos:[180, 86], font:FONT_SMALL_PLAIN})

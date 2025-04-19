@@ -71,8 +71,6 @@ struct city_population_t {
     void yearly_advance_ages_and_calculate_deaths();
 };
 
-int city_population_academy_age();
-
 int city_population_last_used_house_add();
 void city_population_set_last_used_house_add(int building_id);
 

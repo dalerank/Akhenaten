@@ -59,8 +59,6 @@ void ui::advisor_education_window::init() {
     const auto &coverage = g_city.coverage;
     building_type = BUILDING_SCRIBAL_SCHOOL;
 
-    ui["academy_age"].text_var("%u %s", city_population_academy_age(), ui::str(57, 3));
-
     ui["school_total"].text_var("%u %s", g_city.buildings.count_total(BUILDING_SCRIBAL_SCHOOL), ui::str(8, 18));
     ui["school_active"].text_var("%u", g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL));
     ui["school_care"].text_var("%u %s", 75 * g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL), ui::str(57, 7));

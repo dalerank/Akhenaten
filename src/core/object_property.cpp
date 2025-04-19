@@ -33,6 +33,7 @@ const xstring id_property_t::total_stored = "total_stored";
 const xstring id_property_t::free_space = "free_space";
 const xstring id_property_t::population = "population";
 const xstring id_property_t::population_kids = "population_kids";
+const xstring id_property_t::population_youngs = "population_youngs";
 const xstring id_property_t::treasury = "treasury";
 const xstring id_property_t::culture = "culture";
 const xstring id_property_t::prosperity = "prosperity";
