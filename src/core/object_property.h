@@ -30,6 +30,7 @@ struct id_property_t {
     static const xstring total_stored;
     static const xstring free_space;
     static const xstring population;
+    static const xstring population_kids;
     static const xstring treasury;
     static const xstring culture;
     static const xstring prosperity;

@@ -1283,6 +1283,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
     static cproperty cproperties[] = {
         { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
         { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.current); }},
+        { tags().city, tags().population_kids, [] (const xstring &) { return bvariant(g_city.population.school_age); }},
         { tags().city, tags().treasury, [] (const xstring &) { return bvariant(g_city.finance.treasury); }},
         { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
         { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},

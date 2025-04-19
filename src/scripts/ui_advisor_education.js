@@ -5,8 +5,8 @@ window advisor_education_window = {
 		background   : outer_panel({size:[40, 17]})
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:7, pos:[10, 10] })
 		title 	     : header({pos:[60, 17], text:[57, 0]})
-	  	population   : text_center({pos:[20, 50], size:[200, 20], text:"${city.population} ${57.1}", font: FONT_NORMAL_BLACK_ON_LIGHT})
-	  	school_age   : text_center({pos:[220, 50], size:[200, 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
+	  	population   : text_center({pos:[20, 50], size:[200, 20], text:"${city.population} ${57.6}", font: FONT_NORMAL_BLACK_ON_LIGHT})
+	  	school_age   : text_center({pos:[220, 50], size:[200, 20], text: "${city.population_kids} ${57.4}", font: FONT_NORMAL_BLACK_ON_LIGHT})
 	  	academy_age  : text_center({pos:[420, 50], size:[200, 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
 
 	  	// table headers

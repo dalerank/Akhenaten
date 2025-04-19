@@ -29,10 +29,6 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 
 
 static auto &city_data = g_city;
 
-int city_population_school_age() {
-    return city_data.population.school_age;
-}
-
 int city_population_academy_age() {
     return city_data.population.academy_age;
 }

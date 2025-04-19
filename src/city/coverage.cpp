@@ -102,7 +102,7 @@ void city_coverage_t::update() {
     // education
     city_population_calculate_educational_age();
 
-    school = std::min(calc_percentage(75 * g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL), city_population_school_age()), 100);
+    school = std::min(calc_percentage(75 * g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL), g_city.population.school_age), 100);
     library = std::min(calc_percentage(800 * g_city.buildings.count_active(BUILDING_LIBRARY), pop), 100);
     academy = std::min(calc_percentage(100 * g_city.buildings.count_active(BUILDING_ACADEMY), city_population_academy_age()), 100);
 }
