@@ -17,13 +17,13 @@ void ui::advisor_labors_window::change_wages(int v) {
     city_finance_calculate_totals();
 }
 
-int ui::advisor_labors_window::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
+void ui::advisor_labors_window::init() {
+    advisor_window::init();
 
     bstring256 employed_text;
-    employed_text.printf("%u %s %u %s %u%%)", g_city.labor.workers_employed, ui::str(50, 12), 
-                                              g_city.labor.workers_unemployed, ui::str(50, 13),
-                                              g_city.labor.unemployment_percentage);
+    employed_text.printf("%u %s %u %s %u%%)", g_city.labor.workers_employed, ui::str(50, 12),
+        g_city.labor.workers_unemployed, ui::str(50, 13),
+        g_city.labor.unemployment_percentage);
     ui["employed"] = employed_text;
     ui["wages_value"].text_var("%u %s %s %u)", g_city.labor.wages, ui::str(50, 15), ui::str(50, 18), g_city.labor.wages_kingdome);
     ui["wages_estimated"].text_var("%s %u", ui::str(50, 19), city_finance_estimated_wages());
@@ -35,6 +35,11 @@ int ui::advisor_labors_window::draw_background(UiFlags flags) {
     ui["inc_wages"].onclick([this] {
         change_wages(1);
     });
+}
+
+int ui::advisor_labors_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
     return 0;
 }
 
@@ -42,23 +47,40 @@ void ui::advisor_labors_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 
-    for (int i = 0; i < 9; i++) {
-        int y_offset = 82 + 25 * i;
-        ui.button("", vec2i(40, 77 + 25 * i), vec2i{560, 20})
+    auto cat_name = [] (int cat) {
+        if (cat == LABOR_CATEGORY_CULTURE) 
+             return "Culture";
+
+        ui::str(50, cat + 1);
+    };
+
+    const auto &item = ui["item"];
+    const auto &item_image = ui["item_image"];
+    const auto &items_area = ui["items_area"];
+    const auto &item_priority = ui["item_priority"];
+    const auto &item_category = ui["item_category"];
+    const auto &item_needed = ui["item_needed"];
+    const auto &item_allocated = ui["item_allocated"];
+    for (int i = 0; i < LABOR_CATEGORY_SIZE; i++) {
+        vec2i offset = vec2i{ item.pos.x, item.pos.y * i } + items_area.pos;
+        ui.button("", offset, item.pxsize())
             .onclick([category = i] {
                 window_labor_priority_show(category);
             });
 
-        const labor_category_data* cat = city_labor_category(i);
+        const labor_category* cat = g_city.labor.category(i);
         if (cat->priority) {
-            ui.image(image_desc{ PACK_GENERAL, 94 }, vec2i{ 70, y_offset - 2 });
-            ui.label(bstring32(cat->priority), vec2i{ 90, y_offset }, FONT_NORMAL_WHITE_ON_DARK);
+            ui.image(item_image.image(), offset + item_image.pos );
+            ui.label(bstring32(cat->priority), offset + item_priority.pos, item_priority.font());
         }
-        ui.label(ui::str(50, i + 1), vec2i{ 170, y_offset }, FONT_NORMAL_WHITE_ON_DARK);
-        ui.label(bstring32(cat->workers_needed), vec2i{ 410, y_offset }, FONT_NORMAL_WHITE_ON_DARK);
 
-        e_font font = cat->workers_needed != cat->workers_allocated ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
-        ui.label(bstring32(cat->workers_allocated), vec2i{ 510, y_offset }, font);
+        ui.label(cat_name(i), offset + item_category.pos, item_category.font());
+        ui.label(bstring32(cat->workers_needed), offset + item_needed.pos, item_needed.font());
+
+        e_font font = (cat->workers_needed != cat->workers_allocated)
+                            ? item_allocated.font()
+                            : item_allocated.font_hover();
+        ui.label(bstring32(cat->workers_allocated), offset + item_allocated.pos, font);
     }
     ui.end_widget();
 }

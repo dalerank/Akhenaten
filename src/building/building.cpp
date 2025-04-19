@@ -1258,7 +1258,7 @@ void building_impl::static_params::load(archive arch) {
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
 
-    city_labor_set_category(type, labor_category);
+    city_labor_t::set_category(type, labor_category);
 
     anim.load(arch);
 }

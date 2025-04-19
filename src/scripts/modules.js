@@ -13,8 +13,10 @@ import walker_sounds
 import ui_window_features
 import buildings
 import overlays
-include(":building_sounds.js")
-include(":images.js")
+import building_sounds
+import images
+import ui_advisor_labor
+import ui_advisor_military
 include(":images_remap.js")
 include(":imagepaks.js")
 include(":missions.js")

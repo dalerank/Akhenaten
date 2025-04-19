@@ -242,11 +242,11 @@ static int category_for_int_arr_ph[300] = {
   -1, // grand r. tomb
 };
 
-const labor_category_data* city_labor_category(int category) {
-    return &g_city.labor.categories[category];
+const labor_category* city_labor_t::category(int category) {
+    return &categories[category];
 }
 
-void city_labor_set_category(e_building_type type, int category) {
+void city_labor_t::set_category(e_building_type type, int category) {
     category_for_int_arr_ph[type] = category;
 }
 
@@ -328,6 +328,9 @@ int city_labor_t::lower_wages_kingdome() {
     return 1;
 }
 
+int city_labor_t::workers_allocated(int category) const {
+    return categories[category].workers_allocated;
+}
 
 void city_labor_t::calculate_workers(int num_plebs, int num_patricians) {
     g_city.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
@@ -353,13 +356,9 @@ static bool should_have_workers(building* b, int category, int check_access) {
             return false;
     }
 
-    // engineering and water are always covered in C3
-    //if (GAME_ENV == ENGINE_ENV_C3
-    //    && (category == LABOR_CATEGORY_INFRASTRUCTURE || category == LABOR_CATEGORY_WATER_HEALTH))
-    //    return true;
-
     if (check_access)
         return b->houses_covered > 0 ? 1 : 0;
+
     return true;
 }
 
@@ -482,7 +481,7 @@ void city_labor_t::allocate_workers_to_water() {
         return;
 
     static int start_building_id = 1;
-    labor_category_data* water_cat = &categories[LABOR_CATEGORY_WATER_HEALTH];
+    labor_category* water_cat = &categories[LABOR_CATEGORY_WATER_HEALTH];
 
     int percentage_not_filled = 100 - calc_percentage(water_cat->workers_allocated, water_cat->workers_needed);
 

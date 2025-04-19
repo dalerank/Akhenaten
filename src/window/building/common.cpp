@@ -67,7 +67,7 @@ textid get_employment_info_text_id(object_info* c, building* b, int consider_hou
         text_id = 17; // no employees nearby
     else if (b->houses_covered < 40)
         text_id = 20; // poor access to employees
-    else if (city_labor_category(b->labor_category)->workers_allocated <= 0)
+    else if (g_city.labor.workers_allocated(b->labor_category) <= 0)
         text_id = 18; // no people allocated
     else {
         text_id = 19; // too few people allocated

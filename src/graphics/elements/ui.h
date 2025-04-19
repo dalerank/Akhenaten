@@ -138,6 +138,7 @@ struct element {
     virtual image_desc image() const { return {}; }
     virtual void font(int) {}
     virtual e_font font() const { return FONT_INVALID; }
+    virtual e_font font_hover() const { return FONT_INVALID; }
     virtual void width(int v) { size.x = v; }
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
@@ -281,6 +282,7 @@ struct elabel : public element {
     virtual void text(pcstr) override;
     virtual void text_color(color) override;
     virtual void font(int) override;
+    virtual e_font font_hover() const override { return _font_hover; }
     virtual e_font font() const override { return _font; }
     virtual const xstring &tooltip() const override { return _tooltip; }
     virtual const xstring &format() const override { return _format; }

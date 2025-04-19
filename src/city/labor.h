@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "labor_category.h"
 
-struct labor_category_data {
+struct labor_category {
     int workers_needed;
     int workers_allocated;
     int buildings;
@@ -20,10 +20,11 @@ struct city_labor_t {
     int32_t workers_needed;
     int32_t unemployment_percentage;
     int32_t unemployment_percentage_for_goverment;
-    labor_category_data categories[10];
+    labor_category categories[10];
 
     int raise_wages_kingdome();
     int lower_wages_kingdome();
+    int workers_allocated(int category) const;
     void change_wages(int amount);
     void calculate_workers(int num_plebs, int num_patricians);
     void calculate_workers_needed_per_category();
@@ -37,12 +38,11 @@ struct city_labor_t {
     void update();
     void set_priority(int category, int new_priority);
     int max_selectable_priority(int category);
+    const labor_category* category(int category);
+    static void set_category(e_building_type type, int category);
 };
 
 e_labor_category category_for_building(building* b);
-
-const labor_category_data* city_labor_category(int category);
-void city_labor_set_category(e_building_type type, int category);
 
 template<class T>
 void city_labor_set_category(const T &model) {

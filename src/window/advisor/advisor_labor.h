@@ -10,7 +10,7 @@ struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
     virtual void draw_foreground(UiFlags flags) override {};
     virtual int draw_background(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual void init() override {};
+    virtual void init() override;
 
     static advisor_window *instance();
 
