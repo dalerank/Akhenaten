@@ -158,7 +158,7 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         }
 
 #if defined(__vita__) || defined(GAME_PLATFORM_ANDROID)
-        FILE* fp = vfs::file_open(filename, "rb");
+        FILE* fp = vfs::file_open_os(filename, "rb");
         if (!fp) {
             return NULL;
         }
