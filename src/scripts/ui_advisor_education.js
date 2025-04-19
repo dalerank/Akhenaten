@@ -36,6 +36,6 @@ window advisor_education_window = {
 		    }
 	    })
 
-    	education_advice : multiline({pos:[60, 180], wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
+    	education_advice : multiline({pos:[30, 200], size:[px(37), 0], font: FONT_NORMAL_BLACK_ON_LIGHT })
 	}
 }

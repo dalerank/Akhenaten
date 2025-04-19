@@ -88,7 +88,6 @@ var empire_images_remap = []
 var advisor_labors_window = {}
 var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
-var roadblock_info_window = {}
 var empty_info_window = {}
 var advisors_window = {}
 var advisor_military_window = {}
