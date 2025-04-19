@@ -43,7 +43,6 @@ static void set_all_tut_flags_null() {
     for (auto t: tutorial_t::list()) {
         t->reset();
     }
-    tutorial_2::reset();
     tutorial_3::reset();
     tutorial_4::reset();
     tutorial_5::reset();
@@ -120,11 +119,6 @@ bool tutorial_menu_update(int tut) {
         }
     }
     
-    if (tut == 2) {
-        tutorial_2::init();
-        return true;
-    } 
-    
     if (tut == 3) {
         tutorial_3::init();
         return true;
@@ -163,7 +157,6 @@ xstring tutorial_get_immediate_goal_text() {
         }
     }
 
-    if (g_scenario.is_scenario_id(2))  return tutorial_2::goal_text();
     if (g_scenario.is_scenario_id(3))  return tutorial_3::goal_text();
     if (g_scenario.is_scenario_id(4))  return tutorial_4::goal_text();
     if (g_scenario.is_scenario_id(5))  return tutorial_5::goal_text();
@@ -187,7 +180,6 @@ void tutorial_update_step(xstring s) {
         }
     }
 
-    tutorial_2::update_step(s);
     tutorial_3::update_step(s);
     //tutorial_4::update_step(s);
     tutorial_5::update_step(s);

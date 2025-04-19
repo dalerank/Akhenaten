@@ -8,6 +8,16 @@
 #include "city/finance.h"
 #include "game/game.h"
 
+struct tutorial_2 : public tutorial_t {
+    virtual int missionid() const override { return 2; }
+    virtual void init() override;
+    virtual void reset() override;
+    virtual void update_step(xstring s) override;
+    virtual xstring goal_text() override;
+};
+
+tutorial_2 g_tutorial_2;
+
 void tutorial_2_on_build_temple(event_building_create ev) {
     if (g_tutorials_flags.tutorial_2.temples_built) {
         return;

@@ -40,13 +40,6 @@ struct tutorial_t {
     static tutorial_list &list();
 };
 
-struct tutorial_2 {
-    static void init();
-    static void reset();
-    static void update_step(xstring s);
-    static xstring goal_text();
-};
-
 struct tutorial_3 {
     static void init();
     static void reset();
