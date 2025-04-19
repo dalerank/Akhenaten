@@ -15,10 +15,29 @@
 #include "dev/debug.h"
 #include <iostream>
 
-declare_console_command_p(addprosperity, game_cheat_add_prosperity)
-declare_console_command_p(updatekingdome, game_cheat_update_kingdome)
-declare_console_command_p(addkingdome, game_cheat_add_kingdome)
-declare_console_command_p(addculture, game_cheat_add_culture)
+declare_console_command_p(addprosperity) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
+}
+
+declare_console_command_p(updatekingdome) {
+    std::string args; is >> args;
+    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    g_city.ratings.update_kingdom_rating(!!value);
+}
+
+declare_console_command_p(addkingdome) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.ratings.kingdom = calc_bound(g_city.ratings.kingdom + amount, 0, 100);
+}
+
+declare_console_command_p(addculture) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
+};
 
 struct rating_points {
     using points_t = svector<city_ratings_t::point, 32>;
@@ -49,30 +68,6 @@ rating_points ANK_VARIABLE(culture_booth_rating_points);
 rating_points ANK_VARIABLE(culture_school_rating_points);
 rating_points ANK_VARIABLE(culture_academy_rating_points);
 rating_points ANK_VARIABLE(culture_library_rating_points);
-
-void game_cheat_add_prosperity(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
-    g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
-};
-
-void game_cheat_add_kingdome(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
-    g_city.ratings.kingdom = calc_bound(g_city.ratings.kingdom + amount, 0, 100);
-};
-
-void game_cheat_add_culture(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
-    g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
-};
-
-void game_cheat_update_kingdome(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-    g_city.ratings.update_kingdom_rating(!!value);
-}
 
 int city_ratings_t::selected_explanation() {
     switch (selected) {

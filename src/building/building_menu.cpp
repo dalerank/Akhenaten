@@ -21,8 +21,7 @@
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_buldingin_menu);
 
-declare_console_command_p(menuupdate, game_cheat_menu_update);
-void game_cheat_menu_update(std::istream &is, std::ostream &) {
+declare_console_command_p(menuupdate) {
     std::string args;
     is >> args;
     building_menu_update(args.c_str());

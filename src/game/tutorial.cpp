@@ -23,15 +23,13 @@
 tutorial_flags_t g_tutorials_flags;
 const tutorial_stage_t tutorial_stage;
 
-declare_console_command_p(runstage, game_cheat_tutorial_step);
-void game_cheat_tutorial_step(std::istream &is, std::ostream &) {
+declare_console_command_p(runstage) {
     std::string args;
     is >> args;
     tutorial_update_step(args.c_str());
 }
 
-declare_console_command_p(startmessage, game_cheat_startmessage);
-void game_cheat_startmessage(std::istream &is, std::ostream &) {
+declare_console_command_p(startmessage) {
     std::string args;
     is >> args;
     int messageid = args.empty() ? g_scenario.meta.start_message : std::stoi(args);

@@ -48,9 +48,7 @@ building_farm_henna::static_params farm_henna_m;
 building_farm_figs::static_params farm_figs_m;
 
 declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
-declare_console_command_p(farmgrow, game_cheat_farm_grow);
-
-void game_cheat_farm_grow(std::istream &is, std::ostream &os) {
+declare_console_command_p(farmgrow) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
 

@@ -46,8 +46,7 @@
 #include "dev/debug.h"
 #include <iostream>
 
-declare_console_command_p(destroytype, game_cheat_destroy_type)
-void game_cheat_destroy_type(std::istream &is, std::ostream &os) {
+declare_console_command_p(destroytype) {
     std::string args; is >> args;
     int type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     

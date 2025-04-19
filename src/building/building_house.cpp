@@ -29,11 +29,7 @@
 
 #define MAX_DIR 4
 
-declare_console_command_p(houseup, game_cheat_houseup)
-declare_console_command_p(housedown, game_cheat_housedown)
-declare_console_var_int(house_up_delay, 1000)
-
-void game_cheat_houseup(std::istream &is, std::ostream &os) {
+declare_console_command_p(houseup) {
     std::string args; is >> args;
 
     buildings_house_do([] (building_house *house) {
@@ -42,7 +38,7 @@ void game_cheat_houseup(std::istream &is, std::ostream &os) {
     });
 };
 
-void game_cheat_housedown(std::istream &is, std::ostream &os) {
+declare_console_command_p(housedown) {
     std::string args; is >> args;
 
     buildings_house_do([] (building_house *house) {
@@ -53,6 +49,8 @@ void game_cheat_housedown(std::istream &is, std::ostream &os) {
         house->change_to(house->base, prev_level);
     });
 };
+
+declare_console_var_int(house_up_delay, 1000)
 
 building_house_crude_hut::static_params house_crude_hut_m;
 building_house_sturdy_hut::static_params house_sturdy_hut_m;

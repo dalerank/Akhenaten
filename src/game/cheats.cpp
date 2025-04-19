@@ -190,7 +190,7 @@ void game_cheat_parse_command(pcstr command) {
     }
 }
 
-static void game_cheat_add_money(std::istream &is, std::ostream &os) {
+declare_console_command_p(addmoney) {
     std::string args; is >> args;
     int money = 0;
     parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
@@ -198,11 +198,9 @@ static void game_cheat_add_money(std::istream &is, std::ostream &os) {
     events::emit(event_city_warning{ "Added money" });
 }
 
-static void game_cheat_test_crash(std::istream &is, std::ostream &os) {
+declare_console_command_p(crashme) {
     events::emit(event_city_warning{ "Trying to crash the game" });
     const int *p = nullptr;
     std::cout << *p;
 }
 
-declare_console_command(addmoney, game_cheat_add_money);
-declare_console_command_p(crashme, game_cheat_test_crash);

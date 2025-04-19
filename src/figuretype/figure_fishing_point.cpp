@@ -12,8 +12,7 @@ static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 
 figures::model_t<figure_fishing_point> fishing_point_m;
 figures::model_t<figure_fishing_spot> fishing_spot_m;
 
-declare_console_command_p(addfishpoints, game_cheat_create_fishing_points)
-void game_cheat_create_fishing_points(std::istream &is, std::ostream &os) {
+declare_console_command_p(addfishpoints) {
     std::string args; is >> args;
     int count = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 

@@ -19,8 +19,7 @@
 
 figures::model_t<figure_trade_ship> trader_ship_m;
 
-declare_console_command_p(sinkallships, game_cheat_sink_all_ships)
-void game_cheat_sink_all_ships(std::istream &is, std::ostream &os) {
+declare_console_command_p(sinkallships) {
     figure_valid_do([] (figure &f) {
         f.dcast()->kill();
     }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);

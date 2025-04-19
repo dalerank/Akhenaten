@@ -21,8 +21,7 @@ const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static int cheated_invasion = 0;
 
-declare_console_command_p(addsavings, game_cheat_add_savings);
-void game_cheat_add_savings(std::istream &is, std::ostream &) {
+declare_console_command_p(addsavings) {
     std::string args;
     is >> args;
     int amount = atoi(!args.empty() ? args.c_str() : "100");

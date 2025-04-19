@@ -36,8 +36,6 @@
 #include <numeric>
 #include <string>
 
-declare_console_command_p(finishphase, game_cheat_finish_phase);
-
 building_small_mastaba::static_params small_mastaba_m;
 buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
 buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
@@ -671,7 +669,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
     return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles_size());
 }
 
-void game_cheat_finish_phase(std::istream &, std::ostream &) {
+declare_console_command_p(finishphase) {
     buildings_valid_do([&] (building &b) {
         if (!b.is_monument()) {
             return;

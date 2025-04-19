@@ -32,9 +32,7 @@
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
 
-declare_console_command_p(killall, console_command_killall);
-declare_console_command_p(createfigure, console_command_create_figure)
-void console_command_killall(std::istream &, std::ostream &) {
+declare_console_command_p(killall) {
     for (auto &f: map_figures()) {
         if (f->is_valid()) {
             f->poof();
@@ -44,7 +42,7 @@ void console_command_killall(std::istream &, std::ostream &) {
     events::emit(event_city_warning{ "Killed all walkers" });
 }
 
-void console_command_create_figure(std::istream &is, std::ostream &os) {
+declare_console_command_p(createfigure) {
     std::string args; is >> args;
     int f_type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 

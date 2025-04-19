@@ -149,7 +149,7 @@ struct console_ref_bool {
 };
 
 #define declare_console_command(a, ...) namespace console { bool cmd_##a; }; console_command a(#a, __VA_ARGS__);
-#define declare_console_command_p(a, f) namespace console { bool cmd_##a; }; void f(std::istream &, std::ostream &); console_command a(#a, f);
+#define declare_console_command_p(a) namespace console { bool cmd_##a; }; void cmd_ ##a ##_impl(std::istream &, std::ostream &); console_command a(#a, cmd_ ##a ##_impl); void cmd_ ##a ##_impl(std::istream &is, std::ostream &os)
 #define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
 #define declare_console_ref_int16(a, v) namespace console { bool var_##a; }; console_ref_int16 a(#a, v);
 #define declare_console_ref_int32(a, v) namespace console { bool var_##a; }; console_ref_int32 a(#a, v);

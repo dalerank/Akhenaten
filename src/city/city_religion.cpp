@@ -30,15 +30,7 @@
 #include <algorithm>
 #include <array>
 
-declare_console_command_p(godminorblessing, game_cheat_minor_blessing)
-declare_console_command_p(godmajorblessing, game_cheat_major_blessing)
-declare_console_command_p(godminorcurse, game_cheat_minor_curse)
-declare_console_command_p(godmajorcurse, game_cheat_major_curse)
-declare_console_command_p(ranotrade, game_cheat_ranotrade)
-
-const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
-
-void game_cheat_minor_blessing(std::istream &is, std::ostream &os) {
+declare_console_command_p(godminorblessing) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_minor_blessing((e_god)god_id);
@@ -46,7 +38,7 @@ void game_cheat_minor_blessing(std::istream &is, std::ostream &os) {
     events::emit(event_city_warning{ "Casted minor blessing" });
 }
 
-void game_cheat_major_blessing(std::istream &is, std::ostream &os) {
+declare_console_command_p(godmajorblessing) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_blessing((e_god)god_id);
@@ -54,7 +46,7 @@ void game_cheat_major_blessing(std::istream &is, std::ostream &os) {
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
-void game_cheat_minor_curse(std::istream &is, std::ostream &os) {
+declare_console_command_p(godminorcurse) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_minor_curse((e_god)god_id);
@@ -62,7 +54,7 @@ void game_cheat_minor_curse(std::istream &is, std::ostream &os) {
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
-void game_cheat_major_curse(std::istream &is, std::ostream &os) {
+declare_console_command_p(godmajorcurse) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_curse((e_god)god_id);
@@ -70,7 +62,7 @@ void game_cheat_major_curse(std::istream &is, std::ostream &os) {
     events::emit(event_city_warning{ "Casted upset" });
 }
 
-void game_cheat_ranotrade(std::istream &is, std::ostream &os) {
+declare_console_command_p(ranotrade, game_cheat_ranotrade) {
     std::string args; is >> args;
     int nomonth = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 
@@ -78,6 +70,8 @@ void game_cheat_ranotrade(std::istream &is, std::ostream &os) {
     g_city.religion.ra_harshly_reduced_trading_months_left = nomonth;
     g_warning_manager.show_console_var("Ra no month trade %d", nomonth);
 }
+
+const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
 
 void city_religion_t::reset() {
     static auto &city_data = g_city;

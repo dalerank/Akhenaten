@@ -21,8 +21,7 @@
 
 building_fishing_wharf::static_params fishing_wharf_m;
 
-declare_console_command_p(killfishboats, game_cheat_kill_fish_boats);
-void game_cheat_kill_fish_boats(std::istream &is, std::ostream &os) {
+declare_console_command_p(killfishboats) {
     figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }
 

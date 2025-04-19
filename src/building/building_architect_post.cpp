@@ -20,19 +20,16 @@
 
 #include <iostream>
 
-declare_console_command_p(nodamage, console_command_nodamage);
-declare_console_command_p(collapse, console_command_collapse);
-
 buildings::model_t<building_architect_post> architect_post_m;
 info_window_architect_post architect_post_infow;
 
-void console_command_nodamage(std::istream &, std::ostream &) {
+declare_console_command_p(nodamage) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
 }
 
-void console_command_collapse(std::istream &is, std::ostream &) {
+declare_console_command_p(collapse) {
     std::string args;
     is >> args;
     int count = atoi(!args.empty() ? args.c_str() : "10");

@@ -16,18 +16,15 @@
 #include "dev/debug.h"
 #include <iostream>
 
-declare_console_command_p(victory, game_cheat_force_victory)
-declare_console_command_p(defeat, game_cheat_force_defeat)
-
-svector<victory_condition, 16> g_victory_conditions;
-
-void game_cheat_force_defeat(std::istream &is, std::ostream &os) {
+declare_console_command_p(victory) {
     g_city.victory_state.force_lost = true;
 }
 
-void game_cheat_force_victory(std::istream &is, std::ostream &os) {
+declare_console_command_p(defeat) {
     g_city.victory_state.force_win = true;
 }
+
+svector<victory_condition, 16> g_victory_conditions;
 
 void victory_state_t::reset() {
    state = e_victory_state_none;

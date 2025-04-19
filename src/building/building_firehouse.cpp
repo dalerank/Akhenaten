@@ -10,15 +10,13 @@
 
 buildings::model_t<building_firehouse> firehouse_m;
 
-declare_console_command_p(nofire, console_command_nofire);
-declare_console_command_p(startfire, console_command_startfire);
-void console_command_nofire(std::istream &, std::ostream &) {
+declare_console_command_p(nofire) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
 }
 
-void console_command_startfire(std::istream &is, std::ostream &) {
+declare_console_command_p(startfire) {
     std::string args;
     is >> args;
     int count = atoi(!args.empty() ? args.c_str() : "10");

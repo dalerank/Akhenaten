@@ -20,8 +20,7 @@
 
 ui::mission_choice_window g_mission_next;
 
-declare_console_command_p(update_mission_next, ui_update_mission_next);
-void ui_update_mission_next(std::istream &is, std::ostream &) {
+declare_console_command_p(update_mission_next) {
     std::string args; is >> args;
     int scenario_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 

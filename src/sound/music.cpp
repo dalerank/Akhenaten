@@ -60,8 +60,7 @@ void config_load_soundtracks() {
     });
 }
 
-declare_console_command_p(playtrack, game_cheat_play_track);
-void game_cheat_play_track(std::istream &is, std::ostream &) {
+declare_console_command_p(playtrack) {
     std::string args;
     is >> args;
     g_sound.play_track(args.c_str());

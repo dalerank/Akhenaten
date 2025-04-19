@@ -23,8 +23,7 @@ empire_t g_empire;
 #define stricmp strcasecmp
 #endif
 
-declare_console_command_p(makeseatraders, game_cheat_make_sea_traders)
-void game_cheat_make_sea_traders(std::istream &is, std::ostream &os) {
+declare_console_command_p(makeseatraders) {
     for (auto &city : g_empire.get_cities()) {
         if (city.in_use) {
             city.is_sea_trade = true;

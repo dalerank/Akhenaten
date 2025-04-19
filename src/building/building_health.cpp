@@ -20,22 +20,7 @@
 building_apothecary::static_params apothercary_m;
 building_mortuary::static_params mortuary_m;
 
-declare_console_command_p(plague_start, game_cheat_start_plague);
-declare_console_command_p(plague_no, game_cheat_noplague);
-
-void game_cheat_noplague(std::istream &is, std::ostream &os) {
-    buildings_house_do([&] (building_house* house) {
-        if (house->house_population() <= 0) {
-            return;
-        }
-
-        house->base.disease_days = 0;
-        house->base.has_plague = false;
-        house->base.common_health = 100;
-    });
-}
-
-void game_cheat_start_plague(std::istream &is, std::ostream &os) {
+declare_console_command_p(plague_start) {
     std::string args; is >> args;
     int plague_people = atoi(args.empty() ? "100" : args.c_str());
 
@@ -47,6 +32,18 @@ void game_cheat_start_plague(std::istream &is, std::ostream &os) {
         total_population += house->house_population();
     });
     g_city.health.start_disease(total_population, true, plague_people);
+}
+
+declare_console_command_p(plague_no) {
+    buildings_house_do([&] (building_house* house) {
+        if (house->house_population() <= 0) {
+            return;
+        }
+
+        house->base.disease_days = 0;
+        house->base.has_plague = false;
+        house->base.common_health = 100;
+    });
 }
 
 void building_apothecary::spawn_figure() {

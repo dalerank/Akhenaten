@@ -68,8 +68,7 @@ void handle_debug_hotkeys(const hotkeys* h) {
     }
 }
 
-declare_console_command_p(render, game_cheat_render)
-void game_cheat_render(std::istream &is, std::ostream &os) {
+declare_console_command_p(debugrender) {
     std::string args; is >> args;
     g_debug_render  = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 };

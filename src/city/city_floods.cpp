@@ -17,8 +17,7 @@
 
 floods_t g_floods;
 
-declare_console_command_p(startflood, game_cheat_start_flood)
-void game_cheat_start_flood(std::istream &is, std::ostream &os) {
+declare_console_command_p(startflood) {
     std::string args; is >> args;
 
     if (args == "+") {
