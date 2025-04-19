@@ -22,16 +22,14 @@ void figure_scriber::figure_action() {
     }
 }
 
-void academy_coverage(building* b, figure *f) {
-    auto house = ((building *)b)->dcast_house();
-
-    if (house) {
-        auto &housed = house->runtime_data();
-        housed.academy = MAX_COVERAGE;
-    }
-}
-
 int figure_scriber::provide_service() {
-    int houses_serviced = figure_provide_culture(tile(), &base, academy_coverage);
+    int houses_serviced = figure_provide_culture(tile(), &base, [] (building *b, figure *f) {
+        auto house = ((building *)b)->dcast_house();
+
+        if (house) {
+            auto &housed = house->runtime_data();
+            housed.academy = MAX_COVERAGE;
+        }
+    });
     return houses_serviced;
 }

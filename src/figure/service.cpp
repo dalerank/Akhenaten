@@ -23,15 +23,6 @@ static int provide_missionary_coverage(int x, int y) {
     return 1;
 }
 
-static void mortuary_coverage(building* b, figure *f) {
-    auto house = ((building *)b)->dcast_house();
-
-    if (house) {
-        auto &housed = house->runtime_data();
-        housed.mortuary = MAX_COVERAGE;
-    }
-}
-
 int figure::figure_service_provide_coverage() {
     int houses_serviced = 0;
     int none_service = 0;
@@ -41,7 +32,14 @@ int figure::figure_service_provide_coverage() {
         return 0;
 
     case FIGURE_EMBALMER:
-        houses_serviced = figure_provide_culture(tile, this, mortuary_coverage);
+        houses_serviced = figure_provide_culture(tile, this, [] (building * b, figure * f) {
+            auto house = ((building *)b)->dcast_house();
+
+            if (house) {
+                auto &housed = house->runtime_data();
+                housed.mortuary = MAX_COVERAGE;
+            }
+        });
         break;
 
     case FIGURE_MISSIONARY:
