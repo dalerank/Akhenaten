@@ -30,6 +30,14 @@ void game_cheat_tutorial_step(std::istream &is, std::ostream &) {
     tutorial_update_step(args.c_str());
 }
 
+declare_console_command_p(startmessage, game_cheat_startmessage);
+void game_cheat_startmessage(std::istream &is, std::ostream &) {
+    std::string args;
+    is >> args;
+    int messageid = args.empty() ? g_scenario.meta.start_message : std::stoi(args);
+    messages::popup(messageid, 0, 0);
+}
+
 tutorial_t::tutorial_t() {
     list().push_back(this);
 }
@@ -44,8 +52,6 @@ static void set_all_tut_flags_null() {
         t->reset();
     }
     
-    tutorial_6::reset();
-
     //
     g_tutorials_flags.pharaoh.tut7_start = 0;
     g_tutorials_flags.pharaoh.tut8_start = 0;
@@ -140,8 +146,6 @@ xstring tutorial_get_immediate_goal_text() {
         }
     }
 
-    if (g_scenario.is_scenario_id(6))  return tutorial_6::goal_text();
-
     return "#unknown_tutoral_goal";
 }
 
@@ -159,9 +163,6 @@ void tutorial_update_step(xstring s) {
             return tut->update_step(s);
         }
     }
-
-    //tutorial_4::update_step(s);
-    tutorial_6::update_step(s);
 }
 
 void tutorial_flags_t::update_starting_message() {
