@@ -376,7 +376,7 @@ window window_dinasty_menu = {
 		background      : outer_panel({size: [24, 19]})
 
 		title 		: text_center({pos:[0, 20], size:[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
-		btnresume   : button({margin:{centerx: -5, top: 40 + 1 * 40}, size:[270, 25], text:[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
+		btnresume   : button({margin:{centerx: -135, top: 40 + 1 * 40}, size:[270, 25], text:[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
 		btnexplore  : button({margin:{centerx: -135, top: 40 + 2 * 40}, size:[270, 25], text:[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
 		btnload     : button({margin:{centerx: -135, top: 40 + 3 * 40}, size:[270, 25], text:[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
 		btncustom   : button({margin:{centerx: -135, top: 40 + 4 * 40}, size:[270, 25], text:[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })

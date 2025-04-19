@@ -4,6 +4,7 @@
 #include "city/constants.h"
 #include "building/building_type.h"
 #include "core/xstring.h"
+#include "core/svector.h"
 
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
@@ -25,11 +26,18 @@ struct tutorial_stage_t {
 #undef _RR
 };
 
-struct tutorial_1 {
-    static void init();
-    static void reset();
-    static void update_step(xstring s);
-    static xstring goal_text();
+struct tutorial_t {
+    using tutorial_list = svector<tutorial_t *, 16>;
+
+    tutorial_t();
+    
+    virtual int missionid() const = 0;
+    virtual void init() = 0;
+    virtual void reset() = 0;
+    virtual void update_step(xstring s) = 0;
+    virtual xstring goal_text() = 0;
+
+    static tutorial_list &list();
 };
 
 struct tutorial_2 {

@@ -30,8 +30,19 @@ void game_cheat_tutorial_step(std::istream &is, std::ostream &) {
     tutorial_update_step(args.c_str());
 }
 
+tutorial_t::tutorial_t() {
+    list().push_back(this);
+}
+
+tutorial_t::tutorial_list &tutorial_t::list() {
+    static tutorial_list list;
+    return list;
+}
+
 static void set_all_tut_flags_null() {
-    tutorial_1::reset();
+    for (auto t: tutorial_t::list()) {
+        t->reset();
+    }
     tutorial_2::reset();
     tutorial_3::reset();
     tutorial_4::reset();
@@ -101,22 +112,13 @@ void tutorial_map_update(int tut) {
     }
 }
 
-int tutorial_3_adjust_request_year(int *year) {
-    if (g_scenario.is_scenario_id(2)) {
-        //if (!g_tutorials_flags.tutorial_3.pottery_made) {
-        //    return 0;
-        //}
-
-        *year = g_tutorials_flags.tutorial_3.pottery_made_year;
-    }
-    return 1;
-}
-
 bool tutorial_menu_update(int tut) {
-    if (tut == 1) {
-        tutorial_1::init();
-        return true;
-    } 
+    for (auto t: tutorial_t::list()) {
+        if (t->missionid() == tut) {
+            t->init();
+            return true;
+        }
+    }
     
     if (tut == 2) {
         tutorial_2::init();
@@ -154,7 +156,13 @@ bool tutorial_menu_update(int tut) {
 }
 
 xstring tutorial_get_immediate_goal_text() {
-    if (g_scenario.is_scenario_id(1))  return tutorial_1::goal_text();
+    for (auto tut : tutorial_t::list()) {
+        const int missionid = tut->missionid();
+        if (g_scenario.is_scenario_id(missionid)) {
+            return tut->goal_text();
+        }
+    }
+
     if (g_scenario.is_scenario_id(2))  return tutorial_2::goal_text();
     if (g_scenario.is_scenario_id(3))  return tutorial_3::goal_text();
     if (g_scenario.is_scenario_id(4))  return tutorial_4::goal_text();
@@ -172,7 +180,13 @@ void tutorial_flags_t::on_crime() {
 }
 
 void tutorial_update_step(xstring s) {
-    tutorial_1::update_step(s);
+    for (auto tut : tutorial_t::list()) {
+        const int missionid = tut->missionid();
+        if (g_scenario.is_scenario_id(missionid)) {
+            return tut->update_step(s);
+        }
+    }
+
     tutorial_2::update_step(s);
     tutorial_3::update_step(s);
     //tutorial_4::update_step(s);

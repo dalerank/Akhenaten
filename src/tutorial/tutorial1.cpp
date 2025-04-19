@@ -8,6 +8,16 @@
 #include "io/gamefiles/lang.h"
 #include "city/city_message.h"
 
+struct tutorial_1 : public tutorial_t {
+    virtual int missionid() const override { return 1; }
+    virtual void init() override;
+    virtual void reset() override;
+    virtual void update_step(xstring s) override;
+    virtual xstring goal_text() override;
+};
+
+tutorial_1 g_tutorial_1;
+
 void tutorial1_handle_fire(event_fire_damage) {
     if (g_tutorials_flags.tutorial_1.fire) {
         return;
