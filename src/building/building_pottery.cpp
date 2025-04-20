@@ -2,7 +2,6 @@
 
 #include "building/building_workshop.h"
 #include "graphics/animation.h"
-#include "city/labor.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city.h"

@@ -3,7 +3,7 @@
 
 #include "building/building.h"
 #include "city/object_info.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"

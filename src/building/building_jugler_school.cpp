@@ -2,7 +2,7 @@
 
 #include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "widget/city/ornaments.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

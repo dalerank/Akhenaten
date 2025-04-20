@@ -1,7 +1,5 @@
 #include "building_chariots_workshop.h"
 
-#include "city/labor.h"
-
 buildings::model_t<building_chariots_workshop> chariots_workshop_m;
 
 bool building_chariots_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

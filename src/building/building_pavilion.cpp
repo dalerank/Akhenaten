@@ -9,7 +9,6 @@
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"

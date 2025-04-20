@@ -17,7 +17,6 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "graphics/animation.h"
-#include "city/labor.h"
 #include "widget/city/ornaments.h"
 #include "figure/figure.h"
 

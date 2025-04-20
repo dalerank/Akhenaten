@@ -3,7 +3,7 @@
 #include "building/building_dance_school.h"
 #include "figuretype/figure_entertainer.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 
 buildings::model_t<building_conservatory> conservatory_m;
 

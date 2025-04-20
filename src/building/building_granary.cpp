@@ -26,7 +26,7 @@
 #include "game/game.h"
 #include "window/building/distribution.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "dev/debug.h"
 

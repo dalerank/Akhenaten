@@ -17,7 +17,6 @@
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
-#include "city/labor.h"
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_tax_collector> btax_collector_m;

@@ -1,6 +1,6 @@
 #include "building/building_ferry.h"
 
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "grid/water.h"
 #include "grid/image.h"
 #include "grid/building.h"

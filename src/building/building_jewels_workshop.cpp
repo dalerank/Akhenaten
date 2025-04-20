@@ -4,7 +4,6 @@
 #include "empire/empire.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
-#include "city/labor.h"
 #include "city/city.h"
 
 buildings::model_t<building_jewels_workshop> jewels_workshop_m;

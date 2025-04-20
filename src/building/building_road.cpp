@@ -2,7 +2,7 @@
 
 #include "game/undo.h"
 #include "city/city.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/construction/routed.h"

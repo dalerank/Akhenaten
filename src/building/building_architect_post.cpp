@@ -4,7 +4,7 @@
 #include "core/svector.h"
 #include "building/destruction.h"
 #include "city/object_info.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -16,7 +16,6 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
 
 #include <iostream>
 

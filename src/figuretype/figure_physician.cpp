@@ -3,7 +3,6 @@
 #include "core/profiler.h"
 #include "building/building_house.h"
 #include "city/city_health.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
 

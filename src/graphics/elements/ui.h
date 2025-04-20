@@ -49,6 +49,7 @@ enum UiFlags_ {
     UiFlags_SplitText = 1 << 16,
     UiFlags_PanelSmall = 1 << 17,
     UiFlags_PanelOuter = 1 << 18,
+    UiFlags_ThinBorder = 1 << 19,
 };
 using UiFlags = int;
 
@@ -74,6 +75,8 @@ int label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width =
 const image_t *eimage(int imgid, vec2i pos);
 const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
+void border(vec2i pos, vec2i size, int type, int color, UiFlags flags);
+void rect(vec2i pos, vec2i size, int type, int fill, int color, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
@@ -234,6 +237,7 @@ struct ebackground : public element {
 
 struct eborder : public element {
     int border;
+    int colori;
 
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
@@ -329,7 +333,7 @@ struct egeneric_button : public elabel {
     int param2 = 0;
     std::function<void(int, int)> _func, _rfunc;
     xstring _tooltip;
-    bool _border;
+    uint8_t _border;
     bool _hbody;
     bool _split;
 
@@ -360,7 +364,7 @@ struct eimage_button : public element {
     int param2 = 0;
     img_button_offsets offsets;
     bool _selected = false;
-    bool border = false;
+    uint8_t border = 0;
     int texture_id = -1;
     xstring _tooltip;
 

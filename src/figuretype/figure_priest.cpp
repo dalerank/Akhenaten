@@ -1,7 +1,6 @@
 #include "figure_priest.h"
 
 #include "game/tutorial.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "city/city_health.h"
 #include "city/ratings.h"

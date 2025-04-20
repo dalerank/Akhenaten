@@ -4,7 +4,7 @@
 #include "city/object_info.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "game/resource.h"
 #include "grid/property.h"
 #include "grid/image.h"

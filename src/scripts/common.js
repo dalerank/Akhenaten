@@ -92,7 +92,6 @@ var advisors_window = {}
 var sidebar_window_expanded = {}
 var sidebar_window_collapsed = {}
 var sidebar_window_extra = {}
-var dock_info_window = {}
 
 //figures
 var figure_hippo = {}

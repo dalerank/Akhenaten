@@ -1,6 +1,7 @@
 #pragma once
 
 #include "city/labor_category.h"
+#include "city/city_labor.h"
 #include "core/xstring.h"
 #include "core/bitarray.h"
 #include "core/tokenum.h"

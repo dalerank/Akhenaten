@@ -2,7 +2,6 @@
 
 #include "building_workshop.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
 #include "city/city_resource.h"
 #include "city/city.h"
 #include "city/city_warnings.h"

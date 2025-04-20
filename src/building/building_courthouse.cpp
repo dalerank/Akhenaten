@@ -7,7 +7,7 @@
 #include "window/window_building_info.h"
 
 #include "graphics/animation.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 
 buildings::model_t<building_courthouse> courthouse_m;
 

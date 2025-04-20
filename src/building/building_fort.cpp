@@ -21,7 +21,7 @@
 #include "grid/building.h"
 
 #include "graphics/animation.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "game/undo.h"
 
 building_fort_charioteers::static_params fort_charioteers_m;

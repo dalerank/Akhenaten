@@ -5,7 +5,7 @@
 #include "building/building_storage_yard.h"
 #include "graphics/elements/ui.h"
 #include "city/city.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "scenario/scenario.h"

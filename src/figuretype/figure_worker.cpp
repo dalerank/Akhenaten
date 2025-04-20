@@ -7,7 +7,7 @@
 #include "city/city.h"
 #include "city/city_floods.h"
 #include "city/city_health.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "city/ratings.h"
 
 #include "js/js_game.h"

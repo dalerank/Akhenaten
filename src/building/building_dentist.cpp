@@ -1,7 +1,6 @@
 #include "building/building_dentist.h"
 
 #include "building/building_health.h"
-#include "city/labor.h"
 #include "io/gamefiles/lang.h"
 #include "widget/city/ornaments.h"
 

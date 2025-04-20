@@ -5,7 +5,7 @@
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
 #include "figure/formation_legion.h"

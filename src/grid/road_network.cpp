@@ -9,14 +9,14 @@
 
 #include <string.h>
 
-#define MAX_QUEUE 1000
+#define MAX_ROAD_QUEUE 1000
 
 static const int ADJACENT_OFFSETS_PH[] = {-GRID_LENGTH, 1, GRID_LENGTH, -1};
 
 static grid_xx network = {0, FS_UINT8};
 
 struct grid_road_network_t {
-    int items[MAX_QUEUE];
+    int items[MAX_ROAD_QUEUE];
     int head;
     int tail;
 };
@@ -56,7 +56,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
                         next_offset = new_offset;
                     else {
                         grid_road_network.items[grid_road_network.tail++] = new_offset;
-                        if (grid_road_network.tail >= MAX_QUEUE)
+                        if (grid_road_network.tail >= MAX_ROAD_QUEUE)
                             grid_road_network.tail = 0;
                     }
                 }
@@ -67,7 +67,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
                 return size;
 
             next_offset = grid_road_network.items[grid_road_network.head++];
-            if (grid_road_network.head >= MAX_QUEUE)
+            if (grid_road_network.head >= MAX_ROAD_QUEUE)
                 grid_road_network.head = 0;
         }
         grid_offset = next_offset;

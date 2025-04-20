@@ -1161,7 +1161,7 @@ window taxcollector_info_window = {
     }
 }
 
-dock_info_window = {
+window dock_info_window = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),
         orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),

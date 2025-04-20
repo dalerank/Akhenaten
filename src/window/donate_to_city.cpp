@@ -78,14 +78,14 @@ static void draw_background(int) {
 static void draw_foreground(int) {
     graphics_set_to_dialog();
 
-    button_border_draw(128, 216, 64, 20, data.focus_button_id == 3);
-    button_border_draw(208, 216, 64, 20, data.focus_button_id == 4);
-    button_border_draw(288, 216, 64, 20, data.focus_button_id == 5);
-    button_border_draw(368, 216, 64, 20, data.focus_button_id == 6);
-    button_border_draw(448, 216, 64, 20, data.focus_button_id == 7);
+    button_border_draw({128, 216}, {64, 20}, data.focus_button_id == 3);
+    button_border_draw({208, 216}, {64, 20}, data.focus_button_id == 4);
+    button_border_draw({288, 216}, {64, 20}, data.focus_button_id == 5);
+    button_border_draw({368, 216}, {64, 20}, data.focus_button_id == 6);
+    button_border_draw({448, 216}, {64, 20}, data.focus_button_id == 7);
 
-    button_border_draw(336, 283, 160, 20, data.focus_button_id == 1);
-    button_border_draw(144, 283, 160, 20, data.focus_button_id == 2);
+    button_border_draw({ 336, 283 }, { 160, 20 }, data.focus_button_id == 1);
+    button_border_draw({ 144, 283 }, { 160, 20 }, data.focus_button_id == 2);
 
     arrow_buttons_draw({0, 0}, arrow_buttons, 2);
 

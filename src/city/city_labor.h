@@ -1,7 +1,9 @@
 #pragma once
 
-#include "building/building.h"
 #include "labor_category.h"
+#include "building/building_type.h"
+
+struct building;
 
 struct labor_category {
     int workers_needed;

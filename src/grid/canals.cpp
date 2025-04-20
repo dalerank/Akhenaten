@@ -15,7 +15,6 @@
 #include "grid/image_context.h"
 #include "graphics/view/view.h"
 
-#define MAX_QUEUE 1000
 #define IMAGE_CANAL_FULL_OFFSET 48
 
 static int canals_include_construction = 0;

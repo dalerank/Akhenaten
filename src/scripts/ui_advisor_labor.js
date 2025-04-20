@@ -16,8 +16,8 @@ window advisor_labors_window = {
         // employed
         main_panel      : inner_panel({pos:[32, 60], size:[36, 16]})
         item            : dummy({pos:[40, 25], size:[px(35), 22], })
-        item_image      : image({pack:PACK_GENERAL, id:94, pos:[70, 0], enabled:false})
-        item_priority   : dummy({pos:[90, 0], font: FONT_NORMAL_WHITE_ON_DARK})
+        item_image      : image({pack:PACK_GENERAL, id:94, pos:[40, 4], enabled:false})
+        item_priority   : dummy({pos:[55, 5], font: FONT_NORMAL_WHITE_ON_DARK})
         item_category   : dummy({pos:[100, 5], font: FONT_NORMAL_WHITE_ON_DARK})
         item_needed     : dummy({pos:[370, 5], font: FONT_NORMAL_WHITE_ON_DARK})
         item_allocated  : dummy({pos:[470, 5], font: FONT_NORMAL_WHITE_ON_DARK, font_hover:FONT_NORMAL_YELLOW})

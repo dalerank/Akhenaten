@@ -2,7 +2,6 @@
 
 #include "js/js_game.h"
 #include "grid/property.h"
-#include "city/labor.h"
 #include "core/direction.h"
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"

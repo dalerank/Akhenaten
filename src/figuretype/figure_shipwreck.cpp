@@ -8,7 +8,6 @@
 #include "graphics/elements/ui.h"
 #include "window/building/figures.h"
 #include "game/game.h"
-#include "city/labor.h"
 
 figures::model_t<figure_shipwreck> shipwreck_m;
 

@@ -11,7 +11,7 @@
 #include "construction/build_planner.h"
 #include "grid/building.h"
 #include "grid/orientation.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 
 building_festival_square::static_params festival_square_m;
 

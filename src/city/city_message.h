@@ -299,7 +299,7 @@ struct city_message {
 };
 
 #define MAX_MESSAGES 1000
-#define MAX_QUEUE 20
+#define MAX_MESSAGES_QUEUE 20
 
 struct messages {
     static void popup(int message_id, int param1, int param2);

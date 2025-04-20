@@ -3,7 +3,6 @@
 #include "city/object_info.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
-#include "city/labor.h"
 
 buildings::model_t<building_police_station> police_station_m;
 

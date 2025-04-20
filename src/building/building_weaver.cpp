@@ -4,7 +4,6 @@
 #include "graphics/graphics.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "empire/empire.h"
 

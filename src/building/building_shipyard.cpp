@@ -20,7 +20,7 @@
 #include "grid/water.h"
 #include "grid/road_access.h"
 #include "grid/building.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 
 building_shipyard::static_params building_shipyard_m;
 

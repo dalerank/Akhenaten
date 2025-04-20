@@ -2,7 +2,6 @@
 
 #include "building/building_roadblock.h"
 
-#include "city/labor.h"
 #include "graphics/elements/ui.h"
 #include "graphics/window.h"
 #include "window/building/common.h"

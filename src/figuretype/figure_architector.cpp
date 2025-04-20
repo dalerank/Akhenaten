@@ -2,7 +2,6 @@
 
 #include "core/profiler.h"
 #include "core/log.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
 

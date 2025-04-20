@@ -2,7 +2,6 @@
 
 #include "building/building_raw_material.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
 
 buildings::model_t<building_sandstone_quarry> sandstone_quarry_m;
 buildings::model_t<building_stone_quarry> stone_quarry_m;

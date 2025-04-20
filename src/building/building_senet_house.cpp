@@ -5,7 +5,6 @@
 #include "graphics/elements/panel.h"
 #include "io/gamefiles/lang.h"
 #include "window/building/common.h"
-#include "city/labor.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/city_warnings.h"

@@ -1,7 +1,6 @@
 #include "figure_labor_seeker.h"
 
 #include "core/profiler.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
 #include "building/building_house.h"

@@ -11,7 +11,7 @@
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 
 building_well::static_params well_m;
 well_info_window well_infow;

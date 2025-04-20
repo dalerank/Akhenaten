@@ -19,7 +19,6 @@
 #include "grid/building_tiles.h"
 #include "grid/image.h"
 #include "game/undo.h"
-#include "city/labor.h"
 #include "window/window_figure_info.h"
 
 building_plaza::static_params plaza_m;

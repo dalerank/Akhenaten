@@ -21,7 +21,6 @@
 #include "city/city_health.h"
 #include "grid/building.h"
 #include "city/ratings.h"
-#include "city/labor.h"
 #include "city/city.h"
 
 figures::model_t<figure_market_buyer> market_buyer_m;

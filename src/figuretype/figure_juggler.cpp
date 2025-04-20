@@ -1,6 +1,5 @@
 #include "figure_juggler.h"
 
-#include "city/labor.h"
 #include "figure/service.h"
 #include "city/city.h"
 #include "figure/service.h"

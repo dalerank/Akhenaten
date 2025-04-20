@@ -4,7 +4,6 @@
 #include "building/building_workshop.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "city/labor.h"
 
 buildings::model_t<building_bricks_workshop> bricks_workshop_m;
 

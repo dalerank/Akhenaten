@@ -5,7 +5,6 @@
 #include "js/js_game.h"
 #include "building_raw_material.h"
 #include "widget/city/ornaments.h"
-#include "city/labor.h"
 #include "grid/routing/routing.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

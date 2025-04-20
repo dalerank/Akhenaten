@@ -7,7 +7,7 @@
 #include "figure/image.h"
 #include "figure/service.h"
 #include "city/city.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "building/building_house.h"

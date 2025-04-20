@@ -17,7 +17,8 @@ import building_sounds
 import images
 import ui_advisor_labor
 import ui_advisor_military
-include(":images_remap.js")
+import ui_labor_priority_window
+import images_remap
 include(":imagepaks.js")
 include(":missions.js")
 include(":figures.js")

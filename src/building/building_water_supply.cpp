@@ -4,7 +4,6 @@
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"
 #include "window/building/common.h"
-#include "city/labor.h"
 #include "city/city_warnings.h"
 
 buildings::model_t<building_water_supply> water_supply_m;

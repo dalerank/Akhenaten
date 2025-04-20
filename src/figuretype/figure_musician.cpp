@@ -2,7 +2,6 @@
 
 #include "figure/service.h"
 #include "city/city_health.h"
-#include "city/labor.h"
 #include "city/ratings.h"
 #include "city/city.h"
 #include "building/building_entertainment.h"

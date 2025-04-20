@@ -22,7 +22,6 @@
 #include "game/game.h"
 #include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
 

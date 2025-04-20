@@ -7,7 +7,7 @@
 #include "core/object_property.h"
 #include "core/game_environment.h"
 #include "core/custom_span.hpp"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "game/resource.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"

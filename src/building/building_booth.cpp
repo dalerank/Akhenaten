@@ -23,7 +23,7 @@
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "construction/build_planner.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "figure/figure.h"
 
 building_booth::static_params booth_m;

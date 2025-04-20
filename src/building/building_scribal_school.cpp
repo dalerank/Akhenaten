@@ -6,7 +6,6 @@
 #include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "city/labor.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city.h"

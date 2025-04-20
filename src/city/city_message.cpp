@@ -32,7 +32,7 @@ void message_manager_t::init() {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         messages[i].MM_text_id = 0;
     }
-    for (int i = 0; i < MAX_QUEUE; i++) {
+    for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
         queue[i] = 0;
     }
     consecutive_message_delay = 0;
@@ -101,7 +101,7 @@ static int has_video(int text_id) {
 
 static void enqueue_message(int sequence) {
     auto& data = g_message_data;
-    for (int i = 0; i < MAX_QUEUE; i++) {
+    for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
         if (!data.queue[i]) {
             data.queue[i] = sequence;
             break;
@@ -293,7 +293,7 @@ void city_message_process_queue(void) {
         return;
     }
     int sequence = 0;
-    for (int i = 0; i < MAX_QUEUE; i++) {
+    for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
         if (data.queue[i]) {
             sequence = data.queue[i];
             data.queue[i] = 0;

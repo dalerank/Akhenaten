@@ -11,7 +11,6 @@
 #include "graphics/image_groups.h"
 #include "scenario/events.h"
 #include "graphics/font.h"
-#include "city/labor.h"
 #include "city/constants.h"
 
 #include "sound/sound_city.h"

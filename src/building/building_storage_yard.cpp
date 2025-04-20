@@ -14,7 +14,7 @@
 #include "city/city_events.h"
 #include "city/city_warnings.h"
 #include "city/city_resource.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "core/calc.h"
 #include "core/vec2i.h"
 #include "empire/trade_prices.h"

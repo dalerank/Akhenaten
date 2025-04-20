@@ -3,7 +3,7 @@
 #include "grid/water.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "grid/canals.h"
 #include "grid/building.h"
 #include "widget/city/ornaments.h"

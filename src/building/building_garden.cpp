@@ -22,7 +22,6 @@
 #include "figure/formation_herd.h"
 #include "city/city_events.h"
 #include "city/city_warnings.h"
-#include "city/labor.h"
 #include "grid/tiles.h"
 
 building_garden::static_params garden_m;

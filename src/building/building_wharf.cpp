@@ -1,6 +1,5 @@
 #include "building_wharf.h"
 
-#include "city/labor.h"
 #include "grid/water.h"
 #include "grid/image.h"
 #include "grid/building.h"

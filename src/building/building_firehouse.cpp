@@ -5,7 +5,6 @@
 
 #include "dev/debug.h"
 #include "graphics/animation.h"
-#include "city/labor.h"
 #include "widget/city/ornaments.h"
 
 buildings::model_t<building_firehouse> firehouse_m;

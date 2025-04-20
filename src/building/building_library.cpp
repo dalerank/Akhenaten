@@ -1,8 +1,5 @@
 #include "building_library.h"
 
-
-#include "city/labor.h"
-
 struct library_model : public buildings::model_t<building_library> {
 } library_m;
 

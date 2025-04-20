@@ -20,8 +20,9 @@ void button_border_draw(vec2i pos, vec2i size, bool has_focus) {
     int last_block_offset_y = 16 * height_blocks - size.y;
 
     int image_base = image_id_from_group(GROUP_BORDERED_BUTTON);
-    if (has_focus)
+    if (has_focus) {
         image_base += 8;
+    }
 
     for (int yy = 0; yy < height_blocks; yy++) {
         vec2i draw_offset = {0, pos.y + 16 * yy};

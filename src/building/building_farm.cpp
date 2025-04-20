@@ -5,7 +5,6 @@
 #include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "core/calc.h"
 #include "game/resource.h"

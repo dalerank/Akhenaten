@@ -8,7 +8,6 @@
 #include "window/building/common.h"
 #include "io/gamefiles/lang.h"
 #include "core/direction.h"
-#include "city/labor.h"
 #include "figure/figure.h"
 #include "building/building_barracks.h"
 #include "city/city_warnings.h"

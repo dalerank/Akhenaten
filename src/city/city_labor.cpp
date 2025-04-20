@@ -1,4 +1,4 @@
-#include "labor.h"
+#include "city_labor.h"
 
 #include "building/building.h"
 #include "building/building_farm.h"

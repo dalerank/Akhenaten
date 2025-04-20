@@ -7,7 +7,6 @@
 #include "graphics/image.h"
 #include "widget/city/tile_draw.h"
 #include "window/building/common.h"
-#include "city/labor.h"
 #include "city/city_warnings.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"

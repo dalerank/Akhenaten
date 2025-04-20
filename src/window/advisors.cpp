@@ -5,7 +5,7 @@
 #include "city/coverage.h"
 #include "city/finance.h"
 #include "city/city.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "city/city_migration.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"

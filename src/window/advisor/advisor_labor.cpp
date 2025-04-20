@@ -6,7 +6,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/view/view.h"
 #include "graphics/window.h"
-#include "window/labor_priority.h"
+#include "window/window_labor_priority.h"
 #include "game/game.h"
 
 ui::advisor_labors_window g_advisor_labor_window;
@@ -51,7 +51,7 @@ void ui::advisor_labors_window::ui_draw_foreground(UiFlags flags) {
         if (cat == LABOR_CATEGORY_CULTURE) 
              return "Culture";
 
-        ui::str(50, cat + 1);
+        return ui::str(50, cat + 1);
     };
 
     const auto &item = ui["item"];

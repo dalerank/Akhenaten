@@ -8,7 +8,6 @@
 #include "city/finance.h"
 #include "core/calc.h"
 #include "city/city_health.h"
-#include "city/labor.h"
 #include "city/ratings.h"
 #include "city/city.h"
 #include "figure/service.h"

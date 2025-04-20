@@ -7,7 +7,6 @@
 #include "widget/city/ornaments.h"
 
 #include "js/js_game.h"
-#include "city/labor.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"

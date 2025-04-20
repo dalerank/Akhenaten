@@ -10,7 +10,6 @@
 #include "building/building_burning_ruin.h"
 #include "graphics/animation.h"
 #include "city/city_health.h"
-#include "city/labor.h"
 #include "city/city.h"
 #include "figure/service.h"
 #include "grid/building.h"

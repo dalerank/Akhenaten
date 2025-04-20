@@ -3,7 +3,6 @@
 #include "building/industry.h"
 #include "building/monuments.h"
 #include "city/object_info.h"
-#include "city/labor.h"
 #include "city/city_floods.h"
 #include "figure/figure.h"
 #include "game/resource.h"

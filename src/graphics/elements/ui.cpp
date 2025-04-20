@@ -303,6 +303,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool hasbody = !(flags & UiFlags_NoBody);
     const bool hasborder = !(flags & UiFlags_NoBorder);
+    const bool thinborder = !!(flags & UiFlags_ThinBorder);
     const bool splittext = !!(flags & UiFlags_SplitText);
     const bool alingxcenter = !!(flags & UiFlags_AlignXCentered);
     const bool alignleft = !!(flags & UiFlags_AlignLeft);
@@ -321,10 +322,18 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         painter ctx = game.painter();
         small_panel_draw_colored(ctx, pos.x, pos.y, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
     } else if (hasbody) {
-        button_border_draw(offset + pos, size, gbutton.hovered && !darkened);
+        if (thinborder) {
+            graphics_draw_rect(offset + pos, size, 0xff00000);
+        } else {
+            button_border_draw(offset + pos, size, gbutton.hovered && !darkened);
+        }
     } else if (hasborder) {
         if (gbutton.hovered && !darkened) {
-            button_border_draw(offset + pos, size, true);
+            if (thinborder) {
+                graphics_draw_rect(offset + pos, size, 0xff000000);
+            } else {
+                button_border_draw(offset + pos, size, true);
+            }
         }
     }
 
@@ -520,6 +529,16 @@ void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     } else if (!!(flags & UiFlags_PanelInner)) {
         inner_panel_draw(offset + pos, size);
     }
+}
+
+void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
+    const vec2i offset = g_state.offset();
+    graphics_draw_rect(offset + pos, size, color);
+}
+
+void ui::rect(vec2i pos, vec2i size, int type, int fill, int color, UiFlags flags) {
+    graphics_shade_rect(pos, size, fill);
+    graphics_draw_rect(pos, size, color);
 }
 
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
@@ -746,6 +765,7 @@ void ui::eborder::load(archive arch, element *parent, items &elems) {
     element::load(arch, parent, elems);
 
     border = arch.r_int("border");
+    colori = arch.r_int("color");
 }
 
 void ui::eborder::draw(UiFlags flags) {
@@ -754,6 +774,10 @@ void ui::eborder::draw(UiFlags flags) {
     default: //fallthrought
     case 0:
         button_border_draw(offset + pos, size, false);
+        break;
+
+    case 1:
+        graphics_draw_rect(offset + pos, size, colori);
         break;
     }
 }
@@ -862,7 +886,7 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
-    border = arch.r_bool("border");
+    border = arch.r_int("border");
     offsets.data[0] = img_desc.offset;
     offsets.data[1] = arch.r_int("offset_focused", 1);
     offsets.data[2] = arch.r_int("offset_pressed", 2);
@@ -910,8 +934,16 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    if (border && _selected) {
-        button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
+    if (_selected) {
+        switch (border) {
+        case 1:
+            button_border_draw(doffset + pos - vec2i{ 4, 4 }, tsize + vec2i{ 8, 8 }, true);
+            break;
+
+        case 2:
+            graphics_draw_rect(pos, size, 0xff000000);
+            break;
+        }
     }
 
     if (!!(darkened & UiFlags_Darkened)) {
@@ -1111,7 +1143,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
         mode = 1;
     }
     _tooltip = arch.r_string("tooltip");
-    _border = arch.r_bool("border", true);
+    _border = arch.r_int("border", 1);
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
 }

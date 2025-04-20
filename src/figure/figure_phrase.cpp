@@ -8,7 +8,7 @@
 #include "city/ratings.h"
 #include "city/city.h"
 #include "city/coverage.h"
-#include "city/labor.h"
+#include "city/city_labor.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "core/calc.h"
