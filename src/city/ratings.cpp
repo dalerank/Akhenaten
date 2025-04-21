@@ -43,13 +43,17 @@ struct rating_points {
     using points_t = svector<city_ratings_t::point, 32>;
     points_t points;
 
-    void load(pcstr section) {
+    void reset() {
         points.clear();
-        g_config_arch.r_array(section, [this] (archive arch) {
-            auto &step = points.emplace_back();
-            step.coverage = arch.r_int("coverage");
-            step.points = arch.r_int("points");
-        });
+    }
+
+    void load(archive arch) {
+        auto &step = points.emplace_back();
+        step.coverage = arch.r_int("coverage");
+        step.points = arch.r_int("points");
+    }
+
+    void init() {
         assert(!points.empty());
     }
 
@@ -63,11 +67,11 @@ struct rating_points {
     }
 };
 
-rating_points ANK_VARIABLE(culture_religion_rating_points);
-rating_points ANK_VARIABLE(culture_booth_rating_points);
-rating_points ANK_VARIABLE(culture_school_rating_points);
-rating_points ANK_VARIABLE(culture_academy_rating_points);
-rating_points ANK_VARIABLE(culture_library_rating_points);
+rating_points ANK_ARRAY_VARIABLE(culture_religion_rating_points);
+rating_points ANK_ARRAY_VARIABLE(culture_booth_rating_points);
+rating_points ANK_ARRAY_VARIABLE(culture_school_rating_points);
+rating_points ANK_ARRAY_VARIABLE(culture_academy_rating_points);
+rating_points ANK_ARRAY_VARIABLE(culture_library_rating_points);
 
 int city_ratings_t::selected_explanation() {
     switch (selected) {

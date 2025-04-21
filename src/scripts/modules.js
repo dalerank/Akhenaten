@@ -19,7 +19,8 @@ import ui_advisor_labor
 import ui_advisor_military
 import ui_labor_priority_window
 import images_remap
-include(":imagepaks.js")
+import ui_overlay_menu
+import imagepaks
 include(":missions.js")
 include(":figures.js")
 include(":localization.js")

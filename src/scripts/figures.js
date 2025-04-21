@@ -231,7 +231,7 @@ figure_crocodile = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure_hippo = {
+figure figure_hippo = {
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 },
 		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false },

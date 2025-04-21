@@ -86,18 +86,17 @@ struct archive {
         return result;
     }
 
-    template<typename T>
-    inline void r_array_num(pcstr name, T& arr) {
+    template<typename T, typename C>
+    inline void r_array_num(pcstr name, C& arr) {
         arr.clear();
         getproperty(-1, name);
-        std::vector<T> result;
         if (isarray(-1)) {
             int length = getlength(-1);
 
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
                 float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
-                arr.push_back(v);
+                arr.push_back((T)v);
                 pop(1);
             }
         }

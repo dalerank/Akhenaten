@@ -45,7 +45,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
         btn_text_w_size = arch.r_vec2i("btn_text_w_size");
         btn_w_tot_offset = arch.r_int("btn_w_tot_offset", 10);
         btn_w_cost_offset = arch.r_int("btn_w_cost_offset", 10);
-        arch.r_array_num("y_menu_offsets", y_menu_offsets);
+        arch.r_array_num<int>("y_menu_offsets", y_menu_offsets);
 
         btn_w_min = -btn_w_add - 8;
         btn_w_tot = 256 + btn_w_add;

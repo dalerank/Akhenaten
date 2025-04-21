@@ -94,7 +94,6 @@ var sidebar_window_collapsed = {}
 var sidebar_window_extra = {}
 
 //figures
-var figure_hippo = {}
 var figure_crocodile = {}
 var figure_immigrant = {}
 var figure_architector = {}
