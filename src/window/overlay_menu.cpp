@@ -112,27 +112,26 @@ void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
     auto &data = overlay_menu;
 
     fonts_vec fonts{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_DARK };
+    const auto &category_item = ui["category_item"];
+    const auto &submenu_image = ui["submenu_image"];
+    const auto &submenu_item = ui["submenu_item"];
     for (int i = 0; i < data.menus.size(); i++) {
-        auto& btn = ui::button(data.menus[i].title.c_str(), { x_offset - 170, 74 + 24 * i }, { 160, 20 }, fonts, UiFlags_PanelSmall, [this, i] (int, int) {
+        auto& btn = ui::button(data.menus[i].title.c_str(), ui.pos + vec2i{ x_offset, category_item.pos.y * i }, category_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
             button_menu_item(i, 0);
         });
 
         if (btn.hovered) {
             open_submenu(i, 1);
         }
-        //small_panel_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
-        //lang_text_draw_centered(data.menus[i].title.c_str(), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
     }
 
     if (selected_submenu > 0 && data.menus[selected_menu].ids.size() > 1) {
-        ui::eimage(image_id_from_group(PACK_GENERAL, 158), { x_offset - 185, 80 + 24 * selected_menu });
+        ui::eimage(submenu_image.image(), ui.pos + vec2i{ x_offset + submenu_image.pos.x, submenu_item.pos.y * selected_menu });
         for (int i = 0; i < data.menus[selected_menu].ids.size(); i++) {
             pcstr text = game_state_overlay_text(data.menus[selected_menu].ids[i]);
-            auto &btn = ui::button(text, { x_offset - 348, 74 + 24 * (i + selected_menu) }, { 160, 20 }, fonts, UiFlags_PanelSmall, [this, i] (int, int) {
+            auto &btn = ui::button(text, ui.pos + vec2i{ x_offset + submenu_item.pos.x, submenu_item.pos.y * (i + selected_menu) }, submenu_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
                 button_submenu_item(i, 0);
             });
-            //small_panel_draw(x_offset - 348, 74 + 24 * (i + selected_menu), 10, submenu_focus_button_id == i + 1 ? 1 : 2);
-            //text_draw_centered((uint8_t *)text, x_offset - 348, 77 + 24 * (i + selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK, 0);
         }
     }
 

@@ -115,8 +115,10 @@ var overlay_menu = [
 ]
 
 window overlay_menu_widget = {
-	pos : [0, 30]
+	pos : [-85, 20]
 	ui : {
-		category_item : dummy({ })
+		category_item : dummy({pos:[0, 24], size:[160, 20]})
+		submenu_image : image({pos:[-105, 24], group:PACK_GENERAL, id:158, enabled:false})
+		submenu_item  : dummy({pos:[-185, 24], size:[160, 20]}) 
 	}
 }
