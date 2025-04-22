@@ -113,3 +113,10 @@ var overlay_menu = [
     	]
     }
 ]
+
+window overlay_menu_widget = {
+	pos : [0, 30]
+	ui : {
+		category_item : dummy({ })
+	}
+}

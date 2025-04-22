@@ -17,45 +17,7 @@
 #include "js/js_game.h"
 #include "game/game.h"
 
-static void button_menu_item(int index, int param2);
-static void button_submenu_item(int index, int param2);
-
-static generic_button menu_buttons[] = {
-  {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
-  {0, 24, 160, 24, button_menu_item, button_none, 1, 0},
-  {0, 48, 160, 24, button_menu_item, button_none, 2, 0},
-  {0, 72, 160, 24, button_menu_item, button_none, 3, 0},
-  {0, 96, 160, 24, button_menu_item, button_none, 4, 0},
-  {0, 120, 160, 24, button_menu_item, button_none, 5, 0},
-  {0, 144, 160, 24, button_menu_item, button_none, 6, 0},
-  {0, 168, 160, 24, button_menu_item, button_none, 7, 0},
-  {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
-  {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
-};
-
-static generic_button submenu_buttons[] = {
-  {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
-  {0, 24, 160, 24, button_submenu_item, button_none, 1, 0},
-  {0, 48, 160, 24, button_submenu_item, button_none, 2, 0},
-  {0, 72, 160, 24, button_submenu_item, button_none, 3, 0},
-  {0, 96, 160, 24, button_submenu_item, button_none, 4, 0},
-  {0, 120, 160, 24, button_submenu_item, button_none, 5, 0},
-  {0, 144, 160, 24, button_submenu_item, button_none, 6, 0},
-  {0, 168, 160, 24, button_submenu_item, button_none, 7, 0},
-  {0, 192, 160, 24, button_submenu_item, button_none, 8, 0},
-  {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
-};
-
 struct overlay_menu_t {
-    int selected_menu;
-    int selected_submenu;
-    time_millis submenu_focus_time;
-
-    int menu_focus_button_id;
-    int submenu_focus_button_id;
-
-    int keep_submenu_open;
-
     struct overlay_submenu {
         xstring title;
         svector<e_overlay, 16> ids;
@@ -63,14 +25,10 @@ struct overlay_menu_t {
 
     svector<overlay_submenu, 16> menus;
 
-    void reset() {
-        menus.clear();
-
-        selected_submenu = 0;
-    }
-   
-    void load(archive arch) {
-        overlay_submenu &menu = menus.emplace_back();
+    void clear() { menus.clear(); }
+    auto &emplace_back() { return menus.emplace_back(); }
+  
+    void load(overlay_submenu& menu, archive arch) {
         menu.title = arch.r_string("title");
         arch.r_array_num<e_overlay>("ids", menu.ids);
     }
@@ -82,12 +40,106 @@ struct overlay_menu_t {
 
 overlay_menu_t ANK_ARRAY_VARIABLE(overlay_menu);
 
-static void window_overlay_draw_background(int) {
-    window_city_draw_panels();
-    widget_sidebar_city_draw_foreground();
+struct overlay_menu_widget : public autoconfig_window_t<overlay_menu_widget> {
+    int selected_menu;
+    int selected_submenu;
+    time_millis submenu_focus_time;
+    int keep_submenu_open;
+
+    virtual void draw_foreground(UiFlags flags) override {}
+    virtual void ui_draw_foreground(UiFlags flags) override;
+    virtual int ui_handle_mouse(const mouse *m) override;
+    virtual int handle_mouse(const mouse *m) override { return 0; }
+    virtual int get_tooltip_text() override { return 0; }
+    virtual void init() override;
+
+    void button_menu_item(int index, int param2);
+    void button_submenu_item(int index, int param2);
+    void open_submenu(int index, int keep_open);
+    void close_submenu();
+    int get_offset();
+};
+
+overlay_menu_widget g_overlay_menu_widget;
+
+void overlay_menu_widget::init() {
+    selected_menu = 0;
+    selected_submenu = 0;
+    submenu_focus_time = 0;
+    keep_submenu_open = 0;
 }
 
-static int get_sidebar_x_offset() {
+void overlay_menu_widget::open_submenu(int index, int keep_open) {
+    keep_submenu_open = keep_open;
+    selected_menu = index;
+    selected_submenu = index;
+}
+
+void overlay_menu_widget::close_submenu() {
+    if (selected_menu || selected_submenu) {
+        keep_submenu_open = 0;
+        selected_menu = 0;
+        selected_submenu = 0;
+    }
+}
+
+void overlay_menu_widget::button_menu_item(int index, int param2) {
+    auto &data = overlay_menu;
+    if (selected_submenu == 0 || data.menus[selected_menu].ids.size() == 1) {
+        game_state_set_overlay((e_overlay)data.menus[selected_menu].ids.front());
+        close_submenu();
+        window_city_show();
+        return;
+    }
+
+    if (keep_submenu_open && selected_submenu == index) {
+        close_submenu();
+        return;
+    }
+
+    open_submenu(index, 1);
+}
+
+void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
+    window_city_draw_panels();
+    widget_sidebar_city_draw_foreground();
+    window_city_draw();
+
+    ui.begin_widget(pos);
+    ui.draw();
+
+    int x_offset = get_offset();
+    auto &data = overlay_menu;
+
+    fonts_vec fonts{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_DARK };
+    for (int i = 0; i < data.menus.size(); i++) {
+        auto& btn = ui::button(data.menus[i].title.c_str(), { x_offset - 170, 74 + 24 * i }, { 160, 20 }, fonts, UiFlags_PanelSmall, [this, i] (int, int) {
+            button_menu_item(i, 0);
+        });
+
+        if (btn.hovered) {
+            open_submenu(i, 1);
+        }
+        //small_panel_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
+        //lang_text_draw_centered(data.menus[i].title.c_str(), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
+    }
+
+    if (selected_submenu > 0 && data.menus[selected_menu].ids.size() > 1) {
+        ui::eimage(image_id_from_group(PACK_GENERAL, 158), { x_offset - 185, 80 + 24 * selected_menu });
+        for (int i = 0; i < data.menus[selected_menu].ids.size(); i++) {
+            pcstr text = game_state_overlay_text(data.menus[selected_menu].ids[i]);
+            auto &btn = ui::button(text, { x_offset - 348, 74 + 24 * (i + selected_menu) }, { 160, 20 }, fonts, UiFlags_PanelSmall, [this, i] (int, int) {
+                button_submenu_item(i, 0);
+            });
+            //small_panel_draw(x_offset - 348, 74 + 24 * (i + selected_menu), 10, submenu_focus_button_id == i + 1 ? 1 : 2);
+            //text_draw_centered((uint8_t *)text, x_offset - 348, 77 + 24 * (i + selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK, 0);
+        }
+    }
+
+    ui.end_widget();
+}
+
+int overlay_menu_widget::get_offset() {
     vec2i view_pos, view_size;
     const view_data_t &viewport = city_view_viewport();
     city_view_get_viewport(viewport, view_pos, view_size);
@@ -140,99 +192,30 @@ const char* game_state_overlay_text(int index) {
     return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
-static void window_overlay_draw_foreground(int) {
-    painter ctx = game.painter();
-    auto& data = overlay_menu;
-    window_city_draw();
-    int x_offset = get_sidebar_x_offset();
+int overlay_menu_widget::ui_handle_mouse(const mouse* m) {
+    autoconfig_window::ui_handle_mouse(m);
 
-    for (int i = 0; i < data.menus.size(); i++) {
-        small_panel_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
-        lang_text_draw_centered(data.menus[i].title.c_str(), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
+    int btn_id = ui::button_hover(m);
+    if (!btn_id && m->left.went_up) {
+        window_city_show();
+        return 0;
     }
 
-    if (data.selected_submenu > 0 && data.menus[data.selected_menu].ids.size() > 1) {
-        ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 158), x_offset - 185, 80 + 24 * data.selected_menu);
-        for (int i = 0; i < data.menus[data.selected_menu].ids.size(); i++) {
-            small_panel_draw(x_offset - 348, 74 + 24 * (i + data.selected_menu), 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
-
-            const char* text = game_state_overlay_text(data.menus[data.selected_menu].ids[i]);
-            text_draw_centered((uint8_t*)text, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_BLACK_ON_DARK, 0);
-        }
-    }
-}
-
-static void open_submenu(int index, int keep_open) {
-    auto &data = overlay_menu;
-    data.keep_submenu_open = keep_open;
-    data.selected_menu = index;
-    data.selected_submenu = index;
-}
-
-static void close_submenu(void) {
-    auto& data = overlay_menu;
-    if (data.selected_menu || data.selected_submenu) {
-        data.keep_submenu_open = 0;
-        data.selected_menu = 0;
-        data.selected_submenu = 0;
-    }
-}
-
-static void window_overlay_handle_submenu_focus(void) {
-    auto& data = overlay_menu;
-    if (data.menu_focus_button_id || data.submenu_focus_button_id) {
-        data.submenu_focus_time = time_get_millis();
-        if (data.menu_focus_button_id) {
-            open_submenu(data.menu_focus_button_id - 1, 0);
-        }
-    } else if (time_get_millis() - data.submenu_focus_time > 500) {
-        close_submenu();
-    }
-}
-
-static void window_overlay_handle_input(const mouse* m, const hotkeys* h) {
-    auto& data = overlay_menu;
-    int x_offset = get_sidebar_x_offset();
-    bool handled = false;
-    handled |= !!generic_buttons_handle_mouse(m, {x_offset - 170, 72}, menu_buttons, data.menus.size(), &data.menu_focus_button_id);
-
-    if (!data.keep_submenu_open) {
-        window_overlay_handle_submenu_focus();
-    }
-
-    if (data.selected_submenu) {
-        handled |= !!generic_buttons_handle_mouse(m, {x_offset - 348, 72 + 24 * data.selected_menu}, submenu_buttons, data.menus[data.selected_menu].ids.size(), &data.submenu_focus_button_id);
-    }
-
-    if (!handled && input_go_back_requested(m, h)) {
-        if (data.keep_submenu_open)
+    const hotkeys* h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
+        if (keep_submenu_open)
             close_submenu();
         else {
             window_city_show();
         }
     }
+
+    return 0;
 }
 
-static void button_menu_item(int index, int param2) {
+void overlay_menu_widget::button_submenu_item(int index, int param2) {
     auto& data = overlay_menu;
-    if (data.selected_submenu == 0 || data.menus[data.selected_menu].ids.size() == 1) {
-        game_state_set_overlay((e_overlay)data.menus[data.selected_menu].ids.front());
-        close_submenu();
-        window_city_show();
-        return;
-    } 
-    
-    if (data.keep_submenu_open && data.selected_submenu == index) {
-        close_submenu();
-        return;
-    }
-    
-    open_submenu(index, 1);
-}
-
-static void button_submenu_item(int index, int param2) {
-    auto& data = overlay_menu;
-    int overlay = data.menus[data.selected_submenu].ids[index];
+    int overlay = data.menus[selected_submenu].ids[index];
     if (overlay) {
         game_state_set_overlay((e_overlay)overlay);
     }
@@ -244,9 +227,9 @@ static void button_submenu_item(int index, int param2) {
 void window_overlay_menu_show(void) {
     window_type window = {
         WINDOW_OVERLAY_MENU,
-        window_overlay_draw_background,
-        window_overlay_draw_foreground,
-        window_overlay_handle_input
+        [] (int flags) { g_overlay_menu_widget.draw_background(flags); },
+        [] (int flags) { g_overlay_menu_widget.ui_draw_foreground(flags); },
+        [] (auto m, auto h) { g_overlay_menu_widget.ui_handle_mouse(m); },
     };
     overlay_menu.init();
     window_show(&window);

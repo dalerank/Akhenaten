@@ -34,7 +34,7 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 
 #define ANK_REGISTER_CONFIG_ARRAY_VARIABLE(a) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.reset(); g_config_arch.r_array(#a, [] (archive arch) { a.load(arch); }); a.init(); }
+    void config_load_ ## a() { a.clear(); g_config_arch.r_array(#a, [] (archive arch) { auto &it = a.emplace_back(); a.load(it, arch); }); a.init(); }
 
 #define ANK_REGISTER_CONFIG_OBJECTS_VARIABLE(a) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \

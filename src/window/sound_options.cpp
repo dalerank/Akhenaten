@@ -71,16 +71,16 @@ static void draw_foreground(int) {
     auto &data = g_sound_options;
     graphics_set_to_dialog();
 
-    outer_panel_draw(vec2i{48, 80}, 24, 18);
+    outer_panel_draw(vec2i{ 48, 80 }, 24, 18);
 
     // on/off labels
-    small_panel_draw(64, 162, 14, data.focus_button_id == 1 ? 1 : 2);
-    small_panel_draw(64, 192, 14, data.focus_button_id == 2 ? 1 : 2);
-    small_panel_draw(64, 222, 14, data.focus_button_id == 3 ? 1 : 2);
-    small_panel_draw(64, 252, 14, data.focus_button_id == 4 ? 1 : 2);
+    small_panel_draw({ 64, 162 }, 14, data.focus_button_id == 1 ? 1 : 2);
+    small_panel_draw({ 64, 192 }, 14, data.focus_button_id == 2 ? 1 : 2);
+    small_panel_draw({ 64, 222 }, 14, data.focus_button_id == 3 ? 1 : 2);
+    small_panel_draw({ 64, 252 }, 14, data.focus_button_id == 4 ? 1 : 2);
     // ok/cancel labels
-    small_panel_draw(144, 296, 12, data.focus_button_id == 5 ? 1 : 2);
-    small_panel_draw(144, 326, 12, data.focus_button_id == 6 ? 1 : 2);
+    small_panel_draw({ 144, 296 }, 12, data.focus_button_id == 5 ? 1 : 2);
+    small_panel_draw({ 144, 326 }, 12, data.focus_button_id == 6 ? 1 : 2);
 
     // title
     lang_text_draw_centered(46, 0, 96, 92, 288, FONT_LARGE_BLACK_ON_LIGHT);

@@ -319,8 +319,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
 
     if (small_panel) {
         int mask = darkened ? 0xffe0e0e0 : 0xffffffff;
-        painter ctx = game.painter();
-        small_panel_draw_colored(ctx, pos.x, pos.y, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
+        small_panel_draw_colored(offset + pos, (size.x / 16), gbutton.hovered ? 1 : 2, mask);
     } else if (hasbody) {
         if (thinborder) {
             graphics_draw_rect(offset + pos, size, 0xff00000);
@@ -812,7 +811,7 @@ void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
 void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (_body.x > 0) {
-        small_panel_draw(pos.x + offset.x, pos.y + offset.y, _body.x, _body.y);
+        small_panel_draw(pos + offset, _body.x, _body.y);
     }
     ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
 

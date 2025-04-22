@@ -53,7 +53,7 @@ void window_city_draw_paused_and_time_left() {
             years = scenario_criteria_max_year() - game.simtime.year - 1;
         }
         int total_months = 12 - game.simtime.month + simulation_time_t::months_in_year * years;
-        small_panel_draw(1, 25, 15, 1);
+        small_panel_draw({ 1, 25 }, 15, 1);
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         //        city_view_dirty = 1;
@@ -65,7 +65,7 @@ void window_city_draw_paused_and_time_left() {
             years = scenario_criteria_max_year() - game.simtime.year - 1;
         }
         int total_months = simulation_time_t::months_in_year - game.simtime.month + simulation_time_t::months_in_year * years;
-        small_panel_draw(1, 25, 15, 1);
+        small_panel_draw({ 1, 25 }, 15, 1);
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
     }
