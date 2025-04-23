@@ -183,7 +183,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     auto figures = map_figures_in_row(tile);
 
     for (auto *f : figures) {
-        if (!city_overlay::current()->show_figure(f)) {
+        if (!g_city.overlay()->show_figure(f)) {
             continue;
         }
 
@@ -476,7 +476,8 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
 }
 
 void screen_city_t::draw_with_overlay(painter &ctx) {
-    if (!city_overlay::activate()) {
+    const auto overlay = g_city.overlay();
+    if (!overlay) {
         return;
     }
 
@@ -501,7 +502,7 @@ void screen_city_t::draw(painter &ctx) {
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
 
-    if (game.current_overlay) {
+    if (g_city.overlay()) {
         draw_with_overlay(ctx);
     } else {
         draw_without_overlay(ctx, 0, nullptr);
@@ -920,7 +921,7 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
 }
 
 xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
-    const auto overlay = city_overlay::current();
+    const auto overlay = g_city.overlay();
     if (!overlay) {
         return {};
     }
@@ -962,7 +963,7 @@ void screen_city_t::draw_tooltip(tooltip_context* c) {
         return;
     }
 
-    if (game.current_overlay != OVERLAY_NONE) {
+    if (g_city.overlay()) {
         c->high_priority = 1;
         c->text = get_overlay_tooltip(c, current_tile);
     }

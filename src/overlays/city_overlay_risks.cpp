@@ -11,6 +11,7 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "figure/figure.h"
+#include "city/city_buildings.h"
 
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0) {
@@ -59,6 +60,12 @@ bool city_overlay_problems::show_figure(const figure *f) const {
 
 int city_overlay_problems::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
+}
+
+void city_overlay_problems::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
+    building *b = building_at(tile);
+    overlay_problems_prepare_building(b);
+    city_overlay::draw_building_top(pixel, tile, ctx);
 }
 
 bool city_overlay_problems::show_building(const building *b) const {

@@ -5,7 +5,7 @@
 struct city_overlay_problems : public city_overlay_t<OVERLAY_PROBLEMS> {
     virtual bool show_figure(const figure *f) const override;
     virtual int get_column_height(const building *b) const override;
-    //void draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const override;
+    virtual void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const override;
 
     virtual bool show_building(const building *b) const override;
 };

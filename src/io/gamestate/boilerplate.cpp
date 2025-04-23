@@ -181,7 +181,7 @@ static void post_load() {
 
     // problems / overlays
     g_message_manager.init_problem_areas();
-    game_state_reset_overlay();
+    g_city.reset_overlay();
     game_undo_disable();
 
     // military

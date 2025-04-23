@@ -34,6 +34,8 @@
 #include "city/city_events.h"
 #include "empire/empire_object.h"
 #include "game/settings.h"
+#include "overlays/city_overlay.h"
+#include "grid/building.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -583,6 +585,58 @@ void city_t::criminals_update_day() {
 void city_t::before_start_simulation() {
     events::emit(event_population_changed{ population.current });
     events::emit(event_finance_changed{ finance.treasury });
+}
+
+void city_t::reset_overlay() {
+    current_overlay = OVERLAY_NONE;
+    previous_overlay = OVERLAY_NONE;
+}
+
+void city_t::toggle_overlay() {
+    e_overlay tmp_overlay = previous_overlay;
+    previous_overlay = current_overlay;
+    current_overlay = previous_overlay;
+    map_clear_highlights();
+}
+
+void city_t::set_overlay(e_overlay overlay) {
+    if (overlay == OVERLAY_NONE) {
+        previous_overlay = current_overlay;
+    } else {
+        previous_overlay = OVERLAY_NONE;
+    }
+    current_overlay = overlay;
+    map_clear_highlights();
+}
+
+const city_overlay *city_t::overlay() {
+    return city_overlay::get(current_overlay);
+}
+
+
+void city_t::houses_reset_demands() {
+    houses.missing.fountain = 0;
+    houses.missing.well = 0;
+    houses.missing.entertainment = 0;
+    houses.missing.more_entertainment = 0;
+    houses.missing.education = 0;
+    houses.missing.more_education = 0;
+    houses.missing.religion = 0;
+    houses.missing.second_religion = 0;
+    houses.missing.third_religion = 0;
+    houses.missing.apothecary = 0;
+    houses.missing.dentist = 0;
+    houses.missing.mortuary = 0;
+    houses.missing.physician = 0;
+    houses.missing.food = 0;
+    // NB: second_wine purposely not cleared
+
+    houses.requiring.school = 0;
+    houses.requiring.library = 0;
+    houses.requiring.dentist = 0;
+    houses.requiring.physician = 0;
+    houses.requiring.water_supply = 0;
+    houses.requiring.religion = 0;
 }
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {

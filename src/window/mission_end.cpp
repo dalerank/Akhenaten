@@ -75,7 +75,7 @@ void ui::window_mission_won::advance_to_next_mission() {
     g_city.victory_state.stop_governing();
 
     game_undo_disable();
-    game_state_reset_overlay();
+    g_city.reset_overlay();
 
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_scenario.settings.campaign_mission_rank >= 11 || is_custom_map) {

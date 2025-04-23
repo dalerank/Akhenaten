@@ -22,25 +22,3 @@ void game_state_init() {
 void game_state_toggle_paused() {
     game.paused = !game.paused;
 }
-
-void game_state_reset_overlay() {
-    game.current_overlay = OVERLAY_NONE;
-    game.previous_overlay = OVERLAY_NONE;
-}
-
-void game_state_toggle_overlay() {
-    e_overlay previous_overlay = game.previous_overlay;
-    game.previous_overlay = game.current_overlay;
-    game.current_overlay = previous_overlay;
-    map_clear_highlights();
-}
-
-void game_state_set_overlay(e_overlay overlay) {
-    if (overlay == OVERLAY_NONE) {
-        game.previous_overlay = game.current_overlay;
-    } else {
-        game.previous_overlay = OVERLAY_NONE;
-    }
-    game.current_overlay = overlay;
-    map_clear_highlights();
-}

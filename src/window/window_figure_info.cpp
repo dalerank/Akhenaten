@@ -128,7 +128,7 @@ void figure_info_window::window_info_background(object_info &c) {
 
     e_overlay foverlay = f->dcast()->get_overlay();
     ui["show_overlay"].enabled = (foverlay != OVERLAY_NONE);
-    ui["show_overlay"] = (game.current_overlay != foverlay ? "v" : "V");    
+    ui["show_overlay"] = (g_city.overlay_is(foverlay) ? "V" : "v");    
 }
 
 int figure_info_window::window_info_handle_mouse(const mouse *m, object_info &c) {
@@ -186,10 +186,10 @@ void figure_info_window::init(object_info &c) {
 
     e_overlay foverlay = f->dcast()->get_overlay();
     ui["show_overlay"].onclick([foverlay] {
-        if (game.current_overlay != foverlay) {
-            game_state_set_overlay((e_overlay)foverlay);
+        if (g_city.overlay_is(foverlay)) {
+            g_city.set_overlay((e_overlay)foverlay);
         } else {
-            game_state_reset_overlay();
+            g_city.reset_overlay();
         }
     });
 

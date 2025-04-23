@@ -515,7 +515,7 @@ void top_menu_widget::file_handle(menu_item &item) {
 
             g_city_planner.reset();
             game_undo_disable();
-            game_state_reset_overlay();
+            g_city.reset_overlay();
             ui::window_dinasty_menu::show();
         });
     }

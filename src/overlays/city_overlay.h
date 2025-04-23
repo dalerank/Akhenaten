@@ -26,7 +26,7 @@ struct city_overlay {
     animation_t anim;
 
     int tooltip_base;
-    bstring64 caption;
+    xstring caption;
 
     city_overlay(e_overlay t);
 
@@ -39,8 +39,8 @@ struct city_overlay {
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual bool show_building(const building *b) const;
     virtual e_overlay get_type() const { return OVERLAY_NONE; }
+    virtual void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
 
-    void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
     void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
@@ -50,8 +50,7 @@ struct city_overlay {
     void draw_flattened_footprint_building(const building *b, vec2i pos, int image_offset, color color_mask, painter &ctx) const;
 
     static city_overlay *get(e_overlay e);
-    static const city_overlay* current();
-    static bool activate();
+    static std::array<city_overlay *, OVERLAY_SIZE> overlays;
 };
 
 template<e_overlay TYPE>

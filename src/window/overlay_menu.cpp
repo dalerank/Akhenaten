@@ -14,8 +14,9 @@
 #include "io/gamefiles/lang.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"
-#include "js/js_game.h"
 #include "game/game.h"
+#include "js/js_game.h"
+#include "city/city.h"
 
 struct overlay_menu_t {
     struct overlay_submenu {
@@ -86,7 +87,7 @@ void overlay_menu_widget::close_submenu() {
 void overlay_menu_widget::button_menu_item(int index, int param2) {
     auto &data = overlay_menu;
     if (selected_submenu == 0 || data.menus[selected_menu].ids.size() == 1) {
-        game_state_set_overlay((e_overlay)data.menus[selected_menu].ids.front());
+        g_city.set_overlay((e_overlay)data.menus[selected_menu].ids.front());
         close_submenu();
         window_city_show();
         return;
@@ -216,14 +217,14 @@ void overlay_menu_widget::button_submenu_item(int index, int param2) {
     auto& data = overlay_menu;
     int overlay = data.menus[selected_submenu].ids[index];
     if (overlay) {
-        game_state_set_overlay((e_overlay)overlay);
+        g_city.set_overlay((e_overlay)overlay);
     }
 
     close_submenu();
     window_city_show();
 }
 
-void window_overlay_menu_show(void) {
+void window_overlay_menu_show() {
     window_type window = {
         WINDOW_OVERLAY_MENU,
         [] (int flags) { g_overlay_menu_widget.draw_background(flags); },

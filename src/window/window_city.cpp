@@ -160,13 +160,11 @@ static void exit_military_command() {
 
 static void show_overlay(e_overlay overlay) {
     exit_military_command();
-    if (game.current_overlay == overlay) {
-        game_state_set_overlay(OVERLAY_NONE);
+    if (g_city.overlay_is(overlay)) {
+        g_city.set_overlay(OVERLAY_NONE);
     } else {
-        game_state_set_overlay(overlay);
+        g_city.set_overlay(overlay);
     }
-
-    city_overlay::activate();
 }
 
 static void cycle_legion(void) {
@@ -220,8 +218,7 @@ void window_city_handle_hotkeys(const hotkeys* h) {
 
     if (h->toggle_overlay) {
         exit_military_command();
-        game_state_toggle_overlay();
-        city_overlay::activate();
+        g_city.toggle_overlay();
     }
 
     if (h->show_advisor) {

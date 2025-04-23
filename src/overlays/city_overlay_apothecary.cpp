@@ -1,4 +1,4 @@
-#include "city_overlay_apothecary.h"
+#include "city_overlay.h"
 
 #include "city/constants.h"
 #include "grid/property.h"
@@ -7,6 +7,11 @@
 #include "graphics/elements/tooltip.h"
 #include "building/building_house.h"
 #include "figure/figure.h"
+
+struct city_overlay_apothecary : public city_overlay_t<OVERLAY_APOTHECARY> {
+    virtual int get_column_height(const building *b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+};
 
 city_overlay_apothecary g_city_overlay_apothecary;
 

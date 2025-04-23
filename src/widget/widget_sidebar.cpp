@@ -2,6 +2,8 @@
 #include "dev/debug.h"
 
 #include "building/building_menu.h"
+#include "overlays/city_overlay.h"
+#include "city/city.h"
 #include "city/city_message.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
@@ -179,8 +181,8 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     ui["undo_btn"].readonly = game_can_undo();
     ui["goto_problem"].readonly = !city_message_problem_area_count();
 
-    pcstr overlay_text = game.current_overlay
-                            ? game_state_overlay_text(game.current_overlay)
+    xstring overlay_text = g_city.overlay()
+                            ? g_city.overlay()->caption
                             : ui::str(6, 4);
 
     ui["show_overlays"] = overlay_text;

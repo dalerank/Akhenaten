@@ -30,6 +30,7 @@
 #include "building/building_house_demands.h"
 
 struct empire_city;
+struct city_overlay;
 
 struct city_t {
     city_buildings_t buildings;
@@ -75,6 +76,8 @@ struct city_t {
 
     city_festival_t festival;
     city_coverage_t coverage;
+    e_overlay current_overlay = OVERLAY_NONE;
+    e_overlay previous_overlay = OVERLAY_NONE;
 
     struct {
         int8_t march_enemy;
@@ -175,6 +178,12 @@ struct city_t {
     void house_service_decay_houses_covered();
     void house_service_calculate_culture_aggregates();
     void house_process_evolve_and_consume_goods();
+
+    const city_overlay *overlay();
+    inline bool overlay_is(e_overlay o) const { return current_overlay == 0; }
+    void set_overlay(e_overlay o);
+    void toggle_overlay();
+    void reset_overlay();
 
     void init();
     void init_custom_map();

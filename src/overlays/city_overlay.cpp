@@ -13,39 +13,13 @@
 #include "widget/widget_city.h"
 #include "city/city_buildings.h"
 
-#include "overlays/city_overlay_education.h"
-#include "overlays/city_overlay_entertainment.h"
-#include "overlays/city_overlay_health.h"
-#include "overlays/city_overlay_other.h"
-#include "overlays/city_overlay_religion.h"
-#include "overlays/city_overlay_risks.h"
-#include "overlays/city_overlay_criminal.h"
-#include "overlays/city_overlay_fertility.h"
-#include "overlays/city_overlay_desirability.h"
-#include "overlays/city_overlay_bazaar_access.h"
-#include "overlays/city_overlay_fire.h"
-#include "overlays/city_overlay_routing.h"
-#include "overlays/city_overlay_physician.h"
-#include "overlays/city_overlay_apothecary.h"
-#include "overlays/city_overlay_dentist.h"
-#include "overlays/city_overlay_mortuary.h"
-#include "overlays/city_overlay_health.h"
-#include "overlays/city_overlay_juggler.h"
-#include "overlays/city_overlay_bandstand.h"
-#include "overlays/city_overlay_pavilion.h"
-#include "overlays/city_overlay_water.h"
-#include "overlays/city_overlay_damage.h"
-#include "overlays/city_overlay_labor.h"
-#include "overlays/city_overlay_tax_income.h"
-#include "overlays/city_overlay_courthouse.h"
 #include "game/game.h"
 #include "js/js_game.h"
 
 const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
 const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
-const city_overlay* g_city_overlay = 0;
-std::array<city_overlay *, OVERLAY_SIZE> g_city_overlays = { 0 };
+std::array<city_overlay *, OVERLAY_SIZE> city_overlay::overlays = { nullptr };
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays() {
@@ -72,19 +46,7 @@ void config_load_city_overlays() {
 }
 
 city_overlay* city_overlay::get(e_overlay ov) {
-    return g_city_overlays[ov];
-}
-
-const city_overlay* city_overlay::current() {
-    return g_city_overlay;
-}
-
-bool city_overlay::activate() {
-    if (!g_city_overlay || g_city_overlay->get_type() != game.current_overlay) {
-        g_city_overlay = get(game.current_overlay);
-    }
-
-    return g_city_overlay != 0;
+    return overlays[ov];
 }
 
 bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
@@ -249,7 +211,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
 }
 
 city_overlay::city_overlay(e_overlay t) : type(t) {
-    g_city_overlays[type] = this;
+    overlays[type] = this;
 }
 
 bool city_overlay::show_figure(const figure *f) const {
@@ -272,9 +234,6 @@ bool city_overlay::show_building(const building *b) const {
 
 void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
     building* b = building_at(tile);
-    if (get_type() == OVERLAY_PROBLEMS) {
-        overlay_problems_prepare_building(b);
-    }
 
     if (show_building(b)) {
         map_render_set(tile, RENDER_TALL_TILE);

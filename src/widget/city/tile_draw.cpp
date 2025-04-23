@@ -19,6 +19,7 @@
 #include "game/game.h"
 #include "graphics/view/lookup.h"
 #include "city/city_buildings.h"
+#include "city/city.h"
 
 #include "overlays/city_overlay.h"
 #include "overlays/city_overlay_risks.h"
@@ -155,7 +156,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    auto overlay = city_overlay::current();
+    const auto overlay = g_city.overlay();
     if (overlay->draw_custom_footprint(pixel, tile, ctx)) {
         /*nothing*/
 
@@ -188,7 +189,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     //Planner.construction_record_view_position(pixel, point);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
 
-    auto overlay = city_overlay::current();
+    const auto overlay = g_city.overlay();
     if (grid_offset < 0) {
         // Outside map: draw black tile
         //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
@@ -219,7 +220,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
         //}
     }
 
-    city_overlay::current()->draw_custom_top(pixel, point, ctx);
+    g_city.overlay()->draw_custom_top(pixel, point, ctx);
 }
 
 void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
@@ -230,7 +231,7 @@ void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
 
     if (b_id) {
         const building* b = building_at(grid_offset);
-        if (city_overlay::current()->show_building(b)) {
+        if (g_city.overlay()->show_building(b)) {
             draw_ornaments_and_animations_height(pixel, point, ctx);
         }
     } else {
