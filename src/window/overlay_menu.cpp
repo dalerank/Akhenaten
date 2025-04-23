@@ -126,7 +126,7 @@ void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
     }
 
     if (selected_submenu > 0 && data.menus[selected_menu].ids.size() > 1) {
-        ui::eimage(submenu_image.image(), ui.pos + vec2i{ x_offset + submenu_image.pos.x, submenu_item.pos.y * selected_menu });
+        ui::eimage(submenu_image.image(), ui.pos + submenu_image.pos + vec2i{ x_offset, submenu_item.pos.y * selected_menu });
         for (int i = 0; i < data.menus[selected_menu].ids.size(); i++) {
             pcstr text = game_state_overlay_text(data.menus[selected_menu].ids[i]);
             auto &btn = ui::button(text, ui.pos + vec2i{ x_offset + submenu_item.pos.x, submenu_item.pos.y * (i + selected_menu) }, submenu_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
