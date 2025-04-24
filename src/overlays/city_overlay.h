@@ -41,6 +41,7 @@ struct city_overlay {
     virtual e_overlay get_type() const { return OVERLAY_NONE; }
     virtual void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
 
+    xstring title() const;
     void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;

@@ -12,6 +12,7 @@
 #include "graphics/image.h"
 #include "widget/widget_city.h"
 #include "city/city_buildings.h"
+#include "io/gamefiles/lang.h"
 
 #include "game/game.h"
 #include "js/js_game.h"
@@ -41,6 +42,7 @@ void config_load_city_overlays() {
         overlay->walkers = arch.r_array_num<e_figure_type>("walkers");
         overlay->column_type = arch.r_type<e_column_type>("column_type");
         overlay->tooltips = arch.r_array_num("tooltips");
+        overlay->caption = arch.r_string("caption");
         arch.r_anim("column_anim", overlay->anim);
     });
 }
@@ -88,6 +90,15 @@ bool city_overlay::is_drawable_building_corner(tile2i tile, tile2i main, int siz
     }
 
     return (offset_main == main);
+}
+
+xstring city_overlay::title() const {
+    if (!caption.empty()) {
+        return caption;
+    }
+
+    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(e_text_overlay_menu, type);
+    return caption;
 }
 
 void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {

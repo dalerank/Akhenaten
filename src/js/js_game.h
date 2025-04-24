@@ -48,3 +48,4 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 
 #define ANK_VARIABLE(a) a; \
     ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a)
+

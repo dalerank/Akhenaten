@@ -25,6 +25,7 @@ var overlays = [
 
   {
     id:OVERLAY_RELIGION_SETH
+    caption: "Seth"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -33,6 +34,7 @@ var overlays = [
 
   {
     id:OVERLAY_NATIVE
+    caption: "Native"
     walkers:[FIGURE_INDIGENOUS_NATIVE, FIGURE_MISSIONARY]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -41,6 +43,7 @@ var overlays = [
 
   {
     id:OVERLAY_RELIGION_PTAH
+    caption: "Ptah"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -49,6 +52,7 @@ var overlays = [
 
   {
     id:OVERLAY_RELIGION_BAST
+    caption: "Bast"
     walkers:[FIGURE_PRIEST]
     buildings:[BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -65,6 +69,7 @@ var overlays = [
 
   {
     id:OVERLAY_APOTHECARY
+    caption: "Apothecary"
     walkers:[FIGURE_HERBALIST]
     buildings:[BUILDING_APOTHECARY, BUILDING_ROADBLOCK],
     column_type: COLUMN_TYPE_POSITIVE
@@ -92,6 +97,7 @@ var overlays = [
 
   {
     id:OVERLAY_BAZAAR_ACCESS
+    caption: "Bazaar access"
     walkers:[FIGURE_MARKET_BUYER, FIGURE_MARKET_TRADER]
     buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -100,6 +106,7 @@ var overlays = [
 
   {
     id:OVERLAY_COUTHOUSE
+    caption: "Magistrate"
     walkers:[FIGURE_MAGISTRATE]
     buildings:[BUILDING_COURTHOUSE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -116,6 +123,7 @@ var overlays = [
 
   {
     id:OVERLAY_PROBLEMS
+    caption: "Problems"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -124,6 +132,7 @@ var overlays = [
 
   {
     id:OVERLAY_ROUTING
+    caption: "Routing"
     walkers:[],
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -140,6 +149,7 @@ var overlays = [
 
   {
     id:OVERLAY_DENTIST
+    caption: "Dentist"
     walkers:[FIGURE_DENTIST]
     buildings:[BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -148,6 +158,7 @@ var overlays = [
 
   {
     id:OVERLAY_FERTILITY
+    caption: "Fertility"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -207,6 +218,7 @@ var overlays = [
 
   {
     id:OVERLAY_HEALTH
+    caption: "Health"
     walkers:[FIGURE_EMBALMER, FIGURE_HERBALIST, FIGURE_PHYSICIAN, FIGURE_DENTIST]
     buildings:[BUILDING_MORTUARY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -215,6 +227,7 @@ var overlays = [
 
   {
     id:OVERLAY_LABOR
+    caption: "Labor"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -231,6 +244,7 @@ var overlays = [
 
   {
     id:OVERLAY_MORTUARY
+    caption:  "Mortuary"
     walkers:[FIGURE_EMBALMER]
     buildings:[BUILDING_MORTUARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
@@ -239,6 +253,7 @@ var overlays = [
 
   {
     id:OVERLAY_FOOD_STOCKS
+    caption: "Food stocks"
     walkers:[FIGURE_EMBALMER]
     buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
@@ -271,6 +286,7 @@ var overlays = [
 
   {
     id:OVERLAY_DESIRABILITY
+    caption: "Desirability"
     walkers:[]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -279,6 +295,7 @@ var overlays = [
 
   {
     id:OVERLAY_TAX_INCOME
+    caption: "Tax income"
     walkers:[FIGURE_TAX_COLLECTOR]
     buildings:[BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
@@ -287,6 +304,7 @@ var overlays = [
 
   {
     id:OVERLAY_LABOR_ACCESS
+    caption: "Labor access"
     walkers:[FIGURE_LABOR_SEEKER]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS

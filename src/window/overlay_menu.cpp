@@ -129,8 +129,8 @@ void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
     if (selected_submenu > 0 && data.menus[selected_menu].ids.size() > 1) {
         ui::eimage(submenu_image.image(), ui.pos + submenu_image.pos + vec2i{ x_offset, submenu_item.pos.y * selected_menu });
         for (int i = 0; i < data.menus[selected_menu].ids.size(); i++) {
-            pcstr text = game_state_overlay_text(data.menus[selected_menu].ids[i]);
-            auto &btn = ui::button(text, ui.pos + vec2i{ x_offset + submenu_item.pos.x, submenu_item.pos.y * (i + selected_menu) }, submenu_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
+            xstring text = city_overlay::get(data.menus[selected_menu].ids[i])->title();
+            auto &btn = ui::button(text.c_str(), ui.pos + vec2i{ x_offset + submenu_item.pos.x, submenu_item.pos.y * (i + selected_menu) }, submenu_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
                 button_submenu_item(i, 0);
             });
         }
@@ -145,53 +145,6 @@ int overlay_menu_widget::get_offset() {
     city_view_get_viewport(viewport, view_pos, view_size);
 
     return view_pos.x + view_size.x;
-}
-
-const char* game_state_overlay_text(int index) {
-    switch (index) {
-    case OVERLAY_RELIGION_OSIRIS:
-        return "Osiris";
-    case OVERLAY_RELIGION_RA:
-        return "Ra";
-    case OVERLAY_RELIGION_PTAH:
-        return "Ptah";
-    case OVERLAY_RELIGION_SETH:
-        return "Seth";
-    case OVERLAY_RELIGION_BAST:
-        return "Bast";
-    case OVERLAY_NATIVE:
-        return "Native";
-    case OVERLAY_FERTILITY:
-        return "Fertility";
-    case OVERLAY_DESIRABILITY:
-        return "Desirability";
-    case OVERLAY_TAX_INCOME:
-        return "Tax income";
-    case OVERLAY_FOOD_STOCKS:
-        return "Food stocks";
-    case OVERLAY_BAZAAR_ACCESS:
-        return "Bazaar access";
-    case OVERLAY_ROUTING:
-        return "Routing";
-    case OVERLAY_HEALTH: 
-        return "Health";
-    case OVERLAY_APOTHECARY: 
-        return "Apothecary";
-    case OVERLAY_MORTUARY:
-        return "Mortuary";
-    case OVERLAY_DENTIST:
-        return "Dentist";
-    case OVERLAY_PROBLEMS:
-        return "Problems";
-    case OVERLAY_LABOR:
-        return "Labor";
-    case OVERLAY_COUTHOUSE:
-        return "Magistrate";
-    case OVERLAY_LABOR_ACCESS:
-        return "Labor access";
-    }
-
-    return (const char*)lang_get_string(e_text_overlay_menu, index);
 }
 
 int overlay_menu_widget::ui_handle_mouse(const mouse* m) {
