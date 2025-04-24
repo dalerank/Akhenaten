@@ -159,6 +159,15 @@ const building_impl::static_params &building_impl::params(e_building_type e) {
     return (p == nullptr) ? building_impl::static_params::dummy : *p;
 }
 
+const building_impl *building::dcast() const {
+    if (!_ptr) {
+        building_impl::acquire(type, const_cast<building&>(*this));
+    }
+
+    assert(!!_ptr);
+    return _ptr;
+}
+
 building_impl *building::dcast() {
     if (!_ptr) {
         building_impl::acquire(type, *this);
@@ -315,7 +324,7 @@ e_overlay building::get_overlay() const {
 //     }
 // }
 
-bool building::is_house() {
+bool building::is_house() const {
     return building_is_house(type);
 }
 bool building::is_fort() {
@@ -707,7 +716,7 @@ void building::check_labor_problem() {
     }
 }
 
-int building::worker_percentage() {
+int building::worker_percentage() const {
     return calc_percentage<int>(num_workers, model_get_building(type)->laborers);
 }
 
@@ -1257,6 +1266,7 @@ void building_impl::static_params::load(archive arch) {
     needs.canals = arch.r_bool("need_canals");
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
+    min_houses_coverage = arch.r_int("min_houses_coverage", 100);
 
     city_labor_t::set_category(type, labor_category);
 

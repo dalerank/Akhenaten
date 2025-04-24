@@ -229,7 +229,8 @@ public:
     bool is_main();
 
     inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
-    bool is_house();
+    inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
+    bool is_house() const;
     bool is_fort();
     bool is_defense();
     bool is_farm();
@@ -287,7 +288,7 @@ public:
     figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE);
     figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_CARTPUSHER_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER);
 
-    int worker_percentage();
+    int worker_percentage() const;
     int figure_spawn_timer();
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
@@ -303,6 +304,7 @@ public:
 
 public:
     building_impl *dcast();
+    const building_impl *dcast() const;
     building_farm *dcast_farm();
     building_brewery *dcast_brewery();
     building_pottery *dcast_pottery();
@@ -408,6 +410,7 @@ public:
         e_labor_category labor_category;
         animations_t anim;
         uint8_t building_size;
+        uint8_t min_houses_coverage;
         int window_info_height_id;
         int planer_relative_orientation;
         uint16_t production_rate;
@@ -486,6 +489,7 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
     virtual const static_params &params() const { return params(type()); }
+    virtual const static_params &params() { return params(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }

@@ -187,6 +187,8 @@ const char* game_state_overlay_text(int index) {
         return "Labor";
     case OVERLAY_COUTHOUSE:
         return "Magistrate";
+    case OVERLAY_LABOR_ACCESS:
+        return "Labor access";
     }
 
     return (const char*)lang_get_string(e_text_overlay_menu, index);

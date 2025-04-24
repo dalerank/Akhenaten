@@ -115,7 +115,3 @@ int figure_labor_seeker::provide_service() {
 figure_sound_t figure_labor_seeker::get_sound_reaction(xstring key) const {
     return labor_seeker_m.sounds[key];
 }
-
-const animations_t &figure_labor_seeker::anim() const {
-    return labor_seeker_m.anim;
-}
