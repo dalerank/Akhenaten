@@ -36,7 +36,7 @@ city_overlay_labor g_city_overlay_labor;
 city_overlay_labor_access g_city_overlay_labor_access;
 
 int city_overlay_labor::get_column_height(const building *b) const {
-    if (b->state == BUILDING_STATE_VALID) {
+    if (!b->is_valid()) {
         return COLUMN_TYPE_NONE;
     }
 
@@ -89,7 +89,11 @@ xstring city_overlay_labor_access::get_tooltip_for_building(tooltip_context *c, 
 }
 
 int city_overlay_labor_access::get_column_height(const building *b) const {
-    if (b->state == BUILDING_STATE_VALID) {
+    if (!b->is_valid()) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    if (b->is_house()) {
         return COLUMN_TYPE_NONE;
     }
 
@@ -99,7 +103,7 @@ int city_overlay_labor_access::get_column_height(const building *b) const {
     }
 
     int percentage = calc_percentage<int>(b->houses_covered, params.min_houses_coverage);
-    return std::clamp(10 - percentage / 10, 0, 10);
+    return std::clamp(percentage / 10, 0, 10);
 }
 
 bool city_overlay_labor_access::show_building(const building *b) const {

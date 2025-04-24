@@ -284,4 +284,12 @@ var overlays = [
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   },
+
+  {
+    id:OVERLAY_LABOR_ACCESS
+    walkers:[FIGURE_LABOR_SEEKER]
+    buildings:[BUILDING_ROADBLOCK]
+    column_type: COLUMN_TYPE_WATER_ACCESS
+    column_anim: {pack:PACK_GENERAL, id:103}
+  },
 ]
