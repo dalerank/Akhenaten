@@ -90,7 +90,6 @@ const lang_message* lang_get_message(int id);
 
 enum e_text_info {
     e_text_title = 0,
-    e_text_overlay_menu = 14,
     e_text_senate_tooltip = 68,
     e_text_senate_tooltip_unemployed = 135,
     e_text_senate_tooltip_culture = 136,

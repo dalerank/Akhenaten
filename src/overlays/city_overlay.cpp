@@ -100,7 +100,7 @@ xstring city_overlay::title() const {
         return caption;
     }
 
-    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(e_text_overlay_menu, type);
+    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(14, type);
     return caption;
 }
 

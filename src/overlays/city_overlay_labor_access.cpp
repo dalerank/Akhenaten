@@ -8,41 +8,60 @@
 #include "building/building_house.h"
 #include "figure/figure.h"
 
-struct city_overlay_apothecary : public city_overlay_t<OVERLAY_APOTHECARY> {
+struct city_overlay_labor_access : public city_overlay_t<OVERLAY_LABOR_ACCESS> {
+    virtual bool show_figure(const figure *f) const override {
+        if (f->type == FIGURE_LABOR_SEEKER) {
+            return ((figure *)f)->home()->show_on_problem_overlay;
+        }
+
+        return false;
+    }
     virtual int get_column_height(const building *b) const override;
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+    virtual bool show_building(const building *b) const override;
 };
 
-city_overlay_apothecary g_city_overlay_apothecary;
+city_overlay_labor_access g_city_overlay_labor_access;
 
-xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {
-    auto house = ((building *)b)->dcast_house();
-
-    if (!house) {
-        return ui::str(66, 34);
-    }
-
-    auto &housed = house->runtime_data();
-    if (housed.apothecary <= 0)
-        return ui::str(66, 31);
-    else if (housed.apothecary >= 80)
-        return ui::str(66, 32);
-    else if (housed.apothecary < 20)
-        return ui::str(66, 33);
-    else {
-        return ui::str(66, 34);
-    }
+xstring city_overlay_labor_access::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+    return ui::str(66, 57);
 }
 
-int city_overlay_apothecary::get_column_height(const building *b) const {
-    auto house = ((building *)b)->dcast_house();
-
-    if (!house) {
+int city_overlay_labor_access::get_column_height(const building *b) const {
+    if (!b->is_valid()) {
         return COLUMN_TYPE_NONE;
     }
 
-    auto &housed = house->runtime_data();
-    return house->house_population() > 0
-                ? housed.apothecary / 10 
-                : COLUMN_TYPE_NONE;
+    if (b->is_house()) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    const auto &params = b->dcast()->params();
+    if (!params.min_houses_coverage) {
+        return COLUMN_TYPE_NONE;
+    }
+
+    int percentage = calc_percentage<int>(b->houses_covered, params.min_houses_coverage);
+    return std::clamp(percentage / 10, 0, 10);
+}
+
+bool city_overlay_labor_access::show_building(const building *b) const {
+    if (b->is_house()) {
+        return false;
+    }
+
+    const auto &params = b->dcast()->params();
+    if (!params.min_houses_coverage) {
+        return false;
+    }
+
+    if (b->is_valid()) {
+        int percentage = calc_percentage<int>(b->houses_covered, params.min_houses_coverage);
+
+        if (percentage < 50) {
+            return true;
+        }
+    }
+
+    return false;
 }
