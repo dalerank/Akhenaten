@@ -16,6 +16,7 @@ class building;
 struct painter;
 
 inline bool show_figure_none(const figure *f) { return false; }
+using overlay_list = std::array<struct city_overlay *, OVERLAY_SIZE>;
 
 struct city_overlay {
     const e_overlay type;
@@ -51,7 +52,7 @@ struct city_overlay {
     void draw_flattened_footprint_building(const building *b, vec2i pos, int image_offset, color color_mask, painter &ctx) const;
 
     static city_overlay *get(e_overlay e);
-    static std::array<city_overlay *, OVERLAY_SIZE> overlays;
+    static overlay_list &overlays();
 };
 
 template<e_overlay TYPE>

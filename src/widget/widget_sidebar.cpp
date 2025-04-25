@@ -163,16 +163,17 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
 
     ui.pos.x = x_offset;
 
+    const bool is_disabled = !(window_is(WINDOW_CITY) || window_is(WINDOW_BUILD_MENU));
+    const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
+    const animation_t &anim = window_build_menu_image();
+
     ui.begin_widget(ui.pos);
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
 
-    const bool is_disabled = !(window_is(WINDOW_CITY) || window_is(WINDOW_BUILD_MENU));
-    const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
     ui.draw(wflags);
-    const animation_t &anim = window_build_menu_image();
-    ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
     ui.end_widget();
 
+    ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
     int messages = city_message_count();
 
     ui["show_messages"].readonly = (messages <= 0);
@@ -182,7 +183,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     ui["goto_problem"].readonly = !city_message_problem_area_count();
 
     xstring overlay_text = g_city.overlay()
-                            ? g_city.overlay()->caption
+                            ? g_city.overlay()->title()
                             : ui::str(6, 4);
 
     ui["show_overlays"] = overlay_text;

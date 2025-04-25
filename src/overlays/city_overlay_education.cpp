@@ -7,6 +7,7 @@
 #include "building/building_house.h"
 
 city_overlay_education g_city_overlay_education;
+city_overlay_academy g_city_overlay_academy;
 city_overlay_libraries g_city_overlay_libraries;
 
 int city_overlay_education::get_column_height(const building *b) const {

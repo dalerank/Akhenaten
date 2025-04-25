@@ -129,7 +129,8 @@ void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
     if (selected_submenu > 0 && data.menus[selected_menu].ids.size() > 1) {
         ui::eimage(submenu_image.image(), ui.pos + submenu_image.pos + vec2i{ x_offset, submenu_item.pos.y * selected_menu });
         for (int i = 0; i < data.menus[selected_menu].ids.size(); i++) {
-            xstring text = city_overlay::get(data.menus[selected_menu].ids[i])->title();
+            const auto ov = city_overlay::get(data.menus[selected_menu].ids[i]);
+            xstring text = ov ? ov->title() : "unknown";
             auto &btn = ui::button(text.c_str(), ui.pos + vec2i{ x_offset + submenu_item.pos.x, submenu_item.pos.y * (i + selected_menu) }, submenu_item.pxsize(), fonts, UiFlags_PanelSmall, [this, i] (int, int) {
                 button_submenu_item(i, 0);
             });

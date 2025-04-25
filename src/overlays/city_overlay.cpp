@@ -20,7 +20,10 @@
 const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> e_overlay_tokens;
 const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> e_column_type_tokens;
 
-std::array<city_overlay *, OVERLAY_SIZE> city_overlay::overlays = { nullptr };
+overlay_list &city_overlay::overlays() {
+    static overlay_list impl;
+    return impl;
+} ;
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
 void config_load_city_overlays() {
@@ -48,7 +51,7 @@ void config_load_city_overlays() {
 }
 
 city_overlay* city_overlay::get(e_overlay ov) {
-    return overlays[ov];
+    return overlays()[ov];
 }
 
 bool city_overlay::is_drawable_farm_corner(tile2i tile) const {
@@ -222,7 +225,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
 }
 
 city_overlay::city_overlay(e_overlay t) : type(t) {
-    overlays[type] = this;
+    overlays()[type] = this;
 }
 
 bool city_overlay::show_figure(const figure *f) const {

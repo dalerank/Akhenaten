@@ -13,6 +13,9 @@
 #include "figure/figure.h"
 #include "city/city_buildings.h"
 
+city_overlay_problems g_city_overlay_problems;
+city_overlay_native g_city_overlay_native;
+
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0) {
         return fig->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->min_max_seen;

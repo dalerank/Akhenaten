@@ -5,6 +5,9 @@
 #include "city_overlay.h"
 #include "building/building_house.h"
 
+city_overlay_entertainment g_city_overlay_entertainment;
+city_overlay_senet_house g_city_overlay_senet_house;
+
 int city_overlay_entertainment::get_column_height(const building *b) const {
     auto house = ((building *)b)->dcast_house();
 
