@@ -160,7 +160,7 @@ static void exit_military_command() {
 
 static void show_overlay(e_overlay overlay) {
     exit_military_command();
-    if (g_city.overlay_is(overlay)) {
+    if (!g_city.overlay_is(overlay)) {
         g_city.set_overlay(OVERLAY_NONE);
     } else {
         g_city.set_overlay(overlay);

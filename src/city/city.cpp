@@ -593,9 +593,7 @@ void city_t::reset_overlay() {
 }
 
 void city_t::toggle_overlay() {
-    e_overlay tmp_overlay = previous_overlay;
-    previous_overlay = current_overlay;
-    current_overlay = previous_overlay;
+    std::swap(previous_overlay, current_overlay);
     map_clear_highlights();
 }
 
