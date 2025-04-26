@@ -282,7 +282,7 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
             vfs::path conpath(folder, "/", path);
 
 #if defined(GAME_PLATFORM_WIN)
-            char *p = _fullpath(buffer, conpath, buffer.capacity);
+            pstr p = _fullpath(buffer, conpath, buffer.capacity);
 #elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
             realpath(conpath, buffer);
 #endif

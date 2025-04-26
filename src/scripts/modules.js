@@ -18,6 +18,7 @@ import building_sounds
 import images
 import ui_advisor_labor
 import ui_advisor_military
+import ui_advisor_ratings
 import ui_labor_priority_window
 import images_remap
 import ui_overlay_menu
