@@ -15,17 +15,19 @@
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
+#include "city/city_events.h"
 #include "game/game.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 struct hotkey_definition {
-    int* action;
+    int* action = nullptr;
     int value;
     int key;
     int modifiers;
     int repeatable;
+    std::function<void()> callback;
 };
 
 struct arrow_definition {
@@ -142,26 +144,15 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->action = &data.hotkey_state.show_advisor;
         def->value = ADVISOR_HOUSING;
         break;
+
     case HOTKEY_SHOW_OVERLAY_WATER:
-        def->action = &data.hotkey_state.show_overlay;
-        def->value = OVERLAY_WATER;
-        break;
     case HOTKEY_SHOW_OVERLAY_FIRE:
-        def->action = &data.hotkey_state.show_overlay;
-        def->value = OVERLAY_FIRE;
-        break;
     case HOTKEY_SHOW_OVERLAY_DAMAGE:
-        def->action = &data.hotkey_state.show_overlay;
-        def->value = OVERLAY_DAMAGE;
-        break;
     case HOTKEY_SHOW_OVERLAY_CRIME:
-        def->action = &data.hotkey_state.show_overlay;
-        def->value = OVERLAY_CRIME;
-        break;
     case HOTKEY_SHOW_OVERLAY_PROBLEMS:
-        def->action = &data.hotkey_state.show_overlay;
-        def->value = OVERLAY_PROBLEMS;
+        def->callback = [action = mapping.action] { events::emit(event_hotkey_overlay{ action }); };
         break;
+
     case HOTKEY_EDITOR_TOGGLE_BATTLE_INFO:
         def->action = &data.hotkey_state.toggle_editor_battle_info;
         break;
@@ -409,8 +400,15 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
     }
 
     for (auto &def: data.definitions) {
-        if (def.key == key && def.modifiers == modifiers && (!repeat || def.repeatable))
-            *(def.action) = def.value;
+        if (def.key == key && def.modifiers == modifiers && (!repeat || def.repeatable)) {
+            if (def.action) {
+                *(def.action) = def.value;
+            }
+
+            if (def.callback) {
+                def.callback();
+            }
+        }
     }
 }
 

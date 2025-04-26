@@ -75,6 +75,7 @@ void city_t::init() {
     g_warning_manager.clear_all();
     sentiment.init();
     finance.init();
+    hotkeys_handler.init();
 }
 
 void city_t::update_day() {

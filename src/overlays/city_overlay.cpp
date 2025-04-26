@@ -51,6 +51,9 @@ void config_load_city_overlays() {
 }
 
 city_overlay* city_overlay::get(e_overlay ov) {
+    if (ov < 0 || ov >= OVERLAY_SIZE) {
+        return nullptr;
+    }
     return overlays()[ov];
 }
 

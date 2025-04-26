@@ -27,6 +27,7 @@
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
 #include "city/city_maintenance.h"
+#include "city/city_hotkeys_handler.h"
 #include "building/building_house_demands.h"
 
 struct empire_city;
@@ -164,6 +165,7 @@ struct city_t {
 
     city_fishing_points_t fishing_points;
     city_animals_t animals;
+    city_hotkeys_handler_t hotkeys_handler;
 
     struct environment_t {
         void update_day();

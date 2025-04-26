@@ -48,6 +48,8 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #error "unknown compiler"
 #endif
 
+enum e_key;
+
 struct platform_t {
 	struct features_t {
 		uint32_t _vmx : 1;	// actually VMX or AltiVec
@@ -86,6 +88,8 @@ struct platform_t {
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
 	void open_url(pcstr url, pcstr prefix);
 	void run_cmd(pcstr url);
+
+	e_key get_key_from_scancode(int scancode);
 };
 
 extern platform_t platform;

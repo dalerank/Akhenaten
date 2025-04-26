@@ -4,6 +4,7 @@
 #include "building/construction/build_planner.h"
 #include "building/rotation.h"
 #include "city/city_message.h"
+#include "city/city_events.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "core/profiler.h"
@@ -153,20 +154,6 @@ void window_city_draw_foreground(int) {
     }
 }
 
-static void exit_military_command() {
-    if (window_is(WINDOW_CITY_MILITARY))
-        window_city_show();
-}
-
-static void show_overlay(e_overlay overlay) {
-    exit_military_command();
-    if (!g_city.overlay_is(overlay)) {
-        g_city.set_overlay(OVERLAY_NONE);
-    } else {
-        g_city.set_overlay(overlay);
-    }
-}
-
 static void cycle_legion(void) {
     static int current_legion_id = 1;
     if (window_is(WINDOW_CITY)) {
@@ -212,12 +199,10 @@ void window_city_handle_hotkeys(const hotkeys* h) {
         g_settings.increase_game_speed();
     }
 
-    if (h->show_overlay) {
-        show_overlay((e_overlay)h->show_overlay);
-    }
-
     if (h->toggle_overlay) {
-        exit_military_command();
+        if (window_is(WINDOW_CITY_MILITARY)) {
+            window_city_show();
+        }
         g_city.toggle_overlay();
     }
 

@@ -4,6 +4,8 @@
 #include "config/hotkeys.h"
 #include "core/custom_span.hpp"
 
+struct event_hotkey_overlay { int value; };
+
 struct hotkeys {
     // fixed keys with multiple functions
     int enter_pressed;
@@ -15,7 +17,6 @@ struct hotkeys {
     int rotate_map_left;
     int rotate_map_right;
     int show_advisor;
-    int show_overlay;
     int toggle_overlay;
     int toggle_pause;
     int toggle_editor_battle_info;
@@ -31,6 +32,8 @@ struct hotkeys {
     int debug_tile_down;
     int debug_render_up;
     int debug_render_down;
+
+    std::function<void()> callback;
 
     static void install(const custom_span<hotkey_mapping> &mappings);
 };
