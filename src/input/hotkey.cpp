@@ -70,8 +70,9 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
     def->repeatable = 0;
     switch (mapping.action) {
     case HOTKEY_TOGGLE_PAUSE:
-        def->action = &data.hotkey_state.toggle_pause;
+        def->callback = [action = mapping.action] { events::emit(event_toggle_pause{ action }); };
         break;
+
     case HOTKEY_TOGGLE_OVERLAY:      
         def->callback = [action = mapping.action] { events::emit(event_toggle_overlay{ action }); };
         break;

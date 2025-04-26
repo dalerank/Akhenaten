@@ -250,7 +250,6 @@ static void post_load() {
 
     // city sounds
     sound_city_init();
-    g_warning_manager.init();
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations

@@ -128,7 +128,6 @@ void game_t::update_tick(int simtick) {
     g_floods.tick_update(false);
 
     g_city.buildings.update_tick(game.paused);
-    g_city_events.process();
 
     g_city.update_tick(simtick);
 
@@ -464,6 +463,8 @@ void game_t::update() {
     if (window_is(WINDOW_CITY)) {
         anti_scum_random_15bit();
     }
+
+    g_city_events.process();
 }
 
 void game_t::frame_begin() {
@@ -487,6 +488,10 @@ void game_t::sound_frame_begin() {
 
 void game_t::before_start_simulation() {
     events::emit(event_advance_day::from_simtime(game.simtime));
+
+    events::subscribe([this] (event_toggle_pause) {
+        paused = !paused;
+    });
 }
 
 void game_t::handle_input_frame() {

@@ -6,6 +6,7 @@
 
 struct event_hotkey_overlay { int value; };
 struct event_toggle_overlay { int value; };
+struct event_toggle_pause { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -18,7 +19,6 @@ struct hotkeys {
     int rotate_map_left;
     int rotate_map_right;
     int show_advisor;
-    int toggle_pause;
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;

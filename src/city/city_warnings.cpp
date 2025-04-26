@@ -69,7 +69,7 @@ void window_warnings::show_console(pcstr warning_text) {
     w->text = warning_text;
 }
 
-void window_warnings::init() {
+void window_warnings::on_mission_start() {
     has_warning = false;
 
     events::subscribe([this] (event_construction_warning ev) {
@@ -78,6 +78,10 @@ void window_warnings::init() {
 
     events::subscribe([this] (event_city_warning ev) {
         show(ev.id.c_str());
+    });
+
+    events::subscribe([this] (event_toggle_pause ev) {
+        clear_all();
     });
 }
 

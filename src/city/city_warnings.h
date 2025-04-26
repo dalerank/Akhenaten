@@ -18,7 +18,7 @@ struct window_warnings : autoconfig_window_t<window_warnings> {
     int top_offset = 30;
     int message_width = 25;
 
-    void init() override;
+    void on_mission_start() override;
     void show(pcstr type);
     void show_custom(pcstr text);
     bool has_warnings();

@@ -18,7 +18,3 @@ void game_state_init() {
 
     random_generate_pool();
 }
-
-void game_state_toggle_paused() {
-    game.paused = !game.paused;
-}

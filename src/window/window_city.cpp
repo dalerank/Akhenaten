@@ -179,18 +179,10 @@ static void cycle_legion(void) {
     }
 }
 
-static void toggle_pause() {
-    game_state_toggle_paused();
-    g_warning_manager.clear_all();
-}
-
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
     handle_debug_hotkeys(h);
-    ////
-    if (h->toggle_pause)
-        toggle_pause();
 
     if (h->decrease_game_speed) {
         g_settings.decrease_game_speed();
