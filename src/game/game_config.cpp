@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "core/svector.h"
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 static const char* CONF_FILENAME = "akhenaten.conf";
 
@@ -150,4 +151,27 @@ void game_features::load() {
 void game_features::save() {
     vfs::sync_em_fs();
     _settings.sync(CONF_FILENAME);
+}
+
+declare_console_command_p(savefeatures) {
+    for (auto &feature : game_features::_features) {
+        switch (feature->type()) {
+        case setting_bool:
+            {
+                const bool old = feature->to_bool();
+                feature->set(!old);
+                feature->set(old);
+            }
+            break;
+
+        case setting_string:
+            {
+                const xstring old = feature->to_string();
+                feature->set(!!old ? "_" : "!");
+                feature->set(old);
+            }
+            break;
+        }
+    }
+    game_features::save();
 }
