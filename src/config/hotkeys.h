@@ -93,7 +93,7 @@ struct hotkey_mapping {
     e_hotkey_action action = HOTKEY_NONE;
 
     hotkey_mapping() : name("unknown") {}
-    hotkey_mapping(pcstr n, e_key k = KEY_NONE, e_key_mode m = KEY_MOD_NONE, e_hotkey_action a = HOTKEY_NONE);
+    hotkey_mapping(pcstr n, e_key k = KEY_NONE, e_key_mode m = KEY_MOD_NONE, e_hotkey_action a = HOTKEY_NONE, e_key k1 = KEY_NONE, e_key_mode m1 = KEY_MOD_NONE);
 };
 
 namespace game_hotkeys {

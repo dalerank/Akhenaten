@@ -16,6 +16,8 @@ public:
     [[nodiscard]] bool is_window_mode() const;
     void set_window_mode(bool flag = true);
 
+    [[nodiscard]] bool is_logjsfiles() const { return logjsfiles_; }
+
     [[nodiscard]] int get_display_scale_percentage() const;
     void set_display_scale_percentage(int value);
 
@@ -49,6 +51,7 @@ private:
     bool use_sound_ = true;
     bool use_crashdlg_ = true;
     bool create_fulldmp_ = false;
+    bool logjsfiles_ = false;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);

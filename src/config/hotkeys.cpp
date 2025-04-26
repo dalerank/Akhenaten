@@ -31,10 +31,8 @@ namespace game_hotkeys {
     hotkey_mapping toggle_pause ("toggle_pause", KEY_P, KEY_MOD_NONE, HOTKEY_TOGGLE_PAUSE);
     hotkey_mapping toggle_overlay ("toggle_overlay", KEY_SPACE, KEY_MOD_NONE, HOTKEY_TOGGLE_OVERLAY);
     hotkey_mapping cycle_legion ("cycle_legion", KEY_L, KEY_MOD_NONE, HOTKEY_CYCLE_LEGION);
-    hotkey_mapping increase_game_speed ("increase_game_speed", KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
-    hotkey_mapping increase_game_speed_alt ("increase_game_speed_alt", KEY_RIGHTBRACKET, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
-    hotkey_mapping decrease_game_speed ("decrease_game_speed", KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
-    hotkey_mapping decrease_game_speed_alt ("decrease_game_speed_alt", KEY_LEFTBRACKET, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
+    hotkey_mapping increase_game_speed ("increase_game_speed", KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED, KEY_RIGHTBRACKET, KEY_MOD_NONE);
+    hotkey_mapping decrease_game_speed ("decrease_game_speed", KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED, KEY_LEFTBRACKET, KEY_MOD_NONE);
     hotkey_mapping rotate_map_left ("rotate_map_left", KEY_HOME, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_LEFT);
     hotkey_mapping rotate_map_right ("rotate_map_right", KEY_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
     hotkey_mapping build_vacant_house ("build_vacant_house");
@@ -56,24 +54,15 @@ namespace game_hotkeys {
     hotkey_mapping build_roadblock ("build_roadblock");
     hotkey_mapping show_advisor_labor ("show_advisor_labor", KEY_KP_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
     hotkey_mapping show_advisor_labor_alt ("show_advisor_labor_alt", KEY_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
-    hotkey_mapping show_advisor_military ("show_advisor_military", KEY_KP_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
-    hotkey_mapping show_advisor_military_alt ("show_advisor_military_alt", KEY_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
-    hotkey_mapping show_advisor_kingdome ("show_advisor_kingdome", KEY_KP_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_KINGDOME);
-    hotkey_mapping show_advisor_kingdome_alt ("show_advisor_kingdome_alt", KEY_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_KINGDOME);
-    hotkey_mapping show_advisor_ratings ("show_advisor_ratings", KEY_KP_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS);
-    hotkey_mapping show_advisor_ratings_alt ("show_advisor_ratings_alt", KEY_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS);
-    hotkey_mapping show_advisor_trade ("show_advisor_trade", KEY_KP_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE);
-    hotkey_mapping show_advisor_trade_alt ("show_advisor_trade_alt", KEY_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE);
-    hotkey_mapping show_advisor_population ("show_advisor_population", KEY_KP_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION);
-    hotkey_mapping show_advisor_population_alt ("show_advisor_population_alt", KEY_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION);
-    hotkey_mapping show_advisor_health ("show_advisor_health", KEY_KP_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH);
-    hotkey_mapping show_advisor_health_alt ("show_advisor_healt_alt", KEY_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH);
-    hotkey_mapping show_advisor_education ("show_advisor_education", KEY_KP_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION);
-    hotkey_mapping show_advisor_education_alt ("show_advisor_education", KEY_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION);
-    hotkey_mapping show_advisor_entertainment ("show_advisor_entertainment", KEY_KP_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT);
-    hotkey_mapping show_advisor_entertainment_alt ("show_advisor_entertainment", KEY_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT);
-    hotkey_mapping show_advisor_religion ("show_advisor_religion", KEY_KP_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION);
-    hotkey_mapping show_advisor_religion_alt ("show_advisor_religion_alt", KEY_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION);
+    hotkey_mapping show_advisor_military ("show_advisor_military", KEY_KP_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY, KEY_2, KEY_MOD_NONE);
+    hotkey_mapping show_advisor_kingdome ("show_advisor_kingdome", KEY_KP_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_KINGDOME, KEY_3, KEY_MOD_NONE);
+    hotkey_mapping show_advisor_ratings ("show_advisor_ratings", KEY_KP_4, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RATINGS, KEY_4);
+    hotkey_mapping show_advisor_trade ("show_advisor_trade", KEY_KP_5, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_TRADE, KEY_5);
+    hotkey_mapping show_advisor_population ("show_advisor_population", KEY_KP_6, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_POPULATION, KEY_6);
+    hotkey_mapping show_advisor_health ("show_advisor_health", KEY_KP_7, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_HEALTH, KEY_7);
+    hotkey_mapping show_advisor_education ("show_advisor_education", KEY_KP_8, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_EDUCATION, KEY_8);
+    hotkey_mapping show_advisor_entertainment ("show_advisor_entertainment", KEY_KP_9, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, KEY_9);
+    hotkey_mapping show_advisor_religion ("show_advisor_religion", KEY_KP_0, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_RELIGION, KEY_0);
     hotkey_mapping show_advisor_financial ("show_advisor_financial", KEY_MINUS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_FINANCIAL);
     hotkey_mapping show_advisor_chief ("show_advisor_chief", KEY_EQUALS, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_CHIEF);
     hotkey_mapping show_advisor_housing ("show_advisor_housing");
@@ -162,22 +151,28 @@ void game_hotkeys::load() {
     init_defaults();
     
     g_config_arch.r_objects("game_hotkeys", [&] (pcstr key, archive arch) {
-        auto value = arch.to_array_str(key);
+        auto value = arch.to_array_str();
 
         if (value.empty()) {
             return;
         }
 
-        hotkey_mapping mapping(key);
+        auto it = std::find_if(_hotkeys.begin(), _hotkeys.end(), [key] (const hotkey_mapping &m) {
+            return m.name == key;
+        });
+
+        if (it == _hotkeys.end()) {
+            return;
+        }
+
         e_key vkey;
         e_key_mode vmodifiers;
 
-        hotkey_mapping_state* states[] = { &mapping.state, &mapping.alt };
+        hotkey_mapping_state* states[] = { &it->state, &it->alt };
         for (size_t i = 0; i < value.size(); ++i) {
             if (key_combination_from_name(value[i].c_str(), vkey, vmodifiers)) {
                 states[i]->key = vkey;
                 states[i]->modifiers = vmodifiers;
-                set_hotkey(mapping);
             }
         }        
     });
@@ -207,9 +202,12 @@ void game_hotkeys::save() {
     //vfs::file_close(fp);
 }
 
-hotkey_mapping::hotkey_mapping(pcstr n, e_key k, e_key_mode m, e_hotkey_action a) : name(n), action(a) {
+hotkey_mapping::hotkey_mapping(pcstr n, e_key k, e_key_mode m, e_hotkey_action a, e_key k1, e_key_mode m1) : name(n), action(a) {
     state.key = k;
     state.modifiers = m;
+
+    alt.key = k1;
+    alt.modifiers = m1;
 
     game_hotkeys::_hotkeys[action] = *this;
     game_hotkeys::_defaults[action] = *this;

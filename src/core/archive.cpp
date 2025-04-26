@@ -123,7 +123,7 @@ std::vector<std::string> archive::r_array_str(pcstr name) {
     return result;
 }
 
-std::vector<std::string> archive::to_array_str(pcstr name) {
+std::vector<std::string> archive::to_array_str() {
     auto vm = (js_State *)state;
 
     std::vector<std::string> result;
@@ -148,10 +148,11 @@ std::vector<std::string> archive::to_array_str(pcstr name) {
     return result;
 }
 
-archive::variant_t archive::to_variant(pcstr name) {
+archive::variant_t archive::to_variant() {
     auto vm = (js_State *)state;
 
     variant_t result;
+    pcstr name = "unknown";
     if (js_isundefined(vm, -1)) {
         result = variant_t(variant_none_t{ name });
     } else if (js_isstring(vm, -1)) {

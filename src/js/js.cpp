@@ -11,6 +11,7 @@
 #include "mujs/mujs.h"
 #include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
+#include "platform/arguments.h"
 #include "platform/platform.h"
 
 #include <filesystem>
@@ -277,9 +278,11 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
 
     vfs::path buffer;
     for (const auto &folder : vm.scripts_folders) {
-        vfs::path conpath(folder, "/", path);
         if (!!folder) {
             vfs::path conpath(folder, "/", path);
+            if (g_args.is_logjsfiles()) {
+                logs::info("js:get_absolute_path %s", conpath.c_str());
+            }
 
 #if defined(GAME_PLATFORM_WIN)
             pstr p = _fullpath(buffer, conpath, buffer.capacity);

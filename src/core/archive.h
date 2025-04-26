@@ -18,7 +18,7 @@ struct archive {
 
     pcstr r_string(pcstr name);
     std::vector<std::string> r_array_str(pcstr name);
-    std::vector<std::string> to_array_str(pcstr name);
+    std::vector<std::string> to_array_str();
     int r_int(pcstr name, int def = 0);
     float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
@@ -43,7 +43,7 @@ struct archive {
 
     using variant_t = std::variant<variant_none_t, float, bool, xstring, vec2i, variant_array_t, variant_object_t>;
     variant_t r_variant(pcstr name);
-    variant_t to_variant(pcstr name);
+    variant_t to_variant();
 
     std::vector<vec2i> r_array_vec2i(pcstr name);
 

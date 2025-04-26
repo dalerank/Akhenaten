@@ -234,6 +234,8 @@ char const* Arguments::usage() {
            "          do not show crash dialog\n"
            "  --fulldmp\n"
            "         create full dump on crash\n"
+           "  --logjsfiles\n"
+           "         print logs which files open with js\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
@@ -324,6 +326,8 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
         } else if (SDL_strcmp(argv[i], "--window") == 0) {
             window_mode_ = true;
+        } else if (SDL_strcmp(argv[i], "--logjsfiles") == 0) {
+            logjsfiles_ = true;
         } else if (SDL_strcmp(argv[i], "--nosound") == 0) {
             use_sound_ = false;
         } else if (SDL_strcmp(argv[i], "--nocrashdlg") == 0) {
