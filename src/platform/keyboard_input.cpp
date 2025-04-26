@@ -11,7 +11,7 @@ static int is_alt_down(SDL_KeyboardEvent* event) {
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
-e_key platform_t::get_key_from_scancode(int scancode) {
+int platform_t::get_key_from_scancode(int scancode) {
     switch (scancode) {
     case SDL_SCANCODE_A: return KEY_A;
     case SDL_SCANCODE_B: return KEY_B;
@@ -370,7 +370,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     }
 
     // handle hotkeys
-    e_key key = platform.get_key_from_scancode(event->keysym.scancode);
+    e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     e_key_mode mod = get_modifier(event->keysym.mod);
     hotkey_key_pressed(key, mod, event->repeat);
 
@@ -400,7 +400,7 @@ void platform_handle_key_up(SDL_KeyboardEvent* event) {
         return;
     }
 #endif
-    e_key key = platform.get_key_from_scancode(event->keysym.scancode);
+    e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     int mod = get_modifier(event->keysym.mod);
     hotkey_key_released(key, mod);
 }
@@ -418,7 +418,7 @@ e_key system_keyboard_key_for_symbol(pcstr name) {
     if (scancode == SDL_SCANCODE_UNKNOWN)
         return KEY_NONE;
 
-    return platform.get_key_from_scancode(scancode);
+    return (e_key)platform.get_key_from_scancode(scancode);
 }
 
 const char* system_keyboard_key_name(int key) {
