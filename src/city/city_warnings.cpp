@@ -83,6 +83,10 @@ void window_warnings::on_mission_start() {
     events::subscribe([this] (event_toggle_pause ev) {
         clear_all();
     });
+
+    events::subscribe([] (event_rotate_map ev) {
+        events::emit(event_city_warning{ "#oriention" });
+    });
 }
 
 void window_warnings::show_custom(pcstr text) {

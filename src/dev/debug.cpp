@@ -1210,9 +1210,8 @@ void draw_debug_ui(int x, int y) {
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
         vec2i min_pos, max_pos;
-        city_view_get_camera_scrollable_pixel_limits(city_view_data_unsafe(), min_pos, max_pos);
+        city_view_get_camera_scrollable_pixel_limits(g_city_view, min_pos, max_pos);
 
-        auto& viewdata = city_view_data_unsafe();
         int real_max_x;
         int real_max_y;
         city_view_get_camera_max_tile(&real_max_x, &real_max_y);
@@ -1223,7 +1222,7 @@ void draw_debug_ui(int x, int y) {
 
         y += 30;
         debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", min_pos.x, min_pos.y);
-        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", viewdata.camera.position.x, viewdata.camera.position.y);
+        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", g_city_view.camera.position.x, g_city_view.camera.position.y);
         debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", max_pos.x, max_pos.y);
 
         debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
@@ -1234,8 +1233,8 @@ void draw_debug_ui(int x, int y) {
         debug_text_dual_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
         debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", viewdata.viewport.size_pixels.x / 60, viewdata.viewport.size_pixels.y / 30);
-        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", viewdata.viewport.size_pixels.y, viewdata.viewport.size_pixels.y);
+        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", g_city_view.viewport.size_pixels.x / 60, g_city_view.viewport.size_pixels.y / 30);
+        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.y, g_city_view.viewport.size_pixels.y);
 
         debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
         debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());

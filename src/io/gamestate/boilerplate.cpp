@@ -730,7 +730,6 @@ void GamestateIO::start_loaded_file() {
 
     // city view / orientation
     city_view_init();
-    city_settings_init();
     map_orientation_update_buildings();
 
     // river / garden tiles refresh

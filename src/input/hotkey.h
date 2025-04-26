@@ -8,6 +8,8 @@ struct event_hotkey_overlay { int value; };
 struct event_toggle_overlay { int value; };
 struct event_toggle_pause { int value; };
 struct event_change_gamespeed { int value; };
+struct event_rotate_map { int value; };
+struct event_rotate_map_reset { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -15,8 +17,6 @@ struct hotkeys {
     int escape_pressed;
     // keys with specific function
     int cycle_legion;
-    int rotate_map_left;
-    int rotate_map_right;
     int show_advisor;
     int toggle_editor_battle_info;
     int set_bookmark;

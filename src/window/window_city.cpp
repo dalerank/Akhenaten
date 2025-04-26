@@ -10,7 +10,6 @@
 #include "core/profiler.h"
 #include "core/game_environment.h"
 #include "dev/debug.h"
-#include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/game.h"
@@ -34,8 +33,7 @@
 
 static int center_in_city(int element_width_pixels) {
     vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
     int margin = (view_size.x - element_width_pixels) / 2;
     return view_pos.x + margin;
 }
@@ -84,8 +82,7 @@ static void draw_cancel_construction() {
     }
 
     vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
     view_size.x -= 4 * 16;
     inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     painter ctx = game.painter();
@@ -191,12 +188,6 @@ void window_city_handle_hotkeys(const hotkeys* h) {
     if (h->cycle_legion)
         cycle_legion();
 
-    if (h->rotate_map_left) {
-        game_orientation_rotate_left();
-    }
-    if (h->rotate_map_right) {
-        game_orientation_rotate_right();
-    }
     if (h->go_to_bookmark) {
         map_bookmark_go_to(h->go_to_bookmark - 1);
 

@@ -7,7 +7,6 @@
 #include "city/city_message.h"
 #include "core/game_environment.h"
 #include "core/profiler.h"
-#include "game/orientation.h"
 #include "game/state.h"
 #include "game/undo.h"
 #include "io/gamefiles/lang.h"

@@ -253,12 +253,11 @@ static void create_full_city_screenshot() {
     vec2i original_camera_pixels = camera_get_position();
 
     vec2i min_pos, max_pos;
-    view_data_t full_city_view_data = city_view_data_unsafe();
+    view_data_t full_city_view_data = g_city_view;
     city_view_get_camera_scrollable_pixel_limits(full_city_view_data, min_pos, max_pos);
 
     vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
 
     max_pos += view_size;
 
@@ -295,7 +294,7 @@ static void create_full_city_screenshot() {
     graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
     
     vec2i viewport_offset, viewport_size;
-    city_view_get_viewport(viewport, viewport_offset, viewport_size);
+    city_view_get_viewport(g_city_view, viewport_offset, viewport_size);
     city_view_set_viewport(canvas_width + widget_sidebar_city_offset_max(), canvas_height + TOP_MENU_HEIGHT);
     int current_height = base_height;
 

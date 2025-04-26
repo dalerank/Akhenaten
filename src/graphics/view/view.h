@@ -40,12 +40,11 @@ struct painter;
 using tile_draw_callback = std::function<void(vec2i, tile2i, painter&)>;
 using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
-view_data_t& city_view_data_unsafe();
+extern view_data_t g_city_view;
 
 void city_view_camera_position_refresh();
 
 void city_view_init();
-void city_settings_init();
 
 int city_view_orientation(void);
 int city_view_relative_orientation(int orientation);
@@ -75,8 +74,6 @@ void city_view_rotate_left(void);
 void city_view_rotate_right(void);
 
 void city_view_refresh_viewport();
-
-view_data_t &city_view_viewport();
 
 void city_view_set_viewport(int screen_width, int screen_height);
 void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size);

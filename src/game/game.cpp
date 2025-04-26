@@ -263,7 +263,7 @@ void game_t::reload_objects() {
 
 ::painter game_t::painter() {
     ::painter ctx;
-    ctx.view = &city_view_data_unsafe();
+    ctx.view = &g_city_view;
     ctx.renderer = graphics_renderer()->renderer();
     ctx.global_render_scale = graphics_renderer()->scale();
 

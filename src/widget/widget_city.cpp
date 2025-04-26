@@ -85,8 +85,7 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
 
 int screen_city_t::input_coords_in_city(int x, int y) {
     vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
 
     x -= view_pos.x;
     y -= view_pos.y;
@@ -136,12 +135,11 @@ void screen_city_t::update_clouds(painter &ctx) {
         clouds_pause();
     }
 
-    auto& viewdata = city_view_data_unsafe();
     vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
+    city_view_get_camera_scrollable_pixel_limits(g_city_view, min_pos, max_pos);
     const vec2i offset = {
-        viewdata.camera.position.x - min_pos.x,
-        viewdata.camera.position.y - min_pos.y,
+        g_city_view.camera.position.x - min_pos.x,
+        g_city_view.camera.position.y - min_pos.y,
     };
 
     const vec2i limit = {
@@ -602,8 +600,7 @@ bool screen_city_t::handle_cancel_construction_button(const touch_t * t) {
         return false;
 
     vec2i view_pos, view_size;
-    view_data_t viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
     int box_size = 5 * 16;
     view_size.x -= box_size;
 
@@ -640,8 +637,7 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
     if (g_city_planner.build_type) {
         if (t->has_started) {
             vec2i view_pos, view_size;
-            view_data_t viewport = city_view_viewport();
-            city_view_get_viewport(viewport, view_pos, view_size);
+            city_view_get_viewport(g_city_view, view_pos, view_size);
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended) {

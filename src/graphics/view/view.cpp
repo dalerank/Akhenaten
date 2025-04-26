@@ -4,9 +4,12 @@
 
 #include "io/io_buffer.h"
 #include "core/calc.h"
+#include "city/city_events.h"
+#include "city/city_warnings.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"
 #include "grid/image.h"
+#include "grid/orientation.h"
 #include "lookup.h"
 
 #include "widget/widget_minimap.h"
@@ -17,10 +20,32 @@
 #include "city/city.h"
 #include "game/game.h"
 
-view_data_t g_city_view_data;
+view_data_t g_city_view;
 
 view_data_t& city_view_data_unsafe() {
-    return g_city_view_data;
+    return g_city_view;
+}
+
+void city_view_rotate_north() {
+    switch (city_view_orientation()) {
+    case DIR_2_BOTTOM_RIGHT:
+        city_view_rotate_left();
+        map_orientation_change(1);
+        break;
+
+    case DIR_4_BOTTOM_LEFT:
+        city_view_rotate_right();
+        map_orientation_change(0);
+        // fallthrough
+    case DIR_6_TOP_LEFT:
+        city_view_rotate_right();
+        map_orientation_change(0);
+        break;
+
+    default: // already north
+        return;
+    }
+    events::emit(event_city_warning{ "#orientation" });
 }
 
 void city_view_init() {
@@ -28,14 +53,24 @@ void city_view_init() {
     camera_calc_scroll_limits();
     g_zoom.set_scale(100.0f);
     widget_minimap_invalidate();
-}
 
-void city_settings_init() {
+    events::subscribe([] (event_rotate_map ev) {
+        if (ev.value == HOTKEY_ROTATE_MAP_LEFT) {
+            city_view_rotate_left();
+        }
 
+        if (ev.value == HOTKEY_ROTATE_MAP_RIGHT) {
+            city_view_rotate_right();
+        }
+    });
+
+    events::subscribe([] (event_rotate_map_reset ev) {
+        city_view_rotate_north();
+    });
 }
 
 int city_view_orientation() {
-    return g_city_view_data.orientation;
+    return g_city_view.orientation;
 }
 
 int city_view_relative_orientation(int orientation) {
@@ -47,7 +82,7 @@ int city_view_absolute_orientation(int orientation_relative) {
 }
 
 void city_view_reset_orientation(void) {
-    g_city_view_data.orientation = 0;
+    g_city_view.orientation = 0;
     //    calculate_lookup();
 }
 
@@ -66,7 +101,7 @@ void camera_calc_scroll_limits() {
 }
 
 void city_view_get_camera_max_tile(int* x, int* y) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int tx = (int)(data.viewport.size_pixels.x / (TILE_WIDTH_PIXELS * g_zoom.get_scale()));
     int ty = (int)(2 * data.viewport.size_pixels.y / (TILE_HEIGHT_PIXELS * g_zoom.get_scale()));
@@ -76,14 +111,14 @@ void city_view_get_camera_max_tile(int* x, int* y) {
 }
 
 void city_view_get_camera_max_pixel_offset(int* x, int* y) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     *x = TILE_WIDTH_PIXELS - (data.viewport.size_pixels.x % TILE_WIDTH_PIXELS);
     *y = TILE_HEIGHT_PIXELS - (data.viewport.size_pixels.y % TILE_HEIGHT_PIXELS);
 }
 
 vec2i city_view_get_camera_in_pixels() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return {data.camera.tile_internal.x * TILE_WIDTH_PIXELS + data.camera.position.x,
             data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
@@ -97,7 +132,7 @@ void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_
 }
 
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int min_x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     int min_y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
@@ -145,25 +180,25 @@ static void camera_validate_position(view_data_t& view) {
 }
 
 void city_view_camera_position_refresh() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     camera_go_to_corner_tile(data.camera.tile_internal, true);
 }
 
 screen_tile city_view_get_camera_screentile() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return data.camera.tile_internal;
 }
 
 tile2i city_view_get_camera_mappoint() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return tile2i(data.camera.tile_internal.x, data.camera.tile_internal.y);
 }
 
 vec2i camera_get_position() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return data.camera.position;
 }
@@ -196,7 +231,7 @@ void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
     int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
@@ -207,7 +242,7 @@ void camera_go_to_screen_tile(screen_tile screen, bool validate) {
 
 void camera_go_to_mappoint(tile2i point) {
     //camera_go_to_pixel(tile_to_pixel(point), true);
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
         screen_tile screen = tile_to_screen(point);
         screen.x -= data.viewport.width_tiles / 2;
         screen.y -= data.viewport.height_tiles / 2;
@@ -216,7 +251,7 @@ void camera_go_to_mappoint(tile2i point) {
 }
 
 void camera_scroll(int x, int y) {
-    auto& view = g_city_view_data;
+    auto& view = g_city_view;
 
     view.camera.position.x += x;
     view.camera.position.y += y;
@@ -224,7 +259,7 @@ void camera_scroll(int x, int y) {
 }
 
 screen_tile camera_get_selected_screen_tile() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return data.selected_tile;
 }
@@ -245,12 +280,12 @@ void city_view_set_selected_view_tile(const vec2i* tile) {
 }
 
 static int get_camera_corner_offset(void) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return screentile_to_mappoint(data.camera.tile_internal).grid_offset();
 }
 static int get_center_grid_offset() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
     int y_center = data.camera.tile_internal.y + data.viewport.height_tiles / 2;
@@ -258,21 +293,24 @@ static int get_center_grid_offset() {
 }
 
 void city_view_rotate_left() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int center_grid_offset = get_center_grid_offset();
     data.orientation -= 2;
-    if (data.orientation < 0)
+    if (data.orientation < 0) {
         data.orientation = DIR_6_TOP_LEFT;
+    }
 
     if (center_grid_offset >= 0) {
         vec2i screen = tile_to_screen(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
+
+    map_orientation_change(0);
 }
 
 void city_view_rotate_right() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int center_grid_offset = get_center_grid_offset();
     data.orientation += 2;
@@ -283,10 +321,12 @@ void city_view_rotate_right() {
         vec2i screen = tile_to_screen(tile2i(center_grid_offset));
         camera_go_to_screen_tile(screen, true);
     }
+
+    map_orientation_change(1);
 }
 
 static void set_viewport(int x_offset, int y_offset, int width, int height) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     auto zoom = g_zoom.get_percentage();
     //    width = calc_adjust_with_percentage(width, zoom);
@@ -301,23 +341,19 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
 }
 
 static void set_viewport_with_sidebar() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     return set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - widget_sidebar_city_expanded_max() + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 void city_view_set_viewport_without_sidebar() {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - widget_sidebar_city_collapsed_max() + 2, data.screen_height - TOP_MENU_HEIGHT);
 }
 
-view_data_t &city_view_viewport() {
-    return g_city_view_data;
-}
-
 void city_view_refresh_viewport() {
-    auto& view = g_city_view_data;
+    auto& view = g_city_view;
 
     if (view.sidebar_collapsed) {
         city_view_set_viewport_without_sidebar();
@@ -331,7 +367,7 @@ void city_view_refresh_viewport() {
 }
 
 void city_view_set_viewport(int screen_width, int screen_height) {
-    auto& view = g_city_view_data;
+    auto& view = g_city_view;
 
     view.screen_width = screen_width;
     view.screen_height = screen_height;
@@ -350,14 +386,14 @@ void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size) {
 }
 
 void city_view_get_viewport_size_tiles(int* width, int* height) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     *width = data.viewport.width_tiles;
     *height = data.viewport.height_tiles;
 }
 
 bool pixel_is_inside_viewport(vec2i pixel) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     if (pixel.x < data.viewport.offset.x || pixel.x >= data.viewport.offset.x + data.viewport.size_pixels.x
         || pixel.y < data.viewport.offset.y || pixel.y >= data.viewport.offset.y + data.viewport.size_pixels.y) {
@@ -367,7 +403,7 @@ bool pixel_is_inside_viewport(vec2i pixel) {
 }
 
 bool city_view_is_sidebar_collapsed() {
-    return g_city_view_data.sidebar_collapsed;
+    return g_city_view.sidebar_collapsed;
 }
 
 void city_view_start_sidebar_toggle() {
@@ -376,7 +412,7 @@ void city_view_start_sidebar_toggle() {
 }
 
 void city_view_toggle_sidebar(int mode) {
-    auto& view = g_city_view_data;
+    auto& view = g_city_view;
 
     if (mode == -1) {
         view.sidebar_collapsed = !view.sidebar_collapsed;
@@ -388,7 +424,7 @@ void city_view_toggle_sidebar(int mode) {
 }
 
 io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
 
@@ -399,7 +435,7 @@ io_buffer* iob_city_view_orientation = new io_buffer([](io_buffer* iob, size_t v
 });
 
 io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t version) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.camera.tile_internal.x);
     iob->bind(BIND_SIGNATURE_INT32, &data.camera.tile_internal.y);
@@ -430,7 +466,7 @@ void city_view_foreach_valid_map_tile(painter &ctx,
                                       tile_draw_callback callback4,
                                       tile_draw_callback callback5,
                                       tile_draw_callback callback6) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     int odd = 0;
     vec2i screen_0 = starting_tile(ctx);
@@ -490,7 +526,7 @@ static void do_valid_callback(painter &ctx, vec2i pixel, tile2i point, tile_draw
 }
 
 void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback) {
-    auto& data = g_city_view_data;
+    auto& data = g_city_view;
 
     vec2i screen = tile_to_screen(tile2i(grid_offset));
     vec2i pixel;

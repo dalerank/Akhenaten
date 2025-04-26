@@ -102,8 +102,7 @@ static void scroll_map(const mouse* m) {
 
 static int input_coords_in_map(int x, int y) {
     vec2i view_pos, view_size;
-    const view_data_t &viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
 
     x -= view_pos.x;
     y -= view_pos.y;
@@ -116,8 +115,7 @@ static void handle_touch_scroll(const touch_t * t) {
     if (editor_tool_is_active()) {
         if (t->has_started) {
             vec2i view_pos, view_size;
-            const view_data_t &viewport = city_view_viewport();
-            city_view_get_viewport(viewport, view_pos, view_size);
+            city_view_get_viewport(g_city_view, view_pos, view_size);
             scroll_set_custom_margins(view_pos.x, view_pos.y, view_size.x, view_size.y);
         }
         if (t->has_ended)
@@ -168,8 +166,7 @@ static bool handle_cancel_construction_button(const touch_t * t) {
         return false;
 
     vec2i view_pos, view_size;
-    const view_data_t &viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
 
     int box_size = 5 * 16;
     view_size.x -= box_size;

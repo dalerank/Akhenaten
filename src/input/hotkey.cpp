@@ -88,11 +88,10 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_ROTATE_MAP_LEFT:
-        def->action = &data.hotkey_state.rotate_map_left;
-        break;
     case HOTKEY_ROTATE_MAP_RIGHT:
-        def->action = &data.hotkey_state.rotate_map_right;
+        def->callback = [action = mapping.action] { events::emit(event_rotate_map{ action }); };
         break;
+
     case HOTKEY_SHOW_ADVISOR_LABOR:
         def->action = &data.hotkey_state.show_advisor;
         def->value = ADVISOR_LABOR;

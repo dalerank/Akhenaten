@@ -142,8 +142,7 @@ void overlay_menu_widget::ui_draw_foreground(UiFlags flags) {
 
 int overlay_menu_widget::get_offset() {
     vec2i view_pos, view_size;
-    const view_data_t &viewport = city_view_viewport();
-    city_view_get_viewport(viewport, view_pos, view_size);
+    city_view_get_viewport(g_city_view, view_pos, view_size);
 
     return view_pos.x + view_size.x;
 }

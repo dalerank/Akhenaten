@@ -14,7 +14,6 @@
 #include "core/core_utility.h"
 #include "game/game_config.h"
 #include "game/settings.h"
-#include "game/orientation.h"
 #include "game/cheats.h"
 #include "game/state.h"
 #include "game/undo.h"
@@ -298,15 +297,15 @@ void top_menu_widget::debug_render_change_opt(menu_item &item) {
 }
 
 static void button_rotate_reset(int param1, int param2) {
-    game_orientation_rotate_north();
+    events::emit(event_rotate_map_reset{ 0 });
 }
 
 static void button_rotate_left(int param1, int param2) {
-    game_orientation_rotate_left();
+    events::emit(event_rotate_map{ HOTKEY_ROTATE_MAP_LEFT });
 }
 
 static void button_rotate_right(int param1, int param2) {
-    game_orientation_rotate_right();
+    events::emit(event_rotate_map{ HOTKEY_ROTATE_MAP_RIGHT });
 }
 
 void top_menu_widget::draw_elements_impl() {

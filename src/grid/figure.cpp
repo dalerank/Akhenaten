@@ -60,8 +60,8 @@ custom_span<figure *> map_figures_in_row(tile2i tile) {
     vec2i pixel_end_scr = pixel_to_viewport(pixel_end);
 
     if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0 
-        || pixel_begin_scr.x > city_view_data_unsafe().viewport.size_pixels.x
-        || pixel_begin_scr.y > city_view_data_unsafe().viewport.size_pixels.y) {
+        || pixel_begin_scr.x > g_city_view.viewport.size_pixels.x
+        || pixel_begin_scr.y > g_city_view.viewport.size_pixels.y) {
         return custom_span<figure *>(nullptr, 0);
     }
 

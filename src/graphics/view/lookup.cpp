@@ -111,7 +111,7 @@ vec2i tile_to_pixel(tile2i point) {
 }
 
 vec2i pixel_to_viewport(vec2i pixel) {
-    return pixel - city_view_data_unsafe().viewport.offset;
+    return pixel - g_city_view.viewport.offset;
 }
 
 vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
@@ -126,7 +126,7 @@ vec2i pixel_to_camera_coord(vec2i pixel, bool relative) {
     pixel.x = calc_adjust_with_percentage<int>(pixel.x, g_zoom.get_percentage());
     pixel.y = calc_adjust_with_percentage<int>(pixel.y, g_zoom.get_percentage());
 
-    pixel += relative ? vec2i{0, 0} : city_view_data_unsafe().camera.position;
+    pixel += relative ? vec2i{0, 0} : g_city_view.camera.position;
     return pixel;
 }
 

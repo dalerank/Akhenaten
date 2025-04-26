@@ -44,6 +44,7 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
 
     virtual void load(archive arch, pcstr) override;
     virtual void init() override;
+    virtual void on_mission_start() override;
     
     bool is_in_minimap(const mouse *m);
     bool draw_figure(vec2i screen, tile2i point);
