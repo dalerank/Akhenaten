@@ -184,13 +184,6 @@ bool city_has_loaded = false;
 void window_city_handle_hotkeys(const hotkeys* h) {
     handle_debug_hotkeys(h);
 
-    if (h->decrease_game_speed) {
-        g_settings.decrease_game_speed();
-    }
-    if (h->increase_game_speed) {
-        g_settings.increase_game_speed();
-    }
-
     if (h->show_advisor) {
         window_advisors_show_advisor((e_advisor)h->show_advisor);
     }

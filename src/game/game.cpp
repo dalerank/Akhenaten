@@ -492,6 +492,14 @@ void game_t::before_start_simulation() {
     events::subscribe([this] (event_toggle_pause) {
         paused = !paused;
     });
+
+    events::subscribe([this] (event_change_gamespeed ev) {
+        if (ev.value == HOTKEY_INCREASE_GAME_SPEED) {
+            g_settings.increase_game_speed();
+        } else {
+            g_settings.decrease_game_speed();
+        }
+    });
 }
 
 void game_t::handle_input_frame() {

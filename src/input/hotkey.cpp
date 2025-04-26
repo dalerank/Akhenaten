@@ -80,14 +80,13 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
     case HOTKEY_CYCLE_LEGION:
         def->action = &data.hotkey_state.cycle_legion;
         break;
+
     case HOTKEY_INCREASE_GAME_SPEED:
-        def->action = &data.hotkey_state.increase_game_speed;
-        def->repeatable = 1;
-        break;
     case HOTKEY_DECREASE_GAME_SPEED:
-        def->action = &data.hotkey_state.decrease_game_speed;
+        def->callback = [action = mapping.action] { events::emit(event_change_gamespeed{ action }); };
         def->repeatable = 1;
         break;
+
     case HOTKEY_ROTATE_MAP_LEFT:
         def->action = &data.hotkey_state.rotate_map_left;
         break;

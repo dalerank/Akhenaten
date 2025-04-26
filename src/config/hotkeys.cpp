@@ -31,9 +31,9 @@ namespace game_hotkeys {
     hotkey_mapping toggle_pause ("toggle_pause", KEY_P, KEY_MOD_NONE, HOTKEY_TOGGLE_PAUSE);
     hotkey_mapping toggle_overlay ("toggle_overlay", KEY_SPACE, KEY_MOD_NONE, HOTKEY_TOGGLE_OVERLAY);
     hotkey_mapping cycle_legion ("cycle_legion", KEY_L, KEY_MOD_NONE, HOTKEY_CYCLE_LEGION);
-    hotkey_mapping increase_game_speed ("increase_game_speed", KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
+    hotkey_mapping increase_game_speed ("increase_game_speed", KEY_PAGEDOWN, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
     hotkey_mapping increase_game_speed_alt ("increase_game_speed_alt", KEY_RIGHTBRACKET, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
-    hotkey_mapping decrease_game_speed ("decrease_game_speed", KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
+    hotkey_mapping decrease_game_speed ("decrease_game_speed", KEY_PAGEUP, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
     hotkey_mapping decrease_game_speed_alt ("decrease_game_speed_alt", KEY_LEFTBRACKET, KEY_MOD_NONE, HOTKEY_DECREASE_GAME_SPEED);
     hotkey_mapping rotate_map_left ("rotate_map_left", KEY_HOME, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_LEFT);
     hotkey_mapping rotate_map_right ("rotate_map_right", KEY_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
