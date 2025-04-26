@@ -162,21 +162,21 @@ void game_hotkeys::load() {
     init_defaults();
     
     g_config_arch.r_objects("game_hotkeys", [&] (pcstr key, archive arch) {
-        auto value = arch.r_array_str(key);
+        auto value = arch.to_array_str(key);
 
         if (value.empty()) {
             return;
         }
 
         hotkey_mapping mapping(key);
-        int vkey;
-        int vmodifiers;
+        e_key vkey;
+        e_key_mode vmodifiers;
 
         hotkey_mapping_state* states[] = { &mapping.state, &mapping.alt };
         for (size_t i = 0; i < value.size(); ++i) {
-            if (key_combination_from_name(value[i].c_str(), &vkey, &vmodifiers)) {
-                states[i]->key = (e_key)vkey;
-                states[i]->modifiers = (e_key_mode)vmodifiers;
+            if (key_combination_from_name(value[i].c_str(), vkey, vmodifiers)) {
+                states[i]->key = vkey;
+                states[i]->modifiers = vmodifiers;
                 set_hotkey(mapping);
             }
         }        

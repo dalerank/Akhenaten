@@ -28,9 +28,9 @@ static const char* key_display_names[KEY_MAX_ITEMS] = {
     "Keypad 0", "Keypad .", "Keypad +", "Keypad -", "Keypad *", "Keypad /", "NonUS", "~"
 };
 
-struct modifier_name{
-    int modifier;
-    const char* name;
+struct modifier_name {
+    e_key_mode modifier;
+    pcstr name;
 };
 
 static const modifier_name modifier_names[] = {
@@ -41,7 +41,7 @@ static const modifier_name modifier_names[] = {
     {KEY_MOD_NONE}
 };
 
-const char* key_combination_name(int key, int modifiers) {
+pcstr key_combination_name(e_key key, e_key_mode modifiers) {
     static char name[100];
     name[0] = 0;
     for (const modifier_name* modname = modifier_names; modname->modifier; modname++) {
@@ -54,47 +54,49 @@ const char* key_combination_name(int key, int modifiers) {
     return name;
 }
 
-static int parse_modifier(const char* name) {
+static e_key_mode parse_modifier(pcstr name) {
     for (const modifier_name* modname = modifier_names; modname->modifier; modname++) {
         if (strcmp(modname->name, name) == 0)
-            return modname->modifier;
+            return (e_key_mode)modname->modifier;
     }
     return KEY_MOD_NONE;
 }
 
-static int parse_key(const char* name) {
+static e_key parse_key(pcstr name) {
     for (int i = 1; i < KEY_MAX_ITEMS; i++) {
         if (strcmp(key_names[i], name) == 0)
-            return i;
+            return (e_key)i;
     }
     return KEY_NONE;
 }
 
-int key_combination_from_name(const char* name, int* key, int* modifiers) {
+bool key_combination_from_name(const char* name, e_key &key, e_key_mode &modifiers) {
     char editable_name[100] = {0};
     strncpy(editable_name, name, 99);
 
-    *key = KEY_NONE;
-    *modifiers = KEY_MOD_NONE;
+    key = KEY_NONE;
+    modifiers = KEY_MOD_NONE;
 
-    char* token = strtok(editable_name, " ");
+    pstr token = strtok(editable_name, " ");
     while (token) {
         if (token[0]) {
-            int mod = parse_modifier(token);
-            if (mod != KEY_MOD_NONE)
-                *modifiers |= mod;
-            else {
-                *key = parse_key(token);
-                if (*key == KEY_NONE)
-                    return 0;
+            e_key_mode mod = parse_modifier(token);
+            if (mod != KEY_MOD_NONE) {
+                modifiers = (e_key_mode)(modifiers | mod);
+            } else {
+                key = parse_key(token);
+                if (key == KEY_NONE)
+                    return false;
             }
         }
         token = strtok(0, " ");
     }
-    if (*key == KEY_NONE)
-        return 0;
 
-    return 1;
+    if (key == KEY_NONE) {
+        return false;
+    }
+
+    return true;
 }
 
 static int can_display(const char* key_name) {

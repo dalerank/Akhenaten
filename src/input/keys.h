@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "core/xstring.h"
 
 enum e_key {
     KEY_NONE = 0,
@@ -111,6 +112,6 @@ enum e_key_mode {
 
 const char* key_combination_name(int key, int modifiers);
 
-int key_combination_from_name(const char* name, int* key, int* modifiers);
+bool key_combination_from_name(pcstr name, e_key &key, e_key_mode &modifiers);
 
 const uint8_t* key_combination_display_name(int key, int modifiers);
