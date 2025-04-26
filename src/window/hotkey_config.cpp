@@ -163,7 +163,7 @@ static int bottom_button_texts[] = {TR_BUTTON_RESET_DEFAULTS, TR_BUTTON_CANCEL, 
 struct hotkeys_window_data_t {
     int focus_button;
     int bottom_focus_button;
-    hotkey_mapping mappings[HOTKEY_MAX_ITEMS][2];
+    hotkey_mapping mappings[HOTKEY_MAX_ITEMS];
     void (*close_callback)(void);
 };
 
@@ -179,11 +179,7 @@ static void init(void (*close_callback)(void)) {
         hotkey_mapping empty("", KEY_NONE, KEY_MOD_NONE, (e_hotkey_action)i);
 
         const hotkey_mapping* mapping = game_hotkeys::hotkey_for_action((e_hotkey_action)i);
-        data.mappings[i][0] = mapping ? *mapping : empty;
-
-        //mapping = hotkey_for_action(i, 1);
-        //data.mappings[i][1] = mapping ? *mapping : empty;
-        data.mappings[i][1] = empty;
+        data.mappings[i] = mapping ? *mapping : empty;
     }
 }
 
@@ -215,21 +211,18 @@ static void draw_background(int) {
                 lang_text_draw(widget->name_text_group, widget->name_text_id, 32, text_offset, FONT_NORMAL_BLACK_ON_DARK);
             }
 
-            const hotkey_mapping* mapping1 = &data.mappings[widget->action][0];
-            if (mapping1->key) {
-                const uint8_t* keyname = key_combination_display_name(mapping1->key, mapping1->modifiers);
+            const hotkey_mapping* mapping = &data.mappings[widget->action];
+            if (mapping->state.key) {
+                const uint8_t* keyname = key_combination_display_name(mapping->state.key, mapping->state.modifiers);
                 graphics_set_clip_rectangle({HOTKEY_X_OFFSET_1, text_offset}, {HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT});
-                text_draw_centered(
-                  keyname, HOTKEY_X_OFFSET_1 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+                text_draw_centered(keyname, HOTKEY_X_OFFSET_1 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
                 graphics_reset_clip_rectangle();
             }
 
-            const hotkey_mapping* mapping2 = &data.mappings[widget->action][1];
-            if (mapping2->key) {
+            if (mapping->alt.key) {
                 graphics_set_clip_rectangle({HOTKEY_X_OFFSET_2, text_offset}, {HOTKEY_BTN_WIDTH, HOTKEY_BTN_HEIGHT});
-                const uint8_t* keyname = key_combination_display_name(mapping2->key, mapping2->modifiers);
-                text_draw_centered(
-                  keyname, HOTKEY_X_OFFSET_2 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+                const uint8_t* keyname = key_combination_display_name(mapping->alt.key, mapping->alt.modifiers);
+                text_draw_centered(keyname, HOTKEY_X_OFFSET_2 + 3, text_offset, HOTKEY_BTN_WIDTH - 6, FONT_NORMAL_WHITE_ON_DARK, 0);
                 graphics_reset_clip_rectangle();
             }
         }
@@ -292,8 +285,10 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 static void set_hotkey(int action, int index, e_key key, e_key_mode modifiers) {
     auto& data = g_hotkeys_window_data;
-    data.mappings[action][index].key = key;
-    data.mappings[action][index].modifiers = modifiers;
+    auto &state = index ? data.mappings[action].alt : data.mappings[action].state;
+
+    state.key = key;
+    state.modifiers = modifiers;
 }
 
 static void button_hotkey(int row, int is_alternative) {
@@ -308,7 +303,7 @@ static void button_hotkey(int row, int is_alternative) {
 static void button_reset_defaults(int param1, int param2) {
     auto& data = g_hotkeys_window_data;
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
-        data.mappings[action][0] = *game_hotkeys::hotkey_default((e_hotkey_action)action);
+        data.mappings[action] = *game_hotkeys::hotkey_default((e_hotkey_action)action);
     }
 }
 
@@ -324,7 +319,7 @@ static void button_close(int save, int param2) {
     }
 
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
-        game_hotkeys::set_hotkey(data.mappings[action][0]);
+        game_hotkeys::set_hotkey(data.mappings[action]);
     }
 
     game_hotkeys::save();

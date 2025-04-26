@@ -107,19 +107,17 @@ namespace game_hotkeys {
     hotkey_mapping debug_range2_up("debug_range2_up", KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_UP);
     hotkey_mapping debug_range2_dow("debug_range2_down", KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_DOWN);
 
-    void set_mapping(e_key key, e_key_mode modifiers, e_hotkey_action action);
+    void set_mapping(bool alt, e_key key, e_key_mode modifiers, e_hotkey_action action);
     void set_layout_mapping(pcstr name, e_key default_key, e_key_mode modifiers, e_hotkey_action action);
 }
 
-void game_hotkeys::set_mapping(e_key key, e_key_mode modifiers, e_hotkey_action action) {
+void game_hotkeys::set_mapping(bool alt, e_key key, e_key_mode modifiers, e_hotkey_action action) {
     hotkey_mapping& mapping = _hotkeys[action];
     
-    if (mapping.key) {
-        return;
-    }
+    auto &state = alt ? mapping.alt : mapping.state;
 
-    mapping.key = key;
-    mapping.modifiers = modifiers;
+    state.key = key;
+    state.modifiers = modifiers;
     mapping.action = action;
 }
 
@@ -129,7 +127,7 @@ void game_hotkeys::set_layout_mapping(pcstr name, e_key default_key, e_key_mode 
         logs::info("No key found on layout for: %s", name);
         key = default_key;
     }
-    set_mapping(key, modifiers, action);
+    set_mapping(false, key, modifiers, action);
 }
 
 void game_hotkeys::init_defaults(void) {
@@ -145,8 +143,11 @@ void game_hotkeys::set_hotkey(const hotkey_mapping &mapping) {
         return;
     }
 
-    _hotkeys[mapping.action].key = mapping.key;
-    _hotkeys[mapping.action].modifiers = mapping.modifiers;
+    _hotkeys[mapping.action].state.key = mapping.state.key;
+    _hotkeys[mapping.action].state.modifiers = mapping.state.modifiers;
+
+    _hotkeys[mapping.action].alt.key = mapping.alt.key;
+    _hotkeys[mapping.action].alt.modifiers = mapping.alt.modifiers;
 }
 
 const hotkey_mapping* game_hotkeys::hotkey_default(e_hotkey_action action) {
@@ -161,16 +162,24 @@ void game_hotkeys::load() {
     init_defaults();
     
     g_config_arch.r_objects("game_hotkeys", [&] (pcstr key, archive arch) {
-        auto value = arch.r_string(key);
+        auto value = arch.r_array_str(key);
+
+        if (value.empty()) {
+            return;
+        }
 
         hotkey_mapping mapping(key);
         int vkey;
         int vmodifiers;
-        if (key_combination_from_name(value, &vkey, &vmodifiers)) {
-            mapping.key = (e_key)vkey;
-            mapping.modifiers = (e_key_mode)vmodifiers;
-            set_hotkey(mapping);
-        }
+
+        hotkey_mapping_state* states[] = { &mapping.state, &mapping.alt };
+        for (size_t i = 0; i < value.size(); ++i) {
+            if (key_combination_from_name(value[i].c_str(), &vkey, &vmodifiers)) {
+                states[i]->key = (e_key)vkey;
+                states[i]->modifiers = (e_key_mode)vmodifiers;
+                set_hotkey(mapping);
+            }
+        }        
     });
 
     install();
@@ -198,7 +207,10 @@ void game_hotkeys::save() {
     //vfs::file_close(fp);
 }
 
-hotkey_mapping::hotkey_mapping(pcstr n, e_key k, e_key_mode m, e_hotkey_action a) : name(n), key(k), modifiers(m), action(a) {
+hotkey_mapping::hotkey_mapping(pcstr n, e_key k, e_key_mode m, e_hotkey_action a) : name(n), action(a) {
+    state.key = k;
+    state.modifiers = m;
+
     game_hotkeys::_hotkeys[action] = *this;
     game_hotkeys::_defaults[action] = *this;
 }

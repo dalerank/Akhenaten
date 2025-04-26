@@ -81,10 +81,15 @@ enum e_hotkey_action {
     HOTKEY_MAX_ITEMS
 };
 
-struct hotkey_mapping {
-    xstring name;
+struct hotkey_mapping_state {
     e_key key = KEY_NONE;
     e_key_mode modifiers = KEY_MOD_NONE;
+};
+
+struct hotkey_mapping {
+    xstring name;
+    hotkey_mapping_state state;
+    hotkey_mapping_state alt;
     e_hotkey_action action = HOTKEY_NONE;
 
     hotkey_mapping() : name("unknown") {}

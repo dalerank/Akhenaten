@@ -52,11 +52,16 @@ struct hotkey_data_t {
 
 hotkey_data_t g_hotkey_data;
 
-static void add_definition(const hotkey_mapping& mapping) {
+static void add_definition(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
     hotkey_definition* def = &data.definitions[data.num_definitions];
-    def->key = mapping.key;
-    def->modifiers = mapping.modifiers;
+    def->key = alt ? mapping.alt.key : mapping.state.key;
+    def->modifiers = alt ? mapping.alt.modifiers : mapping.state.modifiers;
+    
+    if (def->key == KEY_NONE) {
+        return;
+    }
+
     def->value = 1;
     def->repeatable = 0;
     switch (mapping.action) {
@@ -305,10 +310,14 @@ static void add_definition(const hotkey_mapping& mapping) {
         data.num_definitions++;
 }
 
-static void add_arrow(const hotkey_mapping& mapping) {
+static void add_arrow(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
     arrow_definition* arrow = &data.arrows[data.num_arrows];
-    arrow->key = mapping.key;
+    arrow->key = alt ? mapping.alt.key : mapping.state.key;
+    if (arrow->key == KEY_NONE) {
+        return;
+    }
+
     switch (mapping.action) {
     case HOTKEY_ARROW_UP:
         arrow->action = scroll_arrow_up;
@@ -326,8 +335,10 @@ static void add_arrow(const hotkey_mapping& mapping) {
         arrow->action = 0;
         break;
     }
-    if (arrow->action)
+
+    if (arrow->action) {
         data.num_arrows++;
+    }
 }
 
 static int allocate_mapping_memory(int total_definitions, int total_arrows) {
@@ -379,13 +390,22 @@ void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
 
     data.num_definitions = 2;
 
+    std::array<e_hotkey_action, 4> arrow_actions = {
+        HOTKEY_ARROW_UP,
+        HOTKEY_ARROW_DOWN,
+        HOTKEY_ARROW_LEFT,
+        HOTKEY_ARROW_RIGHT
+    };
     for (int i = 0; i < mappings.size(); i++) {
         int action = mappings[i].action;
-        if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN || action == HOTKEY_ARROW_LEFT
-            || action == HOTKEY_ARROW_RIGHT) {
-            add_arrow(mappings[i]);
-        } else
-            add_definition(mappings[i]);
+        const bool is_arrow_action = std::find(arrow_actions.begin(), arrow_actions.end(), action) != arrow_actions.end();
+        if (is_arrow_action) {
+            add_arrow(mappings[i], false);
+            add_arrow(mappings[i], true);
+        } else {
+            add_definition(mappings[i], false);
+            add_definition(mappings[i], true);
+        }
     }
 }
 
