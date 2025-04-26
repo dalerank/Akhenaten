@@ -27,7 +27,7 @@ void system_set_cursor(int cursor_id);
  * @param name Name of the key
  * @return Corresponding key, or KEY_NONE if the key does not exist on the layout
  */
-int system_keyboard_key_for_symbol(const char* name);
+e_key system_keyboard_key_for_symbol(pcstr name);
 
 /**
  * Gets the key name for the current keyboard layout

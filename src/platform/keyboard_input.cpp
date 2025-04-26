@@ -11,7 +11,7 @@ static int is_alt_down(SDL_KeyboardEvent* event) {
     return (event->keysym.mod & KMOD_ALT) != 0;
 }
 
-static int platform_get_key_from_scancode(SDL_Scancode scancode) {
+static e_key platform_get_key_from_scancode(SDL_Scancode scancode) {
     switch (scancode) {
     case SDL_SCANCODE_A:
         return KEY_A;
@@ -500,7 +500,7 @@ void platform_handle_text(SDL_TextInputEvent* event) {
     keyboard_text(event->text);
 }
 
-int system_keyboard_key_for_symbol(const char* name) {
+e_key system_keyboard_key_for_symbol(pcstr name) {
     SDL_Keycode keycode = SDL_GetKeyFromName(name);
     if (keycode == SDLK_UNKNOWN)
         return KEY_NONE;

@@ -203,7 +203,7 @@ void ui::window_features::init(std::function<void()> cb) {
     page = 0;
     close_callback = cb;
 
-    auto gfeatures = game_features::features();
+    auto gfeatures = game_features::all();
 
     pages.clear();
 
@@ -212,7 +212,7 @@ void ui::window_features::init(std::function<void()> cb) {
     pages.emplace_back();
     pages.back().title = "#TR_CONFIG_HEADER_GAMEPLAY_CHANGES";
     for (int i = 0; i < gfeatures.size(); ++i) {
-        auto *feature = game_features::features()[i];
+        auto *feature = game_features::all()[i];
         if (feature->type() != setting_bool) {
            continue;
         }

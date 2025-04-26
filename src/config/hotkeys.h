@@ -1,9 +1,11 @@
-#ifndef CORE_HOTKEY_CONFIG_H
-#define CORE_HOTKEY_CONFIG_H
+#pragma once
 
 #include "input/keys.h"
+#include "core/xstring.h"
+#include "core/custom_span.hpp"
 
-enum {
+enum e_hotkey_action {
+    HOTKEY_NONE = 0,
     HOTKEY_ARROW_UP,
     HOTKEY_ARROW_DOWN,
     HOTKEY_ARROW_LEFT,
@@ -34,7 +36,7 @@ enum {
     HOTKEY_BUILD_ROADBLOCK,
     HOTKEY_SHOW_ADVISOR_LABOR,
     HOTKEY_SHOW_ADVISOR_MILITARY,
-    HOTKEY_SHOW_ADVISOR_IMPERIAL,
+    HOTKEY_SHOW_ADVISOR_KINGDOME,
     HOTKEY_SHOW_ADVISOR_RATINGS,
     HOTKEY_SHOW_ADVISOR_TRADE,
     HOTKEY_SHOW_ADVISOR_POPULATION,
@@ -79,47 +81,33 @@ enum {
     HOTKEY_MAX_ITEMS
 };
 
-typedef struct {
-    int key;
-    int modifiers;
-    int action;
-} hotkey_mapping;
+struct hotkey_mapping {
+    xstring name;
+    e_key key = KEY_NONE;
+    e_key_mode modifiers = KEY_MOD_NONE;
+    e_hotkey_action action = HOTKEY_NONE;
 
-/**
- * Get mapping for action at the specified index
- * @param action Action
- * @param index Index
- * @return Mapping or NULL if not set
- */
-const hotkey_mapping* hotkey_for_action(int action, int index);
+    hotkey_mapping() : name("unknown") {}
+    hotkey_mapping(pcstr n, e_key k = KEY_NONE, e_key_mode m = KEY_MOD_NONE, e_hotkey_action a = HOTKEY_NONE);
+};
 
-/**
+namespace game_hotkeys {
+    custom_span<hotkey_mapping *> all();
+    hotkey_mapping *find(const xstring &name);
+
+    void load();
+    void save(void);
+    void init_defaults();
+
+ /**
  * Get default mapping for action
  * @param action Action
- * @param index Index, can be 0 or 1
  * @return Mapping, may be an empty mapping. Only returns NULL on invalid input
  */
-const hotkey_mapping* hotkey_default_for_action(int action, int index);
+    const hotkey_mapping *hotkey_default(e_hotkey_action action);
 
-/**
- * Clear all hotkey mappings
- */
-void hotkey_config_clear(void);
+    const hotkey_mapping *hotkey_for_action(e_hotkey_action action);
 
-/**
- * Add a mapping
- * @param mapping Mapping to add
- */
-void hotkey_config_add_mapping(const hotkey_mapping* mapping);
-
-/**
- * Load hotkey config from file and install hotkeys
- */
-void hotkey_config_load(void);
-
-/**
- * Save hotkey config to file and install hotkeys
- */
-void hotkey_config_save(void);
-
-#endif // CORE_HOTKEY_CONFIG_H
+    void set_hotkey(const hotkey_mapping &mapping);
+    void install();
+}

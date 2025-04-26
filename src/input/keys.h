@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-enum {
+enum e_key {
     KEY_NONE = 0,
     KEY_A,
     KEY_B,
@@ -101,7 +101,7 @@ enum {
     KEY_MAX_ITEMS
 };
 
-enum {
+enum e_key_mode {
     KEY_MOD_NONE = 0,
     KEY_MOD_SHIFT = 1,
     KEY_MOD_CTRL = 2,

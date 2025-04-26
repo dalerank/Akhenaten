@@ -85,7 +85,7 @@ static hotkey_widget hotkey_widgets[] = {
   {HOTKEY_HEADER, TR_HOTKEY_HEADER_ADVISORS},
   {HOTKEY_SHOW_ADVISOR_LABOR, TR_HOTKEY_SHOW_ADVISOR_LABOR},
   {HOTKEY_SHOW_ADVISOR_MILITARY, TR_HOTKEY_SHOW_ADVISOR_MILITARY},
-  {HOTKEY_SHOW_ADVISOR_IMPERIAL, TR_HOTKEY_SHOW_ADVISOR_IMPERIAL},
+  {HOTKEY_SHOW_ADVISOR_KINGDOME, TR_HOTKEY_SHOW_ADVISOR_IMPERIAL},
   {HOTKEY_SHOW_ADVISOR_RATINGS, TR_HOTKEY_SHOW_ADVISOR_RATINGS},
   {HOTKEY_SHOW_ADVISOR_TRADE, TR_HOTKEY_SHOW_ADVISOR_TRADE},
   {HOTKEY_SHOW_ADVISOR_POPULATION, TR_HOTKEY_SHOW_ADVISOR_POPULATION},
@@ -176,13 +176,14 @@ static void init(void (*close_callback)(void)) {
     g_hotkey_window_scrollbar.init(0, std::size(hotkey_widgets) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty = {KEY_NONE, KEY_MOD_NONE, i};
+        hotkey_mapping empty("", KEY_NONE, KEY_MOD_NONE, (e_hotkey_action)i);
 
-        const hotkey_mapping* mapping = hotkey_for_action(i, 0);
+        const hotkey_mapping* mapping = game_hotkeys::hotkey_for_action((e_hotkey_action)i);
         data.mappings[i][0] = mapping ? *mapping : empty;
 
-        mapping = hotkey_for_action(i, 1);
-        data.mappings[i][1] = mapping ? *mapping : empty;
+        //mapping = hotkey_for_action(i, 1);
+        //data.mappings[i][1] = mapping ? *mapping : empty;
+        data.mappings[i][1] = empty;
     }
 }
 
@@ -289,7 +290,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-static void set_hotkey(int action, int index, int key, int modifiers) {
+static void set_hotkey(int action, int index, e_key key, e_key_mode modifiers) {
     auto& data = g_hotkeys_window_data;
     data.mappings[action][index].key = key;
     data.mappings[action][index].modifiers = modifiers;
@@ -307,9 +308,7 @@ static void button_hotkey(int row, int is_alternative) {
 static void button_reset_defaults(int param1, int param2) {
     auto& data = g_hotkeys_window_data;
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
-        for (int index = 0; index < 2; index++) {
-            data.mappings[action][index] = *hotkey_default_for_action(action, index);
-        }
+        data.mappings[action][0] = *game_hotkeys::hotkey_default((e_hotkey_action)action);
     }
 }
 
@@ -324,15 +323,12 @@ static void button_close(int save, int param2) {
         return;
     }
 
-    hotkey_config_clear();
     for (int action = 0; action < HOTKEY_MAX_ITEMS; action++) {
-        for (int index = 0; index < 2; index++) {
-            if (data.mappings[action][index].key != KEY_NONE)
-                hotkey_config_add_mapping(&data.mappings[action][index]);
-        }
+        game_hotkeys::set_hotkey(data.mappings[action][0]);
     }
 
-    hotkey_config_save();
+    game_hotkeys::save();
+    game_hotkeys::install();
     window_go_back();
 }
 

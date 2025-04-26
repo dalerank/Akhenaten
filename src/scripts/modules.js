@@ -1,6 +1,7 @@
 log_info("akhenaten: load modules started")
 
 include(":akhenaten.conf")
+include(":hotkeys.conf")
 
 import math
 import ui_common
@@ -21,7 +22,7 @@ import ui_labor_priority_window
 import images_remap
 import ui_overlay_menu
 import imagepaks
-include(":missions.js")
+import missions
 include(":figures.js")
 include(":localization.js")
 include(":building_menu.js")

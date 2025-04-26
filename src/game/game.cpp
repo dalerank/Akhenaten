@@ -368,8 +368,8 @@ bool game_t::check_valid() {
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     update_encoding();
     g_settings.load(); // c3.inf
-    game_features::load();   // akhenaten.ini
-    hotkey_config_load();
+    game_features::load();   // akhenaten.conf
+    game_hotkeys::load();    // hotkeys.conf
     scenario_settings_init();
     random_init();
 

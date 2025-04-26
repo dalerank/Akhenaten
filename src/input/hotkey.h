@@ -2,6 +2,7 @@
 
 #include "input/keys.h"
 #include "config/hotkeys.h"
+#include "core/custom_span.hpp"
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -30,9 +31,9 @@ struct hotkeys {
     int debug_tile_down;
     int debug_render_up;
     int debug_render_down;
-};
 
-void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings);
+    static void install(const custom_span<hotkey_mapping> &mappings);
+};
 
 const hotkeys* hotkey_state(void);
 void hotkey_reset_state(void);

@@ -104,7 +104,7 @@ namespace game_features {
     extern game_feature gameopt_last_save_filename;
     extern game_feature gameopt_last_game_version;
 
-    custom_span<game_feature*> features();
+    custom_span<game_feature*> all();
     game_feature* find(const xstring& name);
 
     void load();

@@ -24,13 +24,13 @@ static int bottom_button_texts[] = {TR_BUTTON_CANCEL, TR_BUTTON_OK};
 static struct {
     int action;
     int index;
-    int key;
-    int modifiers;
-    void (*callback)(int, int, int, int);
+    e_key key;
+    e_key_mode modifiers;
+    void (*callback)(int, int, e_key, e_key_mode);
     int focus_button;
 } data;
 
-static void init(int action, int index, void (*callback)(int, int, int, int)) {
+static void init(int action, int index, void (*callback)(int, int, e_key, e_key_mode)) {
     data.action = action;
     data.index = index;
     data.callback = callback;
@@ -92,20 +92,20 @@ void window_hotkey_editor_key_pressed(int key, int modifiers) {
         button_close(0, 0);
     else {
         if (key != KEY_NONE)
-            data.key = key;
+            data.key = (e_key)key;
 
-        data.modifiers = modifiers;
+        data.modifiers = (e_key_mode)modifiers;
     }
 }
 
 void window_hotkey_editor_key_released(int key, int modifiers) {
     // update modifiers as long as we don't have a proper keypress
     if (data.key == KEY_NONE && key == KEY_NONE) {
-        data.modifiers = modifiers;
+        data.modifiers = (e_key_mode)modifiers;
     }
 }
 
-void window_hotkey_editor_show(int action, int index, void (*callback)(int, int, int, int)) {
+void window_hotkey_editor_show(int action, int index, void (*callback)(int, int, e_key, e_key_mode)) {
     window_type window = {
         WINDOW_HOTKEY_EDITOR,
         draw_background,

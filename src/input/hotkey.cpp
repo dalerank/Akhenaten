@@ -52,14 +52,14 @@ struct hotkey_data_t {
 
 hotkey_data_t g_hotkey_data;
 
-static void add_definition(const hotkey_mapping* mapping) {
+static void add_definition(const hotkey_mapping& mapping) {
     auto& data = g_hotkey_data;
     hotkey_definition* def = &data.definitions[data.num_definitions];
-    def->key = mapping->key;
-    def->modifiers = mapping->modifiers;
+    def->key = mapping.key;
+    def->modifiers = mapping.modifiers;
     def->value = 1;
     def->repeatable = 0;
-    switch (mapping->action) {
+    switch (mapping.action) {
     case HOTKEY_TOGGLE_PAUSE:
         def->action = &data.hotkey_state.toggle_pause;
         break;
@@ -91,7 +91,7 @@ static void add_definition(const hotkey_mapping* mapping) {
         def->action = &data.hotkey_state.show_advisor;
         def->value = ADVISOR_MILITARY;
         break;
-    case HOTKEY_SHOW_ADVISOR_IMPERIAL:
+    case HOTKEY_SHOW_ADVISOR_KINGDOME:
         def->action = &data.hotkey_state.show_advisor;
         def->value = ADVISOR_IMPERIAL;
         break;
@@ -305,11 +305,11 @@ static void add_definition(const hotkey_mapping* mapping) {
         data.num_definitions++;
 }
 
-static void add_arrow(const hotkey_mapping* mapping) {
+static void add_arrow(const hotkey_mapping& mapping) {
     auto& data = g_hotkey_data;
     arrow_definition* arrow = &data.arrows[data.num_arrows];
-    arrow->key = mapping->key;
-    switch (mapping->action) {
+    arrow->key = mapping.key;
+    switch (mapping.action) {
     case HOTKEY_ARROW_UP:
         arrow->action = scroll_arrow_up;
         break;
@@ -346,11 +346,12 @@ static int allocate_mapping_memory(int total_definitions, int total_arrows) {
     return 1;
 }
 
-void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings) {
+void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
     auto& data = g_hotkey_data;
     int total_definitions = 2; // Enter and ESC are fixed hotkeys
     int total_arrows = 0;
-    for (int i = 0; i < num_mappings; i++) {
+
+    for (int i = 0; i < mappings.size(); i++) {
         int action = mappings[i].action;
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN || action == HOTKEY_ARROW_LEFT
             || action == HOTKEY_ARROW_RIGHT) {
@@ -358,8 +359,10 @@ void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings) {
         } else
             total_definitions++;
     }
-    if (!allocate_mapping_memory(total_definitions, total_arrows))
+
+    if (!allocate_mapping_memory(total_definitions, total_arrows)) {
         return;
+    }
 
     // Fixed keys: Escape and Enter
     data.definitions[0].action = &data.hotkey_state.enter_pressed;
@@ -376,13 +379,13 @@ void hotkey_install_mapping(hotkey_mapping* mappings, int num_mappings) {
 
     data.num_definitions = 2;
 
-    for (int i = 0; i < num_mappings; i++) {
+    for (int i = 0; i < mappings.size(); i++) {
         int action = mappings[i].action;
         if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN || action == HOTKEY_ARROW_LEFT
             || action == HOTKEY_ARROW_RIGHT) {
-            add_arrow(&mappings[i]);
+            add_arrow(mappings[i]);
         } else
-            add_definition(&mappings[i]);
+            add_definition(mappings[i]);
     }
 }
 

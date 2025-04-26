@@ -91,7 +91,7 @@ namespace game_features {
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
 
-    custom_span<game_feature*> features() {
+    custom_span<game_feature*> all() {
         return { _features.data(), _features.size() };
     }
 
