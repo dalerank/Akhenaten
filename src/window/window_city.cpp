@@ -199,13 +199,6 @@ void window_city_handle_hotkeys(const hotkeys* h) {
         g_settings.increase_game_speed();
     }
 
-    if (h->toggle_overlay) {
-        if (window_is(WINDOW_CITY_MILITARY)) {
-            window_city_show();
-        }
-        g_city.toggle_overlay();
-    }
-
     if (h->show_advisor) {
         window_advisors_show_advisor((e_advisor)h->show_advisor);
     }

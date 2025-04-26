@@ -26,4 +26,11 @@ void city_hotkeys_handler_t::init() {
             g_city.set_overlay(overlay);
         }
     });
+
+    events::subscribe([] (event_toggle_overlay ev) {
+        if (window_is(WINDOW_CITY_MILITARY)) {
+            window_city_show();
+        }
+        g_city.toggle_overlay();
+    });
 }

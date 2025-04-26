@@ -72,9 +72,10 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
     case HOTKEY_TOGGLE_PAUSE:
         def->action = &data.hotkey_state.toggle_pause;
         break;
-    case HOTKEY_TOGGLE_OVERLAY:
-        def->action = &data.hotkey_state.toggle_overlay;
+    case HOTKEY_TOGGLE_OVERLAY:      
+        def->callback = [action = mapping.action] { events::emit(event_toggle_overlay{ action }); };
         break;
+
     case HOTKEY_CYCLE_LEGION:
         def->action = &data.hotkey_state.cycle_legion;
         break;
