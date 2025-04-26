@@ -35,7 +35,7 @@
 #include "sound/sound.h"
 #include "translation/translation.h"
 #include "window/window_city.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/logo_screen.h"
 #include "window/main_menu.h"
 #include "graphics/view/view.h"
@@ -499,6 +499,10 @@ void game_t::before_start_simulation() {
         } else {
             g_settings.decrease_game_speed();
         }
+    });
+
+    events::subscribe([] (event_save_city ev) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     });
 }
 

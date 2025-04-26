@@ -19,7 +19,7 @@
 #include "input/scroll.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "game/game.h"
 
 const static int EMPIRE_WIDTH = 1200 + 32;

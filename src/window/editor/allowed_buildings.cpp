@@ -10,7 +10,7 @@
 #include "input/input.h"
 #include "scenario/editor.h"
 #include "window/editor/attributes.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 
 static void toggle_building(int id, int param2);
 

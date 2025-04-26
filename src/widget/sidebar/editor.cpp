@@ -21,7 +21,7 @@
 #include "widget/sidebar/common.h"
 #include "window/editor/attributes.h"
 #include "window/editor/build_menu.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "game/game.h"
 
 #define MINIMAP_Y_OFFSET 30

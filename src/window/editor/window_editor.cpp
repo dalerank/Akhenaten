@@ -1,4 +1,4 @@
-#include "map.h"
+#include "window_editor.h"
 
 #include "editor/editor.h"
 #include "editor/tool.h"
@@ -59,8 +59,8 @@ static void handle_hotkeys(const hotkeys* h) {
     if (h->load_file)
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
 
-    if (h->save_file)
-        window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
+    //if (h->save_file)
+    //    window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
