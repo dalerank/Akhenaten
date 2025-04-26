@@ -44,23 +44,25 @@ struct hotkey_data_t {
     global_hotkeys global_hotkey_state;
     hotkeys hotkey_state;
 
-    hotkey_definition* definitions;
-    int num_definitions;
-    arrow_definition* arrows;
-    int num_arrows;
+    svector<hotkey_definition, 128> definitions;
+    svector<arrow_definition, 16> arrows;
 };
 
 hotkey_data_t g_hotkey_data;
 
 static void add_definition(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
-    hotkey_definition* def = &data.definitions[data.num_definitions];
-    def->key = alt ? mapping.alt.key : mapping.state.key;
-    def->modifiers = alt ? mapping.alt.modifiers : mapping.state.modifiers;
+   
+    e_key key = alt ? mapping.alt.key : mapping.state.key;
+    e_key_mode modifiers = alt ? mapping.alt.modifiers : mapping.state.modifiers;
     
-    if (def->key == KEY_NONE) {
+    if (key == KEY_NONE) {
         return;
     }
+
+    hotkey_definition *def = &data.definitions.emplace_back();
+    def->key = key;
+    def->modifiers = modifiers;
 
     def->value = 1;
     def->repeatable = 0;
@@ -306,17 +308,18 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
     default:
         def->action = 0;
     }
-    if (def->action)
-        data.num_definitions++;
 }
 
 static void add_arrow(const hotkey_mapping& mapping, bool alt) {
     auto& data = g_hotkey_data;
-    arrow_definition* arrow = &data.arrows[data.num_arrows];
-    arrow->key = alt ? mapping.alt.key : mapping.state.key;
-    if (arrow->key == KEY_NONE) {
+    e_key key = alt ? mapping.alt.key : mapping.state.key;
+    
+    if (key == KEY_NONE) {
         return;
     }
+
+    arrow_definition* arrow = &data.arrows.emplace_back();
+    arrow->key = key;
 
     switch (mapping.action) {
     case HOTKEY_ARROW_UP:
@@ -335,60 +338,29 @@ static void add_arrow(const hotkey_mapping& mapping, bool alt) {
         arrow->action = 0;
         break;
     }
-
-    if (arrow->action) {
-        data.num_arrows++;
-    }
-}
-
-static int allocate_mapping_memory(int total_definitions, int total_arrows) {
-    auto& data = g_hotkey_data;
-    free(data.definitions);
-    free(data.arrows);
-    data.num_definitions = 0;
-    data.num_arrows = 0;
-    data.definitions = (hotkey_definition*)malloc(sizeof(hotkey_definition) * total_definitions);
-    data.arrows = (arrow_definition*)malloc(sizeof(arrow_definition) * total_arrows);
-    if (!data.definitions || !data.arrows) {
-        free(data.definitions);
-        free(data.arrows);
-        return 0;
-    }
-    return 1;
 }
 
 void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
     auto& data = g_hotkey_data;
-    int total_definitions = 2; // Enter and ESC are fixed hotkeys
-    int total_arrows = 0;
-
-    for (int i = 0; i < mappings.size(); i++) {
-        int action = mappings[i].action;
-        if (action == HOTKEY_ARROW_UP || action == HOTKEY_ARROW_DOWN || action == HOTKEY_ARROW_LEFT
-            || action == HOTKEY_ARROW_RIGHT) {
-            total_arrows++;
-        } else
-            total_definitions++;
-    }
-
-    if (!allocate_mapping_memory(total_definitions, total_arrows)) {
-        return;
-    }
-
+    
+    data.definitions.clear();
+    data.arrows.clear();
+    
     // Fixed keys: Escape and Enter
-    data.definitions[0].action = &data.hotkey_state.enter_pressed;
-    data.definitions[0].key = KEY_ENTER;
-    data.definitions[0].modifiers = 0;
-    data.definitions[0].repeatable = 0;
-    data.definitions[0].value = 1;
+    hotkey_definition &escape_def = data.definitions.emplace_back();
 
-    data.definitions[1].action = &data.hotkey_state.escape_pressed;
-    data.definitions[1].key = KEY_ESCAPE;
-    data.definitions[1].modifiers = 0;
-    data.definitions[1].repeatable = 0;
-    data.definitions[1].value = 1;
+    escape_def.action = &data.hotkey_state.enter_pressed;
+    escape_def.key = KEY_ENTER;
+    escape_def.modifiers = 0;
+    escape_def.repeatable = 0;
+    escape_def.value = 1;
 
-    data.num_definitions = 2;
+    hotkey_definition &enter_def = data.definitions.emplace_back();
+    enter_def.action = &data.hotkey_state.escape_pressed;
+    enter_def.key = KEY_ESCAPE;
+    enter_def.modifiers = 0;
+    enter_def.repeatable = 0;
+    enter_def.value = 1;
 
     std::array<e_hotkey_action, 4> arrow_actions = {
         HOTKEY_ARROW_UP,
@@ -396,6 +368,7 @@ void hotkeys::install(const custom_span<hotkey_mapping> &mappings) {
         HOTKEY_ARROW_LEFT,
         HOTKEY_ARROW_RIGHT
     };
+
     for (int i = 0; i < mappings.size(); i++) {
         int action = mappings[i].action;
         const bool is_arrow_action = std::find(arrow_actions.begin(), arrow_actions.end(), action) != arrow_actions.end();
@@ -425,17 +398,19 @@ void hotkey_key_pressed(int key, int modifiers, int repeat) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
     }
-    if (key == KEY_NONE)
+
+    if (key == KEY_NONE) {
         return;
-    for (int i = 0; i < data.num_arrows; i++) {
-        arrow_definition* arrow = &data.arrows[i];
-        if (arrow->key == key)
-            arrow->action(1);
     }
-    for (int i = 0; i < data.num_definitions; i++) {
-        hotkey_definition* def = &data.definitions[i];
-        if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable))
-            *(def->action) = def->value;
+
+    for (auto &arrow: data.arrows) {
+        if (arrow.key == key)
+            arrow.action(1);
+    }
+
+    for (auto &def: data.definitions) {
+        if (def.key == key && def.modifiers == modifiers && (!repeat || def.repeatable))
+            *(def.action) = def.value;
     }
 }
 
@@ -445,13 +420,14 @@ void hotkey_key_released(int key, int modifiers) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
     }
+
     if (key == KEY_NONE) {
         return;
     }
-    for (int i = 0; i < data.num_arrows; i++) {
-        arrow_definition* arrow = &data.arrows[i];
-        if (arrow->key == key)
-            arrow->action(0);
+
+    for (auto &arrow : data.arrows) {
+        if (arrow.key == key)
+            arrow.action(0);
     }
 }
 
