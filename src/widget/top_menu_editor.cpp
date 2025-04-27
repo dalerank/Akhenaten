@@ -12,7 +12,7 @@
 #include "scenario/scenario.h"
 #include "window/display_options.h"
 #include "window/editor/empire.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"

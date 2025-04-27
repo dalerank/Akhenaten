@@ -33,7 +33,6 @@
 #include "city_warnings.h"
 #include "city/city_events.h"
 #include "empire/empire_object.h"
-#include "game/settings.h"
 #include "overlays/city_overlay.h"
 #include "grid/building.h"
 
@@ -638,6 +637,8 @@ void city_t::houses_reset_demands() {
     houses.requiring.religion = 0;
 }
 
+uint16_t &game_speed();
+
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
@@ -656,7 +657,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.target_value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_00c0);
+    iob->bind(BIND_SIGNATURE_UINT16, &game_speed());
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);

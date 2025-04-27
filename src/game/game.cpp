@@ -73,6 +73,8 @@ declare_console_command_p(nextyear) {
     game.advance_year();
 }
 
+uint16_t &game_speed() { return game.game_speed; }
+
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
     static time_millis last_update;
@@ -325,11 +327,11 @@ static int get_elapsed_ticks() {
     case WINDOW_SLIDING_SIDEBAR:
     case WINDOW_OVERLAY_MENU:
     case WINDOW_BUILD_MENU:
-        game_speed_index = (100 - g_settings.game_speed) / 10;
+        game_speed_index = (100 - game.game_speed) / 10;
         if (game_speed_index >= 10) {
             return 0;
         } else if (game_speed_index < 0) {
-            ticks_per_frame = g_settings.game_speed / 100;
+            ticks_per_frame = game.game_speed / 100;
             game_speed_index = 0;
         }
         break;
@@ -381,6 +383,7 @@ bool game_t::check_valid() {
 
 bool game_init(game_opts opts) {
     int missing_fonts = 0;
+
     if (!image_set_font_pak(encoding_get())) {
         logs::error("unable to load font graphics");
         if (encoding_get() == ENCODING_KOREAN)
@@ -442,8 +445,10 @@ bool game_init_editor() {
 }
 
 void game_exit_editor() {
-    if (!reload_language(0, 0))
+    if (!reload_language(0, 0)) {
         return;
+    }
+
     editor_set_active(0);
     window_main_menu_show(1);
 }
@@ -479,11 +484,29 @@ void game_t::frame_end() {
 
 void game_t::time_init(int year) {
     simtime.init(year);
+    game_speed = 90;
 }
 
 void game_t::sound_frame_begin() {
     OZZY_PROFILER_SECTION("Sound/Frame");
     sound_city_play();
+}
+
+void game_t::increase_game_speed() {
+    if (game_speed >= 100) {
+        if (game_speed < 1000)
+            game_speed += 100;
+    } else {
+        game_speed = calc_bound(game_speed + 10, 10, 100);
+    }
+}
+
+void game_t::decrease_game_speed() {
+    if (game_speed > 100) {
+        game_speed -= 100;
+    } else {
+        game_speed = calc_bound(game_speed - 10, 10, 100);
+    }
 }
 
 void game_t::before_start_simulation() {
@@ -495,9 +518,9 @@ void game_t::before_start_simulation() {
 
     events::subscribe([this] (event_change_gamespeed ev) {
         if (ev.value == HOTKEY_INCREASE_GAME_SPEED) {
-            g_settings.increase_game_speed();
+            increase_game_speed();
         } else {
-            g_settings.decrease_game_speed();
+            decrease_game_speed();
         }
     });
 

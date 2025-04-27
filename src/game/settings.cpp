@@ -32,7 +32,6 @@ void game_settings::load_default_settings() {
     sound_city.enabled = true;
     sound_city.volume = 100;
 
-    game_speed = 90;
     scroll_speed = 70;
 
     difficulty.state = DIFFICULTY_HARD;
@@ -56,8 +55,7 @@ void game_settings::load_settings(buffer* buf) {
     sound_music.enabled = buf->read_u8();
     sound_speech.enabled = buf->read_u8();
     buf->skip(6);
-    game_speed = buf->read_i32();
-    game_speed = 80; // todo: fix settings
+    buf->skip(4);
     scroll_speed = buf->read_i32();
     buf->read_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
@@ -120,7 +118,7 @@ void game_settings::save() {
     buf->write_u8(sound_music.enabled);
     buf->write_u8(sound_speech.enabled);
     buf->skip(6);
-    buf->write_i32(game_speed);
+    buf->skip(4);
     buf->write_i32(scroll_speed);
     buf->write_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
@@ -167,23 +165,6 @@ sound_settings* game_settings::get_sound(int type) {
         return &data.sound_city;
     default:
         return 0;
-    }
-}
-
-void game_settings::increase_game_speed(void) {
-    if (game_speed >= 100) {
-        if (game_speed < 1000)
-            game_speed += 100;
-    } else {
-        game_speed = calc_bound(game_speed + 10, 10, 100);
-    }
-}
-
-void game_settings::decrease_game_speed(void) {
-    if (game_speed > 100) {
-        game_speed -= 100;
-    } else {
-        game_speed = calc_bound(game_speed - 10, 10, 100);
     }
 }
 

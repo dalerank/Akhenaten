@@ -1,11 +1,12 @@
 #include "widget_sidebar_extra.h"
 
 #include "city/city.h"
+#include "city/city_events.h"
 #include "city/city_population.h"
 #include "city/ratings.h"
 #include "core/game_environment.h"
 #include "core/string.h"
-#include "game/settings.h"
+#include "game/game.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/lang_text.h"
@@ -62,8 +63,8 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
     virtual void load(archive arch, pcstr section) override {
         widget::load(arch, section);
 
-        ui["dec_speed"].onclick([] { g_settings.decrease_game_speed(); });
-        ui["inc_speed"].onclick([] { g_settings.increase_game_speed(); });
+        ui["dec_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_DECREASE_GAME_SPEED }); });
+        ui["inc_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_INCREASE_GAME_SPEED }); });
     }
 };
 
@@ -139,7 +140,7 @@ bool update_extra_info_value(int value, int& field) {
 bool sidebar_window_extra::update(int is_background) {
     bool changed = false;
     if (info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)
-        changed |= update_extra_info_value(g_settings.game_speed, game_speed);
+        changed |= update_extra_info_value(game.game_speed, game_speed);
 
     if (info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         changed |= update_extra_info_value(g_city.labor.unemployment_percentage, unemployment_percentage);

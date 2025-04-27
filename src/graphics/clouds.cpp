@@ -6,6 +6,7 @@
 #include "game/settings.h"
 #include "graphics/color.h"
 #include "graphics/image.h"
+#include "game/game.h"
 #include "platform/renderer.h"
 
 #include "dev/debug.h"
@@ -263,7 +264,7 @@ void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const ve
     if (g_cloud_data.pause_frames) {
         g_cloud_data.pause_frames--;
     } else {
-        cloud_speed = g_cloud_data.clouds_speed * static_cast<float>(g_settings.game_speed) / 100;
+        cloud_speed = g_cloud_data.clouds_speed * static_cast<float>(game.game_speed) / 100;
     }
 
     for (auto & i : g_cloud_data.clouds) {

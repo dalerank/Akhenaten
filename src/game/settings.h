@@ -55,8 +55,7 @@ struct game_settings {
     sound_settings sound_music;
     sound_settings sound_speech;
     sound_settings sound_city;
-    // speed settings
-    int game_speed;
+
     int scroll_speed;
     // misc settings
     etooltip_flag tooltips;
@@ -117,9 +116,6 @@ struct game_settings {
         sound->enabled = enabled;
         sound->volume = calc_bound(volume, 0, 100);
     }
-
-    void increase_game_speed();
-    void decrease_game_speed();
 
     void increase_scroll_speed() { scroll_speed = calc_bound(scroll_speed + 10, 0, 100); }
     void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }

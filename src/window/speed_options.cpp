@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "game/game.h"
 #include "input/input.h"
 
 static void button_ok(int param1, int param2);
@@ -40,7 +41,7 @@ static struct {
 static void init(void (*close_callback)()) {
     data.focus_button_id = 0;
     data.close_callback = close_callback;
-    data.original_game_speed = g_settings.game_speed;
+    data.original_game_speed = game.game_speed;
     data.original_scroll_speed = g_settings.scroll_speed;
 }
 
@@ -59,7 +60,7 @@ static void draw_foreground(int) {
     lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
     // game speed
     lang_text_draw(45, 2, 112, 146, FONT_SMALL_PLAIN);
-    text_draw_percentage(g_settings.game_speed, 328, 146, FONT_SMALL_PLAIN);
+    text_draw_percentage(game.game_speed, 328, 146, FONT_SMALL_PLAIN);
     // scroll speed
     lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
     text_draw_percentage(g_settings.scroll_speed, 328, 182, FONT_SMALL_PLAIN);
@@ -85,16 +86,16 @@ static void button_ok(int param1, int param2) {
 }
 
 static void button_cancel(int param1, int param2) {
-    g_settings.game_speed = data.original_game_speed;
+    game.game_speed = data.original_game_speed;
     g_settings.scroll_speed = data.original_scroll_speed;
     data.close_callback();
 }
 
 static void arrow_button_game(int is_down, int param2) {
     if (is_down)
-        g_settings.decrease_game_speed();
+        game.decrease_game_speed();
     else {
-        g_settings.increase_game_speed();
+        game.increase_game_speed();
     }
 }
 

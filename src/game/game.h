@@ -48,7 +48,8 @@ struct game_t {
     bool animation = false;
     bool debug_console = false;
     bool debug_properties = false;
-    int frame = 0;
+    uint16_t game_speed;
+    uint32_t frame = 0;
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;
     bool write_video = false;
@@ -94,6 +95,9 @@ struct game_t {
     void sound_frame_begin();
     void before_start_simulation();
     void handle_input_frame();
+
+    void increase_game_speed();
+    void decrease_game_speed();
 
     threading::thread_pool mtrpc;
     threading::thread_pool mt;
