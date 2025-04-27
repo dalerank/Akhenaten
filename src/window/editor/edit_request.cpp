@@ -12,7 +12,7 @@
 #include "input/input.h"
 #include "scenario/editor.h"
 #include "scenario/scenario.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/editor/requests.h"
 #include "window/numeric_input.h"
 #include "window/select_list.h"

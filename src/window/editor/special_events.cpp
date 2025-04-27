@@ -12,7 +12,7 @@
 #include "scenario/editor_events.h"
 #include "scenario/scenario.h"
 #include "window/editor/attributes.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/numeric_input.h"
 
 static void button_earthquake_severity(int param1, int param2);

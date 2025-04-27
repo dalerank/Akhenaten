@@ -24,7 +24,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "widget/input_box.h"
 #include "window/window_city.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/autoconfig_window.h"
 #include "game/settings.h"
 #include "io/manager.h"

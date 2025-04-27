@@ -13,7 +13,7 @@
 #include "scenario/editor.h"
 #include "scenario/scenario.h"
 #include "window/editor/attributes.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/numeric_input.h"
 
 enum E_RATING {

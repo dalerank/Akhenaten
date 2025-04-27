@@ -13,7 +13,7 @@
 #include "scenario/scenario.h"
 #include "scenario/types.h"
 #include "window/editor/invasions.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/numeric_input.h"
 #include "window/select_list.h"
 

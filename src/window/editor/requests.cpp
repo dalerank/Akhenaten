@@ -16,7 +16,7 @@
 #include "scenario/scenario.h"
 #include "window/editor/attributes.h"
 #include "window/editor/edit_request.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "game/game.h"
 
 static void button_request(int id, int param2);

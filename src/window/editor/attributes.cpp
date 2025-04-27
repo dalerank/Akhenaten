@@ -22,7 +22,7 @@
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/demand_changes.h"
 #include "window/editor/invasions.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 #include "window/editor/price_changes.h"
 #include "window/editor/requests.h"
 #include "window/editor/special_events.h"

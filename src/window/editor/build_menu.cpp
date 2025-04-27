@@ -9,7 +9,7 @@
 #include "input/input.h"
 #include "widget/map_editor.h"
 #include "widget/sidebar/editor.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 
 static void button_menu_item(int index, int param2);
 

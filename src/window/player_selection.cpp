@@ -24,7 +24,6 @@
 #include "main_menu.h"
 #include "popup_dialog.h"
 #include "window/window_city.h"
-#include "window/editor/map.h"
 #include "window/window_dynasty_menu.h"
 #include "window/new_career.h"
 #include "game/game.h"

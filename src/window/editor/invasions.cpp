@@ -11,7 +11,7 @@
 #include "scenario/scenario.h"
 #include "window/editor/attributes.h"
 #include "window/editor/edit_invasion.h"
-#include "window/editor/map.h"
+#include "window/editor/window_editor.h"
 
 static void button_invasion(int id, int param2);
 
