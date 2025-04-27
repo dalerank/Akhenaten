@@ -14,6 +14,7 @@ struct event_save_city { int value; };
 struct event_load_city { int value; };
 struct event_debug_tile_change { int value; };
 struct event_debug_render_change { int value; };
+struct event_rotate_building { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -25,7 +26,6 @@ struct hotkeys {
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
-    int rotate_building;
     int change_building_variant;
     int building;
 

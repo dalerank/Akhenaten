@@ -21,7 +21,7 @@
 #include "dev/debug.h"
 #include "game/game.h"
 
-#define MAX_MESSAGES 10
+#define MAX_LOCAL_MESSAGES 10
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
@@ -61,7 +61,7 @@ static struct {
 
 static void init(void) {
     city_message_sort_and_compact();
-    g_messages_scrollbar.init(city_message_scroll_position(), city_message_count() - MAX_MESSAGES);
+    g_messages_scrollbar.init(city_message_scroll_position(), city_message_count() - MAX_LOCAL_MESSAGES);
 }
 
 static void draw_background(int) {
@@ -92,7 +92,7 @@ static void draw_background(int) {
 static void draw_messages(int total_messages) {
     painter ctx = game.painter();
 
-    int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
+    int max = total_messages < MAX_LOCAL_MESSAGES ? total_messages : MAX_LOCAL_MESSAGES;
     int index = g_messages_scrollbar.scroll_position;
 
     for (int i = 0; i < max; i++, index++) {
@@ -214,7 +214,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         data.focus_button_id = 13;
     }
 
-    handled |= (generic_buttons_handle_mouse(m_dialog, {data.x_text, data.y_text + 4}, generic_buttons_messages, MAX_MESSAGES, &button_id) != 0);
+    handled |= (generic_buttons_handle_mouse(m_dialog, {data.x_text, data.y_text + 4}, generic_buttons_messages, MAX_LOCAL_MESSAGES, &button_id) != 0);
     if (!data.focus_button_id) {
         data.focus_button_id = button_id;
     }
@@ -247,7 +247,7 @@ static void button_delete(int id_to_delete, int param2) {
     int id = city_message_set_current(g_messages_scrollbar.scroll_position + id_to_delete);
     if (id < city_message_count()) {
         city_message_delete(id);
-        scrollbar_update_max(&g_messages_scrollbar, city_message_count() - MAX_MESSAGES);
+        scrollbar_update_max(&g_messages_scrollbar, city_message_count() - MAX_LOCAL_MESSAGES);
     }
 }
 

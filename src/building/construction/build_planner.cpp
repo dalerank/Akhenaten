@@ -294,6 +294,13 @@ int build_planner::can_be_placed() {
     return can_place;
 }
 
+void build_planner::init() {
+    events::subscribe([this] (event_rotate_building ev) {
+        building_rotation_rotate_by_hotkey();
+        update_orientations();
+    });
+}
+
 void build_planner::reset() {
     // reset build info
     total_cost = 0;

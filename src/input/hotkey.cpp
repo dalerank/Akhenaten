@@ -164,7 +164,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_save_city{ action }); };
         break;
     case HOTKEY_ROTATE_BUILDING:
-        def->action = &data.hotkey_state.rotate_building;
+        def->callback = [action = mapping.action] { events::emit(event_rotate_building{ action }); };
         break;
     case HOTKEY_CHANGE_BUILDING_VARIANT:
         def->action = &data.hotkey_state.change_building_variant;

@@ -42,7 +42,6 @@ enum e_place_action {
 };
 
 class build_planner {
-private:
     int tile_graphics_array[30][30] = {};
     int tile_sizes_array[30][30] = {};
     bool tile_blocked_array[30][30] = {};
@@ -76,7 +75,6 @@ private:
     void update_unique_only_one_check();
     void dispatch_warnings();
     void checks_generic_rules(building *b, tile2i tile, int size, int orientation);
-    void check_wall_rules(int type, int x, int y, int size);
     void check_road_access(building *b, tile2i tile, int size, int orientation);
 
     void update_coord_caches();
@@ -109,6 +107,7 @@ public:
 
     int can_be_placed();
 
+    void init();
     void reset();
     void setup_build(e_building_type type);
     void set_graphics_array(custom_span<int> image_set, vec2i size);
