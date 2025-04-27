@@ -290,11 +290,11 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->repeatable = 1;
         break;
     case HOTKEY_DEBUG_RENDER_UP:
-        def->action = &data.hotkey_state.debug_render_up;
+        def->callback = [action = mapping.action] { events::emit(event_debug_render_change{ 1 }); };
         def->repeatable = 1;
         break;
     case HOTKEY_DEBUG_RENDER_DOWN:
-        def->action = &data.hotkey_state.debug_render_down;
+        def->callback = [action = mapping.action] { events::emit(event_debug_render_change{ -1 }); };
         def->repeatable = 1;
         break;
     default:

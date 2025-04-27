@@ -179,8 +179,6 @@ static void cycle_legion(void) {
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
-    handle_debug_hotkeys(h);
-
     if (h->show_advisor) {
         window_advisors_show_advisor((e_advisor)h->show_advisor);
     }

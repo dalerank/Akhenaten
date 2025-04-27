@@ -54,16 +54,6 @@ int g_debug_building_id = 0;
 
 game_debug_t g_debug;
 
-void handle_debug_hotkeys(const hotkeys* h) {   
-    if (h->debug_render_up) {
-        g_debug_render += 1;
-    }
-
-    if (h->debug_render_down) {
-        g_debug_render -= 1;
-    }
-}
-
 declare_console_command_p(debugrender) {
     std::string args; is >> args;
     g_debug_render  = atoi(args.empty() ? (pcstr)"0" : args.c_str());
@@ -1423,5 +1413,9 @@ console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
 void game_debug_t::init() {
     events::subscribe([] (event_debug_tile_change ev) {
         g_debug_tile += ev.value;
+    });    
+    
+    events::subscribe([] (event_debug_render_change ev) {
+        g_debug_render += ev.value;
     });
 }

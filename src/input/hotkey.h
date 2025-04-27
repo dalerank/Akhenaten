@@ -13,6 +13,7 @@ struct event_rotate_map_reset { int value; };
 struct event_save_city { int value; };
 struct event_load_city { int value; };
 struct event_debug_tile_change { int value; };
+struct event_debug_render_change { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -27,9 +28,6 @@ struct hotkeys {
     int rotate_building;
     int change_building_variant;
     int building;
-    // debug
-    int debug_render_up;
-    int debug_render_down;
 
     std::function<void()> callback;
 
