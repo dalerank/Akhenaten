@@ -164,6 +164,12 @@ using PropertiesIterator = FuncLinkedList<debug_iterator_function_cb*>;
 
 } // end namespace debug
 
+struct game_debug_t {
+    void init();
+};
+
+extern game_debug_t g_debug;
+
 #define ANK_REGISTER_PROPS_ITERATOR(func) void func(bool); \
     namespace debug {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static debug::PropertiesIterator ANK_CONFIG_CC1(debug_handler, __LINE__)(func)

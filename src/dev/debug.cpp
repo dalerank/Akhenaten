@@ -34,6 +34,7 @@
 #include "building/building_temple_complex.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
+#include "city/city_events.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "core/random.h"
@@ -51,14 +52,9 @@ int debug_range_4 = 0;
 int g_debug_figure_id = 0;
 int g_debug_building_id = 0;
 
-void handle_debug_hotkeys(const hotkeys* h) {
-    if (h->debug_tile_up) {
-        g_debug_tile += 1;
-    }
-    if (h->debug_tile_down) {
-        g_debug_tile -= 1;
-    }
-    
+game_debug_t g_debug;
+
+void handle_debug_hotkeys(const hotkeys* h) {   
     if (h->debug_render_up) {
         g_debug_render += 1;
     }
@@ -1422,4 +1418,10 @@ console_var_bool::console_var_bool(pcstr name, bool v) : value(v) {
 
 console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
     bind_debug_console_var_bool(name, v);
+}
+
+void game_debug_t::init() {
+    events::subscribe([] (event_debug_tile_change ev) {
+        g_debug_tile += ev.value;
+    });
 }

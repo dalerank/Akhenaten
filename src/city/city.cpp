@@ -35,6 +35,7 @@
 #include "empire/empire_object.h"
 #include "overlays/city_overlay.h"
 #include "grid/building.h"
+#include "dev/debug.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -75,6 +76,7 @@ void city_t::init() {
     sentiment.init();
     finance.init();
     hotkeys_handler.init();
+    g_debug.init();
 }
 
 void city_t::update_day() {

@@ -282,11 +282,11 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->value = BUILDING_ROADBLOCK;
         break;
     case HOTKEY_DEBUG_1_UP:
-        def->action = &data.hotkey_state.debug_tile_up;
+        def->callback = [action = mapping.action] { events::emit(event_debug_tile_change{ +1 }); };
         def->repeatable = 1;
         break;
     case HOTKEY_DEBUG_1_DOWN:
-        def->action = &data.hotkey_state.debug_tile_down;
+        def->callback = [action = mapping.action] { events::emit(event_debug_tile_change{ -1 }); };
         def->repeatable = 1;
         break;
     case HOTKEY_DEBUG_RENDER_UP:

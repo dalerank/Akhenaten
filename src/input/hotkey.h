@@ -12,6 +12,7 @@ struct event_rotate_map { int value; };
 struct event_rotate_map_reset { int value; };
 struct event_save_city { int value; };
 struct event_load_city { int value; };
+struct event_debug_tile_change { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -27,8 +28,6 @@ struct hotkeys {
     int change_building_variant;
     int building;
     // debug
-    int debug_tile_up;
-    int debug_tile_down;
     int debug_render_up;
     int debug_render_down;
 
