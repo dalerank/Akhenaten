@@ -559,7 +559,7 @@ void top_menu_widget::file_handle(menu_item &item) {
         popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
             if (accepted) {
                 widget_top_menu_clear_state();
-                window_main_menu_show(true);
+                main_menu_screen::show(/*restart_music*/true);
             } else {
                 window_city_show();
             }

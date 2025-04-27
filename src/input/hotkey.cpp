@@ -157,8 +157,9 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->action = &data.hotkey_state.toggle_editor_battle_info;
         break;
     case HOTKEY_LOAD_FILE:
-        def->action = &data.hotkey_state.load_file;
+        def->callback = [action = mapping.action] { events::emit(event_load_city{ action }); };
         break;
+
     case HOTKEY_SAVE_FILE:
         def->callback = [action = mapping.action] { events::emit(event_save_city{ action }); };
         break;
@@ -434,7 +435,7 @@ void hotkey_handle_escape(void) {
     popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
         if (accepted) {
             widget_top_menu_clear_state();
-            window_main_menu_show(true);
+            main_menu_screen::show(/*restart_music*/true);
         } else {
             window_city_show();
         }

@@ -79,7 +79,7 @@ void ui::window_mission_won::advance_to_next_mission() {
 
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_scenario.settings.campaign_mission_rank >= 11 || is_custom_map) {
-        window_main_menu_show(1);
+        main_menu_screen::show(/*restart_music*/true);
         if (!is_custom_map) {
             g_settings.clear_personal_savings();
             scenario_settings_init();

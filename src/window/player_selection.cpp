@@ -187,7 +187,7 @@ static void button_click(int param1, int param2) {
         break;
 
     case 3: // back to main menu
-        window_main_menu_show(false);
+        main_menu_screen::show(/*restart_music*/false);
         break;
     }
 }
@@ -200,7 +200,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = *g_window_player_selection;
 
     if (input_go_back_requested(m, h)) {
-        window_main_menu_show(false);
+        main_menu_screen::show(/*restart_music*/false);
     }
 
     const mouse* m_dialog = mouse_in_dialog(m);

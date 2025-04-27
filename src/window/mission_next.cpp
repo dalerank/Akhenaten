@@ -58,7 +58,7 @@ void ui::mission_choice_window::show(int scenario_id) {
 
     const bool mission_valid = mission && mission->campaign_id >= 0;
     if (!mission_valid) {
-        window_main_menu_show(true);
+        main_menu_screen::show(/*restart_music*/true);
         return;
     }
 

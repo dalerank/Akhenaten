@@ -42,7 +42,7 @@ void logo_screen::draw_foreground(UiFlags) {
 
 int logo_screen::ui_handle_mouse(const mouse *m){
     if (m->left.went_up || m->right.went_up) {
-        window_main_menu_show(0);
+        main_menu_screen::show(/*restart_music*/false);
         return 0;
     }
 

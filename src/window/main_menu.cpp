@@ -27,15 +27,6 @@
 #include "core/httplib.h"
 #endif
 
-struct main_menu_screen : autoconfig_window_t<main_menu_screen> {
-    virtual int get_tooltip_text() override { return 0; }
-    virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual int draw_background(UiFlags flags) override;
-    virtual void draw_foreground(UiFlags flags) override;
-
-    void init();
-};
-
 main_menu_screen g_main_menu;
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
@@ -159,24 +150,24 @@ void main_menu_handle_input(const mouse* m, const hotkeys* h) {
             app_request_exit();
         });
     }
-
-    if (h->load_file) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
-    }
 }
 
-void window_main_menu_show(bool restart_music) {
+void main_menu_screen::show(bool restart_music) {
     if (restart_music) {
         g_sound.play_intro();
     }
 
     static window_type window = {
         WINDOW_MAIN_MENU,
-        [] (int flags) { g_main_menu.draw_background(flags); },
-        [] (int flags) { g_main_menu.draw_foreground(flags); },
-        [] (auto m, auto h) { g_main_menu.ui_handle_mouse(m); },
+        [] (int flags) { instance().draw_background(flags); },
+        [] (int flags) { instance().draw_foreground(flags); },
+        [] (auto m, auto h) { instance().ui_handle_mouse(m); },
     };
 
-    g_main_menu.init();
+    instance().init();
     window_show(&window);
+}
+
+main_menu_screen &main_menu_screen::instance() {
+    return g_main_menu;
 }

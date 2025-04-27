@@ -450,8 +450,9 @@ void game_exit_editor() {
     }
 
     editor_set_active(0);
-    window_main_menu_show(1);
+    main_menu_screen::show(/*restart_music*/true);
 }
+
 int game_reload_language() {
     return reload_language(0, 1);
 }
@@ -526,6 +527,10 @@ void game_t::before_start_simulation() {
 
     events::subscribe([] (event_save_city ev) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+    });
+
+    events::subscribe([] (event_load_city ev) {
+        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     });
 }
 

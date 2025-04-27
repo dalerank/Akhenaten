@@ -11,6 +11,7 @@ struct event_change_gamespeed { int value; };
 struct event_rotate_map { int value; };
 struct event_rotate_map_reset { int value; };
 struct event_save_city { int value; };
+struct event_load_city { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -22,7 +23,6 @@ struct hotkeys {
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
-    int load_file;
     int rotate_building;
     int change_building_variant;
     int building;
