@@ -485,7 +485,6 @@ void game_t::frame_end() {
 
 void game_t::time_init(int year) {
     simtime.init(year);
-    game_speed = 90;
 }
 
 void game_t::sound_frame_begin() {

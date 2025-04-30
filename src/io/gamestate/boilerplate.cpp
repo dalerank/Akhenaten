@@ -218,6 +218,7 @@ static void post_load() {
         break;
 
     case e_session_mission:
+        game.game_speed = 80;
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.init_scenario(g_scenario.settings.campaign_scenario_id, game.session.last_loaded);
