@@ -213,86 +213,90 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
     case HOTKEY_SAVE_CITY_SCREENSHOT:
         def->action = &data.global_hotkey_state.save_city_screenshot;
         break;
+
     case HOTKEY_BUILD_VACANT_HOUSE:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_HOUSE_VACANT_LOT;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_HOUSE_VACANT_LOT }); };
         break;
+
     case HOTKEY_BUILD_CLEAR_LAND:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_CLEAR_LAND;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_CLEAR_LAND }); };
         break;
+
     case HOTKEY_BUILD_ROAD:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_ROAD;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_ROAD }); };
         break;
-    case HOTKEY_BUILD_ENGINEERS_POST:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_ARCHITECT_POST;
+
+    case HOTKEY_BUILD_ARCHITECT:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_ARCHITECT_POST }); };
         break;
+
     case HOTKEY_BUILD_WALL:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_MUD_WALL;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_MUD_WALL }); };
         break;
+
     case HOTKEY_BUILD_GATEHOUSE:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_MUD_GATEHOUSE;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_MUD_GATEHOUSE }); };
         break;
-    case HOTKEY_BUILD_PREFECTURE:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_POLICE_STATION;
+
+    case HOTKEY_BUILD_FIREHOUSE:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_FIREHOUSE }); };
         break;
+
     case HOTKEY_BUILD_GRANARY:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_GRANARY;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_GRANARY }); };
         break;
+
     case BUILDING_STORAGE_YARD:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_STORAGE_YARD;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_STORAGE_YARD }); };
         break;
-    case HOTKEY_BUILD_MARKET:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_BAZAAR;
+
+    case HOTKEY_BUILD_BAZAAR:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_BAZAAR }); };
         break;
+
     case HOTKEY_BUILD_PLAZA:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_PLAZA;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_PLAZA }); };
         break;
+
     case HOTKEY_BUILD_GARDENS:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_GARDENS;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_GARDENS }); };
         break;
-    case HOTKEY_BUILD_RESERVOIR:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_WATER_LIFT;
+
+    case HOTKEY_BUILD_WATERLIFT:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_WATER_LIFT }); };
         break;
-    case HOTKEY_BUILD_AQUEDUCT:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_IRRIGATION_DITCH;
+
+    case HOTKEY_BUILD_CANAL:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_IRRIGATION_DITCH }); };
         break;
-    case HOTKEY_BUILD_FOUNTAIN:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_MENU_BEAUTIFICATION;
+
+    case HOTKEY_BUILD_WATER_SUPPLY:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_WATER_SUPPLY }); };
         break;
-    case HOTKEY_BUILD_DOCTOR:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_APOTHECARY;
+
+    case HOTKEY_BUILD_APOTHECARY:
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_APOTHECARY }); };
         break;
+
     case HOTKEY_BUILD_ROADBLOCK:
-        def->action = &data.hotkey_state.building;
-        def->value = BUILDING_ROADBLOCK;
+        def->callback = [] { events::emit(event_building_mode{ BUILDING_ROADBLOCK }); };
         break;
+
     case HOTKEY_DEBUG_1_UP:
         def->callback = [action = mapping.action] { events::emit(event_debug_tile_change{ +1 }); };
         def->repeatable = 1;
         break;
+
     case HOTKEY_DEBUG_1_DOWN:
         def->callback = [action = mapping.action] { events::emit(event_debug_tile_change{ -1 }); };
         def->repeatable = 1;
         break;
+
     case HOTKEY_DEBUG_RENDER_UP:
         def->callback = [action = mapping.action] { events::emit(event_debug_render_change{ 1 }); };
         def->repeatable = 1;
         break;
+
     case HOTKEY_DEBUG_RENDER_DOWN:
         def->callback = [action = mapping.action] { events::emit(event_debug_render_change{ -1 }); };
         def->repeatable = 1;

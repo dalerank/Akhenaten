@@ -10,28 +10,32 @@ for (var i = 0; i < 38; i++) {
 }
 
 var mission0 = { // Nubt
-	start_message : 150, //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
-	city_has_animals : true,
-	gods_least_mood : 50,
-	religion_enabled : false,
-	show_won_screen : false,
-	player_rank : 0,
+	start_message : 150 //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
+	city_has_animals : true
+	gods_least_mood : 50
+	religion_enabled : false
+	show_won_screen : false
+	player_rank : 0
 
-	money : [7500, 5000, 3750, 2500, 2000],
-	rescue_loans : [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers : [300, 200, 150, 100, 75],
+	money : [7500, 5000, 3750, 2500, 2000]
+	rescue_loans : [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers : [300, 200, 150, 100, 75]
+
+	buildings : [
+		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD, BUILDING_WATER_SUPPLY
+	]
 
 	fire_damage : {
-		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +20},	
-		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20},	
-		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20},	
-	},
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +20}
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}
+	}
 
 	stages : {
-		tutorial_fire: [BUILDING_FIREHOUSE],
-		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR],
-		tutorial_water: [BUILDING_WATER_SUPPLY],
-		tutorial_collapse: [BUILDING_ARCHITECT_POST],
+		tutorial_fire: [BUILDING_FIREHOUSE]
+		tutorial_food: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR]
+		tutorial_water: [BUILDING_WATER_SUPPLY]
+		tutorial_collapse: [BUILDING_ARCHITECT_POST]
 	}
 }
 
@@ -45,6 +49,7 @@ var mission1 = {
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 
 	buildings : [
+					BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD,
 					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
 				],

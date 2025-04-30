@@ -196,13 +196,6 @@ void window_city_handle_hotkeys(const hotkeys* h) {
     if (h->change_building_variant) {
         g_city_planner.next_building_variant();
     }
-
-    if (h->building) {
-        if (scenario_building_allowed(h->building)) {
-            g_city_planner.construction_cancel();
-            g_city_planner.setup_build((e_building_type)h->building);
-        }
-    }
 }
 
 void window_city_handle_input(const mouse* m, const hotkeys* h) {

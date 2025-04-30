@@ -299,6 +299,13 @@ void build_planner::init() {
         building_rotation_rotate_by_hotkey();
         update_orientations();
     });
+
+    events::subscribe([this] (event_building_mode ev) {
+        if (scenario_building_allowed(ev.value)) {
+            construction_cancel();
+            setup_build((e_building_type)ev.value);
+        }
+    });
 }
 
 void build_planner::reset() {
