@@ -18,12 +18,19 @@ struct tutorial_1 : public tutorial_t {
 
 tutorial_1 g_tutorial_1;
 
+void tutorial_handle_advance_day(event_advance_day ev) {
+    buildings_valid_do([] (building &b) {
+        b.damage_risk = 0;
+    });
+}
+
 void tutorial1_handle_fire(event_fire_damage) {
     if (g_tutorials_flags.tutorial_1.fire) {
         return;
     }
 
     events::unsubscribe(&tutorial1_handle_fire);
+    events::unsubscribe(&tutorial_handle_advance_day);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.fire = true;
     g_scenario.extra_damage.clear();
@@ -94,8 +101,12 @@ bool tutorial1_is_success() {
 }
 
 void tutorial_1::init() {
-    if (g_tutorials_flags.tutorial_1.fire) building_menu_update(tutorial_stage.tutorial_fire);
-    else events::subscribe(&tutorial1_handle_fire);
+    if (g_tutorials_flags.tutorial_1.fire) {
+        building_menu_update(tutorial_stage.tutorial_fire);
+    } else {
+        events::subscribe(&tutorial_handle_advance_day);
+        events::subscribe(&tutorial1_handle_fire);
+    }
 
     if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
     else events::subscribe(&tutorial1_handle_population_150);

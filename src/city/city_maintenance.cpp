@@ -24,16 +24,12 @@ void fire_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, MESSAGE_FIRE, b->type, b->tile.grid_offset());
 
-    events::emit(event_fire_damage{ b->id });
-
     game_undo_disable();
     b->destroy_by_fire();
 }
 
 void city_maintenance_t::collapse_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-
-    events::emit(event_collase_damage{ b->id });
     city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, MESSAGE_COLLAPSED_BUILDING, b->type, b->tile.grid_offset());
 
     game_undo_disable();

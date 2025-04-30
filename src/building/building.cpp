@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_warnings.h"
+#include "city/city_events.h"
 #include "widget/city/ornaments.h"
 #include "core/svector.h"
 #include "core/profiler.h"
@@ -522,6 +523,9 @@ bool building::workshop_has_resources() {
 
 void building::destroy_by_collapse() {
     assert(is_main());
+
+    events::emit(event_collase_damage{ id });
+
     state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(id, tile, size);
     figure_create_explosion_cloud(tile, size);
@@ -533,6 +537,8 @@ void building::destroy_on_fire_impl(bool plagued) {
     game_undo_disable();
     fire_risk = 0;
     damage_risk = 0;
+
+    events::emit(event_fire_damage{ id });
 
     //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
     state = BUILDING_STATE_DELETED_BY_GAME;
@@ -567,6 +573,7 @@ void building::destroy_on_fire_impl(bool plagued) {
 
 void building::destroy_by_fire() {
     assert(is_main());
+
     destroy_on_fire_impl(false);
     destroy_linked_parts(true);
     g_sound.play_effect(SOUND_EFFECT_EXPLOSION);

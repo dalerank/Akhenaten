@@ -94,7 +94,7 @@ namespace game_hotkeys {
     hotkey_mapping debug_range1_up("debug_range1_up", KEY_PAGEUP, KEY_MOD_CTRL, HOTKEY_DEBUG_1_UP);
     hotkey_mapping debug_range1_down("debug_range1_down", KEY_PAGEDOWN, KEY_MOD_CTRL, HOTKEY_DEBUG_1_DOWN);
     hotkey_mapping debug_range2_up("debug_range2_up", KEY_PAGEUP, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_UP);
-    hotkey_mapping debug_range2_dow("debug_range2_down", KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_DOWN);
+    hotkey_mapping debug_range2_down("debug_range2_down", KEY_PAGEDOWN, KEY_MOD_ALT, HOTKEY_DEBUG_RENDER_DOWN);
 
     void set_mapping(bool alt, e_key key, e_key_mode modifiers, e_hotkey_action action);
     void set_layout_mapping(pcstr name, e_key default_key, e_key_mode modifiers, e_hotkey_action action);
