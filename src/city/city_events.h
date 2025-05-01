@@ -17,6 +17,7 @@ namespace events {
 
     template<typename T>
     inline void unsubscribe(T subscriber) {
-        g_city_events.unsubscribe(subscriber);
+        const bool removed = g_city_events.unsubscribe(subscriber);
+        assert(removed && "Event subscriber not found! This is a bug.");
     }
 } // namespace events

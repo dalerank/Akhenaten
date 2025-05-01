@@ -170,7 +170,9 @@ public:
 		bool result = false;
 		if (callableList) {
 			callableList->forEach([&result, callableList, &pcb] (const Handle &handle, const Callback &callback) {
-				if (&callback == &pcb) {
+				auto *ca = pcb.target<void(Event)>();
+				auto *cb = callback.target<void(Event)>();
+				if (ca == cb) {
 					callableList->remove(handle);
 					result |= true;
 				}
@@ -198,7 +200,7 @@ public:
 	{
 		const CallbackList_ * callableList = doFindCallableList(event);
 		if(callableList) {
-			return ! callableList->empty();
+			return !callableList->empty();
 		}
 
 		return false;
