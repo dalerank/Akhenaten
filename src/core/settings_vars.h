@@ -29,12 +29,12 @@ public:
 
 	bool is_defined(const xstring &name);
 
-	void init();
+	void load_global(pcstr name);
+	void sync_global(pcstr filename, pcstr name);
 
 	setting_variant_type type(const xstring &name);
 
 	// call if you need certainly immediatly sync, better to make task in thread
-	void sync_global(pcstr filename, pcstr name);
 	void set_sync_task(std::function<void(xstring)> task);
 
 	// settup pause before saving data to file

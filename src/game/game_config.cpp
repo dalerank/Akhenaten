@@ -145,7 +145,7 @@ setting_variant_type game_features::game_feature::type() const {
 }
 
 void game_features::load() {
-    _settings.init();
+    _settings.load_global("game_settings");
 }
 
 void game_features::save() {

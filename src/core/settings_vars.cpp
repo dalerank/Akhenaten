@@ -116,11 +116,11 @@ public:
 		}
 	}
 
-	void initialize() {
+	void load_global(pcstr name) {
 		_initialized = true;
 		_variantsDirty = false;
 
-		g_config_arch.r_objects("game_settings", [&] (pcstr key, archive arch) {
+		g_config_arch.r_objects(name, [&] (pcstr key, archive arch) {
 			auto value = arch.to_variant();
 			switch (value.index()) {
 			case archive::e_variant_type::vt_none:
@@ -221,8 +221,8 @@ bool settings_vars_t::is_defined(const xstring &name) {
 	return impl().is_defined(name);
 }
 
-void settings_vars_t::init() {
-	impl().initialize();
+void settings_vars_t::load_global(pcstr name) {
+	impl().load_global(name);
 }
 
 setting_variant_type settings_vars_t::type(const xstring &name) {
