@@ -150,7 +150,7 @@ void game_features::load() {
 
 void game_features::save() {
     vfs::sync_em_fs();
-    _settings.sync(CONF_FILENAME);
+    _settings.sync_global(CONF_FILENAME, "game_settings");
 }
 
 declare_console_command_p(savefeatures) {

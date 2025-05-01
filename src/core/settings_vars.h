@@ -34,7 +34,7 @@ public:
 	setting_variant_type type(const xstring &name);
 
 	// call if you need certainly immediatly sync, better to make task in thread
-	void sync(pcstr filename);
+	void sync_global(pcstr filename, pcstr name);
 	void set_sync_task(std::function<void(xstring)> task);
 
 	// settup pause before saving data to file

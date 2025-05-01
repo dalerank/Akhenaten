@@ -8,66 +8,33 @@
 #include "js/js_game.h"
 #include "mujs/mujs.h"
 
-#define READER_LOCK(macLockName) // ThreadSafety::ReaderLock macLockName(_mutex)
-#define WRITER_LOCK(macLockName) // ThreadSafety::WriterLock macLockName(_mutex)
 
 class settings_vars_impl_t {
 	friend class settings_vars_t;
 	settings_vars_impl_t() {
 	}
 
-	void Finalize() {
-		{
-			WRITER_LOCK(writeLock);
-			_finalized = true;
-		}
-		//_backgroundQueueExecutor->WaitAsync();
-	}
-
 	using variants_map_t = std::unordered_map<xstring, setting_variant>;
 
 public:
 	void reset() {
-		{
-			READER_LOCK(readLock);
-			if (_finalized) {
-				return;
-			}
-			if (!_initialized) {
-				return;
-			}
+		if (!_initialized) {
+			return;
 		}
-
-		//_backgroundQueueExecutor->WaitAsync();
-
-		{
-			WRITER_LOCK(writeLock);
-			_initialized = false;
-		}
+		_initialized = false;
 	}
 
 	size_t get_count() {
-		READER_LOCK(readLock);
-		//if (!IsInitialized(readLock)) {
-		//	return 0;
-		//}
 		return _variants.size();
 	}
 
-	void sync(pcstr filename) {
-		{
-			READER_LOCK(readLock);
-			//if (!IsInitialized(readLock)) {
-			//	return;
-			//}
-		}
-		save(filename);
+	void sync_global(pcstr filename, pcstr name) {
+		save_global(filename, name);
 	}
 
 	void set_autosync_delay(const settings_vars_t::delay_t delay) {
 		bool forceSync = false;
 		{
-			WRITER_LOCK(writeLock);
 			forceSync = (delay < _storageSyncDelay);
 			_storageSyncDelay = delay;
 		}
@@ -78,18 +45,10 @@ public:
 	}
 
 	bool is_defined(xstring name) {
-		READER_LOCK(readLock);
-		//if (!IsInitialized(readLock)) {
-		//	return false;
-		//}
 		return _variants.find(name) != _variants.end();
 	}
 
 	std::optional<setting_variant> get_variant(const xstring &name) {
-		READER_LOCK(readLock);
-		//if (!IsInitialized(readLock)) {
-		//	return {};
-		//}
 		auto it = _variants.find(name);
 		if (it == _variants.end()) {
 			return {};
@@ -98,10 +57,6 @@ public:
 	}
 
 	setting_variant get(const xstring &name, const setting_variant &def) {
-		READER_LOCK(readLock);
-		//if (!IsInitialized(readLock)) {
-		//	return {};
-		//}
 		auto it = _variants.find(name);
 		if (it == _variants.end()) {
 			return def;
@@ -112,10 +67,6 @@ public:
 
 	template<typename T>
 	std::optional<T> get(const xstring &name) {
-		READER_LOCK(readLock);
-		//if (!IsInitialized(readLock)) {
-		//	return {};
-		//}
 		auto it = _variants.find(name);
 		if (it == _variants.end()) {
 			return {};
@@ -130,21 +81,13 @@ public:
 
 	template<typename T>
 	void set(const xstring &name, const T& value) {
-		{
-			READER_LOCK(readLock);
-			//if (!IsInitialized(readLock)) {
-			//	return;
-			//}
-
-			auto it = _variants.find(name);
-			if (it != _variants.end()) {
-				if (it->second == setting_variant(value)) {
-					return;
-				}
+		auto it = _variants.find(name);
+		if (it != _variants.end()) {
+			if (it->second == setting_variant(value)) {
+				return;
 			}
 		}
 
-		WRITER_LOCK(writeLock);
 		_variantsDirty = true;
 		_variants[name] = setting_variant(value);
 		if (_sync_task) {
@@ -174,8 +117,6 @@ public:
 	}
 
 	void initialize() {
-		WRITER_LOCK(writeLock);
-
 		_initialized = true;
 		_variantsDirty = false;
 
@@ -231,54 +172,43 @@ public:
 		svardata.append(v);
     }
 
-	void save(pcstr filename) {
-		int loadResult;
-		{
-			READER_LOCK(readLock);
-			loadResult = _loadResult;
+	void save_global(pcstr filename, pcstr name) {
+		if (!_variantsDirty) {
+			return;
 		}
 
-		{
-			WRITER_LOCK(writeLock);
-			if (!_variantsDirty) {
-				return;
-			}
+		vfs::path fs_file = vfs::content_path(filename);
+		FILE *fp = vfs::file_open_os(fs_file, "wt");
+		if (!fp) {
+			logs::error("Unable to write settings file %s", fs_file.c_str());
+			return;
+		}
 
-			vfs::path fs_file = vfs::content_path(filename);
-			FILE *fp = vfs::file_open_os(fs_file, "wt");
-			if (!fp) {
-				logs::error("Unable to write settings file %s", fs_file.c_str());
-				return;
-			}
+		svardata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
+		svardata.append("var game_settings = ");
 
-			svardata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
-			svardata.append("var game_settings = ");
+		js_State *state = (js_State *)g_config_arch.state;
+		js_setdumping(state, &svarprintf);
+		js_getglobal(state, name);
+		if (js_isobject(state, -1)) {
+			js_dumpobject_ex(state, -1);
+		}
+		js_pop(state, 1);
 
-			js_State *state = (js_State *)g_config_arch.state;
-			js_setdumping(state, &svarprintf);
-			js_getglobal(state, "game_settings");
-			if (js_isobject(state, -1)) {
-				js_dumpobject_ex(state, -1);
-			}
-			js_pop(state, 1);
-
-			fprintf(fp, "%s", svardata.c_str());
-			svardata.clear();
-			_variantsDirty = false;
+		fprintf(fp, "%s", svardata.c_str());
+		svardata.clear();
+		_variantsDirty = false;
 			
-			vfs::file_close(fp);
-		}
+		vfs::file_close(fp);
 	}
 
 private:
 	settings_vars_t::delay_t _storageSyncDelay = std::chrono::milliseconds(100);
 
 	variants_map_t _variants;
-	int _loadResult = -1;
 	bool _variantsDirty = false;
 	bool _syncScheduled = false;
 	bool _initialized = false;
-	bool _finalized = false;
 	std::function<void(xstring)> _sync_task;
 };
 
@@ -300,8 +230,8 @@ setting_variant_type settings_vars_t::type(const xstring &name) {
 	return (var.has_value() ? (setting_variant_type)var.value().index() : setting_none);
 }
 
-void settings_vars_t::sync(pcstr filename) {
-	impl().sync(filename);
+void settings_vars_t::sync_global(pcstr filename, pcstr name) {
+	impl().sync_global(filename, name);
 }
 
 void settings_vars_t::set_sync_task(std::function<void(xstring)> task) {
