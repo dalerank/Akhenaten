@@ -44,7 +44,7 @@ struct tutorial_flags_t {
     struct {
         bool started;
         bool fire;
-        bool population_150_reached;
+        bool granary_opened;
         bool gamemeat_400_stored;
         bool collapse;
         bool architector_built;

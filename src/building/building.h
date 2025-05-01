@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "city/labor_category.h"
 #include "city/city_labor.h"

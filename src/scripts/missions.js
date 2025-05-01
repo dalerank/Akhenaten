@@ -37,6 +37,11 @@ var mission0 = { // Nubt
 		tutorial_water: [BUILDING_WATER_SUPPLY]
 		tutorial_collapse: [BUILDING_ARCHITECT_POST]
 	}
+
+	vars : {
+		granary_open_population : 150
+		population_cap_firstfire : 80
+	}
 }
 
 var mission1 = {

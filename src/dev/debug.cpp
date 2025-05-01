@@ -1313,7 +1313,7 @@ void draw_debug_ui(int x, int y) {
                 f = { "1:fire", flags.tutorial_1.fire };
                 break;
             case 1:
-                f = { "1:pop_150", flags.tutorial_1.population_150_reached };
+                f = { "1:granary_opened", flags.tutorial_1.granary_opened };
                 break;
             case 2:
                 f = { "1:meat_400", flags.tutorial_1.gamemeat_400_stored };

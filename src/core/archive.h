@@ -166,20 +166,58 @@ struct archive {
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
-            pcstr key;
-
-            fixed_memory_resource<bstring128, 128> keys_buffer;
-            std::pmr::vector<bstring128> keys{ &keys_buffer };
-            pushiterator(s_arch, -1, 1);
-            while ((key = nextiterator(s_arch, -1))) {
-                keys.push_back(key);
+            fixed_memory_resource<xstring, 128> keys_buffer;
+            std::pmr::vector<xstring> keys{ &keys_buffer };
+            {
+                pcstr key;
+                pushiterator(s_arch, -1, 1);
+                while ((key = nextiterator(s_arch, -1))) {
+                    keys.push_back(key);
+                }
+                pop(s_arch, 1);
             }
-            pop(s_arch, 1);
 
             for (const auto &key : keys) {
                 getproperty(s_arch, -1, key.c_str());
                 //const bool isobj = isobject(s_arch, -1);
                 read_func(key.c_str(), s_arch);
+                pop(s_arch, 1);
+            }
+        });
+    }
+
+    template<typename T>
+    inline void r_variants(pcstr name, T &container) {
+        this->r_section(name, [&] (archive s_arch) {
+            fixed_memory_resource<xstring, 128> keys_buffer;
+            std::pmr::vector<xstring> keys{ &keys_buffer };
+            {
+                pcstr key;
+                pushiterator(s_arch, -1, 1);
+                while ((key = nextiterator(s_arch, -1))) {
+                    keys.push_back(key);
+                }
+                pop(s_arch, 1);
+            }
+
+            for (const auto &key : keys) {
+                getproperty(s_arch, -1, key.c_str());
+                if (isstring(-1)) {
+                    const xstring str = tostring(-1);
+                    container.set(key, str);
+                } else if (isboolean(-1)) {
+                    const bool v = toboolean(-1);
+                    container.set(key, v);
+                } else if (isnumber(-1)) {
+                    const float f = tonumber(-1);
+                    container.set(key, f);
+                } else if (isobject(-1)) {
+                    ;
+                   // result = variant_t(variant_object_t{ name });
+                } else if (isarray(-1)) {
+                    ;
+                    //result = variant_t(variant_array_t{ name });
+                }
                 pop(s_arch, 1);
             }
         });
@@ -233,8 +271,10 @@ protected:
     void getindex(int idx, int i);
     bool isnumber(int idx);
     bool isstring(int idx);
+    bool isboolean(int idx);
     double tonumber(int idx);
     pcstr tostring(int idx);
+    bool toboolean(int idx);
     void pop(int num);
     static void pop(archive arch, int n);
     bool isobject(int idx);

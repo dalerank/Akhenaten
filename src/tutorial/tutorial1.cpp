@@ -33,25 +33,33 @@ void tutorial1_handle_fire(event_fire_damage) {
     events::unsubscribe(&tutorial_handle_advance_day);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.fire = true;
-    g_scenario.extra_damage.clear();
+    
+    for (auto &item: g_scenario.extra_damage) {
+        item.fire = 0;
+    }
 
     building_menu_update(tutorial_stage.tutorial_fire);
     messages::popup(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);
 }
 
 void tutorial1_popultion_cap(city_migration_t& migration) {
-    const int max_pop = (!g_tutorials_flags.tutorial_1.fire || !g_tutorials_flags.tutorial_1.collapse) ? 80 : 0;
+    const int population_cap_firstfire = g_scenario.vars.get_int("population_cap_firstfire", 80);
+    const int max_pop = (!g_tutorials_flags.tutorial_1.fire || !g_tutorials_flags.tutorial_1.collapse) ? population_cap_firstfire : 0;
     migration.population_cap = max_pop;
 }
 
 void tutorial1_handle_population_150(event_population_changed ev) {
-    if (g_tutorials_flags.tutorial_1.population_150_reached || ev.value < 150) {
+    if (g_tutorials_flags.tutorial_1.granary_opened) {
+        return;
+    }
+
+    if (ev.value < g_scenario.vars.get_int("granary_open_population", 150)) {
         return;
     }
 
     events::unsubscribe(&tutorial1_handle_population_150);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.population_150_reached = true;
+    g_tutorials_flags.tutorial_1.granary_opened = true;
     building_menu_update(tutorial_stage.tutorial_food);
     messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
 }
@@ -95,7 +103,7 @@ void tutorial1_handle_building_create(event_building_create ev) {
 
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
-    const bool may_finish = (tut.fire && tut.collapse && tut.population_150_reached && tut.gamemeat_400_stored);
+    const bool may_finish = (tut.fire && tut.collapse && tut.granary_opened && tut.gamemeat_400_stored);
     const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
@@ -108,7 +116,7 @@ void tutorial_1::init() {
         events::subscribe(&tutorial1_handle_fire);
     }
 
-    if (g_tutorials_flags.tutorial_1.population_150_reached)  building_menu_update(tutorial_stage.tutorial_food);
+    if (g_tutorials_flags.tutorial_1.granary_opened)  building_menu_update(tutorial_stage.tutorial_food);
     else events::subscribe(&tutorial1_handle_population_150);
 
     if (!g_tutorials_flags.tutorial_1.architector_built) {
@@ -127,14 +135,14 @@ void tutorial_1::init() {
 
 void tutorial_1::reset() {
     g_tutorials_flags.tutorial_1.fire = 0;
-    g_tutorials_flags.tutorial_1.population_150_reached = 0;
+    g_tutorials_flags.tutorial_1.granary_opened = 0;
     g_tutorials_flags.tutorial_1.gamemeat_400_stored = 0;
     g_tutorials_flags.tutorial_1.collapse = 0;
     g_tutorials_flags.tutorial_1.started = 0;
 }
 
 xstring tutorial_1::goal_text() {
-    if (!g_tutorials_flags.tutorial_1.population_150_reached)
+    if (!g_tutorials_flags.tutorial_1.granary_opened)
         return lang_get_xstring(62, 21);
     
     if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
@@ -151,7 +159,7 @@ void tutorial_1::update_step(xstring s) {
         g_tutorials_flags.tutorial_1.collapse = false;
         tutorial1_handle_collapse({ 0 });
     } else if (s == tutorial_stage.tutorial_food) {
-        g_tutorials_flags.tutorial_1.population_150_reached = false;
+        g_tutorials_flags.tutorial_1.granary_opened = false;
         tutorial1_handle_population_150({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
         g_tutorials_flags.tutorial_1.gamemeat_400_stored = false;

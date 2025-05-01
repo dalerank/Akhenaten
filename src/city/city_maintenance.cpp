@@ -59,7 +59,7 @@ void city_maintenance_t::check_fire_collapse() {
 
         /////// COLLAPSE
         int damage_risk_increase = model->damage_risk;
-        damage_risk_increase += scenario_additional_damage(b.type, /*collapse*/1);
+        damage_risk_increase += scenario_additional_damage(b.type, e_damage_collapse);
 
         if (!b.damage_proof) {
             b.damage_risk += damage_risk_increase;
@@ -77,7 +77,7 @@ void city_maintenance_t::check_fire_collapse() {
             int expected_fire_risk = building_impl::params(b.type).fire_risk_update;
             expected_fire_risk += model->fire_risk;
 
-            expected_fire_risk += scenario_additional_damage(b.type, /*fire*/0);
+            expected_fire_risk += scenario_additional_damage(b.type, e_damage_fire);
             expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
             b.fire_risk += expected_fire_risk;
             //            if (climate == CLIMATE_NORTHERN)

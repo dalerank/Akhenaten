@@ -11,6 +11,7 @@
 #include "scenario/types.h"
 #include "scenario/scenario_difficulty.h"
 #include "core/archive.h"
+#include "core/settings_vars.h"
 
 #include <cstdint>
 
@@ -53,58 +54,6 @@ enum e_climate {
     CLIMATE_CENTRAL = 0, 
     CLIMATE_NORTHERN = 1, 
     CLIMATE_DESERT = 2
-};
-
-enum {
-    ALLOWED_BUILDING_NONE = 0,
-    ALLOWED_BUILDING_FARMS = 1,
-    ALLOWED_BUILDING_RAW_MATERIALS = 2,
-    ALLOWED_BUILDING_WORKSHOPS = 3,
-    ALLOWED_BUILDING_ROAD = 4,
-    ALLOWED_BUILDING_WALL = 5,
-    ALLOWED_BUILDING_AQUEDUCT = 6,
-    ALLOWED_BUILDING_HOUSING = 7,
-    ALLOWED_BUILDING_AMPHITHEATER = 8,
-    ALLOWED_BUILDING_THEATER = 9,
-    ALLOWED_BUILDING_HIPPODROME = 10,
-    ALLOWED_BUILDING_COLOSSEUM = 11,
-    ALLOWED_BUILDING_GLADIATOR_SCHOOL = 12,
-    ALLOWED_BUILDING_LION_HOUSE = 13,
-    ALLOWED_BUILDING_ACTOR_COLONY = 14,
-    ALLOWED_BUILDING_CHARIOT_MAKER = 15,
-    ALLOWED_BUILDING_GARDENS = 16,
-    ALLOWED_BUILDING_PLAZA = 17,
-    ALLOWED_BUILDING_STATUES = 18,
-    ALLOWED_BUILDING_DOCTOR = 19,
-    ALLOWED_BUILDING_HOSPITAL = 20,
-    ALLOWED_BUILDING_BATHHOUSE = 21,
-    ALLOWED_BUILDING_BARBER = 22,
-    ALLOWED_BUILDING_SCRIBAL_SCHOOL = 23,
-    ALLOWED_BUILDING_ACADEMY = 24,
-    ALLOWED_BUILDING_LIBRARY = 25,
-    ALLOWED_BUILDING_PREFECTURE = 26,
-    ALLOWED_BUILDING_FORT = 27,
-    ALLOWED_BUILDING_GATEHOUSE = 28,
-    ALLOWED_BUILDING_TOWER = 29,
-    ALLOWED_BUILDING_SMALL_TEMPLES = 30,
-    ALLOWED_BUILDING_LARGE_TEMPLES = 31,
-    ALLOWED_BUILDING_MARKET = 32,
-    ALLOWED_BUILDING_GRANARY = 33,
-    ALLOWED_BUILDING_STORAGE_YARD = 34,
-    ALLOWED_BUILDING_TRIUMPHAL_ARCH = 35,
-    ALLOWED_BUILDING_DOCK = 36,
-    ALLOWED_BUILDING_WHARF = 37,
-    ALLOWED_BUILDING_GOVERNOR_HOME = 38,
-    ALLOWED_BUILDING_ENGINEERS_POST = 39,
-    ALLOWED_BUILDING_PALACE = 40,
-    ALLOWED_BUILDING_TAX_COLLECTOR = 41,
-    ALLOWED_BUILDING_WELL = 42,
-    ALLOWED_BUILDING_ORACLE = 43,
-    ALLOWED_BUILDING_MISSION_POST = 44,
-    ALLOWED_BUILDING_BRIDGE = 45,
-    ALLOWED_BUILDING_BARRACKS = 46,
-    ALLOWED_BUILDING_MILITARY_ACADEMY = 47,
-    ALLOWED_BUILDING_DISTRIBUTION_CENTER = 48,
 };
 
 struct win_criteria_t {
@@ -282,6 +231,7 @@ struct scenario_data_t {
     std::vector<resource_allow> init_resources;
     std::vector<extra_damage_t> extra_damage;
     std::vector<building_stage_t> building_stages;
+    settings_vars_t vars;
 
     struct {
         int hut;
@@ -357,7 +307,7 @@ int scenario_campaign_scenario_id();
 
 void scenario_set_campaign_scenario(int scenario_id);
 
-int scenario_additional_damage(e_building_type type, int damage); // 0 - fire, 1 -  collapse
+int scenario_additional_damage(e_building_type type, e_damage_type damage);
 
 int scenario_is_before_mission(int mission);
 

@@ -33,12 +33,20 @@ bool archive::isstring(int idx) {
     return js_isstring((js_State *)state, idx);
 }
 
+bool archive::isboolean(int idx) {
+    return js_isboolean((js_State *)state, idx);
+}
+
 double archive::tonumber(int idx) {
     return js_tonumber((js_State*)state, idx);
 }
 
 pcstr archive::tostring(int idx) {
     return js_tostring((js_State *)state, idx);
+}
+
+bool archive::toboolean(int idx) {
+    return js_toboolean((js_State *)state, idx);
 }
 
 void archive::pop(int num) {

@@ -18,7 +18,7 @@ static const struct {
 // }
 
 void scenario_editor_create(int map_size) {
-    memset(&g_scenario, 0, sizeof(g_scenario));
+    //memset(&g_scenario, 0, sizeof(g_scenario));
 
     g_scenario.map.width = MAP_SIZES[map_size].width;
     g_scenario.map.height = MAP_SIZES[map_size].height;

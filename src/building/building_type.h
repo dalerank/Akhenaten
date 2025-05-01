@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "core/tokenum.h"
 
@@ -292,4 +292,35 @@ enum e_house_level {
     HOUSE_STATELY_MANOR = 17,
     HOUSE_MODEST_ESTATE = 18,
     HOUSE_PALATIAL_ESTATE = 19,
+};
+
+enum e_damage_type {
+	// origin game types
+	e_damage_fire = 0,
+	e_damage_collapse = 1,
+	e_damage_plague = 2,
+	e_damage_earthquake = 3,
+	e_damage_flood = 4,
+	e_damage_earthquake_fire = 5,
+	e_damage_earthquake_collapse = 6,
+	e_damage_earthquake_plague = 7,
+
+	// new types
+	e_damage_riot = 8,               // Riot, uprising, or rebellion
+	e_damage_sabotage = 9,           // Sabotage (enemies, rivals, conspirators)
+	e_damage_decay = 10,             // Gradual decay due to lack of maintenance
+	e_damage_vermin = 11,            // Damage from vermin: rats, locusts, snakes
+	e_damage_sandstorm = 12,         // Sandstorm (abrasion and burial by sand)
+	e_damage_fire_spread = 13,       // Secondary fire from a neighboring building
+	e_damage_curse = 14,             // Mystical damage (wrath of gods, curses)
+	e_damage_overcrowding = 15,      // Structural failure from overcrowding/overuse
+	e_damage_drought = 16,           // Drought → cracks, dried-out canals
+	e_damage_structural_stress = 17, // Damage from overloading (e.g., warehouses)
+	e_damage_infestation = 18,       // Insect infestation (termites, beetles, etc.)
+	e_damage_neglect = 19,           // Neglect (low priority, no workers assigned)
+	e_damage_weak_foundation = 20,   // Built on weak soil → subsidence, cracks
+	e_damage_mold = 21,              // Moisture → rot, mold, wall degradation
+	e_damage_battle = 22,            // Military action, combat-related damage
+
+	e_damage_count
 };
