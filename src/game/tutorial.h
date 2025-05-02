@@ -48,6 +48,7 @@ struct tutorial_flags_t {
         bool gamemeat_stored;
         bool building_collapsed;
         bool architector_built;
+        bool bazaar_built;
     } tutorial_1;
 
     struct {

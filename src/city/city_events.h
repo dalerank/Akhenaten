@@ -16,6 +16,15 @@ namespace events {
     }
 
     template<typename T>
+    inline void subscribe_once(T subscriber) {
+        if (g_city_events.contains(subscriber)) {
+            return;
+        }
+
+        g_city_events.subscribe(subscriber);
+    }
+
+    template<typename T>
     inline void subscribe_if(bool expr, T subscriber)
     {
         if (expr) {

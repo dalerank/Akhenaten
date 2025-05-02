@@ -154,6 +154,33 @@ public:
 		return eventCallbackListMap[event].insert(callback, before);
 	}
 
+	template<typename EventType>
+	bool contains(void (*callback)(EventType)) {
+		return containsListener(typeid(EventType), callback);
+	}
+
+	template<typename Func>
+	bool contains(Func callback) {
+		using EventType = typename type_traits::first_func_argument<decltype(&Func::operator())>::type;
+		return containsListener(typeid(EventType), callback);
+	}
+
+	bool containsListener(const Event &event, const Callback &pcb) {
+		CallbackList_ *callableList = doFindCallableList(event);
+		bool result = false;
+		if (callableList) {
+			callableList->forEach([&result, callableList, &pcb] (const Handle &handle, const Callback &callback) {
+				const auto &ca = pcb.target_type();
+				const auto &cb = callback.target_type();
+				if (ca == cb) {
+					result |= true;
+				}
+			});
+		}
+
+		return result;
+	}
+
 	template<typename E>
 	bool removeListener(const Callback &pcb) {
 		return removeListener(typeid(E), pcb);
@@ -170,8 +197,8 @@ public:
 		bool result = false;
 		if (callableList) {
 			callableList->forEach([&result, callableList, &pcb] (const Handle &handle, const Callback &callback) {
-				auto *ca = pcb.template target<void(Event)>();
-				auto *cb = callback.template target<void(Event)>();
+				const auto &ca = pcb.target_type();
+				const auto &cb = callback.target_type();
 				if (ca == cb) {
 					callableList->remove(handle);
 					result |= true;

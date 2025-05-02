@@ -182,6 +182,18 @@ void window_advisors::init() {
     ui["back_btn"].onclick([] {
         window_city_show();
     });
+
+    events::subscribe_once([this] (event_show_advisor ev) {
+        if (!window_is(WINDOW_ADVISORS)) {
+            return;
+        }
+
+        if (current_advisor == ev.advisor) {
+            window_city_show();
+        } else {
+            window_advisors_show_advisor((e_advisor)ev.advisor);
+        }
+    });
 }
 
 void window_advisors::draw_background(int flags) {
@@ -201,14 +213,6 @@ void window_advisors::draw_foreground(int flags) {
 }
 
 void window_advisors::handle_input(const mouse* m, const hotkeys* h) {
-    if (h->show_advisor) {
-        if (current_advisor == h->show_advisor) {
-            window_city_show();
-        } else {
-            window_advisors_show_advisor((e_advisor)h->show_advisor);
-        }
-    }
-
     const mouse* m_dialog = mouse_in_dialog(m);
     if (current_advisor_window->handle_mouse(m_dialog)) {
         return;

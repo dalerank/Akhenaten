@@ -179,10 +179,6 @@ static void cycle_legion(void) {
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
-    if (h->show_advisor) {
-        window_advisors_show_advisor((e_advisor)h->show_advisor);
-    }
-
     if (h->cycle_legion)
         cycle_legion();
 
@@ -227,6 +223,14 @@ void window_city_draw() {
 
 void window_city_init() {
     widget_sidebar_city_init();
+
+    events::subscribe_once([] (event_show_advisor ev) {
+        if (!window_is(WINDOW_CITY)) {
+            return;
+        }
+
+         window_advisors_show_advisor((e_advisor)ev.advisor);
+    });
 }
 
 void window_city_show() {

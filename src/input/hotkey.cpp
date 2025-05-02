@@ -93,56 +93,43 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_SHOW_ADVISOR_LABOR:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_LABOR;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_LABOR }); };
         break;
     case HOTKEY_SHOW_ADVISOR_MILITARY:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_MILITARY;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_MILITARY }); };
         break;
     case HOTKEY_SHOW_ADVISOR_KINGDOME:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_IMPERIAL;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_IMPERIAL }); };
         break;
     case HOTKEY_SHOW_ADVISOR_RATINGS:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_RATINGS;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_RATINGS }); };
         break;
     case HOTKEY_SHOW_ADVISOR_TRADE:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_TRADE;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_RATINGS }); };
         break;
     case HOTKEY_SHOW_ADVISOR_POPULATION:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_POPULATION;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_POPULATION }); };
         break;
     case HOTKEY_SHOW_ADVISOR_HEALTH:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_HEALTH;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_HEALTH }); };
         break;
     case HOTKEY_SHOW_ADVISOR_EDUCATION:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_EDUCATION;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_EDUCATION }); };
         break;
     case HOTKEY_SHOW_ADVISOR_ENTERTAINMENT:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_ENTERTAINMENT;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_ENTERTAINMENT }); };
         break;
     case HOTKEY_SHOW_ADVISOR_RELIGION:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_RELIGION;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_RELIGION }); };
         break;
     case HOTKEY_SHOW_ADVISOR_FINANCIAL:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_FINANCIAL;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_FINANCIAL }); };
         break;
     case HOTKEY_SHOW_ADVISOR_CHIEF:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_CHIEF;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_CHIEF }); };
         break;
     case HOTKEY_SHOW_ADVISOR_HOUSING:
-        def->action = &data.hotkey_state.show_advisor;
-        def->value = ADVISOR_HOUSING;
+        def->callback = [] { events::emit(event_show_advisor{ ADVISOR_HOUSING }); };
         break;
 
     case HOTKEY_SHOW_OVERLAY_WATER:

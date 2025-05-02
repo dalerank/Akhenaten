@@ -150,7 +150,6 @@ void tutorial_1::init() {
     const bool building_burned = tut.building_burned;
     building_menu_update_if(building_burned, tutorial_stage.tutorial_fire);
 
-    events::subscribe_if(!building_burned, &tutorial_handle_advance_day);
     events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
@@ -160,6 +159,7 @@ void tutorial_1::init() {
 
     const bool architector_built = tut.architector_built;
     events::subscribe_if(!architector_built, &tutorial1_handle_building_create);
+
 
     const bool building_collapsed = tut.building_collapsed;
     building_menu_update_if(building_collapsed, tutorial_stage.tutorial_collapse);
@@ -173,6 +173,8 @@ void tutorial_1::init() {
 
     g_city.victory_state.add_condition(tutorial1_is_success);
     g_city.migration.add_condition(tutorial1_popultion_cap);
+
+    events::subscribe(&tutorial_handle_advance_day);
 }
 
 void tutorial_1::reset() {

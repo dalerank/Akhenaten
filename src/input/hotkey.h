@@ -16,6 +16,7 @@ struct event_debug_tile_change { int value; };
 struct event_debug_render_change { int value; };
 struct event_rotate_building { int value; };
 struct event_building_mode { int value; };
+struct event_show_advisor { int advisor; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -23,7 +24,6 @@ struct hotkeys {
     int escape_pressed;
     // keys with specific function
     int cycle_legion;
-    int show_advisor;
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
