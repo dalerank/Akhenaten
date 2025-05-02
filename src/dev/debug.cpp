@@ -1310,7 +1310,7 @@ void draw_debug_ui(int x, int y) {
             tutopt f{"", flags.pharaoh.flags[i]};
             switch (i) {
             case 0:
-                f = { "1:fire", flags.tutorial_1.fire };
+                f = { "1:fire", flags.tutorial_1.building_burned };
                 break;
             case 1:
                 f = { "1:granary_opened", flags.tutorial_1.granary_opened };
@@ -1319,7 +1319,7 @@ void draw_debug_ui(int x, int y) {
                 f = { "1:meat_400", flags.tutorial_1.gamemeat_400_stored };
                 break;
             case 3:
-                f = { "1:collapse", flags.tutorial_1.collapse };
+                f = { "1:collapse", flags.tutorial_1.building_collapsed };
                 break;
             case 4:
                 f = { "2:gold_500", flags.tutorial_2.gold_mined_500 };

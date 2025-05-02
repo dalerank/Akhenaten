@@ -40,7 +40,7 @@ var mission0 = { // Nubt
 
 	vars : {
 		granary_open_population : 150
-		population_cap_firstfire : 80
+		population_cap_firstfire : 0
 	}
 }
 
