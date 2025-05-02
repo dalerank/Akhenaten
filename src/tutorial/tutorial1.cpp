@@ -19,7 +19,9 @@ struct tutorial_1 : public tutorial_t {
 tutorial_1 g_tutorial_1;
 
 void tutorial_handle_advance_day(event_advance_day ev) {
-    if (!g_tutorials_flags.tutorial_1.building_burned) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (!tut.building_burned) {
         const auto found = std::max_element(city_buildings().begin(), city_buildings().end(), [] (const building& a, const building& b) { return a.fire_risk < b.fire_risk; });
         if (found != city_buildings().end()) {
             building_id max_collapse_bid = found->id;
@@ -31,7 +33,7 @@ void tutorial_handle_advance_day(event_advance_day ev) {
         }
     }
 
-    if (g_tutorials_flags.tutorial_1.building_burned && !g_tutorials_flags.tutorial_1.building_collapsed) {
+    if (tut.building_burned && !tut.building_collapsed) {
         const auto found = std::max_element(city_buildings().begin(), city_buildings().end(), [] (const building& a, const building& b) { return a.damage_risk < b.damage_risk; });
         if (found != city_buildings().end()) {
             building_id max_collapse_bid = found->id;
@@ -44,13 +46,15 @@ void tutorial_handle_advance_day(event_advance_day ev) {
 }
 
 void tutorial1_handle_fire(event_fire_damage) {
-    if (g_tutorials_flags.tutorial_1.building_burned) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (tut.building_burned) {
         return;
     }
 
     events::unsubscribe(&tutorial1_handle_fire);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.building_burned = true;
+    tut.building_burned = true;
     
     for (auto &item: g_scenario.extra_damage) {
         item.fire = 0;
@@ -61,13 +65,17 @@ void tutorial1_handle_fire(event_fire_damage) {
 }
 
 void tutorial1_popultion_cap(city_migration_t& migration) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
     const int population_cap_firstfire = g_scenario.vars.get_int("population_cap_firstfire", 80);
-    const int max_pop = (!g_tutorials_flags.tutorial_1.building_burned || !g_tutorials_flags.tutorial_1.building_collapsed) ? population_cap_firstfire : 0;
+    const int max_pop = (!tut.building_burned || !tut.building_collapsed) ? population_cap_firstfire : 0;
     migration.population_cap = max_pop;
 }
 
 void tutorial1_handle_population_for_granary(event_population_changed ev) {
-    if (g_tutorials_flags.tutorial_1.granary_opened) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (tut.granary_opened) {
         return;
     }
 
@@ -77,13 +85,15 @@ void tutorial1_handle_population_for_granary(event_population_changed ev) {
 
     events::unsubscribe(&tutorial1_handle_population_for_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.granary_opened = true;
+    tut.granary_opened = true;
     building_menu_update(tutorial_stage.tutorial_food);
     messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
 }
 
 void tutorial1_handle_collapse(event_collase_damage) {
-    if (g_tutorials_flags.tutorial_1.building_collapsed) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (tut.building_collapsed) {
         return;
     }
 
@@ -93,13 +103,15 @@ void tutorial1_handle_collapse(event_collase_damage) {
 
     events::unsubscribe(&tutorial1_handle_collapse);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.building_collapsed = true;
+    tut.building_collapsed = true;
     building_menu_update(tutorial_stage.tutorial_collapse);
     messages::popup(MESSAGE_TUTORIAL_COLLAPSED_BUILDING, 0, 0);
 }
 
 void tutorial1_on_filled_granary(event_granary_filled ev) {
-    if (g_tutorials_flags.tutorial_1.gamemeat_stored) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (tut.gamemeat_stored) {
         return;
     }
 
@@ -109,13 +121,14 @@ void tutorial1_on_filled_granary(event_granary_filled ev) {
 
     events::unsubscribe(&tutorial1_on_filled_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.gamemeat_stored = true;
+    tut.gamemeat_stored = true;
     building_menu_update(tutorial_stage.tutorial_water);
     messages::popup(MESSAGE_TUTORIAL_CLEAN_WATER, 0, 0);
 }
 
 void tutorial1_handle_building_create(event_building_create ev) {
-    if (g_tutorials_flags.tutorial_1.architector_built) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+    if (tut.architector_built) {
         return;
     }
 
@@ -132,26 +145,28 @@ bool tutorial1_is_success() {
 }
 
 void tutorial_1::init() {
-    const bool building_burned = g_tutorials_flags.tutorial_1.building_burned;
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    const bool building_burned = tut.building_burned;
     building_menu_update_if(building_burned, tutorial_stage.tutorial_fire);
 
     events::subscribe_if(!building_burned, &tutorial_handle_advance_day);
     events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
-    const bool granary_opened = g_tutorials_flags.tutorial_1.granary_opened;
+    const bool granary_opened = tut.granary_opened;
     building_menu_update_if(granary_opened, tutorial_stage.tutorial_food);
     
     events::subscribe_if(!granary_opened, &tutorial1_handle_population_for_granary);
 
-    const bool architector_built = g_tutorials_flags.tutorial_1.architector_built;
+    const bool architector_built = tut.architector_built;
     events::subscribe_if(!architector_built, &tutorial1_handle_building_create);
 
-    const bool building_collapsed = g_tutorials_flags.tutorial_1.building_collapsed;
+    const bool building_collapsed = tut.building_collapsed;
     building_menu_update_if(building_collapsed, tutorial_stage.tutorial_collapse);
 
     events::subscribe_if(!building_collapsed, &tutorial1_handle_collapse);
 
-    const bool gamemeat_stored = g_tutorials_flags.tutorial_1.gamemeat_stored;
+    const bool gamemeat_stored = tut.gamemeat_stored;
     building_menu_update_if(gamemeat_stored, tutorial_stage.tutorial_water);
     
     events::subscribe_if(!gamemeat_stored, &tutorial1_on_filled_granary);
@@ -161,35 +176,41 @@ void tutorial_1::init() {
 }
 
 void tutorial_1::reset() {
-    g_tutorials_flags.tutorial_1.building_burned = 0;
-    g_tutorials_flags.tutorial_1.granary_opened = 0;
-    g_tutorials_flags.tutorial_1.gamemeat_stored = 0;
-    g_tutorials_flags.tutorial_1.building_collapsed = 0;
-    g_tutorials_flags.tutorial_1.started = 0;
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    tut.building_burned = 0;
+    tut.granary_opened = 0;
+    tut.gamemeat_stored = 0;
+    tut.building_collapsed = 0;
+    tut.started = 0;
 }
 
 xstring tutorial_1::goal_text() {
-    if (!g_tutorials_flags.tutorial_1.granary_opened)
+    auto &tut = g_tutorials_flags.tutorial_1;
+
+    if (!tut.granary_opened)
         return lang_get_xstring(62, 21);
     
-    if (!g_tutorials_flags.tutorial_1.gamemeat_stored)
+    if (!tut.gamemeat_stored)
         return lang_get_xstring(62, 19);
 
     return lang_get_xstring(62, 20);
 }
 
 void tutorial_1::update_step(xstring s) {
+    auto &tut = g_tutorials_flags.tutorial_1;
+
     if (s == tutorial_stage.tutorial_fire) {
-        g_tutorials_flags.tutorial_1.building_burned = false;
+        tut.building_burned = false;
         tutorial1_handle_fire({ 0 });
     } else if (s == tutorial_stage.tutorial_collapse) {
-        g_tutorials_flags.tutorial_1.building_collapsed = false;
+        tut.building_collapsed = false;
         tutorial1_handle_collapse({ 0 });
     } else if (s == tutorial_stage.tutorial_food) {
-        g_tutorials_flags.tutorial_1.granary_opened = false;
+        tut.granary_opened = false;
         tutorial1_handle_population_for_granary({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
-        g_tutorials_flags.tutorial_1.gamemeat_stored = false;
+        tut.gamemeat_stored = false;
         tutorial1_on_filled_granary({ 0 });
     }
 }

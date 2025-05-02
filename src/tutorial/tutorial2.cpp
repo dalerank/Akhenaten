@@ -19,7 +19,9 @@ struct tutorial_2 : public tutorial_t {
 tutorial_2 g_tutorial_2;
 
 void tutorial_2_on_build_temple(event_building_create ev) {
-    if (g_tutorials_flags.tutorial_2.temples_built) {
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    if (tut.temples_built) {
         return;
     }
 
@@ -30,13 +32,15 @@ void tutorial_2_on_build_temple(event_building_create ev) {
 
     events::unsubscribe(&tutorial_2_on_build_temple);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_2.temples_built = true;
+    tut.temples_built = true;
     building_menu_update(tutorial_stage.tutorial_entertainment);
     events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
 }
 
 void tutorial_2_on_gold_extracted(event_gold_extract ev) {
-    if (g_tutorials_flags.tutorial_2.gold_mined) {
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    if (tut.gold_mined) {
         return;
     }
 
@@ -46,13 +50,14 @@ void tutorial_2_on_gold_extracted(event_gold_extract ev) {
 
     events::unsubscribe(&tutorial_2_on_gold_extracted);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_2.gold_mined = true;
+    tut.gold_mined = true;
     building_menu_update(tutorial_stage.tutorial_gods);
     events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
 }
 
 bool tutorial2_is_success() {
     auto &tut = g_tutorials_flags.tutorial_2;
+
     const bool may_finish = (tut.gold_mined && tut.temples_built);
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
     const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
@@ -60,16 +65,21 @@ bool tutorial2_is_success() {
 }
 
 void tutorial2_population_cap(city_migration_t& migration) {
-    const int max_pops = (!g_tutorials_flags.tutorial_2.granary_built) ? 150 : 0;
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    const int nogranary_populcation_cap = g_scenario.vars.get_int("nogranary_populcation_cap", 150);
+    const int max_pops = (!tut.granary_built) ? nogranary_populcation_cap : 0;
     migration.population_cap = max_pops;
 }
 
 void tutorial_2::init() {
-    const bool gold_mined_500 = g_tutorials_flags.tutorial_2.gold_mined;
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    const bool gold_mined_500 = tut.gold_mined;
     building_menu_update_if(gold_mined_500, tutorial_stage.tutorial_gods);
     events::subscribe_if(!gold_mined_500, &tutorial_2_on_gold_extracted);
 
-    const bool temples_built = g_tutorials_flags.tutorial_2.temples_built;
+    const bool temples_built = tut.temples_built;
     building_menu_update_if(temples_built, tutorial_stage.tutorial_entertainment);
     events::subscribe_if(!temples_built, &tutorial_2_on_build_temple);
 
@@ -83,11 +93,13 @@ void tutorial_2::init() {
 }
 
 xstring tutorial_2::goal_text() {
-    if (!g_tutorials_flags.tutorial_2.gold_mined) {
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    if (!tut.gold_mined) {
         return lang_get_xstring(62, 24);
     } 
     
-    if (!g_tutorials_flags.tutorial_2.temples_built) {
+    if (!tut.temples_built) {
         return lang_get_xstring(62, 23);
     } 
     
@@ -105,7 +117,9 @@ void tutorial_2::update_step(xstring s) {
 }
 
 void tutorial_2::reset() {
-    g_tutorials_flags.tutorial_2.started = 0;
-    g_tutorials_flags.tutorial_2.gold_mined = 0;
-    g_tutorials_flags.tutorial_2.temples_built = 0;
+    auto &tut = g_tutorials_flags.tutorial_2;
+
+    tut.started = 0;
+    tut.gold_mined = 0;
+    tut.temples_built = 0;
 }
