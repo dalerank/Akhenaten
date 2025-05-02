@@ -188,10 +188,6 @@ void window_city_handle_hotkeys(const hotkeys* h) {
     }
     if (h->set_bookmark)
         map_bookmark_save(h->set_bookmark - 1);
-
-    if (h->change_building_variant) {
-        g_city_planner.next_building_variant();
-    }
 }
 
 void window_city_handle_input(const mouse* m, const hotkeys* h) {

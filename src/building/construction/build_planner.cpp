@@ -306,6 +306,10 @@ void build_planner::init() {
             setup_build((e_building_type)ev.value);
         }
     });
+
+    events::subscribe([this] (event_change_building_variant) {
+        next_building_variant();
+    });
 }
 
 void build_planner::reset() {

@@ -17,6 +17,7 @@ struct event_debug_render_change { int value; };
 struct event_rotate_building { int value; };
 struct event_building_mode { int value; };
 struct event_show_advisor { int advisor; };
+struct event_change_building_variant { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -27,7 +28,6 @@ struct hotkeys {
     int toggle_editor_battle_info;
     int set_bookmark;
     int go_to_bookmark;
-    int change_building_variant;
 
     std::function<void()> callback;
 
