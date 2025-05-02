@@ -66,7 +66,7 @@ void tutorial1_popultion_cap(city_migration_t& migration) {
     migration.population_cap = max_pop;
 }
 
-void tutorial1_handle_population_150(event_population_changed ev) {
+void tutorial1_handle_population_for_granary(event_population_changed ev) {
     if (g_tutorials_flags.tutorial_1.granary_opened) {
         return;
     }
@@ -75,7 +75,7 @@ void tutorial1_handle_population_150(event_population_changed ev) {
         return;
     }
 
-    events::unsubscribe(&tutorial1_handle_population_150);
+    events::unsubscribe(&tutorial1_handle_population_for_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_1.granary_opened = true;
     building_menu_update(tutorial_stage.tutorial_food);
@@ -131,25 +131,29 @@ bool tutorial1_is_success() {
 }
 
 void tutorial_1::init() {
-    if (g_tutorials_flags.tutorial_1.building_burned) {
-        building_menu_update(tutorial_stage.tutorial_fire);
-    } else {
-        events::subscribe(&tutorial_handle_advance_day);
-        events::subscribe(&tutorial1_handle_fire);
-    }
+    const bool building_burned = g_tutorials_flags.tutorial_1.building_burned;
+    building_menu_update_if(building_burned, tutorial_stage.tutorial_fire);
 
-    if (g_tutorials_flags.tutorial_1.granary_opened)  building_menu_update(tutorial_stage.tutorial_food);
-    else events::subscribe(&tutorial1_handle_population_150);
+    events::subscribe_if(!building_burned, &tutorial_handle_advance_day);
+    events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
-    if (!g_tutorials_flags.tutorial_1.architector_built) {
-        events::subscribe(&tutorial1_handle_building_create);
-    }
+    const bool granary_opened = g_tutorials_flags.tutorial_1.granary_opened;
+    building_menu_update_if(granary_opened, tutorial_stage.tutorial_food);
+    
+    events::subscribe_if(!granary_opened, &tutorial1_handle_population_for_granary);
 
-    if (g_tutorials_flags.tutorial_1.building_collapsed) building_menu_update(tutorial_stage.tutorial_collapse);
-    else events::subscribe(&tutorial1_handle_collapse);
+    const bool architector_built = g_tutorials_flags.tutorial_1.architector_built;
+    events::subscribe_if(!architector_built, &tutorial1_handle_building_create);
 
-    if (g_tutorials_flags.tutorial_1.gamemeat_stored) building_menu_update(tutorial_stage.tutorial_water);
-    else events::subscribe(&tutorial1_on_filled_granary);
+    const bool building_collapsed = g_tutorials_flags.tutorial_1.building_collapsed;
+    building_menu_update_if(building_collapsed, tutorial_stage.tutorial_collapse);
+
+    events::subscribe_if(!building_collapsed, &tutorial1_handle_collapse);
+
+    const bool gamemeat_stored = g_tutorials_flags.tutorial_1.gamemeat_stored;
+    building_menu_update_if(gamemeat_stored, tutorial_stage.tutorial_water);
+    
+    events::subscribe_if(!gamemeat_stored, &tutorial1_on_filled_granary);
 
     g_city.victory_state.add_condition(tutorial1_is_success);
     g_city.migration.add_condition(tutorial1_popultion_cap);
@@ -182,7 +186,7 @@ void tutorial_1::update_step(xstring s) {
         tutorial1_handle_collapse({ 0 });
     } else if (s == tutorial_stage.tutorial_food) {
         g_tutorials_flags.tutorial_1.granary_opened = false;
-        tutorial1_handle_population_150({ 0 });
+        tutorial1_handle_population_for_granary({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
         g_tutorials_flags.tutorial_1.gamemeat_stored = false;
         tutorial1_on_filled_granary({ 0 });

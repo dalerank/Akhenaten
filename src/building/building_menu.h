@@ -15,6 +15,12 @@ bool building_menu_is_submenu(int submenu);
 void building_menu_setup_mission();
 void building_menu_update(const xstring stage);
 
+inline void building_menu_update_if(bool expr, const xstring stage) {
+    if (expr) {
+        building_menu_update(stage);
+    }
+}
+
 int building_menu_count_items(int submenu);
 
 int building_menu_next_index(int submenu, int current_index);
