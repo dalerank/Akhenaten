@@ -126,7 +126,8 @@ void tutorial1_handle_building_create(event_building_create ev) {
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
     const bool may_finish = (tut.building_burned && tut.building_collapsed && tut.granary_opened && tut.gamemeat_stored);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
+    const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 

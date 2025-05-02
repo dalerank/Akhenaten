@@ -42,6 +42,7 @@ var mission0 = { // Nubt
 		granary_open_population : 160
 		population_cap_firstfire : 0
 		granary_meat_stored : 400
+		victory_last_action_delay : 4
 	}
 }
 
@@ -62,6 +63,11 @@ var mission1 = {
 	stages : {
 		tutorial_gods : [BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_FESTIVAL_SQUARE],
 		tutorial_entertainment : [BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
+	}
+
+	vars : {
+		gold_mined : 500
+		victory_last_action_delay : 4
 	}
 }
 

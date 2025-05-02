@@ -55,7 +55,7 @@ struct tutorial_flags_t {
         bool population_250_reached;
         bool population_450_reached;
         bool granary_built;
-        bool gold_mined_500;
+        bool gold_mined;
         bool temples_built;
         bool crime;
     } tutorial_2;

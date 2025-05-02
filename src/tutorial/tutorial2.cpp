@@ -36,25 +36,26 @@ void tutorial_2_on_build_temple(event_building_create ev) {
 }
 
 void tutorial_2_on_gold_extracted(event_gold_extract ev) {
-    if (g_tutorials_flags.tutorial_2.gold_mined_500) {
+    if (g_tutorials_flags.tutorial_2.gold_mined) {
         return;
     }
 
-    if (g_city.finance.this_year.income.gold_extracted < 500) {
+    if (g_city.finance.this_year.income.gold_extracted < g_scenario.vars.get_int("gold_mined", 500)) {
         return;
     }
 
     events::unsubscribe(&tutorial_2_on_gold_extracted);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_2.gold_mined_500 = true;
+    g_tutorials_flags.tutorial_2.gold_mined = true;
     building_menu_update(tutorial_stage.tutorial_gods);
     events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
 }
 
 bool tutorial2_is_success() {
     auto &tut = g_tutorials_flags.tutorial_2;
-    const bool may_finish = (tut.gold_mined_500 && tut.temples_built);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool may_finish = (tut.gold_mined && tut.temples_built);
+    const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 
@@ -64,11 +65,13 @@ void tutorial2_population_cap(city_migration_t& migration) {
 }
 
 void tutorial_2::init() {
-    if (g_tutorials_flags.tutorial_2.gold_mined_500) building_menu_update(tutorial_stage.tutorial_gods);
-    else events::subscribe(&tutorial_2_on_gold_extracted);
+    const bool gold_mined_500 = g_tutorials_flags.tutorial_2.gold_mined;
+    building_menu_update_if(gold_mined_500, tutorial_stage.tutorial_gods);
+    events::subscribe_if(!gold_mined_500, &tutorial_2_on_gold_extracted);
 
-    if (g_tutorials_flags.tutorial_2.temples_built) building_menu_update(tutorial_stage.tutorial_entertainment);
-    else events::subscribe(&tutorial_2_on_build_temple);
+    const bool temples_built = g_tutorials_flags.tutorial_2.temples_built;
+    building_menu_update_if(temples_built, tutorial_stage.tutorial_entertainment);
+    events::subscribe_if(!temples_built, &tutorial_2_on_build_temple);
 
     g_city.victory_state.add_condition(tutorial2_is_success);
     g_city.migration.add_condition(tutorial2_population_cap);
@@ -80,7 +83,7 @@ void tutorial_2::init() {
 }
 
 xstring tutorial_2::goal_text() {
-    if (!g_tutorials_flags.tutorial_2.gold_mined_500) {
+    if (!g_tutorials_flags.tutorial_2.gold_mined) {
         return lang_get_xstring(62, 24);
     } 
     
@@ -103,6 +106,6 @@ void tutorial_2::update_step(xstring s) {
 
 void tutorial_2::reset() {
     g_tutorials_flags.tutorial_2.started = 0;
-    g_tutorials_flags.tutorial_2.gold_mined_500 = 0;
+    g_tutorials_flags.tutorial_2.gold_mined = 0;
     g_tutorials_flags.tutorial_2.temples_built = 0;
 }
