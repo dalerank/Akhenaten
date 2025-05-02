@@ -1316,7 +1316,7 @@ void draw_debug_ui(int x, int y) {
                 f = { "1:granary_opened", flags.tutorial_1.granary_opened };
                 break;
             case 2:
-                f = { "1:meat_400", flags.tutorial_1.gamemeat_400_stored };
+                f = { "1:meat_400", flags.tutorial_1.gamemeat_stored };
                 break;
             case 3:
                 f = { "1:collapse", flags.tutorial_1.building_collapsed };

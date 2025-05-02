@@ -39,8 +39,9 @@ var mission0 = { // Nubt
 	}
 
 	vars : {
-		granary_open_population : 150
+		granary_open_population : 160
 		population_cap_firstfire : 0
+		granary_meat_stored : 400
 	}
 }
 

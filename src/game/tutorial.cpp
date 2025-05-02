@@ -194,7 +194,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     // tut 1
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_burned);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.granary_opened);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.gamemeat_400_stored);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.gamemeat_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_collapsed);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.architector_built);
     // tut 2

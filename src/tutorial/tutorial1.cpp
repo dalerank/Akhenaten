@@ -99,17 +99,17 @@ void tutorial1_handle_collapse(event_collase_damage) {
 }
 
 void tutorial1_on_filled_granary(event_granary_filled ev) {
-    if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) {
+    if (g_tutorials_flags.tutorial_1.gamemeat_stored) {
         return;
     }
 
-    if (ev.amount <= 400) {
+    if (ev.amount <= g_scenario.vars.get_int("granary_meat_stored", 400)) {
         return;
     }
 
     events::unsubscribe(&tutorial1_on_filled_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_1.gamemeat_400_stored = true;
+    g_tutorials_flags.tutorial_1.gamemeat_stored = true;
     building_menu_update(tutorial_stage.tutorial_water);
     messages::popup(MESSAGE_TUTORIAL_CLEAN_WATER, 0, 0);
 }
@@ -125,7 +125,7 @@ void tutorial1_handle_building_create(event_building_create ev) {
 
 bool tutorial1_is_success() {
     auto &tut = g_tutorials_flags.tutorial_1;
-    const bool may_finish = (tut.building_burned && tut.building_collapsed && tut.granary_opened && tut.gamemeat_400_stored);
+    const bool may_finish = (tut.building_burned && tut.building_collapsed && tut.granary_opened && tut.gamemeat_stored);
     const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
     return may_finish && some_days_after_last_action;
 }
@@ -148,7 +148,7 @@ void tutorial_1::init() {
     if (g_tutorials_flags.tutorial_1.building_collapsed) building_menu_update(tutorial_stage.tutorial_collapse);
     else events::subscribe(&tutorial1_handle_collapse);
 
-    if (g_tutorials_flags.tutorial_1.gamemeat_400_stored) building_menu_update(tutorial_stage.tutorial_water);
+    if (g_tutorials_flags.tutorial_1.gamemeat_stored) building_menu_update(tutorial_stage.tutorial_water);
     else events::subscribe(&tutorial1_on_filled_granary);
 
     g_city.victory_state.add_condition(tutorial1_is_success);
@@ -158,7 +158,7 @@ void tutorial_1::init() {
 void tutorial_1::reset() {
     g_tutorials_flags.tutorial_1.building_burned = 0;
     g_tutorials_flags.tutorial_1.granary_opened = 0;
-    g_tutorials_flags.tutorial_1.gamemeat_400_stored = 0;
+    g_tutorials_flags.tutorial_1.gamemeat_stored = 0;
     g_tutorials_flags.tutorial_1.building_collapsed = 0;
     g_tutorials_flags.tutorial_1.started = 0;
 }
@@ -167,7 +167,7 @@ xstring tutorial_1::goal_text() {
     if (!g_tutorials_flags.tutorial_1.granary_opened)
         return lang_get_xstring(62, 21);
     
-    if (!g_tutorials_flags.tutorial_1.gamemeat_400_stored)
+    if (!g_tutorials_flags.tutorial_1.gamemeat_stored)
         return lang_get_xstring(62, 19);
 
     return lang_get_xstring(62, 20);
@@ -184,7 +184,7 @@ void tutorial_1::update_step(xstring s) {
         g_tutorials_flags.tutorial_1.granary_opened = false;
         tutorial1_handle_population_150({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
-        g_tutorials_flags.tutorial_1.gamemeat_400_stored = false;
+        g_tutorials_flags.tutorial_1.gamemeat_stored = false;
         tutorial1_on_filled_granary({ 0 });
     }
 }
