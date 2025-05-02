@@ -17,11 +17,11 @@
 #include <iostream>
 
 declare_console_command_p(victory) {
-    g_city.victory_state.force_lost = true;
+    g_city.victory_state.force_win = true;
 }
 
 declare_console_command_p(defeat) {
-    g_city.victory_state.force_win = true;
+    g_city.victory_state.force_lost = true;
 }
 
 svector<victory_condition, 16> g_victory_conditions;
