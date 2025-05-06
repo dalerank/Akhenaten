@@ -1,39 +1,20 @@
 #include "bookmark.h"
-#include "io/io_buffer.h"
 
-#include "graphics/view/view.h"
-#include "grid/grid.h"
-#include "grid/point.h"
-
-#define MAX_BOOKMARKS 4
-
-static tile2i bookmarks[MAX_BOOKMARKS];
-
-void map_bookmarks_clear(void) {
-    for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        bookmarks[i].set(0);
+void map_bookmarks_t::reset(void) {
+    for (auto &b: points) {
+        b = tile2i::invalid;
     }
 }
 
-void map_bookmark_save(int number) {
-    if (number >= 0 && number < MAX_BOOKMARKS)
-        bookmarks[number] = city_view_get_camera_mappoint();
+void map_bookmarks_t::set(int i, tile2i tile) {
+    if (i >= 0 && i < MAX_BOOKMARKS) {
+        points[i] = tile;
+    }
 }
 
-bool map_bookmark_go_to(int number) {
-    if (number >= 0 && number < MAX_BOOKMARKS) {
-        int x = bookmarks[number].x();
-        int y = bookmarks[number].y();
-        if (x > -1 && MAP_OFFSET(x, y) > -1) {
-            camera_go_to_corner_tile(vec2i(x, y), true);
-            return true;
-        }
+tile2i map_bookmarks_t::get(int i) {
+    if (i >= 0 && i < MAX_BOOKMARKS) {
+        return points[i];
     }
-    return false;
+    return tile2i::invalid;
 }
-
-io_buffer* iob_bookmarks = new io_buffer([](io_buffer* iob, size_t version) {
-    for (int i = 0; i < MAX_BOOKMARKS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT32, bookmarks[i]);
-    }
-});

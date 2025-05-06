@@ -80,10 +80,10 @@ namespace game_hotkeys {
     hotkey_mapping go_to_bookmark_2 ("go_to_bookmark_2", KEY_F2, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_2);
     hotkey_mapping go_to_bookmark_3 ("go_to_bookmark_3", KEY_F3, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_3);
     hotkey_mapping go_to_bookmark_4 ("go_to_bookmark_4", KEY_F4, KEY_MOD_NONE, HOTKEY_GO_TO_BOOKMARK_4);
-    hotkey_mapping set_bookmark_1 ("set_bookmark_1", KEY_F1, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_1);
-    hotkey_mapping set_bookmark_2 ("set_bookmark_2", KEY_F2, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_2);
-    hotkey_mapping set_bookmark_3 ("set_bookmark_3", KEY_F3, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_3);
-    hotkey_mapping set_bookmark_4 ("set_bookmark_4", KEY_F4, KEY_MOD_ALT, HOTKEY_SET_BOOKMARK_4);
+    hotkey_mapping set_bookmark_1 ("set_bookmark_1", KEY_F1, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_1);
+    hotkey_mapping set_bookmark_2 ("set_bookmark_2", KEY_F2, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_2);
+    hotkey_mapping set_bookmark_3 ("set_bookmark_3", KEY_F3, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_3);
+    hotkey_mapping set_bookmark_4 ("set_bookmark_4", KEY_F4, KEY_MOD_CTRL, HOTKEY_SET_BOOKMARK_4);
     hotkey_mapping center_screen ("center_screen", KEY_F5, KEY_MOD_NONE, HOTKEY_CENTER_WINDOW);
     hotkey_mapping toggle_fullscreen ("toggle_fullscreen", KEY_ENTER, KEY_MOD_ALT, HOTKEY_TOGGLE_FULLSCREEN);
     hotkey_mapping toggle_fullscreen_alt ("toggle_fullscreen_alt", KEY_F6, KEY_MOD_NONE, HOTKEY_TOGGLE_FULLSCREEN);

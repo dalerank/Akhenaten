@@ -73,7 +73,7 @@ extern io_buffer* iob_trade_routes_traded;
 extern io_buffer* iob_routing_stats;
 
 extern io_buffer* iob_scenario_map_name;
-extern io_buffer* iob_bookmarks;
+extern io_buffer* iob_city_bookmarks;
 
 extern io_buffer* iob_junk9a;
 extern io_buffer* iob_junk9b;

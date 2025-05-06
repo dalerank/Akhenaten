@@ -18,6 +18,8 @@ struct event_rotate_building { int value; };
 struct event_building_mode { int value; };
 struct event_show_advisor { int advisor; };
 struct event_change_building_variant { int value; };
+struct event_set_bookmark { int value; };
+struct event_goto_bookmark { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions
@@ -26,8 +28,6 @@ struct hotkeys {
     // keys with specific function
     int cycle_legion;
     int toggle_editor_battle_info;
-    int set_bookmark;
-    int go_to_bookmark;
 
     std::function<void()> callback;
 

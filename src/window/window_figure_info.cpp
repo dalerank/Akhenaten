@@ -28,9 +28,10 @@ struct figure_small_image {
 
     figure_small_image(int figure_id) {
         painter ctx = game.painter();
-        tile2i camera_tile = city_view_get_camera_mappoint();
 
-        int grid_offset = figure_get(figure_id)->tile.grid_offset();
+        //tile2i camera_tile = city_view_get_camera_mappoint();
+        //int grid_offset = figure_get(figure_id)->tile.grid_offset();
+        
         vec2i coord = { 0, 0 };
         g_screen_city.draw_for_figure(ctx, figure_id, &coord);
 

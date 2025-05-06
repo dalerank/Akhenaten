@@ -1236,7 +1236,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 155, 50, "viewp:", viewp.x);
         debug_text(ctx, str, x + 40, y + 155, 50, "", viewp.y);
 
-        camera_coordinate coord = pixel_to_camera_coord(pixel, false);
+        vec2i coord = pixel_to_camera_coord(pixel, false);
         debug_text(ctx, str, x, y + 165, 50, "coord:", coord.x);
         debug_text(ctx, str, x + 40, y + 165, 50, "", coord.y);
 

@@ -123,7 +123,6 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 
 static void pre_load() { // do we NEED this...?
     scenario_set_campaign_scenario(-1);
-    map_bookmarks_clear();
 
     // clear data
     g_city.victory_state.reset();
@@ -388,7 +387,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         //                state->building_extra_corrupt_houses = create_savegame_piece(8, false, "");
 
         FILEIO.push_chunk(65, false, "scenario_map_name", iob_scenario_map_name); // ok
-        FILEIO.push_chunk(32, false, "bookmarks", iob_bookmarks);                 // ok
+        FILEIO.push_chunk(32, false, "bookmarks", iob_city_bookmarks);                 // ok
 
         // 12 bytes     00 00 00 00 ??? 3 x int
         // 396 bytes    00 00 00 00 ??? 99 x int
@@ -473,6 +472,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
         }
         break;
+
     case FILE_FORMAT_SAVE_FILE_EXT:
         FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
         FILEIO.push_chunk(4, false, "file_version", iob_file_version);
@@ -532,7 +532,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(2880, false, "trade_routes_traded", iob_trade_routes_traded);     // ok
         FILEIO.push_chunk(50, false, "junk8", iob_routing_stats);                           // unknown bytes
         FILEIO.push_chunk(65, false, "scenario_map_name", iob_scenario_map_name);           // ok
-        FILEIO.push_chunk(32, false, "bookmarks", iob_bookmarks);                           // ok
+        FILEIO.push_chunk(32, false, "bookmarks", iob_city_bookmarks);                           // ok
         FILEIO.push_chunk(12, false, "junk9a", iob_junk9a);                                 // ok ????
         FILEIO.push_chunk(396, false, "junk9b", iob_junk9b);
         FILEIO.push_chunk(51984, false, "soil_fertility_grid", iob_soil_fertility_grid);

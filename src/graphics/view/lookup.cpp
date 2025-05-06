@@ -56,7 +56,8 @@ static void fill_in_lookup_table_for_orientation(int city_orientation) {
 
 void calculate_screentile_lookup_tables() {
     // reset lookup tables
-    for (int o = 0; o < 4; ++o) {
+    constexpr int orientations = 4;
+    for (int o = 0; o < orientations; ++o) {
         for (int y = 0; y < (2 * GRID_LENGTH) + 1; y++) {
             for (int x = 0; x < GRID_LENGTH + 3; x++) {
                 SCREENTILE_TO_MAPPOINT_LOOKUP[o][x][y].set(-1);
@@ -64,7 +65,7 @@ void calculate_screentile_lookup_tables() {
         }
     }
     // fill in tables
-    for (int orientation = 0; orientation < 4; ++orientation) {
+    for (int orientation = 0; orientation < orientations; ++orientation) {
         fill_in_lookup_table_for_orientation(orientation);
     }
 }
@@ -80,7 +81,7 @@ tile2i screentile_to_mappoint(vec2i screen) {
 
 vec2i tile_to_screen(tile2i point) {
     if (!map_grid_inside_map_area(point.grid_offset())) {
-        return {-1, -1};
+        return { -1, -1 };
     }
 
     vec2i start;
@@ -91,8 +92,9 @@ vec2i tile_to_screen(tile2i point) {
     int columns = point.x();
     int rows = point.y();
 
-    return {(start.x + (rows * row_step.x) + (columns * column_step.x)) / 2,
-            (start.y + (rows * row_step.y) + (columns * column_step.y))};
+    vec2i pos = { (start.x + (rows * row_step.x) + (columns * column_step.x)) / 2,
+                  (start.y + (rows * row_step.y) + (columns * column_step.y)) };
+    return pos;
 }
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];

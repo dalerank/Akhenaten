@@ -12,7 +12,6 @@ extern int SCROLL_MAX_SCREENTILE_Y;
 void camera_calc_scroll_limits();
 
 typedef vec2i screen_tile;
-typedef vec2i camera_coordinate;
 
 struct SDL_Renderer;
 
@@ -23,7 +22,7 @@ struct view_data_t {
     int orientation;
     struct {
         screen_tile tile_internal;
-        camera_coordinate position;
+        vec2i position;
     } camera;
     struct {
         vec2i offset;
@@ -72,12 +71,13 @@ void city_view_set_selected_view_tile(const vec2i* tile);
 
 void city_view_rotate_left(void);
 void city_view_rotate_right(void);
+tile2i city_view_get_center();
 
 void city_view_refresh_viewport();
 
 void city_view_set_viewport(int screen_width, int screen_height);
 void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size);
-void city_view_get_viewport_size_tiles(int* width, int* height);
+vec2i city_view_get_viewport_size_tiles();
 
 bool pixel_is_inside_viewport(vec2i pixel);
 bool city_view_is_sidebar_collapsed(void);

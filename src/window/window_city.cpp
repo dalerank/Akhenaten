@@ -20,6 +20,7 @@
 #include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/view/lookup.h"
 #include "grid/bookmark.h"
 #include "grid/grid.h"
 #include "scenario/scenario.h"
@@ -181,13 +182,6 @@ bool city_has_loaded = false;
 void window_city_handle_hotkeys(const hotkeys* h) {
     if (h->cycle_legion)
         cycle_legion();
-
-    if (h->go_to_bookmark) {
-        map_bookmark_go_to(h->go_to_bookmark - 1);
-
-    }
-    if (h->set_bookmark)
-        map_bookmark_save(h->set_bookmark - 1);
 }
 
 void window_city_handle_input(const mouse* m, const hotkeys* h) {
@@ -226,6 +220,19 @@ void window_city_init() {
         }
 
          window_advisors_show_advisor((e_advisor)ev.advisor);
+    });
+
+    events::subscribe_once([] (event_set_bookmark ev) {
+        tile2i center_p = city_view_get_center();
+        g_city.bookmarks.set(ev.value - 1, center_p);
+    });
+
+    events::subscribe_once([] (event_goto_bookmark ev) {
+        tile2i p = g_city.bookmarks.get(ev.value - 1);
+        if (p.valid()) {
+            vec2i screen = tile_to_screen(p);
+            camera_go_to_screen_tile(screen, true);
+        }
     });
 }
 

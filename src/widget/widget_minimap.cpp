@@ -167,22 +167,21 @@ void minimap_window::set_bounds(vec2i ds) {
 
     //    int camera_x, camera_y;
     map_point camera_tile = city_view_get_camera_mappoint();
-    int view_width_tiles, view_height_tiles;
-    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+    vec2i view_size_tiles = city_view_get_viewport_size_tiles();
 
     if ((scenario_map_data()->width - ds.x) / 2 > 0) {
         if (camera_tile.x() < absolute_tile.x()) {
             absolute_tile.set_x(camera_tile.x());
-        } else if (camera_tile.x() > ds.x + absolute_tile.x() - view_width_tiles) {
-            absolute_tile.set_x(view_width_tiles + camera_tile.x() - ds.x);
+        } else if (camera_tile.x() > ds.x + absolute_tile.x() - view_size_tiles.x) {
+            absolute_tile.set_x(view_size_tiles.x + camera_tile.x() - ds.x);
         }
     }
 
     if ((2 * scenario_map_data()->height - ds.y) / 2 > 0) {
         if (camera_tile.y() < absolute_tile.y()) {
             absolute_tile.set_y(camera_tile.y());
-        } else if (camera_tile.y() > ds.y + absolute_tile.y() - view_height_tiles) {
-            absolute_tile.set_y(view_height_tiles + camera_tile.y() - ds.y);
+        } else if (camera_tile.y() > ds.y + absolute_tile.y() - view_size_tiles.y) {
+            absolute_tile.set_y(view_size_tiles.y + camera_tile.y() - ds.y);
         }
     }
     // ensure even height
@@ -333,18 +332,17 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
 void minimap_window::draw_viewport_rectangle(painter &ctx) {
     map_point camera_tile = city_view_get_camera_mappoint();
     vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
-    int view_width_tiles, view_height_tiles;
-    city_view_get_viewport_size_tiles(&view_width_tiles, &view_height_tiles);
+    vec2i view_size_tiles = city_view_get_viewport_size_tiles();
 
     int x_offset = screen_offset.x + 2 * (camera_tile.x() - absolute_tile.x()) - 2 + camera_pixels.x / 30;
     x_offset = std::max(x_offset, screen_offset.x);
 
-    if (x_offset + 2 * view_width_tiles + 4 > screen_offset.x + draw_size.x) {
+    if (x_offset + 2 * view_size_tiles.x + 4 > screen_offset.x + draw_size.x) {
         x_offset -= 2;
     }
 
     int y_offset = screen_offset.y + camera_tile.y() - absolute_tile.y() + 1;
-    graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{view_width_tiles * 2 + 8, view_height_tiles + 3}, COLOR_MINIMAP_VIEWPORT);
+    graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{ view_size_tiles.x * 2 + 8, view_size_tiles.y + 3}, COLOR_MINIMAP_VIEWPORT);
 }
 
 void minimap_window::clear() {

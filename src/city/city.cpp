@@ -37,6 +37,8 @@
 #include "grid/building.h"
 #include "building/construction/build_planner.h"
 #include "dev/debug.h"
+#include "graphics/view/lookup.h"
+#include "graphics/view/view.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -79,6 +81,7 @@ void city_t::init() {
     hotkeys_handler.init();
     g_debug.init();
     g_city_planner.init();
+    bookmarks.reset();
 }
 
 void city_t::update_day() {
@@ -1303,15 +1306,20 @@ io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t versio
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
 });
 
-#define MAX_SMALL 2500
-#define MAX_LARGE 10000
+io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version) {
+    auto &data = g_city;
+    static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
+    for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
+        iob->bind(BIND_SIGNATURE_TILE2I, data.bookmarks.points[i]);
+    }
+});
 
 io_buffer *iob_building_list_small = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(MAX_SMALL * 2);
+    iob->bind____skip(5000);
 });
 
 io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(MAX_LARGE * 2);
+    iob->bind____skip(20000);
 });
 
 const uint8_t* city_player_name() {

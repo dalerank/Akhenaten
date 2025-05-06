@@ -157,36 +157,28 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_change_building_variant{ action }); };
         break;
     case HOTKEY_GO_TO_BOOKMARK_1:
-        def->action = &data.hotkey_state.go_to_bookmark;
-        def->value = 1;
+        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 1 }); };
         break;
     case HOTKEY_GO_TO_BOOKMARK_2:
-        def->action = &data.hotkey_state.go_to_bookmark;
-        def->value = 2;
+        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 2 }); };
         break;
     case HOTKEY_GO_TO_BOOKMARK_3:
-        def->action = &data.hotkey_state.go_to_bookmark;
-        def->value = 3;
+        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 3 }); };
         break;
     case HOTKEY_GO_TO_BOOKMARK_4:
-        def->action = &data.hotkey_state.go_to_bookmark;
-        def->value = 4;
+        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 4 }); };
         break;
     case HOTKEY_SET_BOOKMARK_1:
-        def->action = &data.hotkey_state.set_bookmark;
-        def->value = 1;
+        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 1 }); };
         break;
     case HOTKEY_SET_BOOKMARK_2:
-        def->action = &data.hotkey_state.set_bookmark;
-        def->value = 2;
+        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 2 }); };
         break;
     case HOTKEY_SET_BOOKMARK_3:
-        def->action = &data.hotkey_state.set_bookmark;
-        def->value = 3;
+        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 3 }); };
         break;
     case HOTKEY_SET_BOOKMARK_4:
-        def->action = &data.hotkey_state.set_bookmark;
-        def->value = 4;
+        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 4 }); };
         break;
     case HOTKEY_CENTER_WINDOW:
         def->action = &data.global_hotkey_state.center_screen;

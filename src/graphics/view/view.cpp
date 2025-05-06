@@ -230,24 +230,25 @@ void camera_go_to_corner_tile(screen_tile screen, bool validate) {
     painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
+
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     auto& data = g_city_view;
 
     int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
-    int y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
+    int y = (screen.y - data.viewport.height_tiles / 2) * TILE_HEIGHT_PIXELS;
 
     painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
 }
 
 void camera_go_to_mappoint(tile2i point) {
-    //camera_go_to_pixel(tile_to_pixel(point), true);
     auto& data = g_city_view;
-        screen_tile screen = tile_to_screen(point);
-        screen.x -= data.viewport.width_tiles / 2;
-        screen.y -= data.viewport.height_tiles / 2;
-        screen.y &= ~1;
-        camera_go_to_corner_tile(screen, true);
+    vec2i screen = tile_to_screen(point);
+    //vec2i screen = tile_to_pixel(point);
+    screen.x -= data.viewport.width_tiles / 2;
+    screen.y -= data.viewport.height_tiles / 2;
+    screen.y &= ~1;
+    camera_go_to_corner_tile(screen, true);
 }
 
 void camera_scroll(int x, int y) {
@@ -284,25 +285,26 @@ static int get_camera_corner_offset(void) {
 
     return screentile_to_mappoint(data.camera.tile_internal).grid_offset();
 }
-static int get_center_grid_offset() {
+
+tile2i city_view_get_center() {
     auto& data = g_city_view;
 
     int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
     int y_center = data.camera.tile_internal.y + data.viewport.height_tiles / 2;
-    return screentile_to_mappoint({x_center, y_center}).grid_offset();
+    return screentile_to_mappoint({x_center, y_center});
 }
 
 void city_view_rotate_left() {
     auto& data = g_city_view;
 
-    int center_grid_offset = get_center_grid_offset();
+    tile2i center = city_view_get_center();
     data.orientation -= 2;
     if (data.orientation < 0) {
         data.orientation = DIR_6_TOP_LEFT;
     }
 
-    if (center_grid_offset >= 0) {
-        vec2i screen = tile_to_screen(tile2i(center_grid_offset));
+    if (center.valid()) {
+        vec2i screen = tile_to_screen(center);
         camera_go_to_screen_tile(screen, true);
     }
 
@@ -312,13 +314,13 @@ void city_view_rotate_left() {
 void city_view_rotate_right() {
     auto& data = g_city_view;
 
-    int center_grid_offset = get_center_grid_offset();
+    tile2i center = city_view_get_center();
     data.orientation += 2;
     if (data.orientation > 6)
         data.orientation = DIR_0_TOP_RIGHT;
 
-    if (center_grid_offset >= 0) {
-        vec2i screen = tile_to_screen(tile2i(center_grid_offset));
+    if (center.valid() >= 0) {
+        vec2i screen = tile_to_screen(center);
         camera_go_to_screen_tile(screen, true);
     }
 
@@ -385,11 +387,10 @@ void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size) {
     size = view.viewport.size_pixels;
 }
 
-void city_view_get_viewport_size_tiles(int* width, int* height) {
+vec2i city_view_get_viewport_size_tiles() {
     auto& data = g_city_view;
 
-    *width = data.viewport.width_tiles;
-    *height = data.viewport.height_tiles;
+    return { data.viewport.width_tiles, data.viewport.height_tiles };
 }
 
 bool pixel_is_inside_viewport(vec2i pixel) {

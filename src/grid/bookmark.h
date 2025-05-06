@@ -1,12 +1,15 @@
-#ifndef MAP_BOOKMARK_H
-#define MAP_BOOKMARK_H
+#pragma once
 
-#include "core/buffer.h"
+#include "grid/point.h"
 
-void map_bookmarks_clear(void);
+struct map_bookmarks_t {
+    enum {
+        MAX_BOOKMARKS = 4
+    };
 
-void map_bookmark_save(int number);
+    tile2i points[MAX_BOOKMARKS];
 
-bool map_bookmark_go_to(int number);
-
-#endif // MAP_BOOKMARK_H
+    tile2i get(int i);
+    void set(int i, tile2i tile);
+    void reset();
+};
