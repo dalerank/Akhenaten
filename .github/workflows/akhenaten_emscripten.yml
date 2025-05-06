@@ -55,20 +55,5 @@ jobs:
       with:
         branch: akhenaten-wasm
         folder: dist
-    - name: Configure git for target repo
-      run: |
-        git config --global user.name "gitbub actions"
-        git config --global user.email "actions@akhenaten.game"
-        git remote add pages_deploy https://${{ secrets.PAGES_DEPLOY }}@github.com/dalerank/dalerank.github.io
-        git checkout akhenaten-wasm
-        git checkout --orphan temp_branch
-        rm -rf ./dist
-        rm -rf ./node_modules
-        rm -rf ./src
-        git add -A
-        git commit -m "Deploy Pages"
-        git push --force pages_deploy temp_branch:main
-        git checkout akhenaten-wasm
-        git branch -D temp_branch
 
 
