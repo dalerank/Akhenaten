@@ -17,6 +17,7 @@
 #include "grid/water.h"
 #include "sound/effect.h"
 #include "dev/debug.h"
+#include "game/game_config.h"
 
 #include <vector>
 #include <time.h>
@@ -214,13 +215,25 @@ static void update_herd_formation(formation* m) {
     }
 
     if (can_spawn_ostrich(m) && allow_span_ostrich()) {
-        const bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
-        const bool valid_tile = m->tile.valid();
+        if (m->failed_creation_count > 10) {
+            m->home = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
+        }
+
+        bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
+        bool valid_tile = m->tile.valid();
         if (is_passible && valid_tile) {
             figure* ostrich = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             ostrich->advance_action(FIGURE_ACTION_196_HERD_ANIMAL_AT_REST);
             ostrich->formation_id = m->id;
             ostrich->wait_ticks = ostrich->id & 0x1f;
+            m->failed_creation_count = 0;
+        } else {
+            m->tile = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
+
+            bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
+            bool valid_tile = m->tile.valid();
+
+            m->failed_creation_count += !(is_passible && valid_tile) ? 1 : 0;
         }
     }
 
@@ -299,7 +312,8 @@ static void update_herd_formation(formation* m) {
 }
 
 void formation_herd_update() {
-    if (!scenario_map_has_animals()) {
+    const bool has_animals = scenario_map_has_animals() || !!game_features::gameplay_change_hasanimals;
+    if (!has_animals) {
         return;
     }
 

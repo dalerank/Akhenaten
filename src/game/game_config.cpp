@@ -32,6 +32,7 @@ namespace game_features {
     game_feature gameui_highlight_legions{ "gameui_highlight_legions", "#TR_CONFIG_HIGHLIGHT_LEGIONS", true };
     game_feature gameui_rotate_manually{ "gameui_rotate_manually", "#TR_CONFIG_ROTATE_MANUALLY", true };
     game_feature gameplay_change_grandfestival{ "gameplay_change_grandfestival", "#TR_CONFIG_GRANDFESTIVAL", true };
+    game_feature gameplay_change_hasanimals{ "gameplay_change_grandfestival", "#TR_CONFIG_CITY_HAS_ANIMALS", true };
     game_feature gameplay_change_jealous_gods{ "gameplay_change_jealous_gods", "#TR_CONFIG_JEALOUS_GODS", true };
     game_feature gameplay_change_global_labour{ "gameplay_change_global_labour", "#TR_CONFIG_GLOBAL_LABOUR", false };
     game_feature gameplay_change_school_walkers{ "gameplay_change_school_walkers", "#TR_CONFIG_SCHOOL_WALKERS", false };

@@ -636,7 +636,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         // iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_ostrich_spawn_delay); // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);           // 6
-        iob->bind____skip(6);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->failed_creation_count);           // 6
+        iob->bind____skip(5);
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 

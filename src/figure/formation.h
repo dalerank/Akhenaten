@@ -108,7 +108,8 @@ struct formation {
     formation_state enemy_state;
 
     /* Herd-related */
-    int herd_direction;
+    uint8_t herd_direction;
+    uint8_t failed_creation_count;
     int herd_ostrich_spawn_delay;
 
     struct {
