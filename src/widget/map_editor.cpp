@@ -82,13 +82,13 @@ void widget_map_editor_draw() {
     map_editor_tool_draw(ctx, data.current_tile);
 }
 
-static void update_city_view_coords(int x, int y, map_point* tile) {
+static void update_city_view_coords(int x, int y, tile2i* tile) {
     screen_tile screen = pixel_to_screentile({x, y});
     if (screen.x != -1 && screen.y != -1) {
-        tile->set(screentile_to_mappoint(screen).grid_offset());
+        *tile = screen_to_tile(screen);
         city_view_set_selected_view_tile(&screen);
     } else {
-        tile->set(0);
+        *tile = tile2i::invalid;
     }
 }
 

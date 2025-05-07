@@ -192,7 +192,7 @@ static void draw_overlay_tooltip(tooltip_context* c) {
 static void draw_tile_tooltip(tooltip_context* c) {
     screen_tile screen = pixel_to_screentile({c->mpos.x, c->mpos.y});
     if (screen.x != -1 && screen.y != -1) {
-        int grid_offset = screentile_to_mappoint(screen).grid_offset();
+        int grid_offset = screen_to_tile(screen).grid_offset();
         city_view_set_selected_view_tile(&screen);
         int x_tile = MAP_X(grid_offset);
         int y_tile = MAP_Y(grid_offset);

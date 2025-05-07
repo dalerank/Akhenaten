@@ -3,7 +3,7 @@
 #include "view.h"
 
 void calculate_screentile_lookup_tables();
-tile2i screentile_to_mappoint(vec2i screen);
+tile2i screen_to_tile(vec2i screen);
 vec2i tile_to_screen(tile2i point);
 
 void clear_mappoint_pixelcoord();

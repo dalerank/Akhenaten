@@ -1248,7 +1248,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 185, 50, "offset:", offset.x);
         debug_text(ctx, str, x + 40, y + 185, 50, "", offset.y);
 
-        tile2i point = screentile_to_mappoint(screen);
+        tile2i point = screen_to_tile(screen);
         debug_text(ctx, str, x, y + 195, 50, "point:", point.x());
         debug_text(ctx, str, x + 40, y + 195, 50, "", point.y());
         debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());

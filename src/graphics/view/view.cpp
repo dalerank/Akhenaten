@@ -234,8 +234,13 @@ void camera_go_to_corner_tile(screen_tile screen, bool validate) {
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     auto& data = g_city_view;
 
-    int x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
-    int y = (screen.y - data.viewport.height_tiles / 2) * TILE_HEIGHT_PIXELS;
+    int x, y;
+    switch (city_view_orientation() / 2) {
+    default:
+        x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
+        y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
+        break;
+    }
 
     painter ctx = game.painter();
     camera_go_to_pixel(ctx, {x, y}, validate);
@@ -283,7 +288,7 @@ void city_view_set_selected_view_tile(const vec2i* tile) {
 static int get_camera_corner_offset(void) {
     auto& data = g_city_view;
 
-    return screentile_to_mappoint(data.camera.tile_internal).grid_offset();
+    return screen_to_tile(data.camera.tile_internal).grid_offset();
 }
 
 tile2i city_view_get_center() {
@@ -291,7 +296,7 @@ tile2i city_view_get_center() {
 
     int x_center = data.camera.tile_internal.x + data.viewport.width_tiles / 2;
     int y_center = data.camera.tile_internal.y + data.viewport.height_tiles / 2;
-    return screentile_to_mappoint({x_center, y_center});
+    return screen_to_tile({x_center, y_center});
 }
 
 void city_view_rotate_left() {
@@ -331,13 +336,8 @@ static void set_viewport(int x_offset, int y_offset, int width, int height) {
     auto& data = g_city_view;
 
     auto zoom = g_zoom.get_percentage();
-    //    width = calc_adjust_with_percentage(width, zoom);
-    //    height = calc_adjust_with_percentage(height, zoom);
     data.viewport.offset = vec2i(x_offset, y_offset);
-    //    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
     data.viewport.size_pixels = vec2i{width - 2, height};
-    //    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
-    //    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
     data.viewport.width_tiles = calc_adjust_with_percentage<int>(width, zoom) / TILE_WIDTH_PIXELS;
     data.viewport.height_tiles = calc_adjust_with_percentage<int>(height, zoom) / HALF_TILE_HEIGHT_PIXELS;
 }
@@ -487,7 +487,7 @@ void city_view_foreach_valid_map_tile(painter &ctx,
 
             for (int x = 0; x < data.viewport.width_tiles + 7; x++) {
                 if (screen.x >= 0 && screen.x < (2 * GRID_LENGTH) + 1) {
-                    tile2i point = screentile_to_mappoint(screen);
+                    tile2i point = screen_to_tile(screen);
                     if (point.grid_offset() >= 0) {
                         if (callback1)
                             callback1(pixel, point, ctx);

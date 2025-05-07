@@ -70,7 +70,7 @@ void calculate_screentile_lookup_tables() {
     }
 }
 
-tile2i screentile_to_mappoint(vec2i screen) {
+tile2i screen_to_tile(vec2i screen) {
     if (screen.x == -1 || screen.y == -1) {
         return tile2i(-1);
     }
@@ -87,14 +87,16 @@ vec2i tile_to_screen(tile2i point) {
     vec2i start;
     vec2i column_step;
     vec2i row_step;
-    screentile_calc_params_by_orientation(city_view_orientation() / 2, &start, &column_step, &row_step);
+    int orientation = city_view_orientation() / 2;
+    screentile_calc_params_by_orientation(orientation, &start, &column_step, &row_step);
 
     int columns = point.x();
     int rows = point.y();
 
-    vec2i pos = { (start.x + (rows * row_step.x) + (columns * column_step.x)) / 2,
-                  (start.y + (rows * row_step.y) + (columns * column_step.y)) };
-    return pos;
+    vec2i screen;
+    screen.x = (start.x + (rows * row_step.x) + (columns * column_step.x)) / 2;
+    screen.y = (start.y + (rows * row_step.y) + (columns * column_step.y));
+    return screen;
 }
 
 static vec2i MAPPOINT_TO_PIXEL_LOOKUP[GRID_SIZE_TOTAL];

@@ -77,10 +77,10 @@ tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
     vec2i screen = pixel_to_screentile(pixel);
     if (screen.x != -1 && screen.y != -1) {
         city_view_set_selected_view_tile(&screen);
-        return screentile_to_mappoint(screen);
+        return screen_to_tile(screen);
     }
 
-    return tile2i(0);
+    return tile2i::invalid;
 }
 
 int screen_city_t::input_coords_in_city(int x, int y) {

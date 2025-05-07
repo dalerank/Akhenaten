@@ -35,7 +35,7 @@ void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, 
         int x_abs = absolute_x - 4;
         for (int x_rel = -4; x_rel < width_tiles; x_rel++, x_abs++, screen_x += 2) {
             if (x_abs >= 0 && x_abs < (2 * GRID_LENGTH) + 1 && y_abs >= 0 && y_abs < (2 * GRID_LENGTH) + 1)
-                callback({ screen_x, screen_y }, screentile_to_mappoint({ x_abs, y_abs }));
+                callback({ screen_x, screen_y }, screen_to_tile({ x_abs, y_abs }));
         }
     }
 }
