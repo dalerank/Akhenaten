@@ -4,7 +4,7 @@
 #include "city/constants.h"
 #include "core/buffer.h"
 #include "core/calc.h"
-#include "core/game_environment.h"
+#include "game/game_environment.h"
 #include "core/string.h"
 #include "io/io.h"
 
@@ -174,7 +174,7 @@ void game_settings::toggle_tooltips() {
 }
 
 void game_settings::set_player_name(const uint8_t* name) {
-    string_copy(name, player_name, MAX_PLAYER_NAME);
+    player_name = (pcstr)name;
     encoding_to_utf8(name, player_name_utf8, MAX_PLAYER_NAME, 0);
 }
 

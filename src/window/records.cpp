@@ -1,6 +1,5 @@
 #include "records.h"
 
-#include "core/game_environment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/lang_text.h"

@@ -1,6 +1,5 @@
 #include "text.h"
 
-#include "core/game_environment.h"
 #include "core/string.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

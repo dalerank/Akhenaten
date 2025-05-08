@@ -1,7 +1,6 @@
 #include "mission.h"
 
 #include "core/log.h"
-#include "core/game_environment.h"
 #include "core/buffer.h"
 #include "core/string.h"
 #include "content/vfs.h"

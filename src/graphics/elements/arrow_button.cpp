@@ -1,5 +1,4 @@
 #include "arrow_button.h"
-#include "core/game_environment.h"
 
 #include "graphics/graphics.h"
 #include "graphics/image.h"

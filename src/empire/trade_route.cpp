@@ -1,10 +1,8 @@
 #include "empire/empire.h"
 
 #include "trade_route.h"
-#include "core/game_environment.h"
 #include "io/io_buffer.h"
 #include "city/city.h"
-
 
 void trade_route::init(e_resource resource, int limit) {
     if (resource != RESOURCE_NONE) {

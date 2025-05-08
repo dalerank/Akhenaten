@@ -2,7 +2,6 @@
 
 #include "core/calc.h"
 #include "core/log.h"
-#include "core/game_environment.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"

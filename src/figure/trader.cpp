@@ -1,6 +1,5 @@
 #include "figure/trader.h"
 
-#include "core/game_environment.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "building/building_storage_yard.h"

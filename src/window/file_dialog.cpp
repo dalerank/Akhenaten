@@ -4,7 +4,6 @@
 
 #include "core/calc.h"
 #include "core/encoding.h"
-#include "core/game_environment.h"
 #include "core/string.h"
 #include "content/dir.h"
 #include "game/file_editor.h"

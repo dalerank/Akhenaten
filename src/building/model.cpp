@@ -1,6 +1,5 @@
 #include "building/model.h"
 
-#include "core/game_environment.h"
 #include "core/string.h"
 #include "core/log.h"
 #include "io/io.h"
