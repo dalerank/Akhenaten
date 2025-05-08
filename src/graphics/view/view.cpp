@@ -234,16 +234,12 @@ void camera_go_to_corner_tile(screen_tile screen, bool validate) {
 void camera_go_to_screen_tile(screen_tile screen, bool validate) {
     auto& data = g_city_view;
 
-    int x, y;
-    switch (city_view_orientation() / 2) {
-    default:
-        x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
-        y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
-        break;
-    }
+    vec2i result;
+    result.x = (screen.x - data.viewport.width_tiles / 2) * TILE_WIDTH_PIXELS;
+    result.y = (screen.y - data.viewport.height_tiles / 2) * HALF_TILE_HEIGHT_PIXELS;
 
     painter ctx = game.painter();
-    camera_go_to_pixel(ctx, {x, y}, validate);
+    camera_go_to_pixel(ctx, result, validate);
 }
 
 void camera_go_to_mappoint(tile2i point) {

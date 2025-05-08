@@ -85,7 +85,6 @@ var empire_window = {}
 var empire_images_remap = []
 
 // ui
-var info_window_figure_enemy = {}
 var info_window_figure_animal = {}
 var empty_info_window = {}
 var advisors_window = {}

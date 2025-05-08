@@ -1847,7 +1847,6 @@ building building_water_lift = {
   info_text_id: 107,
 }
 
-
 building building_firehouse = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },

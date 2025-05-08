@@ -768,7 +768,7 @@ window figure_carrier_info_window = {
     })
 }
 
-info_window_figure_enemy = {
+window info_window_figure_enemy = {
     ui : {
         background  : { type : "outer_panel",   pos: [0, 0], size: [29, 22]},
     }
