@@ -7,7 +7,7 @@
 #include "game/game.h"
 #include "city/city_message.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 
 struct tutorial_6 : public tutorial_t {
     virtual int missionid() const override { return 6; }

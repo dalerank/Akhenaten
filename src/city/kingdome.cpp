@@ -1,7 +1,7 @@
 #include "kingdome.h"
 
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"

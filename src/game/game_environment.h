@@ -19,7 +19,3 @@ constexpr int MAX_FISH_POINTS = 8;
 #define MAX_SCENARIO_NAME 65
 #define MAX_SUBTITLE 64
 #define MAX_BRIEF_DESCRIPTION 522
-
-void init_game_environment(int env);
-const char* get_game_title();
-const char* get_engine_pref_path();

@@ -9,7 +9,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "core/calc.h"

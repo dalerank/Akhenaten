@@ -5,7 +5,7 @@
 #include "building/building_farm.h"
 #include "building/building_wall.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "figuretype/figure_homeless.h"
 #include "game/undo.h"

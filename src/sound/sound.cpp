@@ -3,7 +3,6 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
-#include "core/game_environment.h"
 #include "content/file_formats.h"
 #include "core/log.h"
 #include "game/settings.h"

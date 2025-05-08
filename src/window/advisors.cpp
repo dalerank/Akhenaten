@@ -37,7 +37,7 @@
 #include "window/advisor/advisor_trade.h"
 #include "window/window_city.h"
 #include "window/message_dialog.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "game/game.h"
 #include "js/js_game.h"
 

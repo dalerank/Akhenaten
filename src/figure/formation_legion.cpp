@@ -1,6 +1,6 @@
 #include "formation_legion.h"
 
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/military.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"

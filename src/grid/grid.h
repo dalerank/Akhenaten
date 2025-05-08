@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "core/game_environment.h"
 #include "core/vec2i.h"
 #include "core/svector.h"
 #include "point.h"

@@ -1,7 +1,6 @@
 #include "new_career.h"
 
 #include "game/player_data.h"
-#include "core/game_environment.h"
 #include "core/string.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/game_environment.h"
+#include "game/game_environment.h"
 #include <stdint.h>
 
 #define MAX_DAT_ENTRIES 100

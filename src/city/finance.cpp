@@ -6,7 +6,7 @@
 #include "building/model.h"
 #include "buildings.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"

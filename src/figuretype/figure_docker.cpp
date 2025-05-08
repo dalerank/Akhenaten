@@ -8,7 +8,6 @@
 #include "city/city_buildings.h"
 #include "city/trade.h"
 #include "core/calc.h"
-#include "core/game_environment.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/trade_route.h"

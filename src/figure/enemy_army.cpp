@@ -3,6 +3,7 @@
 #define MAX_ENEMY_ARMIES 125
 
 #include "figure/formation.h"
+#include "game/game_environment.h"
 #include "grid/soldier_strength.h"
 
 static enemy_army enemy_armies[MAX_ENEMY_ARMIES];

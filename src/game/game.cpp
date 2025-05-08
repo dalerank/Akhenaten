@@ -5,7 +5,6 @@
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/building_burning_ruin.h"
-#include "core/game_environment.h"
 #include "core/random.h"
 #include "core/profiler.h"
 #include "core/log.h"
@@ -44,7 +43,6 @@
 #include "graphics/screen.h"
 #include "widget/widget_minimap.h"
 #include "city/city.h"
-#include "city/city_events.h"
 #include "city/trade.h"
 #include "city/city_floods.h"
 #include "city/city_population.h"
@@ -64,6 +62,7 @@
 #include <iostream>
 
 game_t game;
+events::typed_queue g_permanent_events;
 
 declare_console_ref_int16(gameyear, game.simtime.year)
 declare_console_ref_int16(gamemonth, game.simtime.month)
@@ -470,7 +469,7 @@ void game_t::update() {
         anti_scum_random_15bit();
     }
 
-    g_city_events.process();
+    events::process();
 }
 
 void game_t::frame_begin() {

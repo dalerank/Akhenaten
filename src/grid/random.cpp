@@ -1,7 +1,6 @@
 #include "random.h"
 #include "io/io_buffer.h"
 
-#include "core/game_environment.h"
 #include "core/random.h"
 #include "grid/grid.h"
 

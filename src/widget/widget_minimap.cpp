@@ -10,7 +10,7 @@
 #include "grid/terrain.h"
 #include "input/scroll.h"
 #include "city/city_buildings.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
 #include "dev/debug.h"

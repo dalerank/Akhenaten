@@ -4,7 +4,6 @@
 #include "window/building/common.h"
 #include "city/city.h"
 #include "core/calc.h"
-#include "core/game_environment.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"

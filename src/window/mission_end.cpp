@@ -23,7 +23,6 @@
 #include "window/main_menu.h"
 #include "window/mission_next.h"
 #include "window/victory_video.h"
-#include "core/game_environment.h"
 #include "building/construction/build_planner.h"
 #include "io/gamestate/boilerplate.h"
 #include "window/window_city.h"

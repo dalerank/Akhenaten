@@ -1,6 +1,5 @@
 #include "empire.h"
 
-#include "core/game_environment.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
@@ -20,7 +19,7 @@
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "window/editor/window_editor.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "game/game.h"
 
 const static int EMPIRE_WIDTH = 1200 + 32;

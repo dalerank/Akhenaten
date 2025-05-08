@@ -2,7 +2,7 @@
 
 #include "core/profiler.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_message.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"

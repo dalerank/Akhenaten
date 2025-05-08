@@ -4,7 +4,7 @@
 
 #include "io/io_buffer.h"
 #include "core/calc.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "graphics/elements/menu.h"
 #include "graphics/image.h"

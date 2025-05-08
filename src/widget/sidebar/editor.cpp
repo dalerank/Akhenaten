@@ -1,6 +1,5 @@
 #include "editor.h"
 
-#include "core/game_environment.h"
 #include "editor/tool.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"

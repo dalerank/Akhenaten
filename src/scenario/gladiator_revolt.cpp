@@ -1,6 +1,6 @@
 #include "gladiator_revolt.h"
 
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_message.h"
 #include "city/city.h"
 #include "core/random.h"

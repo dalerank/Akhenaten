@@ -1,7 +1,6 @@
 #include "core/app.h"
 
 #include "core/encoding.h"
-#include "core/game_environment.h"
 #include "core/stacktrace.h"
 #include "core/log.h"
 #include "figure/figure.h"
@@ -86,13 +85,22 @@ void show_usage() {
 struct application_t {
     bool active = true;
     bool quit = false;
+
+    pcstr game_name;
+
+    void setup() {
+        game_name = "Akhenaten";
+        logs::info("Engine set to %s", game_name);
+    }
+
+    void subscribe_events() {
+        events::subscribe_permanent([] (event_app_center_screen ev) {
+            app_post_event(USER_EVENT_CENTER_WINDOW);
+        });
+    }
 };
 
 application_t g_application;
-
-void system_center() {
-    app_post_event(USER_EVENT_CENTER_WINDOW);
-}
 
 static int init_sdl() {
     logs::info("Initializing SDL");
@@ -357,7 +365,7 @@ static void setup() {
 #endif
 
     // pre-init engine: assert game directory, pref files, etc.
-    init_game_environment(0);
+    g_application.setup();
 #if defined(GAME_PLATFORM_ANDROID)
     bool again = false;
 #endif // GAME_PLATFORM_ANDROID
@@ -641,6 +649,7 @@ int main(int argc, char** argv) {
     g_mouse.init();
     
     game_imgui_overlay_init();
+    g_application.subscribe_events();
 
     run_and_draw();
 

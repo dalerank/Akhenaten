@@ -1,7 +1,6 @@
 #include "platform/prefs.h"
 
 #include "core/bstring.h"
-#include "core/game_environment.h"
 #include "platform/platform.h"
 
 #include "SDL.h"
@@ -10,7 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-static FILE* open_pref_file(const char* filename, const char* mode) {
+pcstr pref_file = "data_dir_pharaoh.txt";
+
+static FILE* open_pref_file(pcstr filename, pcstr mode) {
     static_assert(SDL_VERSION_ATLEAST(2, 0, 1), "SDL version too old");
 #if defined(GAME_PLATFORM_ANDROID)
     bstring512 dir_path = SDL_AndroidGetExternalStoragePath();
@@ -29,9 +30,9 @@ static FILE* open_pref_file(const char* filename, const char* mode) {
     return fp;
 }
 
-const char* pref_get_gamepath() {
+pcstr pref_get_gamepath() {
     static bstring1024 data_dir;
-    FILE* fp = open_pref_file(get_engine_pref_path(), "r"); // open pref file for specific game
+    FILE* fp = open_pref_file(pref_file, "r"); // open pref file for specific game
     if (fp) {
         size_t length = fread(data_dir.data(), 1, 1000, fp);
         fclose(fp);
@@ -43,8 +44,8 @@ const char* pref_get_gamepath() {
     return nullptr;
 }
 
-void pref_save_gamepath(const char* data_dir) {
-    FILE* fp = open_pref_file(get_engine_pref_path(), "w");
+void pref_save_gamepath(pcstr data_dir) {
+    FILE* fp = open_pref_file(pref_file, "w");
     if (fp) {
         fwrite(data_dir, 1, strlen(data_dir), fp);
         fclose(fp);

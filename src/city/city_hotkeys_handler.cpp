@@ -1,7 +1,7 @@
 #include "city_hotkeys_handler.h"
 
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "graphics/window.h"
 #include "window/window_city.h"
 

@@ -4,7 +4,7 @@
 #include "building/model.h"
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
 #include "core/calc.h"

@@ -2,7 +2,6 @@
 
 #include "city/city.h"
 #include "city/city_population.h"
-#include "core/game_environment.h"
 #include "content/vfs.h"
 #include "core/profiler.h"
 #include "game/settings.h"

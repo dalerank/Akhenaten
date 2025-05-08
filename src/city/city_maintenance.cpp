@@ -12,7 +12,7 @@
 #include "scenario/scenario.h"
 #include "figuretype/figure_homeless.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/city_message.h"
 #include "grid/routing/routing.h"

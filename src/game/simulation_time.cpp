@@ -2,7 +2,6 @@
 
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
-#include "core/game_environment.h"
 #include "game/game.h"
 
 void simulation_time_t::init(int year) {

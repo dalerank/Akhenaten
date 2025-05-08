@@ -5,7 +5,6 @@
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "core/object_property.h"
-#include "core/game_environment.h"
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
 #include "game/resource.h"

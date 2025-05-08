@@ -2,7 +2,6 @@
 
 #include "city/constants.h"
 #include "core/bstring.h"
-#include "core/game_environment.h"
 #include "game/resource.h"
 #include "core/svector.h"
 

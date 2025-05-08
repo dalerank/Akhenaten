@@ -1,7 +1,6 @@
 #include "grid.h"
 
 #include "scenario/scenario.h"
-#include "core/game_environment.h"
 #include "graphics/view/view.h"
 #include "building/building.h"
 

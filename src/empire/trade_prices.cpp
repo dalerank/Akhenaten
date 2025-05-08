@@ -1,5 +1,4 @@
 #include "trade_prices.h"
-#include "core/game_environment.h"
 #include "io/io_buffer.h"
 #include "city/city.h"
 

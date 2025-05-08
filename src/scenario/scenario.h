@@ -3,7 +3,7 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 #include "building/building_type.h"
-#include "core/game_environment.h"
+#include "game/game_environment.h"
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
 #include "events.h"

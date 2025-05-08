@@ -1,7 +1,6 @@
 #include "route.h"
 
 #include "city/city_figures.h"
-#include "core/game_environment.h"
 #include "grid/routing/queue.h"
 #include "grid/routing/routing.h"
 

@@ -10,7 +10,7 @@
 #include "grid/figure.h"
 #include "grid/point.h"
 #include "sound/sound.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 
 int attack_is_same_direction(int dir1, int dir2) {
     if (dir1 == dir2)

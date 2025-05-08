@@ -13,7 +13,6 @@
 #include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/bstring.h"
-#include "core/game_environment.h"
 #include "figure/trader.h"
 #include "figure/formation.h"
 #include "figure/figure.h"

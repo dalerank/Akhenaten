@@ -1,6 +1,6 @@
 #include "price_change.h"
 
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"

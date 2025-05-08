@@ -9,7 +9,6 @@
 
 #include "core/archive.h"
 #include "core/log.h"
-#include "core/game_environment.h"
 #include "io/gamefiles/lang.h"
 #include "building/industry.h"
 #include "building/building_temple_complex.h"

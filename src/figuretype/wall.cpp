@@ -19,7 +19,7 @@
 #include "game/game_config.h"
 #include "sound/sound.h"
 #include "city/city_figures.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 
 static const int BALLISTA_FIRING_OFFSETS[]
   = {0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

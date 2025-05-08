@@ -10,7 +10,6 @@
 #include "city/city_buildings.h"
 #include "core/calc.h"
 #include "core/profiler.h"
-#include "core/game_environment.h"
 #include "grid/routing/routing_terrain.h"
 #include "graphics/elements/ui.h"
 #include "grid/road_access.h"

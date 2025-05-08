@@ -1,7 +1,7 @@
 #include "request.h"
 
 #include "building/building_storage_yard.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"

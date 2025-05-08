@@ -5,7 +5,6 @@
 #include "overlays/city_overlay.h"
 #include "city/city.h"
 #include "city/city_message.h"
-#include "core/game_environment.h"
 #include "core/profiler.h"
 #include "game/state.h"
 #include "game/undo.h"

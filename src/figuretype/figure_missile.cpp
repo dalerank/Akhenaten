@@ -5,7 +5,7 @@
 #include "graphics/animkeys.h"
 #include "figure/properties.h"
 #include "city/city_figures.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 
 figures::model_t<figure_hunter_arrow> hunter_arrow_m;
 figures::model_t<figure_arrow> arrow_m;

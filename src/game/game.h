@@ -6,6 +6,7 @@
 #include "core/xstring.h"
 #include "core/threading.h"
 #include "game/simulation_time.h"
+#include "game/game_events.h"
 #include "core/system_time.h"
 
 enum game_option {

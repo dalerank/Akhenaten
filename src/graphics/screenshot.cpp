@@ -2,7 +2,7 @@
 
 #include "city/city_warnings.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "core/buffer.h"
 #include "core/string.h"
 #include "core/log.h"

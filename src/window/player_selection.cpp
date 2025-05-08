@@ -28,9 +28,7 @@
 #include "window/new_career.h"
 #include "game/game.h"
 #include "game/settings.h"
-
 #include "graphics/elements/scroll_list_panel.h"
-#include "core/game_environment.h"
 
 #include <string.h>
 

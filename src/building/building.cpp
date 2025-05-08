@@ -7,7 +7,7 @@
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_warnings.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "widget/city/ornaments.h"
 #include "core/svector.h"
 #include "core/profiler.h"

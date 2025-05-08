@@ -15,7 +15,6 @@
 #include "window/hotkey_editor.h"
 #include "window/main_menu.h"
 #include "window/popup_dialog.h"
-#include "city/city_events.h"
 #include "game/game.h"
 
 #include <stdlib.h>
@@ -36,7 +35,6 @@ struct arrow_definition {
 };
 
 struct global_hotkeys {
-    int center_screen;
     int toggle_fullscreen;
     int save_screenshot;
     int save_city_screenshot;
@@ -157,31 +155,19 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_change_building_variant{ action }); };
         break;
     case HOTKEY_GO_TO_BOOKMARK_1:
-        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 1 }); };
-        break;
     case HOTKEY_GO_TO_BOOKMARK_2:
-        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 2 }); };
-        break;
     case HOTKEY_GO_TO_BOOKMARK_3:
-        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 3 }); };
-        break;
     case HOTKEY_GO_TO_BOOKMARK_4:
-        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ 4 }); };
+        def->callback = [action = mapping.action] { events::emit(event_goto_bookmark{ action - HOTKEY_GO_TO_BOOKMARK_1 }); };
         break;
     case HOTKEY_SET_BOOKMARK_1:
-        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 1 }); };
-        break;
     case HOTKEY_SET_BOOKMARK_2:
-        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 2 }); };
-        break;
     case HOTKEY_SET_BOOKMARK_3:
-        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 3 }); };
-        break;
     case HOTKEY_SET_BOOKMARK_4:
-        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ 4 }); };
+        def->callback = [action = mapping.action] { events::emit(event_set_bookmark{ action - HOTKEY_SET_BOOKMARK_1 }); };
         break;
     case HOTKEY_CENTER_WINDOW:
-        def->action = &data.global_hotkey_state.center_screen;
+        def->callback = [action = mapping.action] { events::emit(event_app_center_screen{ action }); };
         break;
     case HOTKEY_TOGGLE_FULLSCREEN:
         def->action = &data.global_hotkey_state.toggle_fullscreen;
@@ -427,9 +413,6 @@ void hotkey_handle_escape(void) {
 
 void hotkey_handle_global_keys() {
     auto& data = g_hotkey_data;
-    if (data.global_hotkey_state.center_screen) {
-        system_center();
-    }
 
     if (data.global_hotkey_state.toggle_fullscreen) {
         app_fullscreen(!g_settings.is_fullscreen());

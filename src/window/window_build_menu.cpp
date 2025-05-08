@@ -7,7 +7,6 @@
 #include "building/building_menu.h"
 #include "building/construction/build_planner.h"
 #include "building/model.h"
-#include "core/game_environment.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/generic_button.h"

@@ -1,6 +1,5 @@
 #include "common.h"
 
-#include "core/game_environment.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"

@@ -11,7 +11,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/city_resource.h"
 #include "city/city_labor.h"

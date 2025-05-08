@@ -4,7 +4,7 @@
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"
 #include "city/finance.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_buildings.h"
 #include "game/resource.h"

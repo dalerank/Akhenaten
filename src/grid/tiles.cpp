@@ -2,7 +2,6 @@
 
 #include "city/map.h"
 #include "core/direction.h"
-#include "core/game_environment.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"

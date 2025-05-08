@@ -2,7 +2,6 @@
 
 #include "building/building_type.h"
 #include "scenario/scenario.h"
-#include "core/game_environment.h"
 #include "graphics/image_groups.h"
 
 const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;

@@ -34,7 +34,7 @@
 #include "building/building_temple_complex.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "core/random.h"

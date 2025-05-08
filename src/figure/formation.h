@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "core/game_environment.h"
 #include "figure/figure_type.h"
 #include "grid/point.h"
 

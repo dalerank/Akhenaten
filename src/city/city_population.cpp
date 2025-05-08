@@ -3,7 +3,7 @@
 #include "building/building_house.h"
 #include "building/model.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_message.h"
 #include "core/calc.h"
 #include "core/random.h"

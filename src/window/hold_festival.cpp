@@ -2,7 +2,6 @@
 
 #include "city/constants.h"
 #include "city/city.h"
-#include "core/game_environment.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

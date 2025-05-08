@@ -12,7 +12,7 @@
 #include "io/gamefiles/lang.h"
 #include "sound/sound.h"
 #include "window/message_dialog.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "game/game.h"
 
 message_manager_t g_message_manager;

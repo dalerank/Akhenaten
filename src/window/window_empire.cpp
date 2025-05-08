@@ -2,11 +2,10 @@
 
 #include "city/military.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
 #include "city/finance.h"
-#include "core/game_environment.h"
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"

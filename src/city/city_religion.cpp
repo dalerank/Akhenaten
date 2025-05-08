@@ -7,7 +7,7 @@
 #include "building/building_house.h"
 #include "city/coverage.h"
 #include "city/city.h"
-#include "city/city_events.h"
+#include "game/game_events.h"
 #include "city/city_health.h"
 #include "city/city_message.h"
 #include "city/trade.h"
