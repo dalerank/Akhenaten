@@ -20,6 +20,7 @@
 #include "scenario/editor.h"
 #include "scenario/empire.h"
 #include "window/editor/window_editor.h"
+#include "city/city_events.h"
 #include "game/game.h"
 
 const static int EMPIRE_WIDTH = 1200 + 32;
@@ -55,6 +56,11 @@ static void init() {
     int selected_object = g_empire_map.selected_object();
     data.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
+
+    events::subscribe_once([] () {
+        auto &data = g_window_empire;
+        data.show_battle_objects = !data.show_battle_objects;
+    });
 }
 
 static int map_viewport_width() {
@@ -306,10 +312,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     if (scroll_get_delta(m, &position, SCROLL_TYPE_EMPIRE)) {
         g_empire_map.scroll_map(position);
     }
-
-    if (h->toggle_editor_battle_info)
-        data.show_battle_objects = !data.show_battle_objects;
-
+        
     if (m->is_touch) {
         const touch_t* t = get_earliest_touch();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {

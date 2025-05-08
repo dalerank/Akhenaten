@@ -141,7 +141,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_EDITOR_TOGGLE_BATTLE_INFO:
-        def->action = &data.hotkey_state.toggle_editor_battle_info;
+        def->callback = [action = mapping.action] { events::emit(event_toggle_editor_battle_info{ action }); };
         break;
     case HOTKEY_LOAD_FILE:
         def->callback = [action = mapping.action] { events::emit(event_load_city{ action }); };
