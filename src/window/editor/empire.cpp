@@ -57,7 +57,7 @@ static void init() {
     data.selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
     data.focus_button_id = 0;
 
-    events::subscribe_once([] () {
+    events::subscribe_once([] (event_editor_toggle_battle_info ev) {
         auto &data = g_window_empire;
         data.show_battle_objects = !data.show_battle_objects;
     });

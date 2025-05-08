@@ -78,7 +78,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_CYCLE_LEGION:
-        def->action = &data.hotkey_state.cycle_legion;
+        def->callback = [action = mapping.action] { events::emit(event_toggle_legion{ action }); };
         break;
 
     case HOTKEY_INCREASE_GAME_SPEED:
@@ -141,7 +141,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_EDITOR_TOGGLE_BATTLE_INFO:
-        def->callback = [action = mapping.action] { events::emit(event_toggle_editor_battle_info{ action }); };
+        def->callback = [action = mapping.action] { events::emit(event_editor_toggle_battle_info{ action }); };
         break;
     case HOTKEY_LOAD_FILE:
         def->callback = [action = mapping.action] { events::emit(event_load_city{ action }); };

@@ -180,8 +180,7 @@ static void cycle_legion(void) {
 bool city_has_loaded = false;
 
 void window_city_handle_hotkeys(const hotkeys* h) {
-    if (h->cycle_legion)
-        cycle_legion();
+        
 }
 
 void window_city_handle_input(const mouse* m, const hotkeys* h) {
@@ -233,6 +232,10 @@ void window_city_init() {
             vec2i screen = tile_to_screen(p);
             camera_go_to_screen_tile(screen, true);
         }
+    });
+
+    events::subscribe_once([] (event_toggle_legion ev) {
+        cycle_legion();
     });
 }
 
