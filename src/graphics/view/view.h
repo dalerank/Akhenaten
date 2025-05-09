@@ -15,7 +15,12 @@ typedef vec2i screen_tile;
 
 struct SDL_Renderer;
 
-struct view_data_t {
+struct carera_scrollable {
+    vec2i min;
+    vec2i max;
+};
+
+struct viewport_t {
     int screen_width;
     int screen_height;
     bool sidebar_collapsed;
@@ -31,6 +36,8 @@ struct view_data_t {
         int height_tiles;
     } viewport;
     screen_tile selected_tile;
+
+    carera_scrollable get_camera_scrollable_pixel_limits(float p = -1.f);
 };
 
 struct figure_draw_cache_data_t;
@@ -39,7 +46,7 @@ struct painter;
 using tile_draw_callback = std::function<void(vec2i, tile2i, painter&)>;
 using minimap_draw_callback = void(vec2i pixel, tile2i point);
 
-extern view_data_t g_city_view;
+extern viewport_t g_city_view;
 
 void city_view_camera_position_refresh();
 
@@ -58,11 +65,7 @@ void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
 vec2i city_view_get_camera_in_pixels();
 
-struct carera_scrollable {
-    vec2i min;
-    vec2i max;
-};
-carera_scrollable city_view_get_camera_scrollable_pixel_limits(view_data_t& view, float p = -1.f);
+
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
 
 void camera_go_to_pixel(painter &ctx, vec2i pixel, bool validate);
@@ -81,7 +84,7 @@ tile2i city_view_get_center();
 void city_view_refresh_viewport();
 
 void city_view_set_viewport(int screen_width, int screen_height);
-void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size);
+void city_view_get_viewport(const viewport_t &view, vec2i &pos, vec2i &size);
 vec2i city_view_get_viewport_size_tiles();
 
 bool pixel_is_inside_viewport(vec2i pixel);

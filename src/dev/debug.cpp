@@ -1195,7 +1195,7 @@ void draw_debug_ui(int x, int y) {
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
-        auto mm_view = city_view_get_camera_scrollable_pixel_limits(g_city_view);
+        auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
 
         int real_max_x;
         int real_max_y;

@@ -252,8 +252,8 @@ static void create_full_city_screenshot() {
     }
     vec2i original_camera_pixels = camera_get_position();
 
-    view_data_t full_city_view_data = g_city_view;
-    auto mm_view = city_view_get_camera_scrollable_pixel_limits(full_city_view_data);
+    viewport_t full_city_view_data = g_city_view;
+    auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
 
     vec2i view_pos, view_size;
     city_view_get_viewport(g_city_view, view_pos, view_size);
@@ -320,7 +320,7 @@ static void create_full_city_screenshot() {
                 
                //SDL_Rect rect{0, 0, canvas_width, canvas_height};
                //SDL_FillRect(surface, &rect, ((yy + i) % 2) ? 0xff00ff00 : 0xff0000ff);
-                view_data_t local_view_data = full_city_view_data;
+                viewport_t local_view_data = full_city_view_data;
                 painter local_context;
                 local_context.view = &local_view_data;
                 local_context.global_render_scale = 1.f;

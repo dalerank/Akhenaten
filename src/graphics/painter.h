@@ -6,7 +6,7 @@
 #include "graphics/image_desc.h"
 #include "graphics/graphics.h"
 
-struct view_data_t;
+struct viewport_t;
 struct SDL_Renderer;
 struct SDL_Texture;
 struct image_t;
@@ -21,7 +21,7 @@ struct sprite_resource_icon : public sprite {
 };
 
 struct painter {
-    view_data_t *view;
+    viewport_t *view;
     SDL_Renderer *renderer;
     float global_render_scale;
 

@@ -136,7 +136,7 @@ void screen_city_t::update_clouds(painter &ctx) {
         clouds_pause();
     }
 
-    auto mm_view = city_view_get_camera_scrollable_pixel_limits(g_city_view);
+    auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
     const vec2i offset = {
         g_city_view.camera.position.x - mm_view.min.x,
         g_city_view.camera.position.y - mm_view.min.y,

@@ -20,9 +20,9 @@
 #include "city/city.h"
 #include "game/game.h"
 
-view_data_t g_city_view;
+viewport_t g_city_view;
 
-view_data_t& city_view_data_unsafe() {
+viewport_t& city_view_data_unsafe() {
     return g_city_view;
 }
 
@@ -124,13 +124,13 @@ vec2i city_view_get_camera_in_pixels() {
             data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
 }
 
-carera_scrollable city_view_get_camera_scrollable_pixel_limits(view_data_t& view, float p) {
+carera_scrollable viewport_t::get_camera_scrollable_pixel_limits(float p) {
     carera_scrollable result;
     result.min.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     result.min.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
     p = p < 0 ? g_zoom.get_percentage() : p;
-    result.max.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.x, p);
-    result.max.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.y, p);
+    result.max.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(viewport.size_pixels.x, p);
+    result.max.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(viewport.size_pixels.y, p);
 
     return result;
 }
@@ -149,8 +149,8 @@ void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
     clip.y = (min_y - data.camera.position.y);
 }
 
-static void camera_validate_position(view_data_t& view) {
-    carera_scrollable mm_view = city_view_get_camera_scrollable_pixel_limits(view);
+static void camera_validate_position(viewport_t& view) {
+    carera_scrollable mm_view = view.get_camera_scrollable_pixel_limits();
 
     // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
     if (mm_view.max.x <= mm_view.min.x) {
@@ -381,7 +381,7 @@ void city_view_set_viewport(int screen_width, int screen_height) {
     camera_validate_position(view);
 }
 
-void city_view_get_viewport(const view_data_t &view, vec2i &pos, vec2i &size) {
+void city_view_get_viewport(const viewport_t &view, vec2i &pos, vec2i &size) {
     pos = view.viewport.offset;
     size = view.viewport.size_pixels;
 }
