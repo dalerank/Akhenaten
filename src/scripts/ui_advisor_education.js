@@ -1,6 +1,6 @@
 log_info("akhenaten: ui advisor education started")
 
-window advisor_education_window = {
+advisor_education_window = {
 	ui : {
 		background   : outer_panel({size:[40, 17]})
 		advisor_icon : image({pack:PACK_GENERAL, id:128, offset:7, pos:[10, 10] })

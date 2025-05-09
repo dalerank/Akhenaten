@@ -3,7 +3,7 @@ log_info("akhenaten: ui top menu config started")
 function menu_item(config) { return __extend({ type : "menu_item"}, config) }
 function menu_header(config) { return __extend({ type : "menu_header"}, config) }
 
-window top_menu_widget = {
+top_menu_widget = {
 	offset : [10, 6],
 	item_height : 20,
 	background: { pack:PACK_GENERAL, id:121, offset:8 },

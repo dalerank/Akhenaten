@@ -1,11 +1,11 @@
 log_info("akhenaten: ui config started")
 
-var uioptions = {
-    resource_icons  : {pack:PACK_EXPANSION, id:3},
-    advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0},
+uioptions = {
+    resource_icons  : {pack:PACK_EXPANSION, id:3}
+    advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0}
 }
 
-window build_menu_widget = {
+build_menu_widget = {
     ui : {
         item : dummy({size:[-1, 24]}),
     },
@@ -21,7 +21,7 @@ window build_menu_widget = {
                     -30, -46, -62, -78, -78, -94, -94, -110, -110, 0,   0,   0,  0,  0,  0],
 }
 
-window trade_prices_window = {
+trade_prices_window = {
     pos: [(sw(0) - px(56))/2, (sh(0) - px(11))/2],
     next_row_offset : [0, 90], 
     next_item_offset : [42, 0], 
@@ -66,7 +66,7 @@ advisors_window = {
     }
 }
 
-window advisor_entertainment_window = {
+advisor_entertainment_window = {
     ui : {
         background    : outer_panel({size:[40, 20] }),
         title         : text({pos: [60, 12], text:[58, 0], font : FONT_LARGE_BLACK_ON_LIGHT }),
@@ -117,7 +117,7 @@ window advisor_entertainment_window = {
     }
 }
 
-window advisor_trade_window = {
+advisor_trade_window = {
     ui : {
         background   : outer_panel({size:[40, 27] }),
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:4, pos:[10, 10] }),
@@ -143,7 +143,7 @@ window advisor_trade_window = {
     }
 }
 
-window advisor_population_window = {
+advisor_population_window = {
     ui : {
         background   : outer_panel({size:[40, 27] }),
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] }),
@@ -190,7 +190,7 @@ window advisor_population_window = {
     }
 }
 
-window advisor_imperial_window = {
+advisor_imperial_window = {
     ui : {
         background   : outer_panel({size:[40, 27]}),
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos:[10, 10] }),
@@ -220,7 +220,7 @@ window advisor_imperial_window = {
     },
 }
 
-window advisor_health_window = {
+advisor_health_window = {
     ui : {
         background   : outer_panel({size:[40, 18]}),
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] }),
@@ -259,7 +259,7 @@ window advisor_health_window = {
     }
 }
 
-window advisor_financial_window = {
+advisor_financial_window = {
     row_text_x : 80,
     row_last_year_x : 290,
     row_this_year_x : 430,
@@ -291,7 +291,7 @@ window advisor_financial_window = {
     }
 }
 
-window display_options_window = {
+display_options_window = {
     pos: [(sw(0) - px(24))/2, (sh(0) - px(21))/2],
     ui : {
         background  : outer_panel({size : [24, 21] }),
@@ -308,7 +308,7 @@ window display_options_window = {
   } 
 }
 
-window window_dinasty_menu = {
+window_dinasty_menu = {
     pos: [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
     ui : {
         background_image: background({pack:PACK_UNLOADED, id:31})
@@ -323,13 +323,13 @@ window window_dinasty_menu = {
     }
 }
 
-window window_mission_end = {
+window_mission_end = {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
     ui : {
     }
 }
 
-window window_mission_won = {
+window_mission_won = {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
     ui : {
         background      : outer_panel({size:[34, 18]}),
@@ -348,7 +348,7 @@ window window_mission_won = {
     }
 }
 
-window window_mission_lost = {
+window_mission_lost = {
     pos: [(sw(0) - px(34))/2, (sh(0) - px(16))/2],
     ui : {
         background      : outer_panel({size:[34, 16]}),
@@ -359,7 +359,7 @@ window window_mission_lost = {
     }
 }
 
-window mission_choice_window = {
+mission_choice_window = {
     pos: [(sw(0) - 1024)/2, (sh(0) - 768)/2],
     ui : {
         background       : image({pack:PACK_UNLOADED, id:12 }),
@@ -375,7 +375,7 @@ window mission_choice_window = {
     }
 }
 
-window mission_briefing_window = {
+mission_briefing_window = {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
     ui : {
         background       : outer_panel({pos:[16, 32], size : {w:38, h:27} }),
@@ -405,7 +405,7 @@ window mission_briefing_window = {
     }
 }
 
-window roadblock_info_window = {
+roadblock_info_window = {
     ui : {
         background      : outer_panel({size: [29, 17]}),
         title           : text({pos: [0, 12], size: [px(28), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -414,7 +414,7 @@ window roadblock_info_window = {
     }
 }
 
-window granary_orders_window = {
+granary_orders_window = {
     ui : {
         background    : outer_panel({size: [29, 17]}),
         title         : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -432,7 +432,7 @@ window granary_orders_window = {
     }
 }
 
-window granary_info_window = {
+granary_info_window = {
     resource_text_group : 23,
     ui : {
         background : outer_panel({size: [29, 17]}),
@@ -460,7 +460,7 @@ window granary_info_window = {
     }
 }
 
-window info_window_vacant_lot = {
+info_window_vacant_lot = {
     help_id : 128,
     ui : {
         background   : outer_panel({size: [29, 21] }), 
@@ -473,7 +473,7 @@ window info_window_vacant_lot = {
     }
 }
 
-window info_window_statue = {
+info_window_statue = {
     ui : {
         background   : outer_panel({size: [29, 17] }), // pos/size setup from code
         title          : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -484,7 +484,7 @@ window info_window_statue = {
     }
 }
 
-window info_window_water_lift = {
+info_window_water_lift = {
     ui : {
         background   : outer_panel({size: [29, 17] }), // pos/size setup from code
         title          : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -495,7 +495,7 @@ window info_window_water_lift = {
     }
 }
 
-window info_window_house = {
+info_window_house = {
     help_id : 56,
     ui : {
         background : outer_panel({size: [29, 23] }), // pos/size setup from code
@@ -530,7 +530,7 @@ window info_window_house = {
     }
 }
 
-window hold_festival_window = {
+hold_festival_window = {
     pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
     ui : { 
         background_image: background({pack:PACK_UNLOADED, id:11}),
@@ -551,7 +551,7 @@ window hold_festival_window = {
     }
 }
 
-window trade_resource_settings_window = {
+trade_resource_settings_window = {
     pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
     ui : {
         background       : outer_panel({size: [36, 15]}),
@@ -695,7 +695,7 @@ empty_info_window = {
     }
 }
 
-window figure_info_window = {
+figure_info_window = {
     ui : {
         background     : outer_panel({size: [29, 22]}),
         inner_panel    : inner_panel({pos : [16, 40], size: [27, 13] }),
@@ -726,7 +726,7 @@ info_window_figure_animal = {
     })
 }
 
-window figure_warship_info_window = {
+figure_warship_info_window = {
     ui : {
         background       : outer_panel({size: [29, 23]}),
         name             : text_center({pos: [16, 16], size: [px(27), 20], text:"${figure.class_name}", font : FONT_LARGE_BLACK_ON_DARK }),
@@ -753,14 +753,14 @@ window figure_warship_info_window = {
     }
 }
 
-window info_window_figure_caravan_donkey = {
+info_window_figure_caravan_donkey = {
     ui : __baseui(figure_info_window, {
     bought_items   : text({pos: [40, 180], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
     sold_items     : text({pos: [40, 210], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
     })
 }
 
-window figure_carrier_info_window = {
+figure_carrier_info_window = {
     ui : __baseui(figure_info_window, {
         typename             : text({pos: [92, 139], text:"${figure.class_name} ( @Y${figure.home}& )", font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
         items                    : text({pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
@@ -768,13 +768,13 @@ window figure_carrier_info_window = {
     })
 }
 
-window info_window_figure_enemy = {
+info_window_figure_enemy = {
     ui : {
         background  : { type : "outer_panel",   pos: [0, 0], size: [29, 22]},
     }
 }
 
-window terrain_info_window = {
+terrain_info_window = {
     ui : {
         background    : outer_panel({size: [29, 20]}),
         title         : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -785,7 +785,7 @@ window terrain_info_window = {
     }
 }
 
-window temple_info_window = {
+temple_info_window = {
     ui : {
         background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
         title        : text({ pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -802,7 +802,7 @@ window temple_info_window = {
     }
 }
 
-window temple_complex_info_window = {
+temple_complex_info_window = {
     ui : {
         background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
         title        : text({ pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -819,7 +819,7 @@ window temple_complex_info_window = {
     }
 }
 
-window building_info_window = {
+building_info_window = {
     ui : {
         background     : outer_panel({size: [29, 17]}),
         title          : { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
@@ -841,19 +841,19 @@ window building_info_window = {
     }
 }
 
-window water_supply_info_window = {
+water_supply_info_window = {
     ui : __baseui(building_info_window, {
         background  : outer_panel({size: [29, 20]}),
     })
 }
 
-window info_window_ferry = {
+info_window_ferry = {
     ui : __baseui(building_info_window, {
         background  : outer_panel({size: [29, 20]}),
     })
 }
 
-window info_window_bandstand = {
+info_window_bandstand = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
         title        : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -867,7 +867,7 @@ window info_window_bandstand = {
     })
 }
 
-window info_window_pavilion = {
+info_window_pavilion = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
         title        : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -882,7 +882,7 @@ window info_window_pavilion = {
     })
 }
 
-window shrine_info_window = {
+shrine_info_window = {
     ui : {
         background   : outer_panel({size: [29, 14]}),
         title        : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -903,7 +903,7 @@ window shrine_info_window = {
     }
 }
 
-window info_window_mastaba = {
+info_window_mastaba = {
     ui : {
         background    : outer_panel({size: [29, 18]}),
         title         : text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -912,7 +912,7 @@ window info_window_mastaba = {
     }
 }
 
-window info_window_booth = {
+info_window_booth = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({pos: [0, 0], size: [29, 16]}),
         play_text    : text({pos: [32, 162], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
@@ -926,14 +926,14 @@ window info_window_booth = {
     })
 }
 
-window info_window_fishing_wharf = {
+info_window_fishing_wharf = {
     ui : __baseui(building_info_window, {
         resource_img : { type : "resource_icon", pos: [32, 186] },
         storage_desc : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
     })
 }
 
-window info_window_recruiter = {
+info_window_recruiter = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 20]}),
         warning_text  : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -955,7 +955,7 @@ window info_window_recruiter = {
     })
 }
 
-window info_window_farm = {
+info_window_farm = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
@@ -967,19 +967,19 @@ window info_window_farm = {
     })
 }
 
-window info_window_architect_post = {
+info_window_architect_post = {
   ui : __baseui(building_info_window, {
 
   })
 }
 
-window info_window_firehouse = {
+info_window_firehouse = {
   ui : __baseui(building_info_window, {
 
   })
 }
 
-window ruin_info_window = {
+ruin_info_window = {
     open_sounds : [ "wavs/fire.wav" ],
     ui : {
         background    : outer_panel({size: [29, 18]}),
@@ -989,7 +989,7 @@ window ruin_info_window = {
     }
 }
 
-window info_window_burning_ruin = {
+info_window_burning_ruin = {
     open_sounds : [ "wavs/fire.wav" ],
     ui : {
         background    : outer_panel({size: [29, 18]}),
@@ -999,7 +999,7 @@ window info_window_burning_ruin = {
     }
 }
 
-window info_window_mansion = {
+info_window_mansion = {
     first_advisor : ADVISOR_IMPERIAL,
     ui : {
         background    : outer_panel({size: [29, 18]}),
@@ -1014,7 +1014,7 @@ window info_window_mansion = {
     }
 }
 
-window info_window_raw_material = {
+info_window_raw_material = {
     ui : __baseui(building_info_window, {
         resource_img  : resource_icon({pos: [14, 14], prop:"${building.output_resource}"}),
         progress_desc : text({pos: [32, 44], text:"${text.2} ${industry.progress} % ${text.3}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -1029,7 +1029,7 @@ window info_window_raw_material = {
     })
 }
 
-window info_window_garden = {
+info_window_garden = {
     ui : {
         background    : outer_panel({size: [29, 17]}),
         title             : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1039,7 +1039,7 @@ window info_window_garden = {
     }
 }
 
-window info_window_palace = {
+info_window_palace = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         resource_img  : resource_icon({pos: [16, 16], resource:RESOURCE_GOLD}),
@@ -1057,7 +1057,7 @@ window info_window_palace = {
     })
 }
 
-window info_window_courthouse = {
+info_window_courthouse = {
     ui : __baseui(building_info_window, { 
         background    : outer_panel({size: [29, 17]}),
         vaults_hold   : text({pos: [44, 54], font: FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -1065,7 +1065,7 @@ window info_window_courthouse = {
     })
 }
 
-window info_window_entertainment = {
+info_window_entertainment = {
     ui : {
         background    : outer_panel({pos: [0, 0], size: [29, 17]}),
         title             : text({ pos: [0, 12], size: [px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1085,19 +1085,19 @@ window info_window_entertainment = {
     }
 }
 
-window health_info_window = {
+health_info_window = {
     ui : __baseui(building_info_window, {
 
     })
 }
 
-window info_window_work_camp = {
+info_window_work_camp = {
     ui : __baseui(building_info_window, {
 
     })
 }
 
-window legion_info_window = {
+legion_info_window = {
     ui : {
         background    : outer_panel({size: [34, 24]}),
         title             : text({pos: [0, 16], size: [px(31), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1137,7 +1137,7 @@ window legion_info_window = {
     }
 }
 
-window taxcollector_info_window = {
+taxcollector_info_window = {
     ui : {
         background    : outer_panel({size: [29, 17]}),
         title             : text({pos: [0, 12], size: [px(29), 20], text:"${text.0}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1161,14 +1161,14 @@ window taxcollector_info_window = {
     }
 }
 
-window dock_info_window = {
+dock_info_window = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),
         orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:{group: 98, id: 5}}),
     })
 }
 
-window warshipwharf_info_window = {
+warshipwharf_info_window = {
     first_advisor       : ADVISOR_MILITARY,
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 16]}),
@@ -1178,7 +1178,7 @@ window warshipwharf_info_window = {
     })
 }
 
-window shipyard_info_window = {
+shipyard_info_window = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 18]}),
         warning_text  : text({pos: [28, 40], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -1195,7 +1195,7 @@ window shipyard_info_window = {
     })
 }
 
-window scribal_school_info_window = {
+scribal_school_info_window = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 17]}),
         resource_icon : resource_icon({pos: [32, 100] }),
@@ -1210,7 +1210,7 @@ window scribal_school_info_window = {
     })
 }
 
-window dock_orders_window = {
+dock_orders_window = {
     parent_offset: [0, -px(4)],
   ui : {
         background   : outer_panel({size: [29, 22]}),
@@ -1228,7 +1228,7 @@ window dock_orders_window = {
     }
 }
 
-window bazaar_info_window = {
+bazaar_info_window = {
     ui : {
         background   : outer_panel({size: [29, 17]}),
         title          : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1262,7 +1262,7 @@ window bazaar_info_window = {
     }
 }
 
-window bazaar_orders_window = {
+bazaar_orders_window = {
   ui : {
         background   : outer_panel({size: [29, 17]}),
         title          : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1280,7 +1280,7 @@ window bazaar_orders_window = {
     }
 }
 
-window festival_square_info_window = {
+festival_square_info_window = {
     ui : {
         background    : outer_panel({pos: [0, 0], size: [29, 16]}),
         title           : text({text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1296,7 +1296,7 @@ window festival_square_info_window = {
     }
 }
 
-window workshop_info_window = {
+workshop_info_window = {
     ui : {
         background    : outer_panel({size: [29, 17] }),
         title           : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
@@ -1316,7 +1316,7 @@ window workshop_info_window = {
     }
 }
 
-window brickworks_info_window = {
+brickworks_info_window = {
     ui : __baseui(workshop_info_window, {
         background    : outer_panel({size: [29, 18] }),
         warning_text  : text({pos: [32, 58], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
@@ -1329,13 +1329,13 @@ window brickworks_info_window = {
     })
 }
 
-window building_bricklayers_guild_info_window = {
+building_bricklayers_guild_info_window = {
     ui : __baseui(workshop_info_window, {
 
     })
 }
 
-window well_info_window = {
+well_info_window = {
     ui : {
         background    : outer_panel({size: [29, 14] }),
         title           : text({pos: [0, 12], size: [px(28), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center", text:"${loc.well_info_title}"}),
@@ -1343,7 +1343,7 @@ window well_info_window = {
     }
 }
 
-window info_window_storageyard_orders = {
+info_window_storageyard_orders = {
     parent_window_offset : [0, -250],
     ui : {
         background    : outer_panel({size:[29, 35] }),
@@ -1366,7 +1366,7 @@ window info_window_storageyard_orders = {
     }
 }
 
-window info_window_storageyard = {
+info_window_storageyard = {
     first_advisor       : ADVISOR_TRADE,
     ui : {
         background    : outer_panel({size: [29, 21] }),
@@ -1468,7 +1468,7 @@ empire_window = {
     }
 }
 
-window window_popup_dialog_yesno = {
+window_popup_dialog_yesno = {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
     ui : {
         background : outer_panel({size: [30, 10] }),
@@ -1480,7 +1480,7 @@ window window_popup_dialog_yesno = {
     }
 }
 
-window window_popup_dialog_ok = {
+window_popup_dialog_ok = {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
     ui : {
         background : outer_panel({size: [30, 10] }),
@@ -1491,7 +1491,7 @@ window window_popup_dialog_ok = {
     }
 }
 
-window minimap_window = {
+minimap_window = {
   draw_size : [73, 111],
 
     terrain_water : {pack:PACK_GENERAL, id:142},
@@ -1516,14 +1516,14 @@ window minimap_window = {
     terrain_orange: {pack:PACK_GENERAL, id:149, offset:205},
 }
 
-window window_warnings = {
+window_warnings = {
     max_items : 5,
     timeout_ms : 15000,
     top_offset : 30,
     message_interval : 25,
 }
 
-window info_window_education = {
+info_window_education = {
     ui : __baseui(building_info_window, {
         background    : outer_panel({size: [29, 17]}),
         resource_icon : resource_icon({pos: [32, 100] }),

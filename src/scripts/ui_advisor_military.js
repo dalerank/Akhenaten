@@ -1,6 +1,6 @@
 log_info("akhenaten: ui advisor military started")
 
-window advisor_military_window = {
+advisor_military_window = {
     ui : {
         background   : outer_panel({size:[40, 27]})
 

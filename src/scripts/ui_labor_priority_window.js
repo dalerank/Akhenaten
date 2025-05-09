@@ -1,6 +1,6 @@
 log_info("akhenaten: ui labor priority started")
 
-window labor_priority_window = {
+labor_priority_window = {
     pos: [(sw(0) - px(23))/2, (sh(0) - px(9))/2]
     ui: {
         background      : outer_panel({ size:[23, 9] })

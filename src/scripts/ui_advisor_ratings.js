@@ -1,6 +1,6 @@
 log_info("akhenaten: ui advisor ratings started")
 
-window advisor_ratings_window = {
+advisor_ratings_window = {
   ui : {
 		background 		: outer_panel({size:[40, 27] }),
 		background_image : image({pack:PACK_UNLOADED, id:2, pos :[60, 38]	}),

@@ -1,6 +1,6 @@
 log_info("akhenaten: ui advisor chief started")
 
-window advisor_chief_window = {
+advisor_chief_window = {
 	ui : {
 		outer_panel : { type : "outer_panel", pos:[0, 0], size:[40, 27] },
 		advisor_icon : { type : "image", pack:PACK_GENERAL, id:128, offset:11, pos:[10, 10] },

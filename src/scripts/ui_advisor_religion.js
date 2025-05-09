@@ -1,6 +1,6 @@
 log_info("akhenaten: ui advisor religion started")
 
-window advisor_religion_window = {
+advisor_religion_window = {
 	ui : {
 		background : outer_panel({size:[40, 27] }),
 		title : text({pos: [60, 12], text: {group:59, id:0}, font : FONT_LARGE_BLACK_ON_LIGHT }),

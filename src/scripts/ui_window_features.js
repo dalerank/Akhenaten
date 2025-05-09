@@ -2,7 +2,8 @@ log_info("akhenaten: window features started")
 
 function wposbtn(i) { return { x: 32, y: 72 + i * 25} }
 function wpostxt(i) { return { x: 64, y: 78 + i * 25} }
-window window_features = {
+
+window_features = {
     pos: [(sw(0) - px(40))/2, (sh(0) - px(30))/2]
     default_font : FONT_NORMAL_BLACK_ON_LIGHT
 

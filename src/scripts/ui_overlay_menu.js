@@ -1,6 +1,6 @@
 log_info("akhenaten: ui overlay menu started")
 
-var overlay_menu = [
+overlay_menu = [
 	{
 		title: [14, 0] //"None"
 		ids: [OVERLAY_NONE]		
@@ -115,7 +115,7 @@ var overlay_menu = [
     }
 ]
 
-window overlay_menu_widget = {
+overlay_menu_widget = {
 	pos : [-85, 20]
 	ui : {
 		category_item : dummy({pos:[0, 24], size:[160, 20]})

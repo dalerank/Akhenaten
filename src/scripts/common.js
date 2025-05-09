@@ -84,14 +84,6 @@ var building_house_palatial_estate = {}
 var empire_window = {}
 var empire_images_remap = []
 
-// ui
-var info_window_figure_animal = {}
-var empty_info_window = {}
-var advisors_window = {}
-var sidebar_window_expanded = {}
-var sidebar_window_collapsed = {}
-var sidebar_window_extra = {}
-
 //figures
 var figure_crocodile = {}
 var figure_immigrant = {}
