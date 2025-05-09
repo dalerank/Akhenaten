@@ -24,7 +24,7 @@ import images_remap
 import ui_overlay_menu
 import imagepaks
 import missions
-include(":figures.js")
+import figures
 include(":localization.js")
 include(":building_menu.js")
 include(":desirability.js")

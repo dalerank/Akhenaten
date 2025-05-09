@@ -36,7 +36,6 @@ enum
 
 	/* keywords */
 	TK_BREAK,
-	TK_BUILDINGIF,
 	TK_CASE,
 	TK_CATCH,
 	TK_CONTINUE,

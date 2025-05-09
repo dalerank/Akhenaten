@@ -1,6 +1,6 @@
 log_info("akhenaten: building info started")
 
-building building_small_statue = {
+building_small_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 61, offset:1},
     {pack: PACK_GENERAL, id: 61, offset:5},
@@ -14,7 +14,7 @@ building building_small_statue = {
   building_size : 1,
 }
 
-building building_medium_statue = {
+building_medium_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 8, offset:1},
     {pack: PACK_GENERAL, id: 8, offset:5},
@@ -27,7 +27,7 @@ building building_medium_statue = {
   building_size : 2,
 }
 
-building building_large_statue = {
+building_large_statue = {
   variants : [
     {pack: PACK_GENERAL, id: 7, offset:1},
     {pack: PACK_GENERAL, id: 7, offset:5},
@@ -49,7 +49,7 @@ var base_fort_ghost = {
                   [0,  3], [1,  3], [1, 4], [0,  4]],
 }
 
-building building_fort_charioteers = {
+building_fort_charioteers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
@@ -65,7 +65,7 @@ building building_fort_charioteers = {
   info_text_id:89,
 }
 
-building building_fort_infantry = {
+building_fort_infantry = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
@@ -81,7 +81,7 @@ building building_fort_infantry = {
   info_text_id:89,
 }
 
-building building_fort_archers = {
+building_fort_archers = {
   animations : {
     base: {pack: PACK_GENERAL, id: 66},
     ground: {pack: PACK_GENERAL, id: 66, offset:1},
@@ -97,7 +97,7 @@ building building_fort_archers = {
   info_text_id:89,
 }
 
-building building_fort_ground = {
+building_fort_ground = {
   labor_category : LABOR_CATEGORY_MILITARY,
   building_size : 4,
   fire_proof : 1,
@@ -310,7 +310,7 @@ building_house_palatial_estate = {
   window_info_height_id : 5,
 }
 
-building building_cattle_ranch = {
+building_cattle_ranch = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
@@ -325,7 +325,7 @@ building building_cattle_ranch = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building building_farm_grain = {
+building_farm_grain = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -351,7 +351,7 @@ building building_farm_grain = {
   need_meadow : true,
 }
 
-building building_farm_chickpeas = {
+building_farm_chickpeas = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -374,7 +374,7 @@ building building_farm_chickpeas = {
   need_meadow : true,
 }
 
-building building_farm_lettuce = {
+building_farm_lettuce = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -397,7 +397,7 @@ building building_farm_lettuce = {
   need_meadow : true,
 }
 
-building building_farm_pomegranates = {
+building_farm_pomegranates = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -420,7 +420,7 @@ building building_farm_pomegranates = {
   need_meadow : true,
 }
 
-building building_farm_barley = {
+building_farm_barley = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -443,7 +443,7 @@ building building_farm_barley = {
   need_meadow : true,
 }
 
-building building_farm_flax = {
+building_farm_flax = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -466,7 +466,7 @@ building building_farm_flax = {
   need_meadow : true,
 }
 
-building building_farm_henna = {
+building_farm_henna = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -489,7 +489,7 @@ building building_farm_henna = {
   need_meadow : true,
 }
 
-building building_farm_figs = {
+building_farm_figs = {
   animations : {
     preview : { pack:PACK_GENERAL, id:105, },
     base : { pack:PACK_GENERAL, id:105, offset:0 },
@@ -512,7 +512,7 @@ building building_farm_figs = {
   need_meadow : true,
 }
 
-building building_burning_ruin = {
+building_burning_ruin = {
   animations : {
     base0 : { pack:PACK_TERRAIN, id:36, offset:0 },
     fire0 : { pack:PACK_TERRAIN, id:36, offset:1, max_frames:8, duration:2 },
@@ -529,7 +529,7 @@ building building_burning_ruin = {
   damage_proof : true,
 }
 
-building building_granary = {
+building_granary = {
   animations : {
     preview : { pack:PACK_GENERAL, id:99 },
     base : { pack:PACK_GENERAL, id:99 },
@@ -605,7 +605,7 @@ building_shrine_bast = {
   building_size : 1,
 }
 
-building building_weaponsmith = {
+building_weaponsmith = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
@@ -643,7 +643,7 @@ building_guild_stonemasons = {
   building_size : 2,
 }
 
-building building_bricklayers_guild = {
+building_bricklayers_guild = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
@@ -666,7 +666,7 @@ building_carpenters_guild = {
   building_size : 2,
 }
 
-building building_dock = {
+building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },
     base : { pack:PACK_TERRAIN, id:49 },
@@ -685,7 +685,7 @@ building building_dock = {
   window_info_height_id : 1,
 }
 
-building building_personal_mansion = {
+building_personal_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:85 },
     base : { pack:PACK_GENERAL, id:85 },
@@ -699,7 +699,7 @@ building building_personal_mansion = {
   window_info_height_id : 1,
 }
 
-building building_village_mansion = {
+building_village_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:85 },
     base : { pack:PACK_GENERAL, id:85 },
@@ -713,7 +713,7 @@ building building_village_mansion = {
   window_info_height_id : 1,
 }
 
-building building_family_mansion = {
+building_family_mansion = {
   animations : {
     preview : { pack:PACK_GENERAL, id:86 },
     base : { pack:PACK_GENERAL, id:86 },
@@ -727,7 +727,7 @@ building building_family_mansion = {
   window_info_height_id : 1,
 }
 
-building building_dynasty_mansion = {
+building_dynasty_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   building_size : 4,
   unique_building : true,
@@ -894,7 +894,7 @@ building_work_camp = {
   building_size : 2,
 }
 
-building building_booth = {
+building_booth = {
   animations : {
     booth : { pack:PACK_GENERAL, id:114 },
     square : { pack:PACK_GENERAL, id:112 },
@@ -937,7 +937,7 @@ building_water_supply = {
   need_groundwater : true,
 }
 
-building building_well = {
+building_well = {
   animations : {
     preview : { pack: PACK_GENERAL, id:23, max_frames:1 },
     base : { pack: PACK_GENERAL, id:23, max_frames:1 },
@@ -955,7 +955,7 @@ building building_well = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
 }
 
-building building_papyrus_maker = {
+building_papyrus_maker = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:44 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
@@ -971,7 +971,7 @@ building building_papyrus_maker = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building building_weaver = {
+building_weaver = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:122 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:122 },
@@ -987,7 +987,7 @@ building building_weaver = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building building_jewels_workshop = {
+building_jewels_workshop = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:119 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
@@ -1002,7 +1002,7 @@ building building_jewels_workshop = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building building_reed_gatherer = {
+building_reed_gatherer = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
@@ -1031,7 +1031,7 @@ building_wood_cutter = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building building_small_mastaba = {
+building_small_mastaba = {
   animations : {
     preview : { pack:PACK_MASTABA, id:2, offset:7 },
     base : { pack:PACK_MASTABA, id:2, offset:7 },
@@ -1048,11 +1048,11 @@ building building_small_mastaba = {
   // todo
 }
 
-building building_small_mastaba_part_side = building_small_mastaba
-building building_small_mastaba_part_wall = building_small_mastaba
-building building_small_mastaba_part_entrance = building_small_mastaba
+building_small_mastaba_part_side = building_small_mastaba
+building_small_mastaba_part_wall = building_small_mastaba
+building_small_mastaba_part_entrance = building_small_mastaba
 
-building building_medium_mastaba = {
+building_medium_mastaba = {
   animations : {
     preview : {pack:PACK_MASTABA, id:2, offset:7 },
     base : {pack:PACK_MASTABA, id:2, offset:7 },
@@ -1068,9 +1068,9 @@ building building_medium_mastaba = {
   info_text_id:120,
 }
 
-building building_medium_mastaba_part_side = building_medium_mastaba
-building building_medium_mastaba_part_wall = building_medium_mastaba
-building building_medium_mastaba_part_entrance = building_medium_mastaba
+building_medium_mastaba_part_side = building_medium_mastaba
+building_medium_mastaba_part_wall = building_medium_mastaba
+building_medium_mastaba_part_entrance = building_medium_mastaba
 
 building_tax_collector = {
   animations : {
@@ -1098,7 +1098,7 @@ building_tax_collector_up = {
   building_size : 2,
 }
 
-building building_recruiter = {
+building_recruiter = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:166 },
@@ -1231,7 +1231,7 @@ building_pavilion = {
   window_info_height_id : 2,
 }
 
-building building_festival_square = {
+building_festival_square = {
   animations : {
     base : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
@@ -1245,7 +1245,7 @@ building building_festival_square = {
   unique_building : true,
 }
 
-building building_roadblock = {
+building_roadblock = {
   animations : {
     preview : { pack:PACK_GENERAL, id:98 },
     base : { pack:PACK_GENERAL, id:98 },
@@ -1300,7 +1300,7 @@ building_ferry = {
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
-building building_transport_wharf = {
+building_transport_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:17 },
     base : { pack:PACK_TERRAIN, id:17 },
@@ -1324,7 +1324,7 @@ building building_transport_wharf = {
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
-building building_warship_wharf = {
+building_warship_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:28 },
     base : { pack:PACK_TERRAIN, id:28 },
@@ -1347,7 +1347,7 @@ building building_warship_wharf = {
   labor_category : LABOR_CATEGORY_MILITARY,
 }
 
-building building_fishing_wharf = {
+building_fishing_wharf = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:18 },
     base : { pack:PACK_TERRAIN, id:18 },
@@ -1372,7 +1372,7 @@ building building_fishing_wharf = {
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
 }
 
-building building_shipyard = {
+building_shipyard = {
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
@@ -1433,7 +1433,7 @@ building_plaza = {
   building_size : 1,
 }
 
-building building_garden = {
+building_garden = {
   animations : {
     preview : { pack:PACK_GENERAL, id:59 },
     base : { pack:PACK_GENERAL, id:59 },
@@ -1446,7 +1446,7 @@ building building_garden = {
   building_size : 1,
 }
 
-building building_village_palace = {
+building_village_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:47 },
     base : { pack:PACK_GENERAL, id:47 },
@@ -1461,7 +1461,7 @@ building building_village_palace = {
   need_groundwater : true,
 }
 
-building building_town_palace = {
+building_town_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:39 },
     base : { pack:PACK_GENERAL, id:39 },
@@ -1476,7 +1476,7 @@ building building_town_palace = {
   need_groundwater : true,
 }
 
-building building_city_palace = {
+building_city_palace = {
   animations : {
     preview : { pack:PACK_GENERAL, id:18 },
     base : { pack:PACK_GENERAL, id:18 },
@@ -1490,7 +1490,7 @@ building building_city_palace = {
   need_groundwater : true,
 }
 
-building building_road = {
+building_road = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:33 },
     base : { pack:PACK_TERRAIN, id:33 },
@@ -1499,7 +1499,7 @@ building building_road = {
   is_draggable : true,
 }
 
-building building_irrigation_ditch = {
+building_irrigation_ditch = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:33 },
     base : { pack:PACK_TERRAIN, id:33 },
@@ -1509,7 +1509,7 @@ building building_irrigation_ditch = {
   need_canals : false,
 }
 
-building building_clay_pit = {
+building_clay_pit = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
@@ -1525,7 +1525,7 @@ building building_clay_pit = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
 }
 
-building building_brewery = {
+building_brewery = {
   animations : {
     preview : { pack:PACK_GENERAL, id:116 },
     base : { pack:PACK_GENERAL, id:116 },
@@ -1542,7 +1542,7 @@ building building_brewery = {
   building_size : 2,
 }
 
-building building_mine_copper = {
+building_mine_copper = {
   animations : {
     preview : { pack:PACK_GENERAL, id:196 },
     base : { pack:PACK_GENERAL, id:196 },
@@ -1558,7 +1558,7 @@ building building_mine_copper = {
   need_ore : true,
 }
 
-building building_mine_gems = {
+building_mine_gems = {
   animations : {
     preview : { pack:PACK_GENERAL, id:188 },
     base : { pack:PACK_GENERAL, id:188 },
@@ -1572,7 +1572,7 @@ building building_mine_gems = {
   need_rock : true,
 }
 
-building building_sandstone_quarry = {
+building_sandstone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:197 },
     base : { pack:PACK_GENERAL, id:197 },
@@ -1597,7 +1597,7 @@ building_marble_quarry = {
   info_text_id:118,
 }
 
-building building_stone_quarry = {
+building_stone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:187 },
     base : { pack:PACK_GENERAL, id:187 },
@@ -1612,7 +1612,7 @@ building building_stone_quarry = {
   need_rock : true,
 }
 
-building building_granite_quarry = {
+building_granite_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:38 },
     base : { pack:PACK_GENERAL, id:38 },
@@ -1627,7 +1627,7 @@ building building_granite_quarry = {
   need_rock : true,
 }
 
-building building_limestone_quarry = {
+building_limestone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:170 },
     base : { pack:PACK_GENERAL, id:170 },
@@ -1642,7 +1642,7 @@ building building_limestone_quarry = {
   need_rock : true,
 }
 
-building building_mine_gold = {
+building_mine_gold = {
   animations : {
     preview : { pack:PACK_GENERAL, id:185 },
     base : { pack:PACK_GENERAL, id:185 },
@@ -1665,7 +1665,7 @@ building_brick_gatehouse = {
   building_size : 2,
 }
 
-building building_mud_gatehouse = {
+building_mud_gatehouse = {
   animations : {
     preview : { pack:PACK_GENERAL, id:220 },
     base : { pack:PACK_GENERAL, id:220 },
@@ -1674,7 +1674,7 @@ building building_mud_gatehouse = {
   window_info_height_id : 1,
 }
 
-building building_mud_wall = {
+building_mud_wall = {
   animations : {
     preview : { pack:PACK_GENERAL, id:138, offset:27 },
     base : { pack:PACK_GENERAL, id:138 },
@@ -1716,7 +1716,7 @@ building_bullfight_school = {
   building_size : 4,
 }
 
-building building_bricks_workshop = {
+building_bricks_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
@@ -1736,7 +1736,7 @@ building building_bricks_workshop = {
   window_info_height_id : 1,
 }
 
-building building_chariots_workshop = {
+building_chariots_workshop = {
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
@@ -1753,7 +1753,7 @@ building building_chariots_workshop = {
   window_info_height_id : 1,
 }
 
-building building_pottery = {
+building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
@@ -1770,7 +1770,7 @@ building building_pottery = {
   window_info_height_id : 1,
 }
 
-building building_lamp_workshop = {
+building_lamp_workshop = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
@@ -1786,7 +1786,7 @@ building building_lamp_workshop = {
   window_info_height_id : 1,
 }
 
-building building_paint_workshop = {
+building_paint_workshop = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
@@ -1801,7 +1801,7 @@ building building_paint_workshop = {
   window_info_height_id : 1,
 }
 
-building building_academy = {
+building_academy = {
   animations : {
     preview : { pack:PACK_GENERAL, id:44 },
     base : { pack:PACK_GENERAL, id:4 },
@@ -1812,7 +1812,7 @@ building building_academy = {
   window_info_height_id : 1,
 }
 
-building building_physician = {
+building_physician = {
   animations : {
     preview : { pack:PACK_GENERAL, id:70 },
     base : { pack:PACK_GENERAL, id:70 },
@@ -1824,7 +1824,7 @@ building building_physician = {
   building_size : 2,
 }
 
-building building_water_lift = {
+building_water_lift = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
     base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
@@ -1847,7 +1847,7 @@ building building_water_lift = {
   info_text_id: 107,
 }
 
-building building_firehouse = {
+building_firehouse = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
@@ -1913,7 +1913,7 @@ building_hunting_lodge = {
   building_size : 2,
 }
 
-building building_scribal_school = {
+building_scribal_school = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
@@ -1928,7 +1928,7 @@ building building_scribal_school = {
   labor_category : LABOR_CATEGORY_EDUCATION,
 }
 
-building building_temple_complex_osiris = {
+building_temple_complex_osiris = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     main_n : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
@@ -1958,7 +1958,7 @@ building building_temple_complex_osiris = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
-building building_temple_complex_ra = {
+building_temple_complex_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     main_n : { pack:PACK_TEMPLE_RA, id:1 },
@@ -1985,7 +1985,7 @@ building building_temple_complex_ra = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
-building building_temple_complex_ptah = {
+building_temple_complex_ptah = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     main_n : { pack:PACK_TEMPLE_PTAH, id:1 },
@@ -2013,7 +2013,7 @@ building building_temple_complex_ptah = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
-building building_temple_complex_seth = {
+building_temple_complex_seth = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     main_n : { pack:PACK_TEMPLE_SETH, id:1 },
@@ -2041,7 +2041,7 @@ building building_temple_complex_seth = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
-building building_temple_complex_bast = {
+building_temple_complex_bast = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     main_n : { pack:PACK_TEMPLE_BAST, id:1, offset:3 },
@@ -2070,7 +2070,7 @@ building building_temple_complex_bast = {
   labor_category : LABOR_CATEGORY_RELIGION,
 }
 
-building building_temple_complex_altar = {
+building_temple_complex_altar = {
   animations : {
     preview : { pack:PACK_TEMPLE_NILE, id:7},
     base_n  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
@@ -2088,7 +2088,7 @@ building building_temple_complex_altar = {
   fire_proof : true,
 }
 
-building building_temple_complex_oracle = {
+building_temple_complex_oracle = {
   animations : {
     preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
     base_n  :  { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
@@ -2106,7 +2106,7 @@ building building_temple_complex_oracle = {
   fire_proof : true,
 }
 
-building building_temple_complex_altar_ra = {
+building_temple_complex_altar_ra = {
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
   },

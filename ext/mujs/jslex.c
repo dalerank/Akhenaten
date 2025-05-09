@@ -57,7 +57,7 @@ static const char *tokenstring[] = {
 	"'<<='", "'>>='", "'>>>='", "'&='", "'|='", "'^='",
 	"'++'", "'--'",
 
-	"'break'", "'building'", "'case'", "'catch'", "'continue'", "'debugger'",
+	"'break'", "'case'", "'catch'", "'continue'", "'debugger'",
 	"'default'", "'delete'", "'do'", "'else'", "'false'", "'finally'", "'for'",
 	"'function'", "'if'", "'import'", "'in'", "'instanceof'", "'new'", "'null'", "'return'",
 	"'switch'", "'this'", "'throw'", "'true'", "'try'", "'typeof'", "'var'",
@@ -73,7 +73,7 @@ const char *jsY_tokenstring(int token)
 }
 
 static const char *keywords[] = {
-	"break", "building", "case", "catch", "continue", "debugger", "default", "delete",
+	"break", "case", "catch", "continue", "debugger", "default", "delete",
 	"do", "else", "false", "finally", "for", "function", "if", "import", "in",
 	"instanceof", "new", "null", "return", "switch", "this", "throw",
 	"true", "try", "typeof", "var", "void", "while", "with"
