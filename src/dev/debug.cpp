@@ -1195,8 +1195,7 @@ void draw_debug_ui(int x, int y) {
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
-        vec2i min_pos, max_pos;
-        city_view_get_camera_scrollable_pixel_limits(g_city_view, min_pos, max_pos);
+        auto mm_view = city_view_get_camera_scrollable_pixel_limits(g_city_view);
 
         int real_max_x;
         int real_max_y;
@@ -1207,9 +1206,9 @@ void draw_debug_ui(int x, int y) {
         city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
         y += 30;
-        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", min_pos.x, min_pos.y);
+        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", mm_view.min.x, mm_view.min.y);
         debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", g_city_view.camera.position.x, g_city_view.camera.position.y);
-        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", max_pos.x, max_pos.y);
+        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", mm_view.max.x, mm_view.max.y);
 
         debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
         debug_text_dual_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());

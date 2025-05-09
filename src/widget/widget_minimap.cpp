@@ -103,18 +103,17 @@ int minimap_window::handle_mouse(const mouse *m) {
         float xx, yy;
         vec2i relative = get_mouse_relative_pos(m, xx, yy);
         if (relative.x > 0 && relative.y > 0) {
-            vec2i min_pos, max_pos;
             vec2i view_pos, view_size;
 
-            city_view_get_camera_scrollable_pixel_limits(g_city_view, min_pos, max_pos);
+            auto mm_view = city_view_get_camera_scrollable_pixel_limits(g_city_view);
             city_view_get_viewport(g_city_view, view_pos, view_size);
 
-            max_pos += view_size;
-            vec2i city_canvas_pixels = max_pos - min_pos;
+            mm_view.max += view_size;
+            vec2i city_canvas_pixels = mm_view.max - mm_view.min;
             vec2i map_pos(city_canvas_pixels.x * xx, city_canvas_pixels.y * yy);
 
             painter ctx = game.painter();
-            camera_go_to_pixel(ctx, min_pos + map_pos - view_size / 2, true);
+            camera_go_to_pixel(ctx, mm_view.min + map_pos - view_size / 2, true);
             widget_minimap_invalidate();
             mouse_last_coords = { m->x, m->y };
             return true;

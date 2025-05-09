@@ -252,16 +252,15 @@ static void create_full_city_screenshot() {
     }
     vec2i original_camera_pixels = camera_get_position();
 
-    vec2i min_pos, max_pos;
     view_data_t full_city_view_data = g_city_view;
-    city_view_get_camera_scrollable_pixel_limits(full_city_view_data, min_pos, max_pos);
+    auto mm_view = city_view_get_camera_scrollable_pixel_limits(full_city_view_data);
 
     vec2i view_pos, view_size;
     city_view_get_viewport(g_city_view, view_pos, view_size);
 
-    max_pos += view_size;
+    mm_view.max += view_size;
 
-    vec2i city_canvas_pixels = max_pos - min_pos;
+    vec2i city_canvas_pixels = mm_view.max - mm_view.min;
 
     int canvas_width = city_canvas_pixels.x / 5;
     int canvas_height = city_canvas_pixels.y / 5;
@@ -288,7 +287,7 @@ static void create_full_city_screenshot() {
     int old_scale = g_zoom.get_scale() * 100;
 
     int error = 0;
-    int base_height = image_set_loop_height_limits(min_pos.y, max_pos.y);
+    int base_height = image_set_loop_height_limits(mm_view.min.y, mm_view.max.y);
     int size;
     g_zoom.set_scale(100);
     graphics_set_clip_rectangle({0, TOP_MENU_HEIGHT}, {canvas_width, canvas_height});
@@ -301,7 +300,7 @@ static void create_full_city_screenshot() {
     int yy = 0;
     while ((size = image_request_rows()) != 0) {
         
-        int y_offset = (current_height + canvas_height > max_pos.y) ? canvas_height - (max_pos.y - current_height) - TILE_Y_SIZE : 0;
+        int y_offset = (current_height + canvas_height > mm_view.max.y) ? canvas_height - (mm_view.max.y - current_height) - TILE_Y_SIZE : 0;
 
         std::vector<std::thread> threads;
 
@@ -327,7 +326,7 @@ static void create_full_city_screenshot() {
                 local_context.global_render_scale = 1.f;
                 local_context.renderer = graphics_renderer()->renderer();
 
-                camera_go_to_pixel(local_context, vec2i{min_pos.x + width, current_height}, false);
+                camera_go_to_pixel(local_context, vec2i{mm_view.min.x + width, current_height}, false);
                 g_screen_city.draw_without_overlay(local_context, 0, nullptr);
                 graphics_renderer()->save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};

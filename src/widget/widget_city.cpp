@@ -136,11 +136,10 @@ void screen_city_t::update_clouds(painter &ctx) {
         clouds_pause();
     }
 
-    vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(g_city_view, min_pos, max_pos);
+    auto mm_view = city_view_get_camera_scrollable_pixel_limits(g_city_view);
     const vec2i offset = {
-        g_city_view.camera.position.x - min_pos.x,
-        g_city_view.camera.position.y - min_pos.y,
+        g_city_view.camera.position.x - mm_view.min.x,
+        g_city_view.camera.position.y - mm_view.min.y,
     };
 
     const vec2i limit = {
@@ -148,7 +147,7 @@ void screen_city_t::update_clouds(painter &ctx) {
         GRID_LENGTH * TILE_HEIGHT_PIXELS,
     };
 
-    clouds_draw(ctx, min_pos, offset, limit);
+    clouds_draw(ctx, mm_view.min, offset, limit);
 }
 
 void screen_city_t::clear_current_tile() {

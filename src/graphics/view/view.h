@@ -57,7 +57,12 @@ vec2i camera_get_pixel_offset_internal(painter &ctx);
 void city_view_get_camera_max_tile(int* x, int* y);
 void city_view_get_camera_max_pixel_offset(int* x, int* y);
 vec2i city_view_get_camera_in_pixels();
-void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_pos, vec2i &max_pos);
+
+struct carera_scrollable {
+    vec2i min;
+    vec2i max;
+};
+carera_scrollable city_view_get_camera_scrollable_pixel_limits(view_data_t& view, float p = -1.f);
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip);
 
 void camera_go_to_pixel(painter &ctx, vec2i pixel, bool validate);

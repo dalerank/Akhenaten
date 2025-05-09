@@ -124,11 +124,15 @@ vec2i city_view_get_camera_in_pixels() {
             data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
 }
 
-void city_view_get_camera_scrollable_pixel_limits(view_data_t& view, vec2i &min_pos, vec2i &max_pos) {
-    min_pos.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
-    min_pos.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
-    max_pos.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.x, g_zoom.get_percentage());
-    max_pos.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.y, g_zoom.get_percentage());
+carera_scrollable city_view_get_camera_scrollable_pixel_limits(view_data_t& view, float p) {
+    carera_scrollable result;
+    result.min.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
+    result.min.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
+    p = p < 0 ? g_zoom.get_percentage() : p;
+    result.max.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.x, p);
+    result.max.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(view.viewport.size_pixels.y, p);
+
+    return result;
 }
 
 void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
@@ -146,32 +150,31 @@ void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
 }
 
 static void camera_validate_position(view_data_t& view) {
-    vec2i min_pos, max_pos;
-    city_view_get_camera_scrollable_pixel_limits(view, min_pos, max_pos);
+    carera_scrollable mm_view = city_view_get_camera_scrollable_pixel_limits(view);
 
     // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
-    if (max_pos.x <= min_pos.x) {
-        int corr_x = (min_pos.x - max_pos.x) / 2;
-        min_pos.x -= corr_x;
-        max_pos.x += corr_x;
+    if (mm_view.max.x <= mm_view.min.x) {
+        int corr_x = (mm_view.min.x - mm_view.max.x) / 2;
+        mm_view.min.x -= corr_x;
+        mm_view.max.x += corr_x;
     }
-    if (max_pos.y <= min_pos.y) {
-        int corr_y = (min_pos.y - max_pos.y) / 2;
-        min_pos.y -= corr_y;
-        max_pos.y += corr_y;
+    if (mm_view.max.y <= mm_view.min.y) {
+        int corr_y = (mm_view.min.y - mm_view.max.y) / 2;
+        mm_view.min.y -= corr_y;
+        mm_view.max.y += corr_y;
     }
 
-    if (view.camera.position.x < min_pos.x)
-        view.camera.position.x = min_pos.x;
+    if (view.camera.position.x < mm_view.min.x)
+        view.camera.position.x = mm_view.min.x;
 
-    if (view.camera.position.x > max_pos.x)
-        view.camera.position.x = max_pos.x;
+    if (view.camera.position.x > mm_view.max.x)
+        view.camera.position.x = mm_view.max.x;
 
-    if (view.camera.position.y < min_pos.y)
-        view.camera.position.y = min_pos.y;
+    if (view.camera.position.y < mm_view.min.y)
+        view.camera.position.y = mm_view.min.y;
 
-    if (view.camera.position.y > max_pos.y)
-        view.camera.position.y = max_pos.y;
+    if (view.camera.position.y > mm_view.max.y)
+        view.camera.position.y = mm_view.max.y;
 
     view.camera.tile_internal.x = view.camera.position.x / TILE_WIDTH_PIXELS;
     view.camera.tile_internal.y = view.camera.position.y / HALF_TILE_HEIGHT_PIXELS;
