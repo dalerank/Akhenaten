@@ -622,11 +622,11 @@ void build_planner::update_obstructions_check() {
             }
 
             tile_blocked_array[row][column] = false;
-            bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
-            if (!map_grid_is_inside(current_tile, 1)
-                || map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
-                || map_has_figure_at(current_tile)
-                || blocked_by_floodplain_edge) {
+            const bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
+            const bool inside_map = map_grid_is_inside(current_tile, 1);
+            const bool not_clear = inside_map && map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR);
+            const bool has_figure = inside_map && map_has_figure_at(current_tile);
+            if (!inside_map || not_clear || has_figure || blocked_by_floodplain_edge) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }

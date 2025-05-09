@@ -94,7 +94,7 @@ vec2i tile_to_screen(tile2i point) {
     int columns = point.x();
     int rows = point.y();
 
-    vec2i screen;
+    vec2i screen = { -1, -1 };
     tile2i *ptr = nullptr;
     switch (city_orientation) {
     case 0:
@@ -121,6 +121,7 @@ vec2i tile_to_screen(tile2i point) {
         }
         break;
     }
+
     return screen;
 }
 

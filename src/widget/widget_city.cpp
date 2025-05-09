@@ -6,6 +6,7 @@
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/property.h"
+#include "grid/grid.h"
 #include "widget/city/building_ghost.h"
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
@@ -119,14 +120,14 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //        COLOR_CHANNEL_GREEN);
 }
 
-static void draw_tile_boxes(vec2i pixel, tile2i point) {
+void draw_tile_boxes(vec2i pixel, tile2i point) {
     if (map_property_is_draw_tile(point.grid_offset())) {
         int tile_size = map_property_multi_tile_size(point.grid_offset());
         debug_draw_tile_box(pixel.x, pixel.y, tile_size, tile_size);
     }
 };
 
-static void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
+void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
     record_mappoint_pixelcoord(tile, pixel);
 }
 
@@ -268,8 +269,11 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
 
 void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
     // black tile outside of map
-    if (!tile.valid()) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+    const bool is_tree = map_terrain_is(tile, TERRAIN_TREE);
+    const bool is_water = map_terrain_is(tile, TERRAIN_WATER);
+    const bool outside_map = is_tree && is_water;
+    if (!tile.valid() || outside_map) {
+        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS), pixel);
         return;
     }
 
