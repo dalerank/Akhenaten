@@ -1,6 +1,6 @@
 log_info("akhenaten: figures info started")
 
-figure figure_fireman = {
+figure_fireman = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false },
@@ -25,7 +25,7 @@ figure figure_fireman = {
 	max_roam_length : 640,
 }
 
-figure figure_water_carrier = {
+figure_water_carrier = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false },
@@ -46,7 +46,7 @@ figure figure_water_carrier = {
   max_roam_length : 640,
 }
 
-figure figure_protestor = {
+figure_protestor = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false },
@@ -55,7 +55,7 @@ figure figure_protestor = {
 	max_amount : 25,
 }
 
-figure figure_robber = {
+figure_robber = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false },
@@ -64,7 +64,7 @@ figure figure_robber = {
 	max_amount : 25,
 }
 
-figure figure_festival_priest = {
+figure_festival_priest = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
@@ -73,7 +73,7 @@ figure figure_festival_priest = {
 	max_amount : 25,
 }
 
-figure figure_tower_sentry = {
+figure_tower_sentry = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:54, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false },
@@ -84,7 +84,7 @@ figure figure_tower_sentry = {
 	max_amount : 25,
 }
 
-figure figure_priest = {
+figure_priest = {
 	animations : {
 		osiris_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:197, max_frames:12},
 		osiris_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:198, loop:false },
@@ -177,7 +177,7 @@ figure figure_priest = {
 	max_roam_length : 384,
 }
 
-figure figure_ostrich = {
+figure_ostrich = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
@@ -187,7 +187,7 @@ figure figure_ostrich = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure figure_hyena = {
+figure_hyena = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:161, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:162, max_frames:8, duration:3, loop:false },
@@ -197,7 +197,7 @@ figure figure_hyena = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure figure_antelope = {
+figure_antelope = {
 	animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:30, max_frames:12 },
 		death : { pack:PACK_SPR_AMBIENT, id:31, max_frames:8, duration:3, loop:false },
@@ -208,7 +208,7 @@ figure figure_antelope = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure figure_birds = {
+figure_birds = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
@@ -231,7 +231,7 @@ figure_crocodile = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure figure_hippo = {
+figure_hippo = {
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 },
 		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false },
@@ -317,7 +317,7 @@ figure_bolt = {
   terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_standard_bearer = {
+figure_standard_bearer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 },
 		pole : { pack:PACK_GENERAL, id:54, offset:0, max_frames:21 },
@@ -336,7 +336,7 @@ figure_native_trader = {
 	},
 }
 
-figure figure_magistrate = {
+figure_magistrate = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 },
 		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false },
@@ -402,7 +402,7 @@ figure_dentist = {
 	max_roam_length : 384,
 }
 
-figure figure_worker = {
+figure_worker = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:116, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false },
@@ -530,7 +530,7 @@ figure_docker = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure figure_bricklayer = {
+figure_bricklayer = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:109, max_frames:12 },
 		death : {pack:PACK_SPR_MAIN, id:110, max_frames:8, loop:false },
@@ -577,7 +577,7 @@ figure_trade_ship = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_shipwreck = {
+figure_shipwreck = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:12 }
 	},
@@ -708,7 +708,7 @@ figure_dancer = {
 	max_roam_length : 512,
 }
 
-figure figure_festival_guy = {
+figure_festival_guy = {
 	animations : {
 		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
 		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
@@ -754,7 +754,7 @@ figure_soldier_infantry = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_fishing_point = {
+figure_fishing_point = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
@@ -762,7 +762,7 @@ figure figure_fishing_point = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_fishing_spot = {
+figure_fishing_spot = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 },
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4},
@@ -770,7 +770,7 @@ figure figure_fishing_spot = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_fishing_boat = {
+figure_fishing_boat = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
 		swim : {pack:PACK_SPR_MAIN, id:134, max_frames:4, duration:3 },
@@ -781,7 +781,7 @@ figure figure_fishing_boat = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_ferry_boat = {
+figure_ferry_boat = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 },
 		swim : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 },
@@ -791,7 +791,7 @@ figure figure_ferry_boat = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_warship = {
+figure_warship = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 },
 		swim : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 },
@@ -811,7 +811,7 @@ figure figure_warship = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure figure_transport_ship = {
+figure_transport_ship = {
 	animations : {
 		walk : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 },
 		swim : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 },
@@ -881,7 +881,7 @@ figure_senet_player = {
 	max_roam_length: 640,
 }
 
-figure figure_market_trader = {
+figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 },
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false },
@@ -917,7 +917,7 @@ figure_labor_seeker = {
 	max_roam_length : 384,
 }
 
-figure figure_reed_gatherer = {
+figure_reed_gatherer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:37, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false },

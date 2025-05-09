@@ -74,7 +74,7 @@ const char *jsY_tokenstring(int token)
 
 static const char *keywords[] = {
 	"break", "building", "case", "catch", "continue", "debugger", "default", "delete",
-	"do", "else", "false", "figure", "finally", "for", "function", "if", "import", "in",
+	"do", "else", "false", "finally", "for", "function", "if", "import", "in",
 	"instanceof", "new", "null", "return", "switch", "this", "throw",
 	"true", "try", "typeof", "var", "void", "while", "with"
 };
