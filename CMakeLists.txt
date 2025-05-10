@@ -1,5 +1,10 @@
-cmake_minimum_required(VERSION 3.13...3.26)
+cmake_minimum_required(VERSION 3.13...3.56)
 include(CMakeDependentOption)
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+endif()
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
@@ -195,6 +200,13 @@ if (MSVC OR WIN_EMSCRIPTEN)
     set(BUGTRAP_DLL "${BUGTRAP_DIR}/BugTrap-x64.dll")
     file(COPY ${BUGTRAP_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/update_binary_windows.cmd DESTINATION ${GAME_WORKING_DIRECTORY})
+endif()
+
+if(APPLE)
+  find_package(OpenSSL REQUIRED)
+  message("OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
+  message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
+  include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
 set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
@@ -553,14 +565,18 @@ if(APPLE)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 
+    message("${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/")
+    message("${PROJECT_SOURCE_DIR}/update_binary_mac.sh")
+
+    file(COPY "${PROJECT_SOURCE_DIR}/update_binary_mac.sh" DESTINATION "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/")
+
     # perform ad-hoc codesigning
     set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
     set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
     install(CODE "
         execute_process(COMMAND
-            ${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
-        )
-    ")
+          ${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\")
+        ")
 endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
@@ -595,10 +611,19 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-target_link_libraries (${GAME}
+
+if(APPLE)
+  target_link_libraries (${GAME}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${OPENSSL_LIBRARIES} ${EXTMUJS_LIBRARY}
+                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTLAME_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
+
+else()
+  target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
+endif()
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")

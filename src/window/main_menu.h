@@ -8,9 +8,10 @@ struct main_menu_screen : autoconfig_window_t<main_menu_screen> {
     virtual int draw_background(UiFlags flags) override;
     virtual void draw_foreground(UiFlags flags) override;
 
-    void init();
+    void init() override;
 
     static void show(bool restart_music);
     static main_menu_screen &instance();
+    bool updating;
 };
 

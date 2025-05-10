@@ -22,15 +22,20 @@
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 
-#ifdef GAME_PLATFORM_WIN
+
+#if !defined(GAME_PLATFORM_WIN) && defined(GAME_PLATFORM_MACOSX)
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "core/httplib.h"
+#endif
+
+#if defined(GAME_PLATFORM_MACOSX)
+#include <mach-o/dyld.h>
 #endif
 
 main_menu_screen g_main_menu;
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
-#ifdef GAME_PLATFORM_WIN
+#if defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_MACOSX)
     bstring256 req;
     req.printf("https://api.github.com/repos/%s/%s/commits?per_page=1", owner, repo);
     httplib::Url url(req.c_str());
@@ -57,15 +62,45 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
     }
 #else
     return -1;
-#endif // GAME_PLATFORM_WIN
+#endif // GAME_PLATFORM_WIN || GAME_PLATFORM_MACOSX
 }
 
-void main_menu_download_latest_version() {
+void main_menu_download_latest_version()
+{
 #ifdef GAME_PLATFORM_WIN
     game.mt.detach_task([] () {
         ShellExecuteA(0, "Open", "update_binary_windows.cmd", 0, 0, SW_SHOW);
     });
 #endif // GAME_PLATFORM_WIN
+#if defined(GAME_PLATFORM_MACOSX)
+
+    if (g_main_menu.instance().updating==true) return;
+
+    char path[512];
+    uint32_t size = sizeof(path);
+    std::string strAppPath;
+
+    if (_NSGetExecutablePath(path, &size) == 0)
+    {
+        std::string strBinPath(path);
+        int iPos=strBinPath.find(".app");
+        if (iPos>0) { strAppPath=strBinPath.substr(0,iPos+4); } else return;
+        g_main_menu.ui["new_version"] = bstring64("  Downloading now.\n Please wait...");
+        g_main_menu.ui.draw();
+        g_main_menu.instance().updating = true;
+
+        system("cp ../Resources/update_binary_mac.sh /tmp");
+        std::string strCommand = "/tmp/update_binary_mac.sh \""+strAppPath+"\"";
+
+        game.mt.detach_task([strCommand](){
+            system(strCommand.c_str());
+            g_main_menu.instance().updating = false;
+            popup_dialog::show_yesno("#popup_dialog_quit", []{
+                app_request_exit();
+            });
+        });
+    }
+#endif
 }
 
 int main_menu_screen::draw_background(UiFlags flags) {
@@ -82,6 +117,8 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
 
 void main_menu_screen::init() {
     game.mt.detach_task([&] () {
+
+        updating = false;
         int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
 
         if (current_commit <= 1) {

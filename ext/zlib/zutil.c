@@ -4,9 +4,6 @@
  */
 
 #include "zutil.h"
-#ifndef Z_SOLO
-#  include "gzguts.h"
-#endif
 
 z_const char * const z_errmsg[10] = {
     (z_const char *)"need dictionary",
@@ -20,7 +17,6 @@ z_const char * const z_errmsg[10] = {
     (z_const char *)"incompatible version",/* Z_VERSION_ERROR (-6) */
     (z_const char *)""
 };
-
 
 const char * ZEXPORT zlibVersion()
 {
