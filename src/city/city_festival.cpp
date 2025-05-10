@@ -180,7 +180,7 @@ void city_festival_t::execute_festival() {
 }
 
 void city_festival_t::update() {
-    months_since_festival = std::min<uint8_t>(60, months_since_festival++);
+    months_since_festival = std::min<uint8_t>(months_since_festival+1, 60);
 
     if (first_festival_effect_months > 0) {
         --first_festival_effect_months;
