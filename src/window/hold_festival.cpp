@@ -28,12 +28,12 @@ void ui::hold_festival_window::close() {
     window_go_back();
 }
 
-void window_hold_festival_select_size(e_festival_type size) {
+void ui::hold_festival_window::select_size(int size) {
     if (g_city.finance.is_out_of_money()) {
         return;
     }
 
-    if (g_city.festival.select_size(size)) {
+    if (g_city.festival.select_size(e_festival_type(size))) {
     }
 }
 
@@ -88,32 +88,32 @@ void ui::hold_festival_window::init() {
     const bool is_out_of_money = g_city.finance.is_out_of_money();
     ui["small_festival"].text_var("%s %u @I%u", ui::str(58, 31), g_city.festival.small_cost, resource_image_deben);
     ui["small_festival"].darkened = is_out_of_money;
-    ui["small_festival"].onclick([] {
-        window_hold_festival_select_size(FESTIVAL_SMALL);
+    ui["small_festival"].onclick([this] {
+        select_size(FESTIVAL_SMALL);
     });
 
     ui["middle_festival"].text_var("%s %u @I%u", ui::str(58, 32), g_city.festival.large_cost, resource_image_deben);
     ui["middle_festival"].darkened = is_out_of_money;
-    ui["middle_festival"].onclick([] {
-        window_hold_festival_select_size(FESTIVAL_LARGE);
+    ui["middle_festival"].onclick([this] {
+       select_size(FESTIVAL_LARGE);
     });
 
     int resource_image_beer = image_id_resource_icon(RESOURCE_BEER);
     ui["large_festival"].darkened = is_out_of_money || g_city.festival.not_enough_alcohol;
     ui["large_festival"].text_var("%s %u @I%u %u  @I%u", ui::str(58, 32), g_city.festival.grand_cost, resource_image_deben, g_city.festival.grand_alcohol, resource_image_beer);
-    ui["large_festival"].onclick([] {
-        window_hold_festival_select_size(FESTIVAL_GRAND);
+    ui["large_festival"].onclick([this] {
+        select_size(FESTIVAL_GRAND);
     });
 
-    ui["button_ok"].onclick([] {
+    ui["button_ok"].onclick([this] {
         if (!g_city.finance.is_out_of_money()) {
             g_city.festival.schedule();
         }
-        g_hold_festival_window.close();
+        close();
     });
 
-    ui["button_cancel"].onclick([] {
-        g_hold_festival_window.close();
+    ui["button_cancel"].onclick([this] {
+        close();
     });
 
     ui["button_help"].onclick([] {

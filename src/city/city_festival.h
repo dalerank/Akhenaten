@@ -11,6 +11,9 @@ enum e_festival_type {
     FESTIVAL_BAST_SPECIAL = 4,
 };
 
+
+struct event_festival_hold { e_god god; e_festival_type type; };
+
 struct city_festival_t {
     struct {
         int8_t months_to_go;

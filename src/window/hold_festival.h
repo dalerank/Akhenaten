@@ -17,6 +17,7 @@ namespace ui {
         virtual int get_tooltip_text() override { return 0; }
         virtual void init() override;
         void get_tooltip(tooltip_context *c);
+        void select_size(int size);
         
         static void show(bool bg, std::function<void()> cb = nullptr);
     };

@@ -58,12 +58,14 @@ void city_festival_t::schedule() {
         cost = large_cost;
         break;
 
-    default:
+    case FESTIVAL_GRAND:
         planned.months_to_go = grand_min_minths + population / 2000 + 1;
         cost = grand_cost;
     }
 
     city_finance_process_requests_and_festivals(cost);
+
+    events::emit(event_festival_hold{ planned.god, planned.size });
 
     if (selected.size == FESTIVAL_GRAND) {
         events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, grand_alcohol });
