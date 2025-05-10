@@ -530,27 +530,6 @@ info_window_house = {
     }
 }
 
-hold_festival_window = {
-    pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
-    ui : { 
-        background_image: background({pack:PACK_UNLOADED, id:11}),
-        background      : outer_panel({pos: [48, 48], size: [34, 20]}),
-        title           : text_center({pos: [48, 60], size: [544, -1], font : FONT_LARGE_BLACK_ON_LIGHT}),
-        god0            : image_button({pos:[100 * 0 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true }),
-        god1            : image_button({pos:[100 * 1 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true }),
-        god2            : image_button({pos:[100 * 2 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 2, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true }),
-        god3            : image_button({pos:[100 * 3 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 3, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true }),
-        god4            : image_button({pos:[100 * 4 + 70, 96], pack:PACK_UNLOADED, id:21, offset:16 + 4, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true }),
-        small_festival  : button({pos:[102, 216], size:[430, 26], rich:true}),
-        middle_festival : button({pos:[102, 246], size:[430, 26], rich:true}),
-        large_festival  : button({pos:[102, 276], size:[430, 26], rich:true}),
-        button_ok       : image_button({pos:[400, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }),
-        button_cancel   : image_button({pos:[358, 317], size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }),
-        button_help     : image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:0 }),
-        festival_type   : text({pos: [220, 327], size: [544, -1] }),
-    }
-}
-
 trade_resource_settings_window = {
     pos : [(sw(0) - px(36)) / 2, (sh(0) - px(15)) / 2],
     ui : {

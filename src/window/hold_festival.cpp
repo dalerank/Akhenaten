@@ -80,6 +80,8 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
 }
 
 void ui::hold_festival_window::init() {
+    autoconfig_window::init();
+
     ui["background_image"].enabled = background;
 
     int resource_image_deben = image_id_from_group(PACK_GENERAL, 103) + 18;

@@ -25,7 +25,8 @@ import ui_overlay_menu
 import imagepaks
 import missions
 import figures
-include(":localization.js")
+import ui_hold_festival_window
+import localization
 include(":building_menu.js")
 include(":desirability.js")
 include(":floodplain.js")
