@@ -68,7 +68,8 @@ void tutorial2_population_cap(city_migration_t& migration) {
     auto &tut = g_tutorials_flags.tutorial_2;
 
     const int nogranary_populcation_cap = g_scenario.vars.get_int("nogranary_populcation_cap", 150);
-    const int max_pops = (!tut.granary_built) ? nogranary_populcation_cap : 0;
+    const bool granary_built = g_city.buildings.count_active(BUILDING_GRANARY) > 0;
+    const int max_pops = granary_built ? 0 : nogranary_populcation_cap;
     migration.population_cap = max_pops;
 }
 
