@@ -23,9 +23,9 @@ ui::hold_festival_window g_hold_festival_window;
 void ui::hold_festival_window::close() {
     if (callback) {
         callback();
-    } else {
-        window_go_back();
-    }
+    } 
+
+    window_go_back();
 }
 
 void window_hold_festival_select_size(e_festival_type size) {
@@ -71,9 +71,9 @@ int ui::hold_festival_window::ui_handle_mouse(const mouse *m) {
     if (input_go_back_requested(m, h)) {
         if (callback) {
             callback();
-        } else {
-            window_go_back();
-        }
+        } 
+        
+        window_go_back();
     }
 
     return 0;
