@@ -119,7 +119,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
             }
 
             if (!g_city.festival.is_planned()) {
-                window_hold_festival_show(true, window_advisors_show);
+                ui::hold_festival_window::show(true, window_advisors_show);
             }
         });
         ui["festival_advice"] = ui::str(58, 18 + g_city.festival.get_advice());

@@ -15,9 +15,10 @@ namespace ui {
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual int get_tooltip_text() override { return 0; }
-        virtual void init() override {}
+        virtual void init() override;
         void get_tooltip(tooltip_context *c);
+        
+        static void show(bool bg, std::function<void()> cb = nullptr);
     };
 }
 
-void window_hold_festival_show(bool bg, std::function<void()> cb = nullptr);

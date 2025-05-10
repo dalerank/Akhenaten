@@ -9,6 +9,7 @@
 
 struct festival_square_info_window : building_info_window_t<festival_square_info_window> {
     virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return !!c.building_get()->dcast_festival_square();
     }
@@ -16,11 +17,7 @@ struct festival_square_info_window : building_info_window_t<festival_square_info
 
 festival_square_info_window festival_square_infow;
 
-void festival_square_info_window::window_info_background(object_info &c) {
-    building_info_window::window_info_background(c);
-
-    building *b = c.building_get();
-
+void festival_square_info_window::init(object_info &c) {
     if (g_city.festival.is_planned()) {
         int size = g_city.festival.selected_size();
         int months_left = g_city.festival.months_till_next();
@@ -36,9 +33,13 @@ void festival_square_info_window::window_info_background(object_info &c) {
         ui["hold_festival"] = ui::str(58, 16);
         ui["hold_festival"].onclick([] {
             if (!g_city.festival.is_planned()) {
-                window_hold_festival_show(false);
+                ui::hold_festival_window::show(false);
             }
         });
         ui["festival_advice"] = ui::str(58, 18 + g_city.festival.get_advice());
     }
+}
+
+void festival_square_info_window::window_info_background(object_info &c) {
+    building_info_window::window_info_background(c);
 }
