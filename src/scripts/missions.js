@@ -1,6 +1,6 @@
 log_info("akhenaten: missions started")
 
-var mission_sounds = []
+mission_sounds = []
 for (var i = 0; i < 38; i++) {
 	mission_sounds[i] = {
 		mission: i,
@@ -9,7 +9,7 @@ for (var i = 0; i < 38; i++) {
 	}
 }
 
-var mission0 = { // Nubt
+mission0 = { // Nubt
 	start_message : 150 //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	city_has_animals : true
 	gods_least_mood : 50
@@ -46,7 +46,7 @@ var mission0 = { // Nubt
 	}
 }
 
-var mission1 = {
+mission1 = {
 	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
 	city_has_animals : true,
 	gods_least_mood : 50,
@@ -68,10 +68,11 @@ var mission1 = {
 	vars : {
 		gold_mined : 500
 		victory_last_action_delay : 4
+		nogranary_populcation_cap : 150
 	}
 }
 
-var mission2 = {
+mission2 = {
 	start_message : 242 - 99,
 	city_has_animals : true,
 	gods_least_mood : 50,
@@ -92,7 +93,7 @@ var mission2 = {
 	}
 }
 
-var mission3 = {
+mission3 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 0,
@@ -114,7 +115,7 @@ var mission3 = {
 	}
 }
 
-var mission4 = {
+mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 1,
@@ -140,7 +141,7 @@ var mission4 = {
 	}
 }
 
-var mission5 = { // Timna
+mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
@@ -214,7 +215,7 @@ var mission5 = { // Timna
 
 }
 
-var mission6 = { // Behdet
+mission6 = { // Behdet
 	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
@@ -299,7 +300,7 @@ var mission6 = { // Behdet
 	],
 }
 
-var mission7 = { // Abydos
+mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
@@ -384,7 +385,7 @@ var mission7 = { // Abydos
 	],
 }
 
-var mission8 = { // Selima
+mission8 = { // Selima
 	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
@@ -422,7 +423,7 @@ var mission8 = { // Selima
 	],
 }
 
-var mission9 = { // Abu
+mission9 = { // Abu
 	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
