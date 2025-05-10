@@ -136,7 +136,7 @@ void screen_city_t::update_clouds(painter &ctx) {
         clouds_pause();
     }
 
-    auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
+    auto mm_view = g_city_view.get_scrollable_pixel_limits();
     const vec2i offset = {
         g_city_view.camera.position.x - mm_view.min.x,
         g_city_view.camera.position.y - mm_view.min.y,
@@ -851,7 +851,13 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
 void screen_city_t::handle_mouse(const mouse* m) {
     current_tile = update_city_view_coords(*m);
 
+    const float old_zoom_target = g_zoom.ftarget();
+    painter ctx = game.painter();
     g_zoom.handle_mouse(m);
+    if (!ctx.view->can_update(g_zoom.ftarget())) {
+        g_zoom.set_scale(old_zoom_target);
+    }
+
     g_city_planner.draw_as_constructing = false;
     if (m->left.went_down) {
         if (handle_legion_click(current_tile)) {

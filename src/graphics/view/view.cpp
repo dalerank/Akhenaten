@@ -124,7 +124,7 @@ vec2i city_view_get_camera_in_pixels() {
             data.camera.tile_internal.y * HALF_TILE_HEIGHT_PIXELS + data.camera.position.y};
 }
 
-carera_scrollable viewport_t::get_camera_scrollable_pixel_limits(float p) {
+carera_scrollable viewport_t::get_scrollable_pixel_limits(float p) {
     carera_scrollable result;
     result.min.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
     result.min.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
@@ -150,7 +150,7 @@ void city_view_get_camera_scrollable_viewspace_clip(vec2i &clip) {
 }
 
 static void camera_validate_position(viewport_t& view) {
-    carera_scrollable mm_view = view.get_camera_scrollable_pixel_limits();
+    carera_scrollable mm_view = view.get_scrollable_pixel_limits();
 
     // if MAX and MIN limits are the same (map is too zoomed out for the borders) kinda do an average
     if (mm_view.max.x <= mm_view.min.x) {
@@ -592,4 +592,14 @@ void city_view_foreach_tile_in_range(painter &ctx, int grid_offset, int size, in
         x_offset += TILE_WIDTH_PIXELS;
         y_offset += TILE_HEIGHT_PIXELS;
     }
+}
+
+bool viewport_t::can_update(float p) {
+    carera_scrollable new_size;
+    new_size.min.x = SCROLL_MIN_SCREENTILE_X * TILE_WIDTH_PIXELS;
+    new_size.min.y = SCROLL_MIN_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS;
+    new_size.max.x = SCROLL_MAX_SCREENTILE_X * TILE_WIDTH_PIXELS - calc_adjust_with_percentage<int>(viewport.size_pixels.x, p);
+    new_size.max.y = SCROLL_MAX_SCREENTILE_Y * HALF_TILE_HEIGHT_PIXELS - calc_adjust_with_percentage<int>(viewport.size_pixels.y, p);
+
+    return (new_size.min.x < new_size.max.x) && (new_size.min.y < new_size.max.y);
 }

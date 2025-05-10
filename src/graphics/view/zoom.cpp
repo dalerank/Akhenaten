@@ -1,4 +1,5 @@
 #include "zoom.h"
+
 #include "core/calc.h"
 #include "graphics/elements/menu.h"
 #include "game/game_config.h"
@@ -21,14 +22,15 @@ void zoom_t::handle_touch(const touch_t * first, const touch_t * last, int scale
         start_touch(first, last, scale);
         return;
     }
+
     int original_distance, current_distance;
     vec2i temp;
     temp.x = first->start_point.x - last->start_point.x;
     temp.y = first->start_point.y - last->start_point.y;
-    original_distance = (int)sqrt(temp.x * temp.x + temp.y * temp.y);
+    original_distance = (int)sqrtf(temp.x * temp.x + temp.y * temp.y);
     temp.x = first->current_point.x - last->current_point.x;
     temp.y = first->current_point.y - last->current_point.y;
-    current_distance = (int)sqrt(temp.x * temp.x + temp.y * temp.y);
+    current_distance = (int)sqrtf(temp.x * temp.x + temp.y * temp.y);
 
     if (!original_distance || !current_distance) {
         touch.active = false;
@@ -106,8 +108,8 @@ bool zoom_t::update_value(vec2i* camera_position) {
     return true;
 }
 
-float zoom_t::debug_target() { return target; }
-float zoom_t::debug_delta() { return delta; }
+float zoom_t::ftarget() { return target; }
+float zoom_t::fdelta() { return delta; }
 
 float zoom_t::get_scale() {
     return 1.0f / (g_zoom.zoom / 100.0f);
@@ -119,13 +121,11 @@ float zoom_t::get_percentage() {
 
 void zoom_t::set_scale(float z) {
     if (!game_features::gameui_zoom) {
-        z = 100;
+        z = ZOOM_DEFAULT;
     }
 
-    auto& data = g_zoom;
-
-    z = calc_bound(z, 50, 200);
-    data.zoom = z;
-    data.target = z;
+    z = calc_bound(z, ZOOM_MIN, ZOOM_MAX);
+    zoom = z;
+    target = z;
     city_view_refresh_viewport();
 }

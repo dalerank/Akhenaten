@@ -105,7 +105,7 @@ int minimap_window::handle_mouse(const mouse *m) {
         if (relative.x > 0 && relative.y > 0) {
             vec2i view_pos, view_size;
 
-            auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
+            auto mm_view = g_city_view.get_scrollable_pixel_limits();
             city_view_get_viewport(g_city_view, view_pos, view_size);
 
             mm_view.max += view_size;

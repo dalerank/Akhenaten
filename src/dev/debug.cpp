@@ -1195,7 +1195,7 @@ void draw_debug_ui(int x, int y) {
         tile2i camera_tile = city_view_get_camera_mappoint();
         vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
 
-        auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
+        auto mm_view = g_city_view.get_scrollable_pixel_limits();
 
         int real_max_x;
         int real_max_y;
@@ -1224,8 +1224,8 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
         debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());
 
-        debug_text_float(str, x, y + 135, 50, "target:", g_zoom.debug_target());
-        debug_text_float(str, x + 100, y + 135, 50, "delta:", g_zoom.debug_delta());
+        debug_text_float(str, x, y + 135, 50, "target:", g_zoom.ftarget());
+        debug_text_float(str, x + 100, y + 135, 50, "delta:", g_zoom.fdelta());
 
         vec2i pixel = {mouse_get()->x, mouse_get()->y};
         debug_text(ctx, str, x, y + 145, 50, "mouse:", pixel.x);

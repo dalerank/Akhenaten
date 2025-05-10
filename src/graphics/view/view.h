@@ -37,7 +37,8 @@ struct viewport_t {
     } viewport;
     screen_tile selected_tile;
 
-    carera_scrollable get_camera_scrollable_pixel_limits(float p = -1.f);
+    carera_scrollable get_scrollable_pixel_limits(float p = -1.f);
+    bool can_update(float p);
 };
 
 struct figure_draw_cache_data_t;

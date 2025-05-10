@@ -26,8 +26,8 @@ struct zoom_t {
     void end_touch();
 
     bool update_value(vec2i* camera_position);
-    float debug_target();
-    float debug_delta();
+    float ftarget();
+    float fdelta();
 
     float get_scale();
     float get_percentage();

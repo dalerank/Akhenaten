@@ -253,7 +253,7 @@ static void create_full_city_screenshot() {
     vec2i original_camera_pixels = camera_get_position();
 
     viewport_t full_city_view_data = g_city_view;
-    auto mm_view = g_city_view.get_camera_scrollable_pixel_limits();
+    auto mm_view = g_city_view.get_scrollable_pixel_limits();
 
     vec2i view_pos, view_size;
     city_view_get_viewport(g_city_view, view_pos, view_size);
