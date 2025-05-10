@@ -304,6 +304,7 @@ void building::clear_related_data() {
     if (building_is_fort(type)) {
         formation_legion_delete_for_fort(this);
     }
+
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         city_buildings_remove_triumphal_arch();
         //building_menu_update(BUILDSET_NORMAL);
@@ -526,11 +527,26 @@ void building::destroy_by_collapse() {
 
     events::emit(event_collase_damage{ id });
 
+    destroy_reason = e_destroy_collapse;
     state = BUILDING_STATE_RUBBLE;
+    dcast()->on_before_collapse();
     map_building_tiles_set_rubble(id, tile, size);
     figure_create_explosion_cloud(tile, size);
     destroy_linked_parts(false);
     g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+}
+
+void building::destroy_by_flooded() {
+    assert(is_main());
+
+    events::emit(event_flooded_damage{ id });
+
+    destroy_reason = e_destroy_flooded;
+    state = BUILDING_STATE_RUBBLE;
+    dcast()->on_before_flooded();
+    map_building_tiles_set_rubble(id, tile, size);
+    destroy_linked_parts(false);
+    g_sound.play_effect(SOUND_EFFECT_FLOODED);
 }
 
 void building::destroy_on_fire_impl(bool plagued) {

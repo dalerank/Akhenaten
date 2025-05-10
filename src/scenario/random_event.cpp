@@ -13,8 +13,8 @@
 #include "game/game_config.h"
 
 enum E_EVENT_DK {
-    EVENT_ROME_RAISES_WAGES = 1,
-    EVENT_ROME_LOWERS_WAGES = 2,
+    EVENT_KINGDOME_RAISES_WAGES = 1,
+    EVENT_KINGDOME_LOWERS_WAGES = 2,
     EVENT_LAND_TRADE_DISRUPTED = 3,
     EVENT_LAND_SEA_DISRUPTED = 4,
     EVENT_CONTAMINATED_WATER = 5,
@@ -84,43 +84,38 @@ static void contaminate_water(void) {
 }
 
 static void destroy_copper_mine() {
-    if (g_scenario.random_events.iron_mine_collapse) {
-        if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-            if (building_id_first(BUILDING_LIMESTONE_QUARRY) < MAX_BUILDINGS) {
-                city_finance_process_requests_and_festivals(250);
-                messages::popup(MESSAGE_IRON_MINE_COLLAPED, 0, 0);
-            }
-        } else {
-            int grid_offset = building_destroy_first_of_type(BUILDING_LIMESTONE_QUARRY);
-            if (grid_offset)
-                messages::popup(MESSAGE_IRON_MINE_COLLAPED, 0, grid_offset);
-        }
+    if (!g_scenario.random_events.copper_mine_collapsed) {
+        return;
+    }
+
+    building_id bid = building_id_random(BUILDING_COPPER_MINE);
+    auto b = building_get(bid);
+    b->destroy_by_collapse();
+    if (b) {
+        messages::popup(MESSAGE_COPPER_MINE_COLLAPED, 0, b->tile.grid_offset());
     }
 }
 
 static void destroy_clay_pit(void) {
-    if (g_scenario.random_events.clay_pit_flooded) {
-        if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-            if (building_id_first(BUILDING_CLAY_PIT) < MAX_BUILDINGS) {
-                city_finance_process_requests_and_festivals(250);
-                messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, 0);
-            }
-        } else {
-            int grid_offset = building_destroy_first_of_type(BUILDING_CLAY_PIT);
-            if (grid_offset) {
-                messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, grid_offset);
-            }
-        }
+    if (!g_scenario.random_events.clay_pit_flooded) {
+        return;
+    }
+
+    building_id bid = building_id_random(BUILDING_CLAY_PIT);
+    auto b = building_get(bid);
+    b->destroy_by_flooded();
+    if (b) {
+        messages::popup(MESSAGE_CLAY_PIT_FLOODED, 0, b->tile.grid_offset());
     }
 }
 
 void event_manager_t::process_random_events() {
     int event = RANDOM_EVENT_PROBABILITY[random_byte()];
     switch (event) {
-    case EVENT_ROME_RAISES_WAGES:
+    case EVENT_KINGDOME_RAISES_WAGES:
         raise_wages();
         break;
-    case EVENT_ROME_LOWERS_WAGES:
+    case EVENT_KINGDOME_LOWERS_WAGES:
         lower_wages();
         break;
     case EVENT_LAND_TRADE_DISRUPTED:

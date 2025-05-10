@@ -108,6 +108,12 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
+enum e_destroy_reason {
+    e_destroy_simple = 0,
+    e_destroy_collapse = 1,
+    e_destroy_flooded = 2,
+};
+
 enum e_building_state {
     BUILDING_STATE_UNUSED = 0,
     BUILDING_STATE_VALID = 1,
@@ -209,6 +215,7 @@ public:
     signed char desirability;
     bool is_deleted;
     bool is_adjacent_to_water;
+    e_destroy_reason destroy_reason;
     uint16_t storage_id;
     union {
         signed char native_anger;
@@ -298,6 +305,7 @@ public:
     bool workshop_has_resources();
 
     void destroy_by_collapse();
+    void destroy_by_flooded();
     void destroy_by_fire();
 
     void mark_plague(int days);
@@ -461,6 +469,8 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant);
     virtual void on_place_checks();
     virtual void on_destroy() {}
+    virtual void on_before_collapse() {}
+    virtual void on_before_flooded() {}
     virtual void on_undo() {}
     virtual void on_post_load() {}
     virtual void spawn_figure() {}

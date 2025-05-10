@@ -24,6 +24,7 @@
 #include "figure/figure.h"
 #include "graphics/animation.h"
 #include "construction/build_planner.h"
+#include "city/finance.h"
 
 building_mine_copper::static_params copper_mine_m;
 buildings::model_t<building_clay_pit> clay_pit_m;
@@ -76,8 +77,24 @@ int building_clay_pit::get_fire_risk(int value) const {
     return value;
 }
 
+void building_clay_pit::on_before_flooded() {
+    building_industry::on_before_flooded();
+
+    if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
+        events::emit(event_finance_process_request{ efinance_request_disasters, 250 });
+    }
+}
+
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
+}
+
+void building_mine_copper::on_before_collapse() {
+    building_mine::on_before_collapse();
+
+    if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
+        events::emit(event_finance_process_request{ efinance_request_disasters, 250 });
+    }
 }

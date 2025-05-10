@@ -208,7 +208,7 @@ struct scenario_data_t {
         int raise_wages;
         int lower_wages;
         int contaminated_water;
-        int iron_mine_collapse;
+        int copper_mine_collapsed;
         int clay_pit_flooded;
     } random_events;
 

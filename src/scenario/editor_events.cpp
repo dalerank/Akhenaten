@@ -105,11 +105,11 @@ void scenario_editor_contaminated_water_toggle_enabled(void) {
 }
 
 int scenario_editor_iron_mine_collapse_enabled(void) {
-    return g_scenario.random_events.iron_mine_collapse;
+    return g_scenario.random_events.copper_mine_collapsed;
 }
 
 void scenario_editor_iron_mine_collapse_toggle_enabled(void) {
-    g_scenario.random_events.iron_mine_collapse = !g_scenario.random_events.iron_mine_collapse;
+    g_scenario.random_events.copper_mine_collapsed = !g_scenario.random_events.copper_mine_collapsed;
     g_scenario.is_saved = 0;
 }
 

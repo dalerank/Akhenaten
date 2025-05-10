@@ -2,6 +2,22 @@
 
 #include <cstdint>
 
+enum e_finance_request_type {
+    efinance_request_none = 0,
+    efinance_request_festival,
+    efinance_request_kigdome,
+    efinance_request_disasters,
+};
+
+struct finance_request_t {
+    e_finance_request_type type;
+    uint32_t deben;
+};
+
+struct event_finance_changed { int value; };
+struct event_finance_donation { int amount; };
+struct event_finance_process_request { e_finance_request_type type; uint32_t deben; };
+
 struct finance_overview {
     struct {
         int taxes;
@@ -19,16 +35,15 @@ struct finance_overview {
         int salary;
         int stolen;
         int tribute;
-        int requests_and_festivals;
+        uint16_t festivals;
+        int kingdome;
+        uint16_t disasters;
         int total;
     } expenses;
 
     int net_in_out;
     int balance;
 };
-
-struct event_finance_changed { int value; };
-struct event_finance_donation { int amount; };
 
 struct city_taxes_t {
     int32_t taxed_citizens;
@@ -88,6 +103,8 @@ struct city_finance_t {
     void copy_amounts_to_last_year();
     void pay_tribute();
     void advance_year();
+
+    void process_request(finance_request_t request);
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
@@ -106,7 +123,6 @@ void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat();
 void city_finance_process_console(int amount);
 void city_finance_process_stolen(int stolen);
-void city_finance_process_requests_and_festivals(int cost);
 void city_finance_process_construction(int cost);
 
 void city_finance_update_interest(void);

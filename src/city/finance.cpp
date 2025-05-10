@@ -23,6 +23,10 @@ void city_finance_t::init() {
         treasury += ev.amount;
         this_year.income.donated += ev.amount;
     });
+
+    events::subscribe([this] (event_finance_process_request ev) {
+
+    });
 }
 
 bool city_finance_t::is_out_of_money() const{
@@ -79,11 +83,6 @@ void city_finance_process_stolen(int stolen) {
     city_data.finance.this_year.expenses.stolen += stolen;
 }
 
-void city_finance_process_requests_and_festivals(int cost) {
-    city_data.finance.treasury -= cost;
-    city_data.finance.this_year.expenses.requests_and_festivals += cost;
-}
-
 void city_finance_process_construction(int cost) {
     city_data.finance.treasury -= cost;
     city_data.finance.this_year.expenses.construction += cost;
@@ -98,33 +97,56 @@ void city_finance_update_salary() {
 }
 
 void city_finance_calculate_totals() {
-    finance_overview* this_year = &city_data.finance.this_year;
-    this_year->income.total = this_year->income.donated + this_year->income.taxes + this_year->income.exports
-                              + this_year->income.gold_extracted;
+    finance_overview& this_year = city_data.finance.this_year;
+    this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
+                              + this_year.income.gold_extracted;
 
-    this_year->expenses.total = this_year->expenses.stolen + this_year->expenses.salary + this_year->expenses.interest
-                                + this_year->expenses.construction + this_year->expenses.wages
-                                + this_year->expenses.imports + this_year->expenses.requests_and_festivals;
+    this_year.expenses.total = this_year.expenses.stolen + this_year.expenses.salary + this_year.expenses.interest
+                                + this_year.expenses.construction + this_year.expenses.wages
+                                + this_year.expenses.imports + this_year.expenses.festivals + this_year.expenses.kingdome + this_year.expenses.disasters;
 
-    finance_overview* last_year = &city_data.finance.last_year;
-    last_year->income.total = last_year->income.donated + last_year->income.taxes + last_year->income.exports
-                              + last_year->income.gold_extracted;
+    finance_overview& last_year = city_data.finance.last_year;
+    last_year.income.total = last_year.income.donated + last_year.income.taxes + last_year.income.exports
+                              + last_year.income.gold_extracted;
 
-    last_year->expenses.total = last_year->expenses.stolen + last_year->expenses.salary + last_year->expenses.interest
-                                + last_year->expenses.construction + last_year->expenses.wages
-                                + last_year->expenses.imports + last_year->expenses.requests_and_festivals;
+    last_year.expenses.total = last_year.expenses.stolen + last_year.expenses.salary + last_year.expenses.interest
+                                + last_year.expenses.construction + last_year.expenses.wages
+                                + last_year.expenses.imports + last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
 
-    last_year->net_in_out = last_year->income.total - last_year->expenses.total;
-    this_year->net_in_out = this_year->income.total - this_year->expenses.total;
-    this_year->balance = last_year->balance + this_year->net_in_out;
+    last_year.net_in_out = last_year.income.total - last_year.expenses.total;
+    this_year.net_in_out = this_year.income.total - this_year.expenses.total;
+    this_year.balance = last_year.balance + this_year.net_in_out;
 
-    this_year->expenses.tribute = 0;
+    this_year.expenses.tribute = 0;
 }
 
 void city_finance_t::estimate_wages() {
     int monthly_wages = g_city.labor.wages * g_city.labor.workers_employed / 10 / 12;
     this_year.expenses.wages = wages_so_far;
     estimated_wages = (12 - game.simtime.month) * monthly_wages + wages_so_far;
+}
+
+
+void city_finance_t::process_request(finance_request_t request) {
+    switch (request.type) {
+    case efinance_request_festival:
+        city_data.finance.treasury -= request.deben;
+        city_data.finance.this_year.expenses.festivals += request.deben;
+        break;
+
+    case efinance_request_kigdome:
+        city_data.finance.treasury -= request.deben;
+        city_data.finance.this_year.expenses.kingdome += request.deben;
+        break;
+
+    case efinance_request_disasters:
+        city_data.finance.treasury -= request.deben;
+        city_data.finance.this_year.expenses.disasters += request.deben;
+        break;
+
+    default:
+        assert(false && "something strange");
+    }
 }
 
 void city_finance_t::update_estimate_taxes() {
@@ -326,8 +348,12 @@ void city_finance_t::copy_amounts_to_last_year() {
     salary_so_far = 0;
 
     // sundries
-    last_year.expenses.requests_and_festivals = this_year.expenses.requests_and_festivals;
-    this_year.expenses.requests_and_festivals = 0;
+    last_year.expenses.festivals = this_year.expenses.festivals;
+    this_year.expenses.festivals = 0;
+    last_year.expenses.disasters = this_year.expenses.disasters;
+    this_year.expenses.disasters = 0;
+    last_year.expenses.kingdome = this_year.expenses.kingdome;
+    this_year.expenses.kingdome = 0;
     last_year.expenses.stolen = this_year.expenses.stolen;
     this_year.expenses.stolen = 0;
 
@@ -340,7 +366,7 @@ void city_finance_t::pay_tribute() {
     int income = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_extracted;
     int expenses = last_year.expenses.stolen + last_year.expenses.salary + last_year.expenses.interest
                    + last_year.expenses.construction + last_year.expenses.wages + last_year.expenses.imports
-                   + last_year.expenses.requests_and_festivals;
+                   + last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
 
     tribute_not_paid_last_year = 0;
     if (treasury <= 0) {

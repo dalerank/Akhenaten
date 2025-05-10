@@ -98,6 +98,8 @@ void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
 
     bstring128 interest;
     interest.printf("%s 10%%", ui::str(60, 14));
+    int last_year_others = last_year->expenses.festivals + last_year->expenses.kingdome + last_year->expenses.disasters;
+    int this_year_others = this_year->expenses.festivals + this_year->expenses.kingdome + this_year->expenses.disasters;
     svector<row, 32> rows_expenses = {
         {ui::str(60, 11), last_year->expenses.imports, this_year->expenses.imports},
         {ui::str(60, 12), last_year->expenses.wages, this_year->expenses.wages},
@@ -106,7 +108,7 @@ void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
         {ui::str(60, 15), last_year->expenses.salary, this_year->expenses.salary},
         {ui::str(60, 16), last_year->expenses.stolen, this_year->expenses.stolen},
         {ui::str(60, 21), last_year->expenses.tribute, this_year->expenses.tribute},
-        {ui::str(60, 22), last_year->expenses.requests_and_festivals, this_year->expenses.requests_and_festivals},
+        {ui::str(60, 22), last_year_others, this_year_others},
         {"", 0, 0, true, vec2i{line_start_x, 0} }, // sum lines
         {ui::str(60, 17), last_year->expenses.total, this_year->expenses.total},
         {ui::str(60, 18), last_year->net_in_out, this_year->net_in_out},

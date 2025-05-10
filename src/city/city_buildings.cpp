@@ -36,14 +36,36 @@ building *building_next(building_id bid, e_building_type type) {
     return nullptr;
 }
 
-int building_id_first(e_building_type type) {
+building_id building_id_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == type)
             return i;
     }
-    return MAX_BUILDINGS;
+    return 0;
 }
+
+building_id building_id_random(e_building_type type) {
+    svector<building_id, 256> bs;
+
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_VALID && b->type == type) {
+            if (bs.full()) {
+                break;
+            }
+            bs.push_back(b->id);
+        }
+    }
+
+    if (bs.size() > 0) {
+        const int randv = std::rand() % bs.size();
+        return bs[randv];
+    }
+
+    return 0;
+}
+
 
 building *building_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {

@@ -10,6 +10,7 @@ public:
     virtual building_clay_pit *dcast_clay_pit() override { return this; }
 
     virtual int get_fire_risk(int value) const override;
+    virtual void on_before_flooded() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
@@ -51,4 +52,5 @@ public:
     };
 
     virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
+    virtual void on_before_collapse() override;
 };
