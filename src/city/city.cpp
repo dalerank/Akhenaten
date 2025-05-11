@@ -884,7 +884,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     assert(iob->get_offset() == 30440);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.expenses.disasters);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.expenses.disasters);
-    for (int i = 0; i < 1376; i++)
+    for (int i = 0; i < 1380; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2c20[i]);
     for (int i = 0; i < 8; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.houses_requiring_unknown_to_evolve[i]); // ????
