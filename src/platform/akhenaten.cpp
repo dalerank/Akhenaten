@@ -82,26 +82,6 @@ void show_usage() {
 
 } // namespace
 
-struct application_t {
-    bool active = true;
-    bool quit = false;
-
-    pcstr game_name;
-
-    void setup() {
-        game_name = "Akhenaten";
-        logs::info("Engine set to %s", game_name);
-    }
-
-    void subscribe_events() {
-        events::subscribe_permanent([] (event_app_center_screen ev) {
-            app_post_event(USER_EVENT_CENTER_WINDOW);
-        });
-    }
-};
-
-application_t g_application;
-
 static int init_sdl() {
     logs::info("Initializing SDL");
     Uint32 SDL_flags = SDL_INIT_AUDIO;

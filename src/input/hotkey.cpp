@@ -17,9 +17,6 @@
 #include "window/popup_dialog.h"
 #include "game/game.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 struct hotkey_definition {
     int* action = nullptr;
     int value;
@@ -35,7 +32,6 @@ struct arrow_definition {
 };
 
 struct global_hotkeys {
-    int toggle_fullscreen;
     int save_screenshot;
     int save_city_screenshot;
 };
@@ -170,7 +166,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_app_center_screen{ action }); };
         break;
     case HOTKEY_TOGGLE_FULLSCREEN:
-        def->action = &data.global_hotkey_state.toggle_fullscreen;
+        def->callback = [action = mapping.action] { events::emit(event_app_toggle_fullscreen{ action }); };
         break;
     case HOTKEY_SAVE_SCREENSHOT:
         def->action = &data.global_hotkey_state.save_screenshot;
@@ -413,10 +409,6 @@ void hotkey_handle_escape(void) {
 
 void hotkey_handle_global_keys() {
     auto& data = g_hotkey_data;
-
-    if (data.global_hotkey_state.toggle_fullscreen) {
-        app_fullscreen(!g_settings.is_fullscreen());
-    }
 
     if (data.global_hotkey_state.save_screenshot) {
         graphics_save_screenshot(SCREENSHOT_DISPLAY);

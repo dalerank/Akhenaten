@@ -22,7 +22,6 @@ struct event_set_bookmark { int value; };
 struct event_goto_bookmark { int value; };
 struct event_editor_toggle_battle_info { int value; };
 struct event_toggle_legion { int value; };
-struct event_app_center_screen { int value; };
 
 struct hotkeys {
     // fixed keys with multiple functions

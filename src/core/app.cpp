@@ -1,9 +1,12 @@
 #include "app.h"
 
 #include "game/settings.h"
+#include "game/game_events.h"
 #include "platform/screen.h"
 #include "core/log.h"
 #include <SDL.h>
+
+application_t g_application;
 
 void app_window_resize(const vec2i& wsize) {
     static int s_width;
@@ -21,6 +24,7 @@ void app_window_resize(const vec2i& wsize) {
 
 void app_fullscreen(bool fullscreen) {
     app_post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
+    g_settings.set_fullscreen(fullscreen);
     if (!fullscreen) {
         app_window_resize({1200, 800});
     }
@@ -42,4 +46,19 @@ void app_terminate(const char* message) noexcept {
     platform_screen_show_error_message_box("CRASHED", message);
 
     std::terminate();
+}
+
+void application_t::setup() {
+    game_name = "Akhenaten";
+    logs::info("Engine set to %s", game_name);
+}
+
+void application_t::subscribe_events() {
+    events::subscribe_permanent([] (event_app_center_screen ev) {
+        app_post_event(USER_EVENT_CENTER_WINDOW);
+    });
+
+    events::subscribe_permanent([] (event_app_toggle_fullscreen ev) {
+        app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
+    });
 }
