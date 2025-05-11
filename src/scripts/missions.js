@@ -91,6 +91,14 @@ mission2 = {
 		tutorial_health: [BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN],
 		tutorial_gardens: [BUILDING_ROADBLOCK, BUILDING_FERRY, BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA],
 	}
+
+	vars : {
+		figs_stored : 800
+		pottery_step1_stored : 100
+		pottery_step1_population_cap : 500
+		pottery_step2_stored : 200
+		victory_last_action_delay : 3
+	}
 }
 
 mission3 = {

@@ -1330,7 +1330,7 @@ void draw_debug_ui(int x, int y) {
                 f = { "2:crime", flags.tutorial_2.crime };
                 break;
             case 7:
-                f = { "3:figs_800", flags.tutorial_3.figs_800_stored };
+                f = { "3:figs", flags.tutorial_3.figs_stored };
                 break;
             case 8:
                 f = { "3:pottery_100", flags.tutorial_3.pottery_made_1 };

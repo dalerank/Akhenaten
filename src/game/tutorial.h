@@ -63,7 +63,7 @@ struct tutorial_flags_t {
 
     struct {
         bool started;
-        bool figs_800_stored;
+        bool figs_stored;
         bool pottery_made_1;
         bool pottery_made_2;
         bool disease;

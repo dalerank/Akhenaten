@@ -85,6 +85,10 @@ void info_window_booth::init(object_info &c) {
     building_info_window::init(c);
 
     auto band = c.building_get<building_bandstand>();
+    if (!band) {
+        return;
+    }
+
     const auto &d = band->runtime_data();
 
     textid reason{ c.group_id, 1 };

@@ -21,30 +21,26 @@ tutorial_3 g_tutorial_3;
 
 void tutorial_3::reset() {
     g_tutorials_flags.tutorial_3.started = 0;
-    g_tutorials_flags.tutorial_3.figs_800_stored = 0;
+    g_tutorials_flags.tutorial_3.figs_stored = 0;
     g_tutorials_flags.tutorial_3.pottery_made_1 = 0;
     g_tutorials_flags.tutorial_3.pottery_made_2 = 0;
 }
 
 void tutorial3_on_filled_granary(event_granary_filled ev) {
-    if (g_tutorials_flags.tutorial_3.figs_800_stored) {
-        return;
-    }
-
-    if (ev.amount < 800) {
+    if (g_tutorials_flags.tutorial_3.figs_stored) {
         return;
     }
 
     auto granary = building_get(ev.bid)->dcast_granary();
     const int figs_stored = granary ? granary->amount(RESOURCE_FIGS) : 0;
 
-    if (figs_stored < 800) {
+    if (figs_stored < g_scenario.vars.get_int("figs_stored", 800)) {
         return;
     }
 
     events::unsubscribe(&tutorial3_on_filled_granary);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_3.figs_800_stored = true;
+    g_tutorials_flags.tutorial_3.figs_stored = true;
     building_menu_update(tutorial_stage.tutorial_industry);
     messages::popup(MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
 }
@@ -88,7 +84,8 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
         return;
     } 
     
-    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < 100) {
+    const int amount = g_scenario.vars.get_int("pottery_step1_stored", 100);
+    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < amount) {
         return;
     }
 
@@ -105,7 +102,8 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
         return;
     }
     
-    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < 200) {
+    const int amount = g_scenario.vars.get_int("pottery_step2_stored", 200);
+    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < amount) {
         return;
     }
 
@@ -118,13 +116,14 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
 
 bool tutorial3_is_success() {
     auto &tut = g_tutorials_flags.tutorial_3;
-    const bool may_finish = (tut.figs_800_stored && tut.pottery_made_1 && tut.pottery_made_2 && tut.disease);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
+    const bool may_finish = (tut.figs_stored && tut.pottery_made_1 && tut.pottery_made_2 && tut.disease);
+    const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 
 xstring tutorial_3::goal_text() {
-    if (!g_tutorials_flags.tutorial_3.figs_800_stored) {
+    if (!g_tutorials_flags.tutorial_3.figs_stored) {
         return lang_get_xstring(62, 28);
     } 
     
@@ -147,22 +146,23 @@ void tutorial3_hunger_halt_immgrants(event_advance_month ev) {
 }
 
 void tutorial3_population_cap(city_migration_t& migration) {
-    const int max_pop = (!g_tutorials_flags.tutorial_3.pottery_made_1) ? 520 : 0;
+    const int population_cap = g_scenario.vars.get_int("pottery_step1_population_cap", 500);
+    const int max_pop = (!g_tutorials_flags.tutorial_3.pottery_made_1) ? population_cap : 0;
     migration.population_cap = max_pop;
 }
 
 void tutorial_3::init() {
-    if (g_tutorials_flags.tutorial_3.figs_800_stored) building_menu_update(tutorial_stage.tutorial_industry);
-    else events::subscribe(&tutorial3_on_filled_granary);
+    building_menu_update_if(g_tutorials_flags.tutorial_3.figs_stored, tutorial_stage.tutorial_industry);
+    events::subscribe_if(!g_tutorials_flags.tutorial_3.figs_stored, &tutorial3_on_filled_granary);
 
-    if (g_tutorials_flags.tutorial_3.pottery_made_1) building_menu_update(tutorial_stage.tutorial_industry);
-    else events::subscribe(&tutorial3_warehouse_pottery_1_check);
+    building_menu_update_if(g_tutorials_flags.tutorial_3.pottery_made_1, tutorial_stage.tutorial_industry);
+    events::subscribe_if(!g_tutorials_flags.tutorial_3.pottery_made_1, &tutorial3_warehouse_pottery_1_check);
 
-    if (g_tutorials_flags.tutorial_3.pottery_made_2) building_menu_update(tutorial_stage.tutorial_gardens);
-    else events::subscribe(&tutorial3_warehouse_pottery_2_check);
+    building_menu_update_if(g_tutorials_flags.tutorial_3.pottery_made_2, tutorial_stage.tutorial_gardens);
+    events::subscribe_if(!g_tutorials_flags.tutorial_3.pottery_made_2, &tutorial3_warehouse_pottery_2_check);
 
-    if (g_tutorials_flags.tutorial_3.disease) building_menu_update(tutorial_stage.tutorial_health);
-    else events::subscribe(&tutorial3_on_disease);
+    building_menu_update_if(g_tutorials_flags.tutorial_3.disease, tutorial_stage.tutorial_health);
+    events::subscribe_if(!g_tutorials_flags.tutorial_3.disease, &tutorial3_on_disease);
 
     if (game.simtime.month < 5) {
         events::subscribe(&tutorial3_hunger_halt_immgrants);

@@ -70,12 +70,6 @@ void window_go_back() {
     data.current_window = &data.window_queue[data.queue_index];
 }
 
-static void update_input_before() {
-    if (!touch_to_mouse()) {
-        mouse_determine_button_state(); // touch overrides mouse
-    }
-}
-
 void windows_manager_t::update_input_after() {
     auto& data = g_window_manager;
     reset_touches(0);
@@ -96,7 +90,11 @@ void window_draw(int force) {
     auto& data = g_window_manager;
     // draw the current (top) window in the queue
     ui::begin_frame();
-    update_input_before();
+
+    if (!touch_to_mouse()) {
+        mouse_determine_button_state(); // touch overrides mouse
+    }
+
     window_type* w = data.current_window;
 
     {
