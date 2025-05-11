@@ -32,7 +32,6 @@ struct arrow_definition {
 };
 
 struct global_hotkeys {
-    int save_screenshot;
     int save_city_screenshot;
 };
 
@@ -169,7 +168,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [action = mapping.action] { events::emit(event_app_toggle_fullscreen{ action }); };
         break;
     case HOTKEY_SAVE_SCREENSHOT:
-        def->action = &data.global_hotkey_state.save_screenshot;
+        def->callback = [action = mapping.action] { events::emit(event_app_screenshot{ action }); };
         break;
     case HOTKEY_SAVE_CITY_SCREENSHOT:
         def->action = &data.global_hotkey_state.save_city_screenshot;
@@ -410,9 +409,7 @@ void hotkey_handle_escape(void) {
 void hotkey_handle_global_keys() {
     auto& data = g_hotkey_data;
 
-    if (data.global_hotkey_state.save_screenshot) {
-        graphics_save_screenshot(SCREENSHOT_DISPLAY);
-    } else if (data.global_hotkey_state.save_city_screenshot) {
+    if (data.global_hotkey_state.save_city_screenshot) {
         graphics_save_screenshot(SCREENSHOT_FULL_CITY);
     }
 }

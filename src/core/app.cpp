@@ -3,6 +3,7 @@
 #include "game/settings.h"
 #include "game/game_events.h"
 #include "platform/screen.h"
+#include "graphics/screenshot.h"
 #include "core/log.h"
 #include <SDL.h>
 
@@ -60,5 +61,9 @@ void application_t::subscribe_events() {
 
     events::subscribe_permanent([] (event_app_toggle_fullscreen ev) {
         app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
+    });
+
+    events::subscribe([] (event_app_screenshot ev) {
+        graphics_save_screenshot(SCREENSHOT_DISPLAY);
     });
 }

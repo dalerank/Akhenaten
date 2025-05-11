@@ -5,6 +5,7 @@
 
 struct event_app_center_screen { int value; };
 struct event_app_toggle_fullscreen { int value; };
+struct event_app_screenshot { int value; };
 
 enum e_user_event {
     USER_EVENT_QUIT,
