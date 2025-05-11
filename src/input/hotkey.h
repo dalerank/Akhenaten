@@ -40,5 +40,3 @@ void hotkey_key_pressed(int key, int modifiers, int repeat);
 void hotkey_key_released(int key, int modifiers);
 
 void hotkey_handle_escape(void);
-
-void hotkey_handle_global_keys(void);

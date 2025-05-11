@@ -63,7 +63,11 @@ void application_t::subscribe_events() {
         app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
     });
 
-    events::subscribe([] (event_app_screenshot ev) {
+    events::subscribe_permanent([] (event_app_screenshot ev) {
         graphics_save_screenshot(SCREENSHOT_DISPLAY);
+    });
+
+    events::subscribe_permanent([] (event_app_city_screenshot ev) {
+        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
     });
 }

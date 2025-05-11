@@ -74,8 +74,6 @@ static void update_input_before() {
     if (!touch_to_mouse()) {
         mouse_determine_button_state(); // touch overrides mouse
     }
-
-    hotkey_handle_global_keys();
 }
 
 void windows_manager_t::update_input_after() {
