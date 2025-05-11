@@ -51,7 +51,7 @@ void app_terminate(const char* message) noexcept {
 
 void application_t::setup() {
     game_name = "Akhenaten";
-    logs::info("Engine set to %s", game_name);
+    logs::info("Engine set to %s", game_name.c_str());
 }
 
 void application_t::subscribe_events() {
