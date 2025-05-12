@@ -40,7 +40,6 @@ struct city_t {
     city_population_t population;
 
     house_demands houses;
-    desirability_t desirability;
     kingdome_relation_t kingdome;
     city_military_t military;
     victory_state_t victory_state;
