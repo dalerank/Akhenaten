@@ -432,7 +432,7 @@ void building_farm::update_count() const {
 void building_farm::spawn_figure() {
     bool is_floodplain = building_is_floodplain_farm(base);
     if (!is_floodplain && has_road_access()) { // only for meadow farms
-        common_spawn_labor_seeker(50);
+        common_spawn_labor_seeker(params().min_houses_coverage);
         if (building_farm_time_to_deliver(false, base.output_resource_first_id)) { // UGH!!
             spawn_figure_harvests();
         }

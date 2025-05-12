@@ -93,7 +93,7 @@ void building_dock::spawn_figure() {
     }
 
     check_labor_problem();
-    common_spawn_labor_seeker(50);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     int pct_workers = worker_percentage();
     int max_dockers;
     if (pct_workers >= 75) {

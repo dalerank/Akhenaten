@@ -12,8 +12,6 @@
 #include "scenario/map.h"
 #include "city/city.h"
 
-#include "js/js_game.h"
-
 grid_xx g_desirability_grid = {0, FS_INT8};
  
 desirability_t g_desirability("desirability");
@@ -28,11 +26,7 @@ void desirability_t::load(archive arch) {
 
     for (auto &it : items) {
         arch.r_section(it.first, [item = it.second] (archive iarch) {
-            item->size = iarch.r_int("size", 1);
-            item->value = iarch.r_int("value", 0);
-            item->step = iarch.r_int("step", 0);
-            item->step_size = iarch.r_int("step_size", 0);
-            item->range = iarch.r_int("range", 0);
+            item->load(iarch);
         });
     }
 }
@@ -57,17 +51,15 @@ void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int dista
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                map_grid_set(g_desirability_grid,
-                             base_offset + tile->grid_offset,
-                             calc_bound(map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+                int newd = map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability;
+                map_grid_set(g_desirability_grid, base_offset + tile->grid_offset, calc_bound(newd, -100, 100));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
-            map_grid_set(g_desirability_grid,
-                         base_offset + tile->grid_offset,
-                         calc_bound(map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability, -100, 100));
+            int newd = map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability;
+            map_grid_set(g_desirability_grid, base_offset + tile->grid_offset, calc_bound(newd, -100, 100));
         }
     }
 }
@@ -185,3 +177,11 @@ int desirability_t::get_avg(tile2i tile, int size) {
 io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_desirability_grid);
 });
+
+void desirability_t::influence_t::load(archive iarch) {
+    size = iarch.r_int("size", 1);
+    value = iarch.r_int("value", 0);
+    step = iarch.r_int("step", 0);
+    step_size = iarch.r_int("step_size", 0);
+    range = iarch.r_int("range", 0);
+}

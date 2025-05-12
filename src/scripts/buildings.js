@@ -312,43 +312,44 @@ building_house_palatial_estate = {
 
 building_cattle_ranch = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  input_resource : RESOURCE_STRAW,
-  output_resource : RESOURCE_MEAT,
-  building_size : 3,
-  info_help_id:1,
-  info_text_id:117,
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 }
+    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  min_houses_coverage : 100
+  input_resource : RESOURCE_STRAW
+  output_resource : RESOURCE_MEAT
+  building_size : 3
+  info_help_id:1
+  info_text_id:117
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
 }
 
 building_farm_grain = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output_resource : RESOURCE_GRAIN,
-  output_resource_second : RESOURCE_STRAW,
-  output_resource_second_rate : 10,
+    preview : { pack:PACK_GENERAL, id:105, }
+    base : { pack:PACK_GENERAL, id:105, offset:0 }
+    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house : { pack:PACK_GENERAL, id:225 }
+    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland: { pack:PACK_GENERAL, id:37, offset:0 }
+    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  output_resource : RESOURCE_GRAIN
+  output_resource_second : RESOURCE_STRAW
+  output_resource_second_rate : 10
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  info_help_id:90,
-  info_text_id:112,
-  progress_max: 2000,
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true,
+  building_size : 3
+  fire_proof : true
+  damage_proof : true
+  info_help_id:90
+  info_text_id:112
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+  need_meadow : true
 }
 
 building_farm_chickpeas = {
@@ -531,18 +532,19 @@ building_burning_ruin = {
 
 building_granary = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:99 },
-    base : { pack:PACK_GENERAL, id:99 },
-    work : { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-    resources : {pack:PACK_GENERAL, id:99, offset:2},
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
-  window_info_height_id : 1,
-  info_text_id: 98,
-  info_help_id: 3,
-  building_size : 4,
-  update_roads : true,
+    preview : { pack:PACK_GENERAL, id:99 }
+    base : { pack:PACK_GENERAL, id:99 }
+    work : { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 }
+    resources : {pack:PACK_GENERAL, id:99, offset:2}
+    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  min_houses_coverage : 100
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  window_info_height_id : 1
+  info_text_id: 98
+  info_help_id: 3
+  building_size : 4
+  update_roads : true
 }
 
 building_shrine_osiris = {
@@ -645,15 +647,16 @@ building_guild_stonemasons = {
 
 building_bricklayers_guild = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 },
+    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
+    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
     work : { pos : [75, -14], pack:PACK_GENERAL, id:57, offset:1, max_frames:12, duration:4 }
-  },
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
-  input_resource : RESOURCE_BRICKS,
-  info_help_id:92,
-  info_text_id:172,
-  building_size : 2,
+  }
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  input_resource : RESOURCE_BRICKS
+  min_houses_coverage : 100
+  info_help_id:92
+  info_text_id:172
+  building_size : 2
 }
 
 building_carpenters_guild = {
@@ -668,21 +671,22 @@ building_carpenters_guild = {
 
 building_dock = {
   animations : {
-    preview : { pack:PACK_TERRAIN, id:49 },
-    base : { pack:PACK_TERRAIN, id:49 },
-    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 },
-    work_s : { pos:[55, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
+    preview : { pack:PACK_TERRAIN, id:49 }
+    base : { pack:PACK_TERRAIN, id:49 }
+    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 }
+    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 }
+    work_s : { pos:[55, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 }
     work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 }
-  },
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  planer_relative_orientation: 1,
-  building_size : 3,
-  info_help_id:82,
-  info_text_id:101,
-  check_water_access : true,
-  need_shoreline : true,
-  window_info_height_id : 1,
+  }
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  planer_relative_orientation: 1
+  min_houses_coverage : 50
+  building_size : 3
+  info_help_id:82
+  info_text_id:101
+  check_water_access : true
+  need_shoreline : true
+  window_info_height_id : 1
 }
 
 building_personal_mansion = {
@@ -825,7 +829,7 @@ building_juggler_school = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:12, duration:3 }
+    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:14, duration:3 }
   },
   spawn_interval : 10,
   window_info_height_id : 1,
@@ -848,15 +852,16 @@ building_dancer_school = {
 
 building_storage_yard = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:82, },
-    cover : { pos : [-5, -42], pack:PACK_GENERAL, id:82, offset:17 },
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
+    cover : { pos : [-5, -42], pack:PACK_GENERAL, id:82, offset:17 }
     work : { pos : [20, 25], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 }
-  },
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  info_help_id : 4,
-  info_text_id:99,
-  building_size : 3,
+  }
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  info_help_id : 4
+  info_text_id:99
+  building_size : 3
+  min_houses_coverage : 100
 }
 
 building_storage_room = {
@@ -1004,16 +1009,17 @@ building_jewels_workshop = {
 
 building_reed_gatherer = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:24 }
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
-  },
-  output_resource : RESOURCE_REEDS,
-  building_size : 2,
-  window_info_height_id : 1,
-  info_help_id:92,
-  info_text_id:116,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  }
+  output_resource : RESOURCE_REEDS
+  building_size : 2
+  window_info_height_id : 1
+  info_help_id : 92
+  info_text_id : 116
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  min_houses_coverage : 100
 }
 
 building_wood_cutter = {
@@ -1029,6 +1035,7 @@ building_wood_cutter = {
   info_help_id:94,
   info_text_id:120,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+  min_houses_coverage : 100
 }
 
 building_small_mastaba = {
@@ -1074,15 +1081,16 @@ building_medium_mastaba_part_entrance = building_medium_mastaba
 
 building_tax_collector = {
   animations : {
-    preview : { pos: [0, 0], pack:PACK_GENERAL, id:63 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:63 },
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:63 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:63 }
     work : { pos : [60, -45], pack:PACK_GENERAL, id:63, offset:1, max_frames:11 }
-  },
-  labor_category : LABOR_CATEGORY_GOVERNMENT,
-  window_info_height_id : 1,
-  info_help_id:76,
-  info_text_id:106,
-  building_size : 2,
+  }
+  labor_category : LABOR_CATEGORY_GOVERNMENT
+  window_info_height_id : 1
+  info_help_id:76
+  info_text_id:106
+  building_size : 2
+  min_houses_coverage : 50
 }
 
 building_tax_collector_up = {
@@ -1100,16 +1108,17 @@ building_tax_collector_up = {
 
 building_recruiter = {
   animations : {
-    preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:166 },
+    preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:166 }
     work : { pos : [10, 10], pack:PACK_GENERAL, id:166, offset:1, max_frames:11 }
-  },
-  labor_category : LABOR_CATEGORY_MILITARY,
-  window_info_height_id : 3,
-  info_help_id:37,
-  info_text_id:136,
-  building_size : 3,
-  unique_building : true,
+  }
+  labor_category : LABOR_CATEGORY_MILITARY
+  window_info_height_id : 3
+  min_houses_coverage : 100
+  info_help_id:37
+  info_text_id:136
+  building_size : 3
+  unique_building : true
 }
 
 building_bandstand = {
@@ -1269,6 +1278,7 @@ building_brick_tower = {
   fire_proof : true,
   window_info_height_id : 1,
   labor_category : LABOR_CATEGORY_MILITARY,
+  min_houses_coverage : 50
 }
 
 building_mud_tower = {
@@ -1280,6 +1290,7 @@ building_mud_tower = {
   fire_proof : true,
   window_info_height_id : 1,
   labor_category : LABOR_CATEGORY_MILITARY,
+  min_houses_coverage : 50
 }
 
 building_ferry = {
@@ -1322,6 +1333,7 @@ building_transport_wharf = {
   info_text_id: 174,
   need_shoreline : true,
   labor_category : LABOR_CATEGORY_MILITARY,
+  min_houses_coverage : 100
 }
 
 building_warship_wharf = {
@@ -1345,54 +1357,57 @@ building_warship_wharf = {
   planer_relative_orientation: 1,
   need_shoreline : true,
   labor_category : LABOR_CATEGORY_MILITARY,
+  min_houses_coverage : 100
 }
 
 building_fishing_wharf = {
   animations : {
-    preview : { pack:PACK_TERRAIN, id:18 },
-    base : { pack:PACK_TERRAIN, id:18 },
-    work_n : { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 },
-    work_w : { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 },
-    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
-    wait_n : { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    wait_w : { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
-    wait_s : { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
-    wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output_resource : RESOURCE_FISH,
-  building_size : 2,
-  window_info_height_id: 1,
-  planer_relative_orientation: 1,
-  info_help_id: 84,
-  info_text_id: 102,
-  check_water_access : true,
-  need_shoreline : true,
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
+    preview : { pack:PACK_TERRAIN, id:18 }
+    base : { pack:PACK_TERRAIN, id:18 }
+    work_n : { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 }
+    work_w : { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 }
+    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 }
+    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 }
+    wait_n : { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 }
+    wait_w : { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 }
+    wait_s : { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 }
+    wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 }
+    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  output_resource : RESOURCE_FISH
+  building_size : 2
+  window_info_height_id: 1
+  planer_relative_orientation: 1
+  info_help_id: 84
+  info_text_id: 102
+  check_water_access : true
+  need_shoreline : true
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+  min_houses_coverage : 100
 }
 
 building_shipyard = {
   animations : {
-    preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
-    base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
-    wood : { pos : [55, 20], pack:PACK_GENERAL, id:202 },
-    work_warship : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:52, max_frames: 12, duration:4 },
-    work_fishing_boat : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
-    work_transport : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
-  },
-  transport_progress_cost : 400,
-  warship_progress_cost : 400,
-  fishingboat_progress_cost : 100,
-  input_resource : RESOURCE_TIMBER,
-  building_size : 3,
-  window_info_height_id : 1,
-  planer_relative_orientation: 1,
-  info_help_id: 82,
-  info_text_id: 100,
-  check_water_access : true,
-  need_shoreline : true,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+    preview : { pack: PACK_TERRAIN, id:26, max_frames:1 }
+    base : { pack: PACK_TERRAIN, id:26, max_frames:1 }
+    wood : { pos : [55, 20], pack:PACK_GENERAL, id:202 }
+    work_warship : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:52, max_frames: 12, duration:4 }
+    work_fishing_boat : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 }
+    work_transport : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 }
+  }
+  transport_progress_cost : 400
+  warship_progress_cost : 400
+  fishingboat_progress_cost : 100
+  input_resource : RESOURCE_TIMBER
+  building_size : 3
+  window_info_height_id : 1
+  planer_relative_orientation: 1
+  info_help_id: 82
+  info_text_id: 100
+  check_water_access : true
+  need_shoreline : true
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  min_houses_coverage : 50
 }
 
 building_dentist = {
@@ -1899,33 +1914,34 @@ building_conservatory = {
 
 building_hunting_lodge = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:176},
-    base : { pack:PACK_GENERAL, id:176},
-    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:18, duration:3 },
-    gamemeat : { pos:[61, 14], pack:PACK_GENERAL, id:205 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  output_resource : RESOURCE_GAMEMEAT,
-  window_info_height_id : 1,
-  info_help_id:90,
-  info_text_id:154,
-  building_size : 2,
+    preview : { pack:PACK_GENERAL, id:176}
+    base : { pack:PACK_GENERAL, id:176}
+    work : { pos:[20, -15], pack:PACK_GENERAL, id:176, offset:1, max_frames:18, duration:3 }
+    gamemeat : { pos:[61, 14], pack:PACK_GENERAL, id:205 }
+    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+  output_resource : RESOURCE_GAMEMEAT
+  window_info_height_id : 1
+  info_help_id:90
+  info_text_id:154
+  building_size : 2
+  min_houses_coverage : 100
 }
 
 building_scribal_school = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:42},
-    base : { pack:PACK_GENERAL, id:42},
-    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
-    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
-  },
-  input_resource : RESOURCE_PAPYRUS,
-  info_help_id: 68, info_text_id: 85,
-  window_info_height_id : 1,
-
-  building_size : 2,
-  labor_category : LABOR_CATEGORY_EDUCATION,
+    preview : { pack:PACK_GENERAL, id:42}
+    base : { pack:PACK_GENERAL, id:42}
+    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true }
+    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0}
+  }
+  input_resource : RESOURCE_PAPYRUS
+  info_help_id: 68, info_text_id: 85
+  window_info_height_id : 1
+  min_houses_coverage : 50
+  building_size : 2
+  labor_category : LABOR_CATEGORY_EDUCATION
 }
 
 building_temple_complex_osiris = {

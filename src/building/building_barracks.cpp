@@ -204,7 +204,7 @@ void building_recruiter::spawn_figure() {
     check_labor_problem();
     //    map_point road;
     if (base.has_road_access) {
-        common_spawn_labor_seeker(100);
+        common_spawn_labor_seeker(params().min_houses_coverage);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
         //        if (pct_workers >= 100)

@@ -26,7 +26,7 @@ void building_warship_wharf::spawn_figure() {
     check_labor_problem();
 
     if (has_road_access()) {
-        common_spawn_labor_seeker(100);
+        common_spawn_labor_seeker(params().min_houses_coverage);
     }
 }
 

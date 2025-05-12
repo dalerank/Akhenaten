@@ -469,7 +469,7 @@ void building_granary::spawn_figure() {
         return;
     }
     
-    common_spawn_labor_seeker(100);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
         return;
     }

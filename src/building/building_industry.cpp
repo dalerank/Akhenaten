@@ -109,7 +109,7 @@ void building_industry::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(50);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
         return;
     }

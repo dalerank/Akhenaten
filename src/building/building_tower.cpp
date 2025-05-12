@@ -58,7 +58,7 @@ void building_tower::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(50);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     if (num_workers() <= 0) {
         return;
     }

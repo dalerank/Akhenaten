@@ -106,7 +106,7 @@ void building_hunting_lodge::spawn_figure() {
     }
 
     if (base.num_workers < model_get_building(BUILDING_HUNTING_LODGE)->laborers) {
-        common_spawn_labor_seeker(100);
+        common_spawn_labor_seeker(params().min_houses_coverage);
     }
 
     int spawn_delay = spawn_timer();

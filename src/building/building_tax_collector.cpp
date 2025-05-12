@@ -32,7 +32,7 @@ void building_tax_collector::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(50);
+    common_spawn_labor_seeker(params().min_houses_coverage);
 
     int pct_workers = worker_percentage();
     int spawn_delay;

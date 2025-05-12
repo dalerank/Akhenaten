@@ -40,7 +40,7 @@ void building_shipyard::spawn_figure() {
     if (!map_has_road_access(tile(), size())) {
         return;
     }
-    common_spawn_labor_seeker(50);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;

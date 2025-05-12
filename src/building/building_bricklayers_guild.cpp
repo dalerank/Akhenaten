@@ -62,7 +62,7 @@ void building_bricklayers_guild::spawn_figure() {
         return;
     }
 
-    base.common_spawn_labor_seeker(100);
+    base.common_spawn_labor_seeker(params().min_houses_coverage);
     int pct_workers = base.worker_percentage();
     if (pct_workers < 50) {
         return;

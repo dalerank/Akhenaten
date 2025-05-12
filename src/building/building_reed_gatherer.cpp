@@ -43,7 +43,7 @@ void building_reed_gatherer::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(100);
+    common_spawn_labor_seeker(params().min_houses_coverage);
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;

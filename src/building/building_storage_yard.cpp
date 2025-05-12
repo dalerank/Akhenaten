@@ -842,7 +842,7 @@ void building_storage_yard::spawn_figure() {
         }
     }
 
-    base.common_spawn_labor_seeker(100);
+    base.common_spawn_labor_seeker(params().min_houses_coverage);
     auto task = determine_worker_task();
     if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
         return;
