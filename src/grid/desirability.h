@@ -19,7 +19,7 @@ struct desirability_t : config::runtime {
         influence_t rubble;
     } influence;
 
-    desirability_t() : runtime("desirability") {}
+    desirability_t(pcstr s) : runtime(s) {}
 
     void update_terrain();
     void clear_map();

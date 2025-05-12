@@ -16,7 +16,7 @@
 
 grid_xx g_desirability_grid = {0, FS_INT8};
  
-desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
+desirability_t g_desirability("desirability");
 
 void desirability_t::load(archive arch) {
     std::pair<pcstr, desirability_t::influence_t *> items[] = {

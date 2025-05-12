@@ -3,11 +3,9 @@
 #include "core/xstring.h"
 #include "core/archive.h"
 
-namespace config
-{
+namespace config {
 
-struct runtime
-{
+struct runtime {
     pcstr _section;
 
     runtime(pcstr s);

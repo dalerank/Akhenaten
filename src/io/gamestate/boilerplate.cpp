@@ -154,7 +154,7 @@ static void pre_load() { // do we NEED this...?
     map_property_clear();
     map_sprite_clear();
     map_random_clear();
-    g_desirability.clear();
+    g_desirability.clear_map();
     map_elevation_clear();
     map_soldier_strength_clear();
     map_road_network_clear();
