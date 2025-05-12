@@ -12,11 +12,6 @@
 
 figures::model_t<figure_native_trader> native_trader_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_native_trader);
-void config_load_figure_native_trader() {
-    native_trader_m.load();
-}
-
 void figure_native_trader::figure_action() {
     //    is_ghost = false;
     //    terrain_usage = TERRAIN_USAGE_ANY;

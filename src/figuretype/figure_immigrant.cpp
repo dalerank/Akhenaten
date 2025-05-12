@@ -11,11 +11,6 @@
 
 figures::model_t<figure_immigrant> immigrant_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_immigrant);
-void config_load_figure_immigrant() {
-    immigrant_m.load();
-}
-
 void figure_immigrant::on_destroy() {
     auto h = home();
     auto bhome = building_get(base.immigrant_home_building_id);

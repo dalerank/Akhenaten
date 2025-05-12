@@ -11,11 +11,6 @@
 
 figures::model_t<figure_lumberjack> lumberjack_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_lumberjack);
-void config_load_figure_lumberjack() {
-    lumberjack_m.load();
-}
-
 void figure_lumberjack::figure_action() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:

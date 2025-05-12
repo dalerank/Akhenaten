@@ -8,11 +8,6 @@
 
 figures::model_t<figure_explosion> explosion_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_explosion);
-void config_load_figure_explosion() {
-    explosion_m.load();
-}
-
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 static const int CLOUD_CC_OFFSETS[] = {0, 7, 14, 7, 14, 7};
 static const int CLOUD_SPEED[] = {1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1};

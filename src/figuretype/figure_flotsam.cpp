@@ -11,11 +11,6 @@
 
 figures::model_t<figure_flotsam> flotsam_m;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_flotsam);
-void config_load_figure_flotsam() {
-    flotsam_m.load();
-}
-
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0};
 static const int FLOTSAM_TYPE_3[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
