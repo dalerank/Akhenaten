@@ -15,32 +15,26 @@
 #include "js/js_game.h"
 
 grid_xx g_desirability_grid = {0, FS_INT8};
-desirability_t g_desirability;
+ 
+desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_desirability);
-void config_load_desirability() {
-    g_desirability.load();
-}
+void desirability_t::load(archive arch) {
+    std::pair<pcstr, desirability_t::influence_t *> items[] = {
+        {"plaza", &influence.plaza},
+        {"earthquake", &influence.earthquake},
+        {"garden", &influence.garden},
+        {"rubble", &influence.rubble},
+    };
 
-void desirability_t::load() {
-    g_config_arch.r_section("desirability", [this] (archive arch) {
-        std::pair<pcstr, desirability_t::influence_t *> items[] = {
-            {"plaza", &influence.plaza},
-            {"earthquake", &influence.earthquake},
-            {"garden", &influence.garden},
-            {"rubble", &influence.rubble},
-        };
-
-        for (auto &it : items) {
-            arch.r_section(it.first, [item = it.second] (archive iarch) {
-                item->size = iarch.r_int("size", 1);
-                item->value = iarch.r_int("value", 0);
-                item->step = iarch.r_int("step", 0);
-                item->step_size = iarch.r_int("step_size", 0);
-                item->range = iarch.r_int("range", 0);
-            });
-        }
-    });
+    for (auto &it : items) {
+        arch.r_section(it.first, [item = it.second] (archive iarch) {
+            item->size = iarch.r_int("size", 1);
+            item->value = iarch.r_int("value", 0);
+            item->step = iarch.r_int("step", 0);
+            item->step_size = iarch.r_int("step_size", 0);
+            item->range = iarch.r_int("range", 0);
+        });
+    }
 }
 
 void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int desirability) {
@@ -138,13 +132,13 @@ void desirability_t::update_terrain() {
     }
 }
 
-void desirability_t::clear() {
+void desirability_t::clear_map() {
     map_grid_clear(g_desirability_grid);
 }
 
 void desirability_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Desirability Update");
-    clear();
+    clear_map();
     update_buildings();
     update_terrain();
 }

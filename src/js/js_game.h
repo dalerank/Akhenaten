@@ -28,9 +28,9 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func)
 
-#define ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a) \
+#define ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.reset(); g_config_arch.r_section(#a, [] (archive arch) { a.load(arch); }); a.init(); }
+    void config_load_ ## a() { a.reset(); g_config_arch.r_section(name, [] (archive arch) { a.load(arch); }); a.init(); }
 
 #define ANK_REGISTER_CONFIG_ARRAY_VARIABLE(a) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
@@ -47,5 +47,8 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
     ANK_REGISTER_CONFIG_OBJECTS_VARIABLE(a)
 
 #define ANK_VARIABLE(a) a; \
-    ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a)
+    ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, #a)
+
+#define ANK_VARIABLE_N(a, name) a; \
+    ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, name)
 
