@@ -1772,7 +1772,7 @@ building_pottery = {
   animations : {
     preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:3 },
+    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:12 },
     clay : { pos:[60, 30], pack:PACK_GENERAL, id:205, offset:9 },
   },
   input_resource : RESOURCE_CLAY,

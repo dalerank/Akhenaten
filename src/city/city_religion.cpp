@@ -100,13 +100,21 @@ int city_religion_t::god_coverage_total(e_god god, e_building_type temple, e_bui
     switch (is_god_known(god)) {
     default: return 0;
 
-    case GOD_STATUS_KNOWN:
-        return 150 * g_city.buildings.count_total(shrine) + 375 * g_city.buildings.count_active(temple) + 8000 * g_city.buildings.count_active(complex);
-        break;
+    case GOD_STATUS_KNOWN: {
+            const int shrine_cov = 150 * g_city.buildings.count_total(shrine);
+            const int temple_cov = 375 * g_city.buildings.count_active(temple);
+            const int complex_cov = 8000 * g_city.buildings.count_active(complex);
+            const int total_cov = shrine_cov + temple_cov + complex_cov;
+            return total_cov;
+        }
 
-    case GOD_STATUS_PATRON:
-        return 300 * g_city.buildings.count_total(shrine) + 750 * g_city.buildings.count_active(temple) + 8000 * g_city.buildings.count_active(complex);
-        break;
+    case GOD_STATUS_PATRON:{ 
+            const int shrine_cov = 300 * g_city.buildings.count_total(shrine);
+            const int temple_cov = 750 * g_city.buildings.count_active(temple);
+            const int complex_cov = 8000 * g_city.buildings.count_active(complex);
+            const int total_cov = shrine_cov + temple_cov + complex_cov;
+            return total_cov;
+        }
     }
 }
 
