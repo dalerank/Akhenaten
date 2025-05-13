@@ -226,7 +226,7 @@ void city_finance_t::collect_monthly_taxes() {
     city_data.taxes.monthly.uncollected_nobles = 0;
     city_data.taxes.monthly.collected_nobles = 0;
 
-    for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
+    for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
         city_data.population.at_level[i] = 0;
     }
 

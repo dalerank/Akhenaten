@@ -38,7 +38,7 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
             const bool isdown = (buttons[i].state & 0x10);
             if (tiny) {
                 image_id = image_group(isdown ? ui::arrow_button_tiny_down : ui::arrow_button_tiny_up);
-                image_id += buttons[i].state;
+                image_id += (buttons[i].state & 0xf);
             } else {
                 image_id = image_group(isdown ? ui::arrow_button_down : ui::arrow_button_up);
                 image_id += buttons[i].pressed ? -1 : 0;

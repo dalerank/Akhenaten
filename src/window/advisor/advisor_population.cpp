@@ -36,7 +36,7 @@ static vec2i get_y_axis(int max_value) {
 }
 
 static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
-    if (city_population_monthly_count() > max_months) {
+    if (g_city.population.monthly.count > max_months) {
         *end_month = game.simtime.month - 1;
         *end_year = game.simtime.year;
 
@@ -56,7 +56,7 @@ static void get_min_max_month_year(int max_months, int* start_month, int* start_
 void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
     int max_months;
-    int month_count = city_population_monthly_count();
+    int month_count = g_city.population.monthly.count;
     if (month_count <= 20) max_months = 20;
     else if (month_count <= 40) max_months = 40;
     else if (month_count <= 100) max_months = 100;
@@ -69,7 +69,7 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
     // determine max value
     int max_value = 0;
     for (int m = 0; m < max_months; m++) {
-        int value = city_population_at_month(max_months, m);
+        int value = g_city.population.at_month(max_months, m);
         if (value > max_value)
             max_value = value;
     }
@@ -100,7 +100,7 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
     if (full_size) {
         graphics_set_clip_rectangle({0, 0}, {640, y + 200});
         for (int m = 0; m < max_months; m++) {
-            int pop = city_population_at_month(max_months, m);
+            int pop = g_city.population.at_month(max_months, m);
             int val;
             if (y_shift == -1)
                 val = 2 * pop;
@@ -110,16 +110,16 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
             if (val > 0) {
                 switch (max_months) {
                 case 20:
-                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * m, y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_group(graph_bar[1]), x + 20 * m, y + 200 - val);
                     break;
                 case 40:
-                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 1, x + 10 * m, y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_group(graph_bar[2]), x + 10 * m, y + 200 - val);
                     break;
                 case 100:
-                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * m, y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_group(graph_bar[3]), x + 4 * m, y + 200 - val);
                     break;
                 case 200:
-                    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 3, x + 2 * m,y + 200 - val);
+                    ImageDraw::img_generic(ctx, image_group(graph_bar[4]), x + 2 * m,y + 200 - val);
                     break;
                 default:
                     graphics_draw_vertical_line(vec2i{x + m, y + 200 - val}, y + 199, COLOR_RED);
@@ -131,7 +131,7 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
     } else {
         y_shift += 2;
         for (int m = 0; m < max_months; m++) {
-            int val = city_population_at_month(max_months, m) >> y_shift;
+            int val = g_city.population.at_month(max_months, m) >> y_shift;
             if (val > 0) {
                 if (max_months == 20)
                     graphics_fill_rect(vec2i{x + m, y + 50 - val}, vec2i{4, val + 1}, COLOR_RED);
@@ -155,22 +155,19 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
     int y_max = ypx.x;
     int y_shift = ypx.y;
 
-    int x = pos.x;
-    int y = pos.y;
-
     if (full_size) {
         // y axis
-        text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(0, x - 66, y + 196, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered(y_max, pos.x - 66, pos.y - 3, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered(y_max / 2, pos.x - 66, pos.y + 96, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered(0, pos.x - 66, pos.y + 196, 60, FONT_SMALL_PLAIN);
         // x axis
         for (int i = 0; i <= 10; i++) {
-            text_draw_number_centered(i * 10, x + 40 * i - 22, y + 210, 40, FONT_SMALL_PLAIN);
+            text_draw_number_centered(i * 10, pos.x + 40 * i - 22, pos.y + 210, 40, FONT_SMALL_PLAIN);
         }
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
+        graphics_set_clip_rectangle({0, 0}, {640, pos.y + 200});
         for (int i = 0; i < 100; i++) {
             int pop = city_population_at_age(i);
             int val;
@@ -180,7 +177,7 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
                 val = pop >> y_shift;
             }
             if (val > 0) {
-                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR) + 2, x + 4 * i, y + 200 - val);
+                ImageDraw::img_generic(ctx, image_group(graph_bar[2]), pos.x + 4 * i, pos.y + 200 - val);
             }
         }
         graphics_reset_clip_rectangle();
@@ -189,19 +186,17 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
         for (int i = 0; i < 100; i++) {
             int val = city_population_at_age(i) >> y_shift;
             if (val > 0)
-                graphics_draw_vertical_line(vec2i{x + i, y + 50 - val}, y + 50, COLOR_RED);
+                graphics_draw_vertical_line( pos + vec2i{i, 50 - val}, val, COLOR_RED);
         }
     }
 }
 
 void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
-    int max_value = 0;
-    for (int i = 0; i < 20; i++) {
-        int value = city_population_at_level(i);
-        if (value > max_value)
-            max_value = value;
-    }
+
+    const auto &population = g_city.population;
+    const int max_value = *std::max_element(population.at_level.begin(), population.at_level.end());
+
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
@@ -221,25 +216,22 @@ void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos)
 
     if (full_size) {
         graphics_set_clip_rectangle({0, 0}, {640, y + 200});
-        for (int i = 0; i < 20; i++) {
-            int pop = city_population_at_level(i);
-            int val;
-            if (y_shift == -1)
-                val = 2 * pop;
-            else {
-                val = pop >> y_shift;
-            }
+        for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
+            int pop = population.at_level[i];
+            int val = (y_shift == -1) ? 2 * pop : (pop >> y_shift);
+
             if (val > 0) {
-                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_POPULATION_GRAPH_BAR), x + 20 * i, y + 200 - val);
+                ImageDraw::img_generic(ctx, image_group(graph_bar[1]), x + 20 * i, y + 200 - val);
             }
         }
         graphics_reset_clip_rectangle();
     } else {
         y_shift += 2;
-        for (int i = 0; i < 20; i++) {
-            int val = city_population_at_level(i) >> y_shift;
-            if (val > 0)
-                graphics_fill_rect(vec2i{x + 5 * i, y + 50 - val}, vec2i{4, val + 1}, COLOR_RED);
+        for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
+            int val = population.at_level[i] >> y_shift;
+            if (val > 0) {
+                graphics_fill_rect(vec2i{ x + 5 * i, y + 50 - val }, vec2i{ 4, val + 1 }, COLOR_RED);
+            }
         }
     }
 }
@@ -457,6 +449,18 @@ void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
 
     (*this.*info_panel)();
     ui.end_widget();
+}
+
+void ui::advisor_population_window::load(archive arch, pcstr section) {
+    advisor_window::load(arch, section);
+
+    arch.r_desc("graph_bar_1", graph_bar[1]);
+    arch.r_desc("graph_bar_2", graph_bar[2]);
+    arch.r_desc("graph_bar_3", graph_bar[3]);
+    arch.r_desc("graph_bar_4", graph_bar[4]);
+}
+
+void ui::advisor_population_window::init() {
 }
 
 int ui::advisor_population_window::get_tooltip_text(void) {

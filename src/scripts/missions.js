@@ -152,6 +152,11 @@ mission4 = {
 		tutorial_trading: [BUILDING_DOCK],
 		tutorial_monuments: [BUILDING_BRICKLAYERS_GUILD, BUILDING_SMALL_MASTABA]
 	}
+
+	vars : {
+		spacious_apartment_built : 1
+		victory_last_action_delay : 3
+	}
 }
 
 mission5 = { // Timna

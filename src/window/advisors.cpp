@@ -269,7 +269,7 @@ int window_advisors_show_advisor(e_advisor advisor) {
     return 1;
 }
 
-void window_advisors_show(void) {
+void window_advisors_show() {
     static window_type window = {
         WINDOW_ADVISORS,
         [] (int flags) { g_window_advisors.draw_background(flags); },

@@ -116,7 +116,6 @@ struct city_finance_t {
     void calculate_totals();
 };
 
-constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 class figure;
 
 struct event_gold_extract { int amount; };
