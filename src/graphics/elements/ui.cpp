@@ -559,14 +559,14 @@ arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
     const mouse *m = mouse_get();
 
-    int img_index = tiny ? (down ? 0 : 3) : down ? 17 : 15;
     int size = tiny ? 17 : 24;
-    g_state.buttons.push_back(arrow_button{pos.x, pos.y, img_index, size, button_none, 0, 0});
+    g_state.buttons.push_back(arrow_button{pos.x, pos.y, -1, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
     const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
-    const bool pressed = hovered && m->left.is_down;
-    abutton.state = (hovered ? (pressed ? 2 : 1) : 0);
+    abutton.pressed = hovered && m->left.is_down;
+    abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
+    abutton.state |= (down ? 0x10 : 0);
 
     arrow_buttons_draw(offset, abutton, tiny);
     const bool darkened = !!(flags & UiFlags_Darkened);

@@ -3,6 +3,10 @@ log_info("akhenaten: ui config started")
 uioptions = {
     resource_icons  : {pack:PACK_EXPANSION, id:3}
     advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0}
+    arrow_button_tiny_down : {pack:PACK_GENERAL, id:212, offset:0}
+    arrow_button_tiny_up : {pack:PACK_GENERAL, id:212, offset:3}
+    arrow_button_down : {pack:PACK_UNLOADED, id:0, offset:18}
+    arrow_button_up : {pack:PACK_UNLOADED, id:0, offset:16}
 }
 
 build_menu_widget = {

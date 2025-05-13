@@ -5,26 +5,47 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 
+#include "js/js_game.h"
+
 static const int REPEATS[] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1,
                               0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0};
 
 static const time_millis REPEAT_MILLIS = 30;
 static const unsigned int BUTTON_PRESSED_FRAMES = 3;
 
+namespace ui {
+    static image_desc arrow_button_tiny_down;
+    static image_desc arrow_button_tiny_up;
+    static image_desc arrow_button_down;
+    static image_desc arrow_button_up;
+}
+
+ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options);
+void config_load_arrowbutton_options() {
+    g_config_arch.r_section("uioptions", [] (archive arch) {
+        arch.r_desc("arrow_button_tiny_down", ui::arrow_button_tiny_down);
+        arch.r_desc("arrow_button_tiny_up", ui::arrow_button_tiny_up);
+        arch.r_desc("arrow_button_down", ui::arrow_button_down);
+        arch.r_desc("arrow_button_up", ui::arrow_button_up);
+    });
+}
+
 void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny) {
     painter ctx = game.painter();
     for (int i = 0; i < num_buttons; i++) {
-        int image_id = 0;
-        if (tiny) {
-            image_id = image_id_from_group(GROUP_TINY_ARROWS) + buttons[i].image_id;
-        } else {
-            image_id = image_id_from_group(GROUP_SYSTEM_GRAPHICS) + buttons[i].image_id;
+        int image_id = buttons[i].image_id;
+        if (image_id < 0) {
+            const bool isdown = (buttons[i].state & 0x10);
+            if (tiny) {
+                image_id = image_group(isdown ? ui::arrow_button_tiny_down : ui::arrow_button_tiny_up);
+                image_id += buttons[i].state;
+            } else {
+                image_id = image_group(isdown ? ui::arrow_button_down : ui::arrow_button_up);
+                image_id += buttons[i].pressed ? -1 : 0;
+            }
         }
-
-        if (buttons[i].pressed) {
-            image_id += 2;
-        } else {
-            image_id += buttons[i].state;
+        else {
+            image_id += (buttons[i].state & 0xf);
         }
 
         ImageDraw::img_generic(ctx, image_id, pos.x + buttons[i].x, pos.y + buttons[i].y);
