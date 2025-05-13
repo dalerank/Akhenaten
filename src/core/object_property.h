@@ -9,6 +9,8 @@ struct id_property_t {
     static const xstring city;
     static const xstring finance;
     static const xstring estimated_wages;
+    static const xstring wages;
+    static const xstring wages_kingdome;
     static const xstring rating;
     static const xstring model;
     static const xstring farm;

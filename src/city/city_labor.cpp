@@ -304,30 +304,6 @@ static bool is_industry_disabled(building* b) {
     return g_city.resource.mothballed[resource];
 }
 
-void city_labor_t::change_wages(int amount) {
-    wages += amount;
-    wages = calc_bound(wages, 0, 100);
-}
-
-int city_labor_t::raise_wages_kingdome() {
-    if (wages_kingdome >= 45)
-        return 0;
-
-    wages_kingdome += 1 + (random_byte_alt() & 3);
-    if (wages_kingdome > 45)
-        wages_kingdome = 45;
-
-    return 1;
-}
-
-int city_labor_t::lower_wages_kingdome() {
-    if (wages_kingdome <= 5)
-        return 0;
-
-    wages_kingdome -= 1 + (random_byte_alt() & 3);
-    return 1;
-}
-
 int city_labor_t::workers_allocated(int category) const {
     return categories[category].workers_allocated;
 }

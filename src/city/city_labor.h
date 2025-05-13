@@ -14,8 +14,6 @@ struct labor_category {
 } ;
 
 struct city_labor_t {
-    int8_t wages;
-    int8_t wages_kingdome;
     int32_t workers_available;
     int32_t workers_employed;
     int32_t workers_unemployed;
@@ -24,10 +22,7 @@ struct city_labor_t {
     int32_t unemployment_percentage_for_goverment;
     labor_category categories[10];
 
-    int raise_wages_kingdome();
-    int lower_wages_kingdome();
     int workers_allocated(int category) const;
-    void change_wages(int amount);
     void calculate_workers(int num_plebs, int num_patricians);
     void calculate_workers_needed_per_category();
     void set_building_worker_weight();

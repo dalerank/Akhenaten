@@ -12,6 +12,7 @@
 #include "game/tutorial.h"
 #include "game/game.h"
 #include "game/game_config.h"
+#include "core/random.h"
 #include "figure/figure.h"
 
 #include <map>
@@ -19,6 +20,9 @@
 static auto &city_data = g_city;
 
 void city_finance_t::init() {
+    wages_kingdome = 30;
+    wages = 30;
+
     events::subscribe([this] (event_finance_donation ev) {
         treasury += ev.amount;
         this_year.income.donated += ev.amount;
@@ -29,10 +33,34 @@ void city_finance_t::init() {
     });
 
     events::subscribe([this] (event_finance_change_wages ev) {
-        g_city.labor.change_wages(ev.value);
+        change_wages(ev.value);
         estimate_wages();
         calculate_totals();
     });
+}
+
+void city_finance_t::change_wages(int amount) {
+    wages += amount;
+    wages = calc_bound(wages, 0, 100);
+}
+
+int city_finance_t::raise_wages_kingdome() {
+    if (wages_kingdome >= 45)
+        return 0;
+
+    wages_kingdome += 1 + (random_byte_alt() & 3);
+    if (wages_kingdome > 45)
+        wages_kingdome = 45;
+
+    return 1;
+}
+
+int city_finance_t::lower_wages_kingdome() {
+    if (wages_kingdome <= 5)
+        return 0;
+
+    wages_kingdome -= 1 + (random_byte_alt() & 3);
+    return 1;
 }
 
 bool city_finance_t::is_out_of_money() const{
@@ -123,7 +151,7 @@ void city_finance_t::calculate_totals() {
 }
 
 void city_finance_t::estimate_wages() {
-    int monthly_wages = g_city.labor.wages * g_city.labor.workers_employed / 10 / 12;
+    int monthly_wages = wages * g_city.labor.workers_employed / 10 / 12;
     this_year.expenses.wages = wages_so_far;
     estimated_wages = (12 - game.simtime.month) * monthly_wages + wages_so_far;
 }
@@ -273,10 +301,10 @@ void city_finance_t::collect_monthly_taxes() {
 }
 
 void city_finance_t::pay_monthly_wages() {
-    int wages = g_city.labor.wages * g_city.labor.workers_employed / 10 / 12;
-    treasury -= wages;
-    wages_so_far += wages;
-    wage_rate_paid_this_year += g_city.labor.wages;
+    int montly_wages = wages * g_city.labor.workers_employed / 10 / 12;
+    treasury -= montly_wages;
+    wages_so_far += montly_wages;
+    wage_rate_paid_this_year += montly_wages;
 }
 
 void city_finance_t::pay_monthly_interest() {

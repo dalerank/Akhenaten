@@ -78,6 +78,8 @@ struct city_finance_t {
         treasury_t &operator=(int v) { value = 0; return change(v); }
         operator int() const { return value; }
     } treasury;
+    int8_t wages;
+    int8_t wages_kingdome;
     int8_t tax_percentage;
     int32_t estimated_tax_uncollected;
     int32_t estimated_tax_income;
@@ -105,6 +107,9 @@ struct city_finance_t {
     void copy_amounts_to_last_year();
     void pay_tribute();
     void advance_year();
+    void change_wages(int amount);
+    int raise_wages_kingdome();
+    int lower_wages_kingdome();
 
     void process_request(finance_request_t request);
     void calculate_totals();

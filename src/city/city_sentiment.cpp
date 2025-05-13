@@ -78,11 +78,11 @@ int city_sentiment_t::calc_penalty_for_hut_dwellers() {
 }
 
 int city_sentiment_t::calc_sentiment_contribution_wages() {
-    const auto &labor = g_city.labor;
+    const auto & finance = g_city.finance;
 
-    wages = labor.wages;
+    wages = finance.wages;
     int contribution = 0;
-    int wage_diff = labor.wages - labor.wages_kingdome;
+    int wage_diff = finance.wages - finance.wages_kingdome;
     if (wage_diff < 0) {
         contribution = wage_diff / 2;
         if (!contribution)

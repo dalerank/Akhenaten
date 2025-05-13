@@ -28,9 +28,9 @@ void city_t::update_prosperity_explanation() {
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Kingdome
     int avg_wage = finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= labor.wages_kingdome + 2) {
+    if (avg_wage >= finance.wages_kingdome + 2) {
         change += 1;
-    } else if (avg_wage < labor.wages_kingdome) {
+    } else if (avg_wage < finance.wages_kingdome) {
         change -= 1;
     }
 
@@ -63,7 +63,7 @@ void city_t::update_prosperity_explanation() {
         reason = 3;
     else if (labor.unemployment_percentage >= 15)
         reason = 4;
-    else if (avg_wage < labor.wages_kingdome)
+    else if (avg_wage < finance.wages_kingdome)
         reason = 5;
     else if (pct_shanties > 30)
         reason = 6;
@@ -97,9 +97,9 @@ void city_t::update_prosperity_rating() {
 
     // wages: +1 for wages 2+ above Rome, -1 for wages below Rome
     int avg_wage = finance.wage_rate_paid_last_year / 12;
-    if (avg_wage >= labor.wages_kingdome + 2)
+    if (avg_wage >= finance.wages_kingdome + 2)
         change += 1;
-    else if (avg_wage < labor.wages_kingdome)
+    else if (avg_wage < finance.wages_kingdome)
         change -= 1;
 
     // high percentage poor: -1, high percentage rich: +1

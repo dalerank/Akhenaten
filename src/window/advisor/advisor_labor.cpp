@@ -19,7 +19,6 @@ void ui::advisor_labors_window::init() {
         g_city.labor.workers_unemployed, ui::str(50, 13),
         g_city.labor.unemployment_percentage);
     ui["employed"] = employed_text;
-    ui["wages_value"].text_var("%u %s %s %u)", g_city.labor.wages, ui::str(50, 15), ui::str(50, 18), g_city.labor.wages_kingdome);
 
     ui["dec_wages"].onclick([] {
         events::emit(event_finance_change_wages{ -1 });

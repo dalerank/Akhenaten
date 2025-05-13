@@ -59,8 +59,6 @@ void city_t::init() {
     health.target_value = 50;
     health.value = 50;
     unused.unknown_00c0 = 3;
-    labor.wages_kingdome = 30;
-    labor.wages = 30;
     finance.tax_percentage = 7;
     trade.caravan_import_resource = RESOURCE_MIN;
     trade.caravan_backup_import_resource = RESOURCE_MIN;
@@ -805,9 +803,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.unemployment_percentage);
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.unemployment_percentage_for_goverment);
     iob->bind(BIND_SIGNATURE_INT32, &data.labor.workers_needed);
-    iob->bind(BIND_SIGNATURE_INT8, &data.labor.wages);
+    iob->bind(BIND_SIGNATURE_INT8, &data.finance.wages);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.labor.wages_kingdome);
+    iob->bind(BIND_SIGNATURE_INT8, &data.finance.wages_kingdome);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2b6c);
     iob->bind____skip(4);
@@ -1364,6 +1362,8 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().player, tags().salary_amount, [] (const xstring &) { return bvariant(g_city.kingdome.salary_amount); }},
         { tags().city, tags().months_since_festival, [] (const xstring &) { return bvariant(g_city.festival.months_since_festival); }},
         { tags().finance, tags().estimated_wages, [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
+        { tags().finance, tags().wages, [] (const xstring &) { return bvariant(g_city.finance.wages); }},
+        { tags().finance, tags().wages_kingdome, [] (const xstring &) { return bvariant(g_city.finance.wages_kingdome); }},
     };
 
     for (const auto &prop : cproperties) {
