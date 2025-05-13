@@ -4,10 +4,10 @@
 #include "grid/terrain.h"
 #include "core/calc.h"
 #include "building/building_house.h"
+#include "grid/floodplain.h"
+#include "grid/tiles.h"
 #include "city/city.h"
 #include "graphics/animation.h"
-
-#include "js/js_game.h"
 
 figures::model_t<figure_immigrant> immigrant_m;
 
@@ -54,6 +54,12 @@ void figure_immigrant::figure_action() {
             }
 
             do_gotobuilding(home, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
+            const bool isfloodplain = map_terrain_is(tile(), TERRAIN_FLOODPLAIN);
+            if (isfloodplain) {
+                map_set_floodplain_growth(tile().grid_offset(), 0);
+                set_floodplain_land_tiles_image(tile().grid_offset(), false);
+                map_refresh_river_image_at(tile().grid_offset(), false);
+            }
 
             if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
                 base.routing_try_reroute_counter++;
