@@ -27,7 +27,9 @@ import missions
 import figures
 import ui_hold_festival_window
 import localization
-include(":building_menu.js")
+import ui_advisor_entertainment
+import building_menu
+
 include(":desirability.js")
 include(":floodplain.js")
 include(":ui.js")

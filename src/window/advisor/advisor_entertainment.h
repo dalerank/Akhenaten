@@ -11,7 +11,7 @@ struct advisor_entertainment_window : public advisor_window_t<advisor_entertainm
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual void init() override {}
+    virtual void init() override;
 
     void draw_entertainer(int type, pcstr prefix, e_building_type venue, int shows, int coverage, int entertain_coeff);
 

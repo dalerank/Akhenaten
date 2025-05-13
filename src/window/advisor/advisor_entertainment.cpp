@@ -67,9 +67,13 @@ void ui::advisor_entertainment_window::ui_draw_foreground(UiFlags flags) {
     draw_entertainer(3, "senet_house", BUILDING_SENET_HOUSE, g_city.entertainment.senet_house_plays, g_city.coverage.senet_house, 0);
     draw_entertainer(9, "zoo", BUILDING_ZOO, 0, 0, 0);
 
-    ui["advice"] = ui::str(58, 7 + get_entertainment_advice());
-
     ui.end_widget();
+}
+
+void ui::advisor_entertainment_window::init() {
+    advisor_window::init();
+
+    ui["advice"] = ui::str(58, 7 + get_entertainment_advice());
 }
 
 int ui::advisor_entertainment_window::handle_mouse(const mouse* m) {
