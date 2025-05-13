@@ -6,85 +6,78 @@
 
 figures::model_t<figure_festival_guy> festival_guy_m;
 
-void figure_festival_guy::on_create() {
+void figure_festival_guy::update_animation() {
+    building* temple = home();
+    xstring animkey = {};
+    switch (temple->type) {
+    case BUILDING_TEMPLE_OSIRIS:
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
+        animkey = "priest_osiris_walk";
+        break;
+
+    case BUILDING_TEMPLE_RA:
+    case BUILDING_TEMPLE_COMPLEX_RA:
+        animkey = "priest_ra_walk";
+        break;
+
+    case BUILDING_TEMPLE_PTAH:
+    case BUILDING_TEMPLE_COMPLEX_PTAH:
+        animkey = "priest_ptah_walk";
+        break;
+
+    case BUILDING_TEMPLE_SETH:
+    case BUILDING_TEMPLE_COMPLEX_SETH:
+        animkey = "priest_seth_walk";
+        break;
+
+    case BUILDING_TEMPLE_BAST:
+    case BUILDING_TEMPLE_COMPLEX_BAST:
+        animkey = "priest_bast_walk";
+        break;
+
+    case BUILDING_JUGGLER_SCHOOL:
+        animkey = "juggler_walk";
+        break;
+    case BUILDING_CONSERVATORY:
+        animkey = "musician_walk";
+        break;
+    case BUILDING_DANCE_SCHOOL:
+        animkey = "dancer_walk";
+
+    default:
+        assert(false);
+    }
+
+    image_set_animation(animkey);
 }
 
 void figure_festival_guy::figure_action() {
-    building* b = home();
-    switch (b->type) {
-    default:
-        assert(false);
-        break;
-
-    case BUILDING_TEMPLE_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        image_set_animation("priest_osiris");
-        break;
-    case BUILDING_TEMPLE_RA:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-        image_set_animation("priest_ra");
-        break;
-    case BUILDING_TEMPLE_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-        image_set_animation("priest_ptah");
-        break;
-    case BUILDING_TEMPLE_SETH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-        image_set_animation("priest_seth");
-        break;
-    case BUILDING_TEMPLE_BAST:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        image_set_animation("priest_bast");
-        break;
-    case BUILDING_JUGGLER_SCHOOL:
-        image_set_animation("juggler");
-        break;
-    case BUILDING_CONSERVATORY:
-        image_set_animation("musician");
-        break;
-    case BUILDING_DANCE_SCHOOL:
-        image_set_animation("dancer");
-        break;
-    }
-
     switch (action_state()) {
-    case 9: // is "dancing" on tile
-        base.festival_remaining_dances--;
-        advance_action(10);
-        break;
-    case 10: // goes to random spot on the square
-
-        // still going to the square center, first
-        if (base.terrain_usage == TERRAIN_USAGE_ROADS) {
-            if (do_goto(base.destination_tile, TERRAIN_USAGE_ROADS, 10))
-                base.terrain_usage = TERRAIN_USAGE_ANY;
-        } else {
-            //                use_cross_country = true; // todo?
-            if (base.routing_path_id) {
-                do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 11);
-            } else {
-                bool has_square = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
-                if (base.festival_remaining_dances == 0 || !has_square) {
-                    return poof();
-                }
-
-                // choose a random tile on the festival square
-                tile2i festival = city_building_get_festival_square_position();
-                int rand_x, rand_y;
-                int rand_seed = random_short();
-                do {
-                    int random_tile = rand_seed % 25;
-                    rand_x = festival.x() + random_tile % 5;
-                    rand_y = festival.y() + random_tile / 5;
-                    rand_seed++;
-                } while (rand_x == tilex() && rand_y == tiley());
-
-                do_goto(map_point(rand_x, rand_y), TERRAIN_USAGE_ANY, 11);
-            }
+    case FIGURE_ACTION_10_FESTIVAL_GUY_CREATED:
+        base.anim.frame = 0;
+        if (--base.wait_ticks <= 0) {
+            advance_action(FIGURE_ACTION_11_FESTIVAL_GUY_GOTO_SQUARE);
         }
         break;
-    case 11: // reached a random spot on the square, now what?
-        advance_action(9);
+
+    case FIGURE_ACTION_11_FESTIVAL_GUY_GOTO_SQUARE:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_GUY_DANCE)) {
+            base.wait_ticks = rand() % 20;
+        }
+        break;
+
+    case FIGURE_ACTION_12_FESTIVAL_GUY_DANCE:
+        if (--base.wait_ticks <= 0) {
+            advance_action(FIGURE_ACTION_13_FESTIVAL_GUY_GOTO_HOME);
+        }
+        break;
+
+    case FIGURE_ACTION_13_FESTIVAL_GUY_GOTO_HOME:
+        do_gotobuilding(home());
         break;
     }
+}
+
+void figure_festival_guy::before_poof() {
+    ; //
 }

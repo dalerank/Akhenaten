@@ -64,11 +64,18 @@ figure_robber = {
 	max_amount : 25,
 }
 
-figure_festival_priest = {
+figure_festival_guy = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
-	},
+		juggler_walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
+		musician_walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 }
+		dancer_walk : {pack:PACK_SPR_MAIN, id:128, max_frames:12}
+		priest_ra_walk: { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
+		priest_osiris_walk : {pack:PACK_SPR_MAIN, id:197, max_frames:12}
+		priest_ptah_walk: {pack:PACK_SPR_MAIN, id:187, max_frames:12}
+		priest_seth_walk: {pack:PACK_SPR_MAIN, id:193, max_frames:12}
+		priest_bast_walk: {pack:PACK_SPR_MAIN, id:208, max_frames:12}
+	}
+
 	terrain_usage : TERRAIN_USAGE_ANY,
 	max_amount : 25,
 }
@@ -86,95 +93,97 @@ figure_tower_sentry = {
 
 figure_priest = {
 	animations : {
-		osiris_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:197, max_frames:12},
-		osiris_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:198, loop:false },
-		ra_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:210, max_frames:12 },
-		ra_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:211, loop:false },
-		ptah_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:187, max_frames:12 },
-		ptah_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:188, loop:false },
-		seth_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:193, max_frames:12 },
-		seth_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:194, loop:false },
-		bast_walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:208, max_frames:12 },
-		bast_death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:209, loop:false },
-  },
-  sounds : {
-  	osiris_god_love_festival : {sound:"priest_osiris_e01.wav", group:230, text: 0},
-    osiris_city_low_mood : {sound:"priest_osiris_e02.wav", group:230, text: 1},
-    osiris_low_entertainment : {sound:"priest_osiris_e03.wav", group:230, text: 2},
-    osiris_disease_in_city : {sound:"priest_osiris_e04.wav", group:230, text: 3},
-    osiris_city_low_health : {sound:"priest_osiris_g01.wav", group:230, text: 4},
-    osiris_no_food_in_city : {sound:"priest_osiris_g02.wav", group:230, text: 5},
-    osiris_city_not_safety : {sound:"priest_osiris_g03.wav", group:230, text: 6},
-    osiris_need_workers : {sound:"priest_osiris_g04.wav", group:230, text: 7},
-    osiris_gods_are_angry : {sound:"priest_osiris_g05.wav", group:230, text: 8},
-    osiris_low_sentiment : {sound:"priest_osiris_g06.wav", group:230, text: 9},
-    osiris_much_unemployments : {sound:"priest_osiris_g07.wav", group:230, text: 10},
-    osiris_need_entertainment : {sound:"priest_osiris_g08.wav", group:230, text: 11},
-    osiris_city_is_good : {sound:"priest_osiris_g09.wav", group:230, text: 12},
-    osiris_city_is_amazing : {sound:"priest_osiris_g10.wav", group:230, text: 13},
+		osiris_walk : { pack:PACK_SPR_MAIN, id:197, max_frames:12}
+		osiris_death : { pack:PACK_SPR_MAIN, id:198, loop:false }
+		ra_walk : { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
+		ra_death : { pack:PACK_SPR_MAIN, id:211, loop:false }
+		ptah_walk : {  pack:PACK_SPR_MAIN, id:187, max_frames:12 }
+		ptah_death : { pack:PACK_SPR_MAIN, id:188, loop:false }
+		seth_walk : { pack:PACK_SPR_MAIN, id:193, max_frames:12 }
+		seth_death : {  pack:PACK_SPR_MAIN, id:194, loop:false }
+		bast_walk : {  pack:PACK_SPR_MAIN, id:208, max_frames:12 }
+		bast_death : { pack:PACK_SPR_MAIN, id:209, loop:false }
+	}
 
-    ra_god_love_festival : {sound:"priest_ra_e01.wav", group:231, text:0},
-    ra_city_low_mood : {sound:"priest_ra_e02.wav", group:231, text:1},
-    ra_low_entertainment : {sound:"priest_ra_e03.wav", group:231, text:2},
-    ra_disease_in_city : {sound:"priest_ra_e04.wav", group:231, text:3},
-    ra_city_low_health : {sound:"priest_ra_g01.wav", group:231, text:4},
-    ra_no_food_in_city : {sound:"priest_ra_g02.wav", group:231, text:5},
-    ra_city_not_safety : {sound:"priest_ra_g03.wav", group:231, text:6},
-    ra_need_workers : {sound:"priest_ra_g04.wav", group:231, text:7},
-    ra_gods_are_angry : {sound:"priest_ra_g05.wav", group:231, text:8},
-    ra_low_sentiment : {sound:"priest_ra_g06.wav", group:231, text:9},
-    ra_much_unemployments : {sound:"priest_ra_g07.wav", group:231, text:10},
-    ra_need_entertainment : {sound:"priest_ra_g08.wav", group:231, text:11},
-    ra_city_is_good : {sound:"priest_ra_g09.wav", group:231, text:12},
-    ra_city_is_amazing : {sound:"priest_ra_g10.wav", group:231, text:13},
+	sounds : {
+		osiris_god_love_festival : {sound:"priest_osiris_e01.wav", group:230, text: 0}
+		osiris_city_low_mood : {sound:"priest_osiris_e02.wav", group:230, text: 1}
+		osiris_low_entertainment : {sound:"priest_osiris_e03.wav", group:230, text: 2}
+		osiris_disease_in_city : {sound:"priest_osiris_e04.wav", group:230, text: 3}
+		osiris_city_low_health : {sound:"priest_osiris_g01.wav", group:230, text: 4}
+		osiris_no_food_in_city : {sound:"priest_osiris_g02.wav", group:230, text: 5}
+		osiris_city_not_safety : {sound:"priest_osiris_g03.wav", group:230, text: 6}
+		osiris_need_workers : {sound:"priest_osiris_g04.wav", group:230, text: 7}
+		osiris_gods_are_angry : {sound:"priest_osiris_g05.wav", group:230, text: 8}
+		osiris_low_sentiment : {sound:"priest_osiris_g06.wav", group:230, text: 9}
+		osiris_much_unemployments : {sound:"priest_osiris_g07.wav", group:230, text: 10}
+		osiris_need_entertainment : {sound:"priest_osiris_g08.wav", group:230, text: 11}
+		osiris_city_is_good : {sound:"priest_osiris_g09.wav", group:230, text: 12}
+		osiris_city_is_amazing : {sound:"priest_osiris_g10.wav", group:230, text: 13}
 
-  	ptah_god_love_festival : {sound:"priest_ptah_e01.wav", group:232, text:0},
-    ptah_city_low_mood : {sound:"priest_ptah_e02.wav", group:232, text:1},
-    ptah_low_entertainment : {sound:"priest_ptah_e03.wav", group:232, text:2},
-    ptah_disease_in_city : {sound:"priest_ptah_e04.wav", group:232, text:3},
-    ptah_city_low_health : {sound:"priest_ptah_g01.wav", group:232, text:4},
-    ptah_no_food_in_city : {sound:"priest_ptah_g02.wav", group:232, text:5},
-    ptah_city_not_safety : {sound:"priest_ptah_g03.wav", group:232, text:6},
-    ptah_need_workers : {sound:"priest_ptah_g04.wav", group:232, text:7},
-    ptah_gods_are_angry : {sound:"priest_ptah_g05.wav", group:232, text:8},
-    ptah_low_sentiment : {sound:"priest_ptah_g06.wav", group:232, text:9},
-    ptah_much_unemployments : {sound:"priest_ptah_g07.wav", group:232, text:10},
-    ptah_need_entertainment : {sound:"priest_ptah_g08.wav", group:232, text:11},
-    ptah_city_is_good : {sound:"priest_ptah_g09.wav", group:232, text:12},
-    ptah_city_is_amazing : {sound:"priest_ptah_g10.wav", group:232, text:13},
+		ra_god_love_festival : {sound:"priest_ra_e01.wav", group:231, text:0}
+		ra_city_low_mood : {sound:"priest_ra_e02.wav", group:231, text:1}
+		ra_low_entertainment : {sound:"priest_ra_e03.wav", group:231, text:2}
+		ra_disease_in_city : {sound:"priest_ra_e04.wav", group:231, text:3}
+		ra_city_low_health : {sound:"priest_ra_g01.wav", group:231, text:4}
+		ra_no_food_in_city : {sound:"priest_ra_g02.wav", group:231, text:5}
+		ra_city_not_safety : {sound:"priest_ra_g03.wav", group:231, text:6}
+		ra_need_workers : {sound:"priest_ra_g04.wav", group:231, text:7}
+		ra_gods_are_angry : {sound:"priest_ra_g05.wav", group:231, text:8}
+		ra_low_sentiment : {sound:"priest_ra_g06.wav", group:231, text:9}
+		ra_much_unemployments : {sound:"priest_ra_g07.wav", group:231, text:10}
+		ra_need_entertainment : {sound:"priest_ra_g08.wav", group:231, text:11}
+		ra_city_is_good : {sound:"priest_ra_g09.wav", group:231, text:12}
+		ra_city_is_amazing : {sound:"priest_ra_g10.wav", group:231, text:13}
 
-  	seth_god_love_festival : {sound:"priest_seth_e01.wav", group:233, text:0},
-    seth_city_low_mood : {sound:"priest_seth_e02.wav", group:233, text:1},
-    seth_low_entertainment : {sound:"priest_seth_e03.wav", group:233, text:2},
-    seth_disease_in_city : {sound:"priest_seth_e04.wav", group:233, text:3},
-    seth_city_low_health : {sound:"priest_seth_g01.wav", group:233, text:4},
-    seth_no_food_in_city : {sound:"priest_seth_g02.wav", group:233, text:5},
-    seth_city_not_safety : {sound:"priest_seth_g03.wav", group:233, text:6},
-    seth_need_workers : {sound:"priest_seth_g04.wav", group:233, text:7},
-    seth_gods_are_angry : {sound:"priest_seth_g05.wav", group:233, text:8},
-    seth_low_sentiment : {sound:"priest_seth_g06.wav", group:233, text:9},
-    seth_much_unemployments : {sound:"priest_seth_g07.wav", group:233, text:10},
-    seth_need_entertainment : {sound:"priest_seth_g08.wav", group:233, text:11},
-    seth_city_is_good : {sound:"priest_seth_g09.wav", group:233, text:12},
-    seth_city_is_amazing : {sound:"priest_seth_g10.wav", group:233, text:13},
+		ptah_god_love_festival : {sound:"priest_ptah_e01.wav", group:232, text:0}
+		ptah_city_low_mood : {sound:"priest_ptah_e02.wav", group:232, text:1}
+		ptah_low_entertainment : {sound:"priest_ptah_e03.wav", group:232, text:2}
+		ptah_disease_in_city : {sound:"priest_ptah_e04.wav", group:232, text:3}
+		ptah_city_low_health : {sound:"priest_ptah_g01.wav", group:232, text:4}
+		ptah_no_food_in_city : {sound:"priest_ptah_g02.wav", group:232, text:5}
+		ptah_city_not_safety : {sound:"priest_ptah_g03.wav", group:232, text:6}
+		ptah_need_workers : {sound:"priest_ptah_g04.wav", group:232, text:7}
+		ptah_gods_are_angry : {sound:"priest_ptah_g05.wav", group:232, text:8}
+		ptah_low_sentiment : {sound:"priest_ptah_g06.wav", group:232, text:9}
+		ptah_much_unemployments : {sound:"priest_ptah_g07.wav", group:232, text:10}
+		ptah_need_entertainment : {sound:"priest_ptah_g08.wav", group:232, text:11}
+		ptah_city_is_good : {sound:"priest_ptah_g09.wav", group:232, text:12},
+		ptah_city_is_amazing : {sound:"priest_ptah_g10.wav", group:232, text:13}
 
-  	bast_god_love_festival: {sound:"bast_e01.wav", groud:234, text:0},
-    bast_city_low_mood: {sound:"bast_e02.wav", groud:234, text:1},
-    bast_low_entertainment: {sound:"bast_e03.wav", groud:234, text:2},
-    bast_disease_in_city: {sound:"bast_e04.wav", groud:234, text:3},
-    bast_city_low_health: {sound:"bast_g01.wav", groud:234, text:4},
-    bast_no_food_in_city: {sound:"bast_g02.wav", groud:234, text:5},
-    bast_city_not_safety: {sound:"bast_g03.wav", groud:234, text:6},
-    bast_need_workers: {sound:"bast_g04.wav", groud:234, text:7},
-    bast_gods_are_angry: {sound:"bast_g05.wav", groud:234, text:8},
-    bast_low_sentiment: {sound:"bast_g06.wav", groud:234, text:9},
-    bast_much_unemployments: {sound:"bast_g07.wav", groud:234, text:10},
-    bast_need_entertainment: {sound:"bast_g08.wav", groud:234, text:11},
-    bast_city_is_good: {sound:"bast_g09.wav", groud:234, text:12},
-    bast_city_is_amazing: {sound:"bast_g10.wav", groud:234, text:13},
-  },
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		seth_god_love_festival : {sound:"priest_seth_e01.wav", group:233, text:0}
+		seth_city_low_mood : {sound:"priest_seth_e02.wav", group:233, text:1}
+		seth_low_entertainment : {sound:"priest_seth_e03.wav", group:233, text:2}
+		seth_disease_in_city : {sound:"priest_seth_e04.wav", group:233, text:3}
+		seth_city_low_health : {sound:"priest_seth_g01.wav", group:233, text:4}
+		seth_no_food_in_city : {sound:"priest_seth_g02.wav", group:233, text:5}
+		seth_city_not_safety : {sound:"priest_seth_g03.wav", group:233, text:6}
+		seth_need_workers : {sound:"priest_seth_g04.wav", group:233, text:7}
+		seth_gods_are_angry : {sound:"priest_seth_g05.wav", group:233, text:8}
+		seth_low_sentiment : {sound:"priest_seth_g06.wav", group:233, text:9}
+		seth_much_unemployments : {sound:"priest_seth_g07.wav", group:233, text:10}
+		seth_need_entertainment : {sound:"priest_seth_g08.wav", group:233, text:11}
+		seth_city_is_good : {sound:"priest_seth_g09.wav", group:233, text:12}
+		seth_city_is_amazing : {sound:"priest_seth_g10.wav", group:233, text:13}
+
+		bast_god_love_festival: {sound:"bast_e01.wav", groud:234, text:0}
+		bast_city_low_mood: {sound:"bast_e02.wav", groud:234, text:1}
+		bast_low_entertainment: {sound:"bast_e03.wav", groud:234, text:2}
+		bast_disease_in_city: {sound:"bast_e04.wav", groud:234, text:3}
+		bast_city_low_health: {sound:"bast_g01.wav", groud:234, text:4}
+		bast_no_food_in_city: {sound:"bast_g02.wav", groud:234, text:5}
+		bast_city_not_safety: {sound:"bast_g03.wav", groud:234, text:6}
+		bast_need_workers: {sound:"bast_g04.wav", groud:234, text:7}
+		bast_gods_are_angry: {sound:"bast_g05.wav", groud:234, text:8}
+		bast_low_sentiment: {sound:"bast_g06.wav", groud:234, text:9}
+		bast_much_unemployments: {sound:"bast_g07.wav", groud:234, text:10}
+		bast_need_entertainment: {sound:"bast_g08.wav", groud:234, text:11}
+		bast_city_is_good: {sound:"bast_g09.wav", groud:234, text:12}
+		bast_city_is_amazing: {sound:"bast_g10.wav", groud:234, text:13}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
 }
 
 figure_ostrich = {
@@ -703,21 +712,6 @@ figure_dancer = {
     salary_too_low : {sound:"dancer_g08.wav", group:228, text:8},
     city_is_good : {sound:"dancer_g09.wav", group:228, text:9},
     city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 512,
-}
-
-figure_festival_guy = {
-	animations : {
-		juggler : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
-		musician : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
-		dancer : {pack:PACK_SPR_MAIN, id:128, max_frames:12},
-		priest_ra: { pack:PACK_SPR_MAIN, id:210, offset:0 },
-		priest_osiris : {pack:PACK_SPR_MAIN, id:197},
-		priest_ptah: {pack:PACK_SPR_MAIN, id:187},
-		priest_seth: {pack:PACK_SPR_MAIN, id:193},
-		priest_bast: {pack:PACK_SPR_MAIN, id:208}
 	},
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 512,

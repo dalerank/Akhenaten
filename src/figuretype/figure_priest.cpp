@@ -11,7 +11,6 @@
 #include "building/building_house.h"
 
 figures::model_t<figure_priest> priest_m;
-figures::model_t<figure_festival_priest> festival_priest_m;
 
 void figure_priest::figure_before_action() {
     building* b = home();
@@ -225,37 +224,4 @@ figure_sound_t figure_priest::get_sound_reaction(xstring key) const {
     return priest_m.sounds[key];
 }
 
-void figure_festival_priest::figure_action() {
-    switch (action_state()) {
-    case FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED:
-        base.anim.frame = 0;
-        if (--base.wait_ticks <= 0) {
-            advance_action(FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE);
-        }
-        break;
 
-    case FIGURE_ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE)) {
-            base.wait_ticks = rand() % 20;
-        }
-        break;
-
-    case FIGURE_ACTION_12_FESTIVAL_PRIEST_DANCE:
-        if (--base.wait_ticks <= 0) {
-            advance_action(FIGURE_ACTION_13_FESTIVAL_PRIEST_GOTO_HOME);
-        }
-        break;
-
-    case FIGURE_ACTION_13_FESTIVAL_PRIEST_GOTO_HOME:
-        do_gotobuilding(home());
-        break;
-    }
-}
-
-void figure_festival_priest::before_poof() {
-    ; //
-}
-
-const animations_t &figure_festival_priest::anim() const {
-    return festival_priest_m.anim;
-}

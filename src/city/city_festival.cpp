@@ -96,13 +96,12 @@ void city_festival_t::execute_festival() {
         case BUILDING_TEMPLE_COMPLEX_BAST:
         case BUILDING_JUGGLER_SCHOOL:
         case BUILDING_CONSERVATORY:
-        case BUILDING_DANCE_SCHOOL: { // this actually doesn't happen in Pharaoh?
-                                      //                    if (b->has_figure(0))
-                                      //                        b->remove_figure(0);
-                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_PRIEST, FIGURE_ACTION_10_FESTIVAL_PRIEST_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
+        case BUILDING_DANCE_SCHOOL: { 
+                figure* f = b->create_figure_generic(FIGURE_FESTIVAL_GUY, FIGURE_ACTION_10_FESTIVAL_GUY_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
                 
                 tile2i tile_on_square = square_pos.shifted(rand() % square->size, rand() % square->size);
                 f->tile = b->road_access;
+                f->set_home(b);
                 f->set_destination(square);
                 f->destination_tile = tile_on_square;
                 f->festival_remaining_dances = rand() % 10;
