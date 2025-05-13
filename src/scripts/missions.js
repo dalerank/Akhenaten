@@ -102,12 +102,12 @@ mission2 = {
 }
 
 mission3 = {
-	start_message : 241 - 99,
-	city_has_animals : true,
-	player_rank : 0,
-	money : [7500, 5000, 3750, 2500, 2000],
-	rescue_loans : [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers : [300, 200, 150, 100, 75],
+	start_message : 241 - 99
+	city_has_animals : true
+	player_rank : 0
+	money : [7500, 5000, 3750, 2500, 2000]
+	rescue_loans : [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
@@ -117,9 +117,14 @@ mission3 = {
 					BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_FESTIVAL_SQUARE,
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_BREWERY_WORKSHOP
-				],
+				]
 	stages : {
 		tutorial_finance: [BUILDING_TAX_COLLECTOR, BUILDING_PERSONAL_MANSION]
+	}
+
+	vars : {
+		beer_stored : 300
+		victory_last_action_delay : 3
 	}
 }
 

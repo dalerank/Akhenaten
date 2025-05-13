@@ -96,7 +96,7 @@ int city_religion_t::coverage_avg(e_god god) {
     return coverage[god];
 }
 
-int city_religion_t::god_coverage_total(e_god god, e_building_type temple, e_building_type shrine, e_building_type complex) {
+int city_religion_t::god_coverage_total(e_god god, e_building_type shrine, e_building_type temple, e_building_type complex) {
     switch (is_god_known(god)) {
     default: return 0;
 

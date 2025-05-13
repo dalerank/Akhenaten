@@ -19,17 +19,19 @@ struct tutorial_4 : public tutorial_t {
 tutorial_4 g_tutorial_4;
 
 void tutorial_4::reset() {
-    g_tutorials_flags.tutorial_4.started = 0;
-    g_tutorials_flags.tutorial_4.beer_made = 0;
-    g_tutorials_flags.tutorial_4.tax_collector_built = 0;
+    auto& tut = g_tutorials_flags.tutorial_4;
+    tut.started = 0;
+    tut.beer_made = 0;
+    tut.tax_collector_built = 0;
 }
 
 xstring tutorial_4::goal_text() {
-    if (!g_tutorials_flags.tutorial_4.beer_made) {
+    auto& tut = g_tutorials_flags.tutorial_4;
+    if (!tut.beer_made) {
         return lang_get_xstring(62, 33);
     }
 
-    if (!g_tutorials_flags.tutorial_4.tax_collector_built) {
+    if (!tut.tax_collector_built) {
         return "#build_tax_collector";
     }
 
@@ -37,15 +39,17 @@ xstring tutorial_4::goal_text() {
 }
 
 void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
-    if (g_tutorials_flags.tutorial_4.beer_made) {
+    auto& tut = g_tutorials_flags.tutorial_4;
+    if (tut.beer_made) {
         return;
     }
 
-    if (g_city.resource.yards_stored(RESOURCE_BEER) < 300) {
+    const int beer_amount = g_scenario.vars.get_int("beer_stored", 300);
+    if (g_city.resource.yards_stored(RESOURCE_BEER) < beer_amount) {
         return;
     }
 
-    g_tutorials_flags.tutorial_4.beer_made = true;
+    tut.beer_made = true;
     events::unsubscribe(&tutorial4_warehouse_beer_check);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_finance);
@@ -55,12 +59,14 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
 bool tutorial4_is_success() {
     auto &tut = g_tutorials_flags.tutorial_4;
     const bool may_finish = (tut.beer_made && tut.tax_collector_built);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
+    const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 
 void tutorial_4_on_build_tax_collector(event_building_create ev) {
-    if (g_tutorials_flags.tutorial_4.tax_collector_built) {
+    auto& tut = g_tutorials_flags.tutorial_4;
+    if (tut.tax_collector_built) {
         return;
     }
 
@@ -71,16 +77,15 @@ void tutorial_4_on_build_tax_collector(event_building_create ev) {
 
     events::unsubscribe(&tutorial_4_on_build_tax_collector);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    g_tutorials_flags.tutorial_4.tax_collector_built = true;
+    tut.tax_collector_built = true;
 }
     
 void tutorial_4::init() {
-    if (g_tutorials_flags.tutorial_4.beer_made) building_menu_update(tutorial_stage.tutorial_finance);
-    else events::subscribe(&tutorial4_warehouse_beer_check);
+    auto& tut = g_tutorials_flags.tutorial_4;
+    building_menu_update_if(tut.beer_made, tutorial_stage.tutorial_finance);
+    events::subscribe_if(!tut.beer_made , &tutorial4_warehouse_beer_check);
 
-    if (!g_tutorials_flags.tutorial_4.tax_collector_built) {
-        events::subscribe(&tutorial_4_on_build_tax_collector);
-    }
+    events::subscribe_if(!tut.tax_collector_built , &tutorial_4_on_build_tax_collector);
     
     g_city.victory_state.add_condition(&tutorial4_is_success);
 
