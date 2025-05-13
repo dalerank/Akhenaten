@@ -30,6 +30,6 @@ advisor_labors_window = {
         inc_wages       : arrowup({pos:[182, 354], tiny:false})
         wages_title     : text({text:{group:50, id:14}, pos:[70, 359], font:FONT_NORMAL_WHITE_ON_DARK})
         wages_value     : text({pos:[230, 359], font:FONT_NORMAL_WHITE_ON_DARK})
-        wages_estimated : text({pos:[264, 395], font:FONT_NORMAL_BLACK_ON_LIGHT})
+        wages_estimated : text({pos:[264, 395], text:"${50.19} ${finance.estimated_wages}", font:FONT_NORMAL_BLACK_ON_LIGHT})
     }
 }

@@ -4,7 +4,8 @@
 #include "graphics/elements/ui.h"
 
 namespace ui {
-struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
+
+    struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {};
@@ -13,7 +14,6 @@ struct advisor_labors_window : public advisor_window_t<advisor_labors_window> {
     virtual void init() override;
 
     static advisor_window *instance();
-
-    void change_wages(int v);
 };
+
 }
