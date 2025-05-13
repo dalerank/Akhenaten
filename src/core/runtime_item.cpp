@@ -1,6 +1,7 @@
 #include "core/runtime_item.h"
 
 #include "js/js_game.h"
+#include <mutex>
 
 using runtime_items = std::vector<config::runtime*>;
 runtime_items* g_runtime_items = nullptr;
