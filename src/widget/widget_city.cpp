@@ -10,7 +10,7 @@
 #include "widget/city/building_ghost.h"
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "core/string.h"

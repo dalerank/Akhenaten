@@ -5,7 +5,7 @@
 #include "city/object_info.h"
 #include "figure/figure.h"
 #include "game/resource.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "graphics/window.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/panel.h"

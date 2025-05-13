@@ -5,7 +5,7 @@
 #include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"

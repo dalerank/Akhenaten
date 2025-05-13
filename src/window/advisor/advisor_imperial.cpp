@@ -1,7 +1,7 @@
 #include "advisor_imperial.h"
 
 #include "city/city.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"

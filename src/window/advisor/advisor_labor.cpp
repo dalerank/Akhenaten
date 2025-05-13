@@ -1,6 +1,6 @@
 #include "advisor_labor.h"
 
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city.h"
 #include "core/calc.h"
 #include "graphics/elements/ui.h"
@@ -11,12 +11,6 @@
 
 ui::advisor_labors_window g_advisor_labor_window;
 
-void ui::advisor_labors_window::change_wages(int v) {
-    g_city.labor.change_wages(v);
-    g_city.finance.estimate_wages();
-    city_finance_calculate_totals();
-}
-
 void ui::advisor_labors_window::init() {
     advisor_window::init();
 
@@ -26,14 +20,13 @@ void ui::advisor_labors_window::init() {
         g_city.labor.unemployment_percentage);
     ui["employed"] = employed_text;
     ui["wages_value"].text_var("%u %s %s %u)", g_city.labor.wages, ui::str(50, 15), ui::str(50, 18), g_city.labor.wages_kingdome);
-    ui["wages_estimated"].text_var("%s %u", ui::str(50, 19), city_finance_estimated_wages());
 
-    ui["dec_wages"].onclick([this] {
-        change_wages(-1);
+    ui["dec_wages"].onclick([] {
+        events::emit(event_finance_change_wages{ -1 });
     });
 
-    ui["inc_wages"].onclick([this] {
-        change_wages(1);
+    ui["inc_wages"].onclick([] {
+        events::emit(event_finance_change_wages{ 1 });
     });
 }
 

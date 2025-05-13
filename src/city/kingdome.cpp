@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "game/game_events.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
@@ -58,7 +58,7 @@ void kingdome_relation_t::update_debt_state() {
     case e_debt_none:
         // provide bailout
         events::emit(event_finance_donation{ rescue_loan });
-        city_finance_calculate_totals();
+        g_city.finance.calculate_totals();
 
         debt_state = e_debt_one_time;
         months_in_debt = 0;
@@ -298,7 +298,7 @@ void kingdome_relation_t::change_donation_amount(int change) {
 void kingdome_relation_t::donate_savings_to_city() {
     events::emit(event_finance_donation{ donate_amount });
     personal_savings -= donate_amount;
-    city_finance_calculate_totals();
+    g_city.finance.calculate_totals();
 }
 
 void kingdome_relation_t::mark_soldier_killed() {

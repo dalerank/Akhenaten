@@ -9,7 +9,7 @@
 #include "city/city.h"
 #include "city/victory.h"
 #include "city/buildings.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/ratings.h"
 #include "widget/city/ornaments.h"
 #include "graphics/image.h"

@@ -2,7 +2,7 @@
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
 #include "city/ratings.h"

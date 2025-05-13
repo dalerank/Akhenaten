@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "city/city_resource.h"
 #include "empire/trade_prices.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "core/log.h"
 
 buildings::model_t<building_storage_room> storage_room_m;

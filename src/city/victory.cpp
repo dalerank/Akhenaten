@@ -3,7 +3,7 @@
 #include "building/building_house.h"
 #include "building/construction/build_planner.h"
 #include "city/city.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_message.h"
 #include "game/game.h"
 #include "game/game_config.h"

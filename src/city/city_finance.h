@@ -16,6 +16,8 @@ struct finance_request_t {
 
 struct event_finance_changed { int value; };
 struct event_finance_donation { int amount; };
+
+struct event_finance_change_wages { int value; };
 struct event_finance_process_request { e_finance_request_type type; uint32_t deben; };
 
 struct finance_overview {
@@ -105,6 +107,7 @@ struct city_finance_t {
     void advance_year();
 
     void process_request(finance_request_t request);
+    void calculate_totals();
 };
 
 constexpr uint32_t MAX_HOUSE_LEVELS = 20;
@@ -115,7 +118,6 @@ struct event_gold_extract { int amount; };
 void city_finance_change_tax_percentage(int change);
 
 int city_finance_estimated_tax_uncollected();
-int city_finance_estimated_wages();
 
 void city_finance_process_import(int price);
 void city_finance_process_export(int price);
@@ -127,8 +129,6 @@ void city_finance_process_construction(int cost);
 
 void city_finance_update_interest(void);
 void city_finance_update_salary(void);
-
-void city_finance_calculate_totals(void);
 
 const finance_overview* city_finance_overview_last_year();
 const finance_overview* city_finance_overview_this_year();

@@ -2,7 +2,7 @@
 
 #include "building/building_storage_yard.h"
 #include "game/game_events.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_message.h"
 #include "city/ratings.h"
 #include "city/city_resource.h"

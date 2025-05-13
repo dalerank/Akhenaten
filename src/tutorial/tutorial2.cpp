@@ -5,7 +5,7 @@
 #include "io/gamefiles/lang.h"
 #include "city/city.h"
 #include "game/game_events.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "game/game.h"
 
 struct tutorial_2 : public tutorial_t {

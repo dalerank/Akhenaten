@@ -3,7 +3,7 @@
 #include "scenario/scenario.h"
 #include "city/constants.h"
 #include "city/coverage.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city.h"
 #include "city/city_labor.h"
 #include "city/city_migration.h"
@@ -124,8 +124,7 @@ static void set_advisor_window() {
     if (data.sub_advisors[data.current_advisor]) {
         data.current_advisor_window = data.sub_advisors[data.current_advisor];
         data.current_advisor_window->pos = screen_dialog_offset();
-        data.current_advisor_window->init();
-        data.current_advisor_window->format_all(&g_city);
+        data.current_advisor_window->init();       
     } else {
         data.current_advisor_window = nullptr;
     }
@@ -151,7 +150,7 @@ void window_advisors::init() {
     g_city.finance.estimate_wages();
     city_finance_update_interest();
     city_finance_update_salary();
-    city_finance_calculate_totals();
+    g_city.finance.calculate_totals();
 
     g_city.migration.determine_reason();
 
@@ -205,6 +204,7 @@ void window_advisors::draw_background(int flags) {
 void window_advisors::draw_foreground(int flags) {
     ui.draw();
 
+    current_advisor_window->format_all(&g_city);
     current_advisor_window->ui_draw_foreground(flags);
 
     graphics_set_to_dialog();

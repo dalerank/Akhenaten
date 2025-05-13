@@ -11,7 +11,7 @@
 #include "building/building_fort.h"
 #include "building/building.h"
 #include "city/buildings.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"

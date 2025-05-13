@@ -5,7 +5,7 @@
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "game/game_events.h"
 #include "city/city_message.h"
 #include "core/random.h"

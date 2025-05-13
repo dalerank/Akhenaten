@@ -1,4 +1,4 @@
-#include "finance.h"
+#include "city_finance.h"
 
 #include "core/svector.h"
 #include "building/building.h"
@@ -25,7 +25,13 @@ void city_finance_t::init() {
     });
 
     events::subscribe([this] (event_finance_process_request ev) {
+        process_request({ ev.type, ev.deben });
+    });
 
+    events::subscribe([this] (event_finance_change_wages ev) {
+        g_city.labor.change_wages(ev.value);
+        estimate_wages();
+        calculate_totals();
     });
 }
 
@@ -39,10 +45,6 @@ void city_finance_change_tax_percentage(int change) {
 
 int city_finance_estimated_tax_uncollected(void) {
     return city_data.finance.estimated_tax_uncollected;
-}
-
-int city_finance_estimated_wages(void) {
-    return city_data.finance.estimated_wages;
 }
 
 void city_finance_process_import(int price) {
@@ -96,7 +98,7 @@ void city_finance_update_salary() {
     city_data.finance.this_year.expenses.salary = city_data.finance.salary_so_far;
 }
 
-void city_finance_calculate_totals() {
+void city_finance_t::calculate_totals() {
     finance_overview& this_year = city_data.finance.this_year;
     this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
                               + this_year.income.gold_extracted;

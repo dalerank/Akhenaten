@@ -33,7 +33,7 @@
 #include "building/building_temple_complex.h"
 #include "city/buildings.h"
 #include "city/city_buildings.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"

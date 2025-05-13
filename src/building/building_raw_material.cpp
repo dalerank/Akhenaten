@@ -24,7 +24,7 @@
 #include "figure/figure.h"
 #include "graphics/animation.h"
 #include "construction/build_planner.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 
 building_mine_copper::static_params copper_mine_m;
 buildings::model_t<building_clay_pit> clay_pit_m;

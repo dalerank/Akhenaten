@@ -4,7 +4,7 @@
 #include "scenario/request.h"
 
 #include "city/city.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/city_migration.h"

@@ -5,7 +5,7 @@
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "grid/random.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "core/calc.h"
 #include "city/city_health.h"
 #include "city/ratings.h"

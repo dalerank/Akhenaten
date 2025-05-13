@@ -2,7 +2,7 @@
 
 #include "building/building_tax_collector.h"
 #include "building/building_palace.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "core/profiler.h"
 #include "game/game_config.h"
 

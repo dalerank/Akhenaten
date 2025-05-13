@@ -9,7 +9,7 @@
 #include "building/model.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
-#include "city/finance.h"
+#include "city/city_finance.h"
 #include "city/city.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"
