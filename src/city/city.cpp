@@ -1349,21 +1349,24 @@ struct cproperty {
 
 bvariant city_get_property(const xstring &domain, const xstring &name) {
     static cproperty cproperties[] = {
-        { tags().city, tags().tax_percentage, [] (const xstring &) { return bvariant(g_city.finance.tax_percentage); }},
-        { tags().city, tags().population, [] (const xstring &) { return bvariant(g_city.population.current); }},
-        { tags().city, tags().population_kids, [] (const xstring &) { return bvariant(g_city.population.school_age); }},
-        { tags().city, tags().population_youngs, [] (const xstring &) { return bvariant(g_city.population.academy_age); }},
-        { tags().city, tags().treasury, [] (const xstring &) { return bvariant(g_city.finance.treasury); }},
+        { tags().city, "tax_percentage", [] (const xstring&) { return bvariant(g_city.finance.tax_percentage); }},
+        { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
+        { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},
+        { tags().city, "population_youngs", [] (const xstring&) { return bvariant(g_city.population.academy_age); }},
+        { tags().city, "treasury", [] (const xstring&) { return bvariant(g_city.finance.treasury); }},
         { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
         { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},
         { tags().rating, tags().monument, [] (const xstring &) { return bvariant(g_city.ratings.monument); }},
         { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.ratings.kingdom); }},
-        { tags().player, tags().rank_name, [] (const xstring &) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
-        { tags().player, tags().salary_amount, [] (const xstring &) { return bvariant(g_city.kingdome.salary_amount); }},
-        { tags().city, tags().months_since_festival, [] (const xstring &) { return bvariant(g_city.festival.months_since_festival); }},
-        { tags().finance, tags().estimated_wages, [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
-        { tags().finance, tags().wages, [] (const xstring &) { return bvariant(g_city.finance.wages); }},
-        { tags().finance, tags().wages_kingdome, [] (const xstring &) { return bvariant(g_city.finance.wages_kingdome); }},
+        { tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
+        { tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
+        { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},
+        { tags().finance, "estimated_wages", [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},
+        { tags().finance, "wages", [] (const xstring &) { return bvariant(g_city.finance.wages); }},
+        { tags().finance, "wages_kingdome", [] (const xstring &) { return bvariant(g_city.finance.wages_kingdome); }},
+        { tags().city, "workers_employed", [] (const xstring&) { return bvariant(g_city.labor.workers_employed); }},
+        { tags().city, "workers_unemployed", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed); }},
+        { tags().city, "unemployment_percentage", [] (const xstring&) { return bvariant(g_city.labor.unemployment_percentage); }},
     };
 
     for (const auto &prop : cproperties) {

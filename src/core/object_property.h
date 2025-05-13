@@ -8,9 +8,6 @@ struct id_property_t {
     static const xstring figure;
     static const xstring city;
     static const xstring finance;
-    static const xstring estimated_wages;
-    static const xstring wages;
-    static const xstring wages_kingdome;
     static const xstring rating;
     static const xstring model;
     static const xstring farm;
@@ -33,19 +30,13 @@ struct id_property_t {
     static const xstring tax_percentage;
     static const xstring total_stored;
     static const xstring free_space;
-    static const xstring population;
-    static const xstring population_kids;
-    static const xstring population_youngs;
     static const xstring treasury;
     static const xstring culture;
     static const xstring prosperity;
     static const xstring monument;
     static const xstring kingdom;
     static const xstring fertility;
-    static const xstring rank_name;
     static const xstring player;
-    static const xstring salary_amount;
-    static const xstring months_since_festival;
 };
 
 const id_property_t &tags();

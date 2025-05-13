@@ -14,12 +14,6 @@ ui::advisor_labors_window g_advisor_labor_window;
 void ui::advisor_labors_window::init() {
     advisor_window::init();
 
-    bstring256 employed_text;
-    employed_text.printf("%u %s %u %s %u%%)", g_city.labor.workers_employed, ui::str(50, 12),
-        g_city.labor.workers_unemployed, ui::str(50, 13),
-        g_city.labor.unemployment_percentage);
-    ui["employed"] = employed_text;
-
     ui["dec_wages"].onclick([] {
         events::emit(event_finance_change_wages{ -1 });
     });

@@ -23,13 +23,15 @@ advisor_labors_window = {
         item_allocated  : dummy({pos:[470, 5], font: FONT_NORMAL_WHITE_ON_DARK, font_hover:FONT_NORMAL_YELLOW})
         items_area      : dummy({pos:[0, 67]})
 
-        employed        : text({pos:[32, 325], font : FONT_NORMAL_BLACK_ON_LIGHT })
+        employed        : text({pos:[32, 325]
+                                text:"${city.workers_employed} ${50.12} ${city.workers_unemployed} ${50.13} ${city.unemployment_percentage}"
+                                font : FONT_NORMAL_BLACK_ON_LIGHT })
         // wages panel
         wages_panel     : inner_panel({pos:[64, 350], size:[32, 2]})
-        dec_wages       : arrowdown({pos:[158, 354], tiny:false})
+        dec_wages       : arrowdown({pos:[158, 354], tiny:false, onclick: { event_finance_change_wages: {value: -1} }})
         inc_wages       : arrowup({pos:[182, 354], tiny:false})
         wages_title     : text({text:{group:50, id:14}, pos:[70, 359], font:FONT_NORMAL_WHITE_ON_DARK})
-        wages_value     : text({pos:[230, 359], text: "${finance.wages}  ${50.15}  ${50.18} ${finance.wages_kingdome})", font:FONT_NORMAL_WHITE_ON_DARK})
+        wages_value     : text({pos:[230, 359], text:"${finance.wages}  ${50.15}  ${50.18} ${finance.wages_kingdome})", font:FONT_NORMAL_WHITE_ON_DARK})
         wages_estimated : text({pos:[264, 395], text:"${50.19} ${finance.estimated_wages}", font:FONT_NORMAL_BLACK_ON_LIGHT})
     }
 }
