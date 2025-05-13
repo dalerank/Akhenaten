@@ -6,6 +6,7 @@
 #include "window/building/common.h"
 #include "graphics/window.h"
 #include "game/game_config.h"
+#include "game/game_events.h"
 
 struct taxcollector_info_window : public building_info_window_t<taxcollector_info_window> {
     virtual void init(object_info &c) override;
@@ -30,11 +31,11 @@ void taxcollector_info_window::init(object_info &c) {
     ui["money_text"].text_var("%s %d %s", ui::str(c.group_id, 2), amount, ui::str(8, 0));
 
     ui["dec_tax"].onclick([] {
-        city_finance_change_tax_percentage(-1);
+        events::emit(event_finance_change_tax{ -1 });
     });
 
     ui["inc_tax"].onclick([] {
-        city_finance_change_tax_percentage(1);
+        events::emit(event_finance_change_tax{ 1 });
     });
 
     textid reason = {c.group_id, 0};

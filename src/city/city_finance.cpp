@@ -37,6 +37,13 @@ void city_finance_t::init() {
         estimate_wages();
         calculate_totals();
     });
+
+    events::subscribe([this] (event_finance_change_tax ev) {
+        tax_percentage = calc_bound(tax_percentage + ev.value, 0, 25);
+
+        update_estimate_taxes();
+        calculate_totals();
+    });
 }
 
 void city_finance_t::change_wages(int amount) {
@@ -65,10 +72,6 @@ int city_finance_t::lower_wages_kingdome() {
 
 bool city_finance_t::is_out_of_money() const{
     return (treasury <= -5000);
-}
-
-void city_finance_change_tax_percentage(int change) {
-    city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
 }
 
 int city_finance_estimated_tax_uncollected(void) {
