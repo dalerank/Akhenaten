@@ -456,10 +456,6 @@ int city_population_t::at_month(int max_months, int month) {
     return monthly.values[index];
 }
 
-int city_population_at_age(int age) {
-    return city_data.population.at_age[age];
-}
-
 void city_population_t::yearly_advance_ages_and_calculate_deaths() {
     int aged100 = at_age[99];
     for (int age = 99; age > 0; age--) {

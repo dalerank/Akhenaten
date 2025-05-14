@@ -308,16 +308,19 @@ struct g_archive : public archive {
     }
 
     template<typename T>
-    inline void r_section(pcstr name, T read_func) {
+    inline bool r_section(pcstr name, T read_func) {
         if (!state) {
-            return;
+            return true;
         }
 
+        bool ok = false;
         getglobal(name);
         if (isobject(-1)) {
             read_func(state);
-        }
+            ok = true;
+        } 
         pop(1);
+        return ok;
     }
 
     void w_property(pcstr name, pcstr prop, const xstring& value);

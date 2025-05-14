@@ -11,7 +11,7 @@ struct desirability_t : config::runtime {
         int step_size = 0;
         int range = 0;
 
-        void load(archive arch);
+         void load(archive arch);
     };
 
     struct {

@@ -18,8 +18,27 @@
 #include "translation/translation.h"
 #include "window/advisors.h"
 #include "game/game.h"
+#include "core/runtime_item.h"
+
+#include "js/js_game.h"
 
 ui::advisor_population_window g_advisor_population_window;
+
+struct advisor_population_graph {
+    int y_axis_height = 0;
+    vec2i y_axis_offset;
+    int y_axis_label_w;
+    void reset() {}
+    void load(archive arch) {
+        y_axis_height = arch.r_int("y_axis_height");
+        y_axis_offset = arch.r_vec2i("y_axis_offset");
+        y_axis_label_w = arch.r_int("y_axis_label_w");
+    }
+
+    void init() {}
+};
+
+advisor_population_graph ANK_VARIABLE(advisor_population_graph_census);
 
 static vec2i get_y_axis(int max_value) {
     if (max_value <= 100) { return { 100, -1 }; }
@@ -145,21 +164,19 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
 
 void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) {
     painter ctx = game.painter();
-    int max_value = 0;
-    for (int i = 0; i < 100; i++) {
-        int value = city_population_at_age(i);
-        if (value > max_value)
-            max_value = value;
-    }
+    const auto &population = g_city.population;
+    const int max_value = *std::max_element(population.at_age.begin(), population.at_age.end());
+
     vec2i ypx = get_y_axis(max_value);
     int y_max = ypx.x;
     int y_shift = ypx.y;
 
+    const auto &graph = advisor_population_graph_census;
     if (full_size) {
         // y axis
-        text_draw_number_centered(y_max, pos.x - 66, pos.y - 3, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, pos.x - 66, pos.y + 96, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(0, pos.x - 66, pos.y + 196, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered(y_max, pos + graph.y_axis_offset + vec2i{0, 0}, graph.y_axis_label_w, FONT_SMALL_PLAIN);
+        text_draw_number_centered(y_max / 2, pos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height / 2 }, graph.y_axis_label_w, FONT_SMALL_PLAIN);
+        text_draw_number_centered(0, pos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height}, graph.y_axis_label_w, FONT_SMALL_PLAIN);
         // x axis
         for (int i = 0; i <= 10; i++) {
             text_draw_number_centered(i * 10, pos.x + 40 * i - 22, pos.y + 210, 40, FONT_SMALL_PLAIN);
@@ -169,7 +186,7 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
     if (full_size) {
         graphics_set_clip_rectangle({0, 0}, {640, pos.y + 200});
         for (int i = 0; i < 100; i++) {
-            int pop = city_population_at_age(i);
+            int pop = population.at_age[i];
             int val;
             if (y_shift == -1)
                 val = 2 * pop;
@@ -184,7 +201,7 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
     } else {
         y_shift += 2;
         for (int i = 0; i < 100; i++) {
-            int val = city_population_at_age(i) >> y_shift;
+            int val = population.at_age[i] >> y_shift;
             if (val > 0)
                 graphics_draw_vertical_line( pos + vec2i{i, 50 - val}, val, COLOR_RED);
         }

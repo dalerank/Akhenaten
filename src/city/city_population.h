@@ -17,8 +17,8 @@ struct city_population_t {
         int32_t next_index;
         int32_t count;
     } monthly;
-    int16_t at_age[100];
-    std::array<int32_t, HOUSE_LEVEL_MAX> at_level;
+    std::array<uint16_t, 100> at_age;
+    std::array<uint16_t, HOUSE_LEVEL_MAX> at_level;
 
     int32_t yearly_update_requested;
     int32_t yearly_births;
@@ -85,8 +85,6 @@ void city_population_add_capacity(int people_in_house, int max_people);
 int city_population_people_of_working_age();
 
 void city_population_calculate_educational_age();
-
-int city_population_at_age(int age);
 
 void city_population_request_yearly_update();
 

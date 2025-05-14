@@ -1,10 +1,17 @@
 log_info("akhenaten: ui advisor population started")
 
+advisor_population_graph_census = {
+	y_axis_offset  : [-56, 0]
+	y_axis_label_w : 60 
+	y_axis_height  : 200
+}
+
 advisor_population_window = {
 	graph_bar_1 : { pack:PACK_GENERAL, id:157 }
 	graph_bar_2 : { pack:PACK_GENERAL, id:157, offset:1 }
 	graph_bar_3 : { pack:PACK_GENERAL, id:157, offset:2 }
 	graph_bar_4 : { pack:PACK_GENERAL, id:157, offset:3 }
+
     ui : {
         background   : outer_panel({size:[40, 27] })
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
