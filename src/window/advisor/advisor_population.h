@@ -6,6 +6,7 @@
 namespace ui {
 struct advisor_population_window : public advisor_window_t<advisor_population_window> {
     image_desc graph_bar[5];
+    int32_t graph_order = 0;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override;
@@ -20,8 +21,8 @@ struct advisor_population_window : public advisor_window_t<advisor_population_wi
     void print_society_info();
     void print_census_info();
     void print_history_info();
-    void draw_society_graph(int full_size, vec2i pos);
-    void draw_census_graph(int full_size, vec2i pos);
-    void draw_history_graph(int full_size, vec2i pos);
+    void draw_society_graph(int full_size, pcstr body, pcstr title);
+    void draw_census_graph(int full_size, pcstr body, pcstr title);
+    void draw_history_graph(int full_size, pcstr body, pcstr title);
 };
 }

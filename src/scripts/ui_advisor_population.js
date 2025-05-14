@@ -4,6 +4,27 @@ advisor_population_graph_census = {
 	y_axis_offset  : [-56, 0]
 	y_axis_label_w : 60 
 	y_axis_height  : 200
+
+    x_axis_offset  : [-20, 210]
+    x_axis_width   : 170
+}
+
+advisor_population_graph_history = {
+    y_axis_offset  : [-56, 0]
+	y_axis_label_w : 60 
+	y_axis_height  : 200
+
+    x_axis_offset  : [-20, 215]
+    x_axis_width   : 170
+}
+
+advisor_population_society_history = {
+    y_axis_offset  : [-56, 0]
+	y_axis_label_w : 60 
+	y_axis_height  : 200
+
+    x_axis_offset  : [-20, 215]
+    x_axis_width   : 170
 }
 
 advisor_population_window = {
@@ -17,7 +38,7 @@ advisor_population_window = {
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:5, pos:[10, 10] })
         title        : label({font : FONT_LARGE_BLACK_ON_LIGHT, pos:[60, 17]})
         bgimage      : image({pack : PACK_UNLOADED, id:21, offset:14, pos:[56, 60]})
-        population   : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[450, 25]})
+        population   : label({font : FONT_NORMAL_BLACK_ON_DARK, text:"${TR_ADVISOR_TOTAL_POPULATION} ${city.population}", pos:[450, 25]})
         housing      : text_center({font : FONT_NORMAL_BLACK_ON_DARK, pos:[545, 315]})
 
         housing_button : button({pos:[540, 260], size:[64, 50], tooltip:[68, 106]
@@ -41,7 +62,7 @@ advisor_population_window = {
         }),
 
         big_text     : label({font : FONT_NORMAL_BLACK_ON_DARK, pos:[60, 44]}),
-        big_graph_tx : label({pos:[64, 62]}),
+        big_graph_tx : label({pos:[65, 62]}),
 
         inner_panel  : inner_panel({pos:[48, 336], size:[34, 5],
             ui : {

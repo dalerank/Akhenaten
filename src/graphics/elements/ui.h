@@ -68,6 +68,14 @@ void clear_active_elements();
 
 int label(int group, int number, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
 int label(pcstr, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, UiFlags flags = UiFlags_None, int box_width = 0);
+
+template<typename ... Args>
+inline int label(vec2i offset, e_font font, int box_width, UiFlags flags, pcstr fmt, const Args&... args) {
+    bstring1024 s;
+    s.printf(fmt, args...);
+    return label(s.c_str(), offset, font, flags , box_width);
+}
+
 int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT, pcstr postfix = "");
 int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
 int label_colored(textid tx, vec2i pos, e_font font, color color, int box_width = 0);
@@ -76,7 +84,7 @@ const image_t *eimage(int imgid, vec2i pos);
 const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
 void border(vec2i pos, vec2i size, int type, int color, UiFlags flags);
-void rect(vec2i pos, vec2i size, int type, int fill, int color, UiFlags flags);
+void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
 void icon(vec2i pos, e_advisor advisor);
 int button_hover(const mouse *m);
@@ -418,7 +426,11 @@ struct widget {
     void set_clip_rectangle(const element &e);
     void reset_clip_rectangle();
     virtual void begin_frame() { ui::begin_frame(); }
-    void line(bool hline, vec2i pos, int size);
+    void line(bool hline, vec2i pos, int size, color c = COLOR_BLACK);
+    inline void hline(vec2i pos, int size, color c = COLOR_BLACK) { line(true, pos, size, c); }
+    inline void vline(vec2i pos, int size, color c = COLOR_BLACK) { line(false, pos, size, c); }
+    void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags = UiFlags_None) { ui::rect(pos, size, fill, color, flags); }
+
     bool handle_mouse(const mouse *m) { return ui::handle_mouse(m); }
 
     template<typename T>

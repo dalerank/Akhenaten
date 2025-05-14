@@ -1307,7 +1307,7 @@ io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version
 
 io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.graph_order);
+    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
 });
 

@@ -640,14 +640,6 @@ void city_population_check_consistency(void) {
         remove_from_census(city_data.population.current - people_in_houses);
 }
 
-int city_population_graph_order(void) {
-    return city_data.population.graph_order;
-}
-
-void city_population_set_graph_order(int order) {
-    city_data.population.graph_order = order;
-}
-
 int city_population_open_housing_capacity(void) {
     return city_data.population.room_in_houses;
 }

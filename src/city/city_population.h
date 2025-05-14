@@ -42,7 +42,6 @@ struct city_population_t {
 
     int32_t last_used_house_add;
     int32_t last_used_house_remove;
-    int32_t graph_order;
 
     void recalculate();
     void yearly_recalculate();
@@ -89,10 +88,6 @@ void city_population_calculate_educational_age();
 void city_population_request_yearly_update();
 
 void city_population_check_consistency();
-
-int city_population_graph_order();
-
-void city_population_set_graph_order(int order);
 
 int city_population_open_housing_capacity();
 

@@ -25,20 +25,25 @@
 ui::advisor_population_window g_advisor_population_window;
 
 struct advisor_population_graph {
-    int y_axis_height = 0;
-    vec2i y_axis_offset;
+    int y_axis_height, x_axis_width;
+    vec2i y_axis_offset, x_axis_offset;
     int y_axis_label_w;
     void reset() {}
     void load(archive arch) {
         y_axis_height = arch.r_int("y_axis_height");
         y_axis_offset = arch.r_vec2i("y_axis_offset");
         y_axis_label_w = arch.r_int("y_axis_label_w");
+
+        x_axis_offset = arch.r_vec2i("x_axis_offset");
+        x_axis_width = arch.r_int("x_axis_width");
     }
 
     void init() {}
 };
 
 advisor_population_graph ANK_VARIABLE(advisor_population_graph_census);
+advisor_population_graph ANK_VARIABLE(advisor_population_graph_history);
+advisor_population_graph ANK_VARIABLE(advisor_population_society_history);
 
 static vec2i get_y_axis(int max_value) {
     if (max_value <= 100) { return { 100, -1 }; }
@@ -54,37 +59,61 @@ static vec2i get_y_axis(int max_value) {
     return { 51200, 8 };
 }
 
-static void get_min_max_month_year(int max_months, int* start_month, int* start_year, int* end_month, int* end_year) {
+struct month_year {
+    int month;
+    int year;
+};
+
+struct month_year_range {
+    month_year start;
+    month_year end;
+};
+
+month_year_range get_min_max_month_year(int max_months) {
+    month_year_range result;
     if (g_city.population.monthly.count > max_months) {
-        *end_month = game.simtime.month - 1;
-        *end_year = game.simtime.year;
+        result.end.month = game.simtime.month - 1;
+        result.end.year = game.simtime.year;
 
-        if (*end_month < 0)
-            *end_year -= 1;
+        if (result.end.month < 0)
+            result.end.year -= 1;
 
-        *start_month = 11 - (max_months % 12);
-        *start_year = *end_year - max_months / 12;
+        result.start.month = 11 - (max_months % 12);
+        result.start.year = result.end.year - max_months / 12;
     } else {
-        *start_month = 0;
-        *start_year = scenario_property_start_year();
-        *end_month = (max_months + *start_month) % 12;
-        *end_year = (max_months + *start_month) / 12 + *start_year;
+        result.start.month = 0;
+        result.start.year = scenario_property_start_year();
+        result.end.month = (max_months + result.start.month) % 12;
+        result.end.year = (max_months + result.start.month) / 12 + result.start.year;
     }
+
+    return result;
 }
 
-void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos) {
-    painter ctx = game.painter();
-    int max_months;
-    int month_count = g_city.population.monthly.count;
-    if (month_count <= 20) max_months = 20;
-    else if (month_count <= 40) max_months = 40;
-    else if (month_count <= 100) max_months = 100;
-    else if (month_count <= 200) max_months = 200;
-    else max_months = 400;
-    
-    if (!full_size) {
-        max_months = std::clamp(max_months, 20, 100);
-    }
+void ui::advisor_population_window::draw_history_graph(int full_size, pcstr body, pcstr title) {
+    struct columnc {
+        int count;
+        int max;
+        int wline;
+        int graphid;
+    } population = { 0, 0 };;
+
+    const std::array<columnc, 5> thresholds = { {
+        {20, 20, 20, 1},
+        {40, 40, 10, 2},
+        {100, 100, 4, 3},
+        {200, 200, 2, 4},
+        {std::numeric_limits<int>::max(), 400}
+    } };
+
+    const int month_count = g_city.population.monthly.count;
+    auto it = std::find_if(thresholds.begin(), thresholds.end(), [month_count] (const auto& pair) {
+        return month_count <= pair.count;
+    });
+
+    const int max_months = full_size ? it->max : std::clamp(it->max, 20, 200);
+    const int wline = it->wline;
+
     // determine max value
     int max_value = 0;
     for (int m = 0; m < max_months; m++) {
@@ -97,73 +126,57 @@ void ui::advisor_population_window::draw_history_graph(int full_size, vec2i pos)
     int y_max = ypx.x;
     int y_shift = ypx.y;
 
-    int x = pos.x;
-    int y = pos.y;
+    const auto& graph = advisor_population_graph_history;
+    const vec2i bpos = ui[body].pos;
+
 
     if (full_size) {
+        ui[title].text(ui::str(55, 6));
         // y axis
-        text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(0, x - 66, y + 196, 60, FONT_SMALL_PLAIN);
+        ui.label(bstring32(y_max).c_str(), bpos + graph.y_axis_offset, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label(bstring32(y_max / 2).c_str(), bpos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height / 2 }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label("0", bpos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+
         // x axis
-        int start_month, start_year, end_month, end_year;
-        get_min_max_month_year(max_months, &start_month, &start_year, &end_month, &end_year);
-
-        int width = lang_text_draw(25, start_month, x - 20, y + 210, FONT_SMALL_PLAIN);
-        lang_text_draw_year(start_year, x + width - 20, y + 210, FONT_SMALL_PLAIN);
-
-        width = lang_text_draw(25, end_month, x + 380, y + 210, FONT_SMALL_PLAIN);
-        lang_text_draw_year(end_year, x + width + 380, y + 210, FONT_SMALL_PLAIN);
+        auto range = get_min_max_month_year(max_months);
+        ui.label(bpos + graph.x_axis_offset, FONT_SMALL_PLAIN, 0, 0, "%s %d", ui::str(25, range.start.month), range.start.year);
+        ui.label(bpos + graph.x_axis_offset + vec2i{ graph.x_axis_width, 0 }, FONT_SMALL_PLAIN, 0, 0, "%s %d", ui::str(25, range.end.month), range.end.year);
+    }
+    else {
+        ui[title].text(ui::str(55, 3));
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
+        ui.set_clip_rectangle({0, 0}, {640, bpos.y + 200});
         for (int m = 0; m < max_months; m++) {
             int pop = g_city.population.at_month(max_months, m);
-            int val;
-            if (y_shift == -1)
-                val = 2 * pop;
-            else {
-                val = pop >> y_shift;
-            }
+            int val = (y_shift == -1) ? (2 * pop) : (pop >> y_shift);
+
             if (val > 0) {
-                switch (max_months) {
-                case 20:
-                    ImageDraw::img_generic(ctx, image_group(graph_bar[1]), x + 20 * m, y + 200 - val);
-                    break;
-                case 40:
-                    ImageDraw::img_generic(ctx, image_group(graph_bar[2]), x + 10 * m, y + 200 - val);
-                    break;
-                case 100:
-                    ImageDraw::img_generic(ctx, image_group(graph_bar[3]), x + 4 * m, y + 200 - val);
-                    break;
-                case 200:
-                    ImageDraw::img_generic(ctx, image_group(graph_bar[4]), x + 2 * m,y + 200 - val);
-                    break;
-                default:
-                    graphics_draw_vertical_line(vec2i{x + m, y + 200 - val}, y + 199, COLOR_RED);
-                    break;
+                if (max_months >= 200) {
+                    ui.vline(bpos + vec2i{ m, 200 - val }, bpos.y + 199, COLOR_RED);
+                } else {
+                    ui.image(graph_bar[it->graphid], bpos + vec2i{ wline * m, 200 - val });
                 }
             }
         }
-        graphics_reset_clip_rectangle();
+        ui.reset_clip_rectangle();
     } else {
         y_shift += 2;
         for (int m = 0; m < max_months; m++) {
             int val = g_city.population.at_month(max_months, m) >> y_shift;
             if (val > 0) {
                 if (max_months == 20)
-                    graphics_fill_rect(vec2i{x + m, y + 50 - val}, vec2i{4, val + 1}, COLOR_RED);
+                    ui.rect(bpos + vec2i{m, 50 - val}, vec2i{4, val + 1}, COLOR_RED, COLOR_RED);
                 else {
-                    graphics_draw_vertical_line(vec2i{x + m, y + 50 - val}, y + 50, COLOR_RED);
+                    ui.vline(bpos + vec2i{m, 50 - val}, bpos.y + 50, COLOR_RED);
                 }
             }
         }
     }
 }
 
-void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) {
-    painter ctx = game.painter();
+void ui::advisor_population_window::draw_census_graph(int full_size, pcstr body, pcstr title) {
     const auto &population = g_city.population;
     const int max_value = *std::max_element(population.at_age.begin(), population.at_age.end());
 
@@ -172,45 +185,46 @@ void ui::advisor_population_window::draw_census_graph(int full_size, vec2i pos) 
     int y_shift = ypx.y;
 
     const auto &graph = advisor_population_graph_census;
+    const vec2i bpos = ui[body].pos;
     if (full_size) {
+        ui[title].text(ui::str(55, 7));
         // y axis
-        text_draw_number_centered(y_max, pos + graph.y_axis_offset + vec2i{0, 0}, graph.y_axis_label_w, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, pos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height / 2 }, graph.y_axis_label_w, FONT_SMALL_PLAIN);
-        text_draw_number_centered(0, pos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height}, graph.y_axis_label_w, FONT_SMALL_PLAIN);
+        ui.label(bstring32(y_max).c_str(), bpos + graph.y_axis_offset + vec2i{0, 0}, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label(bstring32(y_max / 2).c_str(), bpos + graph.y_axis_offset + vec2i{0, graph.y_axis_height / 2}, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label("0", bpos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height}, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+
         // x axis
         for (int i = 0; i <= 10; i++) {
-            text_draw_number_centered(i * 10, pos.x + 40 * i - 22, pos.y + 210, 40, FONT_SMALL_PLAIN);
+            ui.label(bstring32(i * 10).c_str(), bpos + graph.x_axis_offset + vec2i{ 40 * i, 0 }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
         }
+    } else {
+        ui[title].text(ui::str(55, 4));
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle({0, 0}, {640, pos.y + 200});
+        ui[title].text(ui::str(55, 6));
+        ui.set_clip_rectangle({0, 0}, {640, bpos.y + 200});
         for (int i = 0; i < 100; i++) {
             int pop = population.at_age[i];
-            int val;
-            if (y_shift == -1)
-                val = 2 * pop;
-            else {
-                val = pop >> y_shift;
-            }
+            int val = (y_shift == -1) ? (2 * pop) : (pop >> y_shift);
+
             if (val > 0) {
-                ImageDraw::img_generic(ctx, image_group(graph_bar[2]), pos.x + 4 * i, pos.y + 200 - val);
+                ui.image(graph_bar[2], bpos + vec2i{ 4 * i, 200 - val });
             }
         }
-        graphics_reset_clip_rectangle();
+        ui.reset_clip_rectangle();
     } else {
         y_shift += 2;
         for (int i = 0; i < 100; i++) {
             int val = population.at_age[i] >> y_shift;
-            if (val > 0)
-                graphics_draw_vertical_line( pos + vec2i{i, 50 - val}, val, COLOR_RED);
+            if (val > 0) {
+                ui.vline(bpos + vec2i{ i, 50 - val }, val, COLOR_RED);
+            }
         }
     }
 }
 
-void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos) {
-    painter ctx = game.painter();
-
+void ui::advisor_population_window::draw_society_graph(int full_size, pcstr body, pcstr title) {
     const auto &population = g_city.population;
     const int max_value = *std::max_element(population.at_level.begin(), population.at_level.end());
 
@@ -218,36 +232,39 @@ void ui::advisor_population_window::draw_society_graph(int full_size, vec2i pos)
     int y_max = ypx.x;
     int y_shift = ypx.y;
 
-    int x = pos.x;
-    int y = pos.y;
 
+    const auto& graph = advisor_population_society_history;
+    const vec2i bpos = ui[body].pos;
     if (full_size) {
+        ui[title].text(ui::str(55, 8));
         // y axis
-        text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(0, x - 66, y + 196, 60, FONT_SMALL_PLAIN);
+        ui.label(bstring32(y_max).c_str(), bpos + graph.y_axis_offset, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label(bstring32(y_max / 2).c_str(), bpos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height / 2 }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
+        ui.label("0", bpos + graph.y_axis_offset + vec2i{ 0, graph.y_axis_height }, FONT_SMALL_PLAIN, UiFlags_AlignCentered, graph.y_axis_label_w);
         // x axis
-        lang_text_draw_centered(55, 9, x - 80, y + 210, 200, FONT_SMALL_PLAIN);
-        lang_text_draw_centered(55, 10, x + 280, y + 210, 200, FONT_SMALL_PLAIN);
+        ui.label(bpos + graph.x_axis_offset, FONT_SMALL_PLAIN, 0, 0, "%s", ui::str(55, 9));
+        ui.label(bpos + graph.x_axis_offset + vec2i{ graph.x_axis_width, 0 }, FONT_SMALL_PLAIN, 0, 0, "%s", ui::str(55, 10));
+    } else {
+        ui[title].text(ui::str(55, 5));
     }
 
     if (full_size) {
-        graphics_set_clip_rectangle({0, 0}, {640, y + 200});
+        ui.set_clip_rectangle({0, 0}, {640, bpos.y + 200});
         for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
             int pop = population.at_level[i];
             int val = (y_shift == -1) ? 2 * pop : (pop >> y_shift);
 
             if (val > 0) {
-                ImageDraw::img_generic(ctx, image_group(graph_bar[1]), x + 20 * i, y + 200 - val);
+                ui.image(graph_bar[1], bpos + vec2i{ 20 * i, 200 - val });
             }
         }
-        graphics_reset_clip_rectangle();
+        ui.reset_clip_rectangle();
     } else {
         y_shift += 2;
         for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
             int val = population.at_level[i] >> y_shift;
             if (val > 0) {
-                graphics_fill_rect(vec2i{ x + 5 * i, y + 50 - val }, vec2i{ 4, val + 1 }, COLOR_RED);
+                ui.rect(bpos + vec2i{ 5 * i, 50 - val }, vec2i{ 4, val + 1 }, COLOR_RED, COLOR_RED);
             }
         }
     }
@@ -343,66 +360,21 @@ void ui::advisor_population_window::print_history_info() {
     }
 }
 
-void button_graph(int next) {
-    int new_order;
-
-    switch (city_population_graph_order()) {
-    default:
-    case 0: new_order = next ? 5 : 2; break;
-    case 1: new_order = next ? 3 : 4; break;
-    case 2: new_order = next ? 4 : 0; break;
-    case 3: new_order = next ? 1 : 5; break;
-    case 4: new_order = next ? 2 : 1; break;
-    case 5: new_order = next ? 0 : 3; break;
-    }
-    city_population_set_graph_order(new_order);
-}
-
 int ui::advisor_population_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    int graph_order = city_population_graph_order();
- 
     // Title: depends on big graph shown
-    textid titlestr{ 55, 2 };
-    if (graph_order < 2) { titlestr = { 55, 0 }; } 
-    else if (graph_order < 4) { titlestr = { 55, 1 }; }
-
     const int city_population = g_city.population.current;
 
-    ui["title"] = titlestr;
-    ui["population"].text_var("%u %s", city_population, translation_for(TR_ADVISOR_TOTAL_POPULATION));
-
-    struct {
-        int big, top, bot;
-    } textl;
-
-    switch (graph_order) {
-    default:
-    case 0: textl = { 6, 4, 5 }; break;
-    case 1: textl = { 6, 5, 4 }; break;
-    case 2: textl = { 7, 3, 5 }; break;
-    case 3: textl = { 7, 5, 3 }; break;
-    case 4: textl = { 8, 3, 4 }; break;
-    case 5: textl = { 8, 4, 3 }; break;
-    }
+    ui["title"] = ui::str(55, graph_order);
 
     ui["housing"] = (pcstr)translation_for(TR_HEADER_HOUSING);
-    ui["big_text"] = ui::str(55, textl.big);
-    ui["top_text"] = ui::str(55, textl.top);
-    ui["bot_text"] = ui::str(55, textl.bot);
-
     ui["housing_button"].onclick([] {
         window_advisors_show_advisor(ADVISOR_HOUSING);
     });
 
-    ui["next_graph"].onclick([] {
-        button_graph(true);
-    });
-
-    ui["prev_graph"].onclick([] {
-        button_graph(false);
-    });
+    ui["next_graph"].onclick([this] { ++graph_order; graph_order %= 3; });
+    ui["prev_graph"].onclick([this] { --graph_order; if (graph_order < 0) graph_order = 2; });
 
     return 0;
 }
@@ -411,7 +383,7 @@ void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 
-    using graph_function = void (advisor_population_window::*)(int, vec2i);
+    using graph_function = void (advisor_population_window::*)(int, pcstr body, pcstr title);
     using info_function = void (advisor_population_window::*)();
 
     graph_function big_graph;
@@ -419,7 +391,6 @@ void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
     graph_function bot_graph;
     info_function info_panel;
 
-    int graph_order = city_population_graph_order();
     switch (graph_order) {
     default:
     case 0:
@@ -429,40 +400,22 @@ void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
         info_panel = &advisor_population_window::print_history_info;
         break;
     case 1:
-        big_graph = &advisor_population_window::draw_history_graph;
+        big_graph = &advisor_population_window::draw_census_graph;
         top_graph = &advisor_population_window::draw_society_graph;
-        bot_graph = &advisor_population_window::draw_census_graph;
-        info_panel = &advisor_population_window::print_history_info;
+        bot_graph = &advisor_population_window::draw_history_graph;
+        info_panel = &advisor_population_window::print_census_info;
         break;
     case 2:
-        big_graph = &advisor_population_window::draw_census_graph;
-        top_graph = &advisor_population_window::draw_history_graph;
-        bot_graph = &advisor_population_window::draw_society_graph;
-        info_panel= &advisor_population_window::print_census_info;
-        break;
-    case 3:
-        big_graph = &advisor_population_window::draw_census_graph;
-        top_graph = &advisor_population_window::draw_society_graph;
-        bot_graph = &advisor_population_window::draw_history_graph;
-        info_panel= &advisor_population_window::print_census_info;
-        break;
-    case 4:
         big_graph = &advisor_population_window::draw_society_graph;
         top_graph = &advisor_population_window::draw_history_graph;
         bot_graph = &advisor_population_window::draw_census_graph;
-        info_panel= &advisor_population_window::print_society_info;
-        break;
-    case 5:
-        big_graph = &advisor_population_window::draw_society_graph;
-        top_graph = &advisor_population_window::draw_census_graph;
-        bot_graph = &advisor_population_window::draw_history_graph;
-        info_panel= &advisor_population_window::print_society_info;
+        info_panel = &advisor_population_window::print_society_info;
         break;
     }
 
-    (*this.*big_graph)(1, ui["big_graph_tx"].screen_pos());
-    (*this.*top_graph)(0, ui["next_graph_tx"].screen_pos());
-    (*this.*bot_graph)(0, ui["prev_graph_tx"].screen_pos());
+    (*this.*big_graph)(1, "big_graph_tx", "big_text");
+    (*this.*top_graph)(0, "next_graph_tx", "top_text");
+    (*this.*bot_graph)(0, "prev_graph_tx", "bot_text");
 
     (*this.*info_panel)();
     ui.end_widget();

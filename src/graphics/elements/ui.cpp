@@ -535,9 +535,13 @@ void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
     graphics_draw_rect(offset + pos, size, color);
 }
 
-void ui::rect(vec2i pos, vec2i size, int type, int fill, int color, UiFlags flags) {
-    graphics_shade_rect(pos, size, fill);
-    graphics_draw_rect(pos, size, color);
+void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
+    const vec2i offset = g_state.offset();
+    if (fill) {
+        graphics_fill_rect(offset + pos, size, fill);
+    } else {
+        graphics_draw_rect(offset + pos, size, color);
+    }
 }
 
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
@@ -705,12 +709,12 @@ void ui::widget::reset_clip_rectangle() {
     graphics_reset_clip_rectangle();
 }
 
-void ui::widget::line(bool hline, vec2i npos, int size) {
+void ui::widget::line(bool hline, vec2i npos, int size, color c) {
     const vec2i offset = g_state.offset();
     if (hline) {
-        graphics_draw_horizontal_line(npos + offset, size, COLOR_BLACK);
+        graphics_draw_horizontal_line(npos + offset, size, c);
     } else {
-        graphics_draw_vertical_line(npos + offset, size, COLOR_BLACK);
+        graphics_draw_vertical_line(npos + offset, size, c);
     }
 }
 
