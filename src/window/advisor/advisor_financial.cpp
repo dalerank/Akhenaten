@@ -13,12 +13,6 @@
 
 ui::advisor_financial_window g_advisor_financial_window;
 
-void button_change_taxes(int is_down) {
-    city_finance_change_tax_percentage(is_down ? -1 : 1);
-    g_city.finance.update_estimate_taxes();
-    g_city.finance.calculate_totals();
-}
-
 void ui::advisor_financial_window::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
     ui.label(text, vec2i{ row_text_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_last_year), vec2i{ row_last_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
@@ -50,8 +44,8 @@ int ui::advisor_financial_window::draw_background(UiFlags flags) {
     ui["tax_value"].text_var("%d%% %s %s %d", g_city.finance.tax_percentage, ui::str(60, 4), ui::str(8, 0), g_city.finance.estimated_tax_income);
     ui["tax_payers"].text_var("%d%% %s %s %d Db", g_city.taxes.percentage_taxed_people, ui::str(60, 5), ui::str(60, 22), city_finance_estimated_tax_uncollected());
 
-    ui["dec_tax"].onclick([] { button_change_taxes(true); });
-    ui["inc_tax"].onclick([] { button_change_taxes(false); });
+    ui["dec_tax"].onclick([] { events::emit(event_finance_change_tax{ -1 }); });
+    ui["inc_tax"].onclick([] { events::emit(event_finance_change_tax{ +1 }); });
 
     return 0;
 }

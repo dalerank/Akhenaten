@@ -670,17 +670,21 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.total_capacity);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.room_in_houses);
 
-    for (int i = 0; i < 2400; i++)
+    for (int i = 0; i < 2400; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.values[i]);
+    }
     
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.next_index);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.count);
     
-    for (int i = 0; i < 100; i++)
-        iob->bind(BIND_SIGNATURE_INT16, &data.population.at_age[i]);
+    for (int i = 0; i < 100; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_age[i]);
+    }
     
-    for (int i = 0; i < 20; i++)
-        iob->bind(BIND_SIGNATURE_INT32, &data.population.at_level[i]);
+    for (int i = 0; i < 20; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_level[i]);
+        iob->bind____skip(2);
+    }
     
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_births);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);

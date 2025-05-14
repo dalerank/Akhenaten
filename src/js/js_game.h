@@ -30,7 +30,7 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 
 #define ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.reset(); g_config_arch.r_section(name, [] (archive arch) { a.load(arch); }); a.init(); }
+    void config_load_ ## a() { a.reset(); const bool ok = g_config_arch.r_section(name, [] (archive arch) { a.load(arch); }); assert(ok && "Variable not exist in config:" name); a.init(); }
 
 #define ANK_REGISTER_CONFIG_ARRAY_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \

@@ -28,9 +28,10 @@ import figures
 import ui_hold_festival_window
 import localization
 import ui_advisor_entertainment
+import ui_advisor_population
 import building_menu
+import desirability
 
-include(":desirability.js")
 include(":floodplain.js")
 include(":ui.js")
 include(":ui_top_menu_widget.js")

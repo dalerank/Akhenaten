@@ -20,22 +20,26 @@ struct tutorial_5 : public tutorial_t {
 tutorial_5 g_tutorial_5;
 
 void tutorial_5::reset() {
-    g_tutorials_flags.tutorial_5.started = 0;
-    g_tutorials_flags.tutorial_5.spacious_apartment = 0;
-    g_tutorials_flags.tutorial_5.papyrus_made = 0;
-    g_tutorials_flags.tutorial_5.bricks_bought = 0;
+    auto &tut = g_tutorials_flags.tutorial_5;
+    tut.started = 0;
+    tut.spacious_apartment = 0;
+    tut.papyrus_made = 0;
+    tut.bricks_bought = 0;
 }
 
 void tutorial5_handle_spacious_apartment(event_advance_day) {
-    if (g_tutorials_flags.tutorial_5.spacious_apartment) {
+    auto &tut = g_tutorials_flags.tutorial_5;
+    if (tut.spacious_apartment) {
         return;
     }
 
-    if (g_city.buildings.count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT) < 1) {
+    const int spacious_apartment_count = g_city.buildings.count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT);
+    const int spacious_apartment_built = g_scenario.vars.get_int("spacious_apartment_built");
+    if (spacious_apartment_built < spacious_apartment_built) {
         return;
     }
 
-    g_tutorials_flags.tutorial_5.spacious_apartment = true;
+    tut.spacious_apartment = true;
     g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
     events::unsubscribe(&tutorial5_handle_spacious_apartment);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
@@ -44,15 +48,17 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
 }
 
 void tutorial5_handle_papyrus(event_warehouse_filled ev) {
-    if (g_tutorials_flags.tutorial_5.papyrus_made) {
+    auto &tut = g_tutorials_flags.tutorial_5;
+    if (tut.papyrus_made) {
         return;
     }
 
-    if (g_city.resource.yards_stored(RESOURCE_PAPYRUS) < 100) {
+    const int papyrus_amount = g_scenario.vars.get_int("papyrus_stored", 100);
+    if (g_city.resource.yards_stored(RESOURCE_PAPYRUS) < papyrus_amount) {
         return;
     }
 
-    g_tutorials_flags.tutorial_5.papyrus_made = true;
+    tut.papyrus_made = true;
     events::unsubscribe(&tutorial5_handle_papyrus);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_trading);
@@ -61,15 +67,17 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
 }
 
 void tutorial5_handle_bricks(event_warehouse_filled ev) {
-    if (g_tutorials_flags.tutorial_5.bricks_bought) {
+    auto &tut = g_tutorials_flags.tutorial_5;
+    if (tut.bricks_bought) {
         return;
     }
 
-    if (g_city.resource.yards_stored(RESOURCE_BRICKS) < 100) {
+    const int bricks_amount = g_scenario.vars.get_int("bricks_stored", 100);
+    if (g_city.resource.yards_stored(RESOURCE_BRICKS) < bricks_amount) {
         return;
     }
 
-    g_tutorials_flags.tutorial_5.bricks_bought = true;
+    tut.bricks_bought = true;
     events::unsubscribe(&tutorial5_handle_bricks);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     building_menu_update(tutorial_stage.tutorial_monuments);
@@ -79,25 +87,24 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
 bool tutorial5_is_success() {
     auto &tut = g_tutorials_flags.tutorial_5;
     const bool may_finish = (tut.spacious_apartment && tut.papyrus_made && tut.bricks_bought);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > 3;
+    const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 
 void tutorial_5::init() {
-    if (g_tutorials_flags.tutorial_5.spacious_apartment) {
-        building_menu_update(tutorial_stage.tutorial_education);
-        g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
-    }
-    else events::subscribe(&tutorial5_handle_spacious_apartment);
+    auto &tut = g_tutorials_flags.tutorial_5;
+    building_menu_update_if(tut.spacious_apartment, tutorial_stage.tutorial_education);
+    g_city.set_advisor_available(ADVISOR_EDUCATION, tut.spacious_apartment ? AVAILABLE : NOT_AVAILABLE);
 
-    if (g_tutorials_flags.tutorial_5.papyrus_made) {
-        building_menu_update(tutorial_stage.tutorial_trading);
-        g_city.set_advisor_available(ADVISOR_TRADE, AVAILABLE);
-    }
-    else events::subscribe(&tutorial5_handle_papyrus);
+    events::subscribe_if(!tut.spacious_apartment, &tutorial5_handle_spacious_apartment);
 
-    if (g_tutorials_flags.tutorial_5.bricks_bought) building_menu_update(tutorial_stage.tutorial_monuments);
-    else events::subscribe(&tutorial5_handle_bricks);
+    building_menu_update_if(tut.papyrus_made, tutorial_stage.tutorial_trading);
+    g_city.set_advisor_available(ADVISOR_TRADE, tut.papyrus_made ? AVAILABLE : NOT_AVAILABLE);
+    events::subscribe_if(!tut.papyrus_made, &tutorial5_handle_papyrus);
+
+    building_menu_update_if(tut.bricks_bought, tutorial_stage.tutorial_monuments);
+    events::subscribe_if(!tut.bricks_bought, &tutorial5_handle_bricks);
 
     g_city.victory_state.add_condition(&tutorial5_is_success);
 

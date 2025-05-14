@@ -292,6 +292,7 @@ enum e_house_level {
     HOUSE_STATELY_MANOR = 17,
     HOUSE_MODEST_ESTATE = 18,
     HOUSE_PALATIAL_ESTATE = 19,
+	HOUSE_LEVEL_MAX = 20,
 };
 
 enum e_damage_type {

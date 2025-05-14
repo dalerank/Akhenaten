@@ -18,6 +18,7 @@ struct event_finance_changed { int value; };
 struct event_finance_donation { int amount; };
 
 struct event_finance_change_wages { int value; };
+struct event_finance_change_tax { int value; };
 struct event_finance_process_request { e_finance_request_type type; uint32_t deben; };
 
 struct finance_overview {
@@ -115,12 +116,9 @@ struct city_finance_t {
     void calculate_totals();
 };
 
-constexpr uint32_t MAX_HOUSE_LEVELS = 20;
 class figure;
 
 struct event_gold_extract { int amount; };
-
-void city_finance_change_tax_percentage(int change);
 
 int city_finance_estimated_tax_uncollected();
 

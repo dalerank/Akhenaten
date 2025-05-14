@@ -34,6 +34,7 @@ int text_draw_label_and_number(const char* label, int value, const char* postfix
 void text_draw_label_and_number_centered(const char* label, int value, const char* postfix, int x_offset, int y_offset, int box_width, e_font font, color color);
 
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, e_font font);
+inline void text_draw_number_centered(int value, vec2i offset, int box_width, e_font font) { text_draw_number_centered(value, offset.x, offset.y, box_width, font); }
 void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, e_font font);
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, e_font font, color color);
 

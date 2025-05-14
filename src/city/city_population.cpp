@@ -446,25 +446,14 @@ void city_population_t::update_day() {
     last_day_current = current;
 }
 
-int city_population_monthly_count() {
-    return city_data.population.monthly.count;
-}
-
-int city_population_at_month(int max_months, int month) {
+int city_population_t::at_month(int max_months, int month) {
     int start_offset = 0;
-    if (city_data.population.monthly.count > max_months)
-        start_offset = city_data.population.monthly.count + 2400 - max_months;
+    if (monthly.count > max_months) {
+        start_offset = monthly.count + 2400 - max_months;
+    }
 
     int index = (start_offset + month) % 2400;
-    return city_data.population.monthly.values[index];
-}
-
-int city_population_at_age(int age) {
-    return city_data.population.at_age[age];
-}
-
-int city_population_at_level(int house_level) {
-    return city_data.population.at_level[house_level];
+    return monthly.values[index];
 }
 
 void city_population_t::yearly_advance_ages_and_calculate_deaths() {

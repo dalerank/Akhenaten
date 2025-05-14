@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "building/building_type.h"
 
 struct event_population_changed { int value; };
 
@@ -12,12 +13,12 @@ struct city_population_t {
     int32_t academy_age;
     int32_t working_age;
     struct {
-        int32_t values[2400];
+        std::array<int32_t, 2400> values;
         int32_t next_index;
         int32_t count;
     } monthly;
-    int16_t at_age[100];
-    int32_t at_level[20];
+    std::array<uint16_t, 100> at_age;
+    std::array<uint16_t, HOUSE_LEVEL_MAX> at_level;
 
     int32_t yearly_update_requested;
     int32_t yearly_births;
@@ -69,6 +70,7 @@ struct city_population_t {
     void calculate_working_people();
 
     void yearly_advance_ages_and_calculate_deaths();
+    int at_month(int max_months, int month);
 };
 
 int city_population_last_used_house_add();
@@ -83,14 +85,6 @@ void city_population_add_capacity(int people_in_house, int max_people);
 int city_population_people_of_working_age();
 
 void city_population_calculate_educational_age();
-
-int city_population_monthly_count();
-
-int city_population_at_month(int max_months, int month);
-
-int city_population_at_age(int age);
-
-int city_population_at_level(int house_level);
 
 void city_population_request_yearly_update();
 
