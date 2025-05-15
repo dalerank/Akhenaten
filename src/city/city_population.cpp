@@ -130,10 +130,10 @@ int city_population_t::create_emigrants(int num_people) {
         }
 
         if (to_emigrate <= current_people) {
-            figure_emigrant::create(&house->base, to_emigrate);
+            events::emit(event_create_emigrant{ house->id(), to_emigrate, SOURCE_LOCATION });
             to_emigrate = 0;
         } else {
-            figure_emigrant::create(&house->base, current_people);
+            events::emit(event_create_emigrant{ house->id(), current_people, SOURCE_LOCATION });
             to_emigrate -= current_people;
         }
     }

@@ -7,28 +7,32 @@
 #include "grid/terrain.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "game/game_events.h"
+#include "js/js_game.h"
 
 figures::model_t<figure_emigrant> emigrant_m;
 
-figure *figure_emigrant::create(building* b, int num_people) {
-    building_house *house = b->dcast_house();
-    g_city.population.remove(num_people);
-    if (num_people < house->house_population()) {
-        house->change_population(-num_people);
+void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
+    auto house = building_get(ev.bid)->dcast_house();
+    if (!house) {
+        return;
+    }
+
+    g_city.population.remove(ev.num_people);
+    if (ev.num_people < house->house_population()) {
+        house->change_population(-ev.num_people);
     } else {
         house->change_to_vacant_lot();
     }
 
     figure* f = figure_create(FIGURE_EMIGRANT, house->tile(), DIR_0_TOP_RIGHT);
     if (house->house_level() >= HOUSE_COMMON_MANOR) {
-        g_city.migration.nobles_leave_city(num_people);
+        g_city.migration.nobles_leave_city(ev.num_people);
     }
 
     f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
     f->wait_ticks = 0;
-    f->migrant_num_people = num_people;
-
-    return f;
+    f->migrant_num_people = ev.num_people;
 }
 
 void figure_emigrant::figure_action() {
