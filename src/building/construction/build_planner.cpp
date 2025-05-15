@@ -973,6 +973,14 @@ int build_planner::get_total_drag_size(int* x, int* y) {
 }
 
 void build_planner::construction_start(tile2i tile) {
+    if (!tile.valid()) {
+        return;
+    }
+
+    if (in_progress) {
+        return;
+    }
+
     start = tile;
     end = tile;
 

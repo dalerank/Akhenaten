@@ -523,11 +523,6 @@ void screen_city_t::draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
 
 // INPUT HANDLING
 
-static void build_start(tile2i tile) {
-    if (tile.grid_offset() > 0) // Allow building on paused
-        g_city_planner.construction_start(tile);
-}
-
 static void build_move(tile2i tile) {
     if (!g_city_planner.in_progress)
         return;
@@ -569,7 +564,7 @@ static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_siz
     return false;
 }
 
-static bool handle_right_click_allow_building_info(tile2i tile) {
+bool screen_city_t::allow_building_info(tile2i tile) {
     int allow = true;
     if (!window_is(WINDOW_CITY)) {
         allow = false;
@@ -683,9 +678,11 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     e_building_type type = g_city_planner.build_type;
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile))
+        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
             return;
-        if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
+        }
+
+        if (type == BUILDING_NONE && allow_building_info(tile)) {
             scroll_drag_end();
             capture_input = false;
             window_info_show(tile);
@@ -701,7 +698,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     if (g_city_planner.has_flag_set(e_building_flag::Draggable)) {
         if (!g_city_planner.in_progress) {
             if (first->has_started) {
-                build_start(tile);
+                g_city_planner.construction_start(tile);
                 new_start_grid_offset = 0;
             }
         } else {
@@ -714,7 +711,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
                 new_start_grid_offset = 0;
                 selected_tile.set(0);
                 g_city_planner.construction_cancel();
-                build_start(tile);
+                g_city_planner.construction_start(tile);
             }
             build_move(tile);
             if (selected_tile.grid_offset() != tile.grid_offset())
@@ -740,7 +737,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
 
     if (touch_was_click(first) && first->has_ended && capture_input
         && has_confirmed_construction(selected_tile, tile, size)) {
-        build_start(selected_tile);
+        g_city_planner.construction_start(selected_tile);
         build_move(selected_tile);
         build_end();
         clear_current_tile();
@@ -864,9 +861,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
             return;
         }
         
-        if (!g_city_planner.in_progress) {
-            build_start(current_tile);
-        }
+        g_city_planner.construction_start(current_tile);
 
         build_move(current_tile);
     } else if (m->left.is_down || g_city_planner.in_progress) {
@@ -890,7 +885,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
         if (g_city_planner.construction_active()) {
             g_city_planner.construction_cancel();
         } else {
-            if (handle_right_click_allow_building_info(current_tile)) {
+            if (allow_building_info(current_tile)) {
                 window_info_show(current_tile);
             }
         }
