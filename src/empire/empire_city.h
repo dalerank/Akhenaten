@@ -32,6 +32,7 @@ struct empire_city {
     const trade_route &get_route() const;
     const empire_object *get_empire_object() const;
     const full_empire_object *get_full_empire_object() const;
+    int get_free_slot(int max_traders) const;
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;

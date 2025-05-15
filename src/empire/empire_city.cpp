@@ -37,3 +37,12 @@ const empire_object *empire_city::get_empire_object() const {
 const full_empire_object *empire_city::get_full_empire_object() const {
     return empire_get_full_object(empire_object_id);
 }
+
+int empire_city::get_free_slot(int max_traders) const {
+    for (int i = 0; i < max_traders; i++) {
+        if (!trader_figure_ids[i]) {
+            return i;
+        }
+    }
+    return -1;
+}

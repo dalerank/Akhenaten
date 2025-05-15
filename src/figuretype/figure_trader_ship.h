@@ -10,6 +10,7 @@ enum {
 };
 
 struct empire_city;
+struct event_trade_ship_arrival { int cid; int max_traders; pcstr location; };
 
 class figure_trade_ship : public figure_carrier {
 public:
@@ -31,6 +32,4 @@ public:
     bool lost_queue();
     bool done_trading();
     int is_trading() const;
-
-    static int create(tile2i tile, const empire_city& city);
 };

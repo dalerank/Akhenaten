@@ -4,6 +4,8 @@
 
 struct empire_city;
 
+struct event_trade_caravan_arrival { int cid; int max_traders; pcstr location; };
+
 class figure_trade_caravan : public figure_trader {
 public:
     FIGURE_METAINFO(FIGURE_TRADE_CARAVAN, figure_trade_caravan);
@@ -27,5 +29,4 @@ public:
     const static_params &current_params() const { return static_cast<const static_params &>(params()); }
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
-    static int create(tile2i tile, const empire_city& city);
 };

@@ -338,28 +338,17 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    int index;
-    if (max_traders == 1) {
-        if (!city.trader_figure_ids[0])
-            index = 0;
-        else
-            return false;
-    } else if (max_traders == 2) {
-        if (!city.trader_figure_ids[0])
-            index = 0;
-        else if (!city.trader_figure_ids[1])
-            index = 1;
-        else
-            return false;
-    } else { // 3
-        if (!city.trader_figure_ids[0])
-            index = 0;
-        else if (!city.trader_figure_ids[1])
-            index = 1;
-        else if (!city.trader_figure_ids[2])
-            index = 2;
-        else
-            return false;
+    // Find first available trader slot
+    bool can_create_trader = false;
+    for (int i = 0; i < max_traders; i++) {
+        if (!city.trader_figure_ids[i]) {
+            can_create_trader = true;
+            break;
+        }
+    }
+
+    if (!can_create_trader) {
+        return false;
     }
 
     if (city.trader_entry_delay > 0) {
@@ -371,18 +360,18 @@ bool city_t::generate_trader_from(empire_city &city) {
 
     if (city.is_sea_trade) {
         // generate ship
-        if (g_city.buildings.has_working_dock() && scenario_map_has_river_entry()
-            && !city_trade_has_sea_trade_problems()) {
-            tile2i river_entry = scenario_map_river_entry();
-            city.trader_figure_ids[index] = figure_trade_ship::create(river_entry, city);
+        const bool has_doks = g_city.buildings.has_working_dock();
+        const bool has_river_entry = scenario_map_has_river_entry();
+        const bool can_sea_trade = !city_trade_has_sea_trade_problems();
+        if (has_doks && has_river_entry && can_sea_trade) {
+            events::emit(event_trade_ship_arrival{ city.name_id, max_traders, SOURCE_LOCATION });            
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            tile2i entry = g_city.map.entry_point;
-            city.trader_figure_ids[index] = figure_trade_caravan::create(entry, city);
+            events::emit(event_trade_caravan_arrival{ city.name_id, max_traders, SOURCE_LOCATION });
             return true;
         }
     }

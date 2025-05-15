@@ -14,24 +14,37 @@
 #include "grid/figure.h"
 #include "city/city_figures.h"
 #include "dev/debug.h"
+#include "game/game_events.h"
+#include "js/js_game.h"
 
 #include <iostream>
 
 figures::model_t<figure_trade_ship> trader_ship_m;
 
+void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
+    tile2i river_entry = scenario_map_river_entry();
+
+    auto& emp_city = *g_empire.city(ev.cid);
+
+    // Find first available trader slot
+    const int free_slot = emp_city.get_free_slot(ev.max_traders);
+    if (free_slot == -1) {
+        return;
+    }
+
+    figure* ship = figure_create(FIGURE_TRADE_SHIP, river_entry, DIR_0_TOP_RIGHT);
+    ship->empire_city_id = emp_city.name_id;
+    ship->allow_move_type = EMOVE_DEEPWATER;
+    ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
+    ship->wait_ticks = 10;
+
+    emp_city.trader_figure_ids[free_slot] = ship->id;
+}
+
 declare_console_command_p(sinkallships) {
     figure_valid_do([] (figure &f) {
         f.dcast()->kill();
     }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
-}
-
-int figure_trade_ship::create(tile2i tile, const empire_city& city) {
-    figure* ship = figure_create(FIGURE_TRADE_SHIP, tile, DIR_0_TOP_RIGHT);
-    ship->empire_city_id = city.name_id;
-    ship->allow_move_type = EMOVE_DEEPWATER;
-    ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
-    ship->wait_ticks = 10;
-    return ship->id;
 }
 
 int figure_trade_ship::is_trading() const {

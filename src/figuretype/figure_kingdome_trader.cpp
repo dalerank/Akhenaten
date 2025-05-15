@@ -33,6 +33,32 @@
 
 figure_trade_caravan::static_params trade_caravan_m;
 
+void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
+    tile2i entry = g_city.map.entry_point;
+    auto& emp_city = *g_empire.city(ev.cid);
+
+    // Find first available trader slot
+    const int free_slot = emp_city.get_free_slot(ev.max_traders);
+    if (free_slot == -1) {
+        return;
+    }
+
+    figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
+    caravan->empire_city_id = emp_city.name_id;
+    caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    caravan->wait_ticks = trade_caravan_m.wait_ticks_after_create;
+    // donkey 1
+    figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
+    donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey1->leading_figure_id = caravan->id;
+    // donkey 2
+    figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
+    donkey2->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey2->leading_figure_id = donkey1->id;
+
+    emp_city.trader_figure_ids[free_slot] = caravan->id;
+}
+
 void figure_trade_caravan::static_params::load(archive arch)  {
     int wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
 };
@@ -43,22 +69,6 @@ int figure::trader_total_bought() {
 
 int figure::trader_total_sold() {
     return resource_amount_full;
-}
-
-int figure_trade_caravan::create(tile2i tile, const empire_city& city) {
-    figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, tile, DIR_0_TOP_RIGHT);
-    caravan->empire_city_id = city.name_id;
-    caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    caravan->wait_ticks = trade_caravan_m.wait_ticks_after_create;
-    // donkey 1
-    figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, tile, DIR_0_TOP_RIGHT);
-    donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    donkey1->leading_figure_id = caravan->id;
-    // donkey 2
-    figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, tile, DIR_0_TOP_RIGHT);
-    donkey2->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    donkey2->leading_figure_id = donkey1->id;
-    return caravan->id;
 }
 
 void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_to_entry) {

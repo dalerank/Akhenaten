@@ -12,7 +12,7 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_immigrant> immigrant_m;
+figure_immigrant::static_params immigrant_m;
 
 void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     auto b = building_get(ev.bid);

@@ -13,6 +13,9 @@ public:
     figure_immigrant(figure *f) : figure_impl(f) {}
     virtual figure_immigrant *dcast_immigrant() override { return this; }
 
+    struct static_params : figures::model_t<figure_immigrant> {
+    };
+
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual void figure_before_action() override;
