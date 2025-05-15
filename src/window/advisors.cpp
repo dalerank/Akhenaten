@@ -182,7 +182,7 @@ void window_advisors::init() {
         window_city_show();
     });
 
-    events::subscribe_once([this] (event_show_advisor ev) {
+    events::subscribe([this] (event_show_advisor ev) {
         if (!window_is(WINDOW_ADVISORS)) {
             return;
         }

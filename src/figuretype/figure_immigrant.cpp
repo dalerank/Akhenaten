@@ -8,8 +8,31 @@
 #include "grid/tiles.h"
 #include "city/city.h"
 #include "graphics/animation.h"
+#include "game/game_events.h"
+
+#include "js/js_game.h"
 
 figures::model_t<figure_immigrant> immigrant_m;
+
+void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
+    auto b = building_get(ev.bid);
+
+    tile2i entry = g_city.map.entry_point;
+    figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
+    f->advance_action(FIGURE_ACTION_1_IMMIGRANT_CREATED);
+    if (b) {
+        b->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
+    }
+
+    const int rand_ticks = b ? (b->map_random_7bit & 0x7f) : (rand() & 0x7f);
+    f->wait_ticks = 10 + rand_ticks;
+    f->migrant_num_people = ev.num_people;
+
+    auto imm = smart_cast<figure_immigrant>(f);
+    if (imm && b) {
+        imm->set_immigrant_home(ev.bid);
+    }
+}
 
 void figure_immigrant::on_destroy() {
     auto h = home();
@@ -80,7 +103,11 @@ void figure_immigrant::figure_action() {
     case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
         if (do_enterbuilding(false, home)) {
             building_house *house = home->dcast_house();
-            house->add_population(base.migrant_num_people);
+            if (house) {
+                house->add_population(base.migrant_num_people);
+            } else {
+                advance_action(ACTION_8_RECALCULATE);
+            }
         }
         //            is_ghost = in_building_wait_ticks ? 1 : 0;
         break;
@@ -123,20 +150,6 @@ sound_key figure_immigrant::phrase_key() const {
 
 const animations_t &figure_immigrant::anim() const {
     return immigrant_m.anim;
-}
-
-void figure_immigrant::create(building *house, int num_people) {
-    tile2i entry = g_city.map.entry_point;
-    figure* f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
-    f->advance_action(FIGURE_ACTION_1_IMMIGRANT_CREATED);
-    house->set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
-    f->wait_ticks = 10 + (house->map_random_7bit & 0x7f);
-    f->migrant_num_people = num_people;
-
-    auto imm = smart_cast<figure_immigrant>(f);
-    if (imm) {
-        imm->set_immigrant_home(house->id);
-    }
 }
 
 building* figure_immigrant::immigrant_home() {

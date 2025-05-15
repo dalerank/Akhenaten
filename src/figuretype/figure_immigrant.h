@@ -1,5 +1,12 @@
 #include "figure/figure.h"
 
+struct event_create_immigrant {
+    building_id bid;
+    int num_people;
+    pcstr src_location;
+    std::function<void()> payload;
+};
+
 class figure_immigrant : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_IMMIGRANT, figure_immigrant)
@@ -17,8 +24,6 @@ public:
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual const animations_t &anim() const override;
-
-    static void create(building *house, int num_people);
 
     building* immigrant_home();
 

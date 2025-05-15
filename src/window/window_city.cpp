@@ -212,7 +212,7 @@ void window_city_draw() {
 void window_city_init() {
     widget_sidebar_city_init();
 
-    events::subscribe_once([] (event_show_advisor ev) {
+    events::subscribe([] (event_show_advisor ev) {
         if (!window_is(WINDOW_CITY)) {
             return;
         }
@@ -220,12 +220,12 @@ void window_city_init() {
          window_advisors_show_advisor((e_advisor)ev.advisor);
     });
 
-    events::subscribe_once([] (event_set_bookmark ev) {
+    events::subscribe([] (event_set_bookmark ev) {
         tile2i center_p = city_view_get_center();
         g_city.bookmarks.set(ev.value - 1, center_p);
     });
 
-    events::subscribe_once([] (event_goto_bookmark ev) {
+    events::subscribe([] (event_goto_bookmark ev) {
         tile2i p = g_city.bookmarks.get(ev.value - 1);
         if (p.valid()) {
             vec2i screen = tile_to_screen(p);
@@ -233,7 +233,7 @@ void window_city_init() {
         }
     });
 
-    events::subscribe_once([] (event_toggle_legion ev) {
+    events::subscribe([] (event_toggle_legion ev) {
         cycle_legion();
     });
 }

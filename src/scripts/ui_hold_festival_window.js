@@ -1,7 +1,7 @@
 log_info("akhenaten: ui hold festival started")
 
 hold_festival_window = {
-    pos : [(sw(0) - px(34)) / 2 - 50, (sh(0) - px(20)) / 2 - 100],
+    pos : [(sw(0) - px(34)) / 2, (sh(0) - px(20)) / 2],
     ui : { 
         background_image: background({pack:PACK_UNLOADED, id:11}),
         background      : outer_panel({size: [34, 20]}),

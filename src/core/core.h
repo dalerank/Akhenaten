@@ -6,6 +6,10 @@
 #define ANK_CONFIG_CC1(a, b) ANK_CONFIG_CC0(a, b)
 #define ANK_CONFIG_PULL_VAR_NAME(func) ANK_CONFIG_CC1(config_pull_, func)
 
+#define STRINGIFY1(x) #x
+#define STRINGIFY2(x) STRINGIFY1(x)
+#define SOURCE_LOCATION __FILE__ ":" STRINGIFY2(__LINE__)
+
 template<typename Func>
 struct FuncLinkedList {
     FuncLinkedList(Func cb) : func(cb) {

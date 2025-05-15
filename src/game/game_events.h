@@ -14,21 +14,20 @@ namespace events {
 
     template<typename T>
     inline void subscribe(T subscriber) {
-        g_city_events.subscribe(subscriber);
-    }
-
-    template<typename T>
-    inline void subscribe_permanent(T subscriber) {
-        g_permanent_events.subscribe(subscriber);
-    }
-
-    template<typename T>
-    inline void subscribe_once(T subscriber) {
         if (g_city_events.contains(subscriber)) {
             return;
         }
 
         g_city_events.subscribe(subscriber);
+    }
+
+    template<typename T>
+    inline void subscribe_permanent(T subscriber) {
+        if (g_permanent_events.contains(subscriber)) {
+            return;
+        }
+
+        g_permanent_events.subscribe(subscriber);
     }
 
     template<typename T>

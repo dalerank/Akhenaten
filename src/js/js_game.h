@@ -52,3 +52,10 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 #define ANK_VARIABLE_N(a, name) a; \
     ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, name)
 
+#define ANK_PERMANENT_CALLBACK(event, a) \
+    tmp_register_permanent_callback_ ##event(); \
+    ANK_REGISTER_CONFIG_ITERATOR(register_permanent_callback_ ##event); \
+    void permanent_callback_ ##event(event a); \
+    void register_permanent_callback_ ##event() { events::subscribe_permanent(permanent_callback_ ##event); } \
+    void permanent_callback_ ##event(event a)
+    

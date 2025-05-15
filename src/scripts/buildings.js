@@ -1011,7 +1011,7 @@ building_reed_gatherer = {
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 }
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 }
-    work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19 }
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19, duration:4 }
   }
   output_resource : RESOURCE_REEDS
   building_size : 2
