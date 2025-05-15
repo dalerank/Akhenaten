@@ -28,8 +28,8 @@ struct advisor_population_graph {
     int y_axis_height, x_axis_width;
     vec2i y_axis_offset, x_axis_offset;
     int y_axis_label_w;
-    void reset() {}
-    void load(archive arch) {
+    void archive_unload() {}
+    void archive_load(archive arch) {
         y_axis_height = arch.r_int("y_axis_height");
         y_axis_offset = arch.r_vec2i("y_axis_offset");
         y_axis_label_w = arch.r_int("y_axis_label_w");
@@ -38,7 +38,7 @@ struct advisor_population_graph {
         x_axis_width = arch.r_int("x_axis_width");
     }
 
-    void init() {}
+    void archive_init() {}
 };
 
 advisor_population_graph ANK_VARIABLE(advisor_population_graph_census);

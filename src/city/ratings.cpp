@@ -43,15 +43,15 @@ struct rating_points {
     using points_t = svector<city_ratings_t::point, 32>;
     points_t points;
 
-    void clear() { points.clear(); }
+    void archive_unload() { points.clear(); }
     auto &emplace_back() { return points.emplace_back(); }
 
-    void load(city_ratings_t::point& step, archive arch) {
+    void archive_load(city_ratings_t::point& step, archive arch) {
         step.coverage = arch.r_int("coverage");
         step.points = arch.r_int("points");
     }
 
-    void init() {
+    void archive_init() {
         assert(!points.empty());
     }
 

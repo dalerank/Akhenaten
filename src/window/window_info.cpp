@@ -63,11 +63,13 @@ struct empty_info_window : public common_info_window {
     }
 };
 
-terrain_info_window g_terrain_info_window;
+terrain_info_window_t g_terrain_info_window;
 figure_info_window g_figure_info_window;
 building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
 ruin_info_window g_ruin_info_window;
+
+void window_info_show(const tile2i& point, bool avoid_mouse);
 
 ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
 void config_load_info_window() {
@@ -330,6 +332,13 @@ vec2i common_info_window::bgsize() const {
 void common_info_window::window_info_foreground(object_info &c) {
     ui.draw(); 
 }
+
+void common_info_window::register_handlers() {
+    events::subscribe([] (event_show_tile_info ev) {
+        window_info_show(ev.tile, ev.avoid_mouse);
+        });
+}
+
 
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();

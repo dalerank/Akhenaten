@@ -31,7 +31,7 @@ void bazaar_orders_window::init(object_info &c) {
     });
 
     ui["button_close"].onclick([grid_offset = c.grid_offset] {
-        window_info_show(tile2i(grid_offset), /*avoid_mouse*/true);
+        events::emit(event_show_tile_info{ tile2i(grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
     });
 }
 
@@ -77,7 +77,7 @@ int bazaar_orders_window::window_info_handle_mouse(const mouse *m, object_info &
     const hotkeys *h = hotkey_state();
     if (!result && input_go_back_requested(m, h)) {
         //storage_settings_backup_check();
-        window_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
+        events::emit(event_show_tile_info{ tile2i(c.grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
         return -1;
     }
 

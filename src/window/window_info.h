@@ -8,6 +8,8 @@
 struct object_info;
 struct tooltip_context;
 
+struct event_show_tile_info { tile2i tile; bool avoid_mouse; pcstr source_location; };
+
 struct common_info_window : public ui::widget {
     virtual pcstr section() const { return ""; }
     virtual bool check(object_info &c) { return false; }
@@ -25,9 +27,10 @@ struct common_info_window : public ui::widget {
     void draw_tooltip(tooltip_context *c);
 
     svector<xstring, 4> open_sounds;
+
+    static void register_handlers();
 };
 
-void window_info_show(const tile2i& point, bool avoid_mouse = false);
 int window_building_info_get_type();
 void window_building_info_show_storage_orders();
 void window_building_register_handler(common_info_window *handler);

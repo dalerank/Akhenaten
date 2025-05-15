@@ -26,15 +26,15 @@ struct overlay_menu_t {
 
     svector<overlay_submenu, 16> menus;
 
-    void clear() { menus.clear(); }
+    void archive_unload() { menus.clear(); }
     auto &emplace_back() { return menus.emplace_back(); }
   
-    void load(overlay_submenu& menu, archive arch) {
+    void archive_load(overlay_submenu& menu, archive arch) {
         menu.title = arch.r_string("title");
         arch.r_array_num<e_overlay>("ids", menu.ids);
     }
 
-    void init() {
+    void archive_init() {
         assert(!menus.empty() && "Overlay menu not loaded!");
     }
 };
@@ -180,12 +180,12 @@ void overlay_menu_widget::button_submenu_item(int index, int param2) {
 }
 
 void window_overlay_menu_show() {
-    window_type window = {
+    static window_type window = {
         WINDOW_OVERLAY_MENU,
         [] (int flags) { g_overlay_menu_widget.draw_background(flags); },
         [] (int flags) { g_overlay_menu_widget.ui_draw_foreground(flags); },
         [] (auto m, auto h) { g_overlay_menu_widget.ui_handle_mouse(m); },
     };
-    overlay_menu.init();
+    g_overlay_menu_widget.init();
     window_show(&window);
 }

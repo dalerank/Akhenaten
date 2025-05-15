@@ -6,6 +6,7 @@
 #include "input/input.h"
 #include "graphics/window.h"
 #include "building/common.h"
+#include "game/game_events.h"
 #include "window/building/distribution.h"
 
 struct dock_info_window : public building_info_window_t<dock_info_window> {
@@ -72,7 +73,7 @@ void dock_orders_window::init(object_info &c) {
     });
 
     ui["button_close"].onclick([grid_offset = c.grid_offset] {
-        window_info_show(tile2i(grid_offset), /*avoid_mouse*/true);
+        events::emit(event_show_tile_info{ tile2i(grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
     });
 }
 
@@ -122,7 +123,7 @@ int dock_orders_window::window_info_handle_mouse(const mouse *m, object_info &c)
 
     const hotkeys *h = hotkey_state();
     if (!result && input_go_back_requested(m, h)) {
-        window_info_show(tile2i(c.grid_offset), /*avoid_mouse*/true);
+        events::emit(event_show_tile_info{ tile2i(c.grid_offset), /*avoid_mouse*/true, SOURCE_LOCATION });
         return -1;
     }
 

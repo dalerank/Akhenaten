@@ -685,7 +685,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
         if (type == BUILDING_NONE && allow_building_info(tile)) {
             scroll_drag_end();
             capture_input = false;
-            window_info_show(tile);
+            events::emit(event_show_tile_info{ tile, false, SOURCE_LOCATION });
             return;
         }
     }
@@ -886,7 +886,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
             g_city_planner.construction_cancel();
         } else {
             if (allow_building_info(current_tile)) {
-                window_info_show(current_tile);
+                events::emit(event_show_tile_info{ current_tile, false, SOURCE_LOCATION });
             }
         }
     }

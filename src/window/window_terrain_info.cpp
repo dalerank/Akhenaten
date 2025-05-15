@@ -32,11 +32,11 @@ void window_building_draw_wall(object_info& c) {
     ui["describe"] = ui::str(139, 1);
 }
 
-void terrain_info_window::window_info_background(object_info &c) {
+void terrain_info_window_t::window_info_background(object_info &c) {
     update_buttons(c);
 }
 
-void terrain_info_window::init(object_info &c) {
+void terrain_info_window_t::init(object_info &c) {
     common_info_window::init(c);
 
     textid reason;
@@ -119,7 +119,7 @@ void terrain_info_window::init(object_info &c) {
 //    }
 //}
 
-bool terrain_info_window::check(object_info &c) {
+bool terrain_info_window_t::check(object_info &c) {
     tile2i tile(c.grid_offset);
     if (!c.building_id && map_sprite_animation_at(c.grid_offset) > 0) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {

@@ -79,6 +79,7 @@ void city_t::init() {
     g_debug.init();
     g_city_planner.init();
     bookmarks.reset();
+    common_info_window::register_handlers();
 }
 
 void city_t::update_day() {

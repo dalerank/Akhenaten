@@ -30,15 +30,15 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
 
 #define ANK_REGISTER_CONFIG_OBJECT_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.reset(); const bool ok = g_config_arch.r_section(name, [] (archive arch) { a.load(arch); }); assert(ok && "Variable not exist in config:" name); a.init(); }
+    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(name, [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" name); a.archive_init(); }
 
 #define ANK_REGISTER_CONFIG_ARRAY_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.clear(); g_config_arch.r_array(name, [] (archive arch) { auto &it = a.emplace_back(); a.load(it, arch); }); a.init(); }
+    void config_load_ ## a() { a.archive_unload(); g_config_arch.r_array(name, [] (archive arch) { auto &it = a.emplace_back(); a.archive_load(it, arch); }); a.archive_init(); }
 
 #define ANK_REGISTER_CONFIG_OBJECTS_VARIABLE(a, name) \
     ANK_REGISTER_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.reset(); g_config_arch.r_objects(name, [] (archive arch) { a.load(arch); }); a.init(); }
+    void config_load_ ## a() { a.archive_unload(); g_config_arch.r_objects(name, [] (archive arch) { a.archive_load(arch); }); a.archive_init(); }
 
 #define ANK_ARRAY_VARIABLE(a) a; \
     ANK_REGISTER_CONFIG_ARRAY_VARIABLE(a, #a)

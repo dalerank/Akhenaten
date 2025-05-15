@@ -2,7 +2,7 @@
 
 #include "window_info.h"
 
-struct terrain_info_window : public common_info_window {
+struct terrain_info_window_t : public common_info_window {
     using widget::load;
     virtual void load(archive arch, pcstr section) override {
         common_info_window::load(arch, section);
