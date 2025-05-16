@@ -224,7 +224,7 @@ void city_population_t::evict_overcrowded() {
         }
 
         int num_people_to_evict = -population_room;
-        figure_homeless::create(house->tile(), num_people_to_evict);
+        events::emit(event_create_homeless{ house->tile(), num_people_to_evict, SOURCE_LOCATION });
         if (num_people_to_evict < house->house_population()) {
             house->runtime_data().population -= num_people_to_evict;
         } else {

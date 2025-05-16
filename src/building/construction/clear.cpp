@@ -103,7 +103,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
 
                 auto house = b->dcast_house();
                 if (house && house->house_population() > 0 && !measure_only) {
-                    figure_homeless::create(b->tile, house->house_population());
+                    events::emit(event_create_homeless{ b->tile, house->house_population(), SOURCE_LOCATION });
                     house->runtime_data().population = 0;
                 }
 

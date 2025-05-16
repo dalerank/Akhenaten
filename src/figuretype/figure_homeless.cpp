@@ -9,15 +9,17 @@
 #include "building/building.h"
 #include "building/building_house.h"
 #include "city/city_population.h"
+#include "game/game_events.h"
+#include "js/js_game.h"
 
 figures::model_t<figure_homeless> homeless_m;
 
-void figure_homeless::create(tile2i tile, int num_people) {
-    figure* f = figure_create(FIGURE_HOMELESS, tile, DIR_0_TOP_RIGHT);
+void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
+    figure *f = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT);
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->wait_ticks = 0;
-    f->migrant_num_people = num_people;
-    g_city.population.remove_homeless(num_people);
+    f->migrant_num_people = ev.num_people;
+    g_city.population.remove_homeless(ev.num_people);
 }
 
 int figure_homeless::find_closest_house_with_room(tile2i tile) {

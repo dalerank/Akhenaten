@@ -2,6 +2,8 @@
 
 #include "figure/figure.h"
 
+struct event_create_homeless { tile2i tile; int num_people; pcstr location; };
+
 class figure_homeless : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_HOMELESS, figure_homeless)
@@ -12,9 +14,6 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_roaming_action() override { /*nothing*/ }
     virtual figure_phrase_t phrase() const override { return {FIGURE_HOMELESS, "homeless"}; }
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     int find_closest_house_with_room(tile2i tile);
-    static void create(tile2i tile, int num_people);
-    //virtual sound_key phrase_key() const override;
 };

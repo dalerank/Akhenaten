@@ -123,7 +123,7 @@ void city_maintenance_t::check_kingdome_access() {
                 housed.unreachable_ticks++;
                 if (housed.unreachable_ticks > 4) {
                     if (housed.population > 0) {
-                        figure_homeless::create(b.tile, housed.population);
+                        events::emit(event_create_homeless{ b.tile, housed.population, SOURCE_LOCATION });
                         housed.population = 0;
                         housed.unreachable_ticks = 0;
                     }
