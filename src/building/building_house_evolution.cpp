@@ -20,6 +20,7 @@ void building_house::determine_evolve_text() {
     // this house will devolve soon because...
 
     const model_house& model = model_get_house(level);
+    housed.evolve_text = "";
     // desirability
     if (base.desirability <= model.devolve_desirability) {
         housed.evolve_text = "#house_low_desirabilty";

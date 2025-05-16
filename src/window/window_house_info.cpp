@@ -81,7 +81,7 @@ void info_window_house::init(object_info &c) {
     house->determine_evolve_text();
 
     auto &housed = house->runtime_data();
-    if (housed.worst_desirability_building_id > 0) { // is about to devolve
+    if (housed.evolve_text.empty() && housed.worst_desirability_building_id > 0) { // is about to devolve
         bstring512 text;
         text.printf("%s @Y%s&) %s",
             lang_text_from_key("#house_nearby_building"),

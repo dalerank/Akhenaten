@@ -469,7 +469,7 @@ void city_resources_t::consume_food() {
     g_city.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     buildings_house_do([&] (building_house *house) {
-        if (house->hsize()) {
+        if (!house->hsize()) {
             return;
         }
 
