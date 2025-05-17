@@ -138,11 +138,11 @@ void city_religion_t::calc_coverage() {
     coverage[GOD_SETH] = std::min(calc_percentage(pop, god_coverage_total(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH)), 100);
     coverage[GOD_BAST] = std::min(calc_percentage(pop, god_coverage_total(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST)), 100);
 
-    coverage_common = coverage[GOD_OSIRIS] + coverage[GOD_RA]
+    int result = coverage[GOD_OSIRIS] + coverage[GOD_RA]
                         + coverage[GOD_PTAH] + coverage[GOD_SETH]
                         + coverage[GOD_BAST];
 
-    coverage_common /= known_gods_num;
+    coverage_common = (result / known_gods_num);
 }
 
 city_religion_t::god_states city_religion_t::known_gods() {
