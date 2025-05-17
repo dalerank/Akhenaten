@@ -183,7 +183,7 @@ struct city_t {
     void house_process_evolve();
 
     const city_overlay *overlay();
-    inline bool overlay_is(e_overlay o) const { return current_overlay == 0; }
+    inline bool overlay_is(e_overlay o) const { return current_overlay == o; }
     void set_overlay(e_overlay o);
     void toggle_overlay();
     void reset_overlay();

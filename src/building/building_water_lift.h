@@ -22,7 +22,7 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void update_day() override;
-    virtual int animation_speed(int speed) const;
+    virtual int animation_speed(int speed) const override;
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_CRIME; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POLICE; }
