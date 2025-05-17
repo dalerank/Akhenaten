@@ -83,7 +83,7 @@ int ui::advisor_imperial_window::draw_background(UiFlags flags) {
 
     ui["donate_to_city"].onclick([] { window_donate_to_city_show(); });
     ui["salary_rank"].onclick([] { window_set_salary_show(); });
-    ui["send_gift"].onclick([] { window_gift_to_kingdome_show(); });
+    ui["send_gift"].onclick([] { ui::gift_to_kingdome_window::show(); });
 
     return 0;
 }

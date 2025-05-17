@@ -309,12 +309,13 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
     const bool alignleft = !!(flags & UiFlags_AlignLeft);
     const bool readonly = !!(flags & UiFlags_Readonly);
     const bool small_panel = !!(flags & UiFlags_PanelSmall);
+    const bool selected = !!(flags & UiFlags_Selected);
 
     const vec2i offset = g_state.offset();
 
     g_state.buttons.push_back(generic_button{ pos.x, pos.y, size.x + 4, size.y + 4, button_none, button_none, 0, 0 });
     generic_button &gbutton = g_state.buttons.back().g_button;
-    gbutton.hovered = is_button_hover(gbutton, offset) && !readonly;
+    gbutton.hovered = (is_button_hover(gbutton, offset) || selected) && !readonly;
     gbutton.clip = graphics_clip_rectangle();
 
     if (small_panel) {
@@ -1115,7 +1116,8 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | ((darkened == 1) ? UiFlags_Darkened : UiFlags_None)
                       | (!_border ? UiFlags_NoBorder : UiFlags_None)
                       | (!_hbody ? UiFlags_NoBody : UiFlags_None)
-                      | (_split ? UiFlags_SplitText : UiFlags_None);
+                      | (_split ? UiFlags_SplitText : UiFlags_None)
+                      | (_selected ? UiFlags_Selected : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {

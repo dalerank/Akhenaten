@@ -23,7 +23,6 @@ struct kingdome_gift {
 
 struct kingdome_relation_t {
     kingdome_gift gifts[3];
-    int32_t selected_gift_size;
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
@@ -49,18 +48,17 @@ struct kingdome_relation_t {
     } invasion;
 
     void init_scenario(int rank, int load_type);
-    void init_selected_gift();
     void init_donation_amount();
     const kingdome_gift* get_gift(int size) { return &gifts[size]; }
     int can_send_gift(int size);
     void calculate_gift_costs();
-    void send_gift();
+    void send_gift(int gift_size);
     int salary_for_rank(int rank);
     void set_salary_rank(int rank);
     void update_debt_state();
     void process_invasion();
     void update();
-    bool set_gift_size(int size);
+    int get_gift_cost(int size);
     void set_donation_amount(int amount);
     void change_donation_amount(int change);
     void donate_savings_to_city();

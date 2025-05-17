@@ -35,6 +35,7 @@ autoconfig_window::autoconfig_window(pcstr s) {
 
 void autoconfig_window::load(archive arch, pcstr section) {
     ui::widget::load(arch, section);
+    assert(elements.size() > 0);
     _is_inited = false;
 }
 

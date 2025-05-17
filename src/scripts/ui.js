@@ -52,21 +52,21 @@ trade_prices_window = {
 advisors_window = {
     ui : {
         background      : { type : "image", pack:PACK_UNLOADED, id:11, pos : {x:sw(-1024)/2, y:sh(-768)/2}  },
-        layout              : { type : "image", pack:PACK_GENERAL, id:160, pos : {x:sw(-640)/2, y:sh(400)/2}    },
-        labor_btn           : { type : "image_button", pos: {x:sw(-640)/2 + 12, y:sh(418)/2}, size:[33, 32], pack:PACK_GENERAL, id:159, offset:0 },
+        layout          : { type : "image", pack:PACK_GENERAL, id:160, pos : {x:sw(-640)/2, y:sh(400)/2}    },
+        labor_btn       : { type : "image_button", pos: {x:sw(-640)/2 + 12, y:sh(418)/2}, size:[33, 32], pack:PACK_GENERAL, id:159, offset:0 },
         military_btn    : { type : "image_button", pos: {x:sw(-640)/2 + 52, y:sh(418)/2}, size:[39, 32], pack:PACK_GENERAL, id:159, offset:4 },
         imperial_btn    : { type : "image_button", pos: {x:sw(-640)/2 + 96, y:sh(418)/2}, size:[34, 32], pack:PACK_GENERAL, id:159, offset:8 },
         ratings_btn     : { type : "image_button", pos: {x:sw(-640)/2 + 135, y:sh(418)/2}, size:[38, 32], pack:PACK_GENERAL, id:159, offset:12 },
         trade_btn       : { type : "image_button", pos: {x:sw(-640)/2 + 178, y:sh(418)/2}, size:[46, 32], pack:PACK_GENERAL, id:159, offset:16 },
-        population_btn: { type : "image_button", pos: {x:sw(-640)/2 + 229, y:sh(418)/2}, size:[48, 32], pack:PACK_GENERAL, id:159, offset:20 },
-        health_btn    : { type : "image_button", pos: {x:sw(-640)/2 + 282, y:sh(418)/2}, size:[35, 32], pack:PACK_GENERAL, id:159, offset:24 },
-        education_btn : { type : "image_button", pos: {x:sw(-640)/2 + 322, y:sh(418)/2}, size:[38, 32], pack:PACK_GENERAL, id:159, offset:28 },
+        population_btn  : { type : "image_button", pos: {x:sw(-640)/2 + 229, y:sh(418)/2}, size:[48, 32], pack:PACK_GENERAL, id:159, offset:20 },
+        health_btn      : { type : "image_button", pos: {x:sw(-640)/2 + 282, y:sh(418)/2}, size:[35, 32], pack:PACK_GENERAL, id:159, offset:24 },
+        education_btn   : { type : "image_button", pos: {x:sw(-640)/2 + 322, y:sh(418)/2}, size:[38, 32], pack:PACK_GENERAL, id:159, offset:28 },
         entertainment_btn: { type : "image_button", pos: {x:sw(-640)/2 + 363, y:sh(418)/2}, size:[39, 32], pack:PACK_GENERAL, id:159, offset:32 },
-        religion_btn  : { type : "image_button", pos: {x:sw(-640)/2 + 406, y:sh(418)/2}, size:[35, 32], pack:PACK_GENERAL, id:159, offset:36 },
-        financial_btn : { type : "image_button", pos: {x:sw(-640)/2 + 445, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:40 },
-        chief_btn     : { type : "image_button", pos: {x:sw(-640)/2 + 490, y:sh(418)/2}, size:[46, 32], pack:PACK_GENERAL, id:159, offset:44 },
-        monuments_btn : { type : "image_button", pos: {x:sw(-640)/2 + 542, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:48 },
-        back_btn      : { type : "image_button", pos: {x:sw(-640)/2 + 588, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:52 },
+        religion_btn    : { type : "image_button", pos: {x:sw(-640)/2 + 406, y:sh(418)/2}, size:[35, 32], pack:PACK_GENERAL, id:159, offset:36 },
+        financial_btn   : { type : "image_button", pos: {x:sw(-640)/2 + 445, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:40 },
+        chief_btn       : { type : "image_button", pos: {x:sw(-640)/2 + 490, y:sh(418)/2}, size:[46, 32], pack:PACK_GENERAL, id:159, offset:44 },
+        monuments_btn   : { type : "image_button", pos: {x:sw(-640)/2 + 542, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:48 },
+        back_btn        : { type : "image_button", pos: {x:sw(-640)/2 + 588, y:sh(418)/2}, size:[40, 32], pack:PACK_GENERAL, id:159, offset:52 },
     }
 }
 
@@ -104,7 +104,7 @@ advisor_imperial_window = {
         rating_label : label({pos:[460, 24]}),
         rating_advice : multiline({pos:[60, 46], wrap: 500}),
         inner_panel  : inner_panel({pos:[32, 90], size:[36, 14] }),
-      button_request : dummy({pos:[38, 96], size:[562, 45], 
+        button_request : dummy({pos:[38, 96], size:[562, 45], 
             ui : {
                 button_request_icon   : dummy({pos:[7, 7]}),
                 button_request_amount : dummy({pos:[30, 7], font: FONT_NORMAL_WHITE_ON_DARK}),
@@ -121,8 +121,8 @@ advisor_imperial_window = {
         donate_to_city : button({pos:[320, 335], size:[250, 24], text:{group:52, id:2}, tooltip:[68, 96] }),
         salary_rank  : button({pos:[70, 393], size:[500, 24], tooltip:[68, 97] }),
         big_text     : text_center({pos:[60, 295], size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-    top_text     : text_center({pos:[504, 130], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
-    bot_text     : text_center({pos:[504, 230], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+        top_text     : text_center({pos:[504, 130], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
+        bot_text     : text_center({pos:[504, 230], size:[100, 20], font:FONT_NORMAL_BLACK_ON_LIGHT}),
     },
 }
 
@@ -131,37 +131,37 @@ advisor_health_window = {
         background   : outer_panel({size:[40, 18]}),
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:6, pos:[10, 10] }),
         title        : header({pos:[60, 17], text:{group:56, id:0}}),
-        city_health  : multiline({pos:[60, 46], wrap:512, font: FONT_NORMAL_BLACK_ON_LIGHT}),
+         city_health  : multiline({pos:[60, 46], wrap:512, font: FONT_NORMAL_BLACK_ON_LIGHT}),
 
         working      : label({text:[56, 3], pos:[180, 94], font:FONT_SMALL_PLAIN}),
-    care_for     : label({text:[56, 4], pos:[290, 94], font:FONT_SMALL_PLAIN}),
-    city_coverage: text_center({text:[56, 5], pos:[440, 94], size:[160, 20], font:FONT_SMALL_PLAIN}),
+        care_for     : label({text:[56, 4], pos:[290, 94], font:FONT_SMALL_PLAIN}),
+        city_coverage: text_center({text:[56, 5], pos:[440, 94], size:[160, 20], font:FONT_SMALL_PLAIN}),
 
-    inner_panel  : inner_panel({pos:[32, 108], size:[36, 5],
-        ui : {
-            physicians_total : label({pos:[15, 6], font:FONT_NORMAL_BLACK_ON_DARK}),
-            physicians_active: text_center({pos:[160, 6], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
-            physicians_care  : text_center({pos:[290, 6], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
-            physicians_covg  : text_center({pos:[440, 6], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+        inner_panel  : inner_panel({pos:[32, 108], size:[36, 5],
+            ui : {
+                physicians_total : label({pos:[15, 6], font:FONT_NORMAL_BLACK_ON_DARK}),
+                physicians_active: text_center({pos:[160, 6], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
+                physicians_care  : text_center({pos:[290, 6], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                physicians_covg  : text_center({pos:[440, 6], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
 
-            dentist_total    : label({pos:[15, 24], font:FONT_NORMAL_BLACK_ON_DARK}),
-            dentist_active   : text_center({pos:[160, 24], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
-            dentist_care     : text_center({pos:[290, 24], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
-            dentist_covg     : text_center({pos:[440, 24], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                dentist_total    : label({pos:[15, 24], font:FONT_NORMAL_BLACK_ON_DARK}),
+                dentist_active   : text_center({pos:[160, 24], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
+                dentist_care     : text_center({pos:[290, 24], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                dentist_covg     : text_center({pos:[440, 24], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
 
-            apothecary_total  : label({pos:[15, 42], font:FONT_NORMAL_BLACK_ON_DARK}),
-            apothecary_active : text_center({pos:[160, 42], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
-            apothecary_care   : text_center({pos:[290, 42], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
-            apothecary_covg   : text_center({pos:[440, 42], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                apothecary_total  : label({pos:[15, 42], font:FONT_NORMAL_BLACK_ON_DARK}),
+                apothecary_active : text_center({pos:[160, 42], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
+                apothecary_care   : text_center({pos:[290, 42], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                apothecary_covg   : text_center({pos:[440, 42], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
 
-            mortuary_total   : label({pos:[15, 60], font:FONT_NORMAL_BLACK_ON_DARK}),
-            mortuary_active  : text_center({pos:[160, 60], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
-            mortuary_care    : text_center({pos:[290, 60], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
-            mortuary_covg    : text_center({pos:[440, 60], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
-        }
-    }),
+                mortuary_total   : label({pos:[15, 60], font:FONT_NORMAL_BLACK_ON_DARK}),
+                mortuary_active  : text_center({pos:[160, 60], size:[40, 20], font:FONT_NORMAL_BLACK_ON_DARK}),
+                mortuary_care    : text_center({pos:[290, 60], size:[40, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+                mortuary_covg    : text_center({pos:[440, 60], size:[60, 20], text:[56, 2], font:FONT_NORMAL_BLACK_ON_DARK}),
+            }
+        }),
 
-    health_advice : multiline({pos:[60, 198], wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
+        health_advice : multiline({pos:[60, 198], wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 
@@ -232,6 +232,7 @@ window_dinasty_menu = {
 window_mission_end = {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
     ui : {
+        dummy : dummy({})
     }
 }
 
@@ -1406,6 +1407,9 @@ window_warnings = {
     timeout_ms : 15000,
     top_offset : 30,
     message_interval : 25,
+    ui : {
+        dummy : dummy({})
+    }
 }
 
 info_window_education = {

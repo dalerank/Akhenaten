@@ -344,11 +344,13 @@ struct egeneric_button : public elabel {
     uint8_t _border;
     bool _hbody;
     bool _split;
+    bool _selected = false;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive arch, element *parent, items &elems) override;
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
     virtual void tooltip(const xstring &t) override { _tooltip = t; }
+    virtual void select(bool v) override { _selected = v; }
 
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
     virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }

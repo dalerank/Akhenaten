@@ -31,6 +31,7 @@ import ui_advisor_entertainment
 import ui_advisor_population
 import building_menu
 import desirability
+import ui_send_gift_window
 
 include(":floodplain.js")
 include(":ui.js")

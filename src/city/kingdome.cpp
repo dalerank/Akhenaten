@@ -190,21 +190,8 @@ void kingdome_relation_t::update() {
     //}
 }
 
-void kingdome_relation_t::init_selected_gift() {
-    if (selected_gift_size == GIFT_LAVISH && !g_city.kingdome.can_send_gift(GIFT_LAVISH))
-        selected_gift_size = GIFT_GENEROUS;
-
-    if (selected_gift_size == GIFT_GENEROUS && !g_city.kingdome.can_send_gift(GIFT_GENEROUS))
-        selected_gift_size = GIFT_MODEST;
-}
-
-bool kingdome_relation_t::set_gift_size(int size) {
-    if (gifts[size].cost <= personal_savings) {
-        selected_gift_size = size;
-        return 1;
-    } else {
-        return 0;
-    }
+int kingdome_relation_t::get_gift_cost(int size) {
+    return gifts[size].cost;
 }
 
 int kingdome_relation_t::can_send_gift(int size) {
@@ -218,57 +205,56 @@ void kingdome_relation_t::calculate_gift_costs() {
     gifts[GIFT_LAVISH].cost = savings / 2 + 100;
 }
 
-void kingdome_relation_t::send_gift() {
-    int size = selected_gift_size;
-    if (size < GIFT_MODEST || size > GIFT_LAVISH)
+void kingdome_relation_t::send_gift(int gift_size) {
+    if (gift_size < GIFT_MODEST || gift_size > GIFT_LAVISH)
         return;
 
-    int cost = gifts[size].cost;
+    int cost = gifts[gift_size].cost;
     if (cost > personal_savings)
         return;
 
     if (gift_overdose_penalty <= 0) {
         gift_overdose_penalty = 1;
-        if (size == GIFT_MODEST)
+        if (gift_size == GIFT_MODEST)
             g_city.ratings.change_kingdom(3);
-        else if (size == GIFT_GENEROUS)
+        else if (gift_size == GIFT_GENEROUS)
             g_city.ratings.change_kingdom(5);
-        else if (size == GIFT_LAVISH)
+        else if (gift_size == GIFT_LAVISH)
             g_city.ratings.change_kingdom(10);
 
     } else if (gift_overdose_penalty == 1) {
         gift_overdose_penalty = 2;
-        if (size == GIFT_MODEST)
+        if (gift_size == GIFT_MODEST)
             g_city.ratings.change_kingdom(1);
-        else if (size == GIFT_GENEROUS)
+        else if (gift_size == GIFT_GENEROUS)
             g_city.ratings.change_kingdom(3);
-        else if (size == GIFT_LAVISH)
+        else if (gift_size == GIFT_LAVISH)
             g_city.ratings.change_kingdom(5);
 
     } else if (gift_overdose_penalty == 2) {
         gift_overdose_penalty = 3;
-        if (size == GIFT_MODEST)
+        if (gift_size == GIFT_MODEST)
             g_city.ratings.change_kingdom(0);
-        else if (size == GIFT_GENEROUS)
+        else if (gift_size == GIFT_GENEROUS)
             g_city.ratings.change_kingdom(1);
-        else if (size == GIFT_LAVISH)
+        else if (gift_size == GIFT_LAVISH)
             g_city.ratings.change_kingdom(3);
 
     } else if (gift_overdose_penalty == 3) {
         gift_overdose_penalty = 4;
-        if (size == GIFT_MODEST)
+        if (gift_size == GIFT_MODEST)
             g_city.ratings.change_kingdom(0);
-        else if (size == GIFT_GENEROUS)
+        else if (gift_size == GIFT_GENEROUS)
             g_city.ratings.change_kingdom(0);
-        else if (size == GIFT_LAVISH)
+        else if (gift_size == GIFT_LAVISH)
             g_city.ratings.change_kingdom(1);
     }
 
     months_since_gift = 0;
     // rotate gift type
-    gifts[size].id++;
-    if (gifts[size].id >= 4)
-        gifts[size].id = 0;
+    gifts[gift_size].id++;
+    if (gifts[gift_size].id >= 4)
+        gifts[gift_size].id = 0;
 
     personal_savings -= cost;
 }

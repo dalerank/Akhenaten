@@ -336,7 +336,7 @@ void common_info_window::window_info_foreground(object_info &c) {
 void common_info_window::register_handlers() {
     events::subscribe([] (event_show_tile_info ev) {
         window_info_show(ev.tile, ev.avoid_mouse);
-        });
+    });
 }
 
 

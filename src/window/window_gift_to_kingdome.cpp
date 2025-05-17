@@ -15,93 +15,113 @@
 #include "window/advisors.h"
 #include "game/game.h"
 
-static void button_set_gift(int gift_id, int param2);
-static void button_send_gift(int param1, int param2);
+ui::gift_to_kingdome_window g_gift_to_kingdome_window;
 
-static void window_gift_to_kingdome_init(void) {
-    g_city.kingdome.init_selected_gift();
-}
+void ui::gift_to_kingdome_window::init() {
+    autoconfig_window::init();
 
-static void window_gift_to_kingdome_draw_background(int) {
-    ui::begin_widget(screen_dialog_offset());
-    ui::panel({96, 144}, {30, 15}, UiFlags_PanelOuter);
-    ui::panel({112, 208}, {28, 5}, UiFlags_PanelInner);
-
-    ui::icon(vec2i{112, 160}, RESOURCE_DEBEN);
-
-    ui::label(ui::str(52, 69), {144, 160}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 462);
-    ui::label(bstring128().printf("%s %d %s", ui::str(52, 50), g_city.kingdome.months_since_gift, ui::str(8, 4)),
-                                  {144, 304}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 46);
-
-    if (!g_city.kingdome.can_send_gift(GIFT_MODEST)) {
-        ui::label(ui::str(52, 70), vec2i{160, 224}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 352);  
-    } else {
-        ui::button(ui::str(52, 66 + g_city.kingdome.selected_gift_size), {118, 336}, {260, 20})
-            .onclick([] (int, int) {
-            button_send_gift(2, 0);
-        });
+    if (selected_gift_size == GIFT_LAVISH && !g_city.kingdome.can_send_gift(GIFT_LAVISH)) {
+        selected_gift_size = GIFT_GENEROUS;
     }
+
+    if (selected_gift_size == GIFT_GENEROUS && !g_city.kingdome.can_send_gift(GIFT_GENEROUS)) {
+        selected_gift_size = GIFT_MODEST;
+    }
+
+    ui["button_close"].onclick([] { window_go_back(); });
 
     if (g_city.kingdome.can_send_gift(GIFT_MODEST)) {
-        const auto* gift = g_city.kingdome.get_gift(GIFT_MODEST);
-        ui::label(ui::str(52, 63), {128, 218}, FONT_NORMAL_WHITE_ON_DARK);
-        ui::link(bstring128().printf("%s (%d db)", ui::str(52, 51 + gift->id), gift->cost), {224, 218}, {300, 20})
-            .onclick([] (int, int) {
-                button_send_gift(0, 0);
-            });
+        const auto *gift = g_city.kingdome.get_gift(GIFT_MODEST);
+        ui["link_modest"] = bstring128().printf("%s (%d db)", ui::str(52, 51 + gift->id), gift->cost);
+        ui["link_modest"].onclick([this] { select_link(GIFT_MODEST); });
     }
 
-    if (g_city.kingdome.can_send_gift(GIFT_GENEROUS)) {
-        const auto* gift = g_city.kingdome.get_gift(GIFT_GENEROUS);
-        ui::label(ui::str(52, 64), {128, 238}, FONT_NORMAL_WHITE_ON_DARK);
-        ui::link(bstring128().printf("%s (%d db)", ui::str(52, 55 + gift->id), gift->cost), {224, 238}, {300, 20})
-            .onclick([] (int, int) {
-                button_send_gift(2, 0);
-            });
-    }
+    const bool can_send_gift = g_city.kingdome.can_send_gift(GIFT_MODEST);
+    if (!can_send_gift) {
+        ui.label(ui::str(52, 70), vec2i{ 160, 224 }, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 352); \
+    } 
 
-    if (g_city.kingdome.can_send_gift(GIFT_LAVISH)) {
-        const auto* gift = g_city.kingdome.get_gift(GIFT_LAVISH);
-        ui::label(ui::str(52, 65), {128, 258}, FONT_NORMAL_WHITE_ON_DARK);
-        ui::link(bstring128().printf("%s (%d db)", ui::str(52, 59 + gift->id), gift->cost), {224, 258}, {300, 20})
-            .onclick([] (int, int) {
-                button_send_gift(3, 0);
-            });
-    }
-
-    ui::button(ui::str(13, 4), {400, 336}, {160, 20})
-        .onclick([] (int, int) {
+    ui["send_gift"].readonly = !can_send_gift;
+    ui["send_gift"].onclick([this] {
+        if (g_city.kingdome.can_send_gift(selected_gift_size)) {
+            g_city.kingdome.send_gift(selected_gift_size);
             window_advisors_show();
-        });
-    ui::end_widget();
+        }
+    });
+
+    const bool can_send_gen_gift = g_city.kingdome.can_send_gift(GIFT_GENEROUS);
+    if (can_send_gen_gift) {        
+        const auto *gift = g_city.kingdome.get_gift(GIFT_GENEROUS);
+        ui["link_generous"] = bstring128().printf("%s (%d db)", ui::str(52, 55 + gift->id), gift->cost);
+        ui["link_generous"].onclick([this] { select_link(GIFT_GENEROUS); });
+    }
+
+    const bool can_send_lavish_gift = g_city.kingdome.can_send_gift(GIFT_LAVISH);
+    if (can_send_lavish_gift) {
+        const auto *gift = g_city.kingdome.get_gift(GIFT_LAVISH);
+        ui["link_lavish"] = bstring128().printf("%s (%d db)", ui::str(52, 59 + gift->id), gift->cost);
+        ui["link_lavish"].onclick([this] { select_link(GIFT_LAVISH); });
+    }
+
+    ui["lb_modest"].enabled = can_send_gift;
+    ui["lb_generous"].enabled = can_send_gift;
+    ui["lb_lavish"].enabled = can_send_gift;
+
+    ui["link_modest"].enabled = can_send_gift;
+    ui["link_generous"].enabled = can_send_gift;
+    ui["link_generous"].readonly = can_send_gen_gift;
+    ui["link_lavish"].enabled = can_send_gift;
+    ui["link_lavish"].readonly = can_send_lavish_gift;
 }
 
-static void window_gift_to_kingdome_handle_input(const mouse* m, const hotkeys* h) {
-    bool button_id = ui::handle_mouse(m);
+void ui::gift_to_kingdome_window::select_link(int new_gift) {
+    selected_gift_size = new_gift;
+    constexpr pcstr links[] = { "link_modest", "link_generous", "link_lavish" };
+    for (const auto n: links) {
+        ui[n].select(false);
+    }
 
+    const pcstr selected = links[selected_gift_size];
+    ui[selected].select(true);
+}
+
+bool ui::gift_to_kingdome_window::can_buy_gift(int size) {
+    if (g_city.kingdome.get_gift_cost(size) <= g_city.kingdome.personal_savings) {
+        selected_gift_size = size;
+        return true;
+    }
+
+    return false;
+}
+
+int ui::gift_to_kingdome_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+
+    ui["send_gift"] = ui::str(52, 66 + selected_gift_size);
+    ui.format_all(&g_city);
+
+    return 0;
+}
+
+int ui::gift_to_kingdome_window::ui_handle_mouse(const mouse* m) {
+    autoconfig_window::ui_handle_mouse(m);
+
+    const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
-        window_advisors_show();
+
+        window_go_back();
     }
+
+    return 0;
 }
 
-static void button_set_gift(int gift_id, int param2) {
-    g_city.kingdome.set_gift_size(gift_id - 1);
-}
-
-static void button_send_gift(int param1, int param2) {
-    if (g_city.kingdome.can_send_gift(GIFT_MODEST)) {
-        g_city.kingdome.send_gift();
-        window_advisors_show();
-    }
-}
-
-void window_gift_to_kingdome_show(void) {
+void ui::gift_to_kingdome_window::show() {
     static window_type window = {
         WINDOW_GIFT_TO_EMPEROR,
-        window_gift_to_kingdome_draw_background,
-        [] (int) {},
-        window_gift_to_kingdome_handle_input
+        [] (int flags) { g_gift_to_kingdome_window.draw_background(flags); },
+        [] (int flags) { g_gift_to_kingdome_window.ui_draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { g_gift_to_kingdome_window.ui_handle_mouse(m); },
     };
-    window_gift_to_kingdome_init();
+    g_gift_to_kingdome_window.init();
     window_show(&window);
 }

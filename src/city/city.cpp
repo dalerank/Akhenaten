@@ -1092,7 +1092,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < 4; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_446c[i]);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.selected_gift_size);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_since_gift); // ok
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gift_overdose_penalty);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4488);
@@ -1358,6 +1358,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().city, "workers_employed", [] (const xstring&) { return bvariant(g_city.labor.workers_employed); }},
         { tags().city, "workers_unemployed", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed); }},
         { tags().city, "unemployment_percentage", [] (const xstring&) { return bvariant(g_city.labor.unemployment_percentage); }},
+        { tags().city, "months_since_gift", [] (const xstring&) { return bvariant(g_city.kingdome.months_since_gift); }},
     };
 
     for (const auto &prop : cproperties) {
