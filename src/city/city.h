@@ -180,7 +180,7 @@ struct city_t {
     void house_decay_services();
     void house_service_decay_houses_covered();
     void house_service_calculate_culture_aggregates();
-    void house_process_evolve_and_consume_goods();
+    void house_process_evolve();
 
     const city_overlay *overlay();
     inline bool overlay_is(e_overlay o) const { return current_overlay == 0; }

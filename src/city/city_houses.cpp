@@ -117,7 +117,7 @@ void city_t::house_service_decay_houses_covered() {
     }
 }
 
-void city_t::house_process_evolve_and_consume_goods() {
+void city_t::house_process_evolve() {
     OZZY_PROFILER_SECTION("Game/Update/Process And Consume Goods");
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
@@ -130,12 +130,6 @@ void city_t::house_process_evolve_and_consume_goods() {
             house->base.clear_impl();
         }
     });
-
-    if (game.simtime.day == 0 || game.simtime.day == 7) {
-        buildings_house_do([&] (building_house *house) {
-            house->consume_resources();
-        });
-    }
 
     if (has_expanded) {
         map_routing_update_land();

@@ -276,7 +276,7 @@ void city_t::update_tick(int simtick) {
         building_update_desirability();
         break;
     case 39:
-        house_process_evolve_and_consume_goods();
+        house_process_evolve();
         break;
     case 40:
         building_update_state();
@@ -1118,9 +1118,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating_with_food);
 
-    for (int i = 0; i < 2; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44e0[i]);
-    }
+    iob->bind____skip(4);
+    iob->bind____skip(4);
 
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44ec);
@@ -1129,9 +1128,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44f8);
     iob->bind(BIND_SIGNATURE_INT32, &data.religion.angry_message_delay);
-    iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_consumed_last_month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_produced_last_month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_produced_this_month);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
     iob->bind____skip(4);
     iob->bind____skip(4); //iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
@@ -1139,9 +1138,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
 
-    for (int i = 0; i < 11; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4524[i]);
-    }
+    iob->bind____skip(4 * 11);
 
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.fishing_boats_requested);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warships_requested);
@@ -1209,7 +1206,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.resource.wine_types_available);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.resource.beer_types_available);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.prosperity_max);
     iob->bind____skip(3);

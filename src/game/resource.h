@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <array>
 #include <cassert>
+#include <numeric>
 
 #include "core/tokenum.h"
 #include "core/svector.h"
@@ -148,7 +149,14 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
         return it == end() ? 0 : it->value; 
     }
 
+    inline void append(const resource_list &o) {
+        for (auto &t: o) {
+            (*this)[t.type] += t.value;
+        }
+    }
+
     inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
+    inline bool sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
     static const resource_list foods;
     static const resource_list all;
     static const resource_list values;

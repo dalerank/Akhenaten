@@ -108,7 +108,7 @@ void tutorial1_handle_collapse(event_collase_damage) {
     messages::popup(MESSAGE_TUTORIAL_COLLAPSED_BUILDING, 0, 0);
 }
 
-void tutorial1_on_filled_granary(event_granary_filled ev) {
+void tutorial1_on_filled_granary(event_granary_resource_added ev) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
     if (tut.gamemeat_stored) {

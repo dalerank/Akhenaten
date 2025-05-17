@@ -83,7 +83,7 @@ int building_granary::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
 }
 
-int building_granary::add_resource(e_resource resource, bool is_produced, int amount, bool force) {
+int building_granary::add_resource(e_resource resource, int amount, bool force) {
     if (!force && !resource_is_food(resource)) {
         return -1;
     }
@@ -97,13 +97,12 @@ int building_granary::add_resource(e_resource resource, bool is_produced, int am
         return -1;
     }
 
-    if (is_produced) {
-        city_resource_add_produced_to_granary(amount);
-    }
-
-    int deliverable_amount = std::min<int>(d.resource_stored[RESOURCE_NONE], amount);
+    const int deliverable_amount = std::min<int>(d.resource_stored[RESOURCE_NONE], amount);
     d.resource_stored[resource] += deliverable_amount;
     d.resource_stored[RESOURCE_NONE] -= deliverable_amount;
+    
+    events::emit(event_granary_resource_added{ id(), resource, deliverable_amount });
+    
     return amount - deliverable_amount;
 }
 
@@ -126,7 +125,9 @@ int building_granary::remove_resource(e_resource resource, int amount) {
     }
 
     auto &d = runtime_data();
-    int removed = std::min<int>(d.resource_stored[resource], amount);
+    const int removed = std::min<int>(d.resource_stored[resource], amount);
+
+    events::emit(event_granary_resource_removed{ id(), resource, removed });
 
     city_resource_remove_from_granary(resource, removed);
     d.resource_stored[resource] -= removed;
@@ -356,16 +357,16 @@ void building_granary::bless() {
     }
 
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_GRAIN, 0, 100, true);
+        granary->add_resource(RESOURCE_GRAIN, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_MEAT, 0, 100, true);
+        granary->add_resource(RESOURCE_MEAT, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_LETTUCE, 0, 100, true);
+        granary->add_resource(RESOURCE_LETTUCE, 100, true);
     }
     for (int n = 0; n < 6; n++) {
-        granary->add_resource(RESOURCE_FIGS, 0, 100, true);
+        granary->add_resource(RESOURCE_FIGS, 100, true);
     }
 }
 

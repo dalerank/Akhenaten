@@ -96,6 +96,6 @@ public:
     virtual int remove_resource(e_resource resource, int amount) = 0;
     virtual int freespace() const = 0;
     virtual int total_stored() const = 0;
-    virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) = 0;
+    virtual int add_resource(e_resource resource, int amount, bool force) = 0;
 
 };

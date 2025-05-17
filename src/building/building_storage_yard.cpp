@@ -147,7 +147,7 @@ int building_storage_yard::freespace() const {
     return freespace;
 }
 
-int building_storage_yard::add_resource(e_resource resource, bool is_produced, int amount, bool force) {
+int building_storage_yard::add_resource(e_resource resource, int amount, bool force) {
     assert(id() > 0);
 
     if (!force && is_not_accepting(resource)) {

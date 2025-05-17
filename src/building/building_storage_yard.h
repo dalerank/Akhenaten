@@ -61,7 +61,7 @@ public:
     void remove_resource_curse(int amount);
 
     virtual int remove_resource(e_resource resource, int amount) override;
-    virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) override;
+    virtual int add_resource(e_resource resource, int amount, bool force) override;
 
     virtual bool is_getting(e_resource resource) override;
 

@@ -21,7 +21,8 @@ struct granary_getting_result {
     tile2i tile;
 };
 
-struct event_granary_filled { building_id bid; int amount; };
+struct event_granary_resource_added { building_id bid; e_resource r; int amount; };
+struct event_granary_resource_removed { building_id bid; e_resource r;  int amount; };
 
 class building_granary : public building_storage {
 public:
@@ -47,11 +48,11 @@ public:
     virtual int amount(e_resource resource) const override;
     virtual bool is_getting(e_resource resource) override;
     virtual int remove_resource(e_resource resource, int amount) override;
+    virtual int add_resource(e_resource resource, int amount, bool force) override;
     virtual int freespace() const override;
     bool is_accepting(e_resource resource);
     int is_not_accepting(e_resource resource);
     granary_getting_result find_storage_for_getting();
-    virtual int add_resource(e_resource resource, bool is_produced, int amount, bool force) override;
     int total_stored() const override;
     int capacity_stored() const { return 3200; }
     int allow_food_types() const { return 4; }

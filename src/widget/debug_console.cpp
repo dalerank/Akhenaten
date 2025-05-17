@@ -306,6 +306,10 @@ void bind_debug_console_var_int16(pcstr var, int16_t &ref) {
     debug_console().con.bind_cvar(var, ref);
 }
 
+void bind_debug_console_var_uint8(pcstr var, uint8_t &ref) {
+    debug_console().con.bind_cvar(var, ref);
+}
+
 void bind_debug_console_var_float(pcstr var, float &ref) {
     debug_console().con.bind_cvar(var, ref);
 }

@@ -62,14 +62,14 @@ const resource_list &city_resources_t::available_market_goods() {
 }
 
 int city_resource_multiple_wine_available() {
-    return city_data.resource.wine_types_available >= 2;
+    return city_data.resource.beer_types_available >= 2;
 }
 
 int city_resource_food_supply_months() {
     return city_data.resource.food_supply_months;
 }
 int city_resources_t::food_percentage_produced() {
-    return calc_percentage(city_data.resource.food_produced_last_month, city_data.resource.food_consumed_last_month);
+    return calc_percentage(city_data.resource.food_produced_last_month(), city_data.resource.food_consumed_last_month());
 }
 
 int city_resource_operating_granaries() {
@@ -109,7 +109,7 @@ void city_storageyards_add_resource(event_storageyards_add_resource ev) {
 
     buildings_valid_do<building_storage_yard>([&] (auto warehouse) {
         assert(warehouse && warehouse->is_valid());
-        while (ev.amount && warehouse->add_resource(ev.resource, false, UNITS_PER_LOAD, /*force*/false)) {
+        while (ev.amount && warehouse->add_resource(ev.resource, UNITS_PER_LOAD, /*force*/false)) {
             ev.amount -= UNITS_PER_LOAD;
         }
     });
@@ -275,9 +275,6 @@ void city_resource_toggle_mothballed(e_resource resource) {
     city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
 }
 
-void city_resource_add_produced_to_granary(int amount) {
-    city_data.resource.food_produced_this_month += amount;
-}
 void city_resource_remove_from_granary(int food, int amount) {
     city_data.resource.granary_food_stored[food] -= amount;
 }
@@ -425,10 +422,6 @@ void city_resources_t::calculate_available_food() {
             for (int r = 0; r < RESOURCES_FOODS_MAX; r++) {
                 granary_food_stored[r] += granary.resource_stored[r];
             }
-
-            if (amount_stored >= 100) {
-                events::emit(event_granary_filled{b.id, amount_stored});
-            }
         }
     }, BUILDING_GRANARY);
 
@@ -464,21 +457,35 @@ void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     }
 }
 
-void city_resources_t::consume_food() {
+void city_resources_t::consume_goods(const simulation_time_t& t) {
+    if (t.day == 0 || t.day == 7) {
+        resource_list consumed_goods;
+        buildings_house_do([&] (building_house *house) {
+            auto house_consumed = house->consume_resources();
+            consumed_goods.append(house_consumed);
+        });
+
+        res_this_month.consumed.append(consumed_goods);
+    }
+}
+
+void city_resources_t::consume_food(const simulation_time_t& t) {
     calculate_available_food();
     g_city.unused.unknown_00c0 = 0;
-    int total_consumed = 0;
+    resource_list consumed_food;
     buildings_house_do([&] (building_house *house) {
         resource_list consumed = house->consume_food();
 
-        for (const auto &r : consumed) {            
-            total_consumed += r.value;
-        }
+        consumed_food.append(consumed);
     });
 
-    food_consumed_last_month = total_consumed;
-    food_produced_last_month = food_produced_this_month;
-    food_produced_this_month = 0;
+    res_this_month.consumed.append(consumed_food);
+}
+
+void city_resources_t::advance_month() {
+    res_last_month.consumed = res_this_month.consumed;
+    res_last_month.produced = res_this_month.produced;
+    res_this_month.clear();
 }
 
 int city_resources_t::food_types_available_num() {
@@ -508,7 +515,7 @@ void city_resource_add_items(e_resource res, int amount) {
         return;
     }
 
-    chosen_yard->add_resource(res, false, amount, /*force*/true); // because I'm lazy.
+    chosen_yard->add_resource(res, amount, /*force*/true); // because I'm lazy.
 }
 
 void city_resource_was_added_warning(e_resource res) {

@@ -45,11 +45,11 @@ struct simulation_time_t {
         months_in_year = 12,
     };
 
-    int tick;  // 50 ticks in a day
-    int16_t day;   // 16 days in a month
-    int16_t month; // 12 months in a year
+    uint8_t tick;  // 50 ticks in a day
+    uint8_t day;   // 16 days in a month
+    uint8_t month; // 12 months in a year
     int16_t year;
-    int total_days;
+    uint32_t total_days;
 
     void init(int year);
     int16_t years_since_start() const;

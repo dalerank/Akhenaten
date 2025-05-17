@@ -26,7 +26,7 @@ void tutorial_3::reset() {
     g_tutorials_flags.tutorial_3.pottery_made_2 = 0;
 }
 
-void tutorial3_on_filled_granary(event_granary_filled ev) {
+void tutorial3_on_filled_granary(event_granary_resource_added ev) {
     if (g_tutorials_flags.tutorial_3.figs_stored) {
         return;
     }

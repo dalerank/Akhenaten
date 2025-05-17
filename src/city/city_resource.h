@@ -8,6 +8,8 @@
 #include <iosfwd>
 #include <string>
 
+struct simulation_time_t;
+
 struct event_stats_remove_resource { e_resource resource; int amount; };
 struct event_stats_append_resource { e_resource resource; int amount; };
 struct event_granaries_remove_resource { e_resource resource; int amount; };
@@ -24,17 +26,36 @@ struct city_resources_t {
     int16_t mothballed[RESOURCES_MAX];
     int16_t unk_00[RESOURCES_MAX];
 
-    uint8_t wine_types_available;
+    uint8_t beer_types_available;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_available;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_eaten;
     e_resource food_types_allowed[RESOURCES_FOODS_MAX];
-    int32_t granary_food_stored[RESOURCES_FOODS_MAX];
-    int32_t granary_total_stored;
-    int32_t food_supply_months;
-    int32_t food_needed_per_month;
-    int32_t food_consumed_last_month;
-    int32_t food_produced_last_month;
-    int32_t food_produced_this_month;
+    uint32_t granary_food_stored[RESOURCES_FOODS_MAX];
+    uint32_t granary_total_stored;
+    uint8_t food_supply_months;
+    uint16_t food_needed_per_month;
+
+    struct resource_consumption_t {
+        uint16_t month;
+        uint16_t year;
+        resource_list consumed;
+        resource_list stored;
+        resource_list produced;
+
+        void clear() {
+            month = 0;
+            year = 0;
+            consumed.clear();
+            stored.clear();
+            produced.clear();
+        }
+    };
+
+    resource_consumption_t res_last_month;
+    resource_consumption_t res_this_month;
+
+    inline int food_produced_last_month() const { return res_last_month.produced.sum(); }
+    inline int food_consumed_last_month() const { return res_last_month.consumed.sum(); }
 
     struct {
         int operating;
@@ -55,11 +76,13 @@ struct city_resources_t {
     int food_percentage_produced();
     void calculate_available_food();
     void calculate_food_stocks_and_supply_wheat();
-    void consume_food();
+    void consume_food(const simulation_time_t& t);
+    void consume_goods(const simulation_time_t& t);
 
     int food_types_available_num();
 
     void init();
+    void advance_month();
 };
 
 
@@ -78,7 +101,6 @@ int city_resource_ready_for_using(e_resource resource);
 void city_resource_toggle_stockpiled(e_resource resource);
 int city_resource_is_mothballed(e_resource resource);
 void city_resource_toggle_mothballed(e_resource resource);
-void city_resource_add_produced_to_granary(int amount);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();

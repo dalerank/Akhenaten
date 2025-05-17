@@ -65,7 +65,7 @@ game_t game;
 events::typed_queue g_permanent_events;
 
 declare_console_ref_int16(gameyear, game.simtime.year)
-declare_console_ref_int16(gamemonth, game.simtime.month)
+declare_console_ref_uint8(gamemonth, game.simtime.month)
 
 declare_console_command_p(nextyear) {
     game.simtime.advance_year();
@@ -158,7 +158,8 @@ void game_t::advance_month() {
     g_city.migration.reset_newcomers();
     g_city.health.update();
     g_city.finance.advance_month();
-    g_city.resource.consume_food();
+    g_city.resource.consume_food(game.simtime);
+    g_city.resource.advance_month();
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this
