@@ -154,7 +154,6 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     static const resource_list values;
 };
 
-
 enum e_inventory_good {
     INVENTORY_FOOD1 = 0,
     INVENTORY_FOOD2 = 1,

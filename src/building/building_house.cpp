@@ -237,25 +237,68 @@ void building_house::create_vacant_lot(tile2i tile, int image_id) {
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
-void building_house::consume_resources() {
-    auto consume_resource = [this] (int inventory, int amount) {
+resource_list building_house::consume_food() {
+    if (!hsize()) {
+        return {};
+    }
+
+    auto &d = runtime_data();
+
+    int num_types = model().food_types;
+    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, 35);
+    if (num_types > 1) {
+        amount_per_type /= num_types;
+    }
+
+    d.num_foods = 0;
+    resource_list food_types_eaten;
+    if (scenario_property_kingdom_supplies_grain()) {
+        d.foods[0] = amount_per_type;
+        food_types_eaten[RESOURCE_GRAIN] += amount_per_type;
+        d.num_foods = 1;
+        return food_types_eaten;
+    }
+
+    if (num_types <= 0) {
+        return {};
+    }
+
+    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && d.num_foods < num_types; t++) {
+        const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
+        d.foods[t] -= exist_amount;
+        d.num_foods += (exist_amount > 0) ? 1 : 0;
+        e_resource food_res = g_city.allowed_foods(t);
+        food_types_eaten.push_back({ food_res, amount_per_type });
+    }
+
+    return food_types_eaten;
+}
+
+resource_list building_house::consume_resources() {
+    if (!hsize()) {
+        return {};
+    }
+    
+    resource_list good_types_consumed;
+    auto &d = runtime_data();
+    const model_house& model = model_get_house(house_level());
+
+    auto consume_resource = [&] (int inventory, uint16_t amount) {
         if (amount <= 0) {
             return;
         }
 
-        auto &d = runtime_data();
-        if (amount > d.inventory[inventory]) {
-            d.inventory[inventory] = 0;
-        } else {
-            d.inventory[inventory] -= amount;
-        }
+        amount = std::min(amount, d.inventory[inventory]);
+        d.inventory[inventory] -= amount;
+        good_types_consumed.push_back({ (e_resource)inventory, amount });
     };
 
-    const model_house& model = model_get_house(house_level());
     consume_resource(INVENTORY_GOOD1, model.pottery);
     consume_resource(INVENTORY_GOOD2, model.jewelry);
     consume_resource(INVENTORY_GOOD3, model.linen);
     consume_resource(INVENTORY_GOOD4, model.beer);
+
+    return good_types_consumed;
 }
 
 template<bool use_offset>

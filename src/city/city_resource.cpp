@@ -469,43 +469,10 @@ void city_resources_t::consume_food() {
     g_city.unused.unknown_00c0 = 0;
     int total_consumed = 0;
     buildings_house_do([&] (building_house *house) {
-        if (!house->hsize()) {
-            return;
-        }
+        resource_list consumed = house->consume_food();
 
-        auto& housed = house->runtime_data();
-
-        int num_types = house->model().food_types;
-        short amount_per_type = calc_adjust_with_percentage<short>(housed.population, 35);
-        if (num_types > 1) {
-            amount_per_type /= num_types;
-        }
-
-        housed.num_foods = 0;
-        if (scenario_property_kingdom_supplies_grain()) {
-            housed.foods[0] = amount_per_type;
-            g_city.resource.food_types_eaten[RESOURCE_GRAIN] = amount_per_type;
-            housed.num_foods = 1;
-            return;
-        } 
-        
-        if (num_types <= 0) {
-            return;
-        }
-
-        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && housed.num_foods < num_types; t++) {
-            if (housed.foods[t] >= amount_per_type) {
-                housed.foods[t] -= amount_per_type;
-                housed.num_foods++;
-                total_consumed += amount_per_type;
-                food_types_eaten[t] += amount_per_type;
-            } else if (housed.foods[t] > 0) {
-                // has food but not enough
-                total_consumed += housed.foods[t];
-                food_types_eaten[t] += housed.foods[t];
-                housed.foods[t] = 0;
-                housed.num_foods++;
-            }
+        for (const auto &r : consumed) {            
+            total_consumed += r.value;
         }
     });
 
