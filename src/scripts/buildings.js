@@ -873,11 +873,11 @@ building_storage_room = {
 
 building_bazaar = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:22, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:22, },
-    base_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:0 },
-    fancy : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:12 },
-    fancy_work : { pos : [0, 0], pack:PACK_GENERAL, id:22, offset:13 },
+    preview : {pack:PACK_GENERAL, id:22, },
+    base : {pack:PACK_GENERAL, id:22, },
+    base_work : { pack:PACK_GENERAL, id:22, offset:0 },
+    fancy : { pack:PACK_GENERAL, id:45 },
+    fancy_work : { pack:PACK_GENERAL, id:45, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   building_size : 2,

@@ -44,7 +44,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void highlight_waypoints() override;
-    virtual void set_water_access_tiles(const water_access_tiles &tiles);
+    virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
     void unaccept_all_goods();
     int trader_id();

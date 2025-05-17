@@ -31,7 +31,7 @@ public:
     virtual void update_graphic() override;
     virtual void update_count() const override;
     virtual void spawn_figure() override;
-    virtual void update_map_orientation(int orientation);
+    virtual void update_map_orientation(int orientation) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void highlight_waypoints() override;
