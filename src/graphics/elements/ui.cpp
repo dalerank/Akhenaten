@@ -382,7 +382,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         graphics_shade_rect(offset + pos, size, 0x80);
     }
 
-    if (!darkened && !!cb) {
+    if (!(darkened || readonly) && !!cb) {
         gbutton.onclick(cb);
     }
     return gbutton;
@@ -1117,7 +1117,8 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (!_border ? UiFlags_NoBorder : UiFlags_None)
                       | (!_hbody ? UiFlags_NoBody : UiFlags_None)
                       | (_split ? UiFlags_SplitText : UiFlags_None)
-                      | (_selected ? UiFlags_Selected : UiFlags_None);
+                      | (_selected ? UiFlags_Selected : UiFlags_None)
+                      | (readonly ? UiFlags_Readonly : UiFlags_None);
 
     generic_button *btn = nullptr;
     switch (mode) {
@@ -1130,8 +1131,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
         break;
     }
 
-    if (_func) btn->onclick(_func);
-    if (_rfunc) btn->onrclick(_rfunc);
+    const bool clickable = !darkened && !readonly;
+    if (clickable && _func) btn->onclick(_func);
+    if (clickable && _rfunc) btn->onrclick(_rfunc);
 
     btn->tooltip(_tooltip);
 

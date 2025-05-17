@@ -1,6 +1,6 @@
 log_info("akhenaten: building sounds started")
 
-var building_sounds = [
+building_sounds = [
   { type: BUILDING_TAX_COLLECTOR,						sound: "Wavs/taxfarm.wav"},
   { type: BUILDING_TAX_COLLECTOR_UPGRADED,	sound: "Wavs/taxfarm.wav"},
   { type: BUILDING_VILLAGE_PALACE, 					sound: "Wavs/palace.wav"},

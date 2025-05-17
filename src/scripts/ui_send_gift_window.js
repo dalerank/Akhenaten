@@ -9,6 +9,7 @@ gift_to_kingdome_window = {
         deben_icon      : resource_icon({pos: [15, 15], resource:RESOURCE_GOLD})
 
         last_gift 		: text_center({ pos:[0, 45], size:[px(30), 20], text:"${52.50} ${city.months_since_gift} ${8.4}", })
+        cant_send_gifts	: text_center({ pos:[16, 85], size:[px(28), 0], text:"${52.70}", font:FONT_NORMAL_WHITE_ON_DARK, multiline:true })
 
         panel           : inner_panel({pos:[16, 70], size:[28, 5]
         	ui : {

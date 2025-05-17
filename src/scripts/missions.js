@@ -153,8 +153,21 @@ mission4 = {
 		tutorial_monuments: [BUILDING_BRICKLAYERS_GUILD, BUILDING_SMALL_MASTABA]
 	}
 
+	cities : [
+		{
+			name : "Nekhen",
+			is_sea_trade : true,
+		},
+
+		{
+			name : "Perwadjyt",
+			is_sea_trade : true,
+		},
+	]
+
 	vars : {
 		spacious_apartment_built : 1
+		papyrus_stored : 100
 		victory_last_action_delay : 3
 	}
 }
@@ -230,7 +243,6 @@ mission5 = { // Timna
 			reputation : 60,
 		}
 	]
-
 }
 
 mission6 = { // Behdet
