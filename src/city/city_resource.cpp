@@ -290,6 +290,10 @@ void city_resources_t::init() {
         stored_in_storages[ev.resource] += ev.amount;
     });
 
+    events::subscribe([this] (event_produced_resources ev) {
+        res_this_month.produced[ev.resource] += ev.amount;
+    });
+
     events::subscribe(&city_granaries_remove_resource);
     events::subscribe(&city_storageyards_add_resource);
     events::subscribe(&city_storageyards_remove_resource);

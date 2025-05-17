@@ -132,8 +132,9 @@ void building_fishing_wharf::spawn_figure() {
         }
     }
 
-    bool cart_spawned = base.common_spawn_goods_output_cartpusher();
-    if (cart_spawned) {
+    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    if (fcart) {
+        events::emit(event_produced_resources{ base.output_resource_first_id, fcart->get_carrying_amount() });
         if (d.has_fish) {
             d.has_fish = (base.stored_amount_first > 0);
         }

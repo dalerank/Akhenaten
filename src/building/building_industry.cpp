@@ -3,6 +3,8 @@
 #include "io/io_buffer.h"
 #include "city/city.h"
 #include "core/object_property.h"
+#include "game/game_events.h"
+#include "city/city_resource.h"
 
 constexpr short MAX_PROGRESS_RAW = 200;
 #define MAX_PROGRESS_WORKSHOP 400
@@ -120,8 +122,9 @@ void building_industry::spawn_figure() {
 
     if (has_produced_resource) {
         start_production();
-        const int amount = ready_production();
-        create_cartpusher(base.output_resource_first_id, amount);
+        const int expected_produce = ready_production();
+        create_cartpusher(base.output_resource_first_id, expected_produce);
+        events::emit(event_produced_resources{ base.output_resource_first_id, expected_produce });
     }
 }
 

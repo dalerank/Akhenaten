@@ -682,33 +682,28 @@ bool building::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_
     return false;
 }
 
-bool building::common_spawn_goods_output_cartpusher(bool only_one, bool only_full_loads, int min_carry, int max_carry) {
+figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_carry) {
     // can only have one?
-    if (only_one && has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
-        return false;
+    if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
+        return nullptr;
     }
 
     // no checking for work force? doesn't matter anyways.... there's no instance
     // in the game that allows cartpushers to spawn before the workers disappear!
     if (!has_road_access) {
-        return false;
+        return nullptr;
     }
 
     while (stored_amount_first >= min_carry) {
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
-        if (only_full_loads) {
-            amounts_to_carry -= amounts_to_carry % 100; // remove pittance
-        }
+        amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
-        create_cartpusher(output_resource_first_id, amounts_to_carry);
+        figure* f = create_cartpusher(output_resource_first_id, amounts_to_carry);
         stored_amount_first -= amounts_to_carry;
-        if (only_one || stored_amount_first == 0) {
-            // done once, or out of goods?
-            return true;
-        }
+        return f;
     }
 
-    return false;
+    return nullptr;
 }
 
 void building::common_spawn_labor_seeker(int min_houses) {

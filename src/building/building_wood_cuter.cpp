@@ -9,6 +9,8 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "grid/terrain.h"
+#include "game/game_events.h"
+#include "city/city_resource.h"
 
 buildings::model_t<building_wood_cutter> bwood_cutter_m;
 
@@ -63,7 +65,11 @@ void building_wood_cutter::spawn_figure() {
             }
         }
     }
-    base.common_spawn_goods_output_cartpusher();
+
+    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    if (fcart) {
+        events::emit(event_produced_resources{ base.output_resource_first_id, fcart->get_carrying_amount() });
+    }
 }
 
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -4,6 +4,8 @@
 #include "grid/routing/routing.h"
 #include "figure/figure.h"
 #include "core/random.h"
+#include "game/game_events.h"
+#include "city/city_resource.h"
 
 buildings::model_t<building_reed_gatherer> gatherer_m;
 
@@ -61,5 +63,8 @@ void building_reed_gatherer::spawn_figure() {
         }
     }
 
-    base.common_spawn_goods_output_cartpusher();
+    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    if (fcart) {
+        events::emit(event_produced_resources{ base.output_resource_first_id, fcart->get_carrying_amount() });
+    }
 }
