@@ -28,7 +28,7 @@ declare_console_command_p(addsavings) {
     g_city.kingdome.personal_savings += amount;
 }
 
-void kingdome_relation_t::init_scenario(int rank, int load_type ) {
+void kingdome_relation_t::load_scenario(int rank, int load_type ) {
     g_city.ratings.kingdom = scenario_starting_kingdom();
     personal_savings = scenario_starting_personal_savings();
     player_rank = rank;
@@ -269,8 +269,7 @@ void kingdome_relation_t::set_salary_rank(int rank) {
 }
 
 void kingdome_relation_t::init_donation_amount() {
-    if (donate_amount > personal_savings)
-        donate_amount = personal_savings;
+    donate_amount = calc_bound(donate_amount, 0, personal_savings);
 }
 
 void kingdome_relation_t::set_donation_amount(int amount) {
@@ -307,4 +306,10 @@ void kingdome_relation_t::reset_gifts() {
     gifts[GIFT_MODEST].cost = 0;
     gifts[GIFT_GENEROUS].cost = 0;
     gifts[GIFT_LAVISH].cost = 0;
+}
+
+void kingdome_relation_t::init() {
+    events::subscribe([this] (event_send_gift_to_kingdome ev) {
+        send_gift(ev.gift_size);
+    });
 }

@@ -21,6 +21,8 @@ struct kingdome_gift {
     int cost;
 };
 
+struct event_send_gift_to_kingdome { int gift_size; };
+
 struct kingdome_relation_t {
     kingdome_gift gifts[3];
     int32_t months_since_gift;
@@ -47,7 +49,7 @@ struct kingdome_relation_t {
         int32_t retreat_message_shown;
     } invasion;
 
-    void init_scenario(int rank, int load_type);
+    void load_scenario(int rank, int load_type);
     void init_donation_amount();
     const kingdome_gift* get_gift(int size) { return &gifts[size]; }
     int can_send_gift(int size);
@@ -65,4 +67,6 @@ struct kingdome_relation_t {
     void mark_soldier_killed();
     void force_attack(int size);
     void reset_gifts();
+
+    void init();
 };

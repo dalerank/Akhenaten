@@ -42,7 +42,7 @@ void ui::gift_to_kingdome_window::init() {
     ui["send_gift"].readonly = !can_send_gift;
     ui["send_gift"].onclick([this] {
         if (g_city.kingdome.can_send_gift(selected_gift_size)) {
-            g_city.kingdome.send_gift(selected_gift_size);
+            events::emit(event_send_gift_to_kingdome{ selected_gift_size });
             window_advisors_show();
         }
     });

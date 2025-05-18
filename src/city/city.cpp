@@ -80,6 +80,7 @@ void city_t::init() {
     g_city_planner.init();
     bookmarks.reset();
     common_info_window::register_handlers();
+    kingdome.init();
 }
 
 void city_t::update_day() {
