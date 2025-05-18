@@ -5,14 +5,15 @@
 
 namespace config {
 
-struct runtime {
-    pcstr _section;
+struct static_params {
+    static_params();
 
-    runtime(pcstr s);
+    void archive_load();
 
-    virtual void reset() {}
-    virtual void init() {}
-    virtual void load(archive arch) = 0;
+    virtual void archive_unload() {}
+    virtual void archive_init() {}
+    virtual void archive_load(archive arch) = 0;
+    virtual pcstr archive_section() const = 0;
 };
 
 } // config

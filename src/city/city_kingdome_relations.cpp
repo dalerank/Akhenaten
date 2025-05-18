@@ -1,4 +1,4 @@
-#include "kingdome.h"
+#include "city_kingdome_relations.h"
 
 #include "city/city.h"
 #include "game/game_events.h"
@@ -18,20 +18,12 @@
 #include "dev/debug.h"
 #include <iostream>
 
-const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
-
 static int cheated_invasion = 0;
 
-struct kingdome_t {
-    void archive_unload() {}
-    void archive_load(archive arch) {
-    }
+kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
-    void archive_init() {}
-};
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_kingdome_static_params) {
-    //g_city.kingdome.archive_load(arch);
+void kingdome_relation_t::static_params::archive_load(archive arch) {
+    arch.r_array_num<int>("salary_ranks", salary_ranks);
 }
 
 declare_console_command_p(addsavings) {
@@ -273,12 +265,12 @@ void kingdome_relation_t::send_gift(int gift_size) {
 }
 
 int kingdome_relation_t::salary_for_rank(int rank) { 
-    return SALARY_FOR_RANK[rank];
+    return params().salary_ranks[rank];
 }
 
 void kingdome_relation_t::set_salary_rank(int rank) {
     salary_rank = rank;
-    salary_amount = SALARY_FOR_RANK[rank];
+    salary_amount = params().salary_ranks[rank];
 }
 
 void kingdome_relation_t::init_donation_amount() {
@@ -321,8 +313,8 @@ void kingdome_relation_t::reset_gifts() {
     gifts[GIFT_LAVISH].cost = 0;
 }
 
+
 void kingdome_relation_t::init() {
-    config_load_kingdome_static_params();
     reset_gifts();
 
     events::subscribe([this] (event_send_gift_to_kingdome ev) {
@@ -330,5 +322,6 @@ void kingdome_relation_t::init() {
     });
 }
 
-void kingdome_relation_t::archive_load(archive arch) {
+const kingdome_relation_t::static_params &kingdome_relation_t::params() {
+    return kingdome_relation;
 }

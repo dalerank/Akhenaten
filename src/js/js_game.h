@@ -32,7 +32,11 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func); void func() 
 
-#define ANK_CONFIG_OBJECT_VARIABLE(a, name) \
+#define ANK_CONFIG_OBJECT_VARIABLE(a) \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
+    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" #a); a.archive_init(); }
+
+#define ANK_CONFIG_OBJECT_VARIABLE_N(a, name) \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
     void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(name, [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" name); a.archive_init(); }
 
@@ -51,10 +55,10 @@ using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
     ANK_CONFIG_OBJECTS_VARIABLE(a, #a)
 
 #define ANK_VARIABLE(a) a; \
-    ANK_CONFIG_OBJECT_VARIABLE(a, #a)
+    ANK_CONFIG_OBJECT_VARIABLE_N(a, #a)
 
 #define ANK_VARIABLE_N(a, name) a; \
-    ANK_CONFIG_OBJECT_VARIABLE(a, name)
+    ANK_CONFIG_OBJECT_VARIABLE_N(a, name)
 
 #define ANK_PERMANENT_CALLBACK(event, a) \
     tmp_register_permanent_callback_ ##event(); \

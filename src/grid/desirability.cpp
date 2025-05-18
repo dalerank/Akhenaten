@@ -11,12 +11,21 @@
 #include "io/io_buffer.h"
 #include "scenario/map.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
 grid_xx g_desirability_grid = {0, FS_INT8};
  
-desirability_t g_desirability("desirability");
+desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
 
-void desirability_t::load(archive arch) {
+void desirability_t::influence_t::load(archive iarch) {
+    size = iarch.r_int("size", 1);
+    value = iarch.r_int("value", 0);
+    step = iarch.r_int("step", 0);
+    step_size = iarch.r_int("step_size", 0);
+    range = iarch.r_int("range", 0);
+}
+
+void desirability_t::archive_load(archive arch) {
     std::pair<pcstr, desirability_t::influence_t *> items[] = {
         {"plaza", &influence.plaza},
         {"earthquake", &influence.earthquake},
@@ -177,11 +186,3 @@ int desirability_t::get_avg(tile2i tile, int size) {
 io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_desirability_grid);
 });
-
-void desirability_t::influence_t::load(archive iarch) {
-    size = iarch.r_int("size", 1);
-    value = iarch.r_int("value", 0);
-    step = iarch.r_int("step", 0);
-    step_size = iarch.r_int("step_size", 0);
-    range = iarch.r_int("range", 0);
-}

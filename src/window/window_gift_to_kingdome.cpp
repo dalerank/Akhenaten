@@ -51,7 +51,7 @@ void ui::gift_to_kingdome_window::init() {
     const auto *gen_gift = g_city.kingdome.get_gift(GIFT_GENEROUS);
     ui["link_generous"] = can_send_gen_gift
                             ? bstring128().printf("%s (%d db)", ui::str(52, 55 + gen_gift->id), gen_gift->cost)
-                            : ui::str(52, 48);
+                            : bstring128(ui::str(52, 48));
     ui["link_generous"].onclick([this] { select_link(GIFT_GENEROUS); });
     ui["link_generous"].enabled = can_send_gift;
     ui["link_generous"].readonly = !can_send_gen_gift;
@@ -61,7 +61,7 @@ void ui::gift_to_kingdome_window::init() {
     const auto *lavish_gift = g_city.kingdome.get_gift(GIFT_LAVISH);
     ui["link_lavish"] = can_send_lavish_gift 
                             ? bstring128().printf("%s (%d db)", ui::str(52, 59 + lavish_gift->id), lavish_gift->cost)
-                            : ui::str(52, 48);
+                            : bstring128(ui::str(52, 48));
     ui["link_lavish"].onclick([this] { select_link(GIFT_LAVISH); });
     ui["link_lavish"].enabled = can_send_gift;
     ui["link_lavish"].readonly = !can_send_lavish_gift;

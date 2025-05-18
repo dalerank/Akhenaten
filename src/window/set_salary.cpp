@@ -1,6 +1,6 @@
 #include "set_salary.h"
 
-#include "city/kingdome.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/victory.h"

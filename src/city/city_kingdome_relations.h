@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "core/archive.h"
+#include "core/runtime_item.h"
+#include "city/city_component.h"
+#include "core/svector.h"
 
 enum e_gift { 
     GIFT_MODEST = 0,
@@ -24,7 +26,7 @@ struct kingdome_gift {
 
 struct event_send_gift_to_kingdome { int gift_size; };
 
-struct kingdome_relation_t {
+struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     kingdome_gift gifts[3];
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
@@ -70,5 +72,14 @@ struct kingdome_relation_t {
     void reset_gifts();
 
     void init();
-    void archive_load(archive arch);
+
+    struct static_params {
+        svector<int, 16> salary_ranks;
+
+        void archive_unload() {}
+        void archive_init() {}
+        void archive_load(archive arch);
+    };
+
+    static const static_params &params();
 };

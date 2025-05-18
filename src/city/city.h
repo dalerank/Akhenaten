@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "city/kingdome.h"
+#include "city/city_kingdome_relations.h"
 #include "city/entertainment.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
