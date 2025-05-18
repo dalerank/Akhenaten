@@ -23,8 +23,7 @@ struct info_window_roadblock : public building_info_window {
 
 info_window_roadblock roadblock_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_roadblock_info_window);
-void config_load_roadblock_info_window() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_roadblock_info_window) {
     roadblock_infow.load("roadblock_info_window");
 }
 

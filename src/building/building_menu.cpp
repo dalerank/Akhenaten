@@ -18,8 +18,6 @@
 
 #include <iostream>
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_buldingin_menu);
-
 declare_console_command_p(menuupdate) {
     std::string args;
     is >> args;
@@ -116,7 +114,7 @@ struct menu_config_t {
     bool changed = true;
 } g_menu_config;
 
-void config_load_buldingin_menu() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_buldingin_menu) {
     auto copy_config = g_menu_config;
     g_config_arch.r_array("building_menu", g_menu_config.groups, [&copy_config] (archive arch, auto &group) {
         group.type = arch.r_int("id");

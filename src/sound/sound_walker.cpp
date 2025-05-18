@@ -7,8 +7,7 @@
 
 std::vector<figure_sound_t> g_walker_reaction;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_walker_sounds);
-void config_load_walker_sounds() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_walker_sounds) {
     g_walker_reaction.clear();
 
     g_config_arch.r_array("walker_sounds", [] (archive arch) {

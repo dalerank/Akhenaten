@@ -66,7 +66,6 @@ void city_t::init() {
     population.monthly.count = 0;
     festival.months_since_festival = 1;
     festival.selected.size = FESTIVAL_SMALL;
-    kingdome.reset_gifts();
     religion.reset();
     buildings.init();
     figure_clear_all();

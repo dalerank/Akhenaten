@@ -114,8 +114,7 @@ struct window_advisors : public ui::widget {
 
 window_advisors g_window_advisors;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window);
-void config_load_advisors_window() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window) {
     g_window_advisors.load("advisors_window");
 }
 

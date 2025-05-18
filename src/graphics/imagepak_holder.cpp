@@ -4,8 +4,7 @@
 
 imagepak_holder_t *g_image_data = nullptr;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config);
-void config_load_imagepaks_config() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config) {
     if (g_image_data->common_inited) {
         return;
     }

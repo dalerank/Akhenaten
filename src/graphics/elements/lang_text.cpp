@@ -11,8 +11,7 @@
 
 std::map<xstring, textid> g_localization;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_localization);
-void config_load_localization() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
 
     g_config_arch.r_array("localization", [] (archive arch) {

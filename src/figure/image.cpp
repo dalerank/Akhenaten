@@ -7,10 +7,6 @@
 
 #include "js/js_game.h"
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets);
-ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets);
-ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images);
-
 static const int CORPSE_IMAGE_OFFSETS[128] = {
     0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
     5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
@@ -27,7 +23,7 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 
 
 static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
-void config_load_cart_offsets() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets) {
     int i = 0;
     g_config_arch.r_array("cart_offsets", [&i] (archive arch) {
         int x = arch.r_int("x");
@@ -38,7 +34,7 @@ void config_load_cart_offsets() {
 }
 
 static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
-void config_load_sled_offsets() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets) {
     int i = 0;
     g_config_arch.r_array("sled_offsets", [&i] (archive arch) {
         int x = arch.r_int("x");
@@ -49,7 +45,7 @@ void config_load_sled_offsets() {
 }
 
 static image_desc g_cart_images[RESOURCES_MAX] = {{}};
-void config_load_cart_images() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
     g_config_arch.r_array("cart_images", [] (archive arch) {
         e_resource res = arch.r_type<e_resource>("resource");
         int pack = arch.r_int("pack");

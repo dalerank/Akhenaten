@@ -41,8 +41,7 @@
 #include "js/js_game.h"
 
 int img_mapping[32000] = {0};
-ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config);
-void config_load_images_remap_config() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config) {
     g_config_arch.r_array("empire_images_remap", [] (archive arch) {
         int id = arch.r_int("id");
         int remap = arch.r_int("rid");

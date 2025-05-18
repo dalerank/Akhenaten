@@ -41,8 +41,7 @@ static struct {
 } vita_music_data;
 #endif
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds);
-void config_load_city_sounds() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds) {
     g_config_arch.r_array("city_sounds", [] (archive arch) {
         const int channel = arch.r_int("c");
         const char *path = arch.r_string("p");

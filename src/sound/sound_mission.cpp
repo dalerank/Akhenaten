@@ -6,8 +6,7 @@
 
 std::map<int, snd::mission_config> g_mission_configs;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_sounds);
-void config_load_mission_sounds() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_mission_sounds) {
     g_config_arch.r_array("mission_sounds", [] (archive arch) {
         const int mission = arch.r_int("mission");
         const char *inter = arch.r_string("briefing");

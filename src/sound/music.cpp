@@ -36,8 +36,7 @@ struct music_data_t {
 
 music_data_t g_music;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks);
-void config_load_soundtracks() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks) {
     g_music.tracks.clear();
     g_config_arch.r_objects("soundtracks", [] (pcstr key, archive arch) {
         auto &track = g_music.tracks.emplace_back();

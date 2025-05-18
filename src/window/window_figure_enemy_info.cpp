@@ -19,8 +19,7 @@ struct figure_enemy_info_window : public figure_info_window {
 
 figure_enemy_info_window figure_enemy_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_enemy_window_info);
-void config_load_figure_enemy_window_info() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_enemy_window_info) {
     figure_enemy_infow.load("info_window_figure_enemy");
 }
 

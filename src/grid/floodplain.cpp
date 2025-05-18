@@ -31,8 +31,7 @@ tile_cache floodplain_tiles_local;
 
 image_desc floodplain_tile;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_floodplain);
-void config_load_floodplain() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_floodplain) {
     g_config_arch.r_section("floodplain", [] (archive arch) {
         arch.r_desc("floodplain_tile", floodplain_tile);
     });

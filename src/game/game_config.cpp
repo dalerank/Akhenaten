@@ -8,8 +8,7 @@
 
 static const char* CONF_FILENAME = "akhenaten.conf";
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings);
-void config_load_game_settings() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
     game_features::load();
 }
 

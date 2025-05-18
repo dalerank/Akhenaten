@@ -20,8 +20,7 @@ autoconfig_windows& autoconfig_registry() {
     return *g_autoconfig_windows;
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows);
-void config_load_autoconfig_windows() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows) {
     for (auto *w : autoconfig_registry()) {
         w->load(w->get_section());
     }

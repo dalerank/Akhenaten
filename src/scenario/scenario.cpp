@@ -16,8 +16,7 @@
 
 scenario_data_t g_scenario;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data);
-void config_load_scenario_load_meta_data() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
 
     g_scenario.load_metadata(missionid);

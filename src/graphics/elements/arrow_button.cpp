@@ -20,8 +20,7 @@ namespace ui {
     static image_desc arrow_button_up;
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options);
-void config_load_arrowbutton_options() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options) {
     g_config_arch.r_section("uioptions", [] (archive arch) {
         arch.r_desc("arrow_button_tiny_down", ui::arrow_button_tiny_down);
         arch.r_desc("arrow_button_tiny_up", ui::arrow_button_tiny_up);

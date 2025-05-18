@@ -7,8 +7,7 @@
 
 std::map<e_building_type, vfs::path> g_building_sounds;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds);
-void config_load_building_sounds() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds) {
     g_config_arch.r_array("building_sounds", [] (archive arch) {
         e_building_type type = arch.r_type<e_building_type>("type");
         pcstr path = arch.r_string("sound");

@@ -17,8 +17,7 @@ struct figure_animal_info_window : public figure_info_window {
 
 figure_animal_info_window figure_animal_infow;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_animal_window_info);
-void config_load_figure_animal_window_info() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_figure_animal_window_info) {
     figure_animal_infow.load("info_window_figure_animal");
 }
 

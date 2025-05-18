@@ -149,8 +149,7 @@ namespace ui {
     image_desc advisor_icons;
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options);
-void config_load_ui_options() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
     g_config_arch.r_section("uioptions", [] (archive arch) {
         arch.r_desc("resource_icons", ui::resource_icons);
         arch.r_desc("advisor_icons", ui::advisor_icons);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "core/archive.h"
 
 enum e_gift { 
     GIFT_MODEST = 0,
@@ -69,4 +70,5 @@ struct kingdome_relation_t {
     void reset_gifts();
 
     void init();
+    void archive_load(archive arch);
 };

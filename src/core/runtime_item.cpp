@@ -23,8 +23,7 @@ config::runtime::runtime(pcstr s) : _section(s) {
     runtime_registry().push_back(this);
 }
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_runtime_items);
-void config_load_runtime_items() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_runtime_items) {
     for (auto& item : runtime_registry()) {
         item->reset();
         g_config_arch.r_section(item->_section, [item] (archive arch) {

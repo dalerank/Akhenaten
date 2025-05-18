@@ -13,6 +13,7 @@
 #include "scenario/scenario.h"
 #include "game/settings.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -20,6 +21,18 @@
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static int cheated_invasion = 0;
+
+struct kingdome_t {
+    void archive_unload() {}
+    void archive_load(archive arch) {
+    }
+
+    void archive_init() {}
+};
+
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_kingdome_static_params) {
+    //g_city.kingdome.archive_load(arch);
+}
 
 declare_console_command_p(addsavings) {
     std::string args;
@@ -309,7 +322,12 @@ void kingdome_relation_t::reset_gifts() {
 }
 
 void kingdome_relation_t::init() {
+    reset_gifts();
+
     events::subscribe([this] (event_send_gift_to_kingdome ev) {
         send_gift(ev.gift_size);
     });
+}
+
+void kingdome_relation_t::archive_load(archive arch) {
 }

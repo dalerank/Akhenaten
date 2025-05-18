@@ -71,8 +71,7 @@ ruin_info_window g_ruin_info_window;
 
 void window_info_show(const tile2i& point, bool avoid_mouse);
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window);
-void config_load_info_window() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window) {
     g_building_common_window.load("building_info_window");
     g_empty_info_window.load("empty_info_window");
     g_terrain_info_window.load("terrain_info_window");

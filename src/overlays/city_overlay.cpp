@@ -25,8 +25,7 @@ overlay_list &city_overlay::overlays() {
     return impl;
 } ;
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays);
-void config_load_city_overlays() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays) {
     g_config_arch.r_array("overlays", [] (archive arch) {
         const e_overlay e_v = arch.r_type<e_overlay>("id");
         city_overlay* overlay = city_overlay::get(e_v);

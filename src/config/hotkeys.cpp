@@ -15,8 +15,7 @@
 
 static const char *CONF_HOTKEYS = "hotkeys.conf";
 
-ANK_REGISTER_CONFIG_ITERATOR(config_load_game_hotkeys);
-void config_load_game_hotkeys() {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_hotkeys) {
     game_hotkeys::load();
 }
 
