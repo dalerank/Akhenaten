@@ -322,6 +322,7 @@ void kingdome_relation_t::reset_gifts() {
 }
 
 void kingdome_relation_t::init() {
+    config_load_kingdome_static_params();
     reset_gifts();
 
     events::subscribe([this] (event_send_gift_to_kingdome ev) {
