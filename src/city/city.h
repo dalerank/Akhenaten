@@ -241,6 +241,7 @@ struct city_t {
     void set_advisor_available(e_advisor advisor, e_availability available);
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
+    void on_post_load();
 };
 
 const uint8_t* city_player_name();

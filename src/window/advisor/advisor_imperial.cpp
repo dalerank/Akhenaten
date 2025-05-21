@@ -72,8 +72,6 @@ void ui::advisor_imperial_window::draw_foreground(UiFlags flags) {
 int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    g_city.kingdome.calculate_gift_costs();
-
     ui["header_label"] = (pcstr)city_player_name();
     ui["rating_label"].text_var("%s %u", ui::str(52, 0), g_city.kingdome.rating);
     ui["rating_advice"] = ui::str(52, g_city.kingdome.rating / 5 + 22);

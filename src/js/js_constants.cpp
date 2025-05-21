@@ -12,6 +12,7 @@
 #include "scenario/events.h"
 #include "graphics/font.h"
 #include "city/constants.h"
+#include "city/city_kingdome_relations.h"
 
 #include "sound/sound_city.h"
 
@@ -63,6 +64,10 @@ void js_register_city_labor_category(js_State *J) {
 void js_register_city_overlays(js_State *J) {
     js_register_tokens(J, e_overlay_tokens);
     js_register_tokens(J, e_column_type_tokens);
+}
+
+void js_register_city_constants(js_State *J) {
+    js_register_tokens(J, e_gift_tokens);
 }
 
 void js_registere_event_type(js_State *J) {

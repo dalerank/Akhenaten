@@ -23,6 +23,7 @@
 
 static int cheated_invasion = 0;
 
+const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> e_gift_tokens;
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
 declare_console_command_p(updatekingdome) {
@@ -50,6 +51,18 @@ void kingdome_relation_t::static_params::archive_load(archive arch) {
     arch.r_array_num<int8_t>("tribute_not_paid_years_penalty", tribute_not_paid_years_penalty);
 
     months_since_gift_locker = arch.r_int("months_since_gift_locker", 12);
+    player_salary_above_king_penalty = arch.r_int("player_salary_above_king_penalty", 1);
+    player_salary_less_king_promotion = arch.r_int("player_salary_less_king_promotion", 1);
+    first_debt_penalty = arch.r_int("first_debt_penalty", -5);
+    second_debt_penalty = arch.r_int("second_debt_penalty", -10);
+    last_debt_rating_cap = arch.r_int("last_debt_rating_cap", 10);
+
+    gift_rules.clear();
+    arch.r_array("gift_rules", gift_rules, [&](archive sarch, auto &rule) {
+        rule.id = sarch.r_type<e_gift>("id");
+        rule.rate = sarch.r_float("rate");
+        rule.minimum = arch.r_float("minimum");
+    });
 }
 
 declare_console_command_p(addsavings) {
@@ -101,7 +114,7 @@ void kingdome_relation_t::update_debt_state() {
         debt_state = e_debt_twice;
         months_in_debt = 0;
         messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
-        change(-5);
+        change(params().first_debt_penalty);
         break;
 
     case e_debt_twice:
@@ -118,7 +131,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
             if (!g_city.figures.kingdome_soldiers) {
                 messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
-                change(-10);
+                change(params().second_debt_penalty);
             }
         }
         break;
@@ -138,7 +151,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
 
             if (!g_city.figures.kingdome_soldiers) {
-                rating_cap = 10;
+                rating_cap = params().last_debt_rating_cap;
             }
         }
         break;
@@ -222,18 +235,24 @@ void kingdome_relation_t::update() {
 }
 
 int kingdome_relation_t::get_gift_cost(int size) {
-    return gifts[size].cost;
+    auto it = std::find_if(params().gift_rules.begin(), params().gift_rules.end(),
+        [this] (const auto &rule) { return rule.id == g_city.kingdome.player_rank; });
+
+    if (it != params().gift_rules.end()) {
+        return int(personal_savings / it->rate + it->minimum);
+    }
+
+    // Default gift cost calculation
+    switch (size) {
+    case GIFT_MODEST: return (personal_savings / 8 + 20);
+    case GIFT_GENEROUS: return (personal_savings / 4 + 50);
+    case GIFT_LAVISH: return (personal_savings / 2 + 100);
+    default: return 100;
+    }
 }
 
 int kingdome_relation_t::can_send_gift(int size) {
     return gifts[size].cost <= personal_savings;
-}
-
-void kingdome_relation_t::calculate_gift_costs() {
-    int savings = personal_savings;
-    gifts[GIFT_MODEST].cost = savings / 8 + 20;
-    gifts[GIFT_GENEROUS].cost = savings / 4 + 50;
-    gifts[GIFT_LAVISH].cost = savings / 2 + 100;
 }
 
 void kingdome_relation_t::send_gift(int gift_size) {
@@ -352,15 +371,15 @@ void kingdome_relation_t::advance_year() {
     }
 
     // rank salary
-    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+    const int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
     if (g_city.kingdome.player_rank != 0) {
         if (salary_delta > 0) {
             // salary too high
             rating -= salary_delta;
-            kingdom_salary_penalty = salary_delta + 1;
+            kingdom_salary_penalty = salary_delta + params().player_salary_above_king_penalty;
         } else if (salary_delta < 0) {
             // salary lower than rank
-            rating += 1;
+            rating += params().player_salary_less_king_promotion;
         }
     } else if (salary_delta > 0) {
         rating -= salary_delta;
@@ -486,6 +505,10 @@ void kingdome_relation_t::init() {
     events::subscribe([this] (event_send_gift_to_kingdome ev) {
         send_gift(ev.gift_size);
     });
+}
+
+void kingdome_relation_t::on_post_load() {
+    if (rating_cap == 0) { rating_cap = 100; }
 }
 
 void kingdome_relation_t::reset() {

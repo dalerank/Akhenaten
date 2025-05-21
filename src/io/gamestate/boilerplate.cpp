@@ -195,8 +195,7 @@ static void post_load() {
 
     // building counts / storage
     g_city.buildings.update_counters();
-    g_city.buildings.on_post_load();
-    g_city.figures.on_post_load();
+    g_city.on_post_load();
     g_city.resource.calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     city_resource_determine_available();

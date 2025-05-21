@@ -1387,6 +1387,12 @@ bvariant city_t::get_property(const xstring &domain, const xstring &name) const 
     return city_get_property(domain, name);
 }
 
+void city_t::on_post_load() {
+    buildings.on_post_load();
+    figures.on_post_load();
+    kingdome.on_post_load();
+}
+
 void city_t::environment_t::update_day() {
     river_update_flotsam();
 }
