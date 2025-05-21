@@ -95,6 +95,10 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 
     struct static_params {
         svector<int, 16> salary_ranks;
+        svector<uint8_t, 4> gift_relation_change_first;
+        svector<uint8_t, 4> gift_relation_change_second;
+        svector<uint8_t, 4> gift_relation_change_third;
+        svector<uint8_t, 4> gift_relation_change_last;
 
         void archive_unload() {}
         void archive_init() {}

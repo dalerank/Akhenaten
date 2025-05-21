@@ -27,6 +27,10 @@ kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
 void kingdome_relation_t::static_params::archive_load(archive arch) {
     arch.r_array_num<int>("salary_ranks", salary_ranks);
+    arch.r_array_num<uint8_t>("gift_relation_change_first", gift_relation_change_first);
+    arch.r_array_num<uint8_t>("gift_relation_change_second", gift_relation_change_second);
+    arch.r_array_num<uint8_t>("gift_relation_change_third", gift_relation_change_third);
+    arch.r_array_num<uint8_t>("gift_relation_change_last", gift_relation_change_last);
 }
 
 declare_console_command_p(addsavings) {
@@ -218,44 +222,22 @@ void kingdome_relation_t::send_gift(int gift_size) {
         return;
 
     int cost = gifts[gift_size].cost;
-    if (cost > personal_savings)
+    if (cost > personal_savings) {
         return;
+    }
 
     if (gift_overdose_penalty <= 0) {
         gift_overdose_penalty = 1;
-        if (gift_size == GIFT_MODEST)
-            change(3);
-        else if (gift_size == GIFT_GENEROUS)
-            change(5);
-        else if (gift_size == GIFT_LAVISH)
-            change(10);
-
+        change(params().gift_relation_change_first[gift_size]);
     } else if (gift_overdose_penalty == 1) {
         gift_overdose_penalty = 2;
-        if (gift_size == GIFT_MODEST)
-            change(1);
-        else if (gift_size == GIFT_GENEROUS)
-            change(3);
-        else if (gift_size == GIFT_LAVISH)
-            change(5);
-
+        change(params().gift_relation_change_second[gift_size]);
     } else if (gift_overdose_penalty == 2) {
         gift_overdose_penalty = 3;
-        if (gift_size == GIFT_MODEST)
-            change(0);
-        else if (gift_size == GIFT_GENEROUS)
-            change(1);
-        else if (gift_size == GIFT_LAVISH)
-            change(3);
-
+        change(params().gift_relation_change_third[gift_size]);
     } else if (gift_overdose_penalty == 3) {
         gift_overdose_penalty = 4;
-        if (gift_size == GIFT_MODEST)
-            change(0);
-        else if (gift_size == GIFT_GENEROUS)
-            change(0);
-        else if (gift_size == GIFT_LAVISH)
-            change(1);
+        change(params().gift_relation_change_last[gift_size]);
     }
 
     months_since_gift = 0;
