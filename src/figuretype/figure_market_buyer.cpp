@@ -94,7 +94,7 @@ sound_key figure_market_buyer::phrase_key() const {
         keys.push_back("buyer_gods_are_angry");
     }
 
-    if (g_city.ratings.kingdom < 30) {
+    if (g_city.kingdome.rating < 30) {
         keys.push_back("buyer_city_is_bad_reputation");
     }
 

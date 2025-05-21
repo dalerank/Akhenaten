@@ -71,7 +71,7 @@ sound_key figure_magistrate::phrase_key() const {
         keys.push_back("no_food_in_city");
     }
 
-    if (g_city.ratings.kingdom < 10) {
+    if (g_city.kingdome.rating < 10) {
         keys.push_back("city_bad_reputation");
     }
 

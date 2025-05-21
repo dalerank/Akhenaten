@@ -1,6 +1,8 @@
 #pragma once
 
-enum e_advisor {
+#include <cstdint>
+
+enum e_advisor : uint8_t {
     ADVISOR_NONE = 0,
     ADVISOR_LABOR = 1,
     ADVISOR_MILITARY = 2,
@@ -19,7 +21,7 @@ enum e_advisor {
     ADVISOR_MAX
 };
 
-enum e_low_mood_reason {
+enum e_low_mood_reason : uint8_t {
     LOW_MOOD_NONE = 0,
     LOW_MOOD_NO_FOOD = 1,
     LOW_MOOD_NO_JOBS = 2,
@@ -28,7 +30,7 @@ enum e_low_mood_reason {
     LOW_MOOD_MANY_TENTS = 5,
 };
 
-enum e_no_immigratoion_reason {
+enum e_no_immigratoion_reason : uint8_t {
     NO_IMMIGRATION_LOW_WAGES = 0,
     NO_IMMIGRATION_NO_JOBS = 1,
     NO_IMMIGRATION_NO_FOOD = 2,
@@ -37,7 +39,7 @@ enum e_no_immigratoion_reason {
     NO_IMMIGRATION_LOW_MOOD = 5
 };
 
-enum e_trade_status {
+enum e_trade_status : uint8_t {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
     TRADE_STATUS_EXPORT = 2,
@@ -45,13 +47,13 @@ enum e_trade_status {
     TRADE_STATUS_EXPORT_SURPLUS = 4,
 };
 
-enum e_availability {
+enum e_availability : int8_t {
     NOT_AVAILABLE_YET = -1,
     NOT_AVAILABLE = 0,
     AVAILABLE = 1,
 };
 
-enum e_permission {
+enum e_permission : uint8_t {
     epermission_none = 0,
     epermission_maintenance = 1,
     epermission_priest = 2,
@@ -60,4 +62,10 @@ enum e_permission {
     epermission_education = 5,
     epermission_medicine = 6,
     epermission_tax_collector = 7
+};
+
+enum e_rating_change : uint8_t {
+    e_rating_dropping = 0,
+    e_rating_stalling,
+    e_rating_rising
 };

@@ -1,6 +1,7 @@
 #include "city_kingdome_relations.h"
 
 #include "city/city.h"
+#include "core/calc.h"
 #include "game/game_events.h"
 #include "city/city_finance.h"
 #include "city/city_message.h"
@@ -13,6 +14,8 @@
 #include "scenario/scenario.h"
 #include "game/settings.h"
 #include "game/game.h"
+#include "scenario/criteria.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 #include "dev/debug.h"
@@ -34,7 +37,7 @@ declare_console_command_p(addsavings) {
 }
 
 void kingdome_relation_t::load_scenario(int rank, int load_type ) {
-    g_city.ratings.kingdom = scenario_starting_kingdom();
+    rating = scenario_starting_kingdom();
     personal_savings = scenario_starting_personal_savings();
     player_rank = rank;
     int salary_rank = rank;
@@ -75,7 +78,7 @@ void kingdome_relation_t::update_debt_state() {
         debt_state = e_debt_twice;
         months_in_debt = 0;
         messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
-        g_city.ratings.change_kingdom(-5);
+        change(-5);
         break;
 
     case e_debt_twice:
@@ -92,7 +95,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
             if (!g_city.figures.kingdome_soldiers) {
                 messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
-                g_city.ratings.change_kingdom(-10);
+                change(-10);
             }
         }
         break;
@@ -112,7 +115,7 @@ void kingdome_relation_t::update_debt_state() {
             months_in_debt = 0;
 
             if (!g_city.figures.kingdome_soldiers) {
-                g_city.ratings.limit_kingdom(10);
+                rating_cap = 10;
             }
         }
         break;
@@ -126,9 +129,9 @@ void kingdome_relation_t::process_invasion() {
     if (g_city.figures.kingdome_soldiers && !cheated_invasion) {
         // caesar invasion in progress
         invasion.duration_day_countdown--;
-        if (g_city.ratings.kingdom >= 35 && invasion.duration_day_countdown < 176)
+        if (rating >= 35 && invasion.duration_day_countdown < 176)
             formation_caesar_pause();
-        else if (g_city.ratings.kingdom >= 22) {
+        else if (rating >= 22) {
             if (invasion.duration_day_countdown > 0) {
                 formation_caesar_retreat();
                 if (!invasion.retreat_message_shown) {
@@ -143,8 +146,8 @@ void kingdome_relation_t::process_invasion() {
         // player defeated caesar army
         invasion.size = 0;
         invasion.soldiers_killed = 0;
-        if (g_city.ratings.kingdom < 35) {
-            g_city.ratings.change_kingdom(10);
+        if (rating < 35) {
+            change(10);
             if (invasion.count < 2)
                 messages::popup(MESSAGE_CAESAR_RESPECT_1, 0, 0);
             else if (invasion.count < 3)
@@ -154,7 +157,7 @@ void kingdome_relation_t::process_invasion() {
             }
         }
     } else if (invasion.days_until_invasion <= 0) {
-        if (g_city.ratings.kingdom <= 10) {
+        if (rating <= 10) {
             // warn player that caesar is angry and will invade in a year
             invasion.warnings_given++;
             invasion.days_until_invasion = 192;
@@ -221,38 +224,38 @@ void kingdome_relation_t::send_gift(int gift_size) {
     if (gift_overdose_penalty <= 0) {
         gift_overdose_penalty = 1;
         if (gift_size == GIFT_MODEST)
-            g_city.ratings.change_kingdom(3);
+            change(3);
         else if (gift_size == GIFT_GENEROUS)
-            g_city.ratings.change_kingdom(5);
+            change(5);
         else if (gift_size == GIFT_LAVISH)
-            g_city.ratings.change_kingdom(10);
+            change(10);
 
     } else if (gift_overdose_penalty == 1) {
         gift_overdose_penalty = 2;
         if (gift_size == GIFT_MODEST)
-            g_city.ratings.change_kingdom(1);
+            change(1);
         else if (gift_size == GIFT_GENEROUS)
-            g_city.ratings.change_kingdom(3);
+            change(3);
         else if (gift_size == GIFT_LAVISH)
-            g_city.ratings.change_kingdom(5);
+            change(5);
 
     } else if (gift_overdose_penalty == 2) {
         gift_overdose_penalty = 3;
         if (gift_size == GIFT_MODEST)
-            g_city.ratings.change_kingdom(0);
+            change(0);
         else if (gift_size == GIFT_GENEROUS)
-            g_city.ratings.change_kingdom(1);
+            change(1);
         else if (gift_size == GIFT_LAVISH)
-            g_city.ratings.change_kingdom(3);
+            change(3);
 
     } else if (gift_overdose_penalty == 3) {
         gift_overdose_penalty = 4;
         if (gift_size == GIFT_MODEST)
-            g_city.ratings.change_kingdom(0);
+            change(0);
         else if (gift_size == GIFT_GENEROUS)
-            g_city.ratings.change_kingdom(0);
+            change(0);
         else if (gift_size == GIFT_LAVISH)
-            g_city.ratings.change_kingdom(1);
+            change(1);
     }
 
     months_since_gift = 0;
@@ -313,13 +316,184 @@ void kingdome_relation_t::reset_gifts() {
     gifts[GIFT_LAVISH].cost = 0;
 }
 
+void kingdome_relation_t::advance_month() {
+    if (scenario_is_open_play()) {
+        rating = 50;
+        return;
+    }
+
+    months_since_gift++;
+    if (months_since_gift >= 12) {
+        gift_overdose_penalty = 0;
+    }
+
+
+    rating = calc_bound(rating, 0, 100);
+}
+
+void kingdome_relation_t::advance_year() {
+    advance_month();
+    
+    kingdom_salary_penalty = 0;
+    kingdom_milestone_penalty = 0;
+    kingdom_ignored_request_penalty = 0;
+
+    const bool can_update_rating = !game_features::gameplay_save_year_kingdome_rating;
+    if (can_update_rating && scenario_is_before_mission(3)) {
+        rating -= 2;
+    }
+
+    // tribute penalty
+    if (g_city.finance.tribute_not_paid_last_year) {
+        if (g_city.finance.tribute_not_paid_total_years <= 1) {
+            rating -= 3;
+        } else if (g_city.finance.tribute_not_paid_total_years <= 2) {
+            rating -= 5;
+        } else {
+            rating -= 8;
+        }
+    }
+
+    // rank salary
+    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+    if (g_city.kingdome.player_rank != 0) {
+        if (salary_delta > 0) {
+            // salary too high
+            rating -= salary_delta;
+            kingdom_salary_penalty = salary_delta + 1;
+        } else if (salary_delta < 0) {
+            // salary lower than rank
+            rating += 1;
+        }
+    } else if (salary_delta > 0) {
+        rating -= salary_delta;
+        kingdom_salary_penalty = salary_delta;
+    }
+
+    // milestone
+    int milestone_pct = 0;
+    if (scenario_criteria_milestone_year(25) == game.simtime.year) {
+        milestone_pct = 25;
+    } else if (scenario_criteria_milestone_year(50) == game.simtime.year) {
+        milestone_pct = 50;
+    } else if (scenario_criteria_milestone_year(75) == game.simtime.year) {
+        milestone_pct = 75;
+    }
+
+    auto &ratings = g_city.ratings;
+    if (milestone_pct) {
+        int bonus = 1;
+        if (winning_culture() && ratings.culture < calc_adjust_with_percentage(winning_culture(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_prosperity() && ratings.prosperity < calc_adjust_with_percentage(winning_prosperity(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_monuments() && ratings.monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_kingdom() && rating < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
+            bonus = 0;
+        }
+        if (winning_population() && g_city.population.current < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
+            bonus = 0;
+        }
+
+        if (bonus) {
+            rating += 5;
+        } else {
+            rating -= 2;
+            kingdom_milestone_penalty = 2;
+        }
+    }
+
+    if (rating < rating_last_year) {
+        kingdom_change = e_rating_dropping;
+    } else if (rating == rating_last_year) {
+        kingdom_change = e_rating_stalling;
+    } else {
+        kingdom_change = e_rating_rising;
+    }
+
+    rating_last_year = rating;
+}
+
+void kingdome_relation_t::reduce_missed_request(int penalty) {
+    change(-penalty);
+    kingdom_ignored_request_penalty = penalty;
+}
+
+void kingdome_relation_t::increase_success_request(int value) {
+    change(value);
+}
+
+void kingdome_relation_t::reduce_god_wrath(int value) {
+    change(-value);
+}
+
+void kingdome_relation_t::increase_blessing_god(int value) {
+    change(value);
+}
+
+void kingdome_relation_t::change(int amount) {
+    rating = calc_bound(rating + amount, 0, 100);
+}
+
+void kingdome_relation_t::update_explanation() {
+    kingdom_salary_penalty = 0;
+    int salary_delta = g_city.kingdome.salary_rank - g_city.kingdome.player_rank;
+    if (g_city.kingdome.player_rank != 0) {
+        if (salary_delta > 0) {
+            kingdom_salary_penalty = salary_delta + 1;
+        }
+
+    } else if (salary_delta > 0) {
+        kingdom_salary_penalty = salary_delta;
+    }
+
+    if (kingdom_salary_penalty >= 8)
+        kingdom_explanation = 1;
+    else if (g_city.finance.tribute_not_paid_total_years >= 3)
+        kingdom_explanation = 2;
+    else if (kingdom_ignored_request_penalty >= 5)
+        kingdom_explanation = 3;
+    else if (kingdom_salary_penalty >= 5)
+        kingdom_explanation = 4;
+    else if (g_city.finance.tribute_not_paid_total_years >= 2)
+        kingdom_explanation = 5;
+    else if (kingdom_ignored_request_penalty >= 3)
+        kingdom_explanation = 6;
+    else if (kingdom_salary_penalty >= 3)
+        kingdom_explanation = 7;
+    else if (g_city.finance.tribute_not_paid_last_year)
+        kingdom_explanation = 8;
+    else if (kingdom_salary_penalty >= 2)
+        kingdom_explanation = 9;
+    else if (kingdom_milestone_penalty)
+        kingdom_explanation = 10;
+    else if (kingdom_salary_penalty)
+        kingdom_explanation = 11;
+    else if (kingdom_change == e_rating_rising) { // rising
+        kingdom_explanation = 12;
+    } else if (kingdom_change == e_rating_stalling) { // the same
+        kingdom_explanation = 13;
+    } else {
+        kingdom_explanation = 0;
+    }
+}
 
 void kingdome_relation_t::init() {
+    rating_cap = 100;
     reset_gifts();
 
     events::subscribe([this] (event_send_gift_to_kingdome ev) {
         send_gift(ev.gift_size);
     });
+}
+
+void kingdome_relation_t::reset() {
+    rating = 50;
+    rating_cap = 100;
 }
 
 const kingdome_relation_t::static_params &kingdome_relation_t::params() {

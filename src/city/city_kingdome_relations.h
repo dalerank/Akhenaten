@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "core/runtime_item.h"
 #include "city/city_component.h"
+#include "city/constants.h"
 #include "core/svector.h"
 
 enum e_gift { 
@@ -33,15 +34,24 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 
     e_debt_state debt_state;
     int32_t months_in_debt;
+    uint8_t rating;
+    uint8_t rating_last_year;
+    uint8_t rating_cap;
 
-    int32_t player_rank;
+    int8_t player_rank;
+    e_rating_change kingdom_change;
     uint8_t salary_rank;
     uint8_t salary_amount;
+    int8_t kingdom_salary_penalty;
     int32_t donate_amount;
     uint16_t personal_savings;
     uint8_t player_name_adversary[32];
     uint8_t player_name[32];
     uint8_t campaign_player_name[32]; /**< Temp storage for carrying over player name to next campaign mission */
+    int8_t kingdom_explanation;
+    int8_t kingdom_milestone_penalty;
+    int8_t kingdom_ignored_request_penalty;
+
     struct {
         int32_t count;
         int32_t size;
@@ -70,8 +80,18 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     void mark_soldier_killed();
     void force_attack(int size);
     void reset_gifts();
+    void advance_month();
+    void advance_year();
+
+    void change(int amount);
+    void update_explanation();
+    void reduce_missed_request(int penalty);
+    void increase_success_request(int value);
+    void increase_blessing_god(int value);
+    void reduce_god_wrath(int value);
 
     void init();
+    void reset();
 
     struct static_params {
         svector<int, 16> salary_ranks;

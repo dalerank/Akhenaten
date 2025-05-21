@@ -68,7 +68,7 @@ sound_key figure_water_carrier::phrase_key() const {
         keys.push_back("gods_are_angry");
     }
 
-    if (g_city.ratings.kingdom < 30) {
+    if (g_city.kingdome.rating < 30) {
         keys.push_back("city_is_bad");
     }
 

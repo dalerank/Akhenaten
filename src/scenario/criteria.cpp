@@ -30,6 +30,7 @@ int winning_population() {
 int winning_culture() {
     if (!g_scenario.win_criteria.culture.enabled)
         return 0;
+
     return g_scenario.win_criteria.culture.goal;
 }
 

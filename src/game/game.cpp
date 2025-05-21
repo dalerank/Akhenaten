@@ -151,6 +151,7 @@ void game_t::advance_year() {
     g_city.migration.advance_year();
     g_empire.reset_yearly_trade_amounts();
     g_city.ratings_update(/*yearly_update*/true);
+    g_city.kingdome.advance_year();
     //    city_gods_reset_yearly_blessings();
 }
 
@@ -180,6 +181,7 @@ void game_t::advance_month() {
         advance_year();
     } else {
         g_city.ratings_update(/*yearly_update*/false);
+        g_city.kingdome.advance_month();
     }
 
     g_city.population.record_monthly();

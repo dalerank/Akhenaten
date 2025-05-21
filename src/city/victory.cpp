@@ -63,7 +63,7 @@ e_victory_state city_t::determine_victory_state() {
 
     if (winning_kingdom()) {
         has_criteria = 1;
-        if (ratings.kingdom < winning_kingdom()) {
+        if (kingdome.rating < winning_kingdom()) {
             state = e_victory_state_none;
         }
     }

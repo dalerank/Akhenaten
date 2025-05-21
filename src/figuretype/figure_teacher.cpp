@@ -52,7 +52,7 @@ sound_key figure_teacher::phrase_key() const {
         keys.push_back("teacher_need_workers");
     }
 
-    if (g_city.ratings.kingdom < 30) {
+    if (g_city.kingdome.rating < 30) {
         keys.push_back("teacher_low_rating");
     }
 

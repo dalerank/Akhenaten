@@ -579,7 +579,7 @@ void city_religion_t::perform_major_blessing(e_god god) {
             return;
         } else {
             // increased kingdom by 15
-            g_city.ratings.change_kingdom(15);
+            g_city.kingdome.change(15);
             messages::god(GOD_RA, MESSAGE_BLESSING_RA_KINGDOM );
             return;
         }
@@ -626,7 +626,7 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         } else {
             // slightly increased reputation
             messages::popup(MESSAGE_SMALL_BLESSING_RA_1, 0, 0);
-            g_city.ratings.change_kingdom(5);
+            g_city.kingdome.increase_blessing_god(5);
             return;
         }
         break;
@@ -687,7 +687,7 @@ void city_religion_t::perform_major_curse(e_god god) {
 
         if (anti_scum_random_15bit() % 3 == 1) {
             // lowers reputation
-            g_city.ratings.change_kingdom(-15);
+            g_city.kingdome.reduce_god_wrath(15);
             messages::popup(MESSAGE_CURSE_RA_1, 0, 0);
             return;
         }
@@ -764,7 +764,7 @@ void city_religion_t::perform_minor_curse(e_god god) {
             return;
         } else {
             // lowers reputation
-            g_city.ratings.change_kingdom(-5);
+            g_city.kingdome.reduce_god_wrath(5);
             events::emit(event_message_god{ GOD_RA, MESSAGE_SMALL_CURSE_RA_1 });
             return;
         }

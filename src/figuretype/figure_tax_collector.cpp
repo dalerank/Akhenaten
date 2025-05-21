@@ -101,7 +101,7 @@ sound_key figure_tax_collector::phrase_key() const {
         {"buyer_city_have_no_army", formation_get_num_forts() < 1},
         {"need_workers", g_city.labor.workers_needed >= 10},
         {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
-        {"city_is_bad", g_city.ratings.kingdom < 30},
+        {"city_is_bad", g_city.kingdome.rating < 30},
         {"much_unemployments", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS},
         {"low_entertainment", g_city.festival.months_since_festival > 6},
         {"city_is_good", sentiment > 50},

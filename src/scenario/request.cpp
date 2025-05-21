@@ -60,7 +60,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     case e_event_state_finished:
         messages::popup(MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
         if (!event.is_overdue) {
-            g_city.ratings.increase_kingdom_success_request(3);
+            g_city.kingdome.increase_success_request(3);
         }
         event.event_state = e_event_state_received;
         event.is_active = false;
@@ -69,7 +69,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     case e_event_state_finished_late:
         assert(!event.is_overdue);
         messages::popup(MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
-        g_city.ratings.increase_kingdom_success_request(1);
+        g_city.kingdome.increase_success_request(1);
         event.event_state = e_event_state_received;
         event.is_active = false;
         break;
@@ -104,7 +104,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
                                    event.event_id, 0);
 
         } else if (event.quest_months_left == 0) {
-            g_city.ratings.reduce_kingdom_missed_request(3);
+            g_city.kingdome.reduce_missed_request(3);
             event.event_state = e_event_state_overdue;
             event.is_overdue = true;
             event.quest_months_left = 24; // hardcoded
@@ -129,7 +129,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
             //                                               PHRASE_general_request_no_reason_P_A + faction_mod
             //                                               * 3, id, 0);
         } else if (event.quest_months_left == 0) {
-            g_city.ratings.reduce_kingdom_missed_request(2);
+            g_city.kingdome.reduce_missed_request(2);
             event.event_state = e_event_state_failed;
             event.is_active = false;
             next_action = EVENT_ACTION_REFUSED;

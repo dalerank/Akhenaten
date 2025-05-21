@@ -110,12 +110,11 @@ void city_t::ratings_update_explanations() {
     ratings.update_culture_explanation();
     update_prosperity_explanation();
     ratings.update_monument_explanation();
-    ratings.update_kingdom_explanation();
+    kingdome.update_explanation();
 }
 
 void city_t::ratings_update(bool is_yearly_update) {
     ratings.update_culture_rating();
-    ratings.update_kingdom_rating(is_yearly_update);
     calculate_max_prosperity();
 
     if (is_yearly_update) {
@@ -885,7 +884,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom);
+    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.rating);
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_treasury_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.entertainment);
@@ -979,9 +978,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_explanation);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_explanation);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.kingdom_explanation);
+    iob->bind____skip(3);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.player_rank);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.player_rank);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT16, &data.kingdome.personal_savings); // ok
     iob->bind____skip(2);
                                                                           //    for (int i = 0; i < 2; i++)
@@ -1102,11 +1103,17 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].cost);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].cost);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].cost);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_salary_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_milestone_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_ignored_request_penalty);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.kingdom_change);
+    iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.kingdom_salary_penalty);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.kingdom_milestone_penalty);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.kingdom_ignored_request_penalty);
+    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.rating_last_year);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.rating_cap);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.kingdom_change);
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_native_force_attack);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.mission_post_operational);
@@ -1348,7 +1355,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
         { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},
         { tags().rating, tags().monument, [] (const xstring &) { return bvariant(g_city.ratings.monument); }},
-        { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.ratings.kingdom); }},
+        { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.kingdome.rating); }},
         { tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
         { tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
         { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},

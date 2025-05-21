@@ -33,7 +33,7 @@ void info_window_mansion::init(object_info &c) {
 
         g_city.kingdome.set_salary_rank(0);
         city_finance_update_salary();
-        g_city.ratings.update_kingdom_explanation();
+        g_city.kingdome.update_explanation();
     });
 }
 

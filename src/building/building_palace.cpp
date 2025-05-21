@@ -122,7 +122,7 @@ void building_palace::draw_tooltip(tooltip_context *c) {
     }
 
     lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_kingdom, x + 5, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.kingdom, '@', " ", x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    text_draw_number_colored(g_city.kingdome.rating, '@', " ", x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     if (!scenario_is_open_play() && winning_kingdom()) {
         text_draw_number_colored(winning_kingdom(), '(', ")", x + 140 + width, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }

@@ -78,7 +78,7 @@ void ui::advisor_ratings_window::ui_draw_foreground(UiFlags flags) {
     draw_rating_column(0, g_city.ratings.culture, open_play, winning_culture());
     draw_rating_column(1, g_city.ratings.prosperity, open_play, winning_prosperity());
     draw_rating_column(2, g_city.ratings.monument, open_play, winning_monuments());
-    draw_rating_column(3, g_city.ratings.kingdom, open_play, winning_kingdom());
+    draw_rating_column(3, g_city.kingdome.rating, open_play, winning_kingdom());
 
     ui.end_widget();
 }
@@ -115,7 +115,7 @@ int ui::advisor_ratings_window::draw_background(UiFlags flags) {
 
     case e_selected_rating_kingdom:
         ui["advice_header"] = ui::str(53, 4);
-        ui["advice_text"] = (g_city.ratings.kingdom <= 90) ? ui::str(53, 27 + g_city.ratings.selected_explanation()) : ui::str(53, 53);
+        ui["advice_text"] = (g_city.kingdome.rating <= 90) ? ui::str(53, 27 + g_city.ratings.selected_explanation()) : ui::str(53, 53);
         break;
 
     default:
@@ -128,7 +128,7 @@ int ui::advisor_ratings_window::draw_background(UiFlags flags) {
     draw_rating(0, g_city.ratings.culture, open_play, winning_culture());
     draw_rating(1, g_city.ratings.prosperity, open_play, winning_prosperity());
     draw_rating(2, g_city.ratings.monument, open_play, winning_monuments());
-    draw_rating(3, g_city.ratings.kingdom, open_play, winning_kingdom());
+    draw_rating(3, g_city.kingdome.rating, open_play, winning_kingdom());
 
     return 0;
 }

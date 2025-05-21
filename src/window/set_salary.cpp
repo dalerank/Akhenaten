@@ -100,7 +100,7 @@ static void button_set_salary(int rank, int param2) {
     if (!g_city.victory_state.has_won()) {
         g_city.kingdome.set_salary_rank(rank);
         city_finance_update_salary();
-        g_city.ratings.update_kingdom_explanation();
+        g_city.kingdome.update_explanation();
         window_advisors_show();
     }
 }
