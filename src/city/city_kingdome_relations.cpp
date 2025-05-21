@@ -25,12 +25,31 @@ static int cheated_invasion = 0;
 
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
+declare_console_command_p(updatekingdome) {
+    std::string args; is >> args;
+    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    if (!!value) {
+        g_city.kingdome.advance_year();
+    } else {
+        g_city.kingdome.advance_month();
+    }
+}
+
+declare_console_command_p(addkingdome) {
+    std::string args; is >> args;
+    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    g_city.kingdome.change(amount);
+}
+
 void kingdome_relation_t::static_params::archive_load(archive arch) {
     arch.r_array_num<int>("salary_ranks", salary_ranks);
     arch.r_array_num<uint8_t>("gift_relation_change_first", gift_relation_change_first);
     arch.r_array_num<uint8_t>("gift_relation_change_second", gift_relation_change_second);
     arch.r_array_num<uint8_t>("gift_relation_change_third", gift_relation_change_third);
     arch.r_array_num<uint8_t>("gift_relation_change_last", gift_relation_change_last);
+    arch.r_array_num<int8_t>("tribute_not_paid_years_penalty", tribute_not_paid_years_penalty);
+
+    months_since_gift_locker = arch.r_int("months_since_gift_locker", 12);
 }
 
 declare_console_command_p(addsavings) {
@@ -305,12 +324,11 @@ void kingdome_relation_t::advance_month() {
     }
 
     months_since_gift++;
-    if (months_since_gift >= 12) {
+    if (months_since_gift >= params().months_since_gift_locker) {
         gift_overdose_penalty = 0;
     }
 
-
-    rating = calc_bound(rating, 0, 100);
+    rating = calc_bound(rating, 0, rating_cap);
 }
 
 void kingdome_relation_t::advance_year() {
@@ -326,14 +344,11 @@ void kingdome_relation_t::advance_year() {
     }
 
     // tribute penalty
+    const auto &tribute_penalties = params().tribute_not_paid_years_penalty;
     if (g_city.finance.tribute_not_paid_last_year) {
-        if (g_city.finance.tribute_not_paid_total_years <= 1) {
-            rating -= 3;
-        } else if (g_city.finance.tribute_not_paid_total_years <= 2) {
-            rating -= 5;
-        } else {
-            rating -= 8;
-        }
+        int years_missed = std::clamp<int>(g_city.finance.tribute_not_paid_total_years, 0, tribute_penalties.size() - 1);
+        int penalty = tribute_penalties[years_missed];
+        change(penalty);
     }
 
     // rank salary

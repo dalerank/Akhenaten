@@ -21,22 +21,6 @@ declare_console_command_p(addprosperity) {
     g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
 }
 
-declare_console_command_p(updatekingdome) {
-    std::string args; is >> args;
-    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-    if (!!value) {
-        g_city.kingdome.advance_year();
-    } else {
-        g_city.kingdome.advance_month();
-    }
-}
-
-declare_console_command_p(addkingdome) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
-    g_city.kingdome.change(amount);
-}
-
 declare_console_command_p(addculture) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());

@@ -6,4 +6,6 @@ kingdome_relation = {
 	gift_relation_change_second : [1, 3, 5]
 	gift_relation_change_third : [0, 1, 3]
 	gift_relation_change_last : [0, 0, 1]
+	months_since_gift_locker : 12
+	tribute_not_paid_years_penalty : [-3, ]
 }

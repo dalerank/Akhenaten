@@ -99,6 +99,8 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
         svector<uint8_t, 4> gift_relation_change_second;
         svector<uint8_t, 4> gift_relation_change_third;
         svector<uint8_t, 4> gift_relation_change_last;
+        uint8_t months_since_gift_locker;
+        svector<int8_t, 8> tribute_not_paid_years_penalty;
 
         void archive_unload() {}
         void archive_init() {}
