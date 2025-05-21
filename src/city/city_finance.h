@@ -91,8 +91,8 @@ struct city_finance_t {
     int32_t salary_so_far;
     int32_t wages_so_far;
     int32_t cheated_money;
-    int32_t tribute_not_paid_last_year;
-    int32_t tribute_not_paid_total_years;
+    bool tribute_not_paid_last_year;
+    uint8_t tribute_not_paid_total_years;
     int32_t wage_rate_paid_this_year;
     int32_t wage_rate_paid_last_year;
 

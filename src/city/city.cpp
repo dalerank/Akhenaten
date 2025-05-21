@@ -865,7 +865,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &data.finance.tax_percentage);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.tribute_not_paid_last_year);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.finance.tribute_not_paid_last_year);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.finance.tribute_not_paid_total_years);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wage_rate_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wages_so_far);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.wages);
