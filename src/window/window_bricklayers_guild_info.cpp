@@ -30,7 +30,7 @@ void building_bricklayers_guild_info_window::init(object_info &c) {
     textid reason{ 0, 0 };
     if (!guild->has_road_access()) {
         reason = { 69, 25 };
-    } else if (city_resource_is_mothballed(RESOURCE_BRICKS)) {
+    } else if (g_city.resource.is_mothballed(RESOURCE_BRICKS)) {
         reason = { c.group_id, 4 };
     } else if (guild->num_workers() <= 0) {
         reason = { c.group_id, 5 };

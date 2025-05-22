@@ -66,13 +66,13 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
         e_resource resource = r.type;
         ui.icon(offset + item_icon.pos, resource);
 
-        e_font font_color = city_resource_is_mothballed(resource) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        const bool is_mothballed = g_city.resource.is_mothballed(resource);
+        e_font font_color = is_mothballed ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
 
         // resource name and amount in warehouses
         int res_count = g_city.resource.yards_stored(resource);
         int proper_quality = stack_proper_quantity(res_count, resource);
         const bool is_stockpiled = city_resource_is_stockpiled(resource);
-        const bool is_mothballed = city_resource_is_mothballed(resource);
 
         ui.label(ui::str(23, resource), offset + item_name.pos, font_color, UiFlags_AlignYCentered);
         ui.label(bstring32().printf("%u", proper_quality).c_str(), offset + item_quality.pos, font_color, UiFlags_AlignYCentered, 60);

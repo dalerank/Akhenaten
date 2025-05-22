@@ -267,12 +267,12 @@ void city_resource_toggle_stockpiled(e_resource resource) {
     }
 }
 
-int city_resource_is_mothballed(e_resource resource) {
-    return city_data.resource.mothballed[resource];
+bool city_resources_t::is_mothballed(e_resource resource) {
+    return mothballed[resource];
 }
 
-void city_resource_toggle_mothballed(e_resource resource) {
-    city_data.resource.mothballed[resource] = city_data.resource.mothballed[resource] ? 0 : 1;
+void city_resources_t::toggle_mothballed(e_resource resource) {
+    mothballed[resource] = mothballed[resource] ? 0 : 1;
 }
 
 void city_resource_remove_from_granary(int food, int amount) {
@@ -298,6 +298,10 @@ void city_resources_t::init() {
     events::subscribe(&city_storageyards_add_resource);
     events::subscribe(&city_storageyards_remove_resource);
     events::subscribe(&city_remove_resource);
+
+    events::subscribe([this] (event_toggle_industry_mothballed ev) {
+        mothballed[ev.resource] = !mothballed[ev.resource];
+    });
 }
 
 void city_resource_calculate_storageyard_stocks() {

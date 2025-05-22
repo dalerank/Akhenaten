@@ -7,7 +7,7 @@
 #include "city/city_resource.h"
 
 constexpr short MAX_PROGRESS_RAW = 200;
-#define MAX_PROGRESS_WORKSHOP 400
+constexpr short MAX_PROGRESS_WORKSHOP = 400;
 
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
@@ -54,6 +54,20 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 
     int tmp;
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
+}
+
+bool building_industry::can_play_animation() const {
+    if (g_city.resource.is_mothballed(base.first_material_id)) {
+        return false;
+    }
+
+    if (base.second_material_id != RESOURCE_NONE) {
+        if (g_city.resource.is_mothballed(base.second_material_id)) {
+            return false;
+        }
+    }
+
+    return building_impl::can_play_animation();
 }
 
 void building_industry::update_graphic() {

@@ -452,7 +452,7 @@ void kingdome_relation_t::increase_blessing_god(int value) {
 }
 
 void kingdome_relation_t::change(int amount) {
-    rating = calc_bound(rating + amount, 0, 100);
+    rating = calc_bound(rating + amount, 0, rating_cap);
 }
 
 void kingdome_relation_t::update_explanation() {

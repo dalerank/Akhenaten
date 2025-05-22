@@ -749,8 +749,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT16, &data.resource.trading_amount[i + 1]);
 
-    for (int i = 0; i < RESOURCES_MAX; i++)
-        iob->bind(BIND_SIGNATURE_INT16, &data.resource.mothballed[i + 1]);
+    for (int i = 0; i < RESOURCES_MAX; i++) {
+        iob->bind(BIND_SIGNATURE_UINT8, &data.resource.mothballed[i + 1]);
+        iob->bind____skip(1);
+    }
 
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unused_28ca);
 

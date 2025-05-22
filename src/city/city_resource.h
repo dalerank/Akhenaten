@@ -17,6 +17,7 @@ struct event_granaries_remove_resource { e_resource resource; int amount; };
 struct event_storageyards_add_resource { e_resource resource; int amount; };
 struct event_storageyards_remove_resource { e_resource resource; int amount; };
 struct event_city_remove_resource { e_resource resource; int amount; };
+struct event_toggle_industry_mothballed { e_resource resource; };
 
 struct city_resources_t {
     uint16_t space_in_storages[RESOURCES_MAX];
@@ -24,7 +25,7 @@ struct city_resources_t {
     e_trade_status trade_status[RESOURCES_MAX];
     int16_t trading_amount[RESOURCES_MAX];
     int32_t stockpiled[RESOURCES_MAX];
-    int16_t mothballed[RESOURCES_MAX];
+    bool mothballed[RESOURCES_MAX];
     int16_t unk_00[RESOURCES_MAX];
 
     uint8_t beer_types_available;
@@ -79,6 +80,8 @@ struct city_resources_t {
     void calculate_food_stocks_and_supply_wheat();
     void consume_food(const simulation_time_t& t);
     void consume_goods(const simulation_time_t& t);
+    void toggle_mothballed(e_resource resource);
+    bool is_mothballed(e_resource resource);
 
     int food_types_available_num();
 
@@ -100,8 +103,6 @@ void city_resource_change_trading_amount(e_resource resource, int delta);
 int city_resource_is_stockpiled(e_resource resource);
 int city_resource_ready_for_using(e_resource resource);
 void city_resource_toggle_stockpiled(e_resource resource);
-int city_resource_is_mothballed(e_resource resource);
-void city_resource_toggle_mothballed(e_resource resource);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();

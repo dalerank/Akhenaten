@@ -42,10 +42,8 @@ void trade_resource_settings_window::init() {
     ui["export_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
     ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
 
-    ui["toggle_industry"].onclick([this] {
-        if (g_city.buildings.count_industry_total(resource) > 0) {
-            city_resource_toggle_mothballed(resource);
-        }
+    ui["toggle_industry"].onclick([this] { 
+        events::emit(event_toggle_industry_mothballed{ resource });
     });
 
     ui["stockpile_industry"].onclick([this] { city_resource_toggle_stockpiled(resource); });
@@ -68,7 +66,7 @@ int trade_resource_settings_window::draw_background(UiFlags flags) {
         int active_buildings = g_city.buildings.count_industry_active(resource);
         if (g_city.buildings.count_industry_total(resource) <= 0) {
             production_state = ui::str(54, 7);
-        } else if (city_resource_is_mothballed(resource)) {
+        } else if (g_city.resource.is_mothballed(resource)) {
             production_state.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
         } else if (total_buildings == active_buildings) {
             // not mothballed, all working
@@ -169,7 +167,7 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
 
     // toggle industry button
     ui["toggle_industry"].enabled = (g_city.buildings.count_industry_total(resource) > 0);
-    ui["toggle_industry"] = city_resource_is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
+    ui["toggle_industry"] = g_city.resource.is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
 
     bstring1024 stockpiled_str;
     if (city_resource_is_stockpiled(resource)) {

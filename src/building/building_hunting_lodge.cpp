@@ -3,7 +3,7 @@
 #include "building/model.h"
 #include "core/direction.h"
 #include "city/object_info.h"
-#include "city/city_resource.h"
+#include "city/city.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -46,7 +46,7 @@ void building_hunting_lodge::window_info_background(object_info &c) {
 
     if (!b->has_road_access)
         window_building_draw_description_at(c, 86, 69, 25);
-    else if (city_resource_is_mothballed(RESOURCE_GAMEMEAT))
+    else if (g_city.resource.is_mothballed(RESOURCE_GAMEMEAT))
         window_building_draw_description_at(c, 86, group_id, 4);
     else if (b->num_workers <= 0)
         window_building_draw_description_at(c, 86, group_id, 5);
