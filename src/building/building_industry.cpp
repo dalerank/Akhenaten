@@ -77,6 +77,34 @@ void building_industry::update_graphic() {
     building_impl::update_graphic();
 }
 
+void building_industry::update_production() {
+    auto &d = runtime_data();
+    d.has_raw_materials = false;
+
+    if (base.num_workers <= 0) {
+        return;
+    }
+
+    if (base.curse_days_left) {
+        base.curse_days_left--;
+        return;
+    } 
+
+    if (base.blessing_days_left > 0) {
+        base.blessing_days_left--;
+    }
+
+    const int progress_per_day = produce_uptick_per_day();
+    d.progress += progress_per_day;
+
+    if (base.blessing_days_left) {
+        const float normal_progress = progress_per_day;
+        d.progress += normal_progress;
+    }
+
+    d.progress = std::clamp<short>(d.progress, 0, d.progress_max);
+}
+
 void building_industry::on_create(int orientation) {
     building_impl::on_create(orientation);
 

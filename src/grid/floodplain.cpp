@@ -15,7 +15,7 @@
 #include "grid/building.h"
 #include "core/calc.h"
 #include "city/city.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "js/js_game.h"
 
 #include <cstdint>

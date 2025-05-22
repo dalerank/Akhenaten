@@ -1,10 +1,10 @@
 #pragma once
 
-#include "building/building.h"
+#include "building/building_industry.h"
 
-class building_quarry : public building_impl {
+class building_quarry : public building_industry {
 public:
-    building_quarry(building &b) : building_impl(b) {}
+    building_quarry(building &b) : building_industry(b) {}
     virtual building_quarry *dcast_quarry() override { return this; }
 };
 
@@ -24,7 +24,7 @@ public:
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual int get_produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
+    virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
 };
 
 class building_limestone_quarry : public building_quarry {

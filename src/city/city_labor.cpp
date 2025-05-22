@@ -11,7 +11,7 @@
 #include "core/random.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "grid/terrain.h"
 
 #include <algorithm>

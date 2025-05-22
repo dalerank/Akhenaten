@@ -10,7 +10,10 @@
 
 constexpr uint32_t MAX_PROGRESS_FARM_PH = 2000;
 
-void building_industry_update_production();
+struct city_industry_t {
+    void update_production();
+};
+
 void building_industry_update_farms();
 void building_industry_update_wheat_production(void);
 

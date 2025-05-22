@@ -24,6 +24,9 @@ public:
         e_figure_type processed_figure;
     };
 
+    virtual int produce_uptick_per_day() const { return base.num_workers; }
+    virtual void update_production();
+    
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
     virtual void on_create(int orientation) override;

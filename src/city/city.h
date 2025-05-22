@@ -4,6 +4,7 @@
 
 #include "city/city_kingdome_relations.h"
 #include "city/entertainment.h"
+#include "city/city_industry.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
 #include "city/city_labor.h"
@@ -42,6 +43,7 @@ struct city_t {
     house_demands houses;
     kingdome_relation_t kingdome;
     city_military_t military;
+    city_industry_t industry;
     victory_state_t victory_state;
     city_maintenance_t maintenance;
     e_availability advisors[ADVISOR_MAX];

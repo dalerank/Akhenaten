@@ -10,7 +10,7 @@
 #include "core/archive.h"
 #include "core/log.h"
 #include "io/gamefiles/lang.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "building/building_temple_complex.h"
 
 #include "dev/debug.h"

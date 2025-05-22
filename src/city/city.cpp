@@ -22,7 +22,7 @@
 #include "empire/trade_route.h"
 #include "building/building_granary.h"
 #include "building/building_house.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "building/building_barracks.h"
 #include "building/building_burning_ruin.h"
 #include "figure/figure.h"
@@ -214,7 +214,7 @@ void city_t::update_tick(int simtick) {
         buildings_update_open_water_access();
         break;
     case 20:
-        building_industry_update_production();
+        industry.update_production();
         break;
     case 21:
         maintenance.check_kingdome_access();

@@ -1,4 +1,4 @@
-#include "industry.h"
+#include "city_industry.h"
 
 #include "building/building_type.h"
 #include "building/building_farm.h"
@@ -84,7 +84,7 @@ float get_farm_produce_uptick_per_day(building &b) {
 //     }
 // }
 
-void building_industry_update_production() {
+void city_industry_t::update_production() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
     buildings_valid_do([] (building &b) {
         if (!b.output_resource_first_id) {
@@ -104,29 +104,7 @@ void building_industry_update_production() {
             return;
         }
 
-        auto& industryd = industry->runtime_data();
-        industryd.has_raw_materials = false;
-        if (b.num_workers <= 0) {
-            return;
-        }
-
-        if (b.curse_days_left) {
-            b.curse_days_left--;
-        } else {
-            if (b.blessing_days_left > 0) {
-                b.blessing_days_left--;
-            }
-
-            int progress_per_day = industry->get_produce_uptick_per_day();
-            industryd.progress += progress_per_day;
-
-            if (b.blessing_days_left) {
-                const float normal_progress = progress_per_day;
-                industryd.progress += normal_progress;
-            }
-
-            industryd.progress = std::clamp<short>(industryd.progress, 0, industryd.progress_max);
-        }
+        industry->update_production();
     });
 }
 

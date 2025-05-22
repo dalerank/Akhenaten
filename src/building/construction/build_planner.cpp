@@ -25,7 +25,7 @@
 #include "building/building_festival_square.h"
 #include "building/building_well.h"
 #include "building/building_bridge.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "building/monument_mastaba.h"
 #include "building/rotation.h"
 #include "building/building_fort.h"

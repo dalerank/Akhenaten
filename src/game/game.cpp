@@ -48,7 +48,7 @@
 #include "city/city_population.h"
 #include "city/city_desirability.h"
 #include "city/city_message.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "io/gamestate/boilerplate.h"
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"

@@ -4,7 +4,7 @@
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
 #include "building/building_scribal_school.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "building/rotation.h"
 #include "building/model.h"
 #include "building/monuments.h"
