@@ -72,7 +72,7 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
         // resource name and amount in warehouses
         int res_count = g_city.resource.yards_stored(resource);
         int proper_quality = stack_proper_quantity(res_count, resource);
-        const bool is_stockpiled = city_resource_is_stockpiled(resource);
+        const bool is_stockpiled = g_city.resource.is_stockpiled(resource);
 
         ui.label(ui::str(23, resource), offset + item_name.pos, font_color, UiFlags_AlignYCentered);
         ui.label(bstring32().printf("%u", proper_quality).c_str(), offset + item_quality.pos, font_color, UiFlags_AlignYCentered, 60);

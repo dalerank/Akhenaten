@@ -57,14 +57,8 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 bool building_industry::can_play_animation() const {
-    if (g_city.resource.is_mothballed(base.first_material_id)) {
+    if (g_city.resource.is_mothballed(base.output_resource_first_id)) {
         return false;
-    }
-
-    if (base.second_material_id != RESOURCE_NONE) {
-        if (g_city.resource.is_mothballed(base.second_material_id)) {
-            return false;
-        }
     }
 
     return building_impl::can_play_animation();
@@ -80,6 +74,10 @@ void building_industry::update_graphic() {
 void building_industry::update_production() {
     auto &d = runtime_data();
     d.has_raw_materials = false;
+
+    if (g_city.resource.is_mothballed(base.output_resource_first_id)) {
+        return;
+    }
 
     if (base.num_workers <= 0) {
         return;

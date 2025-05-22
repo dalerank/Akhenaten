@@ -52,7 +52,7 @@ void info_window_mastaba::init(object_info &c) {
             int bricklayers_guilds_num = g_city.buildings.count_total(BUILDING_BRICKLAYERS_GUILD);
             int bricklayers_guilds_active_num = g_city.buildings.count_active(BUILDING_BRICKLAYERS_GUILD);
             int bricks_on_storages = city_resource_ready_for_using(RESOURCE_BRICKS);
-            bool bricks_stockpiled = city_resource_is_stockpiled(RESOURCE_BRICKS);
+            bool bricks_stockpiled = g_city.resource.is_stockpiled(RESOURCE_BRICKS);
             int workers_onsite = building_monument_workers_onsite(&mastaba->base, FIGURE_LABORER);
 
             if (bricks_stockpiled) { reason = { 178, 103 }; }

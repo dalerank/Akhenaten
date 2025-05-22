@@ -46,7 +46,7 @@ void trade_resource_settings_window::init() {
         events::emit(event_toggle_industry_mothballed{ resource });
     });
 
-    ui["stockpile_industry"].onclick([this] { city_resource_toggle_stockpiled(resource); });
+    ui["stockpile_industry"].onclick([this] { g_city.resource.is_stockpiled(resource); });
 
     ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
     ui["button_close"].onclick([] { window_go_back(); });
@@ -170,7 +170,7 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     ui["toggle_industry"] = g_city.resource.is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
 
     bstring1024 stockpiled_str;
-    if (city_resource_is_stockpiled(resource)) {
+    if (g_city.resource.is_stockpiled(resource)) {
         stockpiled_str.printf("%s\n%s", ui::str(54, 26), ui::str(54, 27));
     } else {
         stockpiled_str.printf("%s\n%s", ui::str(54, 28), ui::str(54, 29));

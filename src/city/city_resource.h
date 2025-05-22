@@ -82,6 +82,8 @@ struct city_resources_t {
     void consume_goods(const simulation_time_t& t);
     void toggle_mothballed(e_resource resource);
     bool is_mothballed(e_resource resource);
+    void toggle_stockpiled(e_resource resource);
+    int is_stockpiled(e_resource resource);
 
     int food_types_available_num();
 
@@ -100,9 +102,7 @@ void city_resource_cycle_trade_import(e_resource resource);
 void city_resource_cycle_trade_export(e_resource resource);
 int city_resource_trading_amount(e_resource resource);
 void city_resource_change_trading_amount(e_resource resource, int delta);
-int city_resource_is_stockpiled(e_resource resource);
 int city_resource_ready_for_using(e_resource resource);
-void city_resource_toggle_stockpiled(e_resource resource);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_calculate_storageyard_stocks();
 void city_resource_determine_available();

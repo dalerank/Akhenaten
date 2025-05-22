@@ -174,7 +174,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
     if (!resource_is_food(resource))
         return 0;
 
-    if (city_resource_is_stockpiled(resource) && !force_on_stockpile) {
+    if (g_city.resource.is_stockpiled(resource) && !force_on_stockpile) {
         return 0;
     }
 
@@ -229,8 +229,9 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
     if (!resource_is_food(resource))
         return 0;
 
-    if (city_resource_is_stockpiled(resource))
+    if (g_city.resource.is_stockpiled(resource)) {
         return 0;
+    }
 
     int min_dist = INFINITE;
     int min_building_id = 0;

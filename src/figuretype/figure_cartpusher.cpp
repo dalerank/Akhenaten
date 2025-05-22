@@ -192,7 +192,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     // priority 1: warehouse if resource is on stockpile
     int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(stockpile_id);
-    if (!city_resource_is_stockpiled(base.resource_id)) {
+    if (!g_city.resource.is_stockpiled(base.resource_id)) {
         set_destination(0);
     }
 

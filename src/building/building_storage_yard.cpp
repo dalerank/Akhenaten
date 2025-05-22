@@ -434,7 +434,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
     }
 
     e_resource resource = space->resource();
-    if (city_resource_is_stockpiled(resource)) {
+    if (g_city.resource.is_stockpiled(resource)) {
         return false;
     }
 
@@ -448,7 +448,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
 storage_worker_task building_storage_yard_determine_getting_up_resources(building* b) {
     building_storage_yard* warehouse = b->dcast_storage_yard();
     for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
-        if (!warehouse->is_getting(check_resource) || city_resource_is_stockpiled(check_resource)) {
+        if (!warehouse->is_getting(check_resource) || g_city.resource.is_stockpiled(check_resource)) {
             continue;
         }
 
@@ -502,7 +502,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const bool weapons_stockpile = city_resource_is_stockpiled(RESOURCE_WEAPONS);
+    const bool weapons_stockpile = g_city.resource.is_stockpiled(RESOURCE_WEAPONS);
     if (weapons_stockpile) {
         return { STORAGEYARD_TASK_NONE };
     }
@@ -531,7 +531,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
 }
 
 storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(building * b) {
-    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource_is_stockpiled(RESOURCE_TIMBER)) {
+    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || g_city.resource.is_stockpiled(RESOURCE_TIMBER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -560,7 +560,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
 }
 
 storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(building *b) {
-    if (g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL) <= 0 || city_resource_is_stockpiled(RESOURCE_PAPYRUS)) {
+    if (g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL) <= 0 || g_city.resource.is_stockpiled(RESOURCE_PAPYRUS)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -605,7 +605,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
         }
 
         e_resource check_resource = space->resource();
-        if (city_resource_is_stockpiled(check_resource)) {
+        if (g_city.resource.is_stockpiled(check_resource)) {
             continue;
         }
 
@@ -701,7 +701,7 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
         }
 
         e_resource resource = space->resource();
-        if (city_resource_is_stockpiled(resource)) {
+        if (g_city.resource.is_stockpiled(resource)) {
             continue;
         }
 

@@ -1,7 +1,7 @@
 #include "city_resource.h"
 
 #include "building/building.h"
-#include "building/industry.h"
+#include "city/city_industry.h"
 #include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -239,12 +239,12 @@ void city_resource_change_trading_amount(e_resource resource, int delta) {
     city_data.resource.trading_amount[resource] = calc_bound(city_data.resource.trading_amount[resource] + delta, 0, 10000);
 }
 
-int city_resource_is_stockpiled(e_resource resource) {
-    return city_data.resource.stockpiled[resource];
+int city_resources_t::is_stockpiled(e_resource resource) {
+    return stockpiled[resource];
 }
 
 int city_resource_ready_for_using(e_resource resource) {
-    if (city_resource_is_stockpiled(resource)) {
+    if (g_city.resource.is_stockpiled(resource)) {
         return 0;
     }
 
@@ -256,7 +256,7 @@ int city_resource_ready_for_using(e_resource resource) {
     return amount;
 }
 
-void city_resource_toggle_stockpiled(e_resource resource) {
+void city_resources_t::toggle_stockpiled(e_resource resource) {
     if (city_data.resource.stockpiled[resource])
         city_data.resource.stockpiled[resource] = 0;
     else {

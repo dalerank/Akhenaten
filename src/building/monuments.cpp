@@ -287,7 +287,7 @@ int building_monument_add_module(building *b, int module) {
 }
 
 int building_monument_get_monument(tile2i tile, e_resource resource, int road_network_id, tile2i &dst) {
-    if (city_resource_is_stockpiled(resource)) {
+    if (g_city.resource.is_stockpiled(resource)) {
         return 0;
     }
 

@@ -51,7 +51,7 @@ struct resource_data {
     }
 
     void update_good(e_resource resource, building &b, int distance) {
-        if (city_resource_is_stockpiled(resource)) {
+        if (g_city.resource.is_stockpiled(resource)) {
             return;
         }
 
