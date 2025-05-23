@@ -6,7 +6,7 @@
 
 building_transport_wharf::static_params transport_wharf_m;
 
-void building_transport_wharf::static_params::load(archive arch) {
+void building_transport_wharf::static_params::archive_load(archive arch) {
 
 }
 

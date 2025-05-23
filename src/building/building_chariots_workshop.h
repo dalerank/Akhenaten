@@ -4,7 +4,7 @@
 
 class building_chariots_workshop : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_CHARIOTS_WORKSHOP, building_brick_tower)
+    BUILDING_METAINFO(BUILDING_CHARIOTS_WORKSHOP, building_chariots_workshop)
     building_chariots_workshop(building &b) : building_industry(b) {}
 
     //virtual void on_place(int orientation, int variant) override;

@@ -35,8 +35,8 @@ public:
         preview_offset preview_dir[8];
         place_offset place_dir[8];
 
-        using inherited::load;
-        virtual void load(archive arch) override;
+        using inherited::archive_load;
+        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };

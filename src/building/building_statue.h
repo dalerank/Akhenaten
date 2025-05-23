@@ -16,8 +16,8 @@ public:
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
         
-        using inherited::load;
-        virtual void load(archive arch) override;
+        using inherited::archive_load;
+        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;

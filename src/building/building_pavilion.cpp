@@ -20,7 +20,7 @@
 
 building_pavilion::static_params pavilion_m;
 
-void building_pavilion::static_params::load(archive arch) {
+void building_pavilion::static_params::archive_load(archive arch) {
     for (auto &pdir : preview_dir) {
         pdir.load(arch, bstring32().printf("preview_dir_%d", std::distance(preview_dir, &pdir)).c_str());
     }

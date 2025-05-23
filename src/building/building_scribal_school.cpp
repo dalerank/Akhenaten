@@ -15,7 +15,7 @@
 
 building_scribal_school::static_params scribal_school_m;
 
-void building_scribal_school::static_params::load(archive arch) {
+void building_scribal_school::static_params::archive_load(archive arch) {
 }
 
 void building_scribal_school::update_month() {

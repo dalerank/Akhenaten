@@ -5,7 +5,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 
-buildings::model_t<building_bricks_workshop> bricks_workshop_m;
+building_bricks_workshop::static_params bricks_workshop_m;
 
 bool building_bricks_workshop::can_play_animation() const {
     if (progress() == 0) {

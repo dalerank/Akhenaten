@@ -9,9 +9,9 @@ public:
     building_festival_square(building &b) : building_impl(b) {}
     virtual building_festival_square *dcast_festival_square() override { return this; }
 
-    struct static_params : public buildings::model_t<building_festival_square> {
+    struct static_params : public buildings::model_t<self_type> {
         int square;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };

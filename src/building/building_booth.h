@@ -9,10 +9,10 @@ public:
     building_booth(building &b) : building_entertainment(b) {}
     virtual building_booth *dcast_booth() override { return this; }
 
-    struct static_params : public buildings::model_t<building_booth> {
+    struct static_params : public buildings::model_t<self_type> {
         int booth = 0;
 
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };

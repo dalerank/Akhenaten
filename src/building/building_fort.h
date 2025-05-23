@@ -16,7 +16,7 @@ public:
             svector<vec2i, 32> ground_check_offset;
         } ghost;
 
-        virtual void load(archive arch) override {
+        virtual void archive_load(archive arch) override {
             arch.r_section("ghost", [this] (archive ghost_arch) {
                 ghost.main_view_offset = ghost_arch.r_array_vec2i("main");
                 ghost.ground_view_offset = ghost_arch.r_array_vec2i("ground");

@@ -45,8 +45,8 @@ int building_statue::statue_params_t::get_image(e_building_type type, int orient
 }
 
 template<typename T>
-void building_statue::static_params_t<T>::load(archive arch) {
-    inherited::load(arch);
+void building_statue::static_params_t<T>::archive_load(archive arch) {
+    inherited::archive_load(arch);
     arch.r_array("variants", var, [] (archive arch, auto &item) {
         item.pack = arch.r_int("pack");
         item.id = arch.r_int("id");

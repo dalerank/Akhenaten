@@ -668,7 +668,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
     return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles_size());
 }
 
-declare_console_command_p(finishphase) {
+declare_console_command_p(monumentnext) {
     buildings_valid_do([&] (building &b) {
         if (!b.is_monument()) {
             return;

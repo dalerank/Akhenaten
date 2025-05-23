@@ -1249,7 +1249,7 @@ void building_impl::on_tick(bool refresh_only) {
     base.anim.update(refresh_only);
 }
 
-void building_impl::static_params::load(archive arch) {
+void building_impl::static_params::archive_load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
     fire_risk_update = arch.r_int("fire_risk_update", 50);

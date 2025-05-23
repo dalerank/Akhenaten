@@ -11,7 +11,7 @@ public:
     struct static_params : public buildings::model_t<building_burning_ruin> {
         int fire_animations;
 
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void on_create(int orientation) override;

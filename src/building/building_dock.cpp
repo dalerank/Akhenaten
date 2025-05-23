@@ -27,7 +27,7 @@
 
 building_dock::static_params dock_m;
 
-void building_dock::static_params::load(archive arch) {
+void building_dock::static_params::archive_load(archive arch) {
 
 }
 

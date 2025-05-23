@@ -9,11 +9,11 @@ public:
     building_shipyard(building &b) : building_industry(b) {}
     virtual building_shipyard *dcast_shipyard() override { return this; }
 
-    struct static_params : public buildings::model_t<building_shipyard> {
+    struct static_params : public buildings::model_t<self_type> {
         int warship_progress_cost;
         int transport_progress_cost;
         int fishingboat_progress_cost;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 

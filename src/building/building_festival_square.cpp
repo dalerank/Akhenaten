@@ -15,7 +15,7 @@
 
 building_festival_square::static_params festival_square_m;
 
-void building_festival_square::static_params::load(archive arch) {
+void building_festival_square::static_params::archive_load(archive arch) {
     square = anim[animkeys().square].first_img();
 }
 

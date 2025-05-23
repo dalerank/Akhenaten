@@ -26,7 +26,7 @@
 
 building_bandstand::static_params bandstand_m;
 
-void building_bandstand::static_params::load(archive arch) {
+void building_bandstand::static_params::archive_load(archive arch) {
    stand_sn_n = anim["stand_sn_n"].first_img();
    stand_sn_s = anim["stand_sn_s"].first_img();
    stand_we_w = anim["stand_we_w"].first_img();

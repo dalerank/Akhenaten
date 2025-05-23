@@ -24,7 +24,7 @@
 
 building_shipyard::static_params building_shipyard_m;
 
-void building_shipyard::static_params::load(archive arch) {
+void building_shipyard::static_params::archive_load(archive arch) {
     warship_progress_cost = arch.r_int("warship_progress_cost");
     fishingboat_progress_cost = arch.r_int("fishingboat_progress_cost");
     transport_progress_cost = arch.r_int("transport_progress_cost");

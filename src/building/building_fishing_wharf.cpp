@@ -31,7 +31,7 @@ int building_fishing_wharf::static_params::planer_construction_update(build_plan
     return 1;
 }
 
-void building_fishing_wharf::static_params::load(archive arch) {
+void building_fishing_wharf::static_params::archive_load(archive arch) {
 
 }
 

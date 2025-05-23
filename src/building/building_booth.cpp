@@ -28,7 +28,7 @@
 
 building_booth::static_params booth_m;
 
-void building_booth::static_params::load(archive arch) {
+void building_booth::static_params::archive_load(archive arch) {
     booth = anim[animkeys().booth].first_img();
 }
 

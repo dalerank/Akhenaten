@@ -12,7 +12,7 @@
 
 building_water_lift::static_params water_lift_m;
 
-void building_water_lift::static_params::load(archive arch) {
+void building_water_lift::static_params::archive_load(archive arch) {
 
 }
 

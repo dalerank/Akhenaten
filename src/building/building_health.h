@@ -11,7 +11,7 @@ public:
 
     struct static_params : public buildings::model_t<building_apothecary> {
         int max_serve_clients;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void spawn_figure() override;
@@ -31,8 +31,8 @@ public:
     building_mortuary(building &b) : building_impl(b) {}
 
     struct static_params : public buildings::model_t<building_mortuary> {
-        int max_serve_clients;
-        virtual void load(archive arch) override;
+        uint16_t max_serve_clients;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void spawn_figure() override;

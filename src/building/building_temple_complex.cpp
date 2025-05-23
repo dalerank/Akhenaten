@@ -22,7 +22,7 @@ tile2i building_part_offset(int orientation, int size) {
 }
 
 template<class T>
-void building_temple_complex::static_params_t<T>::load(archive arch) {
+void building_temple_complex::static_params_t<T>::archive_load(archive arch) {
 }
 
 template<class T>

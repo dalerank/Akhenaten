@@ -17,7 +17,7 @@
 building_burning_ruin::static_params burning_ruin_m;
 svector<uint16_t, 2500> g_burning_ruins;
 
-void building_burning_ruin::static_params::load(archive arch) {
+void building_burning_ruin::static_params::archive_load(archive arch) {
     fire_animations = arch.r_int("fire_animations", 1);
 }
 

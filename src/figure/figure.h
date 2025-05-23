@@ -600,24 +600,24 @@ struct model_t : public figure_impl::static_params {
         figure_impl::params(TYPE, *this);
     }
 
-    void load() {
+    void archive_load() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
             static_params::load(arch);
             loaded = true;
-            this->load(arch);
+            this->archive_load(arch);
         });
         assert(loaded);
     }
 
-    virtual void load(archive) {
+    virtual void archive_load(archive) {
         /*overload options*/
     }
 
     static void static_params_load() {
         const model_t &item = static_cast<const model_t &>(figure_impl::params(TYPE));
         assert(item.TYPE == TYPE);
-        const_cast<model_t &>(item).load();
+        const_cast<model_t &>(item).archive_load();
     }
 
     static figure_impl *create(e_figure_type e, figure &f) {

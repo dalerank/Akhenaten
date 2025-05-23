@@ -7,6 +7,14 @@ public:
     building_industry(building &b) : building_impl(b) {}
     virtual building_industry *dcast_industry() override { return this; }
 
+    template<typename T>
+    struct static_params_t : public buildings::model_t<T> {
+        uint16_t progress_max;
+        virtual void archive_load(archive arch) override {
+            progress_max = arch.r_int("progress_max", 200);
+        }
+    };
+
     struct runtime_data_t : public no_copy_assignment {
         short ready_production;
         short progress;

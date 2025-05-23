@@ -389,14 +389,18 @@ private:
     void destroy_linked_parts(bool on_fire);
 };
 
-#define BUILDING_METAINFO(type, clsid) static constexpr e_building_type TYPE = type; static constexpr pcstr CLSID = #clsid;
+#define BUILDING_METAINFO(type, clsid) \
+    static constexpr e_building_type TYPE = type; \
+    static constexpr pcstr CLSID = #clsid; \
+    using self_type = clsid;                                                                           
 
 #define BUILDING_METAINFO_RT(type, clsid)                                                               \
     static constexpr e_building_type TYPE = type;                                                       \
     static constexpr pcstr CLSID = #clsid;                                                              \
+    using self_type = clsid;                                                                            \
     struct runtime_data_t;                                                                              \
     runtime_data_t &runtime_data() {return *(runtime_data_t *)base.runtime_data; }                      \
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }         \
+    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }         
 
 class building_impl {
 public:
@@ -445,7 +449,7 @@ public:
             bool floodplain_shoreline;
         } needs;
 
-        void load(archive arch);
+        void archive_load(archive arch);
 
         virtual void planer_setup_build(build_planner &planer) const {}
         virtual int planer_setup_orientation(int orientation) const { return orientation; }
@@ -780,24 +784,24 @@ struct model_t : public building_impl::static_params {
         building_impl::params(TYPE, *this);
     }
 
-    void load() {
+    void archive_load() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
-            static_params::load(arch);
+            static_params::archive_load(arch);
             loaded = true;
-            this->load(arch);
+            this->archive_load(arch);
         });
         assert(loaded);
     }
 
-    virtual void load(archive) {
+    virtual void archive_load(archive) {
         /*overload options*/
     }
 
     static void static_params_load() {
         const model_t &item = static_cast<const model_t&>(building_impl::params(TYPE));
         assert(item.TYPE == TYPE);
-        const_cast<model_t&>(item).load();
+        const_cast<model_t&>(item).archive_load();
     }
 
     static building_impl *create(e_building_type e, building &b) {

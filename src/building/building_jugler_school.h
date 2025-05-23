@@ -9,9 +9,9 @@ public:
     building_juggler_school(building &b) : building_entertainment(b) {}
     virtual building_juggler_school *dcast_juggler_school() override { return this; }
 
-    struct static_params : public buildings::model_t<building_juggler_school> {
+    struct static_params : public buildings::model_t<self_type> {
         uint8_t spawn_interval;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }

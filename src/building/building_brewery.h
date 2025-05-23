@@ -10,7 +10,7 @@ public:
     virtual building_brewery *dcast_brewery() override { return this; }
 
     struct static_params : public buildings::model_t<building_brewery> {
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual bool is_workshop() const override { return true; }
