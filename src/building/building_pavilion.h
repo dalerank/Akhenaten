@@ -6,7 +6,7 @@ class building_pavilion : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion, building_entertainment)
 
-    struct static_params : public buildings::model_t<building_pavilion> {
+    struct static_params : public building_model {
         using inherited = buildings::model_t<building_pavilion>;
 
         int dancer_tile = 0;
@@ -38,7 +38,7 @@ public:
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
     
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
@@ -52,6 +52,4 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
 
     virtual void spawn_figure() override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

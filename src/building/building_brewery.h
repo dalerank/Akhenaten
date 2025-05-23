@@ -10,13 +10,11 @@ public:
 
     struct static_params : public buildings::model_t<building_brewery> {
         virtual void archive_load(archive arch) override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual bool is_workshop() const override { return true; }
     virtual e_overlay get_overlay() const override { return OVERLAY_BREWERY; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

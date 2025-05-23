@@ -8,7 +8,7 @@ public:
     BUILDING_METAINFO(BUILDING_BANDSTAND, building_bandstand, building_entertainment)
     virtual building_bandstand *dcast_bandstand() override { return this; }
 
-    struct static_params : public buildings::model_t<building_bandstand> {
+    struct static_params : public building_model {
         int stand_sn_n = 0;
         int stand_sn_s = 0;
         int stand_we_w = 0;
@@ -18,7 +18,7 @@ public:
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
@@ -38,6 +38,5 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     void draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask);
 
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
     void map_add_bandstand_tiles();
 };

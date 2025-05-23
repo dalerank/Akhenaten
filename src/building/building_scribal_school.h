@@ -7,12 +7,12 @@ public:
     BUILDING_METAINFO(BUILDING_SCRIBAL_SCHOOL, building_scribal_school, building_impl);
     virtual building_scribal_school *dcast_scribal_school() override { return this; }
 
-    struct static_params : public buildings::model_t<self_type> {
+    struct static_params : public building_model {
         using inherited = model_t<building_scribal_school>;
 
         using inherited::archive_load;
         virtual void archive_load(archive arch) override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
@@ -21,6 +21,4 @@ public:
     virtual void update_month() override;
     virtual void on_place_checks() override;
     virtual bool add_resource(e_resource resource, int amount) override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

@@ -9,11 +9,11 @@ public:
 
     virtual building_well *dcast_well() override { return this; }
 
-    struct static_params : public buildings::model_t<building_well> {
+    struct static_params : public building_model {
         using inherited = buildings::model_t<building_well>;
 
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     //virtual void on_create() override;
     virtual void update_month() override;

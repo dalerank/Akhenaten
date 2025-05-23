@@ -8,13 +8,13 @@ public:
 
     virtual building_booth *dcast_booth() override { return this; }
 
-    struct static_params : public buildings::model_t<self_type> {
+    struct static_params : public building_model {
         int booth = 0;
 
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override {}
     virtual void update_day() override;
@@ -31,6 +31,4 @@ public:
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void on_undo() override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

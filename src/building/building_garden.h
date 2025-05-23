@@ -8,11 +8,11 @@ public:
 
     virtual building_garden *dcast_garden() override { return this; }
 
-    struct static_params : public buildings::model_t<building_garden> {
+    struct static_params : public building_model {
         int place_impl(tile2i start, tile2i end, bool place) const;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
         virtual int planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GARDEN; }

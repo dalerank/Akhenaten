@@ -7,11 +7,11 @@ public:
     BUILDING_METAINFO(BUILDING_BURNING_RUIN, building_burning_ruin, building_impl)
     virtual building_burning_ruin *dcast_burning_ruin() override { return this; }
 
-    struct static_params : public buildings::model_t<building_burning_ruin> {
+    struct static_params : public building_model {
         int fire_animations;
 
         virtual void archive_load(archive arch) override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
     virtual void on_tick(bool refresh_only) override;
@@ -21,8 +21,6 @@ public:
     bool update();
 
     tile2i can_be_accessed();
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 
     static void update_all_ruins();
     static custom_span<uint16_t> get_all();

@@ -8,12 +8,12 @@ public:
 
     virtual building_festival_square *dcast_festival_square() override { return this; }
 
-    struct static_params : public buildings::model_t<self_type> {
+    struct static_params : public building_model {
         int square;
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     struct runtime_data_t {
         int booth_corner_grid_offset;
@@ -32,6 +32,4 @@ public:
     virtual void on_post_load() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_map_orientation(int map_orientation) override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

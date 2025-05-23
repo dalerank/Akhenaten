@@ -7,9 +7,9 @@ class building_ferry : public building_routeblock {
 public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry, building_routeblock)
 
-    struct static_params : public buildings::model_t<building_ferry> {
+    struct static_params : public building_model {
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     struct runtime_data_t {
         int dock_tiles[2];

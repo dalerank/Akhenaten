@@ -8,13 +8,13 @@ public:
 
     virtual building_shipyard *dcast_shipyard() override { return this; }
 
-    struct static_params : public buildings::model_t<self_type> {
+    struct static_params : public building_model {
         int warship_progress_cost;
         int transport_progress_cost;
         int fishingboat_progress_cost;
         virtual void archive_load(archive arch) override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     struct runtime_data_t {
         int dock_tiles[2];
@@ -37,6 +37,4 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

@@ -394,11 +394,15 @@ private:
     static constexpr e_building_type TYPE = type;                                                       \
     static constexpr pcstr CLSID = #clsid;                                                              \
     using self_type = clsid;                                                                            \
+    using building_model = buildings::model_t<self_type>;                                               \
     using inherited = base_class;                                                                       
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
     const type& runtime_data() const { return *(type*)this->base.runtime_data; }    
+
+#define BUILDING_STATIC_DATA(type) ;                                                                    \
+    static const type &current_params() { return (const type &)params(TYPE); }
 
 class building_impl {
 public:

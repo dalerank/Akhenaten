@@ -8,10 +8,10 @@ public:
 
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
-    struct static_params : public buildings::model_t<self_type> {
+    struct static_params : public building_model {
         virtual void archive_load(archive arch) override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     struct runtime_data_t : public building_wharf::runtime_data_t {
         bool has_fish;
@@ -30,6 +30,4 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

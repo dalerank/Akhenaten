@@ -22,11 +22,11 @@ public:
 
     virtual building_dock *dcast_dock() override { return this; }
 
-    struct static_params : public buildings::model_t<building_dock> {
+    struct static_params : public building_model {
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -55,8 +55,6 @@ public:
     tile2i moor_tile() const;
     tile2i wait_tile() const;
     tile2i reid_tile() const;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_dest {
