@@ -4,8 +4,7 @@
 
 class building_weaponsmith : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_WEAPONSMITH, building_weaponsmith)
-    building_weaponsmith(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_WEAPONSMITH, building_weaponsmith, building_industry)
 
     virtual void on_place_checks() override;
     virtual bool need_road_access() const { return true; }

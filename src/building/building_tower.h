@@ -15,12 +15,10 @@ public:
 
 class building_brick_tower : public building_tower {
 public:
-    BUILDING_METAINFO(BUILDING_BRICK_TOWER, building_brick_tower)
-    building_brick_tower(building &b) : building_tower(b) {}
+    BUILDING_METAINFO(BUILDING_BRICK_TOWER, building_brick_tower, building_tower)
 };
 
 class building_mud_tower : public building_tower {
 public:
-    BUILDING_METAINFO(BUILDING_MUD_TOWER, building_mud_tower)
-    building_mud_tower(building &b) : building_tower(b) {}
+    BUILDING_METAINFO(BUILDING_MUD_TOWER, building_mud_tower, building_tower)
 };

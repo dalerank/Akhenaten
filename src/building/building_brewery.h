@@ -4,9 +4,8 @@
 
 class building_brewery : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_BREWERY_WORKSHOP, building_brewery)
+    BUILDING_METAINFO(BUILDING_BREWERY_WORKSHOP, building_brewery, building_industry)
 
-    building_brewery(building &b) : building_industry(b) {}
     virtual building_brewery *dcast_brewery() override { return this; }
 
     struct static_params : public buildings::model_t<building_brewery> {

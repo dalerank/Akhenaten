@@ -4,9 +4,7 @@
 
 class building_apothecary : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_APOTHECARY, building_apothecary)
-
-    building_apothecary(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_APOTHECARY, building_apothecary, building_impl)
     virtual building_apothecary *dcast_apothecary() override { return this; }
 
     struct static_params : public buildings::model_t<building_apothecary> {
@@ -26,9 +24,7 @@ public:
 
 class building_mortuary : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_MORTUARY, building_mortuary)
-
-    building_mortuary(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_MORTUARY, building_mortuary, building_impl)
 
     struct static_params : public buildings::model_t<building_mortuary> {
         uint16_t max_serve_clients;

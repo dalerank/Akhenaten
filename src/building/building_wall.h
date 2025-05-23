@@ -5,8 +5,7 @@
 
 class building_mud_wall : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_MUD_WALL, building_mud_wall)
-    building_mud_wall(building &b);
+    BUILDING_METAINFO(BUILDING_MUD_WALL, building_mud_wall, building_impl)
 
     struct static_params : public buildings::model_t<building_mud_wall> {
         virtual bool planer_can_construction_start(build_planner &p, tile2i start) const override;

@@ -15,26 +15,21 @@ public:
 };
 
 struct building_temple_osiris : public building_temple {
-    building_temple_osiris(building &b) : building_temple(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_OSIRIS, building_temple_osiris);
+    BUILDING_METAINFO(BUILDING_TEMPLE_OSIRIS, building_temple_osiris, building_temple);
 };
 
 struct building_temple_ra : public building_temple {
-    building_temple_ra(building &b) : building_temple(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_RA, building_temple_ra);
+    BUILDING_METAINFO(BUILDING_TEMPLE_RA, building_temple_ra, building_temple);
 };
 
 struct building_temple_ptah : public building_temple {
-    building_temple_ptah(building &b) : building_temple(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_PTAH, building_temple_ptah);
+    BUILDING_METAINFO(BUILDING_TEMPLE_PTAH, building_temple_ptah, building_temple);
 };
 
 struct building_temple_seth : public building_temple {
-    building_temple_seth(building &b) : building_temple(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_SETH, building_temple_seth);
+    BUILDING_METAINFO(BUILDING_TEMPLE_SETH, building_temple_seth, building_temple);
 };
 
 struct building_temple_bast : public building_temple {
-    building_temple_bast(building &b) : building_temple(b) {}
-    BUILDING_METAINFO(BUILDING_TEMPLE_BAST, building_temple_bast);
+    BUILDING_METAINFO(BUILDING_TEMPLE_BAST, building_temple_bast, building_temple);
 };

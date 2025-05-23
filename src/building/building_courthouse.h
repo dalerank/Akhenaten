@@ -4,9 +4,8 @@
 
 class building_courthouse : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_COURTHOUSE, building_courthouse)
+    BUILDING_METAINFO(BUILDING_COURTHOUSE, building_courthouse, building_impl)
 
-    building_courthouse(building &b) : building_impl(b) {}
     virtual building_courthouse *dcast_courthouse() override { return this; }
 
     //virtual void on_create() override;

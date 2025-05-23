@@ -26,14 +26,13 @@ struct event_granary_resource_removed { building_id bid; e_resource r;  int amou
 
 class building_granary : public building_storage {
 public:
-    BUILDING_METAINFO_RT(BUILDING_GRANARY, building_granary)
+    BUILDING_METAINFO(BUILDING_GRANARY, building_granary, building_storage)
 
-    building_granary(building &b) : building_storage(b) {}
     virtual building_granary *dcast_granary() override { return this; }
 
     struct runtime_data_t {
         short resource_stored[16];
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

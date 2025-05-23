@@ -4,9 +4,8 @@
 
 class building_booth : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_BOOTH, building_booth)
+    BUILDING_METAINFO(BUILDING_BOOTH, building_booth, building_entertainment)
 
-    building_booth(building &b) : building_entertainment(b) {}
     virtual building_booth *dcast_booth() override { return this; }
 
     struct static_params : public buildings::model_t<self_type> {

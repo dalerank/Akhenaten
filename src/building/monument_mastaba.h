@@ -45,8 +45,7 @@ public:
 
 class building_small_mastaba : public building_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba)
-    building_small_mastaba(building & b) : building_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba, building_mastaba)
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     struct static_params : public static_params_t<building_small_mastaba> {
@@ -63,26 +62,22 @@ public:
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_SIDE, building_small_mastaba_part_side)
-    building_small_mastaba_part_side(building &b) : building_small_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_SIDE, building_small_mastaba_part_side, building_small_mastaba)
 };
 
 class building_small_mastaba_part_wall : public building_small_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_WALL, building_small_mastaba_part_wall)
-    building_small_mastaba_part_wall(building &b) : building_small_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_WALL, building_small_mastaba_part_wall, building_small_mastaba)
 };
 
 class building_small_mastaba_part_entrance : public building_small_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_ENTRANCE, building_small_mastaba_part_entrance)
-    building_small_mastaba_part_entrance(building &b) : building_small_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_SMALL_MASTABA_ENTRANCE, building_small_mastaba_part_entrance, building_small_mastaba)
 };
 
 class building_medium_mastaba : public building_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA, building_medium_mastaba)
-    building_medium_mastaba(building &b) : building_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA, building_medium_mastaba, building_mastaba)
 
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
@@ -100,20 +95,17 @@ public:
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_SIDE, building_medium_mastaba_part_side)
-    building_medium_mastaba_part_side(building &b) : building_medium_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_SIDE, building_medium_mastaba_part_side, building_medium_mastaba)
 };
 
 class building_medium_mastaba_part_wall : public building_medium_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_WALL, building_medium_mastaba_part_wall)
-    building_medium_mastaba_part_wall(building &b) : building_medium_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_WALL, building_medium_mastaba_part_wall, building_medium_mastaba)
 };
 
 class building_medium_mastaba_part_entrance : public building_medium_mastaba {
 public:
-    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_ENTRANCE, building_medium_mastaba_part_entrance)
-    building_medium_mastaba_part_entrance(building &b) : building_medium_mastaba(b) {}
+    BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_ENTRANCE, building_medium_mastaba_part_entrance, building_medium_mastaba)
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);

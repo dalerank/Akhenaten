@@ -4,9 +4,7 @@
 
 class building_bricklayers_guild : public building_guild {
 public:
-    BUILDING_METAINFO(BUILDING_BRICKLAYERS_GUILD, building_bricklayers_guild)
-
-    building_bricklayers_guild(building &b) : building_guild(b) {}
+    BUILDING_METAINFO(BUILDING_BRICKLAYERS_GUILD, building_bricklayers_guild, building_guild)
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

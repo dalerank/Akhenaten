@@ -4,9 +4,8 @@
 
 class building_physician : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_PHYSICIAN, building_physician)
+    BUILDING_METAINFO(BUILDING_PHYSICIAN, building_physician, building_impl)
 
-    building_physician(building &b) : building_impl(b) {}
     virtual building_physician *dcast_physician() override { return this; }
 
     virtual void spawn_figure() override;

@@ -6,15 +6,14 @@ struct storage_t;
 
 class building_storage_room : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_STORAGE_ROOM, building_storage_room)
+    BUILDING_METAINFO(BUILDING_STORAGE_ROOM, building_storage_room, building_impl)
 
-    building_storage_room(building &b);
     virtual building_storage *dcast_storage() override { return main()->dcast_storage(); }
     virtual building_storage_room *dcast_storage_room() override { return this; }
 
     struct runtime_data_t {
         e_resource resource_id;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }

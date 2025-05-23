@@ -121,9 +121,6 @@ void building_irrigation_ditch::static_params::planer_ghost_preview(build_planne
     }
 }
 
-building_irrigation_ditch::building_irrigation_ditch(building &b) : building_impl(b) {
-}
-
 void building_irrigation_ditch::on_place_checks() {
     // nothing
 }

@@ -5,9 +5,8 @@
 
 class building_work_camp : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_WORK_CAMP, building_work_camp)
+    BUILDING_METAINFO(BUILDING_WORK_CAMP, building_work_camp, building_impl)
 
-    building_work_camp(building &b) : building_impl(b) {}
     building_work_camp *dcast_work_camp() override { return this; }
 
     virtual void spawn_figure() override;

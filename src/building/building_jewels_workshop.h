@@ -4,9 +4,7 @@
 
 class building_jewels_workshop : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_JEWELS_WORKSHOP, building_jewels_workshop)
-
-    building_jewels_workshop(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_JEWELS_WORKSHOP, building_jewels_workshop, building_industry)
 
     virtual bool can_play_animation() const override;
     virtual void on_place_checks() override;

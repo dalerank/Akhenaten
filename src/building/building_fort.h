@@ -45,15 +45,14 @@ public:
 
 class building_fort_ground : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground)
-    building_fort_ground(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
+
     virtual building_fort_ground *dcast_fort_ground() { return this; }
 };
 
 class building_fort_charioteers : public building_fort {
 public:
-    BUILDING_METAINFO(BUILDING_FORT_CHARIOTEERS, building_fort_charioteers)
-    building_fort_charioteers(building &b) : building_fort(b) {}
+    BUILDING_METAINFO(BUILDING_FORT_CHARIOTEERS, building_fort_charioteers, building_fort)
 
     using static_params = static_params_t<building_fort_charioteers>;
 
@@ -62,8 +61,7 @@ public:
 
 class building_fort_archers : public building_fort {
 public:
-    BUILDING_METAINFO(BUILDING_FORT_ARCHERS, building_fort_archers)
-    building_fort_archers(building &b) : building_fort(b) {}
+    BUILDING_METAINFO(BUILDING_FORT_ARCHERS, building_fort_archers, building_fort)
 
     using static_params = static_params_t<building_fort_archers>;
 
@@ -72,8 +70,7 @@ public:
 
 class building_fort_infantry : public building_fort {
 public:
-    BUILDING_METAINFO(BUILDING_FORT_INFANTRY, building_fort_infantry)
-    building_fort_infantry(building &b) : building_fort(b) {}
+    BUILDING_METAINFO(BUILDING_FORT_INFANTRY, building_fort_infantry, building_fort)
 
     using static_params = static_params_t<building_fort_infantry>;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "smart_cast.h"
+#include <type_traits>
 
 #define ANK_CONFIG_CC0(a, b) a##b
 #define ANK_CONFIG_CC1(a, b) ANK_CONFIG_CC0(a, b)

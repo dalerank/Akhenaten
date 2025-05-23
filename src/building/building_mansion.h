@@ -18,18 +18,15 @@ public:
 
 class building_personal_mansion : public building_mansion {
 public:
-    BUILDING_METAINFO(BUILDING_PERSONAL_MANSION, building_personal_mansion)
-    building_personal_mansion(building &b) : building_mansion(b) {}
+    BUILDING_METAINFO(BUILDING_PERSONAL_MANSION, building_personal_mansion, building_mansion)
 };
 
 class building_family_mansion : public building_mansion {
 public:
-    BUILDING_METAINFO(BUILDING_FAMILY_MANSION, building_family_mansion)
-    building_family_mansion(building &b) : building_mansion(b) {}
+    BUILDING_METAINFO(BUILDING_FAMILY_MANSION, building_family_mansion, building_mansion)
 };
 
 class building_dynasty_mansion : public building_mansion {
 public:
-    BUILDING_METAINFO(BUILDING_DYNASTY_MANSION, building_dynasty_mansion)
-    building_dynasty_mansion(building &b) : building_mansion(b) {}
+    BUILDING_METAINFO(BUILDING_DYNASTY_MANSION, building_dynasty_mansion, building_mansion)
 };

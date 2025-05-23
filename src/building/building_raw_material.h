@@ -4,9 +4,8 @@
 
 class building_clay_pit : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_CLAY_PIT, building_clay_pit)
+    BUILDING_METAINFO(BUILDING_CLAY_PIT, building_clay_pit, building_industry)
 
-    building_clay_pit(building &b) : building_industry(b) {}
     virtual building_clay_pit *dcast_clay_pit() override { return this; }
 
     virtual int get_fire_risk(int value) const override;
@@ -28,24 +27,21 @@ public:
 
 class building_mine_gold : public building_mine {
 public:
-    BUILDING_METAINFO(BUILDING_GOLD_MINE, building_mine_gold)
+    BUILDING_METAINFO(BUILDING_GOLD_MINE, building_mine_gold, building_mine)
 
-    building_mine_gold(building &b) : building_mine(b) {}
     virtual int produce_uptick_per_day() const override;
 };
 
 class building_mine_gems : public building_mine {
 public:
-    BUILDING_METAINFO(BUILDING_GEMSTONE_MINE, building_mine_gems)
+    BUILDING_METAINFO(BUILDING_GEMSTONE_MINE, building_mine_gems, building_mine)
 
-    building_mine_gems(building &b) : building_mine(b) {}
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 3) : 0; }
 };
 
 class building_mine_copper : public building_mine {
 public:
-    BUILDING_METAINFO(BUILDING_COPPER_MINE, building_mine_copper)
-    building_mine_copper(building &b) : building_mine(b) {}
+    BUILDING_METAINFO(BUILDING_COPPER_MINE, building_mine_copper, building_mine)
 
     struct static_params : public buildings::model_t<building_mine_copper> {
         virtual bool planer_is_need_flag(e_building_flags flag) const override;

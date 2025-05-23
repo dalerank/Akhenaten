@@ -5,8 +5,7 @@
 
 class building_bandstand : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_BANDSTAND, building_bandstand)
-    building_bandstand(building &b) : building_entertainment(b) {}
+    BUILDING_METAINFO(BUILDING_BANDSTAND, building_bandstand, building_entertainment)
     virtual building_bandstand *dcast_bandstand() override { return this; }
 
     struct static_params : public buildings::model_t<building_bandstand> {

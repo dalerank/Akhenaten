@@ -12,8 +12,7 @@ enum e_barracks_priority {
 
 class building_recruiter : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_RECRUITER, building_recruiter)
-    building_recruiter(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_RECRUITER, building_recruiter, building_impl)
     virtual building_recruiter *dcast_recruiter() override { return this; }
 
     struct static_params : public buildings::model_t<building_recruiter> {
@@ -22,7 +21,7 @@ public:
 
     struct runtime_data_t {
         uint8_t priority;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;

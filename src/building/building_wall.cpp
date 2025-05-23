@@ -358,10 +358,6 @@ bool building_mud_wall::static_params::planer_can_construction_start(build_plann
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
 }
 
-building_mud_wall::building_mud_wall(building &b) : building_impl(b) {
-    // nothing
-}
-
 void building_mud_wall::on_place_checks() {
     // nothing
 }

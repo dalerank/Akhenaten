@@ -4,7 +4,7 @@
 
 class building_dock : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_DOCK, building_dock)
+    BUILDING_METAINFO(BUILDING_DOCK, building_dock, building_impl)
 
     struct runtime_data_t {
         short queued_docker_id;
@@ -18,9 +18,8 @@ public:
         bool reparing;
         short progress;
         bool has_fish;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
-    building_dock(building &b) : building_impl(b) {}
     virtual building_dock *dcast_dock() override { return this; }
 
     struct static_params : public buildings::model_t<building_dock> {

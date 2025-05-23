@@ -4,8 +4,7 @@
 
 class building_irrigation_ditch : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_IRRIGATION_DITCH, building_irrigation_ditch)
-    building_irrigation_ditch(building &b);
+    BUILDING_METAINFO(BUILDING_IRRIGATION_DITCH, building_irrigation_ditch, building_impl)
 
     struct static_params : public buildings::model_t<building_irrigation_ditch> {
         virtual bool planer_can_construction_start(build_planner &p, tile2i start) const override;

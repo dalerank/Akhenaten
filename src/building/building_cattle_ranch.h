@@ -4,9 +4,7 @@
 
 class building_cattle_ranch : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_CATTLE_RANCH, building_cattle_ranch)
-
-    building_cattle_ranch(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_CATTLE_RANCH, building_cattle_ranch, building_industry)
 
     using static_params = static_params_t<self_type>;
     static const static_params& current_params() { return (const static_params&)params(TYPE); }

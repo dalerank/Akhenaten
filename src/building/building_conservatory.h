@@ -4,9 +4,8 @@
 
 class building_conservatory : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_CONSERVATORY, building_conservatory)
+    BUILDING_METAINFO(BUILDING_CONSERVATORY, building_conservatory, building_entertainment)
 
-    building_conservatory(building &b) : building_entertainment(b) {}
     virtual building_conservatory *dcast_conservatory() override { return this; }
 
     virtual void spawn_figure() override;

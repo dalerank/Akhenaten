@@ -4,14 +4,13 @@
 
 class building_wood_cutter : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_WOOD_CUTTERS, building_wood_cutter)
+    BUILDING_METAINFO(BUILDING_WOOD_CUTTERS, building_wood_cutter, building_impl)
 
-    building_wood_cutter(building &b) : building_impl(b) {}
     virtual building_wood_cutter *dcast_wood_cutter() override { return this; }
 
     struct runtime_data_t {
         uint8_t max_gatheres;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual bool is_administration() const override { return true; }

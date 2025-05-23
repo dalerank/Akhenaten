@@ -4,8 +4,7 @@
 
 class building_warship_wharf : public building_wharf {
 public:
-    BUILDING_METAINFO(BUILDING_WARSHIP_WHARF, building_warship_wharf)
-    building_warship_wharf(building &b) : building_wharf(b) {}
+    BUILDING_METAINFO(BUILDING_WARSHIP_WHARF, building_warship_wharf, building_wharf)
 
     virtual building_warship_wharf *dcast_warship_wharf() override { return this; }
 

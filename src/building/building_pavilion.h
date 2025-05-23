@@ -4,8 +4,7 @@
 
 class building_pavilion : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion)
-    building_pavilion(building &b) : building_entertainment(b) {}
+    BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion, building_entertainment)
 
     struct static_params : public buildings::model_t<building_pavilion> {
         using inherited = buildings::model_t<building_pavilion>;

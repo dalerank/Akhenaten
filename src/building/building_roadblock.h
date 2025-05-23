@@ -22,8 +22,7 @@ public:
 
 class building_roadblock : public building_routeblock {
 public:
-    BUILDING_METAINFO(BUILDING_ROADBLOCK, building_roadblock)
-    building_roadblock(building &b) : building_routeblock(b) {}
+    BUILDING_METAINFO(BUILDING_ROADBLOCK, building_roadblock, building_routeblock)
 
     virtual building_roadblock *dcast_roadblock() override { return this; }
 

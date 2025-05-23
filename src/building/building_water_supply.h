@@ -4,9 +4,8 @@
 
 class building_water_supply : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_WATER_SUPPLY, building_water_supply)
+    BUILDING_METAINFO(BUILDING_WATER_SUPPLY, building_water_supply, building_impl)
 
-    building_water_supply(building &b) : building_impl(b) {}
     virtual building_water_supply *dcast_water_supply() override { return this; }
 
     virtual void on_place_checks() override;

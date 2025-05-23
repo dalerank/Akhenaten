@@ -10,8 +10,7 @@ public:
 
 class building_sandstone_quarry : public building_quarry {
 public:
-    BUILDING_METAINFO(BUILDING_SANDSTONE_QUARRY, building_sandstone_quarry)
-    building_sandstone_quarry(building &b) : building_quarry(b) {}
+    BUILDING_METAINFO(BUILDING_SANDSTONE_QUARRY, building_sandstone_quarry, building_quarry)
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
@@ -19,8 +18,7 @@ public:
 
 class building_stone_quarry : public building_quarry {
 public:
-    BUILDING_METAINFO(BUILDING_STONE_QUARRY, building_stone_quarry)
-    building_stone_quarry(building &b) : building_quarry(b) {}
+    BUILDING_METAINFO(BUILDING_STONE_QUARRY, building_stone_quarry, building_quarry)
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
@@ -29,8 +27,7 @@ public:
 
 class building_limestone_quarry : public building_quarry {
 public:
-    BUILDING_METAINFO(BUILDING_LIMESTONE_QUARRY, building_limestone_quarry)
-    building_limestone_quarry(building &b) : building_quarry(b) {}
+    BUILDING_METAINFO(BUILDING_LIMESTONE_QUARRY, building_limestone_quarry, building_quarry)
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
@@ -38,8 +35,7 @@ public:
 
 class building_granite_quarry : public building_quarry {
 public:
-    BUILDING_METAINFO(BUILDING_GRANITE_QUARRY, building_granite_quarry)
-    building_granite_quarry(building &b) : building_quarry(b) {}
+    BUILDING_METAINFO(BUILDING_GRANITE_QUARRY, building_granite_quarry, building_quarry)
 
     virtual int animation_speed(int speed) const override { return 3; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

@@ -4,9 +4,8 @@
 
 class building_festival_square : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_FESTIVAL_SQUARE, building_festival_square)
+    BUILDING_METAINFO(BUILDING_FESTIVAL_SQUARE, building_festival_square, building_impl)
 
-    building_festival_square(building &b) : building_impl(b) {}
     virtual building_festival_square *dcast_festival_square() override { return this; }
 
     struct static_params : public buildings::model_t<self_type> {
@@ -23,6 +22,7 @@ public:
         uint8_t musician_visited;
         uint8_t dancer_visited;
     };
+    BUILDING_RUNTIME_DATA(runtime_data_t)
 
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

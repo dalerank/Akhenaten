@@ -4,8 +4,7 @@
 
 class building_burning_ruin : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_BURNING_RUIN, building_burning_ruin)
-    building_burning_ruin(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_BURNING_RUIN, building_burning_ruin, building_impl)
     virtual building_burning_ruin *dcast_burning_ruin() override { return this; }
 
     struct static_params : public buildings::model_t<building_burning_ruin> {

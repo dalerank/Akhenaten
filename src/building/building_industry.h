@@ -30,7 +30,7 @@ public:
         int unk_40[40];
         int unk_12[10];
         e_figure_type processed_figure;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual int produce_uptick_per_day() const { return base.num_workers; }
     virtual void update_production();
@@ -46,7 +46,4 @@ public:
     virtual void update_count() const override;
     virtual bool can_play_animation() const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };

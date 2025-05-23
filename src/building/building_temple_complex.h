@@ -53,8 +53,7 @@ public:
 
 class building_temple_complex_osiris : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_OSIRIS, building_temple_complex_osiris)
-    building_temple_complex_osiris(building &b) : building_temple_complex(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_OSIRIS, building_temple_complex_osiris, building_temple_complex)
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_OSIRIS; }
 
@@ -63,8 +62,7 @@ public:
 
 class building_temple_complex_ra : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_RA, building_temple_complex_ra)
-    building_temple_complex_ra(building &b) : building_temple_complex(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_RA, building_temple_complex_ra, building_temple_complex)
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_RA; }
 
@@ -73,8 +71,7 @@ public:
   
 class building_temple_complex_ptah : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_PTAH, building_temple_complex_ptah)
-    building_temple_complex_ptah(building &b) : building_temple_complex(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_PTAH, building_temple_complex_ptah, building_temple_complex)
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_PTAH; }
 
@@ -83,8 +80,7 @@ public:
 
 class building_temple_complex_seth : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth)
-    building_temple_complex_seth(building &b) : building_temple_complex(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth, building_temple_complex)
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_SETH; }
 
@@ -93,8 +89,7 @@ public:
 
 class building_temple_complex_bast : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_BAST, building_temple_complex_bast)
-    building_temple_complex_bast(building &b) : building_temple_complex(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_BAST, building_temple_complex_bast, building_temple_complex)    
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_BAST; }
 

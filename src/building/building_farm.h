@@ -32,7 +32,7 @@ public:
         e_labor_state labor_state;
         building_id work_camp_id;
         uint8_t produce_multiplier;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientration, int variant) override;
@@ -68,70 +68,59 @@ public:
     void draw_farm_worker(painter &ctx, int direction, int action, vec2i coords, color color_mask = COLOR_MASK_NONE);
     void draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos);
     int expected_produce();
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 struct building_farm_grain : public building_farm {
-    building_farm_grain(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain);
+    BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain, building_farm);
 
     using static_params = static_params_t<building_farm_grain>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_lettuce : public building_farm {
-    building_farm_lettuce(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce);
+    BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce, building_farm);
 
     using static_params = static_params_t<building_farm_lettuce>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_chickpeas : public building_farm {
-    building_farm_chickpeas(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas);
+    BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas, building_farm);
 
     using static_params = static_params_t<building_farm_chickpeas>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_pomegranates : public building_farm {
-    building_farm_pomegranates(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates);
+    BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates, building_farm);
 
     using static_params = static_params_t<building_farm_pomegranates>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_barley : public building_farm {
-    building_farm_barley(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley);
+    BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley, building_farm);
 
     using static_params = static_params_t<building_farm_barley>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_flax : public building_farm {
-    building_farm_flax(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax);
+    BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax, building_farm);
 
     using static_params = static_params_t<building_farm_flax>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_henna : public building_farm {
-    building_farm_henna(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna);
+    BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna, building_farm);
 
     using static_params = static_params_t<building_farm_henna>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct building_farm_figs : public building_farm {
-    building_farm_figs(building &b) : building_farm(b) {}
-    BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs);
+    BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs, building_farm);
 
     using static_params = static_params_t<building_farm_figs>;
     static const static_params &current_params() { return (const static_params &)params(TYPE); }

@@ -12,9 +12,6 @@
 
 buildings::model_t<building_storage_room> storage_room_m;
 
-inline building_storage_room::building_storage_room(building &b) : building_impl(b) {
-}
-
 void building_storage_room::on_create(int orientation) {
 }
 

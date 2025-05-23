@@ -4,9 +4,7 @@
 
 class building_weaver : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_WEAVER_WORKSHOP, building_weaver)
-
-    building_weaver(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_WEAVER_WORKSHOP, building_weaver, building_industry)
 
     virtual void on_place_checks() override;
     virtual bool can_play_animation() const override;

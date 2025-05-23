@@ -4,9 +4,8 @@
 
 class building_shipyard : public building_industry {
 public:
-    BUILDING_METAINFO_RT(BUILDING_SHIPWRIGHT, building_shipyard)
+    BUILDING_METAINFO(BUILDING_SHIPWRIGHT, building_shipyard, building_industry)
 
-    building_shipyard(building &b) : building_industry(b) {}
     virtual building_shipyard *dcast_shipyard() override { return this; }
 
     struct static_params : public buildings::model_t<self_type> {
@@ -22,7 +21,7 @@ public:
         e_figure_type process_type;
         bool reparing;
         short progress;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

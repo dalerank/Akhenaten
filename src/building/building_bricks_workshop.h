@@ -4,9 +4,7 @@
 
 class building_bricks_workshop : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_BRICKS_WORKSHOP, building_bricks_workshop)
-
-    building_bricks_workshop(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_BRICKS_WORKSHOP, building_bricks_workshop, building_industry)
 
     using static_params = static_params_t<building_bricks_workshop>;
     static const static_params& current_params() { return (const static_params&)params(TYPE); }

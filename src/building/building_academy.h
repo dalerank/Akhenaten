@@ -4,9 +4,7 @@
 
 class building_academy : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_ACADEMY, building_academy)
-
-    building_academy(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_ACADEMY, building_academy, building_impl)
 
     virtual void on_create(int orientation) override {}
     //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;

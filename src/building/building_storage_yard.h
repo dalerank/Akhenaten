@@ -31,9 +31,7 @@ struct event_warehouse_filled { building_id bid; };
 
 class building_storage_yard : public building_storage {
 public:
-    BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard)
-
-    building_storage_yard(building &b) : building_storage(b) {}
+    BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard, building_storage)
 
     struct static_params : public buildings::model_t<building_storage_yard> {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;

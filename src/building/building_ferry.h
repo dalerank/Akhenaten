@@ -5,8 +5,7 @@
 
 class building_ferry : public building_routeblock {
 public:
-    BUILDING_METAINFO_RT(BUILDING_FERRY, building_ferry)
-    building_ferry(building &b) : building_routeblock(b) {}
+    BUILDING_METAINFO(BUILDING_FERRY, building_ferry, building_routeblock)
 
     struct static_params : public buildings::model_t<building_ferry> {
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
@@ -14,7 +13,7 @@ public:
 
     struct runtime_data_t {
         int dock_tiles[2];
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }

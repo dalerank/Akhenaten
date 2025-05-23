@@ -6,9 +6,8 @@
 
 class building_architect_post : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_ARCHITECT_POST, building_architect_post)
+    BUILDING_METAINFO(BUILDING_ARCHITECT_POST, building_architect_post, building_impl)
 
-    building_architect_post(building &b) : building_impl(b) {}
     virtual building_architect_post *dcast_architect_post() override { return this; }
 
     virtual void spawn_figure() override;

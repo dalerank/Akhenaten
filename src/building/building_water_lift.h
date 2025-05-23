@@ -4,8 +4,7 @@
 
 class building_water_lift : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_WATER_LIFT, building_water_lift)
-    building_water_lift(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_WATER_LIFT, building_water_lift, building_impl)
 
     struct static_params : public buildings::model_t<self_type> {
         virtual void archive_load(archive arch) override;
@@ -16,7 +15,7 @@ public:
     struct runtime_data_t {
         int input_tiles[2];
         int output_tiles[2];
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

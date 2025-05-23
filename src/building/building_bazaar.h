@@ -5,8 +5,7 @@
 
 class building_bazaar : public building_impl {
 public:
-    BUILDING_METAINFO_RT(BUILDING_BAZAAR, building_bazaar)
-    building_bazaar(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_BAZAAR, building_bazaar, building_impl)
 
     virtual building_bazaar *dcast_bazaar() override { return this; }
 
@@ -18,7 +17,7 @@ public:
         short beer_demand;
         short fetch_inventory_id;
         short market_goods;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

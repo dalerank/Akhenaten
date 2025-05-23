@@ -389,18 +389,16 @@ private:
     void destroy_linked_parts(bool on_fire);
 };
 
-#define BUILDING_METAINFO(type, clsid) \
-    static constexpr e_building_type TYPE = type; \
-    static constexpr pcstr CLSID = #clsid; \
-    using self_type = clsid;                                                                           
-
-#define BUILDING_METAINFO_RT(type, clsid)                                                               \
+#define BUILDING_METAINFO(type, clsid, base_class)                                                      \
+    clsid(building &b) : base_class(b) {}                                                               \
     static constexpr e_building_type TYPE = type;                                                       \
     static constexpr pcstr CLSID = #clsid;                                                              \
     using self_type = clsid;                                                                            \
-    struct runtime_data_t;                                                                              \
-    runtime_data_t &runtime_data() {return *(runtime_data_t *)base.runtime_data; }                      \
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }         
+    using inherited = base_class;                                                                       
+
+#define BUILDING_RUNTIME_DATA(type) ;                                                                   \
+    type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
+    const type& runtime_data() const { return *(type*)this->base.runtime_data; }    
 
 class building_impl {
 public:

@@ -16,8 +16,7 @@ public:
 
 class building_temple_complex_altar : public building_temple_complex_upgrade {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR, building_temple_complex_altar)
-    building_temple_complex_altar(building &b) : building_temple_complex_upgrade(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR, building_temple_complex_altar, building_temple_complex_upgrade)
 
     using static_params = static_params_t<building_temple_complex_altar>;
 
@@ -26,8 +25,7 @@ public:
 
 class building_temple_complex_oracle : public building_temple_complex_upgrade {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ORACLE, building_temple_complex_oracle)
-    building_temple_complex_oracle(building &b) : building_temple_complex_upgrade(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ORACLE, building_temple_complex_oracle, building_temple_complex_upgrade)
 
     using static_params = static_params_t<building_temple_complex_oracle>;
     virtual void on_place_checks() override;
@@ -37,6 +35,5 @@ public:
 
 class building_temple_complex_altar_ra : public building_temple_complex_altar {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR_AMON, building_temple_complex_altar_ra)
-    building_temple_complex_altar_ra(building &b) : building_temple_complex_altar(b) {}
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_ALTAR_AMON, building_temple_complex_altar_ra, building_temple_complex_altar)
 };

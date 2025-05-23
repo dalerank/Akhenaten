@@ -9,7 +9,7 @@ public:
 
     struct runtime_data_t {
         int16_t tax_income_or_storage;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
@@ -23,25 +23,19 @@ public:
     virtual void spawn_figure() override;
 
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 class building_village_palace : public building_palace {
 public:
-    BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace)
-    building_village_palace(building &b) : building_palace(b) {}
+    BUILDING_METAINFO(BUILDING_VILLAGE_PALACE, building_village_palace, building_palace)
 };
 
 class building_town_palace : public building_palace {
 public:
-    BUILDING_METAINFO(BUILDING_TOWN_PALACE, building_town_palace)
-    building_town_palace(building &b) : building_palace(b) {}
+    BUILDING_METAINFO(BUILDING_TOWN_PALACE, building_town_palace, building_palace)
 };
 
 class building_city_palace : public building_palace {
 public:
-    BUILDING_METAINFO(BUILDING_CITY_PALACE, building_city_palace)
-    building_city_palace(building &b) : building_palace(b) {}
+    BUILDING_METAINFO(BUILDING_CITY_PALACE, building_city_palace, building_palace)
 };

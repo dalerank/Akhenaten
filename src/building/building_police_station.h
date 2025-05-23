@@ -4,9 +4,7 @@
 
 class building_police_station : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_POLICE_STATION, building_police_station)
-
-    building_police_station(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_POLICE_STATION, building_police_station, building_impl)
 
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;

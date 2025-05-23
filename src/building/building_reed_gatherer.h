@@ -4,9 +4,8 @@
 
 class building_reed_gatherer : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_REED_GATHERER, building_reed_gatherer)
+    BUILDING_METAINFO(BUILDING_REED_GATHERER, building_reed_gatherer, building_industry)
 
-    building_reed_gatherer(building &b) : building_industry(b) {}
     virtual building_reed_gatherer *dcast_reed_gatherer() override { return this; }
 
     virtual void on_create(int orientation) override;

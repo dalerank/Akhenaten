@@ -4,9 +4,7 @@
 
 class building_military_academy : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_MILITARY_ACADEMY, building_military_academy)
-
-    building_military_academy(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_MILITARY_ACADEMY, building_military_academy, building_impl)
 
     virtual void window_info_background(object_info &c) override;
     virtual void spawn_figure() override;

@@ -4,9 +4,8 @@
 
 class building_fishing_wharf : public building_wharf {
 public:
-    BUILDING_METAINFO_RT(BUILDING_FISHING_WHARF, building_fishing_wharf)
+    BUILDING_METAINFO(BUILDING_FISHING_WHARF, building_fishing_wharf, building_wharf)
 
-    building_fishing_wharf(building &b) : building_wharf(b) {}
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
     struct static_params : public buildings::model_t<self_type> {
@@ -16,7 +15,7 @@ public:
 
     struct runtime_data_t : public building_wharf::runtime_data_t {
         bool has_fish;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_count() const override;

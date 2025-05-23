@@ -4,9 +4,8 @@
 
 class building_garden : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_GARDENS, building_garden)
+    BUILDING_METAINFO(BUILDING_GARDENS, building_garden, building_impl)
 
-    building_garden(building &b) : building_impl(b) {}
     virtual building_garden *dcast_garden() override { return this; }
 
     struct static_params : public buildings::model_t<building_garden> {

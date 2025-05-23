@@ -6,8 +6,7 @@ void building_workshop_draw_foreground(object_info &c);
 
 class building_lamp_workshop : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_LAMP_WORKSHOP, building_lamp_workshop)
-    building_lamp_workshop(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_LAMP_WORKSHOP, building_lamp_workshop, building_industry)
 
     //virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
@@ -18,8 +17,7 @@ public:
 
 class building_paint_workshop : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_PAINT_WORKSHOP, building_paint_workshop)
-    building_paint_workshop(building &b) : building_industry(b) {}
+    BUILDING_METAINFO(BUILDING_PAINT_WORKSHOP, building_paint_workshop, building_industry)
 
     //virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;

@@ -4,8 +4,7 @@
 
 class building_library : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_LIBRARY, building_library);
-    building_library(building &b) : building_impl(b) {}
+    BUILDING_METAINFO(BUILDING_LIBRARY, building_library, building_impl);
 
     //virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

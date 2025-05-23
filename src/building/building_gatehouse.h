@@ -15,14 +15,12 @@ public:
 
 class building_brick_gatehouse : public building_gatehouse {
 public:
-    BUILDING_METAINFO(BUILDING_BRICK_GATEHOUSE, building_brick_gatehouse)
-    building_brick_gatehouse(building &b) : building_gatehouse(b) {}
+    BUILDING_METAINFO(BUILDING_BRICK_GATEHOUSE, building_brick_gatehouse, building_gatehouse)
 };
 
 class building_mud_gatehouse : public building_gatehouse {
 public:
-    BUILDING_METAINFO(BUILDING_MUD_GATEHOUSE, building_mud_gatehouse)
-    building_mud_gatehouse(building &b) : building_gatehouse(b) {}
+    BUILDING_METAINFO(BUILDING_MUD_GATEHOUSE, building_mud_gatehouse, building_gatehouse)
 
     virtual void window_info_background(object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

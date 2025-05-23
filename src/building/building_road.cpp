@@ -117,10 +117,6 @@ void building_road::static_params::planer_ghost_preview(build_planner &planer, p
     }
 }
 
-inline building_road::building_road(building &b) : building_impl(b) {
-    /*nothing*/
-}
-
 void building_road::on_place_checks() {
     /*nothing*/
 }

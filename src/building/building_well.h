@@ -5,9 +5,8 @@
 
 class building_well : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_WELL, building_well)
+    BUILDING_METAINFO(BUILDING_WELL, building_well, building_impl)
 
-    building_well(building &b) : building_impl(b) {}
     virtual building_well *dcast_well() override { return this; }
 
     struct static_params : public buildings::model_t<building_well> {

@@ -5,9 +5,7 @@
 
 class building_dancer_school : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_DANCE_SCHOOL, building_dancer_school)
-
-    building_dancer_school(building &b) : building_entertainment(b) {}
+    BUILDING_METAINFO(BUILDING_DANCE_SCHOOL, building_dancer_school, building_entertainment)
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENTERTAINMENT; }

@@ -4,9 +4,8 @@
 
 class building_pottery : public building_industry {
 public:
-    BUILDING_METAINFO(BUILDING_POTTERY_WORKSHOP, building_pottery)
+    BUILDING_METAINFO(BUILDING_POTTERY_WORKSHOP, building_pottery, building_industry)
 
-    building_pottery(building &b) : building_industry(b) {}
     virtual building_pottery *dcast_pottery() override { return this; }
 
     virtual bool can_play_animation() const override;

@@ -50,8 +50,7 @@ public:
 
 class building_small_statue : public building_statue {
 public:
-    BUILDING_METAINFO(BUILDING_SMALL_STATUE, building_small_statue)
-    building_small_statue(building &b) : building_statue(b) {}
+    BUILDING_METAINFO(BUILDING_SMALL_STATUE, building_small_statue, building_statue)
 
     virtual const statue_params_t &statue_params() { return current_params(); }
 
@@ -61,8 +60,7 @@ public:
 
 class building_medium_statue : public building_statue {
 public:
-    BUILDING_METAINFO(BUILDING_MEDIUM_STATUE, building_medium_statue)
-    building_medium_statue(building &b) : building_statue(b) {}
+    BUILDING_METAINFO(BUILDING_MEDIUM_STATUE, building_medium_statue, building_statue)
 
     virtual const statue_params_t &statue_params() { return current_params(); }
 
@@ -72,8 +70,7 @@ public:
 
 class building_large_statue : public building_statue {
 public:
-    BUILDING_METAINFO(BUILDING_LARGE_STATUE, building_large_statue)
-    building_large_statue(building &b) : building_statue(b) {}
+    BUILDING_METAINFO(BUILDING_LARGE_STATUE, building_large_statue, building_statue)
 
     virtual const statue_params_t &statue_params() { return current_params(); }
 
