@@ -1,6 +1,5 @@
 #include "undo.h"
 
-#include "building/industry.h"
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"
 #include "city/city_finance.h"

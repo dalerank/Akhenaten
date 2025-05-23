@@ -1,7 +1,6 @@
 #include "figure_cartpusher.h"
 
 #include "building/building_granary.h"
-#include "building/industry.h"
 #include "building/building_storage_yard.h"
 #include "city/buildings.h"
 #include "city/city_resource.h"

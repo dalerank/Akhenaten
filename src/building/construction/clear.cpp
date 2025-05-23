@@ -1,6 +1,5 @@
 #include "clear.h"
 
-#include "building/industry.h"
 #include "building/building_house.h"
 #include "building/building_farm.h"
 #include "building/building_wall.h"

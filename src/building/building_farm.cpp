@@ -1,6 +1,5 @@
 #include "building_farm.h"
 
-#include "building/industry.h"
 #include "core/object_property.h"
 #include "building/building_animation.h"
 #include "city/object_info.h"

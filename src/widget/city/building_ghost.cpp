@@ -5,7 +5,6 @@
 #include "building/building_farm.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_road.h"
-#include "building/industry.h"
 #include "building/monument_mastaba.h"
 #include "building/rotation.h"
 #include "building/building_fort.h"

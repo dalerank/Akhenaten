@@ -5,7 +5,6 @@
 #include "widget/city/tile_draw.h"
 #include "graphics/image.h"
 
-#include "building/industry.h"
 #include "building/building_farm.h"
 #include "building/building_entertainment.h"
 #include "building/building_temple_complex.h"

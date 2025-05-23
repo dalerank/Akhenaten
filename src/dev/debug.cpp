@@ -7,7 +7,6 @@
 
 #include "graphics/graphics.h"
 
-#include "building/industry.h"
 #include "building/monuments.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"

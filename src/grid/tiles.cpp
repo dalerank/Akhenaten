@@ -19,7 +19,6 @@
 #include "grid/terrain.h"
 #include "scenario/map.h"
 #include "building/destruction.h"
-#include "building/industry.h"
 #include "building/building_garden.h"
 #include "building/building_plaza.h"
 #include "building/building_road.h"
