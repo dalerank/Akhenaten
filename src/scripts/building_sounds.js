@@ -52,7 +52,7 @@ building_sounds = [
 	{ type: BUILDING_JUGGLER_SCHOOL,					sound: "Wavs/juggler_school.wav"},
 	{ type: BUILDING_CONSERVATORY, 						sound: "Wavs/music_school.wav"},
 	{ type: BUILDING_DANCE_SCHOOL, 						sound: "Wavs/dance_school.wav"},
-	{ type: BUILDING_SENET_MASTER, 						sound: "Wavs/bullfight_school.wav"},
+	{ type: BUILDING_BULLFIGHT_SCHOOL,				sound: "Wavs/bullfight_school.wav"},
 	{ type: BUILDING_APOTHECARY, 							sound: "Wavs/apothecary.wav"},
 	{ type: BUILDING_DENTIST, 								sound: "Wavs/dentist.wav"},
 	{ type: BUILDING_MORTUARY, 								sound: "Wavs/mortuary.wav"},

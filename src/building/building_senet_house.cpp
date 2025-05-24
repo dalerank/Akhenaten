@@ -14,37 +14,10 @@
 buildings::model_t<building_senet_house> senet_house_m;
 buildings::model_t<building_bullfight_school> bullfight_school_m;
 
-void building_senet_house::window_info_background(object_info &c) {
-    c.help_id = 74;
-    window_building_play_sound(&c, "Wavs/hippodrome.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(73, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    building* b = building_get(c.building_id);
-
-    auto &d = runtime_data();
-    if (!b->has_road_access)
-        window_building_draw_description(c, 69, 25);
-    else if (b->num_workers <= 0)
-        window_building_draw_description(c, 73, 4);
-    else if (!d.num_shows)
-        window_building_draw_description(c, 73, 2);
-    else if (d.juggler_visited)
-        window_building_draw_description(c, 73, 3);
-
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 6 });
-    window_building_draw_employment(&c, 138);
-    if (d.juggler_visited > 0) {
-        int width = lang_text_draw(73, 6, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw_amount(8, 44, 2 * d.juggler_visited, c.offset.x + width + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-    } else {
-        lang_text_draw(73, 5, c.offset.x + 32, c.offset.y + 202, FONT_NORMAL_BLACK_ON_DARK);
-    }
-}
-
 void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
-    const bool has_senet_master = (g_city.buildings.count_active(BUILDING_SENET_MASTER) > 0);
+    const bool has_senet_master = (g_city.buildings.count_active(BUILDING_BULLFIGHT_SCHOOL) > 0);
     warnings.add_if(!has_senet_master, "#build_senet_house");
 }
 
@@ -116,36 +89,6 @@ void building_senet_house::spawn_figure() {
     //            }
     //        }
     //    }
-}
-
-void building_bullfight_school::window_info_background(object_info &c) {
-    building *b = building_get(c.building_id);
-    const auto &params = b->dcast()->params();
-    
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    if (!b->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (building_get(c.building_id)->num_workers <= 0) {
-        window_building_draw_description(c, group_id, 7);
-    } else if (b->worker_percentage() >= 100) {
-        window_building_draw_description(c, group_id, 2);
-    } else if (b->worker_percentage() >= 75) {
-        window_building_draw_description(c, group_id, 3);
-    } else if (b->worker_percentage() >= 50) {
-        window_building_draw_description(c, group_id, 4);
-    } else if (b->worker_percentage() >= 25) {
-        window_building_draw_description(c, group_id, 5);
-    } else {
-        window_building_draw_description(c, group_id, 6);
-    }
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });
-    window_building_draw_employment(&c, 142);
 }
 
 bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

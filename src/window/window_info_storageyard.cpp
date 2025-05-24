@@ -52,6 +52,11 @@ void info_window_storageyard::window_info_foreground(object_info &c) {
     ui.draw();
 }
 
+bool info_window_storageyard::check(object_info &c) {
+    building *b = c.building_get();
+    return building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_YARD_UP, BUILDING_STORAGE_ROOM);
+}
+
 int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_info &c) {
     if (c.storage_show_special_orders) {
         return storageyard_orders_infow.window_info_handle_mouse(m, c);

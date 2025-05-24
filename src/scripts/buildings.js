@@ -822,6 +822,8 @@ building_military_academy = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
   },
   window_info_height_id : 1,
+  info_help_id: 88,
+  info_text_id: 135,
   building_size : 4,
 }
 
@@ -1289,6 +1291,8 @@ building_mud_tower = {
   building_size : 2,
   fire_proof : true,
   window_info_height_id : 1,
+  info_help_id: 85,
+  info_text_id: 159,
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
 }
@@ -1307,7 +1311,7 @@ building_ferry = {
   fire_proof : true,
   planer_relative_orientation: 1,
   info_help_id: 85,
-  info_text_id: 159,
+  info_text_id: 91,
   labor_category : LABOR_CATEGORY_GOVERNMENT,
 }
 
@@ -1678,6 +1682,8 @@ building_brick_gatehouse = {
     base : { pack:PACK_GENERAL, id:161 },
   },
   building_size : 2,
+  info_help_id:85,
+  info_text_id:90,
 }
 
 building_mud_gatehouse = {
@@ -1686,6 +1692,8 @@ building_mud_gatehouse = {
     base : { pack:PACK_GENERAL, id:220 },
   },
   building_size : 2,
+  info_help_id:85,
+  info_text_id:90,
   window_info_height_id : 1,
 }
 
@@ -1716,6 +1724,8 @@ building_senet_house = {
   },
   damage_proof : true,
   window_info_height_id : 2,
+  info_help_id:74,
+  info_text_id:73,
   building_size : 4,
 }
 
@@ -1883,6 +1893,8 @@ building_police_station = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
+  info_help_id: 86,
+  info_text_id: 88,
   building_size : 1,
 }
 

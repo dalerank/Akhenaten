@@ -86,6 +86,8 @@ class building_temple_complex_oracle;
 class building_water_lift;
 class building_monument;
 class building_scribal_school;
+class building_tower;
+class building_senet_house;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -370,6 +372,8 @@ public:
     building_temple_complex_oracle *dcast_temple_complex_oracle();
     building_water_lift *dcast_water_lift();
     building_monument *dcast_monument();
+    building_tower *dcast_tower();
+    building_senet_house *dcast_senet_house();
 
     int get_figures_number(e_figure_type ftype);
 
@@ -483,8 +487,6 @@ public:
     virtual void update_graphic();
     virtual void update_month() {}
     virtual void update_day();
-    virtual void window_info_background(object_info &ctx) {}
-    virtual void window_info_foreground(object_info &ctx) {}
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) { return false; }
@@ -578,6 +580,8 @@ public:
     virtual building_water_lift *dcast_water_lift() { return nullptr; }
     virtual building_monument *dcast_monument() { return nullptr; }
     virtual building_scribal_school *dcast_scribal_school() { return nullptr; }
+    virtual building_tower *dcast_tower() { return nullptr; }
+    virtual building_senet_house *dcast_senet_house() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -761,6 +765,7 @@ GENERATE_SMART_CAST_BUILDING(temple_complex_oracle)
 GENERATE_SMART_CAST_BUILDING(water_lift)
 GENERATE_SMART_CAST_BUILDING(monument)
 GENERATE_SMART_CAST_BUILDING(scribal_school)
+GENERATE_SMART_CAST_BUILDING(tower)
 
 namespace buildings {
 

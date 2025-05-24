@@ -15,14 +15,6 @@ buildings::model_t<building_storage_room> storage_room_m;
 void building_storage_room::on_create(int orientation) {
 }
 
-void building_storage_room::window_info_background(object_info &ctx) {
-    yard()->window_info_background(ctx);
-}
-
-void building_storage_room::window_info_foreground(object_info &ctx) {
-    yard()->window_info_foreground(ctx);
-}
-
 void building_storage_room::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.resource_id);

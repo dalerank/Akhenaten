@@ -8,10 +8,7 @@ struct info_window_storageyard : public building_info_window_t<info_window_stora
     virtual void init(object_info &c) override;
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_YARD_UP, BUILDING_STORAGE_ROOM);
-    }
+    virtual bool check(object_info &c) override;
 
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 };

@@ -52,9 +52,6 @@ void window_building_draw_native_crops(object_info* c) {
 
 void building_info_window::window_info_foreground(object_info &c) {
     common_info_window::window_info_foreground(c);
-    
-    building *b = building_get(c);
-    b->dcast()->window_info_foreground(c);
 }
 
 void window_building_draw_mission_post(object_info* c) {
@@ -95,8 +92,6 @@ void building_info_window::window_info_background(object_info &c) {
     common_info_window::window_info_background(c);
 
     building *b = building_get(c);
-    b->dcast()->window_info_background(c);
-
     ui.format_all(b->dcast());
 
     if (ui["title"].text().empty()) {
@@ -147,7 +142,7 @@ void building_info_window::init(object_info &c) {
     case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&c); break;
 
     default:
-        b->dcast()->window_info_background(c);
+        assert(false && "no info window for this building type");
         break;
     }
 

@@ -17,8 +17,6 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }
-    virtual void window_info_background(object_info &ctx) override;
-    virtual void window_info_foreground(object_info &ctx) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool can_play_animation() const override { return false; }
     virtual int get_fire_risk(int value) const override { return 0; }

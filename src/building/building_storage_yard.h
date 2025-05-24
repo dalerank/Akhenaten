@@ -32,12 +32,13 @@ struct event_warehouse_filled { building_id bid; };
 class building_storage_yard : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard, building_storage)
+    virtual building_storage_yard *dcast_storage_yard() override { return this; }
 
-    struct static_params : public buildings::model_t<building_storage_yard> {
+    struct static_params : public building_model {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    };
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -46,7 +47,6 @@ public:
     virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 
-    virtual building_storage_yard *dcast_storage_yard() override { return this; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     
     building_storage_room *room() { return next()->dcast_storage_room(); }

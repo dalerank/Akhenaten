@@ -739,6 +739,14 @@ info_window_ferry = {
     })
 }
 
+info_window_hunting_lodge = {
+    ui : __baseui(building_info_window, {
+        background   : outer_panel({size: [29, 20]}),
+        resource     : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
+        resource_amount : { type : "text", pos: [62, 186 + 2], font: FONT_NORMAL_BLACK_ON_LIGHT },
+    })
+}
+
 info_window_bandstand = {
     ui : __baseui(building_info_window, {
         background   : outer_panel({size: [29, 20]}),
@@ -1168,18 +1176,54 @@ bazaar_orders_window = {
 
 festival_square_info_window = {
     ui : {
-        background    : outer_panel({pos: [0, 0], size: [29, 16]}),
+        background      : outer_panel({pos: [0, 0], size: [29, 16]}),
         title           : text({text: "#festival_square_info_title", pos: [0, 10], size: [px(29), 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         warning         : text({pos: [32, 36], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        workers_panel : inner_panel({ pos : [16, 96], size: [27, 7] }),
-        fest_months_last : text({pos:[32, 112], size: [px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
-        hold_festival : button({pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}"}),
+        workers_panel   : inner_panel({ pos : [16, 96], size: [27, 7] }),
+        fest_months_last: text({pos:[32, 112], size: [px(25), 20], text:"${city.months_since_festival} ${8.5} ${58.15}", font:FONT_NORMAL_WHITE_ON_DARK, align:"center"}),
+        hold_festival   : button({pos:[60, 134], size:[px(22), 25], font:FONT_NORMAL_WHITE_ON_DARK, text:"${58.16}"}),
         planed_festival : text({pos: [102, 134], font : FONT_NORMAL_BLACK_ON_DARK, align:"center" }),
         festival_advice : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_WHITE_ON_DARK, multiline:true }),
 
-        button_help   : help_button({}),
-        button_close  : close_button({}),
+        button_help     : help_button({}),
+        button_close    : close_button({}),
     }
+}
+
+info_window_tower = {
+    ui : __baseui(building_info_window, {
+
+    })
+}
+
+info_window_senet_house = {
+    ui : __baseui(building_info_window, {
+        advice        : text({pos: [36, 164], wrap:400, font : FONT_NORMAL_BLACK_ON_DARK, multiline:true }),
+    })
+}
+
+info_window_bullfight = {
+    ui : __baseui(building_info_window, {
+
+    })
+}
+
+info_window_police_station = {
+    ui : __baseui(building_info_window, {
+
+    })
+}
+
+info_gatehouse_station = {
+    ui : __baseui(building_info_window, {
+
+    })
+}
+
+info_window_milacademy = {
+    ui : __baseui(building_info_window, {
+
+    })
 }
 
 workshop_info_window = {

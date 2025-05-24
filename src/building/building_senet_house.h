@@ -6,7 +6,6 @@ class building_senet_house : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_SENET_HOUSE, building_senet_house, building_entertainment)
 
-    virtual void window_info_background(object_info &c) override;
     virtual void on_place_checks() override;
     virtual void on_destroy() override;
     virtual void spawn_figure() override;
@@ -18,9 +17,8 @@ public:
 
 class building_bullfight_school : public building_entertainment {
 public:
-    BUILDING_METAINFO(BUILDING_SENET_MASTER, building_bullfight_school, building_entertainment)
+    BUILDING_METAINFO(BUILDING_BULLFIGHT_SCHOOL, building_bullfight_school, building_entertainment)
 
-    virtual void window_info_background(object_info &c) override;
     //virtual void on_place_checks() override;
     //virtual void on_destroy() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

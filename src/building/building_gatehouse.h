@@ -22,7 +22,6 @@ class building_mud_gatehouse : public building_gatehouse {
 public:
     BUILDING_METAINFO(BUILDING_MUD_GATEHOUSE, building_mud_gatehouse, building_gatehouse)
 
-    virtual void window_info_background(object_info &c) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_map_orientation(int orientation) override;
 };

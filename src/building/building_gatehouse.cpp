@@ -28,14 +28,6 @@ void building_gatehouse::on_place_checks() {
     /*nothing*/
 }
 
-void building_mud_gatehouse::window_info_background(object_info &c) {
-    c.help_id = 85;
-    window_building_play_sound(&c, "Wavs/gatehouse.wav");
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(e_text_gate_house, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 158, 90, 1);
-}
-
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     int xy = map_property_multi_tile_xy(tile.grid_offset());
     int orientation = city_view_orientation();

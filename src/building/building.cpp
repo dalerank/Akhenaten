@@ -235,6 +235,8 @@ building_temple_complex_altar *building::dcast_temple_complex_altar() { return d
 building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return dcast()->dcast_temple_complex_oracle(); }
 building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_lift(); }
 building_monument *building::dcast_monument() { return dcast()->dcast_monument(); }
+building_tower *building::dcast_tower() { return dcast()->dcast_tower(); }
+building_senet_house *building::dcast_senet_house() { return dcast()->dcast_senet_house(); }
 
 building::building() {
 }

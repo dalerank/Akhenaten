@@ -22,51 +22,6 @@
 
 buildings::model_t<building_hunting_lodge> hunting_lodge_m;
 
-void building_hunting_lodge::window_info_background(object_info &c) {
-    building* b = building_get(c.building_id);
-
-    painter ctx = game.painter();
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_GAMEMEAT), c.offset.x + 32, c.offset.y + 56);
-    int width = lang_text_draw(group_id, 13, c.offset.x + 60, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    if (!b->stored_amount(RESOURCE_GAMEMEAT)) {
-        lang_text_draw_amount(8, 10, 0, c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        lang_text_draw_amount(8, 10, b->stored_amount(), c.offset.x + 60 + width, c.offset.y + 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    }
-
-    if (!b->has_road_access)
-        window_building_draw_description_at(c, 86, 69, 25);
-    else if (g_city.resource.is_mothballed(RESOURCE_GAMEMEAT))
-        window_building_draw_description_at(c, 86, group_id, 4);
-    else if (b->num_workers <= 0)
-        window_building_draw_description_at(c, 86, group_id, 5);
-    else if (b->stored_amount() <= 0)
-        window_building_draw_description_at(c, 86, group_id, 11);
-    else if (b->worker_percentage() >= 100)
-        window_building_draw_description_at(c, 86, group_id, 6);
-    else if (b->worker_percentage() >= 75)
-        window_building_draw_description_at(c, 86, group_id, 7);
-    else if (b->worker_percentage() >= 50)
-        window_building_draw_description_at(c, 86, group_id, 8);
-    else if (b->worker_percentage() >= 25)
-        window_building_draw_description_at(c, 86, group_id, 9);
-    else
-        window_building_draw_description_at(c, 86, group_id, 10);
-
-    inner_panel_draw(c.offset + vec2i{ 16, 136 }, { c.bgsize.x - 2, 4 });
-    window_building_draw_employment(&c, 142);
-}
-
 void building_hunting_lodge::on_create(int orientation) {
     base.labor_category = hunting_lodge_m.labor_category;
 }
