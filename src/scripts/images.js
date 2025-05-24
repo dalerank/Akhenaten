@@ -4,7 +4,7 @@ log_info("akhenaten: images started")
 //{img: IMG_RESOURCE_ICONS, pack:PACK_GENERAL, id:129},
 //{img: IMG_MINIMAP_COLOR, pack:PACK_GENERAL, id:149, offset:0},
 
-var cart_images = [
+cart_images = [
 	{resource: RESOURCE_NONE, pack:PACK_SPR_MAIN, id:77 },
 	{resource: RESOURCE_BARLEY, pack:PACK_SPR_MAIN, id:91 },
 	{resource: RESOURCE_COPPER, pack:PACK_SPR_MAIN, id:107 },
@@ -17,7 +17,7 @@ var cart_images = [
 	{resource: RESOURCE_TIMBER, pack:PACK_SPR_MAIN, id:97 },
 ]
 
-var cart_offsets = [
+cart_offsets = [
   {x:17, y:-7},
   {x:22, y:-1},
   {x:17, y:7},
@@ -28,7 +28,7 @@ var cart_offsets = [
   {x:0, y:-12}
 ]
 
-var sled_offsets = [
+ sled_offsets = [
   {x:-17, y:9},
   {x:22, y:-1},
   {x:-15, y:-5},
