@@ -56,8 +56,8 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
  * @param localizable Whether the file may, must or must not be localized
  * @return Corrected file, or NULL if the file was not found
  */
-vfs::path content_file(const char *filepath);
-vfs::path content_path(const char *filepath);
+vfs::path content_file(pcstr filepath);
+vfs::path content_path(pcstr filepath);
 
 void content_cache_real_file_paths(pcstr folder);
 void content_cache_paths();

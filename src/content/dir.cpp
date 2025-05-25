@@ -121,10 +121,10 @@ static void expand_dir_listing() {
 
 static int compare_lower(const void *va, const void *vb) {
     // arguments are pointers to char*
-    return string_compare_case_insensitive(*(const char **)va, *(const char **)vb);
+    return string_compare_case_insensitive(*(pcstr *)va, *(pcstr *)vb);
 }
 
-static int add_to_listing(const char *filename) {
+static int add_to_listing(pcstr filename) {
     auto &data = g_dir_data;
 
     if (data.listing.num_files >= data.max_files)
@@ -136,7 +136,7 @@ static int add_to_listing(const char *filename) {
     return LIST_CONTINUE;
 }
 
-const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension) {
+const dir_listing *dir_find_files_with_extension(pcstr dir, pcstr extension) {
     auto &data = g_dir_data;
 
     clear_dir_listing();
@@ -164,7 +164,7 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool) {
     return folders;
 }
 
-static int compare_case(const char *filename) {
+static int compare_case(pcstr filename) {
     auto &data = g_dir_data;
 
     if (string_compare_case_insensitive(filename, data.cased_filename) == 0) {
@@ -216,7 +216,7 @@ vfs::path content_file(pcstr filepath) {
 #endif
 }
 
-const dir_listing *dir_append_files_with_extension(const char *dir, const char *extension) {
+const dir_listing *dir_append_files_with_extension(pcstr dir, pcstr extension) {
     auto &data = g_dir_data;
 
     platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);

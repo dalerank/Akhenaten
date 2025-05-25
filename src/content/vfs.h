@@ -82,6 +82,8 @@ bool file_exists(pcstr filename);
  */
 bool file_remove(pcstr filename);
 
+bool mount_pack(pcstr filename);
+
 /**
 * Create folders if not exists
 * Throw exception if path not exists and can not be created
@@ -89,8 +91,6 @@ bool file_remove(pcstr filename);
 */
 void create_folders(pcstr path);
 void remove_folder(path folder_path);
-
-void set_mixed_mode(bool value);
 
 void sync_em_fs();
 

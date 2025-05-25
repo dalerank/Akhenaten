@@ -3,6 +3,7 @@
 #include "core/string.h"
 #include "core/log.h"
 #include "platform/platform.h"
+#include "zipreader.hpp"
 #include "reader.h"
 
 #include <filesystem>
@@ -32,6 +33,8 @@ FILE * file_open_os(pcstr filename, pcstr mode) {
     return platform_file_manager_open_file(filename, mode);
 }
 
+std::vector<ZipArchive*> g_mounted_archives;
+
 template<typename ... Args>
 void log_io(pcstr fmt, Args ... args) {
     if (!g_verbose_log) {
@@ -43,6 +46,24 @@ void log_io(pcstr fmt, Args ... args) {
 reader file_open(path path, pcstr mode) {
     log_io("[begn] file_open %s", path.c_str());
     const bool is_text_file = !!strstr(mode, "t");
+    const char* is_zip = strstr(path, ".zip/");
+
+    if (!path.empty() && !!is_zip) {
+        const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [path] (const ZipArchive *arch) {
+            return arch->filepath() == path;
+        });
+
+        if (it == g_mounted_archives.end()) {
+            return reader();
+        }
+
+        auto archive = *it;
+        vfs::path zip_path = is_zip + 5;
+        vfs::reader data = archive->createAndOpenFile(zip_path);
+
+        return data; // empty reader
+    }
+
     if (!path.empty() && path.data()[0] == ':') {
         auto data = internal_file_open(path.c_str());
         if (data.first) {
@@ -168,6 +189,30 @@ bool file_remove(pcstr filename) {
     return res;
 }
 
+bool mount_pack(pcstr filename) {
+    if (!vfs::file_exists(filename)) {
+        return false;
+    }
+
+    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [filename] (const ZipArchive *arch) {
+        return arch->filepath() == filename;
+    });
+        
+    if (it != g_mounted_archives.end()) {
+        return true;
+    }
+  
+    auto newzip = new ZipArchive(filename);
+    if (!newzip->isValid()) {
+        delete newzip;
+        return false;
+    }
+
+    g_mounted_archives.push_back(newzip);
+
+    return true;
+}
+
 void create_folders(pcstr path) {
     std::error_code err;
     if (!std::filesystem::create_directories(path, err) && !std::filesystem::exists(path)) {
@@ -189,4 +234,4 @@ void remove_folder(path folder_path) {
     sync_em_fs();
 }
 
-} //
+} // vfs

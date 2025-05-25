@@ -1731,14 +1731,14 @@ building_senet_house = {
 
 building_bullfight_school = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:17 },
-    base : { pack:PACK_GENERAL, id:17 },
+    preview : { pack:PACK_CUSTOM, id:0 },
+    base : { pack:PACK_CUSTOM, id:0 },
   },
   damage_proof : true,
   window_info_height_id : 1,
   info_help_id:75,
   info_text_id:78,
-  building_size : 4,
+  building_size : 2,
 }
 
 building_bricks_workshop = {

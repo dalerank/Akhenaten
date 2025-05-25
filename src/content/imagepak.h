@@ -30,7 +30,7 @@ class imagepak {
     bool should_convert_fonts;
 
     bool load_pak(pcstr pak_name, int starting_index);
-    bool load_folder_pak(pcstr folder);
+    bool load_zip_pak(pcstr folder);
     void cleanup_and_destroy();
 
 public:

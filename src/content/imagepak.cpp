@@ -380,7 +380,7 @@ imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool
     userpack = custom;
 
     if (custom) {
-        if (!load_folder_pak(pak_name)) {
+        if (!load_zip_pak(pak_name)) {
             cleanup_and_destroy();
         }
         return;
@@ -417,38 +417,41 @@ void imagepak::cleanup_and_destroy() {
     }
 }
 
-bool imagepak::load_folder_pak(pcstr folder) {
+bool imagepak::load_zip_pak(pcstr pak) {
     OZZY_PROFILER_SECTION("Game/Loading/Resources/ImageFolderPak");
-    name = folder;
+    name = pak;
 
     entries_num = 0;
     groups_num = 0;
     int bmp_last_group_id = 0;
     int last_idx_in_bmp = 1;
 
-    vfs::path datafolder("Data/", folder);
-    vfs::path configname(datafolder, "/", folder, ".js");
+    vfs::path datafile("Data/", pak, ".zip");
     
-    if (!vfs::file_exists(configname)) {
+    if (!vfs::file_exists(datafile)) {
         return false;
     }
 
-    vfs::path foldername = vfs::content_path(datafolder);
+    if (!vfs::mount_pack(datafile)) {
+        return false;
+    }
+
+    vfs::path configname(datafile, "/", pak, ".js");
     archive arch = config::load(configname);
 
     global_image_index_offset = 0;
-    g_config_arch.r_section(folder, [&] (archive arch) {
+    g_config_arch.r_section(pak, [&] (archive arch) {
         global_image_index_offset = arch.r_int("global_index");
         version = arch.r_int("version");
         useridx = arch.r_int("pack");
+    });
 
-        arch.r_array("groups", [&] (archive arch) {
-            int start_index = arch.r_int("start_index");
-            int finish_index = arch.r_int("finish_index");
-            entries_num += (finish_index - start_index) + 1;
-            bmp_names[groups_num] = arch.r_string("name");
-            ++groups_num;
-        });
+    g_config_arch.r_array(pak, [&] (archive arch) {
+        int start_index = arch.r_int("start_index");
+        int finish_index = arch.r_int("finish_index");
+        entries_num += (finish_index - start_index) + 1;
+        bmp_names[groups_num] = arch.r_string("name");
+        ++groups_num;
     });
 
     assert(global_image_index_offset >= 30000);
@@ -530,7 +533,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
     }
 
     int tmp_group_id = 0;
-    g_config_arch.r_section(folder, [&] (archive arch) {
+    g_config_arch.r_section(pak, [&] (archive arch) {
         arch.r_array("groups", [&] (archive arch) {
             pcstr prefix = arch.r_string("prefix");
             int start_index = arch.r_int("start_index");
@@ -539,7 +542,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
             for (int i = start_index; i <= finish_index; ++i) {
                 bstring512 name;
                 name.printf("%s%05u.png", prefix, i);
-                load_img(bstring256(foldername, "/", name), i - start_index, tmp_group_id);
+                load_img(bstring256(pak, "/", name), i - start_index, tmp_group_id);
                 tmp_group_id++;
             }
         });
@@ -608,7 +611,7 @@ bool imagepak::load_folder_pak(pcstr folder) {
     int y_offset = screen_height() - 24;
     platform_renderer_clear();
     if (image_data_fonts_ready()) {
-        text_draw(bstring512("loading folder pak (", folder, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
+        text_draw(bstring512("loading folder pak (", pak, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
     //painter ctx = game.painter();
     //graphics_renderer()->draw_image(ctx, &images_array.at(0), 0, 0, 0xffffffff, 1.0f, false);

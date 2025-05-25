@@ -250,6 +250,9 @@ add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
+add_subdirectory(ext/lzma)
+add_subdirectory(ext/bzip)
+add_subdirectory(ext/aes)
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
    # no filters on android
@@ -598,7 +601,7 @@ endif()
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
+                        ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
