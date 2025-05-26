@@ -69,7 +69,9 @@ military_data_t g_military_data;
 
 void legion_info_window::change_layout(formation_layout new_layout) {
     auto& data = g_military_data;
-    formation* m = formation_get(data.context_for_callback->formation_id);
+    building* b= data.context_for_callback->building_get();
+
+    formation* m = formation_get(b->formation_id);
     if (m->in_distant_battle)
         return;
 
@@ -98,7 +100,7 @@ void legion_info_window::change_layout(formation_layout new_layout) {
         g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
-    window_city_military_show(data.context_for_callback->formation_id);
+    window_city_military_show(b->formation_id);
 }
 
 void legion_info_window::window_info_foreground(object_info &c) {
@@ -110,7 +112,7 @@ void legion_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     building *fort = c.building_get();
-    const formation *m = formation_get(c.formation_id);
+    const formation *m = formation_get(fort->formation_id);
 
     g_military_data.context_for_callback = &c;
 
@@ -199,7 +201,8 @@ void legion_info_window::init(object_info &c) {
 
     ui["return_to_fort"].onclick([] {
         auto &data = g_military_data;
-        formation *m = formation_get(data.context_for_callback->formation_id);
+        building* b = data.context_for_callback->building_get();
+        formation *m = formation_get(b->formation_id);
         if (!m->in_distant_battle && m->is_at_fort != 1) {
             formation_legion_return_home(m);
             window_city_show();
@@ -234,14 +237,14 @@ bool legion_info_window::check(object_info &c) {
     }
 
     c.building_id = b->main()->id;
-    c.formation_id = b->formation_id;
     return true;
 }
 
 void legion_info_window::update_describe_layout(object_info &c) {
     int title_id, text_id;
+    building* b = c.building_get();
 
-    const formation *m = formation_get(c.formation_id);
+    const formation *m = formation_get(b->formation_id);
     switch (m->layout) {
     case FORMATION_SINGLE_LINE_1:
     case FORMATION_SINGLE_LINE_2:

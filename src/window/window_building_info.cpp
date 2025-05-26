@@ -142,37 +142,11 @@ void building_info_window::init(object_info &c) {
     case BUILDING_RESERVER_MISSION_POST_80: window_building_draw_mission_post(&c); break;
 
     default:
-        assert(false && "no info window for this building type");
         break;
     }
 
     b->dcast()->highlight_waypoints();
-
-    switch (b->type) {
-    case BUILDING_FORT_GROUND:
-        c.building_id = b->main()->id;
-        // fallthrough
-
-    case BUILDING_FORT_ARCHERS:
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_INFANTRY:
-        c.formation_id = b->formation_id;
-        break;
-
-    case BUILDING_STORAGE_ROOM:
-    case BUILDING_SENET_HOUSE:
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        b = b->main();
-        c.building_id = b->id;
-        break;
-
-    default:
-        break;
-    }
+    c.building_id = b->main()->id;
 
     const auto &params = b->dcast()->params();
     c.help_id = params.meta.help_id;
