@@ -35,6 +35,7 @@ import ui_send_gift_window
 import kingdome_relation
 import ui_advisor_trade
 import floodplain
+import ui_advisors_window
 
 include(":ui.js")
 include(":ui_top_menu_widget.js")

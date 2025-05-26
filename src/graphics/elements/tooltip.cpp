@@ -94,26 +94,6 @@ static void draw_button_tooltip(tooltip_context* c) {
     }
 
     switch (window_get_id()) {
-    case WINDOW_ADVISORS:
-        if (c->mpos.y < screen_dialog_offset_y() + 432) {
-            y = c->mpos.y;
-            switch (window_advisors_get_advisor()) {
-            case ADVISOR_LABOR:
-                y -= 74;
-                break;
-            case ADVISOR_TRADE:
-                y -= 54;
-                break;
-            case ADVISOR_POPULATION:
-                y -= 58;
-                break;
-            default:
-                y -= 64;
-                break;
-            }
-        } else
-            y = screen_dialog_offset_y() + 432;
-        break;
     case WINDOW_TRADE_PRICES: // FIXED used to cause ghosting
         y = c->mpos.y - 42;
         break;

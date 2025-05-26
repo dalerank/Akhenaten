@@ -110,6 +110,8 @@ struct window_advisors : public ui::widget {
     void draw_foreground(int flags);
     void set_advisor(int advisor);
     void handle_input(const mouse *m, const hotkeys *h);
+
+    void set_advisor_window();
 };
 
 window_advisors g_window_advisors;
@@ -118,14 +120,13 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window) {
     g_window_advisors.load("advisors_window");
 }
 
-static void set_advisor_window() {
-    auto &data = g_window_advisors;
-    if (data.sub_advisors[data.current_advisor]) {
-        data.current_advisor_window = data.sub_advisors[data.current_advisor];
-        data.current_advisor_window->pos = screen_dialog_offset();
-        data.current_advisor_window->init();       
+void window_advisors::set_advisor_window() {
+    if (sub_advisors[current_advisor]) {
+        current_advisor_window = sub_advisors[current_advisor];
+        current_advisor_window->pos = screen_dialog_offset();
+        current_advisor_window->init();       
     } else {
-        data.current_advisor_window = nullptr;
+        current_advisor_window = nullptr;
     }
 }
 
@@ -135,6 +136,13 @@ void window_advisors::set_advisor(int advisor) {
     
     for (auto &btn : btns) {
         ui[btn.id].select(false);
+    }
+
+    const auto it = std::find_if(std::begin(btns), std::end(btns), [advisor] (const labor_btn& btn) {
+        return btn.adv == advisor;
+    });
+    if (it != std::end(btns)) {
+        ui[it->id].select(true);
     }
 
     ui["back_btn"].enabled = true; // set button active when coming back to menu
@@ -174,7 +182,10 @@ void window_advisors::init() {
         ui[btn.id].onclick([advisor = btn.adv] {
             g_window_advisors.set_advisor(advisor);
         });
-        ui[btn.id].tooltip({ 1, uint8_t(70 + btn.adv) });
+
+        ui[btn.id].onrclick([advisor = btn.adv] {
+            window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[advisor], -1, 0);
+        });
     }
 
     ui["back_btn"].onclick([] {
@@ -231,18 +242,6 @@ void window_advisors::handle_input(const mouse* m, const hotkeys* h) {
         window_city_show();
         return;
     }
-}
-
-static void button_help(int param1, int param2) {
-    auto &data = g_window_advisors;
-    if (data.current_advisor > 0) {
-        window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[data.current_advisor], -1, 0);
-    }
-}
-
-int window_advisors_get_advisor(void) {
-    auto &data = g_window_advisors;
-    return data.current_advisor;
 }
 
 void window_advisors_show_checked() {
