@@ -398,7 +398,7 @@ bool build_planner::has_flag_set(int flag, int param1, int param2, int param3) {
     return false;
 }
 
-void build_planner::set_graphics_row(int row, custom_span<int> image_ids) {
+void build_planner::set_graphics_row(int row, custom_span<int> image_ids, int def) {
     if (row < 0) {
         return;
     }
@@ -409,7 +409,7 @@ void build_planner::set_graphics_row(int row, custom_span<int> image_ids) {
         }
 
         const int image_id = image_ids[i];
-        tile_graphics_array[row][i] = (image_id > 0 ? image_id : -1);
+        tile_graphics_array[row][i] = (image_id > 0 ? image_id : def);
 
         // set sizes automatically as default
         int tile_size = 0;
@@ -426,11 +426,12 @@ void build_planner::set_tiles_building(int image_id, int size_xx) {
     init_tiles(size_xx, size_xx);
     std::array<int, 10> empty_row = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     std::array<int, 10> draw_row = {image_id ? image_id : -1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    const int def = image_id ? 0 : -1;
     for (int row = 0; row < size.y; ++row) {
         if (row == size.y - 1)
-            set_graphics_row(row, make_span(draw_row.data(), size.x));
+            set_graphics_row(row, make_span(draw_row.data(), size.x), def);
         else
-            set_graphics_row(row, make_span(empty_row.data(), size.x));
+            set_graphics_row(row, make_span(empty_row.data(), size.x), def);
     }
 }
 
@@ -443,7 +444,7 @@ void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
     //    set_graphics_row(row, (*image_array)[row], size_x);
 
     for (int row = 0; row < size.y; ++row) {
-        set_graphics_row(row, make_span(& image_set[row * size.x], size.x));
+        set_graphics_row(row, make_span(& image_set[row * size.x], size.x), -1);
     }
 }
 

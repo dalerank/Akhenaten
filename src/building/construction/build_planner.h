@@ -60,7 +60,7 @@ class build_planner {
     int start_offset_screen_x;
     int start_offset_screen_y;
 
-    void set_graphics_row(int row, custom_span<int> image_ids);
+    void set_graphics_row(int row, custom_span<int> image_ids, int def);
 
     void setup_build_flags();
     void setup_build_graphics(); // fills in data automatically
