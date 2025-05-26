@@ -128,6 +128,7 @@ namespace vfs {
         // now we've filled all the fields, this is just a standard deflate block
         _entries.push_back(ZipFileName.c_str());
         _files.push_back(entry);
+        return true;
     }
 
     //! scans for a local header, returns false if there is no more local file header.
@@ -217,7 +218,8 @@ namespace vfs {
             }
             _data->r(&dirEnd, sizeof(dirEnd));
 
-            _files.resize(dirEnd.TotalEntries);
+            //_files.resize(dirEnd.TotalEntries);
+            //_entries.resize(dirEnd.TotalEntries);
             _data->seek(dirEnd.Offset);
             while (scanCentralDirectoryHeader()) {
                 ; //
@@ -256,6 +258,7 @@ namespace vfs {
         _data->seek(entry.RelativeOffsetOfLocalHeader);
         scanZipHeader(true);
         _data->seek(pos + entry.FilenameLength + entry.ExtraFieldLength + entry.FileCommentLength);
+        _files.push_back({});
         _files.back().header.DataDescriptor.CompressedSize = entry.CompressedSize;
         _files.back().header.DataDescriptor.UncompressedSize = entry.UncompressedSize;
         _files.back().header.DataDescriptor.CRC32 = entry.CRC32;
@@ -264,14 +267,14 @@ namespace vfs {
     }
 
     //! opens a file by file name
-    reader ZipArchive::createAndOpenFile(const vfs::path &filename) {
+    reader ZipArchive::createAndOpenFile(const vfs::path &filename, pcstr mode) {
         const auto it = std::find_if(_entries.begin(), _entries.end(), [&filename] (const xstring &entry) {
-            return entry == filename;
+            return !entry.empty() && entry == filename;
         });
 
         const int index = std::distance(_entries.begin(), it);
         if (index != -1) {
-            return createAndOpenFile(index);
+            return createAndOpenFile(index, mode);
         }
 
         return {};
@@ -285,7 +288,7 @@ namespace vfs {
     }
 
     //! opens a file by index
-    reader ZipArchive::createAndOpenFile(unsigned int index) {
+    reader ZipArchive::createAndOpenFile(unsigned int index, pcstr mode) {
         //Supports 0, 8, 12, 14, 99
         //0 - The file is stored (no compression)
         //1 - The file is Shrunk
@@ -305,6 +308,8 @@ namespace vfs {
         //98 - PPMd - Compression Method, WinZip 10
         //99 - AES encryption, WinZip 9
 
+        const bool is_text_file = !!strstr(mode, "t");
+        const int txr_limiter = is_text_file ? 1 : 0;
         const SZipFileEntry &e = _files[index];
 
         short actualCompressionMethod = e.header.CompressionMethod;
@@ -363,9 +368,14 @@ namespace vfs {
                 return {};
             }
 
-            void *mem = malloc(decryptedBuf.size());
+            const size_t memsize = decryptedBuf.size() + txr_limiter;
+            char *mem = (char*)malloc(memsize);
             memcpy(mem, decryptedBuf.data(), decryptedBuf.size());
-            decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, decryptedBuf.size());
+            if (is_text_file) {
+                mem[decryptedBuf.size()] = 0; // null-terminate the string
+            }
+
+            decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
             actualCompressionMethod = (e.header.Sig & 0xffff);
         }
 
@@ -376,11 +386,15 @@ namespace vfs {
                 return decrypted;
             } else {
                 _data->seek(e.Offset);
-                void *mem = malloc(decryptedSize);
+                const size_t memsize = decryptedSize + txr_limiter;
+                char *mem = (char*)malloc(memsize);
                 memcpy(mem, decryptedBuf.data(), decryptedBuf.size());
+                if (is_text_file) {
+                    mem[decryptedSize] = 0; // null-terminate the string
+                }
 
                 _data->r(mem, decryptedSize);
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, decryptedBuf.size());
+                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
                 return decrypted;
             }
         }
@@ -430,10 +444,14 @@ namespace vfs {
                 //Logger::warning( "Error decompressing " + item( index ).fullpath.toString() );
                 return {};
             } else {
-                void *mem = malloc(pBuf.size());
+                const size_t memsize = pBuf.size() + txr_limiter;
+                char *mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
+                if (is_text_file) {
+                    mem[pBuf.size()] = 0; // null-terminate the string
+                }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, pBuf.size());
+                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
                 return decrypted;
             }
         }
@@ -482,10 +500,14 @@ namespace vfs {
                 //Logger::error( "Error decompressing +" + item( index ).fullpath.toString() );
                 return {};
             } else {
-                void *mem = malloc(pBuf.size());
+                const size_t memsize = pBuf.size() + txr_limiter;
+                char *mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
+                if (is_text_file) {
+                    mem[pBuf.size()] = 0; // null-terminate the string
+                }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, pBuf.size());
+                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
                 return decrypted;
             }
         }
@@ -521,10 +543,14 @@ namespace vfs {
                 //Logger::error( "Error decompressing " + item( index ).fullpath.toString() );
                 return {};
             } else {
-                void *mem = malloc(pBuf.size());
+                const size_t memsize = pBuf.size() + txr_limiter;
+                char *mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
+                if (is_text_file) {
+                    mem[pBuf.size()] = 0; // null-terminate the string
+                }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, pBuf.size());
+                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
                 return decrypted;
             }
         }

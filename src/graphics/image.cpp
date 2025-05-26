@@ -64,12 +64,12 @@ bool image_load_paks() {
             continue;
         }
 
-        imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
         if (imgpak.delayed) {
             continue;
         }
 
         imgpak.handle = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
+        imgpak.entries_num = imgpak.handle->get_entry_count(); //imagepak::get_entries_num(imgpak.name);
     }
 
     auto folders = vfs::dir_find_all_subdirectories("Data/", true);
@@ -129,7 +129,7 @@ const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index
     }
 
     auto ids = pak->image_ids();
-    svector<uint16_t, PAK_GROUPS_MAX> sorted_ids;
+    svector<uint16_t, imagepak::PAK_GROUPS_MAX> sorted_ids;
     std::copy(ids.begin(), ids.end(), std::back_inserter(sorted_ids));
     const int start = ids[desc.id];
 

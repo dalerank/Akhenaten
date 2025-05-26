@@ -380,7 +380,7 @@ imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool
     userpack = custom;
 
     if (custom) {
-        if (!load_zip_pak(pak_name)) {
+        if (!load_zip_pak(pak_name, starting_index)) {
             cleanup_and_destroy();
         }
         return;
@@ -395,8 +395,8 @@ imagepak::~imagepak() {
     cleanup_and_destroy();
 }
 
-span_const<bmp_name> imagepak::names() {
-    return {bmp_names, num_bmp_names};
+span_const<imagepak::bmp_name> imagepak::names() {
+    return {bmp_names.data(), num_bmp_names};
 }
 
 span_const<uint16_t> imagepak::image_ids() {
@@ -417,7 +417,7 @@ void imagepak::cleanup_and_destroy() {
     }
 }
 
-bool imagepak::load_zip_pak(pcstr pak) {
+bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     OZZY_PROFILER_SECTION("Game/Loading/Resources/ImageFolderPak");
     name = pak;
 
@@ -439,13 +439,7 @@ bool imagepak::load_zip_pak(pcstr pak) {
     vfs::path configname(datafile, "/", pak, ".js");
     archive arch = config::load(configname);
 
-    global_image_index_offset = 0;
-    g_config_arch.r_section(pak, [&] (archive arch) {
-        global_image_index_offset = arch.r_int("global_index");
-        version = arch.r_int("version");
-        useridx = arch.r_int("pack");
-    });
-
+    global_image_index_offset = starting_index;
     g_config_arch.r_array(pak, [&] (archive arch) {
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
@@ -533,19 +527,17 @@ bool imagepak::load_zip_pak(pcstr pak) {
     }
 
     int tmp_group_id = 0;
-    g_config_arch.r_section(pak, [&] (archive arch) {
-        arch.r_array("groups", [&] (archive arch) {
-            pcstr prefix = arch.r_string("prefix");
-            int start_index = arch.r_int("start_index");
-            int finish_index = arch.r_int("finish_index");
+    g_config_arch.r_array(pak, [&] (archive arch) {
+        pcstr prefix = arch.r_string("prefix");
+        int start_index = arch.r_int("start_index");
+        int finish_index = arch.r_int("finish_index");
 
-            for (int i = start_index; i <= finish_index; ++i) {
-                bstring512 name;
-                name.printf("%s%05u.png", prefix, i);
-                load_img(bstring256(pak, "/", name), i - start_index, tmp_group_id);
-                tmp_group_id++;
-            }
-        });
+        for (int i = start_index; i <= finish_index; ++i) {
+            bstring512 name;
+            name.printf("%s%05u.png", prefix, i);
+            load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id);
+            tmp_group_id++;
+        }
     });
 
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;

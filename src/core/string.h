@@ -42,6 +42,8 @@ int index_of(const uint8_t* haystack, uint8_t needle, int haystack_length);
 // TODO: eventually convert the entire engine to std::string
 void strncpy_safe(char* dest, const char* src, std::size_t destsz);
 
+pcstr strstr_rev(pcstr string, pcstr sub_string);
+
 inline int string_item_count(pcstr src, char separator) {
     int cnt = 0;
     if (src && *src) {

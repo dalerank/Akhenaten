@@ -145,8 +145,8 @@ public:
         if (empty() || (mylen <= slen)) {
             return false;
         }
-        pcstr ptr = strstr(_data, s);
-        return (ptr && (ptr == _data[mylen - slen]));
+        pcstr ptr = ::strstr((pcstr)_data, s);
+        return (ptr && (ptr == (_data + (mylen - slen) )));
     }
 
     inline char back() const { return empty() ? 0 : (_data[len() - 1]); }

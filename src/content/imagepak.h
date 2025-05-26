@@ -8,20 +8,25 @@
 #include <vector>
 
 #define PAK_HEADER_INFO_BYTES 80
-#define PAK_GROUPS_MAX 300
 #define PAK_HEADER_SIZE_BASE PAK_HEADER_INFO_BYTES + (PAK_GROUPS_MAX * 2) // total = 680 bytes
 
 #define PAK_IMAGE_ENTRY_SIZE 64
 
-using bmp_name = bstring<200>;
 
 class imagepak {
+public:
+    using bmp_name = bstring<200>;
+    enum {
+        PAK_GROUPS_MAX = 300,
+    };
+
+private:
+    int entries_num;
     bool userpack;
     int useridx;
     int version;
-    int entries_num;
     size_t groups_num;
-    bmp_name bmp_names[PAK_GROUPS_MAX];
+    std::array<bmp_name, PAK_GROUPS_MAX> bmp_names;
     uint16_t num_bmp_names;
     uint16_t group_image_ids[PAK_GROUPS_MAX];
     std::vector<image_t> images_array;
@@ -30,7 +35,7 @@ class imagepak {
     bool should_convert_fonts;
 
     bool load_pak(pcstr pak_name, int starting_index);
-    bool load_zip_pak(pcstr folder);
+    bool load_zip_pak(pcstr folder, int starting_index);
     void cleanup_and_destroy();
 
 public:

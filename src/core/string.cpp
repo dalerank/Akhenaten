@@ -180,6 +180,44 @@ void strncpy_safe(char* dest, const char* src, std::size_t destsz) {
     dest[srcsz] = '\0';
 }
 
+pcstr strstr_rev(pcstr string, pcstr sub_string) {
+    assert(string && sub_string);
+
+    if (!*string || !*sub_string) {
+        return nullptr;
+    }
+
+    pcstr p1 = string;
+    while (*(p1 + 1)) {
+        p1++;
+    }
+
+    pcstr p2 = sub_string;
+    pcstr p1_i = p1;
+    while (*(p2 + 1)) { 
+        p2++;
+        p1_i--;
+    }
+
+    pcstr p2_end = p2;
+
+    while (p1_i >= string) {
+        pcstr p1_start = p1;
+        p2 = p2_end;
+        while (p2 >= sub_string && *p1 == *p2) {
+            p1--;
+            p2--;
+        }
+        if (p2 < sub_string) {
+            return p1 + 1;
+        }
+        p1 = p1_start - 1;
+        p1_i--;
+    }
+
+    return nullptr;
+}
+
 pcstr textid::c_str_safe(pcstr def) const {
     pcstr text = valid() ? (pcstr)lang_get_string(group, id) : nullptr;
 

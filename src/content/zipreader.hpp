@@ -130,10 +130,10 @@ namespace vfs {
         ~ZipArchive();
 
         //! opens a file by file name
-        reader createAndOpenFile(const vfs::path &filename);
+        reader createAndOpenFile(const vfs::path &filename, pcstr mode);
 
         //! opens a file by index
-        reader createAndOpenFile(unsigned int index);
+        reader createAndOpenFile(unsigned int index, pcstr mode);
 
         //! returns the list of files
         const std::vector<xstring> &entries() const;

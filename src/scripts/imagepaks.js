@@ -1,6 +1,6 @@
 log_info("akhenaten: imagepaks started")
 
-var imagepaks = [
+imagepaks = [
   {id: PACK_UNLOADED, name:"Pharaoh_Unloaded", index:0, system:true},  // 0     --> 682
   {id: PACK_SPR_MAIN, name:"SprMain", index:700, system:false}, // 700   --> 11007
   {id: PACK_GENERAL, name:"Pharaoh_General", index:11706, system:false}, // 11706 --> 11866
@@ -70,7 +70,7 @@ var imagepaks = [
   {id: PACK_ENEMY_PHOENICIAN, name:"Phoenician", index:47600, delayed:true, system:false}, // 47600 --> 47600 + 834 + 201
   {id: PACK_ENEMY_ROMAN, name:"Roman", index:48700, delayed:true, system:false}, // 48700 --> 48700 + 874 + 201
   {id: PACK_ENEMY_SEAPEOPLE, name:"SeaPeople", index:49800, delayed:true, system:false}, // 49000 --> 49850 + 833 + 201
-  {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 50000 + 269 + 201 
+  {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 59000 + 269 + 201 
   {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 50500 + 269 + 201 
-  //{id: PACK_CUSTOM, name:"Pharaoh_Custom", index:30000, system:false, custom:true},  // 30000 -->
+  {id: PACK_CUSTOM, name:"pharaoh_custom_pack", index:60000, system:false, custom:true},  // 60000 -->
 ]
