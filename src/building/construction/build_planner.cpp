@@ -168,6 +168,10 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
                 vec2i current_coord = pixel_coords_cache[row][column];
                 ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
                 ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+            } else if(image_id < 0) {
+                const int black_image = image_id_from_group(GROUP_TERRAIN_BLACK);
+                vec2i current_coord = pixel_coords_cache[row][column];
+                ImageDraw::isometric_from_drawtile(ctx, black_image, current_coord, COLOR_MASK_GREEN);
             }
         }
     }
@@ -394,36 +398,39 @@ bool build_planner::has_flag_set(int flag, int param1, int param2, int param3) {
     return false;
 }
 
-void build_planner::set_graphics_row(int row, int* image_ids, int total) {
+void build_planner::set_graphics_row(int row, custom_span<int> image_ids) {
     if (row < 0) {
         return;
     }
 
-    for (int i = 0; i < total; ++i) {
+    for (int i = 0; i < image_ids.size(); ++i) {
         if (row > 29 || i > 29) {
             return;
         }
 
-        tile_graphics_array[row][i] = image_ids[i];
+        const int image_id = image_ids[i];
+        tile_graphics_array[row][i] = (image_id > 0 ? image_id : -1);
 
         // set sizes automatically as default
         int tile_size = 0;
-        if (image_ids[i] != 0) {
+        if (image_ids[i] > 0) {
             auto img = image_get(image_ids[i]);
             set_tile_size(row, i, img->isometric_size());
+        } else {
+            set_tile_size(row, i, 1); // default size is 1
         }
     }
 }
 
 void build_planner::set_tiles_building(int image_id, int size_xx) {
     init_tiles(size_xx, size_xx);
-    int empty_row[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int draw_row[] = {image_id, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::array<int, 10> empty_row = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::array<int, 10> draw_row = {image_id ? image_id : -1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     for (int row = 0; row < size.y; ++row) {
         if (row == size.y - 1)
-            set_graphics_row(row, draw_row, size.x);
+            set_graphics_row(row, make_span(draw_row.data(), size.x));
         else
-            set_graphics_row(row, empty_row, size.x);
+            set_graphics_row(row, make_span(empty_row.data(), size.x));
     }
 }
 
@@ -436,7 +443,7 @@ void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
     //    set_graphics_row(row, (*image_array)[row], size_x);
 
     for (int row = 0; row < size.y; ++row) {
-        set_graphics_row(row, &image_set[row * size.x], size.x);
+        set_graphics_row(row, make_span(& image_set[row * size.x], size.x));
     }
 }
 
