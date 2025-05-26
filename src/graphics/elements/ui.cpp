@@ -1134,10 +1134,9 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     if (clickable && _func) btn->onclick(_func);
     if (clickable && _rfunc) btn->onrclick(_rfunc);
 
-    btn->tooltip(_tooltip);
-
-    if (!_tooltip.empty() && btn->hovered) {
-        tooltipctx.set(0, _tooltip);
+    const vec2i offset = g_state.offset();
+    if (clickable && is_button_hover(*btn, offset)) {
+        ui::set_tooltip(_tooltip);
     }
 }
 

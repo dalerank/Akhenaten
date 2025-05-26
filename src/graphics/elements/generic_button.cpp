@@ -4,8 +4,6 @@
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 
-#include "graphics/elements/ui.h"
-
 static int get_button(const mouse* m, vec2i pos, const generic_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
         if (pos.x + buttons[i].x <= m->x && pos.x + buttons[i].x + buttons[i].width > m->x && pos.y + buttons[i].y <= m->y
@@ -88,9 +86,6 @@ generic_button &generic_button::tooltip(textid t) {
 
 generic_button &generic_button::tooltip(const xstring &t) { 
     _tooltip = t;
-    if (hovered) {
-        ui::set_tooltip(_tooltip);
-    }
     return *this;
 }
 
