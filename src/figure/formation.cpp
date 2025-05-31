@@ -187,11 +187,11 @@ int formation_has_low_morale(formation* m) {
     return m->months_low_morale || m->months_very_low_morale;
 }
 
-int formation_get_num_forts_cached(void) {
+int formation_get_num_forts_cached() {
     return g_formation_data.num_formations;
 }
 
-void formation_calculate_legion_totals(void) {
+void formation_calculate_legion_totals() {
     auto &data = g_formation_data;
     data.id_last_formation = 0;
     data.num_formations = 0;

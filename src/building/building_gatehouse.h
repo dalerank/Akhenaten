@@ -6,6 +6,24 @@ class building_gatehouse : public building_impl {
 public:
     building_gatehouse(building &b) : building_impl(b) {}
 
+    template<typename T>
+    struct static_params_t : public buildings::model_t<T> {
+        struct {
+            svector<vec2i, 4> main_view_offset;
+            svector<vec2i, 4> part_view_offset;
+        } ghost;
+
+        virtual void archive_load(archive arch) override {
+            arch.r_section("ghost", [this] (archive ghost_arch) {
+                ghost.main_view_offset = ghost_arch.r_array_vec2i("main");
+                ghost.part_view_offset = ghost_arch.r_array_vec2i("part");
+            });
+        }
+
+        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
+    };
+
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -16,6 +34,9 @@ public:
 class building_brick_gatehouse : public building_gatehouse {
 public:
     BUILDING_METAINFO(BUILDING_BRICK_GATEHOUSE, building_brick_gatehouse, building_gatehouse)
+
+    struct static_params : public static_params_t<self_type> {
+    } BUILDING_STATIC_DATA(static_params);;
 };
 
 class building_mud_gatehouse : public building_gatehouse {
@@ -24,4 +45,7 @@ public:
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_map_orientation(int orientation) override;
+
+    struct static_params : public static_params_t<self_type> {
+    } BUILDING_STATIC_DATA(static_params);;
 };

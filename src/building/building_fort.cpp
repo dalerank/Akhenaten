@@ -27,7 +27,7 @@
 building_fort_charioteers::static_params fort_charioteers_m;
 building_fort_archers::static_params fort_archers_m;
 building_fort_infantry::static_params fort_infantry_m;
-buildings::model_t<building_fort_ground> fort_ground_m;
+building_fort_ground::static_params fort_ground_m;
 
 template<typename T>
 void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {

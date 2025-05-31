@@ -1,6 +1,5 @@
 #include "building_gatehouse.h"
 
-#include "js/js_game.h"
 #include "grid/property.h"
 #include "core/direction.h"
 #include "grid/terrain.h"
@@ -10,9 +9,104 @@
 #include "io/gamefiles/lang.h"
 #include "graphics/graphics.h"
 #include "widget/city/ornaments.h"
+#include "building/rotation.h"
+#include "construction/build_planner.h"
+#include "city/city.h"
 
-buildings::model_t<building_brick_gatehouse> brick_gatehouse_m;
-buildings::model_t<building_mud_gatehouse> mud_gatehouse_m;
+building_brick_gatehouse::static_params brick_gatehouse_m;
+building_mud_gatehouse::static_params mud_gatehouse_m;
+
+template<typename T>
+void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    bool fully_blocked = false;
+    bool blocked = false, tmp_blocked;
+    if (g_city.finance.is_out_of_money()) {
+        fully_blocked = true;
+        blocked = true;
+    }
+
+    int local_rotation = -1;
+
+    uint32_t restricted_terrain = TERRAIN_ALL;
+    restricted_terrain -= TERRAIN_ROAD;
+    
+    tile2i tile_second_part;
+
+    const int city_orientation = city_view_orientation() / 2;
+    tile2i possible_next, possible_next_w;
+    blocked_tile_vec tmp_tiles;
+    switch (city_orientation) {
+    case 0:
+        possible_next = end.shifted(0, -1);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 0;
+            tile_second_part = possible_next;
+        }
+
+        possible_next_w = end.shifted(1, 0);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 1;
+            tile_second_part = possible_next_w;
+            break;
+        }
+        break;
+    
+    case 1:
+        break;
+    
+    case 2:
+        break;
+    
+    case 3:
+        break;
+    }
+
+    blocked_tile_vec blocked_tiles_main;
+    blocked_tile_vec blocked_tiles_second;
+
+    if (local_rotation >= 0) {
+        blocked |= !!planer.is_blocked_for_building(end, 1, blocked_tiles_main, restricted_terrain);
+        blocked |= !!planer.is_blocked_for_building(tile_second_part, 1, blocked_tiles_second, restricted_terrain);
+    } else {
+        blocked = true;
+        blocked_tiles_main.clear();
+        blocked_tiles_second.clear();
+        blocked_tiles_main.push_back({ end, true });
+        blocked_tiles_main.push_back({ end.shifted(0, -1), true });
+    }
+
+    int orientation_index = building_rotation_get_storage_fort_orientation(local_rotation) / 2;
+    vec2i main_pixel = pixel + this->ghost.main_view_offset[orientation_index];
+    vec2i ground_pixel = pixel + this->ghost.part_view_offset[orientation_index];
+
+    if (blocked) {
+        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_main);
+        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_second);
+    } else {
+        if (orientation_index == 0 || orientation_index == 3) {
+            // draw fort first, then ground
+            int image_id = this->anim["base_n"].first_img();
+            int image_sec_id = this->anim["base_second_n"].first_img();
+            planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
+            planer.draw_building_ghost(ctx, image_id, main_pixel);
+        } else {
+            // draw ground first, then fort
+            int image_id = this->anim["base_w"].first_img();
+            int image_sec_id = this->anim["base_second_w"].first_img();
+            planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
+            planer.draw_building_ghost(ctx, image_id, ground_pixel);
+        }
+    }
+}
+
+template<typename T>
+void building_gatehouse::static_params_t<T>::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    planer_ghost_preview(planer, ctx, start, end, pixel);
+}
 
 void building_gatehouse::on_create(int orientation) {
     base.orientation = orientation;

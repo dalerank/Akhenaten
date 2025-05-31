@@ -56,6 +56,10 @@ int building_rotation_get_storage_fort_orientation(int building_rotation) {
     return (2 * building_rotation + city_view_orientation()) % 8;
 }
 
+int building_rotation_get_storage_gatehouse_orientation(int building_rotation) {
+    return (2 * building_rotation + city_view_orientation()) % 8;
+}
+
 int building_rotation_get_delta_with_rotation(int default_delta) {
     if (g_global_rotation == 0) {
         return GRID_OFFSET(default_delta, 0);

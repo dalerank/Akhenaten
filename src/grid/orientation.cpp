@@ -253,8 +253,10 @@ bool map_orientation_for_venue(int x, int y, e_venue_mode_orientation mode, int*
                         break;
                     }
 
-                    if (tile_road_checked_against == is_road)
+                    const int road_v = is_road ? 1 : 0;
+                    if (tile_road_checked_against == road_v) {
                         num_correct_road_tiles[orientation_check]++;
+                    }
                 }
             }
         }

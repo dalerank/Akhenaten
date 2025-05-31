@@ -71,6 +71,6 @@ imagepaks = [
   {id: PACK_ENEMY_ROMAN, name:"Roman", index:48700, delayed:true, system:false}, // 48700 --> 48700 + 874 + 201
   {id: PACK_ENEMY_SEAPEOPLE, name:"SeaPeople", index:49800, delayed:true, system:false}, // 49000 --> 49850 + 833 + 201
   {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 59000 + 269 + 201 
-  {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 50500 + 269 + 201 
+  {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 59500 + 269 + 201 
   {id: PACK_CUSTOM, name:"pharaoh_custom_pack", index:60000, system:false, custom:true},  // 60000 -->
 ]

@@ -10,6 +10,7 @@ void building_rotation_rotate_by_hotkey();
 
 void building_rotation_force_two_orientations();
 int building_rotation_get_storage_fort_orientation(int);
+int building_rotation_get_storage_gatehouse_orientation(int building_rotation);
 int building_rotation_get_delta_with_rotation(int default_delta);
 void building_rotation_get_offset_with_rotation(int offset, int rotation, int* x, int* y);
 

@@ -30,7 +30,7 @@ public:
 
     struct runtime_data_t {
         e_figure_type figure_type;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -38,14 +38,14 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
     virtual void highlight_waypoints() override;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 class building_fort_ground : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
+
+    struct static_params : public building_model {
+    } BUILDING_STATIC_DATA(static_params);
 
     virtual building_fort_ground *dcast_fort_ground() { return this; }
 };

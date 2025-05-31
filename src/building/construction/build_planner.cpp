@@ -1261,14 +1261,14 @@ void build_planner::draw_bridge(map_point tile, vec2i pixel, int type, painter &
     }
 }
 
-int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles) {
+int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain) {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
     int num_tiles = (size * size);
     for (int i = 0; i < num_tiles; i++) {
         int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
         tile2i check_tile = tile.shifted(offset);
-        bool tile_blocked = map_terrain_is(check_tile, TERRAIN_NOT_CLEAR)
+        bool tile_blocked = map_terrain_is(check_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
             || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
             || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
             || map_has_figure_at(check_tile);

@@ -4,6 +4,7 @@
 #include "graphics/color.h"
 #include "graphics/view/view.h"
 #include "grid/point.h"
+#include "grid/terrain.h"
 
 enum e_building_flag : uint32_t {
     Groundwater = 1,
@@ -136,7 +137,7 @@ public:
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
     static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);
     static void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
-    static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles);
+    static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain = TERRAIN_ALL);
     static void draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx);
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
     static int tile_grid_offset(int x, int y);

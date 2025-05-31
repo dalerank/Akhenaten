@@ -1663,52 +1663,72 @@ building_limestone_quarry = {
 
 building_mine_gold = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:185 },
-    base : { pack:PACK_GENERAL, id:185 },
+    preview : { pack:PACK_GENERAL, id:185 }
+    base : { pack:PACK_GENERAL, id:185 }
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
-  },
-  output_resource : RESOURCE_GOLD,
-  building_size : 2,
-  info_help_id:93,
-  info_text_id:162,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true,
-  need_ore : true,
+  }
+  output_resource : RESOURCE_GOLD
+  building_size : 2
+  info_help_id:93
+  info_text_id:162
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  need_rock : true
+  need_ore : true
 }
 
 building_brick_gatehouse = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:218 },
-    base : { pack:PACK_GENERAL, id:218 },
-    base_second : { pack:PACK_GENERAL, id:219 },
-    base_cover : { pack:PACK_GENERAL, id:220 },
-  },
-  building_size : 1,
-  info_help_id:85,
-  info_text_id:90,
+    preview : { pack:PACK_GENERAL, id:218 }
+    base_n : { pack:PACK_GENERAL, id:218 }
+    base_second_n : { pack:PACK_GENERAL, id:219 }
+    base_cover_n : { pack:PACK_GENERAL, id:220 }
+
+    base_w : { pack:PACK_GENERAL, id:218, offset:1 }
+    base_second_w : { pack:PACK_GENERAL, id:219, offset:1 }
+    base_cover_w : { pack:PACK_GENERAL, id:220, offset:1 }
+  }
+  
+  ghost : {
+      main : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]]
+      part : [[35, 65], [5, -70], [-200, -55], [-180, 46]]
+  }
+
+  building_size : 1
+  info_help_id:85
+  info_text_id:90
 }
 
 building_mud_gatehouse = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:218 },
-    base : { pack:PACK_GENERAL, id:218 },
-    base_second : { pack:PACK_GENERAL, id:219 },
-    base_cover : { pack:PACK_GENERAL, id:220 },
-  },
-  building_size : 1,
-  info_help_id:85,
-  info_text_id:90,
-  window_info_height_id : 1,
+    preview : { pack:PACK_GENERAL, id:218 }
+    base_n : { pack:PACK_GENERAL, id:218 }
+    base_second_n : { pack:PACK_GENERAL, id:219 }
+    base_cover_n : { pack:PACK_GENERAL, id:220 }
+
+    base_w : { pack:PACK_GENERAL, id:218, offset:1 }
+    base_second_w : { pack:PACK_GENERAL, id:219, offset:1 }
+    base_cover_w : { pack:PACK_GENERAL, id:220, offset:1 }
+  }
+  
+  ghost : {
+      main : [[0, 0], [0, 2], [-55, -35], [-60, -40]]
+      part : [[28, -15], [28, 15], [-200, -55], [-180, 46]]
+  }
+  
+  building_size : 1
+  info_help_id:85
+  info_text_id:90
+  window_info_height_id : 1
 }
 
 building_mud_wall = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:138, offset:27 },
-    base : { pack:PACK_GENERAL, id:138 },
-  },
-  building_size : 1,
-  is_draggable : true,
-  window_info_height_id : 1,
+    preview : { pack:PACK_GENERAL, id:138, offset:27 }
+    base : { pack:PACK_GENERAL, id:138 }
+  }
+  building_size : 1
+  is_draggable : true
+  window_info_height_id : 1
 }
 
 building_vacant_lot = {
