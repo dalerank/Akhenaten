@@ -1678,20 +1678,24 @@ building_mine_gold = {
 
 building_brick_gatehouse = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:161 },
-    base : { pack:PACK_GENERAL, id:161 },
+    preview : { pack:PACK_GENERAL, id:218 },
+    base : { pack:PACK_GENERAL, id:218 },
+    base_second : { pack:PACK_GENERAL, id:219 },
+    base_cover : { pack:PACK_GENERAL, id:220 },
   },
-  building_size : 2,
+  building_size : 1,
   info_help_id:85,
   info_text_id:90,
 }
 
 building_mud_gatehouse = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:220 },
-    base : { pack:PACK_GENERAL, id:220 },
+    preview : { pack:PACK_GENERAL, id:218 },
+    base : { pack:PACK_GENERAL, id:218 },
+    base_second : { pack:PACK_GENERAL, id:219 },
+    base_cover : { pack:PACK_GENERAL, id:220 },
   },
-  building_size : 2,
+  building_size : 1,
   info_help_id:85,
   info_text_id:90,
   window_info_height_id : 1,

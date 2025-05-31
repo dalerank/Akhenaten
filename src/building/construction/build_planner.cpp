@@ -533,6 +533,13 @@ void build_planner::setup_build_flags() {
         set_flag(e_building_flag::Road, false);
         break;
 
+    case BUILDING_MUD_GATEHOUSE:
+    case BUILDING_MUD_GATEHOUSE_UP:
+    case BUILDING_BRICK_GATEHOUSE:
+    case BUILDING_BRICK_GATEHOUSE_UP:
+        set_flag(e_building_flag::Road, false);
+        break;
+
     case BUILDING_ROADBLOCK:
         set_warning("#only_build_roadblocks_on_roads");
         set_flag(e_building_flag::Road, true);
@@ -604,7 +611,8 @@ void build_planner::update_obstructions_check() {
             // special cases
             if (special_flags & e_building_flag::Meadow
                 || special_flags & e_building_flag::FloodplainShore
-                || special_flags & e_building_flag::Road || special_flags & e_building_flag::Canals) {
+                || special_flags & e_building_flag::Road 
+                || special_flags & e_building_flag::Canals) {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             }
 
