@@ -54,14 +54,62 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
             break;
         }
         break;
-    
+
     case 1:
+        possible_next = end.shifted(0, -1);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 1;
+            tile_second_part = possible_next;
+        }
+
+        possible_next_w = end.shifted(1, 0);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 2;
+            tile_second_part = possible_next_w;
+            break;
+        }
         break;
-    
+
     case 2:
-        break;
-    
+        possible_next = end.shifted(0, 1);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 2;
+            tile_second_part = possible_next;
+        }
+
+        possible_next_w = end.shifted(1, 0);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 0;
+            tile_second_part = possible_next_w;
+            break;
+        }
+        break;  
+
     case 3:
+        possible_next = end.shifted(0, 1);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 3;
+            tile_second_part = possible_next;
+        }
+
+        possible_next_w = end.shifted(-1, 0);
+        tmp_tiles.clear();
+        tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
+        if (!tmp_blocked) {
+            local_rotation = 0;
+            tile_second_part = possible_next_w;
+            break;
+        }
         break;
     }
 
