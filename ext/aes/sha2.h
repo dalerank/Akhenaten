@@ -57,18 +57,8 @@
 /* define an unsigned 64-bit type */
 
 #ifdef _MSC_VER
-#if _MSC_VER < 1300
   typedef unsigned __int64   sha2_64t;
-  #define s_u64 ui64
-#elif ULONG_MAX == 0xffffffffffffffff
-  typedef unsigned __int64   sha2_64t;
-  #define s_u64   ul
-#elif ULONG_MAX == 0xffffffff
-  typedef unsigned __int64   sha2_64t;   /* a somewhat dangerous guess */
-  #define s_u64  ull
-#else
-#error Please define sha2_64t as an unsigned 64 bit type in sha2.h
-#endif
+  #define s_u64  ui64
 #else
   #include <stdint.h>
   typedef int64_t sha2_64t;

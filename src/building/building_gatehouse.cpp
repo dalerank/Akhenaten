@@ -78,7 +78,7 @@ building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(b
         tmp_tiles.clear();
         tmp_blocked = !!planer.is_blocked_for_building(possible_next_w, 1, tmp_tiles, restricted_terrain);
         if (!tmp_blocked) {
-            local_rotation = 0;
+            local_rotation = 3;
             tile_second_part = possible_next_w;
             break;
         }
@@ -137,15 +137,15 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
         blocked_tiles_main.push_back({ end.shifted(0, -1), true });
     }
 
-    int orientation_index = building_rotation_get_storage_fort_orientation(back_tile.orientation) / 2;
-    vec2i main_pixel = pixel + this->ghost.main_view_offset[orientation_index];
-    vec2i ground_pixel = pixel + this->ghost.part_view_offset[orientation_index];
+    const int final_rot = (city_orientation + back_tile.orientation) % 8;
+    vec2i main_pixel = pixel + this->ghost.main_view_offset[final_rot];
+    vec2i ground_pixel = pixel + this->ghost.part_view_offset[final_rot];
 
     if (blocked) {
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_main);
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_second);
     } else {
-        if (orientation_index == 0 || orientation_index == 3) {
+        if (back_tile.orientation == 0 || back_tile.orientation == 2) {
             int image_id = this->anim["base_n"].first_img();
             int image_sec_id = this->anim["base_second_n"].first_img();
             planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
@@ -168,62 +168,68 @@ void building_gatehouse::on_create(int orientation) {
     base.orientation = orientation;
 }
 
-void building_gatehouse::update_map_orientation(int orientation) {
-    if (!is_main()) {
-        return;
-    }
-
+void building_gatehouse::update_image_set(building& maingate) {
     const int city_orientation = city_view_orientation() / 2;
     int image_id = mud_gatehouse_m.anim["base"].first_img();
     int map_orientation = city_view_orientation();
 
-    building &backside = next()->base;
-    const int building_rotation = calc_general_direction(tile(), backside.tile) / 2;
+    building &backside = *maingate.next();
+    const int building_rotation = calc_general_direction(maingate.tile, backside.tile) / 2;
 
     static const xstring txs[4] = { "base_n", "base_w", "base_second_n", "base_second_w" };
     int ids[4] = {};
+    const auto &params = building_impl::params(maingate.type);
     for (int i = 0; i < 4; ++i) {
-        ids[i] = this->anim(txs[i]).first_img();
+        const auto &tx = txs[i];
+        ids[i] = params.anim[tx].first_img();
     }
     if (building_rotation == 0 || building_rotation == 2) {
         switch (city_orientation) {
         case 0:
-            map_image_set(tile(), ids[0]);
+            map_image_set(maingate.tile, ids[0]);
             map_image_set(backside.tile, ids[2]);
             break;
         case 1:
-            map_image_set(tile(), ids[1]);
+            map_image_set(maingate.tile, ids[1]);
             map_image_set(backside.tile, ids[3]);
             break;
         case 2:
-            map_image_set(tile(), ids[2]);
+            map_image_set(maingate.tile, ids[2]);
             map_image_set(backside.tile, ids[0]);
             break;
         case 3:
-            map_image_set(tile(), ids[3]);
+            map_image_set(maingate.tile, ids[3]);
             map_image_set(backside.tile, ids[1]);
             break;
         }
     } else if (building_rotation == 1 || building_rotation == 3) {
         switch (city_orientation) {
         case 0:
-            map_image_set(tile(), ids[3]);
-            map_image_set(backside.tile, ids[1]);
-            break;
-        case 1:
-            map_image_set(tile(), ids[0]);
-            map_image_set(backside.tile, ids[2]);
-            break;
-        case 2:
-            map_image_set(tile(), ids[1]);
+            map_image_set(maingate.tile, ids[1]);
             map_image_set(backside.tile, ids[3]);
             break;
-        case 3:
-            map_image_set(tile(), ids[2]);
+        case 1:
+            map_image_set(maingate.tile, ids[2]);
             map_image_set(backside.tile, ids[0]);
+            break;
+        case 2:
+            map_image_set(maingate.tile, ids[3]);
+            map_image_set(backside.tile, ids[1]);
+            break;
+        case 3:
+            map_image_set(maingate.tile, ids[0]);
+            map_image_set(backside.tile, ids[2]);
             break;
         }
     }
+}
+
+void building_gatehouse::update_map_orientation(int orientation) {
+    if (!is_main()) {
+        return;
+    }
+
+    update_image_set(base);
 
     //if (orientation_index == 0 || orientation_index == 3) {
     //    // draw fort first, then ground
@@ -250,17 +256,30 @@ void building_gatehouse::on_place(int orientation, int variant) {
     const int city_orientation = city_view_orientation() / 2;
     back_tile_orientation back_tile = building_gatehouse::second_part_tile(g_city_planner, tile(), city_orientation);
 
-    building *backside = building_create(type(), back_tile.tile, 0);
-    backside->prev_part_building_id = id();
-    base.next_part_building_id = backside->id;
-    backside->next_part_building_id = 0;
+
+    building *backside, *mainside;
+    if (back_tile.orientation == 0 || back_tile.orientation == 2) {
+        backside = building_create(type(), back_tile.tile, 0);
+        backside->prev_part_building_id = id();
+        base.next_part_building_id = backside->id;
+        backside->next_part_building_id = 0;
+        mainside = &base;
+    } else if (back_tile.orientation == 1 || back_tile.orientation == 3) {
+        backside = building_create(type(), back_tile.tile, 0);
+        base.prev_part_building_id = backside->id;
+        base.next_part_building_id = 0;
+        backside->next_part_building_id = base.id;
+        backside->prev_part_building_id = 0;
+        mainside = backside;
+    }
+    assert(backside && mainside);
 
     map_building_tiles_add(base.id, base.tile, base.size, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
     map_building_tiles_add(backside->id, backside->tile, 1, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
 
     base.orientation = back_tile.orientation;
 
-    update_map_orientation(orientation);
+    update_image_set(*mainside);
 }
 
 void building_gatehouse::on_place_checks() {

@@ -14,8 +14,8 @@ public:
     template<typename T>
     struct static_params_t : public buildings::model_t<T> {
         struct {
-            svector<vec2i, 4> main_view_offset;
-            svector<vec2i, 4> part_view_offset;
+            svector<vec2i, 8> main_view_offset;
+            svector<vec2i, 8> part_view_offset;
         } ghost;
 
         virtual void archive_load(archive arch) override {
@@ -36,6 +36,7 @@ public:
     virtual void update_map_orientation(int orientation) override;
         
     static back_tile_orientation second_part_tile(build_planner &planer, tile2i end, int city_orientation);
+    static void update_image_set(building &maingate);
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;
 };
