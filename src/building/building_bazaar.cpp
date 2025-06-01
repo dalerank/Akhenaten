@@ -300,7 +300,7 @@ int building_bazaar::handle_mouse_orders(const mouse* m, object_info &c) {
 
     // resources
     const auto &resources = g_city.resource.available_market_goods();
-    data.building_id = c.building_id;
+    data.bid = c.bid;
     return generic_buttons_handle_mouse(m, {c.offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), resources.size(), &data.resource_focus_button_id);
 }
 

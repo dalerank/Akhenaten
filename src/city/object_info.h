@@ -52,7 +52,7 @@ struct object_info {
     int help_id;
     uint16_t group_id;
     bool can_play_sound;
-    building_id building_id = 0;
+    building_id bid = 0;
     common_info_window *ui = nullptr;
     terrain_info_type terrain_type;
 

@@ -289,7 +289,7 @@ void draw_permissions_buttons(int x, int y, int buttons) {
     uint8_t permission_button_text[] = {'x', 0};
     int offsets[] = {96, 132, 96};
 
-    building_storage *s = building_get(data.building_id)->dcast_storage();
+    building_storage *s = building_get(data.bid)->dcast_storage();
     for (int i = 0; i < buttons; i++) {
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (s->get_permission(i)) {
@@ -324,7 +324,7 @@ int window_building_handle_mouse_granary_orders(const mouse* m, object_info* c) 
 
     // resources
     const size_t num_resources = g_city.resource.available_foods().size();
-    data.building_id = c->building_id;
+    data.bid = c->bid;
     if (generic_buttons_handle_mouse(m, {c->offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), (int)num_resources, &data.resource_focus_button_id)) {
         return 1;
     }
@@ -366,7 +366,7 @@ static void go_to_orders(int param1, int param2) {
 
 static void storage_toggle_permissions(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building* b = building_get(data.building_id);
+    building* b = building_get(data.bid);
 
     building_storage *s = b->dcast_storage();
     s->set_permission(index - 1);
@@ -374,7 +374,7 @@ static void storage_toggle_permissions(int index, int param2) {
 
 static void toggle_resource_state(int param1, int param2) {
     auto &data = g_window_building_distribution;
-    building *b = building_get(data.building_id);
+    building *b = building_get(data.bid);
 
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
@@ -400,7 +400,7 @@ static void toggle_resource_state(int param1, int param2) {
 
 static void toggle_resource_state_backwards(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building* b = building_get(data.building_id);
+    building* b = building_get(data.bid);
     building_bazaar *bazaar = b->dcast_bazaar();
     if (bazaar) {
         bazaar->toggle_good_accepted(index - 1);
@@ -425,7 +425,7 @@ static void toggle_resource_state_backwards(int index, int param2) {
 
 static void order_quantity_increase_decrease(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building* b = building_get(data.building_id);
+    building* b = building_get(data.bid);
     int resource;
 
     building_bazaar *bazaar = b->dcast_bazaar();
@@ -449,7 +449,7 @@ static void order_quantity_increase_decrease(int index, int param2) {
 
 static void market_orders(int index, int param2) {
     auto &data = g_window_building_distribution;
-    building_bazaar* bazaar = building_get(data.building_id)->dcast_bazaar();
+    building_bazaar* bazaar = building_get(data.bid)->dcast_bazaar();
     if (index == 0) {
         bazaar->unaccept_all_goods();
     }
@@ -457,7 +457,7 @@ static void market_orders(int index, int param2) {
 
 static void granary_orders(int index, int param2) {
     auto &data = g_window_building_distribution;
-    int storage_id = building_get(data.building_id)->storage_id;
+    int storage_id = building_get(data.bid)->storage_id;
     if (index == 0)
         building_storage_toggle_empty_all(storage_id);
     else if (index == 1)
@@ -468,13 +468,13 @@ static void granary_orders(int index, int param2) {
 static void warehouse_orders(int index, int param2) {
     auto &data = g_window_building_distribution;
     if (index == 0) {
-        int storage_id = building_get(data.building_id)->storage_id;
+        int storage_id = building_get(data.bid)->storage_id;
         building_storage_toggle_empty_all(storage_id);
     } else if (index == 1) {
-        int storage_id = building_get(data.building_id)->storage_id;
+        int storage_id = building_get(data.bid)->storage_id;
         building_storage_accept_none(storage_id);
     } else if (index == 2) {
-        int storage_id = building_get(data.building_id)->storage_id;
+        int storage_id = building_get(data.bid)->storage_id;
         building_storage_accept_none(storage_id);
     }
     //    window_invalidate();

@@ -60,7 +60,7 @@ int building_plaza::static_params::planer_construction_place(build_planner &plan
 }
 
 void building_plaza::draw_info(object_info &c) {
-    building* b = building_get(c.building_id);
+    building* b = building_get(c.bid);
     const auto &params = b->dcast()->params();
 
     c.help_id = params.meta.help_id;

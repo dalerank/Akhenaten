@@ -19,7 +19,7 @@ struct window_building_distribution {
     int permission_focus_button_id = 0;
     int decr_arrow_focus_button_id = 0;
     int incr_arrow_focus_button_id = 0;
-    int building_id = 0;
+    int bid = 0;
     int partial_resource_focus_button_id = 0;
 
     std::array<generic_button, 20> orders_resource_buttons;

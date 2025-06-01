@@ -121,7 +121,7 @@ void terrain_info_window_t::init(object_info &c) {
 
 bool terrain_info_window_t::check(object_info &c) {
     tile2i tile(c.grid_offset);
-    if (!c.building_id && map_sprite_animation_at(c.grid_offset) > 0) {
+    if (!c.bid && map_sprite_animation_at(c.grid_offset) > 0) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
             c.terrain_type = TERRAIN_INFO_BRIDGE;
         } else {
@@ -140,7 +140,7 @@ bool terrain_info_window_t::check(object_info &c) {
     } else if (map_terrain_is(c.grid_offset, TERRAIN_TREE)) {
         c.terrain_type = TERRAIN_INFO_TREE;
 
-    } else if (!c.building_id && map_terrain_is(c.grid_offset, TERRAIN_FLOODPLAIN)) {
+    } else if (!c.bid && map_terrain_is(c.grid_offset, TERRAIN_FLOODPLAIN)) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {
             c.terrain_type = TERRAIN_INFO_FLOODPLAIN_SUBMERGED;
         } else if (map_terrain_is(c.grid_offset, TERRAIN_ROAD)) {

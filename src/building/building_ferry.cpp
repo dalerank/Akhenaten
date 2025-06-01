@@ -85,7 +85,7 @@ void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
 }
 
 bool info_window_ferry::check(object_info &c) {
-    return !!c.building_id && c.building_get()->dcast_ferry();
+    return !!c.bid && c.building_get()->dcast_ferry();
 }
 
 void info_window_ferry::init(object_info &c) {

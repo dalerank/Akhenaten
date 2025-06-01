@@ -58,7 +58,7 @@ bool building_well::can_play_animation() const {
 void well_info_window::init(object_info &c) {
     building_info_window::init(c);
 
-    int well_necessity = map_water_supply_is_well_unnecessary(c.building_id, 2);
+    int well_necessity = map_water_supply_is_well_unnecessary(c.bid, 2);
     int text_id = 0;
     if (well_necessity == WELL_NECESSARY) { // well is OK
         text_id = 1;

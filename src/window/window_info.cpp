@@ -107,7 +107,7 @@ void object_info::reset(tile2i tile) {
     can_play_sound = true;
     storage_show_special_orders = 0;
     go_to_advisor = {ADVISOR_NONE, ADVISOR_NONE, ADVISOR_NONE};
-    building_id = map_building_at(tile);
+    bid = map_building_at(tile);
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
     nfigure.draw_debug_path = 0;
@@ -152,7 +152,7 @@ figure *object_info::figure_get() {
 }
 
 building *object_info::building_get() {
-    return ::building_get(building_id);
+    return ::building_get(bid);
 }
 
 void window_info_init(tile2i tile, bool avoid_mouse) {
@@ -187,7 +187,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     int building_id = map_building_at(context.grid_offset);
     if (!context.ui && building_id) {
         context.ui = &g_building_common_window;
-        context.building_id = building_id;
+        context.bid = building_id;
     }
       
     if (!context.ui && map_terrain_is(context.grid_offset, TERRAIN_RUBBLE)) {
@@ -293,7 +293,7 @@ void window_info_show(const tile2i& point, bool avoid_mouse) {
 
 int window_building_info_get_type() {
     auto &context = g_object_info;
-    return building_get(context.building_id)->type;
+    return building_get(context.bid)->type;
 }
 
 void window_building_info_show_storage_orders() {

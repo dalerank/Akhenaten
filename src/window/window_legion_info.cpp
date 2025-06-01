@@ -236,7 +236,7 @@ bool legion_info_window::check(object_info &c) {
         return false;
     }
 
-    c.building_id = b->main()->id;
+    c.bid = b->main()->id;
     return true;
 }
 

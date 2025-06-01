@@ -10,7 +10,7 @@ struct info_window_roadblock : public building_info_window {
     int focus_button_id = 0;
     int orders_focus_button_id = 0;
     int figure_focus_button_id = 0;
-    int building_id = 0;
+    int bid = 0;
 
     virtual bool check(object_info &c) override {
         return c.building_get()->dcast_roadblock();
@@ -47,7 +47,7 @@ static void go_to_orders(int param1, int param2) {
 }
 
 void toggle_figure_state(int index, int param2) {
-    building *b = building_get(roadblock_infow.building_id);
+    building *b = building_get(roadblock_infow.bid);
 
     building_roadblock *roadblock = b->dcast_roadblock();
     if (roadblock) {
@@ -120,7 +120,7 @@ int info_window_roadblock::window_info_handle_mouse(const mouse *m, object_info 
     if (c.storage_show_special_orders) {
         int y_offset = window_building_get_vertical_offset(&c, 28);
 
-        data.building_id = c.building_id;
+        data.bid = c.bid;
         if (generic_buttons_handle_mouse(m, vec2i{ c.offset.x + 180, y_offset + 46 }, orders_permission_buttons, sizeof(orders_permission_buttons), &data.figure_focus_button_id)) {
             return 1;
         }

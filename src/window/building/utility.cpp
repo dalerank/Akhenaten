@@ -17,7 +17,7 @@ void window_building_draw_fountain(object_info* c) {
     outer_panel_draw(c->offset, c->bgsize.x, c->bgsize.y);
     lang_text_draw_centered(108, 0, c->offset.x, c->offset.y + 10, 16 * c->bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
     int text_id;
-    building* b = building_get(c->building_id);
+    building* b = building_get(c->bid);
     bool has_groundwater = map_terrain_is(c->grid_offset, TERRAIN_GROUNDWATER);
     if (b->has_water_access) {
         if (b->num_workers > 0)

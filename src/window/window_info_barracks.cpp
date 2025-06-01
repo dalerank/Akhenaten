@@ -40,12 +40,12 @@ void info_window_recruiter::init(object_info &c) {
         ui["workers_text"] = ui::str(c.group_id, workers_state);
     }
 
-    ui["tower_button"].onclick([bid = c.building_id] {
+    ui["tower_button"].onclick([bid = c.bid] {
         auto barracks = ::building_get(bid)->dcast_recruiter();
         barracks->set_priority(0);
     });
    
-    ui["fort_button"].onclick([bid = c.building_id] {
+    ui["fort_button"].onclick([bid = c.bid] {
         auto barracks = ::building_get(bid)->dcast_recruiter();
         barracks->set_priority(1);
     });

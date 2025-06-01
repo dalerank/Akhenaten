@@ -108,13 +108,13 @@ void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int
 }
 
 void window_building_draw_employment(object_info* c, int y_offset) {
-    building* b = building_get(c->building_id);
+    building* b = building_get(c->bid);
     int text_id = get_employment_info_text_id(c, b, 1).id;
     draw_employment_details(c, b, y_offset, text_id);
 }
 
 void window_building_draw_employment_without_house_cover(object_info* c, int y_offset) {
-    building* b = building_get(c->building_id);
+    building* b = building_get(c->bid);
     int text_id = get_employment_info_text_id(c, b, 0).id;
     draw_employment_details(c, b, y_offset, text_id);
 }

@@ -28,7 +28,7 @@ void info_window_storageyard::window_info_background(object_info &c) {
     assert(warehouse);
 
     auto &data = g_window_building_distribution;
-    data.building_id = c.building_id;
+    data.bid = c.bid;
 
     // cartpusher state
     figure *cartpusher = warehouse->get_figure(BUILDING_SLOT_SERVICE);
