@@ -88,6 +88,7 @@ class building_monument;
 class building_scribal_school;
 class building_tower;
 class building_senet_house;
+class building_gatehouse;
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -374,6 +375,7 @@ public:
     building_monument *dcast_monument();
     building_tower *dcast_tower();
     building_senet_house *dcast_senet_house();
+    building_gatehouse *dcast_gatehouse();
 
     int get_figures_number(e_figure_type ftype);
 
@@ -582,6 +584,7 @@ public:
     virtual building_scribal_school *dcast_scribal_school() { return nullptr; }
     virtual building_tower *dcast_tower() { return nullptr; }
     virtual building_senet_house *dcast_senet_house() { return nullptr; }
+    virtual building_gatehouse *dcast_gatehouse() { return nullptr; }
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -766,6 +769,7 @@ GENERATE_SMART_CAST_BUILDING(water_lift)
 GENERATE_SMART_CAST_BUILDING(monument)
 GENERATE_SMART_CAST_BUILDING(scribal_school)
 GENERATE_SMART_CAST_BUILDING(tower)
+GENERATE_SMART_CAST_BUILDING(gatehouse)
 
 namespace buildings {
 

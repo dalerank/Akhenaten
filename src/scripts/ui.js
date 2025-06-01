@@ -1059,7 +1059,7 @@ scribal_school_info_window = {
 
 dock_orders_window = {
     parent_offset: [0, -px(4)],
-  ui : {
+    ui : {
         background   : outer_panel({size: [29, 22]}),
         title          : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         orders_panel : inner_panel({pos : [16, 42], size: [27, 16] }),
@@ -1167,7 +1167,7 @@ info_window_police_station = {
     })
 }
 
-info_gatehouse_station = {
+info_window_gatehouse = {
     ui : __baseui(building_info_window, {
 
     })

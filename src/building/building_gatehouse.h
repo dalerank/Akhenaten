@@ -5,6 +5,7 @@
 class building_gatehouse : public building_impl {
 public:
     building_gatehouse(building &b) : building_impl(b) {}
+    virtual building_gatehouse *dcast_gatehouse() override { return this; }
 
     struct back_tile_orientation {
         tile2i tile;
@@ -37,7 +38,7 @@ public:
         
     static back_tile_orientation second_part_tile(build_planner &planer, tile2i end, int city_orientation);
     static void update_image_set(building &maingate);
-    //virtual void window_info_background(object_info &c) override;
+
     //virtual void spawn_figure() override;
 };
 

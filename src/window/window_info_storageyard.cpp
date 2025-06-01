@@ -11,7 +11,6 @@
 #include "graphics/window.h"
 #include "game/game_config.h"
 #include "game/game.h"
-#include "js/js_game.h"
 
 info_window_storageyard storageyard_infow;
 info_window_storageyard_orders storageyard_orders_infow;

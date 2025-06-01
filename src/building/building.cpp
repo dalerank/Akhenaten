@@ -237,6 +237,7 @@ building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_
 building_monument *building::dcast_monument() { return dcast()->dcast_monument(); }
 building_tower *building::dcast_tower() { return dcast()->dcast_tower(); }
 building_senet_house *building::dcast_senet_house() { return dcast()->dcast_senet_house(); }
+building_gatehouse *building::dcast_gatehouse() { return dcast()->dcast_gatehouse(); }
 
 building::building() {
 }
