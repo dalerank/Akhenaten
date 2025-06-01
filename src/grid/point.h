@@ -46,6 +46,7 @@ public:
     inline self shifted(self offset) { return this->shifted(offset.p_X, offset.p_Y); }
     inline self shifted(vec2i offset) { return this->shifted(offset.x, offset.y); }
     inline self dist2i(self o) { return self(std::abs(this->x() - o.x()), std::abs(this->y() - o.y())); }
+    inline vec2i dist2v(self o) { return vec2i(this->x() - o.x(), this->y() - o.y()); }
 
     inline self mod(int x, int y) { return self(this->x() % x, this->y() % y); }
     inline self add(self o) { return self(this->x() + o.x(), this->y() + o.y()); }

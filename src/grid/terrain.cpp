@@ -313,30 +313,12 @@ static void add_road(int grid_offset) {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR))
         map_terrain_add(grid_offset, TERRAIN_ROAD);
 }
+
 void map_terrain_add_roadblock_road(int x, int y, int orientation) {
     // roads under roadblock
     map_terrain_add(MAP_OFFSET(x, y), TERRAIN_ROAD);
 }
-void map_terrain_add_gatehouse_roads(int x, int y, int orientation) {
-    // roads under gatehouse
-    map_terrain_add(MAP_OFFSET(x, y), TERRAIN_ROAD);
-    map_terrain_add(MAP_OFFSET(x + 1, y), TERRAIN_ROAD);
-    map_terrain_add(MAP_OFFSET(x, y + 1), TERRAIN_ROAD);
-    map_terrain_add(MAP_OFFSET(x + 1, y + 1), TERRAIN_ROAD);
 
-    // free roads before/after gate
-    if (orientation == 1) {
-        add_road(MAP_OFFSET(x, y - 1));
-        add_road(MAP_OFFSET(x + 1, y - 1));
-        add_road(MAP_OFFSET(x, y + 2));
-        add_road(MAP_OFFSET(x + 1, y + 2));
-    } else if (orientation == 2) {
-        add_road(MAP_OFFSET(x - 1, y));
-        add_road(MAP_OFFSET(x - 1, y + 1));
-        add_road(MAP_OFFSET(x + 2, y));
-        add_road(MAP_OFFSET(x + 2, y + 1));
-    }
-}
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
     if (orientation == 1) {
         // road in the middle

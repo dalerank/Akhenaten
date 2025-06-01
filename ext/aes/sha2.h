@@ -61,10 +61,10 @@
   typedef unsigned __int64   sha2_64t;
   #define s_u64 ui64
 #elif ULONG_MAX == 0xffffffffffffffff
-  typedef unsigned long      sha2_64t;
+  typedef unsigned __int64   sha2_64t;
   #define s_u64   ul
 #elif ULONG_MAX == 0xffffffff
-  typedef unsigned long long sha2_64t;   /* a somewhat dangerous guess */
+  typedef unsigned __int64   sha2_64t;   /* a somewhat dangerous guess */
   #define s_u64  ull
 #else
 #error Please define sha2_64t as an unsigned 64 bit type in sha2.h

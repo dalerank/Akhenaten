@@ -1058,11 +1058,6 @@ void build_planner::construction_update(tile2i tile) {
         items_placed = place_houses(true, start.x(), start.y(), end.x(), end.y());
         break;
 
-    case BUILDING_BRICK_GATEHOUSE:
-    case BUILDING_MUD_GATEHOUSE:
-        mark_construction(tile, { 1, 3 }, ~TERRAIN_ROAD, false); // TODO
-        break;
-
     case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
         mark_construction(tile, { 3, 3 }, ~TERRAIN_ROAD, false);
         break;

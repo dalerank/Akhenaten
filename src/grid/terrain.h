@@ -135,7 +135,6 @@ bool map_terrain_adjacent_open_water_tiles(tile2i tile, int size, std::vector<ti
 bool map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int* x_tile, int* y_tile);
 
 void map_terrain_add_roadblock_road(int x, int y, int orientation);
-void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 
 void map_terrain_backup();

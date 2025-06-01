@@ -6,6 +6,11 @@ class building_gatehouse : public building_impl {
 public:
     building_gatehouse(building &b) : building_impl(b) {}
 
+    struct back_tile_orientation {
+        tile2i tile;
+        int orientation;
+    };
+
     template<typename T>
     struct static_params_t : public buildings::model_t<T> {
         struct {
@@ -26,7 +31,11 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
+    virtual void update_map_orientation(int orientation) override;
+        
+    static back_tile_orientation second_part_tile(build_planner &planer, tile2i end, int city_orientation);
     //virtual void window_info_background(object_info &c) override;
     //virtual void spawn_figure() override;
 };
@@ -44,7 +53,6 @@ public:
     BUILDING_METAINFO(BUILDING_MUD_GATEHOUSE, building_mud_gatehouse, building_gatehouse)
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void update_map_orientation(int orientation) override;
 
     struct static_params : public static_params_t<self_type> {
     } BUILDING_STATIC_DATA(static_params);;
