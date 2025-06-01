@@ -256,15 +256,21 @@ void building_gatehouse::on_place(int orientation, int variant) {
     const int city_orientation = city_view_orientation() / 2;
     back_tile_orientation back_tile = building_gatehouse::second_part_tile(g_city_planner, tile(), city_orientation);
 
-
     building *backside, *mainside;
-    if (back_tile.orientation == 0 || back_tile.orientation == 2) {
+    bool bactile_is_main = false;
+    if (tilex() == back_tile.tile.x()) {
+        bactile_is_main = (tiley() < back_tile.tile.y());
+    } else if (tiley() == back_tile.tile.y()) {
+        bactile_is_main = (tilex() < back_tile.tile.x());
+    }
+
+    if (!bactile_is_main) {
         backside = building_create(type(), back_tile.tile, 0);
         backside->prev_part_building_id = id();
         base.next_part_building_id = backside->id;
         backside->next_part_building_id = 0;
         mainside = &base;
-    } else if (back_tile.orientation == 1 || back_tile.orientation == 3) {
+    } else {
         backside = building_create(type(), back_tile.tile, 0);
         base.prev_part_building_id = backside->id;
         base.next_part_building_id = 0;
