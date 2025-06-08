@@ -132,6 +132,7 @@ public:
     bool place();
 
     void set_tiles_building(int image_id, int size_xx);
+    void update_tiles_building(int image_id);
     void init_tiles(int size_x, int size_y);
 
     static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);

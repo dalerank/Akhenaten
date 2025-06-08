@@ -3,6 +3,7 @@
 #include "grid/property.h"
 #include "core/direction.h"
 #include "grid/terrain.h"
+#include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
@@ -16,6 +17,7 @@
 
 building_brick_gatehouse::static_params brick_gatehouse_m;
 building_mud_gatehouse::static_params mud_gatehouse_m;
+building_tower_gatehouse::static_params tower_gatehouse_m;
 
 building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(build_planner &planer, tile2i end, int city_orientation) {
     int local_rotation = -1;
@@ -144,18 +146,19 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
     if (blocked) {
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_main);
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_second);
+        return;
+    }
+
+    if (back_tile.orientation == 0 || back_tile.orientation == 2) {
+        int image_id = this->anim["base_n"].first_img();
+        int image_sec_id = this->anim["base_second_n"].first_img();
+        planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
+        planer.draw_building_ghost(ctx, image_id, main_pixel);
     } else {
-        if (back_tile.orientation == 0 || back_tile.orientation == 2) {
-            int image_id = this->anim["base_n"].first_img();
-            int image_sec_id = this->anim["base_second_n"].first_img();
-            planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
-            planer.draw_building_ghost(ctx, image_id, main_pixel);
-        } else {
-            int image_id = this->anim["base_w"].first_img();
-            int image_sec_id = this->anim["base_second_w"].first_img();
-            planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
-            planer.draw_building_ghost(ctx, image_id, ground_pixel);
-        }
+        int image_id = this->anim["base_w"].first_img();
+        int image_sec_id = this->anim["base_second_w"].first_img();
+        planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
+        planer.draw_building_ghost(ctx, image_id, ground_pixel);
     }
 }
 
@@ -315,4 +318,53 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
         }
     }
     return true;
+}
+
+void building_tower_gatehouse::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {  
+    uint32_t restricted_terrain = TERRAIN_ALL;
+    restricted_terrain -= TERRAIN_WALL;
+    
+    auto result = map_adjust_building_determine_orientation(end, this->building_size, true, true, BUILDING_MUD_GATEHOUSE);
+    
+    blocked_tile_vec blocked_tiles;
+    bool fully_blocked = (!result.match);
+    bool blocked = !!planer.is_blocked_for_building(end, 2, blocked_tiles, restricted_terrain);
+    blocked |= (result.orientation < 0) || fully_blocked;
+    
+    if (blocked) {
+        planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles);
+        return;
+    }
+    
+    int image_id = this->anim["base"].first_img();
+    image_id += (result.orientation == 0 || result.orientation == 2) ? 1 : 0;
+    planer.update_tiles_building(image_id);
+
+    inherited::planer_ghost_preview(planer, ctx, tile, end, pixel);
+}
+
+void building_tower_gatehouse::static_params::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    planer_ghost_preview(planer, ctx, start, end, pixel);
+}
+
+int building_tower_gatehouse::static_params::planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
+    auto match = map_adjust_building_determine_orientation(tile, this->building_size, true, true, BUILDING_MUD_GATEHOUSE);
+    return (match.orientation < 0 ? CAN_NOT_PLACE : state);
+}
+
+void building_tower_gatehouse::update_map_orientation(int map_orientation) {
+    building_impl::update_map_orientation(map_orientation);
+
+    int offset = ((map_orientation / 2) + base.orientation) % 2;
+    int image_id = anim("base").first_img() + offset;
+    map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
+}
+
+void building_tower_gatehouse::on_create(int map_orientation) {
+    inherited::on_create(map_orientation);
+
+    auto match = map_adjust_building_determine_orientation(base.tile, base.size, true, true, BUILDING_MUD_GATEHOUSE);
+    base.orientation = (match.orientation == 0 || match.orientation == 2) ? 1 : 0;
+
+    update_map_orientation(map_orientation);
 }

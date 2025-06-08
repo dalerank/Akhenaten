@@ -464,7 +464,7 @@ public:
         virtual void planer_setup_preview_graphics(build_planner &planer) const;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
-        virtual int planer_update_relative_orientation(build_planner &p, int global_orientation) const { return global_orientation; }
+        virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const { return global_orientation; }
         virtual int planer_update_building_variant(build_planner &p) const;
         virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
@@ -472,6 +472,7 @@ public:
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
         virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
         virtual bool planer_is_need_flag(e_building_flags flag) const;
+        virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
         virtual bool is_unique_building() const { return unique_building; }
     };
 

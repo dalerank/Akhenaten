@@ -31,7 +31,7 @@ int building_temple_complex::static_params_t<T>::planer_setup_orientation(int or
 }
 
 template<class T>
-int building_temple_complex::static_params_t<T>::planer_update_relative_orientation(build_planner &p, int global_rotation) const {
+int building_temple_complex::static_params_t<T>::planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
     return global_rotation + 1;
 }
 

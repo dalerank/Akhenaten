@@ -38,3 +38,10 @@ inline e_highligth_mode map_is_highlighted(tile2i tile) { return map_is_highligh
 void map_clear_highlights();
 
 void map_building_update_all_tiles();
+
+struct adjust_orientation {
+    bool match;
+    int orientation;
+};
+
+adjust_orientation map_adjust_building_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent, e_building_type btype);

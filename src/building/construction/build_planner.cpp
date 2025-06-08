@@ -422,10 +422,9 @@ void build_planner::set_graphics_row(int row, custom_span<int> image_ids, int de
     }
 }
 
-void build_planner::set_tiles_building(int image_id, int size_xx) {
-    init_tiles(size_xx, size_xx);
-    std::array<int, 10> empty_row = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    std::array<int, 10> draw_row = {image_id ? image_id : -1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+void build_planner::update_tiles_building(int image_id) {
+    std::array<int, 10> empty_row = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    std::array<int, 10> draw_row = { image_id ? image_id : -1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     const int def = image_id ? 0 : -1;
     for (int row = 0; row < size.y; ++row) {
         if (row == size.y - 1)
@@ -433,6 +432,11 @@ void build_planner::set_tiles_building(int image_id, int size_xx) {
         else
             set_graphics_row(row, make_span(empty_row.data(), size.x), def);
     }
+}
+
+void build_planner::set_tiles_building(int image_id, int size_xx) {
+    init_tiles(size_xx, size_xx);
+    update_tiles_building(image_id);
 }
 
 void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
@@ -755,6 +759,9 @@ void build_planner::update_requirements_check() {
         }
     }
 
+    const auto &params = building_impl::params(build_type);
+    can_place = params.planer_can_place(*this, start, end, can_place);
+
     if (special_flags & e_building_flag::RiverAccess) {
         if (!map_tile_is_connected_to_open_water(end)) {
             immediate_warning_id = "#inland_lake_has_no_sea_access";
@@ -785,6 +792,7 @@ void build_planner::update_special_case_orientations_check() {
                 result.match = false;
             }
         }
+
         dir_relative = city_view_relative_orientation(result.orientation_absolute);
         if (!result.match) {
             immediate_warning_id = "#building_not_next_to_water";
@@ -936,7 +944,7 @@ void build_planner::update_orientations(bool check_if_changed) {
 
     const auto &params = building_impl::params(build_type);
 
-    relative_orientation = params.planer_update_relative_orientation(*this, relative_orientation);
+    relative_orientation = params.planer_update_relative_orientation(*this, end, relative_orientation);
     building_variant = params.planer_update_building_variant(*this);
 
     relative_orientation = relative_orientation % 4;

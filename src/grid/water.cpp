@@ -165,20 +165,25 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
         switch (city_view_orientation()) {
         case DIR_0_TOP_RIGHT:
             break;
+
         case DIR_2_BOTTOM_RIGHT:
             x -= size - 1;
             break;
+
         case DIR_6_TOP_LEFT:
             y -= size - 1;
             break;
+
         case DIR_4_BOTTOM_LEFT:
             x -= size - 1;
             y -= size - 1;
             break;
         }
     }
-    if (!map_grid_is_inside(tile2i(x, y), size))
-        return {false, 0};
+
+    if (!map_grid_is_inside(tile2i(x, y), size)) {
+        return { false, 0 };
+    }
 
     // actually... check also the bordering blocks on each side.
     size += 2;
@@ -187,13 +192,13 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
 
     // fill in tile cache first
     struct water_tiles_t {
-        int *_data;
         int _size;
-        water_tiles_t(int size) : _size(size) { _data = (int*)alloca(size * size * sizeof(int)); }
+        std::array<int, 32> _data = { 0 };
+        water_tiles_t(int size) : _size(size) {}
         int &at(int row, int column) { return _data[row * _size + column]; }
     } water_tiles(size);
+    assert((size *size) < 36);
 
-    auto water_tile = [water_tiles] (int row, int column) { };
     for (int row = 0; row < size; ++row) {
         for (int column = 0; column < size; ++column) {
             water_tiles.at(row, column) = map_terrain_is(MAP_OFFSET(x + column, y + row), shore_terrain);
@@ -209,6 +214,7 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
                 matches = false;
         }
     }
+
     if (matches) {
         return {true, 0};
     }
@@ -222,6 +228,7 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
                 matches = false;
         }
     }
+
     if (matches) {
         return {true, 1};
     }
@@ -235,6 +242,7 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
                 matches = false;
         }
     }
+
     if (matches) {
         return {true, 2};
     }
@@ -248,6 +256,7 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
                 matches = false;
         }
     }
+
     if (matches) {
         return {true, 3};
     }

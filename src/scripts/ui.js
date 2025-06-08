@@ -1182,7 +1182,7 @@ info_window_milacademy = {
 workshop_info_window = {
     ui : {
         background    : outer_panel({size: [29, 17] }),
-        title           : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        title         : text({pos: [0, 16], size: [px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         warning_text  : text({pos: [20, 58], wrap:px(27), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         produce_icon  : resource_icon({pos: [16, 16], prop:"${building.output_resource}" }),
         ready_prod    : text({pos: [38, 40], size: [px(27), 20], text:"${text.2} ${industry.progress}% ${text.3}", font : FONT_NORMAL_BLACK_ON_LIGHT }),

@@ -251,7 +251,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
         draw_ornaments_and_animations_height, 
-        [this] (vec2i pixel, tile2i tile, painter &ctx) {  draw_figures(pixel, tile, ctx, false); }
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
     );
 
     if (!selected_figure_id) {

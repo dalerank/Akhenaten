@@ -84,7 +84,7 @@ int building_statue::static_params_t<T>::planer_next_building_variant(e_building
 }
 
 template<class T>
-int building_statue::static_params_t<T>::planer_update_relative_orientation(build_planner &p, int global_rotation) const {
+int building_statue::static_params_t<T>::planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
     return global_rotation + 1;;
 }
 

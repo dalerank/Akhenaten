@@ -1698,6 +1698,22 @@ building_brick_gatehouse = {
   info_text_id:90
 }
 
+building_tower_gatehouse = {
+   animations : {
+    preview : { pack:PACK_GENERAL, id:213 }
+    base : { pack:PACK_GENERAL, id:213 }
+    base_osiris : { pack:PACK_GENERAL, id:213 }
+    base_ra : { pack:PACK_GENERAL, id:214 }
+    base_ptah : { pack:PACK_GENERAL, id:215 }
+    base_seth : { pack:PACK_GENERAL, id:216 }
+    base_bast : { pack:PACK_GENERAL, id:217 }
+  }
+
+  building_size : 2
+  info_help_id:85
+  info_text_id:90
+}
+
 building_mud_gatehouse = {
   animations : {
     preview : { pack:PACK_GENERAL, id:218 }

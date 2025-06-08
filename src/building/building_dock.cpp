@@ -32,13 +32,14 @@ void building_dock::static_params::archive_load(archive arch) {
 }
 
 int building_dock::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+    const auto result = map_shore_determine_orientation(end, building_size, true);
+    planer.draw_as_constructing = result.match;
     return 1;
 }
 
 void building_dock::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     const int imgid = anim[animkeys().base].first_img() + planer.relative_orientation;
-    planer.set_tiles_building(imgid, building_size);
+    planer.set_tiles_building(imgid, this->building_size);
 }
 
 void building_dock::on_create(int orientation) {

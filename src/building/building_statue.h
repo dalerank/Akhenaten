@@ -21,8 +21,8 @@ public:
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
+        virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
         virtual int planer_setup_orientation(int orientation) const override { return 1; }
-        virtual int planer_update_relative_orientation(build_planner &p, int global_orientation) const override;
         virtual int planer_update_building_variant(build_planner &planer) const override;
     };
 
