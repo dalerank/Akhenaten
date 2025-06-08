@@ -34,7 +34,6 @@
 ui::window_features g_features_window;
 
 static void button_language_select(int param1, int param2);
-static void toggle_building(int id, int param2);
 static int config_change_string_basic(int key);
 static int config_change_string_language(int key);
 
@@ -177,13 +176,13 @@ int ui::window_features::ui_handle_mouse(const mouse* m) {
     return 0;
 }
 
-static void toggle_building(int id, int param2) {
-    e_building_type type = (e_building_type)BUILDING_NONE;
-
-    bool can_build = building_menu_is_building_enabled(type);
-    building_menu_toggle_building(type, !can_build);
-    building_menu_invalidate();
-}
+//void ui::window_features::toggle_building(int id, int param2) {
+//    e_building_type type = (e_building_type)BUILDING_NONE;
+//
+//    bool can_build = building_menu_is_building_enabled(type);
+//    building_menu_toggle_building(type, !can_build);
+//    building_menu_invalidate();
+//}
 
 void ui::window_features::toggle_resource(e_resource resource) {
     bool can_produce = !g_city.can_produce_resource(resource);
@@ -270,8 +269,9 @@ void ui::window_features::init(std::function<void()> cb) {
             alias.text = text;
             alias.change_action = [alias, god = e_god(i)] () -> int {
                 bool known = !alias.new_value;
-                building_menu_update_gods_available(god, known);
-                g_city.religion.set_god_known(god, known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN);
+                const auto new_status = known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN;
+                events::emit(event_religion_god_status_update{ god, new_status });
+                g_city.religion.set_god_known(god, new_status);
                 return 1;
             };
         }

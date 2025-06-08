@@ -133,7 +133,7 @@ static void pre_load() { // do we NEED this...?
     game_state_init();
     game.animation_timers_init();
     sound_city_init();
-    building_menu_set_all(true);
+    g_building_menu_ctrl.set_all(true);
     building_clear_all();
     building_storage_clear_all();
     g_city.figures.init_figures();
@@ -220,12 +220,12 @@ static void post_load() {
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.settings.campaign_scenario_id, game.session.last_loaded);
-        building_menu_setup_mission();
+        g_building_menu_ctrl.setup_mission();
         is_tutorial_mmission = tutorial_init(/*clear_all*/true, false);
         break;
 
     case e_session_save:
-        building_menu_setup_mission();
+        g_building_menu_ctrl.setup_mission();
         is_tutorial_mmission = tutorial_init(/*clear_all*/false, false);
         break;
 
@@ -233,7 +233,7 @@ static void post_load() {
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario.init_resources);
         g_city.kingdome.load_scenario(g_scenario.settings.campaign_scenario_id, game.session.last_loaded);
-        building_menu_setup_mission();
+        g_building_menu_ctrl.setup_mission();
         is_tutorial_mmission = tutorial_init(/*clear_all*/true, true);
         break;
     }

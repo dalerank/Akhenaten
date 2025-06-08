@@ -67,6 +67,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     int btn_w_tot;
     int btn_w_tot_margin;
     int btn_w_tot_offset;
+    building_menu_ctrl_t *ctrl;
     svector<int, 32> y_menu_offsets;
 };
 
@@ -100,7 +101,7 @@ static int is_all_button(int type) {
 void build_menu_widget::button_menu_item(int item) {
     g_screen_city.clear_current_tile();
 
-    e_building_type type = building_menu_type(selected_submenu, item);
+    e_building_type type = ctrl->type(selected_submenu, item);
     const auto &params = building_impl::params(type);
     if (params.unique_building && g_city.buildings.count_total(type)) {
         return;
@@ -108,8 +109,8 @@ void build_menu_widget::button_menu_item(int item) {
 
     g_city_planner.setup_build(type);
 
-    if (building_menu_is_submenu(type)) {
-        num_items = building_menu_count_items(type);
+    if (ctrl->is_submenu(type)) {
+        num_items = ctrl->count_items(type);
         selected_submenu = type;
         y_offset = y_menu_offsets[num_items];
         g_city_planner.reset();
@@ -122,7 +123,7 @@ int build_menu_widget::button_index_to_submenu_item(int index) {
     auto &data = g_build_menuw;
     int item = -1;
     for (int i = 0; i <= index; i++) {
-        item = building_menu_next_index(data.selected_submenu, item);
+        item = ctrl->next_index(data.selected_submenu, item);
     }
     return item;
 }
@@ -140,8 +141,8 @@ void build_menu_widget::draw_menu_buttons() {
         font = FONT_NORMAL_BLACK_ON_LIGHT;
 
         generic_button *btn = nullptr;
-        item_index = building_menu_next_index(selected_submenu, item_index);
-        e_building_type type = building_menu_type(selected_submenu, item_index);
+        item_index = ctrl->next_index(selected_submenu, item_index);
+        e_building_type type = ctrl->type(selected_submenu, item_index);
         textid tgroup = loc_title(type, { 28, (uint8_t)type });
 
         const auto &params = building_impl::params(type);
@@ -201,7 +202,8 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
 }
 
 void build_menu_widget::init() {
-    num_items = building_menu_count_items(selected_submenu);
+    ctrl = &g_building_menu_ctrl;
+    num_items = ctrl->count_items(selected_submenu);
     y_offset = y_menu_offsets[num_items];
 
     g_city_planner.setup_build(BUILDING_NONE);
@@ -230,7 +232,7 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
 const animation_t &window_build_menu_image() {
     auto &data = g_build_menuw;
     int id = data.selected_submenu ? data.selected_submenu : BUILDING_MENU_VACANT_HOUSE;
-    return building_menu_anim(id);
+    return g_building_menu_ctrl.anim(id);
 }
 
 void window_build_menu_show(int submenu) {

@@ -58,7 +58,7 @@ void game_file_editor_clear_data(void) {
     game_state_init();
     game.animation_timers_init();
     sound_city_init();
-    building_menu_set_all(true);
+    g_building_menu_ctrl.set_all(true);
     building_clear_all();
     building_storage_clear_all();
     g_city.figures.init_figures();

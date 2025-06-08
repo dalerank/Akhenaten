@@ -38,6 +38,7 @@
 #include "dev/debug.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
+#include "building/building_menu.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -80,6 +81,7 @@ void city_t::init() {
     bookmarks.reset();
     common_info_window::register_handlers();
     kingdome.init();
+    building_menu_ctrl_t::register_callbacks();
 }
 
 void city_t::update_day() {

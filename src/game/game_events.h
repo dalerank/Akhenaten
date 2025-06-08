@@ -13,6 +13,16 @@ namespace events {
     }
 
     template<typename T>
+    inline void emit_if(const bool expr, T &&event) {
+        if (!expr) {
+            return;
+        }
+
+        g_city_events.enqueue(std::forward<T>(event));
+        g_permanent_events.enqueue(std::forward<T>(event));
+    }
+
+    template<typename T>
     inline void subscribe(T subscriber) {
         if (g_city_events.contains(subscriber)) {
             return;

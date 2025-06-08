@@ -31,9 +31,9 @@ void tutorial_2_on_build_temple(event_building_create ev) {
     }
 
     events::unsubscribe(&tutorial_2_on_build_temple);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_entertainment });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.temples_built = true;
-    building_menu_update(tutorial_stage.tutorial_entertainment);
     events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
 }
 
@@ -49,9 +49,9 @@ void tutorial_2_on_gold_extracted(event_gold_extract ev) {
     }
 
     events::unsubscribe(&tutorial_2_on_gold_extracted);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_gods });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.gold_mined = true;
-    building_menu_update(tutorial_stage.tutorial_gods);
     events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
 }
 
@@ -77,11 +77,11 @@ void tutorial_2::init() {
     auto &tut = g_tutorials_flags.tutorial_2;
 
     const bool gold_mined_500 = tut.gold_mined;
-    building_menu_update_if(gold_mined_500, tutorial_stage.tutorial_gods);
+    events::emit_if(gold_mined_500, event_building_menu_update{ tutorial_stage.tutorial_gods });
     events::subscribe_if(!gold_mined_500, &tutorial_2_on_gold_extracted);
 
     const bool temples_built = tut.temples_built;
-    building_menu_update_if(temples_built, tutorial_stage.tutorial_entertainment);
+    events::emit_if(temples_built, event_building_menu_update{ tutorial_stage.tutorial_entertainment });
     events::subscribe_if(!temples_built, &tutorial_2_on_build_temple);
 
     g_city.victory_state.add_condition(tutorial2_is_success);
@@ -109,10 +109,10 @@ xstring tutorial_2::goal_text() {
 
 void tutorial_2::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_gods) {
-        building_menu_update(s);
+        events::emit(event_building_menu_update{ s });
         events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
     } else if (s == tutorial_stage.tutorial_entertainment) {
-        building_menu_update(s);
+        events::emit(event_building_menu_update{ s });
         events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
     }
 }

@@ -257,7 +257,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     return items_placed;
 }
 
-static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
+bool build_planner::attach_temple_upgrade(int upgrade_param, int grid_offset) {
     auto complex = building_at(grid_offset)->main()->dcast_temple_complex();
     if (!complex) {
         return false;
@@ -270,7 +270,9 @@ static bool attach_temple_upgrade(int upgrade_param, int grid_offset) {
 
     complexd.temple_complex_upgrades |= upgrade_param;
     map_building_tiles_add_temple_complex_parts(&complex->base);
-    building_menu_update_temple_complexes();
+
+    events::emit(event_temple_complex_updated{ complex->id() } );
+
     return true;
 }
 
@@ -1177,7 +1179,8 @@ void build_planner::construction_finalize() { // confirm final placement
     map_tiles_update_region_empty_land(false, start.shifted(-2, -2), end.shifted(size.x + 2, size.y + 2));
     map_routing_update_land();
     map_routing_update_walls();
-    building_menu_update_temple_complexes();
+    
+    events::emit(event_temple_complex_updated{});
 
     if (should_recalc_ferry_routes) {
         map_routing_update_ferry_routes();
@@ -1376,6 +1379,7 @@ bool build_planner::place() {
             return false;
         }
         break;
+
     case BUILDING_TEMPLE_COMPLEX_ALTAR:
     case BUILDING_TEMPLE_COMPLEX_ORACLE:
         if (!attach_temple_upgrade(additional_req_param1, end.grid_offset())) {

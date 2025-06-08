@@ -151,6 +151,8 @@ public:
     void setup_building_variant(tile2i tile, e_building_type type);
     void mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy);
     void draw_tile_graphics_array(painter &ctx, tile2i start, tile2i end, vec2i pixel);
+
+    bool attach_temple_upgrade(int upgrade_param, int grid_offset);
 };
 
 extern build_planner g_city_planner;

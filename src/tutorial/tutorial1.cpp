@@ -60,7 +60,7 @@ void tutorial1_handle_fire(event_fire_damage) {
         item.fire = 0;
     }
 
-    building_menu_update(tutorial_stage.tutorial_fire);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_fire });
     messages::popup(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);
 }
 
@@ -84,9 +84,9 @@ void tutorial1_handle_population_for_granary(event_population_changed ev) {
     }
 
     events::unsubscribe(&tutorial1_handle_population_for_granary);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_food });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.granary_opened = true;
-    building_menu_update(tutorial_stage.tutorial_food);
     messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
 }
 
@@ -102,9 +102,9 @@ void tutorial1_handle_collapse(event_collase_damage) {
     }
 
     events::unsubscribe(&tutorial1_handle_collapse);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_collapse });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.building_collapsed = true;
-    building_menu_update(tutorial_stage.tutorial_collapse);
     messages::popup(MESSAGE_TUTORIAL_COLLAPSED_BUILDING, 0, 0);
 }
 
@@ -120,9 +120,9 @@ void tutorial1_on_filled_granary(event_granary_resource_added ev) {
     }
 
     events::unsubscribe(&tutorial1_on_filled_granary);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_water });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.gamemeat_stored = true;
-    building_menu_update(tutorial_stage.tutorial_water);
     messages::popup(MESSAGE_TUTORIAL_CLEAN_WATER, 0, 0);
 }
 
@@ -148,12 +148,12 @@ void tutorial_1::init() {
     auto &tut = g_tutorials_flags.tutorial_1;
 
     const bool building_burned = tut.building_burned;
-    building_menu_update_if(building_burned, tutorial_stage.tutorial_fire);
+    events::emit_if(building_burned, event_building_menu_update{ tutorial_stage.tutorial_fire });
 
     events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
-    building_menu_update_if(granary_opened, tutorial_stage.tutorial_food);
+    events::emit_if(granary_opened, event_building_menu_update{ tutorial_stage.tutorial_food });
     
     events::subscribe_if(!granary_opened, &tutorial1_handle_population_for_granary);
 
@@ -162,12 +162,12 @@ void tutorial_1::init() {
 
 
     const bool building_collapsed = tut.building_collapsed;
-    building_menu_update_if(building_collapsed, tutorial_stage.tutorial_collapse);
+    events::emit_if(building_collapsed, event_building_menu_update{ tutorial_stage.tutorial_collapse });
 
     events::subscribe_if(!building_collapsed, &tutorial1_handle_collapse);
 
     const bool gamemeat_stored = tut.gamemeat_stored;
-    building_menu_update_if(gamemeat_stored, tutorial_stage.tutorial_water);
+    events::emit_if(gamemeat_stored, event_building_menu_update{ tutorial_stage.tutorial_water });
     
     events::subscribe_if(!gamemeat_stored, &tutorial1_on_filled_granary);
 

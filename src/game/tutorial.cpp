@@ -133,7 +133,7 @@ xstring tutorial_get_immediate_goal_text() {
 void tutorial_flags_t::on_crime() {
     if (!g_tutorials_flags.pharaoh.crime) {
         g_tutorials_flags.pharaoh.crime = 1;
-        building_menu_update(tutorial_stage.tutorial_crime);
+        events::emit( event_building_menu_update{ tutorial_stage.tutorial_crime });
     }
 }
 

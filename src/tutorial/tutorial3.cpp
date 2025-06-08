@@ -39,9 +39,11 @@ void tutorial3_on_filled_granary(event_granary_resource_added ev) {
     }
 
     events::unsubscribe(&tutorial3_on_filled_granary);
+    events::emit(event_building_menu_update { tutorial_stage.tutorial_industry });
+
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.figs_stored = true;
-    building_menu_update(tutorial_stage.tutorial_industry);
+    
     messages::popup(MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
 }
 
@@ -51,25 +53,27 @@ void tutorial3_on_disease(event_city_disease ev) {
     }
 
     events::unsubscribe(&tutorial3_on_disease);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_health });
+
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.disease = true;
-    building_menu_update(tutorial_stage.tutorial_health);
+    
     messages::popup(MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
 }
 
 void tutorial_3::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_health) {
-        building_menu_update(s);
+        events::emit(event_building_menu_update{ s });
         messages::popup(MESSAGE_TUTORIAL_BASIC_HEALTHCARE, 0, 0);
     }
 
     if (s == tutorial_stage.tutorial_industry) {
-        building_menu_update(s);
+        events::emit(event_building_menu_update{ s });
         messages::popup(MESSAGE_TUTORIAL_INDUSTRY, 0, 0);
     }
 
     if (s == tutorial_stage.tutorial_gardens) {
-        building_menu_update(s);
+        events::emit(event_building_menu_update{ s });
         messages::popup(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
     }
 
@@ -108,9 +112,11 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
     }
 
     events::unsubscribe(&tutorial3_warehouse_pottery_2_check);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_gardens });
+
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_tutorials_flags.tutorial_3.pottery_made_2 = true;
-    building_menu_update(tutorial_stage.tutorial_gardens);
+    
     messages::popup(MESSAGE_TUTORIAL_MUNICIPAL_STRUCTURES, 0, 0);
 }
 
@@ -152,16 +158,16 @@ void tutorial3_population_cap(city_migration_t& migration) {
 }
 
 void tutorial_3::init() {
-    building_menu_update_if(g_tutorials_flags.tutorial_3.figs_stored, tutorial_stage.tutorial_industry);
+    events::emit_if(g_tutorials_flags.tutorial_3.figs_stored, event_building_menu_update{ tutorial_stage.tutorial_industry });
     events::subscribe_if(!g_tutorials_flags.tutorial_3.figs_stored, &tutorial3_on_filled_granary);
 
-    building_menu_update_if(g_tutorials_flags.tutorial_3.pottery_made_1, tutorial_stage.tutorial_industry);
+    events::emit_if(g_tutorials_flags.tutorial_3.pottery_made_1, event_building_menu_update{ tutorial_stage.tutorial_industry });
     events::subscribe_if(!g_tutorials_flags.tutorial_3.pottery_made_1, &tutorial3_warehouse_pottery_1_check);
 
-    building_menu_update_if(g_tutorials_flags.tutorial_3.pottery_made_2, tutorial_stage.tutorial_gardens);
+    events::emit_if(g_tutorials_flags.tutorial_3.pottery_made_2, event_building_menu_update{ tutorial_stage.tutorial_gardens });
     events::subscribe_if(!g_tutorials_flags.tutorial_3.pottery_made_2, &tutorial3_warehouse_pottery_2_check);
 
-    building_menu_update_if(g_tutorials_flags.tutorial_3.disease, tutorial_stage.tutorial_health);
+    events::emit_if(g_tutorials_flags.tutorial_3.disease, event_building_menu_update{ tutorial_stage.tutorial_health });
     events::subscribe_if(!g_tutorials_flags.tutorial_3.disease, &tutorial3_on_disease);
 
     if (game.simtime.month < 5) {

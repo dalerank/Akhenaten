@@ -2,6 +2,8 @@
 
 #include "building/building.h"
 
+struct event_temple_complex_updated { building_id bid; };
+
 enum e_temple_compex_upgrade : uint8_t {
     etc_upgrade_altar = 1 << 0,
     etc_upgrade_oracle = 1 << 1,

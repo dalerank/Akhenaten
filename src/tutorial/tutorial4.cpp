@@ -51,8 +51,9 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
 
     tut.beer_made = true;
     events::unsubscribe(&tutorial4_warehouse_beer_check);
+    events::emit(event_building_menu_update{ tutorial_stage.tutorial_finance });
+
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    building_menu_update(tutorial_stage.tutorial_finance);
     messages::popup(MESSAGE_TUTORIAL_FINANCES, 0, 0);
 }
 
@@ -82,9 +83,9 @@ void tutorial_4_on_build_tax_collector(event_building_create ev) {
     
 void tutorial_4::init() {
     auto& tut = g_tutorials_flags.tutorial_4;
-    building_menu_update_if(tut.beer_made, tutorial_stage.tutorial_finance);
-    events::subscribe_if(!tut.beer_made , &tutorial4_warehouse_beer_check);
+    events::emit_if(tut.beer_made, event_building_menu_update{ tutorial_stage.tutorial_finance });
 
+    events::subscribe_if(!tut.beer_made , &tutorial4_warehouse_beer_check);
     events::subscribe_if(!tut.tax_collector_built , &tutorial_4_on_build_tax_collector);
     
     g_city.victory_state.add_condition(&tutorial4_is_success);

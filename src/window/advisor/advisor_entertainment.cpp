@@ -31,10 +31,11 @@ static int get_entertainment_advice(void) {
 }
 
 void ui::advisor_entertainment_window::draw_entertainer(int type, pcstr prefix, e_building_type venue, int shows, int coverage, int entertain_coeff) {
-    e_font font = building_menu_is_building_enabled(venue) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
+    const bool b_enabled = g_building_menu_ctrl.is_enabled(venue);
+    e_font font = b_enabled ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW;
 
     auto _s = [prefix] (pcstr key) { return bstring32(prefix, "_", key); };
-    if (!building_menu_is_building_enabled(venue)) {
+    if (!b_enabled) {
         ui[_s("total")].text(font, ui::str(58, 47 + type));
         ui[_s("active")].text(font, ui::str(58, 51));
         ui[_s("shows")].text(font, ui::str(58, 51));
