@@ -1,7 +1,6 @@
 #include "advisor_religion.h"
 
 #include "city/constants.h"
-#include "building/building_menu.h"
 #include "city/buildings.h"
 #include "scenario/scenario.h"
 #include "window/popup_dialog.h"

@@ -38,7 +38,7 @@
 #include "dev/debug.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
-#include "building/building_menu.h"
+#include "city/city_building_menu_ctrl.h"
 
 #include <core/string.h>
 #include <string.h>

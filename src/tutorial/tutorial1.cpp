@@ -3,7 +3,7 @@
 #include "city/city.h"
 #include "game/game_events.h"
 #include "game/game.h"
-#include "building/building_menu.h"
+#include "city/city_building_menu_ctrl.h"
 #include "building/building_granary.h"
 #include "io/gamefiles/lang.h"
 #include "city/city_message.h"

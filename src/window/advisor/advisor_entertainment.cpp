@@ -1,9 +1,9 @@
 #include "advisor_entertainment.h"
 
-#include "building/building_menu.h"
 #include "scenario/scenario.h"
 #include "city/coverage.h"
 #include "city/city.h"
+#include "city/city_building_menu_ctrl.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

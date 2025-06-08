@@ -1,6 +1,5 @@
 #include "window_features.h"
 
-#include "building/building_menu.h"
 #include "core/string.h"
 #include "core/log.h"
 #include "city/city.h"

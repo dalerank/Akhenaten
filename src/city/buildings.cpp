@@ -1,7 +1,6 @@
 #include "buildings.h"
 
 #include "building/building_house.h"
-#include "building/building_menu.h"
 #include "core/profiler.h"
 #include "grid/water.h"
 #include "grid/building.h"
@@ -37,8 +36,6 @@ void city_buildings_t::track_building(building &b, bool active) {
 }
 
 void city_buildings_t::check_buildings_twins() {
-
-
     std::set<int> occuped;
     for (auto &b : city_buildings()) {
         if (b.is_valid()) {

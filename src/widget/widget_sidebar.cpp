@@ -1,7 +1,7 @@
 #include "widget_sidebar.h"
 #include "dev/debug.h"
 
-#include "building/building_menu.h"
+#include "city/city_building_menu_ctrl.h"
 #include "overlays/city_overlay.h"
 #include "city/city.h"
 #include "city/city_message.h"

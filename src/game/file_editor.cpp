@@ -1,12 +1,12 @@
 #include "file_editor.h"
 
 #include "building/construction/build_planner.h"
-#include "building/building_menu.h"
 #include "building/building_storage.h"
 #include "building/building_wall.h"
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/victory.h"
+#include "city/city_building_menu_ctrl.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
 #include "figure/enemy_army.h"

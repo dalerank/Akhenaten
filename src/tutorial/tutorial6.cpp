@@ -2,7 +2,6 @@
 
 #include "io/gamefiles/lang.h"
 #include "building/building_house.h"
-#include "building/building_menu.h"
 #include "building/building_storage_yard.h"
 #include "game/game.h"
 #include "city/city_message.h"

@@ -1,6 +1,6 @@
 #include "game/tutorial.h"
 
-#include "building/building_menu.h"
+#include "city/city_building_menu_ctrl.h"
 #include "city/city_message.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"

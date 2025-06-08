@@ -2,11 +2,11 @@
 
 #include "io/gamefiles/lang.h"
 #include "building/building_house.h"
-#include "building/building_menu.h"
 #include "building/building_storage_yard.h"
 #include "game/game.h"
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_building_menu_ctrl.h"
 #include "game/game_events.h"
 
 struct tutorial_5 : public tutorial_t {

@@ -2,9 +2,9 @@
 
 #include "core/svector.h"
 #include "city/city.h"
+#include "city/city_building_menu_ctrl.h"
 #include "graphics/animation.h"
 #include "building/building.h"
-#include "building/building_menu.h"
 #include "building/construction/build_planner.h"
 #include "building/model.h"
 #include "graphics/graphics.h"

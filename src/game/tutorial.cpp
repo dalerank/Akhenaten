@@ -1,12 +1,12 @@
 #include "tutorial.h"
 
-#include "building/building_menu.h"
 #include "building/building_granary.h"
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
+#include "city/city_building_menu_ctrl.h"
 #include "empire/empire_city.h"
 #include "game/resource.h"
 #include "io/io_buffer.h"
