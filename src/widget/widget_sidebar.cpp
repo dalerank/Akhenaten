@@ -186,10 +186,6 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
 
     ui["show_overlays"] = overlay_text;
 
-    if (g_building_menu_ctrl.has_changed()) {
-        refresh_build_menu_buttons();
-    }
-
     draw_sidebar_extra(ui.pos);
     draw_debug_ui(10, 30);
 }
@@ -247,6 +243,10 @@ void ui::sidebar_window_collapsed::init() {
     for (const auto &btn : button_ids) {
         ui[btn.id].onclick([type = btn.type] { window_build_menu_show(type); });
     }
+
+    events::subscribe([this] (event_building_menu_changed ev) {
+        refresh_build_menu_buttons();
+    });
 
     widget_minimap_init();
 }

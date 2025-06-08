@@ -133,7 +133,6 @@ static void pre_load() { // do we NEED this...?
     game_state_init();
     game.animation_timers_init();
     sound_city_init();
-    g_building_menu_ctrl.set_all(true);
     building_clear_all();
     building_storage_clear_all();
     g_city.figures.init_figures();

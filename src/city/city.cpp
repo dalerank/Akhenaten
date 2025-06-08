@@ -81,7 +81,7 @@ void city_t::init() {
     bookmarks.reset();
     common_info_window::register_handlers();
     kingdome.init();
-    building_menu_ctrl_t::register_callbacks();
+    g_building_menu_ctrl.init();
 }
 
 void city_t::update_day() {
