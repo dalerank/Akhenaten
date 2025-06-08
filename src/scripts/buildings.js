@@ -1712,6 +1712,7 @@ building_tower_gatehouse = {
   building_size : 2
   info_help_id:85
   info_text_id:90
+  cost : 200
 }
 
 building_mud_gatehouse = {

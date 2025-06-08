@@ -1078,7 +1078,7 @@ void building_impl::on_place(int orientation, int variant) {
 }
 
 void building_impl::on_place_update_tiles(int orientation, int variant) {
-    int img_id = anim(animkeys().base).first_img();
+    const int img_id = anim(animkeys().base).first_img();
     map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
 }
 
@@ -1288,6 +1288,7 @@ void building_impl::static_params::archive_load(archive arch) {
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
+    cost = arch.r_int("cost");
 
     city_labor_t::set_category(type, labor_category);
 
@@ -1437,6 +1438,11 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     }
 
     return false;
+}
+
+int building_impl::static_params::get_cost() const {
+    const int mcost = model_get_building(type)->cost;
+    return cost > 0 ? cost : mcost;
 }
 
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {

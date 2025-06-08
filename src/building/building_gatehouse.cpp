@@ -360,11 +360,15 @@ void building_tower_gatehouse::update_map_orientation(int map_orientation) {
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 
+void building_tower_gatehouse::on_place_update_tiles(int map_orientation, int variant) {
+    inherited::on_place_update_tiles(map_orientation, variant);
+
+    update_map_orientation(map_orientation);
+}
+
 void building_tower_gatehouse::on_create(int map_orientation) {
     inherited::on_create(map_orientation);
 
     auto match = map_adjust_building_determine_orientation(base.tile, base.size, true, true, BUILDING_MUD_GATEHOUSE);
     base.orientation = (match.orientation == 0 || match.orientation == 2) ? 1 : 0;
-
-    update_map_orientation(map_orientation);
 }

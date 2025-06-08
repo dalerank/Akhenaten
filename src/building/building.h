@@ -438,6 +438,7 @@ public:
         bool check_water_access;
         textid info_title_id;
         int num_types;
+        int cost;
         struct {
             bool canals;
             bool roads;
@@ -474,6 +475,7 @@ public:
         virtual bool planer_is_need_flag(e_building_flags flag) const;
         virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
         virtual bool is_unique_building() const { return unique_building; }
+        virtual int get_cost() const;
     };
 
     building_impl(building &b) : base(b) {}

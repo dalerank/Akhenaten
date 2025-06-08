@@ -1346,8 +1346,8 @@ bool build_planner::place() {
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
-    int placement_cost = model_get_building(build_type)->cost;
     const auto &params = building_impl::params(build_type);
+    int placement_cost = params.get_cost();
 
     switch (build_type) {
     case BUILDING_CLEAR_LAND: {
