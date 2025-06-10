@@ -29,6 +29,7 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
 
     image_desc extra_block;
     image_desc relief_block;
+    image_desc def_image;
     vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;

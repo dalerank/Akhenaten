@@ -485,6 +485,7 @@ sidebar_window_collapsed = {
 }
 
 sidebar_window_expanded = {
+    def_image          : {pack:PACK_GENERAL, id:117, offset:1 }
     extra_block        : {pack:PACK_GENERAL, id:121, offset:2},
     relief_block       : {pack:PACK_GENERAL, id:121, offset:4},
     extra_block_x      : -24,

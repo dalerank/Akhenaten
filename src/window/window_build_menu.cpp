@@ -27,8 +27,9 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
-    virtual void init() override;
+    virtual void init() override {}
 
+    void init(int sub_menu);
     void draw_menu_buttons();
     void button_menu_item(int item);
     int button_index_to_submenu_item(int index);
@@ -53,6 +54,8 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
             window_build_menu_show(selected_submenu);
         }
     }
+
+    void select_submenu(int menu);
 
     int selected_submenu = BUILDING_MENU_VACANT_HOUSE;
     int num_items;
@@ -90,6 +93,13 @@ textid build_menu_widget::loc_title(e_building_type type, textid def) {
     }
     
     return title;
+}
+
+void build_menu_widget::select_submenu(int menu) {
+    const int id = selected_submenu ? selected_submenu : BUILDING_MENU_VACANT_HOUSE;
+    const animation_t &anim = ctrl->anim(id);
+
+    events::emit(event_building_change_mode{ anim });
 }
 
 static int is_all_button(int type) {
@@ -201,12 +211,15 @@ void build_menu_widget::draw_foreground(UiFlags flags) {
     ui.end_widget();
 }
 
-void build_menu_widget::init() {
+void build_menu_widget::init(int sub_menu) {
     ctrl = &g_building_menu_ctrl;
+     
+    selected_submenu = sub_menu;
     num_items = ctrl->count_items(selected_submenu);
     y_offset = y_menu_offsets[num_items];
 
     g_city_planner.setup_build(BUILDING_NONE);
+    select_submenu(sub_menu);
 }
 
 int build_menu_widget::ui_handle_mouse(const mouse* m) {
@@ -229,19 +242,12 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
     return 0;
 }
 
-const animation_t &window_build_menu_image() {
-    auto &data = g_build_menuw;
-    int id = data.selected_submenu ? data.selected_submenu : BUILDING_MENU_VACANT_HOUSE;
-    return g_building_menu_ctrl.anim(id);
-}
-
 void window_build_menu_show(int submenu) {
-    g_build_menuw.selected_submenu = submenu;
-    g_build_menuw.init();
+    g_build_menuw.init(submenu);
 
     if (submenu == BUILDING_MENU_VACANT_HOUSE || submenu == BUILDING_MENU_CLEAR_LAND || submenu == BUILDING_MENU_ROAD) {
         g_build_menuw.button_menu_item(0);
-        g_build_menuw.selected_submenu = 0;
+        g_build_menuw.select_submenu(0);
         return;
     }
 
@@ -252,6 +258,7 @@ void window_build_menu_show(int submenu) {
         [] (const mouse *m, const hotkeys *h) { g_build_menuw.ui_handle_mouse(m); },
         0
     };
+
     window_show(&window);
 }
 

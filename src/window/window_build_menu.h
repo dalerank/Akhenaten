@@ -2,6 +2,7 @@
 
 struct animation_t;
 
-const animation_t &window_build_menu_image();
+struct event_building_change_mode { const animation_t &anim; };
+
 void window_build_menu_show(int submenu);
 int window_build_menu_selected();

@@ -80,6 +80,7 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
     arch.r_desc("relief_block", relief_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
+    arch.r_desc("def_image", def_image);
     slider.load(arch);
 
     if (game.session.active) {
@@ -163,7 +164,6 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
 
     const bool is_disabled = !(window_is(WINDOW_CITY) || window_is(WINDOW_BUILD_MENU));
     const UiFlags wflags = is_disabled ? UiFlags_Darkened : UiFlags_None;
-    const animation_t &anim = window_build_menu_image();
 
     ui.begin_widget(ui.pos);
     widget_minimap_draw({ x_offset + 12, MINIMAP_Y_OFFSET }, 0);
@@ -171,7 +171,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     ui.draw(wflags);
     ui.end_widget();
 
-    ui["build_image"].image(image_desc{ anim.pack, anim.iid, anim.offset });
+    ui["build_image"].image(def_image);
     int messages = city_message_count();
 
     ui["show_messages"].readonly = (messages <= 0);
@@ -246,6 +246,10 @@ void ui::sidebar_window_collapsed::init() {
 
     events::subscribe([this] (event_building_menu_changed ev) {
         refresh_build_menu_buttons();
+    });
+
+    events::subscribe([this] (event_building_change_mode ev) {
+        ui["build_image"].image(image_desc{ ev.anim.pack, ev.anim.iid, ev.anim.offset });
     });
 
     widget_minimap_init();
