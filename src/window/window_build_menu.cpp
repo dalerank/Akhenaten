@@ -117,7 +117,7 @@ void build_menu_widget::button_menu_item(int item) {
         return;
     }
 
-    g_city_planner.setup_build(type);
+    events::emit(event_city_building_mode{ type });
 
     if (ctrl->is_submenu(type)) {
         num_items = ctrl->count_items(type);
@@ -218,7 +218,7 @@ void build_menu_widget::init(int sub_menu) {
     num_items = ctrl->count_items(selected_submenu);
     y_offset = y_menu_offsets[num_items];
 
-    g_city_planner.setup_build(BUILDING_NONE);
+    events::emit(event_city_building_mode{ BUILDING_NONE });
     select_submenu(sub_menu);
 }
 

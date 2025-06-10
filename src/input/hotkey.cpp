@@ -170,71 +170,71 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         break;
 
     case HOTKEY_BUILD_VACANT_HOUSE:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_HOUSE_VACANT_LOT }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_HOUSE_VACANT_LOT }); };
         break;
 
     case HOTKEY_BUILD_CLEAR_LAND:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_CLEAR_LAND }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_CLEAR_LAND }); };
         break;
 
     case HOTKEY_BUILD_ROAD:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_ROAD }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_ROAD }); };
         break;
 
     case HOTKEY_BUILD_ARCHITECT:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_ARCHITECT_POST }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_ARCHITECT_POST }); };
         break;
 
     case HOTKEY_BUILD_WALL:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_MUD_WALL }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_MUD_WALL }); };
         break;
 
     case HOTKEY_BUILD_GATEHOUSE:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_MUD_GATEHOUSE }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_MUD_GATEHOUSE }); };
         break;
 
     case HOTKEY_BUILD_FIREHOUSE:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_FIREHOUSE }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_FIREHOUSE }); };
         break;
 
     case HOTKEY_BUILD_GRANARY:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_GRANARY }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_GRANARY }); };
         break;
 
     case BUILDING_STORAGE_YARD:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_STORAGE_YARD }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_STORAGE_YARD }); };
         break;
 
     case HOTKEY_BUILD_BAZAAR:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_BAZAAR }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_BAZAAR }); };
         break;
 
     case HOTKEY_BUILD_PLAZA:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_PLAZA }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_PLAZA }); };
         break;
 
     case HOTKEY_BUILD_GARDENS:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_GARDENS }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_GARDENS }); };
         break;
 
     case HOTKEY_BUILD_WATERLIFT:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_WATER_LIFT }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_WATER_LIFT }); };
         break;
 
     case HOTKEY_BUILD_CANAL:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_IRRIGATION_DITCH }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_IRRIGATION_DITCH }); };
         break;
 
     case HOTKEY_BUILD_WATER_SUPPLY:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_WATER_SUPPLY }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_WATER_SUPPLY }); };
         break;
 
     case HOTKEY_BUILD_APOTHECARY:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_APOTHECARY }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_APOTHECARY }); };
         break;
 
     case HOTKEY_BUILD_ROADBLOCK:
-        def->callback = [] { events::emit(event_building_mode{ BUILDING_ROADBLOCK }); };
+        def->callback = [] { events::emit(event_city_building_mode{ BUILDING_ROADBLOCK }); };
         break;
 
     case HOTKEY_DEBUG_1_UP:

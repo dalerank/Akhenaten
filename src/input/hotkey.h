@@ -15,7 +15,7 @@ struct event_load_city { int value; };
 struct event_debug_tile_change { int value; };
 struct event_debug_render_change { int value; };
 struct event_rotate_building { int value; };
-struct event_building_mode { int value; };
+struct event_city_building_mode { int value; };
 struct event_show_advisor { int advisor; };
 struct event_change_building_variant { int value; };
 struct event_set_bookmark { int value; };

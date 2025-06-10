@@ -437,18 +437,18 @@ sha2_void sha512_hash(const unsigned char data[], unsigned long len, sha512_ctx 
 
 static sha2_64t  m2[8] =
 {
-    n_u64(0000000000000000), n_u64(ff00000000000000), 
-    n_u64(ffff000000000000), n_u64(ffffff0000000000),
-    n_u64(ffffffff00000000), n_u64(ffffffffff000000),
-    n_u64(ffffffffffff0000), n_u64(ffffffffffffff00)
+    sha2_64t(0x0000000000000000ull), sha2_64t(0xff00000000000000ull),
+    sha2_64t(0xffff000000000000ull), sha2_64t(0xffffff0000000000ull),
+    sha2_64t(0xffffffff00000000ull), sha2_64t(0xffffffffff000000ull),
+    sha2_64t(0xffffffffffff0000ull), sha2_64t(0xffffffffffffff00ull)
 };
 
 static sha2_64t  b2[8] =
 {
-    n_u64(8000000000000000), n_u64(0080000000000000), 
-    n_u64(0000800000000000), n_u64(0000008000000000),
-    n_u64(0000000080000000), n_u64(0000000000800000), 
-    n_u64(0000000000008000), n_u64(0000000000000080)
+    sha2_64t(0x8000000000000000ull), sha2_64t(0x0080000000000000ull),
+    sha2_64t(0x0000800000000000ull), sha2_64t(0x0000008000000000ull),
+    sha2_64t(0x0000000080000000ull), sha2_64t(0x0000000000800000ull),
+    sha2_64t(0x0000000000008000ull), sha2_64t(0x0000000000000080ull)
 };
 
 static void sha_end(unsigned char hval[], sha512_ctx ctx[1], const unsigned int hlen)

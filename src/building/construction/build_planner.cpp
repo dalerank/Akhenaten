@@ -305,7 +305,7 @@ void build_planner::init() {
         update_orientations();
     });
 
-    events::subscribe([this] (event_building_mode ev) {
+    events::subscribe([this] (event_city_building_mode ev) {
         if (scenario_building_allowed(ev.value)) {
             construction_cancel();
             setup_build((e_building_type)ev.value);
