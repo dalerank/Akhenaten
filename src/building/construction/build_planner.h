@@ -110,7 +110,11 @@ public:
 
     void init();
     void reset();
+
+private:
     void setup_build(e_building_type type);
+
+public:
     void set_graphics_array(custom_span<int> image_set, vec2i size);
 
     void construction_start(tile2i tile);

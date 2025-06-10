@@ -33,7 +33,7 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     void draw_menu_buttons();
     void button_menu_item(int item);
     int button_index_to_submenu_item(int index);
-    textid loc_title(e_building_type type, textid def);
+    xstring loc_title(e_building_type type, xstring def);
 
     virtual void load(archive arch, pcstr section) override {
         widget::load(arch, section);
@@ -84,11 +84,11 @@ int build_menu_widget::draw_background(UiFlags flags) {
     return 0;
 }
 
-textid build_menu_widget::loc_title(e_building_type type, textid def) {
+xstring build_menu_widget::loc_title(e_building_type type, xstring def) {
     const auto &params = building_impl::params(type);
     const auto &title = params.info_title_id;
 
-    if (!title.group && !title.id) {
+    if (!title) {
         return def;
     }
     
@@ -153,7 +153,7 @@ void build_menu_widget::draw_menu_buttons() {
         generic_button *btn = nullptr;
         item_index = ctrl->next_index(selected_submenu, item_index);
         e_building_type type = ctrl->type(selected_submenu, item_index);
-        textid tgroup = loc_title(type, { 28, (uint8_t)type });
+        xstring tgroup = loc_title(type, ui::str(28, (uint8_t)type) );
 
         const auto &params = building_impl::params(type);
         if (params.unique_building) {
@@ -162,17 +162,23 @@ void build_menu_widget::draw_menu_buttons() {
             font = has_building ? FONT_NORMAL_BLACK_ON_DARK : font;
             UiFlags flags = UiFlags_PanelSmall;
             flags |= (has_building ? UiFlags_Darkened : UiFlags_None);
-            btn = &ui.button("", btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
+
+            const vec2i btn_pos = btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i };
+            const vec2i btn_size{ btn_w_tot, 20 };
+            btn = &ui.button("", btn_pos, btn_size, fonts_vec{ font, FONT_NORMAL_BLACK_ON_LIGHT }, flags,
                 [this, i] (int, int) {
-                    button_menu_item(button_index_to_submenu_item(i));
+                    int idx = button_index_to_submenu_item(i);
+                    button_menu_item(idx);
                 });
         } else {
-            btn = &ui.button("", btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i }, vec2i{ btn_w_tot, 20 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
+            const vec2i btn_pos = btn_w_start_pos + vec2i{ x_offset - label_margin, y_offset + item.size.y * i };
+            const vec2i btn_size{ btn_w_tot, 20 };
+            btn = &ui.button("", btn_pos, btn_size, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK, FONT_NORMAL_BLACK_ON_LIGHT }, UiFlags_PanelSmall,
                 [this, i] (int, int) {
-                    button_menu_item(button_index_to_submenu_item(i));
+                    int idx = button_index_to_submenu_item(i);
+                    button_menu_item(idx);
                 });
         }
-
 
         if (btn->hovered) {
             font = FONT_NORMAL_BLACK_ON_DARK;
@@ -188,7 +194,7 @@ void build_menu_widget::draw_menu_buttons() {
             int index = (type - BUILDING_TEMPLE_COMPLEX_ALTAR) + 2 * (b->type - BUILDING_TEMPLE_COMPLEX_OSIRIS);
             lang_text_draw_centered(189, index, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else {
-            lang_text_draw_centered(tgroup.group, tgroup.id, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
+            lang_text_draw_centered(tgroup.c_str(), x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         }
 
         int cost = model_get_building(type)->cost;

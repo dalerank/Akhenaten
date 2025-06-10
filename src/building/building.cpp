@@ -637,10 +637,10 @@ void building::mark_plague(int days) {
     has_plague = true;
 }
 
-pcstr building::cls_name() const {
+xstring building::cls_name() const {
     const auto &params = building_impl::params(type);
-    if (params.info_title_id.group != 0) {
-        return ui::str(params.info_title_id);
+    if (params.info_title_id != 0) {
+        return params.info_title_id;
     }
 
     const auto &m = params.meta;
@@ -1272,7 +1272,7 @@ void building_impl::static_params::archive_load(archive arch) {
     is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
     check_water_access = arch.r_bool("check_water_access");
-    info_title_id = arch.r_vec2i("info_title_id");
+    info_title_id = arch.r_string("info_title_id");
     updates.canals = arch.r_bool("update_canals");
     updates.roads = arch.r_bool("update_roads");
     updates.ferries = arch.r_bool("update_ferries");

@@ -1709,6 +1709,7 @@ building_tower_gatehouse = {
     base_bast : { pack:PACK_GENERAL, id:217 }
   }
 
+  info_title_id:"#tower_gatehouse"
   building_size : 2
   info_help_id:85
   info_text_id:90

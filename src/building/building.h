@@ -267,7 +267,7 @@ public:
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
     vfs::path get_sound();
-    pcstr cls_name() const;
+    xstring cls_name() const;
 
     void clear_related_data();
     void clear_impl();
@@ -436,7 +436,7 @@ public:
         uint16_t production_rate;
         bool unique_building;
         bool check_water_access;
-        textid info_title_id;
+        xstring info_title_id;
         int num_types;
         int cost;
         struct {
