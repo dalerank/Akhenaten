@@ -1285,8 +1285,8 @@ building_brick_tower = {
 
 building_mud_tower = {
   animations : {
-    preview : { pack:PACK_TERRAIN, id:135 }
-    base : { pack:PACK_TERRAIN, id:135 }
+    preview : { pack:PACK_GENERAL, id:135 }
+    base : { pack:PACK_GENERAL, id:135 }
   }
   building_size : 2
   fire_proof : true

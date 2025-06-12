@@ -631,7 +631,10 @@ void build_planner::update_obstructions_check() {
 
             if (special_flags & e_building_flag::Road || special_flags & e_building_flag::Canals) {
                 restricted_terrain -= TERRAIN_CANAL;
+            }
 
+            if (special_flags & e_building_flag::Walls) {
+                restricted_terrain -= TERRAIN_WALL;
             }
 
             if (special_flags & e_building_flag::Water || special_flags & e_building_flag::ShoreLine) {
