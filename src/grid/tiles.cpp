@@ -284,7 +284,7 @@ void map_tiles_update_region_meadow(int x_min, int y_min, int x_max, int y_max) 
 
 static void update_marshland_image(int grid_offset) {
     if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND)) { // there's no way to build anything on reed tiles, so... it's fine?
-        const terrain_image img = map_image_context_get_reeds_transition(grid_offset);
+        const terrain_image img = map_image_context_get_reeds_transition(tile2i(grid_offset));
         int image_id = image_id_from_group(GROUP_TERRAIN_REEDS) + 8 + img.group_offset + img.item_offset;
 
         if (!img.is_valid) { // if not edge, then it's a full reeds tile
@@ -311,7 +311,7 @@ void map_tiles_upadte_all_marshland_tiles() {
 
 // the x and y are all GRID COORDS, not PIXEL COORDS
 static void set_water_image(int grid_offset) {
-    const terrain_image img = map_image_context_get_shore(grid_offset);
+    const terrain_image img = map_image_context_get_shore(tile2i(grid_offset));
     int image_id = image_id_from_group(GROUP_TERRAIN_WATER) + img.group_offset + img.item_offset;
     tile2i tile(grid_offset);
     //if (GAME_ENV == ENGINE_ENV_C3 && map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_BUILDING)) {
@@ -366,7 +366,7 @@ static void set_water_image(int grid_offset) {
 }
 
 static void set_deepwater_image(int grid_offset) {
-    const terrain_image img = map_image_context_get_river(grid_offset);
+    const terrain_image img = map_image_context_get_river(tile2i(grid_offset));
     int image_id = image_id_from_group(GROUP_TERRAIN_DEEPWATER) + img.group_offset + img.item_offset;
     map_image_set(grid_offset, image_id);
     map_property_set_multi_tile_size(grid_offset, 1);

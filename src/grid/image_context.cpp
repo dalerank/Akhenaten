@@ -353,7 +353,8 @@ bool map_image_context_context_matches_tiles(const terrain_image_context* contex
     return true;
 }
 
-void map_image_context_fill_matches_grass(int grid_offset, int match_value, int no_match_value, image_tiles_vec& tiles) {
+void map_image_context_fill_matches_grass(tile2i tile, int match_value, int no_match_value, image_tiles_vec& tiles) {
+    const int grid_offset = tile.grid_offset();
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
         int moisture = map_moisture_get(grid_offset + map_grid_direction_delta(i));
         if (moisture & MOISTURE_TRANSITION)
@@ -384,6 +385,7 @@ terrain_image map_image_context_get_terrain_image(e_terrain_image_context group,
             break;
         }
     }
+
     return result;
 }
 
@@ -404,39 +406,39 @@ terrain_image map_image_context_get_earthquake(int grid_offset) {
     return map_image_context_get_terrain_image(CONTEXT_EARTHQUAKE, tiles);
 }
 
-terrain_image map_image_context_get_shore(int grid_offset) {
+terrain_image map_image_context_get_shore(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_WATER, 0, 1, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_WATER, { 0, 1 }, tiles);
     return map_image_context_get_terrain_image(CONTEXT_WATER, tiles);
 }
 
-terrain_image map_image_context_get_river(int grid_offset) {
+terrain_image map_image_context_get_river(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_DEEPWATER, 1, 0, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_DEEPWATER, { 1, 0 }, tiles);
     return map_image_context_get_terrain_image(CONTEXT_DEEPWATER, tiles);
 }
 
-terrain_image map_image_context_get_floodplain_shore(int grid_offset) {
+terrain_image map_image_context_get_floodplain_shore(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_FLOODPLAIN, 0, 1, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_FLOODPLAIN, { 0, 1 }, tiles);
     return map_image_context_get_terrain_image(CONTEXT_DEEPWATER, tiles);
 }
 
-terrain_image map_image_context_get_floodplain_waterline(int grid_offset) {
+terrain_image map_image_context_get_floodplain_waterline(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_WATER, 1, 0, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_WATER, { 1, 0 } , tiles);
     return map_image_context_get_terrain_image(CONTEXT_FLOODSYSTEM, tiles);
 }
 
-terrain_image map_image_context_get_reeds_transition(int grid_offset) {
+terrain_image map_image_context_get_reeds_transition(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches(grid_offset, TERRAIN_MARSHLAND, 1, 0, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_MARSHLAND, { 1, 0 }, tiles);
     return map_image_context_get_terrain_image(CONTEXT_FLOODSYSTEM, tiles);
 }
 
-terrain_image map_image_context_get_grass_corners(int grid_offset) {
+terrain_image map_image_context_get_grass_corners(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_fill_matches_grass(grid_offset, 1, 0, tiles);
+    map_image_context_fill_matches_grass(tile, 1, 0, tiles);
     return map_image_context_get_terrain_image(CONTEXT_GRASSCORNERS, tiles);
 }
 
@@ -449,8 +451,9 @@ terrain_image map_image_context_get_wall_gatehouse(tile2i tile) {
     return map_image_context_get_terrain_image(CONTEXT_WALL_GATEHOUSE, tiles);
 }
 
-void map_image_context_set_tiles_road(int grid_offset, image_tiles_vec& tiles) {
-    map_image_context_fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
+void map_image_context_set_tiles_road(tile2i tile, image_tiles_vec& tiles) {
+    map_image_context_fill_matches(tile, TERRAIN_ROAD, { 1, 0 }, tiles);
+    const int grid_offset = tile.grid_offset();
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
@@ -472,20 +475,24 @@ void map_image_context_set_tiles_road(int grid_offset, image_tiles_vec& tiles) {
     }
 }
 
-terrain_image map_image_context_get_dirt_road(int grid_offset) {
+terrain_image map_image_context_get_dirt_road(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_set_tiles_road(grid_offset, tiles);
+    map_image_context_set_tiles_road(tile, tiles);
     return map_image_context_get_terrain_image(CONTEXT_DIRT_ROAD, tiles);
 }
 
 terrain_image map_image_context_get_paved_road(tile2i tile) {
     image_tiles_vec tiles;
-    map_image_context_set_tiles_road(tile.grid_offset(), tiles);
+    map_image_context_set_tiles_road(tile, tiles);
     return map_image_context_get_terrain_image(CONTEXT_PAVED_ROAD, tiles);
 }
 
-void map_image_context_fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, image_tiles_vec &tiles) {
+void map_image_context_fill_matches(tile2i tile, int terrain, match_option match, image_tiles_vec &tiles) {
+    const int grid_offset = tile.grid_offset();
+
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
-        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) ? match_value : no_match_value;
+        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) 
+                                    ? match.match
+                                    : match.nomatch;
     }
 }

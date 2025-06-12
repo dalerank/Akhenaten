@@ -534,10 +534,10 @@ sha2_void sha384(unsigned char hval[], const unsigned char data[], unsigned long
 
 const sha2_64t  i512[80] = 
 {
-    n_u64(6a09e667f3bcc908), n_u64(bb67ae8584caa73b),
-    n_u64(3c6ef372fe94f82b), n_u64(a54ff53a5f1d36f1),
-    n_u64(510e527fade682d1), n_u64(9b05688c2b3e6c1f),
-    n_u64(1f83d9abfb41bd6b), n_u64(5be0cd19137e2179)
+    sha2_64t(0x6a09e667f3bcc908ull), sha2_64t(0xbb67ae8584caa73bull),
+    sha2_64t(0x3c6ef372fe94f82bull), sha2_64t(0xa54ff53a5f1d36f1ull),
+    sha2_64t(0x510e527fade682d1ull), sha2_64t(0x9b05688c2b3e6c1full),
+    sha2_64t(0x1f83d9abfb41bd6bull), sha2_64t(0x5be0cd19137e2179ull)
 };
 
 sha2_void sha512_begin(sha512_ctx ctx[1])

@@ -310,8 +310,11 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
 
 terrain_image building_mud_wall::get_terrain_image(tile2i tile) {
     std::array<int, MAP_IMAGE_MAX_TILES> tiles;
-    map_image_context_fill_matches(tile, TERRAIN_WALL, 0, 1, tiles);
-    return map_image_context_get_terrain_image(CONTEXT_WALL, tiles);
+    
+    map_image_context_fill_matches(tile, TERRAIN_WALL, { 0, 1 }, tiles);
+
+    terrain_image timg = map_image_context_get_terrain_image(CONTEXT_WALL, tiles);
+    return timg;
 }
 
 void building_mud_wall::set_image(tile2i tile) {

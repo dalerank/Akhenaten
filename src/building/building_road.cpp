@@ -158,7 +158,7 @@ void building_road::set_image(tile2i tile) {
         if (!map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
             map_image_set_road_floodplain(tile);
         } else {
-            const terrain_image img = map_image_context_get_dirt_road(tile.grid_offset());
+            const terrain_image img = map_image_context_get_dirt_road(tile);
             map_image_set(tile, base_img + img.group_offset + img.item_offset + 49 + 344);
         }
     }

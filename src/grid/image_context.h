@@ -38,18 +38,19 @@ void map_image_context_reset_elevation(void);
 terrain_image map_image_context_get_terrain_image(e_terrain_image_context group, const image_tiles_vec& tiles);
 terrain_image map_image_context_get_elevation(int grid_offset, int elevation);
 terrain_image map_image_context_get_earthquake(int grid_offset);
-terrain_image map_image_context_get_shore(int grid_offset);
-terrain_image map_image_context_get_river(int grid_offset);
-terrain_image map_image_context_get_floodplain_shore(int grid_offset);
-terrain_image map_image_context_get_floodplain_waterline(int grid_offset);
-terrain_image map_image_context_get_reeds_transition(int grid_offseet);
-terrain_image map_image_context_get_grass_corners(int grid_offset);
+terrain_image map_image_context_get_shore(tile2i tile);
+terrain_image map_image_context_get_river(tile2i tile);
+terrain_image map_image_context_get_floodplain_shore(tile2i tile);
+terrain_image map_image_context_get_floodplain_waterline(tile2i tile);
+terrain_image map_image_context_get_reeds_transition(tile2i tile);
+terrain_image map_image_context_get_grass_corners(tile2i tile);
 terrain_image map_image_context_get_wall_gatehouse(tile2i tile);
-terrain_image map_image_context_get_dirt_road(int grid_offset);
+terrain_image map_image_context_get_dirt_road(tile2i tile);
 terrain_image map_image_context_get_paved_road(tile2i tile);
 
-void map_image_context_fill_matches(int grid_offset, int terrain, int match_value, int no_match_value, image_tiles_vec &tiles);
-inline void map_image_context_fill_matches(tile2i tile, int terrain, int match_value, int no_match_value, image_tiles_vec &tiles) {
-    map_image_context_fill_matches(tile.grid_offset(), terrain, match_value, no_match_value, tiles);
-}
+struct match_option {
+    int match;
+    int nomatch;
+};
+void map_image_context_fill_matches(tile2i tile, int terrain, match_option match, image_tiles_vec &tiles);
 
