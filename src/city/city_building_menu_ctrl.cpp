@@ -227,11 +227,11 @@ static void enable_gods(Args... args) {
     int mask = make_gods_mask(args...);
     int gods[] = {args...};
 
-    toggle_building(BUILDING_FESTIVAL_SQUARE);
+    g_building_menu_ctrl.toggle_building(BUILDING_FESTIVAL_SQUARE);
     for (auto &g : gods) {
         auto &buildings = god_buildings_aliases[g].types;
         for (auto &b : buildings) {
-            toggle_building(b);
+            g_building_menu_ctrl.toggle_building(b);
         }
     }
 }
