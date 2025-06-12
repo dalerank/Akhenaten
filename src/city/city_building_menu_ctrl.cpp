@@ -33,7 +33,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_menu) {
     g_config_arch.r_array("building_menu", g_building_menu_ctrl.groups, [&copy_config] (archive arch, auto &group) {
         group.type = arch.r_int("id");
         assert(group.type != 0);
-        arch.r_anim("anim", group.anim);
+        arch.r_desc("anim", group.img);
         auto items = arch.r_array_num<int>("items");
         for (auto &it : items) {
             const bool enabled = copy_config.group(group.type).enabled(it);
@@ -283,9 +283,9 @@ void building_menu_ctrl_t::update_temple_complexes() {
 void building_menu_update_monuments() {
 }
 
-const animation_t &building_menu_ctrl_t::anim(int submenu) {
+image_desc building_menu_ctrl_t::image(int submenu) {
     const auto &gr = group(submenu);
-    return gr.anim;
+    return gr.img;
 }
 
 void building_menu_ctrl_t::setup_mission() {

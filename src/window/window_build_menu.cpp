@@ -97,9 +97,9 @@ xstring build_menu_widget::loc_title(e_building_type type, xstring def) {
 
 void build_menu_widget::select_submenu(int menu) {
     const int id = selected_submenu ? selected_submenu : BUILDING_MENU_VACANT_HOUSE;
-    const animation_t &anim = ctrl->anim(id);
+    const image_desc img = ctrl->image(id);
 
-    events::emit(event_building_change_mode{ anim });
+    events::emit(event_building_change_mode{ img });
 }
 
 static int is_all_button(int type) {

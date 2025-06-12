@@ -43,7 +43,7 @@ struct building_menu_group {
         items.clear();
     }
 
-    animation_t anim;
+    image_desc img;
 
     int type;
     items_t items;
@@ -102,7 +102,7 @@ struct building_menu_ctrl_t {
 
     bool is_submenu(int submenu) const;
     void toggle_building(int type, bool enabled = true);
-    const animation_t &anim(int submenu);
+    image_desc image(int submenu);
 
     void update(const xstring stage_name);
     int count_items(int submenu);

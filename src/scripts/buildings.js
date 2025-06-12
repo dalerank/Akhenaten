@@ -1285,15 +1285,15 @@ building_brick_tower = {
 
 building_mud_tower = {
   animations : {
-    preview : { pack:PACK_TERRAIN, id:135 },
-    base : { pack:PACK_TERRAIN, id:135 },
-  },
-  building_size : 2,
-  fire_proof : true,
-  window_info_height_id : 1,
-  info_help_id: 85,
-  info_text_id: 159,
-  labor_category : LABOR_CATEGORY_MILITARY,
+    preview : { pack:PACK_TERRAIN, id:135 }
+    base : { pack:PACK_TERRAIN, id:135 }
+  }
+  building_size : 2
+  fire_proof : true
+  window_info_height_id : 1
+  info_help_id: 85
+  info_text_id: 159
+  labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 50
 }
 

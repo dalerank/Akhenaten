@@ -91,6 +91,22 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
 void ui::sidebar_window_expanded::init() {
     extra_block_size = image_get(extra_block)->size();
 
+    init_ui();
+    subscribe_events();
+}
+
+void ui::sidebar_window_expanded::subscribe_events() {
+    events::subscribe([this] (event_building_change_mode ev) {
+        image_desc img = ev.img;
+        if (img.id == 0 && img.pack == 0) {
+            img = def_image;
+        } 
+
+        ui["build_image"].image(img);
+    });
+}
+
+void ui::sidebar_window_expanded::init_ui() {
     ui["goto_problem"].onclick([] {
         int grid_offset = city_message_next_problem_area_grid_offset();
         if (grid_offset) {
@@ -102,13 +118,14 @@ void ui::sidebar_window_expanded::init() {
     ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
     ui["show_empire"].onclick([] { window_empire_show_checked(); });
 
-    for (const auto &btn: button_ids) {
+    for (const auto &btn : button_ids) {
         ui[btn.id].onclick([this, type = btn.type] {
             this->opened_menu = type;
             window_build_menu_show(type);
         });
     }
 
+    ui["build_image"].image(def_image);
     ui["undo_btn"].onclick([] {
         game_undo_perform();
     });
@@ -171,7 +188,6 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     ui.draw(wflags);
     ui.end_widget();
 
-    ui["build_image"].image(def_image);
     int messages = city_message_count();
 
     ui["show_messages"].readonly = (messages <= 0);
@@ -246,10 +262,6 @@ void ui::sidebar_window_collapsed::init() {
 
     events::subscribe([this] (event_building_menu_changed ev) {
         refresh_build_menu_buttons();
-    });
-
-    events::subscribe([this] (event_building_change_mode ev) {
-        ui["build_image"].image(image_desc{ ev.anim.pack, ev.anim.iid, ev.anim.offset });
     });
 
     widget_minimap_init();

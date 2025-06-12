@@ -45,6 +45,9 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     virtual void load(archive arch, pcstr section) override;
     virtual void init() override;
 
+    void init_ui();
+    void subscribe_events();
+
     void refresh_build_menu_buttons();
     void expand();
     void collapse();
