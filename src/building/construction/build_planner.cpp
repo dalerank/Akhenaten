@@ -1166,7 +1166,7 @@ void build_planner::construction_finalize() { // confirm final placement
     }
 
     if (special_flags & e_building_flag::Walls) {
-        building_mud_wall::update_area_walls(end, 5);
+        events::emit(event_building_update_walls{ end, 5 });
     }
 
     // consume resources for specific buildings (e.g. marble, granite)

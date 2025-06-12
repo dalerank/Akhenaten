@@ -10,8 +10,14 @@
 #include "construction/routed.h"
 #include "graphics/image.h"
 #include "grid/routing/routing_terrain.h"
+#include "game/game_events.h"
+#include "js/js_game.h"
 
 building_mud_wall::static_params building_mud_wall_m;
+
+void ANK_PERMANENT_CALLBACK(event_building_update_walls, ev) {
+    building_mud_wall::update_area_walls( ev.tile, ev.size );
+}
 
 bool building_mud_wall::place_wall(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
@@ -40,7 +46,9 @@ void building_mud_wall::update_all_walls() {
 }
 
 void building_mud_wall::update_area_walls(tile2i tile, int size) {
-    map_tiles_foreach_region_tile_ex(tile.shifted(-1, -1), tile.shifted(size - 2, size - 2), building_mud_wall::set_image);
+    tile2i start = tile.shifted(-1, -1);
+    tile2i end = tile.shifted(size - 2, size - 2);
+    map_tiles_foreach_region_tile_ex(start, end, building_mud_wall::set_image);
 }
 
 int building_mud_wall::get_gatehouse_position(int grid_offset, int direction, int building_id) {

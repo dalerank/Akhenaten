@@ -503,10 +503,10 @@ static void sha_end(unsigned char hval[], sha512_ctx ctx[1], const unsigned int 
 
 const sha2_64t  i384[80] = 
 {
-    n_u64(cbbb9d5dc1059ed8), n_u64(629a292a367cd507),
-    n_u64(9159015a3070dd17), n_u64(152fecd8f70e5939),
-    n_u64(67332667ffc00b31), n_u64(8eb44a8768581511),
-    n_u64(db0c2e0d64f98fa7), n_u64(47b5481dbefa4fa4)
+    sha2_64t(0xcbbb9d5dc1059ed8ull), sha2_64t(0x629a292a367cd507ull),
+    sha2_64t(0x9159015a3070dd17ull), sha2_64t(0x152fecd8f70e5939ull),
+    sha2_64t(0x67332667ffc00b31ull), sha2_64t(0x8eb44a8768581511ull),
+    sha2_64t(0xdb0c2e0d64f98fa7ull), sha2_64t(0x47b5481dbefa4fa4ull)
 };
 
 sha2_void sha384_begin(sha384_ctx ctx[1])

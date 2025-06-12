@@ -3,6 +3,8 @@
 #include "building/building.h"
 #include "grid/image_context.h"
 
+struct event_building_update_walls { tile2i tile; int size; };
+
 class building_mud_wall : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_MUD_WALL, building_mud_wall, building_impl)
