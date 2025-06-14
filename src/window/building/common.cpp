@@ -126,7 +126,7 @@ void window_building_draw_description_at(object_info* c, int y_offset, int text_
     lang_text_draw_multiline(text_group, text_id, c->offset + vec2i{32, y_offset}, 16 * (c->bgsize.x - 4), FONT_NORMAL_BLACK_ON_LIGHT);
 }
 
-void window_building_play_sound(object_info* c, const char* sound_file) {
+void window_building_play_sound(object_info* c, xstring sound_file) {
     if (c->can_play_sound) {
         g_sound.speech_play_file(sound_file, 255);
         c->can_play_sound = 0;

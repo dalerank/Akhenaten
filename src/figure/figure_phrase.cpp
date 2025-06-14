@@ -182,7 +182,7 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, xstring key) {
             return -1;
         }
 
-        vfs::path path;
+        xstring path;
         if (key.empty()) {
             if (f->phrase.id == 0) {
                 f->phrase.id = rand() % 10;

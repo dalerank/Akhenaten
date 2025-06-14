@@ -677,6 +677,7 @@ void ui::widget::load(archive arch, pcstr section) {
 }
 
 void ui::widget::load(pcstr section) {
+    io.name = section;
     g_config_arch.r_section(section, [this] (archive arch) {
         this->load(arch);
     });

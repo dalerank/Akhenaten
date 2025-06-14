@@ -32,22 +32,40 @@ void window_building_draw_wall(object_info& c) {
     ui["describe"] = ui::str(139, 1);
 }
 
-void terrain_info_window_t::window_info_background(object_info &c) {
+void terrain_info_window::window_info_background(object_info &c) {
     update_buttons(c);
 }
 
-void terrain_info_window_t::init(object_info &c) {
+void terrain_info_window::update(object_info &c) {
+    xstring terrain_config = "terrain_info_window";
+
+    switch (c.terrain_type) {
+    case TERRAIN_INFO_ROAD: terrain_config = "terrain_road_info_window"; break;
+    }
+
+    ui.load(terrain_config.c_str());
+}
+
+void terrain_info_window::init(object_info &c) {
     common_info_window::init(c);
 
     textid reason;
     textid describe;
-    svector<pcstr, 16> sounds;
+    svector<xstring, 16> sounds;
+
+    c.help_id = io.r_int("help_id");
 
     switch (c.terrain_type) {
-    case TERRAIN_INFO_ROAD:
-        c.help_id = 57;
-        reason = { 28, 5 };
+    default:
+        sounds.push_back("Wavs/empty_land.wav");
+        reason = { 70, 20 };
         describe = { 70, 42 };
+
+        ui["title"] = ui::str(reason);
+        ui["describe"] = ui::str(describe);
+        break;
+
+    case TERRAIN_INFO_ROAD:
         break;
 
     case TERRAIN_INFO_CANAL:
@@ -73,37 +91,35 @@ void terrain_info_window_t::init(object_info &c) {
         reason = { 70, 26 };
         describe = { 70, 38};
         c.help_id = 191;
+        ui["title"] = ui::str(reason);
+        ui["describe"] = ui::str(describe);
+        break;
 
     case TERRAIN_INFO_ROCK:
         sounds = { "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" };
         reason = { 70, 12 };
         describe = { 70, 38 };
         c.help_id = 191;
+        ui["title"] = ui::str(reason);
+        ui["describe"] = ui::str(describe);
         break;
 
     case TERRAIN_INFO_FLOODPLAIN:
         reason = { 70, 29 };
         describe = { 70, 55 };
         c.help_id = 45;
-        break;
-
-    default:
-        sounds.push_back("Wavs/empty_land.wav");
-        reason = { 70, 20 };
-        describe = { 70, 42 };
+        ui["title"] = ui::str(reason);
+        ui["describe"] = ui::str(describe);
         break;
     }
 
     if (c.can_play_sound) {
         c.can_play_sound = 0;
         if (sounds.size() > 0) {
-            pcstr sound = sounds[rand() % sounds.size()];
+            xstring sound = sounds[rand() % sounds.size()];
             g_sound.speech_play_file(sound, 255);
         }
     }
-
-    ui["title"] = ui::str(reason);
-    ui["describe"] = ui::str(describe);
 }
 
 //vec2i terrain_info_window::bgsize() {
@@ -119,7 +135,7 @@ void terrain_info_window_t::init(object_info &c) {
 //    }
 //}
 
-bool terrain_info_window_t::check(object_info &c) {
+bool terrain_info_window::check(object_info &c) {
     tile2i tile(c.grid_offset);
     if (!c.bid && map_sprite_animation_at(c.grid_offset) > 0) {
         if (map_terrain_is(c.grid_offset, TERRAIN_WATER)) {

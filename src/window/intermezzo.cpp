@@ -44,7 +44,7 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
             return;
         }
 
-        vfs::path file2play = conf.briefing;
+        xstring file2play = conf.briefing;
         if (g_intermezzo_data.type == INTERMEZZO_WON) {
             file2play = conf.won;
         }

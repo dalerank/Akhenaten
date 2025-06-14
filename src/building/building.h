@@ -266,7 +266,7 @@ public:
     bool is_military();
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
-    vfs::path get_sound();
+    xstring get_sound();
     xstring cls_name() const;
 
     void clear_related_data();
@@ -642,7 +642,7 @@ public:
     virtual int stored_amount(e_resource) const;
     metainfo get_info() const;
     void set_animation(const animation_t &anim);
-    vfs::path get_sound();
+    xstring get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
 
     static void params(e_building_type, const static_params &);

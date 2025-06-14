@@ -63,7 +63,7 @@ struct empty_info_window : public common_info_window {
     }
 };
 
-terrain_info_window_t g_terrain_info_window;
+terrain_info_window g_terrain_info_window;
 figure_info_window g_figure_info_window;
 building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
@@ -204,6 +204,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     }
 
     context.ui->init(context);
+    context.ui->update(context);
 
     // dialog size
     context.bgsize = context.ui->bgsize();

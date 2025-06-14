@@ -402,6 +402,7 @@ struct widget {
     e_font default_font = FONT_INVALID;
     element::items elements;
     widget &ui;
+    g_archive_section io;
 
     virtual void draw(UiFlags flags = UiFlags_None);
     virtual void load(archive arch, pcstr section = "ui");

@@ -28,8 +28,8 @@ public:
     void shutdown();
     void init_channels();
     inline custom_span<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
-    void speech_play_file(pcstr filename, int volume);
-    bool speech_file_exist(pcstr filename);
+    void speech_play_file(xstring filename, int volume);
+    bool speech_file_exist(xstring filename);
     void set_channel_volume(int channel, int volume_pct);
     bool is_channel_playing(int channel);
     void play_channel(int channel, int volume_pct);
@@ -71,7 +71,7 @@ private:
     bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
     int get_custom_audio_stream(uint8_t *dst, int len);
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
-    vfs::path speech_filename(pcstr filename);
+    vfs::path speech_filename(xstring filename);
     bool load_channel(channel_t *channel);
     void *load_chunk(pcstr filename);
     vfs::reader load_cached_chunk(vfs::path filename);

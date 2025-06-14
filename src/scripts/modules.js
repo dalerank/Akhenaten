@@ -36,8 +36,9 @@ import kingdome_relation
 import ui_advisor_trade
 import floodplain
 import ui_advisors_window
+import ui_terrain_info
+import ui
 
-include(":ui.js")
 include(":ui_top_menu_widget.js")
 include(":ui_advisor_religion.js")
 include(":ui_advisor_chief.js")

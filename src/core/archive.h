@@ -362,3 +362,15 @@ struct g_archive : public archive {
 };
 
 extern g_archive g_config_arch;
+
+struct g_archive_section {
+    xstring name;
+
+    inline int r_int(pcstr prop_name, int def = 0) {
+        int result = def;
+        g_config_arch.r_section(prop_name, [&] (archive arch) {
+            result = arch.r_int(prop_name, def);
+        });
+        return result;
+    }
+};

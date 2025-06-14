@@ -5,7 +5,7 @@
 
 #include "js/js_game.h"
 
-std::map<e_building_type, vfs::path> g_building_sounds;
+std::map<e_building_type, xstring> g_building_sounds;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds) {
     g_config_arch.r_array("building_sounds", [] (archive arch) {
@@ -15,8 +15,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds) {
     });
 }
 
-vfs::path snd::get_building_info_sound(e_building_type type) {
+xstring snd::get_building_info_sound(e_building_type type) {
     auto it = g_building_sounds.find(type);
 
-    return (it == g_building_sounds.end()) ? vfs::path() : it->second;
+    return (it == g_building_sounds.end()) ? xstring() : it->second;
 }

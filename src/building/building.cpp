@@ -143,7 +143,7 @@ void building_impl::set_animation(const animation_t &anim) {
     base.anim.setup(anim);
 }
 
-vfs::path building_impl::get_sound() {
+xstring building_impl::get_sound() {
     return snd::get_building_info_sound(type());
 }
 
@@ -287,7 +287,7 @@ void building::reset_impl() {
 }
 
 
-vfs::path building::get_sound() {
+xstring building::get_sound() {
     return snd::get_building_info_sound(type);
 }
 
