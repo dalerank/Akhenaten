@@ -36,14 +36,14 @@
 #include <string>
 
 building_small_mastaba::static_params small_mastaba_m;
-buildings::model_t<building_small_mastaba_part_side> small_mastaba_side_m;
-buildings::model_t<building_small_mastaba_part_wall> small_mastaba_wall_m;
-buildings::model_t<building_small_mastaba_part_entrance> small_mastaba_entrance_m;
+building_small_mastaba_part_side::static_params small_mastaba_side_m;
+building_small_mastaba_part_wall::static_params small_mastaba_wall_m;
+building_small_mastaba_part_entrance::static_params small_mastaba_entrance_m;
 
 building_medium_mastaba::static_params medium_mastaba_m;
-buildings::model_t<building_medium_mastaba_part_side> medium_mastaba_side_m;
-buildings::model_t<building_medium_mastaba_part_wall> medium_mastaba_wall_m;
-buildings::model_t<building_medium_mastaba_part_entrance> medium_mastaba_entrance_m;
+building_medium_mastaba_part_side::static_params medium_mastaba_side_m;
+building_medium_mastaba_part_wall::static_params medium_mastaba_wall_m;
+building_medium_mastaba_part_entrance::static_params medium_mastaba_entrance_m;
 
 struct mastaba_part {
     e_building_type type;

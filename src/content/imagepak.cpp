@@ -898,8 +898,9 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     int y_offset = screen_height() - 24;
 
     platform_renderer_clear();
-    if (image_data_fonts_ready()) {
-        text_draw(bstring512("loading pak (", pak_name, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
+    if (image_data_fonts_ready() && image_data_render_on_new_loadpacks()) {
+        bstring512 loadpack_text("loading pak (", pak_name, ")");
+        text_draw(loadpack_text, 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
     platform_renderer_render();
 

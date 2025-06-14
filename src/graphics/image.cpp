@@ -50,13 +50,22 @@ bool image_data_fonts_ready() {
     return g_image_data && g_image_data->fonts_loaded;
 }
 
+bool image_data_render_on_new_loadpacks() {
+    return g_image_data && g_image_data->allow_updata_on_load;
+}
+
 bool image_load_paks() {
     auto& data = *g_image_data;
     data.fonts_enabled = false;
     data.fonts_loaded = false;
+    data.allow_updata_on_load = true;
     data.font_base_offset = 0;
 
-    data.pak_list[PACK_FONT].handle = new imagepak("Pharaoh_Fonts", 18765, false, true);
+    auto &fontpack = data.pak_list[PACK_FONT];
+    fontpack.handle = new imagepak("Pharaoh_Fonts", 18765, false, true);
+    fontpack.entries_num = fontpack.handle->get_entry_count();
+    fontpack.index = fontpack.handle->global_image_index_offset;
+    fontpack.id = PACK_FONT;
     data.fonts_loaded = true;
 
     for (auto &imgpak : g_image_data->pak_list) {
@@ -64,27 +73,15 @@ bool image_load_paks() {
             continue;
         }
 
+        imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
         if (imgpak.delayed) {
             continue;
         }
 
         imgpak.handle = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
-        imgpak.entries_num = imgpak.handle->get_entry_count(); //imagepak::get_entries_num(imgpak.name);
     }
 
-    auto folders = vfs::dir_find_all_subdirectories("Data/", true);
-    for (const auto &f : folders) {
-        auto *newpak = new imagepak(f.c_str(), 0, false, false, /*custom*/true);
-        if (!newpak->get_entry_count()) {
-            delete newpak;
-            continue;
-        }
-        int useridx = newpak->get_user_idx();
-        data.pak_list[useridx].handle = newpak;
-        data.pak_list[useridx].id = useridx;
-        data.pak_list[useridx].index = newpak->get_global_image_index(0);
-        data.pak_list[useridx].custom = true;
-    }
+    data.allow_updata_on_load = false;
 
     return true;
 }
@@ -178,8 +175,12 @@ const image_t* image_get(int id) {
         return data.image_cache[id];
     }
 
-    const image_t* img;
+    const image_t* img = nullptr;
     for (auto &pak: data.pak_list) {
+        if (pak.index < 0) {
+            break;
+        }
+
         const bool is_pak_id = (id >= pak.index && id < pak.index + pak.entries_num);
         if (!is_pak_id) {
             continue;

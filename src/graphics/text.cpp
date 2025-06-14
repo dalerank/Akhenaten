@@ -265,7 +265,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
 
         if (*str >= ' ') {
             int letter_id = font_letter_id(def, str, &num_bytes);
-            int width;
+            int width = 0;
 
             if (letter_id < 0) {
                 letter_id = font_letter_id(def, (uint8_t*)"?", &num_bytes);
