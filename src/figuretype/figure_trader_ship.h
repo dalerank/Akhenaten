@@ -26,8 +26,9 @@ public:
     virtual void poof() override;
     virtual const animations_t &anim() const override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
-    virtual bool window_info_background(object_info &c) override;
     virtual void update_day() override;
+
+    virtual xstring action_tip() const override;
 
     bool lost_queue();
     bool done_trading();

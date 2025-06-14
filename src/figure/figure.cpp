@@ -428,6 +428,10 @@ bool figure::has_destination(building* b) {
     return (b == destination());
 }
 
+xstring figure::action_tip() {
+    return dcast()->action_tip();
+}
+
 void figure::noble_action() {
 
 }
@@ -611,6 +615,8 @@ const fproperty fproperties[] = {
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
+    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(g_empire.city_name(f.empire_city_id)); }},
+    { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
 };
 

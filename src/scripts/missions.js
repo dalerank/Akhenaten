@@ -158,7 +158,7 @@ mission4 = {
 	cities : [
 		{
 			name : "Nekhen",
-			is_sea_trade : true,
+			is_sea_trade : false,
 		},
 
 		{

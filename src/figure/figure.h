@@ -287,6 +287,7 @@ public:
     bool has_home(building* b);
     bool has_destination(int _id = -1);
     bool has_destination(building* b);
+    xstring action_tip();
 
     //    bool is_roamer();
 
@@ -478,6 +479,7 @@ public:
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
     virtual void on_update_home() {}
+    virtual xstring action_tip() const { static xstring tip(""); return tip; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);

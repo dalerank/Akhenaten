@@ -18,5 +18,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds) {
 xstring snd::get_building_info_sound(e_building_type type) {
     auto it = g_building_sounds.find(type);
 
-    return (it == g_building_sounds.end()) ? xstring() : it->second;
+    static xstring empty_sound = "Wavs/empty.wav";
+    return (it == g_building_sounds.end()) ? empty_sound : it->second;
 }

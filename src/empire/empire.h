@@ -36,6 +36,9 @@ public:
 
     empire_city *city(int city_id);
     empire_city *city(pcstr name);
+
+    xstring city_name(int city_id);
+
     custom_span<empire_city> get_cities() { return make_span(cities); }
     custom_span<trade_route> get_routes() { return make_span(trade_routes.routes); }
 

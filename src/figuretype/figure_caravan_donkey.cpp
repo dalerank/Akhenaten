@@ -29,6 +29,8 @@ struct figure_caravan_donkey_info_window : public figure_info_window {
     }
 };
 
+figure_caravan_donkey_info_window figure_caravan_donkey_infow;
+
 const empire_city *figure_caravan_donkey::get_empire_city() const {
     const empire_city *city = g_empire.city(base.empire_city_id);
     return city;

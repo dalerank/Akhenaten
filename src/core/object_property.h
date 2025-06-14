@@ -13,6 +13,8 @@ struct id_property_t {
     static const xstring farm;
     static const xstring name;
     static const xstring class_name;
+    static const xstring city_name;
+    static const xstring action_tip;
     static const xstring home;
     static const xstring laborers;
     static const xstring house;
