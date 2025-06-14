@@ -34,6 +34,7 @@ void terrain_info_window::update(object_info &c) {
     case TERRAIN_INFO_ROAD: terrain_config = "terrain_road_info_window"; break;
     case TERRAIN_INFO_WALL: terrain_config = "terrain_wall_info_window"; break;
     case TERRAIN_INFO_PLAZA: terrain_config = "terrain_plaza_info_window"; break;
+    case TERRAIN_INFO_ORE_ROCK: terrain_config = "terrain_orerock_info_window"; break;
     }
 
     ui.load(terrain_config.c_str());
@@ -60,6 +61,7 @@ void terrain_info_window::init(object_info &c) {
     case TERRAIN_INFO_ROAD:
     case TERRAIN_INFO_WALL:
     case TERRAIN_INFO_PLAZA:
+    case TERRAIN_INFO_ORE_ROCK:
         break;
 
     case TERRAIN_INFO_CANAL:
@@ -69,15 +71,6 @@ void terrain_info_window::init(object_info &c) {
 
     case TERRAIN_INFO_BRIDGE:
         c.help_id = 58;
-        break;
-
-    case TERRAIN_INFO_ORE_ROCK:
-        sounds = { "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" };
-        reason = { 70, 26 };
-        describe = { 70, 38};
-        c.help_id = 191;
-        ui["title"] = ui::str(reason);
-        ui["describe"] = ui::str(describe);
         break;
 
     case TERRAIN_INFO_ROCK:

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "content/vfs.h"
+#include "core/xstring.h"
 
 namespace snd {
     struct mission_config {
-        vfs::path briefing;
-        vfs::path won;
+        xstring briefing;
+        xstring won;
     };
 
     mission_config get_mission_config(int mission);
