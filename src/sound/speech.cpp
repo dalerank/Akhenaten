@@ -28,7 +28,7 @@ void sound_manager_t::speech_play_file(xstring filename, int volume) {
 
     stop_channel(SOUND_CHANNEL_SPEECH);
 
-    pcstr filename_str = filename.c_str();
+    pcstr filename_str = filename.empty() ? "" : filename.c_str();
     vfs::path fs_path = filename_str;
     if (strncmp(filename_str, vfs::content_audio, strlen(vfs::content_audio)) != 0) {
         fs_path = vfs::path(vfs::content_audio, filename_str);
