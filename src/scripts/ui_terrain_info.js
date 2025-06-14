@@ -38,10 +38,19 @@ terrain_plaza_info_window = {
 }
 
 terrain_orerock_info_window = {
-    help_id           : 80 
+    help_id           : 191 
     open_sounds       : [  "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" ] 
     ui : __baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 26], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+    })
+}
+
+terrain_rock_info_window = {
+    help_id           : 191 
+    open_sounds       : [ "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" ] 
+    ui : __baseui(terrain_info_window, {
+        title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 12], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
     })
 }

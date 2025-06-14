@@ -27,7 +27,7 @@ struct common_info_window : public ui::widget {
 
     void draw_tooltip(tooltip_context *c);
 
-    svector<xstring, 4> open_sounds;
+    svector<xstring, 8> open_sounds;
 
     static void register_handlers();
 };
