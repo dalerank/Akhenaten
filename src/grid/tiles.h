@@ -72,6 +72,7 @@ void map_tiles_foreach_region_tile(tile2i tmin, tile2i tmax, Func callback) {
 template<typename Func>
 void map_tiles_foreach_region_tile_ex(tile2i tmin, tile2i tmax, Func callback) {
     map_grid_bound_area(tmin, tmax);
+
     map_grid_area_foreach(tmin, tmax, [&] (tile2i tile) {
         callback(tile);
     });

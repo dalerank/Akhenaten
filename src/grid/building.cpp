@@ -28,6 +28,17 @@ void map_building_set(int grid_offset, int building_id) {
     map_grid_set(g_buildings_grid, grid_offset, building_id);
 }
 
+e_building_type map_building_type_at(tile2i tile) {
+    const int bid = map_building_at(tile);
+    const building *b = building_get(bid);
+    return b->type;
+}
+
+bool map_building_type_is(tile2i tile, e_building_type type) {
+    const auto btype = map_building_type_at(tile);
+    return (btype == type);
+}
+
 void map_building_damage_clear(int grid_offset) {
     map_grid_set(g_damage_grid, grid_offset, 0);
 }

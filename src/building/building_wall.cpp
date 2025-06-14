@@ -47,7 +47,7 @@ void building_mud_wall::update_all_walls() {
 
 void building_mud_wall::update_area_walls(tile2i tile, int size) {
     tile2i start = tile.shifted(-1, -1);
-    tile2i end = tile.shifted(size - 2, size - 2);
+    tile2i end = tile.shifted(size, size);
     map_tiles_foreach_region_tile_ex(start, end, building_mud_wall::set_image);
 }
 
@@ -311,14 +311,16 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
 terrain_image building_mud_wall::get_terrain_image(tile2i tile) {
     std::array<int, MAP_IMAGE_MAX_TILES> tiles;
     
-    map_image_context_fill_matches(tile, TERRAIN_WALL, { 0, 1 }, tiles);
+    map_image_context_fill_matches(tile, TERRAIN_WALL | TERRAIN_GATEHOUSE, { 0, 1 }, tiles);
 
     terrain_image timg = map_image_context_get_terrain_image(CONTEXT_WALL, tiles);
     return timg;
 }
 
 void building_mud_wall::set_image(tile2i tile) {
-    if (!map_terrain_is(tile, TERRAIN_WALL) || map_terrain_is(tile, TERRAIN_BUILDING)) {
+    const bool is_wall = map_terrain_is(tile, TERRAIN_WALL);
+    const bool is_building = map_terrain_is(tile, TERRAIN_BUILDING);
+    if (!is_wall || is_building) {
         return;
     }
 

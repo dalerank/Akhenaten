@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <array>
+
+#include "building/building_type.h"
 #include "grid/point.h"
 
 constexpr uint8_t MAP_IMAGE_MAX_TILES = 8;
@@ -31,9 +33,9 @@ struct terrain_image {
     int canal_offset;
 };
 
-void map_image_context_init(void);
-void map_image_context_reset_water(void);
-void map_image_context_reset_elevation(void);
+void map_image_context_init();
+void map_image_context_reset_water();
+void map_image_context_reset_elevation();
 
 terrain_image map_image_context_get_terrain_image(e_terrain_image_context group, const image_tiles_vec& tiles);
 terrain_image map_image_context_get_elevation(int grid_offset, int elevation);
@@ -52,5 +54,7 @@ struct match_option {
     int match;
     int nomatch;
 };
+
 void map_image_context_fill_matches(tile2i tile, int terrain, match_option match, image_tiles_vec &tiles);
+void map_image_context_fill_matches(tile2i tile, int terrain, e_building_type btype, match_option match, image_tiles_vec &tiles);
 

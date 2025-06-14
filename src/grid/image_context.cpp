@@ -491,8 +491,25 @@ void map_image_context_fill_matches(tile2i tile, int terrain, match_option match
     const int grid_offset = tile.grid_offset();
 
     for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
-        tiles[i] = map_terrain_is(grid_offset + map_grid_direction_delta(i), terrain) 
-                                    ? match.match
-                                    : match.nomatch;
+        const int t_offset = grid_offset + map_grid_direction_delta(i);
+        tiles[i] = map_terrain_is(t_offset, terrain) ? match.match : match.nomatch;
     }
 }
+
+void map_image_context_fill_matches(tile2i tile, int terrain, e_building_type btype, match_option match, image_tiles_vec &tiles) {
+    const int grid_offset = tile.grid_offset();
+
+    for (int i = 0; i < MAP_IMAGE_MAX_TILES; i++) {
+        const int tile_ter = map_terrain_get(grid_offset + map_grid_direction_delta(i));
+
+        const bool is_building = !!(tile_ter & TERRAIN_BUILDING);
+        if (is_building) {
+            const int tile_bid = map_building_at(tile);
+            const int tile_btype = building_get(tile_bid)->type;
+            tiles[i] = (tile_bid == btype) ? match.match : match.nomatch;
+        } else {
+            tiles[i] = !!(tile_ter & terrain) ? match.match : match.nomatch;
+        }
+    }
+}
+
