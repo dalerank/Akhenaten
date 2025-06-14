@@ -23,15 +23,6 @@ void window_building_draw_aqueduct(object_info* c) {
     window_building_draw_description_at(c, 16 * c->bgsize.y - 144, 141, canal_has_water ? 1 : 2);
 }
 
-void window_building_draw_wall(object_info& c) {
-    window_building_play_sound(&c, "Wavs/wall.wav");
-
-    auto& ui = *c.ui;
-
-    ui["title"] = ui::str(139, 0);
-    ui["describe"] = ui::str(139, 1);
-}
-
 void terrain_info_window::window_info_background(object_info &c) {
     update_buttons(c);
 }
@@ -41,9 +32,11 @@ void terrain_info_window::update(object_info &c) {
 
     switch (c.terrain_type) {
     case TERRAIN_INFO_ROAD: terrain_config = "terrain_road_info_window"; break;
+    case TERRAIN_INFO_WALL: terrain_config = "terrain_wall_info_window"; break;
     }
 
     ui.load(terrain_config.c_str());
+    c.help_id = io.r_int("help_id");
 }
 
 void terrain_info_window::init(object_info &c) {
@@ -52,8 +45,6 @@ void terrain_info_window::init(object_info &c) {
     textid reason;
     textid describe;
     svector<xstring, 16> sounds;
-
-    c.help_id = io.r_int("help_id");
 
     switch (c.terrain_type) {
     default:
@@ -66,16 +57,12 @@ void terrain_info_window::init(object_info &c) {
         break;
 
     case TERRAIN_INFO_ROAD:
+    case TERRAIN_INFO_WALL:
         break;
 
     case TERRAIN_INFO_CANAL:
         c.help_id = 60;
         window_building_draw_aqueduct(&c);
-        break;
-
-    case TERRAIN_INFO_WALL:
-        c.help_id = 85;
-        window_building_draw_wall(c);
         break;
 
     case TERRAIN_INFO_BRIDGE:
