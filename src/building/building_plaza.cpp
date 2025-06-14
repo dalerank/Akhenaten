@@ -59,21 +59,6 @@ int building_plaza::static_params::planer_construction_place(build_planner &plan
     return planer_place(planer, start, end);
 }
 
-void building_plaza::draw_info(object_info &c) {
-    building* b = building_get(c.bid);
-    const auto &params = b->dcast()->params();
-
-    c.help_id = params.meta.help_id;
-    int group_id = params.meta.text_id;
-
-    window_building_play_sound(&c, b->get_sound());
-    //window_figure_info_prepare_figures(c);
-    outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-    lang_text_draw_centered(group_id, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
-    //window_building_draw_figure_list(&c);
-    window_building_draw_description_at(c, 16 * c.bgsize.y - 113, group_id, 1);
-}
-
 int is_tile_plaza(int grid_offset) {
 
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))

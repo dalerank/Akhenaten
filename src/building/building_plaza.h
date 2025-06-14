@@ -15,6 +15,5 @@ public:
 
     virtual building_plaza *dcast_plaza() override { return this; }
 
-    static void draw_info(object_info &c);
     static void set_image(int grid_offset);
 };

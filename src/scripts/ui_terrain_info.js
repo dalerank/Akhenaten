@@ -26,5 +26,13 @@ terrain_wall_info_window = {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[139, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
     })
+}
 
+terrain_plaza_info_window = {
+    help_id           : 80 
+    open_sounds       : [ ] 
+    ui : __baseui(terrain_info_window, {
+        title         : text({pos: [0, 16], size: [px(29), 13], text:[137, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        describe      : text({pos: [30, 78], text:[137, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+    })
 }
