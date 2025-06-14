@@ -9,7 +9,6 @@
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
-    _RR(tutorial_food)
     _RR(tutorial_fire)
     _RR(tutorial_water)
     _RR(tutorial_collapse)
@@ -21,7 +20,6 @@ struct tutorial_stage_t {
     _RR(tutorial_crime)
     _RR(tutorial_finance)
     _RR(tutorial_trading)
-    _RR(tutorial_monuments)
     _RR(tutorial_education)
 #undef _RR
 };

@@ -47,8 +47,9 @@ bool building_menu_ctrl_t::is_submenu(int submenu) const {
     return is_group;
 }
 
-void building_menu_ctrl_t::toggle_building(int type, bool enabled) {
+void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
     set(type, enabled);
+    scenario_building_allow(type, enabled);
 
     // additional buildings / building menus
     if (enabled) {
@@ -99,7 +100,7 @@ void building_menu_ctrl_t::toggle_building(int type, bool enabled) {
     }
 }
 
-void building_menu_ctrl_t::enable_if_allowed(int type) {
+void building_menu_ctrl_t::enable_if_allowed(e_building_type type) {
     const bool is_enabled = scenario_building_allowed(type);
     if (is_enabled) {
         toggle_building(type);
@@ -109,7 +110,7 @@ void building_menu_ctrl_t::enable_if_allowed(int type) {
 
 int building_menu_ctrl_t::disable_raw_if_unavailable(int type, e_resource resource) {
     if (!g_city.can_produce_resource(resource)) {
-        toggle_building(type, false);
+        toggle_building((e_building_type)type, false);
         logs::info("build_menu: disabled %d<%s> by no resource", type, e_building_type_tokens.name((e_building_type)type));
         return 0;
     }
@@ -185,9 +186,9 @@ void building_menu_ctrl_t::enable_common_municipal(int level) {
     toggle_building(BUILDING_FIREHOUSE);
     toggle_building(BUILDING_ARCHITECT_POST);
     toggle_building(BUILDING_POLICE_STATION);
-    toggle_building((level >= 3) ? BUILDING_CITY_PALACE : 0);
-    toggle_building((level >= 2) ? BUILDING_TOWN_PALACE : 0);
-    toggle_building((level >= 1) ? BUILDING_VILLAGE_PALACE : 0);
+    toggle_building((level >= 3) ? BUILDING_CITY_PALACE : BUILDING_NONE);
+    toggle_building((level >= 2) ? BUILDING_TOWN_PALACE : BUILDING_NONE);
+    toggle_building((level >= 1) ? BUILDING_VILLAGE_PALACE : BUILDING_NONE);
 }
 
 void building_menu_ctrl_t::enable_common_health() {
@@ -197,16 +198,16 @@ void building_menu_ctrl_t::enable_common_health() {
 }
 
 void building_menu_ctrl_t::enable_entertainment(int level) {
-    toggle_building((level >= 1) ? BUILDING_BOOTH : 0);
-    toggle_building((level >= 1) ? BUILDING_JUGGLER_SCHOOL : 0);
+    toggle_building((level >= 1) ? BUILDING_BOOTH : BUILDING_NONE);
+    toggle_building((level >= 1) ? BUILDING_JUGGLER_SCHOOL : BUILDING_NONE);
 
-    toggle_building((level >= 2) ? BUILDING_BANDSTAND : 0);
-    toggle_building((level >= 2) ? BUILDING_CONSERVATORY : 0);
+    toggle_building((level >= 2) ? BUILDING_BANDSTAND : BUILDING_NONE);
+    toggle_building((level >= 2) ? BUILDING_CONSERVATORY : BUILDING_NONE);
 
-    toggle_building((level >= 3) ? BUILDING_PAVILLION : 0);
-    toggle_building((level >= 3) ? BUILDING_DANCE_SCHOOL : 0);
+    toggle_building((level >= 3) ? BUILDING_PAVILLION : BUILDING_NONE);
+    toggle_building((level >= 3) ? BUILDING_DANCE_SCHOOL : BUILDING_NONE);
 
-    toggle_building((level >= 4) ? BUILDING_SENET_HOUSE : 0);
+    toggle_building((level >= 4) ? BUILDING_SENET_HOUSE : BUILDING_NONE);
 }
 
 struct god_buildings_alias {
@@ -317,7 +318,7 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
         set_all(false);
     } else if (stage_name == "stage_normal") {
         for (int i = 0; i < BUILDING_MAX; i++) {
-            enable_if_allowed(i);
+            enable_if_allowed((e_building_type)i);
         }
 
         // enable monuments!
@@ -343,7 +344,7 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
     // these are always enabled
     const auto &gr = group(BUILDING_MENU_DEFAULT);
     for (const auto &b: gr.items) {
-        toggle_building(b.type);
+        toggle_building((e_building_type)b.type);
     }
 
     events::emit(event_building_menu_changed{ true });

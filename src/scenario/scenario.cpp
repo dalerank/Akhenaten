@@ -112,8 +112,12 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     events.load_mission_metadata(missionid);
 }
 
-bool scenario_building_allowed(int building_type) {
+bool scenario_building_allowed(e_building_type building_type) {
     return g_scenario.allowed_buildings[building_type];
+}
+
+void scenario_building_allow(e_building_type btype, bool allow) {
+    g_scenario.allowed_buildings[btype] = allow;
 }
 
 int scenario_building_image_native_hut() {

@@ -341,7 +341,8 @@ int scenario_property_monuments_is_enabled();
 int scenario_property_monument(int field);
 void scenario_set_monument(int field, int m);
 
-bool scenario_building_allowed(int building_type);
+bool scenario_building_allowed(e_building_type btype);
+void scenario_building_allow(e_building_type btype, bool allow);
 
 int scenario_building_image_native_hut();
 

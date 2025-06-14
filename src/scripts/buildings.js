@@ -647,10 +647,11 @@ building_guild_stonemasons = {
 
 building_bricklayers_guild = {
   animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:57 }
+    preview : { pack:PACK_GENERAL, id:57 }
+    base : { pack:PACK_GENERAL, id:57 }
     work : { pos : [75, -14], pack:PACK_GENERAL, id:57, offset:1, max_frames:12, duration:4 }
   }
+
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   input_resource : RESOURCE_BRICKS
   min_houses_coverage : 100

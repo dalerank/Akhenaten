@@ -82,7 +82,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
 
     tut.bricks_bought = true;
     events::unsubscribe(&tutorial5_handle_bricks);
-    events::emit(event_building_menu_update{ tutorial_stage.tutorial_monuments });
+    events::emit(event_building_menu_update{ "tutorial_monuments" });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     messages::popup(MESSAGE_TUTORIAL_MONUMENTS, 0, 0);
 }
@@ -106,7 +106,7 @@ void tutorial_5::init() {
     g_city.set_advisor_available(ADVISOR_TRADE, tut.papyrus_made ? AVAILABLE : NOT_AVAILABLE);
     events::subscribe_if(!tut.papyrus_made, &tutorial5_handle_papyrus);
 
-    events::emit_if(tut.bricks_bought, event_building_menu_update{ tutorial_stage.tutorial_monuments });
+    events::emit_if(tut.bricks_bought, event_building_menu_update{ "tutorial_monuments" });
     events::subscribe_if(!tut.bricks_bought, &tutorial5_handle_bricks);
 
     g_city.victory_state.add_condition(&tutorial5_is_success);

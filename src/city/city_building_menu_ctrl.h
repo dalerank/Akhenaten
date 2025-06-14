@@ -101,14 +101,14 @@ struct building_menu_ctrl_t {
     }
 
     bool is_submenu(int submenu) const;
-    void toggle_building(int type, bool enabled = true);
+    void toggle_building(e_building_type type, bool enabled = true);
     image_desc image(int submenu);
 
     void update(const xstring stage_name);
     int count_items(int submenu);
     int next_index(int submenu, int current_index);
 
-    void enable_if_allowed(int type);
+    void enable_if_allowed(e_building_type type);
     int disable_raw_if_unavailable(int type, e_resource resource);
 
     void update_if(bool expr, const xstring stage) {

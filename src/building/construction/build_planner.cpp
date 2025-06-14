@@ -306,7 +306,8 @@ void build_planner::init() {
     });
 
     events::subscribe([this] (event_city_building_mode ev) {
-        if (scenario_building_allowed(ev.value)) {
+        const bool enabled = scenario_building_allowed((e_building_type)ev.value);
+        if (enabled) {
             construction_cancel();
             setup_build((e_building_type)ev.value);
         }

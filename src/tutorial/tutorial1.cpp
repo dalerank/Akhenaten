@@ -84,7 +84,7 @@ void tutorial1_handle_population_for_granary(event_population_changed ev) {
     }
 
     events::unsubscribe(&tutorial1_handle_population_for_granary);
-    events::emit(event_building_menu_update{ tutorial_stage.tutorial_food });
+    events::emit(event_building_menu_update{ "tutorial_food" });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.granary_opened = true;
     messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
@@ -153,7 +153,7 @@ void tutorial_1::init() {
     events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
-    events::emit_if(granary_opened, event_building_menu_update{ tutorial_stage.tutorial_food });
+    events::emit_if(granary_opened, event_building_menu_update{ "tutorial_food" });
     
     events::subscribe_if(!granary_opened, &tutorial1_handle_population_for_granary);
 
@@ -208,7 +208,7 @@ void tutorial_1::update_step(xstring s) {
     } else if (s == tutorial_stage.tutorial_collapse) {
         tut.building_collapsed = false;
         tutorial1_handle_collapse({ 0 });
-    } else if (s == tutorial_stage.tutorial_food) {
+    } else if (s == "tutorial_food") {
         tut.granary_opened = false;
         tutorial1_handle_population_for_granary({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
