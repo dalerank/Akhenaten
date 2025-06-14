@@ -36,6 +36,7 @@ void terrain_info_window::update(object_info &c) {
     case TERRAIN_INFO_PLAZA: terrain_config = "terrain_plaza_info_window"; break;
     case TERRAIN_INFO_ORE_ROCK: terrain_config = "terrain_orerock_info_window"; break;
     case TERRAIN_INFO_ROCK: terrain_config = "terrain_rock_info_window"; break;
+    case TERRAIN_INFO_FLOODPLAIN: terrain_config = "terrain_floodplain_info_window"; break;
     }
 
     ui.load(terrain_config.c_str());
@@ -64,6 +65,7 @@ void terrain_info_window::init(object_info &c) {
     case TERRAIN_INFO_PLAZA:
     case TERRAIN_INFO_ORE_ROCK:
     case TERRAIN_INFO_ROCK:
+    case TERRAIN_INFO_FLOODPLAIN:
         break;
 
     case TERRAIN_INFO_CANAL:
@@ -73,14 +75,6 @@ void terrain_info_window::init(object_info &c) {
 
     case TERRAIN_INFO_BRIDGE:
         c.help_id = 58;
-        break;
-
-    case TERRAIN_INFO_FLOODPLAIN:
-        reason = { 70, 29 };
-        describe = { 70, 55 };
-        c.help_id = 45;
-        ui["title"] = ui::str(reason);
-        ui["describe"] = ui::str(describe);
         break;
     }
 
@@ -92,19 +86,6 @@ void terrain_info_window::init(object_info &c) {
         }
     }
 }
-
-//vec2i terrain_info_window::bgsize() {
-//    switch (c.terrain_type) {
-//    case TERRAIN_INFO_CANAL:
-//        return 4;
-//    case TERRAIN_INFO_RUBBLE:
-//    case TERRAIN_INFO_WALL:
-//    case TERRAIN_INFO_GARDEN:
-//        return 1;
-//    default:
-//        return 5;
-//    }
-//}
 
 bool terrain_info_window::check(object_info &c) {
     tile2i tile(c.grid_offset);
