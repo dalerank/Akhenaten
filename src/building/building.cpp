@@ -639,7 +639,7 @@ void building::mark_plague(int days) {
 
 xstring building::cls_name() const {
     const auto &params = building_impl::params(type);
-    if (params.info_title_id != 0) {
+    if (!params.info_title_id.empty()) {
         return params.info_title_id;
     }
 

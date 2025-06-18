@@ -16,10 +16,10 @@ class figure_trade_ship : public figure_carrier {
 public:
     FIGURE_METAINFO(FIGURE_TRADE_SHIP, figure_trade_ship)
     figure_trade_ship(figure *f) : figure_carrier(f) {}
+    virtual figure_trade_ship *dcast_trade_ship() override { return this; }
 
     virtual void on_create() override;
     virtual void figure_action() override;
-    virtual figure_trade_ship *dcast_trade_ship() override { return this; }
     virtual sound_key phrase_key() const override;
     virtual void kill() override;
     virtual void update_animation() override;

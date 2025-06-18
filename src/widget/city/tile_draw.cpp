@@ -162,11 +162,14 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
 
     } else if (map_property_is_draw_tile(tile)) {
         int terrain = map_terrain_get(tile);
-        if (terrain & (TERRAIN_CANAL | TERRAIN_WALL)) {
-        //    // display groundwater
-        //    int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(grid_offset) & 7);
-        //    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mode_highlighted[map_is_highlighted(grid_offset)]);
-        //
+        if (!!(terrain & TERRAIN_WALL)) {
+            overlay->draw_flattened_footprint_anysize(pixel, 1, 1, 0, 0, ctx);
+
+        } else if (!!(terrain & TERRAIN_CANAL)) {
+            const image_t *img = ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            int top_height = img->isometric_top_height();
+            map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
+
         } else if (map_is_highlighted(tile)) {
             e_highligth_mode mode = map_is_highlighted(tile);
             ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, mode_highlighted[mode]);
