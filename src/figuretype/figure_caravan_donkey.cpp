@@ -23,7 +23,7 @@
 figures::model_t<figure_caravan_donkey> caravan_donkey_m;
 
 struct figure_caravan_donkey_info_window : public figure_info_window {
-    virtual void window_info_background(object_info &c) override;
+    virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return !!c.figure_get<figure_caravan_donkey>();
     }
@@ -76,8 +76,8 @@ figure* figure_caravan_donkey::get_head_of_caravan() {
     return f;
 }
 
-void figure_caravan_donkey_info_window::window_info_background(object_info &c) {
-    common_info_window::window_info_background(c);
+void figure_caravan_donkey_info_window::init(object_info &c) {
+    common_info_window::init(c);
 
     figure_caravan_donkey *donkey = c.figure_get<figure_caravan_donkey>();
     figure* f = donkey->get_head_of_caravan();
@@ -132,7 +132,7 @@ void figure_caravan_donkey_info_window::window_info_background(object_info &c) {
     for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
         if (city->buys_resource[r]) {
             int image_id = image_id_resource_icon(r);
-            buing_items.append("@Y%u& ", image_id);
+            buing_items.append("@I%u& ", image_id);
         }
     }
     ui["bought_items"] = buing_items;
@@ -142,7 +142,7 @@ void figure_caravan_donkey_info_window::window_info_background(object_info &c) {
     for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
         if (city->sells_resource[r]) {
             int image_id = image_id_resource_icon(r);
-            buing_items.append("@Y%u& ", image_id);
+            buing_items.append("@I%u& ", image_id);
         }
     }
     ui["sold_items"] = selling_items;

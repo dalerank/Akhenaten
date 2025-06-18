@@ -26,49 +26,51 @@ void figure_trader_ship_info_window::init(object_info &c) {
 
     int trader_id = f->trader_id;
     if (trader_has_traded(trader_id)) {
-        // bought
-        int index = 0;
         ui["buy"] = ui::str(129, 4);
         ui["sell"] = ui::str(129, 5);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r, ++index) {
-            if (trader_bought_resources(trader_id, r)) {
-                bstring64 boughtid; boughtid.printf("buy_%d", index);
-                ui[boughtid] = bstring32(trader_bought_resources(trader_id, r));
 
-                bstring64 imgid; imgid.printf("buy_img_%d", index);
-                ui[imgid].image(image_id_resource_icon(r));
-            }
-        }
-        // sold
-        index = 0;
+        // bought
+        bstring128 bought_items;
         for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
-            if (trader_sold_resources(trader_id, r)) {
-                bstring64 soldid; soldid.printf("sell_%d", index);
-                ui[soldid] = bstring32(trader_sold_resources(trader_id, r));
-
-                bstring64 imgid; imgid.printf("sell_img_%d", index);
-                ui[imgid].image(image_id_resource_icon(r));
+            if (int amount = trader_bought_resources(trader_id, r)) {
+                int image_id = image_id_resource_icon(r);
+                bought_items.append(" @I%u& %u", image_id, amount);
             }
         }
+        ui["buy_text"] = bought_items;
+
+        // sold
+        bstring128 sold_items;
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+            if (int amount = trader_sold_resources(trader_id, r)) {
+                int image_id = image_id_resource_icon(r);
+                sold_items.append(" @I%u& %u", image_id, amount);
+            }
+        }
+        ui["sell_text"] = sold_items;
     } else { // nothing sold/bought (yet)
         // buying
         ui["buy"] = ui::str(129, 2);
         ui["sell"] = ui::str(129, 3);
 
-        int index = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r, ++index) {
+        bstring128 buy_items;
+        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
             if (city->buys_resource[r]) {
-                bstring64 imgid; imgid.printf("buy_img_%d", index);
-                ui[imgid] = bstring32(trader_sold_resources(trader_id, r));
+                int image_id = image_id_resource_icon(r);
+                buy_items.append("@I%u& ", image_id);
             }
         }
+        ui["buy_text"] = buy_items;
+
         // selling
+        bstring128 sell_items;
         for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
-                bstring64 imgid; imgid.printf("sell_img_%d", index);
-                ui[imgid].image(image_id_resource_icon(r));
+                int image_id = image_id_resource_icon(r);
+                buy_items.append("@I%u& ", image_id);
             }
         }
+        ui["sell_text"] = buy_items;
     }
 
 }

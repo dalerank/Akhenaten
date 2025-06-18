@@ -8,20 +8,19 @@ figure_trader_ship_info_window = {
         bigimage       : image({pos: [26, 50], pack:PACK_UNLOADED, id:25 })
         name           : text({pos: [90, 58], text:"${figure.name}", font : FONT_LARGE_BLACK_ON_DARK })
         typename       : text({pos: [92, 86], text:"${figure.class_name}", font : FONT_NORMAL_BLACK_ON_DARK })
-        cityname 	   : text({pos: [220, 86], text:"${figure.city_name}", font : FONT_NORMAL_YELLOW })
+
+        cityname 	   : text({pos: [230, 86], text:"${figure.city_name}", font : FONT_NORMAL_YELLOW })
+        action 		   : text({pos: [312, 86], text:"(${figure.action_tip})", font : FONT_NORMAL_YELLOW })
 
         capacity       : text({pos: [92, 110], text:"${129.1} 1200", font : FONT_NORMAL_BLACK_ON_DARK })
-        action 		   : text({pos: [222, 110], text:"(${figure.action_tip})", font : FONT_NORMAL_YELLOW })
 
         buy 		   : text({pos: [92, 130], text:"${129.4}", font : FONT_NORMAL_BLACK_ON_DARK })
-        buy_img_0      : resource_icon({pos: [30, 130]})
-        buy_0    	   : image({pos: [60, 130]})
+        buy_text       : text({pos: [150, 130], rich: true, scroll:false})
 
         sell  		   : text({pos: [92, 150], text:"${129.5}", font : FONT_NORMAL_BLACK_ON_DARK })
-        sell_img_0     : resource_icon({pos: [30, 150]})
-        sell_0	       : image({pos: [60, 150]})
+        sell_text      : text({pos: [150, 150], rich: true, scroll:false})
 
-        phrase         : text({pos: [90, 180], font:FONT_NORMAL_BLACK_ON_DARK, wrap:px(21), multiline:true })
+        phrase         : text({pos: [90, 180], font:FONT_NORMAL_BLACK_ON_DARK, wrap:px(21), multiline:true, scroll:false })
 
         button_help    : help_button({})
         button_close   : close_button({})
