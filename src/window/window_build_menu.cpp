@@ -242,6 +242,7 @@ int build_menu_widget::ui_handle_mouse(const mouse* m) {
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
         selected_submenu = 0;
+        events::emit(event_city_building_mode{ BUILDING_NONE });
         window_city_show();
     }
 
