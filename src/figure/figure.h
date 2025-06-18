@@ -429,7 +429,12 @@ public:
     }
 };
 
-#define FIGURE_METAINFO(type, clsid) static constexpr e_figure_type TYPE = type; static constexpr pcstr CLSID = #clsid;
+#define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
+    using figure_model = figures::model_t<self_type>;         \
+    static constexpr pcstr CLSID = #clsid;                      \
+    static constexpr e_figure_type TYPE = type;                 
+
+
 class figure_impl {
 public:
     struct static_params {
