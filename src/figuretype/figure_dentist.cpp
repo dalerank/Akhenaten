@@ -3,7 +3,7 @@
 #include "figure/service.h"
 #include "building/building_house.h"
 
-figures::model_t<figure_dentist> fdentist_m;
+figure_dentist::static_params fdentist_m;
 
 void figure_dentist::figure_action() {
     switch (action_state()) {
@@ -38,8 +38,4 @@ int figure_dentist::provide_service() {
         house->runtime_data().dentist = MAX_COVERAGE;
     });
     return 0;
-}
-
-const animations_t &figure_dentist::anim() const {
-    return fdentist_m.anim;
 }

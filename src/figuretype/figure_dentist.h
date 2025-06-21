@@ -7,6 +7,9 @@ public:
     FIGURE_METAINFO(FIGURE_DENTIST, figure_dentist)
     figure_dentist(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figure_model {
+    };
+
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
@@ -14,6 +17,5 @@ public:
     //virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
-    virtual const animations_t &anim() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };
