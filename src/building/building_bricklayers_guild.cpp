@@ -5,19 +5,10 @@
 #include "city/object_info.h"
 #include "city/city.h"
 #include "city/city_labor.h"
-#include "core/random.h"
-#include "core/calc.h"
 #include "figure/figure.h"
 #include "game/resource.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/view/view.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/text.h"
-#include "io/gamefiles/lang.h"
+#include "core/random.h"
 #include "game/game_config.h"
-#include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
@@ -26,7 +17,7 @@
 
 #include <iostream>
 
-buildings::model_t<building_bricklayers_guild> bricklayers_guild_m;
+building_bricklayers_guild::static_params bricklayers_guild_m;
 
 declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
