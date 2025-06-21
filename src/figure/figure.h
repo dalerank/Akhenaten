@@ -13,6 +13,7 @@
 #include "io/io_buffer.h"
 #include "window/building/common.h"
 #include "figure_phrase.h"
+#include "core/tokenum.h"
 #include "graphics/animation.h"
 #include "sound/sound_walker.h"
 
@@ -66,6 +67,8 @@ enum e_move_type : uint8_t {
 enum e_figure_draw_debug_mode {
     FIGURE_DRAW_DEBUG_ROUTING = 2
 };
+
+extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
 
 class figure {
 public:
@@ -430,7 +433,7 @@ public:
 };
 
 #define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
-    using figure_model = figures::model_t<self_type>;         \
+    using figure_model = figures::model_t<self_type>;           \
     static constexpr pcstr CLSID = #clsid;                      \
     static constexpr e_figure_type TYPE = type;                 
 
@@ -448,6 +451,7 @@ public:
         uint16_t max_roam_length;
         uint8_t speed_mult;
         metainfo meta;
+        e_permission permission;
 
         virtual void load(archive arch);
     };
@@ -546,6 +550,7 @@ public:
     inline void set_home(building *b) { base.set_home(b); }
     inline void set_direction_to(building *b) { return base.set_direction_to(b); }
     inline bool is_alive() const { return base.is_alive(); }
+    inline e_permission get_permission() const { return params().permission; }
 
     bvariant get_property(const xstring &domain, const xstring &name) const;
 

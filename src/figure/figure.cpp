@@ -31,6 +31,7 @@
 #endif // _MSC_VER
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
 
 declare_console_command_p(killall) {
     for (auto &f: map_figures()) {
@@ -573,6 +574,7 @@ void figure_impl::static_params::load(archive arch) {
     speed_mult = arch.r_int("speed_mult", 1);
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
+    permission = arch.r_type<e_permission>("permission");
 }
 
 void figure_impl::update_animation() {
