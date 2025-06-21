@@ -2,27 +2,30 @@ log_info("akhenaten: figures info started")
 
 figure_fireman = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false },
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 }
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false }
     fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
-  },
+  }
+
   sounds : {
-  	fighting_fire : {sound:"fireman_e01.wav", group: 242, text:0},
- 		going_to_fire : {sound:"fireman_e02.wav", group: 242, text:1},
- 		fighting_fire_also : {sound:"fireman_e03.WAV", group: 242, text:2},
- 		desease_can_start_at_any_moment : {sound:"fireman_g01.WAV", group: 242, text:3},
- 		no_food_in_city : {sound:"fireman_g02.WAV", group: 242, text:4},
- 		city_not_safety_workers_leaving : {sound:"fireman_g03.WAV", group: 242, text:5},
- 		need_workers : {sound:"fireman_g04.WAV", group: 242, text:6},
- 		hight_fire_level : {sound:"fireman_g05.WAV", group: 242, text:7},
- 		gods_are_angry : {sound:"fireman_g06.WAV", group: 242, text:8},
- 		need_more_workers : {sound:"fireman_g07.WAV", group: 242, text:9},
- 		low_entertainment : {sound:"fireman_g08.WAV", group: 242, text:10},
- 		gods_are_pleasures : {sound:"fireman_g09.WAV", group: 242, text:11},
- 		city_is_amazing : {sound:"fireman_g10.wav", group: 242, text:12},
-  },
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
-	max_roam_length : 640,
+  	fighting_fire : {sound:"fireman_e01.wav", group: 242, text:0}
+ 		going_to_fire : {sound:"fireman_e02.wav", group: 242, text:1}
+ 		fighting_fire_also : {sound:"fireman_e03.WAV", group: 242, text:2}
+ 		desease_can_start_at_any_moment : {sound:"fireman_g01.WAV", group: 242, text:3}
+ 		no_food_in_city : {sound:"fireman_g02.WAV", group: 242, text:4}
+ 		city_not_safety_workers_leaving : {sound:"fireman_g03.WAV", group: 242, text:5}
+ 		need_workers : {sound:"fireman_g04.WAV", group: 242, text:6}
+ 		hight_fire_level : {sound:"fireman_g05.WAV", group: 242, text:7}
+ 		gods_are_angry : {sound:"fireman_g06.WAV", group: 242, text:8}
+ 		need_more_workers : {sound:"fireman_g07.WAV", group: 242, text:9}
+ 		low_entertainment : {sound:"fireman_g08.WAV", group: 242, text:10}
+ 		gods_are_pleasures : {sound:"fireman_g09.WAV", group: 242, text:11}
+ 		city_is_amazing : {sound:"fireman_g10.wav", group: 242, text:12}
+  }
+
+	terrain_usage : TERRAIN_USAGE_ANIMAL
+	max_roam_length : 640
+	permission : epermission_maintenance
 }
 
 figure_water_carrier = {
@@ -76,8 +79,9 @@ figure_festival_guy = {
 		priest_bast_walk: {pack:PACK_SPR_MAIN, id:208, max_frames:12}
 	}
 
-	terrain_usage : TERRAIN_USAGE_ANY,
-	max_amount : 25,
+	terrain_usage : TERRAIN_USAGE_ANY
+	max_amount : 25
+	permission : epermission_entertainer
 }
 
 figure_tower_sentry = {
@@ -184,6 +188,7 @@ figure_priest = {
 
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
+	permission : epermission_priest
 }
 
 figure_ostrich = {
@@ -199,9 +204,10 @@ figure_ostrich = {
 figure_hyena = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:161, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:162, max_frames:8, duration:3, loop:false },
-		eating : { pack:PACK_SPR_MAIN, id:163, max_frames:7 },
-		idle : { pack:PACK_SPR_MAIN, id:164, max_frames:8 },
+		attack : { pack:PACK_SPR_MAIN, id:163, max_frames:6 },
+		death : { pack:PACK_SPR_MAIN, id:163, max_frames:8, duration:3, loop:false },
+		idle : { pack:PACK_SPR_MAIN, id:164, max_frames:6 },
+		eating : { pack:PACK_SPR_MAIN, id:165, max_frames:6 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
@@ -217,12 +223,18 @@ figure_antelope = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
+figure_horses = {
+	animations : {
+		walk : { pack:PACK_SPR_AMBIENT, id:113, max_frames:12 }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+}
+
 figure_birds = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
-		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 },
-		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 },
+		flying : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true },
+		eating : { pack:PACK_SPR_MAIN, id:115, max_frames:25 },
 	},
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
@@ -293,6 +305,33 @@ figure_hunter_arrow = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 },
 		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 },
+	},
+  terrain_usage : TERRAIN_USAGE_ANY,
+}
+
+figure_antelope_hunter = {
+	animations : {
+		walk : { pack:PACK_SPR_AMBIENT, id:36, max_frames:12 },
+		death : { pack:PACK_SPR_AMBIENT, id:37, max_frames:8, loop:false },
+		hunt : { pack:PACK_SPR_AMBIENT, id:38, max_frames:12 },
+		figth : { pack:PACK_SPR_AMBIENT, id:39, max_frames:12 },
+		figth_apcked : { pack:PACK_SPR_AMBIENT, id:40, max_frames:12 },
+		pack : { pack:PACK_SPR_AMBIENT, id:41, max_frames:18, loop:false },
+		move_pack : { pack:PACK_SPR_AMBIENT, id:42, max_frames:12 },
+	},
+	sounds : {
+		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 },
+    back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 },
+    city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
+	},
+	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	max_hunting_distance : 30,
+}
+
+figure_antelopr_hunter_arrow = {
+	animations : {
+		walk : { pack:PACK_SPR_AMBIENT, id:43, max_frames:12 },
+		shadow : { pack:PACK_SPR_AMBIENT, id:44, max_frames:12 },
 	},
   terrain_usage : TERRAIN_USAGE_ANY,
 }
@@ -404,11 +443,24 @@ figure_scriber = {
 
 figure_dentist = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false },
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_medicine
+}
+
+figure_embalmer = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:184, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:185, max_frames:8, loop:false }
+	}
+	
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_medicine
 }
 
 figure_worker = {
@@ -435,48 +487,56 @@ figure_worker = {
 
 figure_physician = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:71, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false },
-	},
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:71, max_frames:12 }
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1},
-    city_has_low_health : {sound:"doctor_g01.wav", group: 239, text:1},
-    no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2},
-    city_have_no_army : {sound:"doctor_g03.wav", group: 239, text:3},
-    need_workers : {sound:"doctor_g04.wav", group: 239, text:4},
-    gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5},
-    gods_are_pleasures : {sound:"doctor_g06.wav", group: 239, text:6},
-    no_job_in_city : {sound:"doctor_g07.wav", group: 239, text:7},
-    low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8},
-    all_good_in_city : {sound:"doctor_g09.wav", group: 239, text:9},
-    city_very_healthy : {sound:"doctor_g10.wav", group: 239, text:10},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1}
+    city_has_low_health : {sound:"doctor_g01.wav", group: 239, text:1}
+    no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2}
+    city_have_no_army : {sound:"doctor_g03.wav", group: 239, text:3}
+    need_workers : {sound:"doctor_g04.wav", group: 239, text:4}
+    gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5}
+    gods_are_pleasures : {sound:"doctor_g06.wav", group: 239, text:6}
+    no_job_in_city : {sound:"doctor_g07.wav", group: 239, text:7}
+    low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8}
+    all_good_in_city : {sound:"doctor_g09.wav", group: 239, text:9}
+    city_very_healthy : {sound:"doctor_g10.wav", group: 239, text:10}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_medicine
 }
 
 figure_architector = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:4, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:4, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false }
+    work_ground : { pack:PACK_SPR_AMBIENT, id:49, max_frames:6 }
+    work_stand : { pack:PACK_SPR_AMBIENT, id:50, max_frames:6 }
+	}
+
 	sounds : {
-		extreme_damage_level: {sound:"engineer_e01.wav", group: 243, text:0},
-    i_am_works: {sound:"engineer_e02.wav", group: 243, text:1},
-    high_damage_level: {sound:"engineer_g01.wav", group: 243, text:2},
-    no_food_in_city: {sound:"engineer_g02.wav", group: 243, text:3},
-    city_not_safety: {sound:"engineer_g03.wav", group: 243, text:4},
-    need_more_workers: {sound:"engineer_g04.wav", group: 243, text:5},
-    gods_are_angry: {sound:"engineer_g05.wav", group: 243, text:6},
-    city_has_bad_reputation: {sound:"engineer_g06.wav", group: 243, text:7},
-    city_is_good: {sound:"engineer_g07.wav", group: 243, text:7},
-    low_entertainment: {sound:"engineer_g08.wav", group: 243, text:8},
-    city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9},
-    city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_service_buildings : 100,
-	max_roam_length : 640,
+		extreme_damage_level: {sound:"engineer_e01.wav", group: 243, text:0}
+    i_am_works: {sound:"engineer_e02.wav", group: 243, text:1}
+    high_damage_level: {sound:"engineer_g01.wav", group: 243, text:2}
+    no_food_in_city: {sound:"engineer_g02.wav", group: 243, text:3}
+    city_not_safety: {sound:"engineer_g03.wav", group: 243, text:4}
+    need_more_workers: {sound:"engineer_g04.wav", group: 243, text:5}
+    gods_are_angry: {sound:"engineer_g05.wav", group: 243, text:6}
+    city_has_bad_reputation: {sound:"engineer_g06.wav", group: 243, text:7}
+    city_is_good: {sound:"engineer_g07.wav", group: 243, text:7}
+    low_entertainment: {sound:"engineer_g08.wav", group: 243, text:8}
+    city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9}
+    city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_service_buildings : 100
+	max_roam_length : 640
+	permission : epermission_maintenance
 }
 
 figure_market_buyer = {
@@ -511,6 +571,30 @@ figure_delivery_boy = {
     i_works_all_day : {sound: "marketboy_e02.wav", group:221, text: 1},
     upon_ill_be_market_owner : {sound: "marketboy_e03.wav", group:221, text: 2},
 	},
+	terrain_usage : TERRAIN_USAGE_ROADS,
+}
+
+figure_carpenter = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:145, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:146, max_frames:8, loop:false },
+		work_ground : { pack:PACK_SPR_MAIN, id:147, max_frames:7 },
+		work_wall : { pack:PACK_SPR_MAIN, id:148, max_frames:7 },
+		climbing : { pack:PACK_SPR_MAIN, id:149, max_frames:3 },
+	},
+
+	terrain_usage : TERRAIN_USAGE_ROADS,
+}
+
+figure_stonemaker = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:150, max_frames:12 },
+		death : { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false },
+		work_ground : { pack:PACK_SPR_MAIN, id:152, max_frames:7 },
+		work_wall : { pack:PACK_SPR_MAIN, id:153, max_frames:7 },
+		climbing : { pack:PACK_SPR_MAIN, id:154, max_frames:3 },
+	},
+
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
@@ -654,22 +738,37 @@ figure_homeless = {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
+figure_drunkman = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		womit : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+}
+
 figure_teacher = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:201, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false },
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		walk : { pack:PACK_SPR_MAIN, id:201, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_education
 }
 
 figure_librarian = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:57, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false },
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		walk : { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_education
 }
 
 figure_constable = {
@@ -684,59 +783,68 @@ figure_constable = {
 
 figure_herbalist = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:180, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:180, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1},
-    have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1}
+    have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_medicine
 }
 
 figure_dancer = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:128, max_frames:12 },
-		death : { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
+		death : { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0},
-    desease_can_start_at_any_moment : {sound:"dancer_g01.wav", group:228, text:1},
-    no_food_in_city : {sound:"dancer_g02.wav", group:228, text:2},
-    city_not_safety_workers_leaving : {sound:"dancer_g03.wav", group:228, text:3},
-    need_workers : {sound:"dancer_g04.wav", group:228, text:4},
-    gods_are_angry : {sound:"dancer_g05.wav", group:228, text:5},
-    city_is_bad : {sound:"dancer_g06.wav", group:228, text:6},
-    much_unemployments : {sound:"dancer_g07.wav", group:228, text:7},
-    salary_too_low : {sound:"dancer_g08.wav", group:228, text:8},
-    city_is_good : {sound:"dancer_g09.wav", group:228, text:9},
-    city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 512,
+		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0}
+    desease_can_start_at_any_moment : {sound:"dancer_g01.wav", group:228, text:1}
+    no_food_in_city : {sound:"dancer_g02.wav", group:228, text:2}
+    city_not_safety_workers_leaving : {sound:"dancer_g03.wav", group:228, text:3}
+    need_workers : {sound:"dancer_g04.wav", group:228, text:4}
+    gods_are_angry : {sound:"dancer_g05.wav", group:228, text:5}
+    city_is_bad : {sound:"dancer_g06.wav", group:228, text:6}
+    much_unemployments : {sound:"dancer_g07.wav", group:228, text:7}
+    salary_too_low : {sound:"dancer_g08.wav", group:228, text:8}
+    city_is_good : {sound:"dancer_g09.wav", group:228, text:9}
+    city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 512
+	permission : epermission_entertainer  // roadblock option
 }
 
 figure_musician = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
-	},
+	}
+
 	sounds : {
-		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 },
- 		city_heath_too_low : { sound:"musician_g01.wav", group:229, text:0 },
- 		no_food_in_city : { sound:"musician_g02.wav", group:229, text:0 },
- 		city_not_safety_workers_leaving : { sound:"musician_g03.wav", group:229, text:0 },
- 		need_workers : { sound:"musician_g04.wav", group:229, text:0 },
- 		gods_are_angry : { sound:"musician_g05.wav", group:229, text:0 },
- 		city_is_bad_reputation : { sound:"musician_g06.wav", group:229, text:0 },
- 		much_unemployments : { sound:"musician_g07.wav", group:229, text:0 },
- 		no_entertainment_need : { sound:"musician_g08.wav", group:229, text:0 },
- 		city_not_bad : { sound:"musician_g09.wav", group:229, text:0 },
- 		city_is_good : { sound:"musician_g10.wav", group:229, text:0 },
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 512,
+		i_like_festivals : { sound:"musician_e01.wav", group:229, text:0 }
+ 		city_heath_too_low : { sound:"musician_g01.wav", group:229, text:0 }
+ 		no_food_in_city : { sound:"musician_g02.wav", group:229, text:0 }
+ 		city_not_safety_workers_leaving : { sound:"musician_g03.wav", group:229, text:0 }
+ 		need_workers : { sound:"musician_g04.wav", group:229, text:0 }
+ 		gods_are_angry : { sound:"musician_g05.wav", group:229, text:0 }
+ 		city_is_bad_reputation : { sound:"musician_g06.wav", group:229, text:0 }
+ 		much_unemployments : { sound:"musician_g07.wav", group:229, text:0 }
+ 		no_entertainment_need : { sound:"musician_g08.wav", group:229, text:0 }
+ 		city_not_bad : { sound:"musician_g09.wav", group:229, text:0 }
+ 		city_is_good : { sound:"musician_g10.wav", group:229, text:0 }
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 512
+	permission: epermission_entertainer
 }
 
 figure_soldier_infantry = {
@@ -835,57 +943,66 @@ figure_soldier_charioteer = {
 
 figure_juggler = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 },
-    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 },
-    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 },
-    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 },
-    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 },
-    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 },
-    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 },
-    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 },
-    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 },
-    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 },
-    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 },
-	},
-	max_roam_length: 640,
+		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 }
+    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 }
+    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 }
+    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 }
+    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 }
+    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 }
+    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 }
+    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 }
+    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 }
+    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 }
+    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 }
+	}
+
+	max_roam_length: 640
+	permission : epermission_entertainer  // roadblock option
 }
 
 figure_senet_player = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:132, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:133, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:132, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:133, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 },
-    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 },
-    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 },
-    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 },
-    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 },
-    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 },
-    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 },
-    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 },
-    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 },
-    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 },
-    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 },
-	},
-	max_roam_length: 640,
+		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 }
+    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 }
+    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 }
+    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 }
+    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 }
+    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 }
+    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 }
+    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 }
+    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 }
+    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 }
+    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 }
+	}
+
+	max_roam_length: 640
+	permission : epermission_entertainer  // for roadblocks
 }
 
 figure_market_trader = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false },
-	},
+		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 }
+		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0},
- 	  we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 384,
+		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0}
+ 	  we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 384
+	permission : epermission_market
 }
 
 figure_labor_seeker = {
@@ -931,24 +1048,27 @@ figure_explosion = {
 
 figure_tax_collector = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:41, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false }
+	}
+
 	sounds : {
-		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0},
-    high_taxes: {sound: "taxman_e02.wav", group: 245, text:1},
-    much_pooh_houses: {sound: "taxman_e03.wav", group: 245, text:2},
-    desease_can_start_at_any_moment: {sound: "taxman_g01.wav", group: 245, text:3},
-    no_food_in_city: {sound: "taxman_g02.wav", group: 245, text:4},
-    city_have_no_army: {sound: "taxman_g03.wav", group: 245, text:5},
-    need_workers: {sound: "taxman_g04.wav", group: 245, text:6},
-    gods_are_angry: {sound: "taxman_g05.wav", group: 245, text:7},
-    city_is_bad: {sound: "taxman_g06.wav", group: 245, text:8},
-    much_unemployments: {sound: "taxman_g07.wav", group: 245, text:9},
-    low_entertainment: {sound: "taxman_g08.wav", group: 245, text:10},
-    city_is_good: {sound: "taxman_g09.wav", group: 245, text:11},
-    city_is_amazing: {sound: "taxman_g10.wav", group: 245, text:12},
-	},
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 512,
+		need_more_tax_collectors: {sound: "taxman_e01.wav", group: 245, text:0}
+    high_taxes: {sound: "taxman_e02.wav", group: 245, text:1}
+    much_pooh_houses: {sound: "taxman_e03.wav", group: 245, text:2}
+    desease_can_start_at_any_moment: {sound: "taxman_g01.wav", group: 245, text:3}
+    no_food_in_city: {sound: "taxman_g02.wav", group: 245, text:4}
+    city_have_no_army: {sound: "taxman_g03.wav", group: 245, text:5}
+    need_workers: {sound: "taxman_g04.wav", group: 245, text:6}
+    gods_are_angry: {sound: "taxman_g05.wav", group: 245, text:7}
+    city_is_bad: {sound: "taxman_g06.wav", group: 245, text:8}
+    much_unemployments: {sound: "taxman_g07.wav", group: 245, text:9}
+    low_entertainment: {sound: "taxman_g08.wav", group: 245, text:10}
+    city_is_good: {sound: "taxman_g09.wav", group: 245, text:11}
+    city_is_amazing: {sound: "taxman_g10.wav", group: 245, text:12}
+	}
+
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 512
+	permission : epermission_tax_collector
 }

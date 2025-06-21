@@ -11,6 +11,7 @@
 #include "graphics/image_groups.h"
 #include "scenario/events.h"
 #include "graphics/font.h"
+#include "figure/figure.h"
 #include "city/constants.h"
 #include "city/city_kingdome_relations.h"
 
@@ -70,8 +71,12 @@ void js_register_city_constants(js_State *J) {
     js_register_tokens(J, e_gift_tokens);
 }
 
-void js_registere_event_type(js_State *J) {
+void js_register_event_type(js_State *J) {
     js_register_tokens(J, e_event_type_tokens);
+}
+
+void js_register_permission(js_State *J) {
+    js_register_tokens(J, e_permission_tokens);
 }
 
 void js_register_terrain(js_State *J) {

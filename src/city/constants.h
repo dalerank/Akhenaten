@@ -61,7 +61,9 @@ enum e_permission : uint8_t {
     epermission_entertainer = 4,
     epermission_education = 5,
     epermission_medicine = 6,
-    epermission_tax_collector = 7
+    epermission_tax_collector = 7,
+
+    epermission_count
 };
 
 enum e_rating_change : uint8_t {

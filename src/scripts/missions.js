@@ -176,11 +176,11 @@ mission4 = {
 
 mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true,
-	player_rank : 1,
-	money : [7500, 5000, 3750, 2500, 2000],
-	rescue_loans : [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers : [300, 200, 150, 100, 75],
+	city_has_animals : true
+	player_rank : 1
+	money : [7500, 5000, 3750, 2500, 2000]
+	rescue_loans : [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [
 		         	BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -191,70 +191,72 @@ mission5 = { // Timna
 					BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
 					BUILDING_RECRUITER, BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS, BUILDING_WEAPONSMITH,
 					BUILDING_SCRIBAL_SCHOOL, BUILDING_CLAY_PIT, BUILDING_GEMSTONE_MINE, BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_POTTERY_WORKSHOP,
-					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH
-				],
+					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH,
+
+					BUILDING_MORTUARY
+				]
 	stages : {
-		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ],
+		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ]
 		tutorial_guilds : [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
-	},
+	}
 	enable_scenario_events : false,
 	events : [
 		{
-			year : 2850,
-			resource : "copper",
-			amount : 500,
-			deadline : 12,
+			year : 2850
+			resource : "copper"
+			amount : 500
+			deadline : 12
 		},
 		{
-			year : 2849,
-			resource : "gems",
-			amount : 1500,
-			deadline : 12,
+			year : 2849
+			resource : "gems"
+			amount : 1500
+			deadline : 12
 		},
 		{
-			year : 2848,
-			resource : "deben",
-			amount : [800, 1000],
-			deadline : 12,
+			year : 2848
+			resource : "deben"
+			amount : [800, 1000]
+			deadline : 12
 		}
-	],
+	]
 
 	attacks : [
 		{
-			year : 2848,
-			type : "bedouin",
-			amount : 4,
-			pepeat_after : [6],
+			year : 2848
+			type : "bedouin"
+			amount : 4
+			pepeat_after : [6]
 		}
 	],
 
 	gifts : [
 		{
-				from: "pharaoh",
+				from: "pharaoh"
 				condition: {
-					kingdome : 65,
-					resource : RESOURCE_CHICKPEAS,
-					amount : [1600, 2400],
+					kingdome : 65
+					resource : RESOURCE_CHICKPEAS
+					amount : [1600, 2400]
 				}
 		}
-	],
+	]
 
 	trade_routes : [
 		{
-			city : "meninefer",
-			reputation : 60,
+			city : "meninefer"
+			reputation : 60
 		}
 	]
 }
 
 mission6 = { // Behdet
 	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true,
-	player_rank : 1,
-	next_mission : 8,
-	money : [7500, 5000, 3750, 2500, 2000],
-	rescue_loans : [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers : [300, 200, 150, 100, 75],
+	city_has_animals : true
+	player_rank : 1
+	next_mission : 8
+	money : [7500, 5000, 3750, 2500, 2000]
+	rescue_loans : [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [   
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -271,10 +273,10 @@ mission6 = { // Behdet
 					BUILDING_SHIPWRIGHT, BUILDING_FISHING_WHARF, BUILDING_FERRY, BUILDING_DOCK,
 					BUILDING_WARSHIP_WHARF, BUILDING_TRANSPORT_WHARF,
 					BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
-					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL
-				],
+					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
+				]
 	stages : {
-	},
+	}
 
 	enable_scenario_events : false,
 	events : [
