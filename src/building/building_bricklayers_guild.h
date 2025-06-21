@@ -6,6 +6,9 @@ class building_bricklayers_guild : public building_guild {
 public:
     BUILDING_METAINFO(BUILDING_BRICKLAYERS_GUILD, building_bricklayers_guild, building_guild)
 
+    struct static_params : public building_model {
+    } BUILDING_STATIC_DATA(static_params);
+
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
