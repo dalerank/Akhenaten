@@ -586,14 +586,14 @@ figure_carpenter = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_stonemaker = {
+figure_stonemason = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:150, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false },
-		work_ground : { pack:PACK_SPR_MAIN, id:152, max_frames:7 },
-		work_wall : { pack:PACK_SPR_MAIN, id:153, max_frames:7 },
-		climbing : { pack:PACK_SPR_MAIN, id:154, max_frames:3 },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false }
+		work_ground : { pack:PACK_SPR_MAIN, id:152, max_frames:7 }
+		work_wall : { pack:PACK_SPR_MAIN, id:153, max_frames:7 }
+		climbing : { pack:PACK_SPR_MAIN, id:154, max_frames:3 }
+	}
 
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }

@@ -609,40 +609,45 @@ building_shrine_bast = {
 
 building_weaponsmith = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
-    work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true },
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 }
+    work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true }
     copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 }
-  },
-  input_resource : RESOURCE_COPPER,
-  output_resource : RESOURCE_WEAPONS,
-  labor_category : LABOR_CATEGORY_MILITARY,
-  window_info_height_id : 1,
-  info_help_id:98,
-  info_text_id:124,
-  building_size : 2,
+  }
+
+  input_resource : RESOURCE_COPPER
+  output_resource : RESOURCE_WEAPONS
+  labor_category : LABOR_CATEGORY_MILITARY
+  window_info_height_id : 1
+  info_help_id: 98
+  info_text_id: 124
+  building_size: 2
 }
 
 building_courthouse = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:62, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:62, },
+    preview : { pack:PACK_GENERAL, id:62, }
+    base : { pack:PACK_GENERAL, id:62, }
     work : { pos : [80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
-  },
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
-  building_size : 3,
-  info_text_id:176,
-  info_help_id:75,
+  }
+
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  building_size : 3
+  info_text_id:176
+  info_help_id:75
 }
 
-building_guild_stonemasons = {
+building_stonemason_guild = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:88 },
-    base : { pack:PACK_GENERAL, id:88 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:88, offset:1, max_frames:12 }
-  },
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
-  building_size : 2,
+    preview : { pack:PACK_GENERAL, id:88 }
+    base : { pack:PACK_GENERAL, id:88 }
+    work : { pack:PACK_GENERAL, id:88, offset:1, max_frames:12 }
+  }
+  
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  building_size: 2
+  info_text_id: 173
+  info_help_id: 363
 }
 
 building_bricklayers_guild = {

@@ -771,6 +771,10 @@ int building_monument_toggle_construction_halted(building *b) {
     }
 }
 
+bool building_monument_need_stonemason(const building *b) {
+    return false;
+}
+
 bool building_monument_need_bricklayers(const building *b) {
     if (!building_is_monument(b->type)) {
         return false;
