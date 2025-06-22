@@ -38,14 +38,6 @@ void js_register_ui_fonts(js_State *J) {
     js_register_tokens(e_font_type_tokens);
 }
 
-void js_register_city_labor_category(js_State *J) {
-    js_register_tokens(e_labor_category_tokens);
-}
-
-void js_register_event_type(js_State *J) {
-    js_register_tokens(e_event_type_tokens);
-}
-
 void js_register_token(int id, pcstr name) {
     if (!name || !*name) {
         return; // skip empty names
