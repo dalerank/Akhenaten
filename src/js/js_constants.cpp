@@ -28,10 +28,6 @@ void js_register_game_constants(js_State *J) {
     }
 }
 
-void js_register_city_walkers(js_State *J) {
-    js_register_tokens(e_figure_type_tokens);
-}
-
 void js_register_city_sound_constants(js_State *J) {
     js_register_tokens(e_sound_channel_city_tokens);
     // repeated for alias id
