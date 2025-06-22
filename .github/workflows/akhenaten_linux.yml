@@ -23,7 +23,7 @@ jobs:
         mkdir build
         mkdir linux_build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./linux_build/akhenaten.linux
