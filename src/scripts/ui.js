@@ -1202,7 +1202,13 @@ brickworks_info_window = {
     })
 }
 
-building_bricklayers_guild_info_window = {
+bricklayers_guild_info_window = {
+    ui : __baseui(workshop_info_window, {
+
+    })
+}
+
+stonemason_guild_info_window = {
     ui : __baseui(workshop_info_window, {
 
     })

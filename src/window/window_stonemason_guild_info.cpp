@@ -1,6 +1,6 @@
 #include "window_building_info.h"
 
-#include "building/building_bricklayers_guild.h"
+#include "building/building_stonemason_guild.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "input/input.h"
@@ -8,7 +8,7 @@
 #include "building/common.h"
 #include "figure/figure.h"
 
-struct bricklayers_guild_info_window : public building_info_window_t<bricklayers_guild_info_window> {
+struct stonemason_guild_info_window : public building_info_window_t<stonemason_guild_info_window> {
     using widget::load;
     virtual void load(archive arch, pcstr section) override {
         widget::load(arch, section);
@@ -16,13 +16,13 @@ struct bricklayers_guild_info_window : public building_info_window_t<bricklayers
 
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.building_get()->type == BUILDING_BRICKLAYERS_GUILD;
+        return c.building_get()->type == BUILDING_STONEMASONS_GUILD;
     }
 };
 
-bricklayers_guild_info_window building_bricklayers_guild_infow;
+stonemason_guild_info_window building_bricklayers_guild_infow;
 
-void bricklayers_guild_info_window::init(object_info &c) {
+void stonemason_guild_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     auto guild = c.building_get()->dcast_guild();
