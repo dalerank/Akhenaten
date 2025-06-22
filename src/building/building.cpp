@@ -734,7 +734,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
 }
 
 void building::check_labor_problem() {
-    if ((houses_covered <= 0 && labor_category != 255) || (labor_category == 255 && num_workers <= 0)) {
+    if ((houses_covered <= 0 && labor_category != LABOR_CATEGORY_INVALID) || (labor_category == LABOR_CATEGORY_INVALID && num_workers <= 0)) {
         show_on_problem_overlay = 2;
     }
 }

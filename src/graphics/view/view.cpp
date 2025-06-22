@@ -323,7 +323,7 @@ void city_view_rotate_right() {
     if (data.orientation > 6)
         data.orientation = DIR_0_TOP_RIGHT;
 
-    if (center.valid() >= 0) {
+    if (center.valid()) {
         vec2i screen = tile_to_screen(center);
         camera_go_to_screen_tile(screen, true);
     }

@@ -13,7 +13,7 @@ struct tutorial_3 : public tutorial_t {
     virtual int missionid() const override { return 3; }
     virtual void init() override;
     virtual void reset() override;
-    virtual void update_step(xstring  overrides);
+    virtual void update_step(xstring  overrides) override;
     virtual xstring goal_text() override;
 };
 

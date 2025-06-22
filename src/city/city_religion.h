@@ -45,6 +45,7 @@ enum e_god_mood {
 };
 
 enum e_god_event {
+    GED_EVENT_UNKNOWN = -1,
     GOD_EVENT_MAJOR_BLESSING = 1,
     GOD_EVENT_MINOR_BLESSING = 2,
     GOD_EVENT_MAJOR_CURSE = 3,

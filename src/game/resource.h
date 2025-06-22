@@ -6,6 +6,7 @@
 #include <array>
 #include <cassert>
 #include <numeric>
+#include <core/tokenum.h>
 
 #include "core/tokenum.h"
 #include "core/svector.h"
@@ -61,6 +62,8 @@ enum e_resource : uint8_t {
     RESOURCE_COUNT
 };
 
+extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
+
 struct id_resources_t {
     static const xstring none;
     static const xstring grain;
@@ -102,8 +105,6 @@ struct id_resources_t {
 };
 
 const id_resources_t& resources();
-
-extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
 
 struct resource_value {
     e_resource type;

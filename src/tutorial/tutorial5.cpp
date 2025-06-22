@@ -35,7 +35,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
 
     const int spacious_apartment_count = g_city.buildings.count_total(BUILDING_HOUSE_SPACIOUS_APARTMENT);
     const int spacious_apartment_built = g_scenario.vars.get_int("spacious_apartment_built");
-    if (spacious_apartment_built < spacious_apartment_built) {
+    if (spacious_apartment_count < spacious_apartment_built) {
         return;
     }
 

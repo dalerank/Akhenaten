@@ -3,8 +3,9 @@
 #include "building/building_type.h"
 #include "scenario/scenario.h"
 #include "graphics/image_groups.h"
+#include "js/js_game.h"
 
-const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
+const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> ANK_CONFIG_ENUM(e_resource_tokens);
 
 static id_resources_t g_tags;
 const id_resources_t &resources() {

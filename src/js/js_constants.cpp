@@ -29,13 +29,12 @@ void js_register_game_constants(js_State *J) {
     // cause it vacant lot id also
     _R(BUILDING_HOUSE_CRUDE_HUT)
 
+    // cuse it is eqaul to RESOURCE_MAX
+    _R(RESOURCE_DEBEN)
+
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});
     }
-}
-
-void js_register_ui_fonts(js_State *J) {
-    js_register_tokens(e_font_type_tokens);
 }
 
 void js_register_token(int id, pcstr name) {
@@ -73,48 +72,3 @@ void js_register_city_advisors(js_State *J) {
     _R(ADVISOR_FINANCIAL)
     _R(ADVISOR_CHIEF)
 };
-
-void js_register_city_resources(js_State *J) {
-   _R(RESOURCE_NONE)
-   _R(RESOURCE_MIN)
-   _R(RESOURCE_FOOD_MIN)
-   _R(RESOURCE_GRAIN)
-   _R(RESOURCE_MEAT)
-   _R(RESOURCE_LETTUCE)
-   _R(RESOURCE_CHICKPEAS)
-   _R(RESOURCE_POMEGRANATES)
-   _R(RESOURCE_FIGS)
-   _R(RESOURCE_FISH)
-   _R(RESOURCE_GAMEMEAT)
-   _R(RESOURCES_FOODS_MAX)
-   _R(RESOURCE_STRAW)
-   _R(RESOURCE_WEAPONS)
-   _R(RESOURCE_CLAY)
-   _R(RESOURCE_BRICKS)
-   _R(RESOURCE_POTTERY)
-   _R(RESOURCE_BARLEY)
-   _R(RESOURCE_BEER)
-   _R(RESOURCE_FLAX)
-   _R(RESOURCE_LINEN)
-   _R(RESOURCE_GEMS)
-   _R(RESOURCE_LUXURY_GOODS)
-   _R(RESOURCE_TIMBER)
-   _R(RESOURCE_GOLD)
-   _R(RESOURCE_REEDS)
-   _R(RESOURCE_PAPYRUS)
-   _R(RESOURCE_STONE)
-   _R(RESOURCE_LIMESTONE)
-   _R(RESOURCE_GRANITE)
-   _R(RESOURCE_UNUSED12)
-   _R(RESOURCE_CHARIOTS)
-   _R(RESOURCE_COPPER)
-   _R(RESOURCE_SANDSTONE)
-   _R(RESOURCE_OIL)
-   _R(RESOURCE_HENNA)
-   _R(RESOURCE_PAINT)
-   _R(RESOURCE_LAMPS)
-   _R(RESOURCE_MARBLE)
-   _R(RESOURCES_MAX)
-   _R(RESOURCE_DEBEN)
-   _R(RESOURCE_TROOPS)
-}

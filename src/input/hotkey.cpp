@@ -201,7 +201,7 @@ static void add_definition(const hotkey_mapping& mapping, bool alt) {
         def->callback = [] { events::emit(event_city_building_mode{ BUILDING_GRANARY }); };
         break;
 
-    case BUILDING_STORAGE_YARD:
+    case HOTKEY_BUILD_STORAGE_YARD:
         def->callback = [] { events::emit(event_city_building_mode{ BUILDING_STORAGE_YARD }); };
         break;
 

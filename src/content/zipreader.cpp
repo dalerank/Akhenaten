@@ -492,7 +492,7 @@ namespace vfs {
             bz_ctx.next_out = pBuf.data();
             bz_ctx.avail_out = uncompressedSize;
             err = BZ2_bzDecompress(&bz_ctx);
-            err;
+            //err;
 
             err = BZ2_bzDecompressEnd(&bz_ctx);
 

@@ -57,8 +57,6 @@ void buffer::reset_offset() {
 }
 
 bool buffer::is_valid(size_t count) const {
-    if (this == nullptr)
-        return false; // eh........ if it works, it works
     bool result = true;
     if (index + count > size()) {
         result = false;

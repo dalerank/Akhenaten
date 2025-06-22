@@ -809,7 +809,7 @@ void city_religion_t::update_curses_and_blessings(e_god randm_god, e_god_event f
         god_state* god = &gods[randm_god];
 
         if (force == GOD_EVENT_MAJOR_BLESSING
-            || (force == -1 && god->happy_ankhs == 50 && god->months_since_festival < 15)) {
+            || (force == GED_EVENT_UNKNOWN && god->happy_ankhs == 50 && god->months_since_festival < 15)) {
             /* ***** MAJOR BLESSINGS ***** */
             perform_major_blessing((e_god)randm_god);
             god->happy_ankhs = 0;
