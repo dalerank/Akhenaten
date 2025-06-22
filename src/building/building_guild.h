@@ -13,7 +13,7 @@ public:
         uint8_t max_workers;
     } BUILDING_RUNTIME_DATA(runtime_data_t);
 
-    virtual void building_guild::on_create(int orientation) override;
+    virtual void on_create(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
