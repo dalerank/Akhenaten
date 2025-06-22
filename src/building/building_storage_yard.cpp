@@ -113,7 +113,7 @@ int building_storage_yard::amount(e_resource resource) const {
 
 int building_storage_yard::total_stored() const {
     int total_stored = 0;
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
         total_stored += amount(r);
     }
 
@@ -447,7 +447,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
 
 storage_worker_task building_storage_yard_determine_getting_up_resources(building* b) {
     building_storage_yard* warehouse = b->dcast_storage_yard();
-    for (e_resource check_resource = RESOURCE_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
+    for (e_resource check_resource = RESOURCES_MIN; check_resource < RESOURCES_MAX; ++check_resource) {
         if (!warehouse->is_getting(check_resource) || g_city.resource.is_stockpiled(check_resource)) {
             continue;
         }
@@ -723,7 +723,7 @@ storage_worker_task building_storage_yard_deliver_emptying_resources(building *b
         return { STORAGEYARD_TASK_NONE };
     }
 
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
         if (!warehouse->is_emptying(r)) {
             continue;
         }

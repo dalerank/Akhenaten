@@ -120,7 +120,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
     }
 
     e_resource resource_to_import = city_trade_current_caravan_import_resource();
-    int imp = RESOURCE_MIN;
+    int imp = RESOURCES_MIN;
     while (imp < RESOURCES_MAX && !g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
         imp++;
         resource_to_import = city_trade_next_caravan_import_resource();
@@ -152,7 +152,7 @@ e_resource trader_get_sell_resource(building* b, int city_id) {
         space = space->next_room();
     }
     // find another importable resource that can be added to this warehouse
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+    for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
         resource_to_import = city_trade_next_caravan_backup_import_resource();
         if (g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
             space = warehouse->room();

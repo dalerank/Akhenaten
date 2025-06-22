@@ -67,7 +67,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
         return false;
 
     int num_importable = 0;
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
         if (!warehouse->is_not_accepting(r)) {
             if (g_empire.can_import_resource_from_city(city_id, r))
                 num_importable++;
@@ -82,7 +82,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
     if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
         can_import = 1;
     } else {
-        for (int i = RESOURCE_MIN; i < RESOURCES_MAX; i++) {
+        for (int i = RESOURCES_MIN; i < RESOURCES_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
             if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
                 can_import = 1;
@@ -141,7 +141,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
 
         const storage_t* s = warehouse->storage();
         int num_imports_for_warehouse = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (!warehouse->is_not_accepting(r) && g_empire.can_import_resource_from_city(city_id, r)) {
                 num_imports_for_warehouse++;
             }
@@ -155,7 +155,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
             }
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
-                for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+                for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
                     if (!warehouse->is_not_accepting(city_trade_next_caravan_import_resource()))
                         break;
                 }

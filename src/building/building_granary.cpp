@@ -108,7 +108,7 @@ int building_granary::add_resource(e_resource resource, int amount, bool force) 
 
 int building_granary::total_stored() const {
     int result = 0;
-    for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
+    for (e_resource r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
         result += amount(r);
     }
 
@@ -342,7 +342,7 @@ void building_granary::bless() {
             continue;
 
         int total_stored = 0;
-        for (e_resource r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
+        for (e_resource r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
             total_stored += this->amount(r);
         }
 

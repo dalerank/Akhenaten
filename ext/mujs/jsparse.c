@@ -136,7 +136,7 @@ static int jsP_accept(js_State *J, int x) {
 	return (J->lookahead == x ? (jsP_next(J), 1) : 0);
 }
 
-static void jsP_expect(js_State *J, char x) {
+static void jsP_expect(js_State *J, int x) {
 	if (!jsP_accept(J, x)) {
 		jsP_error(J, "unexpected token: %s (expected %s)", jsY_tokenstring(J->lookahead), jsY_tokenstring(x));
 	}

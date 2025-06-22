@@ -61,8 +61,8 @@ void city_t::init() {
     health.value = 50;
     unused.unknown_00c0 = 3;
     finance.tax_percentage = 7;
-    trade.caravan_import_resource = RESOURCE_MIN;
-    trade.caravan_backup_import_resource = RESOURCE_MIN;
+    trade.caravan_import_resource = RESOURCES_MIN;
+    trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
     population.monthly.count = 0;
     festival.months_since_festival = 1;
@@ -452,7 +452,7 @@ void city_t::update_allowed_foods() {
 
     std::fill_n(std::begin(resource.food_types_allowed), RESOURCES_FOODS_MAX, RESOURCE_NONE);
 
-    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
+    for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
         bool can_import_food = g_empire.can_import_resource(resource, false);
         bool can_produce_food = can_produce_resource(resource);
         if (can_import_food || can_produce_food) {

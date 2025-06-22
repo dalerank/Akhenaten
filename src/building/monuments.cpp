@@ -691,7 +691,7 @@ bool building_monument_requires_resource(e_building_type type, e_resource resour
 bool building_monument_has_required_resources_to_build(e_building_type type) {
     int phases = building_monument_phases(type);
     for (int phase = 1; phase < phases; phase++) {
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (building_monument_needs_resources(type, r, phase) > 0 &&
                 !g_city.can_produce_resource(r)) {
                 return false;

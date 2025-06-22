@@ -288,7 +288,7 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
 
     const auto &item_buy = ui["city_buy_item"];
     vec2i e_offset = e->pos;
-    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
+    for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
         if (!empire_object_city_buys_resource(object->id, resource))
             continue;
 
@@ -317,7 +317,7 @@ void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
     const auto &item_sell = ui["city_sell_item"];
     int index = 0;
     vec2i e_offset = e->pos;
-    for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
+    for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
         if (!empire_object_city_sells_resource(object->id, resource)) {
             continue;
         }

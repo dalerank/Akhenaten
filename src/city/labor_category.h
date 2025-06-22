@@ -15,6 +15,8 @@ enum e_labor_category {
     LABOR_CATEGORY_MILITARY = 8,
     LABOR_CATEGORY_CULTURE = 9,
     LABOR_CATEGORY_SIZE = 10,
+
+    LABOR_CATEGORY_INVALID = 0xff
 };
 
 extern const token_holder<e_labor_category, LABOR_CATEGORY_NONE, LABOR_CATEGORY_SIZE> e_labor_category_tokens;

@@ -230,7 +230,7 @@ bool figure_trade_caravan::window_info_background(object_info &c) {
         // bought
         int y_base = c.offset.y + 180;
         width = lang_text_draw(129, 4, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_bought_resources(trader_id, r)) {
                 width += text_draw_number(trader_bought_resources(trader_id, r), '@'," ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -241,7 +241,7 @@ bool figure_trade_caravan::window_info_background(object_info &c) {
         // sold
         y_base = c.offset.y + 210;
         width = lang_text_draw(129, 5, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_sold_resources(trader_id, r)) {
                 width += text_draw_number(trader_sold_resources(trader_id, r), '@', " ", c.offset.x + 40 + width, y_base, FONT_NORMAL_BLACK_ON_DARK);
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
@@ -253,7 +253,7 @@ bool figure_trade_caravan::window_info_background(object_info &c) {
              // buying
         int y_base = c.offset.y + 180;
         width = lang_text_draw(129, 2, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (city->buys_resource[r]) {
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});
@@ -263,7 +263,7 @@ bool figure_trade_caravan::window_info_background(object_info &c) {
         // selling
         y_base = c.offset.y + 210;
         width = lang_text_draw(129, 3, c.offset.x + 40, y_base, FONT_NORMAL_BLACK_ON_DARK);
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
                 int image_id = image_id_resource_icon(r) + resource_image_offset(r, RESOURCE_IMAGE_ICON);
                 ImageDraw::img_generic(ctx, image_id, vec2i{c.offset.x + 40 + width, y_base - 3});

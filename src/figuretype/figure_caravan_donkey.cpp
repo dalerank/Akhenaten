@@ -101,7 +101,7 @@ void figure_caravan_donkey_info_window::init(object_info &c) {
     if (trader_has_traded(trader_id)) {
         // bought
         bstring256 bought_items = ui::str(129, 4);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_bought_resources(trader_id, r)) {
                 int amount = trader_bought_resources(trader_id, r);
                 int image_id = image_id_resource_icon(r);
@@ -113,7 +113,7 @@ void figure_caravan_donkey_info_window::init(object_info &c) {
 
         // sold
         bstring256 sold_items = ui::str(129, 5);
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (trader_sold_resources(trader_id, r)) {
                 int amount = trader_sold_resources(trader_id, r);
                 int image_id = image_id_resource_icon(r);
@@ -129,7 +129,7 @@ void figure_caravan_donkey_info_window::init(object_info &c) {
     // nothing sold/bought (yet)
     // buying
     bstring256 buing_items = ui::str(129, 2);
-    for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
         if (city->buys_resource[r]) {
             int image_id = image_id_resource_icon(r);
             buing_items.append("@I%u& ", image_id);
@@ -139,7 +139,7 @@ void figure_caravan_donkey_info_window::init(object_info &c) {
 
     // selling
     bstring256 selling_items = ui::str(129, 3);
-    for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+    for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
         if (city->sells_resource[r]) {
             int image_id = image_id_resource_icon(r);
             buing_items.append("@I%u& ", image_id);

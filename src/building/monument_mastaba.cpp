@@ -502,7 +502,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
 
     if (monumentd.phase >= 2) {
         int minimal_percent = 100;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             bool need_resource = building_monument_needs_resource(&base, r);
             if (need_resource) {
                 minimal_percent = std::min<int>(minimal_percent, monumentd.resources_pct[r]);

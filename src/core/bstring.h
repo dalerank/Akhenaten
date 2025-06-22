@@ -50,13 +50,13 @@ public:
     inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6) { concat(s1, s2, s3, s4, s5, s6); }
     inline bstring(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6, pcstr s7) { concat(s1, s2, s3, s4, s5, s6, s7); }
 
-    inline ref concat(pcstr s1) { snprintf(_data, _size, "%s", s1); return *this; }
-    inline ref concat(pcstr s1, pcstr s2) { snprintf(_data, _size, "%s%s", s1, s2); return *this; }
-    inline ref concat(pcstr s1, pcstr s2, pcstr s3) { snprintf(_data, _size, "%s%s%s", s1, s2, s3); return *this; }
-    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size, "%s%s%s%s", s1, s2, s3, s4); return *this; }
-    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size, "%s%s%s%s%s", s1, s2, s3, s4, s5); return *this; }
-    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6) { snprintf(_data, _size, "%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6); return *this; }
-    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6, pcstr s7) { snprintf(_data, _size, "%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7); return *this; }
+    inline ref concat(pcstr s1) { snprintf(_data, _size-1, "%s", s1); return *this; }
+    inline ref concat(pcstr s1, pcstr s2) { snprintf(_data, _size-1, "%s%s", s1, s2); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3) { snprintf(_data, _size-1, "%s%s%s", s1, s2, s3); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4) { snprintf(_data, _size-1, "%s%s%s%s", s1, s2, s3, s4); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5) { snprintf(_data, _size-1, "%s%s%s%s%s", s1, s2, s3, s4, s5); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6) { snprintf(_data, _size-1, "%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6); return *this; }
+    inline ref concat(pcstr s1, pcstr s2, pcstr s3, pcstr s4, pcstr s5, pcstr s6, pcstr s7) { snprintf(_data, _size-1, "%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7); return *this; }
 
     inline ref cat(pcstr s) { snprintf(_data, _size, "%s%s", _data, s); return *this; }
     inline ref cat(pcstr s1, pcstr s2) { snprintf(_data, _size, "%s%s%s", _data, s1, s2); return *this; }

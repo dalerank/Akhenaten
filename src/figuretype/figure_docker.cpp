@@ -90,7 +90,7 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
     const resource_list importable = g_empire.importable_resources_from_city(city_id);
 
     e_resource resource = city_trade_next_docker_import_resource();
-    for (e_resource i = RESOURCE_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
+    for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
         resource = city_trade_next_docker_import_resource();
     }
 
@@ -174,7 +174,7 @@ int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int
     const resource_list exportable = g_empire.exportable_resources_from_city(city_id);
 
     e_resource resource = city_trade_next_docker_export_resource();
-    for (int i = RESOURCE_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
+    for (int i = RESOURCES_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
         resource = city_trade_next_docker_export_resource();
     }
 

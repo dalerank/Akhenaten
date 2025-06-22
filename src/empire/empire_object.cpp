@@ -117,7 +117,7 @@ void empire_object_init_cities() {
         city->cost_to_open = obj->trade_route_cost;
         city->is_sea_trade = is_sea_trade_route(obj->obj.trade_route_id);
 
-        for (e_resource resource = RESOURCE_MIN; resource < RESOURCES_MAX; ++resource) {
+        for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
             city->sells_resource[resource] = false;
             city->buys_resource[resource] = false;
             if (!is_trade_city(i))

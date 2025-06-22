@@ -31,7 +31,7 @@ void figure_trader_ship_info_window::init(object_info &c) {
 
         // bought
         bstring128 bought_items;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (int amount = trader_bought_resources(trader_id, r)) {
                 int image_id = image_id_resource_icon(r);
                 bought_items.append(" @I%u& %u", image_id, amount);
@@ -41,7 +41,7 @@ void figure_trader_ship_info_window::init(object_info &c) {
 
         // sold
         bstring128 sold_items;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (int amount = trader_sold_resources(trader_id, r)) {
                 int image_id = image_id_resource_icon(r);
                 sold_items.append(" @I%u& %u", image_id, amount);
@@ -54,7 +54,7 @@ void figure_trader_ship_info_window::init(object_info &c) {
         ui["sell"] = ui::str(129, 3);
 
         bstring128 buy_items;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (city->buys_resource[r]) {
                 int image_id = image_id_resource_icon(r);
                 buy_items.append("@I%u& ", image_id);
@@ -64,7 +64,7 @@ void figure_trader_ship_info_window::init(object_info &c) {
 
         // selling
         bstring128 sell_items;
-        for (int r = RESOURCE_MIN; r < RESOURCES_MAX; r++) {
+        for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
             if (city->sells_resource[r]) {
                 int image_id = image_id_resource_icon(r);
                 buy_items.append("@I%u& ", image_id);

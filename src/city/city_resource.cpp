@@ -416,7 +416,7 @@ void city_resources_t::calculate_available_food() {
 
         int amount_stored = 0;
         const auto &granary = b.dcast_granary()->runtime_data();
-        for (int r = RESOURCE_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
+        for (int r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
             amount_stored += granary.resource_stored[r];
         }
 
@@ -433,7 +433,7 @@ void city_resources_t::calculate_available_food() {
         }
     }, BUILDING_GRANARY);
 
-    for (int i = RESOURCE_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
+    for (int i = RESOURCES_FOOD_MIN; i < RESOURCES_FOODS_MAX; i++) {
         const bool hasInCity = granary_food_stored[i];
         granary_total_stored += granary_food_stored[i];
     }

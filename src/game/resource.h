@@ -14,8 +14,6 @@
 
 enum e_resource : uint8_t {
     RESOURCE_NONE = 0,
-    RESOURCE_MIN = 1,
-    RESOURCE_FOOD_MIN = 1,
     RESOURCE_GRAIN = 1,
     RESOURCE_MEAT = 2,
     RESOURCE_LETTUCE = 3,
@@ -24,7 +22,6 @@ enum e_resource : uint8_t {
     RESOURCE_FIGS = 6,
     RESOURCE_FISH = 7,
     RESOURCE_GAMEMEAT = 8,
-    RESOURCES_FOODS_MAX = 9,
     RESOURCE_STRAW = 9,
     RESOURCE_WEAPONS = 10,
     RESOURCE_CLAY = 11,
@@ -52,7 +49,7 @@ enum e_resource : uint8_t {
     RESOURCE_PAINT = 33,
     RESOURCE_LAMPS = 34,
     RESOURCE_MARBLE = 35,
-    RESOURCES_MAX = 36,
+
     //
     RESOURCE_DEBEN = 36,
     RESOURCE_TROOPS = 37,
@@ -61,6 +58,11 @@ enum e_resource : uint8_t {
 
     RESOURCE_COUNT
 };
+
+constexpr e_resource RESOURCES_FOODS_MAX = RESOURCE_STRAW;
+constexpr e_resource RESOURCES_MIN = RESOURCE_GRAIN;
+constexpr e_resource RESOURCES_FOOD_MIN = RESOURCE_GRAIN;
+constexpr e_resource RESOURCES_MAX = RESOURCE_DEBEN;
 
 extern const token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT> e_resource_tokens;
 

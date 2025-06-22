@@ -24,7 +24,7 @@ int io_read_sgx_entries_num(vfs::path filepath) {
         uint32_t reserved;
     } sgx_header;
 
-    fread(&sgx_header, sizeof(sgx_header_t), 1, fp);
+    [[maybe_unused]] int bytesRead = fread(&sgx_header, sizeof(sgx_header_t), 1, fp);
     vfs::file_close(fp);
 
     sgx_header.entries_num += 1;

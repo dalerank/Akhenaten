@@ -266,7 +266,7 @@ bool city_religion_t::PTAH_warehouse_destruction() {
             continue;
 
         int total_stored = 0;
-        for (e_resource r = RESOURCE_MIN; r < RESOURCES_MAX; ++r) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             total_stored += warehouse->amount(r);
         }
 

@@ -29,7 +29,7 @@ void js_register_game_constants(js_State *J) {
     // cause it vacant lot id also
     _R(BUILDING_HOUSE_CRUDE_HUT)
 
-    // cuse it is eqaul to RESOURCE_MAX
+    // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)
 
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
@@ -44,15 +44,6 @@ void js_register_token(int id, pcstr name) {
     auto J = js_vm_state();
     js_newnumber(J, id);
     js_setglobal(J, name);
-}
-
-void js_register_terrain(js_State *J) {
-   _R(TERRAIN_USAGE_ANY)
-   _R(TERRAIN_USAGE_ROADS)
-   _R(TERRAIN_USAGE_ENEMY)
-   _R(TERRAIN_USAGE_PREFER_ROADS)
-   _R(TERRAIN_USAGE_WALLS)
-   _R(TERRAIN_USAGE_ANIMAL)
 }
 
 void js_register_menu(js_State *J) {
