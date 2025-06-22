@@ -21,6 +21,7 @@
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "widget/widget_city.h"
+#include "js/js_game.h"
 
 #include <string.h>
 #include <map>
@@ -31,7 +32,7 @@
 #endif // _MSC_VER
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
-const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
+const token_holder<e_permission, epermission_none, epermission_count> ANK_CONFIG_ENUM(e_permission_tokens);
 
 declare_console_command_p(killall) {
     for (auto &f: map_figures()) {

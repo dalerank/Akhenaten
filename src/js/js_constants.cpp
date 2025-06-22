@@ -23,20 +23,15 @@ void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
     _R(FILE_DIALOG_LOAD)
 
+    // repeated for alias id
+    _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
+ 
+    // cause it vacant lot id also
+    _R(BUILDING_HOUSE_CRUDE_HUT)
+
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});
     }
-}
-
-void js_register_city_sound_constants(js_State *J) {
-    js_register_tokens(e_sound_channel_city_tokens);
-    // repeated for alias id
-    _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
-}
-
-void js_register_city_buildings(js_State *J) {
-    // cause it vacant lot id also
-    _R(BUILDING_HOUSE_CRUDE_HUT)
 }
 
 void js_register_ui_fonts(js_State *J) {
@@ -58,10 +53,6 @@ void js_register_city_constants(js_State *J) {
 
 void js_register_event_type(js_State *J) {
     js_register_tokens(e_event_type_tokens);
-}
-
-void js_register_permission(js_State *J) {
-    js_register_tokens(e_permission_tokens);
 }
 
 void js_register_token(int id, pcstr name) {
