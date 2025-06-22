@@ -23,7 +23,7 @@
 
 static int cheated_invasion = 0;
 
-const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> e_gift_tokens;
+const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> ANK_CONFIG_ENUM(e_gift_tokens);
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
 declare_console_command_p(updatekingdome) {

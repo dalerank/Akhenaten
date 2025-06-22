@@ -247,7 +247,6 @@ void js_reset_vm_state() {
     js_register_city_resources(vm.J);
     js_register_city_advisors(vm.J);
     js_register_event_type(vm.J);
-    js_register_city_constants(vm.J);
     js_register_terrain(vm.J);
     js_register_menu(vm.J);
 

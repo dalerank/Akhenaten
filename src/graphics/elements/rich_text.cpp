@@ -352,7 +352,7 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
                             current_width -= img_width;
 
                             tmp_line.append('@');
-                            while (c = '0' && c <= '9') {
+                            while (c >= '0' && c <= '9') {
                                 tmp_line.append(c);
                                 c = *text++;
                             }

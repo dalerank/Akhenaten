@@ -42,10 +42,6 @@ void js_register_city_labor_category(js_State *J) {
     js_register_tokens(e_labor_category_tokens);
 }
 
-void js_register_city_constants(js_State *J) {
-    js_register_tokens(e_gift_tokens);
-}
-
 void js_register_event_type(js_State *J) {
     js_register_tokens(e_event_type_tokens);
 }
