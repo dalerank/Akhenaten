@@ -42,11 +42,6 @@ void js_register_city_labor_category(js_State *J) {
     js_register_tokens(e_labor_category_tokens);
 }
 
-void js_register_city_overlays(js_State *J) {
-    js_register_tokens(e_overlay_tokens);
-    js_register_tokens(e_column_type_tokens);
-}
-
 void js_register_city_constants(js_State *J) {
     js_register_tokens(e_gift_tokens);
 }

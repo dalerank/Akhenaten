@@ -4,7 +4,6 @@
 
 struct js_State;
 void js_register_game_constants(js_State *J);
-void js_register_city_overlays(js_State *J);
 void js_register_city_labor_category(js_State *J);
 void js_register_ui_fonts(js_State *J);
 void js_register_city_resources(js_State *J);
