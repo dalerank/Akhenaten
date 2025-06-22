@@ -45,6 +45,7 @@
 #include <map>
 
 #include "dev/debug.h"
+#include "js/js_game.h"
 #include <iostream>
 
 declare_console_command_p(destroytype) {
@@ -57,7 +58,8 @@ declare_console_command_p(destroytype) {
 };
 
 const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
-const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> e_building_type_tokens;
+const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> ANK_CONFIG_ENUM(e_building_type_tokens);
+
 static std::array<const building_impl::static_params *, BUILDING_MAX> *building_impl_params = nullptr;
 
 building_impl::static_params building_impl::static_params::dummy;

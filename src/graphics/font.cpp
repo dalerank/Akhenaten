@@ -3,7 +3,7 @@
 #include "core/encoding/trad_chinese.h"
 #include "image.h"
 
-const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_tont_type_tokens;
+const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_font_type_tokens;
 
 static int image_y_offset_none(uint8_t c, int image_height, int line_height);
 static int image_y_offset_default(uint8_t c, int image_height, int line_height);

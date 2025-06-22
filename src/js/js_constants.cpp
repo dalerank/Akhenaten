@@ -1,7 +1,7 @@
 #include "js_constants.h"
 
 #include "js_defines.h"
-
+#include "js_game.h"
 #include "input/hotkey.h"
 #include "mujs/mujs.h"
 #include "window/file_dialog.h"
@@ -17,66 +17,64 @@
 
 #include "sound/sound_city.h"
 
-template<typename T>
-void js_register_tokens(js_State *J, const T &tokens) {
-    for (const auto &btype : tokens.values) {
-        if (!btype.name || !*btype.name) {
-            continue;
-        }
-        js_newnumber(J, btype.id);
-        js_setglobal(J, btype.name);
+js_State *js_vm_state();
+#define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
+void js_register_game_constants(js_State *J) {
+    _R(FILE_TYPE_SAVED_GAME)
+    _R(FILE_DIALOG_LOAD)
+
+    for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
+        s->func({});
     }
 }
 
-#define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
-void js_register_game_constants(js_State *J) {
-   _R(FILE_TYPE_SAVED_GAME)
-   _R(FILE_DIALOG_LOAD)
-}
-
-void js_register_collection_images(js_State *J) {
-    js_register_tokens(J, e_pack_type_tokens);
-}
-
 void js_register_city_walkers(js_State *J) {
-    js_register_tokens(J, e_figure_type_tokens);
+    js_register_tokens(e_figure_type_tokens);
 }
 
 void js_register_city_sound_constants(js_State *J) {
-    js_register_tokens(J, e_sound_channel_city_tokens);
+    js_register_tokens(e_sound_channel_city_tokens);
     // repeated for alias id
     _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
 }
 
 void js_register_city_buildings(js_State *J) {
-    js_register_tokens(J, e_building_type_tokens);
     // cause it vacant lot id also
     _R(BUILDING_HOUSE_CRUDE_HUT)
 }
 
 void js_register_ui_fonts(js_State *J) {
-    js_register_tokens(J, e_tont_type_tokens);
+    js_register_tokens(e_font_type_tokens);
 }
 
 void js_register_city_labor_category(js_State *J) {
-    js_register_tokens(J, e_labor_category_tokens);
+    js_register_tokens(e_labor_category_tokens);
 }
 
 void js_register_city_overlays(js_State *J) {
-    js_register_tokens(J, e_overlay_tokens);
-    js_register_tokens(J, e_column_type_tokens);
+    js_register_tokens(e_overlay_tokens);
+    js_register_tokens(e_column_type_tokens);
 }
 
 void js_register_city_constants(js_State *J) {
-    js_register_tokens(J, e_gift_tokens);
+    js_register_tokens(e_gift_tokens);
 }
 
 void js_register_event_type(js_State *J) {
-    js_register_tokens(J, e_event_type_tokens);
+    js_register_tokens(e_event_type_tokens);
 }
 
 void js_register_permission(js_State *J) {
-    js_register_tokens(J, e_permission_tokens);
+    js_register_tokens(e_permission_tokens);
+}
+
+void js_register_token(int id, pcstr name) {
+    if (!name || !*name) {
+        return; // skip empty names
+    }
+    auto J = js_vm_state();
+    js_newnumber(J, id);
+    js_setglobal(J, name);
 }
 
 void js_register_terrain(js_State *J) {
