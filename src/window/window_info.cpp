@@ -252,6 +252,7 @@ static void window_info_handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (!button_id && input_go_back_requested(m, h)) {
+        context.reset(tile2i::invalid);
         if (context.storage_show_special_orders) {
             storage_settings_backup_check();
         } else {

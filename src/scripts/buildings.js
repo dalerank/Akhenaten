@@ -641,7 +641,7 @@ building_stonemason_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:88 }
     base : { pack:PACK_GENERAL, id:88 }
-    work : { pack:PACK_GENERAL, id:88, offset:1, max_frames:12 }
+    work : { pos:[73, -12], pack:PACK_GENERAL, id:88, offset:1, max_frames:12, duration:4 }
   }
   
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
@@ -1436,7 +1436,7 @@ building_mortuary = {
   animations : {
     preview : { pack:PACK_GENERAL, id:175 },
     base : { pack:PACK_GENERAL, id:175 },
-    work : { pack:PACK_GENERAL, id:175, offset:1, max_frames:12 }
+    work : { pos:[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 }
   },
   max_serve_clients : 1000,
   building_size : 2,
