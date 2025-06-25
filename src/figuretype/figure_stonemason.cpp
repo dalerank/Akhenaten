@@ -1,6 +1,7 @@
 #include "figure_stonemason.h"
 
 #include "building/monument_mastaba.h"
+#include "building/building_statue.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
 
@@ -27,18 +28,42 @@ void figure_stonemason::figure_action() {
     case 9:
         break;
 
+    case FIGURE_ACTION_30_MASON_CREATED_ROAMING:
+        base.destination_tile = destination()->access_tile();
+        advance_action(FIGURE_ACTION_31_MASON_GOING_TO_STATUE);
+        break;
+
     case FIGURE_ACTION_10_MASON_CREATED:
         base.destination_tile = destination()->access_tile();
-        advance_action(FIGURE_ACTION_11_BRIRKLAYER_GOING);
+        advance_action(FIGURE_ACTION_11_MASON_GOING);
         break;
 
     case FIGURE_ACTION_20_MASON_DESTROY:
         poof();
         break;
 
+    case FIGURE_ACTION_31_MASON_GOING_TO_STATUE:
+        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_MASON_DESTROY)) {
+            base.wait_ticks = 0;
+            advance_action(FIGURE_ACTION_14_MASON_WORK_STATUE_GROUND);
+        }
+        break;
+
     case FIGURE_ACTION_11_MASON_GOING:
-        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_BRIRKLAYER_DESTROY)) {
-            advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_MASON_DESTROY)) {
+            advance_action(FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE);
+        }
+        break;
+
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_GROUND:
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_WALL:
+        base.wait_ticks++;
+        if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
+            auto statue = smart_cast<building_statue>(building_get(base.data.stonemason.destination_bid));
+            if (statue) {
+                statue->set_service(100);
+            }
+            advance_action(FIGURE_ACTION_16_MASON_RETURN_HOME);
         }
         break;
 
@@ -49,16 +74,26 @@ void figure_stonemason::figure_action() {
                     map_monuments_set_progress(t, progress + 1);
                 });
             } else {
-                advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+                advance_action(FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE);
             }
         }
         break;
 
     case FIGURE_ACTION_16_MASON_RETURN_HOME:
-        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_18_BRICKLAYER_RANDOM_TILE)) {
+        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_18_MASON_RANDOM_TILE)) {
             poof();
         }
         break;
+    }
+}
+
+void figure_stonemason::on_destroy() {
+    figure_impl::on_destroy();
+
+    // If the stonemason is working on a monument/statue, we need to remove it from the workers list.
+    building *b_dest = building_get(base.data.stonemason.destination_bid);
+    if (b_dest) {
+        b_dest->remove_figure_by_id(base.id);
     }
 }
 
@@ -67,10 +102,12 @@ void figure_stonemason::update_animation() {
 
     switch (action_state()) {
     case FIGURE_ACTION_14_MASON_WORK_GROUND:
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_GROUND:
         image_set_animation(animkeys().work_ground);
         break;
 
-    case FIGURE_ACTION_14_MASON_WORK_WALL:
+    case FIGURE_ACTION_15_MASON_WORK_WALL:
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_WALL:
         image_set_animation(animkeys().work_wall);
         break;
 

@@ -652,9 +652,9 @@ public:
     building &base;
 };
 
-template <typename dest_type>
-inline dest_type *smart_cast(building *b) {
-    return ::smart_cast<dest_type *>(b->dcast());
+template <typename dest_type, typename r_type = std::add_pointer_t<std::remove_pointer_t<dest_type>>>
+inline r_type smart_cast(building *b) {
+    return ::smart_cast<r_type>(b->dcast());
 }
 
 template<typename ... Args>

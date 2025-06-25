@@ -125,15 +125,26 @@ void building_statue::bind_dynamic(io_buffer *iob, size_t version) {
 
     iob->bind____skip(38);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
-    }
-    iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
+    iob->bind____skip(10);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.service);
     iob->bind(BIND_SIGNATURE_UINT8, &d.statue_offset);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
+    }
+}
+
+void building_statue::add_workers(figure_id fid) {
+    base.set_figure(0, fid);
+}
+
+void building_statue::update_day() {
+    building_impl::update_day();
+
+    auto &d = runtime_data();
+    if (d.service > 0) {
+        d.service--;
     }
 }

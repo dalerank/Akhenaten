@@ -215,7 +215,13 @@ public:
 
         struct {
             short idle_wait_count;
+            building_id destination_bid;
         } bricklayer;
+
+        struct {
+            short idle_wait_count;
+            building_id destination_bid;
+        } stonemason;
 
         struct {
             short active_order;

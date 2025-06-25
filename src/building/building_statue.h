@@ -31,10 +31,9 @@ public:
         uint8_t statue_offset;
         uint8_t temple_complex_upgrades;
         uint8_t resources_pct[RESOURCES_MAX];
-        uint16_t workers[5];
-        int8_t phase;
+        uint8_t service;
         uint8_t upgrades;
-    };
+    } BUILDING_RUNTIME_DATA(runtime_data_t);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -42,10 +41,13 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void update_map_orientation(int map_orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void add_workers(figure_id fid) override;
+    virtual void update_day() override;
+
     virtual const statue_params_t &statue_params() = 0;
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
+    uint8_t service() const { return runtime_data().service; }
+    void set_service(uint8_t v) { runtime_data().service = v; }
 };
 
 class building_small_statue : public building_statue {
@@ -55,7 +57,7 @@ public:
     virtual const statue_params_t &statue_params() { return current_params(); }
 
     using static_params = static_params_t<building_small_statue>;
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    BUILDING_STATIC_DATA(static_params);
 };
 
 class building_medium_statue : public building_statue {
@@ -65,7 +67,7 @@ public:
     virtual const statue_params_t &statue_params() { return current_params(); }
 
     using static_params = static_params_t<building_medium_statue>;
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    BUILDING_STATIC_DATA(static_params);
 };
 
 class building_large_statue : public building_statue {
@@ -75,5 +77,5 @@ public:
     virtual const statue_params_t &statue_params() { return current_params(); }
 
     using static_params = static_params_t<building_large_statue>;
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    BUILDING_STATIC_DATA(static_params);
 };

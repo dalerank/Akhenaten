@@ -1,7 +1,8 @@
 #include "building_stonemason_guild.h"
 
-#include "building/building.h"
+#include "building/building_statue.h"
 #include "building/monuments.h"
+#include "figuretype/figure_stonemason.h"
 #include "city/city.h"
 #include "city/city_labor.h"
 #include "core/calc.h"
@@ -35,20 +36,12 @@ void building_stonemason_guild::on_create(int orientation) {
 }
 
 bool building_stonemason_guild::can_spawn_stonemason_man(int max_gatherers_per_building) {
-    return false;
+   bool has_free_man = (base.get_figures_number(FIGURE_STONEMASON) < runtime_data().max_workers);
+   if (!has_free_man) {
+       return false;
+   }
 
-   //uint32_t total_sites = g_city.buildings.count_total(BUILDING_SMALL_MASTABA);
-   //uint32_t active_sites = g_city.buildings.count_active(BUILDING_SMALL_MASTABA);
-   //if (total_sites == active_sites) {
-   //    return false;
-   //}
-   //
-   //bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
-   //if (!has_free_man) {
-   //    return false;
-   //}
-
-    //return true;
+   return true;
 }
 
 void building_stonemason_guild::spawn_figure() {
@@ -87,16 +80,44 @@ void building_stonemason_guild::spawn_figure() {
             return false;
         }
 
-        return building_monument_need_bricklayers(&b);
+        return building_monument_need_stonemason(&b);
     });
 
-    if (!monument) {
+    if (monument) {
+        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)FIGURE_ACTION_10_MASON_CREATED, BUILDING_SLOT_SERVICE);
+        monument->dcast()->add_workers(f->id);
+        f->wait_ticks = random_short() % 30; // ok
         return;
     }
 
-    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
-    monument->dcast()->add_workers(f->id);
-    f->wait_ticks = random_short() % 30; // ok
+    // If no monument is found, create a stonemason figure with a statue destination
+    int min_service_value = 9999;
+    building_impl *min_service_statue = nullptr;
+    buildings_valid_do([&] (building &b) {
+        const auto statue = b.dcast_statue();
+        if (!statue) {
+            return;
+        }
+
+        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
+        if (has_worker) {
+            return; 
+        }
+
+        const int value = statue->service();
+        if (value < min_service_value) {
+            min_service_value = value;
+            min_service_statue = statue;
+        }
+    });
+
+    if (min_service_statue) {
+        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, &min_service_statue->base, (e_figure_action)FIGURE_ACTION_30_MASON_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        min_service_statue->add_workers(f->id);
+        f->wait_ticks = random_short() % 30;
+        f->data.stonemason.destination_bid = min_service_statue->id();
+        return;
+    }
 }
 
 bool building_stonemason_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
