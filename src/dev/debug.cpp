@@ -1280,11 +1280,11 @@ void draw_debug_ui(int x, int y) {
         for (int i = 0; i < NUM_CLOUDS; i++) {
             const cloud_type *cloud = &g_cloud_data.clouds[i];
             e_cloud_status status = cloud->status;
-            char status_text[16] = {};
+            char status_text[32] = {};
             switch (status) {
-                case e_cloud_status_inactive: snprintf(status_text, 16, "%s", "status: INACTIVE"); break;
-                case e_cloud_status_created: snprintf(status_text, 16, "%s", "status: CREATED"); break;
-                case e_cloud_status_moving: snprintf(status_text, 16, "%s", "status: MOVING"); break;
+                case e_cloud_status_inactive: snprintf(status_text, 32, "%s", "status: INACTIVE"); break;
+                case e_cloud_status_created: snprintf(status_text, 32, "%s", "status: CREATED"); break;
+                case e_cloud_status_moving: snprintf(status_text, 32, "%s", "status: MOVING"); break;
             }
 
             // debug_text(ctx, str, (cloud->render_x - x_offset) * scale, (cloud->render_y - y_offset) * scale, 50, "Cloud", i);

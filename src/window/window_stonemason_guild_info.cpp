@@ -20,7 +20,7 @@ struct stonemason_guild_info_window : public building_info_window_t<stonemason_g
     }
 };
 
-stonemason_guild_info_window building_bricklayers_guild_infow;
+stonemason_guild_info_window building_stonemason_guild_infow;
 
 void stonemason_guild_info_window::init(object_info &c) {
     building_info_window::init(c);
