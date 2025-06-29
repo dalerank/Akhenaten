@@ -86,6 +86,7 @@ void map_grid_init(grid_xx& grid);
 int32_t map_grid_get(grid_xx& grid, uint32_t at);
 inline int32_t map_grid_get(grid_xx &grid, tile2i at) { return map_grid_get(grid, at.grid_offset()); }
 void map_grid_set(grid_xx& grid, uint32_t at, int64_t value);
+inline void map_grid_set(grid_xx& grid, tile2i at, int64_t value) { map_grid_set(grid, at.grid_offset(), value); }
 void map_grid_fill(grid_xx& grid, int64_t value);
 void map_grid_clear(grid_xx& grid);
 void map_grid_copy(grid_xx& src, grid_xx& dst);

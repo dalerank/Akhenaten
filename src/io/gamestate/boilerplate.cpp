@@ -160,6 +160,7 @@ static void pre_load() { // do we NEED this...?
 
     map_image_context_init();
     map_random_init();
+    map_tiles_gardens_clear_all();
 }
 
 static void post_load() {
@@ -248,6 +249,7 @@ static void post_load() {
 
     // city sounds
     sound_city_init();
+    map_tiles_gardens_update_all();
 }
 
 // set up list of io_buffer chunks in correct order for specific file format read/write operations
@@ -475,10 +477,10 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
         FILEIO.push_chunk(4, false, "file_version", iob_file_version);
         FILEIO.push_chunk(6004, false, "chunks_schema", iob_chunks_schema);
-        FILEIO.push_chunk(207936, false, "image_grid", &io_image_grid::instance());        // (228²) * 4 <<
+        FILEIO.push_chunk(51984 * 4, false, "image_grid", &io_image_grid::instance());        // (228²) * 4 <<
         FILEIO.push_chunk(51984, false, "edge_grid", iob_edge_grid);                       // (228²) * 1
         FILEIO.push_chunk(103968, false, "building_grid", iob_building_grid);              // (228²) * 2
-        FILEIO.push_chunk(207936, false, "terrain_grid", iob_terrain_grid);                // (228²) * 4 <<
+        FILEIO.push_chunk(51984 * 4, false, "terrain_grid", iob_terrain_grid);                // (228²) * 4 <<
         FILEIO.push_chunk(51984, false, "aqueduct_grid", iob_aqueduct_grid);               // (228²) * 1
         FILEIO.push_chunk(103968, false, "figure_grid", iob_figure_grid);                  // (228²) * 2
         FILEIO.push_chunk(51984, false, "bitfields_grid", iob_bitfields_grid);             // (228²) * 1
@@ -547,7 +549,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(20, false, "junk14", iob_junk14);
         FILEIO.push_chunk(528, false, "bizarre_ordered_fields_1", iob_bizarre_ordered_fields_1);
         FILEIO.push_chunk(36, false, "floodplain_settings", iob_floodplain_settings); // floodplain_settings
-        FILEIO.push_chunk(207936, false, "GRID03_32BIT", iob_GRID03_32BIT);           // todo: 4-byte grid
+        FILEIO.push_chunk(51984 * 4, false, "GRID03_32BIT", iob_GRID03_32BIT);           // todo: 4-byte grid
         FILEIO.push_chunk(312, false, "bizarre_ordered_fields_4", iob_bizarre_ordered_fields_4);                           // 71x 4-bytes emptiness
         FILEIO.push_chunk(64, false, "junk16", iob_junk16);                        // 71x 4-bytes emptiness
         FILEIO.push_chunk(41, false, "tutorial_flags_struct", iob_tutorial_flags); // 41 x 1-byte flag fields
@@ -564,7 +566,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(1344, false, "bizarre_ordered_fields_8", iob_bizarre_ordered_fields_8);
         FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
         FILEIO.push_chunk(51984, false, "terrain_floodplain_growth", iob_terrain_floodplain_growth);
-        FILEIO.push_chunk(207936, false, "monuments_progress", iob_monuments_progress_grid); // (228²) * 4
+        FILEIO.push_chunk(51984 * 4, false, "monuments_progress", iob_monuments_progress_grid); // (228²) * 4
         if (file_version > 165) {
             FILEIO.push_chunk(51984, false, "rubble_type_grid", iob_rubble_type_grid); //  (228²) * 1
         }

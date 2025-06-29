@@ -24,6 +24,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "grid/vegetation.h"
+#include "grid/gardens.h"
 #include "widget/city/building_ghost.h"
 #include "game/game.h"
 
@@ -311,6 +312,16 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         d = map_canal_at(grid_offset);
         if (d)
             debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_GREEN);
+        break;
+
+    case e_debug_render_gardens:
+        d = map_garden_at(grid_offset);
+        if (d) {
+            int decay = map_tiles_garden_decay_get(tile2i(grid_offset));
+            int garden = map_tiles_garden_get(tile2i(grid_offset), false);
+            debug_text(ctx, str, x0, y + 5, 0, "", garden, COLOR_GREEN);
+            debug_text(ctx, str, x0, y + 15, 0, "", decay, COLOR_LIGHT_RED);
+        }
         break;
 
     case e_debug_render_grass_soil_depletion: // FERTILITY & SOIL DEPLETION

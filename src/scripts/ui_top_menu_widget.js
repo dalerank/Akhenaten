@@ -112,6 +112,7 @@ top_menu_widget = {
 	    entertainment  	: menu_item({text:"", parameter:30}),
 	    canals       	: menu_item({text:"", parameter:31}),
 	    overlay_add    	: menu_item({text:"", parameter:32}),
+	    gardens      	: menu_item({text:"", parameter:33}),
 	},
 
 	ui : {

@@ -72,6 +72,7 @@ enum e_debug_render {
     e_debug_render_overall_entertainment = 30,
     e_debug_render_canals = 31,
     e_debug_render_overlay_add = 32,
+    e_debug_render_gardens = 33,
 
     e_debug_render_size
 };
