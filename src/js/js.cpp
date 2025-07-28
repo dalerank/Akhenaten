@@ -16,6 +16,12 @@
 
 #include <filesystem>
 
+#if defined(GAME_PLATFORM_LINUX)
+#include <linux/limits.h>
+#elif defined(GAME_PLATFORM_MACOSX)
+#include <sys/syslimits.h>
+#endif
+
 #define MAX_FILES_RELOAD 255
 
 struct {
@@ -163,10 +169,10 @@ int js_vm_exec_function_args(const char *funcname, const char *szTypes, ...) {
                 js_pushnumber(vm.J, va_arg(vl, int));
                 break;
             case 'f':
-                js_pushnumber(vm.J, va_arg(vl, float));
+                js_pushnumber(vm.J, va_arg(vl, double));
                 break;
             case 'c':
-                msg[0] = va_arg(vl, char);
+                msg[0] = va_arg(vl, int);
                 js_pushstring(vm.J, msg);
                 break;
             case 's':
@@ -277,7 +283,11 @@ vfs::path js_vm_get_absolute_path(vfs::path path) {
 #if defined(GAME_PLATFORM_WIN)
             pstr p = _fullpath(buffer, conpath, buffer.capacity);
 #elif defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX)
-            realpath(conpath, buffer);
+            char resolved[PATH_MAX];
+            if (!realpath(conpath, resolved)) {
+                continue;
+            }
+            buffer = resolved;
 #endif
             buffer.replace('\\', '/');
 
