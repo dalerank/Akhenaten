@@ -148,7 +148,7 @@ static translation_string all_strings[]
      {TR_HOTKEY_SHOW_ADVISOR_RELIGION, "Berater für Religion"},
      {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Berater für Finanzen"},
      {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Oberster Berater"},
-     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Housing advisor"},
+     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Berater für Gebäude"},
      {TR_HOTKEY_TOGGLE_OVERLAY, "Akt. Spezialkarte umschalten"},
      {TR_HOTKEY_SHOW_OVERLAY_WATER, "Wasserkarte"},
      {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Feuerkarte"},
