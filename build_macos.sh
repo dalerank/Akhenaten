@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-./update-workspace-mac.sh
-
 cmake --build ./build --target clean
 cmake -B build -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 cmake --build ./build

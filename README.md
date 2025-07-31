@@ -131,6 +131,7 @@ chmod +x akhenaten.linux
 - From the root folder execute:
 
   ```
+  $ ./update-workspace-mac.sh
   $ ./build_macos.sh
   ```
 
