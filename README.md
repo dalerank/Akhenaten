@@ -131,10 +131,7 @@ chmod +x akhenaten.linux
 - From the root folder execute:
 
   ```
-  $ ./update-workspace-mac.sh
-  $ cmake --build ./build --target clean
-  $ cmake -B build -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
-  $ cmake --build ./build
+  $ ./build_macos.sh
   ```
 
 ### Android
