@@ -9,7 +9,7 @@
 #include <cstring>
 
 #define MAX_TEXT_ENTRIES 1000
-#define MAX_TEXT_DATA 300000
+#define MAX_TEXT_DATA 400000
 #define MIN_TEXT_SIZE (28 + MAX_TEXT_ENTRIES * 8)
 #define MAX_TEXT_SIZE (MIN_TEXT_SIZE + MAX_TEXT_DATA)
 

@@ -132,8 +132,7 @@ chmod +x akhenaten.linux
 
   ```
   $ ./update-workspace-mac.sh
-  $ cmake --build ./build --target clean
-  $ cmake --build ./build
+  $ ./build_macos.sh
   ```
 
 ### Android

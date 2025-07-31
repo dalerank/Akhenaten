@@ -80,4 +80,7 @@ main () {
 }
 
 main
+
+ln -s "$HOME"/Library/Frameworks/SDL2_mixer.framework/Headers/SDL_mixer.h src/SDL_mixer.h
+
 exit 0
