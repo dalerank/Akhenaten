@@ -18,6 +18,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
         xstring key = arch.r_string("key");
         uint16_t group = arch.r_int("group");
         uint16_t id = arch.r_int("id");
+        xstring text = arch.r_string("text");
 
         g_localization.insert({key, {group, id}});
     });

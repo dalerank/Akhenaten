@@ -28,7 +28,33 @@ struct dir_listing {
 
 namespace vfs {
 
-using path = bstring256;
+struct path : public bstring256 {
+    template<typename ...Args>
+    inline path(Args &&...args) : bstring256(std::forward<Args>(args)...) {
+        bstring256 tmp = *this;
+        clear();
+        tmp.replace('\\', '/'); // Replace backslashes with slashes
+        pcstr c = tmp.data();
+        pstr mptr = data();
+        if (c) {
+            *mptr = *c;
+            ++c;
+        }
+
+        for (; *c != 0; ++c) {
+            if (*c == '/' && *mptr == '/') {
+                continue;
+            }
+
+            ++mptr;
+            *mptr = *c;
+        }
+
+        size_t size = mptr - _data;
+        int remain = capacity - size;
+        *(mptr + ((remain > 0) ? 1 : 0)) = 0;
+    }
+};
 
 constexpr pcstr SAVE_FOLDER = "Save";
 constexpr pcstr SCRIPTS_FOLDER = "Scripts";

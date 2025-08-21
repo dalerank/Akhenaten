@@ -253,7 +253,7 @@ city_message &message_manager_t::post_common(bool use_popup, int message_id, int
 
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, int message_type, int param1, short param2) {
     auto& data = g_message_data;
-    int use_popup = false;
+    bool use_popup = false;
 
     if (data.message_delay[category] <= 0) {
         use_popup = true;

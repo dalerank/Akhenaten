@@ -74,6 +74,14 @@ declare_console_command_p(nextyear) {
 
 uint16_t &game_speed() { return game.game_speed; }
 
+const std::vector<lang_pack> &get_def_lang_packs() {
+    static std::vector<lang_pack> lang_packs = {
+        {"", "eng", "Pharaoh_Text", "Pharaoh_MM"},
+    };
+
+    return lang_packs;
+}
+
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
     static time_millis last_update;
@@ -296,11 +304,11 @@ static encoding_type update_encoding(void) {
 }
 
 static bool reload_language(int is_editor, int reload_images) {
-    if (!lang_load(is_editor)) {
+    if (!lang_load(is_editor, get_def_lang_packs())) {
         if (is_editor)
-            logs::error("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+            logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
         else
-            logs::error("'c3.eng' or 'c3_mm.eng' files not found or too large.");
+            logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
         return false;
     }
     encoding_type encoding = update_encoding();
@@ -364,7 +372,7 @@ static int get_elapsed_ticks() {
 bool game_t::check_valid() {
     vfs::content_cache_paths();
 
-    if (!lang_load(0)) {
+    if (!lang_load(false, get_def_lang_packs())) {
         return false;
     }
 

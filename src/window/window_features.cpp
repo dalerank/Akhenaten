@@ -32,18 +32,10 @@
 
 ui::window_features g_features_window;
 
-static void button_language_select(int param1, int param2);
-static int config_change_string_basic(int key);
-static int config_change_string_language(int key);
-
-static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
-
-static void set_language(int index) {
+void ui::window_features::set_language(int index) {
     auto& data = g_features_window;
     const char* dir = (index == 0 ? "" : data.language_options_utf8[index]);
     game_features::gameopt_language_dir = dir;
-
-    data.selected_language_option = index;
 }
 
 void ui::window_features::cancel_values() {
@@ -52,11 +44,6 @@ void ui::window_features::cancel_values() {
             feature.new_value = feature.original_value;
         }
     }
-}
-
-static int config_string_changed(int key) {
-    auto& data = g_features_window;
-    return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
 }
 
 int ui::window_features::config_change_basic(feature_t &alias, const xstring fname) {
@@ -73,14 +60,7 @@ int ui::window_features::config_change_basic(feature_t &alias, const xstring fna
     return 1;
 }
 
-static int config_change_string_basic(int key) {
-    auto& data = g_features_window;
-    data.config_string_values[key].original_value = data.config_string_values[key].new_value;
-
-    return 1;
-}
-
-static int config_change_string_language(int key) {
+int  ui::window_features::config_change_string_language(int key) {
     auto& data = g_features_window;
     //game_features::gameopt_language_dir = , data.config_string_values[key].new_value);
     if (!game_reload_language()) {
@@ -113,14 +93,6 @@ bool ui::window_features::apply_changed_configs() {
     }
 
     return true;
-}
-
-static void button_language_select(int param1, int param2) {
-    auto& data = g_features_window;
-    window_select_list_show_text(screen_dialog_offset_x() + language_button.x + language_button.width - 10,
-                                 screen_dialog_offset_y() + 45,
-                                 make_span(data.language_options.data(), data.language_options.size()),
-                                 set_language);
 }
 
 void ui::window_features::button_reset_defaults() {
@@ -304,27 +276,48 @@ void ui::window_features::init(std::function<void()> cb) {
         }
     }
 
-    config_string_values[0].change_action = config_change_string_language;
+    {
+        auto &pageref = pages.emplace_back();
+        pages.back().title = "#TR_CONFIG_HEADER_LANGUAGES";
 
-    language_options.clear();
-    language_options_utf8.clear();
+        language_options.clear();
+        language_options_utf8.clear();
 
-    language_options.push_back( (pcstr)translation_for(TR_CONFIG_LANGUAGE_DEFAULT)) ;
-    language_options_utf8.push_back("");
+        language_options.push_back((pcstr)translation_for(TR_CONFIG_LANGUAGE_DEFAULT));
+        language_options_utf8.push_back("");
 
-    const dir_listing* subdirs = vfs::dir_find_all_subdirectories(nullptr);
-    for (int i = 0; i < subdirs->num_files; i++) {
-        if (!language_options.full() && lang_dir_is_valid(subdirs->files[i])) {
-            language_options_utf8.push_back(subdirs->files[i]);
+        const dir_listing *subdirs = vfs::dir_find_all_subdirectories("localization");
+        for (int i = 0; i < subdirs->num_files; i++) {
+            if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
+                pages.emplace_back();
+                pages.back().title = "#TR_CONFIG_HEADER_LANGUAGES";
+            }
 
-            bstring256 buffer;
-            encoding_from_utf8(subdirs->files[i], (uint8_t*)buffer.data(), ui::window_features::CONFIG_STRING_VALUE_MAX);
-            language_options.push_back( buffer.c_str() );
-            if (game_features::gameopt_language_dir.to_string() == subdirs->files[i]) {
-                selected_language_option = i;
+            vfs::path locpath = vfs::path("localization", "/", subdirs->files[i]);
+            lang_pack lpack(locpath, "loc");
+            if (!language_options.full() && lang_dir_is_valid(lpack)) {
+                auto &pageref = pages.back();
+                auto &feature = pageref.features.emplace_back();
+
+                language_options_utf8.push_back(subdirs->files[i]);
+
+                bstring256 buffer;
+                encoding_from_utf8(subdirs->files[i], (uint8_t *)buffer.data(), ui::window_features::CONFIG_STRING_VALUE_MAX);
+                language_options.push_back(buffer.c_str());
+
+                feature.get_value = [lang = subdirs->files[i], this] () -> int { return (game_features::gameopt_language_dir.to_string() == lang); };
+                const bool value = feature.get_value();
+                feature.original_value = value;
+                feature.new_value = value;
+                feature.change_action = [this, i] () -> int { this->config_change_string_language(i); return 1; };
+                feature.toggle_action = [&feature] (int p1, int p2) { feature.new_value = (feature.new_value > 0) ? 0 : 1;  };
+                feature.text = subdirs->files[i];
             }
         }
     }
+
+    //config_string_values[0].change_action = config_change_string_language;
+   
 
     ui["btn_defaults"].onclick([this] { button_reset_defaults(); });
     ui["btn_hotkeys"].onclick([this] { window_hotkey_config_show([] {}); });

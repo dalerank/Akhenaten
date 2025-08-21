@@ -34,33 +34,8 @@ struct lang_data_t {
 
 lang_data_t g_lang_data;
 
-struct lang_files_collection {
-    const char* FILE_TEXT_ENG;
-    const char* FILE_MM_ENG;
-    const char* FILE_TEXT_RUS;
-    const char* FILE_MM_RUS;
-    const char* FILE_EDITOR_TEXT_ENG;
-    const char* FILE_EDITOR_MM_ENG;
-};
-
-lang_files_collection lfcs = { "Pharaoh_Text.eng",
-                                 "Pharaoh_MM.eng",
-                                 "Pharaoh_Text.rus",
-                                 "Pharaoh_MM.rus",
-                                 "Pharaoh_Map_Text.eng",
-                                 "Pharaoh_Map_MM.eng" };
-
-static bool file_exists_in_dir(const char* dir, const char* file) {
-    bstring256 path(dir, "/", file);
-    return vfs::file_exists(path);
-}
-
-bool lang_dir_is_valid(const char* dir) {
-    lang_files_collection* lfc = &lfcs;
-    if (file_exists_in_dir(dir, lfc->FILE_TEXT_ENG) && file_exists_in_dir(dir, lfc->FILE_MM_ENG))
-        return true;
-
-    if (file_exists_in_dir(dir, lfc->FILE_TEXT_RUS) && file_exists_in_dir(dir, lfc->FILE_MM_RUS))
+bool lang_dir_is_valid(lang_pack lpack) {
+    if (vfs::file_exists(lpack.langfile) && vfs::file_exists(lpack.mmfile))
         return true;
 
     return false;
@@ -122,7 +97,7 @@ static void parse_MM_file(buffer* buf) {
     //}
 }
 
-static bool load_files(const char* text_filename, const char* message_filename, int localizable) {
+static bool load_files(vfs::path text_filename, vfs::path message_filename, int localizable) {
     // load text into buffer
     buffer buf = buffer(BUFFER_SIZE);
     int filesize = io_read_file_into_buffer(text_filename, localizable, &buf, BUFFER_SIZE);
@@ -160,16 +135,32 @@ static bool load_files(const char* text_filename, const char* message_filename, 
     return true;
 }
 
-bool lang_load(int is_editor) {
-    lang_files_collection* lfc = &lfcs;
-    if (is_editor)
-        return load_files(lfc->FILE_EDITOR_TEXT_ENG, lfc->FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
+bool lang_load(bool is_editor, const std::vector<lang_pack>& lang_packs) {
+    //lang_files_collection lfcs = { "Pharaoh_Text.eng",
+    //                             "Pharaoh_MM.eng",
+    //                             "Pharaoh_Text.rus",
+    //                             "Pharaoh_MM.rus",
+    //                             "Pharaoh_Map_Text.eng",
+    //                             "Pharaoh_Map_MM.eng" };
+    if (is_editor) {
+        const auto &pack = lang_packs.front();
+        return load_files(pack.langfile, pack.mmfile, MAY_BE_LOCALIZED);
+    }
 
     // Prefer language files from localized dir, fall back to main dir
-    return load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, MUST_BE_LOCALIZED)
-           || load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, MUST_BE_LOCALIZED)
-           || load_files(lfc->FILE_TEXT_ENG, lfc->FILE_MM_ENG, NOT_LOCALIZED)
-           || load_files(lfc->FILE_TEXT_RUS, lfc->FILE_MM_RUS, NOT_LOCALIZED);
+    for (const auto &pack: lang_packs) {
+        if (lang_dir_is_valid(pack)) {
+            if (load_files(pack.langfile, pack.mmfile, MUST_BE_LOCALIZED)) {
+                return true;
+            }
+
+            if (load_files(pack.langfile, pack.mmfile, NOT_LOCALIZED)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 const uint8_t *lang_get_string(textid text) {

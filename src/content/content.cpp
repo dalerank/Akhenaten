@@ -95,11 +95,11 @@ static int is_file(int mode) {
     return S_ISREG(mode) || S_ISLNK(mode);
 }
 
-int platform_file_manager_list_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *)) {
+int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr extension, int (*callback)(pcstr)) {
     if (type == TYPE_NONE)
         return LIST_ERROR;
 
-    bstring256 save_dir(platform_file_manager_get_base_path(), "/", dir);
+    path save_dir(platform_file_manager_get_base_path(), "/", dir);
     dir = save_dir.c_str();
     dir_name current_dir;
 

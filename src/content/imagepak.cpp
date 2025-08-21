@@ -484,7 +484,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.animation.unk07 = -1;
         img.animation.unk08 = -1;
         img.animation.unk09 = -1;
-        img.animation.can_reverse = -1;
+        img.animation.can_reverse = false;
         img.animation.unk10 = -1;
         img.type = -1;
         img.is_fully_compressed = false;

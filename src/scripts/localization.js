@@ -1,6 +1,6 @@
 log_info("akhenaten: localization config started")
 
-var localization = [
+localization = [
   {key: "#popup_dialog_quit", group:5, id:0 },
   {key: "#popup_dialog_open_trade", group:5, id:2 },
   {key: "#popup_dialog_send_goods", group:5, id:7 },
@@ -381,6 +381,7 @@ var localization = [
   {key: "#house_nearby_building", group:127, id:102},
   {key: "#having_detrimental_effect", group:127, id:103},
   {key: "#house_upgrade_nospace", group:127, id:104},
+  {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Localization"},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]
