@@ -49,7 +49,8 @@ from an unmodified game installation to run, in this case it needs _Pharaoh_ **a
 Note that you must have permission to write in the game data directory as the saves will be
 stored there; also, your game must be patched to last version to run Akhenaten.
 
-[![buymeabeer](https://github.com/user-attachments/assets/f8f97765-7dad-428b-a722-a26a2d3d39fb)](https://patreon.com/imspinner)
+[![Become a patron](https://github.com/user-attachments/assets/f8f97765-7dad-428b-a722-a26a2d3d39fb)](https://patreon.com/imspinner)[![Become a patron](https://github.com/user-attachments/assets/ed3eed16-0419-49ba-8a8c-53c1413c125b)](https://github.com/sponsors/dalerank)
+
 
 ## Building Akhenaten from source
 
@@ -210,4 +211,5 @@ cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
 ```
 
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
+
 
