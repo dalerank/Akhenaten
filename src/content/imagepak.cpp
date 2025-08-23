@@ -443,6 +443,10 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     g_config_arch.r_array(pak, [&] (archive arch) {
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
+        if (finish_index <= 0) {
+            finish_index = start_index;
+        }
+        assert(finish_index >= start_index);
         entries_num += (finish_index - start_index) + 1;
         bmp_names[groups_num] = arch.r_string("name");
         ++groups_num;
@@ -451,7 +455,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     assert(global_image_index_offset >= 30000);
     images_array.reserve(entries_num);
 
-    auto load_img = [&] (pcstr fn, int i, int group_id) {
+    auto load_img = [&] (pcstr fn, int i, int group_id, int atlas_rect_id) {
         image_t img;
         img.pak_name = name;
         img.sgx_index = i;
@@ -512,7 +516,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.unk19 = -1;
         img.unk20 = -1;
 
-        image_packer_rect* rect = &packer.rects[i];
+        image_packer_rect* rect = &packer.rects[atlas_rect_id];
         rect->input.width = img.width;
         rect->input.height = img.height;
 
@@ -526,18 +530,23 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         return false;
     }
 
-    int tmp_group_id = 0;
+    int tmp_group_id = 0, atlas_rect_id = 0;
     g_config_arch.r_array(pak, [&] (archive arch) {
         pcstr prefix = arch.r_string("prefix");
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
+        if (finish_index <= 0) {
+            finish_index = start_index;
+        }
+        assert(finish_index >= start_index);
 
         for (int i = start_index; i <= finish_index; ++i) {
             bstring512 name;
             name.printf("%s%05u.png", prefix, i);
-            load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id);
-            tmp_group_id++;
+            load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id, atlas_rect_id);
+            ++atlas_rect_id;
         }
+        ++tmp_group_id;
     });
 
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
