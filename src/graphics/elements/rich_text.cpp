@@ -274,7 +274,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
                 const image_t* img = image_letter(letter_id);
                 if (!measure_only) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, def->font, letter_id, x, y - height, clr);
+                    ImageDraw::img_letter(ctx, img, def->font, letter_id, x, y - height, clr);
                 }
                 x += img->width + def->letter_spacing;
             }

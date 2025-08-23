@@ -60,17 +60,15 @@ int ui::window_features::config_change_basic(feature_t &alias, const xstring fna
     return 1;
 }
 
-int  ui::window_features::config_change_string_language(int key) {
-    auto& data = g_features_window;
-    //game_features::gameopt_language_dir = , data.config_string_values[key].new_value);
+int  ui::window_features::config_change_string_language(const lang_pack& lpack) {
+    game_features::gameopt_language_dir = lpack.dir;
     if (!game_reload_language()) {
         // Notify user that language dir is invalid and revert to previously selected
+        game_features::gameopt_language_dir = "";
         window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
-        //g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
         game_reload_language();
         return 0;
     }
-    //data.config_string_values[key].original_value = data.config_string_values[key].new_value;
     return 1;
 }
 
@@ -309,8 +307,10 @@ void ui::window_features::init(std::function<void()> cb) {
                 const bool value = feature.get_value();
                 feature.original_value = value;
                 feature.new_value = value;
-                feature.change_action = [this, i] () -> int { this->config_change_string_language(i); return 1; };
-                feature.toggle_action = [&feature] (int p1, int p2) { feature.new_value = (feature.new_value > 0) ? 0 : 1;  };
+                feature.change_action = [] () -> int { return 0; };
+                feature.toggle_action = [this, lpack] (int p1, int p2) { 
+                    this->config_change_string_language(lpack);
+                };
                 feature.text = subdirs->files[i];
             }
         }

@@ -381,7 +381,7 @@ localization = [
   {key: "#house_nearby_building", group:127, id:102},
   {key: "#having_detrimental_effect", group:127, id:103},
   {key: "#house_upgrade_nospace", group:127, id:104},
-  {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Localization"},
+  {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Локализация"},
 
   {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."},
 ]

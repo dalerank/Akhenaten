@@ -2,6 +2,7 @@
 
 #include "core/encoding.h"
 #include "core/tokenum.h"
+#include "content/dir.h"
 
 #include <stdint.h>
 #include <array>

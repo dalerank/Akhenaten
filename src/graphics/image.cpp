@@ -206,11 +206,14 @@ const image_t* image_letter(int letter_id) {
     auto& data = *g_image_data;
     auto fontpak = data.pak_list[PACK_FONT].handle;
     if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
-        return fontpak->get_image(data.font_base_offset + letter_id);
+        const int image_id = data.font_base_offset + letter_id;
+        return fontpak->get_image(image_id);
     } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return fontpak->get_image(data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET);
+        const int image_id = data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET;
+        return fontpak->get_image(image_id);
     } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return image_get(image_id_from_group(GROUP_FONT) + letter_id);
+        const int image_id = image_id_from_group(PACK_FONT, 1) + letter_id;
+        return image_get(image_id);
     } else {
         return nullptr;
     }

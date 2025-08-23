@@ -6,6 +6,7 @@
 #include "graphics/view/view.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
+#include "core/log.h"
 
 #define ELLIPSIS_LENGTH 4
 #define NUMBER_BUFFER_LENGTH 100
@@ -49,6 +50,7 @@ void text_capture_cursor(int cursor_position, int offset_start, int offset_end) 
     input_cursor.text_offset_start = offset_start;
     input_cursor.text_offset_end = offset_end;
 }
+
 void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
     if (!input_cursor.capture)
         return;
@@ -164,6 +166,7 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
     *out_num_chars = num_chars;
     return width;
 }
+
 uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font font, unsigned int requested_width, int invert) {
     const font_definition* def = font_definition_for(font);
     if (!length)
@@ -243,7 +246,6 @@ int text_draw(const uint8_t *str, int x, int y, e_font font, color color) {
 int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color, float scale) {
     y = y - 3;
 
-
     const font_definition* def = font_definition_for(font);
     if (!def) {
         return 0;
@@ -277,7 +279,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
                 const image_t* img = image_letter(letter_id);
                 if (img != nullptr) {
                     int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, font, letter_id, current_x, y - height, color, scale);
+                    ImageDraw::img_letter(ctx, img, font, letter_id, current_x, y - height, color, scale);
                     width = (def->letter_spacing + img->width) * scale;
                 }
             }

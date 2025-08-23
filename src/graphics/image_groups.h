@@ -93,14 +93,6 @@ enum e_pack {
 
 extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
 
-////////////////// FONT
-
-#define GROUP_FONT PACK_FONT, 1
-
-////////////////// EMPIRE MAP
-
-//#define GROUP_EMPIRE_MAP PACK_EMPIRE, 1
-
 ////////////////// TERRAIN
 
 #define GROUP_TERRAIN_BLACK PACK_TERRAIN, 1

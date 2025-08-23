@@ -3,6 +3,7 @@
 #include "platform/renderer.h"
 #include "autoconfig_window.h"
 
+struct lang_pack;
 namespace game_features {
     struct game_feature;
 }
@@ -57,7 +58,7 @@ namespace ui {
         void cancel_values();
         void toggle_resource(e_resource resource);
         int config_change_basic(feature_t &alias, const xstring feature);
-        int config_change_string_language(int key);
+        int config_change_string_language(const lang_pack& key);
         void ui::window_features::set_language(int index);
         void init(std::function<void()> callback);
 

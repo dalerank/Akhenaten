@@ -761,8 +761,7 @@ void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color c
     graphics_renderer()->draw_image(ctx, img, vec2i{ x, y - img->height }, color_mask, scale);
 }
 
-void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
-    const image_t* img = image_letter(letter_id);
+void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         //        draw_multibyte_letter(font, img, x, y, color_mask, scale);
         return;
@@ -770,8 +769,9 @@ void ImageDraw::img_letter(painter &ctx, e_font font, int letter_id, int x, int 
     if (!color_mask)
         color_mask = base_color_for_font(font);
 
-    if (font == FONT_SMALL_SHADED)
+    if (font == FONT_SMALL_SHADED) {
         graphics_renderer()->draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+    }
 
     graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
 }

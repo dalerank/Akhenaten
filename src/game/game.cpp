@@ -304,7 +304,15 @@ static encoding_type update_encoding(void) {
 }
 
 static bool reload_language(int is_editor, int reload_images) {
-    if (!lang_load(is_editor, get_def_lang_packs())) {
+    const xstring lang_dir = game_features::gameopt_language_dir.to_string();
+    std::vector<lang_pack> lang_packs;
+    if (lang_dir.empty()) {
+        lang_packs = get_def_lang_packs();
+    } else {
+        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text", "Pharaoh_MM");
+    }
+
+    if (!lang_load(is_editor, lang_packs)) {
         if (is_editor)
             logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
         else

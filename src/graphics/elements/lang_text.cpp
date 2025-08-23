@@ -9,7 +9,13 @@
 
 #include <map>
 
-std::map<xstring, textid> g_localization;
+struct loc_textid {
+    uint16_t group;
+    uint16_t id;
+    xstring text;
+};
+
+std::map<xstring, loc_textid> g_localization;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
@@ -20,13 +26,13 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
         uint16_t id = arch.r_int("id");
         xstring text = arch.r_string("text");
 
-        g_localization.insert({key, {group, id}});
+        g_localization.insert({key, {group, id, text}});
     });
 }
 
 textid loc_text_from_key(pcstr key) {
     auto it = g_localization.find(key);
-    return (it != g_localization.end()) ? it->second : textid{0, 0};
+    return (it != g_localization.end()) ? textid{it->second.group, it->second.id} : textid{ 0, 0 };
 }
 
 const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
@@ -37,6 +43,10 @@ pcstr lang_text_from_key(pcstr key) {
 
     auto it = g_localization.find(key);
     if (it != g_localization.end()) {
+        if (!it->second.text.empty()) {
+            return it->second.text.c_str();
+        }
+
         pcstr str = (pcstr)lang_get_string(it->second.group, it->second.id);
         return str;
     }
