@@ -294,17 +294,13 @@ static int is_unpatched(void) {
     return difficulty_option == help_menu || delete_game == option_menu;
 }
 
-static encoding_type update_encoding(void) {
+static void update_encoding() {
     int language = locale_determine_language();
-    encoding_type encoding = encoding_determine(language);
-    logs::info("Detected encoding: %i", encoding);
-    font_set_encoding(encoding);
     translation_load(language);
-    return encoding;
 }
 
 static bool reload_language(int is_editor, int reload_images) {
-    const xstring lang_dir = game_features::gameopt_language_dir.to_string();
+    const xstring lang_dir = game_features::gameopt_language.to_string();
     std::vector<lang_pack> lang_packs;
     if (lang_dir.empty()) {
         lang_packs = get_def_lang_packs();
@@ -319,13 +315,8 @@ static bool reload_language(int is_editor, int reload_images) {
             logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
         return false;
     }
-    encoding_type encoding = update_encoding();
 
-    if (!image_set_font_pak(encoding)) {
-        logs::error("unable to load font graphics");
-        return false;
-    }
-
+    update_encoding();
     return true;
 }
 
@@ -400,16 +391,6 @@ bool game_t::check_valid() {
 }
 
 bool game_init(game_opts opts) {
-    int missing_fonts = 0;
-
-    if (!image_set_font_pak(encoding_get())) {
-        logs::error("unable to load font graphics");
-        if (encoding_get() == ENCODING_KOREAN)
-            missing_fonts = 1;
-        else
-            return false;
-    }
-
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
         return false;
@@ -441,7 +422,7 @@ bool game_init(game_opts opts) {
     }
 
     game_state_init();
-    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
+    window_logo_show((is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
     return true;
 }

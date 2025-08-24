@@ -88,7 +88,7 @@ namespace game_features {
     game_feature gameui_hide_new_game_top_menu{ "gameui_hide_new_game_top_menu", "#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", true };
     game_feature gameplay_save_year_kingdome_rating{ "gameplay_save_year_kingdome_rating", "#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", true };
     game_feature gameopt_last_player{ "gameopt_last_player", "", "" };
-    game_feature gameopt_language_dir{ "gameopt_language_dir", "", "" };
+    game_feature gameopt_language { "gameopt_language", "", "" };
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
 
