@@ -634,13 +634,29 @@ endif()
 
 if (MSVC)
     set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe" "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb")
-
     foreach( file_i ${BINARY_FILES})
         add_custom_command(
             TARGET ${GAME}
             POST_BUILD
             COMMAND ${CMAKE_COMMAND}
             ARGS -E copy ${file_i} "${GAME_WORKING_DIRECTORY}"
+        )
+    endforeach( file_i )
+
+    set(DATA_FILES "${CMAKE_SOURCE_DIR}/data/pharaoh_custom_pack.sgx" "${CMAKE_SOURCE_DIR}/data/pharaoh_fonts_pack.sgx")
+    add_custom_command(
+        OUTPUT 
+        ${GAME_WORKING_DIRECTORY}/Data    
+        COMMAND ${CMAKE_COMMAND} 
+        -E make_directory ${GAME_WORKING_DIRECTORY}/Data
+    )
+    set(BINARY_FILES_DIRECTORY "${GAME_WORKING_DIRECTORY}/Data")
+    foreach( file_i ${DATA_FILES})
+        add_custom_command(
+            TARGET ${GAME}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+            ARGS -E copy ${file_i} "${BINARY_FILES_DIRECTORY}"
         )
     endforeach( file_i )
 endif()
