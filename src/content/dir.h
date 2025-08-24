@@ -56,6 +56,13 @@ struct path : public bstring256 {
         replace('\\', '/'); // Replace backslashes with slashes
     }
 
+    path &operator=(pcstr str) {
+        clear();
+        append(str);
+        replace('\\', '/'); // Replace backslashes with slashes
+        return *this;
+    }
+
     path &operator=(const std::string &str) {
         clear();
         append(str.c_str());
