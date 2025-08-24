@@ -762,12 +762,9 @@ void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color c
 }
 
 void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
-    if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        //        draw_multibyte_letter(font, img, x, y, color_mask, scale);
-        return;
-    }
-    if (!color_mask)
+    if (!color_mask) {
         color_mask = base_color_for_font(font);
+    }
 
     if (font == FONT_SMALL_SHADED) {
         graphics_renderer()->draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);

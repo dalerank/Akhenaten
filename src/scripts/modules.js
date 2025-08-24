@@ -27,6 +27,7 @@ import missions
 import figures
 import ui_hold_festival_window
 import localization
+import localization_en
 import ui_advisor_entertainment
 import ui_advisor_population
 import building_menu
@@ -40,8 +41,9 @@ import ui_terrain_info
 import ui
 import ui_figure_trader_ship_window
 import ui_top_menu_widget
+import ui_advisor_religion
+import fonts
 
-include(":ui_advisor_religion.js")
 include(":ui_advisor_chief.js")
 include(":ui_advisor_education.js")
 include(":music.js")

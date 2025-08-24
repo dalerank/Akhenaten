@@ -17,7 +17,6 @@ struct imagepak_handle {
 };
 
 struct imagepak_holder_t {
-    bool fonts_enabled = false;
     bool fonts_loaded = false;
     bool allow_updata_on_load = false;
     bool common_inited = false;

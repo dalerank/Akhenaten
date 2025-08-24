@@ -27,6 +27,7 @@ namespace ui {
             int original_value;
             int new_value;
             xstring text;
+            bool volatile_value = false;
             std::function<void(int, int)> toggle_action;
             std::function<int()> change_action;
             std::function<int()> get_value;
@@ -40,9 +41,6 @@ namespace ui {
         };
 
         svector<features_page_t, 16> pages;
-
-        svector<xstring, MAX_LANGUAGE_DIRS> language_options;
-        svector<bstring64, MAX_LANGUAGE_DIRS> language_options_utf8;
 
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
@@ -58,8 +56,7 @@ namespace ui {
         void cancel_values();
         void toggle_resource(e_resource resource);
         int config_change_basic(feature_t &alias, const xstring feature);
-        int config_change_string_language(const lang_pack& key);
-        void set_language(int index);
+        int config_change_string_language(const game_language &lang);
         void init(std::function<void()> callback);
 
         static void show(std::function<void()> callback);

@@ -5,6 +5,7 @@
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
+#include "game/game_config.h"
 #include "translation/translation.h"
 
 #include <map>
@@ -16,17 +17,37 @@ struct loc_textid {
 };
 
 std::map<xstring, loc_textid> g_localization;
+svector<game_language, 4> g_game_languages;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
+    lang_reaload_localized_texts();
 
-    g_config_arch.r_array("localization", [] (archive arch) {
+    g_game_languages.clear();
+    g_config_arch.r_array("game_languages", [] (archive arch) {
+        auto &config = g_game_languages.emplace_back();
+        config.lang = arch.r_string("lang");
+        config.caption = arch.r_string("caption");
+        config.key = arch.r_string("key");
+        config.table = arch.r_string("table");
+    });
+}
+
+void lang_reaload_localized_texts() {
+    const xstring current_lang = game_features::gameopt_language.to_string();
+    xstring localization_table;
+    localization_table.printf("localization_%s", current_lang.empty() ? "en" : current_lang.c_str());
+    g_config_arch.r_array(localization_table.c_str(), [] (archive arch) {
         xstring key = arch.r_string("key");
         uint16_t group = arch.r_int("group");
         uint16_t id = arch.r_int("id");
         xstring text = arch.r_string("text");
 
-        g_localization.insert({key, {group, id, text}});
+        auto result = g_localization.insert({ key, {group, id, text} });
+        if (!result.second) {
+            // If the key already exists, we can update the text
+            result.first->second.text = text;
+        }
     });
 }
 
@@ -36,6 +57,11 @@ textid loc_text_from_key(pcstr key) {
 }
 
 const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
+
+const svector<game_language, 4>& get_available_languages() {
+    return g_game_languages;
+}
+
 pcstr lang_text_from_key(pcstr key) {
     if (!key) {
         return "";

@@ -136,12 +136,6 @@ static bool load_files(vfs::path text_filename, vfs::path message_filename, int 
 }
 
 bool lang_load(bool is_editor, const std::vector<lang_pack>& lang_packs) {
-    //lang_files_collection lfcs = { "Pharaoh_Text.eng",
-    //                             "Pharaoh_MM.eng",
-    //                             "Pharaoh_Text.rus",
-    //                             "Pharaoh_MM.rus",
-    //                             "Pharaoh_Map_Text.eng",
-    //                             "Pharaoh_Map_MM.eng" };
     if (is_editor) {
         const auto &pack = lang_packs.front();
         return load_files(pack.langfile, pack.mmfile, MAY_BE_LOCALIZED);
