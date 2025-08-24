@@ -57,6 +57,7 @@ SET(SDL2_SEARCH_PATHS
 	/opt/local # DarwinPorts
 	/opt/csw # Blastwave
 	/opt
+    /home/linuxbrew/.linuxbrew/opt/sdl2_mixer # bazzite with homebrew
     ${SDL_EXT_DIR}
     ${SDL_MINGW_EXT_DIR}
 )
