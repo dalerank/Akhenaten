@@ -5,31 +5,6 @@
 
 #include <stdint.h>
 
-/**
- * Encoding type
- */
-typedef enum {
-    ENCODING_WESTERN_EUROPE = 1252,
-    ENCODING_EASTERN_EUROPE = 1250,
-    ENCODING_CYRILLIC = 1251,
-    ENCODING_TRADITIONAL_CHINESE = 950,
-    ENCODING_SIMPLIFIED_CHINESE = 936,
-    ENCODING_KOREAN = 949
-} encoding_type;
-
-/**
- * Determines the encoding used for the language files (= game),
- * and sets up conversion routines for utf-8 strings
- * @param language Game language
- * @return encoding (best guess)
- */
-encoding_type encoding_determine(int language);
-
-/**
- * Returns the determined internal encoding type
- * @return encoding (best guess)
- */
-encoding_type encoding_get(void);
 
 /*
  * Returns whether the encoding uses multibyte chars for the internal strings

@@ -415,7 +415,6 @@ static const letter_code HIGH_TO_UTF8_CYRILLIC[HIGH_CHAR_COUNT] = {
 };
 
 static struct {
-    encoding_type encoding;
     const letter_code* to_utf8_table;
     from_utf8_lookup from_utf8_table[HIGH_CHAR_COUNT];
     from_utf8_lookup from_utf8_decomposed_table[HIGH_CHAR_COUNT];
@@ -576,43 +575,6 @@ static const letter_code* get_letter_code_for_combining_utf8(const char* prev_ch
     return search_utf8_table(&key, data.from_utf8_decomposed_table, data.decomposed_table_size);
 }
 
-encoding_type encoding_determine(int language) {
-    // Determine encoding based on language:
-    // - Windows-1250 (Central/Eastern Europe) is used in Polish only
-    // - Windows-1251 (Cyrillic) is used in Russian only
-    // - Windows-950 (Big5) is used in Traditional Chinese only
-    // - Windows-1252 (Western Europe) is used in all other languages
-    if (language == LANGUAGE_POLISH) {
-        data.to_utf8_table = HIGH_TO_UTF8_EASTERN;
-        data.encoding = ENCODING_EASTERN_EUROPE;
-    } else if (language == LANGUAGE_RUSSIAN) {
-        data.to_utf8_table = HIGH_TO_UTF8_CYRILLIC;
-        data.encoding = ENCODING_CYRILLIC;
-    } else if (language == LANGUAGE_TRADITIONAL_CHINESE) {
-        encoding_trad_chinese_init();
-        data.to_utf8_table = NULL;
-        data.encoding = ENCODING_TRADITIONAL_CHINESE;
-    } else if (language == LANGUAGE_SIMPLIFIED_CHINESE) {
-        encoding_simp_chinese_init();
-        data.to_utf8_table = NULL;
-        data.encoding = ENCODING_SIMPLIFIED_CHINESE;
-    } else if (language == LANGUAGE_KOREAN) {
-        encoding_korean_init();
-        data.to_utf8_table = NULL;
-        data.encoding = ENCODING_KOREAN;
-    } else { // assume Western encoding
-        data.to_utf8_table = HIGH_TO_UTF8_DEFAULT;
-        data.encoding = ENCODING_WESTERN_EUROPE;
-    }
-    build_reverse_lookup_table();
-    build_decomposed_lookup_table();
-    return data.encoding;
-}
-
-encoding_type encoding_get(void) {
-    return data.encoding;
-}
-
 int encoding_is_multibyte(void) {
     return !data.to_utf8_table;
 }
@@ -635,15 +597,15 @@ int encoding_can_display(const char* utf8_char) {
 
 void encoding_to_utf8(const uint8_t* input, char* output, int output_length, int decomposed) {
     if (!data.to_utf8_table) {
-        if (data.encoding == ENCODING_KOREAN)
-            encoding_korean_to_utf8(input, output, output_length);
-        else if (data.encoding == ENCODING_TRADITIONAL_CHINESE)
-            encoding_trad_chinese_to_utf8(input, output, output_length);
-        else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE)
-            encoding_simp_chinese_to_utf8(input, output, output_length);
-        else {
-            *output = 0;
-        }
+        //if (data.encoding == ENCODING_KOREAN)
+        //    encoding_korean_to_utf8(input, output, output_length);
+        //else if (data.encoding == ENCODING_TRADITIONAL_CHINESE)
+        //    encoding_trad_chinese_to_utf8(input, output, output_length);
+        //else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE)
+        //    encoding_simp_chinese_to_utf8(input, output, output_length);
+        //else {
+        //    *output = 0;
+        //}
         return;
     }
     const char* max_output = &output[output_length - 1];
@@ -682,16 +644,16 @@ void encoding_to_utf8(const uint8_t* input, char* output, int output_length, int
 
 void encoding_from_utf8(const char* input, uint8_t* output, int output_length) {
     if (!data.to_utf8_table) {
-        if (data.encoding == ENCODING_KOREAN) {
-            encoding_korean_from_utf8(input, output, output_length);
-            return;
-        } else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
-            encoding_trad_chinese_from_utf8(input, output, output_length);
-            return;
-        } else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE) {
-            encoding_simp_chinese_from_utf8(input, output, output_length);
-            return;
-        }
+        //if (data.encoding == ENCODING_KOREAN) {
+        //    encoding_korean_from_utf8(input, output, output_length);
+        //    return;
+        //} else if (data.encoding == ENCODING_TRADITIONAL_CHINESE) {
+        //    encoding_trad_chinese_from_utf8(input, output, output_length);
+        //    return;
+        //} else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE) {
+        //    encoding_simp_chinese_from_utf8(input, output, output_length);
+        //    return;
+        //}
     }
 
     const uint8_t* max_output = &output[output_length - 1];

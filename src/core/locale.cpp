@@ -29,7 +29,7 @@ struct locale_data_t {
 
 locale_data_t g_locale_data;
 
-static int determine_language(void) {
+static int determine_language() {
     // Dirty way to check the language, but there's not really another way:
     // Check if the string for "New game" is in one of the supported languages
     const uint8_t* new_game_string = lang_get_string(1, 1);
