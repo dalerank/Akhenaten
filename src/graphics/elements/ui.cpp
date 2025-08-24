@@ -832,7 +832,8 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
-    if (strchr(_text.c_str(), '{')) {
+
+    if (!_text.empty() && strchr(_text.c_str(), '{')) {
         _format = _text.c_str();
     }
     _font = arch.r_type<e_font>("font", FONT_INVALID);
