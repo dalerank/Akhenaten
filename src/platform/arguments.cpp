@@ -40,9 +40,11 @@ enum class argument_type {
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
     MIXED_MODE,
+    EXTDATA_FOLDER,
 };
 
 const std::unordered_map<std::string, argument_type> argument_types{{"data_directory", argument_type::DATA_DIRECTORY},
+                                                                    {"extdata", argument_type::DATA_DIRECTORY},
                                                                     {"window_mode", argument_type::WINDOW_MODE},
                                                                     {"renderer", argument_type::RENDERER},
                                                                     {"display_scale_percentage",argument_type::DISPLAY_SCALE_PERCENTAGE},
@@ -304,6 +306,10 @@ void Arguments::set_data_directory(const char * value) {
     data_directory_ = value;
 }
 
+const char *Arguments::get_extdata_directory() const {
+    return extdata_directory_;
+}
+
 const char *Arguments::get_scripts_directory() const {
     return scripts_directory_;
 }
@@ -339,7 +345,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 renderer_ = argv[i + 1];
                 ++i;
             } else {
-                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate("Option --render must be opengl,direct3d");
             }
         } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
             if (i + 1 < argc) {
@@ -354,14 +360,21 @@ void Arguments::parse_cli_(int argc, char** argv) {
                 SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.x, &window_size_.y);
                 ++i;
             } else {
-                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate("Option --size must should has fixed WxH format");
+            }
+        } else if (SDL_strcmp(argv[i], "--extdata") == 0) {
+            if (i + 1 < argc) {
+                extdata_directory_ = argv[i + 1];
+                ++i;
+            } else {
+                app_terminate("Option --extdata folder should exist");
             }
         } else if (SDL_strcmp(argv[i], "--mixed") == 0) {
             if (i + 1 < argc) {
                 scripts_directory_ = argv[i + 1];
                 ++i;
             } else {
-                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+                app_terminate("Option --mixed folder should exist");
             }
 
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -371,7 +384,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
                 set_cursor_scale_percentage(percentage);
             } else {
-                app_terminate(CURSOR_SCALE_ERROR_MESSAGE);
+                app_terminate("Option --cursor-scale must be followed by a scale value between 0.5 and 5");
             }
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
             app_terminate(usage());

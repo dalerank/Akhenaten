@@ -12,7 +12,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-static bstring512 content_dir;
+static bstring512 content_dir, content_extdir;
 
 namespace vfs {
 
@@ -181,20 +181,29 @@ int platform_file_manager_set_base_path(pcstr path) {
 #endif
 }
 
-const char *platform_file_manager_get_base_path() {
+pcstr platform_file_manager_get_base_path() {
     return content_dir.c_str();
+}
+
+int platform_file_manager_set_ext_path(pcstr path) {
+    content_extdir = path;
+    return true;
+}
+
+pcstr platform_file_manager_get_ext_path() {
+    return content_extdir.c_str();
 }
 
 #if defined(__vita__)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
+FILE *platform_file_manager_open_file(pcst filename, pcstr mode) {
     char *resolved_path = vita_prepend_path(filename);
     FILE *fp = fopen(resolved_path, mode);
     free(resolved_path);
     return fp;
 }
 
-int platform_file_manager_remove_file(const char *filename) {
+int platform_file_manager_remove_file(pcstr filename) {
     char *resolved_path = vita_prepend_path(filename);
     int result = remove(resolved_path);
     free(resolved_path);
@@ -203,7 +212,7 @@ int platform_file_manager_remove_file(const char *filename) {
 
 #elif defined(GAME_PLATFORM_WIN)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
+FILE *platform_file_manager_open_file(pcstr filename, pcstr mode) {
     FILE *fp = fopen(filename, mode);
 
     return fp;
@@ -216,7 +225,7 @@ bool platform_file_manager_remove_file(const char *filename) {
 
 #elif defined(GAME_PLATFORM_ANDROID)
 
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
+FILE *platform_file_manager_open_file(pcstr filename, pcstr mode) {
     int fd = android_get_file_descriptor(filename, mode);
     if (!fd) {
         return NULL;

@@ -27,7 +27,10 @@ enum {
  * @return true if the base path was correctly set, false otherwise
  */
 int platform_file_manager_set_base_path(pcstr path);
-const char *platform_file_manager_get_base_path();
+pcstr platform_file_manager_get_base_path();
+
+int platform_file_manager_set_ext_path(pcstr path);
+pcstr platform_file_manager_get_ext_path();
 
 /**
  * Gets the contents of a directory by the specified extension
