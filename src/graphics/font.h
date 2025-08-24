@@ -44,18 +44,6 @@ struct font_definition {
     int (*image_y_offset)(uint8_t c, int image_height, int line_height);
 };
 
-enum { 
-    NO_EXTRA_FONT = 0,
-    FULL_CHARSET_IN_FONT = 1,
-    MULTIBYTE_IN_FONT = 2
-};
-
-/**
- * Sets the encoding for font drawing functions
- * @param encoding Encoding to use
- */
-void font_set_encoding(encoding_type encoding);
-
 /**
  * Gets the font definition for the specified font
  * @param font Font
@@ -78,3 +66,5 @@ int font_can_display(const uint8_t* character);
  * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
 int font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
+void font_set_letter_id(e_font font, uint32_t character, int letter_id);
+void font_reload_external_symbols();
