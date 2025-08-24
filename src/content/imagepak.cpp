@@ -20,6 +20,7 @@
 #include "js/js.h"
 
 #include <array>
+#include <unordered_set>
 #include <cinttypes>
 #include <cstring>
 
@@ -447,8 +448,9 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
             finish_index = start_index;
         }
         assert(finish_index >= start_index);
-        entries_num += (finish_index - start_index) + 1;
+        group_image_ids[groups_num] = entries_num;
         bmp_names[groups_num] = arch.r_string("name");
+        entries_num += (finish_index - start_index) + 1;
         ++groups_num;
     });
 
