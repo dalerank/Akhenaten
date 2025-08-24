@@ -118,11 +118,24 @@ On Fedora and other `rpm` distributions:
 ##### Running the game
 
 Assuming the zip file is in your Downloads directory:
-```
+```shell
 cd ~/Downloads
 unzip akhenaten_linux.zip
 chmod +x akhenaten.linux
 ./akhenaten.linux
+```
+
+#### Building in Bazzite (https://bazzite.gg/) on Steam Deck or other platform
+You will have to use rpm-ostree to install static version of stdc++ which is not recommended
+and will make system updates slower.
+But you won't be able to build Akhenaten without it. 
+```shell
+rpm-ostree install libstdc++-static
+systemctl reboot
+```
+And after reboot:
+```shell
+./update-workspace-bazzite.sh
 ```
 
 ### MacOS
