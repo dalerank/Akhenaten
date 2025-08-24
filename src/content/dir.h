@@ -53,6 +53,14 @@ struct path : public bstring256 {
         size_t size = mptr - _data;
         int remain = capacity - size;
         *(mptr + ((remain > 0) ? 1 : 0)) = 0;
+        replace('\\', '/'); // Replace backslashes with slashes
+    }
+
+    path &operator=(const std::string &str) {
+        clear();
+        append(str.c_str());
+        replace('\\', '/'); // Replace backslashes with slashes
+        return *this;
     }
 };
 
@@ -83,7 +91,7 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
  * @return Corrected file, or NULL if the file was not found
  */
 vfs::path content_file(pcstr filepath);
-vfs::path content_path(pcstr filepath);
+vfs::path content_path(pcstr filepath, pcstr extdir = nullptr);
 
 void content_cache_real_file_paths(pcstr folder);
 void content_cache_paths();

@@ -33,19 +33,17 @@ struct path_uri {
 
 std::map<size_t, path_uri> path_cache;
 
-vfs::path content_internal_path(pcstr path) {
-    vfs::path corrected_path = platform_file_manager_get_base_path();
-    if (corrected_path.back() != '/') {
-        corrected_path.append('/');
+vfs::path content_internal_path(pcstr path, pcstr dir) {
+    if (!dir) {
+        dir = platform_file_manager_get_base_path();
     }
 
-    corrected_path.append(path);
-    corrected_path.replace('\\', '/');
+    vfs::path corrected_path(dir, "/", path);
     return corrected_path;
 }
 
 void content_cache_real_file_paths(pcstr f) {
-    vfs::path folder = content_internal_path(f);
+    vfs::path folder = content_internal_path(f, nullptr);
     if (!fs::exists(folder.c_str()) || !fs::is_directory(folder.c_str())) {
         return;
     }
@@ -181,8 +179,8 @@ static int correct_case(pcstr dir, char *filename, int type) {
     return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
-vfs::path content_path(pcstr path) {
-    vfs::path uri_path = content_internal_path(path);
+vfs::path content_path(pcstr path, pcstr extdir) {
+    vfs::path uri_path = content_internal_path(path, extdir);
     vfs::path orig_path = uri_path;
     vfs::path lower = uri_path.tolower();
     const size_t lhash = lower.hash();
@@ -202,6 +200,14 @@ vfs::path content_file(pcstr filepath) {
     bool exists = std::filesystem::exists(corrected_filename.c_str());
     if (exists) {
         return corrected_filename;
+    }
+
+    pcstr extpath = platform_file_manager_get_ext_path();
+    vfs::path corrected_ext_filename = content_path(filepath, (extpath && *extpath) ? extpath : "./");
+    corrected_ext_filename = std::filesystem::absolute(corrected_ext_filename.c_str()).string();
+    exists = std::filesystem::exists(corrected_ext_filename.c_str());
+    if (exists) {
+        return corrected_ext_filename;
     }
 
     return vfs::path();
