@@ -21,27 +21,6 @@ bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* c
     return true;
 }
 
-bool image_set_font_pak(encoding_type encoding) {
-    auto& data = *g_image_data;
-    // TODO?
-    if (encoding == ENCODING_CYRILLIC) {
-        return false;
-    } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
-        return false;
-    } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
-        return false;
-    } else if (encoding == ENCODING_KOREAN) {
-        return false;
-    } else {
-        //        free(data.font);
-        //        free(data.font_data);
-        //        data.font = 0;
-        //        data.font_data = 0;
-        data.fonts_enabled = NO_EXTRA_FONT;
-        return true;
-    }
-}
-
 void image_data_touch(const imagepak_handle& h) {
     image_get(h.id, 0);
 }
@@ -56,7 +35,6 @@ bool image_data_render_on_new_loadpacks() {
 
 bool image_load_paks() {
     auto& data = *g_image_data;
-    data.fonts_enabled = false;
     data.fonts_loaded = false;
     data.allow_updata_on_load = true;
     data.font_base_offset = 0;
@@ -73,12 +51,19 @@ bool image_load_paks() {
             continue;
         }
 
-        imgpak.entries_num = imagepak::get_entries_num(imgpak.name);
+        const int pack_entries = imagepak::get_entries_num(imgpak.name);
+        if (pack_entries > 0) {
+            imgpak.entries_num = pack_entries;
+        }
+  
         if (imgpak.delayed) {
             continue;
         }
 
         imgpak.handle = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
+        if (imgpak.custom) {
+            imgpak.entries_num = imgpak.handle->get_entry_count();
+        }
     }
 
     data.allow_updata_on_load = false;
@@ -156,6 +141,9 @@ const image_t *image_get(int pak, int id) {
     auto &pakref = data.pak_list[pak];
     if (pakref.handle == nullptr) {
         pakref.handle = new imagepak(pakref.name, pakref.index, pakref.system, false, pakref.custom);
+        if (pakref.custom) {
+            pakref.entries_num = pakref.handle->get_entry_count();
+        }
     }
 
     if (pakref.handle != nullptr) {
@@ -205,12 +193,8 @@ const image_t* image_get(int id) {
 const image_t* image_letter(int letter_id) {
     auto& data = *g_image_data;
     auto fontpak = data.pak_list[PACK_FONT].handle;
-    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
-        const int image_id = data.font_base_offset + letter_id;
-        return fontpak->get_image(image_id);
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        const int image_id = data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET;
-        return fontpak->get_image(image_id);
+    if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
+        return image_get(letter_id);
     } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
         const int image_id = image_id_from_group(PACK_FONT, 1) + letter_id;
         return image_get(image_id);
