@@ -57,8 +57,10 @@ int ui::window_features::config_change_basic(feature_t &alias, const xstring fna
 
 int ui::window_features::config_change_string_language(const game_language &lang) {
     game_features::gameopt_language = lang.lang;
-    vfs::path lang_file(":", lang.table.c_str(), ".js");
-    const bool ok = js_vm_load_file_and_exec(lang_file.c_str());
+
+    bool ok = lang_reload_localized_files()
+                && lang_reload_localized_tables();
+
     if (!ok) {
         // Notify user that language dir is invalid and revert to previously selected
         game_features::gameopt_language = "";
@@ -66,7 +68,6 @@ int ui::window_features::config_change_string_language(const game_language &lang
         return 0;
     }
 
-    lang_reaload_localized_texts();
     return 1;
 }
 

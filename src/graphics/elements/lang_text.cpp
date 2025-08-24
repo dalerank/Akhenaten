@@ -5,6 +5,8 @@
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
+#include "js/js.h"
+#include "core/log.h"
 #include "game/game_config.h"
 #include "translation/translation.h"
 
@@ -21,7 +23,7 @@ svector<game_language, 4> g_game_languages;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
-    lang_reaload_localized_texts();
+    lang_reload_localized_tables();
 
     g_game_languages.clear();
     g_config_arch.r_array("game_languages", [] (archive arch) {
@@ -33,15 +35,33 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     });
 }
 
-void lang_reaload_localized_texts() {
-    const xstring current_lang = game_features::gameopt_language.to_string();
-    xstring localization_table;
-    localization_table.printf("localization_%s", current_lang.empty() ? "en" : current_lang.c_str());
-    g_config_arch.r_array(localization_table.c_str(), [] (archive arch) {
+bool lang_reload_localized_files() {
+    const auto current_lang = lang_get_current_language();
+    const xstring localization_table = current_lang.table;
+    vfs::path lang_file(":", localization_table.c_str(), ".js");
+    const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
+    if (!lang_file_loaded) {
+        logs::error("Failed to load localization file: %s", lang_file.c_str());
+        return false;
+    }
+
+    return true;
+}
+
+bool lang_reload_localized_tables() {
+    const auto current_lang = lang_get_current_language();
+    const xstring localization_table = current_lang.table;
+    if (localization_table.empty()) {
+        return false;
+    }
+
+    bool lang_table_loaded = false;
+    g_config_arch.r_array(localization_table.c_str(), [&lang_table_loaded] (archive arch) {
         xstring key = arch.r_string("key");
         uint16_t group = arch.r_int("group");
         uint16_t id = arch.r_int("id");
         xstring text = arch.r_string("text");
+        lang_table_loaded = true;
 
         auto result = g_localization.insert({ key, {group, id, text} });
         if (!result.second) {
@@ -49,6 +69,8 @@ void lang_reaload_localized_texts() {
             result.first->second.text = text;
         }
     });
+
+    return lang_table_loaded;
 }
 
 textid loc_text_from_key(pcstr key) {
@@ -103,6 +125,20 @@ int lang_text_get_width(const char* str, e_font font) {
 int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return lang_text_draw(str, vec2i{x_offset, y_offset}, font, box_width);
+}
+
+game_language lang_get_current_language() {
+    const xstring current_lang = game_features::gameopt_language.to_string();
+    auto find_lang = std::find_if(g_game_languages.begin(), g_game_languages.end(),
+        [current_lang] (const game_language &lang) {
+        return lang.lang == current_lang;
+    });
+
+    if (find_lang == g_game_languages.end()) {
+        return g_game_languages.front();
+    }
+
+    return *find_lang;
 }
 
 int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width) {

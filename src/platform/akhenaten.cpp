@@ -398,6 +398,8 @@ static void setup() {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
+
+    vfs::platform_file_manager_set_ext_path(g_args.get_extdata_directory());
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
@@ -630,6 +632,8 @@ int main(int argc, char** argv) {
     
     game_imgui_overlay_init();
     g_application.subscribe_events();
+    lang_reload_localized_files();
+    lang_reload_localized_tables();
 
     run_and_draw();
 
