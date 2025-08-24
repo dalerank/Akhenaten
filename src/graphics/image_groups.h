@@ -87,6 +87,7 @@ enum e_pack {
     PACK_SUN_TEMPLE_3,
     //
     PACK_CUSTOM,
+    PACK_CUSTOM_FONT,
     // 
     PACK_MAX,
 };
