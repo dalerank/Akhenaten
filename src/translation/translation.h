@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/locale.h"
+#include "core/svector.h"
 
 #include <stdint.h>
 
@@ -192,10 +193,10 @@ enum e_translate_key {
     TRANSLATION_MAX_KEY
 };
 
-typedef struct {
+struct translation_string {
     int key;
     const char* string;
-} translation_string;
+};
 
 void translation_load(int language);
 

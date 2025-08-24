@@ -8,26 +8,27 @@
 
 #define BUFFER_SIZE 100000
 
-static struct {
+struct {
     uint8_t* strings[TRANSLATION_MAX_KEY];
     uint8_t buffer[BUFFER_SIZE];
     int buf_index;
-} data;
+} translation_data;
 
 static void set_strings(const translation_string* strings, int num_strings, int is_default) {
     for (int i = 0; i < num_strings; i++) {
         const translation_string* string = &strings[i];
-        if (data.strings[string->key])
+        if (translation_data.strings[string->key]) {
             continue;
+        }
 
         if (is_default) {
             logs::info("Translation key not found: %s %u", string->string, string->key);
         }
 
-        int length_left = BUFFER_SIZE - data.buf_index;
-        encoding_from_utf8(string->string, &data.buffer[data.buf_index], length_left);
-        data.strings[string->key] = &data.buffer[data.buf_index];
-        data.buf_index += 1 + string_length(&data.buffer[data.buf_index]);
+        int length_left = BUFFER_SIZE - translation_data.buf_index;
+        encoding_from_utf8(string->string, &translation_data.buffer[translation_data.buf_index], length_left);
+        translation_data.strings[string->key] = &translation_data.buffer[translation_data.buf_index];
+        translation_data.buf_index += 1 + string_length(&translation_data.buffer[translation_data.buf_index]);
     }
 }
 
@@ -74,12 +75,12 @@ void translation_load(int language) {
         break;
     }
 
-    memset(data.strings, 0, sizeof(data.strings));
-    data.buf_index = 0;
+    memset(translation_data.strings, 0, sizeof(translation_data.strings));
+    translation_data.buf_index = 0;
     set_strings(strings, num_strings, 0);
     set_strings(default_strings, num_default_strings, 1);
 }
 
 const uint8_t* translation_for(int key) {
-    return data.strings[key];
+    return translation_data.strings[key];
 }
