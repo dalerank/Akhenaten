@@ -430,7 +430,11 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     vfs::path datafile("Data/", pak, ".zip");
     
     if (!vfs::file_exists(datafile)) {
-        return false;
+        datafile.printf("Data/%s.sgx", pak);
+
+        if (!vfs::file_exists(datafile)) {
+            return false;
+        }
     }
 
     if (!vfs::mount_pack(datafile)) {

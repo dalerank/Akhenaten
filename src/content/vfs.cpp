@@ -43,27 +43,30 @@ void log_io(pcstr fmt, Args ... args) {
     logs::info(fmt, args...);
 }
 
-vfs::path extract_zippack_path(const vfs::path &path) {
+vfs::path extract_pack_path(const vfs::path &path) {
     vfs::path result;
     result = path;
     result.replace('\\', '/'); // Normalize slashes
 
     pcstr zip_pos = result.strstr(".zip/");
-    if (!zip_pos) {
-        return {}; // No .zip found
+    pcstr sgx_pos = result.strstr(".sgx/");
+
+    if (!zip_pos && !sgx_pos) {
+        return {}; // No .zip/.sgx found
     }
 
+    pcstr pack_pos = zip_pos ? zip_pos : sgx_pos;
     // Go backwards from .zip to find the start of the zip file name
-    *((pstr)zip_pos + 4) = 0;
+    *((pstr)pack_pos + 4) = 0;
     return result;
 }
 
-vfs::path extract_zippack_name(const vfs::path &path) {
-    vfs::path result = extract_zippack_path(path);
+vfs::path extract_pack_name(const vfs::path &path) {
+    vfs::path result = extract_pack_path(path);
 
-    pcstr begin_zipname = strstr_rev(result, "/");
-    if (begin_zipname) {
-        result = begin_zipname + 1; // in case of Windows backslash
+    pcstr begin_packname = strstr_rev(result, "/");
+    if (begin_packname) {
+        result = begin_packname + 1; // in case of Windows backslash
         return result;
     }
 
@@ -74,11 +77,12 @@ reader file_open(path path, pcstr mode) {
     log_io("[begn] file_open %s", path.c_str());
     const bool is_text_file = !!strstr(mode, "t");
     const char* is_zip = strstr(path, ".zip/");
+    const char *is_sgx = strstr(path, ".sgx/");
 
-    if (!path.empty() && !!is_zip) {
-        const vfs::path zip_name = extract_zippack_name(path);
-        const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&zip_name] (const ZipArchive *arch) {
-            return arch->filepath().ends_with(zip_name);
+    if (!path.empty() && (!!is_zip || !!is_sgx)) {
+        const vfs::path pack_name = extract_pack_name(path);
+        const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&pack_name] (const ZipArchive *arch) {
+            return arch->filepath().ends_with(pack_name);
         });
 
         if (it == g_mounted_archives.end()) {
@@ -86,7 +90,8 @@ reader file_open(path path, pcstr mode) {
         }
 
         auto archive = *it;
-        const vfs::path filename = (is_zip + 5);
+        pcstr path_pos = (is_zip ? is_zip : is_sgx);
+        const vfs::path filename = (path_pos + 5);
         reader data = archive->createAndOpenFile(filename, mode);
 
         return data; // empty reader
