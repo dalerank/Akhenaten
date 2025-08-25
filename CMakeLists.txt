@@ -3,6 +3,8 @@ include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
+option(USE_SYSTEM_PNG "Use the system png instead of the bundled one" OFF)
+
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
     set(WIN_EMSCRIPTEN TRUE)
@@ -246,7 +248,12 @@ if (PLATFORM_ANDROID)
     set(VERSION_REVISION "")
 endif()
 
-add_subdirectory(ext/png)
+if(USE_SYSTEM_PNG)
+    find_package(PNG)
+else()
+    add_subdirectory(ext/png)
+endif()
+
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
@@ -630,6 +637,7 @@ if(UNIX AND NOT APPLE)
     install(FILES "res/akhenaten.desktop" DESTINATION "share/applications" RENAME "com.github.dalerank.akhenaten.desktop")
     install(FILES "res/akhenaten_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.dalerank.akhenaten.png")
     install(FILES "res/metainfo.xml"      DESTINATION "share/metainfo" RENAME "com.github.dalerank.akhenaten.metainfo.xml")
+    target_link_libraries(${GAME} ${PNG_LIBRARIES})
 endif()
 
 if (MSVC)
