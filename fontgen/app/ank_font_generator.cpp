@@ -29,6 +29,12 @@ int main() {
 
     font_symbol_t symbols[] = {
         { 0x0410, 0x044F }, // Cyrillic
+        { 0x00C4, 0x00C4, }, // Ä
+        { 0x00E4, 0x00E4, }, // ä
+        { 0x00D6, 0x00D6, }, // Ö
+        { 0x00F6, 0x00F6, }, // ö
+        { 0x00DC, 0x00DC, }, // Ü
+        { 0x00FC, 0x00FC, }, // ü
     };
 
 	int index = 0;
