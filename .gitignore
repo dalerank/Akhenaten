@@ -16,7 +16,6 @@ res/akhenaten.icns
 /build*/
 out/
 cmake-build-*
-/data
 /ext/SDL2/**
 *~
 *.swp
