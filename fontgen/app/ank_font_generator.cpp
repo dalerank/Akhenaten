@@ -1,8 +1,6 @@
 ﻿#include "../fgen/Atlas.hpp"
 
 int main() {
-	const char* FONT_PATH = "fonts/corri.ttf";
-
     using colors_t = uint8_t[4];
     struct font_config_t {
         int size;
@@ -12,6 +10,7 @@ int main() {
 
     struct font_symbol_t {
         uint32_t begin, end;
+        const char *fontfile;
     };
 
     font_config_t configs[] = {
@@ -28,13 +27,21 @@ int main() {
     };
 
     font_symbol_t symbols[] = {
-        { 0x0410, 0x044F }, // Cyrillic
-        { 0x00C4, 0x00C4, }, // Ä
-        { 0x00E4, 0x00E4, }, // ä
-        { 0x00D6, 0x00D6, }, // Ö
-        { 0x00F6, 0x00F6, }, // ö
-        { 0x00DC, 0x00DC, }, // Ü
-        { 0x00FC, 0x00FC, }, // ü
+        { 0x0410, 0x044F, "fonts/corri.ttf"}, // Cyrillic
+        { 0x00C4, 0x00C4, "fonts/swansea.ttf"}, // Ä
+        { 0x00E4, 0x00E4, "fonts/swansea.ttf"}, // ä
+        { 0x00D6, 0x00D6, "fonts/swansea.ttf"}, // Ö
+        { 0x00F6, 0x00F6, "fonts/swansea.ttf"}, // ö
+        { 0x00DC, 0x00DC, "fonts/swansea.ttf"}, // Ü
+        { 0x00FC, 0x00FC, "fonts/swansea.ttf"}, // ü
+        { 0x00C9, 0x00C9, "fonts/swansea.ttf"}, // É
+        { 0x00E9, 0x00E9, "fonts/swansea.ttf"}, // é
+        { 0x00C0, 0x00C0, "fonts/swansea.ttf"}, // À
+        { 0x00E0, 0x00E0, "fonts/swansea.ttf"}, // à
+        { 0x00C8, 0x00C8, "fonts/swansea.ttf"}, // È
+        { 0x00E8, 0x00E8, "fonts/swansea.ttf"}, // è
+        { 0x00D9, 0x00D8, "fonts/swansea.ttf"}, // Ù
+        { 0x00F9, 0x00F9, "fonts/swansea.ttf"}, // ù
     };
 
 	int index = 0;
@@ -47,7 +54,7 @@ int main() {
             for (uint32_t i = symbol.begin; i <= symbol.end; ++i) {
                 Trex::Charset charset;
                 charset.AddCodepoint(i);
-                Trex::Atlas atlas(FONT_PATH, config.size, charset, Trex::RenderMode::COLOR, 1, true, (uint8_t*)config.color);
+                Trex::Atlas atlas(symbol.fontfile, config.size, charset, Trex::RenderMode::COLOR, 1, true, (uint8_t*)config.color);
 
                 char buffer[64];
                 snprintf(buffer, sizeof(buffer), "fonts_%05d.png", index);

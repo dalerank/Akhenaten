@@ -39,9 +39,6 @@ void translation_load(int language) {
     int num_default_strings = 0;
 
     switch (language) {
-    case LANGUAGE_FRENCH:
-        translation_french(&strings, &num_strings);
-        break;
     case LANGUAGE_ITALIAN:
         translation_italian(&strings, &num_strings);
         break;
