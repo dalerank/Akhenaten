@@ -13,7 +13,9 @@ struct game_language {
     xstring table;
 };
 
-const svector<game_language, 4>& get_available_languages();
+using game_languages = svector<game_language, 8>;
+
+const game_languages& get_available_languages();
 
 pcstr lang_text_from_key(pcstr key);
 textid loc_text_from_key(pcstr key);

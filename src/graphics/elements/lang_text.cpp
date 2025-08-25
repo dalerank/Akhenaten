@@ -19,7 +19,7 @@ struct loc_textid {
 };
 
 std::map<xstring, loc_textid> g_localization;
-svector<game_language, 4> g_game_languages;
+game_languages g_game_languages;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
@@ -94,7 +94,7 @@ textid loc_text_from_key(pcstr key) {
 
 const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
 
-const svector<game_language, 4>& get_available_languages() {
+const game_languages& get_available_languages() {
     return g_game_languages;
 }
 
