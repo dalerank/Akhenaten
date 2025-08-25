@@ -64,7 +64,7 @@ int ui::window_features::config_change_string_language(const game_language &lang
     if (!ok) {
         // Notify user that language dir is invalid and revert to previously selected
         game_features::gameopt_language = "";
-        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
+        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE, SOURCE_LOCATION);
         return 0;
     }
 

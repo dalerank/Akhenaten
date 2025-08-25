@@ -1,8 +1,5 @@
-#ifndef WINDOW_PLAIN_MESSAGE_DIALOG_H
-#define WINDOW_PLAIN_MESSAGE_DIALOG_H
+#pragma once
 
-#include "translation/translation.h"
+#include "core/string.h"
 
-void window_plain_message_dialog_show(int title, int message);
-
-#endif // WINDOW_PLAIN_MESSAGE_DIALOG_H
+void window_plain_message_dialog_show(int title, int message, pcstr debug_info);

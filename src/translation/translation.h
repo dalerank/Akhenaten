@@ -202,10 +202,6 @@ void translation_load(int language);
 
 const uint8_t* translation_for(int key);
 
-void translation_korean(const translation_string** strings, int* num_strings);
-
-void translation_polish(const translation_string** strings, int* num_strings);
-
 void translation_portuguese(const translation_string** strings, int* num_strings);
 
 void translation_russian(const translation_string** strings, int* num_strings);
