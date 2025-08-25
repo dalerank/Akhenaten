@@ -55,6 +55,20 @@ bool lang_reload_localized_tables() {
         return false;
     }
 
+    // first restore the default localization (english), than add current language on top
+    g_config_arch.r_array("localization_en", [] (archive arch) {
+        xstring key = arch.r_string("key");
+        uint16_t group = arch.r_int("group");
+        uint16_t id = arch.r_int("id");
+        xstring text = arch.r_string("text");
+
+        auto result = g_localization.insert({ key, {group, id, text} });
+        if (!result.second) {
+            // If the key already exists, we can update the text
+            result.first->second.text = text;
+        }
+    });
+
     bool lang_table_loaded = false;
     g_config_arch.r_array(localization_table.c_str(), [&lang_table_loaded] (archive arch) {
         xstring key = arch.r_string("key");

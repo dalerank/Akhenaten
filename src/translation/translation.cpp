@@ -37,12 +37,8 @@ void translation_load(int language) {
     int num_strings = 0;
     const translation_string* default_strings = NULL;
     int num_default_strings = 0;
-    translation_english(&default_strings, &num_default_strings);
 
     switch (language) {
-    case LANGUAGE_ENGLISH:
-        translation_english(&strings, &num_strings);
-        break;
     case LANGUAGE_FRENCH:
         translation_french(&strings, &num_strings);
         break;
