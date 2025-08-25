@@ -87,8 +87,8 @@ int get_letter_height(const uint8_t* str, e_font font) {
     const font_definition* def = font_definition_for(font);
     int num_bytes = 1;
 
-    int letter_id = font_letter_id(def, str, &num_bytes);
-    return letter_id >= 0 ? image_letter(letter_id)->height : 0;
+    const auto glyph = font_letter_id(def, str, &num_bytes);
+    return glyph.imagid >= 0 ? image_letter(glyph.imagid)->height : 0;
 }
 
 int text_get_width(const uint8_t* str, e_font font) {
@@ -104,9 +104,9 @@ int text_get_width(const uint8_t* str, e_font font) {
         if (*str == ' ')
             width += def->space_width;
         else {
-            int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id >= 0) {
-                const image_t* img = image_letter(letter_id);
+            const auto glyph = font_letter_id(def, str, &num_bytes);
+            if (glyph.imagid >= 0) {
+                const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr)
                     width += def->letter_spacing + img->width;
             }
@@ -123,9 +123,9 @@ int get_letter_width(const uint8_t* str, const font_definition* def, int* num_by
         return def->space_width;
     }
 
-    int letter_id = font_letter_id(def, str, num_bytes);
-    if (letter_id >= 0) {
-        return def->letter_spacing + image_letter(letter_id)->width;
+    const auto glyph = font_letter_id(def, str, num_bytes);
+    if (glyph.imagid >= 0) {
+        return def->letter_spacing + image_letter(glyph.imagid)->width;
     } else {
         return 0;
     }
@@ -150,9 +150,10 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
 
         } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id >= 0)
-                width += image_letter(letter_id)->width + def->letter_spacing;
+            const auto glyph = font_letter_id(def, str, &num_bytes);
+            if (glyph.imagid >= 0) {
+                width += image_letter(glyph.imagid)->width + def->letter_spacing;
+            }
 
             word_char_seen = 1;
             if (num_bytes > 1) {
@@ -219,9 +220,10 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
         if (*str == ' ')
             width += def->space_width;
         else {
-            int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id >= 0)
-                width += def->letter_spacing + image_letter(letter_id)->width;
+            const auto glyph = font_letter_id(def, str, &num_bytes);
+            if (glyph.imagid >= 0) {
+                width += def->letter_spacing + image_letter(glyph.imagid)->width;
+            }
         }
         if (ellipsis_width + width <= requested_width)
             length_with_ellipsis += num_bytes;
@@ -266,20 +268,20 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
         int num_bytes = 1;
 
         if (*str >= ' ') {
-            int letter_id = font_letter_id(def, str, &num_bytes);
+            auto glyph = font_letter_id(def, str, &num_bytes);
             int width = 0;
 
-            if (letter_id < 0) {
-                letter_id = font_letter_id(def, (uint8_t*)"?", &num_bytes);
+            if (glyph.imagid < 0) {
+                glyph = font_letter_id(def, (uint8_t*)"?", &num_bytes);
             }
 
             if (*str == ' ' || *str == '_') {
                 width = (def->space_width * scale);
             } else {
-                const image_t* img = image_letter(letter_id);
+                const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
-                    int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, img, font, letter_id, current_x, y - height, color, scale);
+                    int height = def->image_y_offset(str, img->height, def->line_height);
+                    ImageDraw::img_letter(ctx, img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
                     width = (def->letter_spacing + img->width) * scale;
                 }
             }

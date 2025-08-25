@@ -26,6 +26,12 @@ extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_font_type_
 
 using fonts_vec = std::array<e_font, 2>;
 
+struct font_glyph {
+    uint32_t code; // code point
+    int imagid; // texture
+    vec2i bearing;
+};
+
 struct font_definition {
     e_font font;
     int image_offset;
@@ -41,7 +47,7 @@ struct font_definition {
      * @param line_height Line height for the font
      * @return Offset to subtract from y coordinate
      */
-    int (*image_y_offset)(uint8_t c, int image_height, int line_height);
+    int (*image_y_offset)(const uint8_t *c, int image_height, int line_height);
 };
 
 /**
@@ -65,6 +71,6 @@ int font_can_display(const uint8_t* character);
  * @param num_bytes Out: number of bytes consumed by letter
  * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
-int font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
-void font_set_letter_id(e_font font, uint32_t character, int letter_id);
+font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
+void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
 void font_reload_external_symbols();

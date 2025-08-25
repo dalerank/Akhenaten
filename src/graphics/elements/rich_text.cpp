@@ -131,9 +131,9 @@ static int get_lexem_width(const uint8_t *str, int in_link) {
             width += 4;
         } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
-            if (letter_id >= 0) {
-                width += normal_font_def->letter_spacing + image_letter(letter_id)->width;
+            const auto glyph = font_letter_id(normal_font_def, str, &num_bytes);
+            if (glyph.imagid >= 0) {
+                width += normal_font_def->letter_spacing + image_letter(glyph.imagid)->width;
             }
         }
         str++;
@@ -188,9 +188,10 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
             width += 4;
         } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
-            if (letter_id >= 0)
-                width += 1 + image_letter(letter_id)->width;
+            const auto glyph = font_letter_id(normal_font_def, str, &num_bytes);
+            if (glyph.imagid >= 0) {
+                width += 1 + image_letter(glyph.imagid)->width;
+            }
 
             word_char_seen = 1;
             if (num_bytes > 1) {
@@ -261,8 +262,8 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
             }
 
             int num_bytes = 1;
-            int letter_id = font_letter_id(def, str, &num_bytes);
-            if (letter_id < 0) {
+            const auto glyph = font_letter_id(def, str, &num_bytes);
+            if (glyph.imagid < 0) {
                 x += def->space_width;
             } else {
                 if (num_bytes > 1 && start_link) {
@@ -271,10 +272,10 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
                     start_link = 0;
                 }
 
-                const image_t* img = image_letter(letter_id);
+                const image_t* img = image_letter(glyph.imagid);
                 if (!measure_only) {
-                    int height = def->image_y_offset(*str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, img, def->font, letter_id, x, y - height, clr);
+                    int height = def->image_y_offset(str, img->height, def->line_height);
+                    ImageDraw::img_letter(ctx, img, def->font, glyph.imagid, x, y - height, clr);
                 }
                 x += img->width + def->letter_spacing;
             }

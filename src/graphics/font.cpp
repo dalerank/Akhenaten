@@ -10,16 +10,16 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
 
 const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> ANK_CONFIG_ENUM(e_font_type_tokens);
 
-static int image_y_offset_none(uint8_t c, int image_height, int line_height);
-static int image_y_offset_default(uint8_t c, int image_height, int line_height);
-static int image_y_offset_eastern(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_normal_colored(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int line_height);
-static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int line_height);
-static int image_y_offset_korean(uint8_t c, int image_height, int line_height);
+static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_default(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_eastern(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_normal_small_plain(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_normal_colored(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_plain(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_black(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_large_brown(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_cyrillic_small_black(const uint8_t *c, int image_height, int line_height);
+static int image_y_offset_korean(const uint8_t *c, int image_height, int line_height);
 
 static const int CHAR_TO_FONT_IMAGE_DEFAULT[] = {
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01, 0x01, 0x01, 0x00,
@@ -150,7 +150,8 @@ enum E_MULTIBYTE {
     MULTIBYTE_SIMPLIFIED_CHINESE = 2,
     MULTIBYTE_KOREAN = 3,
 };
-using multibyte_map_t = std::unordered_map<uint32_t, int>; // Maps multibyte character to letter ID
+
+using multibyte_map_t = std::unordered_map<uint32_t, font_glyph>; // Maps multibyte character to letter ID
 
 struct font_data_t {
     const int* font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
@@ -160,38 +161,43 @@ struct font_data_t {
 
 static font_data_t g_font_data;
 
-static int image_y_offset_none(uint8_t c, int image_height, int line_height) {
+static int image_y_offset_none(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
-    if (offset < 0 || c < 0x80)
+    if (offset < 0 || *c < 0x80)
         offset = 0;
 
     return offset;
 }
 
-static int image_y_offset_default(uint8_t c, int image_height, int line_height) {
-    int offset = image_height - line_height;
-    if (offset < 0)
-        offset = 0;
-
-    if (c < 0x80 || c == 0xE7)
-        offset = 0;
-
-    return offset;
-}
-
-static int image_y_offset_eastern(uint8_t c, int image_height, int line_height) {
+static int image_y_offset_default(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
     if (offset < 0)
         offset = 0;
 
-    if (c < 0x80 || c == 0xEA || c == 0xB9 || c == 0xA5 || c == 0xCA)
+    if (*c < 0x80 || *c == 0xE7) {
+        offset = 0;
+    }
+
+    if (*c > 0x80) {
+        offset = -line_height;
+    }
+
+    return offset;
+}
+
+static int image_y_offset_eastern(const uint8_t *c, int image_height, int line_height) {
+    int offset = image_height - line_height;
+    if (offset < 0)
+        offset = 0;
+
+    if (*c < 0x80 || *c == 0xEA || *c == 0xB9 || *c == 0xA5 || *c == 0xCA)
         offset = 0;
 
     return offset;
 }
 
-static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_height, int line_height) {
-    switch (c) {
+static int image_y_offset_cyrillic_normal_small_plain(const uint8_t *c, int image_height, int line_height) {
+    switch (*c) {
     case 36:
         return 1;
     case 201:
@@ -203,12 +209,12 @@ static int image_y_offset_cyrillic_normal_small_plain(uint8_t c, int image_heigh
     }
 }
 
-static int image_y_offset_cyrillic_normal_colored(uint8_t c, int image_height, int line_height) {
-    return c == 201 ? 3 : 0;
+static int image_y_offset_cyrillic_normal_colored(const uint8_t *c, int image_height, int line_height) {
+    return *c == 201 ? 3 : 0;
 }
 
-static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int line_height) {
-    switch (c) {
+static int image_y_offset_cyrillic_large_plain(const uint8_t *c, int image_height, int line_height) {
+    switch (*c) {
     case 36:
         return 2;
     case 201:
@@ -235,8 +241,8 @@ static int image_y_offset_cyrillic_large_plain(uint8_t c, int image_height, int 
     }
 }
 
-static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int line_height) {
-    switch (c) {
+static int image_y_offset_cyrillic_large_black(const uint8_t *c, int image_height, int line_height) {
+    switch (*c) {
     case 36:
         return 2;
     case 201:
@@ -267,8 +273,8 @@ static int image_y_offset_cyrillic_large_black(uint8_t c, int image_height, int 
     }
 }
 
-static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int line_height) {
-    switch (c) {
+static int image_y_offset_cyrillic_large_brown(const uint8_t *c, int image_height, int line_height) {
+    switch (*c) {
     case 36:
         return 2;
     case 201:
@@ -299,8 +305,8 @@ static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int 
     }
 }
 
-static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int line_height) {
-    switch (c) {
+static int image_y_offset_cyrillic_small_black(const uint8_t *c, int image_height, int line_height) {
+    switch (*c) {
     case 36:
     case 40:
     case 41:
@@ -329,8 +335,8 @@ static int image_y_offset_cyrillic_small_black(uint8_t c, int image_height, int 
     }
 }
 
-static int image_y_offset_korean(uint8_t c, int image_height, int line_height) {
-    if (c < 0x80)
+static int image_y_offset_korean(const uint8_t *c, int image_height, int line_height) {
+    if (*c < 0x80)
         return 0;
 
     if (line_height == 11) {
@@ -350,15 +356,17 @@ const font_definition* font_definition_for(e_font font) {
 int font_can_display(const uint8_t* character) {
     auto& data = g_font_data;
     int dummy;
-    return font_letter_id(&data.font_definitions[FONT_NORMAL_BLACK_ON_LIGHT], character, &dummy) >= 0;
+    const auto glyph = font_letter_id(&data.font_definitions[FONT_NORMAL_BLACK_ON_LIGHT], character, &dummy);
+    return glyph.imagid >= 0;
 }
 
-int font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
+font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
     if (*str >= 0x80) {
         *num_bytes = 2;
         const auto &mbmap = data.mbsymbols[def->font];
-        auto it = mbmap.find(*(uint16_t*)str);
+        const uint16_t code = *(uint16_t *)str;
+        auto it = mbmap.find(code);
         if (it != mbmap.end()) {
             return it->second;
         }
@@ -391,19 +399,24 @@ int font_letter_id(const font_definition* def, const uint8_t* str, int* num_byte
         //}
     } else {
         *num_bytes = 1;
-        if (!data.font_mapping[*str])
-            return -1;
+        if (!data.font_mapping[*str]) {
+            return { 0xffffffff, -1 };
+        }
 
-        return data.font_mapping[*str] + def->image_offset - 1;
+        font_glyph r;
+        r.code = *str;
+        r.imagid = data.font_mapping[*str] + def->image_offset - 1;
+
+        return r;
     }
 
-    return -1;
+    return { 0xffffffff, -1 };
 }
 
-void font_set_letter_id(e_font font, uint32_t character, int letter_id) {
+void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing) {
     auto &data = g_font_data;
     auto &mbmap = data.mbsymbols[font];
-    mbmap[character] = letter_id;
+    mbmap[character] = { character, imgid, bearing };
 }
 
 void font_reload_external_symbols() {
@@ -412,6 +425,7 @@ void font_reload_external_symbols() {
         int pack = arch.r_int("pack");
         int id = arch.r_int("id");
         int offset = arch.r_int("offset");
+        vec2i bearing = arch.r_vec2i("bearing");
         if (!symbol || !*symbol) {
             return;
         }
@@ -433,6 +447,6 @@ void font_reload_external_symbols() {
         }
 
         int image_id = image_id_from_group(pack, id) + offset;
-        font_set_letter_id(font, symdec, image_id);
+        font_set_letter_id(font, symdec, image_id, bearing);
     });
 }
