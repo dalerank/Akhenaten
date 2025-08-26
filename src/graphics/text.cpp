@@ -154,7 +154,7 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
             if (glyph.imagid >= 0) {
                 width += image_letter(glyph.imagid)->width + def->letter_spacing;
             }
-
+            
             word_char_seen = 1;
             if (num_bytes > 1) {
                 num_chars += num_bytes;
