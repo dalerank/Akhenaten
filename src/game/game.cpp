@@ -32,7 +32,6 @@
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
-#include "translation/translation.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
 #include "window/logo_screen.h"
@@ -296,7 +295,6 @@ static int is_unpatched(void) {
 
 static void update_encoding() {
     int language = locale_determine_language();
-    translation_load(language);
 }
 
 static bool reload_language(int is_editor, int reload_images) {

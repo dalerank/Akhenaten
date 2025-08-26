@@ -20,7 +20,6 @@
 #include "graphics/text.h"
 #include "scenario/invasion.h"
 #include "scenario/scenario.h"
-#include "translation/translation.h"
 #include "window/advisors.h"
 #include "game/game.h"
 #include "io/gamefiles/lang.h"

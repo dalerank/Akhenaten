@@ -7,7 +7,6 @@
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "translation/translation.h"
 #include "input/input.h"
 
 static void button_ok(int param1, int param2);
@@ -24,15 +23,15 @@ struct plain_message_dialog_t {
 
 plain_message_dialog_t plain_message_dialog;
 
-static int init(int title, int message, pcstr info) {
+static int init(pcstr title, pcstr message, pcstr info) {
     if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
 
     plain_message_dialog.debug_info = info;
-    plain_message_dialog.title = (pcstr)translation_for(title);
-    plain_message_dialog.message = (pcstr)translation_for(message);
+    plain_message_dialog.title = title;
+    plain_message_dialog.message = message;
     return 1;
 }
 
@@ -65,7 +64,7 @@ static void button_ok(int param1, int param2) {
     close();
 }
 
-void window_plain_message_dialog_show(int title, int message, pcstr debug_info) {
+void window_plain_message_dialog_show(pcstr title, pcstr message, pcstr debug_info) {
     if (!init(title, message, debug_info)) {
         return;
     }

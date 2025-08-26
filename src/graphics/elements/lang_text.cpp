@@ -8,7 +8,6 @@
 #include "js/js.h"
 #include "core/log.h"
 #include "game/game_config.h"
-#include "translation/translation.h"
 
 #include <map>
 
@@ -92,8 +91,6 @@ textid loc_text_from_key(pcstr key) {
     return (it != g_localization.end()) ? textid{it->second.group, it->second.id} : textid{ 0, 0 };
 }
 
-const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
-
 const game_languages& get_available_languages() {
     return g_game_languages;
 }
@@ -111,17 +108,6 @@ pcstr lang_text_from_key(pcstr key) {
 
         pcstr str = (pcstr)lang_get_string(it->second.group, it->second.id);
         return str;
-    }
-
-    if (strncmp(key, "#TR_", 4) == 0) {
-        const auto &values = e_translation_tokens.values;
-        auto rIt = std::find_if(values.begin(), values.end(), [key] (auto &p) { 
-            return p.name && strcmp(p.name, key+1) == 0; // remove the # prefix
-        });
-        if (rIt != values.end()) {
-            pcstr str = (pcstr)translation_for(rIt->id);
-            return str;
-        }
     }
 
     return key;

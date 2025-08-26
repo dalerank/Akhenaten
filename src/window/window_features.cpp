@@ -20,7 +20,6 @@
 #include "game/game_config.h"
 #include "content/dir.h"
 #include "io/gamefiles/lang.h"
-#include "translation/translation.h"
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
 #include "scenario/scenario.h"
@@ -64,7 +63,7 @@ int ui::window_features::config_change_string_language(const game_language &lang
     if (!ok) {
         // Notify user that language dir is invalid and revert to previously selected
         game_features::gameopt_language = "";
-        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE, SOURCE_LOCATION);
+        window_plain_message_dialog_show("#TR_INVALID_LANGUAGE_TITLE", "#TR_INVALID_LANGUAGE_MESSAGE", SOURCE_LOCATION);
         return 0;
     }
 

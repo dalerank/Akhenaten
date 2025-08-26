@@ -13,7 +13,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/scenario.h"
-#include "translation/translation.h"
 #include "game/game.h"
 
 #define ADVISOR_HEIGHT 27
@@ -32,10 +31,10 @@ static void draw_housing_table() {
     int width;
     int y_offset = 68;
     int rows = 0;
-    int goods_demand_strings[4] = {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY,
-                                   TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE,
-                                   TR_ADVISOR_RESIDENCES_DEMANDING_OIL,
-                                   TR_ADVISOR_RESIDENCES_DEMANDING_WINE};
+    pcstr goods_demand_strings[4] = {"#TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY",
+                                     "#TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE",
+                                     "#TR_ADVISOR_RESIDENCES_DEMANDING_OIL",
+                                     "#TR_ADVISOR_RESIDENCES_DEMANDING_WINE"};
     int goods_icons[4] = {RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_MEAT, RESOURCE_BEER};
 
     housing_type_counts = calculate_number_of_each_housing_type();
@@ -59,19 +58,19 @@ static void draw_housing_table() {
         }
     }
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 270, y_offset + 180, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw("#TR_ADVISOR_TOTAL_NUM_HOUSES", 270, y_offset + 180, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(calculate_total_housing_buildings(), '@', " ", 450, y_offset + 180, FONT_NORMAL_WHITE_ON_DARK);
 
-    text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 270, y_offset + 200, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw("#TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY", 270, y_offset + 200, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(city_population_open_housing_capacity(), '@', " ", 450, y_offset + 200, FONT_NORMAL_WHITE_ON_DARK);
 
-    text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 270, y_offset + 220, FONT_NORMAL_BLACK_ON_DARK, 0);
+    text_draw("#TR_ADVISOR_TOTAL_HOUSING_CAPACITY", 270, y_offset + 220, FONT_NORMAL_BLACK_ON_DARK, 0);
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 450, y_offset + 220, FONT_NORMAL_WHITE_ON_DARK);
 
     painter ctx = game.painter();
     for (int i = 0; i <= 3; i++) {
         ImageDraw::img_generic(ctx, image_id_resource_icon(goods_icons[i]), vec2i{54, y_offset + 260 + (23 * i)});
-        text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw(goods_demand_strings[i], 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
@@ -91,15 +90,15 @@ int ui::advisor_housing_window::draw_background(UiFlags flags) {
 
     const int city_population = g_city.population.current;
     width = text_draw_number(city_population, '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw("#TR_ADVISOR_TOTAL_POPULATION", 450 + width, 25, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < 58; i++) {
         val = i / 2;
         graphics_draw_vertical_line(vec2i{545 + i, 260 + 50 - val}, 260 + 50, COLOR_RED);
     }
 
-    text_draw(translation_for(TR_ADVISOR_ADVISOR_HEADER_HOUSING), 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
-    text_draw_centered(translation_for(TR_ADVISOR_BUTTON_GRAPHS), 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw("#TR_ADVISOR_ADVISOR_HEADER_HOUSING", 60, 12, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered("#TR_ADVISOR_BUTTON_GRAPHS", 545, 315, 61, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     draw_housing_table();
 

@@ -8,7 +8,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "config/hotkeys.h"
-#include "translation/translation.h"
 
 #define NUM_BOTTOM_BUTTONS 2
 
@@ -19,7 +18,7 @@ static generic_button bottom_buttons[] = {
   {328, 228, 120, 24, button_close, button_none, 1},
 };
 
-static int bottom_button_texts[] = {TR_BUTTON_CANCEL, TR_BUTTON_OK};
+static pcstr bottom_button_texts[] = {"#TR_BUTTON_CANCEL", "#TR_BUTTON_OK"};
 
 static struct {
     int action;
@@ -43,11 +42,11 @@ static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{168, 128}, 19, 9);
 
-    text_draw_centered(translation_for(TR_HOTKEY_EDIT_TITLE), 176, 144, 296, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    text_draw_centered("#TR_HOTKEY_EDIT_TITLE", 176, 144, 296, FONT_LARGE_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button* btn = &bottom_buttons[i];
-        text_draw_centered(translation_for(bottom_button_texts[i]), btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        text_draw_centered((const uint8_t*)bottom_button_texts[i], btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     }
 
     graphics_reset_dialog();

@@ -71,6 +71,8 @@
 #include "graphics/window.h"
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
+#define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
+#define URL_EDITOR "https://github.com/dalerank/akhenaten/wiki/Editor"
 
 #define INTPTR(d) (*(int*)(d))
 
