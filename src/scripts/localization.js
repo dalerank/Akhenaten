@@ -8,4 +8,5 @@ game_languages = [
   {lang:"it", caption:"Italian", key:"italian", table:"localization_it"},
   {lang:"kr", caption:"Korean", key:"korean", table:"localization_kr"},
   {lang:"po", caption:"Polish", key:"polish", table:"localization_po"},
+  {lang:"pr", caption:"Portugese", key:"portugese", table:"localization_pr"},
 ]
