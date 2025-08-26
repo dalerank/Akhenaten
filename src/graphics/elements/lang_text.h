@@ -13,7 +13,7 @@ struct game_language {
     xstring table;
 };
 
-using game_languages = svector<game_language, 8>;
+using game_languages = svector<game_language, 12>;
 
 const game_languages& get_available_languages();
 
