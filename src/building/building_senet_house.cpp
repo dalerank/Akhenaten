@@ -10,6 +10,7 @@
 #include "city/city_warnings.h"
 #include "window/building/common.h"
 #include "sound/sound_building.h"
+#include "empire/empire.h"
 
 buildings::model_t<building_senet_house> senet_house_m;
 buildings::model_t<building_bullfight_school> bullfight_school_m;
@@ -18,81 +19,85 @@ void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_senet_master = (g_city.buildings.count_active(BUILDING_BULLFIGHT_SCHOOL) > 0);
-    warnings.add_if(!has_senet_master, "#build_senet_house");
+    const bool nobrewery = g_city.buildings.count_industry_active(RESOURCE_BEER) <= 0;
+    const bool nostored_beer = g_city.resource.yards_stored(RESOURCE_BEER) <= 0;
+    const bool can_produce_beer = g_city.can_produce_resource(RESOURCE_BEER);
+    const bool can_import_beer = g_empire.can_import_resource(RESOURCE_BEER, true);
+    const bool is_import_beer = (city_resource_trade_status(RESOURCE_BEER) == TRADE_STATUS_IMPORT);
+
+    warnings.add_if(!has_senet_master, "#build_senet_master");
+    warnings.add_if(!nostored_beer, "#need_beer");
+    warnings.add_if(!nobrewery, "#need_brewery");
+    warnings.add_if(!can_produce_beer, "#build_brewery");
+    warnings.add_if(!can_import_beer, "#import_beer_overseer");
+    warnings.add_if(!is_import_beer, "#import_beer_trade_route");
 }
 
 void building_senet_house::on_destroy() {
     city_buildings_remove_senet_house();
 }
 
+bool building_senet_house::add_resource(e_resource resource, int amount) {
+    if (resource != RESOURCE_BEER) {
+        return false;
+    }
+
+    assert(id() > 0);
+    base.stored_amount_first += amount;
+    return true;
+}
+
 void building_senet_house::spawn_figure() {
-    // TODO
-    //    check_labor_problem();
-    //    if (prev_part_building_id)
-    //        return;
-    //    building *part = b;
-    //    for (int i = 0; i < 2; i++) {
-    //        part = part->next();
-    //        if (part->id)
-    //            part->show_on_problem_overlay = show_on_problem_overlay;
-    //
-    //    }
-    //    if (has_figure_of_type(FIGURE_CHARIOTEER))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access_hippodrome_rotation(x, y, &road, subtype.orientation)) {
-    //        if (houses_covered <= 50 || data.entertainment.days1 <= 0)
-    //            generate_labor_seeker(road.x, road.y);
-    //
-    //        int pct_workers = worker_percentage();
-    //        int spawn_delay;
-    //        if (pct_workers >= 100)
-    //            spawn_delay = 7;
-    //        else if (pct_workers >= 75)
-    //            spawn_delay = 15;
-    //        else if (pct_workers >= 50)
-    //            spawn_delay = 30;
-    //        else if (pct_workers >= 25)
-    //            spawn_delay = 50;
-    //        else if (pct_workers >= 1)
-    //            spawn_delay = 80;
-    //        else
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            figure *f = figure_create(FIGURE_CHARIOTEER, road.x, road.y, DIR_0_TOP_RIGHT);
-    //            f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
-    //            f->home() = b;
-    //            figure_id = f->id;
-    //            f->init_roaming();
-    //
-    //            if (!city_entertainment_hippodrome_has_race()) {
-    //                // create mini-horses
-    //                figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, x + 2, y + 1, DIR_2_BOTTOM_RIGHT);
-    //                horse1->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
-    //                horse1->building_id = id;
-    //                horse1->set_resource(0);
-    //                horse1->speed_multiplier = 3;
-    //
-    //                figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, x + 2, y + 2, DIR_2_BOTTOM_RIGHT);
-    //                horse2->action_state = FIGURE_ACTION_200_HIPPODROME_HORSE_CREATED;
-    //                horse2->building_id = id;
-    //                horse1->set_resource(1);
-    //                horse2->speed_multiplier = 2;
-    //
-    //                if (data.entertainment.days1 > 0) {
-    //                    if (city_entertainment_show_message_hippodrome())
-    //                        city_message_post(true, MESSAGE_WORKING_HIPPODROME, 0, 0);
-    //
-    //                }
-    //            }
-    //        }
-    //    }
+    if (base.stored_amount_first <= 0) {
+        return;
+    }
+
+    auto &d = runtime_data();
+    const bool draunk_spawned = common_spawn_figure_trigger(100, BUILDING_SLOT_DRUNKARD);
+    if (draunk_spawned) {
+        const short spent = std::min<short>(base.stored_amount_first, 20);
+        base.stored_amount_first -= spent;
+
+        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+        return;
+    }
+}
+
+void building_senet_house::update_graphic() {
+    const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
+    set_animation(animkey);
+
+    building_impl::update_graphic();
+}
+
+bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
+
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    if (amount >= 0) {
+        const auto &ranim = anim(animkeys().beer);
+        vec2i pos = ranim.pos;
+        for (int i = 0; i < amount; ++i) {
+            ImageDraw::img_generic(ctx, ranim.first_img(), point + pos, color_mask);
+            pos += {5, -5};
+        }
+    }
+
+    return true;
 }
 
 bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_CHARIOTS_2) + amount, x + 65, y +
-    //            3, color_mask);
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
+
+    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    if (amount >= 0) {
+        const auto &ranim = anim(animkeys().straw);
+        vec2i pos = ranim.pos;
+        for (int i = 0; i < amount; ++i) {
+            ImageDraw::img_generic(ctx, ranim.first_img(), point + pos, color_mask);
+            pos += {5, -5};
+        }
+    }
+
     return true;
 }

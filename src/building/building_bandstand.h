@@ -27,7 +27,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void spawn_figure() override;
-    virtual int animation_speed(int speed) const override { return 4; }
     virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }

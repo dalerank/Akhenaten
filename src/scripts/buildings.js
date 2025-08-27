@@ -1770,11 +1770,12 @@ building_senet_house = {
     preview : { pack:PACK_GENERAL, id:17 },
     base : { pack:PACK_GENERAL, id:17 },
   },
-  damage_proof : true,
+  input_resource : RESOURCE_PAPYRUS
   window_info_height_id : 2,
   info_help_id:74,
   info_text_id:73,
   building_size : 4,
+  labor_category : LABOR_CATEGORY_EDUCATION
 }
 
 building_bullfight_school = {
@@ -1782,7 +1783,6 @@ building_bullfight_school = {
     preview : { pack:PACK_CUSTOM, id:0 },
     base : { pack:PACK_CUSTOM, id:0 },
   },
-  damage_proof : true,
   window_info_height_id : 1,
   info_help_id:75,
   info_text_id:78,

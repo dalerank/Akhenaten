@@ -107,7 +107,8 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
 
             case BUILDING_RECRUITER:
             case BUILDING_SHIPWRIGHT:
-            case BUILDING_SCRIBAL_SCHOOL: {
+            case BUILDING_SCRIBAL_SCHOOL: 
+            case BUILDING_SENET_HOUSE: {
                     building_impl *b = dest->dcast();
                     bool ok = b->add_resource(resource, amount_single_turn);
                     if (!ok) {
@@ -356,7 +357,16 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 4: raw materials to workshop
+    // priority 4: beer to senet house
+    if (base.resource_id == RESOURCE_BEER) {
+        auto result = building_get_asker_for_resource(tile(), BUILDING_SENET_HOUSE, base.resource_id, road_network_id, warehouse->distance_from_entry);
+        set_destination(result.building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
+    }
+
+    // priority 5: raw materials to workshop
     {
         tile2i dest;
         int building_id = building_get_workshop_for_raw_material_with_room(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, dest);
@@ -366,7 +376,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 5: food to granary
+    // priority 6: food to granary
     {
         tile2i dest;
         int building_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dest);
@@ -376,7 +386,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 6: food to getting granary
+    // priority 7: food to getting granary
     {
         tile2i dest;
         int building_id = building_getting_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &dest);
@@ -386,7 +396,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 7: resource to other warehouse
+    // priority 8: resource to other warehouse
     tile2i dest;
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, dest);
     set_destination(warehouse_id);

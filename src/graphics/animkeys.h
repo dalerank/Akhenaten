@@ -58,6 +58,7 @@ struct id_anim_t {
     static const xstring clay;
     static const xstring papyrus;
     static const xstring straw;
+    static const xstring beer;
     static const xstring copper;
     static const xstring reeds;
     static const xstring farm_house;
