@@ -650,14 +650,10 @@ if(MSVC)
 endif()
 
 if (PLATFORM_ANDROID)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_BSD_SOURCE")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
     find_library(log-lib log)
     find_library(android-lib android)
     target_link_libraries(${GAME} ${log-lib} ${android-lib})
-endif()
-
-if (APPLE OR PLATFORM_ANDROID)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0")
 endif()
 
 if(NOT APPLE)
