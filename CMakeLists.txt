@@ -1,7 +1,13 @@
-cmake_minimum_required(VERSION 3.13...3.26)
+cmake_minimum_required(VERSION 3.16)
 include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
+
+option(OPTION_SYSTEM_LIBPNG "Use the system libpng" ON)
+cmake_dependent_option(OPTION_SYSTEM_LIBPNG "Use the system libpng" ON APPLE OFF)
+option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
+message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
+message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
@@ -70,6 +76,7 @@ if (MSVC)
     add_compile_options(/EHsc)
 elseif (APPLE)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -Wno-deprecated-declarations -Wno-switch --std=c++17 -fno-exceptions -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+
 elseif(PLATFORM_ANDROID)
     set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -Wno-switch -Wno-non-pod-varargs --std=c++17 -Wno-constant-conversion ${CMAKE_CXX_FLAGS}")
 elseif(WIN_EMSCRIPTEN)
@@ -569,7 +576,6 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
-include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
@@ -598,9 +604,35 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
+if (OPTION_SYSTEM_LIBPNG)
+    find_package(PNG QUIET)
+    if (NOT PNG_FOUND AND OPTION_BUILD_LIBPNG)
+        include(FetchContent)
+        FetchContent_Declare(
+                libpng
+                GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+                GIT_TAG v1.6.50
+        )
+        FetchContent_MakeAvailable(libpng)
+        set(PNG_LIBRARIES png_static)
+        target_link_libraries(${GAME} ${PNG_LIBRARIES})
+    endif()
+    if (NOT PNG_FOUND AND NOT OPTION_BUILD_LIBPNG)
+        # clear the PNG_LIBRARY variable
+        unset(PNG_LIBRARY CACHE)
+    endif()
+    if (PNG_FOUND)
+        include_directories(${PNG_INCLUDE_DIRS})
+        target_link_libraries(${GAME} ${PNG_LIBRARIES})
+    endif()
+else()
+    include_directories(${EXTPNG_INCLUDE_DIR})
+    target_link_libraries(${EXTPNG_LIBRARY})
+endif()
+
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
 
 if(MSVC)
