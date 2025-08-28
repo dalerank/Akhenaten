@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16...3.26)
 include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
@@ -604,6 +604,15 @@ endif()
 if (OPTION_SYSTEM_LIBPNG)
     find_package(PNG QUIET)
     if (NOT PNG_FOUND AND OPTION_BUILD_LIBPNG)
+        FetchContent_Declare(
+                zlib
+                GIT_REPOSITORY https://github.com/madler/zlib
+                GIT_TAG v1.3.1
+        )
+        FetchContent_MakeAvailable(zlib)
+        include_directories(ZLIB_INCLUDE_DIR)
+        target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+
         include(FetchContent)
         FetchContent_Declare(
                 libpng
@@ -612,13 +621,12 @@ if (OPTION_SYSTEM_LIBPNG)
         )
         FetchContent_MakeAvailable(libpng)
         set(PNG_LIBRARIES png_static)
+        include_directories(${PNG_INCLUDE_DIRS})
         target_link_libraries(${GAME} ${PNG_LIBRARIES})
-    endif()
-    if (NOT PNG_FOUND AND NOT OPTION_BUILD_LIBPNG)
+    elseif(NOT PNG_FOUND AND NOT OPTION_BUILD_LIBPNG)
         # clear the PNG_LIBRARY variable
         unset(PNG_LIBRARY CACHE)
-    endif()
-    if (PNG_FOUND)
+    elseif (PNG_FOUND)
         include_directories(${PNG_INCLUDE_DIRS})
         target_link_libraries(${GAME} ${PNG_LIBRARIES})
     endif()
