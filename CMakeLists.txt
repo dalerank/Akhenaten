@@ -3,7 +3,7 @@ include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_SYSTEM_LIBPNG "Use the system libpng" ON)
+option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
 option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
 message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
 message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
