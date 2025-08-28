@@ -629,7 +629,7 @@ if (OPTION_SYSTEM_LIBPNG)
 else()
     add_subdirectory(ext/png)
     include_directories(${EXTPNG_INCLUDE_DIR})
-    target_link_libraries(${EXTPNG_LIBRARY})
+    target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
 endif()
 
 target_link_libraries (${GAME}
