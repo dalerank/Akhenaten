@@ -36,7 +36,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
-#include "ImGuiFileDialog.h"
+#include "imguifiledialog.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 #ifdef __SWITCH__

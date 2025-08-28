@@ -1226,7 +1226,7 @@ The Custom Icon Font (in CustomFont.cpp and CustomFont.h) was made with ImGuiFon
 #pragma region CONFIG FILE INCLUSION
 
 #ifndef CUSTOM_IMGUIFILEDIALOG_CONFIG
-#include "ImGuiFileDialogConfig.h"
+#include "imguifiledialogconfig.h"
 #else  // CUSTOM_IMGUIFILEDIALOG_CONFIG
 #include CUSTOM_IMGUIFILEDIALOG_CONFIG
 #endif  // CUSTOM_IMGUIFILEDIALOG_CONFIG
