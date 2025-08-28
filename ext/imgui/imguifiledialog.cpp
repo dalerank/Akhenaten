@@ -428,18 +428,13 @@ public:
 #else   // _IGFD_WIN_
             fs::path pathName = fs::path(vName);
 #endif  // _IGFD_WIN_
-            try {
-                // interesting, in the case of a protected dir or for any reason the dir cant be opened
-                // this func will work but will say nothing more . not like the dirent version
-                bExists = fs::is_directory(pathName);
-                // test if can be opened, this function can thrown an exception if there is an issue with this dir
-                // here, the dir_iter is need else not exception is thrown..
-                const auto dir_iter = std::filesystem::directory_iterator(pathName);
-                (void)dir_iter;  // for avoid unused warnings
-            } catch (const std::exception& /*ex*/) {
-                // fail so this dir cant be opened
-                bExists = false;
-            }
+            // interesting, in the case of a protected dir or for any reason the dir cant be opened
+            // this func will work but will say nothing more . not like the dirent version
+            bExists = fs::is_directory(pathName);
+            // test if can be opened, this function can thrown an exception if there is an issue with this dir
+            // here, the dir_iter is need else not exception is thrown..
+            const auto dir_iter = std::filesystem::directory_iterator(pathName);
+            (void)dir_iter;  // for avoid unused warnings
         }
         return bExists;  // this is not a directory!
     }
@@ -537,42 +532,38 @@ public:
 
     std::vector<IGFD::FileInfos> ScanDirectory(const std::string& vPath) override {
         std::vector<IGFD::FileInfos> res;
-        try {
-            const std::filesystem::path fspath(vPath);
-            const auto dir_iter   = std::filesystem::directory_iterator(fspath);
-            IGFD::FileType fstype = IGFD::FileType(IGFD::FileType::ContentType::Directory, std::filesystem::is_symlink(std::filesystem::status(fspath)));
-            {
-                IGFD::FileInfos file_two_dot;
-                file_two_dot.filePath    = vPath;
-                file_two_dot.fileNameExt = "..";
-                file_two_dot.fileType    = fstype;
-                res.push_back(file_two_dot);
+        const std::filesystem::path fspath(vPath);
+        const auto dir_iter   = std::filesystem::directory_iterator(fspath);
+        IGFD::FileType fstype = IGFD::FileType(IGFD::FileType::ContentType::Directory, std::filesystem::is_symlink(std::filesystem::status(fspath)));
+        {
+            IGFD::FileInfos file_two_dot;
+            file_two_dot.filePath    = vPath;
+            file_two_dot.fileNameExt = "..";
+            file_two_dot.fileType    = fstype;
+            res.push_back(file_two_dot);
+        }
+        for (const auto& file : dir_iter) {
+            IGFD::FileType fileType;
+            if (file.is_symlink()) {
+                fileType.SetSymLink(file.is_symlink());
+                fileType.SetContent(IGFD::FileType::ContentType::LinkToUnknown);
             }
-            for (const auto& file : dir_iter) {
-                IGFD::FileType fileType;
-                if (file.is_symlink()) {
-                    fileType.SetSymLink(file.is_symlink());
-                    fileType.SetContent(IGFD::FileType::ContentType::LinkToUnknown);
-                }
-                if (file.is_directory()) {
-                    fileType.SetContent(IGFD::FileType::ContentType::Directory);
-                }  // directory or symlink to directory
-                else if (file.is_regular_file()) {
-                    fileType.SetContent(IGFD::FileType::ContentType::File);
-                }
-                if (fileType.isValid()) {
-                    auto fileNameExt = file.path().filename().string();
-                    {
-                        IGFD::FileInfos _file;
-                        _file.filePath    = vPath;
-                        _file.fileNameExt = fileNameExt;
-                        _file.fileType    = fileType;
-                        res.push_back(_file);
-                    }
+            if (file.is_directory()) {
+                fileType.SetContent(IGFD::FileType::ContentType::Directory);
+            }  // directory or symlink to directory
+            else if (file.is_regular_file()) {
+                fileType.SetContent(IGFD::FileType::ContentType::File);
+            }
+            if (fileType.isValid()) {
+                auto fileNameExt = file.path().filename().string();
+                {
+                    IGFD::FileInfos _file;
+                    _file.filePath    = vPath;
+                    _file.fileNameExt = fileNameExt;
+                    _file.fileType    = fileType;
+                    res.push_back(_file);
                 }
             }
-        } catch (const std::exception& ex) {
-            printf("%s", ex.what());
         }
         return res;
     }
@@ -1079,13 +1070,9 @@ void IGFD::FilterInfos::addCollectionFilter(const std::string& vFilter, const bo
             count_dots = _count_dots;
         }
     } else {
-        try {
-            auto rx = std::regex(vFilter);
-            filters.try_add(vFilter);
-            filters_regex.emplace_back(rx);
-        } catch (std::exception&) {
-            assert(0);  // YOUR REGEX FILTER IS INVALID
-        }
+        auto rx = std::regex(vFilter);
+        filters.try_add(vFilter);
+        filters_regex.emplace_back(rx);
     }
 }
 
