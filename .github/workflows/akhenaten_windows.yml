@@ -23,7 +23,7 @@ jobs:
     - name: build-project
       run: |
         cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DOPTION_BUILD_LIBPNG=ON ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
         cd ..
         cmake --build ./build --target akhenaten --config RelWithDebInfo
         copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64/akhenaten.exe
