@@ -1769,13 +1769,14 @@ building_senet_house = {
   animations : {
     preview : { pack:PACK_GENERAL, id:17 },
     base : { pack:PACK_GENERAL, id:17 },
+    work : { pos:[30, -35], pack:PACK_GENERAL, id:17, offset:1, max_frames:18, duration:5 },
   },
-  input_resource : RESOURCE_PAPYRUS
+  input_resource : RESOURCE_BEER
   window_info_height_id : 2,
   info_help_id:74,
   info_text_id:73,
   building_size : 4,
-  labor_category : LABOR_CATEGORY_EDUCATION
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT
 }
 
 building_bullfight_school = {

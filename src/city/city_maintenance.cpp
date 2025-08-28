@@ -181,13 +181,16 @@ void city_maintenance_t::check_kingdome_access() {
         } else if (b.type == BUILDING_SENET_HOUSE) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Senet");
             b.distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_hippodrome(b.tile.x(), b.tile.y(), &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b.road_network_id = map_road_network_get(road_grid_offset);
-                b.distance_from_entry = map_routing_distance(road_grid_offset);
-                b.road_access.x(x_road);
-                b.road_access.y(y_road);
+            const bool closest_road = !!game_features::gameplay_building_road_closest;
+            tile2i road = map_road_to_largest_network(b.tile, b.size, closest_road);
+            if (road.valid()) {
+                b.road_network_id = map_road_network_get(road);
+                b.distance_from_entry = map_routing_distance(road);
+                b.road_access = road;
+                b.has_road_access = true;
+            } else {
+                b.road_access = map_get_road_access_tile(b.tile, b.size);
+                b.has_road_access = b.road_access.valid();
             }
         } else if (building_type_any_of(b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST)) {
             if (b.is_main()) {
