@@ -1,8 +1,6 @@
 #pragma once
 
-#include "grid/point.h"
-
-class building;
+#include "building/building.h"
 
 enum e_routed_mode {
     ROUTED_BUILDING_ROAD = 0,

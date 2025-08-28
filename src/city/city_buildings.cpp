@@ -15,6 +15,7 @@
 #include "building/building_house.h"
 #include "building/building_wall.h"
 #include "io/io_buffer.h"
+#include "grid/road_access.h"
 
 building g_all_buildings[5000];
 custom_span<building> g_city_buildings = make_span(g_all_buildings);
@@ -151,6 +152,38 @@ static void building_delete_UNSAFE(building *b) {
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
+}
+
+building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int(building &)> fweight) {
+    int min_dist = 10000;
+    building *min_building = nullptr;
+    tile2i home_tile{ home.tile };
+    buildings_valid_do([&] (building &b) {
+        if (pred(b)) {
+            return;
+        }
+
+        if (!map_has_road_access(b.tile, b.size)) {
+            return;
+        }
+
+        if (b.distance_from_entry <= 0 || b.road_network_id != home.road_network_id) {
+            return;
+        }
+
+        int dist = calc_distance_with_penalty(b.tile, home_tile, home.distance_from_entry, b.distance_from_entry);
+        dist += fweight(b);
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_building = &b;
+        }
+    });
+
+    if (min_building && min_dist < 10000) {
+        return min_building->id;
+    }
+
+    return 0;
 }
 
 void building_update_state(void) {

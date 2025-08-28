@@ -191,6 +191,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
     iob->bind(BIND_SIGNATURE_UINT16,&d.unreachable_ticks);
     iob->bind(BIND_SIGNATURE_UINT16,&d.last_update_day);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.drunkard_active);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -674,6 +675,7 @@ void building_house::decay_services() {
     decay_service(housed.temple_seth);
     decay_service(housed.temple_bast);
     decay_service(housed.bazaar_access);
+    decay_service(housed.drunkard_active);
 }
 
 bool building_house::can_expand(int num_tiles) {

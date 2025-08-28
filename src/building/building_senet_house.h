@@ -5,6 +5,7 @@
 class building_senet_house : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_SENET_HOUSE, building_senet_house, building_entertainment)
+    building_senet_house* dcast_senet_house() { return this; }
 
     virtual void on_place_checks() override;
     virtual void on_destroy() override;

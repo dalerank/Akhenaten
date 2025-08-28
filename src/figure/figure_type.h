@@ -151,6 +151,7 @@ enum e_figure_type {
     FIGURE_MUMMY = 109,
     FIGURE_PHARAOH = 110,
     FIGURE_GOVERNOR = 111,
+    FIGURE_DRUNKARD = 112,
 
     FIGURE_MAX,
 };

@@ -1,5 +1,4 @@
 #include "figure_reed_gatherer.h"
-#include "figuretype/figure_reed_gatherer.h"
 
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
