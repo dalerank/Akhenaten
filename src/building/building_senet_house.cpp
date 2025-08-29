@@ -48,17 +48,23 @@ bool building_senet_house::add_resource(e_resource resource, int amount) {
 }
 
 void building_senet_house::spawn_figure() {
+    const bool can_spawn_master = common_spawn_figure_trigger(100, BUILDING_SLOT_SERVICE);
+    if (can_spawn_master) {
+        create_roaming_figure(FIGURE_SENET_PLAYER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+        return;
+    }
+
     if (base.stored_amount_first <= 0) {
         return;
     }
 
     auto &d = runtime_data();
-    const bool draunk_spawned = common_spawn_figure_trigger(100, BUILDING_SLOT_DRUNKARD);
-    if (draunk_spawned) {
+    const bool can_spawn_drunk = common_spawn_figure_trigger(100, BUILDING_SLOT_DRUNKARD);
+    if (can_spawn_drunk) {
         const short spent = std::min<short>(base.stored_amount_first, 20);
         base.stored_amount_first -= spent;
 
-        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+        create_roaming_figure(FIGURE_DRUNKARD, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DRUNKARD);
         return;
     }
 }

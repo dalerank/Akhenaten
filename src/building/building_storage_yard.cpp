@@ -4,6 +4,7 @@
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
 #include "building/building_scribal_school.h"
+#include "building/building_senet_house.h"
 #include "city/city_industry.h"
 #include "building/rotation.h"
 #include "building/model.h"
@@ -559,6 +560,39 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
     return { STORAGEYARD_TASK_NONE };
 }
 
+storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b) {
+    if (g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 || g_city.resource.is_stockpiled(RESOURCE_BEER)) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
+    auto warehouse = b->dcast_storage_yard();
+    auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_SENET_HOUSE, RESOURCE_BEER, warehouse->road_network(), warehouse->distance_from_entry());
+    auto senet_house = building_get_ex<building_senet_house>(result.building_id);
+    if (!senet_house) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
+    const int school_want = senet_house->need_resource_amount(RESOURCE_BEER);
+
+    if (school_want > 0 && warehouse->road_network() == senet_house->road_network()) {
+        int available = 0;
+        auto space = warehouse->room();
+        while (space) {
+            if (space->base.stored_amount_first > 0 && space->resource() == RESOURCE_BEER) {
+                available += space->base.stored_amount_first;
+            }
+            space = space->next_room();
+        }
+
+        if (available > 0) {
+            int amount = std::min(available, school_want);
+            return { STORAGEYARD_TASK_DELIVERING, &warehouse->base, amount, RESOURCE_BEER };
+        }
+    }
+
+    return { STORAGEYARD_TASK_NONE };
+}
+
 storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(building *b) {
     if (g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL) <= 0 || g_city.resource.is_stockpiled(RESOURCE_PAPYRUS)) {
         return { STORAGEYARD_TASK_NONE };
@@ -745,14 +779,15 @@ storage_worker_task building_storage_yard::determine_worker_task() {
 
     using action_type = decltype(building_storageyard_deliver_weapons);
     action_type *actions[] = {
-        &building_storage_yard_determine_getting_up_resources,       // getting up resources
+        &building_storage_yard_determine_getting_up_resources,      // getting up resources
         &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
         &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
-        &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver raw materials to workshops
+        &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver papyrus materials to scribal school
+        &building_storageyard_deliver_beer_to_senet_house,          // deliver raw materials to workshops
         &building_storageyard_deliver_timber_to_shipyard_school,    // deliver raw materials to workshops
-        &building_storage_yard::deliver_food_to_gettingup_granary,    // deliver food to getting granary
+        &building_storage_yard::deliver_food_to_gettingup_granary,  // deliver food to getting granary
         &building_storageyard_deliver_food_to_accepting_granary,    // deliver food to accepting granary
-        &building_storage_yard_deliver_emptying_resources,           // emptying resource
+        &building_storage_yard_deliver_emptying_resources,          // emptying resource
         &building_storageyard_deliver_to_monuments,                 // monuments resource
     };
 

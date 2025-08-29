@@ -738,9 +738,10 @@ figure_homeless = {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
-figure_drunkman = {
+figure_drunkard = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		back : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
 		womit : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
 	}

@@ -289,7 +289,7 @@ public:
     }
 
     void set_home(int _id);
-    void set_destination(int _id);
+    void set_destination(building_id _id);
     void set_home(building* b);
     void set_destination(building* b);
     bool has_home(int _id = -1);
@@ -549,7 +549,7 @@ public:
     inline void image_set_animation(const animation_t &anim) { base.image_set_animation(anim); }
     inline void follow_ticks(int num_ticks) { base.follow_ticks(num_ticks); }
     inline bool has_destination(int _id = -1) { return base.has_destination(_id); }
-    inline void set_destination(int _id) { base.set_destination(_id); }
+    inline void set_destination(building_id _id) { base.set_destination(_id); }
     inline void set_destination(building *b) { base.set_destination(b); }
            void set_destination(building *b, tile2i t);
     inline void set_home(int _id) { base.set_home(_id); }

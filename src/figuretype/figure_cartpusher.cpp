@@ -145,7 +145,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
 }
 
 void figure_cartpusher::calculate_destination(bool warehouseman) {
-    set_destination(0);
+    set_destination(nullptr);
     base.anim.frame = 0;
     base.wait_ticks++;
 
@@ -194,7 +194,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
     int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(stockpile_id);
     if (!g_city.resource.is_stockpiled(base.resource_id)) {
-        set_destination(0);
+        set_destination(nullptr);
     }
 
     if (has_destination()) {
@@ -213,7 +213,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
         }
 
         if (dist >= 64) {
-            set_destination(0);
+            set_destination(nullptr);
         }
     }
 
@@ -247,7 +247,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
         }
 
         if (dist >= 64) {
-            set_destination(0);
+            set_destination(nullptr);
         }
     }
 

@@ -74,7 +74,7 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     if (roam_length >= max_roam_length) { // roam over, return home
         destination_tile.set(0);
         roam_length = 0;
-        set_destination(0);
+        set_destination(nullptr);
         route_remove();
         advance_action(NEXT_ACTION);
         return true;
@@ -353,14 +353,14 @@ void figure::set_home(int _id) {
     dcast()->on_update_home();
 };
 
-void figure::set_destination(int _id) {
+void figure::set_destination(building_id _id) {
     destination_building_id = _id;
 };
 void figure::set_home(building* b) {
     home_building_id = b->id;
 };
 void figure::set_destination(building* b) {
-    destination_building_id = b->id;
+    destination_building_id = b ? b->id : 0;
 };
 
 bool figure::has_home(int _id) {

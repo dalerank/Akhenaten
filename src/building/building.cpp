@@ -449,7 +449,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     }
 
     cart->load_resource(resource_id, quantity);
-    cart->set_destination(0);
+    cart->set_destination(nullptr);
     cart->base.immigrant_home_building_id = 0;
 
     set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
@@ -473,7 +473,7 @@ figure *building::create_figure_with_destination(e_figure_type _type, building *
 figure *building::create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
-    f->set_destination(0);
+    f->set_destination(nullptr);
     f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!

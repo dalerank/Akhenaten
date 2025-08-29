@@ -99,7 +99,3 @@ int figure_musician::provide_service() {
 figure_sound_t figure_musician::get_sound_reaction(xstring key) const {
     return musician_m.sounds[key];
 }
-
-const animations_t &figure_musician::anim() const {
-    return musician_m.anim;
-}

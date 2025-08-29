@@ -25,6 +25,7 @@ bool building_exists_at(tile2i point, building *b);
 
 void building_clear_all();
 void building_update_state();
+building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int (building &)> fweight = [] (auto &) { return 0; });
 
 template<typename T>
 T* building_at_ex(tile2i tile) {
