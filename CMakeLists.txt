@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.13...3.26)
+cmake_minimum_required(VERSION 3.16...3.26)
 include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
+
+option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
+option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
+message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
+message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
@@ -248,7 +253,6 @@ if (PLATFORM_ANDROID)
     set(VERSION_REVISION "")
 endif()
 
-add_subdirectory(ext/png)
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
@@ -571,7 +575,6 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
-include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
@@ -600,9 +603,40 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
+if (OPTION_SYSTEM_LIBPNG)
+    if (OPTION_BUILD_LIBPNG)
+        include(FetchContent)
+        FetchContent_Declare(
+                zlib
+                GIT_REPOSITORY https://github.com/madler/zlib
+                GIT_TAG v1.3.1
+        )
+        FetchContent_MakeAvailable(zlib)
+        include_directories(${ZLIB_INCLUDE_DIR})
+        target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+
+        FetchContent_Declare(
+                libpng
+                GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+                GIT_TAG v1.6.50
+        )
+        FetchContent_MakeAvailable(libpng)
+        set(PNG_LIBRARIES png_static)
+    else()
+        find_package(PNG)
+    endif()
+
+    include_directories(${PNG_INCLUDE_DIRS})
+    target_link_libraries(${GAME} ${PNG_LIBRARIES})
+else()
+    add_subdirectory(ext/png)
+    include_directories(${EXTPNG_INCLUDE_DIR})
+    target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
+endif()
+
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
 
 if(MSVC)
