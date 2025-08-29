@@ -16,19 +16,15 @@ public:
     FIGURE_METAINFO(FIGURE_DRUNKARD, figure_drunkard)
     figure_drunkard(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figures::model_t<figure_drunkard> {
-        virtual void load(archive arch) override;
-    };
-
-    short ticks_moved = 0;
+    struct static_params : public figure_model {
+        uint16_t womit_delay;
+        uint16_t walk_delay;
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_REED_GATHERER, "reed"}; }
     virtual void update_animation() override;
-    //virtual sound_key phrase_key() const override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

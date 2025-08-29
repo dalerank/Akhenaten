@@ -8,7 +8,7 @@
 
 figure_reed_gatherer::static_params reed_gatherer_m;
 
-void figure_reed_gatherer::static_params::load(archive arch) {
+void figure_reed_gatherer::static_params::archive_load(archive arch) {
     max_amount = arch.r_int("max_amount");
 }
 

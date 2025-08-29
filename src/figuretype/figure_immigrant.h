@@ -7,6 +7,13 @@ struct event_create_immigrant {
     std::function<void()> payload;
 };
 
+enum e_immigrant_action : uint16_t {
+    FIGURE_ACTION_1_IMMIGRANT_CREATED = 1,
+    FIGURE_ACTION_2_IMMIGRANT_ARRIVING = 2,
+    FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE = 3,
+    FIGURE_ACTION_6_IMMIGRANT_LEAVING = 6,
+};
+
 class figure_immigrant : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_IMMIGRANT, figure_immigrant)

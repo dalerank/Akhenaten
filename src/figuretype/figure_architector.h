@@ -9,8 +9,8 @@ public:
 
     struct static_params : public figures::model_t<figure_architector> {
         int max_service_buildings;
-        virtual void load(archive arch) override;
-    };
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
 
     virtual void figure_action() override;
     virtual void figure_before_action() override;
@@ -20,6 +20,4 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_DAMAGE; }
     virtual void on_action_changed(int saved_action) override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
-
-    static const static_params &current_params() { return (const static_params &)figure_impl::params(TYPE); }
 };

@@ -7,7 +7,7 @@
 
 figure_architector::static_params architector_m;
 
-void figure_architector::static_params::load(archive arch) {
+void figure_architector::static_params::archive_load(archive arch) {
     max_service_buildings = arch.r_int("max_service_buildings");
 }
 

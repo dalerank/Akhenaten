@@ -17,11 +17,11 @@ public:
 
     struct static_params : public building_model {
         virtual bool is_unique_building() const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         uint8_t priority;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
