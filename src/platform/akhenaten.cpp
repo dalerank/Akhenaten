@@ -232,7 +232,7 @@ static void show_options_window(Arguments& args) {
             if (ImGuiFileDialog::Instance()->Display("ChooseFolderDlgKey", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size)) {
                 ImGui::SetWindowFocus();
                 if (ImGuiFileDialog::Instance()->IsOk()) {
-                    args.set_data_directory(ImGuiFileDialog::Instance()->GetFilePathName().c_str());
+                    args.set_data_directory(ImGuiFileDialog::Instance()->GetCurrentPath().c_str());
                 }
                 ImGuiFileDialog::Instance()->Close();
             }
