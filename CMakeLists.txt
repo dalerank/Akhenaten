@@ -87,6 +87,8 @@ elseif(WIN_EMSCRIPTEN)
     -sASYNCIFY -sASYNCIFY_STACK_SIZE=32768 \
     -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=128mb -sMEMORY_GROWTH_LINEAR_STEP=32mb \
     -sENVIRONMENT=web \
+    -sMODULARIZE \
+    -sEXPORT_ALL -sEXPORTED_RUNTIME_METHODS=callMain,addRunDependency,removeRunDependency \
     -lidbfs.js")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-c++11-narrowing \
