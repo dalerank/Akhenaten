@@ -159,7 +159,7 @@ building_id building_closest_route(building &home, std::function<bool(building &
     building *min_building = nullptr;
     tile2i home_tile{ home.tile };
     buildings_valid_do([&] (building &b) {
-        if (pred(b)) {
+        if (!pred(b)) {
             return;
         }
 

@@ -11,7 +11,7 @@ public:
         virtual void archive_load(archive arch) override;
 
         int max_hunting_distance;
-    };
+    } FIGURE_STATIC_DATA_T;
 
     virtual void figure_before_action() override;
     virtual void figure_action() override;

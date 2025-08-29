@@ -10,7 +10,9 @@
 
 figure_drunkard::static_params drunkard_m;
 
-void figure_drunkard::static_params::load(archive arch) {
+void figure_drunkard::static_params::archive_load(archive arch) {
+    womit_delay = arch.r_int("womit_delay", 25);
+    walk_delay = arch.r_int("walk_delay", 25);
 }
 
 void figure_drunkard::figure_before_action() {
@@ -76,14 +78,15 @@ void figure_drunkard::figure_action() {
         break;
 
     case ACTION_11_DRUNKARD_RETURN_HOME:
-        ticks_moved--;
-        if (ticks_moved <= 0) {
+        base.data.drunkard.moved_ticks--;
+        if (base.data.drunkard.moved_ticks <= 0) {
             advance_action(ACTION_10_DRUNKARD_WOMIT);
-            ticks_moved = 20;
+            base.data.drunkard.moved_ticks = current_params().walk_delay;
+            base.wait_ticks = current_params().womit_delay;
             break;
         }
 
-        if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
+        if (do_gotobuilding(destination(), TERRAIN_USAGE_PREFER_ROADS)) {
             poof();
         }
         break;

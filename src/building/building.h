@@ -408,8 +408,12 @@ private:
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
     const type& runtime_data() const { return *(type*)this->base.runtime_data; }    
 
+#define BUILDING_RUNTIME_DATA_T BUILDING_RUNTIME_DATA(runtime_data_t)
+
 #define BUILDING_STATIC_DATA(type) ;                                                                    \
     static const type &current_params() { return (const type &)params(TYPE); }
+
+#define BUILDING_STATIC_DATA_T BUILDING_STATIC_DATA(static_params)
 
 class building_impl {
 public:

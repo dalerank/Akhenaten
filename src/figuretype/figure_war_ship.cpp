@@ -20,7 +20,7 @@
 figure_warship::static_params warship_m;
 figure_warship_info_window figure_warship_infow;
 
-void figure_warship::static_params::load(archive arch) {
+void figure_warship::static_params::archive_load(archive arch) {
     orders_info.fill(0);
     arch.r_objects("orders", [this] (pcstr key, archive or_arch) {
         int id = or_arch.r_int("id");

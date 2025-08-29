@@ -13,7 +13,7 @@ public:
 
     struct static_params : figures::model_t<figure_trade_caravan> {
         int wait_ticks_after_create;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void on_create() override;

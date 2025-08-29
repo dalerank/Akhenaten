@@ -742,10 +742,12 @@ figure_drunkard = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
 		back : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
-		womit : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		womit : { pack:PACK_SPR_MAIN, id:204, max_frames:12, duration:4 }
 		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
 	}
 
+	walk_delay : 50
+  womit_delay : 50
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 }

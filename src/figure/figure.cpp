@@ -565,7 +565,7 @@ metainfo figure_impl::get_info() const {
 }
 
 figure_impl::static_params figure_impl::static_params::dummy;
-void figure_impl::static_params::load(archive arch) {
+void figure_impl::static_params::base_load(archive arch) {
     anim.load(arch);
     assert(anim.data.size() > 0);
 

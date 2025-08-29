@@ -59,7 +59,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     emp_city.trader_figure_ids[free_slot] = caravan->id;
 }
 
-void figure_trade_caravan::static_params::load(archive arch)  {
+void figure_trade_caravan::static_params::archive_load(archive arch)  {
     int wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
 };
 
