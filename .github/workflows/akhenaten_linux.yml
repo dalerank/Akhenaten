@@ -17,13 +17,13 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
+        sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libpng-dev
     - name: build-project
       run: |
         mkdir build
         mkdir linux_build
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake -DCMAKE_BUILD_TYPE=Release -DOPTION_SYSTEM_LIBPNG=ON ..
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./linux_build/akhenaten.linux
