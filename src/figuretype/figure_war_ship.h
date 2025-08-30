@@ -21,7 +21,7 @@ public:
 
     struct static_params : public figures::model_t<figure_warship> {
         std::array<short, e_order_max> orders_info;
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void on_create() override;

@@ -10,7 +10,7 @@ public:
     struct static_params : public figures::model_t<figure_reed_gatherer> {
         int max_amount;
 
-        virtual void load(archive arch) override;
+        virtual void archive_load(archive arch) override;
     };
 
     virtual void on_create() override {}

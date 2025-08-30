@@ -198,6 +198,10 @@ public:
         } herbalist;
 
         struct {
+            short moved_ticks;
+        } drunkard;
+
+        struct {
             short poor_taxed;
             short middle_taxed;
             short reach_taxed;
@@ -441,8 +445,12 @@ public:
 #define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
     using figure_model = figures::model_t<self_type>;           \
     static constexpr pcstr CLSID = #clsid;                      \
-    static constexpr e_figure_type TYPE = type;                 
+    static constexpr e_figure_type TYPE = type;            
 
+#define FIGURE_STATIC_DATA(type) ;                              \
+    static const type &current_params() { return (const type &)params(TYPE); }
+
+#define FIGURE_STATIC_DATA_T FIGURE_STATIC_DATA(static_params)
 
 class figure_impl {
 public:
@@ -459,7 +467,8 @@ public:
         metainfo meta;
         e_permission permission;
 
-        virtual void load(archive arch);
+    protected:
+        void base_load(archive arch);
     };
 
     figure_impl(figure *f) : base(*f), data(f->data) {}
@@ -609,6 +618,8 @@ struct model_t : public figure_impl::static_params {
     static constexpr pcstr CLSID = T::CLSID;
 
     model_t() {
+        static_assert(sizeof(T) == sizeof(figure_impl), "Derived class contains extra data");
+
         name = CLSID;
         ftype = TYPE;
 
@@ -621,7 +632,7 @@ struct model_t : public figure_impl::static_params {
     void archive_load() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
-            static_params::load(arch);
+            base_load(arch);
             loaded = true;
             this->archive_load(arch);
         });
