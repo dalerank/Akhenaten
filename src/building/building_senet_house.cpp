@@ -6,6 +6,7 @@
 #include "io/gamefiles/lang.h"
 #include "window/building/common.h"
 #include "city/buildings.h"
+#include "figuretype/figure_drunkard.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "window/building/common.h"
@@ -64,7 +65,7 @@ void building_senet_house::spawn_figure() {
         const short spent = std::min<short>(base.stored_amount_first, 20);
         base.stored_amount_first -= spent;
 
-        create_roaming_figure(FIGURE_DRUNKARD, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DRUNKARD);
+        create_roaming_figure(FIGURE_DRUNKARD, (e_figure_action)figure_drunkard::ACTION_14_DRUNKARD_CREATED, BUILDING_SLOT_DRUNKARD);
         return;
     }
 }

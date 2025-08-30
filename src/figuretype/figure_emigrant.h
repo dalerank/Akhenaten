@@ -8,6 +8,13 @@ struct event_create_emigrant {
     pcstr src_location;
 };
 
+enum e_emigrant_action : uint16_t {
+    FIGURE_ACTION_2_EMIGRANT_ARRIVING = 2,
+    FIGURE_ACTION_4_EMIGRANT_CREATED = 4,
+    FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE = 5,
+    FIGURE_ACTION_6_EMIGRANT_LEAVING = 6,
+};
+
 class figure_emigrant : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_EMIGRANT, figure_emigrant)
@@ -20,5 +27,4 @@ public:
     virtual figure_phrase_t phrase() const override { return {FIGURE_EMIGRANT, "emigrant"}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
-    virtual const animations_t &anim() const override;
 };
