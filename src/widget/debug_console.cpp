@@ -16,8 +16,8 @@
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
-#include "imgui/backends/imgui_impl_sdlrenderer.h"
-#include "imgui/backends/imgui_impl_sdl.h"
+#include "imgui/backends/imgui_impl_sdlrenderer2.h"
+#include "imgui/backends/imgui_impl_sdl2.h"
 #include "dev/debug.h"
 
 #include <iostream>
@@ -220,13 +220,13 @@ void game_imgui_overlay_init() {
     // Setup Platform/Renderer backends
     auto renderer = graphics_renderer();
     ImGui_ImplSDL2_InitForSDLRenderer(renderer->window(), renderer->renderer());
-    ImGui_ImplSDLRenderer_Init(renderer->renderer());
+    ImGui_ImplSDLRenderer2_Init(renderer->renderer());
 
     debug_console().con.bind_command("close", [] (auto &, auto &) { game.debug_console = false; });
 }
 
 void game_imgui_overlay_destroy() {
-    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 }
@@ -236,7 +236,7 @@ void game_imgui_overlay_begin_frame() {
         //return;
     }
 
-    ImGui_ImplSDLRenderer_NewFrame();
+    ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 }
@@ -245,9 +245,10 @@ void game_imgui_overlay_draw() {
     if (!game.debug_console) {
     //    return;
     }
+    auto renderer = graphics_renderer();
 
     ImGui::Render();
-    ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer->renderer());
 }
 
 bool game_imgui_overlay_handle_event(void *e) {

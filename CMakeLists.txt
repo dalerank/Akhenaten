@@ -593,7 +593,7 @@ include_directories(ext/imgui/backends)
 include_directories(ext/openssl/include)
 
 if(MSVC)
-    include_directories(ext/dirent)
+    include_directories(ext/imgui/dirent)
     include_directories(ext/bugtrap)
     include_directories(ext/ffmpeg/include)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
