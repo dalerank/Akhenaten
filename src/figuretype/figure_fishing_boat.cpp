@@ -89,10 +89,10 @@ void figure_fishing_boat::figure_action() {
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
-            base.data.fishing_boat.had_home = true;
+            runtime_data().had_home = true;
             route_remove();
         } else {
-            if (base.data.fishing_boat.had_home) {
+            if (runtime_data().had_home) {
                 advance_action(FIGURE_ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN);
                 return;
             } else {
@@ -116,7 +116,7 @@ void figure_fishing_boat::figure_action() {
                 advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
-                base.data.fishing_boat.had_home = true;
+                runtime_data().had_home = true;
                 route_remove();
             }
         }

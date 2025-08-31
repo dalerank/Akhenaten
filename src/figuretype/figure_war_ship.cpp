@@ -51,7 +51,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
 
 void figure_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
-    data.warship.active_order = e_order_goto_wharf;
+    runtime_data().active_order = e_order_goto_wharf;
 }
 
 void figure_warship::on_destroy() {
@@ -83,7 +83,7 @@ void figure_warship::figure_action() {
 
     assert(base.allow_move_type == EMOVE_WATER);
 
-    switch (data.warship.active_order) {
+    switch (runtime_data().active_order) {
     case e_order_goto_wharf:
         figure_action_goto_wharf();
         break;
@@ -255,7 +255,7 @@ void figure_warship_info_window::init(object_info &c) {
     for (const pcstr id: button_ids) {
         ui[id].onclick([f, this] (int p1, int p2) {
             const auto &params = f->params();
-            f->data.warship.active_order = p1;
+            f->runtime_data().active_order = p1;
         });
     }
 }
@@ -264,7 +264,7 @@ void figure_warship_info_window::window_info_background(object_info &c) {
     figure_info_window::window_info_background(c);
 
     figure_warship *f = c.figure_get<figure_warship>();
-    const short order = f->data.warship.active_order;
+    const short order = f->runtime_data().active_order;
 
     const figure_properties *target_props = figure_properties_for_type(f->type());
     ui["repair"].darkened = (f->base.damage == 0) ? UiFlags_Grayscale : UiFlags_None;

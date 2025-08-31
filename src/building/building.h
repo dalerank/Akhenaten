@@ -163,12 +163,11 @@ struct event_building_create { building_id bid; };
 class building {
 public:
     enum { max_figures = 4 };
-    using ptr_buffer_t = char[24];
+    using ptr_buffer_t = char[16];
 
 private:
     ptr_buffer_t _ptr_buffer = { 0 };
     class building_impl *_ptr = nullptr; // dcast
-
 
 public:
     e_building_type type;

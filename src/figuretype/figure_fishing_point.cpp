@@ -23,15 +23,16 @@ void figure_fishing_point::figure_action() {
     base.terrain_usage = TERRAIN_USAGE_ANY;
     base.use_cross_country = true;
     bool animation_finished = false;
+    auto &d = runtime_data();
     if (base.anim.frame == 0) {
         base.progress_on_tile++;
         if (base.progress_on_tile > 14) { // wrap around
             base.progress_on_tile = 0;
         }
 
-        data.fishpoint.offset++;
-        data.fishpoint.offset %= std::size(FISHPOINT_OFFSETS);
-        vec2i offset = FISHPOINT_OFFSETS[data.fishpoint.offset];
+        d.offset++;
+        d.offset %= std::size(FISHPOINT_OFFSETS);
+        vec2i offset = FISHPOINT_OFFSETS[d.offset];
         base.set_cross_country_destination(base.source_tile.shifted(offset.x, offset.y));
         animation_finished = true;
     }
@@ -39,9 +40,9 @@ void figure_fishing_point::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_196_FISHPOINT_BUBLES:
         if (animation_finished) {
-            data.fishpoint.current_step++;
-            if (data.fishpoint.current_step > data.fishpoint.max_step) {
-                data.fishpoint.current_step = 0;
+            d.current_step++;
+            if (d.current_step > d.max_step) {
+                d.current_step = 0;
                 advance_action(FIGURE_ACTION_197_FISHPOINT_JUMP);
             }
         }
@@ -50,7 +51,7 @@ void figure_fishing_point::figure_action() {
     case FIGURE_ACTION_197_FISHPOINT_JUMP:
         if (animation_finished) {
             advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
-            data.fishpoint.max_step = 5 + rand() % 10;
+            d.max_step = 5 + rand() % 10;
         }
         break;
     }

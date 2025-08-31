@@ -23,6 +23,8 @@ void figure_drunkard::figure_before_action() {
 }
 
 void figure_drunkard::figure_action() {
+    auto &d = runtime_data();
+
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_12_DRUNKARD_CREATED_SOBER: // spawning
@@ -78,10 +80,10 @@ void figure_drunkard::figure_action() {
         break;
 
     case ACTION_11_DRUNKARD_RETURN_HOME:
-        base.data.drunkard.moved_ticks--;
-        if (base.data.drunkard.moved_ticks <= 0) {
+        d.moved_ticks--;
+        if (d.moved_ticks <= 0) {
             advance_action(ACTION_10_DRUNKARD_WOMIT);
-            base.data.drunkard.moved_ticks = current_params().walk_delay;
+            d.moved_ticks = current_params().walk_delay;
             base.wait_ticks = current_params().womit_delay;
             break;
         }

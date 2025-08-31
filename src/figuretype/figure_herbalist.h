@@ -7,6 +7,10 @@ public:
     FIGURE_METAINFO(FIGURE_HERBALIST, figure_herbalist)
     figure_herbalist(figure *f) : figure_impl(f) {}
 
+    struct runtime_data_t {
+        short see_low_health;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;

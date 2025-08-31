@@ -36,6 +36,7 @@ class figure_fishing_boat;
 class figure_fishing_point;
 class figure_caravan_donkey;
 class figure_transport_ship;
+class figure_stonemason;
 class figure_warship;
 
 struct animation_t;
@@ -71,11 +72,15 @@ enum e_figure_draw_debug_mode {
 extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
 
 class figure {
-public:
-    using ptr_buffer_t = char[24];
+public: 
+    using ptr_buffer_t = char[16];
+
+private:
     ptr_buffer_t _ptr_buffer = { 0 };
     figure_impl *_ptr = nullptr;
 
+public:
+    char runtime_data[32] = { 0 };
     e_resource resource_id;
     uint16_t resource_amount_full; // full load counter
 
@@ -190,53 +195,6 @@ public:
     short market_lady_bought_amount;
     // 115 bytes
     uint8_t draw_debug_mode;
-    union data_t {
-        struct {
-            short see_low_health;
-            short reserved_1;
-            short reserved_2;
-        } herbalist;
-
-        struct {
-            bool had_home;
-        } fishing_boat;
-
-        struct {
-            short moved_ticks;
-        } drunkard;
-
-        struct {
-            short poor_taxed;
-            short middle_taxed;
-            short reach_taxed;
-        } taxman;
-
-        struct {
-            short frame;
-        } flotsam;
-
-        struct {
-            short offset;
-            short max_step;
-            short current_step;
-        } fishpoint;
-
-        struct {
-            short idle_wait_count;
-            building_id destination_bid;
-        } bricklayer;
-
-        struct {
-            short idle_wait_count;
-            building_id destination_bid;
-        } stonemason;
-
-        struct {
-            short active_order;
-        } warship;
-
-        short value[3];
-    } data;
     char festival_remaining_dances;
     
     figure_impl *dcast();
@@ -451,6 +409,12 @@ public:
     static constexpr pcstr CLSID = #clsid;                      \
     static constexpr e_figure_type TYPE = type;            
 
+#define FIGURE_RUNTIME_DATA(type) ;                                                                   \
+    type& runtime_data() { return *(type*)this->base.runtime_data; }                                  \
+    const type& runtime_data() const { return *(type*)this->base.runtime_data; }  
+
+#define FIGURE_RUNTIME_DATA_T FIGURE_RUNTIME_DATA(runtime_data_t)
+
 #define FIGURE_STATIC_DATA(type) ;                              \
     static const type &current_params() { return (const type &)params(TYPE); }
 
@@ -475,7 +439,7 @@ public:
         void base_load(archive arch);
     };
 
-    figure_impl(figure *f) : base(*f), data(f->data) {}
+    figure_impl(figure *f) : base(*f) {}
 
     virtual void on_create();
     virtual void on_destroy() {}
@@ -528,6 +492,7 @@ public:
     virtual figure_caravan_donkey *dcast_caravan_donkey() { return nullptr; }
     virtual figure_warship *dcast_warship() { return nullptr; }
     virtual figure_transport_ship *dcast_transport_ship() { return nullptr; }
+    virtual figure_stonemason *dcast_stonemason() { return nullptr; }
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -576,7 +541,6 @@ public:
     metainfo get_info() const;
 
     figure &base;
-    figure::data_t &data;
 };
 
 GENERATE_SMART_CAST(figure_impl)
@@ -596,6 +560,7 @@ GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
+GENERATE_SMART_CAST_FIGURE(stonemason)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

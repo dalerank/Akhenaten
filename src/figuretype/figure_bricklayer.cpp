@@ -76,13 +76,14 @@ void figure_bricklayer::figure_action() {
     case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         base.wait_ticks++;
         if (base.wait_ticks > 30) {
+            auto &d = runtime_data();
             base.wait_ticks = 0;
-            data.bricklayer.idle_wait_count++;
+            d.idle_wait_count++;
             bool area_ready = true;
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
             if (area_ready) {
                 advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
-            } else if (data.bricklayer.idle_wait_count > 20) {
+            } else if (d.idle_wait_count > 20) {
                 base.destination_tile = building_monument_access_point(destination());
                 base.destination_tile.shift(1, 1);
                 advance_action(FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
