@@ -123,7 +123,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
     return min_enemy_id;
 }
 
-int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on) {
+int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
     int figure_id = 0;
     int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES; i++) {
@@ -133,6 +133,11 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
         }
 
         if (!gang_on && f->targeted_by_figure_id) {
+            continue;
+        }
+
+        const bool should_avoid = avoid(f);
+        if (should_avoid) {
             continue;
         }
 

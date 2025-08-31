@@ -349,7 +349,7 @@ public:
     void zebra_action();
     void hippodrome_horse_action();
 
-    int is_nearby(int category, int* distance, int max_distance = 10000, bool gang_on = true);
+    int is_nearby(int category, int *distance, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
 
     inline void set_resource(e_resource resource) { resource_id = resource; }
