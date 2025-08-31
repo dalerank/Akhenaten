@@ -18,7 +18,7 @@ namespace vfs {
 
 #ifdef _WIN32
 
-#include "dirent_win.h"
+#include "dirent.h"
 #include <windows.h>
 
 #define fs_dir_type _WDIR
