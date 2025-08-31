@@ -198,6 +198,10 @@ public:
         } herbalist;
 
         struct {
+            bool had_home;
+        } fishing_boat;
+
+        struct {
             short moved_ticks;
         } drunkard;
 

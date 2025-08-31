@@ -1,6 +1,7 @@
 #include "building_shipyard.h"
 
 #include "building/building.h"
+#include "figuretype/figure_fishing_boat.h"
 #include "city/object_info.h"
 #include "city/buildings.h"
 #include "city/city.h"

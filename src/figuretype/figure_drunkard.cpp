@@ -87,6 +87,10 @@ void figure_drunkard::figure_action() {
         }
 
         if (do_gotobuilding(destination(), TERRAIN_USAGE_PREFER_ROADS)) {
+            auto house = destination()->dcast_house();
+            if (house) {
+                house->runtime_data().drunkard_active = 96;
+            }
             poof();
         }
         break;

@@ -24,6 +24,8 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
+    water_access_tiles get_water_access_tiles() const;
+
     runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
     const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
     

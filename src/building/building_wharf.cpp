@@ -93,3 +93,10 @@ void building_wharf::set_water_access_tiles(const water_access_tiles &tiles) {
     d.dock_tiles[0] = tiles.point_a.grid_offset();
     d.dock_tiles[1] = tiles.point_b.grid_offset();
 }
+
+water_access_tiles building_wharf::get_water_access_tiles() const {
+    auto &d = runtime_data();
+    return water_access_tiles {
+                tile2i{ d.dock_tiles[0] }, tile2i{ d.dock_tiles[1] }
+           };
+}

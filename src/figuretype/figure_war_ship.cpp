@@ -104,8 +104,6 @@ void figure_warship::kill() {
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
-    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: anim_key = "work"; break;
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
     case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
     case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
     case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;

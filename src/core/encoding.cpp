@@ -596,18 +596,6 @@ int encoding_can_display(const char* utf8_char) {
 }
 
 void encoding_to_utf8(const uint8_t* input, char* output, int output_length, int decomposed) {
-    if (!data.to_utf8_table) {
-        //if (data.encoding == ENCODING_KOREAN)
-        //    encoding_korean_to_utf8(input, output, output_length);
-        //else if (data.encoding == ENCODING_TRADITIONAL_CHINESE)
-        //    encoding_trad_chinese_to_utf8(input, output, output_length);
-        //else if (data.encoding == ENCODING_SIMPLIFIED_CHINESE)
-        //    encoding_simp_chinese_to_utf8(input, output, output_length);
-        //else {
-        //    *output = 0;
-        //}
-        return;
-    }
     const char* max_output = &output[output_length - 1];
 
     while (*input && output < max_output) {
