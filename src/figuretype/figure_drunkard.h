@@ -22,6 +22,10 @@ public:
         virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
+    struct runtime_data_t {
+        short moved_ticks;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;

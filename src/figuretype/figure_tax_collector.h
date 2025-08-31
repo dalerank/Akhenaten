@@ -7,6 +7,12 @@ public:
     FIGURE_METAINFO(FIGURE_TAX_COLLECTOR, figure_tax_collector)
     figure_tax_collector(figure *f) : figure_impl(f) {}
 
+    struct runtime_data_t {
+        short poor_taxed;
+        short middle_taxed;
+        short reach_taxed;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;

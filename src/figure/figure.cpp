@@ -764,10 +764,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
     iob->bind____skip(115);
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_debug_mode);     // 6
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[0]); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[1]); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[2]); // -1
-    iob->bind____skip(44);
+    static_assert(sizeof(figure::runtime_data) == 32, "runtime_data more then 32 bytes");
+    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 6 + 26
+    iob->bind____skip(18);
     iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);
 

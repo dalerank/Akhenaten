@@ -7,6 +7,11 @@ public:
     FIGURE_METAINFO(FIGURE_BRICKLAYER, figure_bricklayer)
     figure_bricklayer(figure *f) : figure_impl(f) {}
 
+    struct runtime_data_t {
+        short idle_wait_count;
+        building_id destination_bid;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_action() override;
     //virtual void figure_before_action() override;

@@ -20,7 +20,13 @@ public:
     FIGURE_METAINFO(FIGURE_CARPENTER, figure_carpenter)
     figure_carpenter(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {};
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
+
+    struct runtime_data_t {
+        short idle_wait_count;
+        building_id destination_bid;
+    } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_action() override;

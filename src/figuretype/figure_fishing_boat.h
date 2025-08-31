@@ -20,6 +20,10 @@ public:
     figure_fishing_boat(figure *f) : figure_impl(f) {}
     virtual figure_fishing_boat *dcast_fishing_boat() override { return this; }
 
+    struct runtime_data_t {
+        bool had_home;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override;
     virtual void on_destroy() override;
     virtual void before_poof() override;

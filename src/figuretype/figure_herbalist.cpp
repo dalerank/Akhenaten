@@ -50,7 +50,7 @@ figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_herbalist::phrase_key() const {
-    if (data.herbalist.see_low_health > 0) {
+    if (runtime_data().see_low_health > 0) {
         return "have_malaria_risk_here";
     } else {
         return "no_threat_malaria_here";
@@ -61,8 +61,8 @@ sound_key figure_herbalist::phrase_key() const {
 
 int figure_herbalist::provide_service() {
     int minmax = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
-        f->data.herbalist.see_low_health += (b->common_health < 20) ? 1 : 0;
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure*) {
+        runtime_data().see_low_health += (b->common_health < 20) ? 1 : 0;
         b->common_health = std::max<uint8_t>(b->common_health, 50);
 
         auto house = b->dcast_house();

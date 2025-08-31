@@ -59,7 +59,7 @@ void figure_carpenter::figure_action() {
     case FIGURE_ACTION_15_CARPENTER_WORK_VERT:
         base.wait_ticks++;
         if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
-            auto statue = smart_cast<building_statue>(building_get(base.data.stonemason.destination_bid));
+            auto statue = smart_cast<building_statue>(building_get(runtime_data().destination_bid));
             if (statue) {
                 statue->set_service(100);
             }
@@ -92,7 +92,7 @@ void figure_carpenter::on_destroy() {
     figure_impl::on_destroy();
 
     // If the stonemason is working on a monument/statue, we need to remove it from the workers list.
-    building *b_dest = building_get(base.data.stonemason.destination_bid);
+    building *b_dest = building_get(runtime_data().destination_bid);
     if (b_dest) {
         b_dest->remove_figure_by_id(base.id);
     }
