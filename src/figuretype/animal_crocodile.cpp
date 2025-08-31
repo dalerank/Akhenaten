@@ -5,7 +5,11 @@
 #include "city/city.h"
 #include "core/random.h"
 
-figures::model_t<figure_crocodile> crocodile_m;
+figure_crocodile::static_params crocodile_m;
+
+void figure_crocodile::static_params::archive_load(archive arch) {
+    max_hungry = arch.r_int("max_hungry", 25);
+}
 
 void figure_crocodile::on_create() {
     base.allow_move_type = EMOVE_AMPHIBIAN;
@@ -68,19 +72,12 @@ void figure_crocodile::update_animation() {
         anim_key = animkeys().idle;
         break;
 
-    case 18: 
+    case FIGURE_ACTION_19_CROCODILE_EATING:
         anim_key = animkeys().eating;
         break;
 
-    case 16: // fleeing
     case FIGURE_ACTION_10_CROCODILE_MOVING: // on the move
         anim_key = animkeys().walk; break;
-        break;
-
-    case 15: // terrified
-    case 14: // scared
-        anim_key = animkeys().eating;
-        base.anim.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
