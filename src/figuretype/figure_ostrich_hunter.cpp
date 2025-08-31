@@ -48,9 +48,9 @@ void figure_ostrich_hunter::figure_action() {
         base.target_figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, ostrich_hunter_m.max_hunting_distance, false);
         if (base.target_figure_id) {
             figure_get(base.target_figure_id)->targeted_by_figure_id = id();
-            advance_action(ACTION_9_CHASE_PREY);
+            advance_action(ACTION_9_OSTRICH_HUNTER_CHASE_PREY);
         } else {
-            advance_action(ACTION_16_HUNTER_INVESTIGATE);
+            advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
             tile2i base_tile;
             int figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, 10000, /*gang*/true);
             if (figure_id) {
@@ -62,7 +62,7 @@ void figure_ostrich_hunter::figure_action() {
         }
         break;
 
-    case ACTION_16_HUNTER_INVESTIGATE:
+    case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
         do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = DIR_0_TOP_RIGHT;
@@ -77,24 +77,24 @@ void figure_ostrich_hunter::figure_action() {
 
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            advance_action(ACTION_9_CHASE_PREY);
+            advance_action(ACTION_9_OSTRICH_HUNTER_CHASE_PREY);
         }
         break;
 
-    case ACTION_9_CHASE_PREY: // following prey
+    case ACTION_9_OSTRICH_HUNTER_CHASE_PREY: // following prey
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }
 
         if (dist >= 2) {
-            do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_HUNTER_HUNT, ACTION_8_RECALCULATE);
+            do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
         } else {
             base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
-            advance_action(ACTION_15_HUNTER_HUNT);
+            advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
         }
         break;
 
-    case ACTION_15_HUNTER_HUNT: // firing at prey
+    case ACTION_15_OSTRICH_HUNTER_HUNT: // firing at prey
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             if (!base.target_figure_id) {
@@ -102,7 +102,7 @@ void figure_ostrich_hunter::figure_action() {
             }
             base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
-                advance_action(ACTION_11_HUNTER_WALK);
+                advance_action(ACTION_11_OSTRICH_HUNTER_WALK);
                 scared_animals_in_area(prey->tile, /*dist*/16);
             } else if (dist >= 2) {
                 base.wait_ticks = 12;
@@ -150,7 +150,7 @@ void figure_ostrich_hunter::figure_action() {
 }
 
 sound_key figure_ostrich_hunter::phrase_key() const {
-    if (action_state() == ACTION_16_HUNTER_INVESTIGATE || action_state() == ACTION_9_CHASE_PREY || action_state() == ACTION_15_HUNTER_HUNT) {
+    if (action_state(ACTION_16_OSTRICH_HUNTER_INVESTIGATE, ACTION_9_OSTRICH_HUNTER_CHASE_PREY, ACTION_15_OSTRICH_HUNTER_HUNT)) {
         return "hunting";
     } else if (action_state() == ACTION_8_RECALCULATE ) {
         if (g_city.sentiment.value > 40) {
@@ -172,9 +172,9 @@ const animations_t &figure_ostrich_hunter::anim() const {
 void figure_ostrich_hunter::update_animation() {
     xstring animkey;
     switch (action_state()) {
-    case ACTION_9_CHASE_PREY:
-    case ACTION_11_HUNTER_WALK:
-    case ACTION_16_HUNTER_INVESTIGATE:
+    case ACTION_9_OSTRICH_HUNTER_CHASE_PREY:
+    case ACTION_11_OSTRICH_HUNTER_WALK:
+    case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
         animkey = animkeys().walk;
         break;
 
@@ -183,7 +183,7 @@ void figure_ostrich_hunter::update_animation() {
         animkey = animkeys().fight;
         break;
 
-    case ACTION_15_HUNTER_HUNT: // hunting
+    case ACTION_15_OSTRICH_HUNTER_HUNT: // hunting
         animkey = animkeys().hunt;
         break;
         //        case ??: // attacking

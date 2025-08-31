@@ -2,6 +2,13 @@
 
 #include "figure/figure.h"
 
+enum e_figure_ostrich_hunber : uint16_t {
+    ACTION_9_OSTRICH_HUNTER_CHASE_PREY = 9,
+    ACTION_11_OSTRICH_HUNTER_WALK = 11,
+    ACTION_15_OSTRICH_HUNTER_HUNT = 15,
+    ACTION_16_OSTRICH_HUNTER_INVESTIGATE = 16,
+};
+
 class figure_ostrich_hunter : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_OSTRICH_HUNTER, figure_ostrich_hunter)
