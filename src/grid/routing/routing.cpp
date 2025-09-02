@@ -456,13 +456,54 @@ static void callback_travel_noncitizen_land_through_building(int next_offset, in
     }
 }
 
-static void callback_travel_noncitizen_land(int next_offset, int dist) {
-    if (!has_fighting_enemy(next_offset)) {
-        if (map_grid_get(routing_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE
-            && map_grid_get(routing_land_noncitizen, next_offset) < NONCITIZEN_5_FORT) {
-            enqueue(next_offset, dist);
-        }
+static void callback_travel_amphibia_land_water_through_building(int next_offset, int dist) {
+    if (has_fighting_enemy(next_offset)) {
+        return;
     }
+
+    const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
+    if (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_0_PASSABLE
+        || (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_1_BUILDING
+            && map_building_at(next_offset) == g_routing_state_data.through_building_id)) {
+        enqueue(next_offset, dist);
+    }
+}
+
+static void callback_travel_amphibia_land_water(int next_offset, int dist) {
+    if (has_fighting_enemy(next_offset)) {
+        return;
+    }
+
+    const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
+    if (pas == AMPHIBIA_0_PASSABLE || pas == AMPHIBIA_1_BUILDING) {
+        enqueue(next_offset, dist);
+    }
+}
+
+static void callback_travel_noncitizen_land(int next_offset, int dist) {
+    if (has_fighting_enemy(next_offset)) {
+        return;
+    }
+
+    const int32_t pas = map_grid_get(routing_land_noncitizen, next_offset);
+    if (pas >= NONCITIZEN_0_PASSABLE && pas < NONCITIZEN_5_FORT) {
+        enqueue(next_offset, dist);
+    }
+}
+
+bool map_routing_amphibia_can_travel_over_land_water(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
+    int src_offset = src.grid_offset();
+    int dst_offset = dst.grid_offset();
+    ++g_routing_stats.total_routes_calculated;
+    ++g_routing_stats.enemy_routes_calculated;
+    if (only_through_building_id > 0) {
+        g_routing_state_data.through_building_id = only_through_building_id;
+        route_queue(src_offset, dst_offset, callback_travel_amphibia_land_water_through_building);
+    } else {
+        route_queue_max(src_offset, dst_offset, max_tiles, callback_travel_amphibia_land_water);
+    }
+
+    return map_grid_get(routing_distance, dst_offset) != 0;
 }
 
 bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
@@ -470,7 +511,7 @@ bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int onl
     int dst_offset = dst.grid_offset();
     ++g_routing_stats.total_routes_calculated;
     ++g_routing_stats.enemy_routes_calculated;
-    if (only_through_building_id) {
+    if (only_through_building_id > 0) {
         g_routing_state_data.through_building_id = only_through_building_id;
         route_queue(src_offset, dst_offset, callback_travel_noncitizen_land_through_building);
     } else {
@@ -510,6 +551,18 @@ int map_routing_distance(int grid_offset) {
 
 int map_citizen_grid(int grid_offset) {
     return map_grid_get(routing_land_citizen, grid_offset);
+}
+
+int map_noncitizen_grid(int grid_offset) {
+    return map_grid_get(routing_land_noncitizen, grid_offset);
+}
+
+int map_amphibia_grid(int grid_offset) {
+    return map_grid_get(routing_land_amphibia, grid_offset);
+}
+
+int map_water_grid(int grid_offset) {
+    return map_grid_get(routing_tiles_water, grid_offset);
 }
 
 io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob, size_t version) {

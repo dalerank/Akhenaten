@@ -20,6 +20,12 @@ enum {
 
     NONCITIZEN_N1_BLOCKED = -1,
 
+    AMPHIBIA_0_PASSABLE = 0,
+    AMPHIBIA_1_BUILDING = 1,
+    AMPHIBIA_N1_BLOCKED = -1,  
+    AMPHIBIA_N2_MAP_EDGE = -2,
+    AMPHIBIA_N3_LOW_BRIDGE = -3,
+
     WATER_0_PASSABLE = 0,
     WATER_N1_BLOCKED = -1,
     WATER_N2_MAP_EDGE = -2,
@@ -36,5 +42,6 @@ extern grid_xx water_drag;
 
 extern grid_xx routing_land_citizen;
 extern grid_xx routing_land_noncitizen;
+extern grid_xx routing_land_amphibia;
 extern grid_xx routing_tiles_water;
 extern grid_xx routing_tiles_walls;

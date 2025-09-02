@@ -128,6 +128,30 @@ static int get_land_type_citizen_aqueduct(int grid_offset) {
     //        return CITIZEN_N1_BLOCKED;
     //    }
 }
+
+static int get_land_type_amphibia(int grid_offset) {
+    switch (building_at(grid_offset)->type) {
+    default:
+        return AMPHIBIA_1_BUILDING;
+
+    case BUILDING_STORAGE_YARD:
+    case BUILDING_FORT_GROUND:
+        return AMPHIBIA_0_PASSABLE;
+
+    case BUILDING_BURNING_RUIN:
+    case BUILDING_UNUSED_NATIVE_HUT_88:
+    case BUILDING_UNUSED_NATIVE_MEETING_89:
+    case BUILDING_UNUSED_NATIVE_CROPS_93:
+        return AMPHIBIA_N1_BLOCKED;
+
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_INFANTRY:
+    case BUILDING_FORT_ARCHERS:
+        return AMPHIBIA_N1_BLOCKED;
+    }
+    return 0;
+}
+
 static int get_land_type_noncitizen(int grid_offset) {
     switch (building_at(grid_offset)->type) {
     default:
@@ -249,6 +273,34 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
         else
             return NONCITIZEN_0_PASSABLE;
 
+    case ROUTING_TYPE_AMPHIBIA:
+        if (terrain & TERRAIN_GATEHOUSE)
+            return AMPHIBIA_1_BUILDING;
+        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL))
+            return AMPHIBIA_0_PASSABLE;
+        else if (terrain & TERRAIN_ROAD)
+            return AMPHIBIA_0_PASSABLE;
+        else if (terrain & TERRAIN_WALL)
+            return AMPHIBIA_N1_BLOCKED;
+        else if (terrain & TERRAIN_BUILDING)
+            return get_land_type_amphibia(grid_offset);
+        else if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
+            if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
+                switch (map_sprite_animation_at(grid_offset)) {
+                case 5:
+                case 6: // low bridge middle section
+                    return AMPHIBIA_N3_LOW_BRIDGE;
+                case 13: // ship bridge pillar
+                    return AMPHIBIA_N1_BLOCKED;
+                default:
+                    return AMPHIBIA_0_PASSABLE;
+                }
+            } else
+                return AMPHIBIA_N2_MAP_EDGE;
+        } else {
+            return AMPHIBIA_N1_BLOCKED;
+        }
+
     case ROUTING_TYPE_WATER:
         if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
             if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
@@ -321,12 +373,33 @@ void map_routing_update_land_citizen(void) {
         }
     }
 }
-static void map_routing_update_land_noncitizen(void) {
+
+static void map_routing_update_amphibia() {
+    OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Amphibia");
+    map_grid_fill(routing_land_amphibia, -1);
+    int grid_offset = scenario_map_data()->start_offset;
+
+    const int mheight = scenario_map_data()->height;
+    const int mwidth = scenario_map_data()->width;
+    const int mborder_size = scenario_map_data()->border_size;
+
+    for (int y = 0; y < mheight; y++, grid_offset += mborder_size) {
+        for (int x = 0; x < mwidth; x++, grid_offset++) {
+            map_grid_set(routing_land_amphibia, grid_offset, map_routing_tile_check(ROUTING_TYPE_AMPHIBIA, grid_offset));
+        }
+    }
+}
+
+static void map_routing_update_land_noncitizen() {
     OZZY_PROFILER_SECTION("Game/Run/Routing/Update land/Noncitizen");
     map_grid_fill(routing_land_noncitizen, -1);
     int grid_offset = scenario_map_data()->start_offset;
-    for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
+
+    const int mheight = scenario_map_data()->height;
+    const int mwidth = scenario_map_data()->width;
+    const int mborder_size = scenario_map_data()->border_size;
+    for (int y = 0; y < mheight; y++, grid_offset += mborder_size) {
+        for (int x = 0; x < mwidth; x++, grid_offset++) {
             map_grid_set(routing_land_noncitizen, grid_offset, map_routing_tile_check(ROUTING_TYPE_NONCITIZEN, grid_offset));
             //            int terrain = map_terrain_get(grid_offset);
             //            if (terrain & TERRAIN_GATEHOUSE) {
@@ -355,6 +428,7 @@ void map_routing_update_land() {
     OZZY_PROFILER_SECTION("Game/Run/Routing/Update land");
     map_routing_update_land_citizen();
     map_routing_update_land_noncitizen();
+    map_routing_update_amphibia();
 }
 
 void map_routing_update_ferry_routes() {
@@ -459,10 +533,11 @@ void map_routing_update_walls(void) {
     }
 }
 
-void map_routing_update_all(void) {
+void map_routing_update_all() {
     map_routing_update_land();
     map_routing_update_water();
     map_routing_update_walls();
+    map_routing_update_amphibia();
 }
 
 /////////////
