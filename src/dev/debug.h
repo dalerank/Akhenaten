@@ -73,6 +73,9 @@ enum e_debug_render {
     e_debug_render_canals = 31,
     e_debug_render_overlay_add = 32,
     e_debug_render_gardens = 33,
+    e_debug_render_routing_noncitizen = 34,
+    e_debug_render_routing_amphibia = 35,
+    e_debug_render_routing_water = 36,
 
     e_debug_render_size
 };
