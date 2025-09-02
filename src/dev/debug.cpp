@@ -283,22 +283,22 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_routing_grid: // CITIZEN ROUTING GRID
         d = map_citizen_grid(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, d > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, x, y + 10, 0, "", d, d >= 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         break;
 
     case e_debug_render_routing_noncitizen: // CITIZEN ROUTING GRID
         d = map_noncitizen_grid(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, d > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, x, y + 10, 0, "", d, d >= 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         break;
 
     case e_debug_render_routing_amphibia: // CITIZEN ROUTING GRID
         d = map_amphibia_grid(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, d > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, x, y + 10, 0, "", d, d >= 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         break;
 
     case e_debug_render_routing_water: // CITIZEN ROUTING GRID
         d = map_water_grid(grid_offset);
-        debug_text(ctx, str, x, y + 10, 0, "", d, d > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, x, y + 10, 0, "", d, d >= 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         break;
 
     case e_debug_render_moisture: // MOISTURE
