@@ -5,5 +5,6 @@ grid_xx water_drag = {0, FS_UINT8};
 
 grid_xx routing_land_citizen = {0, FS_INT8};
 grid_xx routing_land_noncitizen = {0, FS_INT8};
+grid_xx routing_land_amphibia = {0, FS_INT8};
 grid_xx routing_tiles_water = {0, FS_INT8};
 grid_xx routing_tiles_walls = {0, FS_INT8};

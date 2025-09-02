@@ -32,8 +32,9 @@ enum e_terrain_usage {
     TERRAIN_USAGE_PREFER_ROADS = 3,
     TERRAIN_USAGE_WALLS = 4,
     TERRAIN_USAGE_ANIMAL = 5,
+    TERRAIN_USAGE_AMPHIBIA = 6,
 
-    TERRAIN_USAGE_MAX = 6
+    TERRAIN_USAGE_MAX
 };
 
 extern const token_holder< e_terrain_usage, TERRAIN_USAGE_ANY, TERRAIN_USAGE_MAX> e_terrain_usage_tokens;
