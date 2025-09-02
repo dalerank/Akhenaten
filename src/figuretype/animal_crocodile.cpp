@@ -55,6 +55,10 @@ void figure_crocodile::figure_action() {
 
         if (dist >= 1) {
             do_goto(prey->tile, TERRAIN_USAGE_AMPHIBIA, FIGURE_ACTION_24_CROCODILE_LOOKING_FOR_ATTACK, ACTION_8_RECALCULATE);
+            if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
+                base.direction = DIR_0_TOP_RIGHT;
+                advance_action(ACTION_8_RECALCULATE);
+            }
         } else {
             advance_action(FIGURE_ACTION_24_CROCODILE_LOOKING_FOR_ATTACK);
         }

@@ -280,7 +280,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             return AMPHIBIA_0_PASSABLE;
         else if (terrain & TERRAIN_ROAD)
             return AMPHIBIA_0_PASSABLE;
-        else if (terrain & TERRAIN_WALL)
+        else if (terrain & (TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_TREE))
             return AMPHIBIA_N1_BLOCKED;
         else if (terrain & TERRAIN_BUILDING)
             return get_land_type_amphibia(grid_offset);
@@ -298,7 +298,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             } else
                 return AMPHIBIA_N2_MAP_EDGE;
         } else {
-            return AMPHIBIA_N1_BLOCKED;
+            return AMPHIBIA_0_PASSABLE;
         }
 
     case ROUTING_TYPE_WATER:
@@ -556,7 +556,10 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
         return map_grid_get(routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
         return map_grid_get(routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+    case TERRAIN_USAGE_AMPHIBIA:
+        return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
     }
+    assert(false && "uknown terrain usage option");
     return false;
 }
 
