@@ -1087,11 +1087,11 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
 }
 
 void ui::emenu_header::draw(UiFlags flags) {
-    lang_text_draw(impl.text, pos, _font);
+    lang_text_draw(impl.text.c_str(), pos, _font);
 }
 
 int ui::emenu_header::text_width() {
-    return lang_text_get_width(impl.text, _font);
+    return lang_text_get_width(impl.text.c_str(), _font);
 }
 
 menu_item &ui::emenu_header::item(pcstr key) {

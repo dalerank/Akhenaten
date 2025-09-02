@@ -18,8 +18,8 @@ struct menu_item {
 };
 
 struct menu_header {
-    svector<menu_item, 32> items;
-    bstring64 text;
+    svector<menu_item, 48> items;
+    xstring text;
     short x_start;
     short x_end;
     int calculated_width_blocks;
