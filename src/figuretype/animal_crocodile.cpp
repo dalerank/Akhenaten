@@ -10,6 +10,7 @@ figure_crocodile::static_params crocodile_m;
 void figure_crocodile::static_params::archive_load(archive arch) {
     max_hungry = arch.r_int("max_hungry", 25);
     max_hunting_distance = arch.r_int("max_hunting_distance", 10);
+    chase_speed_mult = arch.r_int("chase_speed_mult", 2);
 }
 
 void figure_crocodile::on_create() {
@@ -27,6 +28,7 @@ void figure_crocodile::figure_action() {
 
     base.allow_move_type = EMOVE_AMPHIBIAN;
     base.roam_wander_freely = false;
+    base.speed_multiplier = current_params().speed_mult;
     auto &d = runtime_data();
 
     figure *prey = figure_get(base.target_figure_id);
@@ -48,6 +50,7 @@ void figure_crocodile::figure_action() {
         break;
 
     case ACTION_9_CROCODILE_CHASE_PREY: // following prey
+        base.speed_multiplier = current_params().chase_speed_mult;
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }

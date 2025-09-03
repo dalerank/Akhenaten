@@ -25,6 +25,7 @@ public:
     struct static_params : public figure_model {
         uint16_t max_hungry;
         uint16_t max_hunting_distance;
+        uint8_t chase_speed_mult;
         virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
