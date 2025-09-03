@@ -39,6 +39,7 @@ struct id_anim_t {
     static const xstring wait_e;
     static const xstring eating;
     static const xstring idle;
+    static const xstring swim_idle;
     static const xstring booth;
     static const xstring stand_sn_s;
     static const xstring stand_sn_n;

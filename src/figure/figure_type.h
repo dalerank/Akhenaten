@@ -158,4 +158,5 @@ enum e_figure_type {
 };
 
 using figure_id = uint16_t;
+constexpr figure_id INVALID_FIGURE_ID = 0;
 extern const token_holder<e_figure_type, FIGURE_NONE, FIGURE_MAX> e_figure_type_tokens;

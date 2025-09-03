@@ -142,14 +142,13 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
         return false;
 
     base.wait_ticks_next_target = 0;
-    int distance;
-    int enemy_id = base.is_nearby(2, &distance);
-    if (enemy_id > 0 && distance <= max_distance) {
-        figure* enemy = figure_get(enemy_id);
+    auto result = base.is_nearby(NEARBY_HOSTILE);
+    if (result.fid > 0 && result.distance <= max_distance) {
+        figure* enemy = figure_get(result.fid);
         base.wait_ticks_next_target = 0;
         advance_action(FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY);
         base.destination_tile = enemy->tile;
-        base.target_figure_id = enemy_id;
+        base.target_figure_id = result.fid;
         enemy->targeted_by_figure_id = id();
         //base.target_figure_created_sequence = enemy->created_sequence;
         route_remove();

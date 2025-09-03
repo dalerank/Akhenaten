@@ -46,7 +46,7 @@ void random_generate_next() {
     random_bits_fill();
 }
 
-void random_generate_pool(void) {
+void random_generate_pool() {
     auto &data = g_random_data;
     data.pool_index = 0;
     for (int i = 0; i < MAX_RANDOM; i++) {
@@ -61,13 +61,13 @@ void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2) {
     random_bits_fill();
 }
 
-int8_t random_byte(void) {
+int8_t random_byte() {
     return g_random_data.random1_7bit;
 }
-int8_t random_byte_alt(void) {
+int8_t random_byte_alt() {
     return g_random_data.random2_7bit;
 }
-int16_t random_short(void) {
+int16_t random_short() {
     return g_random_data.random1_15bit;
 }
 int32_t random_from_pool(int index) {

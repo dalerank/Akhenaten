@@ -44,21 +44,23 @@ void figure_ostrich_hunter::figure_action() {
     }
 
     switch (action_state()) {
-    case ACTION_8_RECALCULATE:
-        base.target_figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, ostrich_hunter_m.max_hunting_distance, false);
-        if (base.target_figure_id) {
-            figure_get(base.target_figure_id)->targeted_by_figure_id = id();
-            advance_action(ACTION_9_OSTRICH_HUNTER_CHASE_PREY);
-        } else {
-            advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
-            tile2i base_tile;
-            int figure_id = base.is_nearby(NEARBY_ANIMAL, &dist, 10000, /*gang*/true);
-            if (figure_id) {
-                base_tile = figure_get(figure_id)->tile;
+    case ACTION_8_RECALCULATE: {
+            auto result = base.is_nearby(NEARBY_ANIMAL, ostrich_hunter_m.max_hunting_distance, false);
+            base.target_figure_id = result.fid;
+            if (base.target_figure_id) {
+                figure_get(base.target_figure_id)->targeted_by_figure_id = id();
+                advance_action(ACTION_9_OSTRICH_HUNTER_CHASE_PREY);
             } else {
-                base_tile = home()->tile;
+                advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
+                tile2i base_tile;
+                auto max_result = base.is_nearby(NEARBY_ANIMAL, 10000, /*gang*/true);
+                if (max_result.fid) {
+                    base_tile = figure_get(max_result.fid)->tile;
+                } else {
+                    base_tile = home()->tile;
+                }
+                base.destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
             }
-            base.destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
         }
         break;
 
