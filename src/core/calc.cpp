@@ -1,15 +1,5 @@
 #include "core/calc.h"
 
-int calc_minimum_distance(int x1, int y1, int x2, int y2) {
-    int distance_x = get_delta(x1, x2);
-    int distance_y = get_delta(y1, y2);
-    if (distance_x <= distance_y)
-        return distance_x;
-    else {
-        return distance_y;
-    }
-}
-
 int calc_general_direction(tile2i from, tile2i to) {
     int x_from = from.x();
     int x_to = to.x();

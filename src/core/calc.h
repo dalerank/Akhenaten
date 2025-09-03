@@ -68,7 +68,12 @@ inline int calc_maximum_distance(_T1 from, _T2 to) {
  * Gets minimum distance
  * @return min(dx, dy)
  */
-int calc_minimum_distance(int x1, int y1, int x2, int y2);
+template<typename _T1, typename _T2>
+inline int calc_minimum_distance(_T1 from, _T2 to) {
+    int distance_x = get_delta(point_get_x(from), point_get_x(to));
+    int distance_y = get_delta(point_get_y(from), point_get_y(to));
+    return (distance_x <= distance_y) ? distance_x : distance_y;
+}
 
 /**
  * Gets maximum distance with penalty applied

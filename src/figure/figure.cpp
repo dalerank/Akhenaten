@@ -123,8 +123,8 @@ static int get_nearest_enemy(int x, int y, int *distance) {
     return min_enemy_id;
 }
 
-int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
-    int figure_id = 0;
+nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
+    figure_id fid = 0;
     int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
@@ -181,15 +181,15 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
                 }
                 if (dist < lowest_distance) {
                     lowest_distance = dist;
-                    figure_id = i;
+                    fid = i;
                     //                    if (!gang_on)
                     //                        return figure_id;
                 }
             }
         }
     }
-    *distance = lowest_distance;
-    return figure_id;
+
+    return { fid, lowest_distance };
 }
 
 bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
@@ -470,6 +470,18 @@ void figure_impl::on_create() {
 
 void figure_impl::on_post_load() {
     on_change_terrain(0, base.terrain_type);
+}
+
+void figure_impl::on_attacked(figure *attacker) {
+    if (base.state != FIGURE_STATE_ALIVE) {
+        return;
+    }
+
+    if (action_state(FIGURE_ACTION_149_CORPSE)) {
+        return;
+    }
+
+    kill();
 }
 
 void figure_impl::on_change_terrain(int old, int current) {

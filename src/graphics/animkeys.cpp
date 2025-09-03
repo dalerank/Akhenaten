@@ -37,6 +37,7 @@ const xstring id_anim_t::wait_s = "wait_s";
 const xstring id_anim_t::wait_e = "wait_e";
 const xstring id_anim_t::eating = "eating";
 const xstring id_anim_t::idle = "idle";
+const xstring id_anim_t::swim_idle = "swim_idle";
 const xstring id_anim_t::booth = "booth";
 const xstring id_anim_t::stand_sn_s = "stand_sn_s";
 const xstring id_anim_t::stand_sn_n = "stand_sn_n";

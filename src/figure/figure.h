@@ -71,6 +71,11 @@ enum e_figure_draw_debug_mode {
 
 extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
 
+struct nearby_result {
+    figure_id fid = 0;
+    int distance = 0;
+};
+
 class figure {
 public: 
     using ptr_buffer_t = char[16];
@@ -172,7 +177,7 @@ public:
     uint8_t phrase_sequence_city;
     uint8_t trader_id;
     uint8_t wait_ticks_next_target;
-    short target_figure_id;
+    figure_id target_figure_id;
     short targeted_by_figure_id;
     //unsigned short created_sequence;
     //unsigned short target_figure_created_sequence;
@@ -349,7 +354,7 @@ public:
     void zebra_action();
     void hippodrome_horse_action();
 
-    int is_nearby(int category, int *distance, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
+    nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
     bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
 
     inline void set_resource(e_resource resource) { resource_id = resource; }
@@ -445,6 +450,7 @@ public:
     virtual void on_destroy() {}
     virtual void on_post_load();
     virtual void on_change_terrain(int old, int current);
+    virtual void on_attacked(figure *attacker);
     virtual void figure_action() {}
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
