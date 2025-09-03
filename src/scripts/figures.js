@@ -250,6 +250,7 @@ figure_crocodile = {
 		eating : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
 	}
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
+	chase_speed_mult : 2
 }
 
 figure_hippo = {
