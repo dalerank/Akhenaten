@@ -312,6 +312,7 @@ public:
     void destroy_by_fire();
 
     void mark_plague(int days);
+    bool is_ajacent_tile(tile2i t) const;
 
 public:
     building_impl *dcast();

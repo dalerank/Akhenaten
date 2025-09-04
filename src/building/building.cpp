@@ -639,6 +639,11 @@ void building::mark_plague(int days) {
     has_plague = true;
 }
 
+bool building::is_ajacent_tile(tile2i t) const {
+    grid_area area = map_grid_get_area(tile, size, 1);
+    return area.contains(t);
+}
+
 xstring building::cls_name() const {
     const auto &params = building_impl::params(type);
     if (!params.info_title_id.empty()) {
