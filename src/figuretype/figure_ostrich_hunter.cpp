@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "figure/properties.h"
 #include "grid/figure.h"
+#include "grid/routing/routing.h"
 #include "graphics/animkeys.h"
 #include "figuretype/figure_missile.h"
 #include "city/city_figures.h"
@@ -66,7 +67,7 @@ void figure_ostrich_hunter::figure_action() {
 
     case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
         do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
-        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_8_RECALCULATE);
         }
@@ -89,7 +90,10 @@ void figure_ostrich_hunter::figure_action() {
         }
 
         if (dist >= 2) {
-            do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
+            const bool finished = do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
+            if (!finished && direction() == DIR_FIGURE_REROUTE) {
+                advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
+            }
         } else {
             base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW)->missile_delay;
             advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
@@ -134,15 +138,40 @@ void figure_ostrich_hunter::figure_action() {
 
         base.target_figure_id = 0;
         if (animation().finished()) {
-            advance_action(ACTION_12_HUNTER_MOVE_PACKED);
+            advance_action(ACTION_12_OSTRICH_HUNTER_MOVE_PACKED);
         }
         break;
 
-    case ACTION_12_HUNTER_MOVE_PACKED:                                     // returning with prey
-        do_returnhome(TERRAIN_USAGE_ANIMAL, ACTION_14_HUNTER_UNLOADING);
+    case ACTION_12_OSTRICH_HUNTER_MOVE_PACKED: {                                    // returning with prey
+            const bool finished = do_returnhome(TERRAIN_USAGE_ANIMAL, ACTION_14_OSTRICH_HUNTER_UNLOADING);
+            if (!finished && direction() == DIR_FIGURE_REROUTE) {
+                if (home()->is_ajacent_tile(tile())) {
+                    advance_action(ACTION_14_OSTRICH_HUNTER_UNLOADING);
+                    break;
+                }
+
+                advance_action(ACTION_12_OSTRICH_HUNTER_LOOK_RANDOM_PACKED);
+            }
+        }
         break;
 
-    case ACTION_14_HUNTER_UNLOADING:
+    case ACTION_12_OSTRICH_HUNTER_LOOK_RANDOM_PACKED: {
+            grid_area area = map_grid_get_area(tile(), 1, 1);
+            svector<tile2i, 16> free_tiles;
+            area.find_all(free_tiles, [&] (tile2i t) {
+                return map_noncitizen_is_passable(t.grid_offset());
+            });
+            advance_action(ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED);
+            base.destination_tile = map_random_choose(free_tiles, tile());
+        }
+        break;
+
+    case ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED: {
+            do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED);
+        }
+        break;
+
+    case ACTION_14_OSTRICH_HUNTER_UNLOADING:
         if (animation().finished()) {
             home()->stored_amount_first += 100;
             poof();
@@ -188,19 +217,17 @@ void figure_ostrich_hunter::update_animation() {
     case ACTION_15_OSTRICH_HUNTER_HUNT: // hunting
         animkey = animkeys().hunt;
         break;
-        //        case ??: // attacking
-        //            image_set_animation(GROUP_FIGURE_HUNTER, 200, 12);
-        //        case ??: // attacking w/ prey on his back
-        //            image_set_animation(GROUP_FIGURE_HUNTER, 296, 12);
+
     case ACTION_10_PICKUP_ANIMAL:
         animkey = animkeys().pack;
         break;
 
-    case ACTION_12_HUNTER_MOVE_PACKED:
+    case ACTION_12_OSTRICH_HUNTER_MOVE_PACKED:
+    case ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED:
         animkey = animkeys().move_pack;
         break;
 
-    case ACTION_14_HUNTER_UNLOADING:
+    case ACTION_14_OSTRICH_HUNTER_UNLOADING:
         animkey = animkeys().unpack;
         break;
     }
