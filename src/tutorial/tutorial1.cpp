@@ -115,7 +115,10 @@ void tutorial1_on_filled_granary(event_granary_resource_added ev) {
         return;
     }
 
-    if (ev.amount <= g_scenario.vars.get_int("granary_meat_stored", 400)) {
+    auto granary = building_get(ev.bid)->dcast_granary();
+    const int meat_stored = granary ? granary->amount(RESOURCE_GAMEMEAT) : 0;
+
+    if (meat_stored <= g_scenario.vars.get_int("granary_meat_stored", 400)) {
         return;
     }
 
