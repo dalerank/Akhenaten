@@ -557,6 +557,10 @@ int map_noncitizen_grid(int grid_offset) {
     return map_grid_get(routing_land_noncitizen, grid_offset);
 }
 
+bool map_noncitizen_is_passable(int grid_offset) {
+    return map_noncitizen_grid(grid_offset) == NONCITIZEN_0_PASSABLE;
+}
+
 int map_amphibia_grid(int grid_offset) {
     return map_grid_get(routing_land_amphibia, grid_offset);
 }
