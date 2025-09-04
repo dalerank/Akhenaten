@@ -174,6 +174,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     }
 
     for (const auto &btn : button_ids) {
+        ui[btn.id].readonly = (g_building_menu_ctrl.count_items(btn.type) == 0);
         ui[btn.id].select(btn.type == opened_menu);
     }
 
