@@ -43,6 +43,7 @@ import ui_figure_trader_ship_window
 import ui_top_menu_widget
 import ui_advisor_religion
 import fonts
+import routing
 
 include(":ui_advisor_chief.js")
 include(":ui_advisor_education.js")
