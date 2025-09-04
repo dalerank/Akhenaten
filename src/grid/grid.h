@@ -65,6 +65,31 @@ struct grid_area {
         }
     }
 
+    bool contains(tile2i t) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+                tile2i tt(xx, yy);
+                if (tt == t) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    template<typename T>
+    void find_all(T& out, std::function<bool(tile2i)> f) {
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
+            for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) {
+                tile2i tt(xx, yy);
+                if (f(tt)) {
+                    out.push_back(tt);
+                }
+            }
+        }
+    }
+
     template<typename T>
     tile2i find_if(T f) {
         for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) {
@@ -90,6 +115,20 @@ inline void map_grid_set(grid_xx& grid, tile2i at, int64_t value) { map_grid_set
 void map_grid_fill(grid_xx& grid, int64_t value);
 void map_grid_clear(grid_xx& grid);
 void map_grid_copy(grid_xx& src, grid_xx& dst);
+
+template<typename T>
+tile2i map_random_choose(T &arr, tile2i avoid) {
+    if (arr.empty()) {
+        return tile2i::invalid;
+    }
+
+    auto idx = rand() % arr.size();
+    if (arr[idx] != avoid) {
+        return arr[idx];
+    }
+
+    return arr[0];
+}
 
 void map_grid_and(grid_xx& grid, uint32_t at, int mask);
 void map_grid_or(grid_xx& grid, uint32_t at, int mask);
