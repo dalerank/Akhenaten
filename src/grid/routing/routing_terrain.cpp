@@ -20,6 +20,18 @@
 #include "scenario/map.h"
 #include "figure/route.h"
 #include "city/city_buildings.h"
+#include "js/js_game.h"
+#include <array>
+
+std::array<bool, BUILDING_MAX> routing_amphibia_buildings = { false };
+
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_amphibia) {
+    g_config_arch.r_array("routing_amphibia", [] (archive arch) {
+        e_building_type type = arch.r_type<e_building_type>("type");
+        bool passable = arch.r_bool("passable", false);
+        routing_amphibia_buildings[type] = passable;
+    });
+}
 
 static int get_land_type_citizen_building(int grid_offset) {
     building* b = building_at(grid_offset);
@@ -107,8 +119,8 @@ static int get_land_type_citizen_building(int grid_offset) {
     }
     return CITIZEN_0_ROAD;
 }
-static int get_land_type_citizen_aqueduct(int grid_offset) {
-    return CITIZEN_N3_AQUEDUCT;
+static int get_land_type_citizen_canal(int grid_offset) {
+    return CITIZEN_N3_CANAL;
     //    int image_id = map_image_at(grid_offset) - image_id_from_group(GROUP_BUILDING_AQUEDUCT);
     //    if (image_id <= 3)
     //        return CITIZEN_N3_AQUEDUCT;
@@ -130,26 +142,8 @@ static int get_land_type_citizen_aqueduct(int grid_offset) {
 }
 
 static int get_land_type_amphibia(int grid_offset) {
-    switch (building_at(grid_offset)->type) {
-    default:
-        return AMPHIBIA_1_BUILDING;
-
-    case BUILDING_STORAGE_YARD:
-    case BUILDING_FORT_GROUND:
-        return AMPHIBIA_0_PASSABLE;
-
-    case BUILDING_BURNING_RUIN:
-    case BUILDING_UNUSED_NATIVE_HUT_88:
-    case BUILDING_UNUSED_NATIVE_MEETING_89:
-    case BUILDING_UNUSED_NATIVE_CROPS_93:
-        return AMPHIBIA_N1_BLOCKED;
-
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_INFANTRY:
-    case BUILDING_FORT_ARCHERS:
-        return AMPHIBIA_N1_BLOCKED;
-    }
-    return 0;
+    building* b = building_at(grid_offset);
+    return routing_amphibia_buildings[b->type] ? AMPHIBIA_0_PASSABLE : AMPHIBIA_N1_BLOCKED;
 }
 
 static int get_land_type_noncitizen(int grid_offset) {
@@ -248,7 +242,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
                 return get_land_type_citizen_building(grid_offset);
             }
         } else if (terrain & TERRAIN_CANAL) {
-            return get_land_type_citizen_aqueduct(grid_offset);
+            return get_land_type_citizen_canal(grid_offset);
         } else if (terrain & TERRAIN_NOT_CLEAR) {
             return CITIZEN_N1_BLOCKED;
         } else {
@@ -613,7 +607,7 @@ int map_routing_get_destroyable(int grid_offset) {
     case NONCITIZEN_1_BUILDING:
         return DESTROYABLE_BUILDING;
     case NONCITIZEN_2_CLEARABLE:
-        return DESTROYABLE_AQUEDUCT_GARDEN;
+        return DESTROYABLE_CANALS_GARDEN;
     case NONCITIZEN_3_WALL:
         return DESTROYABLE_WALL;
     case NONCITIZEN_4_GATEHOUSE:

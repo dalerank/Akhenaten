@@ -131,7 +131,7 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
     int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
     int d_y = MAP_Y(next_offset) - MAP_Y(queue_get(0));
     switch (map_grid_get(routing_land_citizen, next_offset)) {
-    case CITIZEN_N3_AQUEDUCT:
+    case CITIZEN_N3_CANAL:
         if (!map_can_place_road_under_canal(tile2i(next_offset)))
             blocked = true;
         if (!can_place_on_crossing_no_neighboring(next_offset, TERRAIN_CANAL, TERRAIN_ROAD, d_x, d_y, false))
@@ -188,6 +188,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     if (!blocked)
         enqueue(next_offset, dist);
 }
+
 bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
     switch (map_grid_get(routing_land_citizen, grid_offset)) {
     case CITIZEN_N1_BLOCKED:
@@ -213,7 +214,7 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
         }
         break;
 
-    case CITIZEN_N3_AQUEDUCT:
+    case CITIZEN_N3_CANAL:
         if (!is_aqueduct) {
             if (!map_can_place_road_under_canal(tile2i(grid_offset)))
                 return false;
@@ -475,7 +476,7 @@ static void callback_travel_amphibia_land_water(int next_offset, int dist) {
     }
 
     const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
-    if (pas == AMPHIBIA_0_PASSABLE || pas == AMPHIBIA_1_BUILDING) {
+    if (pas == AMPHIBIA_0_PASSABLE) {
         enqueue(next_offset, dist);
     }
 }
