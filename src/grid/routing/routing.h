@@ -23,6 +23,7 @@ int map_routing_distance(int grid_offset);
 inline int map_routing_distance(tile2i tile) { return map_routing_distance(tile.grid_offset()); }
 int map_citizen_grid(int grid_offset);
 int map_noncitizen_grid(int grid_offset);
+bool map_noncitizen_is_passable(int grid_offset);
 int map_amphibia_grid(int grid_offset);
 int map_water_grid(int grid_offset);
 
