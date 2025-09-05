@@ -597,12 +597,12 @@ void draw_debug_figures(vec2i pixel, tile2i tile, painter &ctx) {
 }
 
 void figure::draw_debug() {
-    if (draw_debug_mode == 0) {
+    if (draw_mode == 0) {
         return;
     }
 
-    building* b = home();
-    building* bdest = destination();
+    building *b = home();
+    building *bdest = destination();
 
     uint8_t str[10];
     vec2i pixel = tile_to_pixel(tile);
@@ -613,8 +613,7 @@ void figure::draw_debug() {
     color col = COLOR_WHITE;
     painter ctx = game.painter();
 
-    switch (draw_debug_mode) {
-    case 1: // ACTION & STATE IDS
+    if (!!(draw_mode & e_figure_draw_overlay)) {
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", id, COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
         debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
@@ -631,30 +630,31 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", tile.grid_offset(), COLOR_FONT_MEDIUM_GRAY);
         debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
         debug_text(ctx, str, pixel.x + 30, pixel.y + 30, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
-        break;
+    }
 
-    case FIGURE_DRAW_DEBUG_ROUTING:
+    if (!!(draw_mode & e_figure_draw_routing)) {
         // draw path
-        if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
+        if (routing_path_id) {
             vec2i coords = tile_to_pixel(destination()->tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             coords = tile_to_pixel(destination_tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int tx = tile.x();
             int ty = tile.y();
             coords = tile_to_pixel(tile);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+            ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
                 starting_tile_index--;
             }
 
             for (int i = starting_tile_index; i < routing_path_length; i++) {
+                int img_index = 10;
                 auto pdir = figure_route_get_direction(routing_path_id, i);
                 switch (pdir) {
                 case 0: ty--; break;
                 case 1: tx++; ty--; break;
-                case 2: tx++; break;
+                case 2: tx++; img_index = 1; break;
                 case 3: tx++; ty++; break;
                 case 4: ty++; break;
                 case 5: tx--; ty++; break;
@@ -662,7 +662,7 @@ void figure::draw_debug() {
                 case 7: tx--; ty--; break;
                 }
                 coords = tile_to_pixel(tile2i(tx, ty));
-                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+                ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + img_index, coords.x, coords.y);
             }
         }
 
@@ -698,31 +698,35 @@ void figure::draw_debug() {
         pixel.y += 50;
         string_from_int(str, progress_on_tile, 0);
         text_draw(ctx, str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
-        break;
-    case 3: // RESOURCE CARRY
+    }
+
+    if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
         if (resource_id) {
             debug_text(ctx, str, pixel.x, pixel.y, indent, "", resource_id, COLOR_GREEN);
             debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : COLOR_FONT_MEDIUM_GRAY);
             debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
         }
-        break;
-    case 4: // BUILDING DATA
+    }
+
+    if (!!(draw_mode & e_figure_draw_building)) {
         debug_text(ctx, str, pixel.x + 0, pixel.y, indent, "", homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(immigrant_home_building_id)->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        break;
-    case 5: // FESTIVAL
+    }
+
+    if (!!(draw_mode & e_figure_draw_festival)) {
         pixel.y += 30;
         //debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "service[0]", data.value[0], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "service[1]", data.value[1], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "service[2]", data.value[2], COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
-        break;
-    case 6: // CROSS-COUNTRY MOVEMENT
+    }
+
+    if (!!(draw_mode & e_figure_cross_country_move)) { // CROSS-COUNTRY MOVEMENT
         if (use_cross_country) {
             vec2i tp;
             if (tile.grid_offset() != -1) {
@@ -753,7 +757,6 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta.x, col);
         debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_delta.y, col);
         pixel.y += 10;
-        break;
     }
 }
 

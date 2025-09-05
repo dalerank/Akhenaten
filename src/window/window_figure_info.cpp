@@ -115,13 +115,12 @@ void figure_info_window::load(archive arch, pcstr section) {
 void figure_info_window::window_info_background(object_info &c) {
     common_info_window::window_info_background(c);
 
-    int figure_id = c.nfigure.ids[c.nfigure.selected_index];
-    figure *f = ::figure_get(figure_id);
+    figure *f = c.nfigure.get();
 
     ui.format_all(f->dcast());
 
     ui.check_errors = false;
-    ui["show_path"] = (f->draw_debug_mode ? "P" : "p");
+    ui["show_path"] = ( !!(f->draw_mode & e_figure_draw_routing) ? "P" : "p");
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
         ui[{"button_figure", i}].select(i == c.nfigure.selected_index);
@@ -195,7 +194,7 @@ void figure_info_window::init(object_info &c) {
     });
 
     ui["show_path"].onclick([f] {
-        f->draw_debug_mode = f->draw_debug_mode ? 0 : FIGURE_DRAW_DEBUG_ROUTING;
+        f->draw_mode ^= e_figure_draw_routing;
     });
 }
 

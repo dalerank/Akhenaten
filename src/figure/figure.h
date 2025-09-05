@@ -65,15 +65,21 @@ enum e_move_type : uint8_t {
     EMOVE_AMPHIBIAN = 3,
 };
 
-enum e_figure_draw_debug_mode {
-    FIGURE_DRAW_DEBUG_ROUTING = 2
-};
-
 extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
 
 struct nearby_result {
     figure_id fid = 0;
     int distance = 0;
+};
+
+enum e_figure_draw_mode { 
+    e_figure_draw_none = 0, 
+    e_figure_draw_overlay = 0x1,
+    e_figure_draw_routing = 0x2,
+    e_figure_draw_carry = 0x4,
+    e_figure_draw_building = 0x8,
+    e_figure_draw_festival = 0x10,
+    e_figure_cross_country_move = 0x20,
 };
 
 class figure {
@@ -199,7 +205,7 @@ public:
     // 14 bytes 00 00 00 00 00 00 00 ...
     short market_lady_bought_amount;
     // 115 bytes
-    uint8_t draw_debug_mode;
+    uint8_t draw_mode;
     char festival_remaining_dances;
     
     figure_impl *dcast();

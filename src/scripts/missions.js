@@ -395,6 +395,10 @@ mission7 = { // Abydos
 			name : "Byblos",
 			is_sea_trade : true,
 		},
+		{
+			name : "Perwadjyt",
+			is_sea_trade : true,
+		},
 	],
 
 	choice_background : {pack:PACK_UNLOADED, id:12},

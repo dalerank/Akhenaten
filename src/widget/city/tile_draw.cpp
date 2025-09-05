@@ -81,8 +81,6 @@ void map_render_set(int grid_offset, int flag) {
     map_grid_set(g_render_grid, grid_offset, flag);
 }
 
-enum e_figure_draw_mode { e_figure_draw_common = 0, e_figure_draw_overlay = 1 };
-
 void local_render_context_t::init() {
     advance_water_animation = 0;
 

@@ -72,5 +72,4 @@ void figure_trader_ship_info_window::init(object_info &c) {
         }
         ui["sell_text"] = buy_items;
     }
-
 }
