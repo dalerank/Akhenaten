@@ -5,6 +5,7 @@
 #include "grid/vegetation.h"
 #include "building/building.h"
 #include "city/city_buildings.h"
+#include "routing_terrain.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -476,7 +477,9 @@ static void callback_travel_amphibia_land_water(int next_offset, int dist) {
     }
 
     const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
-    if (pas == AMPHIBIA_0_PASSABLE) {
+    if (pas == AMPHIBIA_0_PASSABLE
+        || (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_1_BUILDING
+            && map_routing_tile_check(TERRAIN_USAGE_AMPHIBIA, next_offset) >= 0)) {
         enqueue(next_offset, dist);
     }
 }

@@ -23,33 +23,37 @@
 #include "js/js_game.h"
 #include <array>
 
-std::array<bool, BUILDING_MAX> routing_amphibia_buildings = { false };
+std::array<int, BUILDING_MAX> routing_amphibia_buildings = { -1 };
+std::array<int, BUILDING_MAX> routing_citizen_buildings = { -1 };
+std::array<int, BUILDING_MAX> routing_noncitizen_buildings = { -1 };
 
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_amphibia) {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
+    routing_amphibia_buildings.fill( -1 );
+
     g_config_arch.r_array("routing_amphibia", [] (archive arch) {
         e_building_type type = arch.r_type<e_building_type>("type");
-        bool passable = arch.r_bool("passable", false);
-        routing_amphibia_buildings[type] = passable;
+        int penalty = arch.r_int("penalty", false);
+        routing_amphibia_buildings[type] = penalty;
+    });
+
+    routing_citizen_buildings.fill( -1 );
+    g_config_arch.r_array("routing_citizen", [] (archive arch) {
+        e_building_type type = arch.r_type<e_building_type>("type");
+        int penalty = arch.r_int("penalty", false);
+        routing_citizen_buildings[type] = penalty;
+    });
+
+    routing_noncitizen_buildings.fill(0); // why it  0
+    g_config_arch.r_array("routing_noncitizen", [] (archive arch) {
+        e_building_type type = arch.r_type<e_building_type>("type");
+        int penalty = arch.r_int("penalty", false);
+        routing_noncitizen_buildings[type] = penalty;
     });
 }
 
 static int get_land_type_citizen_building(int grid_offset) {
     building* b = building_at(grid_offset);
     switch (b->type) {
-    default:
-        return CITIZEN_N1_BLOCKED;
-
-    case BUILDING_MUD_GATEHOUSE:
-    case BUILDING_FERRY:
-        return CITIZEN_0_ROAD;
-
-    case BUILDING_ROADBLOCK:
-        return CITIZEN_0_ROAD;
-
-    case BUILDING_FORT_GROUND:
-    case BUILDING_FESTIVAL_SQUARE:
-        return CITIZEN_2_PASSABLE_TERRAIN;
-
     case BUILDING_SMALL_MASTABA:
     case BUILDING_SMALL_MASTABA_SIDE:
     case BUILDING_SMALL_MASTABA_WALL:
@@ -97,27 +101,13 @@ static int get_land_type_citizen_building(int grid_offset) {
             }
         }
         break;
-        //        case BUILDING_GRANARY:
-        //            switch (map_property_multi_tile_xy(grid_offset)) {
-        //                case EDGE_X1Y0:
-        //                case EDGE_X0Y1:
-        //                case EDGE_X1Y1:
-        //                case EDGE_X2Y1:
-        //                case EDGE_X1Y2:
-        //                    return CITIZEN_0_ROAD;
-        //            }
-        //            break;
-        //        case BUILDING_RESERVOIR:
-        //            switch (map_property_multi_tile_xy(grid_offset)) {
-        //                case EDGE_X1Y0:
-        //                case EDGE_X0Y1:
-        //                case EDGE_X2Y1:
-        //                case EDGE_X1Y2:
-        //                    return CITIZEN_N4_RESERVOIR_CONNECTOR; // aqueduct connect points
-        //            }
-        //            break;
+
+    default:
+        // no special case, value from config
+        break;
     }
-    return CITIZEN_0_ROAD;
+
+    return routing_citizen_buildings[b->type];;
 }
 static int get_land_type_citizen_canal(int grid_offset) {
     return CITIZEN_N3_CANAL;
@@ -141,32 +131,14 @@ static int get_land_type_citizen_canal(int grid_offset) {
     //    }
 }
 
-static int get_land_type_amphibia(int grid_offset) {
+int map_routing_land_penalty_amphibia(int grid_offset) {
     building* b = building_at(grid_offset);
-    return routing_amphibia_buildings[b->type] ? AMPHIBIA_0_PASSABLE : AMPHIBIA_N1_BLOCKED;
+    return routing_amphibia_buildings[b->type];
 }
 
 static int get_land_type_noncitizen(int grid_offset) {
-    switch (building_at(grid_offset)->type) {
-    default:
-        return NONCITIZEN_1_BUILDING;
-
-    case BUILDING_STORAGE_YARD:
-    case BUILDING_FORT_GROUND:
-        return NONCITIZEN_0_PASSABLE;
-
-    case BUILDING_BURNING_RUIN:
-    case BUILDING_UNUSED_NATIVE_HUT_88:
-    case BUILDING_UNUSED_NATIVE_MEETING_89:
-    case BUILDING_UNUSED_NATIVE_CROPS_93:
-        return NONCITIZEN_N1_BLOCKED;
-
-    case BUILDING_FORT_CHARIOTEERS:
-    case BUILDING_FORT_INFANTRY:
-    case BUILDING_FORT_ARCHERS:
-        return NONCITIZEN_5_FORT;
-    }
-    return 0;
+    building *b = building_at(grid_offset);
+    return routing_amphibia_buildings[b->type];
 }
 
 static int is_surrounded_by_water(int grid_offset) {
@@ -277,7 +249,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
         else if (terrain & (TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_TREE))
             return AMPHIBIA_N1_BLOCKED;
         else if (terrain & TERRAIN_BUILDING)
-            return get_land_type_amphibia(grid_offset);
+            return map_routing_land_penalty_amphibia(grid_offset);
         else if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
             if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
                 switch (map_sprite_animation_at(grid_offset)) {
@@ -554,6 +526,10 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
         return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
     }
     assert(false && "uknown terrain usage option");
+    return false;
+}
+
+bool map_routing_amphibia_is_passable_building(int grid_offset) {
     return false;
 }
 
