@@ -656,7 +656,7 @@ void figure::draw_debug() {
                 case 1: tx++; ty--; break;
                 case 2: tx++; img_index = 1; break;
                 case 3: tx++; ty++; break;
-                case 4: ty++; break;
+                case 4: ty++; img_index = 0; break;
                 case 5: tx--; ty++; break;
                 case 6: tx--; break;
                 case 7: tx--; ty--; break;
