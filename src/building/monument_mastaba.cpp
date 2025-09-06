@@ -179,6 +179,15 @@ void building_mastaba::update_images(building *b, int curr_phase, const vec2i si
     }
 }
 
+bool building_mastaba::need_workers() {
+    if (!is_main()) {
+        return false;
+    }
+
+    const auto &w = runtime_data().workers;
+    return std::find(w.begin(), w.end(), 0) != w.end();
+}
+
 void building_mastaba::finalize(building *b, const vec2i size_b) {
     building *part = b;
     building *main = b->main();
@@ -465,9 +474,9 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     return true;
 }
 
-custom_span<uint16_t> building_mastaba::active_workers() {
+span_const<uint16_t> building_mastaba::active_workers() const {
     auto &monumentd = runtime_data();
-    return custom_span<uint16_t>(monumentd.workers, 5);
+    return span_const<uint16_t>(monumentd.workers);
 }
 
 void building_mastaba::update_day(const vec2i tiles_size) {

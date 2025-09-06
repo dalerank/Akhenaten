@@ -23,42 +23,40 @@ public:
 
 public:
     constexpr custom_span() noexcept
-      : m_storage(nullptr),
-        m_size(0) {
+      : m_storage(nullptr), m_size(0) {
     }
 
     template <typename It>
     constexpr custom_span(It it, size_type count) noexcept
-      : m_storage(it),
-        m_size(count) {
+      : m_storage(it), m_size(count) {
     }
 
     template <typename It>
     constexpr custom_span(It it, It end) noexcept
-      : m_storage(it),
-        m_size(end - it) {
+      : m_storage(it), m_size(end - it) {
     }
 
     template <std::size_t N>
     constexpr custom_span(element_type (arr)[N]) noexcept
-      : m_storage(arr),
-        m_size(N) {
+      : m_storage(arr), m_size(N) {
     }
 
     template <std::size_t N>
     constexpr custom_span(const element_type (&arr)[N]) noexcept
-        : m_storage((element_type*)arr),
-        m_size(N) {
+        : m_storage((element_type*)arr), m_size(N) {
     }
 
     template <typename U, std::size_t N>
     constexpr custom_span(std::array<U, N>& arr) noexcept
-      : m_storage(arr.begin()),
-        m_size(N) {
+      : m_storage(arr.data()), m_size(N) {
+    }
+
+    template <typename U, std::size_t N>
+    constexpr custom_span(const std::array<U, N> &arr) noexcept
+        : m_storage((T*)arr.data()), m_size(N) {
     }
 
     constexpr custom_span(const custom_span& other) noexcept = default;
-
     custom_span& operator=(const custom_span& other) noexcept = default;
 
 public:
