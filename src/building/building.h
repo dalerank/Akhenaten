@@ -240,7 +240,6 @@ public:
 
     inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
-    bool is_house() const;
     bool is_defense();
     bool is_farm();
     bool is_workshop();
@@ -327,7 +326,7 @@ public:
         return smart_cast<T *>(dcast());
     }
     
-    #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); }
+    #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); };
     ALLOW_SMART_CAST_BUILDING(farm)
     ALLOW_SMART_CAST_BUILDING(brewery)
     ALLOW_SMART_CAST_BUILDING(pottery);
