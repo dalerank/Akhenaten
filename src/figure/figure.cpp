@@ -293,6 +293,19 @@ figure_impl *figure::dcast() {
     return _ptr;
 }
 
+const figure_impl *figure::dcast() const {
+    if (!id) {
+        return nullptr;
+    }
+
+    if (!_ptr) {
+        figure_impl::acquire(type, *(figure*)this);
+    }
+
+    assert(!!_ptr);
+    return _ptr;
+}
+
 bool figure::in_roam_history(int goffset) {
     return roam_history.exist(goffset);
 }
