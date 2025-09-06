@@ -180,68 +180,6 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building_farm *building::dcast_farm() { return dcast<building_farm>(); }
-building_brewery *building::dcast_brewery() { return dcast()->dcast_brewery(); }
-building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
-building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
-building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
-building_juggler_school *building::dcast_juggler_school() { return dcast()->dcast_juggler_school(); }
-building_bazaar *building::dcast_bazaar() { return dcast()->dcast_bazaar(); }
-building_firehouse *building::dcast_firehouse() { return dcast()->dcast_firehouse(); }
-building_architect_post *building::dcast_architect_post() { return dcast()->dcast_architect_post(); }
-building_booth *building::dcast_booth() { return dcast()->dcast_booth(); }
-building_apothecary *building::dcast_apothecary() { return dcast()->dcast_apothecary(); }
-building_granary *building::dcast_granary() { return dcast()->dcast_granary(); }
-building_water_supply *building::dcast_water_supply() { return dcast()->dcast_water_supply(); }
-building_conservatory *building::dcast_conservatory() { return dcast()->dcast_conservatory(); }
-building_courthouse *building::dcast_courthouse() { return dcast()->dcast_courthouse(); }
-building_well *building::dcast_well() { return dcast()->dcast_well(); }
-building_clay_pit *building::dcast_clay_pit() { return dcast()->dcast_clay_pit(); }
-building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_reed_gatherer(); }
-building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
-building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
-building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
-building_mastaba *building::dcast_mastaba() { return dcast<building_mastaba>(); }
-building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
-building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
-building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
-building_pavilion *building::dcast_pavilion() { return dcast()->dcast_pavilion(); }
-building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
-building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
-building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
-building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
-building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_fishing_wharf(); }
-building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard(); }
-building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
-building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
-building_house *building::dcast_house() { return dcast()->dcast_house(); }
-building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_burning_ruin(); }
-building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
-building_temple *building::dcast_temple() { return dcast()->dcast_temple(); }
-building_tax_collector *building::dcast_tax_collector() { return dcast()->dcast_tax_collector(); }
-building_roadblock *building::dcast_roadblock() { return dcast()->dcast_roadblock(); }
-building_routeblock *building::dcast_routeblock() { return dcast()->dcast_routeblock(); }
-building_mine *building::dcast_mine() { return dcast()->dcast_mine(); }
-building_quarry *building::dcast_quarry() { return dcast()->dcast_quarry(); }
-building_palace *building::dcast_palace() { return dcast()->dcast_palace(); }
-building_festival_square *building::dcast_festival_square() { return dcast()->dcast_festival_square(); }
-building_bandstand *building::dcast_bandstand() { return dcast()->dcast_bandstand(); }
-building_industry *building::dcast_industry() { return dcast()->dcast_industry(); }
-building_guild *building::dcast_guild() { return dcast()->dcast_guild(); }
-building_entertainment *building::dcast_entertainment() { return dcast()->dcast_entertainment(); }
-building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
-building_physician *building::dcast_physician() { return dcast()->dcast_physician(); }
-building_wharf *building::dcast_wharf() { return dcast()->dcast_wharf(); }
-building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_warship_wharf(); }
-building_temple_complex *building::dcast_temple_complex() { return dcast()->dcast_temple_complex(); }
-building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
-building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return dcast()->dcast_temple_complex_oracle(); }
-building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_lift(); }
-building_monument *building::dcast_monument() { return dcast()->dcast_monument(); }
-building_tower *building::dcast_tower() { return dcast()->dcast_tower(); }
-building_senet_house *building::dcast_senet_house() { return dcast()->dcast_senet_house(); }
-building_gatehouse *building::dcast_gatehouse() { return dcast()->dcast_gatehouse(); }
-
 building::building() {
 }
 

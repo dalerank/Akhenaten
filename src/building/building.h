@@ -327,68 +327,69 @@ public:
     const T *dcast() const {
         return smart_cast<T *>(dcast());
     }
-
-    building_farm *dcast_farm();
-    building_brewery *dcast_brewery();
-    building_pottery *dcast_pottery();
-    building_storage_yard *dcast_storage_yard();
-    building_storage_room *dcast_storage_room();
-    building_juggler_school *dcast_juggler_school();
-    building_bazaar *dcast_bazaar();
-    building_firehouse *dcast_firehouse();
-    building_architect_post *dcast_architect_post();
-    building_booth *dcast_booth();
-    building_apothecary *dcast_apothecary();
-    building_granary *dcast_granary();
-    building_water_supply *dcast_water_supply();
-    building_conservatory *dcast_conservatory();
-    building_courthouse *dcast_courthouse();
-    building_well *dcast_well();
-    building_clay_pit *dcast_clay_pit();
-    building_reed_gatherer *dcast_reed_gatherer();
-    building_papyrus_maker *dcast_papyrus_maker();
-    building_dock *dcast_dock();
-    building_work_camp *dcast_work_camp();
-    building_mastaba *dcast_mastaba();
-    building_small_mastaba *dcast_small_mastaba();
-    building_wood_cutter *dcast_wood_cutter();
-    building_recruiter *dcast_recruiter();
-    building_pavilion *dcast_pavilion();
-    building_statue *dcast_statue();
-    building_ferry *dcast_ferry();
-    building_fort *dcast_fort();
-    building_fort_ground *dcast_fort_ground();
-    building_fishing_wharf *dcast_fishing_wharf();
-    building_shipyard *dcast_shipyard();
-    building_plaza *dcast_plaza();
-    building_garden *dcast_garden();
-    building_house *dcast_house();
-    building_burning_ruin *dcast_burning_ruin();
-    building_storage *dcast_storage();
-    building_temple *dcast_temple();
-    building_tax_collector *dcast_tax_collector();
-    building_roadblock *dcast_roadblock();
-    building_routeblock *dcast_routeblock();
-    building_mine *dcast_mine();
-    building_quarry *dcast_quarry();
-    building_palace *dcast_palace();
-    building_festival_square *dcast_festival_square();
-    building_bandstand *dcast_bandstand();
-    building_industry *dcast_industry();
-    building_guild *dcast_guild();
-    building_entertainment *dcast_entertainment();
-    building_mansion *dcast_mansion();
-    building_physician *dcast_physician();
-    building_wharf *dcast_wharf();
-    building_warship_wharf *dcast_warship_wharf();
-    building_temple_complex *dcast_temple_complex();
-    building_temple_complex_altar *dcast_temple_complex_altar();
-    building_temple_complex_oracle *dcast_temple_complex_oracle();
-    building_water_lift *dcast_water_lift();
-    building_monument *dcast_monument();
-    building_tower *dcast_tower();
-    building_senet_house *dcast_senet_house();
-    building_gatehouse *dcast_gatehouse();
+    
+    #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); }
+    ALLOW_SMART_CAST_BUILDING(farm)
+    ALLOW_SMART_CAST_BUILDING(brewery)
+    ALLOW_SMART_CAST_BUILDING(pottery);
+    ALLOW_SMART_CAST_BUILDING(storage_yard)
+    ALLOW_SMART_CAST_BUILDING(storage_room)
+    ALLOW_SMART_CAST_BUILDING(juggler_school)
+    ALLOW_SMART_CAST_BUILDING(bazaar)
+    ALLOW_SMART_CAST_BUILDING(firehouse)
+    ALLOW_SMART_CAST_BUILDING(architect_post)
+    ALLOW_SMART_CAST_BUILDING(booth)
+    ALLOW_SMART_CAST_BUILDING(apothecary)
+    ALLOW_SMART_CAST_BUILDING(granary)
+    ALLOW_SMART_CAST_BUILDING(water_supply)
+    ALLOW_SMART_CAST_BUILDING(conservatory)
+    ALLOW_SMART_CAST_BUILDING(courthouse)
+    ALLOW_SMART_CAST_BUILDING(well)
+    ALLOW_SMART_CAST_BUILDING(clay_pit)
+    ALLOW_SMART_CAST_BUILDING(reed_gatherer)
+    ALLOW_SMART_CAST_BUILDING(papyrus_maker)
+    ALLOW_SMART_CAST_BUILDING(dock)
+    ALLOW_SMART_CAST_BUILDING(work_camp)
+    ALLOW_SMART_CAST_BUILDING(mastaba)
+    ALLOW_SMART_CAST_BUILDING(small_mastaba)
+    ALLOW_SMART_CAST_BUILDING(wood_cutter)
+    ALLOW_SMART_CAST_BUILDING(recruiter)
+    ALLOW_SMART_CAST_BUILDING(pavilion)
+    ALLOW_SMART_CAST_BUILDING(statue)
+    ALLOW_SMART_CAST_BUILDING(ferry)
+    ALLOW_SMART_CAST_BUILDING(fort)
+    ALLOW_SMART_CAST_BUILDING(fort_ground)
+    ALLOW_SMART_CAST_BUILDING(fishing_wharf)
+    ALLOW_SMART_CAST_BUILDING(shipyard)
+    ALLOW_SMART_CAST_BUILDING(plaza)
+    ALLOW_SMART_CAST_BUILDING(garden)
+    ALLOW_SMART_CAST_BUILDING(house)
+    ALLOW_SMART_CAST_BUILDING(burning_ruin)
+    ALLOW_SMART_CAST_BUILDING(storage)
+    ALLOW_SMART_CAST_BUILDING(temple)
+    ALLOW_SMART_CAST_BUILDING(tax_collector)
+    ALLOW_SMART_CAST_BUILDING(roadblock)
+    ALLOW_SMART_CAST_BUILDING(routeblock)
+    ALLOW_SMART_CAST_BUILDING(mine)
+    ALLOW_SMART_CAST_BUILDING(quarry)
+    ALLOW_SMART_CAST_BUILDING(palace)
+    ALLOW_SMART_CAST_BUILDING(festival_square)
+    ALLOW_SMART_CAST_BUILDING(bandstand)
+    ALLOW_SMART_CAST_BUILDING(industry)
+    ALLOW_SMART_CAST_BUILDING(guild)
+    ALLOW_SMART_CAST_BUILDING(entertainment)
+    ALLOW_SMART_CAST_BUILDING(mansion)
+    ALLOW_SMART_CAST_BUILDING(physician)
+    ALLOW_SMART_CAST_BUILDING(wharf)
+    ALLOW_SMART_CAST_BUILDING(warship_wharf)
+    ALLOW_SMART_CAST_BUILDING(temple_complex)
+    ALLOW_SMART_CAST_BUILDING(temple_complex_altar)
+    ALLOW_SMART_CAST_BUILDING(temple_complex_oracle)
+    ALLOW_SMART_CAST_BUILDING(water_lift)
+    ALLOW_SMART_CAST_BUILDING(monument)
+    ALLOW_SMART_CAST_BUILDING(tower)
+    ALLOW_SMART_CAST_BUILDING(senet_house)
+    ALLOW_SMART_CAST_BUILDING(gatehouse)
 
     int get_figures_number(e_figure_type ftype);
 
@@ -540,71 +541,72 @@ public:
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
 
-    virtual building_farm *dcast_farm() { return nullptr; }
-    virtual building_brewery *dcast_brewery() { return nullptr; }
-    virtual building_pottery *dcast_pottery() { return nullptr; }
-    virtual building_storage_yard *dcast_storage_yard() { return nullptr; }
-    virtual building_storage_room *dcast_storage_room() { return nullptr; }
-    virtual building_juggler_school *dcast_juggler_school() { return nullptr; }
-    virtual building_bazaar *dcast_bazaar() { return nullptr; }
-    virtual building_firehouse *dcast_firehouse() { return nullptr; }
-    virtual building_architect_post *dcast_architect_post() { return nullptr; }
-    virtual building_booth *dcast_booth() { return nullptr; }
-    virtual building_apothecary *dcast_apothecary() { return nullptr; }
-    virtual building_granary *dcast_granary() { return nullptr; }
-    virtual building_water_supply *dcast_water_supply() { return nullptr; }
-    virtual building_conservatory *dcast_conservatory() { return nullptr; }
-    virtual building_courthouse *dcast_courthouse() { return nullptr; }
-    virtual building_well *dcast_well() { return nullptr; }
-    virtual building_clay_pit *dcast_clay_pit() { return nullptr; }
-    virtual building_reed_gatherer *dcast_reed_gatherer() { return nullptr; }
-    virtual building_papyrus_maker *dcast_papyrus_maker() { return nullptr; }
-    virtual building_dock *dcast_dock() { return nullptr; }
-    virtual building_work_camp *dcast_work_camp() { return nullptr; }
-    virtual building_mastaba *dcast_mastaba() { return nullptr; }
-    virtual building_small_mastaba *dcast_small_mastaba() { return nullptr; }
-    virtual building_medium_mastaba *dcast_medium_mastaba() { return nullptr; }
-    virtual building_wood_cutter *dcast_wood_cutter() { return nullptr; }
-    virtual building_recruiter *dcast_recruiter() { return nullptr; }
-    virtual building_pavilion *dcast_pavilion() { return nullptr; }
-    virtual building_statue *dcast_statue() { return nullptr; }
-    virtual building_ferry *dcast_ferry() { return nullptr; }
-    virtual building_fort *dcast_fort() { return nullptr; }
-    virtual building_fort_ground *dcast_fort_ground() { return nullptr; }
-    virtual building_fishing_wharf *dcast_fishing_wharf() { return nullptr; }
-    virtual building_shipyard *dcast_shipyard() { return nullptr; }
-    virtual building_plaza *dcast_plaza() { return nullptr; }
-    virtual building_garden *dcast_garden() { return nullptr; }
-    virtual building_house *dcast_house() { return nullptr; }
-    virtual building_burning_ruin *dcast_burning_ruin() { return nullptr; }
-    virtual building_storage *dcast_storage() { return nullptr; }
-    virtual building_temple *dcast_temple() { return nullptr; }
-    virtual building_tax_collector *dcast_tax_collector() { return nullptr; }
-    virtual building_roadblock *dcast_roadblock() { return nullptr; }
-    virtual building_mine *dcast_mine() { return nullptr; }
-    virtual building_quarry *dcast_quarry() { return nullptr; }
-    virtual building_palace *dcast_palace() { return nullptr; }
-    virtual building_festival_square *dcast_festival_square() { return nullptr; }
-    virtual building_bandstand *dcast_bandstand() { return nullptr; }
-    virtual building_routeblock *dcast_routeblock() { return nullptr; }
-    virtual building_industry *dcast_industry() { return nullptr; }
-    virtual building_guild *dcast_guild() { return nullptr; }
-    virtual building_entertainment *dcast_entertainment() { return nullptr; }
-    virtual building_mansion *dcast_mansion() { return nullptr; }
-    virtual building_physician *dcast_physician() { return nullptr; }
-    virtual building_wharf *dcast_wharf() { return nullptr; }
-    virtual building_warship_wharf *dcast_warship_wharf() { return nullptr; }
-    virtual building_shrine *dcast_shrine() { return nullptr; }
-    virtual building_transport_wharf *dcast_transport_wharf() { return nullptr; }
-    virtual building_temple_complex *dcast_temple_complex() { return nullptr; }
-    virtual building_temple_complex_altar *dcast_temple_complex_altar() { return nullptr; }
-    virtual building_temple_complex_oracle *dcast_temple_complex_oracle() { return nullptr; }
-    virtual building_water_lift *dcast_water_lift() { return nullptr; }
-    virtual building_monument *dcast_monument() { return nullptr; }
-    virtual building_scribal_school *dcast_scribal_school() { return nullptr; }
-    virtual building_tower *dcast_tower() { return nullptr; }
-    virtual building_senet_house *dcast_senet_house() { return nullptr; }
-    virtual building_gatehouse *dcast_gatehouse() { return nullptr; }
+    #define ALLOW_SMART_CAST_BUILDING_I(type) virtual building_##type *dcast_##type() { return nullptr; }
+    ALLOW_SMART_CAST_BUILDING_I(farm)
+    ALLOW_SMART_CAST_BUILDING_I(brewery)
+    ALLOW_SMART_CAST_BUILDING_I(pottery)
+    ALLOW_SMART_CAST_BUILDING_I(storage_yard)
+    ALLOW_SMART_CAST_BUILDING_I(storage_room)
+    ALLOW_SMART_CAST_BUILDING_I(juggler_school)
+    ALLOW_SMART_CAST_BUILDING_I(bazaar)
+    ALLOW_SMART_CAST_BUILDING_I(firehouse)
+    ALLOW_SMART_CAST_BUILDING_I(architect_post)
+    ALLOW_SMART_CAST_BUILDING_I(booth)
+    ALLOW_SMART_CAST_BUILDING_I(apothecary)
+    ALLOW_SMART_CAST_BUILDING_I(granary)
+    ALLOW_SMART_CAST_BUILDING_I(water_supply)
+    ALLOW_SMART_CAST_BUILDING_I(conservatory)
+    ALLOW_SMART_CAST_BUILDING_I(courthouse)
+    ALLOW_SMART_CAST_BUILDING_I(well)
+    ALLOW_SMART_CAST_BUILDING_I(clay_pit)
+    ALLOW_SMART_CAST_BUILDING_I(reed_gatherer)
+    ALLOW_SMART_CAST_BUILDING_I(papyrus_maker)
+    ALLOW_SMART_CAST_BUILDING_I(dock)
+    ALLOW_SMART_CAST_BUILDING_I(work_camp)
+    ALLOW_SMART_CAST_BUILDING_I(mastaba)
+    ALLOW_SMART_CAST_BUILDING_I(small_mastaba)
+    ALLOW_SMART_CAST_BUILDING_I(medium_mastaba)
+    ALLOW_SMART_CAST_BUILDING_I(wood_cutter)
+    ALLOW_SMART_CAST_BUILDING_I(recruiter)
+    ALLOW_SMART_CAST_BUILDING_I(pavilion)
+    ALLOW_SMART_CAST_BUILDING_I(statue)
+    ALLOW_SMART_CAST_BUILDING_I(ferry)
+    ALLOW_SMART_CAST_BUILDING_I(fort)
+    ALLOW_SMART_CAST_BUILDING_I(fort_ground)
+    ALLOW_SMART_CAST_BUILDING_I(fishing_wharf)
+    ALLOW_SMART_CAST_BUILDING_I(shipyard)
+    ALLOW_SMART_CAST_BUILDING_I(plaza)
+    ALLOW_SMART_CAST_BUILDING_I(garden)
+    ALLOW_SMART_CAST_BUILDING_I(house)
+    ALLOW_SMART_CAST_BUILDING_I(burning_ruin)
+    ALLOW_SMART_CAST_BUILDING_I(storage)
+    ALLOW_SMART_CAST_BUILDING_I(temple)
+    ALLOW_SMART_CAST_BUILDING_I(tax_collector)
+    ALLOW_SMART_CAST_BUILDING_I(roadblock)
+    ALLOW_SMART_CAST_BUILDING_I(mine)
+    ALLOW_SMART_CAST_BUILDING_I(quarry)
+    ALLOW_SMART_CAST_BUILDING_I(palace)
+    ALLOW_SMART_CAST_BUILDING_I(festival_square)
+    ALLOW_SMART_CAST_BUILDING_I(bandstand)
+    ALLOW_SMART_CAST_BUILDING_I(routeblock)
+    ALLOW_SMART_CAST_BUILDING_I(industry)
+    ALLOW_SMART_CAST_BUILDING_I(guild)
+    ALLOW_SMART_CAST_BUILDING_I(entertainment)
+    ALLOW_SMART_CAST_BUILDING_I(mansion)
+    ALLOW_SMART_CAST_BUILDING_I(physician)
+    ALLOW_SMART_CAST_BUILDING_I(wharf)
+    ALLOW_SMART_CAST_BUILDING_I(warship_wharf)
+    ALLOW_SMART_CAST_BUILDING_I(shrine)
+    ALLOW_SMART_CAST_BUILDING_I(transport_wharf)
+    ALLOW_SMART_CAST_BUILDING_I(temple_complex)
+    ALLOW_SMART_CAST_BUILDING_I(temple_complex_altar)
+    ALLOW_SMART_CAST_BUILDING_I(temple_complex_oracle)
+    ALLOW_SMART_CAST_BUILDING_I(water_lift)
+    ALLOW_SMART_CAST_BUILDING_I(monument)
+    ALLOW_SMART_CAST_BUILDING_I(scribal_school)
+    ALLOW_SMART_CAST_BUILDING_I(tower)
+    ALLOW_SMART_CAST_BUILDING_I(senet_house)
+    ALLOW_SMART_CAST_BUILDING_I(gatehouse)
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -739,7 +741,6 @@ building *building_end();
 GENERATE_SMART_CAST(building_impl)
 #define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)
 
-
 GENERATE_SMART_CAST_BUILDING(farm)
 GENERATE_SMART_CAST_BUILDING(juggler_school)
 GENERATE_SMART_CAST_BUILDING(storage_yard)
@@ -804,6 +805,7 @@ GENERATE_SMART_CAST_BUILDING(scribal_school)
 GENERATE_SMART_CAST_BUILDING(tower)
 GENERATE_SMART_CAST_BUILDING(senet_house)
 GENERATE_SMART_CAST_BUILDING(gatehouse)
+GENERATE_SMART_CAST_BUILDING(work_camp)
 
 namespace buildings {
 
