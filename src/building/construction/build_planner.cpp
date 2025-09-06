@@ -1137,7 +1137,7 @@ void build_planner::construction_finalize() { // confirm final placement
     const auto &params = building_impl::params(build_type);
     if (!place()) {
         map_property_clear_constructing_and_deleted();
-        if (building_type_any_of(build_type, BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH)) {
+        if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH })) {
             game_undo_restore_map(0);
         } else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS) {
             game_undo_restore_map(1);

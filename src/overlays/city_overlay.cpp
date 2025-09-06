@@ -210,8 +210,8 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         bool draw = true;
         if (b->size == 3 && building_is_farm(b->type)) {
             draw = is_drawable_farm_corner(tile);
-        } else if (building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM, 
-                                            BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
+        } else if (building_type_any_of(*b, { BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM,
+                                            BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
             building *main = b->main();
             draw = is_drawable_building_corner(tile, main->tile, main->size);
             if (draw) {

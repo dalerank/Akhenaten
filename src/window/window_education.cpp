@@ -25,7 +25,7 @@ struct info_window_education : building_info_window_t<info_window_education> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_ACADEMY, BUILDING_LIBRARY);
+        return building_type_any_of(*b, { BUILDING_ACADEMY, BUILDING_LIBRARY });
     }
 };
 

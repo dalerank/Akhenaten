@@ -317,6 +317,17 @@ public:
 public:
     building_impl *dcast();
     const building_impl *dcast() const;
+
+    template<typename T>
+    T *dcast() {
+        return smart_cast<T*>(dcast());
+    }
+
+    template<typename T>
+    const T *dcast() const {
+        return smart_cast<T *>(dcast());
+    }
+
     building_farm *dcast_farm();
     building_brewery *dcast_brewery();
     building_pottery *dcast_pottery();
@@ -338,6 +349,7 @@ public:
     building_papyrus_maker *dcast_papyrus_maker();
     building_dock *dcast_dock();
     building_work_camp *dcast_work_camp();
+    building_mastaba *dcast_mastaba();
     building_small_mastaba *dcast_small_mastaba();
     building_wood_cutter *dcast_wood_cutter();
     building_recruiter *dcast_recruiter();
@@ -662,22 +674,32 @@ inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
 
-template<typename ... Args>
-bool building_type_any_of(e_building_type type, Args ... args) {
-    int types[] = {args...};
-    return (std::find(std::begin(types), std::end(types), type) != std::end(types));
+template<typename T>
+bool building_type_any_of(e_building_type type, const T& types) {
+    return (std::find(types.begin(), types.end(), type) != types.end());
 }
 
-template<typename ... Args>
-bool building_type_any_of(building &b, Args ... args) {
-    return building_type_any_of(b.type, args...);
+inline bool building_type_any_of(e_building_type type, const std::initializer_list<e_building_type>& types) {
+    return (std::find(types.begin(), types.end(), type) != types.end());
 }
 
-template<typename ... Args>
-bool building_type_none_of(building &b, Args ... args) {
-    int types[] = {args...};
-    return (std::find(std::begin(types), std::end(types), b.type) == std::end(types));
+inline bool building_type_any_of(building &b, const e_building_type &type) {
+    return b.type = type;
 }
+
+inline bool building_type_any_of(building &b, const std::initializer_list<e_building_type> &types) {
+    return building_type_any_of(b.type, types);
+}
+
+template<typename T>
+bool building_type_none_of(building &b, const T& types) {
+    return (std::find(types.begin(), types.end(), b.type) == types.end());
+}
+
+inline bool building_type_none_of(building &b, const std::initializer_list<e_building_type> &types) {
+    return (std::find(types.begin(), types.end(), b.type) == types.end());
+}
+
 
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_fort(int type);
@@ -716,6 +738,9 @@ building *building_end();
 
 GENERATE_SMART_CAST(building_impl)
 #define GENERATE_SMART_CAST_BUILDING(type) GENERATE_SMART_CAST_CUSTOM(building_##type, type)
+
+
+GENERATE_SMART_CAST_BUILDING(farm)
 GENERATE_SMART_CAST_BUILDING(juggler_school)
 GENERATE_SMART_CAST_BUILDING(storage_yard)
 GENERATE_SMART_CAST_BUILDING(storage_room)

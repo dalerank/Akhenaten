@@ -20,7 +20,7 @@ static int terrain_on_routing_overlay() {
 }
 
 static bool building_on_routing_overlay(e_building_type type) {
-    return building_type_any_of(type, BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD);
+    return building_type_any_of(type, { BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD });
 }
 
 inline bool city_overlay_routing::show_figure(const figure *f) const {

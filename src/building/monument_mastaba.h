@@ -33,7 +33,7 @@ public:
     bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
 
     void update_day(const vec2i tiles_size);
-    bool need_workers();
+    virtual bool need_workers() const override;
     span_const<uint16_t> active_workers() const;
 
     static void update_images(building *b, int curr_phase, const vec2i size_b);

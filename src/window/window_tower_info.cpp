@@ -7,7 +7,7 @@ struct info_window_tower : public building_info_window_t<info_window_tower> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER);
+        return building_type_any_of(*b, { BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER });
     }
 };
 

@@ -7,7 +7,7 @@ struct info_window_hunting_lodge : public building_info_window_t<info_window_hun
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_HUNTING_LODGE);
+        return (b->type == BUILDING_HUNTING_LODGE);
     }
 };
 
