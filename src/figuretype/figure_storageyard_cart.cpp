@@ -60,7 +60,7 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     }
 
     building* dest = destination();
-    const bool is_storage = building_type_any_of(dest->type, BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM);
+    const bool is_storage = building_type_any_of(dest->type, { BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM });
     if (!is_storage) {
         advance_action(action_done);
     }

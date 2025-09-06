@@ -91,10 +91,10 @@ void city_finance_process_export(int price) {
 void city_finance_process_gold_extraction(int amount, figure *f) {
     city_data.finance.treasury += amount;
 
-    if (building_type_any_of(*f->home(), BUILDING_GOLD_MINE)) {
+    if (building_type_any_of(*f->home(), { BUILDING_GOLD_MINE })) {
         city_data.finance.this_year.income.gold_extracted += amount;
         events::emit(event_gold_extract{ amount });
-    } else if (building_type_any_of(*f->home(), BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED)) {
+    } else if (building_type_any_of(*f->home(), { BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED })) {
         city_data.finance.this_year.income.taxes += amount;
     }
 }

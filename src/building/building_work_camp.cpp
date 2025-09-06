@@ -41,13 +41,10 @@ building* building_work_camp::determine_worker_needed() {
         }
 
         auto monument = b.dcast_monument();
-        if (monument) {
-            auto &d = monument->runtime_data();
-            if (d.phase < 2 && building_monument_need_workers(&b)) {
-                mindist_sq = curdist_sq;
-                result = &monument->base;
-                return;
-            }
+        if (monument && monument->phase() < 2 && monument->need_workers()) {
+            mindist_sq = curdist_sq;
+            result = &monument->base;
+            return;
         }
     });
 

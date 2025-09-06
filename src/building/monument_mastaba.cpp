@@ -141,7 +141,7 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
 }
 
 tile2i building_small_mastaba_bricks_waiting_tile(building *b) {
-    const bool is_mastaba = building_type_any_of(b->type, BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA);
+    const bool is_mastaba = building_type_any_of(b->type, make_array(BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA));
     if (!is_mastaba) {
         return tile2i{-1, -1};
     }
@@ -179,7 +179,7 @@ void building_mastaba::update_images(building *b, int curr_phase, const vec2i si
     }
 }
 
-bool building_mastaba::need_workers() {
+bool building_mastaba::need_workers() const {
     if (!is_main()) {
         return false;
     }
@@ -279,11 +279,11 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
     int image_id = image_base_bricks + (layer - 1) * 8 + 4;
     int random = (image_base_bricks + 96 + (layer - 1) + (tile.x() + tile.y()) % 1 * 6);
     int result = random;
-    if (building_type_any_of(type, BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE)) {
+    if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE })) {
         int ids[4] = {image_base_bricks + 110, image_base_bricks + 104, image_base_bricks + 104, image_base_bricks + 109};
         int i = (orientation + (city_view_orientation() / 2)) % 4;
         return ids[i];
-    } else if (building_type_any_of(type, BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL)) {
+    } else if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL })) {
         return random;
     } else if (tile.y() == start.y()) { // top corner
         result = (image_id + 3);

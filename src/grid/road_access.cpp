@@ -29,7 +29,7 @@ bool road_tile_valid_access(int grid_offset) {
 
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {// general case -- no buildings over road!
         e_building_type btype = building_at(grid_offset)->type; // exceptions: vvv
-        if (building_type_any_of(btype, BUILDING_MUD_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
+        if (building_type_any_of(btype, { BUILDING_MUD_GATEHOUSE, BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
             return true;
         }
     }

@@ -7,7 +7,7 @@ public:
     FIGURE_METAINFO(FIGURE_REED_GATHERER, figure_reed_gatherer)
     figure_reed_gatherer(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figures::model_t<figure_reed_gatherer> {
+    struct static_params : public figure_model {
         int max_amount;
 
         virtual void archive_load(archive arch) override;

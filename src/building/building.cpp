@@ -180,7 +180,7 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building_farm *building::dcast_farm() { return dcast()->dcast_farm(); }
+building_farm *building::dcast_farm() { return dcast<building_farm>(); }
 building_brewery *building::dcast_brewery() { return dcast()->dcast_brewery(); }
 building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
 building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
@@ -201,6 +201,7 @@ building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_
 building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
 building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
 building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
+building_mastaba *building::dcast_mastaba() { return dcast<building_mastaba>(); }
 building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
 building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
 building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
@@ -850,7 +851,7 @@ bool building_is_fort(int type) {
 }
 
 bool building_is_defense(e_building_type type) {
-    return building_type_any_of(type, BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER);
+    return building_type_any_of(type, { BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER });
 }
 
 bool building_is_farm(e_building_type type) {
@@ -908,11 +909,11 @@ bool building_is_monument(e_building_type type) {
 }
 
 bool building_is_palace(e_building_type type) {
-    return building_type_any_of(type, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE);
+    return building_type_any_of(type, { BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE });
 }
 
 bool building_is_tax_collector(e_building_type type) {
-    return building_type_any_of(type, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
+    return building_type_any_of(type, { BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED });
 }
 
 bool building_is_governor_mansion(e_building_type type) {
@@ -931,7 +932,7 @@ bool building_is_shrine(e_building_type type) {
     return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
 }
 bool building_is_guild(e_building_type type) {
-    return building_type_any_of(type, BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD);
+    return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
 }
 bool building_is_statue(e_building_type type) {
     return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE);
@@ -1029,7 +1030,7 @@ bool building_is_entertainment(e_building_type type) {
 }
 
 bool building_is_education(e_building_type type) {
-    return building_type_any_of(type, BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY);
+    return building_type_any_of(type, { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY });
 }
 
 bool building_is_military(e_building_type type) {
@@ -1037,7 +1038,7 @@ bool building_is_military(e_building_type type) {
         return true;
     }
     
-    if (building_type_any_of(BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND)) {
+    if (building_type_any_of(type, { BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND })) {
         return true;
     }
     

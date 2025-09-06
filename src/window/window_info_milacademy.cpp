@@ -7,7 +7,7 @@ struct info_window_milacademy : public building_info_window_t<info_window_milaca
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_MILITARY_ACADEMY, BUILDING_MILITARY_ACADEMY_2, BUILDING_MILITARY_ACADEMY_3);
+        return building_type_any_of(*b, { BUILDING_MILITARY_ACADEMY, BUILDING_MILITARY_ACADEMY_2, BUILDING_MILITARY_ACADEMY_3 });
     }
 };
 
