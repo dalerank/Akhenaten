@@ -209,6 +209,20 @@ public:
     char festival_remaining_dances;
     
     figure_impl *dcast();
+    const figure_impl *dcast() const;
+
+    template<typename T>
+    T *dcast() {
+        return smart_cast<T *>(dcast());
+    }
+
+    template<typename T>
+    const T *dcast() const {
+        return smart_cast<T *>(dcast());
+    }
+
+    #define ALLOW_SMART_CAST_FIGURE(type) figure_##type *dcast_##type() { return dcast<figure_##type>(); }
+    ALLOW_SMART_CAST_FIGURE(immigrant)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -489,22 +503,23 @@ public:
     static const static_params &params(e_figure_type);
     static void acquire(e_figure_type e, figure &b);
 
-    virtual figure_immigrant *dcast_immigrant() { return nullptr; }
-    virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
-    virtual figure_storageyard_cart *dcast_storageyard_cart() { return nullptr; }
-    virtual figure_trade_ship *dcast_trade_ship() { return nullptr; }
-    virtual figure_sled *dcast_sled() { return nullptr; }
-    virtual figure_musician *dcast_musician() { return nullptr; }
-    virtual figure_dancer *dcast_dancer() { return nullptr; }
-    virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
-    virtual figure_worker *dcast_worker() { return nullptr; }
-    virtual figure_soldier *dcast_soldier() { return nullptr; }
-    virtual figure_fishing_boat *dcast_fishing_boat() { return nullptr; }
-    virtual figure_fishing_point *dcast_fishing_point() { return nullptr; }
-    virtual figure_caravan_donkey *dcast_caravan_donkey() { return nullptr; }
-    virtual figure_warship *dcast_warship() { return nullptr; }
-    virtual figure_transport_ship *dcast_transport_ship() { return nullptr; }
-    virtual figure_stonemason *dcast_stonemason() { return nullptr; }
+    #define ALLOW_SMART_CAST_FIGURE_I(type) virtual figure_##type *dcast_##type() { return nullptr; }
+    ALLOW_SMART_CAST_FIGURE_I(immigrant)
+    ALLOW_SMART_CAST_FIGURE_I(cartpusher)
+    ALLOW_SMART_CAST_FIGURE_I(storageyard_cart)
+    ALLOW_SMART_CAST_FIGURE_I(trade_ship)
+    ALLOW_SMART_CAST_FIGURE_I(sled)
+    ALLOW_SMART_CAST_FIGURE_I(musician)
+    ALLOW_SMART_CAST_FIGURE_I(dancer)
+    ALLOW_SMART_CAST_FIGURE_I(labor_seeker)
+    ALLOW_SMART_CAST_FIGURE_I(worker)
+    ALLOW_SMART_CAST_FIGURE_I(soldier)
+    ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
+    ALLOW_SMART_CAST_FIGURE_I(fishing_point)
+    ALLOW_SMART_CAST_FIGURE_I(caravan_donkey)
+    ALLOW_SMART_CAST_FIGURE_I(warship)
+    ALLOW_SMART_CAST_FIGURE_I(transport_ship)
+    ALLOW_SMART_CAST_FIGURE_I(stonemason)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
