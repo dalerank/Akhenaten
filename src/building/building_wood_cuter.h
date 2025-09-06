@@ -10,7 +10,7 @@ public:
 
     struct runtime_data_t {
         uint8_t max_gatheres;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual bool is_administration() const override { return true; }

@@ -9,7 +9,7 @@ public:
     struct runtime_data_t {
         int dock_tiles[2];
         uint8_t docker_anim_frame;
-    };
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual building_wharf *dcast_wharf() override { return this; }
 
@@ -25,9 +25,6 @@ public:
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
     water_access_tiles get_water_access_tiles() const;
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
     
     virtual bool ship_moored() const { return false; }
 };

@@ -13,7 +13,7 @@ public:
         using inherited = building_model;
 
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     //virtual void on_create() override;
     virtual void update_month() override;
