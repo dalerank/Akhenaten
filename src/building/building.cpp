@@ -273,9 +273,6 @@ e_overlay building::get_overlay() const {
 bool building::is_house() const {
     return building_is_house(type);
 }
-bool building::is_fort() {
-    return building_is_fort(type);
-}
 bool building::is_defense() {
     return building_is_defense(type);
 }

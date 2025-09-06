@@ -241,7 +241,6 @@ public:
     inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     bool is_house() const;
-    bool is_fort();
     bool is_defense();
     bool is_farm();
     bool is_workshop();
