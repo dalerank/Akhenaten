@@ -743,7 +743,7 @@ bool building_monument_need_workers(building *b) {
         return false;
     }
 
-    if (building_type_none_of(*b, BUILDING_SMALL_MASTABA)) {
+    if (building_type_none_of(*b, BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA)) {
         return false;
     }
 

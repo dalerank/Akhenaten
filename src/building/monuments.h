@@ -20,7 +20,7 @@ public:
         uint8_t statue_offset;
         uint8_t temple_complex_upgrades;
         uint8_t resources_pct[RESOURCES_MAX];
-        uint16_t workers[5];
+        std::array<uint16_t, 5> workers;
         int8_t phase;
         uint8_t upgrades;
     };
