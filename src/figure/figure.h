@@ -202,8 +202,7 @@ public:
     short market_lady_resource_image_offset;
     // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF
     short market_lady_returning_home_id;
-    // 14 bytes 00 00 00 00 00 00 00 ...
-    short market_lady_bought_amount;
+
     // 115 bytes
     uint8_t draw_mode;
     char festival_remaining_dances;
