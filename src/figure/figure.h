@@ -199,7 +199,6 @@ public:
     unsigned char routing_try_reroute_counter;
     uint16_t collecting_item_max;
     unsigned short sender_building_id;
-    short market_lady_resource_image_offset;
 
     // 115 bytes
     uint8_t draw_mode;

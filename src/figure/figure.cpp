@@ -787,7 +787,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
-    iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00
+    iob->bind____skip(4); 
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...
     iob->bind____skip(2);
     iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...
