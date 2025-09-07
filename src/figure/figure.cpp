@@ -18,6 +18,7 @@
 #include "io/io_buffer.h"
 #include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
+#include "graphics/view/lookup.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "widget/widget_city.h"
@@ -33,6 +34,8 @@
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
 const token_holder<e_permission, epermission_none, epermission_count> ANK_CONFIG_ENUM(e_permission_tokens);
+
+const vec2i default_cart_offset{ 0, -7 };
 
 declare_console_command_p(killall) {
     for (auto &f: map_figures()) {
@@ -539,8 +542,22 @@ void figure_impl::figure_roaming_action() {
     }
 }
 
+vec2i figure::main_sprite_pixel() const {
+    return lookup_tile_to_pixel(tile);
+}
+
+vec2i figure::cart_sprite_pixel() const {
+    vec2i r = main_cached_pos + cart_offset + default_cart_offset;
+    return r;
+}
+
+void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
+    const image_t *img = image_get(cart_image_id);
+    ImageDraw::img_sprite(ctx, cart_image_id, pixel + cart_offset + default_cart_offset);
+}
+
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_main(ctx, base.cached_pos, highlight);
+    base.draw_figure_main(ctx, base.main_cached_pos, highlight);
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {

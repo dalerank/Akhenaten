@@ -33,7 +33,7 @@ struct figure_small_image {
         //int grid_offset = figure_get(figure_id)->tile.grid_offset();
         
         g_screen_city.draw_for_figure(ctx, figure_id);
-        const vec2i coord = figure_get(figure_id)->cached_pos;
+        const vec2i coord = figure_get(figure_id)->main_cached_pos;
 
         image_id = graphics_save_to_texture(-1, coord + vec2i{ figure_small_image_x(), figure_small_image_y()}, {48, 48});
     }

@@ -150,5 +150,5 @@ void figure_storageyard_cart::figure_action() {
 }
 
 void figure_storageyard_cart::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_with_cart(ctx, base.cached_pos, highlight);
+    base.draw_figure_with_cart(ctx, base.main_cached_pos, highlight);
 }

@@ -500,7 +500,7 @@ void figure_cartpusher::figure_action() {
 }
 
 void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_with_cart(ctx, base.cached_pos, highlight);
+    base.draw_figure_with_cart(ctx, base.main_cached_pos, highlight);
 }
 
 figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {

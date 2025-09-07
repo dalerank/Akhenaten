@@ -11,7 +11,8 @@
 #include <assert.h>
 
 static grid_xx grid_figures = {0, FS_UINT16};
-svector<figure *, 5000> g_figures_y_sort;
+
+svector<figure_draw, 5000> g_figures_y_sort;
 
 bool map_has_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(grid_figures, grid_offset) > 0;
@@ -30,30 +31,37 @@ void map_figure_sort_by_y() {
 
         if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
             f->tile = {-1, -1};
-            f->cached_pos = {-1, -1};
+            f->main_cached_pos = {-1, -1};
+            f->cart_cached_pos = {-1, -1};
             f->poof();
             continue;
         }
 
-        vec2i draw_pos = tile_to_pixel(f->tile);
+        const vec2i draw_pos = f->main_sprite_pixel();
         if (draw_pos.x == 0 && draw_pos.y == 0) { // tile outside viewport
             continue;
         }
 
-        f->cached_pos = draw_pos;
+        f->main_cached_pos = draw_pos;
 
-        f->cached_pos = f->adjust_pixel_offset(f->cached_pos);
-        f->is_drawn = false;
-        g_figures_y_sort.push_back(f);
+        f->main_cached_pos = f->adjust_pixel_offset(f->main_cached_pos);
+        f->is_main_drawn = false;
+        f->is_cart_drawn = false;
+        g_figures_y_sort.push_back({ f, f->main_cached_pos, false });
+
+        if (f->cart_image_id) {
+            f->cart_cached_pos = f->cart_sprite_pixel();
+            g_figures_y_sort.push_back({ f, f->cart_cached_pos, true });
+        }
     }
 
-    std::sort(g_figures_y_sort.begin(), g_figures_y_sort.end(), [] (figure *lhs, figure *rhs) {
-        return lhs->cached_pos.y < rhs->cached_pos.y;
+    std::sort(g_figures_y_sort.begin(), g_figures_y_sort.end(), [] (auto &lhs, auto &rhs) {
+        return lhs.fpos.y < rhs.fpos.y;
     });
 }
 
-custom_span<figure *> map_figures_in_row(tile2i tile) {
-    vec2i pixel_begin = tile_to_pixel(tile);
+custom_span<figure_draw> map_figures_in_row(tile2i tile) {
+    vec2i pixel_begin = lookup_tile_to_pixel(tile);
     vec2i pixel_end = pixel_begin + vec2i(0, TILE_HEIGHT_PIXELS);
 
     vec2i pixel_begin_scr = pixel_to_viewport(pixel_begin);
@@ -62,26 +70,26 @@ custom_span<figure *> map_figures_in_row(tile2i tile) {
     if (pixel_end_scr.x < 0 || pixel_end_scr.y < 0 
         || pixel_begin_scr.x > g_city_view.viewport.size_pixels.x
         || pixel_begin_scr.y > g_city_view.viewport.size_pixels.y) {
-        return custom_span<figure *>(nullptr, 0);
+        return {};
     }
 
-    auto begin = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_begin.y, [](const figure *f, int y) {
-        return f->cached_pos.y < y;
+    auto begin = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_begin.y, [](const auto &f, int y) {
+        return f.fpos.y < y;
     });
 
     if (begin == g_figures_y_sort.end()) {
-        return custom_span<figure *>(nullptr, 0);
+        return {};
     }
 
-    auto end = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_end.y, [](const figure *f, int y) {
-        return f->cached_pos.y < y;
+    auto end = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_end.y, [](const auto &f, int y) {
+        return f.fpos.y < y;
     });
 
     if (end == g_figures_y_sort.end()) {
-        custom_span<figure *>(begin, g_figures_y_sort.end());
+        custom_span<figure_draw>(begin, g_figures_y_sort.end());
     }
 
-    return custom_span<figure*>(begin, end);
+    return custom_span<figure_draw>(begin, end);
 }
 
 void map_figure_set(int grid_offset, int id) {

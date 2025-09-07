@@ -158,7 +158,8 @@ public:
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
     uint8_t migrant_num_people;
-    bool is_drawn;
+    bool is_main_drawn;
+    bool is_cart_drawn;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;
     short leading_figure_id;
@@ -190,7 +191,8 @@ public:
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
-    vec2i cached_pos;
+    vec2i main_cached_pos;
+    vec2i cart_cached_pos;
 
     // pharaoh
 
@@ -303,7 +305,9 @@ public:
 
     // city_figure.c
     void draw_debug();
-    vec2i adjust_pixel_offset(const vec2i &pixel);
+    vec2i adjust_pixel_offset(const vec2i pixel);
+    vec2i main_sprite_pixel() const;
+    vec2i cart_sprite_pixel() const;
     //    void draw_figure(int x, int y, int highlight);
     void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
     void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);

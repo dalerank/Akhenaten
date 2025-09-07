@@ -882,7 +882,7 @@ void build_planner::update_unique_only_one_check() {
 }
 
 void build_planner::update_coord_caches() {
-    vec2i view_tile = tile_to_pixel(end);
+    vec2i view_tile = lookup_tile_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
@@ -1297,7 +1297,7 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 
 void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
     for (auto &tile : blocked_tiles) {
-        vec2i pixel = tile_to_pixel(tile.tile);
+        vec2i pixel = lookup_tile_to_pixel(tile.tile);
         draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
 }

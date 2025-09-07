@@ -158,20 +158,20 @@ void screen_city_t::clear_current_tile() {
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto figures = map_figures_in_row(tile);
 
-    for (auto *f : figures) {
-        if (f->is_drawn && !force) {
+    for (const auto &f : figures) {
+        if (f.f->is_main_drawn && !force) {
             continue;
         }
 
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
         if (!selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0);
+            int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
+            f.f->city_draw_figure(ctx, highlight);
+        } else if (f.f->id == selected_figure_id) {
+            f.f->city_draw_figure(ctx, 0);
         }
     }
 }
@@ -180,24 +180,24 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     int grid_offset = tile.grid_offset();
     auto figures = map_figures_in_row(tile);
 
-    for (auto *f : figures) {
-        if (!g_city.overlay()->show_figure(f)) {
+    for (const auto &f : figures) {
+        if (!g_city.overlay()->show_figure(f.f)) {
             continue;
         }
 
-        if (f->is_drawn) {
+        if (f.f->is_main_drawn) {
             continue;
         }
 
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
         if (!selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0);
+            int highlight = f.f->formation_id > 0 && f.f->formation_id == highlighted_formation;
+            f.f->city_draw_figure(ctx, highlight);
+        } else if (f.f->id == selected_figure_id) {
+            f.f->city_draw_figure(ctx, 0);
         }
     }
 }

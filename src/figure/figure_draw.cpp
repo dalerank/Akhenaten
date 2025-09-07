@@ -40,7 +40,7 @@ void figure::draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out) {
     }
 }
 
-vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
+vec2i figure::adjust_pixel_offset(const vec2i pixel) {
     // determining x/y offset on tile
     vec2i offset(0, 0);
     if (use_cross_country) {
@@ -109,10 +109,7 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
 }
 
-void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
-    const image_t* img = image_get(cart_image_id);
-    ImageDraw::img_sprite(ctx, cart_image_id, pixel + cart_offset - vec2i{0, 7});
-}
+
 
 void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight) {
     draw_figure_cart(ctx, pixel, highlight);
@@ -144,19 +141,19 @@ void figure::city_draw_figure(painter &ctx, int highlight) {
     if (cart_image_id) {
         switch (type) {
         case FIGURE_MAP_FLAG:
-            draw_map_flag(cached_pos, highlight);
+            draw_map_flag(main_cached_pos, highlight);
             break;
 
         default:
-            dcast()->figure_draw(ctx, cached_pos, highlight);
+            dcast()->figure_draw(ctx, main_cached_pos, highlight);
             break;
         }
     } else {
-        draw_figure_main(ctx, cached_pos, highlight);
+        draw_figure_main(ctx, main_cached_pos, highlight);
         if (!is_enemy_image && highlight) {
-            ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
+            ImageDraw::img_sprite(ctx, sprite_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
         }
     }
 
-    is_drawn = true;
+    is_main_drawn = true;
 }
