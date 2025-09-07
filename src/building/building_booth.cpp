@@ -32,6 +32,12 @@ void building_booth::static_params::archive_load(archive arch) {
     booth = anim[animkeys().booth].first_img();
 }
 
+bool building_booth::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
+    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
+    const bool has_figure = map_has_figure_at(tile);
+    return (is_road || !has_figure);
+}
+
 void building_booth::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     int orientation = 0;
 
@@ -39,7 +45,7 @@ void building_booth::static_params::planer_ghost_preview(build_planner &planer, 
     // TODO: proper correct for map orientation (for now, just use a different orientation)
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
-    if (can_build != 1) { // no can place
+    if (!can_build) { // no can place
         for (int i = 0; i < building_size * building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }

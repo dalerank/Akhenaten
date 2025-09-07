@@ -613,6 +613,7 @@ void build_planner::setup_build_graphics() {
 
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
+    const auto &params = building_impl::params(build_type);
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // check terrain at coords
@@ -655,8 +656,8 @@ void build_planner::update_obstructions_check() {
             const bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
             const bool inside_map = map_grid_is_inside(current_tile, 1);
             const bool not_clear = inside_map && map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR);
-            const bool has_figure = inside_map && map_has_figure_at(current_tile);
-            if (!inside_map || not_clear || has_figure || blocked_by_floodplain_edge) {
+            const bool allow_tile = inside_map && params.plane_ghost_allow_tile(*this, current_tile);
+            if (!inside_map || not_clear || !allow_tile || blocked_by_floodplain_edge) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }
@@ -1341,7 +1342,6 @@ void build_planner::draw_graphics(painter &ctx) {
     const auto &params = building_impl::params(build_type);
     params.planer_ghost_preview(*this, ctx, start, end, pixel);
 }
-
 
 bool build_planner::place() {
     if (end == tile2i(-1, -1)) {

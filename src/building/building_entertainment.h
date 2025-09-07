@@ -19,6 +19,9 @@ public:
         uint32_t latched_venue_add_grid_offset;
         uint8_t ent_reserved_u8;
         e_resource consume_material_id;
+        uint16_t visitors_today;
+        uint16_t visitors_month;
+        uint16_t visitors_annual;
     };
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
