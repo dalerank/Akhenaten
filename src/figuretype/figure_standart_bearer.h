@@ -11,7 +11,7 @@ public:
     virtual void figure_action() override;
     virtual void figure_draw(painter &ctx, vec2i pixel, int hightlight) override;
     virtual void before_poof() override;
-    virtual void main_update_image() override;
+    virtual void main_image_update() override;
     virtual void update_animation() override;
     virtual void on_config_reload() override;
     virtual void on_update_home() override;

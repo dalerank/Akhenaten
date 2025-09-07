@@ -85,13 +85,13 @@ void figure::rioter_action() {
     dir = figure_image_normalize_direction(dir);
 
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_DEATH) + figure_image_corpse_offset();
+        main_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_DEATH) + figure_image_corpse_offset();
     } else if (direction == DIR_FIGURE_ATTACK) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame % 16];
+        main_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame % 16];
     } else if (action_state == FIGURE_ACTION_121_RIOTER_MOVING) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_WALK) + dir + 8 * anim.frame;
+        main_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_WALK) + dir + 8 * anim.frame;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame / 2];
+        main_image_id = image_id_from_group(GROUP_FIGURE_RIOTER_ATTACK) + CRIMINAL_OFFSETS[anim.frame / 2];
     }
 }
 

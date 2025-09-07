@@ -96,6 +96,8 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
 void figure_storageyard_cart::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Warehouse Man");
     int road_network_id = map_road_network_get(tile());
+
+    base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED:
@@ -147,8 +149,4 @@ void figure_storageyard_cart::figure_action() {
         do_retrieve(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
         break;
     }
-}
-
-void figure_storageyard_cart::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_with_cart(ctx, base.main_cached_pos, highlight);
 }

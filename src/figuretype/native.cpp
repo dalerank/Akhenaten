@@ -85,17 +85,17 @@ void figure::indigenous_native_action() {
     is_enemy_image = 1;
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)
-            sprite_image_id = 393 + dir + 8 * ((attack_image_offset - 12) / 2);
+            main_image_id = 393 + dir + 8 * ((attack_image_offset - 12) / 2);
         else {
-            sprite_image_id = 393 + dir;
+            main_image_id = 393 + dir;
         }
     } else if (action_state == FIGURE_ACTION_149_CORPSE)
-        sprite_image_id = 441 + figure_image_corpse_offset();
+        main_image_id = 441 + figure_image_corpse_offset();
     else if (direction == DIR_FIGURE_ATTACK)
-        sprite_image_id = 393 + dir + 8 * (anim.frame / 2);
+        main_image_id = 393 + dir + 8 * (anim.frame / 2);
     else if (action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
-        sprite_image_id = 297 + dir + 8 * anim.frame;
+        main_image_id = 297 + dir + 8 * anim.frame;
     else {
-        sprite_image_id = 201 + dir + 8 * anim.frame;
+        main_image_id = 201 + dir + 8 * anim.frame;
     }
 }

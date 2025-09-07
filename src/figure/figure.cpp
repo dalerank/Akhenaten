@@ -22,6 +22,10 @@
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "widget/widget_city.h"
+#include "figuretype/editor.h"
+#include "figure/image.h"
+#include "game/game.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 #include <string.h>
@@ -31,6 +35,14 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #endif // _MSC_VER
+
+static const vec2i crowd_offsets[] = {
+    {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
+    {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6},
+    {-3, 6}, {6, 3}, {-6, -3}, {6, -3}, {-6, 3},
+    {3, 6}, {-3, -6}, {0,-10}, {10,0}, {0, 10}, {-10, 0}
+};
+constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
 const token_holder<e_permission, epermission_none, epermission_count> ANK_CONFIG_ENUM(e_permission_tokens);
@@ -553,7 +565,7 @@ vec2i figure::cart_sprite_pixel() const {
 
 void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
-    ImageDraw::img_sprite(ctx, cart_image_id, pixel + cart_offset + default_cart_offset);
+    ImageDraw::img_sprite(ctx, cart_image_id, pixel);
 }
 
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
@@ -569,11 +581,11 @@ bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
 }
 
-void figure_impl::main_update_image() {
+void figure_impl::main_image_update() {
     if (base.state == FIGURE_STATE_DYING) {
-        base.sprite_image_id = base.anim.start() + base.anim.current_frame();
+        base.main_image_id = base.anim.start() + base.anim.current_frame();
     } else {
-        base.sprite_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
+        base.main_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
     }
 }
 
@@ -697,6 +709,149 @@ figure_impl *figures::create(e_figure_type e, figure &f) {
     return f.acquire_impl<figure_impl>();
 }
 
+void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
+    painter ctx = game.painter();
+    // base
+    ImageDraw::img_generic(ctx, main_image_id, pixel.x, pixel.y);
+    // flag
+    ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - image_get(cart_image_id)->height);
+    // flag number
+    int number = 0;
+    int id = resource_id;
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
+        number = id - MAP_FLAG_INVASION_MIN + 1;
+    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
+        number = id - MAP_FLAG_FISHING_MIN + 1;
+    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
+        number = id - MAP_FLAG_HERD_MIN + 1;
+    }
+
+    if (number > 0) {
+        text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
+    }
+}
+
+
+bool figure::has_cart() const {
+    return (use_cart && cart_image_id != 0);
+}
+
+vec2i figure::adjust_pixel_offset(const vec2i pixel) {
+    // determining x/y offset on tile
+    vec2i offset(0, 0);
+    if (use_cross_country) {
+        auto cc_offets = tile_pixel_coords();
+        offset = cc_offets;
+        offset.y -= missile_damage;
+    } else {
+        int dir = figure_image_normalize_direction(direction);
+        int adjusted_progress = progress_on_tile;
+        if (progress_on_tile >= 8) {
+            adjusted_progress -= 15;
+        }
+
+        switch (dir) {
+        case DIR_0_TOP_RIGHT:
+            offset.x += 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
+            break;
+        case DIR_1_RIGHT:
+            offset.x += 4 * adjusted_progress;
+            offset.y = 0;
+            break;
+        case DIR_2_BOTTOM_RIGHT:
+            offset.x += 2 * adjusted_progress;
+            offset.y += adjusted_progress;
+            break;
+        case DIR_3_BOTTOM:
+            offset.x = 0;
+            offset.y += 2 * adjusted_progress;
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            offset.x -= 2 * adjusted_progress;
+            offset.y += adjusted_progress;
+            break;
+        case DIR_5_LEFT:
+            offset.x -= 4 * adjusted_progress;
+            offset.y = 0;
+            break;
+        case DIR_6_TOP_LEFT:
+            offset.x -= 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
+            break;
+        case DIR_7_TOP:
+            offset.x = 0;
+            offset.y -= 2 * adjusted_progress;
+            break;
+        }
+        offset.y -= current_height;
+    }
+
+    if (!!game_features::gameplay_change_citizen_road_offset && id && type != FIGURE_BALLISTA) {
+        // an attempt to not let people walk through each other
+        offset += crowd_offsets[id % crowd_offsets_size];
+    }
+
+    return { pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8 };
+}
+
+void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
+    int x_correction = 0;
+    int y_correction = 3;
+
+    y_correction = dcast()->y_correction(y_correction);
+
+    const image_t *img = is_enemy_image ? image_get_enemy(PACK_ENEMY_ASSYRIAN, main_image_id) : image_get(main_image_id);
+    ImageDraw::img_sprite(ctx, main_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
+}
+
+//void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight) {
+//    draw_figure_cart(ctx, pixel, highlight);
+//    draw_figure_main(ctx, pixel, highlight);
+//
+//    // return; // pharaoh doesn't draw carts on top - to rework maybe later..?
+//    // 
+//    // if (cart_offset.y >= 0) {
+//    //     draw_figure_main(ctx, pixel, highlight, coord_out);
+//    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
+//    // } else {
+//    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
+//    //     draw_figure_main(ctx, pixel, highlight, coord_out);
+//    // }
+//}
+
+void figure::city_draw_figure(painter &ctx, int highlight) {
+    // This is to update the sprite's direction when rotating the city view.
+    // Unfortunately, because the only thing we have at the time of file loading is
+    // the raw sprite image id, it doesn't work if we haven't performed at least a
+    // single frame of figure action after loading a file (i.e. if paused instantly)
+    figure_image_update(true);
+
+    // if (coord_out != nullptr) {
+    //     highlight = 0;
+    //     *coord_out = cached_pos;
+    // }
+
+    if (cart_image_id) {
+        switch (type) {
+        case FIGURE_MAP_FLAG:
+            draw_map_flag(main_cached_pos, highlight);
+            break;
+
+        default:
+            dcast()->figure_draw(ctx, main_cached_pos, highlight);
+            break;
+        }
+    } else {
+        draw_figure_main(ctx, main_cached_pos, highlight);
+        if (!is_enemy_image && highlight) {
+            ImageDraw::img_sprite(ctx, main_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
+        }
+    }
+
+    is_main_drawn = true;
+}
+
 void figure::bind(io_buffer* iob) {
     figure* f = this;
     int tmpe;
@@ -706,9 +861,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 
     //    f->sprite_image_id = buf->read_i16() + 18;
-    f->sprite_image_id -= 18;
-    iob->bind(BIND_SIGNATURE_UINT16, &f->sprite_image_id);
-    f->sprite_image_id += 18;
+    f->main_image_id -= 18;
+    iob->bind(BIND_SIGNATURE_UINT16, &f->main_image_id);
+    f->main_image_id += 18;
 
     iob->bind(BIND_SIGNATURE_INT16, &f->anim.frame);
     iob->bind(BIND_SIGNATURE_UINT16, &f->next_figure);

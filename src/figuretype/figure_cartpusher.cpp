@@ -446,6 +446,8 @@ void figure_cartpusher::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Cartpusher");
     building* b = home();
     int road_network_id = map_road_network_get(tile());
+
+    base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_20_CARTPUSHER_INITIAL:
@@ -497,10 +499,6 @@ void figure_cartpusher::figure_action() {
         }
         break;
     }
-}
-
-void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_with_cart(ctx, base.main_cached_pos, highlight);
 }
 
 figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {

@@ -123,13 +123,13 @@ void figure::figure_image_update(bool refresh_only) {
     case FIGURE_ARROW:
     case FIGURE_HUNTER_ARROW: {
         int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-        sprite_image_id = anim.base + 16 + dir;
+        main_image_id = anim.base + 16 + dir;
         break;
     }
 
     default:
-        dcast()->main_update_image();
-        dcast()->cart_update_image();
+        dcast()->main_image_update();
+        dcast()->cart_image_update();
     }
 }
 
@@ -173,8 +173,10 @@ image_desc resource2cartanim(e_resource resource_id) {
     return g_cart_images[RESOURCE_NONE];
 }
 
-void figure::cart_update_image() {
+void figure::cart_image_update() {
     // determine cart sprite
+    cart_image_id = 0;
+
     switch (resource_id) {
     case RESOURCE_STONE:
     case RESOURCE_LIMESTONE:
@@ -214,21 +216,7 @@ void figure::cart_update_image() {
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
         }
     }
-    //} else if (resource_amount_full == 100) {
-    //    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8
-    //                    + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
-    //} else {
-    //    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
-    //    cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
-    //}
-
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
-    } else {
-        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim.frame;
-    }
 
     switch (resource_id) {
     case RESOURCE_GRANITE:
