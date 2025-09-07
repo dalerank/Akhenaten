@@ -372,7 +372,6 @@ public:
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
     int get_carrying_amount();
-    void determine_deliveryman_destination_food();
     void cart_update_image();
     
     int trader_total_bought();
