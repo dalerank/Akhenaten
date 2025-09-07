@@ -93,9 +93,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("trader_id", f->trader_id);
         game_debug_show_property("cached_pos", f->cached_pos);
 
-        if (f->type == FIGURE_IMMIGRANT) {
-            game_debug_show_property("immigrant_home_building_id", f->immigrant_home_building_id);
-        }
+        f->dcast()->debug_show_properties();
 
         if (f->type == FIGURE_HERBALIST) {
             //game_debug_show_property("see_low_health", f->data.herbalist.see_low_health);
