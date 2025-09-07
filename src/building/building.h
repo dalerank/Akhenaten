@@ -491,6 +491,7 @@ public:
         virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
         virtual bool planer_is_need_flag(e_building_flags flag) const;
         virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
+        virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
         virtual bool is_unique_building() const { return unique_building; }
         virtual int get_cost() const;
     };

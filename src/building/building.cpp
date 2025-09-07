@@ -1377,6 +1377,10 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     return false;
 }
 
+bool building_impl::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
+    return (map_has_figure_at(tile) == false);
+}
+
 int building_impl::static_params::get_cost() const {
     const int mcost = model_get_building(type)->cost;
     return cost > 0 ? cost : mcost;
