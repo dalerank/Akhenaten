@@ -14,14 +14,14 @@ public:
         int fishingboat_progress_cost;
         virtual void archive_load(archive arch) override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         int dock_tiles[2];
         e_figure_type process_type;
         bool reparing;
         short progress;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
