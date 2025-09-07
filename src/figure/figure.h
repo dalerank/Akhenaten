@@ -99,8 +99,9 @@ public:
     uint16_t destination_building_id;
 
     figure_id id;
-    uint16_t sprite_image_id;
+    uint16_t main_image_id;
     uint16_t cart_image_id;
+    bool use_cart;
     animation_context anim;
     bool is_enemy_image;
 
@@ -257,6 +258,7 @@ public:
     inline bool is_alive() { return state == FIGURE_STATE_ALIVE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
+    bool has_cart() const;
 
     inline void set_state(e_figure_state s) { state = s; };
     void bind(io_buffer* iob);
@@ -313,7 +315,6 @@ public:
     void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
     void city_draw_figure(painter &ctx, int highlight);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c
@@ -376,7 +377,7 @@ public:
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
     int get_carrying_amount();
-    void cart_update_image();
+    void cart_image_update();
     
     int trader_total_bought();
     int trader_total_sold();
@@ -483,8 +484,8 @@ public:
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
-    virtual void cart_update_image() { base.cart_update_image(); }
-    virtual void main_update_image();
+    virtual void cart_image_update() { base.cart_image_update(); }
+    virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return params().anim; }
     virtual const static_params &params() const { return params(type()); }

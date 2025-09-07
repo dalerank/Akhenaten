@@ -8,7 +8,6 @@ public:
     figure_docker(figure *f) : figure_carrier(f) {}
 
     virtual void on_create() override {}
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight) override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
     virtual void on_destroy() override;
     virtual void figure_action() override;

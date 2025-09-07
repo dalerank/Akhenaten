@@ -41,7 +41,6 @@ public:
     virtual void figure_before_action() override;
     virtual void before_poof() override;
     virtual void figure_action() override;
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight) override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;

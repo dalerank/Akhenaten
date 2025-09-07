@@ -24,7 +24,7 @@ int map_figure_id_get(int grid_offset) {
 
 void map_figure_sort_by_y() {
     g_figures_y_sort.clear();
-    for (auto *f : map_figures()) {
+    for (figure *f : map_figures()) {
         if (f->state == FIGURE_STATE_NONE) {
             continue;
         }
@@ -49,7 +49,7 @@ void map_figure_sort_by_y() {
         f->is_cart_drawn = false;
         g_figures_y_sort.push_back({ f, f->main_cached_pos, false });
 
-        if (f->cart_image_id) {
+        if (f->has_cart()) {
             f->cart_cached_pos = f->cart_sprite_pixel();
             g_figures_y_sort.push_back({ f, f->cart_cached_pos, true });
         }

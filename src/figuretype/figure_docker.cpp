@@ -326,6 +326,7 @@ bool figure_docker::fetch_export_resource(building* b) {
 void figure_docker::figure_action() {
     building* b = home();
 
+    base.use_cart = true;
     if (b->state != BUILDING_STATE_VALID) {
         poof();
     }
@@ -409,7 +410,7 @@ void figure_docker::figure_action() {
             if (base.wait_ticks >= 80) {
                 advance_action(FIGURE_ACTION_132_DOCKER_IDLING);
                 base.wait_ticks = 0;
-                base.sprite_image_id = 0;
+                base.main_image_id = 0;
                 base.cart_image_id = 0;
                 dock.queued_docker_id = 0;
             }
@@ -495,10 +496,6 @@ void figure_docker::figure_action() {
     }
 }
 
-void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_with_cart(ctx, pixel, highlight);
-}
-
 sound_key figure_docker::phrase_key() const {
     const bool in_action = action_state(FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE, FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     if (in_action) {
@@ -515,17 +512,17 @@ void figure_docker::update_animation() {
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
     if (action_state(FIGURE_ACTION_149_CORPSE)) {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
     }
 
     if (base.cart_image_id) {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);
     } else {
-        base.sprite_image_id = 0;
+        base.main_image_id = 0;
     }
 }
 

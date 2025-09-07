@@ -32,7 +32,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("wait_ticks", f->wait_ticks);
         game_debug_show_property("terrain_type", get_terrain_type("", f->terrain_type));
         game_debug_show_property("roam_length", f->roam_length);
-        game_debug_show_property("sprite_image_id", f->sprite_image_id);
+        game_debug_show_property("main_image_id", f->main_image_id);
         game_debug_show_property("cart_image_id", f->cart_image_id);
         game_debug_show_property("use_cross_country", f->use_cross_country);
         game_debug_show_property("state", f->state);

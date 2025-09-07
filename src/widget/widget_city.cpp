@@ -159,19 +159,27 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
     auto figures = map_figures_in_row(tile);
 
     for (const auto &f : figures) {
-        if (f.f->is_main_drawn && !force) {
+        const bool should_draw_main = !f.f->is_main_drawn;
+        const bool should_draw_cart = (f.draw_cart && !f.f->is_cart_drawn);
+        if (!should_draw_main && !should_draw_cart && !force) {
             continue;
         }
 
-        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
-            continue;
-        }
+        if (should_draw_main) { // draw main
+            if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+                continue;
+            }
 
-        if (!selected_figure_id) {
-            int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
-            f.f->city_draw_figure(ctx, highlight);
-        } else if (f.f->id == selected_figure_id) {
-            f.f->city_draw_figure(ctx, 0);
+            if (!selected_figure_id) {
+                int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
+                f.f->city_draw_figure(ctx, highlight);
+            } else if (f.f->id == selected_figure_id) {
+                f.f->city_draw_figure(ctx, 0);
+            }
+        } 
+        
+        if (should_draw_cart) { // draw cart
+            f.f->draw_figure_cart(ctx, f.fpos, 0);
         }
     }
 }

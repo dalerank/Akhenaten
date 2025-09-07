@@ -20,7 +20,7 @@ enum {
 struct figure_draw {
     figure *f;
     vec2i fpos;
-    bool draw_cart;
+    bool draw_cart = false;
 };
 
 int map_figure_id_get(int grid_offset);
