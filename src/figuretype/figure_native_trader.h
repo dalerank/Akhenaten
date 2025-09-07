@@ -9,7 +9,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight) override;
     //virtual void figure_before_action() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_NATIVE_TRADER, "nativet"}; }
     virtual const animations_t &anim() const override;

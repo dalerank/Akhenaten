@@ -539,8 +539,8 @@ void figure_impl::figure_roaming_action() {
     }
 }
 
-void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
-    base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
+void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_figure_main(ctx, base.cached_pos, highlight);
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {

@@ -30,6 +30,8 @@ public:
     FIGURE_METAINFO(FIGURE_CART_PUSHER, figure_cartpusher)
     figure_cartpusher(figure *f) : figure_carrier(f) {}
 
+    virtual figure_cartpusher *dcast_cartpusher() override { return this; }
+
     struct static_params : public figure_model {
         uint8_t wait_on_calculate_destination;
 
@@ -39,14 +41,12 @@ public:
     virtual void figure_before_action() override;
     virtual void before_poof() override;
     virtual void figure_action() override;
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) override;
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight) override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
-
-    virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 
     void do_deliver(bool storageyard_cart, int action_done, int action_fail);
     void calculate_destination(bool warehouseman);

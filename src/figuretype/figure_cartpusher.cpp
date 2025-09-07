@@ -499,8 +499,8 @@ void figure_cartpusher::figure_action() {
     }
 }
 
-void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, base.cached_pos, highlight, coord_out);
+void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_figure_with_cart(ctx, base.cached_pos, highlight);
 }
 
 figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
