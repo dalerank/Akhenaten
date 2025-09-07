@@ -383,8 +383,7 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
 
     cart->load_resource(resource_id, quantity);
     cart->set_destination(nullptr);
-    cart->base.immigrant_home_building_id = 0;
-
+    
     set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
     if (!!game_features::gameplay_change_cart_speed_depends_quntity) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
@@ -397,7 +396,6 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
 figure *building::create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
-    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
@@ -407,7 +405,6 @@ figure *building::create_roaming_figure(e_figure_type _type, e_figure_action cre
     figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
     f->set_destination(nullptr);
-    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->init_roaming_from_building(figure_roam_direction);
@@ -764,10 +761,10 @@ bool building::has_figure(int i, int figure_id) {
         return has_any;
     } else {
         figure *f = this->get_figure(i);
-        if (f->state
-            && (f->home() == this || building_get(f->immigrant_home_building_id) == this)) { // check if figure belongs to this building...
+        if (f->state && f->dcast()->is_home(this)) { // check if figure belongs to this building...
             if (figure_id < 0)                                       // only check if there is a figure
                 return true;
+
             return (f->id == figure_id);
         } else { // decouple if figure does not belong to this building - assume cache is incorrect
             remove_figure(i);

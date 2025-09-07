@@ -96,7 +96,6 @@ public:
     uint16_t resource_amount_full; // full load counter
 
     uint16_t home_building_id;
-    uint16_t immigrant_home_building_id;
     uint16_t destination_building_id;
 
     figure_id id;
@@ -267,9 +266,6 @@ public:
     building* destination();
     const int homeID() const {
         return home_building_id;
-    }
-    const int immigrant_homeID() const {
-        return immigrant_home_building_id;
     }
     const int destinationID() const {
         return destination_building_id;
@@ -471,10 +467,10 @@ public:
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
-    virtual figure_phrase_t phrase() const { return {FIGURE_NONE, ""}; }
+    virtual figure_phrase_t phrase() const { return { FIGURE_NONE, "" }; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
@@ -494,6 +490,9 @@ public:
     virtual void on_config_reload() {}
     virtual void on_update_home() {}
     virtual xstring action_tip() const { static xstring tip(""); return tip; }
+    virtual void debug_show_properties() {}
+    virtual void debug_draw() {}
+    virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
