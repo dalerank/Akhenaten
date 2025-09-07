@@ -566,6 +566,7 @@ vec2i figure::cart_sprite_pixel() const {
 void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
     ImageDraw::img_sprite(ctx, cart_image_id, pixel);
+    is_cart_drawn = true;
 }
 
 void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {

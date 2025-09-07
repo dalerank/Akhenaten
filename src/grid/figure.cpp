@@ -51,7 +51,15 @@ void map_figure_sort_by_y() {
 
         if (f->has_cart()) {
             f->cart_cached_pos = f->cart_sprite_pixel();
-            g_figures_y_sort.push_back({ f, f->cart_cached_pos, true });
+            const image_t *img = image_get(f->cart_image_id);
+            int cart_y = img ? img->animation.sprite_offset.y : 0;
+            vec2i cart_bound_pos = f->cart_cached_pos;
+            switch (f->direction) {
+            case DIR_6_TOP_LEFT:
+                cart_bound_pos += vec2i(0, -cart_y / 2);
+                break;
+            }
+            g_figures_y_sort.push_back({ f, cart_bound_pos, true });
         }
     }
 
