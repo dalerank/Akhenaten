@@ -10,6 +10,9 @@
 #include "building/building_house.h"
 #include "city/city_population.h"
 #include "game/game_events.h"
+#include "dev/debug.h"
+#include "game/game.h"
+#include "graphics/view/lookup.h"
 #include "js/js_game.h"
 
 figures::model_t<figure_homeless> homeless_m;
@@ -20,6 +23,27 @@ void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
     f->wait_ticks = 0;
     f->migrant_num_people = ev.num_people;
     g_city.population.remove_homeless(ev.num_people);
+}
+
+void figure_homeless::debug_draw() {
+    if (!base.draw_mode) {
+        return;
+    }
+
+    uint8_t str[10];
+    vec2i pixel = tile_to_pixel(tile());
+    pixel = base.adjust_pixel_offset(pixel);
+    pixel.x -= 10;
+    pixel.y -= 80;
+    int indent = 0;
+    color col = COLOR_WHITE;
+    painter ctx = game.painter();
+
+    auto &d = runtime_data();
+    if (!!(base.draw_mode & e_figure_draw_building)) {
+        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", d.adv_home_building_id, d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(d.adv_home_building_id)->get_figure_slot(&base), d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+    }
 }
 
 int figure_homeless::find_closest_house_with_room(tile2i tile) {
@@ -45,7 +69,7 @@ int figure_homeless::find_closest_house_with_room(tile2i tile) {
 
 void figure_homeless::on_destroy() {
     auto h = home();
-    auto bhome = building_get(base.immigrant_home_building_id);
+    auto bhome = building_get(runtime_data().adv_home_building_id);
     if (h == bhome) {
         bhome->remove_figure(2);
     }
@@ -64,8 +88,8 @@ void figure_homeless::figure_action() {
                 building* b = building_get(building_id);
                 tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
                 if (road_tile.valid()) {
-                    b->set_figure(2, id());
-                    base.immigrant_home_building_id = building_id;
+                    b->set_figure(BUILDING_SLOT_IMMIGRANT, id());
+                    runtime_data().adv_home_building_id = building_id;
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 } else {
                     poof();
@@ -81,14 +105,14 @@ void figure_homeless::figure_action() {
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
         } else {
-            building *ihome = building_get(base.immigrant_home_building_id);
+            building *ihome = building_get(runtime_data().adv_home_building_id);
             do_gotobuilding(ihome, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
         }
         break;
 
     case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
         {
-            building *b = building_get(base.immigrant_home_building_id);
+            building *b = building_get(runtime_data().adv_home_building_id);
             if (do_enterbuilding(false, b)) {
                 building_house *house = b->dcast_house();
                 house->add_population(base.migrant_num_people);
@@ -139,8 +163,8 @@ void figure_homeless::figure_action() {
                 building* b = building_get(building_id);
                 tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
                 if (road_tile.valid()) {
-                    b->set_figure(2, id());
-                    base.immigrant_home_building_id = building_id;
+                    b->set_figure(BUILDING_SLOT_IMMIGRANT, id());
+                    runtime_data().adv_home_building_id = building_id;
                     advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 }
             }

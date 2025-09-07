@@ -9,6 +9,9 @@
 #include "city/city.h"
 #include "graphics/animation.h"
 #include "game/game_events.h"
+#include "widget/debug_console.h"
+#include "graphics/view/lookup.h"
+#include "game/game.h"
 
 #include "js/js_game.h"
 
@@ -34,12 +37,32 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     }
 }
 
+void figure_immigrant::debug_draw() {
+    if (!base.draw_mode) {
+        return;
+    }
+
+    uint8_t str[10];
+    vec2i pixel = tile_to_pixel(tile());
+    pixel = base.adjust_pixel_offset(pixel);
+    pixel.x -= 10;
+    pixel.y -= 80;
+    int indent = 0;
+    painter ctx = game.painter();
+
+    auto &d = runtime_data();
+    if (!!(base.draw_mode & e_figure_draw_building)) {
+        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", d.adv_home_building_id, d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(d.adv_home_building_id)->get_figure_slot(&base), d.adv_home_building_id > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+    }
+}
+
 void figure_immigrant::on_destroy() {
     auto h = home();
-    auto bhome = building_get(base.immigrant_home_building_id);
-    if (h == bhome) {
-        bhome->remove_figure(2);
-    }
+    auto bhome = immigrant_home();
+
+    bhome->remove_figure_by_id(id());
+    h->remove_figure_by_id(id());
 }
 
 void figure_immigrant::figure_action() {
@@ -152,6 +175,10 @@ const animations_t &figure_immigrant::anim() const {
     return immigrant_m.anim;
 }
 
+void figure_immigrant::debug_show_properties() {
+    game_debug_show_property("immigrant_home_building_id", runtime_data().adv_home_building_id);
+}
+
 building* figure_immigrant::immigrant_home() {
-    return building_get(base.immigrant_home_building_id);
+    return building_get(runtime_data().adv_home_building_id);
 };
