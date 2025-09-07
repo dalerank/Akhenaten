@@ -587,13 +587,8 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i tile, painter &ctx) {
-    int figure_id = map_figure_id_get(tile);
-    while (figure_id) {
-        figure* f = figure_get(figure_id);
-        f->draw_debug();
-        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-    }
+void draw_debug_figures() {
+
 }
 
 void figure::draw_debug() {
@@ -652,13 +647,13 @@ void figure::draw_debug() {
                 int img_index = 10;
                 auto pdir = figure_route_get_direction(routing_path_id, i);
                 switch (pdir) {
-                case 0: ty--; break;
+                case 0: ty--; img_index = 0; break;
                 case 1: tx++; ty--; break;
                 case 2: tx++; img_index = 1; break;
                 case 3: tx++; ty++; break;
                 case 4: ty++; img_index = 0; break;
                 case 5: tx--; ty++; break;
-                case 6: tx--; break;
+                case 6: tx--; img_index = 1; break;
                 case 7: tx--; ty--; break;
                 }
                 coords = tile_to_pixel(tile2i(tx, ty));
@@ -713,8 +708,6 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(immigrant_home_building_id)->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
     }
 
     if (!!(draw_mode & e_figure_draw_festival)) {
@@ -758,6 +751,8 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_delta.y, col);
         pixel.y += 10;
     }
+
+    dcast()->debug_draw();
 }
 
 bstring256 get_terrain_type(pcstr def, tile2i tile) {

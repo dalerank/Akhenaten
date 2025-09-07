@@ -103,7 +103,6 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x = 1
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size = 1);
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
-void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx);
 
 void draw_debug_ui(int x, int y);
 

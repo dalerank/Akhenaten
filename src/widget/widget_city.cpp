@@ -263,7 +263,13 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
 
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
-    city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
+    debug_draw_figures();
+}
+
+void screen_city_t::debug_draw_figures() {
+    for (auto &f : map_figures()) {
+        f->draw_debug();
+    }
 }
 
 void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
