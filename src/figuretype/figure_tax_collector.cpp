@@ -13,19 +13,19 @@
 #include "figure/service.h"
 #include "building/building_house.h"
 
-figures::model_t<figure_tax_collector> tax_collector_m;
+figure_tax_collector::static_params tax_collector_m;
 
 void figure_tax_collector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
     building* b = home();
     switch (action_state()) {
-    case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
+    case ACTION_40_TAX_COLLECTOR_CREATED:
         base.anim.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                base.action_state = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                base.action_state = ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                 base.set_cross_country_destination(road_tile);
                 base.roam_length = 0;
             } else {
@@ -34,7 +34,7 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
+    case ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
         {
             base.use_cross_country = true;
             const bool finished = base.move_ticks_cross_country(1);
@@ -43,7 +43,7 @@ void figure_tax_collector::figure_action() {
                     // returned to own building
                     poof();
                 } else {
-                    advance_action(FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING);
+                    advance_action(ACTION_42_TAX_COLLECTOR_ROAMING);
                     base.init_roaming_from_building(0);
                     base.roam_length = 0;
                 }
@@ -51,12 +51,12 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING:
+    case ACTION_42_TAX_COLLECTOR_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                advance_action(FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING, road_tile);
+                advance_action(ACTION_43_TAX_COLLECTOR_RETURNING, road_tile);
             } else {
                 poof();
             }
@@ -68,16 +68,19 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
+    case ACTION_43_TAX_COLLECTOR_RETURNING:
         base.move_ticks(1);
             if (direction() == DIR_FIGURE_NONE) {
-                advance_action(FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING);
+                advance_action(ACTION_41_TAX_COLLECTOR_ENTERING_EXITING);
                 base.set_cross_country_destination(b->tile);
                 base.roam_length = 0;
             } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
                 poof();
             }
 
+        break;
+
+    case FIGURE_ACTION_149_CORPSE:
         break;
 
     default:
