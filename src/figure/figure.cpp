@@ -741,7 +741,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->cc_direction);
     iob->bind(BIND_SIGNATURE_UINT8, &f->speed_multiplier);
     iob->bind(BIND_SIGNATURE_INT16, &f->home_building_id);
-    iob->bind(BIND_SIGNATURE_INT16, &f->immigrant_home_building_id);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &f->destination_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->formation_id);       // formation: 10
     iob->bind(BIND_SIGNATURE_UINT8, &f->index_in_formation); // 3
