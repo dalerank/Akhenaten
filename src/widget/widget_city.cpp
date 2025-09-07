@@ -171,7 +171,7 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
             int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
             f->city_draw_figure(ctx, highlight);
         } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0, selected_figure_coord);
+            f->city_draw_figure(ctx, 0);
         }
     }
 }
@@ -197,7 +197,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
             int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
             f->city_draw_figure(ctx, highlight);
         } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0, selected_figure_coord);
+            f->city_draw_figure(ctx, 0);
         }
     }
 }
@@ -217,7 +217,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 }
 
 
-void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
+void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     highlighted_formation = 0;
     if (!!game_features::gameui_highlight_legions) {
         highlighted_formation = formation_legion_at(current_tile);
@@ -227,7 +227,6 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     }
 
     this->selected_figure_id = selected_figure_id;
-    this->selected_figure_coord = figure_coord;
 
     render_ctx.init();
 
@@ -512,17 +511,17 @@ void screen_city_t::draw(painter &ctx) {
     if (g_city.overlay()) {
         draw_with_overlay(ctx);
     } else {
-        draw_without_overlay(ctx, 0, nullptr);
+        draw_without_overlay(ctx, 0);
     }
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
 }
 
-void screen_city_t::draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
+void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
 
-    draw_without_overlay(ctx, figure_id, coord);
+    draw_without_overlay(ctx, figure_id);
 
     graphics_reset_clip_rectangle();
 }

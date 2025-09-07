@@ -20,7 +20,6 @@ struct screen_city_t {
 
     int selected_figure_id;
     int highlighted_formation;
-    vec2i *selected_figure_coord;
 
     void handle_touch_scroll(const touch_t *t, bool force_capture_input);
     void update_clouds(painter &ctx);
@@ -42,8 +41,8 @@ struct screen_city_t {
 
     void draw(painter &ctx);
     void draw_with_overlay(painter &ctx);
-    void draw_without_overlay(painter &ctx, int selected_figure_id, vec2i *figure_coord);
-    void draw_for_figure(painter &ctx, int figure_id, vec2i *coord);
+    void draw_without_overlay(painter &ctx, int selected_figure_id);
+    void draw_for_figure(painter &ctx, int figure_id);
     void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force);
     void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);

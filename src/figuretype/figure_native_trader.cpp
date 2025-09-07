@@ -86,8 +86,8 @@ void figure_native_trader::figure_action() {
 
 }
 
-void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
+void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_figure_with_cart(ctx, pixel, highlight);
 }
 
 const animations_t &figure_native_trader::anim() const {

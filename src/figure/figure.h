@@ -305,11 +305,11 @@ public:
     void draw_debug();
     vec2i adjust_pixel_offset(const vec2i &pixel);
     //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void city_draw_figure(painter &ctx, int highlight, vec2i* coord_out = nullptr);
+    void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
+    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
+    void city_draw_figure(painter &ctx, int highlight);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
+    void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c
@@ -466,7 +466,7 @@ public:
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out);
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
     virtual figure_phrase_t phrase() const { return { FIGURE_NONE, "" }; }

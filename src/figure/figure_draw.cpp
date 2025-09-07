@@ -99,7 +99,7 @@ vec2i figure::adjust_pixel_offset(const vec2i &pixel) {
     return {pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8};
 }
 
-void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
     int x_correction = 0;
     int y_correction = 3;
 
@@ -109,49 +109,50 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* c
     ImageDraw::img_sprite(ctx, sprite_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
 }
 
-void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
+void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
     const image_t* img = image_get(cart_image_id);
     ImageDraw::img_sprite(ctx, cart_image_id, pixel + cart_offset - vec2i{0, 7});
 }
 
-void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
-    draw_figure_cart(ctx, pixel, highlight, coord_out);
-    draw_figure_main(ctx, pixel, highlight, coord_out);
-    return; // pharaoh doesn't draw carts on top - to rework maybe later..?
+void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight) {
+    draw_figure_cart(ctx, pixel, highlight);
+    draw_figure_main(ctx, pixel, highlight);
 
-    if (cart_offset.y >= 0) {
-        draw_figure_main(ctx, pixel, highlight, coord_out);
-        draw_figure_cart(ctx, pixel, highlight, coord_out);
-    } else {
-        draw_figure_cart(ctx, pixel, highlight, coord_out);
-        draw_figure_main(ctx, pixel, highlight, coord_out);
-    }
+    // return; // pharaoh doesn't draw carts on top - to rework maybe later..?
+    // 
+    // if (cart_offset.y >= 0) {
+    //     draw_figure_main(ctx, pixel, highlight, coord_out);
+    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
+    // } else {
+    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
+    //     draw_figure_main(ctx, pixel, highlight, coord_out);
+    // }
 }
 
-void figure::city_draw_figure(painter &ctx, int highlight, vec2i* coord_out) {
+void figure::city_draw_figure(painter &ctx, int highlight) {
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is
     // the raw sprite image id, it doesn't work if we haven't performed at least a
     // single frame of figure action after loading a file (i.e. if paused instantly)
     figure_image_update(true);
 
-    if (coord_out != nullptr) {
-        highlight = 0;
-        *coord_out = cached_pos;
-    }
+    // if (coord_out != nullptr) {
+    //     highlight = 0;
+    //     *coord_out = cached_pos;
+    // }
 
     if (cart_image_id) {
         switch (type) {
         case FIGURE_MAP_FLAG:
-            draw_map_flag(cached_pos, highlight, coord_out);
+            draw_map_flag(cached_pos, highlight);
             break;
 
         default:
-            dcast()->figure_draw(ctx, cached_pos, highlight, coord_out);
+            dcast()->figure_draw(ctx, cached_pos, highlight);
             break;
         }
     } else {
-        draw_figure_main(ctx, cached_pos, highlight, coord_out);
+        draw_figure_main(ctx, cached_pos, highlight);
         if (!is_enemy_image && highlight) {
             ImageDraw::img_sprite(ctx, sprite_image_id, cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
         }

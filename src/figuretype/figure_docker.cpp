@@ -495,8 +495,8 @@ void figure_docker::figure_action() {
     }
 }
 
-void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
-    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
+void figure_docker::figure_draw(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_figure_with_cart(ctx, pixel, highlight);
 }
 
 sound_key figure_docker::phrase_key() const {
