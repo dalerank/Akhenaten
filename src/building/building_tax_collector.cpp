@@ -19,6 +19,7 @@
 #include "game/game.h"
 #include "widget/city/ornaments.h"
 #include "figuretype/figure_tax_collector.h"
+#include "figuretype/figure_cartpusher.h"
 
 building_tax_collector::static_params  btax_collector_m;
 building_tax_collector_up::static_params btax_collector_up_m;
@@ -79,7 +80,7 @@ void building_tax_collector::update_month() {
 
     if (base.has_road_access && base.deben_storage > 100) {
         int may_send = std::min<int>((base.deben_storage / 100) * 100, 400);
-        figure *f = base.create_cartpusher(RESOURCE_GOLD, may_send, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+        figure *f = base.create_cartpusher(RESOURCE_GOLD, may_send, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER);
         base.deben_storage -= may_send;
         f->sender_building_id = base.id;
     }

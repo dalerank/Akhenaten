@@ -31,6 +31,7 @@
 #include "figure/figure.h"
 #include "grid/tiles.h"
 #include "dev/debug.h"
+#include "figuretype/figure_cartpusher.h"
 
 #include <iostream>
 
@@ -544,7 +545,7 @@ void building_farm::spawn_figure_harvests() {
                 const int expected_produce = this->expected_produce();
                 const int second_produce_expected = expected_produce / rate;
                 events::emit(event_produced_resources{ base.output_resource_first_id, second_produce_expected });
-                figure *f = create_cartpusher(base.output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                figure *f = create_cartpusher(base.output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
                 f->sender_building_id = id();
             }
         }

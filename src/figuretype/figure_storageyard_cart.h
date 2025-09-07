@@ -2,6 +2,10 @@
 
 #include "figuretype/figure_cartpusher.h"
 
+enum e_warehouse_cart_action {
+    ACTION_9_WAREHOUSE_CART_DELIVERING_GOODS = 9,
+};
+
 class figure_storageyard_cart : public figure_cartpusher {
 public:
     FIGURE_METAINFO(FIGURE_STORAGEYARD_CART, figure_storageyard_cart)

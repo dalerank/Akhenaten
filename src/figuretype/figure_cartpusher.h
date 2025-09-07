@@ -2,6 +2,20 @@
 
 #include "figure/figure.h"
 
+enum e_cartpusher_action {
+    ACTION_9_CARTPUSHER_DELIVERING_GOODS = 9,
+    ACTION_10_CARTPUSHER_DELIVERING_FOOD = 10,
+    ACTION_11_CARTPUSHER_DELIVERING_GOLD = 11,
+    ACTION_20_CARTPUSHER_INITIAL = 20,
+    ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE = 21,
+    ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY = 22,
+    ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP = 23,
+    ACTION_24_CARTPUSHER_AT_WAREHOUSE = 24,
+    ACTION_25_CARTPUSHER_AT_GRANARY = 25,
+    ACTION_26_CARTPUSHER_AT_WORKSHOP = 26,
+    ACTION_27_CARTPUSHER_RETURNING = 27,
+};
+
 class figure_carrier : public figure_impl {
 public:
     figure_carrier(figure *f) : figure_impl(f) {}
@@ -15,6 +29,12 @@ class figure_cartpusher : public figure_carrier {
 public:
     FIGURE_METAINFO(FIGURE_CART_PUSHER, figure_cartpusher)
     figure_cartpusher(figure *f) : figure_carrier(f) {}
+
+    struct static_params : public figure_model {
+        uint8_t wait_on_calculate_destination;
+
+        virtual void archive_load(archive arch) override;
+    } BUILDING_STATIC_DATA_T;
 
     virtual void figure_before_action() override;
     virtual void before_poof() override;

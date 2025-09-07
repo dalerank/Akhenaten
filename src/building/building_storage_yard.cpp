@@ -297,7 +297,7 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
     return true;
 }
 
-int building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i &dst) {
+building_id building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i &dst) {
     int min_dist = 10000;
     int min_building_id = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
