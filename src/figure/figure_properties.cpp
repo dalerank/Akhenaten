@@ -91,7 +91,8 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("phrase_key", f->phrase_key);
         game_debug_show_property("phrase_sequence_city", f->phrase_sequence_city);
         game_debug_show_property("trader_id", f->trader_id);
-        game_debug_show_property("cached_pos", f->cached_pos);
+        game_debug_show_property("main_cached_pos", f->main_cached_pos);
+        game_debug_show_property("cart_cached_pos", f->cart_cached_pos);
 
         f->dcast()->debug_show_properties();
 
