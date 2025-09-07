@@ -179,7 +179,11 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
         } 
         
         if (should_draw_cart) { // draw cart
-            f.f->draw_figure_cart(ctx, f.fpos, 0);
+            if (f.f->cart_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->cart_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+                continue;
+            }
+
+            f.f->draw_figure_cart(ctx, f.f->cart_cached_pos, 0);
         }
     }
 }
