@@ -18,9 +18,14 @@
 #include "sound/sound_building.h"
 #include "game/game.h"
 #include "widget/city/ornaments.h"
+#include "figuretype/figure_tax_collector.h"
 
-buildings::model_t<building_tax_collector> btax_collector_m;
-buildings::model_t<building_tax_collector_up> btax_collector_up_m;
+building_tax_collector::static_params  btax_collector_m;
+building_tax_collector_up::static_params btax_collector_up_m;
+
+void building_tax_collector::static_params::archive_load(archive arch) {
+    max_deben_storage = arch.r_int("max_deben_storage");
+}
 
 void building_tax_collector::spawn_figure() {
     if (!has_road_access()) {
@@ -53,7 +58,7 @@ void building_tax_collector::spawn_figure() {
     base.figure_spawn_delay++;
     if (base.figure_spawn_delay > spawn_delay) {
         base.figure_spawn_delay = 0;
-        create_roaming_figure(FIGURE_TAX_COLLECTOR, FIGURE_ACTION_40_TAX_COLLECTOR_CREATED, BUILDING_SLOT_SERVICE);
+        create_roaming_figure(FIGURE_TAX_COLLECTOR, (e_figure_action)ACTION_40_TAX_COLLECTOR_CREATED, BUILDING_SLOT_SERVICE);
     }
 }
 
@@ -94,10 +99,4 @@ bvariant building_tax_collector::get_property(const xstring &domain, const xstri
     }
 
     return building_impl::get_property(domain, name);
-}
-
-const building_impl::static_params &building_tax_collector::params() const {
-    return (type() == BUILDING_TAX_COLLECTOR) 
-                ? *(static_params*)&btax_collector_m
-                : *(static_params*)&btax_collector_up_m;
 }
