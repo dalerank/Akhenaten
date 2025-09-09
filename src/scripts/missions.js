@@ -26,9 +26,9 @@ mission0 = { // Nubt
 	]
 
 	fire_damage : {
-		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +20}
-		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}	
-		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +0, collapse: +0}
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
 	}
 
 	stages : {
