@@ -1,6 +1,7 @@
 #include "figure_caravan_donkey.h"
 
 #include "figure/trader.h"
+#include "figuretype/figure_kingdome_trader.h"
 
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -90,9 +91,9 @@ void figure_caravan_donkey_info_window::init(object_info &c) {
     
     int text_id;
     switch (f->action_state) {
-    case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
-    case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
-    case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(trader_id) ? 11 : 13; break;
+    case ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
+    case ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
+    case ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(trader_id) ? 11 : 13; break;
     default: text_id = 11; break;
     }
 
