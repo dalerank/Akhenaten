@@ -2,6 +2,7 @@
 
 #include "game/settings.h"
 #include "game/game_events.h"
+#include "game/game_events_history.h"
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
 #include "core/log.h"
@@ -69,5 +70,9 @@ void application_t::subscribe_events() {
 
     events::subscribe_permanent([] (event_app_city_screenshot ev) {
         graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+    });
+
+    events::subscribe_permanent([] (event_app ev) {
+        events_history::log_permanent_event(ev);
     });
 }
