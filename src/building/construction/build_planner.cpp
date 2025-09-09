@@ -164,13 +164,15 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
 
             int image_id = tile_graphics_array[row][column];
             if (image_id > 0) {
-                vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
-                ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+                command.image_id = image_id;
+                command.pixel = pixel_coords_cache[row][column];
+                command.mask = COLOR_MASK_GREEN;
             } else if(image_id < 0) {
-                const int black_image = image_id_from_group(GROUP_TERRAIN_BLACK);
-                vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(ctx, black_image, current_coord, COLOR_MASK_GREEN);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+                command.pixel = pixel_coords_cache[row][column];
+                command.mask = COLOR_MASK_GREEN;
             }
         }
     }
@@ -1331,8 +1333,10 @@ void build_planner::draw(painter &ctx) {
 }
 
 void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
-    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
-    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);
+    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = color_mask;
 }
 
 void build_planner::draw_graphics(painter &ctx) {

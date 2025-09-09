@@ -77,6 +77,17 @@ void map_render_set(tile2i tile, int flag) {
     map_grid_set(g_render_grid, tile.grid_offset(), flag);
 }
 
+void map_render_add(int grid_offset, int flag) {
+    int current = map_grid_get(g_render_grid, grid_offset);
+    map_grid_set(g_render_grid, grid_offset, current | flag);
+}
+
+void map_render_sub(int grid_offset, int flag) {
+    int current = map_grid_get(g_render_grid, grid_offset);
+    current &= (~flag);
+    map_grid_set(g_render_grid, grid_offset, current);
+}
+
 void map_render_set(int grid_offset, int flag) {
     map_grid_set(g_render_grid, grid_offset, flag);
 }
@@ -150,7 +161,11 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW};
     if (!tile.valid()) {
         // Outside map: draw black tile
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
+
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+        command.pixel = pixel;
+        command.mask = COLOR_MASK_NONE;
         return;
     }
 
@@ -164,19 +179,33 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             overlay->draw_flattened_footprint_anysize(pixel, 1, 1, 0, 0, ctx);
 
         } else if (!!(terrain & TERRAIN_CANAL)) {
-            const image_t *img = ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pixel;
+            command.mask = COLOR_MASK_NONE;
+
+            const image_t* img = image_get(command.image_id);
             int top_height = img->isometric_top_height();
             map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
 
         } else if (map_is_highlighted(tile)) {
             e_highligth_mode mode = map_is_highlighted(tile);
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, mode_highlighted[mode]);
+
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pixel;
+            command.mask = mode_highlighted[mode];
         
         } else if (terrain & TERRAIN_BUILDING) {
             overlay->draw_building_footprint(ctx, pixel, tile, 0);
         
         } else {
-            const image_t *img = ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pixel;
+            command.mask = COLOR_MASK_NONE;
+
+            const image_t* img = image_get(command.image_id);
             int top_height = img->isometric_top_height();
             map_render_set(tile, top_height > 0 ? RENDER_TALL_TILE : 0);
         }
@@ -201,7 +230,10 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     } else if (map_property_is_draw_tile(grid_offset)) {
         bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
         if (tall_flat_tile) {
-            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(grid_offset), pixel, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+            command.image_id = map_image_at(grid_offset);
+            command.pixel = pixel;
+            command.mask = COLOR_MASK_NONE;
         }
 
         //int terrain = map_terrain_get(grid_offset);

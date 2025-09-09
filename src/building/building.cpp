@@ -1047,7 +1047,6 @@ figure *building_impl::get_figure_in_slot(int slot) {
     return figure_get(get_figure_id(slot));
 }
 
-
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (!base.anim.id) {
         int image_id = map_image_at(tile.grid_offset());
@@ -1057,7 +1056,12 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     if (base.has_plague) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
+        int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = skull_img;
+        command.pixel = { point.x + 18, point.y - 32 };
+        command.mask = color_mask;
     }
 
     return false;
@@ -1081,7 +1085,10 @@ void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     }
 
     vec2i pos = pixel + base.anim.pos;
-    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos, mask);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = base.anim.start() + base.anim.current_frame();
+    command.pixel = pos;
+    command.mask = mask;
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {

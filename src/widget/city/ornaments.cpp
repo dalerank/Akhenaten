@@ -48,9 +48,16 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
     }
 
     if (base_id == sprite_id) {
-        ImageDraw::img_ornament(ctx, sprite_id + animation_offset, base_id, pos.x, pos.y, color_mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_ornament);
+        command.image_id = sprite_id + animation_offset;
+        command.base_id = base_id;
+        command.pixel = pos;
+        command.mask = color_mask;
     } else {
-        ImageDraw::img_sprite(ctx, sprite_id + animation_offset, pos, color_mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+        command.image_id = sprite_id + animation_offset;
+        command.pixel = pos;
+        command.mask = color_mask;
     }
 }
 
@@ -98,11 +105,11 @@ void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx
         return;
     }
 
-    int image_id = map_image_at(grid_offset);
+    //int image_id = map_image_at(grid_offset);
     building* b = building_at(grid_offset);
-    if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED) {
-        ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42);
-    }
+    //if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED) {
+    //    ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42);
+    //}
 
     if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
         return;

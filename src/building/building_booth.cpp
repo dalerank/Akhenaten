@@ -155,8 +155,10 @@ bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel
 bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
     if (current_params().booth == image_id) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mask);
-        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        command.image_id = image_id;
+        command.pixel = pixel;
+        command.mask = mask;
     }
 
     return false;
