@@ -9,16 +9,16 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-struct figure_trader_ship_info_window : public figure_info_window_t<figure_trader_ship_info_window> {
+struct figure_trader_info_window : public figure_info_window_t<figure_trader_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return !!c.figure_get<figure_trade_ship>();
+        return figure_type_any_of(c.nfigure.get(), FIGURE_TRADE_SHIP, FIGURE_TRADE_CARAVAN, FIGURE_TRADE_CARAVAN_DONKEY);
     }
 };
 
-figure_trader_ship_info_window figure_trader_ship_infow;
+figure_trader_info_window figure_trader_infow;
 
-void figure_trader_ship_info_window::init(object_info &c) {
+void figure_trader_info_window::init(object_info &c) {
     figure_info_window::init(c);
 
     figure* f = c.figure_get();
