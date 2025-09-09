@@ -8,6 +8,17 @@
 #include "io/gamefiles/lang.h"
 #include "city/city_message.h"
 
+/** How Tutorial 1 works, from observing the OG game 
+ * 1 - "Food or Famine" pop-up at the 150 citizen mark (unlocks buildings);
+ * 2 - "Fire in the Village" pop-up: Hard and Very Hard, fire breaks in July. Normal breaks in Nov.
+ * Very Easy takes more than 2 years (unlocks building).
+ * 3 - "Water" pop-up triggers: Normal at 100 meat stored, Hard and Very H. at 400. (unlocks building); 
+ * 4 - No need to see the "Fire in the Village" pop-up to complete the mission.
+ * 5 - No damage risk (collapsed building), only fire.
+ * 6 - The fire risk increasing in diff rates per difficulty is not a tutorial thing,
+ * it's part of the difficulty system (played a random mission later in the game and it behaves the same).
+ */
+
 struct tutorial_1 : public tutorial_t {
     virtual int missionid() const override { return 1; }
     virtual void init() override;
@@ -118,7 +129,7 @@ void tutorial1_on_filled_granary(event_granary_resource_added ev) {
     auto granary = building_get(ev.bid)->dcast_granary();
     const int meat_stored = granary ? granary->amount(RESOURCE_GAMEMEAT) : 0;
 
-    if (meat_stored <= g_scenario.vars.get_int("granary_meat_stored", 400)) {
+    if (meat_stored < g_scenario.vars.get_int("granary_meat_stored", 400)) {
         return;
     }
 
@@ -140,11 +151,9 @@ void tutorial1_handle_building_create(event_building_create ev) {
 }
 
 bool tutorial1_is_success() {
-    auto &tut = g_tutorials_flags.tutorial_1;
-    const bool may_finish = (tut.building_burned && tut.building_collapsed && tut.granary_opened && tut.gamemeat_stored);
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
     const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
-    return may_finish && some_days_after_last_action;
+    return some_days_after_last_action;
 }
 
 void tutorial_1::init() {
