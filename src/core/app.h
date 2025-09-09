@@ -1,12 +1,14 @@
 #pragma once
 
+#include "core/event.h"
 #include "core/vec2i.h"
 #include "core/xstring.h"
 
-struct event_app_center_screen { int value; };
-struct event_app_toggle_fullscreen { int value; };
-struct event_app_screenshot { int value; };
-struct event_app_city_screenshot { int value; };
+struct event_app: game_event { int value; event_app(const char *name, const int value): game_event(name, "app"), value(value) {}; };
+struct event_app_center_screen: event_app { explicit event_app_center_screen(const int value): event_app("event_app_center_screen", value) {}; };
+struct event_app_toggle_fullscreen: event_app { explicit event_app_toggle_fullscreen(const int value): event_app("event_app_toggle_fullscreen", value) {}; };
+struct event_app_screenshot: event_app { explicit event_app_screenshot(const int value): event_app("event_app_screenshot", value) {}; };
+struct event_app_city_screenshot: event_app { explicit event_app_city_screenshot(const int value): event_app("event_app_city_screenshot", value) {}; };
 
 enum e_user_event {
     USER_EVENT_QUIT,
