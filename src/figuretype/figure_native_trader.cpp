@@ -17,6 +17,8 @@ void figure_native_trader::figure_action() {
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
+    base.use_cart = true;
+
     switch (action_state()) {
     case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
         base.move_ticks(1);
@@ -86,23 +88,15 @@ void figure_native_trader::figure_action() {
 
 }
 
-void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
-}
-
-const animations_t &figure_native_trader::anim() const {
-    return native_trader_m.anim;
-}
-
 void figure_native_trader::update_animation() {
     figure_impl::update_animation();
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
     }
 
     int cart_img = native_trader_m.anim["cart"].first_img();

@@ -106,11 +106,11 @@ void figure::zebra_action() {
     }
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_149_CORPSE) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + 96 + figure_image_corpse_offset();
+        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + 96 + figure_image_corpse_offset();
     } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
+        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim.frame;
+        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim.frame;
     }
 }
 

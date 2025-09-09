@@ -11,7 +11,7 @@ public:
         int max_amount;
 
         virtual void archive_load(archive arch) override;
-    };
+    } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_before_action() override;
@@ -20,6 +20,4 @@ public:
     virtual void update_animation() override;
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

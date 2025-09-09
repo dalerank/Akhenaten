@@ -5,7 +5,7 @@
 class figure_robber : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_ROBBER, figure_robber)
-        figure_robber(figure *f) : figure_impl(f) {}
+    figure_robber(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}
     virtual void figure_action() override;

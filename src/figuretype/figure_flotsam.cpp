@@ -83,5 +83,5 @@ void figure_flotsam::update_animation() {
     auto &d = runtime_data();
     d.frame = std::min<short>(d.frame++, 2048);
     int cur_frame = std::min<int>(d.frame / 36, 35);
-    base.sprite_image_id = flotsam_m.anim["walk"].first_img() + cur_frame;
+    base.main_image_id = flotsam_m.anim["walk"].first_img() + cur_frame;
 }

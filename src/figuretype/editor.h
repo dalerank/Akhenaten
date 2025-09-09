@@ -1,5 +1,4 @@
-#ifndef FIGURETYPE_EDITOR_H
-#define FIGURETYPE_EDITOR_H
+#pragma once
 
 #include "figure/figure.h"
 
@@ -21,7 +20,3 @@ enum {
 };
 
 void figure_create_editor_flags(void);
-
-// void figure_editor_flag_action();
-
-#endif // FIGURETYPE_EDITOR_H

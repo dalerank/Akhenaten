@@ -11,7 +11,7 @@ public:
 
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual building_plaza *dcast_plaza() override { return this; }
 
