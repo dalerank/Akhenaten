@@ -11,13 +11,14 @@
 #include "grid/terrain.h"
 #include "figure/figure.h"
 #include "city/city_buildings.h"
+#include "figuretype/figure_cartpusher.h"
 
 city_overlay_problems g_city_overlay_problems;
 city_overlay_native g_city_overlay_native;
 
 static int is_problem_cartpusher(figure *fig) {
     if (fig->id > 0) {
-        return fig->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->min_max_seen;
+        return fig->action_state == ACTION_20_CARTPUSHER_INITIAL && fig->min_max_seen;
     } else {
         return 0;
     }
@@ -54,7 +55,7 @@ bool city_overlay_problems::show_figure(const figure *f) const {
     if (f->type == FIGURE_LABOR_SEEKER) {
         return ((figure *)f)->home()->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
-        return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
+        return f->action_state == ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
     } 
 
     return false;

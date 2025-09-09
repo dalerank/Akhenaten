@@ -7,7 +7,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual void cart_update_image() override {}
+    virtual void cart_image_update() override {}
     virtual void update_animation() override;
-    virtual void main_update_image() override {}
+    virtual void main_image_update() override {}
 };

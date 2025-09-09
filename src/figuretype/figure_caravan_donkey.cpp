@@ -50,7 +50,7 @@ void figure_caravan_donkey::figure_action() {
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     int image_id = anim(animkeys().walk).first_img();
-    base.sprite_image_id = image_id + dir + 8 * base.anim.frame;
+    base.main_image_id = image_id + dir + 8 * base.anim.frame;
 }
 
 void figure_caravan_donkey::figure_before_action() {

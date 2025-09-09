@@ -96,12 +96,12 @@ public:
     uint16_t resource_amount_full; // full load counter
 
     uint16_t home_building_id;
-    uint16_t immigrant_home_building_id;
     uint16_t destination_building_id;
 
     figure_id id;
-    uint16_t sprite_image_id;
+    uint16_t main_image_id;
     uint16_t cart_image_id;
+    bool use_cart;
     animation_context anim;
     bool is_enemy_image;
 
@@ -159,7 +159,8 @@ public:
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
     uint8_t migrant_num_people;
-    bool is_drawn;
+    bool is_main_drawn;
+    bool is_cart_drawn;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;
     short leading_figure_id;
@@ -191,7 +192,8 @@ public:
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
-    vec2i cached_pos;
+    vec2i main_cached_pos;
+    vec2i cart_cached_pos;
 
     // pharaoh
 
@@ -199,11 +201,7 @@ public:
     unsigned char routing_try_reroute_counter;
     uint16_t collecting_item_max;
     unsigned short sender_building_id;
-    short market_lady_resource_image_offset;
-    // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF
-    short market_lady_returning_home_id;
-    // 14 bytes 00 00 00 00 00 00 00 ...
-    short market_lady_bought_amount;
+
     // 115 bytes
     uint8_t draw_mode;
     char festival_remaining_dances;
@@ -260,6 +258,7 @@ public:
     inline bool is_alive() { return state == FIGURE_STATE_ALIVE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
+    bool has_cart() const;
 
     inline void set_state(e_figure_state s) { state = s; };
     void bind(io_buffer* iob);
@@ -271,9 +270,6 @@ public:
     building* destination();
     const int homeID() const {
         return home_building_id;
-    }
-    const int immigrant_homeID() const {
-        return immigrant_home_building_id;
     }
     const int destinationID() const {
         return destination_building_id;
@@ -311,13 +307,14 @@ public:
 
     // city_figure.c
     void draw_debug();
-    vec2i adjust_pixel_offset(const vec2i &pixel);
+    vec2i adjust_pixel_offset(const vec2i pixel);
+    vec2i main_sprite_pixel() const;
+    vec2i cart_sprite_pixel() const;
     //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void city_draw_figure(painter &ctx, int highlight, vec2i* coord_out = nullptr);
+    void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
+    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
+    void city_draw_figure(painter &ctx, int highlight);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c
@@ -380,8 +377,7 @@ public:
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
     int get_carrying_amount();
-    void determine_deliveryman_destination_food();
-    void cart_update_image();
+    void cart_image_update();
     
     int trader_total_bought();
     int trader_total_sold();
@@ -475,10 +471,10 @@ public:
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
-    virtual figure_phrase_t phrase() const { return {FIGURE_NONE, ""}; }
+    virtual figure_phrase_t phrase() const { return { FIGURE_NONE, "" }; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
@@ -488,8 +484,8 @@ public:
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
-    virtual void cart_update_image() { base.cart_update_image(); }
-    virtual void main_update_image();
+    virtual void cart_image_update() { base.cart_image_update(); }
+    virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return params().anim; }
     virtual const static_params &params() const { return params(type()); }
@@ -498,6 +494,9 @@ public:
     virtual void on_config_reload() {}
     virtual void on_update_home() {}
     virtual xstring action_tip() const { static xstring tip(""); return tip; }
+    virtual void debug_show_properties() {}
+    virtual void debug_draw() {}
+    virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);

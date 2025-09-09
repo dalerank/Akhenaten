@@ -263,7 +263,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x0, y + 5, 0, "", b->road_access.x(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             debug_text(ctx, str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
-                auto tile_coords = tile_to_pixel(b->road_access);
+                auto tile_coords = lookup_tile_to_pixel(b->road_access);
                 build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
@@ -587,13 +587,8 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i tile, painter &ctx) {
-    int figure_id = map_figure_id_get(tile);
-    while (figure_id) {
-        figure* f = figure_get(figure_id);
-        f->draw_debug();
-        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-    }
+void draw_debug_figures() {
+
 }
 
 void figure::draw_debug() {
@@ -605,7 +600,7 @@ void figure::draw_debug() {
     building *bdest = destination();
 
     uint8_t str[10];
-    vec2i pixel = tile_to_pixel(tile);
+    vec2i pixel = lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
     pixel.x -= 10;
     pixel.y -= 80;
@@ -620,7 +615,7 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", wait_ticks, COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", roam_length, COLOR_WHITE);
         if (true) {
-            vec2i tp = tile_to_pixel(tile);
+            vec2i tp = lookup_tile_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
@@ -635,13 +630,13 @@ void figure::draw_debug() {
     if (!!(draw_mode & e_figure_draw_routing)) {
         // draw path
         if (routing_path_id) {
-            vec2i coords = tile_to_pixel(destination()->tile);
+            vec2i coords = lookup_tile_to_pixel(destination()->tile);
             build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
-            coords = tile_to_pixel(destination_tile);
+            coords = lookup_tile_to_pixel(destination_tile);
             build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int tx = tile.x();
             int ty = tile.y();
-            coords = tile_to_pixel(tile);
+            coords = lookup_tile_to_pixel(tile);
             ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
@@ -652,16 +647,16 @@ void figure::draw_debug() {
                 int img_index = 10;
                 auto pdir = figure_route_get_direction(routing_path_id, i);
                 switch (pdir) {
-                case 0: ty--; break;
+                case 0: ty--; img_index = 0; break;
                 case 1: tx++; ty--; break;
                 case 2: tx++; img_index = 1; break;
                 case 3: tx++; ty++; break;
                 case 4: ty++; img_index = 0; break;
                 case 5: tx--; ty++; break;
-                case 6: tx--; break;
+                case 6: tx--; img_index = 1; break;
                 case 7: tx--; ty--; break;
                 }
-                coords = tile_to_pixel(tile2i(tx, ty));
+                coords = lookup_tile_to_pixel(tile2i(tx, ty));
                 ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + img_index, coords.x, coords.y);
             }
         }
@@ -713,8 +708,6 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(immigrant_home_building_id)->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
     }
 
     if (!!(draw_mode & e_figure_draw_festival)) {
@@ -730,11 +723,11 @@ void figure::draw_debug() {
         if (use_cross_country) {
             vec2i tp;
             if (tile.grid_offset() != -1) {
-                tp = tile_to_pixel(tile);
+                tp = lookup_tile_to_pixel(tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_GREEN);
             }
             if (destination_tile.grid_offset() != -1) {
-                tp = tile_to_pixel(destination_tile);
+                tp = lookup_tile_to_pixel(destination_tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_FONT_YELLOW);
             }
         }
@@ -758,6 +751,8 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_delta.y, col);
         pixel.y += 10;
     }
+
+    dcast()->debug_draw();
 }
 
 bstring256 get_terrain_type(pcstr def, tile2i tile) {
@@ -1275,7 +1270,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());
 
         debug_text_a(ctx, str, x + 180, y + 195, 50, get_terrain_type("type: ", point));
-        pixel = tile_to_pixel(point);
+        pixel = lookup_tile_to_pixel(point);
         debug_text(ctx, str, x, y + 205, 50, "pixel:", pixel.x);
         debug_text(ctx, str, x + 40, y + 205, 50, "", pixel.y);
 

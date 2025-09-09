@@ -52,7 +52,7 @@ void figure_standard_bearer::setup_flag_animation() {
     }
 }
 
-void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlight, vec2i *coord_out) {
+void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlight) {
     if (formation_get(base.formation_id)->in_distant_battle) {
         return;
     }
@@ -70,7 +70,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     const vec2i flag_offset = vec2i(0, -flag->height);
     //if (m->is_halted) 
     {
-        ImageDraw::img_generic(ctx, base.sprite_image_id, pixel + pole_offset + flag_offset);
+        ImageDraw::img_generic(ctx, base.main_image_id, pixel + pole_offset + flag_offset);
     }
 
     // top icon
@@ -83,6 +83,6 @@ void figure_standard_bearer::before_poof() {
     setup_flag_animation();
 }
 
-void figure_standard_bearer::main_update_image() {
-    base.sprite_image_id = base.anim.start() + base.anim.current_frame();
+void figure_standard_bearer::main_image_update() {
+    base.main_image_id = base.anim.start() + base.anim.current_frame();
 }
