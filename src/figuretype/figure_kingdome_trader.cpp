@@ -209,12 +209,7 @@ xstring figure_trade_caravan::action_tip() const {
     switch (action_state()) {
     case ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
     case ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
-    case ACTION_103_TRADE_CARAVAN_LEAVING:
-        if (trader_has_traded(base.trader_id))
-            text_id = 11;
-        else
-            text_id = 13;
-        break;
+    case ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(base.trader_id) ? 11 : 13; break;
     default:
         text_id = 11;
         break;
