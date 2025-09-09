@@ -148,6 +148,7 @@ struct console_var_bool {
     bool value;
     console_var_bool(pcstr name, bool init);
     bool operator()() const { return value; }
+    bool operator!() const { return !value; }
 };
 
 struct console_ref_bool {

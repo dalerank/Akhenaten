@@ -125,7 +125,10 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
         const auto &canim = anim(animkeys().wood);
-        ImageDraw::img_generic(ctx, canim.first_img() + amount, point + canim.pos, mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = canim.first_img() + amount;
+        command.pixel = point + canim.pos;
+        command.mask = mask;
     }
     return true;
 }

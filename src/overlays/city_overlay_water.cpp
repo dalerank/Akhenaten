@@ -46,8 +46,10 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
         if (building_at(tile)->type == BUILDING_ROADBLOCK) {
             city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         } else if (map_property_is_draw_tile(tile)) {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
-            ImageDraw::isometric_from_drawtile_top(ctx, map_image_at(tile), pixel, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            command.image_id = map_image_at(tile);
+            command.pixel = pixel;
+            command.mask = COLOR_MASK_NONE;
         }
     } else {
         int terrain = map_terrain_get(tile);
