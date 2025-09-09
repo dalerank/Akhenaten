@@ -34,6 +34,7 @@ class figure_worker;
 class figure_soldier;
 class figure_fishing_boat;
 class figure_fishing_point;
+class figure_trade_caravan;
 class figure_caravan_donkey;
 class figure_transport_ship;
 class figure_stonemason;
@@ -516,6 +517,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
     ALLOW_SMART_CAST_FIGURE_I(fishing_point)
     ALLOW_SMART_CAST_FIGURE_I(caravan_donkey)
+    ALLOW_SMART_CAST_FIGURE_I(trade_caravan)
     ALLOW_SMART_CAST_FIGURE_I(warship)
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
@@ -585,6 +587,7 @@ GENERATE_SMART_CAST_FIGURE(fishing_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
+GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
 

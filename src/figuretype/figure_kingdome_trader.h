@@ -19,6 +19,8 @@ public:
     FIGURE_METAINFO(FIGURE_TRADE_CARAVAN, figure_trade_caravan);
     figure_trade_caravan(figure *f) : figure_trader(f) {}
 
+    virtual figure_trade_caravan *dcast_trade_caravan() override { return this; }
+
     struct static_params : figures::model_t<figure_trade_caravan> {
         int wait_ticks_after_create;
         virtual void archive_load(archive arch) override;
