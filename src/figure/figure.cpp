@@ -565,7 +565,11 @@ vec2i figure::cart_sprite_pixel() const {
 
 void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
-    ImageDraw::img_sprite(ctx, cart_image_id, pixel);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    command.image_id = cart_image_id;
+    command.pixel = pixel;
+    command.mask = COLOR_MASK_NONE;
+
     is_cart_drawn = true;
 }
 
@@ -803,23 +807,11 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
     y_correction = dcast()->y_correction(y_correction);
 
     const image_t *img = is_enemy_image ? image_get_enemy(PACK_ENEMY_ASSYRIAN, main_image_id) : image_get(main_image_id);
-    ImageDraw::img_sprite(ctx, main_image_id, pixel + vec2i{ x_correction, y_correction }, COLOR_MASK_NONE);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    command.image_id = main_image_id;
+    command.pixel = pixel + vec2i{ x_correction, y_correction };
+    command.mask = COLOR_MASK_NONE;
 }
-
-//void figure::draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight) {
-//    draw_figure_cart(ctx, pixel, highlight);
-//    draw_figure_main(ctx, pixel, highlight);
-//
-//    // return; // pharaoh doesn't draw carts on top - to rework maybe later..?
-//    // 
-//    // if (cart_offset.y >= 0) {
-//    //     draw_figure_main(ctx, pixel, highlight, coord_out);
-//    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
-//    // } else {
-//    //     draw_figure_cart(ctx, pixel, highlight, coord_out);
-//    //     draw_figure_main(ctx, pixel, highlight, coord_out);
-//    // }
-//}
 
 void figure::city_draw_figure(painter &ctx, int highlight) {
     // This is to update the sprite's direction when rotating the city view.
@@ -845,9 +837,9 @@ void figure::city_draw_figure(painter &ctx, int highlight) {
         }
     } else {
         draw_figure_main(ctx, main_cached_pos, highlight);
-        if (!is_enemy_image && highlight) {
-            ImageDraw::img_sprite(ctx, main_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
-        }
+        //if (!is_enemy_image && highlight) {
+        //    ImageDraw::img_sprite(ctx, main_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
+        //}
     }
 
     is_main_drawn = true;

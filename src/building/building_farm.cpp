@@ -188,7 +188,11 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
     context.frame = d.worker_frame;
     context.update(false);
     d.worker_frame = context.frame;
-    ImageDraw::img_sprite(ctx, context.start() + direction + 8 * context.current_frame(), coords + context.pos, color_mask);
+
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    command.image_id = context.start() + direction + 8 * context.current_frame();
+    command.pixel = coords + context.pos;
+    command.mask = color_mask;
 }
 
 static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
@@ -204,13 +208,19 @@ void building_farm::draw_crops(painter &ctx, e_building_type type, int progress,
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
-            ImageDraw::img_from_below(ctx, image_crops + growth_offset, point.x + FARM_TILE_OFFSETS_FLOODPLAIN[i].x, point.y + FARM_TILE_OFFSETS_FLOODPLAIN[i].y, color_mask);
+
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
+            command.image_id = image_crops + growth_offset;
+            command.pixel = { point.x + FARM_TILE_OFFSETS_FLOODPLAIN[i].x, point.y + FARM_TILE_OFFSETS_FLOODPLAIN[i].y };
+            command.mask = color_mask;
         }
     } else { // on dry meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
-
-            ImageDraw::img_from_below(ctx, image_crops + growth_offset, point.x + FARM_TILE_OFFSETS_MEADOW[i].x, point.y + FARM_TILE_OFFSETS_MEADOW[i].y, color_mask);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
+            command.image_id = image_crops + growth_offset;
+            command.pixel = { point.x + FARM_TILE_OFFSETS_MEADOW[i].x, point.y + FARM_TILE_OFFSETS_MEADOW[i].y };
+            command.mask = color_mask;
         }
     }
 }

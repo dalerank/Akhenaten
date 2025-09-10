@@ -101,20 +101,31 @@ bool city_overlay_native::draw_custom_footprint(vec2i pixel, tile2i tile, painte
         if (map_terrain_is(tile, TERRAIN_BUILDING))
             city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
         else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pixel;
+            command.mask = COLOR_MASK_NONE;
         }
     } else if (map_terrain_is(tile, TERRAIN_CANAL | TERRAIN_WALL)) {
         // display groundwater
-        int image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(tile) & 7);
-        ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, 0);
-    } else if (map_terrain_is(tile, TERRAIN_BUILDING))
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_EMPTY_LAND) + (map_random_get(tile) & 7);
+        command.pixel = pixel;
+        command.mask = COLOR_MASK_NONE;
+    } else if (map_terrain_is(tile, TERRAIN_BUILDING)) {
         city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
-    else {
+    } else {
+        int image_id = 0;
         if (map_property_is_native_land(tile)) {
-            ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1, pixel, 0);
+            image_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY) + 1;
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pixel, 0);
+            image_id = map_image_at(tile);
         }
+
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id;
+        command.pixel = pixel;
+        command.mask = COLOR_MASK_NONE;
     }
 
     return true;

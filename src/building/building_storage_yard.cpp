@@ -292,7 +292,10 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
     draw_normal_anim(ctx, point, tile, color_mask);
 
     const auto &cover = anim("cover");
-    ImageDraw::img_generic(ctx, cover.first_img(), point + cover.pos , color_mask);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = cover.first_img();
+    command.pixel = point + cover.pos;
+    command.mask = color_mask;
 
     return true;
 }

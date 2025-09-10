@@ -22,13 +22,13 @@ mission0 = { // Nubt
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [
-		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD, BUILDING_WATER_SUPPLY
+		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD
 	]
 
 	fire_damage : {
-		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +20}
-		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}	
-		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +0, collapse: +0}
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
 	}
 
 	stages : {

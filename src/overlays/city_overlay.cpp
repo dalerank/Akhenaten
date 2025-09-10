@@ -184,7 +184,10 @@ void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int s
                 shape_offset = 2;
             }
 
-            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, tp, color_mask);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = image_base + shape_offset;
+            command.pixel = tp;
+            command.mask = color_mask;
         }
     }
 }
@@ -199,12 +202,21 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     if (show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = map_image_at(tile);
+                command.pixel = pos;
+                command.mask = COLOR_MASK_NONE;
             } else if (map_property_is_draw_tile(tile)) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = map_image_at(tile);
+                command.pixel = pos;
+                command.mask = COLOR_MASK_NONE;
             }
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pos;
+            command.mask = COLOR_MASK_NONE;
         }
     } else {
         bool draw = true;

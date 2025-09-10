@@ -863,7 +863,7 @@ building_storage_yard = {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
     base : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
     cover : { pos : [-5, -42], pack:PACK_GENERAL, id:82, offset:17 }
-    work : { pos : [20, 25], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 }
+    work : { pos : [10, -10], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 }
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   info_help_id : 4

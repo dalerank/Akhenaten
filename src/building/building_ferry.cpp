@@ -44,7 +44,11 @@ void building_ferry::update_map_orientation(int orientation) {
 bool building_ferry::force_draw_height_tile(painter &ctx, tile2i t, vec2i pixel, color mask) {
     if (this->main()->tile() == t) {
         int image_id = map_image_at(t);
-        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel + vec2i{-30, 15}, mask);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+        command.image_id = image_id;
+        command.pixel = pixel + vec2i{ -30, 15 };
+        command.mask = mask;
 
         return true;
     }
