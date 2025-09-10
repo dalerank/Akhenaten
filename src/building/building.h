@@ -418,7 +418,7 @@ private:
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                    \
-    const type& runtime_data() const { return *(type*)this->base.runtime_data; }    
+    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(building::runtime_data)); return *(type*)this->base.runtime_data; }
 
 #define BUILDING_RUNTIME_DATA_T BUILDING_RUNTIME_DATA(runtime_data_t)
 
@@ -527,6 +527,7 @@ public:
     virtual textid get_tooltip() const { return {0, 0}; }
     virtual int ready_production() const { return params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
+    virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
     virtual const static_params &params() const { return params(type()); }
     virtual const static_params &params() { return params(type()); }

@@ -1131,22 +1131,22 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
-    booth : {pack:PACK_GENERAL, id:114},
-    square : {pack:PACK_GENERAL, id:58},
-    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
-    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
-    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
-    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
-    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
-    musician_sn : { pos : [45, 7], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11 },
-    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 }
-  },
-  labor_category : LABOR_CATEGORY_ENTERTAINMENT,
-  fire_proof: true,
-  window_info_height_id : 3,
-  info_help_id:72,
-  info_text_id:71,
-  building_size : 3,
+    booth : {pack:PACK_GENERAL, id:114}
+    square : {pack:PACK_GENERAL, id:58}
+    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
+    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0}
+    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1}
+    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2}
+    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3}
+    musician_sn : { pos : [-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
+    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
+  }
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  fire_proof: true
+  window_info_height_id : 3
+  info_help_id:72
+  info_text_id:71
+  building_size : 3
 }
 
 building_pavilion = {

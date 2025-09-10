@@ -789,7 +789,7 @@ bool building_is_farm(e_building_type type) {
 }
 
 bool building_is_floodplain_farm(building &b) {
-    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
+    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN));
 }
 
 bool building_is_workshop(int type) {
@@ -1076,19 +1076,24 @@ void building_impl::update_count() const {
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
-    if (!base.anim.valid()) {
-        return;
-    }
-
     if (!can_play_animation()) {
         return;
     }
 
-    vec2i pos = pixel + base.anim.pos;
-    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-    command.image_id = base.anim.start() + base.anim.current_frame();
+    draw_normal_anim(ctx, base.anim, pixel, tile, mask);
+}
+
+void building_impl::draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i pixel, tile2i tile, color mask) {
+    if (!ranim.valid()) {
+        return;
+    }
+
+    vec2i pos = pixel + ranim.pos;
+    auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = ranim.start() + ranim.current_frame();
     command.pixel = pos;
     command.mask = mask;
+    command.flags = ranim.flags;
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
