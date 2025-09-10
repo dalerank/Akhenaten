@@ -52,7 +52,7 @@ static int category_for_int_arr[300] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 290
 };
 
-static int category_for_int_arr_ph[300] = {
+static int category_for_int_arr_ph[303] = {
   // houses
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10

@@ -10,6 +10,10 @@ public:
     figure_caravan_donkey(figure *f) : figure_impl(f) {}
     figure_caravan_donkey *dcast_caravan_donkey() override { return this; }
 
+    struct static_params : figure_model {
+        virtual void archive_load(archive arch) override {}
+    } FIGURE_STATIC_DATA_T;
+
     const empire_city *get_empire_city() const;
 
     virtual void on_create() override {}
@@ -17,6 +21,7 @@ public:
     virtual void figure_before_action() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_CARAVAN_DONKEY, "donkey"}; }
     virtual void update_animation() override;
+    virtual xstring action_tip() const override;
 
-    figure *get_head_of_caravan();
+    figure *get_head_of_caravan() const;
 };

@@ -35,15 +35,23 @@ inline T* figure_get(int id) {
 custom_span<figure *> map_figures();
 
 template<typename ... Args>
-bool figure_type_none_of(figure &f, Args ... args) {
+bool figure_type_none_of(const figure &f, Args ... args) {
     int types[] = { args... };
     return (std::find(std::begin(types), std::end(types), f.type) == std::end(types));
 }
 
-template<typename ... Args>
-bool figure_type_any_of(figure &f, Args ... args) {
+template<typename T, typename ... Args>
+bool figure_type_any_of(const T &f, Args ... args) {
     int types[] = { args... };
-    return (std::find(std::begin(types), std::end(types), f.type) != std::end(types));
+    e_figure_type type;
+    if constexpr (std::is_same_v<e_figure_type, std::decay_t<T>>) {
+        type = f;
+    } else if constexpr (std::is_pointer_v<T>) {
+        type = f ? f->type : FIGURE_NONE;
+    } else {
+        type = f.type;
+    }
+    return (std::find(std::begin(types), std::end(types), type) != std::end(types));
 }
 
 template<typename ... Args, typename T>

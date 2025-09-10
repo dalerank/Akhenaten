@@ -593,13 +593,6 @@ figure_warship_info_window = {
     }
 }
 
-info_window_figure_caravan_donkey = {
-    ui : __baseui(figure_info_window, {
-        bought_items   : text({pos: [40, 180], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
-        sold_items     : text({pos: [40, 210], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
-    })
-}
-
 figure_carrier_info_window = {
     ui : __baseui(figure_info_window, {
         typename             : text({pos: [92, 139], text:"${figure.class_name} ( @Y${figure.home}& )", font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
