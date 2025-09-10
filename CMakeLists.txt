@@ -242,6 +242,8 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
         file(COPY ${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION} DESTINATION ${SDL2_SRC_EXTRACT_PATH})
         set(SDL2_MIXER_SRC_EXTRACT_PATH "${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION}")
         file(COPY ${SDL2_MIXER_SRC_EXTRACT_PATH}/include/SDL_mixer.h DESTINATION ${SDL2_EXTRACT_PATH}/SDL2_mixer-${SDL2_MIXER_VERSION}/include)
+        message("Download SDL2_mixer external dependencies")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E bash external/download.sh)
     endif()
 endif()
 
