@@ -7,15 +7,17 @@
 
 namespace events_history
 {
-    inline void _log_event_to_console(char const* message)
+    inline void _log_event_to_console(std::string const* message)
     {
-        std::cout << message << std::endl;
+        std::cout << message->c_str() << std::endl;
     }
 
-    inline void log_permanent_event (const game_event &event)
+    template<typename EventType>
+    void log_event (EventType const& ev)
     {
-        const char* event_name = event.name;
-        char const* message = (std::string("Permanent event happened with name: ") + std::string(event_name)).c_str();
-        _log_event_to_console(message);
+
+        // const char* event_name = event.name;
+        const std::string message = std::string("Event emitted with type: ") + std::string(typeid(EventType).name());
+        _log_event_to_console(&message);
     }
 }

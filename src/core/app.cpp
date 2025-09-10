@@ -71,8 +71,4 @@ void application_t::subscribe_events() {
     events::subscribe_permanent([] (event_app_city_screenshot ev) {
         graphics_save_screenshot(SCREENSHOT_FULL_CITY);
     });
-
-    events::subscribe_permanent([] (event_app ev) {
-        events_history::log_permanent_event(ev);
-    });
 }
