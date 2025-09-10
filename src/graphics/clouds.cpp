@@ -166,8 +166,7 @@ static void init_cloud_images()
     }
 }
 
-static void generate_cloud(cloud_type *cloud)
-{
+static void generate_cloud(cloud_type *cloud) {
     color pixels[CLOUD_WIDTH * CLOUD_HEIGHT] = {};
 
     const int width = random_from_min_to_range(static_cast<int>((CLOUD_WIDTH * 0.15f)), static_cast<int>((CLOUD_WIDTH * 0.2f)));

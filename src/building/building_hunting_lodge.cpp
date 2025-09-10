@@ -93,7 +93,10 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
         const auto &anim = hunting_lodge_m.anim["gamemeat"];
-        ImageDraw::img_generic(ctx, anim.first_img() + amount, point + anim.pos, color_mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = anim.first_img() + amount;
+        command.pixel = point + anim.pos;
+        command.mask = color_mask;
     }
 
     return true;

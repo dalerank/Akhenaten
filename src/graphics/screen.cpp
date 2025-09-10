@@ -28,19 +28,19 @@ void screen_set_resolution(int width, int height) {
     g_warning_manager.clear_all();
 }
 
-int screen_width(void) {
+int screen_width() {
     return g_screen_data.width;
 }
-int screen_height(void) {
+int screen_height() {
     return g_screen_data.height;
 }
 vec2i screen_size() {
     return {g_screen_data.width, g_screen_data.height};
 }
 
-int screen_dialog_offset_x(void) {
+int screen_dialog_offset_x() {
     return g_screen_data.dialog_offset.x;
 }
-int screen_dialog_offset_y(void) {
+int screen_dialog_offset_y() {
     return g_screen_data.dialog_offset.y;
 }

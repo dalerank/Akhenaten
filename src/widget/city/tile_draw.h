@@ -5,7 +5,9 @@
 #include "grid/point.h"
 
 enum e_render_state {
-    RENDER_TALL_TILE = 1,
+    RENDER_NONE = 0x0,
+    RENDER_TALL_TILE = 0x1,
+    RENDER_TALL_TILE_DRAWN = 0x2,
 };
 
 struct local_render_context_t {
@@ -25,6 +27,8 @@ void map_render_clear();
 
 void map_render_set(tile2i tile, int flag);
 void map_render_set(int grid_offset, int flag);
+void map_render_add(int grid_offset, int flag);
+void map_render_sub(int grid_offset, int flag);
 bool map_render_is(int grid_offset, int render_mask);
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx);
