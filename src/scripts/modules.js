@@ -44,7 +44,8 @@ import ui_top_menu_widget
 import ui_advisor_religion
 import fonts
 import routing
+import ui_bazaar_window
+import ui_advisor_chief
 
-include(":ui_advisor_chief.js")
 include(":ui_advisor_education.js")
 include(":music.js")
