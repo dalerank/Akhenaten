@@ -248,7 +248,6 @@ const labor_category* city_labor_t::category(int category) {
 }
 
 void city_labor_t::set_category(e_building_type type, int category) {
-    std::cout << "TYPE: " << type << " CATEGORY: " << category << std::endl;
     category_for_int_arr_ph[type] = category;
 }
 
