@@ -4,6 +4,7 @@
 
 #include "graphics/image_desc.h"
 #include "graphics/image.h"
+#include "graphics/graphics.h"
 
 int animation_t::global_hashtime = 0;
 
@@ -19,6 +20,8 @@ void animation_t::load(archive arch) {
     start_frame = arch.r_int("start_frame", 0);
     reverse = arch.r_bool("reverse", false);
     hashtime = global_hashtime;
+    bool internal_offset = arch.r_bool("internal_offset", false);
+    flags = (internal_offset ? ImgFlag_InternalOffset : 0);
 }
 
 int animation_t::first_img() const {
@@ -52,6 +55,7 @@ void animation_context::setup(const animation_t &anim) {
     is_reverse = anim.reverse;
     can_reverse = is_reverse || anim.can_reverse;
     hashtime = anim.hashtime;
+    flags = anim.flags;
 }
 
 void animation_context::update(bool refresh_only) {

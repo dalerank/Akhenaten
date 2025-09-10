@@ -429,11 +429,11 @@ public:
 #define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
     using figure_model = figures::model_t<self_type>;           \
     static constexpr pcstr CLSID = #clsid;                      \
-    static constexpr e_figure_type TYPE = type;            
+    static constexpr e_figure_type TYPE = type;                                               
 
 #define FIGURE_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                  \
-    const type& runtime_data() const { return *(type*)this->base.runtime_data; }  
+    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(figure::runtime_data)); return *(type*)this->base.runtime_data; }  
 
 #define FIGURE_RUNTIME_DATA_T FIGURE_RUNTIME_DATA(runtime_data_t)
 
