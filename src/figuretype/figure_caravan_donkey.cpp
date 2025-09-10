@@ -69,16 +69,17 @@ figure* figure_caravan_donkey::get_head_of_caravan() const {
 }
 
 xstring figure_caravan_donkey::action_tip() const {
-    int text_id = 0;
     figure *f = get_head_of_caravan();
     switch (f->action_state) {
-    case ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
-    case ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
-    case ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(base.trader_id) ? 11 : 13; break;
+    case ACTION_101_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
+    case ACTION_102_TRADE_CARAVAN_TRADING: return "#trader_trading_goods"; 
+    case ACTION_103_TRADE_CARAVAN_LEAVING: 
+        return trader_has_traded(base.trader_id) 
+                    ? "#trader_returning_home" 
+                    : "#trader_nothing_to_trage";
     default:
-        text_id = 11;
-        break;
+        return "#trader_returning_home";
     }
 
-    return { ui::str(129, text_id) };
+    return "#trader_unknown";
 }

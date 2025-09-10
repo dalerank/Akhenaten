@@ -321,13 +321,12 @@ void figure_trade_ship::update_day() {
 }
 
 xstring figure_trade_ship::action_tip() const {
-    int text_id = 0;
     switch (action_state()) {
-    case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED: text_id = 6; break;
-    case FIGURE_ACTION_112_TRADE_SHIP_MOORED: text_id = 7; break;
-    case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: text_id = 8; break;
-    default: text_id = 9; break;
+    case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED: return "#trader_ship_waiting_free_dock";
+    case FIGURE_ACTION_112_TRADE_SHIP_MOORED: return "#trader_ship_docking_trading";
+    case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: return "#trader_ship_returning_home";
+    default: return "#trader_ship_sailing_dock";
     }
 
-    return { ui::str(129, text_id) };
+    return "#trade_ship_unknown";
 }
