@@ -24,6 +24,7 @@ import images_remap
 import ui_overlay_menu
 import imagepaks
 import missions
+import mission_8_selima
 import figures
 import ui_hold_festival_window
 import localization
@@ -46,6 +47,7 @@ import fonts
 import routing
 import ui_bazaar_window
 import ui_advisor_chief
+import ui_mission_briefing_window
 
 include(":ui_advisor_education.js")
 include(":music.js")

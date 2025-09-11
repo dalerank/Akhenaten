@@ -22,8 +22,10 @@ int scenario_criteria_survival_years() {
 }
 
 int winning_population() {
-    if (!g_scenario.win_criteria.population.enabled)
+    if (!g_scenario.win_criteria.population.enabled) {
         return 0;
+    }
+
     return g_scenario.win_criteria.population.goal;
 }
 
