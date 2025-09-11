@@ -47,8 +47,8 @@ namespace events_history
     {
         const char* event_name = typeid(EventType).name();
         // TODO: Replace placeholders with actual source and misc info
-        event_history_record_s record = {time(nullptr), event_name, std::string(), std::string()};
-        const std::string message = std::string("Event emitted with type: ") + std::string(event_name);
+        const event_history_record_s record = {time(nullptr), event_name, std::string(), std::string()};
+        event_history.events.push_back(record);
     }
 
     inline std::vector<std::string> get_history_lines()
