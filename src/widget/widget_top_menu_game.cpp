@@ -256,14 +256,14 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
 
 void top_menu_widget::debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
-    g_debug_render = (opt == g_debug_render) ? 0 : opt;
+    set_debug_render_mode((opt == debug_render_mode()) ? e_debug_render_none : e_debug_render(opt));
     auto *render = headers["debug_render"].dcast_menu_header();
     if (!render) {
         return;
     }
 
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, render->impl.items[i].text, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
     }
 }
 
@@ -474,7 +474,7 @@ void top_menu_widget::set_text_for_debug_render() {
     }
 
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, render->impl.items[i].text, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
     }
 }
 

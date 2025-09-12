@@ -45,19 +45,19 @@
 #include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
 
-int g_debug_tile = 0;
-int g_debug_render = 0;
+#include "js/js_game.h"
+
 int debug_range_3 = 0;
 int debug_range_4 = 0;
 int g_debug_figure_id = 0;
-int g_debug_building_id = 0;
 
 game_debug_t g_debug;
 
-declare_console_command_p(debugrender) {
-    std::string args; is >> args;
-    g_debug_render  = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-};
+const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
+
+declare_console_var_int(debugrender, 0);
+declare_console_var_int(debugtile, 0);
+declare_console_var_int(debugbuildingid, 0);
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
@@ -209,7 +209,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     int x = pixel.x;
     int y = pixel.y;
 
-    int DB2 = abs(g_debug_render) % e_debug_render_size;
+    int DB2 = abs(debug_render_mode()) % e_debug_render_size;
 
     if (DB2 == 0)
         return;
@@ -505,10 +505,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
-    case e_debug_render_marshland_depl: // MARSHLAND DEPLETION
-        d = map_get_vegetation_growth(grid_offset);
-        if (d != 255) {
-            debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+    case e_debug_render_vegetation_growth: // MARSHLAND DEPLETION
+        if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND | TERRAIN_TREE)) {
+            d = map_get_vegetation_growth(grid_offset);
+            debug_text(ctx, str, x, y + 10, 0, "", d, (d < 200) ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
         }
         break;
 
@@ -754,6 +754,22 @@ void figure::draw_debug() {
     dcast()->debug_draw();
 }
 
+void set_debug_building_id(int bid) {
+    debugbuildingid.value = bid;
+}
+
+int get_debug_building_id() {
+    return debugbuildingid();
+}
+
+e_debug_render debug_render_mode() {
+    return (e_debug_render)debugrender.value;
+}
+
+void set_debug_render_mode(e_debug_render mode) {
+    debugrender.value = mode;
+}
+
 bstring256 get_terrain_type(pcstr def, tile2i tile) {
     int type = map_terrain_get(tile.grid_offset());
 
@@ -803,8 +819,8 @@ void draw_debug_ui(int x, int y) {
     /////// DEBUG PAGES NAME
     if (g_debug_show_opts[e_debug_show_pages]) {
         y += 13;
-        int DB1 = abs(g_debug_tile) % 7;
-        int DB2 = abs(g_debug_render) % 20;
+        int DB1 = abs(debugtile()) % 7;
+        int DB2 = abs(debugrender()) % 20;
 
         color col = COLOR_GREEN;
 
@@ -1431,10 +1447,10 @@ console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
 
 void game_debug_t::init() {
     events::subscribe([] (event_debug_tile_change ev) {
-        g_debug_tile += ev.value;
+        debugtile.value += ev.value;
     });    
     
     events::subscribe([] (event_debug_render_change ev) {
-        g_debug_render += ev.value;
+        debugrender.value += ev.value;
     });
 }
