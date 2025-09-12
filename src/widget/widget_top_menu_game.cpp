@@ -236,7 +236,7 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
 
     case e_debug_show_properties: 
         game.debug_properties = !game.debug_properties;
-        g_debug_show_opts[opt] = game.debug_properties;
+        set_debug_draw_option(opt, game.debug_properties);
         widget_top_menu_clear_state();
         window_go_back();
         debug_opt_text(e_debug_show_properties, game.debug_properties );
@@ -245,12 +245,12 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
     case e_debug_write_video: 
         game.set_write_video(!game.get_write_video());
         debug_opt_text(e_debug_write_video, game.get_write_video());
-        g_debug_show_opts[opt] = game.get_write_video();
+        set_debug_draw_option(opt, game.get_write_video());
         break;
 
     default:
-        g_debug_show_opts[opt] = !g_debug_show_opts[opt];
-        debug_opt_text(opt, g_debug_show_opts[opt]);
+        set_debug_draw_option(opt, !get_debug_draw_option(opt));
+        debug_opt_text(opt, get_debug_draw_option(opt));
     }
 }
 
@@ -463,7 +463,7 @@ void top_menu_widget::set_text_for_warnings() {
 void top_menu_widget::set_text_for_debug_city() {
     auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
-        debug_opt_text(i, g_debug_show_opts[i]);
+        debug_opt_text(i, get_debug_draw_option(i));
     }
 }
 
@@ -631,7 +631,7 @@ void top_menu_widget::sub_menu_init() {
         render->onclick([this] (auto &h) { debug_render_change_opt(h); });
     }
 
-    g_debug_show_opts[e_debug_show_properties] = game.debug_properties;
+    set_debug_draw_option(e_debug_show_properties, game.debug_properties);
 
     set_text_for_autosave();
     set_text_for_tooltips();
