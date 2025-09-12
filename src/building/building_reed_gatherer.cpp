@@ -7,7 +7,7 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 
-buildings::model_t<building_reed_gatherer> gatherer_m;
+building_reed_gatherer::static_params reed_gatherer_m;
 
 void building_reed_gatherer::on_create(int orientation) {
     runtime_data().max_gatheres = 1;

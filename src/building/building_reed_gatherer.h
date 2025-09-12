@@ -8,6 +8,9 @@ public:
 
     virtual building_reed_gatherer *dcast_reed_gatherer() override { return this; }
 
+    struct static_params : public building_model {
+    } BUILDING_STATIC_DATA_T;
+
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
