@@ -6,7 +6,7 @@
 
 #include "grid/routing/routing.h"
 
-figure_reed_gatherer::static_params reed_gatherer_m;
+figure_reed_gatherer::static_params figure_reed_gatherer_m;
 
 void figure_reed_gatherer::static_params::archive_load(archive arch) {
     max_amount = arch.r_int("max_amount");
@@ -71,7 +71,7 @@ void figure_reed_gatherer::figure_action() {
 
     case ACTION_11_REED_GATHERER_RETURN_HOME: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
-            home()->stored_amount_first += reed_gatherer_m.max_amount;
+            home()->stored_amount_first += current_params().max_amount;
         }
         break;
     }

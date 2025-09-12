@@ -65,7 +65,7 @@ enum e_debug_render {
     e_debug_render_monuments = 23,
     e_debug_render_figures = 24,
     e_debug_render_height = 25,
-    e_debug_render_marshland_depl = 26,
+    e_debug_render_vegetation_growth = 26,
     e_debug_render_damage_fire = 27,
     e_debug_render_desirability = 28,
     e_debug_render_river_shore = 29,
@@ -81,10 +81,11 @@ enum e_debug_render {
 };
 
 extern bool g_debug_show_opts[e_debug_opt_size];
-extern int g_debug_tile;
-extern int g_debug_render;
 extern int g_debug_figure_id;
-extern int g_debug_building_id;
+void set_debug_building_id(int bid);
+int get_debug_building_id();
+e_debug_render debug_render_mode();
+void set_debug_render_mode(e_debug_render mode);
 
 bstring256 get_terrain_type(pcstr def, tile2i tile);
 bstring256 get_terrain_type(pcstr def, int type);

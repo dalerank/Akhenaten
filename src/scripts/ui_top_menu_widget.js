@@ -105,7 +105,7 @@ top_menu_widget = {
 	    monuments 		: menu_item({text:"xxx Monuments", parameter:23}),
 	    figures 		: menu_item({text:"xxx Figures", parameter:24}),
 	    height 			: menu_item({text:"xxx Height", parameter:25}),
-	    marshland_depl	: menu_item({text:"xxx Marshland depl", parameter:26}),
+	    marshland_depl	: menu_item({text:"xxx Vegetation Growth", parameter:26}),
 	    damage_fire 	: menu_item({text:"xxx Dmg fire", parameter:27}),
 	    desirability 	: menu_item({text:"xxx Desirability", parameter:28}),
 	    shoreline   	: menu_item({text:"xxx River Shore", parameter:29}),
