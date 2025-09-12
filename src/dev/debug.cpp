@@ -52,6 +52,7 @@ int debug_range_4 = 0;
 int g_debug_figure_id = 0;
 
 game_debug_t g_debug;
+bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
 
@@ -202,6 +203,14 @@ static int north_tile_grid_offset(int x, int y) {
     }
 
     return grid_offset;
+}
+
+bool get_debug_draw_option(int opt) {
+    return g_debug_show_opts[opt];
+}
+
+void set_debug_draw_option(int opt, bool e) {
+    g_debug_show_opts[opt] = e;
 }
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
@@ -505,7 +514,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
-    case e_debug_render_vegetation_growth: // MARSHLAND DEPLETION
+    case e_debug_render_vegetation_growth:
         if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND | TERRAIN_TREE)) {
             d = map_get_vegetation_growth(grid_offset);
             debug_text(ctx, str, x, y + 10, 0, "", d, (d < 200) ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
@@ -527,13 +536,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
-    case e_debug_render_desirability: // FIRE
+    case e_debug_render_desirability:
         if (g_desirability.get(grid_offset) != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", g_desirability.get(grid_offset), COLOR_LIGHT_RED);
         }
         break;
 
-    case e_debug_render_marshland: // MARSHLAND
+    case e_debug_render_marshland:
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
@@ -809,8 +818,6 @@ bstring256 get_terrain_type(pcstr def, int type) {
 
     return buffer;
 }
-
-bool g_debug_show_opts[e_debug_opt_size] = {0};
 
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
