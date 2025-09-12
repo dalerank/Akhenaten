@@ -1032,18 +1032,19 @@ building_reed_gatherer = {
 
 building_wood_cutter = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
-    work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 },
-    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
-  },
-  output_resource : RESOURCE_TIMBER,
-  building_size : 2,
-  window_info_height_id : 1,
-  info_help_id:94,
-  info_text_id:120,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:23 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:23 }
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 }
+    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 }
+  }
+  output_resource : RESOURCE_TIMBER
+  building_size : 2
+  window_info_height_id : 1
+  info_help_id:94
+  info_text_id:120
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
+  max_gatherers : 1
 }
 
 building_small_mastaba = {
