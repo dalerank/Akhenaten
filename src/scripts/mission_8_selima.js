@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 8 selima started")
 
 mission8 = { // Selima
-	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : 149, //The finer things, 247 = 146 + 99 - 1
 	city_has_animals : true
 	player_rank : 1
 	next_mission : 10
@@ -14,7 +14,16 @@ mission8 = { // Selima
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [
+                    BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD,
+					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
+					BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
+                    BUILDING_WOOD_CUTTERS, BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP,
+					BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
+                    BUILDING_RECRUITER, BUILDING_WEAPONSMITH, BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_ARCHERS, BUILDING_FORT_INFANTRY,
+                    BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
+					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
+                    BUILDING_SCRIBAL_SCHOOL,
 				]
 
 	stages : { // 
@@ -24,6 +33,44 @@ mission8 = { // Selima
 		population_enabled : true
 		population_goal : 2500
 	}
+
+    cities : [
+		{
+			name : "Kerma",
+			is_sea_trade : false,
+            // sell Ebony
+            // buys linen, jewelry
+		},
+
+		{
+			name : "Behdet",
+			is_sea_trade : false,
+            // sell fish, clay, pottery, beer, flax, papyrus, granite
+            // buys bricks, linen, gems, jewelry, tibmer
+		},
+
+        {
+			name : "Abedju",
+			is_sea_trade : false,
+            // sell fish, grain, beer, linen, limestone
+            // buys gamemeat, clay, bricks, wood, papyrus, sunstone, limestone
+		},
+
+        {
+			name : "Men-nefer",
+            is_sea_trade : false,
+            // sell chickpeas, pottery, papyrus
+            // buys bricks, barley, beer, jewelry 
+		},
+
+        
+        {
+			name : "Timna",
+            is_sea_trade : false,
+            // sell weapons, clay, pottery, copper
+            // buys fish, beer, linen, papyrus
+		},
+	]
 
 	choice : [
 		{
