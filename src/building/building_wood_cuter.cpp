@@ -12,10 +12,14 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 
-buildings::model_t<building_wood_cutter> bwood_cutter_m;
+building_wood_cutter::static_params bwood_cutter_m;
+
+void building_wood_cutter::static_params::archive_load(archive arch) {
+    max_gatherers = arch.r_int("max_gatherers", 1);
+}
 
 void building_wood_cutter::on_create(int orientation) {
-    runtime_data().max_gatheres = 1;
+    runtime_data().max_gatheres = current_params().max_gatherers;
 }
 
 void building_wood_cutter::bind_dynamic(io_buffer *iob, size_t version) {
@@ -72,17 +76,24 @@ void building_wood_cutter::spawn_figure() {
     }
 }
 
+bool building_wood_cutter::can_play_animation() const {
+    if (base.stored_amount() < 100) {
+        return false;
+    }
+
+    return building_industry::can_play_animation();
+}
+
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &anim = bwood_cutter_m.anim["work"];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     int amount = ceil((float)base.stored_amount() / 100.0) - 1;
     if (amount >= 0) {
-        const auto &anim = bwood_cutter_m.anim["wood"];
+        const auto &eanim = anim(animkeys().wood);
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-        command.image_id = anim.first_img() + amount;
-        command.pixel = point + anim.pos;
+        command.image_id = eanim.first_img() + amount;
+        command.pixel = point + eanim.pos;
         command.mask = color_mask;
     }
 
