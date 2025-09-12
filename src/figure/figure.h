@@ -66,8 +66,6 @@ enum e_move_type : uint8_t {
     EMOVE_AMPHIBIAN = 3,
 };
 
-extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
-
 struct nearby_result {
     figure_id fid = 0;
     int distance = 0;

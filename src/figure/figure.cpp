@@ -45,7 +45,9 @@ static const vec2i crowd_offsets[] = {
 constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
 static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
-const token_holder<e_permission, epermission_none, epermission_count> ANK_CONFIG_ENUM(e_permission_tokens);
+
+using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
+const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
 
 const vec2i default_cart_offset{ 0, -7 };
 
