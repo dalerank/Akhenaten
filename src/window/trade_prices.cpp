@@ -59,11 +59,11 @@ void trade_prices_window::ui_draw_foreground(UiFlags flags) {
     vec2i current_pos = items_pos;
     const auto &item_button = ui["item_button"];
     int start_i = 0;
-    for (int i = 1; (start_i + i) < RESOURCES_MAX; i++) {
+    for (e_resource i = RESOURCE_GRAIN; (start_i + i) < RESOURCES_MAX; ++i) {
         int image_offset = i;
         if (i >= next) {
             start_i += next;
-            i = 0;
+            i = RESOURCE_NONE;
             items_pos += next_row_offset;
             current_pos = items_pos;
         }

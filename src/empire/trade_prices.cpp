@@ -1,65 +1,32 @@
 #include "trade_prices.h"
+
 #include "io/io_buffer.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-static auto &city_data = g_city;
-struct trade_price {
-    int32_t buy;
-    int32_t sell;
-};
+trade_price g_default_prices[RESOURCES_MAX] = {};
 
-static const struct trade_price DEFAULT_PRICES[RESOURCES_MAX] = {
-  {0, 0},
-  {28, 21},   // grain
-  {47, 35},   // meat
-  {33, 25},   // lettuce
-  {33, 25},   // chickpeas
-  {33, 25},   // pomegranates
-  {33, 25},   // figs
-  {42, 33},   // fish
-  {44, 34},   // gamemeat
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_default_prices) {
+    g_config_arch.r_array("default_prices", [] (archive arch) {
+        e_resource res = arch.r_type<e_resource>("res");
+        int buy = arch.r_int("buy", 0);
+        int sell = arch.r_int("sell", 0);
+        g_default_prices[res] = { res, buy, sell };
+    });
+}
 
-  {21, 16},   // straw
-  {325, 275}, // weapons
-  {38, 29},   // clay
-  {150, 120}, // bricks
-  {140, 105}, // pottery
-  {48, 37},   // barley
-  {185, 140}, // beer
-  {54, 42},   // flax
-  {210, 160}, // linen
-  {120, 92},  // gems
-  {310, 150}, // luxury goods
-  {225, 170}, // wood
-  {0, 0},     // gold
-  {31, 23},   // reeds
-  {200, 165}, // papyrus
-  {38, 29},   // stone
-  {46, 35},   // limestone
-  {60, 45},   // granite
-  {0, 0},     // unused12
-  {375, 315}, // chariots
-  {240, 185}, // copper
-  {40, 32},   // sandstone
-  {110, 85},  // oil
-  {40, 30},   // henna
-  {155, 116}, // paint
-  {250, 190}, // lamps
-  {72, 54},   // marble
-};
+trade_price prices[RESOURCES_MAX];
 
-static struct trade_price prices[RESOURCES_MAX];
-
-void trade_prices_reset(void) {
+void trade_prices_reset() {
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        prices[i] = DEFAULT_PRICES[i];
+        prices[i] = g_default_prices[i];
     }
 }
 
-int trade_price_change(int resource, int amount) {
+bool trade_price_change(e_resource resource, int amount) {
     if (amount < 0 && prices[resource].sell <= 0) {
         // cannot lower the price to negative
-        return 0;
+        return false;
     }
     if (amount < 0 && prices[resource].sell <= -amount) {
         prices[resource].buy = 2;
@@ -68,18 +35,18 @@ int trade_price_change(int resource, int amount) {
         prices[resource].buy += amount;
         prices[resource].sell += amount;
     }
-    return 1;
+    return true;
 }
 
-int trade_price_buy(int resource) {
+int trade_price_buy(e_resource resource) {
     return prices[resource].buy;
 }
 
-int trade_price_sell(int resource, int bonus_inclusion) {
+int trade_price_sell(e_resource resource, int bonus_inclusion) {
     switch (bonus_inclusion) {
-    case PRICE_WITH_BONUS: return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
+    case PRICE_WITH_BONUS: return prices[resource].sell * (g_city.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
     case PRICE_ONLY_BASE: return prices[resource].sell;
-    case PRICE_ONLY_BONUS: return prices[resource].sell * (city_data.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
+    case PRICE_ONLY_BONUS: return prices[resource].sell * (g_city.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
     }
 
     return 999;

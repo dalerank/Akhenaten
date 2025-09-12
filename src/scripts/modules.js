@@ -48,6 +48,7 @@ import routing
 import ui_bazaar_window
 import ui_advisor_chief
 import ui_mission_briefing_window
+import economic
 
 include(":ui_advisor_education.js")
 include(":music.js")
