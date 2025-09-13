@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "figure/figure_type.h"
 #include "grid/point.h"
+#include "grid/routing/routing_fwd.h"
 #include "graphics/image_desc.h"
 #include "io/io_buffer.h"
 #include "window/building/common.h"
@@ -413,8 +414,7 @@ public:
     // service.c
     int figure_service_provide_coverage();
 
-    // grid/marshland.c
-    bool find_resource_tile(int resource_type, tile2i &out);
+    resource_tile find_resource_tile(e_resource resource);
 
     template<typename T>
     figure_impl *acquire_impl() {

@@ -2,6 +2,14 @@
 
 #include "figure/figure.h"
 
+enum e_reed_gatherer_action {
+    ACTION_8_REED_GATHERER_RECALCULATE = 8,
+    ACTION_9_REED_GATHERER_GOTO_RESOURCE = 9,
+    ACTION_10_REED_GATHERER_WORK = 10,
+    ACTION_11_REED_GATHERER_RETURN_HOME = 11,
+    ACTION_14_REED_GATHERER_CREATED = 14,
+};
+
 class figure_reed_gatherer : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_REED_GATHERER, figure_reed_gatherer)

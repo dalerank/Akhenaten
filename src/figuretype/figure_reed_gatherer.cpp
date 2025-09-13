@@ -21,16 +21,15 @@ void figure_reed_gatherer::figure_before_action() {
 
 void figure_reed_gatherer::figure_action() {
     switch (action_state()) {
-    case ACTION_8_RECALCULATE:
-    case ACTION_14_GATHERER_CREATED: // spawning
+    case ACTION_8_REED_GATHERER_RECALCULATE:
+    case ACTION_14_REED_GATHERER_CREATED: // spawning
         base.anim.frame = 0;
         if (base.wait_ticks++ >= 10) {
-            tile2i dest(-1, -1);
-            bool found_resource = map_routing_citizen_found_reeds(tile(), dest);
+            const auto rtile = map_routing_citizen_found_reeds(tile());
 
-            if (found_resource) {
+            if (rtile.res == RESOURCE_REEDS) {
                 base.anim.offset = 0;
-                do_goto(dest, TERRAIN_USAGE_PREFER_ROADS);
+                do_goto(rtile.tile, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(ACTION_9_REED_GATHERER_GOTO_RESOURCE);
             } else {
                 poof();

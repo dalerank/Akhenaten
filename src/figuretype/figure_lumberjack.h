@@ -2,10 +2,24 @@
 
 #include "figure/figure.h"
 
+enum e_lumberjack_action {
+    ACTION_8_LUMBERJACK_RECALCULATE = 8,
+    ACTION_9_LUMBERJACK_GOTO_RESOURCE = 9,
+    ACTION_10_LUMBERJACK_WORK = 10,
+    ACTION_11_LUMBERJACK_RETURN_HOME = 11,
+    ACTION_14_LUMBERJACK_CREATED = 14,
+};
+
 class figure_lumberjack : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_LUMBERJACK, figure_lumberjack)
     figure_lumberjack(figure *f) : figure_impl(f) {}
+
+    struct static_params : public figure_model {
+        int max_amount;
+
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_before_action() override;

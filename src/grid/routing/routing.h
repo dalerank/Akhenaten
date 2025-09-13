@@ -1,6 +1,8 @@
 #pragma once
 
-#include "building/building.h"
+#include "routing_fwd.h"
+
+class building;
 
 enum e_routed_mode {
     ROUTED_BUILDING_ROAD = 0,
@@ -28,8 +30,8 @@ int map_amphibia_grid(int grid_offset);
 int map_water_grid(int grid_offset);
 
 bool map_routing_citizen_found_terrain(tile2i src, tile2i *dst, int terrain_type);
-bool map_routing_citizen_found_reeds(tile2i src, tile2i &dst);
-bool map_routing_citizen_found_timber(tile2i src, tile2i &dst);
+resource_tile map_routing_citizen_found_reeds(tile2i src);
+resource_tile map_routing_citizen_found_timber(tile2i src);
 
 bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst);
 bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst);

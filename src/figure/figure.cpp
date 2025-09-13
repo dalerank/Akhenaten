@@ -26,6 +26,7 @@
 #include "figure/image.h"
 #include "game/game.h"
 #include "game/game_config.h"
+#include "grid/routing/routing.h"
 #include "js/js_game.h"
 
 #include <string.h>
@@ -110,6 +111,18 @@ int figure::target_is_alive() {
         return 1;
 
     return 0;
+}
+
+resource_tile figure::find_resource_tile(e_resource resource) {
+    switch (resource) {
+    case RESOURCE_REEDS:
+        return map_routing_citizen_found_reeds(tile);
+
+    case RESOURCE_TIMBER:
+        return map_routing_citizen_found_timber(tile);
+    }
+
+    return { RESOURCE_NONE, tile2i::invalid };
 }
 
 static int get_nearest_enemy(int x, int y, int *distance) {
