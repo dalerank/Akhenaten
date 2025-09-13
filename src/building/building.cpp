@@ -746,31 +746,29 @@ void building::remove_figure_by_id(int id) {
     }
 }
 
-figure *building::get_figure(int i) {
+figure *building::get_figure(int i) const {
     return ::figure_get(get_figure_id(i));
 }
 
-bool building::has_figure(int i, int figure_id) {
+bool building::has_figure(int i, int figure_id) const {
     // seatrch through all the figures if index is -1
     if (i == -1) {
-        bool has_any = false;
+        assert(figure_id > 0);
         for (int i = 0; i < max_figures; i++) {
-            if (has_figure(i, figure_id))
-                has_any = true;
-        }
-        return has_any;
-    } else {
-        figure *f = this->get_figure(i);
-        if (f->state && f->dcast()->is_home(this)) { // check if figure belongs to this building...
-            if (figure_id < 0)                                       // only check if there is a figure
+            figure* f = this->get_figure(i);
+            if (f->id == figure_id) {
                 return true;
-
-            return (f->id == figure_id);
-        } else { // decouple if figure does not belong to this building - assume cache is incorrect
-            remove_figure(i);
-            return false;
+            }
         }
+        return false;
+    } 
+
+    figure *f = this->get_figure(i);
+    if (figure_id == -1) {
+        return f->id > 0;
     }
+
+    return (f->id == figure_id);
 }
 
 ///////////////
@@ -1039,8 +1037,18 @@ void building_impl::update_graphic() {
     base.minimap_anim = anim("minimap");
 }
 
+void building_impl::remove_dead_figures() {
+    for (int i = 0; i < base.max_figures; i++) {
+        figure* f = this->get_figure(i);
+        if (f->state != FIGURE_STATE_ALIVE) {
+            base.figure_ids[i] = 0;
+        }
+    }
+}
+
 void building_impl::update_day() {
     update_graphic();
+    remove_dead_figures();
 }
 
 figure *building_impl::get_figure_in_slot(int slot) {

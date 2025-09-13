@@ -276,12 +276,12 @@ public:
     e_overlay get_overlay() const;
     int get_figure_id(int i) const { return figure_ids[i]; };
 
-    figure* get_figure(int i);
+    figure* get_figure(int i) const;
     void set_figure(int i, int figure_id = -1);
     void set_figure(int i, figure* f);
     void remove_figure(int i);
     void remove_figure_by_id(int id);
-    bool has_figure(int i, int figure_id = -1);
+    bool has_figure(int i, int figure_id = -1) const;
     bool has_figure(int i, figure* f);
     bool has_figure_of_type(int i, e_figure_type _type);
     int get_figure_slot(figure* f);
@@ -510,6 +510,7 @@ public:
     virtual void update_graphic();
     virtual void update_month() {}
     virtual void update_day();
+    virtual void remove_dead_figures();
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) { return false; }
