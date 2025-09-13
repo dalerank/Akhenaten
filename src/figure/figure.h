@@ -111,7 +111,7 @@ public:
 
     bool use_cross_country;
     bool is_friendly;
-    uint8_t state;
+    e_figure_state state;
     uint8_t faction_id; // 1 = city, 0 = enemy
     uint8_t action_state_before_attack;
     uint8_t direction;
