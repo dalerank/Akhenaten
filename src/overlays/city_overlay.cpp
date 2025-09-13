@@ -131,14 +131,21 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
     // base
-    ImageDraw::img_generic(ctx, image_id + 2, pixel + vec2i{ 9, -8 });
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = image_id + 2;
+    command.pixel = pixel + vec2i{ 9, -8 };
+
     if (height) {
         // column
         for (int i = 1; i < height; i++) {
-            ImageDraw::img_generic(ctx, image_id + 1, pixel + vec2i{ 17, -8 - 10 * i + 13 });
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            command.image_id = image_id + 1;
+            command.pixel = pixel + vec2i{ 17, -8 - 10 * i + 13 };
         }
         // capital
-        ImageDraw::img_generic(ctx, image_id, pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 });
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = image_id;
+        command.pixel = pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 };
     }
 }
 

@@ -530,6 +530,9 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
+
+    ImageDraw::apply_render_commands(ctx);
+
     city_view_foreach_valid_map_tile(ctx,
         draw_isometrics_overlay_height,
         draw_ornaments_overlay,
