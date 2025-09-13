@@ -3,34 +3,36 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "core/calc.h"
-#include "game/tutorial.h"
+#include "js/js_game.h"
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
+city_migration_t::params g_migration_params;
+
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
+    g_config_arch.r_section("migration_defaults", [] (archive arch) {
+        auto &defaults = g_migration_params;
+        defaults.max_immigration_amount_per_batch = arch.r_int("max_immigration_amount_per_batch", 4);
+        defaults.max_emigration_amount_per_batch = arch.r_int("max_emigration_amount_per_batch", 4);
+        defaults.max_newcomers_per_update = arch.r_int("max_newcomers_per_update", 12);
+        defaults.max_leftovers_per_update = arch.r_int("max_leftovers_per_update", 12);
+        defaults.sentiment_inluence = arch.r_array_vec2i("sentiment_influence", "s", "i");
+        assert(!defaults.sentiment_inluence.empty());
+    });
+}
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
 }
 
 void city_migration_t::update_status() {
-    percentage_by_sentiment = 0;
+    auto& params = g_migration_params;
 
     const auto &sentiment = g_city.sentiment;
-    if (sentiment.value > 70) {
-        percentage_by_sentiment = 100;
-    } else if (sentiment.value > 60) {
-        percentage_by_sentiment = 75;
-    } else if (sentiment.value >= 50) {
-        percentage_by_sentiment = 50;
-    } else if (sentiment.value > 40) {
-        percentage_by_sentiment = 0;
-    } else if (sentiment.value > 30) {
-        percentage_by_sentiment = -10;
-    } else if (sentiment.value > 20) {
-        percentage_by_sentiment = -25;
-    } else {
-        percentage_by_sentiment = -50;
-    }
+    auto it = std::find_if(params.sentiment_inluence.begin(), params.sentiment_inluence.end(), [&] (const auto& t) { 
+        return sentiment.value > t.x; 
+    });
 
+    percentage_by_sentiment = (it != params.sentiment_inluence.end()) ? it->y : 0;
     percentage = percentage_by_sentiment;
 
     immigration_amount_per_batch = 0;
@@ -54,7 +56,7 @@ void city_migration_t::update_status() {
         if (emigration_duration) {
             emigration_duration--;
         } else {
-            immigration_amount_per_batch = calc_adjust_with_percentage(12, (int)percentage);
+            immigration_amount_per_batch = calc_adjust_with_percentage<int>(params.max_newcomers_per_update, percentage);
             immigration_duration = 2;
         }
     } else if (percentage < 0) {
@@ -62,7 +64,7 @@ void city_migration_t::update_status() {
         if (immigration_duration) {
             immigration_duration--;
         } else if (g_city.population.current > 100) {
-            emigration_amount_per_batch = calc_adjust_with_percentage(12, -percentage);
+            emigration_amount_per_batch = calc_adjust_with_percentage<int>(params.max_leftovers_per_update, -percentage);
             emigration_duration = 2;
         }
     }
@@ -77,6 +79,10 @@ void city_migration_t::create_immigrants(int num_people) {
     }
 }
 
+city_migration_t::params& city_migration_t::current_params() {
+    return g_migration_params;
+}
+
 void city_migration_t::create_emigrants(int num_people) {
     emigrated_today += g_city.population.create_emigrants(num_people);
 }
@@ -86,11 +92,12 @@ void city_migration_t::create_migrants() {
     emigrated_today = 0;
     refused_immigrants_today = 0;
 
+    auto& params = g_migration_params;
     if (immigration_amount_per_batch > 0) {
-        if (immigration_amount_per_batch >= 4) {
+        if (immigration_amount_per_batch >= params.max_immigration_amount_per_batch) {
             create_immigrants(immigration_amount_per_batch);
 
-        } else if (immigration_amount_per_batch + immigration_queue_size >= 4) {
+        } else if (immigration_amount_per_batch + immigration_queue_size >= params.max_immigration_amount_per_batch) {
             create_immigrants(immigration_amount_per_batch + immigration_queue_size);
             immigration_queue_size = 0;
 
@@ -100,9 +107,10 @@ void city_migration_t::create_migrants() {
     }
     
     if (emigration_amount_per_batch > 0) {
-        if (emigration_amount_per_batch >= 4) {
+        if (emigration_amount_per_batch >= params.max_emigration_amount_per_batch) {
             create_emigrants(emigration_amount_per_batch);
-        } else if (emigration_amount_per_batch + emigration_queue_size >= 4) {
+
+        } else if (emigration_amount_per_batch + emigration_queue_size >= params.max_emigration_amount_per_batch) {
             create_emigrants(emigration_amount_per_batch + emigration_queue_size);
             emigration_queue_size = 0;
             if (!emigration_message_shown) {

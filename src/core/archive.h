@@ -45,7 +45,7 @@ struct archive {
     variant_t r_variant(pcstr name);
     variant_t to_variant();
 
-    std::vector<vec2i> r_array_vec2i(pcstr name);
+    std::vector<vec2i> r_array_vec2i(pcstr name, pcstr px = "x", pcstr py = "y");
 
     template<class T>
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }

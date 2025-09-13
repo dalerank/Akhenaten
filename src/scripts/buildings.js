@@ -1032,9 +1032,9 @@ building_reed_gatherer = {
 
 building_wood_cutter = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:23 }
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:23 }
-    work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 }
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:19 }
     wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 }
   }
   output_resource : RESOURCE_TIMBER
