@@ -305,16 +305,31 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
         || (orientation == DIR_6_TOP_LEFT && xy == EDGE_X1Y0)) {
         int image_id = mud_gatehouse_m.anim["base"].first_img();
         int color_mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
+
         if (base.orientation == 1) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
-            else
-                ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
+            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
+                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                command.image_id = image_id;
+                command.pixel = vec2i{ x - 22, y - 80 };
+                command.mask = color_mask;
+            } else {
+                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                command.image_id = image_id + 1;
+                command.pixel = vec2i{ x - 18, y - 81 };
+                command.mask = color_mask;
+            }
         } else if (base.orientation == 2) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
-                ImageDraw::img_generic(ctx, image_id + 1, x - 18, y - 81, color_mask);
-            else
-                ImageDraw::img_generic(ctx, image_id, x - 22, y - 80, color_mask);
+            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
+                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                command.image_id = image_id + 1;
+                command.pixel = vec2i{ x - 18, y - 81 };
+                command.mask = color_mask;
+            } else {
+                auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                command.image_id = image_id;
+                command.pixel = vec2i{ x - 22, y - 80 };
+                command.mask = color_mask;
+            }
         }
     }
     return true;
