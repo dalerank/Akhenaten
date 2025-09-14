@@ -39,8 +39,11 @@
 #include "game/game.h"
 
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 int empire_images_remap[32000] = {0};
+
+declare_console_var_bool(empire_window_draw_points, false)
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config) {
     g_config_arch.r_array("empire_images_remap", [] (archive arch) {
         int id = arch.r_int("id");
@@ -216,6 +219,10 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
                 vec2i disp = draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
                 ImageDraw::img_generic(ctx, image_id, disp);
                 progress += 1.0f;
+            }
+
+            if (empire_window_draw_points()) {
+                ImageDraw::fill_rect(draw_offset + vec2i{ route_point.p.x - 4, route_point.p.y - 4 }, vec2i{ 8, 8 }, COLOR_BLACK);
             }
         }
     }

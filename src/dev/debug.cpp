@@ -75,7 +75,7 @@ static void debug_font_line(int* y, e_font font) {
 }
 
 void debug_font_test() {
-    graphics_fill_rect(vec2i{0, 0}, vec2i{1600, 300}, COLOR_FONT_LIGHT_GRAY);
+    ImageDraw::fill_rect(vec2i{0, 0}, vec2i{1600, 300}, COLOR_FONT_LIGHT_GRAY);
     //    auto str = string_from_ascii(font_test_str, true);
     int y = 10;
     debug_font_line(&y, FONT_SMALL_PLAIN);

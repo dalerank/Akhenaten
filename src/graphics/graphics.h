@@ -27,7 +27,6 @@ void graphics_draw_pixel(vec2i pixel, color color);
 void graphics_draw_rect(vec2i start, vec2i size, color color);
 void graphics_draw_inset_rect(vec2i start, vec2i size);
 
-void graphics_fill_rect(vec2i start, vec2i size, color color);
 void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);
@@ -79,6 +78,7 @@ const image_t* img_generic(painter &ctx, const image_t *img, vec2i p, color colo
 const image_t* img_isometric(painter& ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
 const image_t* img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
 
+void fill_rect(vec2i p, vec2i size, color color);
 void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);

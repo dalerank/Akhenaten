@@ -538,7 +538,7 @@ void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
 void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (fill) {
-        graphics_fill_rect(offset + pos, size, fill);
+        ImageDraw::fill_rect(offset + pos, size, fill);
     } else {
         graphics_draw_rect(offset + pos, size, color);
     }
