@@ -40,17 +40,17 @@
 
 #include "js/js_game.h"
 
-int img_mapping[32000] = {0};
+int empire_images_remap[32000] = {0};
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config) {
     g_config_arch.r_array("empire_images_remap", [] (archive arch) {
         int id = arch.r_int("id");
         int remap = arch.r_int("rid");
-        img_mapping[id] = remap;
+        empire_images_remap[id] = remap;
     });
 }
 
 int image_id_remap(int id) {
-    int rimg = img_mapping[id];
+    int rimg = empire_images_remap[id];
     return rimg ? rimg : id;
 }
 
@@ -95,32 +95,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
-    virtual void load(archive arch, pcstr section) override {
-        autoconfig_window::load(arch, section);
-    
-        trade_column_spacing = arch.r_int("trade_column_spacing");
-        trade_row_spacing = arch.r_int("trade_row_spacing");
-        info_y_traded = arch.r_int("info_y_traded");
-        trade_button_offset_x = arch.r_int("trade_button_offset_x");
-        info_y_city_desc = arch.r_int("info_y_city_desc");
-        text_group_old_names = arch.r_int("text_group_old_names");
-        text_group_new_names = arch.r_int("text_group_new_names");
-        trade_resource_size = arch.r_int("trade_resource_size");
-        trade_button_offset_y = arch.r_int("trade_button_offset_y");
-        start_pos = arch.r_vec2i("start_pos");
-        finish_pos = arch.r_vec2i("finish_pos");
-        arch.r_desc("image", image);
-        arch.r_desc("bottom_image", bottom_image);
-        arch.r_desc("horizontal_bar", horizontal_bar);
-        arch.r_desc("vertical_bar", vertical_bar);
-        arch.r_desc("cross_bar", cross_bar);
-        arch.r_desc("trade_amount", trade_amount);
-        arch.r_desc("closed_trade_route_hl", closed_trade_route_hl);
-        arch.r_desc("open_trade_route", open_trade_route);
-        arch.r_desc("open_trade_route_hl", open_trade_route_hl);
-
-        init();
-    }
+    virtual void load(archive arch, pcstr section) override;
 
     void draw_map();
     void draw_empire_object(const empire_object *obj);
@@ -165,11 +140,38 @@ void empire_window::init() {
 
 }
 
+inline void empire_window::load(archive arch, pcstr section) {
+    autoconfig_window::load(arch, section);
+
+    trade_column_spacing = arch.r_int("trade_column_spacing");
+    trade_row_spacing = arch.r_int("trade_row_spacing");
+    info_y_traded = arch.r_int("info_y_traded");
+    trade_button_offset_x = arch.r_int("trade_button_offset_x");
+    info_y_city_desc = arch.r_int("info_y_city_desc");
+    text_group_old_names = arch.r_int("text_group_old_names");
+    text_group_new_names = arch.r_int("text_group_new_names");
+    trade_resource_size = arch.r_int("trade_resource_size");
+    trade_button_offset_y = arch.r_int("trade_button_offset_y");
+    start_pos = arch.r_vec2i("start_pos");
+    finish_pos = arch.r_vec2i("finish_pos");
+    arch.r_desc("image", image);
+    arch.r_desc("bottom_image", bottom_image);
+    arch.r_desc("horizontal_bar", horizontal_bar);
+    arch.r_desc("vertical_bar", vertical_bar);
+    arch.r_desc("cross_bar", cross_bar);
+    arch.r_desc("trade_amount", trade_amount);
+    arch.r_desc("closed_trade_route_hl", closed_trade_route_hl);
+    arch.r_desc("open_trade_route", open_trade_route);
+    arch.r_desc("open_trade_route_hl", open_trade_route_hl);
+
+    init();
+}
+
 void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
     painter ctx = game.painter();
 
-    map_route_object* obj = empire_get_route_object(route_id);
-    if (!obj->in_use) {
+    const map_route_object& obj = empire_get_route_object(route_id);
+    if (!obj.in_use) {
         return;
     }
 
@@ -180,26 +182,29 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
         return;
         //image_id = image_id_from_group(GROUP_MINIMAP_BUILDING) + 211;
         break;
+
     case ROUTE_CLOSED_SELECTED: // highlighted, closed
         image_id = image_group(closed_trade_route_hl);
         break;
+
     case ROUTE_OPEN: // open
         image_id = image_group(open_trade_route);
         break;
+
     case ROUTE_OPEN_SELECTED: // highlighted, open
         image_id = image_group(open_trade_route_hl);
         break;
     }
 
-    for (int i = 0; i < obj->num_points; i++) {
-        const auto &route_point = obj->points[i];
+    for (int i = 0; i < obj.num_points; i++) {
+        const auto &route_point = obj.points[i];
 
         // first corner in pair
         ImageDraw::img_generic(ctx, image_id, draw_offset + route_point.p);
 
         // draw lines connecting the turns
-        if (i < obj->num_points - 1) {
-            auto nextup_route_point = obj->points[i + 1];
+        if (i < obj.num_points - 1) {
+            auto nextup_route_point = obj.points[i + 1];
             vec2i d = nextup_route_point.p - route_point.p;
             float len = 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
 

@@ -50,6 +50,6 @@ import ui_advisor_chief
 import ui_mission_briefing_window
 import economic
 import migration
-
-include(":ui_advisor_education.js")
-include(":music.js")
+import ui_empire_window
+import ui_advisor_education
+import music
