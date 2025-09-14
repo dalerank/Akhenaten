@@ -14,6 +14,8 @@
 #include "dev/debug.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
+#include "core/log.h"
+#include <string>
 
 #include <iostream>
 #include <algorithm>
@@ -23,6 +25,61 @@ empire_t g_empire;
 #ifndef _WIN32
 #define stricmp strcasecmp
 #endif
+
+declare_console_command_p(save_empire_routes) {
+    const int MAX_ROUTE_OBJECTS = 50;
+    vfs::path fs_file = vfs::content_path("empire_routes.js");
+    FILE* fp = vfs::file_open_os(fs_file, "wt");
+    if (!fp) {
+        logs::error("Unable to empire_routes file %s", fs_file.c_str());
+        return;
+    }
+
+    std::string sroutesdata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
+    sroutesdata.append("var empire_routes = [\n");
+
+    for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
+        const map_route_object& obj = empire_get_route_object(id);
+        if (!obj.in_use) {
+            continue;
+        }
+
+        sroutesdata.append("{\n");
+        sroutesdata.append(bstring128().printf("\tunk_header : [%d, %d]\n", obj.unk_header[0], obj.unk_header[1]).c_str());;
+
+        sroutesdata.append("\tpoints = [\n");
+        for (int i = 0; i < 50; i++) {
+            sroutesdata.append(bstring128().printf("\t\t{ x : %d, y : %d, is_in_use : %i },\n", obj.points[i].p.x, obj.points[i].p.y, obj.points[i].is_in_use).c_str());
+        }
+        sroutesdata.append("\t]\n");
+
+        int city_id = g_empire.get_city_for_trade_route(id);
+        const empire_city& city = *g_empire.city(city_id);
+        const empire_city& ourcity = g_city.ourcity();
+
+        sroutesdata.append(bstring128().printf("\tstart : \"%s\"\n", lang_get_string(21, city.name_id)));
+        sroutesdata.append(bstring128().printf("\told_name : \"%s\"\n", lang_get_string(195, city.name_id)));
+        sroutesdata.append(bstring128().printf("\tstop : \"%s\"\n", lang_get_string(21, ourcity.name_id)));
+        sroutesdata.append(bstring128().printf("\tcity_id : %d\n", city.name_id));
+        sroutesdata.append(bstring128().printf("\troute_id : %d\n", id));
+        sroutesdata.append(bstring128().printf("\tlength : %d\n", obj.length));
+        sroutesdata.append(bstring128().printf("\tunk_00 : %d\n", obj.unk_00));
+        sroutesdata.append(bstring128().printf("\tunk_01 : %d\n", obj.unk_01));
+
+        sroutesdata.append(bstring128().printf("\troute_type : %d\n", obj.route_type)); // 1 = land, 2 = sea
+        sroutesdata.append(bstring128().printf("\tnum_points : %d\n", obj.num_points));
+        sroutesdata.append(bstring128().printf("\tin_use : %d\n", obj.in_use));
+        sroutesdata.append(bstring128().printf("\tunk_03 : %d\n", obj.unk_03));
+
+        sroutesdata.append("},\n");
+    }
+    sroutesdata.append("]\n");
+
+    fprintf(fp, "%s", sroutesdata.c_str());
+    sroutesdata.clear();
+
+    vfs::file_close(fp);
+}
 
 declare_console_command_p(makeseatraders) {
     for (auto &city : g_empire.get_cities()) {

@@ -12,6 +12,7 @@
 #include "io/manager.h"
 #include "scenario/empire.h"
 #include "game/game.h"
+#include "dev/debug.h"
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -156,6 +157,7 @@ void empire_object_init_cities() {
         city->empire_object_id = i;
     }
 }
+
 int empire_object_init_distant_battle_travel_months(int object_type) {
     auto& objects = g_empire_objects;
     int month = 0;
@@ -335,12 +337,10 @@ int empire_object_update_animation(const empire_object* obj, int image_id) {
     return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
 }
 
-#define MAX_ROUTE_OBJECTS 50
+std::array<map_route_object, 50> g_empire_route_objects;
 
-static struct map_route_object route_objects[MAX_ROUTE_OBJECTS];
-
-map_route_object* empire_get_route_object(int id) {
-    return &route_objects[id];
+const map_route_object& empire_get_route_object(int id) {
+    return g_empire_route_objects[id];
 }
 
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
@@ -406,8 +406,9 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
 
 io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_routes");
+    const int MAX_ROUTE_OBJECTS = 50;
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
-        map_route_object* obj = &route_objects[id];
+        map_route_object* obj = &g_empire_route_objects[id];
 
         iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[0]); // 05 00 00 00
         iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[1]); // 00 00 00 00

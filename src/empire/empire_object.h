@@ -84,4 +84,4 @@ struct map_route_object {
     char unk_03; // 00
 };
 
-map_route_object* empire_get_route_object(int id);
+const map_route_object& empire_get_route_object(int id);
