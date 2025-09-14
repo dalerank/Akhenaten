@@ -109,15 +109,12 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     const auto &params = building_impl::params(BUILDING_GARDENS);
     const auto &anim = params.anim["base"].first_img();
     if (map_grid_inside_map_area(grid_offset, 1)) {
-        ImageDraw::isometric_from_drawtile(ctx, anim, pixel, COLOR_CHANNEL_GREEN);
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = anim;
+        command.pixel = pixel;
+        command.mask = COLOR_CHANNEL_GREEN;
         return;
     }
-    //    if (!map_grid_is_inside(tx, ty, 1))
-    //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
-    //        COLOR_CHANNEL_RED);
-    //    else
-    //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
-    //        COLOR_CHANNEL_GREEN);
 }
 
 void draw_tile_boxes(vec2i pixel, tile2i point) {
@@ -158,20 +155,32 @@ void screen_city_t::clear_current_tile() {
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto figures = map_figures_in_row(tile);
 
-    for (auto *f : figures) {
-        if (f->is_drawn && !force) {
+    for (const auto &f : figures) {
+        const bool should_draw_main = !f.f->is_main_drawn;
+        const bool should_draw_cart = (f.draw_cart && !f.f->is_cart_drawn);
+        if (!should_draw_main && !should_draw_cart && !force) {
             continue;
         }
 
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
-            continue;
-        }
+        if (should_draw_main) { // draw main
+            if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+                continue;
+            }
 
-        if (!selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0, selected_figure_coord);
+            if (!selected_figure_id) {
+                int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
+                f.f->city_draw_figure(ctx, highlight);
+            } else if (f.f->id == selected_figure_id) {
+                f.f->city_draw_figure(ctx, 0);
+            }
+        } 
+        
+        if (should_draw_cart) { // draw cart
+            if (f.f->cart_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->cart_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+                continue;
+            }
+
+            f.f->draw_figure_cart(ctx, f.f->cart_cached_pos, 0);
         }
     }
 }
@@ -180,24 +189,24 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     int grid_offset = tile.grid_offset();
     auto figures = map_figures_in_row(tile);
 
-    for (auto *f : figures) {
-        if (!g_city.overlay()->show_figure(f)) {
+    for (const auto &f : figures) {
+        if (!g_city.overlay()->show_figure(f.f)) {
             continue;
         }
 
-        if (f->is_drawn) {
+        if (f.f->is_main_drawn) {
             continue;
         }
 
-        if (f->cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f->cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
         if (!selected_figure_id) {
-            int highlight = f->formation_id > 0 && f->formation_id == highlighted_formation;
-            f->city_draw_figure(ctx, highlight);
-        } else if (f->id == selected_figure_id) {
-            f->city_draw_figure(ctx, 0, selected_figure_coord);
+            int highlight = f.f->formation_id > 0 && f.f->formation_id == highlighted_formation;
+            f.f->city_draw_figure(ctx, highlight);
+        } else if (f.f->id == selected_figure_id) {
+            f.f->city_draw_figure(ctx, 0);
         }
     }
 }
@@ -216,8 +225,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
     }
 }
 
-
-void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, vec2i* figure_coord) {
+void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     highlighted_formation = 0;
     if (!!game_features::gameui_highlight_legions) {
         highlighted_formation = formation_legion_at(current_tile);
@@ -227,13 +235,13 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
     }
 
     this->selected_figure_id = selected_figure_id;
-    this->selected_figure_coord = figure_coord;
 
     render_ctx.init();
 
     g_city_planner.ghost_mark_deleting(current_tile);
 
     map_render_clear();
+    ImageDraw::clear_render_commands();
 
     clear_mappoint_pixelcoord();
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
@@ -248,22 +256,34 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id, v
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
     );
 
-    city_view_foreach_valid_map_tile(ctx, 
-        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
-        draw_ornaments_and_animations_height, 
+    ImageDraw::apply_render_commands(ctx);
+       
+    city_view_foreach_valid_map_tile(ctx,
+        [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
+        draw_ornaments_and_animations_height,
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
     );
+
+    ImageDraw::apply_render_commands(ctx);
 
     if (!selected_figure_id) {
         g_city_planner.update(current_tile);
         g_city_planner.draw(ctx);
     }
 
-    update_clouds(ctx);
-
     // finally, draw these on top of everything else
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
-    city_view_foreach_valid_map_tile(ctx, draw_debug_figures);
+    debug_draw_figures();
+
+    ImageDraw::apply_render_commands(ctx);
+
+    update_clouds(ctx);
+}
+
+void screen_city_t::debug_draw_figures() {
+    for (auto &f : map_figures()) {
+        f->draw_debug();
+    }
 }
 
 void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) {
@@ -272,7 +292,10 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
     const bool is_water = map_terrain_is(tile, TERRAIN_WATER);
     const bool outside_map = is_tree && is_water;
     if (!tile.valid() || outside_map) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS), pixel);
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_UGLY_GRASS);
+        command.pixel = pixel;
+        command.mask = COLOR_MASK_NONE;
         return;
     }
 
@@ -337,16 +360,25 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         color_mask = COLOR_MASK_GREEN;
     }
 
-    const image_t *img = ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
+    const image_t* img = image_get(image_id);
     if (!img) {
         return;
     }
+
+    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = color_mask;
 
     int image_alt_value = map_image_alt_at(tile);
     int image_alt_id = (image_alt_value & 0x00ffffff);
     uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
     if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+        command.image_id = image_alt_id;
+        command.pixel = pixel;
+        command.mask = (0x00ffffff | (image_alt_alpha << 24));
+        command.flags = ImgFlag_Alpha;
     }
 
     int top_height = img->isometric_top_height();
@@ -357,7 +389,10 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     int grid_offset = tile.grid_offset();
     // black tile outside of map
     if (grid_offset < 0) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+        command.pixel = pixel;
+        command.mask = COLOR_BLACK;
         return;
     }
 
@@ -384,62 +419,57 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     }
 
     bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
-    bool should_draw = building_id > 0 || tall_flat_tile;
+    bool tall_flat_tile_drawn = map_render_is(grid_offset, RENDER_TALL_TILE_DRAWN);
+    bool should_draw = building_id > 0 || (tall_flat_tile && !tall_flat_tile_drawn);
     if (!should_draw) {
         return;
     }
 
-    if (tall_flat_tile && building_id > 0) {
-        map_grid_area_foreach(tile, tile.shifted(b->size, b->size), [] (tile2i tile) {
-            const bool is_building = map_terrain_is(tile, TERRAIN_BUILDING);
-            if (is_building) {
-                return;
-            }
-            int image_id = map_image_at(tile);
-            const image_t *img = image_get(image_id);
-            int top_height = img->isometric_top_height();
-            map_render_set(tile, top_height > 0);
-        });
-    }
+    //if (!ImageDraw::is_deffered() && tall_flat_tile && building_id > 0) {
+    //    map_grid_area_foreach(tile, tile.shifted(b->size, b->size), [] (tile2i tile) {
+    //        const bool is_building = map_terrain_is(tile, TERRAIN_BUILDING);
+    //        if (is_building) {
+    //            return;
+    //        }
+    //        int image_id = map_image_at(tile);
+    //        const image_t *img = image_get(image_id);
+    //        int top_height = img->isometric_top_height();
+    //        map_render_set(tile, top_height > 0);
+    //    });
+    //}
 
     int image_id = map_image_at(grid_offset);
     if (tall_flat_tile) {
-        ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
+        {
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+            command.image_id = image_id;
+            command.pixel = pixel;
+            command.mask = color_mask;
+            const image_t* img = image_get(image_id);
+            command.virtual_xorder = img->width;
+        }
 
         int image_alt_value = map_image_alt_at(grid_offset);
         int image_alt_id = (image_alt_value & 0x00ffffff);
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
-            ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            command.image_id = image_alt_id;
+            command.pixel = pixel;
+            command.mask = (0x00ffffff | (image_alt_alpha << 24));
+            command.flags = ImgFlag_Alpha;
         }
         return;
     }
-
-    vec2i view_pos, view_size;
-    city_view_get_viewport(*ctx.view, view_pos, view_size);
-    int direction = SOUND_DIRECTION_CENTER;
-    if (pixel.x < view_pos.x + 100) {
-        direction = SOUND_DIRECTION_LEFT;
-    } else if (pixel.x > view_pos.x + view_size.x - 100) {
-        direction = SOUND_DIRECTION_RIGHT;
-    }
-
-    if (!!game_features::gameui_visual_feedback_on_delete && drawing_building_as_deleted(b)) {
-        color_mask = COLOR_MASK_RED;
-    }
-
-    sound_city_mark_building_view(b, direction);
-    if (map_property_is_constructing(grid_offset)) {
-        image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_FLAT);
-    }
-
-    //ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
 }
 
 void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     // black tile outside of map
     if (!tile.valid()) {
-        ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, COLOR_BLACK);
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+        command.pixel = pixel;
+        command.mask = COLOR_BLACK;
         return;
     }
 
@@ -465,14 +495,24 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         color_mask = COLOR_MASK_RED;
     }
 
+    map_render_add(tile.grid_offset(), RENDER_TALL_TILE_DRAWN);
     int image_id = map_image_at(tile);
-    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask);
+    {
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+        command.image_id = image_id;
+        command.pixel = pixel;
+        command.mask = color_mask;
+    } 
 
     int image_alt_value = map_image_alt_at(tile);
     int image_alt_id = (image_alt_value & 0x00ffffff);
     uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
     if (image_alt_id > 0 && image_alt_alpha > 0) {
-        ImageDraw::isometric_from_drawtile_top(ctx, image_alt_id, pixel, (0x00ffffff | (image_alt_alpha << 24)), ImgFlag_Alpha);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+        command.image_id = image_alt_id;
+        command.pixel = pixel;
+        command.mask = (0x00ffffff | (image_alt_alpha << 24));
+        command.flags = ImgFlag_Alpha;
     }
 }
 
@@ -483,19 +523,36 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     }
 
     map_render_clear();
+    ImageDraw::clear_render_commands();
 
     g_city_planner.ghost_mark_deleting(current_tile);
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, draw_isometrics_overlay_flat);
+
+    ImageDraw::apply_render_commands(ctx);
+
     city_view_foreach_valid_map_tile(ctx,
         draw_isometrics_overlay_height,
         draw_ornaments_overlay,
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
     );
+
+    ImageDraw::apply_render_commands(ctx);
+
     g_city_planner.update(current_tile);
     g_city_planner.draw(ctx);
+
+    ImageDraw::apply_render_commands(ctx);
+
+    // finally, draw these on top of everything else
+    city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
+    debug_draw_figures();
+
+    ImageDraw::apply_render_commands(ctx);
+
+    update_clouds(ctx);
 }
 
 void screen_city_t::draw(painter &ctx) {
@@ -506,17 +563,17 @@ void screen_city_t::draw(painter &ctx) {
     if (g_city.overlay()) {
         draw_with_overlay(ctx);
     } else {
-        draw_without_overlay(ctx, 0, nullptr);
+        draw_without_overlay(ctx, 0);
     }
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
 }
 
-void screen_city_t::draw_for_figure(painter &ctx, int figure_id, vec2i* coord) {
+void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
 
-    draw_without_overlay(ctx, figure_id, coord);
+    draw_without_overlay(ctx, figure_id);
 
     graphics_reset_clip_rectangle();
 }

@@ -17,6 +17,12 @@ enum {
     TEST_SEARCH_HAS_COLOR,
 };
 
+struct figure_draw {
+    figure *f;
+    vec2i fpos;
+    bool draw_cart = false;
+};
+
 int map_figure_id_get(int grid_offset);
 inline int map_figure_id_get(tile2i tile) { return map_figure_id_get(tile.grid_offset());  }
 
@@ -36,4 +42,4 @@ inline int map_figure_foreach_until(tile2i tile, int test) { return map_figure_f
 void map_figure_clear();
 void map_figure_sort_by_y();
 
-custom_span<figure *> map_figures_in_row(tile2i tile);
+custom_span<figure_draw> map_figures_in_row(tile2i tile);

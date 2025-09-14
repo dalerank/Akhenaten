@@ -1,6 +1,7 @@
 #include "figure_caravan_donkey.h"
 
 #include "figure/trader.h"
+#include "figuretype/figure_kingdome_trader.h"
 
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -20,16 +21,7 @@
 #include "window/window_figure_info.h"
 #include "core/profiler.h"
 
-figures::model_t<figure_caravan_donkey> caravan_donkey_m;
-
-struct figure_caravan_donkey_info_window : public figure_info_window {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return !!c.figure_get<figure_caravan_donkey>();
-    }
-};
-
-figure_caravan_donkey_info_window figure_caravan_donkey_infow;
+figure_caravan_donkey::static_params caravan_donkey_m;
 
 const empire_city *figure_caravan_donkey::get_empire_city() const {
     const empire_city *city = g_empire.city(base.empire_city_id);
@@ -50,7 +42,7 @@ void figure_caravan_donkey::figure_action() {
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     int image_id = anim(animkeys().walk).first_img();
-    base.sprite_image_id = image_id + dir + 8 * base.anim.frame;
+    base.main_image_id = image_id + dir + 8 * base.anim.frame;
 }
 
 void figure_caravan_donkey::figure_before_action() {
@@ -68,7 +60,7 @@ void figure_caravan_donkey::update_animation() {
     /*nothing*/
 }
 
-figure* figure_caravan_donkey::get_head_of_caravan() {
+figure* figure_caravan_donkey::get_head_of_caravan() const {
     figure* f = &base;
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {
         f = figure_get(f->leading_figure_id);
@@ -76,74 +68,18 @@ figure* figure_caravan_donkey::get_head_of_caravan() {
     return f;
 }
 
-void figure_caravan_donkey_info_window::init(object_info &c) {
-    common_info_window::init(c);
-
-    figure_caravan_donkey *donkey = c.figure_get<figure_caravan_donkey>();
-    figure* f = donkey->get_head_of_caravan();
-
-    const empire_city* city = donkey->get_empire_city();
-    ui["name"].text_var("%s %s", ui::str(64, f->type), ui::str(21, city->name_id));
-    ui["type"].text_var("%s %s %u", ui::str(129, 1), ui::str(8, 10), 800);
-
-    int trader_id = f->trader_id;
-    
-    int text_id;
+xstring figure_caravan_donkey::action_tip() const {
+    figure *f = get_head_of_caravan();
     switch (f->action_state) {
-    case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING: text_id = 12; break;
-    case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING: text_id = 10; break;
-    case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING: text_id = trader_has_traded(trader_id) ? 11 : 13; break;
-    default: text_id = 11; break;
+    case ACTION_101_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
+    case ACTION_102_TRADE_CARAVAN_TRADING: return "#trader_trading_goods"; 
+    case ACTION_103_TRADE_CARAVAN_LEAVING: 
+        return trader_has_traded(base.trader_id) 
+                    ? "#trader_returning_home" 
+                    : "#trader_nothing_to_trage";
+    default:
+        return "#trader_returning_home";
     }
 
-    ui["phrase"] = ui::str(129, text_id);
-
-    if (trader_has_traded(trader_id)) {
-        // bought
-        bstring256 bought_items = ui::str(129, 4);
-        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (trader_bought_resources(trader_id, r)) {
-                int amount = trader_bought_resources(trader_id, r);
-                int image_id = image_id_resource_icon(r);
-
-                bought_items.append("%d @Y%u& ", amount, image_id);
-            }
-        }
-        ui["bought_items"] = bought_items;
-
-        // sold
-        bstring256 sold_items = ui::str(129, 5);
-        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (trader_sold_resources(trader_id, r)) {
-                int amount = trader_sold_resources(trader_id, r);
-                int image_id = image_id_resource_icon(r);
-
-                sold_items.append("%d @Y%u& ", amount, image_id);
-            }
-        }
-        ui["sold_items"] = sold_items;
-
-        return;
-    }
-    
-    // nothing sold/bought (yet)
-    // buying
-    bstring256 buing_items = ui::str(129, 2);
-    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-        if (city->buys_resource[r]) {
-            int image_id = image_id_resource_icon(r);
-            buing_items.append("@I%u& ", image_id);
-        }
-    }
-    ui["bought_items"] = buing_items;
-
-    // selling
-    bstring256 selling_items = ui::str(129, 3);
-    for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
-        if (city->sells_resource[r]) {
-            int image_id = image_id_resource_icon(r);
-            buing_items.append("@I%u& ", image_id);
-        }
-    }
-    ui["sold_items"] = selling_items;
+    return "#trader_unknown";
 }

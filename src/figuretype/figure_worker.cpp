@@ -12,10 +12,15 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_worker> worker_m;
+figure_worker::static_params worker_m;
 
-tile2i figure_worker::small_mastaba_tile4work(building *b) {
-    building_small_mastaba *mastaba = b->dcast_small_mastaba();
+auto any_mastaba_types = make_array(
+    BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
+    BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE
+);
+
+tile2i figure_worker::mastaba_tile4work(building *b) {
+    building_mastaba *mastaba = b->dcast_mastaba();
     if (!mastaba) {
         return tile2i{-1, -1};
     }
@@ -95,9 +100,8 @@ void figure_worker::figure_action() {
                 d.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
-            } else if (building_type_any_of(b_dest->type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
-                                                          BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE)) {
-                tile2i tile_need_leveling = small_mastaba_tile4work(b_dest);
+            } else if (building_type_any_of(b_dest->type, any_mastaba_types)) {
+                tile2i tile_need_leveling = mastaba_tile4work(b_dest);
                 if (tile_need_leveling == tile2i{-1, -1}) {
                     poof();
                     return;

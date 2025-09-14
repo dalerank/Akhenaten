@@ -192,7 +192,7 @@ void city_maintenance_t::check_kingdome_access() {
                 b.road_access = map_get_road_access_tile(b.tile, b.size);
                 b.has_road_access = b.road_access.valid();
             }
-        } else if (building_type_any_of(b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST)) {
+        } else if (building_type_any_of(b, { BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST })) {
             if (b.is_main()) {
                 auto complex = b.dcast_temple_complex();
                 int orientation = (5 - (complex->runtime_data().variant / 2)) % 4;

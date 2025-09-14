@@ -33,7 +33,7 @@ void figure_shipwreck::figure_action() {
 }
 
 void figure_shipwreck::update_animation() {
-    base.sprite_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
+    base.main_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
 }
 
 bool figure_shipwreck::window_info_background(object_info &c) {

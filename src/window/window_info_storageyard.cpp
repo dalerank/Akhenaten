@@ -53,7 +53,7 @@ void info_window_storageyard::window_info_foreground(object_info &c) {
 
 bool info_window_storageyard::check(object_info &c) {
     building *b = c.building_get();
-    return building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_YARD_UP, BUILDING_STORAGE_ROOM);
+    return building_type_any_of(*b, { BUILDING_STORAGE_YARD, BUILDING_STORAGE_YARD_UP, BUILDING_STORAGE_ROOM });
 }
 
 int info_window_storageyard::window_info_handle_mouse(const mouse *m, object_info &c) {

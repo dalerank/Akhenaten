@@ -15,9 +15,10 @@
 #include "city/city_resource.h"
 #include <iostream>
 
-declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
+building_weaponsmith::static_params weaponsmith_m;
 
-buildings::model_t<building_weaponsmith> weaponsmith_m;
+declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
+declare_console_command(addcopper, game_cheat_add_resource<RESOURCE_COPPER>);
 
 void building_weaponsmith::on_place_checks() {
     if (g_city.buildings.count_industry_active(RESOURCE_COPPER) > 0) {
@@ -53,7 +54,11 @@ bool building_weaponsmith::draw_ornaments_and_animations_height(painter &ctx, ve
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().copper);
-        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = ranim.first_img() + amount;
+        command.pixel = point + ranim.pos;
+        command.mask = color_mask;
     }
 
     return true;

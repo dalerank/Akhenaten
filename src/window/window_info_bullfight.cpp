@@ -7,7 +7,7 @@ struct info_window_bullfight : public building_info_window_t<info_window_bullfig
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_BULLFIGHT_SCHOOL);
+        return (b->type == BUILDING_BULLFIGHT_SCHOOL);
     }
 };
 

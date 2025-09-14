@@ -60,7 +60,7 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     }
 
     building* dest = destination();
-    const bool is_storage = building_type_any_of(dest->type, BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM);
+    const bool is_storage = building_type_any_of(dest->type, { BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM });
     if (!is_storage) {
         advance_action(action_done);
     }
@@ -96,13 +96,15 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
 void figure_storageyard_cart::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Warehouse Man");
     int road_network_id = map_road_network_get(tile());
+
+    base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED:
         calculate_destination(true);
         break;
 
-    case ACTION_9_DELIVERING_GOODS:
+    case ACTION_9_WAREHOUSE_CART_DELIVERING_GOODS:
     case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
         break;
@@ -147,8 +149,4 @@ void figure_storageyard_cart::figure_action() {
         do_retrieve(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
         break;
     }
-}
-
-void figure_storageyard_cart::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, base.cached_pos, highlight, coord_out);
 }

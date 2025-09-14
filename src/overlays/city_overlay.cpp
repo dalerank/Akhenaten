@@ -131,14 +131,21 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
     // base
-    ImageDraw::img_generic(ctx, image_id + 2, pixel + vec2i{ 9, -8 });
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = image_id + 2;
+    command.pixel = pixel + vec2i{ 9, -8 };
+
     if (height) {
         // column
         for (int i = 1; i < height; i++) {
-            ImageDraw::img_generic(ctx, image_id + 1, pixel + vec2i{ 17, -8 - 10 * i + 13 });
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            command.image_id = image_id + 1;
+            command.pixel = pixel + vec2i{ 17, -8 - 10 * i + 13 };
         }
         // capital
-        ImageDraw::img_generic(ctx, image_id, pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 });
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = image_id;
+        command.pixel = pixel + vec2i{ 5, -8 - capital_height - 10 * (height - 1) + 13 };
     }
 }
 
@@ -184,7 +191,10 @@ void city_overlay::draw_flattened_footprint_anysize(vec2i pos, int size_x, int s
                 shape_offset = 2;
             }
 
-            ImageDraw::isometric_from_drawtile(ctx, image_base + shape_offset, tp, color_mask);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = image_base + shape_offset;
+            command.pixel = tp;
+            command.mask = color_mask;
         }
     }
 }
@@ -199,19 +209,28 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     if (show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = map_image_at(tile);
+                command.pixel = pos;
+                command.mask = COLOR_MASK_NONE;
             } else if (map_property_is_draw_tile(tile)) {
-                ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = map_image_at(tile);
+                command.pixel = pos;
+                command.mask = COLOR_MASK_NONE;
             }
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(tile), pos, 0);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+            command.image_id = map_image_at(tile);
+            command.pixel = pos;
+            command.mask = COLOR_MASK_NONE;
         }
     } else {
         bool draw = true;
         if (b->size == 3 && building_is_farm(b->type)) {
             draw = is_drawable_farm_corner(tile);
-        } else if (building_type_any_of(*b, BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM, 
-                                            BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE)) {
+        } else if (building_type_any_of(*b, { BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM,
+                                            BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
             building *main = b->main();
             draw = is_drawable_building_corner(tile, main->tile, main->size);
             if (draw) {

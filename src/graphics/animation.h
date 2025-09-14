@@ -22,6 +22,7 @@ struct animation_t {
     int duration;
     int start_frame;
     int hashtime = 0;
+    uint32_t flags;
     bool can_reverse;
     bool loop = true;
     bool reverse = false;
@@ -41,6 +42,7 @@ struct animation_context {
     uint8_t frame_duration = 1;
     uint16_t max_frames;
     uint16_t frame;
+    uint32_t flags;
     bool can_reverse;
     bool loop = true;
     bool is_reverse = false;

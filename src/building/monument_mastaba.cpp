@@ -102,8 +102,11 @@ void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &p
         for (int j = 0; j < size.y; ++j) {
             vec2i p = pixel + (vec2i(-30, 15) * i) + (vec2i(30, 15) * j);
             int image_id = get_image(end.shifted(i, j), end, size);
-            ImageDraw::isometric_from_drawtile(ctx, image_id, p, COLOR_MASK_GREEN);
-            ImageDraw::isometric_from_drawtile_top(ctx, image_id, p, COLOR_MASK_GREEN, 1.f);
+
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            command.image_id = image_id;
+            command.pixel = p;
+            command.mask = COLOR_MASK_GREEN;
         }
     }
 }
@@ -141,7 +144,7 @@ void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id,
 }
 
 tile2i building_small_mastaba_bricks_waiting_tile(building *b) {
-    const bool is_mastaba = building_type_any_of(b->type, BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA);
+    const bool is_mastaba = building_type_any_of(b->type, make_array(BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA));
     if (!is_mastaba) {
         return tile2i{-1, -1};
     }
@@ -177,6 +180,15 @@ void building_mastaba::update_images(building *b, int curr_phase, const vec2i si
         
         part = part->has_next() ? part->next() : nullptr;
     }
+}
+
+bool building_mastaba::need_workers() const {
+    if (!is_main()) {
+        return false;
+    }
+
+    const auto &w = runtime_data().workers;
+    return std::find(w.begin(), w.end(), 0) != w.end();
 }
 
 void building_mastaba::finalize(building *b, const vec2i size_b) {
@@ -270,11 +282,11 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
     int image_id = image_base_bricks + (layer - 1) * 8 + 4;
     int random = (image_base_bricks + 96 + (layer - 1) + (tile.x() + tile.y()) % 1 * 6);
     int result = random;
-    if (building_type_any_of(type, BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE)) {
+    if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE })) {
         int ids[4] = {image_base_bricks + 110, image_base_bricks + 104, image_base_bricks + 104, image_base_bricks + 109};
         int i = (orientation + (city_view_orientation() / 2)) % 4;
         return ids[i];
-    } else if (building_type_any_of(type, BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL)) {
+    } else if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL })) {
         return random;
     } else if (tile.y() == start.y()) { // top corner
         result = (image_id + 3);
@@ -311,15 +323,21 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = tile_to_pixel(ntile);
+                vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    ImageDraw::isometric_from_drawtile(ctx, clear_land_id + ((dy * 4 + dx) & 7), offset, color_mask);
+                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = clear_land_id + ((dy * 4 + dx) & 7);
+                    command.pixel = offset;
+                    command.mask = color_mask;
                 }
 
                 if (progress > 0 && progress <= 200) {
-                    int clr = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
-                    ImageDraw::isometric_from_drawtile(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, clr, ImgFlag_Alpha);
+                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = image_grounded + ((dy * 4 + dx) & 7);
+                    command.pixel = offset;
+                    command.mask = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);;
+                    command.flags = ImgFlag_Alpha;
                 }
             }
         }
@@ -328,41 +346,61 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         const image_t *img = image_get(image_stick);
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
-            vec2i offset = tile_to_pixel(left_top);
-            ImageDraw::isometric_from_drawtile(ctx, image_stick, offset, color_mask);
+            vec2i offset = lookup_tile_to_pixel(left_top);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_stick;
+            command.pixel = offset;
+            command.mask = color_mask;
         }
 
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
-            vec2i offset = tile_to_pixel(right_top);
-            ImageDraw::isometric_from_drawtile(ctx, image_stick, offset, color_mask);
+            vec2i offset = lookup_tile_to_pixel(right_top);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_stick;
+            command.pixel = offset;
+            command.mask = color_mask;
+
         }
 
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
-            vec2i offset = tile_to_pixel(left_bottom);
-            ImageDraw::isometric_from_drawtile(ctx, image_stick, offset, color_mask);
+            vec2i offset = lookup_tile_to_pixel(left_bottom);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_stick;
+            command.pixel = offset;
+            command.mask = color_mask;
         }
 
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
-            vec2i offset = tile_to_pixel(right_bottom);
-            ImageDraw::isometric_from_drawtile(ctx, image_stick, offset, color_mask);
+            vec2i offset = lookup_tile_to_pixel(right_bottom);
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_stick;
+            command.pixel = offset;
+            command.mask = color_mask;
         }
     } else if (monumentd.phase == 1) {
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = tile_to_pixel(ntile);
+                vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
-                    ImageDraw::isometric_from_drawtile(ctx, image_grounded + ((dy * 4 + dx) & 7), offset, color_mask);
+                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = image_grounded + ((dy * 4 + dx) & 7);
+                    command.pixel = offset;
+                    command.mask = color_mask;
                 }
 
                 if (progress > 0 && progress <= 200) {
-                    int clr = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
                     int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
-                    ImageDraw::isometric_from_drawtile(ctx, img, offset, clr, true);
+
+                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = img;
+                    command.pixel = offset;
+                    command.mask = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
+                    command.flags = ImgFlag_Alpha;
                 }
             }
         }
@@ -370,11 +408,15 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         for (int dy = 0; dy < base.size; dy++) {
             for (int dx = 0; dx < base.size; dx++) {
                 tile2i ntile = base.tile.shifted(dx, dy);
-                vec2i offset = tile_to_pixel(ntile);
+                vec2i offset = lookup_tile_to_pixel(ntile);
                 uint32_t progress = map_monuments_get_progress(ntile);
                 if (progress < 200) {
                     int img = get_image(base.orientation, base.tile.shifted(dx, dy), main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
-                    ImageDraw::isometric_from_drawtile(ctx, img, offset, color_mask);
+
+                    auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                    command.image_id = img;
+                    command.pixel = offset;
+                    command.mask = color_mask;
                 }
             }
         }
@@ -407,8 +449,8 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     }
 
     std::sort(tiles2draw.begin(), tiles2draw.end(), [] (tile2i lhs, tile2i rhs) {
-        vec2i lhs_offset = tile_to_pixel(lhs);
-        vec2i rhs_offset = tile_to_pixel(rhs);
+        vec2i lhs_offset = lookup_tile_to_pixel(lhs);
+        vec2i rhs_offset = lookup_tile_to_pixel(rhs);
         return lhs_offset.y < rhs_offset.y;
     });
 
@@ -426,10 +468,14 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             if (progress >= 200) {
-                vec2i offset = tile_to_pixel(tile);
+                vec2i offset = lookup_tile_to_pixel(tile);
                 int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 1);
-                ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
-                ImageDraw::isometric_from_drawtile_top(ctx, img, offset + city_orientation_offset, color_mask);
+
+                auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+                command.image_id = img;
+                command.pixel = offset + city_orientation_offset;
+                command.mask = color_mask;
+
                 fill_tiles_height(ctx, tile, img);
             }
         }
@@ -438,18 +484,26 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), (progress >= 200) ? (phase - 1) : (phase - 2));
-            vec2i offset = tile_to_pixel(tile);
-            ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
-            ImageDraw::isometric_from_drawtile_top(ctx, img, offset + city_orientation_offset, color_mask);
+            vec2i offset = lookup_tile_to_pixel(tile);
+
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = offset + city_orientation_offset;
+            command.mask = color_mask;
+
             fill_tiles_height(ctx, tile, img);
         }
     } else if (monumentd.phase == 8) {
         for (auto &tile : tiles2draw) {
             uint32_t progress = map_monuments_get_progress(tile);
-            vec2i offset = tile_to_pixel(tile);
+            vec2i offset = lookup_tile_to_pixel(tile);
             int img = building_small_mastabe_get_bricks_image(base.orientation, base.type, tile, main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1), 6);
-            ImageDraw::isometric_from_drawtile(ctx, img, offset + city_orientation_offset, color_mask);
-            ImageDraw::isometric_from_drawtile_top(ctx, img, offset + city_orientation_offset, color_mask);
+            
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+            command.image_id = img;
+            command.pixel = offset + city_orientation_offset;
+            command.mask = color_mask;
+
             fill_tiles_height(ctx, tile, img);
         }
     }
@@ -457,7 +511,7 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     if (monumentd.phase > 2 && base.type == BUILDING_SMALL_MASTABA_SIDE) {
         grid_tiles tile2common = map_grid_get_tiles(main->tile, main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1));
         for (auto &t : tile2common) {
-            vec2i offset = tile_to_pixel(t);
+            vec2i offset = lookup_tile_to_pixel(t);
             g_screen_city.draw_figures(offset, t, ctx, /*force*/true);
         }
     }
@@ -465,9 +519,9 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, 
     return true;
 }
 
-custom_span<uint16_t> building_mastaba::active_workers() {
+span_const<uint16_t> building_mastaba::active_workers() const {
     auto &monumentd = runtime_data();
-    return custom_span<uint16_t>(monumentd.workers, 5);
+    return span_const<uint16_t>(monumentd.workers);
 }
 
 void building_mastaba::update_day(const vec2i tiles_size) {

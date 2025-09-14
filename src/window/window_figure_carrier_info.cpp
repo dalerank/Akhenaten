@@ -39,7 +39,7 @@ void figure_carrier_info_window::init(object_info &c) {
     bool is_returning = false;
     switch (f->action_state()) {
     case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
+    case ACTION_27_CARTPUSHER_RETURNING:
     case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
     case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
     case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:

@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "figure/figure_type.h"
 #include "grid/point.h"
+#include "grid/routing/routing_fwd.h"
 #include "graphics/image_desc.h"
 #include "io/io_buffer.h"
 #include "window/building/common.h"
@@ -34,6 +35,7 @@ class figure_worker;
 class figure_soldier;
 class figure_fishing_boat;
 class figure_fishing_point;
+class figure_trade_caravan;
 class figure_caravan_donkey;
 class figure_transport_ship;
 class figure_stonemason;
@@ -65,15 +67,19 @@ enum e_move_type : uint8_t {
     EMOVE_AMPHIBIAN = 3,
 };
 
-enum e_figure_draw_debug_mode {
-    FIGURE_DRAW_DEBUG_ROUTING = 2
-};
-
-extern const token_holder<e_permission, epermission_none, epermission_count> e_permission_tokens;
-
 struct nearby_result {
     figure_id fid = 0;
     int distance = 0;
+};
+
+enum e_figure_draw_mode { 
+    e_figure_draw_none = 0, 
+    e_figure_draw_overlay = 0x1,
+    e_figure_draw_routing = 0x2,
+    e_figure_draw_carry = 0x4,
+    e_figure_draw_building = 0x8,
+    e_figure_draw_festival = 0x10,
+    e_figure_cross_country_move = 0x20,
 };
 
 class figure {
@@ -90,12 +96,12 @@ public:
     uint16_t resource_amount_full; // full load counter
 
     uint16_t home_building_id;
-    uint16_t immigrant_home_building_id;
     uint16_t destination_building_id;
 
     figure_id id;
-    uint16_t sprite_image_id;
+    uint16_t main_image_id;
     uint16_t cart_image_id;
+    bool use_cart;
     animation_context anim;
     bool is_enemy_image;
 
@@ -106,7 +112,7 @@ public:
 
     bool use_cross_country;
     bool is_friendly;
-    uint8_t state;
+    e_figure_state state;
     uint8_t faction_id; // 1 = city, 0 = enemy
     uint8_t action_state_before_attack;
     uint8_t direction;
@@ -153,7 +159,8 @@ public:
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
     uint8_t migrant_num_people;
-    bool is_drawn;
+    bool is_main_drawn;
+    bool is_cart_drawn;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;
     short leading_figure_id;
@@ -185,7 +192,8 @@ public:
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
-    vec2i cached_pos;
+    vec2i main_cached_pos;
+    vec2i cart_cached_pos;
 
     // pharaoh
 
@@ -193,16 +201,26 @@ public:
     unsigned char routing_try_reroute_counter;
     uint16_t collecting_item_max;
     unsigned short sender_building_id;
-    short market_lady_resource_image_offset;
-    // 12 bytes FFFF FFFF FFFF FFFF FFFF FFFF
-    short market_lady_returning_home_id;
-    // 14 bytes 00 00 00 00 00 00 00 ...
-    short market_lady_bought_amount;
+
     // 115 bytes
-    uint8_t draw_debug_mode;
+    uint8_t draw_mode;
     char festival_remaining_dances;
     
     figure_impl *dcast();
+    const figure_impl *dcast() const;
+
+    template<typename T>
+    T *dcast() {
+        return smart_cast<T *>(dcast());
+    }
+
+    template<typename T>
+    const T *dcast() const {
+        return smart_cast<T *>(dcast());
+    }
+
+    #define ALLOW_SMART_CAST_FIGURE(type) figure_##type *dcast_##type() { return dcast<figure_##type>(); }
+    ALLOW_SMART_CAST_FIGURE(immigrant)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -240,6 +258,7 @@ public:
     inline bool is_alive() { return state == FIGURE_STATE_ALIVE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
+    bool has_cart() const;
 
     inline void set_state(e_figure_state s) { state = s; };
     void bind(io_buffer* iob);
@@ -251,9 +270,6 @@ public:
     building* destination();
     const int homeID() const {
         return home_building_id;
-    }
-    const int immigrant_homeID() const {
-        return immigrant_home_building_id;
     }
     const int destinationID() const {
         return destination_building_id;
@@ -291,13 +307,14 @@ public:
 
     // city_figure.c
     void draw_debug();
-    vec2i adjust_pixel_offset(const vec2i &pixel);
+    vec2i adjust_pixel_offset(const vec2i pixel);
+    vec2i main_sprite_pixel() const;
+    vec2i cart_sprite_pixel() const;
     //    void draw_figure(int x, int y, int highlight);
-    void draw_figure_main(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
-    void city_draw_figure(painter &ctx, int highlight, vec2i* coord_out = nullptr);
+    void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
+    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
+    void city_draw_figure(painter &ctx, int highlight);
     //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
-    void draw_figure_with_cart(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out = nullptr);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     // movement.c
@@ -360,8 +377,7 @@ public:
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
     int get_carrying_amount();
-    void determine_deliveryman_destination_food();
-    void cart_update_image();
+    void cart_image_update();
     
     int trader_total_bought();
     int trader_total_sold();
@@ -398,8 +414,7 @@ public:
     // service.c
     int figure_service_provide_coverage();
 
-    // grid/marshland.c
-    bool find_resource_tile(int resource_type, tile2i &out);
+    resource_tile find_resource_tile(e_resource resource);
 
     template<typename T>
     figure_impl *acquire_impl() {
@@ -412,11 +427,11 @@ public:
 #define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
     using figure_model = figures::model_t<self_type>;           \
     static constexpr pcstr CLSID = #clsid;                      \
-    static constexpr e_figure_type TYPE = type;            
+    static constexpr e_figure_type TYPE = type;                                               
 
 #define FIGURE_RUNTIME_DATA(type) ;                                                                   \
     type& runtime_data() { return *(type*)this->base.runtime_data; }                                  \
-    const type& runtime_data() const { return *(type*)this->base.runtime_data; }  
+    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(figure::runtime_data)); return *(type*)this->base.runtime_data; }  
 
 #define FIGURE_RUNTIME_DATA_T FIGURE_RUNTIME_DATA(runtime_data_t)
 
@@ -455,10 +470,10 @@ public:
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out);
+    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
-    virtual figure_phrase_t phrase() const { return {FIGURE_NONE, ""}; }
+    virtual figure_phrase_t phrase() const { return { FIGURE_NONE, "" }; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
@@ -468,8 +483,8 @@ public:
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
     virtual int y_correction(int y) const { return y; }
-    virtual void cart_update_image() { base.cart_update_image(); }
-    virtual void main_update_image();
+    virtual void cart_image_update() { base.cart_image_update(); }
+    virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return params().anim; }
     virtual const static_params &params() const { return params(type()); }
@@ -478,27 +493,32 @@ public:
     virtual void on_config_reload() {}
     virtual void on_update_home() {}
     virtual xstring action_tip() const { static xstring tip(""); return tip; }
+    virtual void debug_show_properties() {}
+    virtual void debug_draw() {}
+    virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
     static void acquire(e_figure_type e, figure &b);
 
-    virtual figure_immigrant *dcast_immigrant() { return nullptr; }
-    virtual figure_cartpusher *dcast_cartpusher() { return nullptr; }
-    virtual figure_storageyard_cart *dcast_storageyard_cart() { return nullptr; }
-    virtual figure_trade_ship *dcast_trade_ship() { return nullptr; }
-    virtual figure_sled *dcast_sled() { return nullptr; }
-    virtual figure_musician *dcast_musician() { return nullptr; }
-    virtual figure_dancer *dcast_dancer() { return nullptr; }
-    virtual figure_labor_seeker *dcast_labor_seeker() { return nullptr; }
-    virtual figure_worker *dcast_worker() { return nullptr; }
-    virtual figure_soldier *dcast_soldier() { return nullptr; }
-    virtual figure_fishing_boat *dcast_fishing_boat() { return nullptr; }
-    virtual figure_fishing_point *dcast_fishing_point() { return nullptr; }
-    virtual figure_caravan_donkey *dcast_caravan_donkey() { return nullptr; }
-    virtual figure_warship *dcast_warship() { return nullptr; }
-    virtual figure_transport_ship *dcast_transport_ship() { return nullptr; }
-    virtual figure_stonemason *dcast_stonemason() { return nullptr; }
+    #define ALLOW_SMART_CAST_FIGURE_I(type) virtual figure_##type *dcast_##type() { return nullptr; }
+    ALLOW_SMART_CAST_FIGURE_I(immigrant)
+    ALLOW_SMART_CAST_FIGURE_I(cartpusher)
+    ALLOW_SMART_CAST_FIGURE_I(storageyard_cart)
+    ALLOW_SMART_CAST_FIGURE_I(trade_ship)
+    ALLOW_SMART_CAST_FIGURE_I(sled)
+    ALLOW_SMART_CAST_FIGURE_I(musician)
+    ALLOW_SMART_CAST_FIGURE_I(dancer)
+    ALLOW_SMART_CAST_FIGURE_I(labor_seeker)
+    ALLOW_SMART_CAST_FIGURE_I(worker)
+    ALLOW_SMART_CAST_FIGURE_I(soldier)
+    ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
+    ALLOW_SMART_CAST_FIGURE_I(fishing_point)
+    ALLOW_SMART_CAST_FIGURE_I(caravan_donkey)
+    ALLOW_SMART_CAST_FIGURE_I(trade_caravan)
+    ALLOW_SMART_CAST_FIGURE_I(warship)
+    ALLOW_SMART_CAST_FIGURE_I(transport_ship)
+    ALLOW_SMART_CAST_FIGURE_I(stonemason)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -565,6 +585,7 @@ GENERATE_SMART_CAST_FIGURE(fishing_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
+GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
 

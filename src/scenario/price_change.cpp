@@ -25,7 +25,7 @@ void scenario_price_change_process(void) {
             continue;
         }
         int amount = g_scenario.price_changes[i].amount;
-        int resource = g_scenario.price_changes[i].resource;
+        e_resource resource = g_scenario.price_changes[i].resource;
         if (g_scenario.price_changes[i].is_rise) {
             if (trade_price_change(resource, amount))
                 events::emit(event_message{ true, MESSAGE_PRICE_INCREASED, amount, resource });

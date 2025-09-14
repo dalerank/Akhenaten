@@ -185,7 +185,7 @@ void build_menu_widget::draw_menu_buttons() {
         }
 
         int text_offset = btn_w_start_pos.y + btn_text_w_offset.y;
-        const bool temple_upgrades = building_type_any_of(type, BUILDING_TEMPLE_COMPLEX_ALTAR, BUILDING_TEMPLE_COMPLEX_ORACLE);
+        const bool temple_upgrades = building_type_any_of(type, make_array(BUILDING_TEMPLE_COMPLEX_ALTAR, BUILDING_TEMPLE_COMPLEX_ORACLE));
         if (is_all_button(type)) {
             lang_text_draw_centered(52, 19, x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         } else if (temple_upgrades) {

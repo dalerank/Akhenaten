@@ -438,8 +438,8 @@ bool building_monument_is_monument(const building *b) {
 }
 
 bool building_monument_type_is_monument(e_building_type type) {
-    return building_type_any_of(type, BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
-                                      BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE);
+    return building_type_any_of(type, { BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
+                                      BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE });
 }
 
 bool building_monument_type_is_mini_monument(e_building_type type) {
@@ -743,7 +743,7 @@ bool building_monument_need_workers(building *b) {
         return false;
     }
 
-    if (building_type_none_of(*b, BUILDING_SMALL_MASTABA)) {
+    if (building_type_none_of(*b, { BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA })) {
         return false;
     }
 

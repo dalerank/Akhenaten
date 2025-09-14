@@ -62,7 +62,7 @@ public:
 
 class building_tower_gatehouse : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_TOWER_GATERHOUSE, building_tower_gatehouse, building_impl)
+    BUILDING_METAINFO(BUILDING_TOWER_GATEHOUSE, building_tower_gatehouse, building_impl)
     
     struct static_params : public building_model {
         using inherited = building_model;

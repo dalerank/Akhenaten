@@ -16,7 +16,7 @@ public:
     virtual void figure_action() override;
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override;
-    virtual void main_update_image() override;
+    virtual void main_image_update() override;
     static figure *create(tile2i tile);
 };
 

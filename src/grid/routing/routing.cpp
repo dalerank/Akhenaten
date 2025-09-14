@@ -5,6 +5,7 @@
 #include "grid/vegetation.h"
 #include "building/building.h"
 #include "city/city_buildings.h"
+#include "routing_terrain.h"
 #include "core/profiler.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -349,42 +350,47 @@ bool map_routing_citizen_found_terrain(tile2i src, tile2i *dst, int terrain_type
     return route_queue_until_terrain(src_offset, terrain_type, dst, callback_travel_found_terrain);
 }
 
-static bool callback_travel_found_reeds(int next_offset, int dist) {
-    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
-        enqueue(next_offset, dist);
-        if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
-            // requires tile to be fully within a 3x3 marshland area
-            if (map_terrain_all_tiles_in_radius_are(tile2i(next_offset), 1, 1, TERRAIN_MARSHLAND)) {
+resource_tile map_routing_citizen_found_reeds(tile2i src) {
+    auto callback_travel_found_reeds = [] (int next_offset, int dist) {
+        if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)) {
+            enqueue(next_offset, dist);
+            if (map_terrain_is(next_offset, TERRAIN_MARSHLAND)) {
+                // requires tile to be fully within a 3x3 marshland area
+                if (map_terrain_all_tiles_in_radius_are(tile2i(next_offset), 1, 1, TERRAIN_MARSHLAND)) {
+                    if (can_harvest_point(next_offset))
+                        return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    int src_offset = src.grid_offset();
+    ++g_routing_stats.total_routes_calculated;
+    tile2i dst;
+    const bool found = route_queue_until_found(src_offset, dst, callback_travel_found_reeds);
+
+    return { found ? RESOURCE_REEDS : RESOURCE_NONE, dst };
+}
+
+resource_tile map_routing_citizen_found_timber(tile2i src) {
+    auto callback_travel_found_timber = [] (int next_offset, int dist) {
+        if ((map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD || map_terrain_is(next_offset, TERRAIN_TREE))
+            && !has_fighting_friendly(next_offset)) {
+            enqueue(next_offset, dist);
+            if (map_terrain_is(next_offset, TERRAIN_TREE)) {
                 if (can_harvest_point(next_offset))
                     return true;
             }
         }
-    }
-    return false;
-}
+        return false;
+        };
 
-bool map_routing_citizen_found_reeds(tile2i src, tile2i &dst) {
     int src_offset = src.grid_offset();
     ++g_routing_stats.total_routes_calculated;
-    return route_queue_until_found(src_offset, dst, callback_travel_found_reeds);
-}
-
-static bool callback_travel_found_timber(int next_offset, int dist) {
-    if ((map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD || map_terrain_is(next_offset, TERRAIN_TREE))
-        && !has_fighting_friendly(next_offset)) {
-        enqueue(next_offset, dist);
-        if (map_terrain_is(next_offset, TERRAIN_TREE)) {
-            if (can_harvest_point(next_offset))
-                return true;
-        }
-    }
-    return false;
-}
-
-bool map_routing_citizen_found_timber(tile2i src, tile2i &dst) {
-    int src_offset = src.grid_offset();
-    ++g_routing_stats.total_routes_calculated;
-    return route_queue_until_found(src_offset, dst, callback_travel_found_timber);
+    tile2i dst;
+    const bool found = route_queue_until_found(src_offset, dst, callback_travel_found_timber);
+    return { found ? RESOURCE_TIMBER : RESOURCE_NONE, dst };
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist) {
@@ -476,7 +482,9 @@ static void callback_travel_amphibia_land_water(int next_offset, int dist) {
     }
 
     const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
-    if (pas == AMPHIBIA_0_PASSABLE) {
+    if (pas == AMPHIBIA_0_PASSABLE
+        || (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_1_BUILDING
+            && map_routing_tile_check(TERRAIN_USAGE_AMPHIBIA, next_offset) >= 0)) {
         enqueue(next_offset, dist);
     }
 }
