@@ -48,10 +48,19 @@ void buildings_valid_do(T func) {
     }
 }
 
-template<typename ... Args, typename T>
-void buildings_valid_do(T func, Args ... args) {
+template<typename T>
+void buildings_valid_do(T func, const std::initializer_list<e_building_type>& types) {
     for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, args...)) {
+        if (b.is_valid() && building_type_any_of(b, types)) {
+            func(b);
+        }
+    }
+}
+
+template<typename T>
+void buildings_valid_do(T func, e_building_type type) {
+    for (auto &b : city_buildings()) {
+        if (b.is_valid() && (b.type == type)) {
             func(b);
         }
     }
@@ -79,10 +88,10 @@ inline B *building_first_ex(T pred) {
     return nullptr;
 }
 
-template <typename ... Args>
-inline building *building_first_of_type(Args ... types) {
+template <typename T>
+inline building *building_first_of_type(const T& types) {
     for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, types...)) {
+        if (b.is_valid() && building_type_any_of(b, types)) {
             return &b;
         }
     }

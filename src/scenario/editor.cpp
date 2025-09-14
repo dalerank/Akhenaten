@@ -207,7 +207,7 @@ static void sort_price_changes(void) {
 
 void scenario_editor_price_change_delete(int index) {
     g_scenario.price_changes[index].year = 0;
-    g_scenario.price_changes[index].resource = 0;
+    g_scenario.price_changes[index].resource = RESOURCE_NONE;
     g_scenario.price_changes[index].amount = 0;
     g_scenario.price_changes[index].is_rise = 0;
     sort_price_changes();

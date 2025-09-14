@@ -33,7 +33,8 @@ public:
     bool draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
 
     void update_day(const vec2i tiles_size);
-    custom_span<uint16_t> active_workers();
+    virtual bool need_workers() const override;
+    span_const<uint16_t> active_workers() const;
 
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     static void finalize(building *b, const vec2i size_b);
@@ -50,7 +51,7 @@ public:
 
     struct static_params : public static_params_t<building_small_mastaba> {
         virtual vec2i init_tiles_size() const { return vec2i(10, 4); }
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
@@ -63,7 +64,7 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_SIDE, building_small_mastaba_part_side, building_small_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 class building_small_mastaba_part_wall : public building_small_mastaba {
@@ -71,7 +72,7 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_WALL, building_small_mastaba_part_wall, building_small_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 class building_small_mastaba_part_entrance : public building_small_mastaba {
@@ -79,7 +80,7 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_ENTRANCE, building_small_mastaba_part_entrance, building_small_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba : public building_mastaba {
@@ -90,7 +91,7 @@ public:
 
     struct static_params : public static_params_t<building_medium_mastaba> {
         virtual vec2i init_tiles_size() const { return vec2i(14, 6); }
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
@@ -103,7 +104,7 @@ public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_SIDE, building_medium_mastaba_part_side, building_medium_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba_part_wall : public building_medium_mastaba {
@@ -111,7 +112,7 @@ public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_WALL, building_medium_mastaba_part_wall, building_medium_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba_part_entrance : public building_medium_mastaba {
@@ -119,7 +120,7 @@ public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_ENTRANCE, building_medium_mastaba_part_entrance, building_medium_mastaba)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);

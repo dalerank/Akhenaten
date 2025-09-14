@@ -172,7 +172,7 @@ void figure_constable::figure_action() {
         do_enterbuilding(true, b);
         break;
 
-    case ACTION_10_DELIVERING_FOOD:
+    case 10:
     case FIGURE_ACTION_72_POLICEMAN_ROAMING:
         do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_73_POLICEMAN_RETURNING);
         break;

@@ -32,7 +32,7 @@ int city_overlay_labor_access::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    if (b->is_house()) {
+    if (b->dcast<building_house>()) {
         return COLUMN_TYPE_NONE;
     }
 
@@ -46,7 +46,7 @@ int city_overlay_labor_access::get_column_height(const building *b) const {
 }
 
 bool city_overlay_labor_access::show_building(const building *b) const {
-    if (b->is_house()) {
+    if (b->dcast<building_house>()) {
         return false;
     }
 

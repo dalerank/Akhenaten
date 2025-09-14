@@ -49,7 +49,7 @@ void figure_drunkard::figure_action() {
         if (base.wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
             building_id bid = building_closest_route(*home(),
-                [] (building &b) { return b.is_house(); },
+                [] (building &b) { return !!b.dcast_house(); },
                 [] (building &b) {
                     auto house = b.dcast_house();
                     return (house ? house->runtime_data().drunkard_active * 100 : 0);
@@ -88,7 +88,7 @@ void figure_drunkard::figure_action() {
             break;
         }
 
-        if (do_gotobuilding(destination(), TERRAIN_USAGE_PREFER_ROADS)) {
+        if (do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS)) {
             auto house = destination()->dcast_house();
             if (house) {
                 house->runtime_data().drunkard_active = 96;

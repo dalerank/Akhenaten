@@ -207,7 +207,7 @@ archive::variant_t archive::r_variant(pcstr name) {
     return result;
 }
 
-std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
+std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
     std::vector<vec2i> result;
@@ -215,7 +215,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
-            vec2i v = r_vec2i_impl("x", "y");
+            vec2i v = r_vec2i_impl(px, py);
             result.push_back(v);
             js_pop(vm, 1);
         }

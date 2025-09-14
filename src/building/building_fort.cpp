@@ -121,7 +121,11 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (map_property_is_draw_tile(tile.grid_offset())) {
         int mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
         const auto &anim = params().anim[animkeys().picture];
-        ImageDraw::img_generic(ctx, anim.first_img(), point + anim.pos, mask);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = anim.first_img();
+        command.pixel = point + anim.pos;
+        command.mask = color_mask;
     }
 
     return true;

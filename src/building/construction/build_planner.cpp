@@ -164,13 +164,15 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
 
             int image_id = tile_graphics_array[row][column];
             if (image_id > 0) {
-                vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(ctx, image_id, current_coord, COLOR_MASK_GREEN);
-                ImageDraw::isometric_from_drawtile_top(ctx, image_id, current_coord, COLOR_MASK_GREEN);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+                command.image_id = image_id;
+                command.pixel = pixel_coords_cache[row][column];
+                command.mask = COLOR_MASK_GREEN;
             } else if(image_id < 0) {
-                const int black_image = image_id_from_group(GROUP_TERRAIN_BLACK);
-                vec2i current_coord = pixel_coords_cache[row][column];
-                ImageDraw::isometric_from_drawtile(ctx, black_image, current_coord, COLOR_MASK_GREEN);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
+                command.pixel = pixel_coords_cache[row][column];
+                command.mask = COLOR_MASK_GREEN;
             }
         }
     }
@@ -613,6 +615,7 @@ void build_planner::setup_build_graphics() {
 
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
+    const auto &params = building_impl::params(build_type);
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // check terrain at coords
@@ -655,8 +658,8 @@ void build_planner::update_obstructions_check() {
             const bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
             const bool inside_map = map_grid_is_inside(current_tile, 1);
             const bool not_clear = inside_map && map_terrain_is(current_tile, restricted_terrain & TERRAIN_NOT_CLEAR);
-            const bool has_figure = inside_map && map_has_figure_at(current_tile);
-            if (!inside_map || not_clear || has_figure || blocked_by_floodplain_edge) {
+            const bool allow_tile = inside_map && params.plane_ghost_allow_tile(*this, current_tile);
+            if (!inside_map || not_clear || !allow_tile || blocked_by_floodplain_edge) {
                 tile_blocked_array[row][column] = true;
                 tiles_blocked_total++;
             }
@@ -881,7 +884,7 @@ void build_planner::update_unique_only_one_check() {
 }
 
 void build_planner::update_coord_caches() {
-    vec2i view_tile = tile_to_pixel(end);
+    vec2i view_tile = lookup_tile_to_pixel(end);
     if (view_tile.x == 0 && view_tile.y == 0)
         // this prevents graphics from being drawn on the top left corner
         // of the screen when the current "end" tile isn't valid.
@@ -1137,7 +1140,7 @@ void build_planner::construction_finalize() { // confirm final placement
     const auto &params = building_impl::params(build_type);
     if (!place()) {
         map_property_clear_constructing_and_deleted();
-        if (building_type_any_of(build_type, BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH)) {
+        if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH })) {
             game_undo_restore_map(0);
         } else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS) {
             game_undo_restore_map(1);
@@ -1296,7 +1299,7 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 
 void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
     for (auto &tile : blocked_tiles) {
-        vec2i pixel = tile_to_pixel(tile.tile);
+        vec2i pixel = lookup_tile_to_pixel(tile.tile);
         draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
 }
@@ -1330,8 +1333,10 @@ void build_planner::draw(painter &ctx) {
 }
 
 void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
-    ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, color_mask);
-    ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, color_mask, 1.f);
+    auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = color_mask;
 }
 
 void build_planner::draw_graphics(painter &ctx) {
@@ -1341,7 +1346,6 @@ void build_planner::draw_graphics(painter &ctx) {
     const auto &params = building_impl::params(build_type);
     params.planer_ghost_preview(*this, ctx, start, end, pixel);
 }
-
 
 bool build_planner::place() {
     if (end == tile2i(-1, -1)) {

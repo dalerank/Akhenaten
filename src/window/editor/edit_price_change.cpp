@@ -89,7 +89,7 @@ static void button_year(int param1, int param2) {
 }
 
 static void set_resource(int value) {
-    data.price_change.resource = value;
+    data.price_change.resource = (e_resource)value;
 }
 
 static void button_resource(int param1, int param2) {

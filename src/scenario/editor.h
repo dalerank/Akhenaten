@@ -20,7 +20,7 @@ struct editor_invasion {
 
 struct editor_price_change {
     int year;
-    int resource;
+    e_resource resource;
     int amount;
     int is_rise;
 };

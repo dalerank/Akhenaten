@@ -722,10 +722,9 @@ void ui::widget::line(bool hline, vec2i npos, int size, color c) {
 
 void ui::eimg::draw(UiFlags flags) {
     if (isometric) {
-        painter ctx = game.painter();
         const vec2i offset = g_state.offset();
-        ImageDraw::isometric_from_drawtile(ctx, image_group(img_desc), offset + pos);
-        ImageDraw::isometric_from_drawtile_top(ctx, image_group(img_desc), offset + pos);
+        painter ctx = game.painter();
+        ImageDraw::img_isometric(ctx, image_group(img_desc), offset + pos, COLOR_MASK_NONE);
     } else {
         ui::eimage(img_desc, pos);
     }

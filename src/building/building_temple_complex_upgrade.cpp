@@ -35,7 +35,7 @@ void building_temple_complex_upgrade::static_params_t<T>::planer_ghost_preview(b
     case 3: offset = { bsize, bsize }; break;
     }
 
-    vec2i pixel_upgrade = tile_to_pixel(upgrade_base->tile.shifted(offset));
+    vec2i pixel_upgrade = lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
     planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 

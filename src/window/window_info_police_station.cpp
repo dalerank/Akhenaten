@@ -7,7 +7,7 @@ struct info_window_police_station : public building_info_window_t<info_window_po
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_POLICE_STATION);
+        return (b->type == BUILDING_POLICE_STATION);
     }
 };
 

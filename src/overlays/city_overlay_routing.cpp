@@ -20,7 +20,7 @@ static int terrain_on_routing_overlay() {
 }
 
 static bool building_on_routing_overlay(e_building_type type) {
-    return building_type_any_of(type, BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD);
+    return building_type_any_of(type, { BUILDING_FERRY, BUILDING_PLAZA, BUILDING_BOOTH, BUILDING_ROAD });
 }
 
 inline bool city_overlay_routing::show_figure(const figure *f) const {
@@ -39,20 +39,26 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, 
     int image_id = image_id_from_group(GROUP_TERRAIN_DESIRABILITY);
     if (map_terrain_is(grid_offset, terrain_on_routing_overlay()) && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         drawn = true;
-        ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
+
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(grid_offset);
+        command.pixel = pixel;
+        command.mask = color_mask;
     }
 
     if (!drawn && map_terrain_is(grid_offset, TERRAIN_WATER)) {
         drawn = true;
         if (map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE)) {
-            int offset = 4;
-            ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
+            image_id += 4;
         } else if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-            int offset = 5;
-            ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
+            image_id += 5;
         } else {
-            ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
+            image_id = map_image_at(grid_offset);
         }
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = image_id;
+        command.pixel = pixel;
+        command.mask = color_mask;
     }
 
     if (!drawn) {
@@ -61,7 +67,10 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, 
             int offset = 2;
 
             if (b && !building_on_routing_overlay(b->type)) {
-                ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
+                auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+                command.image_id = image_id + offset;
+                command.pixel = pixel;
+                command.mask = color_mask;
                 drawn = true;
             }
         }
@@ -73,14 +82,20 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, 
         bool building_road = b && building_on_routing_overlay(b->type);
 
         if (road || building_road) {
-            int offset = 5;
             drawn = true;
-            ImageDraw::isometric_from_drawtile(ctx, image_id + offset, pixel, color_mask);
+
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            command.image_id = image_id + 5;
+            command.pixel = pixel;
+            command.mask = color_mask;
         }
     }
 
     if (!drawn) {
-        ImageDraw::isometric_from_drawtile(ctx, map_image_at(grid_offset), pixel, color_mask);
+        auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(grid_offset);
+        command.pixel = pixel;
+        command.mask = color_mask;
     }
 }
 

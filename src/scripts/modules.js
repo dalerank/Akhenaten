@@ -24,6 +24,7 @@ import images_remap
 import ui_overlay_menu
 import imagepaks
 import missions
+import mission_8_selima
 import figures
 import ui_hold_festival_window
 import localization
@@ -39,12 +40,16 @@ import floodplain
 import ui_advisors_window
 import ui_terrain_info
 import ui
-import ui_figure_trader_ship_window
+import ui_figure_trader_window
 import ui_top_menu_widget
 import ui_advisor_religion
 import fonts
 import routing
+import ui_bazaar_window
+import ui_advisor_chief
+import ui_mission_briefing_window
+import economic
+import migration
 
-include(":ui_advisor_chief.js")
 include(":ui_advisor_education.js")
 include(":music.js")

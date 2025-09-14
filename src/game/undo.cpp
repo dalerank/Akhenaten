@@ -232,7 +232,7 @@ void game_undo_perform() {
         map_image_restore();
         map_property_restore();
         map_property_clear_constructing_and_deleted();
-    } else if (building_type_any_of((e_building_type)data.type, BUILDING_IRRIGATION_DITCH, BUILDING_ROAD, BUILDING_MUD_WALL)) {
+    } else if (building_type_any_of((e_building_type)data.type, make_array(BUILDING_IRRIGATION_DITCH, BUILDING_ROAD, BUILDING_MUD_WALL))) {
         map_terrain_restore();
         map_canal_restore();
         restore_map_images();

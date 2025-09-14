@@ -110,7 +110,7 @@ void figure_spear::figure_action() {
     }
 
     int dir = (16 + direction() - 2 * city_view_orientation()) % 16;
-    base.sprite_image_id = anim(animkeys().walk).first_img() + dir;
+    base.main_image_id = anim(animkeys().walk).first_img() + dir;
 }
 
 void figure_javelin::figure_action() {
@@ -167,5 +167,5 @@ void figure_bolt::figure_action() {
         poof();
     }
     int dir = (16 + direction() - 2 * city_view_orientation()) % 16;
-    base.sprite_image_id = anim(animkeys().walk).first_img() + 32 + dir;
+    base.main_image_id = anim(animkeys().walk).first_img() + 32 + dir;
 }

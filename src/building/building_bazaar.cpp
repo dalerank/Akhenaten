@@ -142,7 +142,7 @@ building *building_bazaar::get_storage_destination() {
             resources[INVENTORY_GOOD3].update_good(RESOURCE_LINEN, b, distance);
             resources[INVENTORY_GOOD4].update_good(RESOURCE_BEER, b, distance);
         }
-    }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
+    }, { BUILDING_GRANARY, BUILDING_STORAGE_YARD });
 
     // update demands
     auto &d = runtime_data();

@@ -91,10 +91,9 @@ void figure::ballista_action() {
     }
     int dir = figure_image_direction();
     if (action_state == FIGURE_ACTION_181_BALLISTA_FIRING) {
-        sprite_image_id
-          = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir + 8 * BALLISTA_FIRING_OFFSETS[wait_ticks_missile / 4];
+        main_image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir + 8 * BALLISTA_FIRING_OFFSETS[wait_ticks_missile / 4];
     } else {
-        sprite_image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
+        main_image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
     }
 }
 

@@ -148,8 +148,8 @@ int city_population_t::create_immigrants(int num_people) {
 
     // clean up any dead immigrants
     for (auto house: houses) {
-        if (house->base.has_figure(2) && house->get_figure(2)->state != FIGURE_STATE_ALIVE) {
-            house->base.remove_figure(2);
+        if (house->base.has_figure(BUILDING_SLOT_IMMIGRANT) && house->get_figure(BUILDING_SLOT_IMMIGRANT)->state != FIGURE_STATE_ALIVE) {
+            house->base.remove_figure(BUILDING_SLOT_IMMIGRANT);
         }
     };
 
@@ -160,7 +160,7 @@ int city_population_t::create_immigrants(int num_people) {
             break;
         }
 
-        if (house->distance_from_entry() <= 0 || house->population_room() <= 8 || house->base.has_figure(2, -1)) {
+        if (house->distance_from_entry() <= 0 || house->population_room() <= 8 || house->base.has_figure(BUILDING_SLOT_IMMIGRANT, -1)) {
             continue; // house already has immigrant
         }
 
@@ -174,13 +174,14 @@ int city_population_t::create_immigrants(int num_people) {
             break;
         }
 
-        if (house->distance_from_entry() <= 0 || house->population_room() <= 0 || house->base.has_figure(2, -1)) {
+        if (house->distance_from_entry() <= 0 || house->population_room() <= 0 || house->base.has_figure(BUILDING_SLOT_IMMIGRANT, -1)) {
             continue; // immigrant algready going to this house
         }
         const int population_room = house->population_room();
         to_immigrate -= std::min(to_immigrate, population_room);
         events::emit(event_create_immigrant{ house->id(), to_immigrate, SOURCE_LOCATION });
     }
+
     return num_people - to_immigrate;
 }
 

@@ -39,7 +39,7 @@ e_column_color city_overlay_health::get_column_color(const building *b) const {
 void city_overlay_health::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
     city_overlay::draw_custom_top(pixel, tile, ctx);
 
-    if (g_debug_render == e_debug_render_overlay_add) {
+    if (debug_render_mode() == e_debug_render_overlay_add) {
         building *b = building_at(tile);
         if (b->id) {
             auto house = b->dcast_house();

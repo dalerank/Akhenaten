@@ -63,13 +63,14 @@ struct object_info {
     } go_to_advisor;
 
     int storage_show_special_orders;
-    struct {
+    struct nfigure_t {
         int draw_debug_path;
         textid phrase;
         xstring phrase_key;
         int selected_index;
         int drawn;
         svector<int, 7> ids;
+        figure *get() const;
     } nfigure;
 
     void reset(tile2i tile);

@@ -45,20 +45,20 @@
 #include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
 
-int g_debug_tile = 0;
-int g_debug_render = 0;
+#include "js/js_game.h"
+
 int debug_range_3 = 0;
 int debug_range_4 = 0;
 int g_debug_figure_id = 0;
-int g_debug_building_id = 0;
 
 game_debug_t g_debug;
+bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
-declare_console_command_p(debugrender) {
-    std::string args; is >> args;
-    g_debug_render  = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-};
+const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
 
+declare_console_var_int(debugrender, 0);
+declare_console_var_int(debugtile, 0);
+declare_console_var_int(debugbuildingid, 0);
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";
@@ -205,12 +205,20 @@ static int north_tile_grid_offset(int x, int y) {
     return grid_offset;
 }
 
+bool get_debug_draw_option(int opt) {
+    return g_debug_show_opts[opt];
+}
+
+void set_debug_draw_option(int opt, bool e) {
+    g_debug_show_opts[opt] = e;
+}
+
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;
 
-    int DB2 = abs(g_debug_render) % e_debug_render_size;
+    int DB2 = abs(debug_render_mode()) % e_debug_render_size;
 
     if (DB2 == 0)
         return;
@@ -263,7 +271,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x0, y + 5, 0, "", b->road_access.x(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             debug_text(ctx, str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
             if (b->has_road_access) {
-                auto tile_coords = tile_to_pixel(b->road_access);
+                auto tile_coords = lookup_tile_to_pixel(b->road_access);
                 build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
             }
         }
@@ -506,10 +514,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
-    case e_debug_render_marshland_depl: // MARSHLAND DEPLETION
-        d = map_get_vegetation_growth(grid_offset);
-        if (d != 255) {
-            debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
+    case e_debug_render_vegetation_growth:
+        if (map_terrain_is(grid_offset, TERRAIN_MARSHLAND | TERRAIN_TREE)) {
+            d = map_get_vegetation_growth(grid_offset);
+            debug_text(ctx, str, x, y + 10, 0, "", d, (d < 200) ? COLOR_LIGHT_RED : COLOR_LIGHT_BLUE);
         }
         break;
 
@@ -528,13 +536,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
-    case e_debug_render_desirability: // FIRE
+    case e_debug_render_desirability:
         if (g_desirability.get(grid_offset) != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", g_desirability.get(grid_offset), COLOR_LIGHT_RED);
         }
         break;
 
-    case e_debug_render_marshland: // MARSHLAND
+    case e_debug_render_marshland:
         d = map_terrain_is(grid_offset, TERRAIN_MARSHLAND);
         if (d != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", d, COLOR_LIGHT_RED);
@@ -587,25 +595,20 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     }
 }
 
-void draw_debug_figures(vec2i pixel, tile2i tile, painter &ctx) {
-    int figure_id = map_figure_id_get(tile);
-    while (figure_id) {
-        figure* f = figure_get(figure_id);
-        f->draw_debug();
-        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-    }
+void draw_debug_figures() {
+
 }
 
 void figure::draw_debug() {
-    if (draw_debug_mode == 0) {
+    if (draw_mode == 0) {
         return;
     }
 
-    building* b = home();
-    building* bdest = destination();
+    building *b = home();
+    building *bdest = destination();
 
     uint8_t str[10];
-    vec2i pixel = tile_to_pixel(tile);
+    vec2i pixel = lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
     pixel.x -= 10;
     pixel.y -= 80;
@@ -613,15 +616,14 @@ void figure::draw_debug() {
     color col = COLOR_WHITE;
     painter ctx = game.painter();
 
-    switch (draw_debug_mode) {
-    case 1: // ACTION & STATE IDS
+    if (!!(draw_mode & e_figure_draw_overlay)) {
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", id, COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
         debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", wait_ticks, COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", roam_length, COLOR_WHITE);
         if (true) {
-            vec2i tp = tile_to_pixel(tile);
+            vec2i tp = lookup_tile_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
@@ -631,38 +633,39 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", tile.grid_offset(), COLOR_FONT_MEDIUM_GRAY);
         debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
         debug_text(ctx, str, pixel.x + 30, pixel.y + 30, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
-        break;
+    }
 
-    case FIGURE_DRAW_DEBUG_ROUTING:
+    if (!!(draw_mode & e_figure_draw_routing)) {
         // draw path
-        if (routing_path_id) { //&& (roam_length == max_roam_length || roam_length == 0)
-            vec2i coords = tile_to_pixel(destination()->tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, coords);
-            coords = tile_to_pixel(destination_tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 20, coords);
+        if (routing_path_id) {
+            vec2i coords = lookup_tile_to_pixel(destination()->tile);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            coords = lookup_tile_to_pixel(destination_tile);
+            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int tx = tile.x();
             int ty = tile.y();
-            coords = tile_to_pixel(tile);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+            coords = lookup_tile_to_pixel(tile);
+            ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords.x, coords.y);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
                 starting_tile_index--;
             }
 
             for (int i = starting_tile_index; i < routing_path_length; i++) {
+                int img_index = 10;
                 auto pdir = figure_route_get_direction(routing_path_id, i);
                 switch (pdir) {
-                case 0: ty--; break;
+                case 0: ty--; img_index = 0; break;
                 case 1: tx++; ty--; break;
-                case 2: tx++; break;
+                case 2: tx++; img_index = 1; break;
                 case 3: tx++; ty++; break;
-                case 4: ty++; break;
+                case 4: ty++; img_index = 0; break;
                 case 5: tx--; ty++; break;
-                case 6: tx--; break;
+                case 6: tx--; img_index = 1; break;
                 case 7: tx--; ty--; break;
                 }
-                coords = tile_to_pixel(tile2i(tx, ty));
-                ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, coords.x, coords.y);
+                coords = lookup_tile_to_pixel(tile2i(tx, ty));
+                ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + img_index, coords.x, coords.y);
             }
         }
 
@@ -698,39 +701,41 @@ void figure::draw_debug() {
         pixel.y += 50;
         string_from_int(str, progress_on_tile, 0);
         text_draw(ctx, str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
-        break;
-    case 3: // RESOURCE CARRY
+    }
+
+    if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
         if (resource_id) {
             debug_text(ctx, str, pixel.x, pixel.y, indent, "", resource_id, COLOR_GREEN);
             debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : COLOR_FONT_MEDIUM_GRAY);
             debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
         }
-        break;
-    case 4: // BUILDING DATA
+    }
+
+    if (!!(draw_mode & e_figure_draw_building)) {
         debug_text(ctx, str, pixel.x + 0, pixel.y, indent, "", homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
         debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 0, pixel.y + 20, indent, "", immigrant_homeID(), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 20, 8, ":", building_get(immigrant_home_building_id)->get_figure_slot(this), immigrant_homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        break;
-    case 5: // FESTIVAL
+    }
+
+    if (!!(draw_mode & e_figure_draw_festival)) {
         pixel.y += 30;
         //debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "service[0]", data.value[0], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "service[1]", data.value[1], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "service[2]", data.value[2], COLOR_WHITE);
         debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
-        break;
-    case 6: // CROSS-COUNTRY MOVEMENT
+    }
+
+    if (!!(draw_mode & e_figure_cross_country_move)) { // CROSS-COUNTRY MOVEMENT
         if (use_cross_country) {
             vec2i tp;
             if (tile.grid_offset() != -1) {
-                tp = tile_to_pixel(tile);
+                tp = lookup_tile_to_pixel(tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_GREEN);
             }
             if (destination_tile.grid_offset() != -1) {
-                tp = tile_to_pixel(destination_tile);
+                tp = lookup_tile_to_pixel(destination_tile);
                 debug_draw_tile_box(tp.x, tp.y, COLOR_NULL, COLOR_FONT_YELLOW);
             }
         }
@@ -753,8 +758,25 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta.x, col);
         debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_delta.y, col);
         pixel.y += 10;
-        break;
     }
+
+    dcast()->debug_draw();
+}
+
+void set_debug_building_id(int bid) {
+    debugbuildingid.value = bid;
+}
+
+int get_debug_building_id() {
+    return debugbuildingid();
+}
+
+e_debug_render debug_render_mode() {
+    return (e_debug_render)debugrender.value;
+}
+
+void set_debug_render_mode(e_debug_render mode) {
+    debugrender.value = mode;
 }
 
 bstring256 get_terrain_type(pcstr def, tile2i tile) {
@@ -797,8 +819,6 @@ bstring256 get_terrain_type(pcstr def, int type) {
     return buffer;
 }
 
-bool g_debug_show_opts[e_debug_opt_size] = {0};
-
 void draw_debug_ui(int x, int y) {
     uint8_t str[300];
 
@@ -806,8 +826,8 @@ void draw_debug_ui(int x, int y) {
     /////// DEBUG PAGES NAME
     if (g_debug_show_opts[e_debug_show_pages]) {
         y += 13;
-        int DB1 = abs(g_debug_tile) % 7;
-        int DB2 = abs(g_debug_render) % 20;
+        int DB1 = abs(debugtile()) % 7;
+        int DB2 = abs(debugrender()) % 20;
 
         color col = COLOR_GREEN;
 
@@ -1272,7 +1292,7 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());
 
         debug_text_a(ctx, str, x + 180, y + 195, 50, get_terrain_type("type: ", point));
-        pixel = tile_to_pixel(point);
+        pixel = lookup_tile_to_pixel(point);
         debug_text(ctx, str, x, y + 205, 50, "pixel:", pixel.x);
         debug_text(ctx, str, x + 40, y + 205, 50, "", pixel.y);
 
@@ -1434,10 +1454,10 @@ console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
 
 void game_debug_t::init() {
     events::subscribe([] (event_debug_tile_change ev) {
-        g_debug_tile += ev.value;
+        debugtile.value += ev.value;
     });    
     
     events::subscribe([] (event_debug_render_change ev) {
-        g_debug_render += ev.value;
+        debugrender.value += ev.value;
     });
 }

@@ -15,8 +15,7 @@ public:
     template<class T>
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
-        
-        using inherited::archive_load;
+
         virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
@@ -33,7 +32,7 @@ public:
         uint8_t resources_pct[RESOURCES_MAX];
         uint8_t service;
         uint8_t upgrades;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

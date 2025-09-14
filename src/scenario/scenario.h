@@ -93,7 +93,7 @@ struct invasion_t {
 struct price_change_t {
     int year;
     int month;
-    int resource;
+    e_resource resource;
     int amount;
     int is_rise;
 };

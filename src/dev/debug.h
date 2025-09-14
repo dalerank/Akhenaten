@@ -65,7 +65,7 @@ enum e_debug_render {
     e_debug_render_monuments = 23,
     e_debug_render_figures = 24,
     e_debug_render_height = 25,
-    e_debug_render_marshland_depl = 26,
+    e_debug_render_vegetation_growth = 26,
     e_debug_render_damage_fire = 27,
     e_debug_render_desirability = 28,
     e_debug_render_river_shore = 29,
@@ -80,11 +80,11 @@ enum e_debug_render {
     e_debug_render_size
 };
 
-extern bool g_debug_show_opts[e_debug_opt_size];
-extern int g_debug_tile;
-extern int g_debug_render;
 extern int g_debug_figure_id;
-extern int g_debug_building_id;
+void set_debug_building_id(int bid);
+int get_debug_building_id();
+e_debug_render debug_render_mode();
+void set_debug_render_mode(e_debug_render mode);
 
 bstring256 get_terrain_type(pcstr def, tile2i tile);
 bstring256 get_terrain_type(pcstr def, int type);
@@ -103,13 +103,11 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x = 1
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size = 1);
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
-void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx);
 
 void draw_debug_ui(int x, int y);
 
-inline bool draw_debug(e_debug_render opt) {
-    return g_debug_show_opts[opt];
-}
+bool get_debug_draw_option(int opt);
+void set_debug_draw_option(int opt, bool e);
 
 struct console_command {
     console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f);
@@ -149,6 +147,7 @@ struct console_var_bool {
     bool value;
     console_var_bool(pcstr name, bool init);
     bool operator()() const { return value; }
+    bool operator!() const { return !value; }
 };
 
 struct console_ref_bool {
