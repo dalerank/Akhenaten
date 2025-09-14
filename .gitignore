@@ -11,6 +11,7 @@ src/platform/version.c
 res/version.rc
 res/version.txt
 res/akhenaten.icns
+src/SDL_mixer.h
 
 # Build output and data directories
 /build*/
