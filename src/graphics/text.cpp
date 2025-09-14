@@ -76,9 +76,9 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
                                           y_offset + input_cursor.y_offset + 14,
                                           COLOR_WHITE);
         } else {
-            graphics_fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
-                               vec2i{input_cursor.width, 2},
-                               COLOR_WHITE);
+            ImageDraw::fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
+                                 vec2i{input_cursor.width, 2},
+                                 COLOR_WHITE);
         }
     }
 }

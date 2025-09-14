@@ -129,7 +129,7 @@ void graphics_draw_rect(vec2i start, vec2i size, color color) {
     graphics_renderer()->draw_rect(start, size, color);
 }
 
-void graphics_fill_rect(vec2i start, vec2i size, color color) {
+void ImageDraw::fill_rect(vec2i start, vec2i size, color color) {
     graphics_renderer()->fill_rect(start, size, color);
 }
 

@@ -74,7 +74,7 @@ static void draw_foreground(int) {
     auto &data = g_numeric_input;
     outer_panel_draw(data, 8, 14);
 
-    graphics_fill_rect(vec2i{data.x + 16, data.y + 16}, vec2i{96, 30}, COLOR_BLACK);
+    ImageDraw::fill_rect(vec2i{data.x + 16, data.y + 16}, vec2i{96, 30}, COLOR_BLACK);
     if (data.num_digits > 0)
         text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
 
