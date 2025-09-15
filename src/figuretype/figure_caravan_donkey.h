@@ -1,8 +1,7 @@
 #pragma once
 
 #include "figure/figure.h"
-
-struct empire_city;
+#include "empire/empire_city.h"
 
 class figure_caravan_donkey : public figure_impl {
 public:
@@ -14,7 +13,6 @@ public:
         virtual void archive_load(archive arch) override {}
     } FIGURE_STATIC_DATA_T;
 
-    const empire_city *get_empire_city() const;
 
     virtual void on_create() override {}
     virtual void figure_action() override;
@@ -23,6 +21,7 @@ public:
     virtual void update_animation() override;
     virtual xstring action_tip() const override;
     virtual bvariant get_property(const xstring& domain, const xstring& name) const override;
+    virtual empire_city_handle empire_city() const override;
 
-    figure *get_head_of_caravan() const;
+    figure *head_of_caravan() const;
 };

@@ -23,7 +23,7 @@ void figure_trader::sell(int amounts) {
     //    resource_amount_loads += amounts / 100;
 }
 
-bool figure_trader::can_buy(building* b, int city_id) {
+bool figure_trader::can_buy(building* b, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
@@ -39,7 +39,7 @@ bool figure_trader::can_buy(building* b, int city_id) {
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first >= 100 && g_empire.can_export_resource_to_city(city_id, space->resource())) {
+        if (space->base.stored_amount_first >= 100 && g_empire.can_export_resource_to_city(city.handle, space->resource())) {
             return true;
         }
         space = space->next_room();
@@ -48,7 +48,7 @@ bool figure_trader::can_buy(building* b, int city_id) {
     return false;
 }
 
-bool figure_trader::can_sell(building* b, int city_id) {
+bool figure_trader::can_sell(building* b, empire_city_handle city) {
     auto warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
@@ -69,7 +69,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
     int num_importable = 0;
     for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
         if (!warehouse->is_not_accepting(r)) {
-            if (g_empire.can_import_resource_from_city(city_id, r))
+            if (g_empire.can_import_resource_from_city(city.handle, r))
                 num_importable++;
         }
     }
@@ -79,12 +79,12 @@ bool figure_trader::can_sell(building* b, int city_id) {
 
     int can_import = 0;
     e_resource resource = city_trade_current_caravan_import_resource();
-    if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
+    if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city.handle, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCES_MIN; i < RESOURCES_MAX; i++) {
             resource = city_trade_next_caravan_import_resource();
-            if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city_id, resource)) {
+            if (!warehouse->is_not_accepting(resource) && g_empire.can_import_resource_from_city(city.handle, resource)) {
                 can_import = 1;
                 break;
             }
@@ -102,7 +102,7 @@ bool figure_trader::can_sell(building* b, int city_id) {
                     return true;
                 }
 
-                if (g_empire.can_import_resource_from_city(city_id, space->resource())) {
+                if (g_empire.can_import_resource_from_city(city.handle, space->resource())) {
                     return true;
                 }
             }
@@ -112,13 +112,13 @@ bool figure_trader::can_sell(building* b, int city_id) {
     return false;
 }
 
-int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distance_from_entry, tile2i &warehouse) {
+int figure_trader::get_closest_storageyard(tile2i tile, empire_city_handle city, int distance_from_entry, tile2i &warehouse) {
     const resource_list exportable = base.trader_amount_bought < 800 
-                                        ? g_empire.exportable_resources_from_city(city_id)
+                                        ? g_empire.exportable_resources_from_city(city.handle)
                                         : resource_list{};
 
     const resource_list importable = base.get_carrying_amount() < 800 
-                                        ? g_empire.importable_resources_from_city(city_id)
+                                        ? g_empire.importable_resources_from_city(city.handle)
                                         : resource_list{};
 
     int num_importable = importable.size();
@@ -142,7 +142,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, int city_id, int distanc
         const storage_t* s = warehouse->storage();
         int num_imports_for_warehouse = 0;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (!warehouse->is_not_accepting(r) && g_empire.can_import_resource_from_city(city_id, r)) {
+            if (!warehouse->is_not_accepting(r) && g_empire.can_import_resource_from_city(city.handle, r)) {
                 num_imports_for_warehouse++;
             }
         }

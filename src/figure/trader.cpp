@@ -86,7 +86,7 @@ empire_trader_handle empire_create_trader() {
     return empire_trader_handle{ (uint8_t)std::distance(traders.begin(), it) };
 }
 
-e_resource empire_trader_handle::get_buy_resource(building* b, int city_id, int amount) {
+e_resource empire_trader_handle::get_buy_resource(building* b, empire_city_handle city, int amount) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return RESOURCE_NONE;
@@ -95,7 +95,7 @@ e_resource empire_trader_handle::get_buy_resource(building* b, int city_id, int 
     building_storage_room* space = warehouse->room();
     while (space) {
         e_resource resource = space->resource();
-        if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city_id, resource)) {
+        if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city.handle, resource)) {
             // update stocks
             events::emit(event_stats_remove_resource{ resource, amount });
             space->take_resource(amount);
@@ -113,7 +113,7 @@ e_resource empire_trader_handle::get_buy_resource(building* b, int city_id, int 
     return RESOURCE_NONE;
 }
 
-e_resource empire_trader_handle::get_sell_resource(building* b, int city_id) {
+e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return RESOURCE_NONE;
@@ -121,7 +121,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, int city_id) {
 
     e_resource resource_to_import = city_trade_current_caravan_import_resource();
     int imp = RESOURCES_MIN;
-    while (imp < RESOURCES_MAX && !g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
+    while (imp < RESOURCES_MAX && !g_empire.can_import_resource_from_city(city.handle, resource_to_import)) {
         imp++;
         resource_to_import = city_trade_next_caravan_import_resource();
     }
@@ -154,7 +154,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, int city_id) {
     // find another importable resource that can be added to this warehouse
     for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
         resource_to_import = city_trade_next_caravan_backup_import_resource();
-        if (g_empire.can_import_resource_from_city(city_id, resource_to_import)) {
+        if (g_empire.can_import_resource_from_city(city.handle, resource_to_import)) {
             space = warehouse->room();
             while (space) {
                 if (space->base.stored_amount_first < 400 && space->resource() == resource_to_import) {

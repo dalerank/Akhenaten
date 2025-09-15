@@ -46,20 +46,24 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
         return;
     }
 
-    figure* caravan = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
-    caravan->empire_city_id = emp_city.name_id;
-    caravan->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
-    caravan->wait_ticks = trade_caravan_m.wait_ticks_after_create;
+    figure* f = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
+
+    auto caravan = f->dcast<figure_trade_caravan>();
+    assert(caravan != nullptr);
+
+    caravan->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
+    caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
+    caravan->base.wait_ticks = trade_caravan_m.wait_ticks_after_create;
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
     donkey1->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
-    donkey1->leading_figure_id = caravan->id;
+    donkey1->leading_figure_id = caravan->id();
     // donkey 2
     figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
     donkey2->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
 
-    emp_city.trader_figure_ids[free_slot] = caravan->id;
+    emp_city.trader_figure_ids[free_slot] = caravan->id();
 }
 
 void figure_trade_caravan::static_params::archive_load(archive arch)  {
@@ -77,7 +81,8 @@ int figure::trader_total_sold() {
 
 void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_to_entry) {
     tile2i dst;
-    int warehouse_id = get_closest_storageyard(src_tile, base.empire_city_id, distance_to_entry, dst);
+    auto& d = runtime_data();
+    int warehouse_id = get_closest_storageyard(src_tile, d.empire_city, distance_to_entry, dst);
     if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
         base.action_state = ACTION_101_TRADE_CARAVAN_ARRIVING;
@@ -93,14 +98,22 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
 
 void figure_trade_caravan::debug_show_properties() {
     game_debug_show_property("trader_id", runtime_data().trader.handle);
+    game_debug_show_property("empire_city_id", runtime_data().empire_city.handle);
 }
 
 void figure_trade_caravan::on_create() {
+    figure_trader::on_create();
     runtime_data().trader = empire_create_trader();
+}
+
+void figure_trade_caravan::on_destroy() {
+    figure_trader::on_destroy();
+    empire_city().remove_trader(id());
 }
 
 void figure_trade_caravan::figure_action() {
     int last_action_state = action_state();
+    auto& d = runtime_data();
     switch (action_state()) {
     default:
     case ACTION_100_TRADE_CARAVAN_CREATED:
@@ -132,10 +145,10 @@ void figure_trade_caravan::figure_action() {
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
             int move_on = 0;
-            if (can_buy(destination(), base.empire_city_id)) {
-                e_resource resource = empire_trader().get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);
+            if (can_buy(destination(), d.empire_city)) {
+                e_resource resource = empire_trader().get_buy_resource(destination(), d.empire_city, UNITS_PER_LOAD);
                 if (resource) {
-                    auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
+                    auto &trade_route = d.empire_city.get_route();
                     trade_route.increase_traded(resource, UNITS_PER_LOAD);
                     empire_trader().record_bought_resource(resource);
                     buy(UNITS_PER_LOAD);
@@ -146,10 +159,10 @@ void figure_trade_caravan::figure_action() {
                 move_on++;
             }
 
-            if (move_on > 0 && can_sell(destination(), base.empire_city_id)) {
-                e_resource resource = empire_trader().get_sell_resource(destination(), base.empire_city_id);
+            if (move_on > 0 && can_sell(destination(), d.empire_city)) {
+                e_resource resource = empire_trader().get_sell_resource(destination(), d.empire_city);
                 if (resource) {
-                    auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
+                    auto &trade_route = d.empire_city.get_route();
                     trade_route.increase_traded(resource, UNITS_PER_LOAD);
                     empire_trader().record_sold_resource(resource);
                     sell(UNITS_PER_LOAD);

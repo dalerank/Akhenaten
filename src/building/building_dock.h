@@ -48,7 +48,7 @@ public:
 
     void unaccept_all_goods();
     empire_trader_handle empire_trader() const;
-    int trader_city_id();
+    empire_city_handle trader_city();
     bool is_trade_accepted(e_resource r);
     void toggle_good_accepted(e_resource r);
     int count_idle_dockers() const;

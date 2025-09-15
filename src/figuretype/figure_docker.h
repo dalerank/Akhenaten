@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figuretype/figure_cartpusher.h"
+#include "empire/empire_city.h"
 #include "figure/trader.h"
 
 class figure_docker : public figure_carrier {
@@ -17,12 +18,13 @@ public:
     virtual void poof() override;
 
     empire_trader_handle trader();
-    int trader_city_id();
+    empire_city_handle trader_city();
+
     bool deliver_import_resource(building *dock);
     tile2i get_trade_center_location();
     bool fetch_export_resource(building* dock);
-    bool try_import_resource(building *b, e_resource resource, int city_id);
-    int try_export_resource(building *b, e_resource resource, int city_id);
-    int get_closest_warehouse_for_import(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &import_resource);
-    int get_closest_warehouse_for_export(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &export_resource);
+    bool try_import_resource(building *b, e_resource resource, empire_city_handle city_id);
+    bool try_export_resource(building *b, e_resource resource, empire_city_handle city_id);
+    int get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &import_resource);
+    int get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &export_resource);
 };
