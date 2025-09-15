@@ -34,6 +34,12 @@ void building_bandstand::static_params::archive_load(archive arch) {
    booth = anim["booth"].first_img();
 }
 
+bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
+    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
+    const bool has_figure = map_has_figure_at(tile);
+    return (is_road || !has_figure);
+}
+
 void building_bandstand::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(3, 3);
 }

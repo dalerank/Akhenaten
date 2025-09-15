@@ -43,8 +43,8 @@ void figure_trader_info_window::init(object_info &c) {
 
     assert(trader.valid());
     if (trader.has_traded()) {
-        ui["buy"] = ui::str(129, 4);
-        ui["sell"] = ui::str(129, 5);
+        ui["buy"] = "#trader_bought";
+        ui["sell"] = "#trader_sold";
 
         // bought
         bstring128 bought_items;
@@ -69,8 +69,8 @@ void figure_trader_info_window::init(object_info &c) {
         ui["sell_text"] = sold_items;
     } else { // nothing sold/bought (yet)
         // buying
-        ui["buy"] = ui::str(129, 2);
-        ui["sell"] = ui::str(129, 3);
+        ui["buy"] = "#trader_buys";
+        ui["sell"] = "#trader_sells";
 
         bstring128 buy_items;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
