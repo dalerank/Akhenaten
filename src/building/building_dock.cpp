@@ -236,11 +236,10 @@ empire_trader_handle building_dock::empire_trader() const {
     return ship->empire_trader();
 }
 
-int building_dock::trader_city_id() {
+empire_city_handle building_dock::trader_city() {
     auto &d = runtime_data();
-    return d.trade_ship
-                ? figure_get(d.trade_ship)->empire_city_id
-                : 0;
+    auto ship = d.trade_ship ? figure_get<figure_trade_ship>(d.trade_ship) : 0;
+    return { ship ? ship->empire_city() : empire_city_handle{} };
 }
 
 bool building_dock::is_trade_accepted(e_resource r) {
@@ -252,18 +251,20 @@ void building_dock::toggle_good_accepted(e_resource r) {
 }
 
 bool building_dock::accepts_ship(int ship_id) {
-    figure* f = figure_get(ship_id);
+    auto ship = figure_get<figure_trade_ship>(ship_id);
+    if (!ship) {
+        return false;
+    }
 
-    empire_city* city = g_empire.city(f->empire_city_id);
+    empire_city_handle city = ship->empire_city();
     const resource_list resources = g_city.resource.available();
-    int any_acceptance = 0;
     for (const resource_value r: resources) {
-        if (city->sells_resource[r.type] || city->buys_resource[r.type]) {
-            any_acceptance += is_trade_accepted(r.type) ? 1 : 0;
+        if (is_trade_accepted(r.type) && (city.sells_resource(r.type) || city.buys_resource(r.type))) {
+            return true;
         }
     }
 
-    return (any_acceptance > 0);
+    return false;
 }
 
 void building_dock::highlight_waypoints() {

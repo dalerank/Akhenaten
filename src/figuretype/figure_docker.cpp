@@ -26,7 +26,7 @@
 
 figures::model_t<figure_docker> docker_m;
 
-bool figure_docker::try_import_resource(building* b, e_resource resource, int city_id) {
+bool figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
@@ -40,7 +40,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
         return false;
     }
 
-    auto &trade_route = g_empire.city(city_id)->get_route();
+    auto &trade_route = city.get_route();
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
@@ -64,7 +64,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, int ci
     return false;
 }
 
-int figure_docker::try_export_resource(building* b, e_resource resource, int city_id) {
+bool figure_docker::try_export_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return 0;
@@ -77,7 +77,7 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
     building_storage_room* space = warehouse->room();
     while (space) {
         if (space->base.stored_amount_first && space->resource() == resource) {
-            auto &trade_route = g_empire.city(city_id)->get_route();
+            auto &trade_route = city.get_route();
             trade_route.increase_traded(resource, 100);
             space->remove_export(resource);
             return 1;
@@ -87,8 +87,8 @@ int figure_docker::try_export_resource(building* b, e_resource resource, int cit
     return 0;
 }
 
-int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& import_resource) {
-    const resource_list importable = g_empire.importable_resources_from_city(city_id);
+int figure_docker::get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& import_resource) {
+    const resource_list importable = g_empire.importable_resources_from_city(city.handle);
 
     e_resource resource = city_trade_next_docker_import_resource();
     for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !importable[resource]; ++i) {
@@ -171,8 +171,8 @@ int figure_docker::get_closest_warehouse_for_import(tile2i pos, int city_id, int
     return min_building_id;
 }
 
-int figure_docker::get_closest_warehouse_for_export(tile2i pos, int city_id, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& export_resource) {
-    const resource_list exportable = g_empire.exportable_resources_from_city(city_id);
+int figure_docker::get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource& export_resource) {
+    const resource_list exportable = g_empire.exportable_resources_from_city(city.handle);
 
     e_resource resource = city_trade_next_docker_export_resource();
     for (int i = RESOURCES_MIN; i < RESOURCES_MAX && !exportable[resource]; i++) {
@@ -252,13 +252,13 @@ tile2i figure_docker::get_trade_center_location() {
 }
 
 empire_trader_handle figure_docker::trader() {
-    building_dock *dock = home()->dcast_dock();
-    return dock->empire_trader();
+    auto dock = home()->dcast_dock();
+    return dock ? dock->empire_trader() : empire_trader_handle{};
 }
 
-int figure_docker::trader_city_id() {
-    building_dock *dock = home()->dcast_dock();
-    return dock->trader_city_id();
+empire_city_handle figure_docker::trader_city() {
+    auto dock = home()->dcast_dock();
+    return dock ? dock->trader_city() : empire_city_handle{};
 }
 
 bool figure_docker::deliver_import_resource(building* b) {
@@ -277,7 +277,7 @@ bool figure_docker::deliver_import_resource(building* b) {
     tile2i trade_center_tile = get_trade_center_location();
     tile2i tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_import(trade_center_tile, ship->base.empire_city_id, b->distance_from_entry, b->road_network_id, tile, resource);
+    int warehouse_id = get_closest_warehouse_for_import(trade_center_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, tile, resource);
     if (!warehouse_id) {
         return false;
     }
@@ -300,21 +300,21 @@ bool figure_docker::fetch_export_resource(building* b) {
         return false;
     }
 
-    figure* ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= 1200) {
+    auto ship = figure_get<figure_trade_ship>(ship_id);
+    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->base.trader_amount_bought >= ship->max_capacity()) {
         return false;
     }
 
     tile2i trade_cener_tile = get_trade_center_location();
     tile2i tile;
     e_resource resource;
-    int warehouse_id = get_closest_warehouse_for_export(trade_cener_tile, ship->empire_city_id, b->distance_from_entry, b->road_network_id, tile, resource);
+    int warehouse_id = get_closest_warehouse_for_export(trade_cener_tile, ship->empire_city(), b->distance_from_entry, b->road_network_id, tile, resource);
 
     if (!warehouse_id) {
         return false;
     }
 
-    ship->trader_amount_bought++;
+    ship->base.trader_amount_bought++;
     set_destination(warehouse_id);
     advance_action(FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     base.wait_ticks = 0;
@@ -455,11 +455,10 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
-            int trade_city_id = dock.trade_ship
-                                    ? figure_get(dock.trade_ship)->empire_city_id
-                                    : 0;
+            auto ship = figure_get<figure_trade_ship>(dock.trade_ship);
+            auto trade_city = ship ? ship->empire_city() : empire_city_handle{};
 
-            if (try_import_resource(destination(), base.resource_id, trade_city_id)) {
+            if (try_import_resource(destination(), base.resource_id, trade_city)) {
                 base.wait_ticks = 0;
                 trader().record_sold_resource(base.resource_id);
                 advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
@@ -478,10 +477,10 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
-            int trade_city_id = trader_city_id();
+            auto trade_city = trader_city();
             advance_action(FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING);
             base.wait_ticks = 0;
-            const bool can_export = try_export_resource(destination(), base.resource_id, trade_city_id);
+            const bool can_export = try_export_resource(destination(), base.resource_id, trade_city);
             if (can_export) {
                 int amount = trader().record_bought_resource(base.resource_id);
                 load_resource(base.resource_id, amount);

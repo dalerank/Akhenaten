@@ -23,9 +23,11 @@
 
 figure_caravan_donkey::static_params caravan_donkey_m;
 
-const empire_city *figure_caravan_donkey::get_empire_city() const {
-    const empire_city *city = g_empire.city(base.empire_city_id);
-    return city;
+empire_city_handle figure_caravan_donkey::empire_city() const {
+    auto head = head_of_caravan();
+    assert(head != nullptr);
+
+    return head->dcast<figure_trade_caravan>()->empire_city();
 }
 
 void figure_caravan_donkey::figure_action() {
@@ -60,7 +62,7 @@ void figure_caravan_donkey::update_animation() {
     /*nothing*/
 }
 
-figure* figure_caravan_donkey::get_head_of_caravan() const {
+figure* figure_caravan_donkey::head_of_caravan() const {
     figure* f = &base;
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {
         f = figure_get(f->leading_figure_id);
@@ -69,7 +71,7 @@ figure* figure_caravan_donkey::get_head_of_caravan() const {
 }
 
 bvariant figure_caravan_donkey::get_property(const xstring& domain, const xstring& name) const {
-    auto head = get_head_of_caravan()->dcast<figure_trade_caravan>();
+    auto head = head_of_caravan()->dcast<figure_trade_caravan>();
     if (head) {
         return head->get_property(domain, name);
     }
@@ -78,7 +80,7 @@ bvariant figure_caravan_donkey::get_property(const xstring& domain, const xstrin
 }
 
 xstring figure_caravan_donkey::action_tip() const {
-    auto head = get_head_of_caravan()->dcast<figure_trade_caravan>();
+    auto head = head_of_caravan()->dcast<figure_trade_caravan>();
     if (!head) {
         return "#donkey_no_trader_head";
     }

@@ -297,10 +297,6 @@ void figure::figure_delete_UNSAFE() {
         ; // nothing
     }
 
-    if (empire_city_id) {
-        g_empire.city(empire_city_id)->remove_trader(id);
-    }
-
     route_remove();
     map_figure_remove();
 
@@ -690,7 +686,7 @@ const fproperty fproperties[] = {
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
-    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(g_empire.city_name(f.empire_city_id)); }},
+    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
 };
@@ -928,7 +924,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_missile);
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.x);
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
     iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);

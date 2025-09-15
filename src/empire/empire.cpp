@@ -126,13 +126,6 @@ empire_city *empire_t::city(pcstr name) {
     return nullptr;
 }
 
-xstring empire_t::city_name(int city_id) {
-    const empire_city *ptr = city(city_id);
-    const int group = !!game_features::gameui_empire_city_old_names ? 195 : 21;
-    pcstr name = ptr ? (pcstr)lang_get_string(group, ptr->name_id) : "unknown city";
-    return xstring(name);
-}
-
 bool empire_t::can_import_resource(e_resource resource, bool check_if_open) {
     for (const auto &city: cities) {
         if (city.in_use && city.can_trade()

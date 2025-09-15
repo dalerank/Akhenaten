@@ -34,13 +34,14 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
         return;
     }
 
-    figure* ship = figure_create(FIGURE_TRADE_SHIP, river_entry, DIR_0_TOP_RIGHT);
-    ship->empire_city_id = emp_city.name_id;
-    ship->allow_move_type = EMOVE_DEEPWATER;
-    ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
-    ship->wait_ticks = 10;
+    auto f = figure_create(FIGURE_TRADE_SHIP, river_entry, DIR_0_TOP_RIGHT);
+    auto ship = f->dcast<figure_trade_ship>();
+    ship->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
+    ship->advance_action(FIGURE_ACTION_110_TRADE_SHIP_CREATED);
+    ship->base.allow_move_type = EMOVE_DEEPWATER;
+    ship->base.wait_ticks = 10;
 
-    emp_city.trader_figure_ids[free_slot] = ship->id;
+    emp_city.trader_figure_ids[free_slot] = ship->id();
 }
 
 declare_console_command_p(sink_all_ships) {
@@ -110,7 +111,13 @@ bool figure_trade_ship::done_trading() {
 }
 
 void figure_trade_ship::on_create() {
+    figure_carrier::on_create();
     runtime_data().trader = empire_create_trader();
+}
+
+void figure_trade_ship::on_destroy() {
+    figure_carrier::on_destroy();
+    empire_city().remove_trader(id());
 }
 
 void figure_trade_ship::figure_action() {
@@ -251,6 +258,7 @@ void figure_trade_ship::figure_action() {
 
 void figure_trade_ship::debug_show_properties() {
     game_debug_show_property("trader_id", runtime_data().trader.handle);
+    game_debug_show_property("empire_city_id", runtime_data().empire_city.handle);
 }
 
 sound_key figure_trade_ship::phrase_key() const {

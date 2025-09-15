@@ -8,6 +8,7 @@
 #include "figure/action.h"
 #include "figure/formation.h"
 #include "figure/figure_type.h"
+#include "empire/empire_city.h"
 #include "grid/point.h"
 #include "grid/routing/routing_fwd.h"
 #include "graphics/image_desc.h"
@@ -168,7 +169,6 @@ public:
     uint8_t wait_ticks_missile;
     vec2i cart_offset;
 
-    uint8_t empire_city_id;
     uint16_t trader_amount_bought;
     uint16_t name;
     uint8_t terrain_usage;
@@ -502,6 +502,7 @@ public:
     virtual void debug_show_properties() {}
     virtual void debug_draw() {}
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
+    virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
 
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);

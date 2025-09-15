@@ -25,17 +25,20 @@ void figure_trader_info_window::init(object_info &c) {
     figure_info_window::init(c);
 
     figure *f = c.figure_get();
-    empire_city *city = g_empire.city(f->empire_city_id);
 
     empire_trader_handle trader;
-    auto donkey = f->dcast<figure_caravan_donkey>();
-    if (donkey) {
-        figure* head = donkey->get_head_of_caravan();
-        trader = head ? head->dcast()->dcast_trade_caravan()->empire_trader() : empire_trader_handle{};
+    empire_city_handle city;
+
+    if (auto donkey = f->dcast<figure_caravan_donkey>(); donkey != nullptr) {
+        auto head = donkey->head_of_caravan()->dcast<figure_trade_caravan>();
+        trader = head ? head->empire_trader() : empire_trader_handle{};
+        city =  head ? head->empire_city() : empire_city_handle{};
     } else if(auto caravan = f->dcast<figure_trade_caravan>(); caravan != nullptr) {
         trader = caravan->empire_trader();
+        city = caravan->empire_city();
     } else if(auto ship = f->dcast<figure_trade_ship>(); ship != nullptr) {
         trader = ship->empire_trader();
+        city = ship->empire_city();
     }
 
     assert(trader.valid());
@@ -71,7 +74,7 @@ void figure_trader_info_window::init(object_info &c) {
 
         bstring128 buy_items;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (city->buys_resource[r]) {
+            if (city.buys_resource(r)) {
                 int image_id = image_id_resource_icon(r);
                 buy_items.append_fmt("@I%u& ", image_id);
             }
@@ -80,8 +83,8 @@ void figure_trader_info_window::init(object_info &c) {
 
         // selling
         bstring128 sell_items;
-        for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
-            if (city->sells_resource[r]) {
+        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
+            if (city.sells_resource(r)) {
                 int image_id = image_id_resource_icon(r);
                 sell_items.append_fmt("@I%u& ", image_id);
             }
