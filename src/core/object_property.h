@@ -39,6 +39,7 @@ struct id_property_t {
     static const xstring kingdom;
     static const xstring fertility;
     static const xstring player;
+    static const xstring capacity;
 };
 
 const id_property_t &tags();

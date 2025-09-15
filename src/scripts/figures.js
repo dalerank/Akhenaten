@@ -657,18 +657,19 @@ figure_governor = {
 
 figure_trade_ship = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 },
-		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 },
-		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 }
+		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 }
+		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 }
+	}
 	sounds : {
-		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},
-		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1},
-		no_trade : {sound:"barge_e03.wav", group: 224, text:2},
-		good_trade : {sound:"barge_e04.wav", group: 224, text:3},
-		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4},
-	},
-	terrain_usage : TERRAIN_USAGE_ANY,
+		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0}
+		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1}
+		no_trade : {sound:"barge_e03.wav", group: 224, text:2}
+		good_trade : {sound:"barge_e04.wav", group: 224, text:3}
+		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4}
+	}
+	terrain_usage : TERRAIN_USAGE_ANY
+	max_capacity : 1200
 }
 
 figure_shipwreck = {
@@ -716,11 +717,12 @@ figure_sled_puller = {
 
 figure_trade_caravan = {
 	animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
-		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
-	},
-	wait_ticks_after_create : 10,
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
+		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
+		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
+	}
+	wait_ticks_after_create : 10
+	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
+	max_capacity : 800
 }
 
 figure_caravan_donkey = {

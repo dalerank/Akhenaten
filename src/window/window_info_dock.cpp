@@ -49,7 +49,7 @@ void dock_info_window::init(object_info &c) {
 
     textid reason{ 0, 0 };
     if (!dock->has_road_access()) { reason = { 69, 25 }; }
-    else if (dock->runtime_data().trade_ship_id) {
+    else if (dock->runtime_data().trade_ship) {
         reason.id = approximate_value(dock->worker_percentage() / 100.f, make_array(2, 3, 4, 5));
     } else {
         reason.id = approximate_value(dock->worker_percentage() / 100.f, make_array(6, 7, 8, 9));

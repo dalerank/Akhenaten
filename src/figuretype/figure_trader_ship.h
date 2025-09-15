@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figuretype/figure_cartpusher.h"
+#include "figure/trader.h"
 #include "grid/point.h"
 
 enum {
@@ -18,6 +19,15 @@ public:
     figure_trade_ship(figure *f) : figure_carrier(f) {}
     virtual figure_trade_ship *dcast_trade_ship() override { return this; }
 
+    struct static_params : public figure_model {
+        uint16_t max_capacity;
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
+
+    struct runtime_data_t {
+        empire_trader_handle trader;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;
@@ -27,8 +37,11 @@ public:
     virtual const animations_t &anim() const override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
     virtual void update_day() override;
-
     virtual xstring action_tip() const override;
+    virtual void debug_show_properties() override;
+    virtual bvariant get_property(const xstring& domain, const xstring& name) const override;
+
+    empire_trader_handle empire_trader() const { return runtime_data().trader; }
 
     bool lost_queue();
     bool done_trading();

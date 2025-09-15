@@ -28,6 +28,8 @@
 #include "grid/road_access.h"
 #include "scenario/map.h"
 #include "game/game.h"
+#include "widget/debug_console.h"
+#include "core/object_property.h"
 #include "figure/trader.h"
 
 #include "js/js_game.h"
@@ -61,7 +63,8 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
 }
 
 void figure_trade_caravan::static_params::archive_load(archive arch)  {
-    int wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
+    wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
+    max_capacity = arch.r_int("max_capacity", 800);
 };
 
 int figure::trader_total_bought() {
@@ -88,8 +91,12 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     }
 }
 
+void figure_trade_caravan::debug_show_properties() {
+    game_debug_show_property("trader_id", runtime_data().trader.handle);
+}
+
 void figure_trade_caravan::on_create() {
-    base.trader_id = trader_create();
+    runtime_data().trader = empire_create_trader();
 }
 
 void figure_trade_caravan::figure_action() {
@@ -126,12 +133,12 @@ void figure_trade_caravan::figure_action() {
             base.wait_ticks = 0;
             int move_on = 0;
             if (can_buy(destination(), base.empire_city_id)) {
-                e_resource resource = trader_get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);
+                e_resource resource = empire_trader().get_buy_resource(destination(), base.empire_city_id, UNITS_PER_LOAD);
                 if (resource) {
                     auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
                     trade_route.increase_traded(resource, UNITS_PER_LOAD);
-                    trader_record_bought_resource(base.trader_id, resource);
-                    trader_buy(UNITS_PER_LOAD);
+                    empire_trader().record_bought_resource(resource);
+                    buy(UNITS_PER_LOAD);
                 } else {
                     move_on++;
                 }
@@ -140,12 +147,12 @@ void figure_trade_caravan::figure_action() {
             }
 
             if (move_on > 0 && can_sell(destination(), base.empire_city_id)) {
-                e_resource resource = trader_get_sell_resource(destination(), base.empire_city_id);
+                e_resource resource = empire_trader().get_sell_resource(destination(), base.empire_city_id);
                 if (resource) {
                     auto &trade_route = g_empire.city(base.empire_city_id)->get_route();
                     trade_route.increase_traded(resource, UNITS_PER_LOAD);
-                    trader_record_sold_resource(base.trader_id, resource);
-                    trader_sell(UNITS_PER_LOAD);
+                    empire_trader().record_sold_resource(resource);
+                    sell(UNITS_PER_LOAD);
                 } else {
                     move_on++;
                 }
@@ -204,12 +211,21 @@ void figure_trade_caravan::update_animation() {
     base.main_image_id = anim(animkeys().walk).first_img() + dir + 8 * base.anim.frame;
 }
 
+bvariant figure_trade_caravan::get_property(const xstring& domain, const xstring& name) const {
+    auto& d = runtime_data();
+    if (domain == tags().figure && name == tags().capacity) {
+        return bvariant(current_params().max_capacity);
+    }
+
+    return figure_impl::get_property(domain, name);
+}
+
 xstring figure_trade_caravan::action_tip() const {
     switch (action_state()) {
     case ACTION_101_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
     case ACTION_102_TRADE_CARAVAN_TRADING: return "#trader_trading_goods";
     case ACTION_103_TRADE_CARAVAN_LEAVING:
-        return trader_has_traded(base.trader_id)
+        return empire_trader().has_traded()
             ? "#trader_returning_home"
             : "#trader_nothing_to_trage";
     default:

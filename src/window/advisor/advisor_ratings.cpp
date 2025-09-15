@@ -89,7 +89,7 @@ int ui::advisor_ratings_window::draw_background(UiFlags flags) {
     bstring128 caption = ui::str(53, 7);
     if (!(!winning_population() || scenario_is_open_play())) {
         caption = ui::str(53, 6);
-        caption.append("%u", winning_population());
+        caption.append_fmt("%u", winning_population());
     }
     ui["population_label"] = caption;
 

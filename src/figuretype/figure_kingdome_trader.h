@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figure_trader.h"
+#include "figure/trader.h"
 
 struct empire_city;
 
@@ -21,8 +22,13 @@ public:
 
     virtual figure_trade_caravan *dcast_trade_caravan() override { return this; }
 
+    struct runtime_data_t {
+        empire_trader_handle trader;
+    } FIGURE_RUNTIME_DATA_T;
+
     struct static_params : figures::model_t<figure_trade_caravan> {
         int wait_ticks_after_create;
+        uint16_t max_capacity;
         virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
@@ -34,6 +40,9 @@ public:
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual void update_animation() override;
     virtual xstring action_tip() const override;
+    virtual void debug_show_properties() override;
+    virtual bvariant get_property(const xstring& domain, const xstring& name) const override;
 
+    empire_trader_handle empire_trader() const { return runtime_data().trader; }
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 };

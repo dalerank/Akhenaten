@@ -5,6 +5,7 @@
 
 #include "figure/image.h"
 
+#include "widget/debug_console.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
 
@@ -66,8 +67,8 @@ void figure_native_trader::figure_action() {
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
             if (can_buy(destination(), 0)) {
-                e_resource resource = trader_get_buy_resource(destination(), 0, 100);
-                trader_record_bought_resource(base.trader_id, resource);
+                e_resource resource = empire_trader().get_buy_resource(destination(), 0, 100);
+                empire_trader().record_bought_resource(resource);
                 base.trader_amount_bought += 3;
             } else {
                 tile2i tile;
@@ -105,4 +106,12 @@ void figure_native_trader::update_animation() {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);
     }
+}
+
+void figure_native_trader::debug_show_properties() {
+    game_debug_show_property("trader_id", 0);
+}
+
+empire_trader_handle figure_native_trader::empire_trader() { 
+    return empire_trader_handle{}; 
 }

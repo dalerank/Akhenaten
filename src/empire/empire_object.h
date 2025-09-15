@@ -82,6 +82,9 @@ struct map_route_object {
     unsigned char num_points;
     bool in_use;
     char unk_03; // 00
+    int path_length;
+
+    int calc_length();
 };
 
 const map_route_object& empire_get_route_object(int id);

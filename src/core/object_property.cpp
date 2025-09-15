@@ -40,3 +40,4 @@ const xstring id_property_t::monument = "monument";
 const xstring id_property_t::kingdom = "kingdom";
 const xstring id_property_t::fertility = "fertility";
 const xstring id_property_t::player = "player";
+const xstring id_property_t::capacity = "capacity";

@@ -1108,13 +1108,6 @@ void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
     assert(base.output_resource_first_id == RESOURCE_NONE);
 }
 
-struct bproperty {
-    xstring domain;
-    xstring name;
-
-    std::function<bvariant(building &, const xstring &)> handler;
-};
-
 const bproperty bproperties[] = {
     { tags().stored, xstring("*"),
         [] (building &b, const xstring &name) {

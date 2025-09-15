@@ -182,7 +182,6 @@ public:
     textid phrase;
     xstring phrase_key;
     uint8_t phrase_sequence_city;
-    uint8_t trader_id;
     uint8_t wait_ticks_next_target;
     figure_id target_figure_id;
     short targeted_by_figure_id;
@@ -440,6 +439,13 @@ public:
 
 #define FIGURE_STATIC_DATA_T FIGURE_STATIC_DATA(static_params)
 
+struct fproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(figure&, const xstring&)> handler;
+};
+
 class figure_impl {
 public:
     struct static_params {
@@ -500,6 +506,7 @@ public:
     static void params(e_figure_type, const static_params &);
     static const static_params &params(e_figure_type);
     static void acquire(e_figure_type e, figure &b);
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const;
 
     #define ALLOW_SMART_CAST_FIGURE_I(type) virtual figure_##type *dcast_##type() { return nullptr; }
     ALLOW_SMART_CAST_FIGURE_I(immigrant)
@@ -562,7 +569,6 @@ public:
     inline bool is_alive() const { return base.is_alive(); }
     inline e_permission get_permission() const { return params().permission; }
 
-    bvariant get_property(const xstring &domain, const xstring &name) const;
 
     metainfo get_info() const;
 
