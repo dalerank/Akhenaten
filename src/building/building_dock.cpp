@@ -22,6 +22,7 @@
 #include "game/game.h"
 #include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
+#include "figuretype/figure_trader_ship.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
 
@@ -200,7 +201,7 @@ void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[1]);
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[2]);
                                      
-    iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship_id);
+    iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship);
 }
 
 int building_dock::count_idle_dockers() const {
@@ -228,14 +229,17 @@ void building_dock::unaccept_all_goods() {
     runtime_data().trading_goods.zeroes(64);
 }
 
-int building_dock::trader_id() {
-    return figure_get(runtime_data().trade_ship_id)->trader_id;
+empire_trader_handle building_dock::empire_trader() const {
+    auto& d = runtime_data();
+    auto ship = figure_get<figure_trade_ship>(d.trade_ship);
+    assert(ship != nullptr);
+    return ship->empire_trader();
 }
 
 int building_dock::trader_city_id() {
     auto &d = runtime_data();
-    return d.trade_ship_id
-                ? figure_get(d.trade_ship_id)->empire_city_id
+    return d.trade_ship
+                ? figure_get(d.trade_ship)->empire_city_id
                 : 0;
 }
 
@@ -332,7 +336,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
 
         better_dock = dock;
         auto &d = dock->runtime_data();
-        if (!d.trade_ship_id || d.trade_ship_id == ship_id) {
+        if (!d.trade_ship || d.trade_ship == ship_id) {
             break;
         }
     }
@@ -343,7 +347,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
     }
 
     tile2i moor_tile = better_dock->moor_tile();
-    better_dock->runtime_data().trade_ship_id = ship_id;
+    better_dock->runtime_data().trade_ship = ship_id;
     return {better_dock->id(), moor_tile };
 }
 

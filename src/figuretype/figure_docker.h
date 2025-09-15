@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figuretype/figure_cartpusher.h"
+#include "figure/trader.h"
 
 class figure_docker : public figure_carrier {
 public:
@@ -15,7 +16,7 @@ public:
     virtual void update_animation() override;
     virtual void poof() override;
 
-    int trader_id();
+    empire_trader_handle trader();
     int trader_city_id();
     bool deliver_import_resource(building *dock);
     tile2i get_trade_center_location();

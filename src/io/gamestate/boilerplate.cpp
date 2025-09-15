@@ -715,7 +715,7 @@ void GamestateIO::start_loaded_file() {
 
         // traders / empire
         g_empire_map.init_scenario();
-        traders_clear();
+        empire_traders_clear();
 
         // set up events
         scenario_earthquake_init();

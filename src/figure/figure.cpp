@@ -672,13 +672,6 @@ void figure_impl::update_animation() {
     }
 }
 
-struct fproperty {
-    xstring domain;
-    xstring name;
-
-    std::function<bvariant(figure &, const xstring &)> handler;
-};
-
 const fproperty fproperties[] = {
     //{ tags().stored, xstring("*"),
     //    [] (figure &b, const xstring &name) {
@@ -950,7 +943,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
+    iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
     iob->bind(BIND_SIGNATURE_INT16, &f->target_figure_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->targeted_by_figure_id);

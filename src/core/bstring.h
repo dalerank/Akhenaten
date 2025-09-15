@@ -77,7 +77,7 @@ public:
     inline bool operator!() const { return empty(); }
 
     template <typename... Args>
-    inline ref append(pcstr fmt, Args&&... args) {
+    inline ref append_fmt(pcstr fmt, Args&&... args) {
         size_t size = this->len();
         char* dest = _data + size;
         size_t remain = _size - size;

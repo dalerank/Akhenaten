@@ -408,26 +408,28 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
     logs::info("iob_empire_map_routes");
     const int MAX_ROUTE_OBJECTS = 50;
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
-        map_route_object* obj = &g_empire_route_objects[id];
+        map_route_object& obj = g_empire_route_objects[id];
 
-        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[0]); // 05 00 00 00
-        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_header[1]); // 00 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj.unk_header[0]); // 05 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj.unk_header[1]); // 00 00 00 00
 
         for (int i = 0; i < 50; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].p.x);
-            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].p.y);
-            iob->bind(BIND_SIGNATURE_UINT16, &obj->points[i].is_in_use);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].p.x);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].p.y);
+            iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].is_in_use);
         }
-        iob->bind(BIND_SIGNATURE_UINT32, &obj->length);
+        iob->bind(BIND_SIGNATURE_UINT32, &obj.length);
 
-        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_00); // 00 00 00 00
-        iob->bind(BIND_SIGNATURE_UINT32, &obj->unk_01); // FF FF FF FF
+        iob->bind(BIND_SIGNATURE_UINT32, &obj.unk_00); // 00 00 00 00
+        iob->bind(BIND_SIGNATURE_UINT32, &obj.unk_01); // FF FF FF FF
 
-        iob->bind(BIND_SIGNATURE_UINT8, &obj->route_type); // 1 = land; 2 = sea;
-        iob->bind(BIND_SIGNATURE_UINT8, &obj->num_points);
-        iob->bind(BIND_SIGNATURE_UINT8, &obj->in_use);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj.route_type); // 1 = land; 2 = sea;
+        iob->bind(BIND_SIGNATURE_UINT8, &obj.num_points);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj.in_use);
 
-        iob->bind(BIND_SIGNATURE_UINT8, &obj->unk_03);
+        iob->bind(BIND_SIGNATURE_UINT8, &obj.unk_03);
+
+        obj.path_length = obj.calc_length();
         //        SDL_Log("TRADE DATA: %04i %04i -- %02i %02i %02i", obj->unk_header[0], obj->unk_header[1],
         //        obj->route_type, obj->in_use, obj->unk_03);
     }
@@ -444,4 +446,20 @@ void full_empire_object::add_sell_resource(e_resource r) {
     it = std::find(std::begin(city_sells_resource), std::end(city_sells_resource), 0);
     assert(it != std::end(city_sells_resource));
     *it = r;
+}
+
+int map_route_object::calc_length() {
+    if (num_points == 0) {
+        return 0;
+    }
+
+    float pathlen = 0.f;
+    for (int i = 0; i < num_points - 1; i++) {
+        const auto route_point = points[0];
+        const auto nextup_route_point = points[i + 1];
+        vec2i d = nextup_route_point.p - route_point.p;
+        pathlen += 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
+    }
+
+    return (int)pathlen;
 }

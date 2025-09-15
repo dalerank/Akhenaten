@@ -15,11 +15,13 @@
 #include "city/city_figures.h"
 #include "dev/debug.h"
 #include "game/game_events.h"
+#include "widget/debug_console.h"
+#include "core/object_property.h"
 #include "js/js_game.h"
 
 #include <iostream>
 
-figures::model_t<figure_trade_ship> trader_ship_m;
+figure_trade_ship::static_params trader_ship_m;
 
 void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     tile2i river_entry = scenario_map_river_entry();
@@ -41,7 +43,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     emp_city.trader_figure_ids[free_slot] = ship->id;
 }
 
-declare_console_command_p(sinkallships) {
+declare_console_command_p(sink_all_ships) {
     figure_valid_do([] (figure &f) {
         f.dcast()->kill();
     }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
@@ -76,6 +78,10 @@ int figure_trade_ship::is_trading() const {
     return TRADE_SHIP_NONE;
 }
 
+void figure_trade_ship::static_params::archive_load(archive arch) {
+    max_capacity = arch.r_int("max_capacity", 1200);
+};
+
 bool figure_trade_ship::lost_queue() {
     building* b = destination();
 
@@ -84,7 +90,7 @@ bool figure_trade_ship::lost_queue() {
     }
 
     const auto &dock = b->dcast_dock()->runtime_data();
-    if (b->num_workers > 0 && dock.trade_ship_id == id()) {
+    if (b->num_workers > 0 && dock.trade_ship == id()) {
         return false;
     }
 
@@ -104,7 +110,7 @@ bool figure_trade_ship::done_trading() {
 }
 
 void figure_trade_ship::on_create() {
-    base.trader_id = trader_create();
+    runtime_data().trader = empire_create_trader();
 }
 
 void figure_trade_ship::figure_action() {
@@ -243,9 +249,13 @@ void figure_trade_ship::figure_action() {
     }
 }
 
+void figure_trade_ship::debug_show_properties() {
+    game_debug_show_property("trader_id", runtime_data().trader.handle);
+}
+
 sound_key figure_trade_ship::phrase_key() const {
     if (action_state() == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
-        if (!trader_has_traded(base.trader_id))
+        if (!empire_trader().has_traded())
             return "no_trade"; // no trade
         else {
             return "good_trade"; // good trade
@@ -269,7 +279,7 @@ void figure_trade_ship::kill() {
 
     if (dock) {
         auto &d = dock->runtime_data();
-        d.trade_ship_id = 0;
+        d.trade_ship = 0;
     }
 
     base.set_home(0);
@@ -319,6 +329,16 @@ void figure_trade_ship::update_day() {
     }
     base.trade_ship_failed_dock_attempts++;
 }
+
+bvariant figure_trade_ship::get_property(const xstring& domain, const xstring& name) const {
+    auto& d = runtime_data();
+    if (domain == tags().figure && name == tags().capacity) {
+        return bvariant(current_params().max_capacity);
+    }
+
+    return figure_impl::get_property(domain, name);
+}
+
 
 xstring figure_trade_ship::action_tip() const {
     switch (action_state()) {

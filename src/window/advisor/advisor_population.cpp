@@ -311,7 +311,7 @@ void ui::advisor_population_window::print_history_info() {
 
         const auto &resources = g_city.resource;
         if (city_resource_food_supply_months() > 0) {
-            text.append("%s %s %u", ui::str(55, 12), ui::str(8, 4), city_resource_food_supply_months());
+            text.append_fmt("%s %s %u", ui::str(55, 12), ui::str(8, 4), city_resource_food_supply_months());
         } else if (resources.granary_total_stored > resources.food_needed_per_month / 2)
             text.append(ui::str(55, 13));
         else if (resources.granary_total_stored > 0)

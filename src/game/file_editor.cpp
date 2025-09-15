@@ -66,7 +66,7 @@ void game_file_editor_clear_data(void) {
     figure_name_init();
     formations_clear();
     figure_route_clear_all();
-    traders_clear();
+    empire_traders_clear();
     game.simtime.init(2098);
     scenario_invasion_clear();
 }

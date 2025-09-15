@@ -68,13 +68,26 @@ figure* figure_caravan_donkey::get_head_of_caravan() const {
     return f;
 }
 
+bvariant figure_caravan_donkey::get_property(const xstring& domain, const xstring& name) const {
+    auto head = get_head_of_caravan()->dcast<figure_trade_caravan>();
+    if (head) {
+        return head->get_property(domain, name);
+    }
+
+    return figure_impl::get_property(domain, name);
+}
+
 xstring figure_caravan_donkey::action_tip() const {
-    figure *f = get_head_of_caravan();
-    switch (f->action_state) {
+    auto head = get_head_of_caravan()->dcast<figure_trade_caravan>();
+    if (!head) {
+        return "#donkey_no_trader_head";
+    }
+
+    switch (head->action_state()) {
     case ACTION_101_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
     case ACTION_102_TRADE_CARAVAN_TRADING: return "#trader_trading_goods"; 
     case ACTION_103_TRADE_CARAVAN_LEAVING: 
-        return trader_has_traded(base.trader_id) 
+        return head->empire_trader().has_traded() 
                     ? "#trader_returning_home" 
                     : "#trader_nothing_to_trage";
     default:

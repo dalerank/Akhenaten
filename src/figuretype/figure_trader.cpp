@@ -14,11 +14,11 @@
 #include "graphics/elements/lang_text.h"
 #include "figure/trader.h"
 
-void figure_trader::trader_buy(int amounts) {
+void figure_trader::buy(int amounts) {
     base.trader_amount_bought += amounts;
 }
 
-void figure_trader::trader_sell(int amounts) {
+void figure_trader::sell(int amounts) {
     base.resource_amount_full += amounts;
     //    resource_amount_loads += amounts / 100;
 }

@@ -427,6 +427,13 @@ private:
 
 #define BUILDING_STATIC_DATA_T BUILDING_STATIC_DATA(static_params)
 
+struct bproperty {
+    xstring domain;
+    xstring name;
+
+    std::function<bvariant(building&, const xstring&)> handler;
+};
+
 class building_impl {
 public:
     struct static_params {
