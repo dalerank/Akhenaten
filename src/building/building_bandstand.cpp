@@ -240,8 +240,8 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, tile2i 
 
     building* next_tile = base.next();
     xstring anim_key = (direction == 0) ? "musician_sn" : "musician_we";
-    runtime_data().musician_ctx.setup(anim(anim_key));
-    draw_normal_anim(ctx, runtime_data().musician_ctx, pixel, tile, color_mask);
+    d.musician_ctx.setup(anim(anim_key));
+    draw_normal_anim(ctx, d.musician_ctx, pixel, tile, color_mask);
 }
 
 void building_bandstand::on_tick(bool refresh_only) {

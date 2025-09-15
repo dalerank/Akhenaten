@@ -562,6 +562,7 @@ localization_en = [
   {key: "#trader_from", text:"from"},
   {key: "#trader_capacity", text:"Capacity"},
   {key: "#trader_buys", text:"Buys"},
+  {key: "#trader_sells", text:"Sells"},
   {key: "#trader_bought", text:"Bought"},
   {key: "#trader_sold", text:"Sold"},
   {key: "#trader_returning_home", text:"Returning home"},
@@ -572,6 +573,8 @@ localization_en = [
   {key: "#trader_ship_docking_trading", text:"Docked, buying and selling goods"},
   {key: "#trader_ship_returning_home", text:"Returning home"},
   {key: "#trader_ship_sailing_dock", text:"Sailing to city Docks"},
+  {key: "#building_employee", text:"Employee"},
+  {key: "#building_employee_needed", text:"needed"},
 
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100},
   {key: "#house_upgrade_inprogress", group:127, id:101},
