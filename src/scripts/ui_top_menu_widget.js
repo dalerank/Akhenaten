@@ -8,7 +8,7 @@ top_menu_widget = {
 	item_height : 20,
 	background: { pack:PACK_GENERAL, id:121, offset:8 },
 	sidebar_offset : 158,
-	spacing : 32,
+	spacing : 16,
 	offset_rotate_basic : 200,
 
 	headers : {
@@ -119,9 +119,9 @@ top_menu_widget = {
 	},
 
 	ui : {
-		background 		: dummy({size:[sw(0), 30]}),
-		date          	: link({pos:[0, 2], margin:{right: -150}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] }),
-		population   	: link({pos:[0, 2], margin:{right: -320}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
-		funds        	: link({pos:[0, 2], margin:{right: -450}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
+		background 		: dummy({size:[sw(0), 30], fill_width: true}),
+		date          : link({pos:[0, 2], margin:{right: -110}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] }),
+		population   	: link({pos:[0, 2], margin:{right: -310}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] }),
+		funds        	: link({pos:[0, 2], margin:{right: -440}, size:[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 61] }),
 	}
 }

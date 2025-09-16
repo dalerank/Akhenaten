@@ -133,6 +133,8 @@ struct element {
     bool enabled = true;
     uint8_t darkened = 0;
     draw_callback _draw_callback;
+    bool fill_width = false;
+    bool fill_height = false;
 
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);
@@ -141,7 +143,12 @@ struct element {
     virtual void tooltip(textid t) {}
     virtual void tooltip(const xstring &t) {}
     virtual int text_width() { return 0; }
-    virtual vec2i pxsize() const { return size; }
+    virtual vec2i pxsize() const {
+        return vec2i { 
+            fill_width ? screen_width() : size.x,
+            fill_height ? screen_height() : size.y,
+        };
+    }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void text_color(color) {}
     virtual void image(int) {}
