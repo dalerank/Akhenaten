@@ -377,9 +377,6 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     // handle cheats: special case since they ARE layout dependent
     if (!event->repeat && is_alt_down(event)) {
         switch (event->keysym.sym) {
-        case SDLK_k:
-            game_cheat_activate();
-            break;
         case SDLK_c:
             game_cheat_money();
             break;

@@ -14,7 +14,7 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "grid/figure.h"
-#include "scenario/gladiator_revolt.h"
+#include "scenario/scenario_revolt.h"
 #include "sound/effect.h"
 #include "sound/sound.h"
 
@@ -500,11 +500,12 @@ void figure::enemy53_axe_action() {
     else
         main_image_id = 601 + dir + 8 * anim.frame;
 }
+
 void figure::enemy_gladiator_action() {
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    use_cross_country = false;
     //    figure_image_increase_offset(12);
-    if (scenario_gladiator_revolt_is_finished()) {
+    if (scenario_revolt_is_finished()) {
         // end of gladiator revolt: poof gladiators
         if (action_state != FIGURE_ACTION_149_CORPSE) {
             kill();
@@ -512,6 +513,7 @@ void figure::enemy_gladiator_action() {
             direction = 0;
         }
     }
+
     switch (action_state) {
         //        case FIGURE_ACTION_150_ATTACK:
         //            figure_combat_handle_attack();

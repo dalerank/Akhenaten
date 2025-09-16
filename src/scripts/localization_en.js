@@ -575,6 +575,8 @@ localization_en = [
   {key: "#trader_ship_sailing_dock", text:"Sailing to city Docks"},
   {key: "#building_employee", text:"Employee"},
   {key: "#building_employee_needed", text:"needed"},
+  {key: "#AD", text:"AD"},
+  {key: "#BC", text:"BC"},
 
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100},
   {key: "#house_upgrade_inprogress", group:127, id:101},

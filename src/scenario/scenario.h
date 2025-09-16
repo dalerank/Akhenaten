@@ -6,7 +6,7 @@
 #include "game/game_environment.h"
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
-#include "events.h"
+#include "scenario_event_manager.h"
 #include "grid/point.h"
 #include "scenario/types.h"
 #include "scenario/scenario_difficulty.h"

@@ -9,7 +9,7 @@
 #include "building/building.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "graphics/font.h"
 #include "figure/figure.h"
 #include "city/constants.h"

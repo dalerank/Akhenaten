@@ -13,7 +13,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "grid/grid.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "window/window_city.h"
 #include "game/game.h"
 

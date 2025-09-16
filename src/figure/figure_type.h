@@ -15,7 +15,7 @@ enum e_enemy_type {
     ENEMY_8_GREEK = 8,
     ENEMY_9_EGYPTIAN = 9,
     ENEMY_10_CARTHAGINIAN = 10,
-    ENEMY_11_CAESAR = 11
+    ENEMY_11_EGYPTIAN = 11
 };
 
 enum e_figure_state {

@@ -1,4 +1,4 @@
-#include "events.h"
+#include "scenario_event_manager.h"
 
 #include "city/city_message.h"
 #include "core/string.h"
@@ -12,6 +12,7 @@
 #include "game/game.h"
 #include "request.h"
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
@@ -33,11 +34,33 @@ struct events_data_t {
 
 events_data_t g_scenario_events;
 
+declare_console_command_p(run_scenario_event) {
+    bstring128 args; is >> args;
+    int tag_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+
+    if (!tag_id) {
+        return;
+    }
+
+    auto& events = g_scenario_events.event_list;
+    auto it = std::find_if(events.begin(), events.end(), [&] (auto& e) { return e.tag_id == tag_id; });
+    if (it == events.end()) {
+        return;
+    }
+    
+    auto date = game.simtime.date();
+    it->event_trigger_type = EVENT_TRIGGER_ONCE;
+    it->time.year = date.year;
+    it->month = date.month;
+    g_scenario.events.process_events();
+}
+
 void event_manager_t::load_mission_event(archive arch, event_ph_t &ev) {
     ev.type = arch.r_type<e_event_type>("type");
-    ev.time.value = arch.r_int("year");
+    ev.time.year = arch.r_int("year");
     ev.amount.value = arch.r_int("amount");
     ev.month = arch.r_int("month");
+    ev.tag_id = arch.r_int("tag_id");
     
     switch (ev.type) {
     case EVENT_TYPE_REQUEST:
@@ -97,7 +120,7 @@ event_ph_t* event_manager_t::create(const event_ph_t* parent) {
 
     data.event_list.push_back({});
     int event_id = data.event_list.size() - 1;
-    event_ph_t&new_event = data.event_list.back();
+    event_ph_t& new_event = data.event_list.back();
 
     // if parent event is supplied, clone it into the new event
     if (parent != nullptr) {
@@ -110,22 +133,23 @@ event_ph_t* event_manager_t::create(const event_ph_t* parent) {
 
 bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent, e_event_trigger_type trigger_type) {
     event_ph_t* child = create(master);
-    if (child) {
-        child->event_state = e_event_state_initial;
-        child->event_trigger_type = trigger_type;
-
-        update_randomized_values(*child);
-
-        // calculate date of activation
-        int month_abs_parent = parent->time.value * 12 + parent->month; // field is YEARS in parent
-        int month_abs_child = month_abs_parent + child->time.value;     // field is MONTHS in child
-        child->time.value = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
-        child->month = month_abs_child % 12; // update proper month value relative to the year
-        child->quest_months_left = month_abs_child - month_abs_parent;
-
-        return true;
+    if (!child) {
+        return false;
     }
-    return false;
+
+    child->event_state = e_event_state_initial;
+    child->event_trigger_type = trigger_type;
+
+    update_randomized_values(*child);
+
+    // calculate date of activation
+    int month_abs_parent = parent->time.year * 12 + parent->month; // field is YEARS in parent
+    int month_abs_child = month_abs_parent + child->time.year;     // field is MONTHS in child
+    child->time.year = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
+    child->month = month_abs_child % 12; // update proper month value relative to the year
+    child->quest_months_left = month_abs_child - month_abs_parent;
+
+    return true;
 }
 
 const event_ph_t* event_manager_t::at(int id) const {
@@ -197,15 +221,15 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     }
 
     assert(event.event_id == id);
+    if (event.event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED) {
+        return;
+    }
+
     if (event.event_trigger_type == EVENT_TRIGGER_ONLY_VIA_EVENT && !via_event_trigger) {
         return;
     }
 
     if (event.event_trigger_type != EVENT_TRIGGER_ONLY_VIA_EVENT && via_event_trigger) {
-        return;
-    }
-
-    if (event.event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED) {
         return;
     }
 
@@ -382,10 +406,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_fixed);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_min);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_max);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.value);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_fixed);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_min);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.f_max);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.year);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.unk01);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.unk02);
+        iob->bind(BIND_SIGNATURE_INT16, &event.time.unk03);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[1]);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[2]);
@@ -394,7 +418,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.on_refusal_action);
         iob->bind(BIND_SIGNATURE_INT8, &event.event_trigger_type);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
+        iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
         iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
         iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
         iob->bind(BIND_SIGNATURE_INT8,  &event.event_state);

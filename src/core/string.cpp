@@ -42,6 +42,7 @@ const uint8_t* string_from_ascii(const char* str, bool extended) {
     }
     return (const uint8_t*)str;
 }
+
 int string_to_int(const uint8_t* str) {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
     const uint8_t* ptr = str;

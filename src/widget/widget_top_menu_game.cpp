@@ -168,10 +168,10 @@ void top_menu_widget::update_date(event_advance_day ev) {
     bstring32 text;
     if (ev.year >= 0) {
         int use_year_ad = locale_year_before_ad();
-        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, ui::str(20, 1)); }
-        else { text.printf("%s %s %d", month_str, ev.year, ui::str(20, 1)); }
+        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, lang_text_from_key("#AD")); }
+        else { text.printf("%s %s %d", month_str, lang_text_from_key("#AD")); }
     } else {
-        text.printf("%s %d %s", month_str, -ev.year, ui::str(20, 0));
+        text.printf("%s %d %s", month_str, -ev.year, lang_text_from_key("#BC"));
     }
 
     ui["date"] = text;

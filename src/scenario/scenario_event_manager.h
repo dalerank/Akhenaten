@@ -52,7 +52,7 @@ enum e_event_state {
 };
 extern const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
 
-enum {
+enum e_event_subtype {
     EVENT_SUBTYPE_GENERIC_REQUEST = 0,
     EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,
     EVENT_SUBTYPE_MSG_CITY_SAVED = 0,
@@ -71,7 +71,7 @@ enum {
     EVENT_SUBTYPE_CITY_GENERIC_TROUBLE = 6,
 };
 
-enum {
+enum e_event_faction_request {
     EVENT_FACTION_REQUEST_FROM_CITY = 0,
     EVENT_FACTION_REQUEST_FROM_PHARAOH = 1,
 };
@@ -89,7 +89,7 @@ enum e_event_trigger_type {
 };
 extern const token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX> e_event_trigger_type_tokens;
 
-enum {
+enum e_event_invabder {
     EVENT_INVADER_ENEMY = 1,
     EVENT_INVADER_EGYPT = 2,
     EVENT_INVADER_PHARAOH = 3,
@@ -129,6 +129,13 @@ struct event_ph_value {
     int16_t f_max;
 };
 
+struct event_ph_date {
+    int16_t year;
+    int16_t unk01;
+    int16_t unk02;
+    int16_t unk03;
+};
+
 struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
@@ -137,12 +144,12 @@ struct event_ph_t {
     int8_t month;
     event_ph_value item;
     event_ph_value amount;
-    event_ph_value time;
+    event_ph_date time;
     int16_t location_fields[4];
     int16_t on_completed_action;
     int16_t on_refusal_action;
     e_event_trigger_type event_trigger_type;
-    int16_t __unk07;
+    uint16_t tag_id;
     int16_t months_initial;
     int16_t quest_months_left;
     e_event_state event_state;
@@ -177,7 +184,7 @@ struct event_ph_t {
     int16_t __unk21;
     int16_t __unk22;
 
-    game_date_t date() { return {time.value, month}; }
+    game_date_t date() { return {time.year, month}; }
 };
 
 struct mission_id_t;

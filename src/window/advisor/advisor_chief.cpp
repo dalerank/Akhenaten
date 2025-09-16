@@ -18,7 +18,7 @@
 #include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
 #include "graphics/text.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "window/advisors.h"
 #include "game/game.h"

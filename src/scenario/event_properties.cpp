@@ -1,12 +1,11 @@
-#include "events.h"
+#include "scenario_event_manager.h"
 
 #include "widget/debug_console.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
+#include "game/game.h"
 
-ANK_REGISTER_PROPS_ITERATOR(config_load_event_properties);
-
-void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
+void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
     ImGui::PushID(0x80000000 | e.event_id);
 
     ImGui::TableNextRow();
@@ -19,12 +18,22 @@ void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
         game_debug_show_property("event_id", e.event_id, true);
 
         bstring256 type_name;
+        game_debug_show_property("Execute", [&] { 
+            auto date = game.simtime.date();
+            e.time.year = date.year;
+            e.month = date.month;
+            e.event_trigger_type = EVENT_TRIGGER_ONCE;
+            g_scenario.events.process_events();
+        });
 
         type_name.printf("%s [%d]", token::find_name(e_event_type_tokens, e.type), e.type);
+        game_debug_show_property("tag_id", e.tag_id);
         game_debug_show_property("<type>", type_name);
         game_debug_show_property("month", e.month);
-        game_debug_show_property("time.year", e.time.value);
-        game_debug_show_property("time.f_fixed", e.time.f_fixed);
+        game_debug_show_property("time", e.time.year);
+        bstring32 time_str; time_str.printf("%s %d %s", ui::str(25, e.month), e.time.year + scenario_property_start_year(), lang_text_from_key("#AD"));
+        game_debug_show_property("date", time_str.c_str());
+        game_debug_show_property("time.f_fixed", e.time.unk01);
         game_debug_show_property("months_initial", e.months_initial);
         game_debug_show_property("quest_months_left", e.quest_months_left);
 
@@ -56,7 +65,7 @@ void game_debug_show_properties_object(pcstr prefix, const event_ph_t &e) {
     ImGui::PopID();
 }
 
-
+ANK_REGISTER_PROPS_ITERATOR(config_load_event_properties);
 void config_load_event_properties(bool header) {
     static bool _debug_events_open = false;
 
@@ -67,7 +76,7 @@ void config_load_event_properties(bool header) {
 
     if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
         for (int i = 0; i < g_scenario.events.events_count(); ++i) {
-            const event_ph_t *evt = g_scenario.events.at(i);
+            event_ph_t *evt = g_scenario.events.at(i);
             assert(evt);
             game_debug_show_properties_object("Events", *evt);
         }

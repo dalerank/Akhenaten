@@ -10,7 +10,7 @@
 #include "core/profiler.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "game/settings.h"
 #include "game/game.h"
@@ -172,13 +172,12 @@ void kingdome_relation_t::process_invasion() {
                 formation_caesar_retreat();
                 if (!invasion.retreat_message_shown) {
                     invasion.retreat_message_shown = 1;
-                    messages::popup(MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
+                    messages::popup(MESSAGE_KINGDOME_ARMY_RETREAT, 0, 0);
                 }
             } else if (invasion.duration_day_countdown == 0)
-                messages::popup(MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
+                messages::popup(MESSAGE_KINGDOME_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
         }
-    } else if (invasion.soldiers_killed
-               && invasion.soldiers_killed >= invasion.size) {
+    } else if (invasion.soldiers_killed && invasion.soldiers_killed >= invasion.size) {
         // player defeated caesar army
         invasion.size = 0;
         invasion.soldiers_killed = 0;
@@ -198,7 +197,7 @@ void kingdome_relation_t::process_invasion() {
             invasion.warnings_given++;
             invasion.days_until_invasion = 192;
             if (invasion.warnings_given <= 1)
-                messages::popup(MESSAGE_CAESAR_WRATH, 0, 0);
+                messages::popup(MESSAGE_KINGDOME_WRATH, 0, 0);
         }
     } else {
         invasion.days_until_invasion--;
@@ -214,7 +213,7 @@ void kingdome_relation_t::process_invasion() {
             else {
                 size = 144;
             }
-            if (scenario_invasion_start_from_caesar(size)) {
+            if (scenario_invasion_start_from_kingdome(size)) {
                 cheated_invasion = 0;
                 invasion.count++;
                 invasion.duration_day_countdown = 192;
@@ -229,9 +228,6 @@ void kingdome_relation_t::process_invasion() {
 void kingdome_relation_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Emperor Update");
     update_debt_state();
-    //if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable Caesar invasion in Egypt
-    //    process_caesar_invasion();
-    //}
 }
 
 int kingdome_relation_t::get_gift_cost(int size) {
@@ -319,7 +315,7 @@ void kingdome_relation_t::mark_soldier_killed() {
 }
 
 void kingdome_relation_t::force_attack(int size) {
-    if (scenario_invasion_start_from_caesar(size)) {
+    if (scenario_invasion_start_from_kingdome(size)) {
         cheated_invasion = 1;
         invasion.count++;
         invasion.days_until_invasion = 0;

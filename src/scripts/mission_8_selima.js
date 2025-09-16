@@ -35,39 +35,52 @@ mission8 = { // Selima
 		population_goal : 2500
 	}
 
+    enable_scenario_events : false,
+	events : [
+		{
+            tag_id : 1
+			type: EVENT_TYPE_REQUEST
+			year : 2649
+			month : 1
+			resource : RESOURCE_LUXURY_GOODS
+			amount : 200
+			deadline : 9
+		},
+    ]
+
     cities : [
 		{
-			name : "Kerma",
-			is_sea_trade : false,
+			name : "Kerma"
+			is_sea_trade : false
             // sell Ebony
             // buys linen, jewelry
 		},
 
 		{
-			name : "Behdet",
-			is_sea_trade : false,
+			name : "Behdet"
+			is_sea_trade : false
             // sell fish, clay, pottery, beer, flax, papyrus, granite
             // buys bricks, linen, gems, jewelry, tibmer
 		},
 
         {
-			name : "Abedju",
-			is_sea_trade : false,
+			name : "Abedju"
+			is_sea_trade : false
             // sell fish, grain, beer, linen, limestone
             // buys gamemeat, clay, bricks, wood, papyrus, sunstone, limestone
 		},
 
         {
-			name : "Men-nefer",
-            is_sea_trade : false,
+			name : "Men-nefer"
+            is_sea_trade : false
             // sell chickpeas, pottery, papyrus
             // buys bricks, barley, beer, jewelry 
 		},
 
         
         {
-			name : "Timna",
-            is_sea_trade : false,
+			name : "Timna"
+            is_sea_trade : false
             // sell weapons, clay, pottery, copper
             // buys fish, beer, linen, papyrus
 		},

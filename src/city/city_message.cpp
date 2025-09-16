@@ -1,7 +1,7 @@
 #include "city_message.h"
 
 #include "io/io_buffer.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "content/vfs.h"
 #include "core/encoding.h"
 #include "core/string.h"
@@ -350,7 +350,7 @@ int city_message_get_advisor(int message_type) {
     switch (message_type) {
     case MESSAGE_LOCAL_UPRISING:
     case MESSAGE_BARBARIAN_ATTACK:
-    case MESSAGE_CAESAR_ARMY_ATTACK:
+    case MESSAGE_KINGDOME_ARMY_ATTACK:
     case MESSAGE_DISTANT_BATTLE:
     case MESSAGE_ENEMIES_CLOSING:
     case MESSAGE_ENEMIES_AT_THE_DOOR:

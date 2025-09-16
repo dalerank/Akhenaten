@@ -106,6 +106,14 @@ void game_debug_show_property_value(pcstr field, const std::function<void()> &f,
     }
 }
 
+void game_debug_show_property_value(pcstr field, const game_date_t& d, bool disabled) {
+    int v[2] = { d.year, d.month };
+    if (ImGui::InputInt2(field, v)) {
+        ((game_date_t&)d).year = v[0];
+        ((game_date_t&)d).month = v[1];
+    }
+}
+
 template<typename T>
 void game_debug_show_property_t(pcstr field, const T &v, bool disabled = false) {
     ImGui::PushID(game_debug_cli_guid);
@@ -179,6 +187,7 @@ void game_debug_show_property(pcstr field, const xstring &v, bool disabled) { ga
 void game_debug_show_property(pcstr field, const vec2i &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const tile2i &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const std::function<void()> &f, bool disabled)  { game_debug_show_property_t(field, f, disabled); }
+void game_debug_show_property(pcstr field, const game_date_t &d, bool disabled)  { game_debug_show_property_t(field, d, disabled); }
 
 void game_debug_properties_draw() {
     if (!game.debug_properties) {

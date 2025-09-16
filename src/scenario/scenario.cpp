@@ -7,7 +7,7 @@
 #include "empire/trade_route.h"
 #include "earthquake.h"
 #include "farao_change.h"
-#include "events.h"
+#include "scenario_event_manager.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/mission.h"
