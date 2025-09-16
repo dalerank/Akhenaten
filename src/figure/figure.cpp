@@ -52,7 +52,7 @@ const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
 
 const vec2i default_cart_offset{ 0, -7 };
 
-declare_console_command_p(killall) {
+declare_console_command_p(kill_all_figures) {
     for (auto &f: map_figures()) {
         if (f->is_valid()) {
             f->poof();
@@ -62,7 +62,7 @@ declare_console_command_p(killall) {
     events::emit(event_city_warning{ "Killed all walkers" });
 }
 
-declare_console_command_p(createfigure) {
+declare_console_command_p(create_figure) {
     std::string args; is >> args;
     int f_type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 

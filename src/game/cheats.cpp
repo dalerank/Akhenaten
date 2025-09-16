@@ -19,7 +19,7 @@
 #include "graphics/font.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/console.h"
@@ -33,7 +33,6 @@
 #define stricmp strcasecmp
 #endif
 
-static void game_cheat_start_invasion(pcstr);
 static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
@@ -47,8 +46,7 @@ struct cheat_command_handle {
     cheat_command* command;
 };
 
-static cheat_command_handle g_cheat_commands[] = {{"startinvasion", game_cheat_start_invasion},
-                                                  {"addclay", game_cheat_add_clay},
+static cheat_command_handle g_cheat_commands[] = {{"addclay", game_cheat_add_clay},
                                                   {"showtooltip", game_cheat_show_tooltip},
                                                   {"popmilestone", game_cheat_pop_milestone},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
@@ -74,26 +72,9 @@ static int parse_word(pcstr string, pstr word) {
     return count + 1;
 }
 
-// return value is next argument index
-int parse_integer(pcstr string, int &value) {
-    bstring64 copy;
-    int count = 0;
-    while (*string && *string != ' ') {
-        copy.data()[count] = *string;
-        count++;
-        string++;
-    }
-    copy.data()[count] = '\0';
-    value = string_to_int(copy);
-    return count + 1;
-}
-
 void game_cheat_activate() {
     if (window_is(WINDOW_BUILDING_INFO)) {
         g_cheats_data.is_cheating = (window_building_info_get_type() == BUILDING_WELL);
-    } else if (g_cheats_data.is_cheating && window_is(WINDOW_MESSAGE_DIALOG)) {
-        g_cheats_data.is_cheating = true;
-        scenario_invasion_start_from_cheat();
     } else {
         g_cheats_data.is_cheating = 0;
     }
@@ -138,18 +119,6 @@ static void game_cheat_add_clay(pcstr args) {
 
 static void game_cheat_pop_milestone(pcstr args) {
     g_city.population.reached_milestone(true);
-}
-
-static void game_cheat_start_invasion(pcstr args) {
-    int attack_type = 0;
-    int size = 0;
-    int invasion_point = 0;
-    int index = parse_integer(args, attack_type); // 0 barbarians, 1 caesar, 2 mars natives
-    index = parse_integer(args + index, size);
-    parse_integer(args + index, invasion_point);
-    scenario_invasion_start_from_console(attack_type, size, invasion_point);
-
-    events::emit(event_city_warning{ "Started invasion" });
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {

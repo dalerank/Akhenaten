@@ -41,7 +41,7 @@
 #include "scenario/earthquake.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"

@@ -206,7 +206,7 @@ const empire_object* empire_object_get_battle_icon(int path_id, int year) {
     return 0;
 }
 
-int empire_object_get_max_invasion_path(void) {
+int empire_object_get_max_invasion_path() {
     auto& objects = g_empire_objects;
     int max_path = 0;
     for (int i = 0; i < MAX_OBJECTS; i++) {

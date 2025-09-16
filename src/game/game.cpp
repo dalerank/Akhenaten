@@ -28,7 +28,7 @@
 #include "content/content.h"
 #include "mission.h"
 #include "figure/formation.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"

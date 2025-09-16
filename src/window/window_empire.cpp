@@ -26,7 +26,7 @@
 #include "input/input.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "window/advisors.h"
 #include "window/window_city.h"

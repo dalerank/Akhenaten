@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <iosfwd>
+#include <iomanip>
 
 extern int debug_range_1;
 extern int debug_range_2;
@@ -165,6 +166,13 @@ struct console_ref_bool {
 #define declare_console_ref_float(a, v) namespace console { bool var_##a; }; console_ref_float a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
 #define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
+
+inline std::istream& operator>>(std::istream& is, bstring128& arg) {
+    char tmp[bstring128::capacity];
+    is >> std::setw(bstring128::capacity) >> tmp;
+    arg = tmp;
+    return is;
+}
 
 namespace debug {
 

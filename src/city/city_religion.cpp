@@ -19,7 +19,7 @@
 #include "game/tutorial.h"
 #include "grid/routing/routing_terrain.h"
 #include "ratings.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "sound/effect.h"
 #include "dev/debug.h"
