@@ -86,8 +86,8 @@ enum e_sound_channel_city {
 
     SOUND_CHANNEL_CITY_COUNT,
 };
-
-extern const token_holder<e_sound_channel_city, SOUND_CHANNEL_CITY_NONE, SOUND_CHANNEL_CITY_COUNT> e_sound_channel_city_tokens;
+using e_sound_channel_city_tokens_t = token_holder<e_sound_channel_city, SOUND_CHANNEL_CITY_NONE, SOUND_CHANNEL_CITY_COUNT>;
+extern const e_sound_channel_city_tokens_t e_sound_channel_city_tokens;
 
 struct city_sound_channel {
     int in_use;

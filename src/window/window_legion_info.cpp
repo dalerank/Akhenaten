@@ -67,7 +67,7 @@ military_data_t g_military_data;
 //    }
 //}
 
-void legion_info_window::change_layout(formation_layout new_layout) {
+void legion_info_window::change_layout(e_formation_layout new_layout) {
     auto& data = g_military_data;
     building* b= data.context_for_callback->building_get();
 
@@ -172,7 +172,7 @@ void legion_info_window::init(object_info &c) {
             imgbtn->darkened = UiFlags_None;
             imgbtn->select(m->layout == imgbtn->param1);
             imgbtn->onclick([this] (int p1, int) {
-                this->change_layout((formation_layout)p1);
+                this->change_layout((e_formation_layout)p1);
                 this->update_describe_layout(*g_military_data.context_for_callback);
             });
         }

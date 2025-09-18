@@ -16,7 +16,7 @@
 #define MAX_CHANNELS 70
 
 city_sounds_t g_city_sounds;
-const token_holder<e_sound_channel_city, SOUND_CHANNEL_CITY_NONE, SOUND_CHANNEL_CITY_COUNT> ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
+const e_sound_channel_city_tokens_t ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
 
 const city_sounds_t &sound_city_channels() {
     return g_city_sounds;
