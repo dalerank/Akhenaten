@@ -163,13 +163,13 @@ void kingdome_relation_t::update_debt_state() {
 
 void kingdome_relation_t::process_invasion() {
     if (g_city.figures.kingdome_soldiers && !cheated_invasion) {
-        // caesar invasion in progress
+        // nomes invasion in progress
         invasion.duration_day_countdown--;
         if (rating >= 35 && invasion.duration_day_countdown < 176)
-            formation_caesar_pause();
+            formation_kingdome_pause();
         else if (rating >= 22) {
             if (invasion.duration_day_countdown > 0) {
-                formation_caesar_retreat();
+                formation_kingdome_retreat();
                 if (!invasion.retreat_message_shown) {
                     invasion.retreat_message_shown = 1;
                     messages::popup(MESSAGE_KINGDOME_ARMY_RETREAT, 0, 0);
@@ -178,7 +178,7 @@ void kingdome_relation_t::process_invasion() {
                 messages::popup(MESSAGE_KINGDOME_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
         }
     } else if (invasion.soldiers_killed && invasion.soldiers_killed >= invasion.size) {
-        // player defeated caesar army
+        // player defeated nomes army
         invasion.size = 0;
         invasion.soldiers_killed = 0;
         if (rating < 35) {
