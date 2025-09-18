@@ -79,7 +79,7 @@ void formation_legion_update_recruit_status(building* b) {
     }
 }
 
-void formation_legion_change_layout(formation* m, formation_layout new_layout) {
+void formation_legion_change_layout(formation* m, e_formation_layout new_layout) {
     if (new_layout == FORMATION_MOP_UP && m->layout != FORMATION_MOP_UP)
         m->prev.layout = m->layout;
 
