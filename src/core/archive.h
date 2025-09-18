@@ -89,9 +89,6 @@ struct archive {
         }
     }
 
-    template<>
-    void r<int>(pcstr name, int& v) { v = r_int(name); }
-
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
         getproperty(-1, name);
@@ -305,6 +302,9 @@ protected:
     static pcstr nextiterator(archive arch, int idx);
     void getglobal(pcstr name);
 };
+
+template<>
+inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
 
 struct g_archive : public archive {
     template<typename T>
