@@ -152,3 +152,11 @@ inline int parse_integer(pcstr string, int& value) {
     value = string_to_int(copy);
     return count + 1;
 }
+
+template<typename Buffer, typename Stream>
+inline int parse_integer_from(Stream& is) {
+    Buffer buf; is >> buf;
+    int value;
+    parse_integer(buf, value);
+    return value;
+}
