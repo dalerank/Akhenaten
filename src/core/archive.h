@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "core/xstring.h"
 #include "core/vec2i.h"
+#include "grid/point.h"
 #include "core/fixed_memory_resource.h"
 
 #include <vector>
@@ -25,6 +26,7 @@ struct archive {
     bool r_bool(pcstr name, bool def = false);
     vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
     vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
+    tile2i r_tile2i(pcstr name, pcstr i = "i", pcstr j = "j");
     bool r_anim(pcstr name, animation_t &anim);
     bool r_desc(pcstr name, image_desc &desc);
 
@@ -69,6 +71,26 @@ struct archive {
         pop(1);
         return result;
     }
+
+    template<typename T, std::size_t N>
+    void r(pcstr name, std::array<T, N>& v) { v = r_sarray<T, N>(name); }
+
+    template<typename T>
+    void r(T& s) {
+        archive_helper::to_value(*this, s);
+    }
+
+    template<typename T>
+    void r(pcstr name, T& v) {
+        if constexpr (std::is_enum_v<T>) {
+            archive_helper::to_enum(*this, name, v);
+        } else {
+           archive_helper::to_value(*this, name, v);
+        }
+    }
+
+    template<>
+    void r<int>(pcstr name, int& v) { v = r_int(name); }
 
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
@@ -374,3 +396,150 @@ struct g_archive_section {
         return result;
     }
 };
+
+#define ANK_CONFIG_STRUCT_EXPAND( x ) x
+#define ANK_CONFIG_STRUCT_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43, _44, _45, _46, _47, _48, _49, _50, _51, _52, _53, _54, _55, _56, _57, _58, _59, _60, _61, _62, _63, _64, NAME,...) NAME
+#define ANK_CONFIG_STRUCT_PASTE(...) ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_GET_MACRO(__VA_ARGS__, \
+        ANK_CONFIG_STRUCT_PASTE64, \
+        ANK_CONFIG_STRUCT_PASTE63, \
+        ANK_CONFIG_STRUCT_PASTE62, \
+        ANK_CONFIG_STRUCT_PASTE61, \
+        ANK_CONFIG_STRUCT_PASTE60, \
+        ANK_CONFIG_STRUCT_PASTE59, \
+        ANK_CONFIG_STRUCT_PASTE58, \
+        ANK_CONFIG_STRUCT_PASTE57, \
+        ANK_CONFIG_STRUCT_PASTE56, \
+        ANK_CONFIG_STRUCT_PASTE55, \
+        ANK_CONFIG_STRUCT_PASTE54, \
+        ANK_CONFIG_STRUCT_PASTE53, \
+        ANK_CONFIG_STRUCT_PASTE52, \
+        ANK_CONFIG_STRUCT_PASTE51, \
+        ANK_CONFIG_STRUCT_PASTE50, \
+        ANK_CONFIG_STRUCT_PASTE49, \
+        ANK_CONFIG_STRUCT_PASTE48, \
+        ANK_CONFIG_STRUCT_PASTE47, \
+        ANK_CONFIG_STRUCT_PASTE46, \
+        ANK_CONFIG_STRUCT_PASTE45, \
+        ANK_CONFIG_STRUCT_PASTE44, \
+        ANK_CONFIG_STRUCT_PASTE43, \
+        ANK_CONFIG_STRUCT_PASTE42, \
+        ANK_CONFIG_STRUCT_PASTE41, \
+        ANK_CONFIG_STRUCT_PASTE40, \
+        ANK_CONFIG_STRUCT_PASTE39, \
+        ANK_CONFIG_STRUCT_PASTE38, \
+        ANK_CONFIG_STRUCT_PASTE37, \
+        ANK_CONFIG_STRUCT_PASTE36, \
+        ANK_CONFIG_STRUCT_PASTE35, \
+        ANK_CONFIG_STRUCT_PASTE34, \
+        ANK_CONFIG_STRUCT_PASTE33, \
+        ANK_CONFIG_STRUCT_PASTE32, \
+        ANK_CONFIG_STRUCT_PASTE31, \
+        ANK_CONFIG_STRUCT_PASTE30, \
+        ANK_CONFIG_STRUCT_PASTE29, \
+        ANK_CONFIG_STRUCT_PASTE28, \
+        ANK_CONFIG_STRUCT_PASTE27, \
+        ANK_CONFIG_STRUCT_PASTE26, \
+        ANK_CONFIG_STRUCT_PASTE25, \
+        ANK_CONFIG_STRUCT_PASTE24, \
+        ANK_CONFIG_STRUCT_PASTE23, \
+        ANK_CONFIG_STRUCT_PASTE22, \
+        ANK_CONFIG_STRUCT_PASTE21, \
+        ANK_CONFIG_STRUCT_PASTE20, \
+        ANK_CONFIG_STRUCT_PASTE19, \
+        ANK_CONFIG_STRUCT_PASTE18, \
+        ANK_CONFIG_STRUCT_PASTE17, \
+        ANK_CONFIG_STRUCT_PASTE16, \
+        ANK_CONFIG_STRUCT_PASTE15, \
+        ANK_CONFIG_STRUCT_PASTE14, \
+        ANK_CONFIG_STRUCT_PASTE13, \
+        ANK_CONFIG_STRUCT_PASTE12, \
+        ANK_CONFIG_STRUCT_PASTE11, \
+        ANK_CONFIG_STRUCT_PASTE10, \
+        ANK_CONFIG_STRUCT_PASTE9, \
+        ANK_CONFIG_STRUCT_PASTE8, \
+        ANK_CONFIG_STRUCT_PASTE7, \
+        ANK_CONFIG_STRUCT_PASTE6, \
+        ANK_CONFIG_STRUCT_PASTE5, \
+        ANK_CONFIG_STRUCT_PASTE4, \
+        ANK_CONFIG_STRUCT_PASTE3, \
+        ANK_CONFIG_STRUCT_PASTE2, \
+        ANK_CONFIG_STRUCT_PASTE1)(__VA_ARGS__))
+#define ANK_CONFIG_STRUCT_PASTE2(func, v1) func(v1)
+#define ANK_CONFIG_STRUCT_PASTE3(func, v1, v2) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE2(func, v2)
+#define ANK_CONFIG_STRUCT_PASTE4(func, v1, v2, v3) ANK_CONFIG_STRUCT_PASTE2(func, v1)  ANK_CONFIG_STRUCT_PASTE3(func, v2, v3)
+#define ANK_CONFIG_STRUCT_PASTE5(func, v1, v2, v3, v4) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE4(func, v2, v3, v4)
+#define ANK_CONFIG_STRUCT_PASTE6(func, v1, v2, v3, v4, v5) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE5(func, v2, v3, v4, v5)
+#define ANK_CONFIG_STRUCT_PASTE7(func, v1, v2, v3, v4, v5, v6) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE6(func, v2, v3, v4, v5, v6)
+#define ANK_CONFIG_STRUCT_PASTE8(func, v1, v2, v3, v4, v5, v6, v7) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE7(func, v2, v3, v4, v5, v6, v7)
+#define ANK_CONFIG_STRUCT_PASTE9(func, v1, v2, v3, v4, v5, v6, v7, v8) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE8(func, v2, v3, v4, v5, v6, v7, v8)
+#define ANK_CONFIG_STRUCT_PASTE10(func, v1, v2, v3, v4, v5, v6, v7, v8, v9) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE9(func, v2, v3, v4, v5, v6, v7, v8, v9)
+#define ANK_CONFIG_STRUCT_PASTE11(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE10(func, v2, v3, v4, v5, v6, v7, v8, v9, v10)
+#define ANK_CONFIG_STRUCT_PASTE12(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE11(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11)
+#define ANK_CONFIG_STRUCT_PASTE13(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE12(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12)
+#define ANK_CONFIG_STRUCT_PASTE14(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE13(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13)
+#define ANK_CONFIG_STRUCT_PASTE15(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE14(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14)
+#define ANK_CONFIG_STRUCT_PASTE16(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE15(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15)
+#define ANK_CONFIG_STRUCT_PASTE17(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE16(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16)
+#define ANK_CONFIG_STRUCT_PASTE18(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE17(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17)
+#define ANK_CONFIG_STRUCT_PASTE19(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE18(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18)
+#define ANK_CONFIG_STRUCT_PASTE20(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE19(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19)
+#define ANK_CONFIG_STRUCT_PASTE21(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE20(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20)
+#define ANK_CONFIG_STRUCT_PASTE22(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE21(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21)
+#define ANK_CONFIG_STRUCT_PASTE23(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE22(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22)
+#define ANK_CONFIG_STRUCT_PASTE24(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE23(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23)
+#define ANK_CONFIG_STRUCT_PASTE25(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE24(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24)
+#define ANK_CONFIG_STRUCT_PASTE26(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE25(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25)
+#define ANK_CONFIG_STRUCT_PASTE27(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE26(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26)
+#define ANK_CONFIG_STRUCT_PASTE28(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE27(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27)
+#define ANK_CONFIG_STRUCT_PASTE29(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE28(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28)
+#define ANK_CONFIG_STRUCT_PASTE30(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE29(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29)
+#define ANK_CONFIG_STRUCT_PASTE31(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE30(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30)
+#define ANK_CONFIG_STRUCT_PASTE32(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE31(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31)
+#define ANK_CONFIG_STRUCT_PASTE33(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE32(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32)
+#define ANK_CONFIG_STRUCT_PASTE34(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE33(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33)
+#define ANK_CONFIG_STRUCT_PASTE35(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE34(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34)
+#define ANK_CONFIG_STRUCT_PASTE36(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE35(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35)
+#define ANK_CONFIG_STRUCT_PASTE37(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE36(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36)
+#define ANK_CONFIG_STRUCT_PASTE38(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE37(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37)
+#define ANK_CONFIG_STRUCT_PASTE39(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE38(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38)
+#define ANK_CONFIG_STRUCT_PASTE40(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE39(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39)
+#define ANK_CONFIG_STRUCT_PASTE41(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE40(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40)
+#define ANK_CONFIG_STRUCT_PASTE42(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE41(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41)
+#define ANK_CONFIG_STRUCT_PASTE43(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE42(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42)
+#define ANK_CONFIG_STRUCT_PASTE44(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE43(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43)
+#define ANK_CONFIG_STRUCT_PASTE45(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE44(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44)
+#define ANK_CONFIG_STRUCT_PASTE46(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE45(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45)
+#define ANK_CONFIG_STRUCT_PASTE47(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE46(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46)
+#define ANK_CONFIG_STRUCT_PASTE48(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE47(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47)
+#define ANK_CONFIG_STRUCT_PASTE49(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE48(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48)
+#define ANK_CONFIG_STRUCT_PASTE50(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE49(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49)
+#define ANK_CONFIG_STRUCT_PASTE51(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE50(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50)
+#define ANK_CONFIG_STRUCT_PASTE52(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE51(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51)
+#define ANK_CONFIG_STRUCT_PASTE53(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE52(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52)
+#define ANK_CONFIG_STRUCT_PASTE54(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE53(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53)
+#define ANK_CONFIG_STRUCT_PASTE55(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE54(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54)
+#define ANK_CONFIG_STRUCT_PASTE56(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE55(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55)
+#define ANK_CONFIG_STRUCT_PASTE57(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE56(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56)
+#define ANK_CONFIG_STRUCT_PASTE58(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE57(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57)
+#define ANK_CONFIG_STRUCT_PASTE59(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE58(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58)
+#define ANK_CONFIG_STRUCT_PASTE60(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE59(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59)
+#define ANK_CONFIG_STRUCT_PASTE61(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE60(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60)
+#define ANK_CONFIG_STRUCT_PASTE62(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE61(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61)
+#define ANK_CONFIG_STRUCT_PASTE63(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE62(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62)
+#define ANK_CONFIG_STRUCT_PASTE64(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE63(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63)
+
+#define ANK_CONFIG_STRUCT_FROM(v1) js_j.r<decltype(js_t.v1)>(#v1, js_t.v1); 
+
+#define ANK_CONFIG_STRUCT(Type, ...)  \
+namespace archive_helper {            \
+    template<typename ArchiveT>       \
+    void to_value(ArchiveT js_j, Type& js_t) { ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__)) } \
+}
+
+namespace archive_helper {
+    template<typename T, std::size_t N>
+    void to_value(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
+    
+    template<typename T>
+    void to_enum(archive arch, pcstr name, T& v) { v = arch.r_type<T>(name); }
+}
