@@ -48,6 +48,10 @@ mission8 = { // Selima
 		},
     ]
 
+    invasion_points : [
+        { index:0, pos:[30, 26], sea:false },
+    ]
+
     cities : [
 		{
 			name : "Kerma"
