@@ -7,3 +7,5 @@ int difficulty_sentiment(void);
 int difficulty_adjust_enemies(int enemies);
 
 int difficulty_adjust_wolf_attack(int attack);
+
+int difficulty_multiply_risk(int risk_delta);
