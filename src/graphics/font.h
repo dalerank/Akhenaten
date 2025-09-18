@@ -22,7 +22,8 @@ enum e_font {
     FONT_INVALID = 0xff
 };
 
-extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_font_type_tokens;
+using e_font_tokens_t = token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX>;
+extern const e_font_tokens_t e_font_tokens;
 
 using fonts_vec = std::array<e_font, 2>;
 

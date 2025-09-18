@@ -123,7 +123,7 @@ void figure_javelin::figure_action() {
     int should_die = base.move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile();
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
+        missile_hit_target(target_id, FIGURE_ENEMY_KINGDOME_INFANTRY);
         g_sound.play_effect(SOUND_EFFECT_JAVELIN);
     } else if (should_die) {
         poof();

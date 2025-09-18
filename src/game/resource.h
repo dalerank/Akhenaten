@@ -118,6 +118,7 @@ enum e_resource : uint8_t {
 
     RESOURCE_COUNT
 };
+using e_resource_tokens_t = token_holder<e_resource, RESOURCE_NONE, RESOURCE_COUNT>;
 
 constexpr e_resource RESOURCES_FOODS_MAX = RESOURCE_STRAW;
 constexpr e_resource RESOURCES_MIN = RESOURCE_GRAIN;

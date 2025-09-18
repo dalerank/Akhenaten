@@ -65,12 +65,13 @@ void figure::enemy_initial(formation* m) {
         if (attack_image_offset) {
             e_figure_type missile_type;
             switch (m->enemy_type) {
-            case ENEMY_4_GOTH:
-            case ENEMY_5_PERGAMUM:
-            case ENEMY_9_EGYPTIAN:
-            case ENEMY_10_CARTHAGINIAN:
+            case ENEMY_3_EGYPTIAN:
+            case ENEMY_4_HITTITE:
+            case ENEMY_5_HYKSOS:
+            case ENEMY_6_KUSHITE:
                 missile_type = FIGURE_ARROW;
                 break;
+
             default:
                 missile_type = FIGURE_SPEAR;
                 break;
@@ -229,10 +230,10 @@ void figure::enemy43_spear_action() {
     is_enemy_image = 1;
 
     switch (m->enemy_type) {
-    case ENEMY_5_PERGAMUM:
-    case ENEMY_6_SELEUCID:
-    case ENEMY_7_ETRUSCAN:
-    case ENEMY_8_GREEK:
+    case ENEMY_3_EGYPTIAN:
+    case ENEMY_4_HITTITE:
+    case ENEMY_5_HYKSOS:
+    case ENEMY_6_KUSHITE:
         break;
     default:
         return;
@@ -263,9 +264,9 @@ void figure::enemy44_sword_action() {
     is_enemy_image = 1;
 
     switch (m->enemy_type) {
-    case ENEMY_5_PERGAMUM:
-    case ENEMY_6_SELEUCID:
-    case ENEMY_9_EGYPTIAN:
+    case ENEMY_3_EGYPTIAN:
+    case ENEMY_4_HITTITE:
+    case ENEMY_5_HYKSOS:
         break;
     default:
         return;
@@ -283,6 +284,7 @@ void figure::enemy44_sword_action() {
     else
         main_image_id = 449 + dir + 8 * anim.frame;
 }
+
 void figure::enemy45_sword_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -294,9 +296,9 @@ void figure::enemy45_sword_action() {
     is_enemy_image = 1;
 
     switch (m->enemy_type) {
-    case ENEMY_7_ETRUSCAN:
-    case ENEMY_8_GREEK:
-    case ENEMY_10_CARTHAGINIAN:
+    case ENEMY_3_EGYPTIAN:
+    case ENEMY_4_HITTITE:
+    case ENEMY_5_HYKSOS:
         break;
     default:
         return;
@@ -368,6 +370,7 @@ void figure::enemy_chariot_action() {
     else
         main_image_id = 601 + dir + 8 * anim.frame;
 }
+
 void figure::enemy49_fast_sword_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -383,11 +386,11 @@ void figure::enemy49_fast_sword_action() {
         attack_id = 393;
         corpse_id = 441;
         normal_id = 297;
-    } else if (m->enemy_type == ENEMY_1_NUMIDIAN) {
+    } else if (m->enemy_type == ENEMY_1_ASSYRIAN) {
         attack_id = 593;
         corpse_id = 641;
         normal_id = 449;
-    } else if (m->enemy_type == ENEMY_4_GOTH) {
+    } else if (m->enemy_type == ENEMY_4_HITTITE) {
         attack_id = 545;
         corpse_id = 593;
         normal_id = 449;
@@ -415,8 +418,9 @@ void figure::enemy50_sword_action() {
     int dir = get_direction();
     is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT)
+    if (m->enemy_type != ENEMY_2_CANAANITE && m->enemy_type != ENEMY_3_EGYPTIAN)
         return;
+
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)
             main_image_id = 545 + dir + 8 * ((attack_image_offset - 12) / 2);
@@ -439,8 +443,9 @@ void figure::enemy51_spear_action() {
     int dir = get_missile_direction(m);
     is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_1_NUMIDIAN)
+    if (m->enemy_type != ENEMY_1_ASSYRIAN)
         return;
+
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)
             main_image_id = 593 + dir + 8 * ((attack_image_offset - 12) / 2);
@@ -486,8 +491,9 @@ void figure::enemy53_axe_action() {
     int dir = get_direction();
     is_enemy_image = 1;
 
-    if (m->enemy_type != ENEMY_2_GAUL)
+    if (m->enemy_type != ENEMY_2_CANAANITE)
         return;
+
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)
             main_image_id = 697 + dir + 8 * ((attack_image_offset - 12) / 2);

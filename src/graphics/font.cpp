@@ -8,7 +8,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_reload_external_symbols();
 }
 
-const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> ANK_CONFIG_ENUM(e_font_type_tokens);
+const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
 static int image_y_offset_default(const uint8_t *c, int image_height, int line_height);
