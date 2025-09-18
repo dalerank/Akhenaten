@@ -240,7 +240,7 @@ void figure::hit_opponent() {
     // defense modifiers
     if (opponent_formation->is_halted
         && (opponent_formation->figure_type == FIGURE_STANDARD_BEARER
-            || opponent_formation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
+            || opponent_formation->figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)) {
         if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction))
             opponent_defense -= 4; // opponent not attacking in coordinated formation
         else if (opponent_formation->layout == FORMATION_COLUMN)
