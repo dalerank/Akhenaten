@@ -290,6 +290,15 @@ vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
     return result;
 }
 
+tile2i archive::r_tile2i(pcstr name, pcstr i, pcstr j) {
+    auto vm = (js_State*)state;
+    js_getproperty(vm, -1, name);
+    vec2i t = r_vec2i_impl(i, j);
+    js_pop(vm, 1);
+
+    return tile2i(t.x, t.y);
+}
+
 bool archive::r_anim(pcstr name, animation_t &anim) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
