@@ -3,6 +3,7 @@
 #include "core/buffer.h"
 #include "figure/figure_type.h"
 #include "grid/point.h"
+#include "core/tokenum.h"
 
 // #define MAX_FORMATIONS 250
 
@@ -23,7 +24,7 @@ enum {
     FORMATION_ATTACK_RANDOM = 4
 };
 
-enum formation_layout {
+enum e_formation_layout {
     FORMATION_COLUMN = 0,
     FORMATION_DOUBLE_LINE_1 = 1,
     FORMATION_DOUBLE_LINE_2 = 2,
@@ -37,7 +38,11 @@ enum formation_layout {
     FORMATION_ENEMY_DOUBLE_LINE = 10,
     FORMATION_ENEMY_WIDE_COLUMN = 11,
     FORMATION_ENEMY12 = 12,
+
+    FORMATION_LAYOUT_COUNT
 };
+using e_formation_layout_tokens_t = token_holder<e_formation_layout, FORMATION_COLUMN, FORMATION_LAYOUT_COUNT>;
+extern const e_formation_layout_tokens_t e_formation_layout_tokens;
 
 struct formation_state {
     int duration_halt;
@@ -54,7 +59,7 @@ struct formation {
     int is_herd;   /**< Flag to indicate herd */
     int is_legion; /**< Flag to indicate (own) legion */
     int legion_id; /**< Legion ID (0-5 for own troops) */
-    formation_layout layout;
+    e_formation_layout layout;
     int direction;
     int orientation;
 
@@ -112,7 +117,7 @@ struct formation {
     int herd_ostrich_spawn_delay;
 
     struct {
-        formation_layout layout;
+        e_formation_layout layout;
         int x_home;
         int y_home;
     } prev;
@@ -124,7 +129,7 @@ void formation_clear(int formation_id);
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
 
@@ -136,9 +141,8 @@ void formation_record_fight(formation* m);
 
 int formation_grid_offset_for_invasion(int invasion_sequence);
 
-void formation_caesar_pause(void);
-
-void formation_caesar_retreat(void);
+void formation_kingdome_pause(void);
+void formation_kingdome_retreat(void);
 
 int formation_get_num_forts_cached(void);
 void formation_calculate_legion_totals(void);
@@ -149,7 +153,7 @@ int formation_get_max_forts();
 int formation_for_legion(int legion_index);
 
 void formation_change_morale(formation* m, int amount);
-int formation_has_low_morale(formation* m);
+bool formation_has_low_morale(formation* m);
 void formation_update_morale_after_death(formation* m);
 
 void formation_update_monthly_morale_deployed(void);

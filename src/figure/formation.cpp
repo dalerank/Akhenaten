@@ -12,9 +12,11 @@
 #include "grid/grid.h"
 #include "game/game_config.h"
 #include "sound/sound.h"
+#include "js/js_game.h"
 
 #include <string.h>
 
+const e_formation_layout_tokens_t ANK_CONFIG_ENUM(e_formation_layout_tokens);
 formation g_formations[250];
 
 struct formation_data_t {
@@ -82,7 +84,7 @@ formation* formation_create_legion(int building_id, int x, int y, e_figure_type 
     return m;
 }
 
-static int formation_create(e_figure_type figure_type, formation_layout layout, int orientation, tile2i tile) {
+static int formation_create(e_figure_type figure_type, e_formation_layout layout, int orientation, tile2i tile) {
     int formation_id = get_free_formation(10);
     if (!formation_id) {
         return 0;
@@ -120,7 +122,7 @@ int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animal
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, tile);
     if (!formation_id)
         return 0;
@@ -169,21 +171,21 @@ int formation_grid_offset_for_invasion(int invasion_sequence) {
     return 0;
 }
 
-void formation_caesar_pause(void) {
+void formation_kingdome_pause(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
+        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
             g_formations[i].wait_ticks = 20;
     }
 }
 
-void formation_caesar_retreat(void) {
+void formation_kingdome_retreat(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
+        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
             g_formations[i].months_low_morale = 1;
     }
 }
 
-int formation_has_low_morale(formation* m) {
+bool formation_has_low_morale(formation* m) {
     return m->months_low_morale || m->months_very_low_morale;
 }
 
@@ -246,21 +248,21 @@ void formation_change_morale(formation* m, int amount) {
     int max_morale;
     if (m->figure_type == FIGURE_INFANTRY)
         max_morale = m->has_military_training ? 100 : 80;
-    else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)
+    else if (m->figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
         max_morale = 100;
     else if (m->figure_type == FIGURE_ARCHER|| m->figure_type == FIGURE_FCHARIOTEER)
         max_morale = m->has_military_training ? 80 : 60;
     else {
         switch (m->enemy_type) {
         case ENEMY_0_BARBARIAN:
-        case ENEMY_1_NUMIDIAN:
-        case ENEMY_2_GAUL:
-        case ENEMY_3_CELT:
-        case ENEMY_4_GOTH:
+        case ENEMY_1_ASSYRIAN:
+        case ENEMY_2_CANAANITE:
+        case ENEMY_3_EGYPTIAN:
+        case ENEMY_4_HITTITE:
             max_morale = 80;
             break;
-        case ENEMY_8_GREEK:
-        case ENEMY_10_CARTHAGINIAN:
+        case ENEMY_5_HYKSOS:
+        case ENEMY_6_KUSHITE:
             max_morale = 90;
             break;
         default:
@@ -449,7 +451,7 @@ void formation_calculate_figures(void) {
         if (!::smart_cast<figure_soldier>(f) && !f->is_enemy() && !f->is_herd())
             continue;
 
-        if (f->type == FIGURE_ENEMY54_GLADIATOR)
+        if (f->type == FIGURE_ENEMY54_REVOLTMAN)
             continue;
 
         int index = formation_add_figure(
