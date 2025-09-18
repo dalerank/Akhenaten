@@ -19,6 +19,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "game/game_config.h"
 #include "game/undo.h"
+#include "game/difficulty.h"
 
 void fire_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
@@ -67,10 +68,10 @@ void city_maintenance_t::check_fire_collapse() {
         const model_building *model = model_get_building(b.type);
 
         /////// COLLAPSE
-        int damage_risk_increase = model->damage_risk;
-        damage_risk_increase += scenario_additional_damage(b.type, e_damage_collapse);
-
         if (!b.damage_proof) {
+            int damage_risk_increase = model->damage_risk;
+            damage_risk_increase += scenario_additional_damage(b.type, e_damage_collapse);
+            damage_risk_increase = difficulty_multiply_risk(damage_risk_increase);
             b.damage_risk += damage_risk_increase;
         }
 
@@ -83,12 +84,13 @@ void city_maintenance_t::check_fire_collapse() {
         /////// FIRE
         int random_building = (b.id + map_random_get(b.tile)) & 7;
         if (!b.fire_proof && random_building == random_global) {
-            int expected_fire_risk = building_impl::params(b.type).fire_risk_update;
-            expected_fire_risk += model->fire_risk;
+            int fire_risk_increase = building_impl::params(b.type).fire_risk_update;
+            fire_risk_increase += model->fire_risk;
+            fire_risk_increase += scenario_additional_damage(b.type, e_damage_fire);
+            fire_risk_increase = b.dcast()->get_fire_risk(fire_risk_increase);
+            fire_risk_increase = difficulty_multiply_risk(fire_risk_increase);
 
-            expected_fire_risk += scenario_additional_damage(b.type, e_damage_fire);
-            expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
-            b.fire_risk += expected_fire_risk;
+            b.fire_risk += fire_risk_increase;
             //            if (climate == CLIMATE_NORTHERN)
             //                b->fire_risk = 0;
             //            else if (climate == CLIMATE_DESERT)
