@@ -10,13 +10,8 @@ city_migration_t::params g_migration_params;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
     g_config_arch.r_section("migration_defaults", [] (archive arch) {
-        auto &defaults = g_migration_params;
-        defaults.max_immigration_amount_per_batch = arch.r_int("max_immigration_amount_per_batch", 4);
-        defaults.max_emigration_amount_per_batch = arch.r_int("max_emigration_amount_per_batch", 4);
-        defaults.max_newcomers_per_update = arch.r_int("max_newcomers_per_update", 12);
-        defaults.max_leftovers_per_update = arch.r_int("max_leftovers_per_update", 12);
-        defaults.sentiment_inluence = arch.r_array_vec2i("sentiment_influence", "s", "i");
-        assert(!defaults.sentiment_inluence.empty());
+        arch.r(g_migration_params);
+        assert(!g_migration_params.sentiment_influence.empty());
     });
 }
 
@@ -28,11 +23,11 @@ void city_migration_t::update_status() {
     auto& params = g_migration_params;
 
     const auto &sentiment = g_city.sentiment;
-    auto it = std::find_if(params.sentiment_inluence.begin(), params.sentiment_inluence.end(), [&] (const auto& t) { 
-        return sentiment.value > t.x; 
+    auto it = std::find_if(params.sentiment_influence.begin(), params.sentiment_influence.end(), [&] (const auto& t) {
+        return sentiment.value > t.s; 
     });
 
-    percentage_by_sentiment = (it != params.sentiment_inluence.end()) ? it->y : 0;
+    percentage_by_sentiment = (it != params.sentiment_influence.end()) ? it->i : 0;
     percentage = percentage_by_sentiment;
 
     immigration_amount_per_batch = 0;
