@@ -2,17 +2,23 @@
 
 #include <cstdint>
 #include <functional>
-#include <vector>
 
+#include "core/archive.h"
 #include "core/vec2i.h"
+#include "core/svector.h"
 
 struct city_migration_t {
+    struct sentiment_step_t {
+        int s;
+        int i;
+    };
+
     struct params {
         uint8_t max_immigration_amount_per_batch;
         uint8_t max_emigration_amount_per_batch;
         uint8_t max_newcomers_per_update;
         uint8_t max_leftovers_per_update;
-        std::vector<vec2i> sentiment_inluence;
+        svector<sentiment_step_t, 16> sentiment_influence;
     };
 
     uint8_t immigration_queue_size;
@@ -55,3 +61,12 @@ struct city_migration_t {
     using condition = std::function<void(city_migration_t &)>;
     void add_condition(condition);
 };
+
+ANK_CONFIG_STRUCT(city_migration_t::sentiment_step_t, s, i)
+
+ANK_CONFIG_STRUCT(city_migration_t::params, 
+                  max_immigration_amount_per_batch,
+                  max_emigration_amount_per_batch,
+                  max_newcomers_per_update,
+                  max_leftovers_per_update,
+                  sentiment_influence)

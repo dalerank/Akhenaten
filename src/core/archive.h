@@ -5,6 +5,7 @@
 #include "core/vec2i.h"
 #include "grid/point.h"
 #include "core/fixed_memory_resource.h"
+#include "core/svector.h"
 
 #include <vector>
 #include <string>
@@ -62,8 +63,14 @@ struct archive {
 
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
-                float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
-                *it = ((T)v);
+                if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                    *it = static_cast<T>(v);
+                } else {
+                    if (isobject(-1)) {
+                        archive_helper::to_value(*this, *it);
+                    }
+                }
                 it = std::next(it);
                 pop(1);
             }
@@ -76,18 +83,10 @@ struct archive {
     void r(pcstr name, std::array<T, N>& v) { v = r_sarray<T, N>(name); }
 
     template<typename T>
-    void r(T& s) {
-        archive_helper::to_value(*this, s);
-    }
+    void r(T& s);
 
     template<typename T>
-    void r(pcstr name, T& v) {
-        if constexpr (std::is_enum_v<T>) {
-            archive_helper::to_enum(*this, name, v);
-        } else {
-           archive_helper::to_value(*this, name, v);
-        }
-    }
+    void r(pcstr name, T& v);
 
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
@@ -302,9 +301,6 @@ protected:
     static pcstr nextiterator(archive arch, int idx);
     void getglobal(pcstr name);
 };
-
-template<>
-inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
 
 struct g_archive : public archive {
     template<typename T>
@@ -539,7 +535,29 @@ namespace archive_helper {            \
 namespace archive_helper {
     template<typename T, std::size_t N>
     void to_value(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
+
+    template<typename T, std::size_t N>
+    void to_value(archive arch, pcstr name, svector<T, N>& v) { 
+        arch.r_array(name, v, [] (archive it_arch, auto &it) {
+            it_arch.r<T>(it);
+        }); 
+    }
     
     template<typename T>
     void to_enum(archive arch, pcstr name, T& v) { v = arch.r_type<T>(name); }
+}
+
+template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
+template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
+
+template<typename T>
+void archive::r(T& s) { archive_helper::to_value(*this, s); }
+
+template<typename T>
+void archive::r(pcstr name, T& v) {
+    if constexpr (std::is_enum_v<T>) {
+        archive_helper::to_enum(*this, name, v);
+    } else {
+        archive_helper::to_value(*this, name, v);
+    }
 }
