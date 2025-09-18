@@ -19,9 +19,9 @@ constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
 constexpr int NUM_PHRASES = 601;
 constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
-const token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX> ANK_CONFIG_ENUM(e_event_type_tokens);
-const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
-const token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX> e_event_trigger_type_tokens;
+const e_event_type_tokens_t ANK_CONFIG_ENUM(e_event_type_tokens);
+const e_event_state_tokens_t e_event_state_tokens;
+const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 
 struct events_data_t {
     svector<event_ph_t, MAX_EVENTS> event_list;

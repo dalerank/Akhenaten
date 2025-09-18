@@ -37,7 +37,8 @@ enum e_event_type {
 
     EVENT_TYPE_MAX,
 };
-extern const token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX> e_event_type_tokens;
+using e_event_type_tokens_t = token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX>;
+extern const e_event_type_tokens_t e_event_type_tokens;
 
 enum e_event_state {
     e_event_state_initial = 0,
@@ -50,7 +51,8 @@ enum e_event_state {
     e_event_state_already_fired = 7,
     e_event_state_max
 };
-extern const token_holder<e_event_state, e_event_state_initial, e_event_state_max> e_event_state_tokens;
+using e_event_state_tokens_t = token_holder<e_event_state, e_event_state_initial, e_event_state_max>;
+extern const e_event_state_tokens_t e_event_state_tokens;
 
 enum e_event_subtype {
     EVENT_SUBTYPE_GENERIC_REQUEST = 0,
@@ -87,7 +89,8 @@ enum e_event_trigger_type {
 
     EVENT_TRIGGER_MAX
 };
-extern const token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX> e_event_trigger_type_tokens;
+using e_event_trigger_type_tokens_t = token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX>;
+extern const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 
 enum e_event_invabder {
     EVENT_INVADER_ENEMY = 1,
