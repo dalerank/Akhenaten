@@ -33,76 +33,83 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
     int enemy_type = formation_get(formation_id)->enemy_type;
     switch (f->type) {
     case FIGURE_ENEMY43_SPEAR:
-        switch (enemy_type) {
-        case ENEMY_5_PERGAMUM:
-            image_id = 44;
-            break;
-        case ENEMY_6_SELEUCID:
-            image_id = 46;
-            break;
-        case ENEMY_7_ETRUSCAN:
-            image_id = 32;
-            break;
-        case ENEMY_8_GREEK:
-            image_id = 36;
-            break;
-        }
+        image_id = 44;
+        //switch (enemy_type) {
+        //case ENEMY_5_PERGAMUM:
+        //    image_id = 44;
+        //    break;
+        //case ENEMY_6_SELEUCID:
+        //    image_id = 46;
+        //    break;
+        //case ENEMY_7_ETRUSCAN:
+        //    image_id = 32;
+        //    break;
+        //case ENEMY_8_GREEK:
+        //    image_id = 36;
+        //    break;
+        //}
         break;
+
     case FIGURE_ENEMY44_SWORD:
-        switch (enemy_type) {
-        case ENEMY_5_PERGAMUM:
-            image_id = 45;
-            break;
-        case ENEMY_6_SELEUCID:
-            image_id = 47;
-            break;
-        case ENEMY_9_EGYPTIAN:
-            image_id = 29;
-            break;
-        }
+        image_id = 45;
+        //switch (enemy_type) {
+        //case ENEMY_5_PERGAMUM:
+        //    image_id = 45;
+        //    break;
+        //case ENEMY_6_SELEUCID:
+        //    image_id = 47;
+        //    break;
+        //case ENEMY_9_EGYPTIAN:
+        //    image_id = 29;
+        //    break;
+        //}
         break;
     case FIGURE_ENEMY45_SWORD:
-        switch (enemy_type) {
-        case ENEMY_7_ETRUSCAN:
-            image_id = 31;
-            break;
-        case ENEMY_8_GREEK:
-            image_id = 37;
-            break;
-        case ENEMY_10_CARTHAGINIAN:
-            image_id = 22;
-            break;
-        }
+        image_id = 31;
+        //switch (enemy_type) {
+        //case ENEMY_7_ETRUSCAN:
+        //    image_id = 31;
+        //    break;
+        //case ENEMY_8_GREEK:
+        //    image_id = 37;
+        //    break;
+        //case ENEMY_10_CARTHAGINIAN:
+        //    image_id = 22;
+        //    break;
+        //}
         break;
     case FIGURE_ENEMY49_FAST_SWORD:
-        switch (enemy_type) {
-        case ENEMY_0_BARBARIAN:
-            image_id = 21;
-            break;
-        case ENEMY_1_NUMIDIAN:
-            image_id = 20;
-            break;
-        case ENEMY_4_GOTH:
-            image_id = 35;
-            break;
-        }
+        image_id = 21;
+        //switch (enemy_type) {
+        //case ENEMY_0_BARBARIAN:
+        //    image_id = 21;
+        //    break;
+        //case ENEMY_1_NUMIDIAN:
+        //    image_id = 20;
+        //    break;
+        //case ENEMY_4_GOTH:
+        //    image_id = 35;
+        //    break;
+        //}
         break;
     case FIGURE_ENEMY50_SWORD:
-        switch (enemy_type) {
-        case ENEMY_2_GAUL:
-            image_id = 40;
-            break;
-        case ENEMY_3_CELT:
-            image_id = 24;
-            break;
-        }
+        image_id = 40;
+        //switch (enemy_type) {
+        //case ENEMY_2_GAUL:
+        //    image_id = 40;
+        //    break;
+        //case ENEMY_3_CELT:
+        //    image_id = 24;
+        //    break;
+        //}
         break;
     case FIGURE_ENEMY51_SPEAR:
-        switch (enemy_type) {
-        case ENEMY_1_NUMIDIAN:
-            image_id = 20;
-            break;
-        }
+        image_id = 20;
+        //switch (enemy_type) {
+        //case ENEMY_1_NUMIDIAN:
+        //    image_id = 20;
+        //    break;
+        //}
         break;
     }
 
