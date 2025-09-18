@@ -67,8 +67,10 @@ void scenario_editor_create(int map_size) {
     g_scenario.exit_point.set(-1);
     g_scenario.river_entry_point.set(-1);
     g_scenario.river_exit_point.set(-1);
-    for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++)
-        g_scenario.invasion_points_land[i].set(-1);
+
+    auto& inv_landp = g_scenario.invasion_points_land;
+    std::fill(inv_landp.begin(), inv_landp.end(), tile2i::invalid);
+
     for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++)
         g_scenario.invasion_points_sea[i].set(-1);
 
