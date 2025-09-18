@@ -275,9 +275,9 @@ int figure::figure_image_corpse_offset() {
         formation* m = formation_get(formation_id);
         if (m->enemy_type == ENEMY_0_BARBARIAN)
             type_offset = 441;
-        else if (m->enemy_type == ENEMY_1_NUMIDIAN)
+        else if (m->enemy_type == ENEMY_1_ASSYRIAN)
             type_offset = 641;
-        else if (m->enemy_type == ENEMY_4_GOTH)
+        else if (m->enemy_type == ENEMY_4_HITTITE)
             type_offset = 593;
         break;
     }

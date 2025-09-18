@@ -17,8 +17,8 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-const token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE> ANK_CONFIG_ENUM(e_overlay_tokens);
-const token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE> ANK_CONFIG_ENUM(e_column_type_tokens);
+const e_overlay_tokens_t ANK_CONFIG_ENUM(e_overlay_tokens);
+const e_column_type_tokens_t ANK_CONFIG_ENUM(e_column_type_tokens);
 
 overlay_list &city_overlay::overlays() {
     static overlay_list impl;

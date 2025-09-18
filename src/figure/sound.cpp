@@ -37,10 +37,10 @@ void figure::play_die_sound() {
     case FIGURE_ENEMY50_SWORD:
     case FIGURE_ENEMY51_SPEAR:
     case FIGURE_ENEMY53_AXE:
-    case FIGURE_ENEMY54_GLADIATOR:
-    case FIGURE_ENEMY_CAESAR_JAVELIN:
-    case FIGURE_ENEMY_CAESAR_MOUNTED:
-    case FIGURE_ENEMY_CAESAR_LEGIONARY:
+    case FIGURE_ENEMY54_REVOLTMAN:
+    case FIGURE_ENEMY_KINGDOME_JAVELIN:
+    case FIGURE_ENEMY_KINGDOME_MOUNTED:
+    case FIGURE_ENEMY_KINGDOME_INFANTRY:
         is_soldier = 1;
         break;
 
@@ -70,7 +70,7 @@ void figure::play_hit_sound() {
     int effect = 0;
     switch (type) {
     case FIGURE_INFANTRY:
-    case FIGURE_ENEMY_CAESAR_LEGIONARY:
+    case FIGURE_ENEMY_KINGDOME_INFANTRY:
         if (city_sound_update_hit_soldier()) {
             effect = SOUND_EFFECT_SWORD;
         }
@@ -81,7 +81,7 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY48_CHARIOT:
     case FIGURE_ENEMY50_SWORD:
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
-    case FIGURE_ENEMY54_GLADIATOR:
+    case FIGURE_ENEMY54_REVOLTMAN:
         if (city_sound_update_hit_soldier())
             effect = SOUND_EFFECT_SWORD_SWING;
         break;
