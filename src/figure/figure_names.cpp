@@ -17,10 +17,19 @@ struct figure_name_data_t {
     int32_t musician;
     int32_t dancer;
     int32_t senet_player;
-    int32_t barbarian;
-    int32_t enemy_greek;
+    int32_t enemy_barbarian;
+    int32_t enemy_assyrian;
+    int32_t enemy_canaanite;
     int32_t enemy_egyptian;
-    int32_t enemy_arabian;
+    int32_t enemy_hittite;
+    int32_t enemy_hyksos;
+    int32_t enemy_kushite;
+    int32_t enemy_libian;
+    int32_t enemy_nubian;
+    int32_t enemy_persian;
+    int32_t enemy_phoenician;
+    int32_t enemy_roman;
+    int32_t enemy_seapeople;
     int32_t trader;
     int32_t ship;
     int32_t warship;
@@ -29,7 +38,7 @@ struct figure_name_data_t {
 
 figure_name_data_t g_figure_name_data;
 
-static int32_t init_name(void) {
+static int8_t init_name() {
     random_generate_next();
     return random_byte() & 0xf;
 }
@@ -49,21 +58,31 @@ void figure_name_init() {
     data.musician = init_name();
     data.dancer = init_name();
     data.senet_player = init_name();
-    data.barbarian = init_name();
-    data.enemy_greek = init_name();
+    data.enemy_barbarian = init_name();
+    data.enemy_assyrian = init_name();
+    data.enemy_canaanite = init_name();
     data.enemy_egyptian = init_name();
-    data.enemy_arabian = init_name();
+    data.enemy_hittite = init_name();
+    data.enemy_hyksos = init_name();
+    data.enemy_kushite = init_name();
+    data.enemy_libian = init_name();
+    data.enemy_nubian = init_name();
+    data.enemy_persian = init_name();
+    data.enemy_phoenician = init_name();
+    data.enemy_roman = init_name();
+    data.enemy_seapeople = init_name();
     data.trader = init_name();
     data.ship = init_name();
     data.warship = init_name();
     data.enemy_warship = init_name();
 }
 
-static int get_next_name(int32_t* field, int offset, int max) {
-    int name = offset + *field;
-    *field = *field + 1;
-    if (*field >= max)
-        *field = 0;
+static int get_next_name(int32_t& field, int offset, int max) {
+    int name = offset + field;
+    field = field + 1;
+    if (field >= max) {
+        field = 0;
+    }
 
     return name;
 }
@@ -72,38 +91,38 @@ int figure_name_get(int type, int enemy) {
     auto &data = g_figure_name_data;
     switch (type) {
     case FIGURE_TAX_COLLECTOR:
-        return get_next_name(&data.tax_collector, 132, 32);
+        return get_next_name(data.tax_collector, 132, 32);
 
     case FIGURE_ARCHITECT:
-        return get_next_name(&data.engineer, 165, 32);
+        return get_next_name(data.engineer, 165, 32);
 
     case FIGURE_FIREMAN:
     case FIGURE_TOWER_SENTRY:
-        return get_next_name(&data.fireman, 198, 32);
+        return get_next_name(data.fireman, 198, 32);
 
     case FIGURE_JUGGLER:
-        return get_next_name(&data.juggler, 330, 32);
+        return get_next_name(data.juggler, 330, 32);
 
     case FIGURE_MUSICIAN:
-        return get_next_name(&data.musician, 363, 32);
+        return get_next_name(data.musician, 363, 32);
 
     case FIGURE_DANCER:
-        return get_next_name(&data.dancer, 396, 16);
+        return get_next_name(data.dancer, 396, 16);
 
     case FIGURE_SENET_PLAYER:
-        return get_next_name(&data.senet_player, 413, 16);
+        return get_next_name(data.senet_player, 413, 16);
 
     case FIGURE_TRADE_CARAVAN:
     case FIGURE_TRADE_CARAVAN_DONKEY:
-        return get_next_name(&data.trader, 562, 16);
+        return get_next_name(data.trader, 562, 16);
 
     case FIGURE_TRADE_SHIP:
     case FIGURE_FISHING_BOAT:
-        return get_next_name(&data.ship, 579, 16);
+        return get_next_name(data.ship, 579, 16);
 
     case FIGURE_MARKET_TRADER:
     case FIGURE_MARKET_BUYER:
-        return get_next_name(&data.citizen_female, 99, 32);
+        return get_next_name(data.citizen_female, 99, 32);
 
     case FIGURE_SCRIBER:
     case FIGURE_DELIVERY_BOY:
@@ -111,7 +130,7 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_WATER_CARRIER:
     case FIGURE_WORKER:
     default:
-        return get_next_name(&data.citizen_male, 1, 64);
+        return get_next_name(data.citizen_male, 1, 64);
 
     case FIGURE_PRIEST:
     case FIGURE_TEACHER:
@@ -120,23 +139,23 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_EMBALMER:
     case FIGURE_PHYSICIAN:
     case FIGURE_NOBLES:
-        return get_next_name(&data.nobles, 66, 32);
+        return get_next_name(data.nobles, 66, 32);
 
     case FIGURE_ARCHER:
-    case FIGURE_ENEMY_CAESAR_JAVELIN:
-        return get_next_name(&data.javelin_thrower, 231, 32);
+    case FIGURE_ENEMY_KINGDOME_JAVELIN:
+        return get_next_name(data.javelin_thrower, 231, 32);
 
     case FIGURE_FCHARIOTEER:
-    case FIGURE_ENEMY_CAESAR_MOUNTED:
-        return get_next_name(&data.cavalry, 264, 32);
+    case FIGURE_ENEMY_KINGDOME_MOUNTED:
+        return get_next_name(data.cavalry, 264, 32);
 
     case FIGURE_INFANTRY:
-    case FIGURE_ENEMY_CAESAR_LEGIONARY:
-        return get_next_name(&data.legionary, 297, 32);
+    case FIGURE_ENEMY_KINGDOME_INFANTRY:
+        return get_next_name(data.legionary, 297, 32);
 
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_NATIVE_TRADER:
-        return get_next_name(&data.barbarian, 430, 32);
+        return get_next_name(data.enemy_barbarian, 430, 32);
 
     case FIGURE_ENEMY43_SPEAR:
     case FIGURE_ENEMY44_SWORD:
@@ -150,22 +169,22 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
     case FIGURE_ENEMY53_AXE:
         switch (enemy) {
-        case ENEMY_8_GREEK:
-            return get_next_name(&data.enemy_greek, 463, 32);
+        //case ENEMY_8_GREEK:
+        //    return get_next_name(&data.enemy_greek, 463, 32);
 
-        case ENEMY_9_EGYPTIAN:
-            return get_next_name(&data.enemy_egyptian, 496, 32);
+        case ENEMY_3_EGYPTIAN:
+            return get_next_name(data.enemy_egyptian, 496, 32);
 
-        case ENEMY_1_NUMIDIAN:
-        case ENEMY_5_PERGAMUM:
-        case ENEMY_10_CARTHAGINIAN:
-            return get_next_name(&data.enemy_arabian, 529, 32);
+        //case ENEMY_1_NUMIDIAN:
+        //case ENEMY_5_PERGAMUM:
+        //case ENEMY_10_CARTHAGINIAN:
+        //    return get_next_name(&data.enemy_arabian, 529, 32);
 
-        case ENEMY_7_ETRUSCAN:
-            return get_next_name(&data.fireman, 198, 32);
+        //case ENEMY_7_ETRUSCAN:
+        //    return get_next_name(&data.fireman, 198, 32);
 
         default:
-            return get_next_name(&data.barbarian, 430, 32);
+            return get_next_name(data.enemy_barbarian, 430, 32);
         }
 
     case FIGURE_EXPLOSION:
@@ -193,10 +212,10 @@ io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.musician);
     iob->bind(BIND_SIGNATURE_INT32, &data.dancer);
     iob->bind(BIND_SIGNATURE_INT32, &data.senet_player);
-    iob->bind(BIND_SIGNATURE_INT32, &data.barbarian);
-    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_greek);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_barbarian);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_assyrian);
     iob->bind(BIND_SIGNATURE_INT32, &data.enemy_egyptian);
-    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_arabian);
+    iob->bind(BIND_SIGNATURE_INT32, &data.enemy_canaanite);
     iob->bind(BIND_SIGNATURE_INT32, &data.trader);
     iob->bind(BIND_SIGNATURE_INT32, &data.ship);
     iob->bind(BIND_SIGNATURE_INT32, &data.warship);
