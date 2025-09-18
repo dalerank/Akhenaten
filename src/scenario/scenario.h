@@ -224,8 +224,8 @@ struct scenario_data_t {
     tile2i herd_points_prey[MAX_PREY_HERD_POINTS];
     tile2i fishing_points[MAX_FISH_POINTS];
     tile2i disembark_points[MAX_DISEMBARK_POINTS];
-    tile2i invasion_points_land[MAX_INVASION_POINTS_LAND];
-    tile2i invasion_points_sea[MAX_INVASION_POINTS_SEA];
+    std::array<tile2i, MAX_INVASION_POINTS_LAND> invasion_points_land;
+    std::array<tile2i, MAX_INVASION_POINTS_SEA> invasion_points_sea;
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     std::vector<resource_allow> init_resources;

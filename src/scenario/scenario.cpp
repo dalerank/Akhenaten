@@ -106,6 +106,13 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
             building_stages.push_back({key, buildings});
         });
 
+        arch.r_array("invasion_points", [&] (archive parch) {
+            int index = std::clamp(parch.r_int("index"), 0, MAX_INVASION_POINTS_LAND);
+            bool issea = parch.r_bool("sea");
+            auto& points = issea ? invasion_points_sea : invasion_points_land;
+            points[index] = parch.r_tile2i("pos");
+        });
+
         arch.r_section("win_criteria", [this] (archive sarch) {
             auto read_criteria = [] (archive sarch, pcstr key, win_criteria_t& criteria) {
                 criteria.enabled = sarch.r_bool(bstring32(key, "_enabled"), criteria.enabled);
@@ -311,15 +318,17 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(42);
 
     if (iob->is_read_access()) {
-        for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { g_scenario.invasion_points_land[i].invalidate_offset(); }
-        for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { g_scenario.invasion_points_land[i].invalidate_offset(); }
+        auto& lands = g_scenario.invasion_points_land;
+        auto& sea = g_scenario.invasion_points_land;
+        std::fill(lands.begin(), lands.end(), tile2i::invalid);
+        std::fill(sea.begin(), sea.end(), tile2i::invalid);
     }
 
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_X)); }
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_X)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_sea[i].private_access(_X)); }
 
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_Y)); }
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_Y)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_sea[i].private_access(_Y)); }
 
     iob->bind____skip(36); // 18 * 2
 
