@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "core/tokenum.h"
 
 enum e_advisor : uint8_t {
     ADVISOR_NONE = 0,
@@ -65,6 +66,7 @@ enum e_permission : uint8_t {
 
     epermission_count
 };
+using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
 
 enum e_rating_change : uint8_t {
     e_rating_dropping = 0,
