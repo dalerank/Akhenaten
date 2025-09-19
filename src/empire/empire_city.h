@@ -6,6 +6,7 @@
 #include "empire/trade_route.h"
 #include "figure/figure_type.h"
 #include "core/tokenum.h"
+#include "core/archive.h"
 
 struct empire_city {
     enum {
@@ -42,6 +43,7 @@ struct empire_city {
         type = EMPIRE_CITY_EGYPTIAN;
     }
 };
+ANK_CONFIG_STRUCT(empire_city, is_sea_trade)
 
 struct empire_city_handle {
     uint8_t handle = 0;

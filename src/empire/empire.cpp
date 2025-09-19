@@ -100,7 +100,7 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
                 return;
             }
 
-            city->is_sea_trade = city_arch.r_bool("is_sea_trade", city->is_sea_trade);
+            city_arch.r(*city);
         });
     });
 }
