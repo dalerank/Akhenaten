@@ -9,15 +9,36 @@
 #include "core/log.h"
 #include "game/game_config.h"
 
-#include <map>
+#include <unordered_set>
 
 struct loc_textid {
+    xstring key;
     uint16_t group;
     uint16_t id;
     xstring text;
+
+    bool operator==(const loc_textid& other) const noexcept {
+        return key == other.key;
+    }
+
+    bool operator!=(const loc_textid& other) const noexcept {
+        return key != other.key;
+    }
+
+    bool operator<(const loc_textid& other) const noexcept {
+        return key < other.key;
+    }
+};
+ANK_CONFIG_STRUCT(loc_textid, key, group, id, text)
+
+template<>
+struct std::hash<loc_textid> {
+    std::size_t operator()(const loc_textid& k) const noexcept {
+        return (size_t)k.key._get();
+    }
 };
 
-std::map<xstring, loc_textid> g_localization;
+std::unordered_set<loc_textid> g_localization;
 game_languages g_game_languages;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
@@ -26,13 +47,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
 
     g_game_languages.clear();
     g_config_arch.r("game_languages", g_game_languages);
-    //[] (archive arch) {
-    //    auto &config = g_game_languages.emplace_back();
-    //    config.lang = arch.r_string("lang");
-    //    config.caption = arch.r_string("caption");
-    //    config.key = arch.r_string("key");
-    //    config.table = arch.r_string("table");
-    //});
 }
 
 bool lang_reload_localized_files() {
@@ -55,41 +69,18 @@ bool lang_reload_localized_tables() {
         return false;
     }
 
-    // first restore the default localization (english), than add current language on top
-    g_config_arch.r_array("localization_en", [] (archive arch) {
-        xstring key = arch.r_string("key");
-        uint16_t group = arch.r_int("group");
-        uint16_t id = arch.r_int("id");
-        xstring text = arch.r_string("text");
+    g_localization.clear();
+    g_config_arch.r(localization_table.c_str(), g_localization);
 
-        auto result = g_localization.insert({ key, {group, id, text} });
-        if (!result.second) {
-            // If the key already exists, we can update the text
-            result.first->second.text = text;
-        }
-    });
+    // restore the default localization (english), for values without translates
+    g_config_arch.r("localization_en", g_localization);
 
-    bool lang_table_loaded = false;
-    g_config_arch.r_array(localization_table.c_str(), [&lang_table_loaded] (archive arch) {
-        xstring key = arch.r_string("key");
-        uint16_t group = arch.r_int("group");
-        uint16_t id = arch.r_int("id");
-        xstring text = arch.r_string("text");
-        lang_table_loaded = true;
-
-        auto result = g_localization.insert({ key, {group, id, text} });
-        if (!result.second) {
-            // If the key already exists, we can update the text
-            result.first->second.text = text;
-        }
-    });
-
-    return lang_table_loaded;
+    return true;
 }
 
 textid loc_text_from_key(pcstr key) {
-    auto it = g_localization.find(key);
-    return (it != g_localization.end()) ? textid{it->second.group, it->second.id} : textid{ 0, 0 };
+    auto it = g_localization.find({ key });
+    return (it != g_localization.end()) ? textid{it->group, it->id} : textid{ 0, 0 };
 }
 
 const game_languages& get_available_languages() {
@@ -101,13 +92,13 @@ pcstr lang_text_from_key(pcstr key) {
         return "";
     }
 
-    auto it = g_localization.find(key);
+    auto it = g_localization.find({ key });
     if (it != g_localization.end()) {
-        if (!it->second.text.empty()) {
-            return it->second.text.c_str();
+        if (!it->text.empty()) {
+            return it->text.c_str();
         }
 
-        pcstr str = (pcstr)lang_get_string(it->second.group, it->second.id);
+        pcstr str = (pcstr)lang_get_string(it->group, it->id);
         return str;
     }
 

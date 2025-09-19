@@ -1,6 +1,4 @@
-#ifndef CORE_LOCALE_H
-#define CORE_LOCALE_H
-
+#pragma once
 /**
  * Language type
  */
@@ -39,5 +37,3 @@ int locale_year_before_ad(void);
  * @return Boolean true if the filenames should be translated, false if we should use English
  */
 int locale_translate_rank_autosaves(void);
-
-#endif // CORE_LOCALE_H
