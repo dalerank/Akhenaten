@@ -39,14 +39,17 @@ struct cart_image_desc : public image_desc {
 };
 ANK_CONFIG_STRUCT(cart_image_desc, res, pack, id, offset)
 
+template<>
+struct std::hash<cart_image_desc> {
+    [[nodiscard]] size_t operator()(const cart_image_desc &desc) const noexcept {
+        return desc.res;
+    }
+};
+
 std::array<cart_image_desc, RESOURCES_MAX> g_cart_images;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
-    g_config_arch.r_array("cart_images", [] (archive arch) {
-        cart_image_desc cart_desc;
-        arch.r(cart_desc);
-        g_cart_images[cart_desc.res] = cart_desc;
-    });
+    g_config_arch.r_stable_array("cart_images", g_cart_images);
 }
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {

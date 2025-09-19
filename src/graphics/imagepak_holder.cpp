@@ -9,11 +9,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config) {
         return;
     }
 
-    g_config_arch.r_array("imagepaks", [] (archive arch) {
-        imagepak_handle handle;
-        arch.r(handle);
-        g_image_data->pak_list[handle.id] = handle;
-    });
+    g_config_arch.r_stable_array("imagepaks", g_image_data->pak_list);
 
     g_image_data->image_cache.resize(65 * 1024, nullptr);
     g_image_data->common_inited = true;

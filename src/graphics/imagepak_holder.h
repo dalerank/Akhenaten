@@ -16,6 +16,13 @@ struct imagepak_handle {
 };
 ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
 
+template<>
+struct std::hash<imagepak_handle> {
+    [[nodiscard]] size_t operator()(const imagepak_handle &h) const noexcept {
+        return h.id;
+    }
+};
+
 struct imagepak_holder_t {
     bool fonts_loaded = false;
     bool allow_updata_on_load = false;
