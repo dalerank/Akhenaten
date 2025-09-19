@@ -314,8 +314,8 @@ struct g_archive : public archive {
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
                 if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
-                    v.push_back(static_cast<T>(v));
+                    double item = isnumber(-1) ? tonumber(-1) : 0.0;
+                    v.push_back(static_cast<T>(item));
                 } else {
                     if (isobject(-1)) {
                         T item;
