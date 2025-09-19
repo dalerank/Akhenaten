@@ -385,6 +385,6 @@ bool game_load_campaign_file() {
 
 mission_choice_t load_mission_choice(const mission_id_t &missionid) {
     mission_choice_t mission_choice;
-    g_config_arch.r_object(missionid, mission_choice);
+    g_config_arch.r(missionid, mission_choice);
     return mission_choice;
 }

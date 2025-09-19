@@ -25,13 +25,14 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     lang_reload_localized_tables();
 
     g_game_languages.clear();
-    g_config_arch.r_array("game_languages", [] (archive arch) {
-        auto &config = g_game_languages.emplace_back();
-        config.lang = arch.r_string("lang");
-        config.caption = arch.r_string("caption");
-        config.key = arch.r_string("key");
-        config.table = arch.r_string("table");
-    });
+    g_config_arch.r("game_languages", g_game_languages);
+    //[] (archive arch) {
+    //    auto &config = g_game_languages.emplace_back();
+    //    config.lang = arch.r_string("lang");
+    //    config.caption = arch.r_string("caption");
+    //    config.key = arch.r_string("key");
+    //    config.table = arch.r_string("table");
+    //});
 }
 
 bool lang_reload_localized_files() {

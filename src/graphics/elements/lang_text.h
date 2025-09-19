@@ -12,6 +12,7 @@ struct game_language {
     xstring key;
     xstring table;
 };
+ANK_CONFIG_STRUCT(game_language, lang, caption, key, table)
 
 using game_languages = svector<game_language, 12>;
 
