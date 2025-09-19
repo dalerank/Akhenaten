@@ -54,31 +54,7 @@ struct archive {
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
     template<size_t S, typename T = int>
-    inline std::array<T, S> r_sarray(pcstr name) {
-        getproperty(-1, name);
-        std::array<T, S> result;
-        auto it = result.begin();
-        if (isarray(-1)) {
-            int length = getlength(-1);
-            length = std::min<int>(S, length);
-
-            for (int i = 0; i < length; ++i) {
-                getindex(-1, i);
-                if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
-                    *it = static_cast<T>(v);
-                } else {
-                    if (isobject(-1)) {
-                        archive_helper::to_value(*this, *it);
-                    }
-                }
-                it = std::next(it);
-                pop(1);
-            }
-        }
-        pop(1);
-        return result;
-    }
+    inline std::array<T, S> r_sarray(pcstr name);
 
     template<typename T, std::size_t N>
     void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
@@ -330,7 +306,7 @@ struct g_archive : public archive {
     void r(pcstr name, T& v);
 
     template<typename T, std::size_t N>
-    void g_archive::r(pcstr name, std::array<T, N>& v) { 
+    void r(pcstr name, std::array<T, N>& v) { 
         getglobal(name);
         auto it = v.begin();
         if (isarray(-1)) {
@@ -366,6 +342,22 @@ struct g_archive : public archive {
             read_func(state);
             ok = true;
         } 
+        pop(1);
+        return ok;
+    }
+
+    template<typename T>
+    inline bool r_object(pcstr name, T& obj) {
+        if (!state) {
+            return true;
+        }
+
+        bool ok = false;
+        getglobal(name);
+        if (isobject(-1)) {
+            archive_helper::to_value(archive(state), obj);
+            ok = true;
+        }
         pop(1);
         return ok;
     }
@@ -582,6 +574,34 @@ namespace archive_helper {
     inline void to_value(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
 }
 ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
+
+template<size_t S, typename T>
+inline std::array<T, S> archive::r_sarray(pcstr name) {
+    getproperty(-1, name);
+    std::array<T, S> result;
+    auto it = result.begin();
+    if (isarray(-1)) {
+        int length = getlength(-1);
+        length = std::min<int>(S, length);
+
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+            if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+                double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                *it = static_cast<T>(v);
+            }
+            else {
+                if (isobject(-1)) {
+                    archive_helper::to_value(*this, *it);
+                }
+            }
+            it = std::next(it);
+            pop(1);
+        }
+    }
+    pop(1);
+    return result;
+}
 
 template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
 template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
