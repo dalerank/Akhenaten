@@ -304,30 +304,7 @@ struct g_archive : public archive {
     }
 
     template<typename T, std::size_t N>
-    void r(pcstr name, svector<T, N>& v) {
-        getglobal(name);
-        v.clear();
-        if (isarray(-1)) {
-            int length = getlength(-1);
-            length = std::min<int>(N, length);
-
-            for (int i = 0; i < length; ++i) {
-                getindex(-1, i);
-                if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                    double item = isnumber(-1) ? tonumber(-1) : 0.0;
-                    v.push_back(static_cast<T>(item));
-                } else {
-                    if (isobject(-1)) {
-                        T item;
-                        archive_helper::to_value(archive(state), item);
-                        v.push_back(item);
-                    }
-                }
-                pop(1);
-            }
-        }
-        pop(1);
-    }
+    void r(pcstr name, svector<T, N> &v);
 
     template<typename T>
     void r(pcstr name, std::unordered_set<T>& v) {
@@ -674,4 +651,30 @@ void archive::r(pcstr name, T& v) {
     } else {
         archive_helper::to_value(*this, name, v);
     }
+}
+
+template<typename T, std::size_t N>
+void g_archive::r(pcstr name, svector<T, N> &v) {
+    getglobal(name);
+    v.clear();
+    if (isarray(-1)) {
+        int length = getlength(-1);
+        length = std::min<int>(N, length);
+
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+            if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+                double item = isnumber(-1) ? tonumber(-1) : 0.0;
+                v.push_back(static_cast<T>(item));
+            } else {
+                if (isobject(-1)) {
+                    T item;
+                    archive_helper::to_value(archive(state), item);
+                    v.push_back(item);
+                }
+            }
+            pop(1);
+        }
+    }
+    pop(1);
 }
