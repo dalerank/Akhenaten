@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include <variant>
 
 struct animation_t;
@@ -328,6 +329,14 @@ struct g_archive : public archive {
         pop(1);
     }
 
+    template<typename T>
+    void r(pcstr name, std::unordered_set<T>& v) {
+        this->r_array(name, [&] (archive arch) {
+            T itemv; arch.r(itemv);
+            v.insert(itemv);
+        });
+    }
+
     template<typename T, std::size_t N>
     void r(pcstr name, std::array<T, N>& v) {
         getglobal(name);
@@ -628,6 +637,7 @@ inline std::array<T, S> archive::r_sarray(pcstr name) {
 
 template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
 template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
+template<> inline void archive::r<uint16_t>(pcstr name, uint16_t& v) { v = r_uint(name); }
 template<> inline void archive::r<bool>(pcstr name, bool& v) { v = r_bool(name); }
 template<> inline void archive::r<vec2i>(pcstr name, vec2i& v) { v = r_vec2i(name); }
 template<> inline void archive::r<xstring>(pcstr name, xstring& v) { v = r_string(name); }

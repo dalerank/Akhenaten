@@ -7,9 +7,9 @@
 #include "ui.h"
 
 struct game_language {
+    xstring key;
     xstring lang;
     xstring caption;
-    xstring key;
     xstring table;
 };
 ANK_CONFIG_STRUCT(game_language, lang, caption, key, table)
