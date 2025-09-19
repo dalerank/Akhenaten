@@ -388,11 +388,7 @@ mission_choice_t load_mission_choice(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [&] (archive arch) {
         arch.r_array("choice", [&] (archive choice_arch) {
             auto &item = result.points.emplace_back();
-            item.name = choice_arch.r_string("name");
-            item.tooltip = choice_arch.r_string("tooltip");
-            item.id = choice_arch.r_int("id");
-            item.pos = arch.r_vec2i("pos");
-            choice_arch.r_desc("image", item.image);
+            choice_arch.r(item);            
         });
 
         arch.r_desc("choice_background", result.background);

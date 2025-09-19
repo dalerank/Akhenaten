@@ -36,6 +36,7 @@ struct mission_choice_t {
     xstring title;
     svector<point, 4> points;
 };
+ANK_CONFIG_STRUCT(mission_choice_t::point, name, pos, tooltip, image, id)
 
 struct mission_step_t {
     int scenario_id = -1;
