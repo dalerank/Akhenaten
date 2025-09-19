@@ -24,6 +24,8 @@ import images_remap
 import ui_overlay_menu
 import imagepaks
 import missions
+import mission_5_timna
+import mission_6_behdet
 import mission_8_selima
 import figures
 import ui_hold_festival_window
