@@ -2,12 +2,14 @@
 
 #include "core/buffer.h"
 #include "game/resource.h"
+#include "core/archive.h"
 
 struct trade_price {
     e_resource res;
     int32_t buy;
     int32_t sell;
 };
+ANK_CONFIG_STRUCT(trade_price, res, buy, sell)
 
 enum e_price_rule { 
     PRICE_WITH_BONUS, 
