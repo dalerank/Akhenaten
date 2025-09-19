@@ -32,6 +32,7 @@ struct animation_t {
     void load(archive arch);
     int first_img() const;
 };
+ANK_CONFIG_STRUCT(animation_t, id, pos, pack, iid, offset, max_frames, duration, start_frame, flags, can_reverse, loop, reverse)
 
 struct animation_context {
     xstring id;

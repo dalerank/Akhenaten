@@ -44,8 +44,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays) {
         overlay->walkers = arch.r_array_num<e_figure_type>("walkers");
         overlay->column_type = arch.r_type<e_column_type>("column_type");
         overlay->tooltips = arch.r_array_num("tooltips");
-        overlay->caption = arch.r_string("caption");
-        arch.r_anim("column_anim", overlay->anim);
+        arch.r("caption", overlay->caption);
+        arch.r("column_anim", overlay->anim);
     });
 }
 

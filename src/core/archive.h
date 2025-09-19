@@ -322,7 +322,7 @@ struct g_archive : public archive {
         getglobal(name);
         if (isarray(-1)) {
             int length = getlength(-1);
-            using value_type = T::value_type;
+            using value_type = typename T::value_type;
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
                 if (isobject(-1)) {
