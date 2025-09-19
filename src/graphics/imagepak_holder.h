@@ -1,9 +1,8 @@
 #pragma once 
 
-#include <array>
-#include <vector>
 #include "content/imagepak.h"
 #include "core/xstring.h"
+#include "core/archive.h"
 
 struct imagepak_handle {
     xstring name;
@@ -15,6 +14,7 @@ struct imagepak_handle {
     bool delayed = true;
     imagepak *handle = nullptr;
 };
+ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
 
 struct imagepak_holder_t {
     bool fonts_loaded = false;
