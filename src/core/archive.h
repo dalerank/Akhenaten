@@ -6,13 +6,13 @@
 #include "grid/point.h"
 #include "core/fixed_memory_resource.h"
 #include "core/svector.h"
+#include "graphics/image_desc.h"
 
 #include <vector>
 #include <string>
 #include <variant>
 
 struct animation_t;
-struct image_desc;
 
 struct archive {
     void *state = nullptr;
@@ -60,6 +60,7 @@ struct archive {
         auto it = result.begin();
         if (isarray(-1)) {
             int length = getlength(-1);
+            length = std::min<int>(S, length);
 
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
@@ -80,7 +81,7 @@ struct archive {
     }
 
     template<typename T, std::size_t N>
-    void r(pcstr name, std::array<T, N>& v) { v = r_sarray<T, N>(name); }
+    void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
 
     template<typename T>
     void r(T& s);
@@ -326,6 +327,34 @@ struct g_archive : public archive {
     }
 
     template<typename T>
+    void r(pcstr name, T& v);
+
+    template<typename T, std::size_t N>
+    void g_archive::r(pcstr name, std::array<T, N>& v) { 
+        getglobal(name);
+        auto it = v.begin();
+        if (isarray(-1)) {
+            int length = getlength(-1);
+            length = std::min<int>(N, length);
+
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                    *it = static_cast<T>(v);
+                } else {
+                    if (isobject(-1)) {
+                        archive_helper::to_value(*this, *it);
+                    }
+                }
+                it = std::next(it);
+                pop(1);
+            }
+        }
+        pop(1);
+    }
+
+    template<typename T>
     inline bool r_section(pcstr name, T read_func) {
         if (!state) {
             return true;
@@ -544,11 +573,21 @@ namespace archive_helper {
     }
     
     template<typename T>
-    void to_enum(archive arch, pcstr name, T& v) { v = arch.r_type<T>(name); }
+    void to_value(archive arch, pcstr name, T& v) { 
+        arch.r_section(name, [&] (archive sarch) {
+            archive_helper::to_value(sarch, v);
+        });
+    }
+
+    inline void to_value(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
 }
+ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
 
 template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
 template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
+template<> inline void archive::r<bool>(pcstr name, bool& v) { v = r_bool(name); }
+template<> inline void archive::r<vec2i>(pcstr name, vec2i& v) { v = r_vec2i(name); }
+template<> inline void archive::r<xstring>(pcstr name, xstring& v) { v = r_string(name); }
 
 template<typename T>
 void archive::r(T& s) { archive_helper::to_value(*this, s); }
@@ -556,7 +595,9 @@ void archive::r(T& s) { archive_helper::to_value(*this, s); }
 template<typename T>
 void archive::r(pcstr name, T& v) {
     if constexpr (std::is_enum_v<T>) {
-        archive_helper::to_enum(*this, name, v);
+        v = this->r_type<T>(name);
+    } else if constexpr(std::is_arithmetic_v<T>) {
+        v = this->r<T>(name);
     } else {
         archive_helper::to_value(*this, name, v);
     }
