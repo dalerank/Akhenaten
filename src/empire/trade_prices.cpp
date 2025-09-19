@@ -7,11 +7,7 @@
 std::array<trade_price, RESOURCES_MAX> g_default_prices;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_default_prices) {
-    g_config_arch.r_array("default_prices", [] (archive arch) {
-        trade_price config;
-        arch.r(config);
-        g_default_prices[config.res] = config;
-    });
+    g_config_arch.r_stable_array("default_prices", g_default_prices);
 }
 
 trade_price prices[RESOURCES_MAX];
