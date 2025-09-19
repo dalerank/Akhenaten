@@ -22,36 +22,30 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 };
 
 
-static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+std::array<vec2i, 8> g_cart_offsets; //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets) {
     int i = 0;
-    g_config_arch.r_array("cart_offsets", [&i] (archive arch) {
-        int x = arch.r_int("x");
-        int y = arch.r_int("y");
-        CART_OFFSETS[i] = vec2i{x, y};
-        i++;
-    });
+    g_config_arch.r("cart_offsets", g_cart_offsets);
 }
 
-static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+std::array<vec2i, 8> g_sled_offsets; // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets) {
     int i = 0;
-    g_config_arch.r_array("sled_offsets", [&i] (archive arch) {
-        int x = arch.r_int("x");
-        int y = arch.r_int("y");
-        SLED_OFFSETS[i] = vec2i{x, y};
-        i++;
-    });
+    g_config_arch.r("sled_offsets", g_sled_offsets);
 }
 
-static image_desc g_cart_images[RESOURCES_MAX] = {{}};
+struct cart_image_desc : public image_desc {
+    e_resource res;
+};
+ANK_CONFIG_STRUCT(cart_image_desc, res, pack, id, offset)
+
+std::array<cart_image_desc, RESOURCES_MAX> g_cart_images;
+
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
     g_config_arch.r_array("cart_images", [] (archive arch) {
-        e_resource res = arch.r_type<e_resource>("resource");
-        int pack = arch.r_int("pack");
-        int id = arch.r_int("id");
-        int offset = arch.r_int("offset");
-        g_cart_images[res] = {pack, id, offset};
+        cart_image_desc cart_desc;
+        arch.r(cart_desc);
+        g_cart_images[cart_desc.res] = cart_desc;
     });
 }
 
@@ -285,11 +279,11 @@ int figure::figure_image_corpse_offset() {
 }
 
 void figure::figure_image_set_sled_offset(int direction) {
-    cart_offset = SLED_OFFSETS[direction];
+    cart_offset = g_sled_offsets[direction];
 }
 
 void figure::figure_image_set_cart_offset(int direction) {
-    cart_offset = CART_OFFSETS[direction];
+    cart_offset = g_cart_offsets[direction];
 }
 
 int figure::figure_image_missile_launcher_offset() {
