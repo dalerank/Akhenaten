@@ -4,14 +4,13 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-trade_price g_default_prices[RESOURCES_MAX] = {};
+std::array<trade_price, RESOURCES_MAX> g_default_prices;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_default_prices) {
     g_config_arch.r_array("default_prices", [] (archive arch) {
-        e_resource res = arch.r_type<e_resource>("res");
-        int buy = arch.r_int("buy", 0);
-        int sell = arch.r_int("sell", 0);
-        g_default_prices[res] = { res, buy, sell };
+        trade_price config;
+        arch.r(config);
+        g_default_prices[config.res] = config;
     });
 }
 
