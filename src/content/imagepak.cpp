@@ -371,7 +371,7 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
 
 #define MAX_FILE_SCRATCH_SIZE 20000000
 
-imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
+imagepak::imagepak(xstring pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
     //    images = nullptr;
     //    image_data = nullptr;
     entries_num = 0;
@@ -381,13 +381,13 @@ imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool
     userpack = custom;
 
     if (custom) {
-        if (!load_zip_pak(pak_name, starting_index)) {
+        if (!load_zip_pak(pak_name.c_str(), starting_index)) {
             cleanup_and_destroy();
         }
         return;
     } 
 
-    if (!load_pak(pak_name, starting_index)) {
+    if (!load_pak(pak_name.c_str(), starting_index)) {
         cleanup_and_destroy();
     }
 }
@@ -943,8 +943,8 @@ const image_t* imagepak::get_image(int id, bool relative) {
     return &images_array[id];
 }
 
-int imagepak::get_entries_num(pcstr pak_name) {
-    vfs::path filename_full("Data/", pak_name);
+int imagepak::get_entries_num(xstring pak_name) {
+    vfs::path filename_full("Data/", pak_name.c_str());
 
     // split in .555 and .sg3 filename strings
     vfs::path filename_sgx(filename_full, ".sg3");

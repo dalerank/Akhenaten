@@ -2,6 +2,7 @@
 
 #include "graphics/image.h"
 #include "content/vfs.h"
+#include "core/xstring.h"
 #include "core/bstring.h"
 #include "core/custom_span.hpp"
 
@@ -39,12 +40,12 @@ private:
     void cleanup_and_destroy();
 
 public:
-    bstring256 name;
+    xstring name;
     std::vector<atlas_data_t> atlas_pages;
 
     int global_image_index_offset = 0;
 
-    imagepak(pcstr pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
+    imagepak(xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
     span_const<bmp_name> names();
@@ -59,5 +60,5 @@ public:
     const image_t* get_image(int id, bool relative = false);
     bool loaded_system_sprites() const { return should_load_system_sprites; }
 
-    static int get_entries_num(pcstr pak_name);
+    static int get_entries_num(xstring pak_name);
 };

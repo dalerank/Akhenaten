@@ -3,10 +3,10 @@
 #include <array>
 #include <vector>
 #include "content/imagepak.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 
 struct imagepak_handle {
-    bstring128 name;
+    xstring name;
     int id = -1;
     int index = -1;
     uint32_t entries_num = 0;
