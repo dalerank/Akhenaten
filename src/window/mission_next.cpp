@@ -31,16 +31,16 @@ declare_console_command_p(update_mission_next) {
 }
 
 void ui::mission_choice_window::init() {
-    ui["background"].image(choice.background);
-    ui["image1"].image(choice.image1);
-    ui["image1"].pos = choice.image1_pos;
-    ui["image2"].image(choice.image2);
-    ui["image2"].pos = choice.image2_pos;
-    ui["title"] = choice.title;
+    ui["background"].image(choice.choice_background);
+    ui["image1"].image(choice.choice_image1);
+    ui["image1"].pos = choice.choice_image1_pos;
+    ui["image2"].image(choice.choice_image2);
+    ui["image2"].pos = choice.choice_image2_pos;
+    ui["title"] = choice.choice_title;
 
-    for (auto &point: choice.points) {
+    for (auto &point: choice.choice) {
         bstring64 pid;
-        size_t index = std::distance(&choice.points[0], &point);
+        size_t index = std::distance(&choice.choice[0], &point);
         pid.printf("point%d", index);
         auto &elm = ui[pid];
         elm.pos = point.pos;
@@ -64,7 +64,7 @@ void ui::mission_choice_window::show(int scenario_id) {
 
     mission_id_t missionid(scenario_id);
     mission_choice_t choice = load_mission_choice(missionid);
-    if (choice.points.empty()) {
+    if (choice.choice.empty()) {
         GamestateIO::load_mission(scenario_id, true);
         return;
     }

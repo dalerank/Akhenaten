@@ -124,7 +124,7 @@ int get_last_mission_in_campaign(int campaign_id) {
 bool game_mission_has_choice(int scenario_id) {
     mission_id_t missionid(scenario_id);
     mission_choice_t choices = load_mission_choice(missionid);
-    return !choices.points.empty();
+    return !choices.choice.empty();
 }
 
 bool game_campaign_unlocked(int campaign_id) {
@@ -384,20 +384,7 @@ bool game_load_campaign_file() {
 }
 
 mission_choice_t load_mission_choice(const mission_id_t &missionid) {
-    mission_choice_t result;
-    g_config_arch.r_section(missionid, [&] (archive arch) {
-        arch.r_array("choice", [&] (archive choice_arch) {
-            auto &item = result.points.emplace_back();
-            choice_arch.r(item);            
-        });
-
-        arch.r_desc("choice_background", result.background);
-        arch.r_desc("choice_image1", result.image1);
-        result.image1_pos = arch.r_vec2i("choice_image1_pos");
-        arch.r_desc("choice_image2", result.image2);
-        result.image2_pos = arch.r_vec2i("choice_image2_pos");
-        result.title = arch.r_string("choice_title");
-    });
-
-    return result;
+    mission_choice_t mission_choice;
+    g_config_arch.r_object(missionid, mission_choice);
+    return mission_choice;
 }
