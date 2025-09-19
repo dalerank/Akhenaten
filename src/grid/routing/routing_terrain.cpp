@@ -37,20 +37,15 @@ struct std::hash<building_penalty> {
 };
 
 std::array<building_penalty, BUILDING_MAX> routing_amphibia_buildings;
-std::array<int, BUILDING_MAX> routing_citizen_buildings = { -1 };
+std::array<building_penalty, BUILDING_MAX> routing_citizen_buildings;
 std::array<int, BUILDING_MAX> routing_noncitizen_buildings = { -1 };
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
     routing_amphibia_buildings.fill({ BUILDING_NONE, -1 });
+    routing_citizen_buildings.fill({ BUILDING_NONE, -1 });
 
     g_config_arch.r_stable_array("routing_amphibia", routing_amphibia_buildings);
-
-    routing_citizen_buildings.fill( -1 );
-    g_config_arch.r_array("routing_citizen", [] (archive arch) {
-        e_building_type type = arch.r_type<e_building_type>("type");
-        int penalty = arch.r_int("penalty", false);
-        routing_citizen_buildings[type] = penalty;
-    });
+    g_config_arch.r_stable_array("routing_citizen", routing_citizen_buildings);
 
     routing_noncitizen_buildings.fill(0); // why it  0
     g_config_arch.r_array("routing_noncitizen", [] (archive arch) {
@@ -116,7 +111,7 @@ static int get_land_type_citizen_building(int grid_offset) {
         break;
     }
 
-    return routing_citizen_buildings[b->type];;
+    return routing_citizen_buildings[b->type].penalty;
 }
 static int get_land_type_citizen_canal(int grid_offset) {
     return CITIZEN_N3_CANAL;
