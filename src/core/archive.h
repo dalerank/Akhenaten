@@ -363,6 +363,25 @@ struct g_archive : public archive {
     }
 
     template<typename T>
+    void r_stable_array(pcstr name, T &arr) {
+        getglobal(name);
+        if (isarray(-1)) {
+            int length = getlength(-1);
+            using value_type = T::value_type;
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                if (isobject(-1)) {
+                    value_type item;
+                    archive_helper::to_value(archive(state), item);
+                    arr[std::hash<value_type>()(item)] = item;
+                }
+                pop(1);
+            }
+        }
+        pop(1);
+    }
+
+    template<typename T>
     inline bool r_section(pcstr name, T read_func) {
         if (!state) {
             return true;
