@@ -23,18 +23,27 @@
 #include "js/js_game.h"
 #include <array>
 
-std::array<int, BUILDING_MAX> routing_amphibia_buildings = { -1 };
+struct building_penalty {
+    e_building_type type = BUILDING_NONE;
+    int penalty = - 1;
+};
+ANK_CONFIG_STRUCT(building_penalty, type, penalty)
+
+template<>
+struct std::hash<building_penalty> {
+    [[nodiscard]] size_t operator()(const building_penalty &bp) const noexcept {
+        return bp.type;
+    }
+};
+
+std::array<building_penalty, BUILDING_MAX> routing_amphibia_buildings;
 std::array<int, BUILDING_MAX> routing_citizen_buildings = { -1 };
 std::array<int, BUILDING_MAX> routing_noncitizen_buildings = { -1 };
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
-    routing_amphibia_buildings.fill( -1 );
+    routing_amphibia_buildings.fill({ BUILDING_NONE, -1 });
 
-    g_config_arch.r_array("routing_amphibia", [] (archive arch) {
-        e_building_type type = arch.r_type<e_building_type>("type");
-        int penalty = arch.r_int("penalty", false);
-        routing_amphibia_buildings[type] = penalty;
-    });
+    g_config_arch.r_stable_array("routing_amphibia", routing_amphibia_buildings);
 
     routing_citizen_buildings.fill( -1 );
     g_config_arch.r_array("routing_citizen", [] (archive arch) {
@@ -133,12 +142,12 @@ static int get_land_type_citizen_canal(int grid_offset) {
 
 int map_routing_land_penalty_amphibia(int grid_offset) {
     building* b = building_at(grid_offset);
-    return routing_amphibia_buildings[b->type];
+    return routing_amphibia_buildings[b->type].penalty;
 }
 
 static int get_land_type_noncitizen(int grid_offset) {
     building *b = building_at(grid_offset);
-    return routing_amphibia_buildings[b->type];
+    return routing_amphibia_buildings[b->type].penalty;
 }
 
 static int is_surrounded_by_water(int grid_offset) {

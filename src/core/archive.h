@@ -315,29 +315,7 @@ struct g_archive : public archive {
     }
 
     template<typename T, std::size_t N>
-    void r(pcstr name, std::array<T, N>& v) {
-        getglobal(name);
-        auto it = v.begin();
-        if (isarray(-1)) {
-            int length = getlength(-1);
-            length = std::min<int>(N, length);
-
-            for (int i = 0; i < length; ++i) {
-                getindex(-1, i);
-                if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
-                    *it = static_cast<T>(v);
-                } else {
-                    if (isobject(-1)) {
-                        archive_helper::to_value(archive(state), *it);
-                    }
-                }
-                it = std::next(it);
-                pop(1);
-            }
-        }
-        pop(1);
-    }
+    void r(pcstr name, std::array<T, N> &v);
 
     template<typename T>
     void r_stable_array(pcstr name, T &arr) {
@@ -673,6 +651,31 @@ void g_archive::r(pcstr name, svector<T, N> &v) {
                     v.push_back(item);
                 }
             }
+            pop(1);
+        }
+    }
+    pop(1);
+}
+
+template<typename T, std::size_t N>
+void g_archive::r(pcstr name, std::array<T, N> &v) {
+    getglobal(name);
+    auto it = v.begin();
+    if (isarray(-1)) {
+        int length = getlength(-1);
+        length = std::min<int>(N, length);
+
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+            if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+                double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                *it = static_cast<T>(v);
+            } else {
+                if (isobject(-1)) {
+                    archive_helper::to_value(archive(state), *it);
+                }
+            }
+            it = std::next(it);
             pop(1);
         }
     }
