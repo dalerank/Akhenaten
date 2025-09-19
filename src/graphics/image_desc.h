@@ -8,4 +8,5 @@ struct image_desc {
     int offset = 0;
 
     image_desc operator+(int v) const { return {pack, id, offset + v}; }
+    bool valid() const { return pack || id || offset; }
 };
