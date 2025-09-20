@@ -9,14 +9,21 @@ struct difficulty_data_t {
     int enemies;
     int starting_kingdom;
     int sentiment;
+    float risk_multiplier;
 };
 
+// time for a house to catch fire, tested on og game install:
+// very easy - 51 months (lets round to 50)
+// easy - 12 months
+// normal - 10 months
+// hard - 7 months
+// very hard - 7 months
 static const difficulty_data_t g_difficulty_data[] = {
-  {40, 70, 80},  // very easy
-  {60, 60, 70},  // easy
-  {80, 50, 60},  // normal
-  {100, 50, 50}, // hard
-  {120, 40, 40}   // very hard
+  {40, 70, 80, 0.2},  // very easy
+  {60, 60, 70, 0.8},  // easy
+  {80, 50, 60, 1.0},  // normal
+  {100, 50, 50, 1.2}, // hard
+  {120, 40, 40, 1.2}   // very hard
 };
 
 int difficulty_starting_kingdom(void) {
@@ -42,4 +49,8 @@ int difficulty_adjust_wolf_attack(int attack) {
     default:
         return attack;
     }
+}
+
+int difficulty_multiply_risk(int risk_delta) {
+    return int(g_difficulty_data[g_settings.difficulty()].risk_multiplier * risk_delta);
 }
