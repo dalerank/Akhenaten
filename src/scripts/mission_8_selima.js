@@ -31,8 +31,10 @@ mission8 = { // Selima
 	}
 
 	win_criteria : {
-		population_enabled : true
-		population_goal : 2500
+		population : {enabled : true, goal : 2500 }
+		culture : {enabled : true, goal : 25 }
+		prosperity : {enabled : true, goal : 25 }
+		monuments : {enabled : true, goal : 18 }
 	}
 
     enable_scenario_events : false,
