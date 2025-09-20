@@ -60,6 +60,7 @@ struct win_criteria_t {
     int enabled;
     int goal;
 };
+ANK_CONFIG_STRUCT(win_criteria_t, enabled, goal)
 
 struct map_data_t {
     int width = -1;

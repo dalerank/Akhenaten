@@ -99,18 +99,13 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         });
 
         arch.r_section("win_criteria", [this] (archive sarch) {
-            auto read_criteria = [] (archive sarch, pcstr key, win_criteria_t& criteria) {
-                criteria.enabled = sarch.r_bool(bstring32(key, "_enabled"), criteria.enabled);
-                criteria.goal = sarch.r_int(bstring32(key, "_goal"), criteria.goal);
-            };
-
-            read_criteria(sarch, "population", win_criteria.population);
-            read_criteria(sarch, "culture", win_criteria.culture);
-            read_criteria(sarch, "prosperity", win_criteria.prosperity);
-            read_criteria(sarch, "monuments", win_criteria.monuments);
-            read_criteria(sarch, "kingdom", win_criteria.kingdom);
-            read_criteria(sarch, "housing_count", win_criteria.housing_count);
-            read_criteria(sarch, "housing_level", win_criteria.housing_level);
+            sarch.r("population", win_criteria.population);
+            sarch.r("culture", win_criteria.culture);
+            sarch.r("prosperity", win_criteria.prosperity);
+            sarch.r("monuments", win_criteria.monuments);
+            sarch.r("kingdom", win_criteria.kingdom);
+            sarch.r("housing_count", win_criteria.housing_count);
+            sarch.r("housing_level", win_criteria.housing_level);
         });
 
         arch.r_variants("vars", vars);
