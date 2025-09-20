@@ -155,7 +155,7 @@ struct scenario_data_t {
 
     int player_faction;
 
-    struct {
+    struct win_criterias_t {
         struct win_criteria_t population;
         struct win_criteria_t culture;
         struct win_criteria_t prosperity;
@@ -306,6 +306,7 @@ struct scenario_data_t {
 };
 ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
 ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood)
+ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
 

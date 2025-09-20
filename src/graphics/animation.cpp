@@ -27,7 +27,7 @@ void animations_t::load(archive arch, pcstr section) {
     arch.r_objects(section, [this](pcstr key, archive anim_arch) {
         data.push_back({});
         data.back().key = key;
-        archive_helper::to_value(anim_arch, data.back());
+        archive_helper::reader(anim_arch, data.back());
     });
 }
 

@@ -542,7 +542,7 @@ constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
     template<typename ArchiveT>                                                                   \
-    void to_value(ArchiveT js_j, Type& js_t) {                                                    \
+    void reader(ArchiveT js_j, Type& js_t) {                                                    \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
         if constexpr (class_has_load_function_v<Type>) { js_t.load(js_j); }                       \
     }                                                                                             \
@@ -550,10 +550,10 @@ namespace archive_helper {                                                      
 
 namespace archive_helper {
     template<typename T, std::size_t N>
-    void to_value(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
+    void reader(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
 
     template<typename T, std::size_t N>
-    void to_value(archive arch, pcstr name, svector<T, N>& v) { 
+    void reader(archive arch, pcstr name, svector<T, N>& v) {
         if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
             arch.r_array_num<T>(name, v);
         } else {
@@ -564,13 +564,13 @@ namespace archive_helper {
     }
     
     template<typename T>
-    void to_value(archive arch, pcstr name, T& v) { 
+    void reader(archive arch, pcstr name, T& v) {
         arch.r_section(name, [&] (archive sarch) {
-            archive_helper::to_value(sarch, v);
+            archive_helper::reader(sarch, v);
         });
     }
 
-    inline void to_value(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
+    inline void reader(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
 }
 ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
 
@@ -591,7 +591,7 @@ inline std::array<T, S> archive::r_sarray(pcstr name) {
             }
             else {
                 if (isobject(-1)) {
-                    archive_helper::to_value(*this, *it);
+                    archive_helper::reader(*this, *it);
                 }
             }
             it = std::next(it);
@@ -612,7 +612,7 @@ void archive::r_stable_array(pcstr name, T &arr) {
             getindex(-1, i);
             if (isobject(-1)) {
                 value_type item;
-                archive_helper::to_value(archive(state), item);
+                archive_helper::reader(archive(state), item);
                 arr[std::hash<value_type>()(item)] = item;
             }
             pop(1);
@@ -631,7 +631,7 @@ template<> inline void archive::r<vec2i>(pcstr name, vec2i& v) { v = r_vec2i(nam
 template<> inline void archive::r<xstring>(pcstr name, xstring& v) { v = r_string(name); }
 
 template<typename T>
-void archive::r(T& s) { archive_helper::to_value(*this, s); }
+void archive::r(T& s) { archive_helper::reader(*this, s); }
 
 template<typename T>
 void archive::r(pcstr name, T& v) {
@@ -640,7 +640,7 @@ void archive::r(pcstr name, T& v) {
     } else if constexpr(std::is_arithmetic_v<T>) {
         v = this->r<T>(name);
     } else {
-        archive_helper::to_value(*this, name, v);
+        archive_helper::reader(*this, name, v);
     }
 }
 
@@ -660,7 +660,7 @@ void g_archive::r(pcstr name, svector<T, N> &v) {
             } else {
                 if (isobject(-1)) {
                     T item;
-                    archive_helper::to_value(archive(state), item);
+                    archive_helper::reader(archive(state), item);
                     v.push_back(item);
                 }
             }
@@ -685,7 +685,7 @@ void g_archive::r(pcstr name, std::array<T, N> &v) {
                 *it = static_cast<T>(v);
             } else {
                 if (isobject(-1)) {
-                    archive_helper::to_value(archive(state), *it);
+                    archive_helper::reader(archive(state), *it);
                 }
             }
             it = std::next(it);
@@ -704,7 +704,7 @@ bool g_archive::r(pcstr name, T &obj) {
     bool ok = false;
     getglobal(name);
     if (isobject(-1)) {
-        archive_helper::to_value(archive(state), obj);
+        archive_helper::reader(archive(state), obj);
         ok = true;
     }
     pop(1);
@@ -721,7 +721,7 @@ void g_archive::r_stable_array(pcstr name, T &arr) {
             getindex(-1, i);
             if (isobject(-1)) {
                 value_type item;
-                archive_helper::to_value(archive(state), item);
+                archive_helper::reader(archive(state), item);
                 arr[std::hash<value_type>()(item)] = item;
             }
             pop(1);
