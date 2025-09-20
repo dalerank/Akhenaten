@@ -26,8 +26,8 @@
 #include <cmath>
 
 void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
-    if (anim.pack > 0 && anim.iid > 0) {
-        int anim_id = image_id_from_group(anim.pack, anim.iid) + anim.offset;
+    if (anim.pack > 0 && anim.id > 0) {
+        const int anim_id = anim.first_img();
         building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask, 0, anim.max_frames, anim.duration);
     }
 }

@@ -40,10 +40,10 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays) {
         if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
         if (*caption) { overlay->caption = caption; }
 
-        overlay->buildings = arch.r_array_num<e_building_type>("buildings");
-        overlay->walkers = arch.r_array_num<e_figure_type>("walkers");
-        overlay->column_type = arch.r_type<e_column_type>("column_type");
-        overlay->tooltips = arch.r_array_num("tooltips");
+        arch.r("buildings", overlay->buildings);
+        arch.r("walkers", overlay->walkers);
+        arch.r("column_type", overlay->column_type);
+        arch.r("tooltips", overlay->tooltips);
         arch.r("caption", overlay->caption);
         arch.r("column_anim", overlay->anim);
     });

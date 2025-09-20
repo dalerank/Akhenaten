@@ -307,7 +307,7 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
         ;
     } else if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); anim.iid = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "id"); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "duration"); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "max_frames"); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
