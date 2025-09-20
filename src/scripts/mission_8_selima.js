@@ -9,7 +9,7 @@ mission8 = { // Selima
 	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0}
 	choice_image1_pos : [192, 144]
 	choice_title : [144, 22]
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 

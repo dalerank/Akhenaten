@@ -64,13 +64,8 @@ int scenario_data_t::house_tax_multiplier(int v) const {
 
 void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
-        meta.start_message = arch.r_int("start_message");
-        meta.show_won_screen = arch.r_bool("show_won_screen", true);
+        arch.r(meta);
 
-        meta.initial_funds = arch.r_sarray<8>("money");
-        meta.rescue_loans = arch.r_sarray<8>("rescue_loans");
-        meta.house_tax_multipliers = arch.r_sarray<8>("house_tax_multipliers");
-        
         env.has_animals = arch.r_bool("city_has_animals");
         env.gods_least_mood = arch.r_int("gods_least_mood", 0);
         win_criteria.next_mission = arch.r_int("next_mission", 0);

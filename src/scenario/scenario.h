@@ -264,10 +264,10 @@ struct scenario_data_t {
         uint8_t gods_least_mood;
     } env;
 
-    struct {
+    struct meta_t {
         uint16_t start_message;
         bool start_message_shown;
-        bool show_won_screen;
+        bool hide_won_screen;
         std::array<int, 8> initial_funds = { 0 };
         std::array<int, 8> rescue_loans = { 0 };
         std::array<int, 8> house_tax_multipliers = { 0 };
@@ -295,6 +295,7 @@ struct scenario_data_t {
         return is_scenario_id(make_span(values));
     }
 };
+ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
 
 extern scenario_data_t g_scenario;
 

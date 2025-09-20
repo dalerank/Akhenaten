@@ -145,7 +145,7 @@ void window_mission_show_intermezzo() {
 void ui::window_mission_won::show() {
     mouse_reset_up_state();
 
-    if (g_scenario.meta.show_won_screen) {
+    if (!g_scenario.meta.hide_won_screen) {
         window_mission_show_intermezzo();
         return;
     } 
