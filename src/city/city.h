@@ -193,7 +193,7 @@ struct city_t {
     void init();
     void init_custom_map();
     void init_campaign_mission();
-    void init_mission_resources(const std::vector<resource_allow> &resources);
+    void init_mission_resources(const resource_allow_vec &resources);
     e_resource allowed_foods(int i);
     bool is_food_allowed(e_resource resource);
     void set_allowed_food(int i, e_resource r);

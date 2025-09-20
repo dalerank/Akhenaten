@@ -80,19 +80,10 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         }
 
         init_resources.clear();
-        arch.r_objects("resources", [&] (pcstr key, archive rarch) {
-            e_resource resource = rarch.r_type<e_resource>("type");
-            bool allowed = rarch.r_bool("allow");
-            init_resources.push_back({ resource, allowed });
-        });
+        arch.r("init_resources", init_resources);
 
-        extra_damage.clear();
-        arch.r_objects("fire_damage", [&] (pcstr key, archive barch) {
-            e_building_type type = barch.r_type<e_building_type>("type");
-            int8_t fire = barch.r_int("fire");
-            int8_t collapse = barch.r_int("collapse");
-            extra_damage.push_back({ type, fire, collapse });
-        });
+        std::fill(extra_damage.begin(), extra_damage.end(), extra_damage_t{ BUILDING_NONE, 0, 0 });
+        arch.r_stable_array("extra_damage", extra_damage);
 
         building_stages.clear();
         arch.r_objects("stages", [&](pcstr key, archive sarch) {

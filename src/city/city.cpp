@@ -139,7 +139,7 @@ void city_t::init_campaign_mission() {
     finance.this_year.income.gold_extracted = 0;
 }
 
-void city_t::init_mission_resources(const std::vector<resource_allow>& resources) {
+void city_t::init_mission_resources(const resource_allow_vec& resources) {
     auto fobj = const_cast<full_empire_object*>(ourcity().get_full_empire_object());
     for (const auto &r: resources) {
         fobj->add_sell_resource(r.type);
