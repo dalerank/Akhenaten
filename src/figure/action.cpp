@@ -204,7 +204,7 @@ void figure::action_perform() {
         }
         max_roam_length = params.max_roam_length;
         speed_multiplier = params.speed_mult;
-        if (!this->anim.id) {
+        if (!this->anim.key) {
             const animation_t &def_anim = params.anim[animkeys().walk];
             image_set_animation(def_anim);
         }

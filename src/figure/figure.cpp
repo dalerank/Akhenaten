@@ -528,8 +528,8 @@ void figure_impl::on_change_terrain(int old, int current) {
                             && !(current & TERRAIN_SHORE))
                             && !(current & TERRAIN_BUILDING);
 
-    const bool is_swim_animaion = base.anim.id == animkeys().swim;
-    const bool is_walk_animaion = base.anim.id == animkeys().walk;
+    const bool is_swim_animaion = base.anim.key == animkeys().swim;
+    const bool is_walk_animaion = base.anim.key == animkeys().walk;
     const bool is_moving_animation = is_swim_animaion || is_walk_animaion;
 
     if (!is_moving_animation) {
@@ -655,7 +655,7 @@ void figure_impl::static_params::base_load(archive arch) {
 
 void figure_impl::update_animation() {
     xstring animkey;
-    if (!base.anim.id) {
+    if (!base.anim.key) {
         animkey = animkeys().walk;
     }
  

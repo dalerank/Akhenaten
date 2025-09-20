@@ -111,7 +111,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
-        game_debug_show_property("id", f->anim.id, true);
+        game_debug_show_property("key", f->anim.key, true);
         game_debug_show_property("base", f->anim.base);
         game_debug_show_property("offset", f->anim.offset);
         game_debug_show_property("hashtime", f->anim.hashtime);

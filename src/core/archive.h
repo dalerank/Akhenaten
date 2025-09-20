@@ -51,6 +51,23 @@ struct archive {
 
     std::vector<vec2i> r_array_vec2i(pcstr name, pcstr px = "x", pcstr py = "y");
 
+    template<typename T, typename C>
+    inline void r_array_num(pcstr name, C &arr) {
+        arr.clear();
+        getproperty(-1, name);
+        if (isarray(-1)) {
+            int length = getlength(-1);
+
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                arr.push_back(static_cast<T>(v));
+                pop(1);
+            }
+        }
+        pop(1);
+    }
+
     template<class T>
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
@@ -59,6 +76,9 @@ struct archive {
 
     template<typename T, std::size_t N>
     void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
+
+    template<typename T, std::size_t N, typename = std::enable_if_t<std::is_enum_v<T> || std::is_arithmetic_v<T>>>
+    void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
 
     template<typename T>
     void r(T& s);
@@ -82,23 +102,6 @@ struct archive {
         }
         pop(1);
         return result;
-    }
-
-    template<typename T, typename C>
-    inline void r_array_num(pcstr name, C& arr) {
-        arr.clear();
-        getproperty(-1, name);
-        if (isarray(-1)) {
-            int length = getlength(-1);
-
-            for (int i = 0; i < length; ++i) {
-                getindex(-1, i);
-                float v = isnumber(-1) ? (float)tonumber(-1) : 0.f;
-                arr.push_back((T)v);
-                pop(1);
-            }
-        }
-        pop(1);
     }
 
     template<typename T>
@@ -353,20 +356,7 @@ struct g_archive : public archive {
     }
 
     template<typename T>
-    inline bool r(pcstr name, T& obj) {
-        if (!state) {
-            return true;
-        }
-
-        bool ok = false;
-        getglobal(name);
-        if (isobject(-1)) {
-            archive_helper::to_value(archive(state), obj);
-            ok = true;
-        }
-        pop(1);
-        return ok;
-    }
+    inline bool r(pcstr name, T &obj);
 
     void w_property(pcstr name, pcstr prop, const xstring& value);
     void w_property(pcstr name, pcstr prop, bool value);
@@ -553,10 +543,22 @@ struct g_archive_section {
 
 #define ANK_CONFIG_STRUCT_FROM(v1) js_j.r<decltype(js_t.v1)>(#v1, js_t.v1); 
 
-#define ANK_CONFIG_STRUCT(Type, ...)  \
-namespace archive_helper {            \
-    template<typename ArchiveT>       \
-    void to_value(ArchiveT js_j, Type& js_t) { ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__)) } \
+template<typename, typename = void>
+struct class_has_load_function : std::false_type {};
+
+template<typename T>
+struct class_has_load_function<T, std::void_t<decltype(std::declval<T &>().load(nullptr))>> : std::true_type {};
+
+template<typename T>
+constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
+
+#define ANK_CONFIG_STRUCT(Type, ...)                                                              \
+namespace archive_helper {                                                                        \
+    template<typename ArchiveT>                                                                   \
+    void to_value(ArchiveT js_j, Type& js_t) {                                                    \
+        ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
+        if constexpr (class_has_load_function_v<Type>) { js_t.load(js_j); }                       \
+    }                                                                                             \
 }
 
 namespace archive_helper {
@@ -680,4 +682,20 @@ void g_archive::r(pcstr name, std::array<T, N> &v) {
         }
     }
     pop(1);
+}
+
+template<typename T>
+bool g_archive::r(pcstr name, T &obj) {
+    if (!state) {
+        return true;
+    }
+
+    bool ok = false;
+    getglobal(name);
+    if (isobject(-1)) {
+        archive_helper::to_value(archive(state), obj);
+        ok = true;
+    }
+    pop(1);
+    return ok;
 }
