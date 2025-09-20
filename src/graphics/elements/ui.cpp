@@ -596,6 +596,8 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
     pos = arch.r_vec2i("pos") + parent_offset;
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
+    fill_width = arch.r_bool("fill_width", false);
+    fill_height = arch.r_bool("fill_height", false);
 
     arch.r_section("margin", [this] (archive m) {
         margin.bottom = m.r_int("bottom", margini::nomargin);
@@ -606,7 +608,6 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
         margin.centery = m.r_int("centery", margini::nomargin);
         int i = 0;
     });
-
 
     load_elements(arch, "ui", this, items);
 }
