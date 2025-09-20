@@ -2,6 +2,7 @@
 
 #include "game/settings.h"
 #include "game/game_events.h"
+#include "game/game_events_history.h"
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
 #include "core/log.h"

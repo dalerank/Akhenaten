@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "core/eventbus.h"
+#include "game/game_events_history.h"
 
 extern events::typed_queue g_city_events;
 extern events::typed_queue g_permanent_events;
@@ -10,6 +11,7 @@ namespace events {
     inline void emit(T &&event) {
         g_city_events.enqueue(std::forward<T>(event));
         g_permanent_events.enqueue(std::forward<T>(event));
+        events_history::log_event(std::forward<T>(event));
     }
 
     template<typename T>
@@ -18,8 +20,7 @@ namespace events {
             return;
         }
 
-        g_city_events.enqueue(std::forward<T>(event));
-        g_permanent_events.enqueue(std::forward<T>(event));
+        emit(std::forward<T>(event));
     }
 
     template<typename T>
