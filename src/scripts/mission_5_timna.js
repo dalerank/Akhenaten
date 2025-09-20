@@ -4,7 +4,7 @@ mission5 = { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true
 	player_rank : 1
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 

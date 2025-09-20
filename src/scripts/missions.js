@@ -14,10 +14,10 @@ mission0 = { // Nubt
 	city_has_animals : true
 	gods_least_mood : 50
 	religion_enabled : false
-	show_won_screen : false
+	hide_won_screen : true
 	player_rank : 0
 
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
@@ -51,8 +51,8 @@ mission1 = {
 	city_has_animals : true,
 	gods_least_mood : 50,
 	player_rank : 0,
-	show_won_screen : false,
-	money : [7500, 5000, 3750, 2500, 2000],
+	hide_won_screen : true,
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 
 	buildings : [
@@ -77,7 +77,7 @@ mission2 = {
 	city_has_animals : true,
 	gods_least_mood : 50,
 	player_rank : 0,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -105,7 +105,7 @@ mission3 = {
 	start_message : 241 - 99
 	city_has_animals : true
 	player_rank : 0
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
@@ -132,7 +132,7 @@ mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 1,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -179,7 +179,7 @@ mission7 = { // Abydos
 	city_has_animals : true,
 	player_rank : 1,
 	next_mission : 8,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -273,7 +273,7 @@ mission9 = { // Abu
 	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
