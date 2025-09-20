@@ -34,18 +34,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_overlays) {
             return;
         }
 
-        const char *caption = arch.r_string("caption");
-        int tooltip_base = arch.r_int("tooltip_base");
-
-        if (tooltip_base) { overlay->tooltip_base = tooltip_base; }
-        if (*caption) { overlay->caption = caption; }
-
-        arch.r("buildings", overlay->buildings);
-        arch.r("walkers", overlay->walkers);
-        arch.r("column_type", overlay->column_type);
-        arch.r("tooltips", overlay->tooltips);
-        arch.r("caption", overlay->caption);
-        arch.r("column_anim", overlay->anim);
+        arch.r(*overlay);
     });
 }
 
@@ -102,7 +91,7 @@ xstring city_overlay::title() const {
         return caption;
     }
 
-    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(14, type);
+    const_cast<city_overlay*>(this)->caption = (pcstr)lang_get_string(14, id);
     return caption;
 }
 
@@ -126,7 +115,7 @@ void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int he
         }
     }
 
-    int image_id = anim.first_img() + color;
+    int image_id = column_anim.first_img() + color;
 
     height = std::min(height, 10);
     int capital_height = image_get(image_id)->height;
@@ -245,8 +234,8 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     }
 }
 
-city_overlay::city_overlay(e_overlay t) : type(t) {
-    overlays()[type] = this;
+city_overlay::city_overlay(e_overlay t) : id(t) {
+    overlays()[id] = this;
 }
 
 bool city_overlay::show_figure(const figure *f) const {

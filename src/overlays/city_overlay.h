@@ -19,14 +19,11 @@ inline bool show_figure_none(const figure *f) { return false; }
 using overlay_list = std::array<struct city_overlay *, OVERLAY_SIZE>;
 
 struct city_overlay {
-    const e_overlay type;
-    svector<int, 10> tooltips;
+    e_overlay id;
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
     e_column_type column_type = COLUMN_TYPE_NONE;
-    animation_t anim;
-
-    int tooltip_base;
+    animation_t column_anim;
     xstring caption;
 
     city_overlay(e_overlay t);
@@ -54,6 +51,7 @@ struct city_overlay {
     static city_overlay *get(e_overlay e);
     static overlay_list &overlays();
 };
+ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption)
 
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {

@@ -567,9 +567,13 @@ namespace archive_helper {
 
     template<typename T, std::size_t N>
     void to_value(archive arch, pcstr name, svector<T, N>& v) { 
-        arch.r_array(name, v, [] (archive it_arch, auto &it) {
-            it_arch.r<T>(it);
-        }); 
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+            arch.r_array_num<T>(name, v);
+        } else {
+            arch.r_array(name, v, [] (archive it_arch, auto &it) {
+                it_arch.r<T>(it);
+            });
+        }
     }
     
     template<typename T>
