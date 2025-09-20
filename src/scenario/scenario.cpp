@@ -65,9 +65,8 @@ int scenario_data_t::house_tax_multiplier(int v) const {
 void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
         arch.r(meta);
+        arch.r(env);
 
-        env.has_animals = arch.r_bool("city_has_animals");
-        env.gods_least_mood = arch.r_int("gods_least_mood", 0);
         win_criteria.next_mission = arch.r_int("next_mission", 0);
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {

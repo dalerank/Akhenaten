@@ -258,7 +258,7 @@ struct scenario_data_t {
         } burial_provisions[RESOURCES_MAX];
     } monuments;
 
-    struct {
+    struct env_t {
         bool flotsam_enabled;
         bool has_animals;
         uint8_t gods_least_mood;
@@ -296,6 +296,7 @@ struct scenario_data_t {
     }
 };
 ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
+ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood)
 
 extern scenario_data_t g_scenario;
 
