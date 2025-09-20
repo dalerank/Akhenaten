@@ -702,8 +702,8 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
 
     offset_rotate = s_width - offset_rotate_basic;
 
+    // "ui" is the Debens, Population and Date texts
     ui["population"].text_var("%s %d", ui::str(6, 1), states.population);
-
     ui.begin_widget({ 0, 0 });
     ui.draw();
     ui.end_widget();
