@@ -68,6 +68,9 @@ struct archive {
         pop(1);
     }
 
+    template<typename T>
+    inline void r_stable_array(pcstr name, T &arr);
+
     template<class T>
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
@@ -599,7 +602,27 @@ inline std::array<T, S> archive::r_sarray(pcstr name) {
     return result;
 }
 
+template<typename T>
+void archive::r_stable_array(pcstr name, T &arr) {
+    getproperty(-1, name);
+    if (isarray(-1)) {
+        int length = getlength(-1);
+        using value_type = typename T::value_type;
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+            if (isobject(-1)) {
+                value_type item;
+                archive_helper::to_value(archive(state), item);
+                arr[std::hash<value_type>()(item)] = item;
+            }
+            pop(1);
+        }
+    }
+    pop(1);
+}
+
 template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
+template<> inline void archive::r<int8_t>(pcstr name, int8_t& v) { v = r_int(name); }
 template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
 template<> inline void archive::r<uint16_t>(pcstr name, uint16_t& v) { v = r_uint(name); }
 template<> inline void archive::r<uint32_t>(pcstr name, uint32_t& v) { v = r_uint(name); }

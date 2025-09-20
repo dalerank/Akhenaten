@@ -25,7 +25,7 @@ mission0 = { // Nubt
 		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD
 	]
 
-	fire_damage : {
+	extra_damage : {
 		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +0, collapse: +0}
 		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}	
 		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
@@ -277,7 +277,7 @@ mission9 = { // Abu
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
-	resources : {
+	init_resources : {
 		grain : { type:RESOURCE_GRAIN, allow: true},
 		barley: { type:RESOURCE_BARLEY, allow: true},
 		flax: { type:RESOURCE_FLAX, allow:true},

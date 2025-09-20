@@ -112,6 +112,14 @@ struct extra_damage_t {
     int8_t collapse;
 };
 
+template<>
+struct std::hash<extra_damage_t> {
+    [[nodiscard]] size_t operator()(const extra_damage_t &d) const noexcept {
+        return d.type;
+    }
+};
+ANK_CONFIG_STRUCT(extra_damage_t, type, fire, collapse)
+
 struct building_stage_t {
     xstring key;
     std::vector<e_building_type> buildings;
@@ -228,8 +236,8 @@ struct scenario_data_t {
     std::array<tile2i, MAX_INVASION_POINTS_SEA> invasion_points_sea;
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
-    std::vector<resource_allow> init_resources;
-    std::vector<extra_damage_t> extra_damage;
+    resource_allow_vec init_resources;
+    std::array<extra_damage_t, BUILDING_MAX> extra_damage;
     std::vector<building_stage_t> building_stages;
     settings_vars_t vars;
 
