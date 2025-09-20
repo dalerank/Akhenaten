@@ -67,7 +67,6 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         arch.r(meta);
         arch.r(env);
 
-        win_criteria.next_mission = arch.r_int("next_mission", 0);
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {
             g_city.kingdome.player_rank = rank;
@@ -98,17 +97,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
             points[index] = parch.r_tile2i("pos");
         });
 
-        arch.r_section("win_criteria", [this] (archive sarch) {
-            sarch.r("population", win_criteria.population);
-            sarch.r("culture", win_criteria.culture);
-            sarch.r("prosperity", win_criteria.prosperity);
-            sarch.r("monuments", win_criteria.monuments);
-            sarch.r("kingdom", win_criteria.kingdom);
-            sarch.r("housing_count", win_criteria.housing_count);
-            sarch.r("housing_level", win_criteria.housing_level);
-        });
-
-        arch.r_variants("vars", vars);
+        arch.r("win_criteria", win_criteria);
+        arch.r("vars", vars);
     });
 
     events.load_mission_metadata(missionid);

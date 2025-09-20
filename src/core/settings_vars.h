@@ -6,6 +6,7 @@
 
 #include "core/vec2i.h"
 #include "core/xstring.h"
+#include "core/archive.h"
 
 class settings_vars_impl_t;
 
@@ -59,3 +60,7 @@ public:
 	xstring get_string(const xstring &name, const xstring &def = "");
 	void set_string(const xstring &name, const xstring &value);
 };
+
+namespace archive_helper {
+	inline void reader(archive arch, pcstr name, settings_vars_t &v) { arch.r_variants(name, v); }
+}
