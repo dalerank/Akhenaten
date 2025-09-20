@@ -30,30 +30,7 @@ struct tutorial_1 : public tutorial_t {
 tutorial_1 g_tutorial_1;
 
 void tutorial_handle_advance_day(event_advance_day ev) {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    if (!tut.building_burned) {
-        const auto found = std::max_element(city_buildings().begin(), city_buildings().end(), [] (const building& a, const building& b) { return a.fire_risk < b.fire_risk; });
-        if (found != city_buildings().end()) {
-            building_id max_collapse_bid = found->id;
-            buildings_valid_do([max_collapse_bid] (building& b) { 
-                if (b.id != max_collapse_bid) 
-                    b.fire_risk = 0;
-                    b.damage_risk = 0;
-            });
-        }
-    }
-
-    if (tut.building_burned && !tut.building_collapsed) {
-        const auto found = std::max_element(city_buildings().begin(), city_buildings().end(), [] (const building& a, const building& b) { return a.damage_risk < b.damage_risk; });
-        if (found != city_buildings().end()) {
-            building_id max_collapse_bid = found->id;
-            buildings_valid_do([max_collapse_bid] (building& b) {
-                if (b.id != max_collapse_bid)
-                    b.damage_risk = 0;
-            });
-        }
-    }
+    // nothing special happens here
 }
 
 void tutorial1_handle_fire(event_fire_damage) {
