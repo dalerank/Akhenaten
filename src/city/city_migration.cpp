@@ -10,7 +10,7 @@ city_migration_defaults_t g_migration_params;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
     g_config_arch.r_section("migration_defaults", [] (archive arch) {
-        arch.r(g_migration_params);
+        archive_helper::reader(arch, g_migration_params);
     });
     assert(!g_migration_params.sentiment_influence.empty());
 }
