@@ -585,7 +585,7 @@ namespace archive_helper {
         if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
             arch.r_array_num<T>(name, v);
         } else {
-            arch.r_array(name, v, [] (archive it_arch, auto &it) {
+            arch.r_array(name, v, [] (archive it_arch, T &it) {
                 it_arch.r<T>(it);
             });
         }
@@ -596,7 +596,7 @@ namespace archive_helper {
         if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
             arch.r_array_num<T>(name, v);
         } else {
-            arch.r_array(name, v, [] (archive it_arch, auto &it) {
+            arch.r_array(name, v, [] (archive it_arch, T &it) {
                 it_arch.r<T>(it);
             });
         }
@@ -606,7 +606,7 @@ namespace archive_helper {
     void reader(archive arch, pcstr name, std::unordered_map<xstring, T> &v) { 
         arch.r_objects(name, [&] (pcstr key, archive sarch) {
             auto &item = v[key];
-            sarch.r(item);
+            sarch.r<T>(item);
         });
     }
     
