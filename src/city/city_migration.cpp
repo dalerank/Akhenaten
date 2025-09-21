@@ -21,8 +21,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
     g_migration_sentiment_influence.clear();
     g_config_arch.r_array("migration_sentiment_influence", [] (archive arch) {
         sentiment_step_t step; 
-        arch.r(step);
-        g_migration_sentiment_influence.push_back(step);
+        vec2i t = arch.r_vec2i_impl("s", "i");
+        g_migration_sentiment_influence.push_back({t.x, t.y});
     });
     assert(!g_migration_sentiment_influence.empty());
 }
