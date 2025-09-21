@@ -124,7 +124,7 @@ ANK_CONFIG_STRUCT(extra_damage_t, type, fire, collapse)
 
 struct building_stage_t {
     xstring key;
-    std::vector<e_building_type> buildings;
+    svector<e_building_type, 16> buildings;
 };
 ANK_CONFIG_STRUCT(building_stage_t, key, buildings)
 
