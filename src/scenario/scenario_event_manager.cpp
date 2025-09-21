@@ -318,12 +318,17 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     }
     case EVENT_TYPE_FAILED_FLOOD:
     case EVENT_TYPE_PERFECT_FLOOD:
-    case EVENT_TYPE_GIFT:
     case EVENT_TYPE_LOCUSTS:
     case EVENT_TYPE_FROGS:
     case EVENT_TYPE_HAILSTORM:
     case EVENT_TYPE_BLOOD_RIVER:
     case EVENT_TYPE_CRIME_WAVE:
+        break;
+
+    case EVENT_TYPE_GIFT_FROM_PHARAOH:
+        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+            PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+            id, 0);
         break;
     }
 

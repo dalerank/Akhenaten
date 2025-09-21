@@ -566,8 +566,7 @@ void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
 
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
-    template<typename ArchiveT>                                                                   \
-    void reader(ArchiveT js_j, Type& js_t) {                                                      \
+    inline void reader(archive js_j, Type& js_t) {                                                \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
         call_load_if_exists(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{});   \
     }                                                                                             \
