@@ -253,11 +253,12 @@ protected:
 
         arr.clear();
         int length = getlength(-1);
+        using value_type = typename T::value_type;
         for (int i = 0; i < length; ++i) {
             getindex(-1, i);
 
             if (isobject(-1)) {
-                arr.push_back({});
+                arr.push_back(value_type());
                 read_func(state, arr.back());
             }
 
@@ -547,6 +548,17 @@ namespace archive_helper {                                                      
         if constexpr (class_has_load_function_v<Type>) { js_t.load(js_j); }                       \
     }                                                                                             \
 }
+ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
+
+template<> inline void archive::r<int>(pcstr name, int &v) { v = r_int(name); }
+template<> inline void archive::r<int8_t>(pcstr name, int8_t &v) { v = r_int(name); }
+template<> inline void archive::r<uint8_t>(pcstr name, uint8_t &v) { v = r_uint(name); }
+template<> inline void archive::r<uint16_t>(pcstr name, uint16_t &v) { v = r_uint(name); }
+template<> inline void archive::r<uint32_t>(pcstr name, uint32_t &v) { v = r_uint(name); }
+template<> inline void archive::r<bool>(pcstr name, bool &v) { v = r_bool(name); }
+template<> inline void archive::r<vec2i>(pcstr name, vec2i &v) { v = r_vec2i(name); }
+template<> inline void archive::r<xstring>(pcstr name, xstring &v) { v = r_string(name); }
+template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(name); }
 
 namespace archive_helper {
     template<typename T, std::size_t N>
@@ -571,8 +583,11 @@ namespace archive_helper {
     }
 
     inline void reader(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
+    inline void reader(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = {t.x, t.y}; }
 }
-ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
+
+template<typename T>
+void archive::r(T &s) { archive_helper::reader(*this, s); }
 
 template<size_t S, typename T>
 inline std::array<T, S> archive::r_sarray(pcstr name) {
@@ -620,18 +635,6 @@ void archive::r_stable_array(pcstr name, T &arr) {
     }
     pop(1);
 }
-
-template<> inline void archive::r<int>(pcstr name, int& v) { v = r_int(name); }
-template<> inline void archive::r<int8_t>(pcstr name, int8_t& v) { v = r_int(name); }
-template<> inline void archive::r<uint8_t>(pcstr name, uint8_t& v) { v = r_uint(name); }
-template<> inline void archive::r<uint16_t>(pcstr name, uint16_t& v) { v = r_uint(name); }
-template<> inline void archive::r<uint32_t>(pcstr name, uint32_t& v) { v = r_uint(name); }
-template<> inline void archive::r<bool>(pcstr name, bool& v) { v = r_bool(name); }
-template<> inline void archive::r<vec2i>(pcstr name, vec2i& v) { v = r_vec2i(name); }
-template<> inline void archive::r<xstring>(pcstr name, xstring& v) { v = r_string(name); }
-
-template<typename T>
-void archive::r(T& s) { archive_helper::reader(*this, s); }
 
 template<typename T>
 void archive::r(pcstr name, T& v) {

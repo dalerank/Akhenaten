@@ -50,8 +50,8 @@ mission8 = { // Selima
 		},
     ]
 
-    invasion_points : [
-        { index:0, pos:[30, 26], sea:false },
+    invasion_points_land : [
+        [30, 26],
     ]
 
     cities : [
