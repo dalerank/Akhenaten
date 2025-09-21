@@ -738,14 +738,7 @@ inline bool g_archive::r(pcstr name, T &obj) {
         return true;
     }
 
-    bool ok = false;
-    getglobal(name);
-    if (isobject(-1)) {
-        archive_helper::reader(archive(state), obj);
-        ok = true;
-    }
-    pop(1);
-    return ok;
+    return r_section(name, [&] (archive arch) { arch.r(obj); });
 }
 
 template<typename T>

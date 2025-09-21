@@ -31,8 +31,9 @@ struct music_data_t {
     };
 
     svector<soundtrack, 64> tracks;
-    svector<pop_soundtrack, 16> pop_tracks;
+    svector<pop_soundtrack, 16> music_populations;
 };
+ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, track)
 ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short)
 
 music_data_t g_music;
@@ -47,12 +48,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks) {
 
     g_config_arch.r("music", g_music);
 
-    g_music.pop_tracks.clear();
-    g_config_arch.r_objects("music_populations", [] (pcstr key, archive arch) {
-        auto &track = g_music.pop_tracks.emplace_back();
-        track.pop = arch.r_int("pop");
-        track.track = arch.r_string("track");
-    });
+    g_music.music_populations.clear();
+    g_config_arch.r("music_populations", g_music.music_populations);
 }
 
 declare_console_command_p(playtrack) {
@@ -115,10 +112,10 @@ void sound_manager_t::music_update(bool force) {
     } else if (total_enemies > 0) {
         track = g_music.combat_short;
     } else {
-        track = g_music.pop_tracks.front().track;
+        track = g_music.music_populations.front().track;
         const int city_population = g_city.population.current;
 
-        for (const auto &p : g_music.pop_tracks) {
+        for (const auto &p : g_music.music_populations) {
             if (p.pop > city_population) {
                 break;
             }
