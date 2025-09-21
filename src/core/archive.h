@@ -540,12 +540,25 @@ struct class_has_load_function<T, std::void_t<decltype(std::declval<T &>().load(
 template<typename T>
 constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
 
+// The problem is that  clang SFINAE trait class_has_load_function is working incorrectly. 
+// Clang checks constexpr if more strictly, and even when the condition is false, it still checks 
+// the syntactic correctness of the code inside the block.
+template<typename ArchiveT, typename Type>
+void call_load_if_exists(ArchiveT js_j, Type &js_t, std::true_type) {
+    js_t.load(js_j);
+}
+
+template<typename ArchiveT, typename Type>
+void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
+    // nothing to do, class has no load function
+}
+
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
     template<typename ArchiveT>                                                                   \
-    void reader(ArchiveT js_j, Type& js_t) {                                                    \
+    void reader(ArchiveT js_j, Type& js_t) {                                                      \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
-        if constexpr (class_has_load_function_v<Type>) { js_t.load(js_j); }                       \
+        call_load_if_exists(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{});   \
     }                                                                                             \
 }
 ANK_CONFIG_STRUCT(image_desc, pack, id, offset)

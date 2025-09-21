@@ -125,6 +125,7 @@ struct building_stage_t {
     xstring key;
     std::vector<e_building_type> buildings;
 };
+ANK_CONFIG_STRUCT(building_stage_t, key, buildings)
 
 enum e_scenario_mode {
     e_scenario_normal,
