@@ -587,6 +587,25 @@ namespace archive_helper {
             });
         }
     }
+
+    template<typename T>
+    void reader(archive arch, pcstr name, std::vector<T> &v) {
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+            arch.r_array_num<T>(name, v);
+        } else {
+            arch.r_array(name, v, [] (archive it_arch, auto &it) {
+                it_arch.r<T>(it);
+            });
+        }
+    }
+
+    template<typename T>
+    void reader(archive arch, pcstr name, std::unordered_map<xstring, T> &v) { 
+        arch.r_objects(name, [&] (pcstr key, archive sarch) {
+            auto &item = v[key];
+            sarch.r(item);
+        });
+    }
     
     template<typename T>
     void reader(archive arch, pcstr name, T& v) {

@@ -4,23 +4,28 @@
 #include <functional>
 
 #include "core/archive.h"
-#include "core/vec2i.h"
-#include "core/svector.h"
+
+struct sentiment_step_t {
+    int s;
+    int i;
+};
+ANK_CONFIG_STRUCT(sentiment_step_t, s, i)
+
+struct city_migration_defaults_t {
+    uint8_t max_immigration_amount_per_batch;
+    uint8_t max_emigration_amount_per_batch;
+    uint8_t max_newcomers_per_update;
+    uint8_t max_leftovers_per_update;
+    svector<sentiment_step_t, 16> sentiment_influence;
+};
+ANK_CONFIG_STRUCT(city_migration_defaults_t,
+    max_immigration_amount_per_batch,
+    max_emigration_amount_per_batch,
+    max_newcomers_per_update,
+    max_leftovers_per_update,
+    sentiment_influence)
 
 struct city_migration_t {
-    struct sentiment_step_t {
-        int s;
-        int i;
-    };
-
-    struct params {
-        uint8_t max_immigration_amount_per_batch;
-        uint8_t max_emigration_amount_per_batch;
-        uint8_t max_newcomers_per_update;
-        uint8_t max_leftovers_per_update;
-        svector<sentiment_step_t, 16> sentiment_influence;
-    };
-
     uint8_t immigration_queue_size;
     uint8_t emigration_queue_size;
     uint16_t immigration_duration;
@@ -49,7 +54,7 @@ struct city_migration_t {
     void create_migrants();
     void create_emigrants(int num_people);
     void create_immigrants(int num_people);
-    params& current_params();
+    city_migration_defaults_t& current_params();
     
     void determine_reason();
     int no_room_for_immigrants();
@@ -61,12 +66,3 @@ struct city_migration_t {
     using condition = std::function<void(city_migration_t &)>;
     void add_condition(condition);
 };
-
-ANK_CONFIG_STRUCT(city_migration_t::sentiment_step_t, s, i)
-
-ANK_CONFIG_STRUCT(city_migration_t::params, 
-                  max_immigration_amount_per_batch,
-                  max_emigration_amount_per_batch,
-                  max_newcomers_per_update,
-                  max_leftovers_per_update,
-                  sentiment_influence)
