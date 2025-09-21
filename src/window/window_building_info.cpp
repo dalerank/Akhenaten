@@ -119,7 +119,7 @@ textid building_info_window::get_tooltip(object_info &c) {
 void building_info_window::init(object_info &c) {
     common_info_window::init(c);
 
-    g_debug_building_id = c.bid;
+    set_debug_building_id(c.bid);
     building *b = building_get(c);
 
     c.go_to_advisor.first = ADVISOR_NONE;

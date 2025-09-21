@@ -26,11 +26,15 @@
 #include "game/game_config.h"
 #include "city/city.h"
 
-figures::model_t<figure_cartpusher> cartpusher_m;
+figure_cartpusher::static_params cartpusher_m;
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+void figure_cartpusher::static_params::archive_load(archive arch) {
+    wait_on_calculate_destination = arch.r_int("wait_on_calculate_destination", 30);
+}
 
 void figure_carrier::load_resource(e_resource resource, int amount) {
     base.resource_id = resource;
@@ -107,7 +111,8 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
 
             case BUILDING_RECRUITER:
             case BUILDING_SHIPWRIGHT:
-            case BUILDING_SCRIBAL_SCHOOL: {
+            case BUILDING_SCRIBAL_SCHOOL: 
+            case BUILDING_SENET_HOUSE: {
                     building_impl *b = dest->dcast();
                     bool ok = b->add_resource(resource, amount_single_turn);
                     if (!ok) {
@@ -144,12 +149,12 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
 }
 
 void figure_cartpusher::calculate_destination(bool warehouseman) {
-    set_destination(0);
+    set_destination(nullptr);
     base.anim.frame = 0;
     base.wait_ticks++;
 
     if (!warehouseman) {
-        if (base.wait_ticks > 30) {
+        if (base.wait_ticks > current_params().wait_on_calculate_destination) {
             base.wait_ticks = 0;
             determine_deliveryman_destination();
         }
@@ -185,19 +190,19 @@ void figure_cartpusher::determine_deliveryman_destination() {
         building* b = building_get(senate_id);
         if (senate_id && b->state == BUILDING_STATE_VALID && b->num_workers >= 5) {
             set_destination(senate_id);
-            return advance_action(ACTION_11_DELIVERING_GOLD);
+            return advance_action(ACTION_11_CARTPUSHER_DELIVERING_GOLD);
         }
     }
 
     // priority 1: warehouse if resource is on stockpile
-    int stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
+    building_id stockpile_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(stockpile_id);
     if (!g_city.resource.is_stockpiled(base.resource_id)) {
-        set_destination(0);
+        set_destination(nullptr);
     }
 
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
+        return advance_action(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
     }
 
     // priority 2: accepting granary for food
@@ -212,26 +217,26 @@ void figure_cartpusher::determine_deliveryman_destination() {
         }
 
         if (dist >= 64) {
-            set_destination(0);
+            set_destination(nullptr);
         }
     }
 
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
+        return advance_action(ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
 
     // priority 3: workshop for raw material
     int workshop_id = building_get_workshop_for_raw_material_with_room(tile(), (e_resource)base.resource_id, warehouse->distance_from_entry, road_network_id, dst);
     set_destination(workshop_id);
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP);
+        return advance_action(ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP);
     }
 
     // priority 4: warehouse
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &understaffed_storages, dst);
     set_destination(warehouse_id);
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
+        return advance_action(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
     }
 
     // priority 5: granary forced when on stockpile
@@ -246,12 +251,12 @@ void figure_cartpusher::determine_deliveryman_destination() {
         }
 
         if (dist >= 64) {
-            set_destination(0);
+            set_destination(nullptr);
         }
     }
 
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
+        return advance_action(ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
     }
 
     // no one will accept
@@ -356,7 +361,16 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 4: raw materials to workshop
+    // priority 4: beer to senet house
+    if (base.resource_id == RESOURCE_BEER) {
+        auto result = building_get_asker_for_resource(tile(), BUILDING_SENET_HOUSE, base.resource_id, road_network_id, warehouse->distance_from_entry);
+        set_destination(result.building_id);
+        if (has_destination()) {
+            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        }
+    }
+
+    // priority 5: raw materials to workshop
     {
         tile2i dest;
         int building_id = building_get_workshop_for_raw_material_with_room(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, dest);
@@ -366,7 +380,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 5: food to granary
+    // priority 6: food to granary
     {
         tile2i dest;
         int building_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dest);
@@ -376,7 +390,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 6: food to getting granary
+    // priority 7: food to getting granary
     {
         tile2i dest;
         int building_id = building_getting_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &dest);
@@ -386,7 +400,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 7: resource to other warehouse
+    // priority 8: resource to other warehouse
     tile2i dest;
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, dest);
     set_destination(warehouse_id);
@@ -432,47 +446,49 @@ void figure_cartpusher::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Cartpusher");
     building* b = home();
     int road_network_id = map_road_network_get(tile());
+
+    base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
+    case ACTION_20_CARTPUSHER_INITIAL:
         calculate_destination(false);
         break;
 
-    case ACTION_9_DELIVERING_GOODS:
+    case ACTION_9_CARTPUSHER_DELIVERING_GOODS:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_DELIVERING_UNLOADING_GOODS, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_10_DELIVERING_FOOD:
+    case ACTION_10_CARTPUSHER_DELIVERING_FOOD:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_DELIVERING_UNLOADING_FOODS, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_11_DELIVERING_GOLD:
+    case ACTION_11_CARTPUSHER_DELIVERING_GOLD:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
+    case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
+    case ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
+    case ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
 
     case 12: // storage yard
     case 13: // granary
     case 14: // palace
-    case FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE:
-    case FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY:
-    case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
+    case ACTION_24_CARTPUSHER_AT_WAREHOUSE:
+    case ACTION_25_CARTPUSHER_AT_GRANARY:
+    case ACTION_26_CARTPUSHER_AT_WORKSHOP:
         do_deliver(false, FIGURE_ACTION_15_RETURNING2, ACTION_8_RECALCULATE);
         break;
 
     case FIGURE_ACTION_15_RETURNING2:
-    case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
+    case ACTION_27_CARTPUSHER_RETURNING:
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
         // so there is no need for `cartpusher_do_deliver` action.
@@ -485,10 +501,6 @@ void figure_cartpusher::figure_action() {
     }
 }
 
-void figure_cartpusher::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, base.cached_pos, highlight, coord_out);
-}
-
 figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
     return cartpusher_m.sounds[key];
 }
@@ -498,18 +510,18 @@ bool figure_cartpusher::can_move_by_water() const {
 }
 
 sound_key figure_cartpusher::phrase_key() const {
-    if (action_state(FIGURE_ACTION_20_CARTPUSHER_INITIAL, FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
+    if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
         return "i_have_no_destination";
     }
 
-    if (action_state(FIGURE_ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
+    if (action_state(ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
         return "back_to_home";
     }
 
-    if (action_state(FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
-                     FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
-                     FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
-                     ACTION_11_DELIVERING_GOLD)) {
+    if (action_state(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
+                     ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
+                     ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
+                     ACTION_11_CARTPUSHER_DELIVERING_GOLD)) {
         return "delivering_items";
     }
 

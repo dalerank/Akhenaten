@@ -28,14 +28,16 @@ struct mission_choice_t {
         image_desc image;
         int id;
     };
-    image_desc background;
-    image_desc image1;
-    vec2i image1_pos;
-    image_desc image2;
-    vec2i image2_pos;
-    xstring title;
-    svector<point, 4> points;
+    image_desc choice_background;
+    image_desc choice_image1;
+    vec2i choice_image1_pos;
+    image_desc choice_image2;
+    vec2i choice_image2_pos;
+    xstring choice_title;
+    svector<point, 4> choice;
 };
+ANK_CONFIG_STRUCT(mission_choice_t::point, name, pos, tooltip, image, id)
+ANK_CONFIG_STRUCT(mission_choice_t, choice_background, choice_image1, choice_image1_pos, choice_image2, choice_image2_pos, choice_title, choice)
 
 struct mission_step_t {
     int scenario_id = -1;

@@ -4,25 +4,21 @@
 
 #include "graphics/image_desc.h"
 #include "graphics/image.h"
+#include "graphics/graphics.h"
 
 int animation_t::global_hashtime = 0;
 
-void animation_t::load(archive arch) {
-    pos = arch.r_vec2i("pos");
-    pack = arch.r_int("pack");
-    iid = arch.r_int("id");
-    offset = arch.r_int("offset");
-    max_frames = arch.r_int("max_frames");
-    duration = arch.r_int("duration", 1);
-    can_reverse = arch.r_bool("can_reverse");
+bool animation_t::load(archive arch) {
+    duration = std::max(1, duration);
     loop = arch.r_bool("loop", true);
-    start_frame = arch.r_int("start_frame", 0);
-    reverse = arch.r_bool("reverse", false);
     hashtime = global_hashtime;
+    bool internal_offset = arch.r_bool("internal_offset", false);
+    flags = (internal_offset ? ImgFlag_InternalOffset : 0);
+    return true;
 }
 
 int animation_t::first_img() const {
-    int image_id = image_id_from_group(pack, iid) + offset;   
+    int image_id = image_id_from_group(pack, id) + offset;   
     return image_id;
 }
 
@@ -30,18 +26,18 @@ void animations_t::load(archive arch, pcstr section) {
     data.clear();
     arch.r_objects(section, [this](pcstr key, archive anim_arch) {
         data.push_back({});
-        data.back().id = key;
-        data.back().load(anim_arch);
+        data.back().key = key;
+        archive_helper::reader(anim_arch, data.back());
     });
 }
 
 void animation_context::setup(const animation_t &anim) {
-    if (id == anim.id && hashtime == anim.hashtime) {
+    if (key == anim.key && hashtime == anim.hashtime) {
         return;
     }
 
-    id = anim.id;
-    base = image_id_from_group(anim.pack, anim.iid);
+    key = anim.key;
+    base = image_id_from_group(anim.pack, anim.id);
     offset = anim.offset;
     max_frames = anim.max_frames;
     frame_duration = std::max(1, anim.duration);
@@ -52,6 +48,7 @@ void animation_context::setup(const animation_t &anim) {
     is_reverse = anim.reverse;
     can_reverse = is_reverse || anim.can_reverse;
     hashtime = anim.hashtime;
+    flags = anim.flags;
 }
 
 void animation_context::update(bool refresh_only) {

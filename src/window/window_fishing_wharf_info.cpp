@@ -1,6 +1,7 @@
 #include "window/window_building_info.h"
 
 #include "building/building_fishing_wharf.h"
+#include "figuretype/figure_fishing_boat.h"
 #include "window/building/common.h"
 #include "city/object_info.h"
 

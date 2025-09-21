@@ -235,36 +235,6 @@ mission_choice_window = {
     }
 }
 
-mission_briefing_window = {
-    pos: [(sw(0) - px(38))/2, (sh(0) - px(27))/2],
-    ui : {
-        background       : outer_panel({pos:[16, 32], size : {w:38, h:27} }),
-        title            : text({pos:[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT }),
-        subtitle         : text({pos:[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        objectives_panel : inner_panel({pos:[32, 96], size: {w:36, h:6} }),
-        objectives_label : label({text : {group:62, id:10}, pos : {x:48, y:104},    font : FONT_NORMAL_WHITE_ON_DARK }),
-        
-        goal_0           : label({pos:[32  + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_1           : label({pos:[288 + 16, 90  + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_2           : label({pos:[32  + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_3           : label({pos:[288 + 16, 112 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_4           : label({pos:[32  + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_5           : label({pos:[288 + 16, 134 + 32], body : {w:15, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        goal_immediate   : label({pos:[32 + 16,  136 + 32], body : {w:31, h:1}, font : FONT_NORMAL_YELLOW, enabled: false }),
-        
-        description_panel: inner_panel({pos : {x:32, y:200}, size: {w:33, h:14} }),
-        description_text : text({pos: [40, 200], size:[px(34), px(14)], wrap:px(34), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
-        difficulty_label : label({pos:[105, 433], size:[80, 14], font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        back             : image_button({pos:[26, 428], size:[31, 20], pack:PACK_GENERAL, id:90, offset:8 }),
-
-        dec_difficulty   : image_button({pos:[65, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:0 }),
-        inc_difficulty   : image_button({pos:[65 + 18, 428], size:[17, 17], pack:PACK_GENERAL, id:212, offset:3 }),
-
-        tocity_label     : label({text : {group:62, id:7}, margin:{right:-140, bottom:0}, font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        start_mission    : next_button({ margin:{right:-40, bottom:-3} }),
-    }
-}
-
 roadblock_info_window = {
     ui : {
         background      : outer_panel({size: [29, 17]}),
@@ -593,18 +563,11 @@ figure_warship_info_window = {
     }
 }
 
-info_window_figure_caravan_donkey = {
-    ui : __baseui(figure_info_window, {
-        bought_items   : text({pos: [40, 180], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
-        sold_items     : text({pos: [40, 210], size:[px(29), px(10)], wrap:px(29), font : FONT_NORMAL_WHITE_ON_DARK, font_link:FONT_NORMAL_YELLOW, rich:true, clip_area:true }),
-    })
-}
-
 figure_carrier_info_window = {
     ui : __baseui(figure_info_window, {
-        typename             : text({pos: [92, 139], text:"${figure.class_name} ( @Y${figure.home}& )", font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
-        items                    : text({pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
-        phrase               : text({pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true }),
+        typename         : text({pos: [92, 139], text:"${figure.class_name} ( @Y${figure.home}& )", font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
+        items            : text({pos: [102, 158], size:[px(29), 20], font : FONT_NORMAL_BLACK_ON_DARK, rich:true, scroll:false }),
+        phrase           : text({pos: [90, 180], font : FONT_NORMAL_BLACK_ON_DARK, wrap:px(22), multiline:true }),
     })
 }
 
@@ -617,11 +580,11 @@ info_window_figure_enemy = {
 temple_info_window = {
     ui : {
         background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
-        title        : text({ pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        title        : text({ pos: [0, 16], size: [px(29), 13], text:"${building.name}", font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 
         inner_panel  : inner_panel({ pos : [16, 56], size: [27, 4] }),
         workers_img  : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] }),
-        workers_text : text({ text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+        workers_text : text({ text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers} ${loc.building_employee_needed} )", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
         workers_desc : text({ pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
         button_help  : image_button({ margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
         button_close : image_button({ margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
@@ -638,7 +601,7 @@ temple_complex_info_window = {
         
         inner_panel  : inner_panel({ pos : [16, 56], size: [27, 4] }),
         workers_img  : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 70] }),
-        workers_text : text({ text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+        workers_text : text({ text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers}  ${loc.building_employee_needed} )", pos: [70, 74], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
         workers_desc : text({ pos: [70, 74 + 16], font: FONT_NORMAL_BLACK_ON_DARK }),
         button_help  : image_button({ margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }),
         button_close : image_button({ margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
@@ -656,7 +619,7 @@ building_info_window = {
         inner_panel    : inner_panel({pos : [16, 100], size: [27, 5],
                                                 ui : {
                                                     workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                                    workers_text : text({pos: [50, 16], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK}),
+                                                    workers_text : text({pos: [50, 16], text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers}  ${loc.building_employee_needed} )", font: FONT_NORMAL_BLACK_ON_DARK}),
                                                     workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
                                                 }
                                           }),
@@ -1065,58 +1028,6 @@ dock_orders_window = {
     }
 }
 
-bazaar_info_window = {
-    ui : {
-        background   : outer_panel({size: [29, 17]}),
-        title          : text({text: "#bazaar_info_title", pos: [0, 10], size: [16 * 29, 0], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text : text({pos: [32, 36], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        food0_icon   : resource_icon({pos: [32, 85]}),
-        food0_text   : text({pos: [64, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food1_icon   : resource_icon({pos: [142, 85] }),
-        food1_text   : text({pos: [174, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food2_icon   : resource_icon({pos: [252, 85] }),
-        food2_text   : text({pos: [284, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food3_icon   : resource_icon({pos: [362, 85] }),
-        food3_text   : text({pos: [394, 90], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good0_icon   : resource_icon({pos: [32, 110] }),
-        good0_text   : text({pos: [64, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good1_icon   : resource_icon({pos: [142, 110] }),
-        good1_text   : text({pos: [174, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good2_icon   : resource_icon({pos: [252, 110] }),
-        good2_text   : text({pos: [284, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good3_icon   : resource_icon({pos: [362, 110] }),
-        good3_text   : text({pos: [394, 114], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        workers_panel: inner_panel({pos : [16, 136], size: [27, 4] }),
-        workers_img  : image({pack:PACK_GENERAL, id:134, offset:14, pos:[40, 142 + 6] }),
-        workers_text : text({pos:[70, 142 + 12], text:"${building.num_workers} ${8.12} ( ${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        workers_desc : text({pos: [70, 142 + 26], font: FONT_NORMAL_BLACK_ON_DARK }),
-        orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}"}),
-        show_overlay : button({margin:{right:-64, bottom:-40}, size:[23, 23]}),
-        mothball     : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
-
-        button_help   : help_button({}),
-        button_close  : close_button({}),
-    }
-}
-
-bazaar_orders_window = {
-  ui : {
-        background   : outer_panel({size: [29, 17]}),
-        title          : text({pos: [0, 12], size: [px(28), 0], text:{group:98, id:5}, font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        orders_panel : inner_panel({pos : [16, 42], size: [27, 10] }),
-        accept_none  : button({pos:[80, -1], size:[300, 24], text:{group:99, id:7}, margin:{bottom:-38} }),
-
-        item_orders_column : dummy({margin:{centerx:0}}),
-        item_icon_column : dummy({pos:[25, 0]}),
-        item_name_column : dummy({pos:[55, 0]}),
-        item_row     : dummy({size:[px(13), 20]}),      
-        items_area   : dummy({pos:[0, 50]}), 
-
-        button_help   : help_button({}),
-        button_close  : close_button({}),
-    }
-}
-
 festival_square_info_window = {
     ui : {
         background      : outer_panel({pos: [0, 0], size: [29, 16]}),
@@ -1208,6 +1119,12 @@ bricklayers_guild_info_window = {
     })
 }
 
+carpenters_guild_info_window = {
+    ui : __baseui(workshop_info_window, {
+
+    })
+}
+
 stonemason_guild_info_window = {
     ui : __baseui(workshop_info_window, {
 
@@ -1293,57 +1210,6 @@ info_window_storageyard = {
         mothball      : button({margin:{right:-90, bottom:-40}, size:[23, 23]}),
 
         first_advisor : image_button({margin:{left:40, bottom:-40}, size:[28, 28], pack:PACK_GENERAL, id:106 }),
-    }
-}
-
-empire_window = {
-    trade_column_spacing : 146,
-    trade_row_spacing : 20,
-    info_y_traded : -3,
-    trade_button_offset_x : 0,
-    info_y_footer_1 : 78,
-    info_y_city_desc : 28,
-    text_group_old_names : 195,
-    text_group_new_names : 21,
-    trade_resource_size : 18,
-    trade_resource_offset : 3,
-    trade_button_offset_y : 10,
-    start_pos : [16, 16],
-    finish_pos : [32, 136],
-    image : {pack:PACK_EMPIRE, id:1},
-    bottom_image : {pack:PACK_GENERAL, id:172, offset:3},
-    horizontal_bar : {pack:PACK_GENERAL, id:172, offset:1},
-    vertical_bar : {pack:PACK_GENERAL, id:172, offset:0},
-    cross_bar : {pack:PACK_GENERAL, id:172, offset:2},
-    trade_amount : {pack:PACK_GENERAL, id:171},
-    closed_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:211},
-    open_trade_route : {pack:PACK_GENERAL, id:149, offset:201},
-    open_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:186},
-
-    ui : {
-        background : dummy({size:[sw(0), sh(0)]}),
-        city_name : header({pos:[0, -1], margin:{bottom:-120}, size:[sw(0), 20], align:"center"}),
-        button_help : help_button({margin:{centerx:575, bottom:-120}}),
-        button_close : close_button({margin:{centerx:575, bottom:-40}}),
-        button_advisor : advisor_button({margin:{centerx:-595, bottom:-120}}),
-        button_open_trade : button({margin:{centerx:-220, bottom:-40}, size:[440, 20]}),
-        info_tooltip : text({margin:{centerx:-200, bottom:-60}, size:[400, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-
-        city_sell_title : text({text:[47, 11], margin:{centerx:250, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        city_sell_items : dummy({pos:[0, 100], size:[200, 0], margin:{centerx:100, bottom:-90}}),
-        city_sell_item : dummy({size:[120, 20], font:FONT_SMALL_PLAIN}),
-    
-        city_buy_title : text({text:[47, 10], margin:{centerx:-300, bottom:-120}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        city_buy_items : dummy({pos:[0, 0], size:[200, 0], margin:{centerx:-430, bottom:-90}}),
-        city_buy_item : dummy({size:[120, 20], font:FONT_SMALL_PLAIN}),
-
-        city_want_sell_title : text({text:[47, 5], margin:{centerx:-220, bottom:-90}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
-    city_want_sell_items : dummy({pos:[0, 100], margin:{centerx:-170, bottom:-90}}),
-        city_want_sell_item : dummy({size:[110, 0], font:FONT_SMALL_PLAIN}),
-
-    city_want_buy_title : text({text:[47, 4], margin:{centerx:-220, bottom:-70}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
-      city_want_buy_items : dummy({pos:[0, 0], margin:{centerx:-170, bottom:-70}}),
-        city_want_buy_item : dummy({size:[110, 0], font:FONT_SMALL_PLAIN}),
     }
 }
 

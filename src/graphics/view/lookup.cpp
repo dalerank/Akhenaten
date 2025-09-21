@@ -134,7 +134,7 @@ void record_mappoint_pixelcoord(tile2i point, vec2i pixel) {
     MAPPOINT_TO_PIXEL_LOOKUP[point.grid_offset()] = {pixel.x, pixel.y};
 }
 
-vec2i tile_to_pixel(tile2i point) {
+vec2i lookup_tile_to_pixel(tile2i point) {
     int grid_offset = point.grid_offset();
     assert(grid_offset < max_grid_offset);
     return MAPPOINT_TO_PIXEL_LOOKUP[grid_offset];

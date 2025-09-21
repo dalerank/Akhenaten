@@ -95,7 +95,7 @@ void figure_emigrant::update_animation() {
 
     int dir = base.figure_image_direction();
     switch (action_state()) {
-    case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
+    case FIGURE_ACTION_2_EMIGRANT_ARRIVING:
     case FIGURE_ACTION_6_EMIGRANT_LEAVING:
         base.cart_image_id = emigrant_m.anim["cart"].first_img() + dir;
         base.figure_image_set_cart_offset((dir + 4) % 8);
@@ -121,8 +121,4 @@ sound_key figure_emigrant::phrase_key() const {
     }
 
     return  "all_good_in_city";
-}
-
-const animations_t &figure_emigrant::anim() const {
-    return emigrant_m.anim;
 }

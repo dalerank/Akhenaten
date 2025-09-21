@@ -34,8 +34,8 @@
 #include <platform/android/android.h>
 
 #include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_sdlrenderer.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include "imguifiledialog.h"
 #include "misc/cpp/imgui_stdlib.h"
 
@@ -71,6 +71,8 @@
 #include "graphics/window.h"
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
+#define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
+#define URL_EDITOR "https://github.com/dalerank/akhenaten/wiki/Editor"
 
 #define INTPTR(d) (*(int*)(d))
 
@@ -163,7 +165,12 @@ static bool pre_init(pcstr custom_data_dir) {
 /** Show configuration window to override parameters of the startup.
  */
 static void show_options_window(Arguments& args) {
+#ifndef __APPLE__
     auto const window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+#else
+    auto const window_flags = SDL_WINDOW_RESIZABLE;
+#endif
+    
     SDL_Window* platform_window = SDL_CreateWindow("Akhenaten: configuration", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(platform_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
@@ -177,11 +184,10 @@ static void show_options_window(Arguments& args) {
 
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(platform_window, renderer);
-    ImGui_ImplSDLRenderer_Init(renderer);
+    ImGui_ImplSDLRenderer2_Init(renderer);
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    ImGuiFileDialog fileDialog;
     bool store_configuration = false;
 
     auto video_drivers = get_video_drivers(false);
@@ -200,7 +206,7 @@ static void show_options_window(Arguments& args) {
         }
 
         // Start the Dear ImGui frame
-        ImGui_ImplSDLRenderer_NewFrame();
+        ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
@@ -220,17 +226,20 @@ static void show_options_window(Arguments& args) {
             ImGui::InputText("default", data_directory.data(), data_directory.capacity);
             ImGui::SameLine();
             if (ImGui::Button("...")) {
-                fileDialog.OpenDialog("Choose Folder", "", nullptr, ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
+                IGFD::FileDialogConfig config;
+                config.path = ".";
+                config.countSelectionMax = 1;
+                config.flags = ImGuiFileDialogFlags_Modal;
+                ImGuiFileDialog::Instance()->OpenDialog("ChooseFolderDlgKey", "Choose Folder", nullptr, config);
             }
 
             ImVec2 filedialog_size(1280 * 0.5, 720 * 0.5);
-            ImVec2 filedialog_pos{(platform_window_w - filedialog_size.x) / 2, (platform_window_h - filedialog_size.y) / 2};
-            if (fileDialog.Display("Choose Folder", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size, filedialog_size, filedialog_pos)) {
+            if (ImGuiFileDialog::Instance()->Display("ChooseFolderDlgKey", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size)) {
                 ImGui::SetWindowFocus();
-                if (fileDialog.IsOk()) {
-                    args.set_data_directory(fileDialog.GetFilePathName().c_str());
+                if (ImGuiFileDialog::Instance()->IsOk()) {
+                    args.set_data_directory(ImGuiFileDialog::Instance()->GetCurrentPath().c_str());
                 }
-                fileDialog.Close();
+                ImGuiFileDialog::Instance()->Close();
             }
 
             ImGui::BeginChild("RenderSection");
@@ -314,12 +323,12 @@ static void show_options_window(Arguments& args) {
                                (Uint8)(clear_color.z * 255),
                                (Uint8)(clear_color.w * 255));
         SDL_RenderClear(renderer);
-        ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+        ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer);
         SDL_RenderPresent(renderer);
     }
 
     // Cleanup
-    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
@@ -398,6 +407,8 @@ static void setup() {
         logs::info("Exiting: SDL create window failed");
         exit(-2);
     }
+
+    vfs::platform_file_manager_set_ext_path(g_args.get_extdata_directory());
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
@@ -630,6 +641,8 @@ int main(int argc, char** argv) {
     
     game_imgui_overlay_init();
     g_application.subscribe_events();
+    lang_reload_localized_files();
+    lang_reload_localized_tables();
 
     run_and_draw();
 

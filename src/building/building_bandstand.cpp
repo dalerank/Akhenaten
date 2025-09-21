@@ -34,6 +34,12 @@ void building_bandstand::static_params::archive_load(archive arch) {
    booth = anim["booth"].first_img();
 }
 
+bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
+    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
+    const bool has_figure = map_has_figure_at(tile);
+    return (is_road || !has_figure);
+}
+
 void building_bandstand::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(3, 3);
 }
@@ -204,8 +210,10 @@ bool building_bandstand::force_draw_height_tile(painter &ctx, tile2i tile, vec2i
     int image_id = map_image_at(tile);
     const auto it = std::find(std::begin(imgs), std::end(imgs), image_id);
     if (it != std::end(imgs)) {
-       ImageDraw::isometric_from_drawtile(ctx, image_id, pixel, mask);
-       ImageDraw::isometric_from_drawtile_top(ctx, image_id, pixel, mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
+        command.image_id = image_id;
+        command.pixel = pixel;
+        command.mask = mask;
     }
     return false;
 }
@@ -220,51 +228,52 @@ void building_bandstand::on_undo() {
     }
 }
 
-void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, int direction, color color_mask) {
+void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask) {
+    if (direction < 0) {
+        return;
+    }
+
     auto &d = runtime_data();
     if (!d.musician_visited) {
         return;
     }
 
     building* next_tile = base.next();
-    switch (direction) {
-    case 0:
-    {
-        const animation_t &ranim = anim("musician_sn");
-        building_draw_normal_anim(ctx, pixel, &base, tile(), ranim, color_mask);
-    }
-    break;
+    xstring anim_key = (direction == 0) ? "musician_sn" : "musician_we";
+    d.musician_ctx.setup(anim(anim_key));
+    draw_normal_anim(ctx, d.musician_ctx, pixel, tile, color_mask);
+}
 
-    case 1:
-    {
-        const animation_t &ranim = anim("musician_we");
-        building_draw_normal_anim(ctx, pixel, &base, tile(), ranim, color_mask);
+void building_bandstand::on_tick(bool refresh_only) {
+    inherited::on_tick(refresh_only);
+
+    runtime_data().musician_ctx.update(refresh_only);
+    runtime_data().juggler_ctx.update(refresh_only);
+}
+
+void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask) {
+    auto &d = runtime_data();
+    if (!d.juggler_visited) {
+        return;
     }
-    break;
+
+    if (map_image_at(tile) != bandstand_m.booth) {
+        return;
     }
+    
+    d.juggler_ctx.setup(anim("juggler"));
+    draw_normal_anim(ctx, d.juggler_ctx, pixel, tile, color_mask);
 }
 
 bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    int color_mask = 0;
-    if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile)) {
-        color_mask = COLOR_MASK_RED;
-    }
+    const bool is_deleted = drawing_building_as_deleted(&base) || map_property_is_deleted(tile);
+    int color_mask = is_deleted ? COLOR_MASK_RED : COLOR_MASK_NONE;
 
-    int grid_offset = tile.grid_offset();
-    if (map_image_at(grid_offset) == bandstand_m.stand_sn_n) {
-        draw_shows_musicians(ctx, point, 1, color_mask);
-    } else if (map_image_at(grid_offset) == bandstand_m.stand_we_w) {
-        draw_shows_musicians(ctx, point, 0, color_mask);
-    }
+    const int direction = (map_image_at(tile) == bandstand_m.stand_sn_n) ? 1 :
+                          (map_image_at(tile) == bandstand_m.stand_we_e) ? 0 : -1;
 
-    auto &d = runtime_data();
-    if (map_image_at(grid_offset) == bandstand_m.booth) {
-        const animation_t &anim = bandstand_m.anim["juggler"];
-        building* main = base.main();
-        if (d.juggler_visited) {
-            building_draw_normal_anim(ctx, point, &base, tile, anim, mask);
-        }
-    }
+    draw_shows_juggler(ctx, point, tile, direction, color_mask);
+    draw_shows_musicians(ctx, point, tile, direction, color_mask);
 
     return false;
 }

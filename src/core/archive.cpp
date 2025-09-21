@@ -207,7 +207,7 @@ archive::variant_t archive::r_variant(pcstr name) {
     return result;
 }
 
-std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
+std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
     std::vector<vec2i> result;
@@ -215,7 +215,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
-            vec2i v = r_vec2i_impl("x", "y");
+            vec2i v = r_vec2i_impl(px, py);
             result.push_back(v);
             js_pop(vm, 1);
         }
@@ -290,6 +290,15 @@ vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
     return result;
 }
 
+tile2i archive::r_tile2i(pcstr name, pcstr i, pcstr j) {
+    auto vm = (js_State*)state;
+    js_getproperty(vm, -1, name);
+    vec2i t = r_vec2i_impl(i, j);
+    js_pop(vm, 1);
+
+    return tile2i(t.x, t.y);
+}
+
 bool archive::r_anim(pcstr name, animation_t &anim) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
@@ -298,7 +307,7 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
         ;
     } else if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "pack"); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        js_getproperty(vm, -1, "id"); anim.iid = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        js_getproperty(vm, -1, "id"); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "offset"); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "duration"); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "max_frames"); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);

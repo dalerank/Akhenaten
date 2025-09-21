@@ -19,10 +19,14 @@ public:
     figure_warship(figure *f) : figure_impl(f) {}
     virtual figure_warship *dcast_warship() override { return this; }
 
-    struct static_params : public figures::model_t<figure_warship> {
+    struct static_params : public figure_model {
         std::array<short, e_order_max> orders_info;
-        virtual void load(archive arch) override;
-    };
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
+
+    struct runtime_data_t {
+        short active_order;
+    } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
     virtual void on_destroy() override;
@@ -37,8 +41,6 @@ public:
 
     void figure_action_goto_wharf();
     void figure_action_common();
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };
 
 struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {

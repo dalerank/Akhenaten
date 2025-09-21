@@ -7,7 +7,7 @@
 #include "empire/trade_route.h"
 #include "earthquake.h"
 #include "farao_change.h"
-#include "events.h"
+#include "scenario_event_manager.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/mission.h"
@@ -64,16 +64,9 @@ int scenario_data_t::house_tax_multiplier(int v) const {
 
 void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [this] (archive arch) {
-        meta.start_message = arch.r_int("start_message");
-        meta.show_won_screen = arch.r_bool("show_won_screen", true);
+        arch.r(meta);
+        arch.r(env);
 
-        meta.initial_funds = arch.r_sarray<8>("money");
-        meta.rescue_loans = arch.r_sarray<8>("rescue_loans");
-        meta.house_tax_multipliers = arch.r_sarray<8>("house_tax_multipliers");
-        
-        env.has_animals = arch.r_bool("city_has_animals");
-        env.gods_least_mood = arch.r_int("gods_least_mood", 0);
-        win_criteria.next_mission = arch.r_int("next_mission", 0);
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {
             g_city.kingdome.player_rank = rank;
@@ -86,19 +79,10 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         }
 
         init_resources.clear();
-        arch.r_objects("resources", [&] (pcstr key, archive rarch) {
-            e_resource resource = rarch.r_type<e_resource>("type");
-            bool allowed = rarch.r_bool("allow");
-            init_resources.push_back({ resource, allowed });
-        });
+        arch.r("init_resources", init_resources);
 
-        extra_damage.clear();
-        arch.r_objects("fire_damage", [&] (pcstr key, archive barch) {
-            e_building_type type = barch.r_type<e_building_type>("type");
-            int8_t fire = barch.r_int("fire");
-            int8_t collapse = barch.r_int("collapse");
-            extra_damage.push_back({ type, fire, collapse });
-        });
+        std::fill(extra_damage.begin(), extra_damage.end(), extra_damage_t{ BUILDING_NONE, 0, 0 });
+        arch.r_stable_array("extra_damage", extra_damage);
 
         building_stages.clear();
         arch.r_objects("stages", [&](pcstr key, archive sarch) {
@@ -106,7 +90,15 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
             building_stages.push_back({key, buildings});
         });
 
-        arch.r_variants("vars", vars);
+        arch.r_array("invasion_points", [&] (archive parch) {
+            int index = std::clamp(parch.r_int("index"), 0, MAX_INVASION_POINTS_LAND);
+            bool issea = parch.r_bool("sea");
+            auto& points = issea ? invasion_points_sea : invasion_points_land;
+            points[index] = parch.r_tile2i("pos");
+        });
+
+        arch.r("win_criteria", win_criteria);
+        arch.r("vars", vars);
     });
 
     events.load_mission_metadata(missionid);
@@ -296,15 +288,17 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(42);
 
     if (iob->is_read_access()) {
-        for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { g_scenario.invasion_points_land[i].invalidate_offset(); }
-        for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { g_scenario.invasion_points_land[i].invalidate_offset(); }
+        auto& lands = g_scenario.invasion_points_land;
+        auto& sea = g_scenario.invasion_points_land;
+        std::fill(lands.begin(), lands.end(), tile2i::invalid);
+        std::fill(sea.begin(), sea.end(), tile2i::invalid);
     }
 
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_X)); }
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_X)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_sea[i].private_access(_X)); }
 
     for (int i = 0; i < MAX_INVASION_POINTS_LAND; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_Y)); }
-    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_land[i].private_access(_Y)); }
+    for (int i = 0; i < MAX_INVASION_POINTS_SEA; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.invasion_points_sea[i].private_access(_Y)); }
 
     iob->bind____skip(36); // 18 * 2
 

@@ -2,10 +2,26 @@
 
 #include "figure/figure.h"
 
+enum e_tax_collector_action {
+    ACTION_40_TAX_COLLECTOR_CREATED = 40,
+    ACTION_41_TAX_COLLECTOR_ENTERING_EXITING = 41,
+    ACTION_42_TAX_COLLECTOR_ROAMING = 42,
+    ACTION_43_TAX_COLLECTOR_RETURNING = 43,
+};
+
 class figure_tax_collector : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_TAX_COLLECTOR, figure_tax_collector)
     figure_tax_collector(figure *f) : figure_impl(f) {}
+
+    struct runtime_data_t {
+        short poor_taxed;
+        short middle_taxed;
+        short reach_taxed;
+    } FIGURE_RUNTIME_DATA_T;
+
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_action() override;

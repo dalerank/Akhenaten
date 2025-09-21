@@ -87,19 +87,13 @@ enum e_pack {
     PACK_SUN_TEMPLE_3,
     //
     PACK_CUSTOM,
+    PACK_CUSTOM_FONT,
     // 
     PACK_MAX,
 };
 
-extern const token_holder<e_pack, PACK_UNLOADED, PACK_MAX> e_pack_type_tokens;
-
-////////////////// FONT
-
-#define GROUP_FONT PACK_FONT, 1
-
-////////////////// EMPIRE MAP
-
-//#define GROUP_EMPIRE_MAP PACK_EMPIRE, 1
+using e_pack_tokens_t = token_holder<e_pack, PACK_UNLOADED, PACK_MAX>;
+extern const e_pack_tokens_t e_pack_type_tokens;
 
 ////////////////// TERRAIN
 

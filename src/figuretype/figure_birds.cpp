@@ -95,7 +95,7 @@ void figure_birds::update_animation() {
         break;
     }
 
-    base.sprite_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
+    base.main_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
 }
 
 void figure_birds::before_poof() {

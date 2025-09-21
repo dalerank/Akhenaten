@@ -191,6 +191,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
     iob->bind(BIND_SIGNATURE_UINT16,&d.unreachable_ticks);
     iob->bind(BIND_SIGNATURE_UINT16,&d.last_update_day);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.drunkard_active);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -306,7 +307,7 @@ static int house_image_group(int level) {
     const e_building_type btype = e_building_type(BUILDING_HOUSE_VACANT_LOT + level);
     const auto &params = building_impl::params(btype);
     const auto anim = params.anim["house"];
-    int image_id = image_id_from_group(anim.pack, anim.iid);
+    int image_id = image_id_from_group(anim.pack, anim.id);
 
     return image_id + (use_offset ? anim.offset : 0);
 }
@@ -674,6 +675,7 @@ void building_house::decay_services() {
     decay_service(housed.temple_seth);
     decay_service(housed.temple_bast);
     decay_service(housed.bazaar_access);
+    decay_service(housed.drunkard_active);
 }
 
 bool building_house::can_expand(int num_tiles) {

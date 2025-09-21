@@ -2,16 +2,24 @@
 
 #include "figure/figure.h"
 
+enum e_reed_gatherer_action {
+    ACTION_8_REED_GATHERER_RECALCULATE = 8,
+    ACTION_9_REED_GATHERER_GOTO_RESOURCE = 9,
+    ACTION_10_REED_GATHERER_WORK = 10,
+    ACTION_11_REED_GATHERER_RETURN_HOME = 11,
+    ACTION_14_REED_GATHERER_CREATED = 14,
+};
+
 class figure_reed_gatherer : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_REED_GATHERER, figure_reed_gatherer)
     figure_reed_gatherer(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figures::model_t<figure_reed_gatherer> {
+    struct static_params : public figure_model {
         int max_amount;
 
-        virtual void load(archive arch) override;
-    };
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_before_action() override;
@@ -20,6 +28,4 @@ public:
     virtual void update_animation() override;
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
 };

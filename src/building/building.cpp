@@ -180,67 +180,6 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building_farm *building::dcast_farm() { return dcast()->dcast_farm(); }
-building_brewery *building::dcast_brewery() { return dcast()->dcast_brewery(); }
-building_pottery *building::dcast_pottery() { return dcast()->dcast_pottery(); }
-building_storage_yard *building::dcast_storage_yard() { return dcast()->dcast_storage_yard(); }
-building_storage_room *building::dcast_storage_room() { return dcast()->dcast_storage_room(); }
-building_juggler_school *building::dcast_juggler_school() { return dcast()->dcast_juggler_school(); }
-building_bazaar *building::dcast_bazaar() { return dcast()->dcast_bazaar(); }
-building_firehouse *building::dcast_firehouse() { return dcast()->dcast_firehouse(); }
-building_architect_post *building::dcast_architect_post() { return dcast()->dcast_architect_post(); }
-building_booth *building::dcast_booth() { return dcast()->dcast_booth(); }
-building_apothecary *building::dcast_apothecary() { return dcast()->dcast_apothecary(); }
-building_granary *building::dcast_granary() { return dcast()->dcast_granary(); }
-building_water_supply *building::dcast_water_supply() { return dcast()->dcast_water_supply(); }
-building_conservatory *building::dcast_conservatory() { return dcast()->dcast_conservatory(); }
-building_courthouse *building::dcast_courthouse() { return dcast()->dcast_courthouse(); }
-building_well *building::dcast_well() { return dcast()->dcast_well(); }
-building_clay_pit *building::dcast_clay_pit() { return dcast()->dcast_clay_pit(); }
-building_reed_gatherer *building::dcast_reed_gatherer() { return dcast()->dcast_reed_gatherer(); }
-building_papyrus_maker *building::dcast_papyrus_maker() { return dcast()->dcast_papyrus_maker(); }
-building_dock *building::dcast_dock() { return dcast()->dcast_dock(); }
-building_work_camp *building::dcast_work_camp() { return dcast()->dcast_work_camp(); }
-building_small_mastaba *building::dcast_small_mastaba() { return dcast()->dcast_small_mastaba(); }
-building_wood_cutter *building::dcast_wood_cutter() { return dcast()->dcast_wood_cutter(); }
-building_recruiter *building::dcast_recruiter() { return dcast()->dcast_recruiter(); }
-building_pavilion *building::dcast_pavilion() { return dcast()->dcast_pavilion(); }
-building_statue *building::dcast_statue() { return dcast()->dcast_statue(); }
-building_ferry *building::dcast_ferry() { return dcast()->dcast_ferry(); }
-building_fort *building::dcast_fort() { return dcast()->dcast_fort(); }
-building_fort_ground *building::dcast_fort_ground() { return dcast()->dcast_fort_ground(); }
-building_fishing_wharf *building::dcast_fishing_wharf() { return dcast()->dcast_fishing_wharf(); }
-building_shipyard *building::dcast_shipyard() { return dcast()->dcast_shipyard(); }
-building_plaza *building::dcast_plaza() { return dcast()->dcast_plaza(); }
-building_garden *building::dcast_garden() { return dcast()->dcast_garden(); }
-building_house *building::dcast_house() { return dcast()->dcast_house(); }
-building_burning_ruin *building::dcast_burning_ruin() { return dcast()->dcast_burning_ruin(); }
-building_storage *building::dcast_storage() { return dcast()->dcast_storage(); }
-building_temple *building::dcast_temple() { return dcast()->dcast_temple(); }
-building_tax_collector *building::dcast_tax_collector() { return dcast()->dcast_tax_collector(); }
-building_roadblock *building::dcast_roadblock() { return dcast()->dcast_roadblock(); }
-building_routeblock *building::dcast_routeblock() { return dcast()->dcast_routeblock(); }
-building_mine *building::dcast_mine() { return dcast()->dcast_mine(); }
-building_quarry *building::dcast_quarry() { return dcast()->dcast_quarry(); }
-building_palace *building::dcast_palace() { return dcast()->dcast_palace(); }
-building_festival_square *building::dcast_festival_square() { return dcast()->dcast_festival_square(); }
-building_bandstand *building::dcast_bandstand() { return dcast()->dcast_bandstand(); }
-building_industry *building::dcast_industry() { return dcast()->dcast_industry(); }
-building_guild *building::dcast_guild() { return dcast()->dcast_guild(); }
-building_entertainment *building::dcast_entertainment() { return dcast()->dcast_entertainment(); }
-building_mansion *building::dcast_mansion() { return dcast()->dcast_mansion(); }
-building_physician *building::dcast_physician() { return dcast()->dcast_physician(); }
-building_wharf *building::dcast_wharf() { return dcast()->dcast_wharf(); }
-building_warship_wharf *building::dcast_warship_wharf() { return dcast()->dcast_warship_wharf(); }
-building_temple_complex *building::dcast_temple_complex() { return dcast()->dcast_temple_complex(); }
-building_temple_complex_altar *building::dcast_temple_complex_altar() { return dcast()->dcast_temple_complex_altar(); }
-building_temple_complex_oracle *building::dcast_temple_complex_oracle() { return dcast()->dcast_temple_complex_oracle(); }
-building_water_lift *building::dcast_water_lift() { return dcast()->dcast_water_lift(); }
-building_monument *building::dcast_monument() { return dcast()->dcast_monument(); }
-building_tower *building::dcast_tower() { return dcast()->dcast_tower(); }
-building_senet_house *building::dcast_senet_house() { return dcast()->dcast_senet_house(); }
-building_gatehouse *building::dcast_gatehouse() { return dcast()->dcast_gatehouse(); }
-
 building::building() {
 }
 
@@ -331,12 +270,6 @@ e_overlay building::get_overlay() const {
 //     }
 // }
 
-bool building::is_house() const {
-    return building_is_house(type);
-}
-bool building::is_fort() {
-    return building_is_fort(type);
-}
 bool building::is_defense() {
     return building_is_defense(type);
 }
@@ -449,9 +382,8 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
     }
 
     cart->load_resource(resource_id, quantity);
-    cart->set_destination(0);
-    cart->base.immigrant_home_building_id = 0;
-
+    cart->set_destination(nullptr);
+    
     set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
     if (!!game_features::gameplay_change_cart_speed_depends_quntity) {
         f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
@@ -464,7 +396,6 @@ figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figu
 figure *building::create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
     f->set_destination(destination->id);
-    f->immigrant_home_building_id = 0;
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     return f;
@@ -473,8 +404,7 @@ figure *building::create_figure_with_destination(e_figure_type _type, building *
 figure *building::create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) {
     figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
 
-    f->set_destination(0);
-    f->immigrant_home_building_id = 0;
+    f->set_destination(nullptr);
 
     set_figure(slot, f->id); // warning: this overwrites any existing figure!
     f->init_roaming_from_building(figure_roam_direction);
@@ -637,6 +567,11 @@ void building::mark_plague(int days) {
     assert(is_main());
     disease_days = days;
     has_plague = true;
+}
+
+bool building::is_ajacent_tile(tile2i t) const {
+    grid_area area = map_grid_get_area(tile, size, 1);
+    return area.contains(t);
 }
 
 xstring building::cls_name() const {
@@ -811,31 +746,29 @@ void building::remove_figure_by_id(int id) {
     }
 }
 
-figure *building::get_figure(int i) {
+figure *building::get_figure(int i) const {
     return ::figure_get(get_figure_id(i));
 }
 
-bool building::has_figure(int i, int figure_id) {
+bool building::has_figure(int i, int figure_id) const {
     // seatrch through all the figures if index is -1
     if (i == -1) {
-        bool has_any = false;
+        assert(figure_id > 0);
         for (int i = 0; i < max_figures; i++) {
-            if (has_figure(i, figure_id))
-                has_any = true;
-        }
-        return has_any;
-    } else {
-        figure *f = this->get_figure(i);
-        if (f->state
-            && (f->home() == this || building_get(f->immigrant_home_building_id) == this)) { // check if figure belongs to this building...
-            if (figure_id < 0)                                       // only check if there is a figure
+            figure* f = this->get_figure(i);
+            if (f->id == figure_id) {
                 return true;
-            return (f->id == figure_id);
-        } else { // decouple if figure does not belong to this building - assume cache is incorrect
-            remove_figure(i);
-            return false;
+            }
         }
+        return false;
+    } 
+
+    figure *f = this->get_figure(i);
+    if (figure_id == -1) {
+        return f->id > 0;
     }
+
+    return (f->id == figure_id);
 }
 
 ///////////////
@@ -845,7 +778,7 @@ bool building_is_fort(int type) {
 }
 
 bool building_is_defense(e_building_type type) {
-    return building_type_any_of(type, BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER);
+    return building_type_any_of(type, { BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER });
 }
 
 bool building_is_farm(e_building_type type) {
@@ -854,7 +787,7 @@ bool building_is_farm(e_building_type type) {
 }
 
 bool building_is_floodplain_farm(building &b) {
-    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN)); // b->data.industry.labor_state >= 1 // b->labor_category == 255
+    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN));
 }
 
 bool building_is_workshop(int type) {
@@ -903,11 +836,11 @@ bool building_is_monument(e_building_type type) {
 }
 
 bool building_is_palace(e_building_type type) {
-    return building_type_any_of(type, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE);
+    return building_type_any_of(type, { BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE });
 }
 
 bool building_is_tax_collector(e_building_type type) {
-    return building_type_any_of(type, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
+    return building_type_any_of(type, { BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED });
 }
 
 bool building_is_governor_mansion(e_building_type type) {
@@ -926,7 +859,7 @@ bool building_is_shrine(e_building_type type) {
     return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
 }
 bool building_is_guild(e_building_type type) {
-    return building_type_any_of(type, BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD);
+    return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
 }
 bool building_is_statue(e_building_type type) {
     return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE);
@@ -1024,7 +957,7 @@ bool building_is_entertainment(e_building_type type) {
 }
 
 bool building_is_education(e_building_type type) {
-    return building_type_any_of(type, BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY);
+    return building_type_any_of(type, { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY });
 }
 
 bool building_is_military(e_building_type type) {
@@ -1032,7 +965,7 @@ bool building_is_military(e_building_type type) {
         return true;
     }
     
-    if (building_type_any_of(BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND)) {
+    if (building_type_any_of(type, { BUILDING_MILITARY_ACADEMY, BUILDING_RECRUITER, BUILDING_FORT_GROUND })) {
         return true;
     }
     
@@ -1104,17 +1037,26 @@ void building_impl::update_graphic() {
     base.minimap_anim = anim("minimap");
 }
 
+void building_impl::remove_dead_figures() {
+    for (int i = 0; i < base.max_figures; i++) {
+        figure* f = this->get_figure(i);
+        if (f->state != FIGURE_STATE_ALIVE) {
+            base.figure_ids[i] = 0;
+        }
+    }
+}
+
 void building_impl::update_day() {
     update_graphic();
+    remove_dead_figures();
 }
 
 figure *building_impl::get_figure_in_slot(int slot) {
     return figure_get(get_figure_id(slot));
 }
 
-
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (!base.anim.id) {
+    if (!base.anim.key) {
         int image_id = map_image_at(tile.grid_offset());
         building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
     } else {
@@ -1122,7 +1064,12 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     }
 
     if (base.has_plague) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PLAGUE_SKULL), point.x + 18, point.y - 32, color_mask);
+        int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = skull_img;
+        command.pixel = { point.x + 18, point.y - 32 };
+        command.mask = color_mask;
     }
 
     return false;
@@ -1137,28 +1084,29 @@ void building_impl::update_count() const {
 }
 
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
-    if (!base.anim.valid()) {
-        return;
-    }
-
     if (!can_play_animation()) {
         return;
     }
 
-    vec2i pos = pixel + base.anim.pos;
-    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos, mask);
+    draw_normal_anim(ctx, base.anim, pixel, tile, mask);
+}
+
+void building_impl::draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i pixel, tile2i tile, color mask) {
+    if (!ranim.valid()) {
+        return;
+    }
+
+    vec2i pos = pixel + ranim.pos;
+    auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+    command.image_id = ranim.start() + ranim.current_frame();
+    command.pixel = pos;
+    command.mask = mask;
+    command.flags = ranim.flags;
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
     assert(base.output_resource_first_id == RESOURCE_NONE);
 }
-
-struct bproperty {
-    xstring domain;
-    xstring name;
-
-    std::function<bvariant(building &, const xstring &)> handler;
-};
 
 const bproperty bproperties[] = {
     { tags().stored, xstring("*"),
@@ -1440,6 +1388,10 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     }
 
     return false;
+}
+
+bool building_impl::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
+    return (map_has_figure_at(tile) == false);
 }
 
 int building_impl::static_params::get_cost() const {

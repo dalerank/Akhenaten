@@ -27,6 +27,11 @@ namespace game_features {
             set(value);
             return *this;
         }
+
+        inline game_feature &operator=(const xstring& value) {
+            set(value.c_str());
+            return *this;
+        }
     };
 
     extern game_feature gameplay_fix_immigration;
@@ -100,7 +105,7 @@ namespace game_features {
     extern game_feature gameui_hide_new_game_top_menu;
     extern game_feature gameplay_save_year_kingdome_rating;
     extern game_feature gameopt_last_player;
-    extern game_feature gameopt_language_dir;
+    extern game_feature gameopt_language;
     extern game_feature gameopt_last_save_filename;
     extern game_feature gameopt_last_game_version;
     extern game_feature gameplay_change_hasanimals;

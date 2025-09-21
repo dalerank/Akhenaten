@@ -22,37 +22,34 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 };
 
 
-static vec2i CART_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+std::array<vec2i, 8> g_cart_offsets; //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets) {
     int i = 0;
-    g_config_arch.r_array("cart_offsets", [&i] (archive arch) {
-        int x = arch.r_int("x");
-        int y = arch.r_int("y");
-        CART_OFFSETS[i] = vec2i{x, y};
-        i++;
-    });
+    g_config_arch.r("cart_offsets", g_cart_offsets);
 }
 
-static vec2i SLED_OFFSETS[] = {{17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12}};
+std::array<vec2i, 8> g_sled_offsets; // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets) {
     int i = 0;
-    g_config_arch.r_array("sled_offsets", [&i] (archive arch) {
-        int x = arch.r_int("x");
-        int y = arch.r_int("y");
-        SLED_OFFSETS[i] = vec2i{x, y};
-        i++;
-    });
+    g_config_arch.r("sled_offsets", g_sled_offsets);
 }
 
-static image_desc g_cart_images[RESOURCES_MAX] = {{}};
+struct cart_image_desc : public image_desc {
+    e_resource res;
+};
+ANK_CONFIG_STRUCT(cart_image_desc, res, pack, id, offset)
+
+template<>
+struct std::hash<cart_image_desc> {
+    [[nodiscard]] size_t operator()(const cart_image_desc &desc) const noexcept {
+        return desc.res;
+    }
+};
+
+std::array<cart_image_desc, RESOURCES_MAX> g_cart_images;
+
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
-    g_config_arch.r_array("cart_images", [] (archive arch) {
-        e_resource res = arch.r_type<e_resource>("resource");
-        int pack = arch.r_int("pack");
-        int id = arch.r_int("id");
-        int offset = arch.r_int("offset");
-        g_cart_images[res] = {pack, id, offset};
-    });
+    g_config_arch.r_stable_array("cart_images", g_cart_images);
 }
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {
@@ -97,7 +94,7 @@ vec2i figure::tile_pixel_coords() {
 }
 
 void figure::image_set_animation(const animation_t &anim) {
-    if (anim.iid > 0) {
+    if (anim.id > 0) {
         this->anim.setup(anim);
         return;
     }
@@ -123,13 +120,13 @@ void figure::figure_image_update(bool refresh_only) {
     case FIGURE_ARROW:
     case FIGURE_HUNTER_ARROW: {
         int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-        sprite_image_id = anim.base + 16 + dir;
+        main_image_id = anim.base + 16 + dir;
         break;
     }
 
     default:
-        dcast()->main_update_image();
-        dcast()->cart_update_image();
+        dcast()->main_image_update();
+        dcast()->cart_image_update();
     }
 }
 
@@ -173,8 +170,10 @@ image_desc resource2cartanim(e_resource resource_id) {
     return g_cart_images[RESOURCE_NONE];
 }
 
-void figure::cart_update_image() {
+void figure::cart_image_update() {
     // determine cart sprite
+    cart_image_id = 0;
+
     switch (resource_id) {
     case RESOURCE_STONE:
     case RESOURCE_LIMESTONE:
@@ -214,21 +213,7 @@ void figure::cart_update_image() {
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;
         }
     }
-    //} else if (resource_amount_full == 100) {
-    //    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 8 * resource_id - 8
-    //                    + resource_image_offset(resource_id, RESOURCE_IMAGE_FOOD_CART);
-    //} else {
-    //    cart_image_id = image_id_from_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * resource_id;
-    //    cart_image_id += resource_image_offset(resource_id, RESOURCE_IMAGE_CART);
-    //}
-
     int dir = figure_image_normalize_direction(direction < 8 ? direction : previous_tile_direction);
-
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
-    } else {
-        //sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * anim.frame;
-    }
 
     switch (resource_id) {
     case RESOURCE_GRANITE:
@@ -287,9 +272,9 @@ int figure::figure_image_corpse_offset() {
         formation* m = formation_get(formation_id);
         if (m->enemy_type == ENEMY_0_BARBARIAN)
             type_offset = 441;
-        else if (m->enemy_type == ENEMY_1_NUMIDIAN)
+        else if (m->enemy_type == ENEMY_1_ASSYRIAN)
             type_offset = 641;
-        else if (m->enemy_type == ENEMY_4_GOTH)
+        else if (m->enemy_type == ENEMY_4_HITTITE)
             type_offset = 593;
         break;
     }
@@ -297,11 +282,11 @@ int figure::figure_image_corpse_offset() {
 }
 
 void figure::figure_image_set_sled_offset(int direction) {
-    cart_offset = SLED_OFFSETS[direction];
+    cart_offset = g_sled_offsets[direction];
 }
 
 void figure::figure_image_set_cart_offset(int direction) {
-    cart_offset = CART_OFFSETS[direction];
+    cart_offset = g_cart_offsets[direction];
 }
 
 int figure::figure_image_missile_launcher_offset() {

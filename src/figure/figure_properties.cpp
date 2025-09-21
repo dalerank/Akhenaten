@@ -32,7 +32,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("wait_ticks", f->wait_ticks);
         game_debug_show_property("terrain_type", get_terrain_type("", f->terrain_type));
         game_debug_show_property("roam_length", f->roam_length);
-        game_debug_show_property("sprite_image_id", f->sprite_image_id);
+        game_debug_show_property("main_image_id", f->main_image_id);
         game_debug_show_property("cart_image_id", f->cart_image_id);
         game_debug_show_property("use_cross_country", f->use_cross_country);
         game_debug_show_property("state", f->state);
@@ -75,7 +75,6 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("movement_ticks_watchdog", f->movement_ticks_watchdog);
         game_debug_show_property("leading_figure_id", f->leading_figure_id);
         game_debug_show_property("cart_offset", f->cart_offset);
-        game_debug_show_property("empire_city_id", f->empire_city_id);
         game_debug_show_property("trader_amount_bought", f->trader_amount_bought);
         game_debug_show_property("name", f->name);
         game_debug_show_property("terrain_usage", f->terrain_usage);
@@ -90,15 +89,13 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("phrase_id", f->phrase.id);
         game_debug_show_property("phrase_key", f->phrase_key);
         game_debug_show_property("phrase_sequence_city", f->phrase_sequence_city);
-        game_debug_show_property("trader_id", f->trader_id);
-        game_debug_show_property("cached_pos", f->cached_pos);
+        game_debug_show_property("main_cached_pos", f->main_cached_pos);
+        game_debug_show_property("cart_cached_pos", f->cart_cached_pos);
 
-        if (f->type == FIGURE_IMMIGRANT) {
-            game_debug_show_property("immigrant_home_building_id", f->immigrant_home_building_id);
-        }
+        f->dcast()->debug_show_properties();
 
         if (f->type == FIGURE_HERBALIST) {
-            game_debug_show_property("see_low_health", f->data.herbalist.see_low_health);
+            //game_debug_show_property("see_low_health", f->data.herbalist.see_low_health);
         }
 
         ImGui::TreePop();
@@ -114,7 +111,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
-        game_debug_show_property("id", f->anim.id, true);
+        game_debug_show_property("key", f->anim.key, true);
         game_debug_show_property("base", f->anim.base);
         game_debug_show_property("offset", f->anim.offset);
         game_debug_show_property("hashtime", f->anim.hashtime);

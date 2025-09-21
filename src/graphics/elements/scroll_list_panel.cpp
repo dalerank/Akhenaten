@@ -230,7 +230,7 @@ void scroll_list_panel::draw() {
             if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);
             }
-            text_draw(text, text_pos_x, text_pos_y, font, 0);
+            text_draw(text.c_str(), text_pos_x, text_pos_y, font, 0);
         }
     }
 

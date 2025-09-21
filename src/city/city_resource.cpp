@@ -168,7 +168,7 @@ void city_resources_t::calculate_stocks() {
                 storages[r.type] += granary->is_gettable(r.type) ? granary->amount(r.type) : 0;
             }
         }
-    }, BUILDING_GRANARY, BUILDING_STORAGE_YARD);
+    }, { BUILDING_GRANARY, BUILDING_STORAGE_YARD });
 }
 
 void city_resource_cycle_trade_status(e_resource resource) {

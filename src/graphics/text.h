@@ -22,7 +22,9 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width);
 
 int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color color, float scale = 1.f);
 int text_draw(const uint8_t* str, int x, int y, e_font font, color color);
+inline int text_draw(pcstr str, int x, int y, e_font font, color color) { return text_draw((const uint8_t*)str, x, y, font, color); }
 void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font font, color color);
+inline void text_draw_centered(pcstr str, int x, int y, int box_width, e_font font, color color) { text_draw_centered((const uint8_t*)str, x, y, box_width, font, color); }
 int text_draw_left(uint8_t* str, int x, int y, e_font font, color color);
 
 int text_draw_number(int value, char prefix, const char* postfix, int x_offset, int y_offset, e_font font);

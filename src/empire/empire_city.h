@@ -4,7 +4,9 @@
 #include "empire/type.h"
 #include "game/resource.h"
 #include "empire/trade_route.h"
+#include "figure/figure_type.h"
 #include "core/tokenum.h"
+#include "core/archive.h"
 
 struct empire_city {
     enum {
@@ -13,7 +15,7 @@ struct empire_city {
 
     int in_use; // this can be 2, so it's an int!
     e_empire_city type;
-    int name_id;
+    uint8_t name_id;
     int route_id;
     bool is_open;
     bool buys_resource[RESOURCES_MAX];
@@ -40,6 +42,27 @@ struct empire_city {
     void set_foreign() {
         type = EMPIRE_CITY_EGYPTIAN;
     }
+};
+ANK_CONFIG_STRUCT(empire_city, is_sea_trade)
+
+struct empire_city_handle {
+    uint8_t handle = 0;
+
+    empire_city& operator*();
+    empire_city& ref();
+    const empire_city& ref() const;
+
+    const trade_route& get_route() const;
+    trade_route& get_route();
+    bool valid() const { return handle > 0; }
+    bool buys_resource(e_resource r) const;
+    bool sells_resource(e_resource r) const;
+
+    void remove_trader(figure_id fid);
+    xstring name() const;
+
+    [[nodiscard]]
+    bool operator!() const { return !valid(); }
 };
 
 extern const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;

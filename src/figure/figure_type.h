@@ -5,18 +5,23 @@
 
 enum e_enemy_type {
     ENEMY_0_BARBARIAN = 0,
-    ENEMY_1_NUMIDIAN = 1,
-    ENEMY_2_GAUL = 2,
-    ENEMY_3_CELT = 3,
-    ENEMY_4_GOTH = 4,
-    ENEMY_5_PERGAMUM = 5,
-    ENEMY_6_SELEUCID = 6,
-    ENEMY_7_ETRUSCAN = 7,
-    ENEMY_8_GREEK = 8,
-    ENEMY_9_EGYPTIAN = 9,
-    ENEMY_10_CARTHAGINIAN = 10,
-    ENEMY_11_CAESAR = 11
+    ENEMY_1_ASSYRIAN = 1,
+    ENEMY_2_CANAANITE = 2,
+    ENEMY_3_EGYPTIAN = 3,
+    ENEMY_4_HITTITE = 4,
+    ENEMY_5_HYKSOS = 5,
+    ENEMY_6_KUSHITE = 6,
+    ENEMY_7_LIBIAN = 7,
+    ENEMY_8_NUBIAN = 8,
+    ENEMY_9_PERSIAN = 9,
+    ENEMY_10_PHOENICIAN = 10,
+    ENEMY_11_ROMAN = 11,
+    ENEMY_12_SEAPEOPLE = 12,
+
+    ENEMY_COUNT
 };
+using e_enemy_type_tokens_t = token_holder<e_enemy_type, ENEMY_0_BARBARIAN, ENEMY_COUNT>;
+extern const e_enemy_type_tokens_t e_enemy_type_tokens;
 
 enum e_figure_state {
     FIGURE_STATE_NONE = 0,
@@ -32,11 +37,12 @@ enum e_terrain_usage {
     TERRAIN_USAGE_PREFER_ROADS = 3,
     TERRAIN_USAGE_WALLS = 4,
     TERRAIN_USAGE_ANIMAL = 5,
+    TERRAIN_USAGE_AMPHIBIA = 6,
 
-    TERRAIN_USAGE_MAX = 6
+    TERRAIN_USAGE_MAX
 };
-
-extern const token_holder< e_terrain_usage, TERRAIN_USAGE_ANY, TERRAIN_USAGE_MAX> e_terrain_usage_tokens;
+using e_terrain_usage_tokens_t = token_holder<e_terrain_usage, TERRAIN_USAGE_ANY, TERRAIN_USAGE_MAX>;
+extern const e_terrain_usage_tokens_t e_terrain_usage_tokens;
 
 enum e_figure_type {
     FIGURE_NONE = 0,
@@ -93,10 +99,10 @@ enum e_figure_type {
     FIGURE_ENEMY51_SPEAR = 51,
     FIGURE_ENEMY52_MOUNTED_ARCHER = 52,
     FIGURE_ENEMY53_AXE = 53,
-    FIGURE_ENEMY54_GLADIATOR = 54,
-    FIGURE_ENEMY_CAESAR_JAVELIN = 55,
-    FIGURE_ENEMY_CAESAR_MOUNTED = 56,
-    FIGURE_ENEMY_CAESAR_LEGIONARY = 57,
+    FIGURE_ENEMY54_REVOLTMAN = 54,
+    FIGURE_ENEMY_KINGDOME_JAVELIN = 55,
+    FIGURE_ENEMY_KINGDOME_MOUNTED = 56,
+    FIGURE_ENEMY_KINGDOME_INFANTRY = 57,
     FIGURE_NATIVE_TRADER = 58,
     FIGURE_ARROW = 59,
     FIGURE_JAVELIN = 60,
@@ -151,9 +157,13 @@ enum e_figure_type {
     FIGURE_MUMMY = 109,
     FIGURE_PHARAOH = 110,
     FIGURE_GOVERNOR = 111,
+    FIGURE_DRUNKARD = 112,
 
     FIGURE_MAX,
 };
 
 using figure_id = uint16_t;
-extern const token_holder<e_figure_type, FIGURE_NONE, FIGURE_MAX> e_figure_type_tokens;
+constexpr figure_id INVALID_FIGURE_ID = 0;
+
+using e_figure_type_tokens_t = token_holder<e_figure_type, FIGURE_NONE, FIGURE_MAX>;
+extern const e_figure_type_tokens_t e_figure_type_tokens;

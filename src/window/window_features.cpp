@@ -20,31 +20,17 @@
 #include "game/game_config.h"
 #include "content/dir.h"
 #include "io/gamefiles/lang.h"
-#include "translation/translation.h"
 #include "window/hotkey_config.h"
 #include "window/plain_message_dialog.h"
 #include "scenario/scenario.h"
 #include "window/select_list.h"
 #include "empire/empire_city.h"
+#include "js/js.h"
 
 #include <string.h>
 #include <numeric>
 
 ui::window_features g_features_window;
-
-static void button_language_select(int param1, int param2);
-static int config_change_string_basic(int key);
-static int config_change_string_language(int key);
-
-static generic_button language_button = {120, 50, 200, 24, button_language_select, button_none, 0, TR_CONFIG_LANGUAGE_LABEL};
-
-static void set_language(int index) {
-    auto& data = g_features_window;
-    const char* dir = (index == 0 ? "" : data.language_options_utf8[index]);
-    game_features::gameopt_language_dir = dir;
-
-    data.selected_language_option = index;
-}
 
 void ui::window_features::cancel_values() {
     for (auto &p : pages) {
@@ -52,11 +38,6 @@ void ui::window_features::cancel_values() {
             feature.new_value = feature.original_value;
         }
     }
-}
-
-static int config_string_changed(int key) {
-    auto& data = g_features_window;
-    return data.config_string_values[key].original_value != data.config_string_values[key].new_value;
 }
 
 int ui::window_features::config_change_basic(feature_t &alias, const xstring fname) {
@@ -73,24 +54,19 @@ int ui::window_features::config_change_basic(feature_t &alias, const xstring fna
     return 1;
 }
 
-static int config_change_string_basic(int key) {
-    auto& data = g_features_window;
-    data.config_string_values[key].original_value = data.config_string_values[key].new_value;
+int ui::window_features::config_change_string_language(const game_language &lang) {
+    game_features::gameopt_language = lang.lang;
 
-    return 1;
-}
+    bool ok = lang_reload_localized_files()
+                && lang_reload_localized_tables();
 
-static int config_change_string_language(int key) {
-    auto& data = g_features_window;
-    //game_features::gameopt_language_dir = , data.config_string_values[key].new_value);
-    if (!game_reload_language()) {
+    if (!ok) {
         // Notify user that language dir is invalid and revert to previously selected
-        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE);
-        //g_ankh_config.set(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
-        game_reload_language();
+        game_features::gameopt_language = "";
+        window_plain_message_dialog_show("#TR_INVALID_LANGUAGE_TITLE", "#TR_INVALID_LANGUAGE_MESSAGE", SOURCE_LOCATION);
         return 0;
     }
-    //data.config_string_values[key].original_value = data.config_string_values[key].new_value;
+
     return 1;
 }
 
@@ -115,22 +91,12 @@ bool ui::window_features::apply_changed_configs() {
     return true;
 }
 
-static void button_language_select(int param1, int param2) {
-    auto& data = g_features_window;
-    window_select_list_show_text(screen_dialog_offset_x() + language_button.x + language_button.width - 10,
-                                 screen_dialog_offset_y() + 45,
-                                 make_span(data.language_options.data(), data.language_options.size()),
-                                 set_language);
-}
-
 void ui::window_features::button_reset_defaults() {
     for (auto &p : pages) {
         for (auto &feature: p.features) {
             feature.new_value = feature.original_value;
         }
     }
-
-    set_language(0);
 }
 
 void ui::window_features::button_close(bool save) {
@@ -297,34 +263,45 @@ void ui::window_features::init(std::function<void()> cb) {
             feature.original_value = value;
             feature.new_value = value;
             feature.change_action = [this, r] () -> int { this->toggle_resource(r.type); return 1; };
-            feature.toggle_action = [&feature] (int p1, int p2) { feature.new_value = (feature.new_value > 0) ? 0 : 1;  };
+            feature.toggle_action = [&feature] (int p1, int p2) { 
+                feature.new_value = (feature.new_value > 0) ? 0 : 1;
+            };
 
             bstring64 text; text.printf("City allow %s", ui::resource_name(r.type));
             feature.text = text;
         }
     }
 
-    config_string_values[0].change_action = config_change_string_language;
+    {
+        auto &pageref = pages.emplace_back();
+        pages.back().title = "#TR_CONFIG_HEADER_LANGUAGES";
 
-    language_options.clear();
-    language_options_utf8.clear();
-
-    language_options.push_back( (pcstr)translation_for(TR_CONFIG_LANGUAGE_DEFAULT)) ;
-    language_options_utf8.push_back("");
-
-    const dir_listing* subdirs = vfs::dir_find_all_subdirectories(nullptr);
-    for (int i = 0; i < subdirs->num_files; i++) {
-        if (!language_options.full() && lang_dir_is_valid(subdirs->files[i])) {
-            language_options_utf8.push_back(subdirs->files[i]);
-
-            bstring256 buffer;
-            encoding_from_utf8(subdirs->files[i], (uint8_t*)buffer.data(), ui::window_features::CONFIG_STRING_VALUE_MAX);
-            language_options.push_back( buffer.c_str() );
-            if (game_features::gameopt_language_dir.to_string() == subdirs->files[i]) {
-                selected_language_option = i;
+        auto& game_languages = get_available_languages();
+        for (int i = 0; i < game_languages.size(); i++) {
+            const auto &config = game_languages[i];
+            if (i != 0 && (i % FEATURES_PER_PAGE) == 0) {
+                pages.emplace_back();
+                pages.back().title = "#TR_CONFIG_HEADER_LANGUAGES";
             }
+
+            auto &pageref = pages.back();
+            auto &feature = pageref.features.emplace_back();
+
+            feature.get_value = [lang = config, this] () -> int { 
+                const xstring curlang = game_features::gameopt_language.to_string();
+                return (curlang == lang.lang || (curlang.empty() && lang.lang == "en"));
+            };
+            const bool value = feature.get_value();
+            feature.original_value = value;
+            feature.new_value = value;
+            feature.volatile_value = true;
+            feature.change_action = [] () -> int { return 0; };
+            feature.toggle_action = [lpack = config, this, &feature] (int p1, int p2) {
+                this->config_change_string_language(lpack);
+            };
+            feature.text = config.caption;
         }
-    }
+    }  
 
     ui["btn_defaults"].onclick([this] { button_reset_defaults(); });
     ui["btn_hotkeys"].onclick([this] { window_hotkey_config_show([] {}); });
@@ -337,9 +314,6 @@ void ui::window_features::init(std::function<void()> cb) {
 void ui::window_features::ui_draw_foreground(UiFlags flags) {
     ui["title"] = pages[page].title;
 
-    //text_draw(translation_for(TR_CONFIG_LANGUAGE_LABEL), 20, 56, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    //text_draw_centered((uint8_t*)language_options[selected_language_option].c_str(), language_button.x, language_button.y + 6, language_button.width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-
     auto btn = [&] (int i) -> ui::element& { bstring32 id; id.printf("bfeature%d", i); return ui[id]; };
     auto lb = [&] (int i) -> ui::element& { bstring32 id; id.printf("tfeature%d", i); return ui[id]; };
     for (int i = 0; i < FEATURES_PER_PAGE; ++i) {
@@ -351,7 +325,11 @@ void ui::window_features::ui_draw_foreground(UiFlags flags) {
         auto &feature = pages[page].features[i];
         
         auto &b = btn(i);
-        b = feature.new_value ? "x" : "";
+        if (feature.volatile_value) {
+            b = feature.get_value() ? "x" : "";
+        } else {
+            b = feature.new_value ? "x" : "";
+        }
         b.enabled = true;
 
         b.onclick(feature.toggle_action);
@@ -366,14 +344,6 @@ void ui::window_features::ui_draw_foreground(UiFlags flags) {
     ui.draw();
 
     ui.end_widget();
-
-    //for (int i = 0; i < std::size(bottom_buttons); i++) {
-    //    text_draw_centered(translation_for(bottom_buttons[i].parameter2), bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    //}
-    //
-    //for (int i = 0; i < std::size(page_buttons); i++) {
-    //    text_draw_centered(translation_for(page_buttons[i].parameter2), page_buttons[i].x, page_buttons[i].y + 6, page_buttons[i].width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    //}
 }
 
 void ui::window_features::show(std::function<void()> close_callback) {

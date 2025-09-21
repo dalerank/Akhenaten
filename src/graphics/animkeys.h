@@ -13,6 +13,7 @@ struct id_anim_t {
     static const xstring work;
     static const xstring work_ground;
     static const xstring work_wall;
+    static const xstring womit;
     static const xstring none;
     static const xstring fire;
     static const xstring poof;
@@ -38,6 +39,7 @@ struct id_anim_t {
     static const xstring wait_e;
     static const xstring eating;
     static const xstring idle;
+    static const xstring swim_idle;
     static const xstring booth;
     static const xstring stand_sn_s;
     static const xstring stand_sn_n;
@@ -58,6 +60,7 @@ struct id_anim_t {
     static const xstring clay;
     static const xstring papyrus;
     static const xstring straw;
+    static const xstring beer;
     static const xstring copper;
     static const xstring reeds;
     static const xstring farm_house;

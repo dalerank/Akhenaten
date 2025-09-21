@@ -28,11 +28,10 @@
 #include "content/content.h"
 #include "mission.h"
 #include "figure/formation.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
-#include "translation/translation.h"
 #include "window/window_city.h"
 #include "window/editor/window_editor.h"
 #include "window/logo_screen.h"
@@ -73,6 +72,14 @@ declare_console_command_p(nextyear) {
 }
 
 uint16_t &game_speed() { return game.game_speed; }
+
+const std::vector<lang_pack> &get_def_lang_packs() {
+    static std::vector<lang_pack> lang_packs = {
+        {"", "eng", "Pharaoh_Text", "Pharaoh_MM"},
+    };
+
+    return lang_packs;
+}
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -286,30 +293,28 @@ static int is_unpatched(void) {
     return difficulty_option == help_menu || delete_game == option_menu;
 }
 
-static encoding_type update_encoding(void) {
+static void update_encoding() {
     int language = locale_determine_language();
-    encoding_type encoding = encoding_determine(language);
-    logs::info("Detected encoding: %i", encoding);
-    font_set_encoding(encoding);
-    translation_load(language);
-    return encoding;
 }
 
 static bool reload_language(int is_editor, int reload_images) {
-    if (!lang_load(is_editor)) {
+    const xstring lang_dir = game_features::gameopt_language.to_string();
+    std::vector<lang_pack> lang_packs;
+    if (lang_dir.empty()) {
+        lang_packs = get_def_lang_packs();
+    } else {
+        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text", "Pharaoh_MM");
+    }
+
+    if (!lang_load(is_editor, lang_packs)) {
         if (is_editor)
-            logs::error("'c3_map.eng' or 'c3_map_mm.eng' files not found or too large.");
+            logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
         else
-            logs::error("'c3.eng' or 'c3_mm.eng' files not found or too large.");
-        return false;
-    }
-    encoding_type encoding = update_encoding();
-
-    if (!image_set_font_pak(encoding)) {
-        logs::error("unable to load font graphics");
+            logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
         return false;
     }
 
+    update_encoding();
     return true;
 }
 
@@ -364,7 +369,7 @@ static int get_elapsed_ticks() {
 bool game_t::check_valid() {
     vfs::content_cache_paths();
 
-    if (!lang_load(0)) {
+    if (!lang_load(false, get_def_lang_packs())) {
         return false;
     }
 
@@ -384,16 +389,6 @@ bool game_t::check_valid() {
 }
 
 bool game_init(game_opts opts) {
-    int missing_fonts = 0;
-
-    if (!image_set_font_pak(encoding_get())) {
-        logs::error("unable to load font graphics");
-        if (encoding_get() == ENCODING_KOREAN)
-            missing_fonts = 1;
-        else
-            return false;
-    }
-
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
         return false;
@@ -425,7 +420,7 @@ bool game_init(game_opts opts) {
     }
 
     game_state_init();
-    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
+    window_logo_show((is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
 
     return true;
 }

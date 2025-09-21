@@ -11,6 +11,7 @@
 #include "window/plain_message_dialog.h"
 #include "window/autoconfig_window.h"
 #include "game/game.h"
+#include "core/core.h"
 
 #include <cmath>
 
@@ -66,9 +67,9 @@ void window_logo_show(int show_patch_message) {
     window_show(&window);
 
     if (show_patch_message == MESSAGE_MISSING_PATCH) {
-        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE);
+        window_plain_message_dialog_show("#TR_NO_PATCH_TITLE", "#TR_NO_PATCH_MESSAGE", SOURCE_LOCATION);
     } else if (show_patch_message == MESSAGE_MISSING_FONTS) {
-        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE);
+        window_plain_message_dialog_show("#TR_MISSING_FONTS_TITLE", "#TR_MISSING_FONTS_MESSAGE", SOURCE_LOCATION);
     }
 
     if (!!game_features::gameui_show_intro_video) {

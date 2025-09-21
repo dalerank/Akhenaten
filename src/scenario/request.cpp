@@ -9,7 +9,7 @@
 #include "city/city.h"
 #include "core/random.h"
 #include "core/svector.h"
-#include "events.h"
+#include "scenario_event_manager.h"
 #include "game/resource.h"
 #include "game/tutorial.h"
 #include "scenario/scenario.h"

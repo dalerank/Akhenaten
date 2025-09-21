@@ -20,7 +20,7 @@
 #include "input/scroll.h"
 #include "io/gamefiles/lang.h"
 #include "scenario/scenario.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "scenario/request.h"
 #include "window/advisors.h"
 #include "window/window_city.h"

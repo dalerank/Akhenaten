@@ -30,6 +30,8 @@ public:
     [[nodiscard]] const char* get_data_directory() const;
     void set_data_directory(const char *value);
 
+    [[nodiscard]] const char* get_extdata_directory() const;
+
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
 
@@ -41,6 +43,7 @@ public:
 
 private:
     vfs::path data_directory_;
+    vfs::path extdata_directory_;
     vfs::path scripts_directory_;
 
     bstring64 renderer_;

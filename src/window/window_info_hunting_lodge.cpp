@@ -7,7 +7,7 @@ struct info_window_hunting_lodge : public building_info_window_t<info_window_hun
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_HUNTING_LODGE);
+        return (b->type == BUILDING_HUNTING_LODGE);
     }
 };
 
@@ -36,5 +36,5 @@ void info_window_hunting_lodge::init(object_info &c) {
     int worker_desc = approximate_value(b->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6));
     ui["workers_desc"] = ui::str(c.group_id, worker_desc);
 
-    ui["resource_amount"] = bstring128().printf("%s %s", ui::str(c.group_id, 13), b->stored_amount());
+    ui["resource_amount"] = bstring128().printf("%s %d", ui::str(c.group_id, 13), b->stored_amount());
 }

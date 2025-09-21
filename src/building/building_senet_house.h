@@ -5,13 +5,17 @@
 class building_senet_house : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_SENET_HOUSE, building_senet_house, building_entertainment)
+    building_senet_house* dcast_senet_house() { return this; }
 
     virtual void on_place_checks() override;
     virtual void on_destroy() override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_SENET_HOUSE; }
-    virtual int animation_speed(int speed) const override { return 3; }
     //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+
+    virtual bool add_resource(e_resource resource, int amount) override;
+    virtual void update_graphic() override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
 
 

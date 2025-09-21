@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/xstring.h"
-#include "core/string.h"
+#include "content/dir.h"
 
 enum e_message_arhtype { 
     TYPE_MANUAL = 0,
@@ -57,19 +57,35 @@ struct lang_message {
     struct lang_message_string content;
 };
 
+struct lang_pack {
+    vfs::path dir;
+    vfs::path langfile;
+    vfs::path mmfile;
+    xstring ext;
+
+    lang_pack(pcstr dir, pcstr ext, pcstr lang = "Pharaoh_Text", pcstr mm = "Pharaoh_MM") {
+        this->dir = dir;
+        this->ext = ext;
+        pcstr pdir = dir && *dir ? dir : "";
+        pcstr plim = dir && *dir ? "/" : ""; 
+        langfile.printf("%s%s%s.%s", pdir, plim, lang, ext);
+        mmfile.printf("%s%s%s.%s", pdir, plim, mm, ext);
+    }
+};
+
 /**
  * Checks whether the directory contains language files
  * @param dir Directory to check
  * @return boolean true if it contains language files, false if not
  */
-bool lang_dir_is_valid(const char* dir);
+bool lang_dir_is_valid(lang_pack lpack);
 
 /**
  * Loads the language files
  * @param is_editor Whether to load the editor language files or the regular ones
  * @return boolean true on success, false on failure
  */
-bool lang_load(int is_editor);
+bool lang_load(bool is_editor, const std::vector<lang_pack>& lang_packs);
 
 /**
  * Gets a localized string

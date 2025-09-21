@@ -82,7 +82,11 @@ bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     if (anim_wharf.valid()) {
         int img_id = anim_wharf.start() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
         const image_t *img = image_get(img_id);
-        ImageDraw::img_generic(ctx, img_id, point + anim_wharf.pos, color_mask, 1.f, ImgFlag_InternalOffset);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = img_id;
+        command.pixel = point + anim_wharf.pos;
+        command.mask = color_mask;
+        command.flags = ImgFlag_InternalOffset;
     }
 
     return true;
@@ -92,4 +96,11 @@ void building_wharf::set_water_access_tiles(const water_access_tiles &tiles) {
     auto &d = runtime_data();
     d.dock_tiles[0] = tiles.point_a.grid_offset();
     d.dock_tiles[1] = tiles.point_b.grid_offset();
+}
+
+water_access_tiles building_wharf::get_water_access_tiles() const {
+    auto &d = runtime_data();
+    return water_access_tiles {
+                tile2i{ d.dock_tiles[0] }, tile2i{ d.dock_tiles[1] }
+           };
 }

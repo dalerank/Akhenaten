@@ -1,12 +1,11 @@
 #pragma once 
 
-#include <array>
-#include <vector>
 #include "content/imagepak.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
+#include "core/archive.h"
 
 struct imagepak_handle {
-    bstring128 name;
+    xstring name;
     int id = -1;
     int index = -1;
     uint32_t entries_num = 0;
@@ -15,9 +14,16 @@ struct imagepak_handle {
     bool delayed = true;
     imagepak *handle = nullptr;
 };
+ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
+
+template<>
+struct std::hash<imagepak_handle> {
+    [[nodiscard]] size_t operator()(const imagepak_handle &h) const noexcept {
+        return h.id;
+    }
+};
 
 struct imagepak_holder_t {
-    bool fonts_enabled = false;
     bool fonts_loaded = false;
     bool allow_updata_on_load = false;
     bool common_inited = false;

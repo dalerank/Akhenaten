@@ -7,10 +7,16 @@ public:
 
     virtual figure_fishing_point *dcast_fishing_point() override { return this; }
 
+    struct runtime_data_t {
+        short offset;
+        short max_step;
+        short current_step;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void figure_action() override;
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override;
-    virtual void main_update_image() override;
+    virtual void main_image_update() override;
     static figure *create(tile2i tile);
 };
 

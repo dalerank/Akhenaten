@@ -5,50 +5,101 @@
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
-#include "translation/translation.h"
+#include "js/js.h"
+#include "core/log.h"
+#include "game/game_config.h"
 
-#include <map>
+#include <unordered_set>
 
-std::map<xstring, textid> g_localization;
+struct loc_textid {
+    xstring key;
+    uint16_t group;
+    uint16_t id;
+    xstring text;
+
+    bool operator==(const loc_textid& other) const noexcept {
+        return key == other.key;
+    }
+
+    bool operator!=(const loc_textid& other) const noexcept {
+        return key != other.key;
+    }
+
+    bool operator<(const loc_textid& other) const noexcept {
+        return key < other.key;
+    }
+};
+ANK_CONFIG_STRUCT(loc_textid, key, group, id, text)
+
+template<>
+struct std::hash<loc_textid> {
+    std::size_t operator()(const loc_textid& k) const noexcept {
+        return (size_t)k.key._get();
+    }
+};
+
+std::unordered_set<loc_textid> g_localization;
+game_languages g_game_languages;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
+    lang_reload_localized_tables();
 
-    g_config_arch.r_array("localization", [] (archive arch) {
-        xstring key = arch.r_string("key");
-        uint16_t group = arch.r_int("group");
-        uint16_t id = arch.r_int("id");
+    g_game_languages.clear();
+    g_config_arch.r("game_languages", g_game_languages);
+}
 
-        g_localization.insert({key, {group, id}});
-    });
+bool lang_reload_localized_files() {
+    const auto current_lang = lang_get_current_language();
+    const xstring localization_table = current_lang.table;
+    vfs::path lang_file(":", localization_table.c_str(), ".js");
+    const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
+    if (!lang_file_loaded) {
+        logs::error("Failed to load localization file: %s", lang_file.c_str());
+        return false;
+    }
+
+    return true;
+}
+
+bool lang_reload_localized_tables() {
+    const auto current_lang = lang_get_current_language();
+    const xstring localization_table = current_lang.table;
+    if (localization_table.empty()) {
+        return false;
+    }
+
+    g_localization.clear();
+    g_config_arch.r(localization_table.c_str(), g_localization);
+
+    // restore the default localization (english), for values without translates
+    g_config_arch.r("localization_en", g_localization);
+
+    return true;
 }
 
 textid loc_text_from_key(pcstr key) {
-    auto it = g_localization.find(key);
-    return (it != g_localization.end()) ? it->second : textid{0, 0};
+    auto it = g_localization.find({ key });
+    return (it != g_localization.end()) ? textid{it->group, it->id} : textid{ 0, 0 };
 }
 
-const token_holder<e_translate_key, TR_NO_PATCH_TITLE, TRANSLATION_MAX_KEY> e_translation_tokens;
+const game_languages& get_available_languages() {
+    return g_game_languages;
+}
+
 pcstr lang_text_from_key(pcstr key) {
     if (!key) {
         return "";
     }
 
-    auto it = g_localization.find(key);
+    auto it = g_localization.find({ key });
     if (it != g_localization.end()) {
-        pcstr str = (pcstr)lang_get_string(it->second.group, it->second.id);
-        return str;
-    }
-
-    if (strncmp(key, "#TR_", 4) == 0) {
-        const auto &values = e_translation_tokens.values;
-        auto rIt = std::find_if(values.begin(), values.end(), [key] (auto &p) { 
-            return p.name && strcmp(p.name, key+1) == 0; // remove the # prefix
-        });
-        if (rIt != values.end()) {
-            pcstr str = (pcstr)translation_for(rIt->id);
-            return str;
+        if (!it->text.empty()) {
+            return it->text.c_str();
         }
+
+        pcstr str = (pcstr)lang_get_string(it->group, it->id);
+        return str;
     }
 
     return key;
@@ -66,6 +117,20 @@ int lang_text_get_width(const char* str, e_font font) {
 int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font, int box_width) {
     pcstr str = (pcstr)lang_get_string(group, number);
     return lang_text_draw(str, vec2i{x_offset, y_offset}, font, box_width);
+}
+
+game_language lang_get_current_language() {
+    const xstring current_lang = game_features::gameopt_language.to_string();
+    auto find_lang = std::find_if(g_game_languages.begin(), g_game_languages.end(),
+        [current_lang] (const game_language &lang) {
+        return lang.lang == current_lang;
+    });
+
+    if (find_lang == g_game_languages.end()) {
+        return g_game_languages.front();
+    }
+
+    return *find_lang;
 }
 
 int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width) {

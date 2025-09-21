@@ -7,7 +7,7 @@ struct info_window_senet_house : public building_info_window_t<info_window_senet
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return building_type_any_of(*b, BUILDING_SENET_HOUSE);
+        return (b->type == BUILDING_SENET_HOUSE);
     }
 };
 

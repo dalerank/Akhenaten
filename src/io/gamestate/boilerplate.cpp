@@ -55,8 +55,8 @@
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/farao_change.h"
-#include "scenario/gladiator_revolt.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_revolt.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/price_change.h"
 #include "scenario/request.h"
 #include "sound/sound_city.h"
@@ -715,11 +715,11 @@ void GamestateIO::start_loaded_file() {
 
         // traders / empire
         g_empire_map.init_scenario();
-        traders_clear();
+        empire_traders_clear();
 
         // set up events
         scenario_earthquake_init();
-        scenario_gladiator_revolt_init();
+        scenario_revolt_init();
         scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
         scenario_invasion_init();

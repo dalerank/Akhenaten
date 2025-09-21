@@ -233,37 +233,38 @@ figure_horses = {
 
 figure_birds = {
 	animations : {
-		flying : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true },
-		eating : { pack:PACK_SPR_MAIN, id:115, max_frames:25 },
-	},
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+		flying : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
+		eating : { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
+	}
+	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
 figure_crocodile = {
   animations : {
-		walk : { pack:PACK_SPR_MAIN, id:23, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:24, max_frames:8, duration:3, loop:false },
-		attack : { pack:PACK_SPR_MAIN, id:25, max_frames:7 },
-		sweem : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 },
-		sweem_attack : { pack:PACK_SPR_MAIN, id:27, max_frames:8 },
-		sweem_idle : { pack:PACK_SPR_MAIN, id:28, max_frames:8 },
-		eating : { pack:PACK_SPR_MAIN, id:27, max_frames:8 },
-	},
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+		walk : { pack:PACK_SPR_MAIN, id:23, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:24, max_frames:8, duration:3, loop:false }
+		attack : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
+		swim : { pack:PACK_SPR_MAIN, id:26, max_frames:11 }
+		idle : { pack:PACK_SPR_MAIN, id:23, max_frames:1, loop: false }
+		swim_idle : { pack:PACK_SPR_MAIN, id:27, max_frames:11 }
+		eating : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
+	}
+	terrain_usage : TERRAIN_USAGE_AMPHIBIA
+	chase_speed_mult : 2
 }
 
 figure_hippo = {
   animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 },
-		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false },
-		attack : { pack:PACK_SPR_AMBIENT, id:24, max_frames:7 },
-		sweem : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 },
-		sweem_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 },
-		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 },
-		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 },
-		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 },
-	},
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 }
+		death : { pack:PACK_SPR_AMBIENT, id:23, max_frames:8, duration:3, loop:false }
+		attack : { pack:PACK_SPR_AMBIENT, id:24, max_frames:7 }
+		sweem : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 }
+		sweem_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 }
+		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 }
+		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 }
+		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 }
+	}
+	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
 figure_immigrant = {
@@ -656,18 +657,19 @@ figure_governor = {
 
 figure_trade_ship = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 },
-		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 },
-		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 }
+		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 }
+		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 }
+	}
 	sounds : {
-		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0},
-		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1},
-		no_trade : {sound:"barge_e03.wav", group: 224, text:2},
-		good_trade : {sound:"barge_e04.wav", group: 224, text:3},
-		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4},
-	},
-	terrain_usage : TERRAIN_USAGE_ANY,
+		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0}
+		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1}
+		no_trade : {sound:"barge_e03.wav", group: 224, text:2}
+		good_trade : {sound:"barge_e04.wav", group: 224, text:3}
+		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4}
+	}
+	terrain_usage : TERRAIN_USAGE_ANY
+	max_capacity : 1200
 }
 
 figure_shipwreck = {
@@ -715,11 +717,12 @@ figure_sled_puller = {
 
 figure_trade_caravan = {
 	animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 },
-		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false },
-	},
-	wait_ticks_after_create : 10,
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
+		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
+		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
+	}
+	wait_ticks_after_create : 10
+	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
+	max_capacity : 800
 }
 
 figure_caravan_donkey = {
@@ -738,13 +741,16 @@ figure_homeless = {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
-figure_drunkman = {
+figure_drunkard = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
-		womit : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		back : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
+		womit : { pack:PACK_SPR_MAIN, id:204, max_frames:12, duration:4 }
 		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
 	}
 
+	walk_delay : 50
+  womit_delay : 50
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 }

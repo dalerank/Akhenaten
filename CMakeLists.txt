@@ -1,9 +1,12 @@
-cmake_minimum_required(VERSION 3.13...3.26)
+cmake_minimum_required(VERSION 3.16...3.26)
 include(CMakeDependentOption)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(USE_SYSTEM_PNG "Use the system png instead of the bundled one" OFF)
+option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
+option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
+message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
+message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
@@ -58,7 +61,7 @@ else()
         FetchContent_Declare(
                 cpptrace
                 GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-                GIT_TAG        v0.7.5 # <HASH or TAG>
+                GIT_TAG        v1.0.4 # <HASH or TAG>
         )
         FetchContent_MakeAvailable(cpptrace)
 
@@ -89,6 +92,8 @@ elseif(WIN_EMSCRIPTEN)
     -sASYNCIFY -sASYNCIFY_STACK_SIZE=32768 \
     -sALLOW_MEMORY_GROWTH -sINITIAL_MEMORY=128mb -sMEMORY_GROWTH_LINEAR_STEP=32mb \
     -sENVIRONMENT=web \
+    -sMODULARIZE \
+    -sEXPORT_ALL -sEXPORTED_RUNTIME_METHODS=callMain,addRunDependency,removeRunDependency \
     -lidbfs.js")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wno-c++11-narrowing \
@@ -116,8 +121,8 @@ else()
     SET(GAME_BUILD_TYPE "Debug")
 endif()
 
-set(SDL2_VERSION "2.30.11")
-set(SDL2_MIXER_VERSION "2.8.0")
+set(SDL2_VERSION "2.32.10")
+set(SDL2_MIXER_VERSION "2.8.1")
 set(OPENSSL_VERSION "3.4.1")
 
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
@@ -221,6 +226,7 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
         file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_SRC_UNPACK_DIR} DESTINATION ${SDL2_SRC_EXTRACT_PATH})
     endif()
 
+    set(SDL2_MIXER_VERSION "2.8.0")
     set(SDL2_MIXER_SRC_CHECK_PATH "${SDL2_EXTRACT_PATH}/SDL2_mixer-${SDL2_MIXER_VERSION}/mixer.h")
     set(SDL2_MIXER_SRC_DOWNLOAD_URL "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-${SDL2_MIXER_VERSION}.zip")
     set(SDL2_MIXER_SRC_DEP_FILENAME "SDL2_mixer-${SDL2_MIXER_VERSION}.zip")
@@ -576,7 +582,6 @@ endif()
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${EXTEXPAT_INCLUDE_DIR})
-include_directories(${EXTPNG_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
@@ -595,7 +600,7 @@ include_directories(ext/imgui/backends)
 include_directories(ext/openssl/include)
 
 if(MSVC)
-    include_directories(ext/dirent)
+    include_directories(ext/imgui/dirent)
     include_directories(ext/bugtrap)
     include_directories(ext/ffmpeg/include)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
@@ -605,9 +610,40 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
+if (OPTION_SYSTEM_LIBPNG)
+    if (OPTION_BUILD_LIBPNG)
+        include(FetchContent)
+        FetchContent_Declare(
+                zlib
+                GIT_REPOSITORY https://github.com/madler/zlib
+                GIT_TAG v1.3.1
+        )
+        FetchContent_MakeAvailable(zlib)
+        include_directories(${ZLIB_INCLUDE_DIR})
+        target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+
+        FetchContent_Declare(
+                libpng
+                GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+                GIT_TAG v1.6.50
+        )
+        FetchContent_MakeAvailable(libpng)
+        set(PNG_LIBRARIES png_static)
+    else()
+        find_package(PNG)
+    endif()
+
+    include_directories(${PNG_INCLUDE_DIRS})
+    target_link_libraries(${GAME} ${PNG_LIBRARIES})
+else()
+    add_subdirectory(ext/png)
+    include_directories(${EXTPNG_INCLUDE_DIR})
+    target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
+endif()
+
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${EXTPNG_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
 
 if(MSVC)
@@ -642,13 +678,29 @@ endif()
 
 if (MSVC)
     set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe" "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb")
-
     foreach( file_i ${BINARY_FILES})
         add_custom_command(
             TARGET ${GAME}
             POST_BUILD
             COMMAND ${CMAKE_COMMAND}
             ARGS -E copy ${file_i} "${GAME_WORKING_DIRECTORY}"
+        )
+    endforeach( file_i )
+
+    set(DATA_FILES "${CMAKE_SOURCE_DIR}/data/pharaoh_custom_pack.sgx" "${CMAKE_SOURCE_DIR}/data/pharaoh_fonts_pack.sgx")
+    add_custom_command(
+        OUTPUT 
+        ${GAME_WORKING_DIRECTORY}/Data    
+        COMMAND ${CMAKE_COMMAND} 
+        -E make_directory ${GAME_WORKING_DIRECTORY}/Data
+    )
+    set(BINARY_FILES_DIRECTORY "${GAME_WORKING_DIRECTORY}/Data")
+    foreach( file_i ${DATA_FILES})
+        add_custom_command(
+            TARGET ${GAME}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+            ARGS -E copy ${file_i} "${BINARY_FILES_DIRECTORY}"
         )
     endforeach( file_i )
 endif()

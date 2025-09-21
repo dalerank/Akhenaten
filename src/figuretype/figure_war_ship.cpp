@@ -20,7 +20,7 @@
 figure_warship::static_params warship_m;
 figure_warship_info_window figure_warship_infow;
 
-void figure_warship::static_params::load(archive arch) {
+void figure_warship::static_params::archive_load(archive arch) {
     orders_info.fill(0);
     arch.r_objects("orders", [this] (pcstr key, archive or_arch) {
         int id = or_arch.r_int("id");
@@ -51,7 +51,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
 
 void figure_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
-    data.warship.active_order = e_order_goto_wharf;
+    runtime_data().active_order = e_order_goto_wharf;
 }
 
 void figure_warship::on_destroy() {
@@ -83,7 +83,7 @@ void figure_warship::figure_action() {
 
     assert(base.allow_move_type == EMOVE_WATER);
 
-    switch (data.warship.active_order) {
+    switch (runtime_data().active_order) {
     case e_order_goto_wharf:
         figure_action_goto_wharf();
         break;
@@ -104,8 +104,6 @@ void figure_warship::kill() {
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
-    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: anim_key = "work"; break;
-    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: anim_key = "idle"; break;
     case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
     case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
     case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
@@ -257,7 +255,7 @@ void figure_warship_info_window::init(object_info &c) {
     for (const pcstr id: button_ids) {
         ui[id].onclick([f, this] (int p1, int p2) {
             const auto &params = f->params();
-            f->data.warship.active_order = p1;
+            f->runtime_data().active_order = p1;
         });
     }
 }
@@ -266,7 +264,7 @@ void figure_warship_info_window::window_info_background(object_info &c) {
     figure_info_window::window_info_background(c);
 
     figure_warship *f = c.figure_get<figure_warship>();
-    const short order = f->data.warship.active_order;
+    const short order = f->runtime_data().active_order;
 
     const figure_properties *target_props = figure_properties_for_type(f->type());
     ui["repair"].darkened = (f->base.damage == 0) ? UiFlags_Grayscale : UiFlags_None;

@@ -14,21 +14,21 @@ mission0 = { // Nubt
 	city_has_animals : true
 	gods_least_mood : 50
 	religion_enabled : false
-	show_won_screen : false
+	hide_won_screen : true
 	player_rank : 0
 
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
 	buildings : [
-		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD, BUILDING_WATER_SUPPLY
+		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD
 	]
 
-	fire_damage : {
-		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +50, collapse: +20}
-		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}	
-		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +50, collapse: +20}
+	extra_damage : {
+		house0: { type:BUILDING_HOUSE_CRUDE_HUT, fire: +0, collapse: +0}
+		house1: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}	
+		house2: { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
 	}
 
 	stages : {
@@ -51,8 +51,8 @@ mission1 = {
 	city_has_animals : true,
 	gods_least_mood : 50,
 	player_rank : 0,
-	show_won_screen : false,
-	money : [7500, 5000, 3750, 2500, 2000],
+	hide_won_screen : true,
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 
 	buildings : [
@@ -77,7 +77,7 @@ mission2 = {
 	city_has_animals : true,
 	gods_least_mood : 50,
 	player_rank : 0,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -105,7 +105,7 @@ mission3 = {
 	start_message : 241 - 99
 	city_has_animals : true
 	player_rank : 0
-	money : [7500, 5000, 3750, 2500, 2000]
+	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
 
@@ -132,7 +132,7 @@ mission4 = {
 	start_message : 241 - 99,
 	city_has_animals : true,
 	player_rank : 1,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -147,7 +147,7 @@ mission4 = {
 					BUILDING_CHICKPEAS_FARM, BUILDING_BARLEY_FARM, BUILDING_WORK_CAMP,
 					BUILDING_MUD_WALL,
 
-					BUILDING_BULLFIGHT_SCHOOL, BUILDING_MUD_GATEHOUSE, BUILDING_TOWER_GATERHOUSE, BUILDING_MUD_TOWER,
+					BUILDING_BULLFIGHT_SCHOOL, BUILDING_MUD_GATEHOUSE, BUILDING_TOWER_GATEHOUSE, BUILDING_MUD_TOWER,
 				],
 	stages : {
 		tutorial_education: [BUILDING_REED_GATHERER, BUILDING_PAPYRUS_WORKSHOP, BUILDING_SCRIBAL_SCHOOL],
@@ -174,172 +174,12 @@ mission4 = {
 	}
 }
 
-mission5 = { // Timna
-	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true
-	player_rank : 1
-	money : [7500, 5000, 3750, 2500, 2000]
-	rescue_loans : [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers : [300, 200, 150, 100, 75]
-
-	buildings : [
-		         	BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
-					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
-					BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION,
-					BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN,
-					BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
-					BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
-					BUILDING_RECRUITER, BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS, BUILDING_WEAPONSMITH,
-					BUILDING_SCRIBAL_SCHOOL, BUILDING_CLAY_PIT, BUILDING_GEMSTONE_MINE, BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_POTTERY_WORKSHOP,
-					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH,
-
-					BUILDING_MORTUARY, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD
-				]
-	stages : {
-		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ]
-		tutorial_guilds : [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
-	}
-	enable_scenario_events : false,
-	events : [
-		{
-			year : 2850
-			resource : "copper"
-			amount : 500
-			deadline : 12
-		},
-		{
-			year : 2849
-			resource : "gems"
-			amount : 1500
-			deadline : 12
-		},
-		{
-			year : 2848
-			resource : "deben"
-			amount : [800, 1000]
-			deadline : 12
-		}
-	]
-
-	attacks : [
-		{
-			year : 2848
-			type : "bedouin"
-			amount : 4
-			pepeat_after : [6]
-		}
-	],
-
-	gifts : [
-		{
-				from: "pharaoh"
-				condition: {
-					kingdome : 65
-					resource : RESOURCE_CHICKPEAS
-					amount : [1600, 2400]
-				}
-		}
-	]
-
-	trade_routes : [
-		{
-			city : "meninefer"
-			reputation : 60
-		}
-	]
-}
-
-mission6 = { // Behdet
-	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true
-	player_rank : 1
-	next_mission : 8
-	money : [7500, 5000, 3750, 2500, 2000]
-	rescue_loans : [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers : [300, 200, 150, 100, 75]
-
-	buildings : [   
-					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
-					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
-					BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION,
-					BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN,
-					BUILDING_WORK_CAMP, BUILDING_CHICKPEAS_FARM, BUILDING_BARLEY_FARM,
-					BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY,
-					BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
-					BUILDING_RECRUITER, BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS, BUILDING_WEAPONSMITH,
-					BUILDING_SCRIBAL_SCHOOL,
-					BUILDING_CLAY_PIT, BUILDING_REED_GATHERER, BUILDING_GOLD_MINE,
-					BUILDING_POTTERY_WORKSHOP, BUILDING_WEAVER_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP,
-					BUILDING_SHIPWRIGHT, BUILDING_FISHING_WHARF, BUILDING_FERRY, BUILDING_DOCK,
-					BUILDING_WARSHIP_WHARF, BUILDING_TRANSPORT_WHARF,
-					BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
-					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
-				]
-	stages : {
-	}
-
-	enable_scenario_events : false,
-	events : [
-		{
-			year : 2684,
-			resource : "pottery",
-			amount : 1400,
-			deadline : 9,
-		},
-		{
-			year : 2683,
-			resource : "beer",
-			amount : 1100,
-			deadline : 12,
-		},
-	],
-
-	cities : [
-		{
-			name : "Byblos",
-			is_sea_trade : true,
-		},
-
-		{
-			name: "Perwadjyt",
-			is_sea_trade : true,
-		},
-
-		{
-			name: "Men-nefer",
-			is_sea_trade : true,
-		}
-	],
-
-	choice_background : {pack:PACK_UNLOADED, id:12},
-	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
-	choice_image1_pos : [192, 144],
-	choice_title : [144, 19],
-	choice : [
-		{
-			name : "Abydos",
-			id : 6,
-			image: {pack:PACK_UNLOADED, id:20, offset:0},
-			tooltip : [144, 20],
-			pos : [620, 420],
-		},
-
-		{
-			name : "Behdet",
-			id : 7,
-			image: {pack:PACK_UNLOADED, id:20},
-			tooltip : [144, 21],
-			pos : [640, 480],
-		}
-	],
-}
-
 mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
 	player_rank : 1,
 	next_mission : 8,
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
@@ -360,7 +200,8 @@ mission7 = { // Abydos
 					BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS,
 					BUILDING_BRICKLAYERS_GUILD,
 					BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA,
-					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL
+					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, 
+					BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL, BUILDING_SENET_HOUSE
 				],
 	stages : {
 	},
@@ -394,6 +235,10 @@ mission7 = { // Abydos
 			name : "Byblos",
 			is_sea_trade : true,
 		},
+		{
+			name : "Perwadjyt",
+			is_sea_trade : true,
+		},
 	],
 
 	choice_background : {pack:PACK_UNLOADED, id:12},
@@ -419,44 +264,6 @@ mission7 = { // Abydos
 	],
 }
 
-mission8 = { // Selima
-	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true,
-	player_rank : 1,
-	next_mission : 10,
-	choice_background : {pack:PACK_UNLOADED, id:12},
-	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
-	choice_image1_pos : [192, 144],
-	choice_title : [144, 22],
-	money : [7500, 5000, 3750, 2500, 2000],
-	rescue_loans : [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers : [300, 200, 150, 100, 75],
-
-	buildings : [
-					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
-				],
-	stages : { // 
-	},
-
-	choice : [
-		{
-			name : "Selima",
-			id : 8,
-			image: {pack:PACK_UNLOADED, id:20, offset:0},
-			tooltip : [144, 23],
-			pos : [620, 420],
-		},
-
-		{
-			name : "Abu",
-			id : 9,
-			image: {pack:PACK_UNLOADED, id:20},
-			tooltip : [144, 24],
-			pos : [640, 480],
-		}
-	],
-}
-
 mission9 = { // Abu
 	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	city_has_animals : true,
@@ -466,11 +273,11 @@ mission9 = { // Abu
 	choice_image1 : {pack:PACK_UNLOADED, id:13, offset:0},
 	choice_image1_pos : [192, 144],
 	choice_title : [144, 22],
-	money : [7500, 5000, 3750, 2500, 2000],
+	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
 	house_tax_multipliers : [300, 200, 150, 100, 75],
 
-	resources : {
+	init_resources : {
 		grain : { type:RESOURCE_GRAIN, allow: true},
 		barley: { type:RESOURCE_BARLEY, allow: true},
 		flax: { type:RESOURCE_FLAX, allow:true},

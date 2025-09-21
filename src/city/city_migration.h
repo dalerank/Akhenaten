@@ -3,23 +3,40 @@
 #include <cstdint>
 #include <functional>
 
+#include "core/archive.h"
+#include "core/vec2i.h"
+#include "core/svector.h"
+
 struct city_migration_t {
+    struct sentiment_step_t {
+        int s;
+        int i;
+    };
+
+    struct params {
+        uint8_t max_immigration_amount_per_batch;
+        uint8_t max_emigration_amount_per_batch;
+        uint8_t max_newcomers_per_update;
+        uint8_t max_leftovers_per_update;
+        svector<sentiment_step_t, 16> sentiment_influence;
+    };
+
+    uint8_t immigration_queue_size;
+    uint8_t emigration_queue_size;
     uint16_t immigration_duration;
     uint16_t emigration_duration;
     uint8_t immigration_amount_per_batch;
     uint8_t emigration_amount_per_batch;
-    uint8_t immigration_queue_size;
-    uint8_t emigration_queue_size;
     uint8_t immigrated_today;
     uint8_t emigrated_today;
     uint8_t refused_immigrants_today;
-    int8_t no_immigration_cause;
     int8_t percentage;
-    uint16_t newcomers;
-    int8_t emigration_message_shown;
     int8_t percentage_by_sentiment;
-    uint16_t nobles_leave_city_this_year;
     int32_t population_cap;
+    int8_t no_immigration_cause;
+    int8_t emigration_message_shown;
+    uint16_t nobles_leave_city_this_year;
+    uint16_t newcomers;
 
     bool migration_cap;
     bool invading_cap;
@@ -32,6 +49,7 @@ struct city_migration_t {
     void create_migrants();
     void create_emigrants(int num_people);
     void create_immigrants(int num_people);
+    params& current_params();
     
     void determine_reason();
     int no_room_for_immigrants();
@@ -44,6 +62,11 @@ struct city_migration_t {
     void add_condition(condition);
 };
 
-int city_migration_percentage();
-int city_migration_newcomers();
-void city_migration_reset_newcomers();
+ANK_CONFIG_STRUCT(city_migration_t::sentiment_step_t, s, i)
+
+ANK_CONFIG_STRUCT(city_migration_t::params, 
+                  max_immigration_amount_per_batch,
+                  max_emigration_amount_per_batch,
+                  max_newcomers_per_update,
+                  max_leftovers_per_update,
+                  sentiment_influence)

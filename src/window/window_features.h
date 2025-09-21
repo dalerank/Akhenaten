@@ -3,6 +3,7 @@
 #include "platform/renderer.h"
 #include "autoconfig_window.h"
 
+struct lang_pack;
 namespace game_features {
     struct game_feature;
 }
@@ -26,6 +27,7 @@ namespace ui {
             int original_value;
             int new_value;
             xstring text;
+            bool volatile_value = false;
             std::function<void(int, int)> toggle_action;
             std::function<int()> change_action;
             std::function<int()> get_value;
@@ -39,16 +41,6 @@ namespace ui {
         };
 
         svector<features_page_t, 16> pages;
-
-        struct {
-            xstring original_value;
-            xstring new_value;
-            int (*change_action)(int key);
-        } config_string_values[4];
-
-        svector<xstring, MAX_LANGUAGE_DIRS> language_options;
-        svector<bstring64, MAX_LANGUAGE_DIRS> language_options_utf8;
-        int selected_language_option;
 
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
@@ -64,6 +56,7 @@ namespace ui {
         void cancel_values();
         void toggle_resource(e_resource resource);
         int config_change_basic(feature_t &alias, const xstring feature);
+        int config_change_string_language(const game_language &lang);
         void init(std::function<void()> callback);
 
         static void show(std::function<void()> callback);

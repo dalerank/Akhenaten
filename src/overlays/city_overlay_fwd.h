@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/tokenum.h"
+
 enum e_column_type {
     COLUMN_TYPE_NONE = -1,
     COLUMN_TYPE_RISK,
@@ -8,6 +10,7 @@ enum e_column_type {
 
     COLUMN_TYPE_SIZE
 };
+using e_column_type_tokens_t = token_holder<e_column_type, COLUMN_TYPE_RISK, COLUMN_TYPE_SIZE>;
 
 enum e_column_color {
     COLUMN_COLOR_NONE = -1,
@@ -60,3 +63,4 @@ enum e_overlay {
 
     OVERLAY_SIZE
 };
+using e_overlay_tokens_t = token_holder<e_overlay, OVERLAY_NONE, OVERLAY_SIZE>;

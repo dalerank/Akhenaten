@@ -43,7 +43,7 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: emscripten_build
-        path: src/assets/akhenaten/
+        path: src/assets/module/
       env:
         VITE_BASE: /
     - name: Install and Build 🔧

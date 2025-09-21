@@ -22,6 +22,7 @@
 #include "game/game.h"
 #include "window/building/distribution.h"
 #include "graphics/elements/lang_text.h"
+#include "figuretype/figure_trader_ship.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
 
@@ -174,7 +175,12 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     auto &d = runtime_data();
     if (anim_dockers.valid()) {
         int img_id = anim_dockers.start() + (d.docker_anim_frame / anim_dockers.frame_duration) * 4;
-        ImageDraw::img_generic(ctx, img_id, point + anim_dockers.pos, color_mask, 1.f, ImgFlag_InternalOffset);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = img_id;
+        command.pixel = point + anim_dockers.pos;
+        command.mask = color_mask;
+        command.flags = ImgFlag_InternalOffset;
     }
     return false;
 }
@@ -195,7 +201,7 @@ void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[1]);
     iob->bind(BIND_SIGNATURE_INT16, &d.docker_ids[2]);
                                      
-    iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship_id);
+    iob->bind(BIND_SIGNATURE_INT16, &d.trade_ship);
 }
 
 int building_dock::count_idle_dockers() const {
@@ -223,15 +229,17 @@ void building_dock::unaccept_all_goods() {
     runtime_data().trading_goods.zeroes(64);
 }
 
-int building_dock::trader_id() {
-    return figure_get(runtime_data().trade_ship_id)->trader_id;
+empire_trader_handle building_dock::empire_trader() const {
+    auto& d = runtime_data();
+    auto ship = figure_get<figure_trade_ship>(d.trade_ship);
+    assert(ship != nullptr);
+    return ship->empire_trader();
 }
 
-int building_dock::trader_city_id() {
+empire_city_handle building_dock::trader_city() {
     auto &d = runtime_data();
-    return d.trade_ship_id
-                ? figure_get(d.trade_ship_id)->empire_city_id
-                : 0;
+    auto ship = d.trade_ship ? figure_get<figure_trade_ship>(d.trade_ship) : 0;
+    return { ship ? ship->empire_city() : empire_city_handle{} };
 }
 
 bool building_dock::is_trade_accepted(e_resource r) {
@@ -243,18 +251,20 @@ void building_dock::toggle_good_accepted(e_resource r) {
 }
 
 bool building_dock::accepts_ship(int ship_id) {
-    figure* f = figure_get(ship_id);
+    auto ship = figure_get<figure_trade_ship>(ship_id);
+    if (!ship) {
+        return false;
+    }
 
-    empire_city* city = g_empire.city(f->empire_city_id);
+    empire_city_handle city = ship->empire_city();
     const resource_list resources = g_city.resource.available();
-    int any_acceptance = 0;
     for (const resource_value r: resources) {
-        if (city->sells_resource[r.type] || city->buys_resource[r.type]) {
-            any_acceptance += is_trade_accepted(r.type) ? 1 : 0;
+        if (is_trade_accepted(r.type) && (city.sells_resource(r.type) || city.buys_resource(r.type))) {
+            return true;
         }
     }
 
-    return (any_acceptance > 0);
+    return false;
 }
 
 void building_dock::highlight_waypoints() {
@@ -327,7 +337,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
 
         better_dock = dock;
         auto &d = dock->runtime_data();
-        if (!d.trade_ship_id || d.trade_ship_id == ship_id) {
+        if (!d.trade_ship || d.trade_ship == ship_id) {
             break;
         }
     }
@@ -338,7 +348,7 @@ building_dest map_get_free_destination_dock(int ship_id) {
     }
 
     tile2i moor_tile = better_dock->moor_tile();
-    better_dock->runtime_data().trade_ship_id = ship_id;
+    better_dock->runtime_data().trade_ship = ship_id;
     return {better_dock->id(), moor_tile };
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building.h"
+#include "figure/trader.h"
 
 class building_dock : public building_impl {
 public:
@@ -12,7 +13,7 @@ public:
         sbitarray64 trading_goods;
         uint8_t num_ships;
         short docker_ids[3];
-        short trade_ship_id;
+        figure_id trade_ship;
         uint8_t docker_anim_frame;
         e_figure_type process_type;
         bool reparing;
@@ -46,8 +47,8 @@ public:
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
     void unaccept_all_goods();
-    int trader_id();
-    int trader_city_id();
+    empire_trader_handle empire_trader() const;
+    empire_city_handle trader_city();
     bool is_trade_accepted(e_resource r);
     void toggle_good_accepted(e_resource r);
     int count_idle_dockers() const;

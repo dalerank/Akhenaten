@@ -72,6 +72,7 @@ public:
         uint8_t tax_coverage;
         uint8_t days_without_food;
         uint8_t hsize;
+        uint8_t drunkard_active;
         building_id worst_desirability_building_id;
         xstring evolve_text;
     };

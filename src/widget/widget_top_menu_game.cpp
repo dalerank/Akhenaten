@@ -95,7 +95,7 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void debug_render_change_opt(menu_item &item);
     void debug_change_opt(menu_item &item);
     void debug_opt_text(int opt, bool v);
-    void debug_render_text(int opt, bool v);
+    void debug_render_text(int opt, const xstring name, bool v);
 
     virtual void load(archive arch, pcstr section) override {
         autoconfig_window::load(arch, section);
@@ -168,10 +168,10 @@ void top_menu_widget::update_date(event_advance_day ev) {
     bstring32 text;
     if (ev.year >= 0) {
         int use_year_ad = locale_year_before_ad();
-        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, ui::str(20, 1)); }
-        else { text.printf("%s %s %d", month_str, ev.year, ui::str(20, 1)); }
+        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, lang_text_from_key("#AD")); }
+        else { text.printf("%s %s %d", month_str, lang_text_from_key("#AD")); }
     } else {
-        text.printf("%s %d %s", month_str, -ev.year, ui::str(20, 0));
+        text.printf("%s %d %s", month_str, -ev.year, lang_text_from_key("#BC"));
     }
 
     ui["date"] = text;
@@ -185,43 +185,9 @@ void top_menu_widget::update_finance(event_finance_changed ev) {
     ui["funds"].text_var("%s %d", ui::str(6, 0), ev.value);
 }
 
-void top_menu_widget::debug_render_text(int opt, bool v) {
-    struct option { pcstr on, off; };
-    static option debug_text_rend[] = {
-        {"Buildings ON", "Buildings OFF"},
-        {"Tile Size ON", "Tile Size OFF"},
-        {"Roads ON", "Roads OFF"},
-        {"Routing Dist ON", "Routing Dist OFF"},
-        {"Routing Grid ON", "Routing Grid OFF"},
-        {"Moisture ON", "Moisture OFF"},
-        {"Grass Level ON", "Grass Level OFF"},
-        {"Soil Depl ON", "Soil Depl OFF"},
-        {"Flood Order ON", "Flood Order OFF"},
-        {"Flood Flags ON", "Flood Flags OFF"},
-        {"Labor ON", "Labor OFF"},
-        {"Sprite Frames ON", "Sprite Frames OFF"},
-        {"Terrain Bits ON", "Terrain Bits OFF"},
-        {"Image ON", "Image OFF"},
-        {"Image Alt ON", "Image Alt OFF"},
-        {"Marshland ON", "Marshland OFF"},
-        {"Terrain ON", "Terrain OFF"},
-        {"Tile Coord ON", "Tile Coord OFF"},
-        {"Flood Shore ON", "Flood Shore OFF"},
-        {"Tile TopH ON", "Tile TopH OFF"},
-        {"Monuments ON", "Monuments OFF"},
-        {"Figures ON", "Figures OFF"},
-        {"Height ON", "Height OFF"},
-        {"Marshland Depl ON", "Marshland Depl OFF"},
-        {"Dmg Fire ON", "Dmg Fire OFF"},
-        {"Desirability ON", "Desirability OFF"},
-        {"River Shore ON", "River Shore OFF"},
-        {"Entertainment ON", "Entertainment OFF"},
-        {"Canals ON", "Canals OFF"},
-        {"Overlay Add ON", "Overlay Add OFF"},
-        {"Gardens ON", "Gardens OFF"},
-    };
-    const auto &current = debug_text_rend[opt];
-    menu_item_update("debug_render", opt, v ? current.on : current.off);
+void top_menu_widget::debug_render_text(int opt, const xstring name, bool v) {
+    bstring128 text(v ? "ON " : "OFF", name.c_str() + 3);
+    menu_item_update("debug_render", opt, text);
 }
 
 void top_menu_widget::debug_opt_text(int opt, bool v) {
@@ -270,7 +236,7 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
 
     case e_debug_show_properties: 
         game.debug_properties = !game.debug_properties;
-        g_debug_show_opts[opt] = game.debug_properties;
+        set_debug_draw_option(opt, game.debug_properties);
         widget_top_menu_clear_state();
         window_go_back();
         debug_opt_text(e_debug_show_properties, game.debug_properties );
@@ -279,21 +245,25 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
     case e_debug_write_video: 
         game.set_write_video(!game.get_write_video());
         debug_opt_text(e_debug_write_video, game.get_write_video());
-        g_debug_show_opts[opt] = game.get_write_video();
+        set_debug_draw_option(opt, game.get_write_video());
         break;
 
     default:
-        g_debug_show_opts[opt] = !g_debug_show_opts[opt];
-        debug_opt_text(opt, g_debug_show_opts[opt]);
+        set_debug_draw_option(opt, !get_debug_draw_option(opt));
+        debug_opt_text(opt, get_debug_draw_option(opt));
     }
 }
 
 void top_menu_widget::debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
-    g_debug_render = (opt == g_debug_render) ? 0 : opt;
+    set_debug_render_mode((opt == debug_render_mode()) ? e_debug_render_none : e_debug_render(opt));
     auto *render = headers["debug_render"].dcast_menu_header();
+    if (!render) {
+        return;
+    }
+
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
     }
 }
 
@@ -445,7 +415,7 @@ void top_menu_widget::header_update_text(pcstr header, pcstr text) {
         return;
     }
 
-    int item_width = lang_text_get_width(impl.text, FONT_NORMAL_BLACK_ON_LIGHT);
+    int item_width = lang_text_get_width(impl.text.c_str(), FONT_NORMAL_BLACK_ON_LIGHT);
     int blocks = (item_width + 8) / 16 + 1;
     if (blocks > impl.calculated_width_blocks) {
         impl.calculated_width_blocks = blocks;
@@ -493,14 +463,18 @@ void top_menu_widget::set_text_for_warnings() {
 void top_menu_widget::set_text_for_debug_city() {
     auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
-        debug_opt_text(i, g_debug_show_opts[i]);
+        debug_opt_text(i, get_debug_draw_option(i));
     }
 }
 
 void top_menu_widget::set_text_for_debug_render() {
     auto *render = headers["debug_render"].dcast_menu_header();
+    if (!render) {
+        return;
+    }
+
     for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, g_debug_render == render->impl.items[i].parameter);
+        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
     }
 }
 
@@ -657,7 +631,7 @@ void top_menu_widget::sub_menu_init() {
         render->onclick([this] (auto &h) { debug_render_change_opt(h); });
     }
 
-    g_debug_show_opts[e_debug_show_properties] = game.debug_properties;
+    set_debug_draw_option(e_debug_show_properties, game.debug_properties);
 
     set_text_for_autosave();
     set_text_for_tooltips();
@@ -728,8 +702,8 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
 
     offset_rotate = s_width - offset_rotate_basic;
 
+    // "ui" is the Debens, Population and Date texts
     ui["population"].text_var("%s %d", ui::str(6, 1), states.population);
-
     ui.begin_widget({ 0, 0 });
     ui.draw();
     ui.end_widget();

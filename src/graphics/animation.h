@@ -13,27 +13,29 @@ struct animation_timer {
 };
 
 struct animation_t {
-    xstring id;
+    xstring key;
     vec2i pos;
     int pack;
-    int iid;
+    int id;
     int offset;
     int max_frames;
     int duration;
     int start_frame;
     int hashtime = 0;
+    uint32_t flags;
     bool can_reverse;
     bool loop = true;
     bool reverse = false;
 
     static int global_hashtime;
 
-    void load(archive arch);
+    bool load(archive arch);
     int first_img() const;
 };
+ANK_CONFIG_STRUCT(animation_t, pos, pack, id, offset, max_frames, duration, start_frame, can_reverse, reverse)
 
 struct animation_context {
-    xstring id;
+    xstring key;
     int base;
     int offset;
     int hashtime = -1;
@@ -41,6 +43,7 @@ struct animation_context {
     uint8_t frame_duration = 1;
     uint16_t max_frames;
     uint16_t frame;
+    uint32_t flags;
     bool can_reverse;
     bool loop = true;
     bool is_reverse = false;
@@ -65,7 +68,7 @@ struct animations_t {
         if (data.empty()) {
             return dummy;
         }
-        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id == key; });
+        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.key == key; });
         return (it == data.end()) ? dummy : *it;
     }
 };

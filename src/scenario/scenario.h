@@ -6,7 +6,7 @@
 #include "game/game_environment.h"
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
-#include "events.h"
+#include "scenario_event_manager.h"
 #include "grid/point.h"
 #include "scenario/types.h"
 #include "scenario/scenario_difficulty.h"
@@ -60,6 +60,7 @@ struct win_criteria_t {
     int enabled;
     int goal;
 };
+ANK_CONFIG_STRUCT(win_criteria_t, enabled, goal)
 
 struct map_data_t {
     int width = -1;
@@ -93,7 +94,7 @@ struct invasion_t {
 struct price_change_t {
     int year;
     int month;
-    int resource;
+    e_resource resource;
     int amount;
     int is_rise;
 };
@@ -111,6 +112,14 @@ struct extra_damage_t {
     int8_t fire;
     int8_t collapse;
 };
+
+template<>
+struct std::hash<extra_damage_t> {
+    [[nodiscard]] size_t operator()(const extra_damage_t &d) const noexcept {
+        return d.type;
+    }
+};
+ANK_CONFIG_STRUCT(extra_damage_t, type, fire, collapse)
 
 struct building_stage_t {
     xstring key;
@@ -146,7 +155,7 @@ struct scenario_data_t {
 
     int player_faction;
 
-    struct {
+    struct win_criterias_t {
         struct win_criteria_t population;
         struct win_criteria_t culture;
         struct win_criteria_t prosperity;
@@ -224,12 +233,12 @@ struct scenario_data_t {
     tile2i herd_points_prey[MAX_PREY_HERD_POINTS];
     tile2i fishing_points[MAX_FISH_POINTS];
     tile2i disembark_points[MAX_DISEMBARK_POINTS];
-    tile2i invasion_points_land[MAX_INVASION_POINTS_LAND];
-    tile2i invasion_points_sea[MAX_INVASION_POINTS_SEA];
+    std::array<tile2i, MAX_INVASION_POINTS_LAND> invasion_points_land;
+    std::array<tile2i, MAX_INVASION_POINTS_SEA> invasion_points_sea;
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
-    std::vector<resource_allow> init_resources;
-    std::vector<extra_damage_t> extra_damage;
+    resource_allow_vec init_resources;
+    std::array<extra_damage_t, BUILDING_MAX> extra_damage;
     std::vector<building_stage_t> building_stages;
     settings_vars_t vars;
 
@@ -258,16 +267,16 @@ struct scenario_data_t {
         } burial_provisions[RESOURCES_MAX];
     } monuments;
 
-    struct {
+    struct env_t {
         bool flotsam_enabled;
         bool has_animals;
         uint8_t gods_least_mood;
     } env;
 
-    struct {
+    struct meta_t {
         uint16_t start_message;
         bool start_message_shown;
-        bool show_won_screen;
+        bool hide_won_screen;
         std::array<int, 8> initial_funds = { 0 };
         std::array<int, 8> rescue_loans = { 0 };
         std::array<int, 8> house_tax_multipliers = { 0 };
@@ -295,6 +304,9 @@ struct scenario_data_t {
         return is_scenario_id(make_span(values));
     }
 };
+ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
+ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood)
+ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
 

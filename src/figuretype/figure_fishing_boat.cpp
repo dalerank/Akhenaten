@@ -40,6 +40,30 @@ water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
     return { true, wharf->id(), dock_tile };
 }
 
+water_dest map_water_get_closest_wharf(figure &boat) {
+    building_wharf *wharf = nullptr;
+
+    int mindist = 9999;
+    tile2i dock_tile;
+    wharf = building_first_ex<building_wharf>([&] (building_wharf *w) {
+        const auto water_tiles = w->get_water_access_tiles();
+        const float curdist = boat.tile.dist(water_tiles.point_a);
+        if (curdist < mindist) {
+            wharf = w;
+            mindist = curdist;
+            dock_tile = water_tiles.point_a;
+        }
+
+        return false;
+    });
+
+    if (!wharf) {
+        return { false, 0 };
+    }
+
+    return { true, wharf->id(), dock_tile };
+}
+
 void figure_fishing_boat::on_create() {
     base.allow_move_type = EMOVE_WATER;
 }
@@ -54,10 +78,8 @@ void figure_fishing_boat::before_poof() {
 
 void figure_fishing_boat::figure_action() {
     building_fishing_wharf* wharf = home()->dcast_fishing_wharf();
-    //    if (b->state != BUILDING_STATE_VALID)
-    //        poof();
 
-    int wharf_boat_id = wharf->get_figure_id(BUILDING_SLOT_BOAT);
+    int wharf_boat_id = wharf ? wharf->get_figure_id(BUILDING_SLOT_BOAT) : 0;
     if (action_state() != FIGURE_ACTION_190_FISHING_BOAT_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_fishing_boat(base);
         building* new_home = building_get(result.bid);
@@ -67,9 +89,15 @@ void figure_fishing_boat::figure_action() {
             advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
+            runtime_data().had_home = true;
             route_remove();
         } else {
-            poof();
+            if (runtime_data().had_home) {
+                advance_action(FIGURE_ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN);
+                return;
+            } else {
+                poof();
+            }
         }
     }
 
@@ -88,7 +116,29 @@ void figure_fishing_boat::figure_action() {
                 advance_action(FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
+                runtime_data().had_home = true;
                 route_remove();
+            }
+        }
+        break;
+       
+    case FIGURE_ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN: {
+            water_dest result = map_water_get_closest_wharf(base);
+            building *dest_wharf = building_get(result.bid);
+            if (result.found) {
+                set_destination(dest_wharf);
+                advance_action(FIGURE_ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
+            } else {
+                poof();
+            }
+        }
+        break;
+
+    case FIGURE_ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF: {
+            base.move_ticks(1);
+            base.height_adjusted_ticks = 0;
+            if (direction() == DIR_FIGURE_NONE) {
+                poof();
             }
         }
         break;

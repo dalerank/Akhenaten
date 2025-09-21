@@ -538,7 +538,7 @@ void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
 void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (fill) {
-        graphics_fill_rect(offset + pos, size, fill);
+        ImageDraw::fill_rect(offset + pos, size, fill);
     } else {
         graphics_draw_rect(offset + pos, size, color);
     }
@@ -596,6 +596,8 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
     pos = arch.r_vec2i("pos") + parent_offset;
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
+    fill_width = arch.r_bool("fill_width", false);
+    fill_height = arch.r_bool("fill_height", false);
 
     arch.r_section("margin", [this] (archive m) {
         margin.bottom = m.r_int("bottom", margini::nomargin);
@@ -606,7 +608,6 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
         margin.centery = m.r_int("centery", margini::nomargin);
         int i = 0;
     });
-
 
     load_elements(arch, "ui", this, items);
 }
@@ -721,10 +722,9 @@ void ui::widget::line(bool hline, vec2i npos, int size, color c) {
 
 void ui::eimg::draw(UiFlags flags) {
     if (isometric) {
-        painter ctx = game.painter();
         const vec2i offset = g_state.offset();
-        ImageDraw::isometric_from_drawtile(ctx, image_group(img_desc), offset + pos);
-        ImageDraw::isometric_from_drawtile_top(ctx, image_group(img_desc), offset + pos);
+        painter ctx = game.painter();
+        ImageDraw::img_isometric(ctx, image_group(img_desc), offset + pos, COLOR_MASK_NONE);
     } else {
         ui::eimage(img_desc, pos);
     }
@@ -832,7 +832,8 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
-    if (strchr(_text.c_str(), '{')) {
+
+    if (!_text.empty() && strchr(_text.c_str(), '{')) {
         _format = _text.c_str();
     }
     _font = arch.r_type<e_font>("font", FONT_INVALID);
@@ -1086,11 +1087,11 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
 }
 
 void ui::emenu_header::draw(UiFlags flags) {
-    lang_text_draw(impl.text, pos, _font);
+    lang_text_draw(impl.text.c_str(), pos, _font);
 }
 
 int ui::emenu_header::text_width() {
-    return lang_text_get_width(impl.text, _font);
+    return lang_text_get_width(impl.text.c_str(), _font);
 }
 
 menu_item &ui::emenu_header::item(pcstr key) {

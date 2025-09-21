@@ -113,7 +113,7 @@ building_house_crude_hut = {
   },
   building_size : 1,
   num_types : 2,
-  fire_risk_update : 100,
+  fire_risk_update : 40,
   is_draggable : true,
   window_info_height_id : 5,
 }
@@ -124,7 +124,7 @@ building_house_sturdy_hut = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 100,
+  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
 }
@@ -135,7 +135,7 @@ building_house_meager_shanty = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 100,
+  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
 }
@@ -146,7 +146,7 @@ building_house_common_shanty = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 100,
+  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
 }
@@ -863,7 +863,7 @@ building_storage_yard = {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
     base : { pos : [0, 0], pack:PACK_GENERAL, id:82, }
     cover : { pos : [-5, -42], pack:PACK_GENERAL, id:82, offset:17 }
-    work : { pos : [20, 25], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 }
+    work : { pos : [10, -10], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 }
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   info_help_id : 4
@@ -1032,18 +1032,19 @@ building_reed_gatherer = {
 
 building_wood_cutter = {
   animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:23 },
-    work : { pos : [30, -17], pack:PACK_GENERAL, id:23, offset:1, max_frames:19 },
-    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
-  },
-  output_resource : RESOURCE_TIMBER,
-  building_size : 2,
-  window_info_height_id : 1,
-  info_help_id:94,
-  info_text_id:120,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
+    preview : { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    base : { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    work : { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:12 }
+    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 }
+  }
+  output_resource : RESOURCE_TIMBER
+  building_size : 2
+  window_info_height_id : 1
+  info_help_id:94
+  info_text_id:120
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
+  max_gatherers : 1
 }
 
 building_small_mastaba = {
@@ -1131,22 +1132,22 @@ building_recruiter = {
 
 building_bandstand = {
   animations : {
-    booth : {pack:PACK_GENERAL, id:114},
-    square : {pack:PACK_GENERAL, id:58},
-    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
-    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
-    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
-    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
-    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
-    musician_sn : { pos : [45, 7], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11 },
-    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11 }
-  },
-  labor_category : LABOR_CATEGORY_ENTERTAINMENT,
-  fire_proof: true,
-  window_info_height_id : 3,
-  info_help_id:72,
-  info_text_id:71,
-  building_size : 3,
+    booth : {pack:PACK_GENERAL, id:114}
+    square : {pack:PACK_GENERAL, id:58}
+    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
+    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0}
+    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1}
+    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2}
+    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3}
+    musician_sn : { pos : [-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
+    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
+  }
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  fire_proof: true
+  window_info_height_id : 3
+  info_help_id:72
+  info_text_id:71
+  building_size : 3
 }
 
 building_pavilion = {
@@ -1769,12 +1770,14 @@ building_senet_house = {
   animations : {
     preview : { pack:PACK_GENERAL, id:17 },
     base : { pack:PACK_GENERAL, id:17 },
+    work : { pos:[30, -35], pack:PACK_GENERAL, id:17, offset:1, max_frames:18, duration:5 },
   },
-  damage_proof : true,
+  input_resource : RESOURCE_BEER
   window_info_height_id : 2,
   info_help_id:74,
   info_text_id:73,
   building_size : 4,
+  labor_category : LABOR_CATEGORY_ENTERTAINMENT
 }
 
 building_bullfight_school = {
@@ -1782,7 +1785,6 @@ building_bullfight_school = {
     preview : { pack:PACK_CUSTOM, id:0 },
     base : { pack:PACK_CUSTOM, id:0 },
   },
-  damage_proof : true,
   window_info_height_id : 1,
   info_help_id:75,
   info_text_id:78,

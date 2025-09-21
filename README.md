@@ -13,19 +13,18 @@
 
 Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine.
 Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible.
-Allows you to load original save games from Pharaoh and play the initial campaign missions without major issues.
 
 This is a fork of the **Julius/Augustus** project with the aim of making it work with _Pharaoh_ instead of _Caesar 3_.
 
-The work is still in progress, so any help or support is appreciated. You can more or less load
-original save games and play the first few missions in the campaign without major issues.
+The work is still in progress, so any help or support is appreciated. Allows you to load original save games 
+from Pharaoh and play the initial campaign missions without major issues.
 
 If you're looking for _Caesar 3_'s vanilla experience with modern machine compatibility, check out [Julius](https://github.com/bvschaik/julius).<br>
 If you want additional features and visual/UI improvements, and don't care about strict
 compatibility with the original save files, check out [Augustus](https://github.com/Keriew/augustus).<br>
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
 or [GOG](https://www.gog.com/en/game/pharaoh_cleopatra).<br>
-For the official upcoming remaster (unrelated to Akhenaten) called _A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
+For the official 2023 remaster (unrelated to Akhenaten) called _Pharaoh: A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
 
 ## Running the game
 
@@ -49,7 +48,8 @@ from an unmodified game installation to run, in this case it needs _Pharaoh_ **a
 Note that you must have permission to write in the game data directory as the saves will be
 stored there; also, your game must be patched to last version to run Akhenaten.
 
-[![buymeabeer](https://github.com/user-attachments/assets/657eb58a-b0c7-484c-af41-3fbfe43ef778)](https://patreon.com/imspinner)
+[![Become a patron](https://github.com/user-attachments/assets/f8f97765-7dad-428b-a722-a26a2d3d39fb)](https://patreon.com/imspinner)[![Become a patron](https://github.com/user-attachments/assets/ed3eed16-0419-49ba-8a8c-53c1413c125b)](https://github.com/sponsors/dalerank)
+
 
 ## Building Akhenaten from source
 
@@ -117,11 +117,24 @@ On Fedora and other `rpm` distributions:
 ##### Running the game
 
 Assuming the zip file is in your Downloads directory:
-```
+```shell
 cd ~/Downloads
 unzip akhenaten_linux.zip
 chmod +x akhenaten.linux
 ./akhenaten.linux
+```
+
+#### Building in Bazzite (https://bazzite.gg/) on Steam Deck or other platform
+You will have to use rpm-ostree to install static version of stdc++ which is not recommended
+and will make system updates slower.
+But you won't be able to build Akhenaten without it. 
+```shell
+rpm-ostree install libstdc++-static
+systemctl reboot
+```
+And after reboot:
+```shell
+./update-workspace-bazzite.sh
 ```
 
 ### MacOS
@@ -210,3 +223,6 @@ cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
 ```
 
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
+
+
+

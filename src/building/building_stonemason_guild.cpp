@@ -115,7 +115,10 @@ void building_stonemason_guild::spawn_figure() {
         auto f = base.create_figure_with_destination(FIGURE_STONEMASON, &min_service_statue->base, (e_figure_action)FIGURE_ACTION_30_MASON_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
         min_service_statue->add_workers(f->id);
         f->wait_ticks = random_short() % 30;
-        f->data.stonemason.destination_bid = min_service_statue->id();
+        auto mason = smart_cast<figure_stonemason>(f);
+        if (mason) {
+            mason->runtime_data().destination_bid = min_service_statue->id();
+        }
         return;
     }
 }

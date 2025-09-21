@@ -17,7 +17,7 @@ public:
         short beer_demand;
         short fetch_inventory_id;
         short market_goods;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

@@ -6,6 +6,18 @@
 #include "core/string.h"
 #include "ui.h"
 
+struct game_language {
+    xstring key;
+    xstring lang;
+    xstring caption;
+    xstring table;
+};
+ANK_CONFIG_STRUCT(game_language, lang, caption, key, table)
+
+using game_languages = svector<game_language, 12>;
+
+const game_languages& get_available_languages();
+
 pcstr lang_text_from_key(pcstr key);
 textid loc_text_from_key(pcstr key);
 
@@ -15,7 +27,10 @@ int lang_text_get_width(const char* str, e_font font);
 int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font, int box_width = 0);
 inline int lang_text_draw(int group, int number, vec2i offset, e_font font, int box_width = 0) { return lang_text_draw(group, number, offset.x, offset.y, font, box_width); }
 
+bool lang_reload_localized_files();
+bool lang_reload_localized_tables();
 
+game_language lang_get_current_language();
 int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width = 0);
 
 template<typename ... Args>

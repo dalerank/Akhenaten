@@ -1,7 +1,7 @@
 #pragma once
 
 #include "game/resource.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include <functional>
 
 struct scenario_request {

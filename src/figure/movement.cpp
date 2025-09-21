@@ -169,7 +169,7 @@ void figure::advance_route_tile(int roaming_enabled) {
                 max_damage = 10;
                 break;
 
-            case DESTROYABLE_AQUEDUCT_GARDEN:
+            case DESTROYABLE_CANALS_GARDEN:
                 if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
                     cause_damage = 0;
                 else

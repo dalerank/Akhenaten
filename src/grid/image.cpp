@@ -23,7 +23,7 @@ void map_image_set(int grid_offset, int image_id) {
 }
 
 void map_image_set(tile2i tile, const animation_t &anim) {
-    int image_id = image_id_from_group(anim.pack, anim.iid) + anim.offset;
+    const int image_id = anim.first_img();
     map_grid_set(g_images_grid, tile.grid_offset(), image_id);
 }
 

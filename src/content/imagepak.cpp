@@ -20,6 +20,7 @@
 #include "js/js.h"
 
 #include <array>
+#include <unordered_set>
 #include <cinttypes>
 #include <cstring>
 
@@ -370,7 +371,7 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
 
 #define MAX_FILE_SCRATCH_SIZE 20000000
 
-imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
+imagepak::imagepak(xstring pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
     //    images = nullptr;
     //    image_data = nullptr;
     entries_num = 0;
@@ -380,13 +381,13 @@ imagepak::imagepak(pcstr pak_name, int starting_index, bool system_sprites, bool
     userpack = custom;
 
     if (custom) {
-        if (!load_zip_pak(pak_name, starting_index)) {
+        if (!load_zip_pak(pak_name.c_str(), starting_index)) {
             cleanup_and_destroy();
         }
         return;
     } 
 
-    if (!load_pak(pak_name, starting_index)) {
+    if (!load_pak(pak_name.c_str(), starting_index)) {
         cleanup_and_destroy();
     }
 }
@@ -429,7 +430,11 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     vfs::path datafile("Data/", pak, ".zip");
     
     if (!vfs::file_exists(datafile)) {
-        return false;
+        datafile.printf("Data/%s.sgx", pak);
+
+        if (!vfs::file_exists(datafile)) {
+            return false;
+        }
     }
 
     if (!vfs::mount_pack(datafile)) {
@@ -443,15 +448,20 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     g_config_arch.r_array(pak, [&] (archive arch) {
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
-        entries_num += (finish_index - start_index) + 1;
+        if (finish_index <= 0) {
+            finish_index = start_index;
+        }
+        assert(finish_index >= start_index);
+        group_image_ids[groups_num] = entries_num;
         bmp_names[groups_num] = arch.r_string("name");
+        entries_num += (finish_index - start_index) + 1;
         ++groups_num;
     });
 
     assert(global_image_index_offset >= 30000);
     images_array.reserve(entries_num);
 
-    auto load_img = [&] (pcstr fn, int i, int group_id) {
+    auto load_img = [&] (pcstr fn, int i, int group_id, int atlas_rect_id) {
         image_t img;
         img.pak_name = name;
         img.sgx_index = i;
@@ -484,7 +494,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.animation.unk07 = -1;
         img.animation.unk08 = -1;
         img.animation.unk09 = -1;
-        img.animation.can_reverse = -1;
+        img.animation.can_reverse = false;
         img.animation.unk10 = -1;
         img.type = -1;
         img.is_fully_compressed = false;
@@ -512,7 +522,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.unk19 = -1;
         img.unk20 = -1;
 
-        image_packer_rect* rect = &packer.rects[i];
+        image_packer_rect* rect = &packer.rects[atlas_rect_id];
         rect->input.width = img.width;
         rect->input.height = img.height;
 
@@ -526,18 +536,23 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         return false;
     }
 
-    int tmp_group_id = 0;
+    int tmp_group_id = 0, atlas_rect_id = 0;
     g_config_arch.r_array(pak, [&] (archive arch) {
         pcstr prefix = arch.r_string("prefix");
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
+        if (finish_index <= 0) {
+            finish_index = start_index;
+        }
+        assert(finish_index >= start_index);
 
         for (int i = start_index; i <= finish_index; ++i) {
             bstring512 name;
             name.printf("%s%05u.png", prefix, i);
-            load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id);
-            tmp_group_id++;
+            load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id, atlas_rect_id);
+            ++atlas_rect_id;
         }
+        ++tmp_group_id;
     });
 
     packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
@@ -603,7 +618,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     int y_offset = screen_height() - 24;
     platform_renderer_clear();
     if (image_data_fonts_ready()) {
-        text_draw(bstring512("loading folder pak (", pak, ")"), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
+        text_draw(bstring512("loading folder pak (", pak, ")").c_str(), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
     //painter ctx = game.painter();
     //graphics_renderer()->draw_image(ctx, &images_array.at(0), 0, 0, 0xffffffff, 1.0f, false);
@@ -900,7 +915,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     platform_renderer_clear();
     if (image_data_fonts_ready() && image_data_render_on_new_loadpacks()) {
         bstring512 loadpack_text("loading pak (", pak_name, ")");
-        text_draw(loadpack_text, 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
+        text_draw(loadpack_text.c_str(), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
     platform_renderer_render();
 
@@ -928,8 +943,8 @@ const image_t* imagepak::get_image(int id, bool relative) {
     return &images_array[id];
 }
 
-int imagepak::get_entries_num(pcstr pak_name) {
-    vfs::path filename_full("Data/", pak_name);
+int imagepak::get_entries_num(xstring pak_name) {
+    vfs::path filename_full("Data/", pak_name.c_str());
 
     // split in .555 and .sg3 filename strings
     vfs::path filename_sgx(filename_full, ".sg3");

@@ -1,7 +1,7 @@
 #include "city_message.h"
 
 #include "io/io_buffer.h"
-#include "scenario/events.h"
+#include "scenario/scenario_event_manager.h"
 #include "content/vfs.h"
 #include "core/encoding.h"
 #include "core/string.h"
@@ -253,7 +253,7 @@ city_message &message_manager_t::post_common(bool use_popup, int message_id, int
 
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, int message_type, int param1, short param2) {
     auto& data = g_message_data;
-    int use_popup = false;
+    bool use_popup = false;
 
     if (data.message_delay[category] <= 0) {
         use_popup = true;
@@ -350,7 +350,7 @@ int city_message_get_advisor(int message_type) {
     switch (message_type) {
     case MESSAGE_LOCAL_UPRISING:
     case MESSAGE_BARBARIAN_ATTACK:
-    case MESSAGE_CAESAR_ARMY_ATTACK:
+    case MESSAGE_KINGDOME_ARMY_ATTACK:
     case MESSAGE_DISTANT_BATTLE:
     case MESSAGE_ENEMIES_CLOSING:
     case MESSAGE_ENEMIES_AT_THE_DOOR:

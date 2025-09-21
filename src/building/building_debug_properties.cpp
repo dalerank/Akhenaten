@@ -85,7 +85,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
-        game_debug_show_property("id", b->anim.id, true);
+        game_debug_show_property("key", b->anim.key, true);
         game_debug_show_property("base", b->anim.base);
         game_debug_show_property("offset", b->anim.offset);
         game_debug_show_property("hashtime", b->anim.hashtime);
@@ -111,8 +111,8 @@ void config_load_building_properties(bool header) {
         return;
     } 
 
-    if (_debug_buildng_open && g_debug_building_id > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        building *b = building_get(g_debug_building_id);
+    if (_debug_buildng_open && get_debug_building_id() > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+        building *b = building_get(get_debug_building_id());
         game_debug_show_properties_object("Building", b);
         ImGui::EndTable();
     }

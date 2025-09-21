@@ -43,7 +43,10 @@ bool building_weaver::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().flax);
-        ImageDraw::img_generic(ctx, ranim.first_img() + amount, point + ranim.pos, color_mask);
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = ranim.first_img() + amount;
+        command.pixel = point + ranim.pos;
+        command.mask = color_mask;
     }
 
     return true;

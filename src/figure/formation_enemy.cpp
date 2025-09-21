@@ -356,7 +356,7 @@ bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &
     return false;
 }
 
-static void seth_kill_enemies(void) {
+void formation_seth_kill_enemies() {
     int to_kill = g_city.religion.spirit_of_seth_power();
     if (to_kill <= 0) {
         return;
@@ -368,7 +368,7 @@ static void seth_kill_enemies(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (f->is_enemy() && f->type != FIGURE_ENEMY54_GLADIATOR) {
+        if (f->is_enemy() && f->type != FIGURE_ENEMY54_REVOLTMAN) {
             f->kill();
             to_kill--;
             if (!grid_offset)
@@ -475,7 +475,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     }
 
     if (m->wait_ticks > 32) {
-        seth_kill_enemies();
+        formation_seth_kill_enemies();
     }
 
     if (halt) {

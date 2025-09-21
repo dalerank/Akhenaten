@@ -2,6 +2,7 @@
 
 #include "core/encoding.h"
 #include "core/tokenum.h"
+#include "content/dir.h"
 
 #include <stdint.h>
 #include <array>
@@ -21,9 +22,16 @@ enum e_font {
     FONT_INVALID = 0xff
 };
 
-extern const token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX> e_font_type_tokens;
+using e_font_tokens_t = token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX>;
+extern const e_font_tokens_t e_font_tokens;
 
 using fonts_vec = std::array<e_font, 2>;
+
+struct font_glyph {
+    uint32_t code; // code point
+    int imagid; // texture
+    vec2i bearing;
+};
 
 struct font_definition {
     e_font font;
@@ -40,20 +48,8 @@ struct font_definition {
      * @param line_height Line height for the font
      * @return Offset to subtract from y coordinate
      */
-    int (*image_y_offset)(uint8_t c, int image_height, int line_height);
+    int (*image_y_offset)(const uint8_t *c, int image_height, int line_height);
 };
-
-enum { 
-    NO_EXTRA_FONT = 0,
-    FULL_CHARSET_IN_FONT = 1,
-    MULTIBYTE_IN_FONT = 2
-};
-
-/**
- * Sets the encoding for font drawing functions
- * @param encoding Encoding to use
- */
-void font_set_encoding(encoding_type encoding);
 
 /**
  * Gets the font definition for the specified font
@@ -76,4 +72,6 @@ int font_can_display(const uint8_t* character);
  * @param num_bytes Out: number of bytes consumed by letter
  * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
-int font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
+font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
+void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
+void font_reload_external_symbols();

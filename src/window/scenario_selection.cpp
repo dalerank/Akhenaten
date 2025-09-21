@@ -15,7 +15,7 @@
 #include "io/gamestate/boilerplate.h"
 #include "message_dialog.h"
 #include "scenario/criteria.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "game/game.h"

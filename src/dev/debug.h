@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <iosfwd>
+#include <iomanip>
 
 extern int debug_range_1;
 extern int debug_range_2;
@@ -65,7 +66,7 @@ enum e_debug_render {
     e_debug_render_monuments = 23,
     e_debug_render_figures = 24,
     e_debug_render_height = 25,
-    e_debug_render_marshland_depl = 26,
+    e_debug_render_vegetation_growth = 26,
     e_debug_render_damage_fire = 27,
     e_debug_render_desirability = 28,
     e_debug_render_river_shore = 29,
@@ -73,15 +74,18 @@ enum e_debug_render {
     e_debug_render_canals = 31,
     e_debug_render_overlay_add = 32,
     e_debug_render_gardens = 33,
+    e_debug_render_routing_noncitizen = 34,
+    e_debug_render_routing_amphibia = 35,
+    e_debug_render_routing_water = 36,
 
     e_debug_render_size
 };
 
-extern bool g_debug_show_opts[e_debug_opt_size];
-extern int g_debug_tile;
-extern int g_debug_render;
 extern int g_debug_figure_id;
-extern int g_debug_building_id;
+void set_debug_building_id(int bid);
+int get_debug_building_id();
+e_debug_render debug_render_mode();
+void set_debug_render_mode(e_debug_render mode);
 
 bstring256 get_terrain_type(pcstr def, tile2i tile);
 bstring256 get_terrain_type(pcstr def, int type);
@@ -100,13 +104,11 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x = 1
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size = 1);
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
-void draw_debug_figures(vec2i pixel, tile2i point, painter &ctx);
 
 void draw_debug_ui(int x, int y);
 
-inline bool draw_debug(e_debug_render opt) {
-    return g_debug_show_opts[opt];
-}
+bool get_debug_draw_option(int opt);
+void set_debug_draw_option(int opt, bool e);
 
 struct console_command {
     console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f);
@@ -146,6 +148,7 @@ struct console_var_bool {
     bool value;
     console_var_bool(pcstr name, bool init);
     bool operator()() const { return value; }
+    bool operator!() const { return !value; }
 };
 
 struct console_ref_bool {
@@ -163,6 +166,13 @@ struct console_ref_bool {
 #define declare_console_ref_float(a, v) namespace console { bool var_##a; }; console_ref_float a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
 #define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
+
+inline std::istream& operator>>(std::istream& is, bstring128& arg) {
+    char tmp[bstring128::capacity];
+    is >> std::setw(bstring128::capacity) >> tmp;
+    arg = tmp;
+    return is;
+}
 
 namespace debug {
 

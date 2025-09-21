@@ -138,3 +138,25 @@ inline void string_to_array_t(arr_t &lst, pcstr src, char separator) {
         lst[i] = tmp;
     }
 }
+
+// return value is next argument index
+inline int parse_integer(pcstr string, int& value) {
+    bstring64 copy;
+    int count = 0;
+    while (*string && *string != ' ') {
+        copy.data()[count] = *string;
+        count++;
+        string++;
+    }
+    copy.data()[count] = '\0';
+    value = string_to_int(copy);
+    return count + 1;
+}
+
+template<typename Buffer, typename Stream>
+inline int parse_integer_from(Stream& is) {
+    Buffer buf; is >> buf;
+    int value;
+    parse_integer(buf, value);
+    return value;
+}

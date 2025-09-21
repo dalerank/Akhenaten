@@ -41,7 +41,7 @@
 #include "scenario/earthquake.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
-#include "scenario/invasion.h"
+#include "scenario/scenario_invasion.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
@@ -66,7 +66,7 @@ void game_file_editor_clear_data(void) {
     figure_name_init();
     formations_clear();
     figure_route_clear_all();
-    traders_clear();
+    empire_traders_clear();
     game.simtime.init(2098);
     scenario_invasion_clear();
 }

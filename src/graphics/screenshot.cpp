@@ -327,7 +327,7 @@ static void create_full_city_screenshot() {
                 local_context.renderer = graphics_renderer()->renderer();
 
                 camera_go_to_pixel(local_context, vec2i{mm_view.min.x + width, current_height}, false);
-                g_screen_city.draw_without_overlay(local_context, 0, nullptr);
+                g_screen_city.draw_without_overlay(local_context, 0);
                 graphics_renderer()->save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
                 //bool ok = SDL_RenderReadPixels(local_context.renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;

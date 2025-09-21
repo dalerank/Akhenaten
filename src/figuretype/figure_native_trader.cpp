@@ -5,8 +5,10 @@
 
 #include "figure/image.h"
 
+#include "widget/debug_console.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
+#include "city/city.h"
 
 #include "js/js_game.h"
 
@@ -17,6 +19,8 @@ void figure_native_trader::figure_action() {
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
+    base.use_cart = true;
+
     switch (action_state()) {
     case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
         base.move_ticks(1);
@@ -47,7 +51,7 @@ void figure_native_trader::figure_action() {
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
             tile2i tile;
-            int building_id = get_closest_storageyard(tile, 0, -1, tile);
+            int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
             if (building_id) {
                 advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                 set_destination(building_id);
@@ -63,13 +67,13 @@ void figure_native_trader::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
-            if (can_buy(destination(), 0)) {
-                e_resource resource = trader_get_buy_resource(destination(), 0, 100);
-                trader_record_bought_resource(base.trader_id, resource);
+            if (can_buy(destination(), { g_city.ourcity().name_id })) {
+                e_resource resource = empire_trader().get_buy_resource(destination(), { g_city.ourcity().name_id }, 100);
+                empire_trader().record_bought_resource(resource);
                 base.trader_amount_bought += 3;
             } else {
                 tile2i tile;
-                int building_id = get_closest_storageyard(tile, 0, -1, tile);
+                int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
                 if (building_id) {
                     advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                     set_destination(building_id);
@@ -86,29 +90,29 @@ void figure_native_trader::figure_action() {
 
 }
 
-void figure_native_trader::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i *coord_out) {
-    base.draw_figure_with_cart(ctx, pixel, highlight, coord_out);
-}
-
-const animations_t &figure_native_trader::anim() const {
-    return native_trader_m.anim;
-}
-
 void figure_native_trader::update_animation() {
     figure_impl::update_animation();
 
     int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.sprite_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
     }
 
-    int cart_img = native_trader_m.anim["cart"].first_img();
+    int cart_img = anim("cart").first_img();
     base.cart_image_id = cart_img + 8 + 8 * base.resource_id; // BUGFIX should be within else statement?
     if (base.cart_image_id) {
         base.cart_image_id += dir;
         base.figure_image_set_cart_offset(dir);
     }
+}
+
+void figure_native_trader::debug_show_properties() {
+    game_debug_show_property("trader_id", 0);
+}
+
+empire_trader_handle figure_native_trader::empire_trader() { 
+    return empire_trader_handle{}; 
 }

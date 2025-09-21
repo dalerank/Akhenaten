@@ -7,7 +7,7 @@
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 
-buildings::model_t<building_roadblock> roadblock_m;
+building_roadblock::static_params roadblock_m;
 
 void building_roadblock::on_place_checks() {
     /*nothing*/
@@ -16,6 +16,10 @@ void building_roadblock::on_place_checks() {
 bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     /*nothing*/
     return true;
+}
+
+bool building_roadblock::force_draw_top_tile(painter& ctx, tile2i tile, vec2i pixel, color mask) {
+    return false;
 }
 
 void building_roadblock::bind_dynamic(io_buffer *iob, size_t version) {

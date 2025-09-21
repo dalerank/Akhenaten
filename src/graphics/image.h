@@ -125,7 +125,6 @@ extern int terrain_ph_offset;
 bool image_data_fonts_ready();
 bool image_data_render_on_new_loadpacks();
 bool image_load_paks();
-bool image_set_font_pak(encoding_type encoding);
 
 int image_id_resource_icon(int resource);
 int image_group(image_desc desc);

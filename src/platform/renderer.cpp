@@ -1176,7 +1176,7 @@ void platform_render_apply_filter() {
     int error = -1;
     {
         OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
-        //error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
+        error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
         
         SDL_RenderFlush(data.renderer);
         //error = 0;

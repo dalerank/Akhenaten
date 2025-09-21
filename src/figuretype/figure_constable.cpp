@@ -142,14 +142,13 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
         return false;
 
     base.wait_ticks_next_target = 0;
-    int distance;
-    int enemy_id = base.is_nearby(2, &distance);
-    if (enemy_id > 0 && distance <= max_distance) {
-        figure* enemy = figure_get(enemy_id);
+    auto result = base.is_nearby(NEARBY_HOSTILE);
+    if (result.fid > 0 && result.distance <= max_distance) {
+        figure* enemy = figure_get(result.fid);
         base.wait_ticks_next_target = 0;
         advance_action(FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY);
         base.destination_tile = enemy->tile;
-        base.target_figure_id = enemy_id;
+        base.target_figure_id = result.fid;
         enemy->targeted_by_figure_id = id();
         //base.target_figure_created_sequence = enemy->created_sequence;
         route_remove();
@@ -165,63 +164,22 @@ void figure_constable::figure_action() {
     building* b = home();
     switch (action_state()) {
     case FIGURE_ACTION_70_POLICEMAN_CREATED:
-        base.anim.frame = 0;
-        base.wait_ticks--;
-        if (base.wait_ticks <= 0) {
-            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
-            if (road_tile.valid()) {
-                advance_action(FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING);
-                base.set_cross_country_destination(road_tile);
-                base.roam_length = 0;
-            } else {
-                poof();
-            }
-        }
+        advance_action(FIGURE_ACTION_72_POLICEMAN_ROAMING);
         break;
 
     case 9:
     case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
-        base.use_cross_country = true;
-        if (base.move_ticks_cross_country(1) == 1) {
-            if (map_building_at(tile()) == base.homeID()) {
-                // returned to own building
-                poof();
-            } else {
-                advance_action(FIGURE_ACTION_72_POLICEMAN_ROAMING);
-                base.init_roaming_from_building(0);
-                base.direction = calc_general_direction(tile(), base.destination_tile);
-                base.roam_length = 0;
-            }
-        }
+        do_enterbuilding(true, b);
         break;
 
-    case ACTION_10_DELIVERING_FOOD:
+    case 10:
     case FIGURE_ACTION_72_POLICEMAN_ROAMING:
-        base.roam_length++;
-        if (base.roam_length >= base.max_roam_length) {
-            tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
-            if (road_tile.valid()) {
-                advance_action(FIGURE_ACTION_73_POLICEMAN_RETURNING);
-                base.destination_tile = road_tile;
-                route_remove();
-            } else {
-                poof();
-            }
-        }
-        base.roam_ticks(1);
+        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_73_POLICEMAN_RETURNING);
         break;
 
     case ACTION_11_RETURNING_EMPTY:
     case FIGURE_ACTION_73_POLICEMAN_RETURNING:
-        base.move_ticks(1);
-        if (direction() == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING);
-            base.set_cross_country_destination(b->tile);
-            base.roam_length = 0;
-        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            poof();
-        }
-        break;
+        do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
 
     case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
         base.terrain_usage = TERRAIN_USAGE_ANY;

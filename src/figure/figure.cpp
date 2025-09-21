@@ -18,9 +18,15 @@
 #include "io/io_buffer.h"
 #include "graphics/animkeys.h"
 #include "sound/sound_walker.h"
+#include "graphics/view/lookup.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "widget/widget_city.h"
+#include "figuretype/editor.h"
+#include "figure/image.h"
+#include "game/game.h"
+#include "game/game_config.h"
+#include "grid/routing/routing.h"
 #include "js/js_game.h"
 
 #include <string.h>
@@ -31,10 +37,22 @@
 #include <windows.h>
 #endif // _MSC_VER
 
-static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
-const token_holder<e_permission, epermission_none, epermission_count> ANK_CONFIG_ENUM(e_permission_tokens);
+static const vec2i crowd_offsets[] = {
+    {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
+    {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6},
+    {-3, 6}, {6, 3}, {-6, -3}, {6, -3}, {-6, 3},
+    {3, 6}, {-3, -6}, {0,-10}, {10,0}, {0, 10}, {-10, 0}
+};
+constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
-declare_console_command_p(killall) {
+static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+
+using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
+const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
+
+const vec2i default_cart_offset{ 0, -7 };
+
+declare_console_command_p(kill_all_figures) {
     for (auto &f: map_figures()) {
         if (f->is_valid()) {
             f->poof();
@@ -44,7 +62,7 @@ declare_console_command_p(killall) {
     events::emit(event_city_warning{ "Killed all walkers" });
 }
 
-declare_console_command_p(createfigure) {
+declare_console_command_p(create_figure) {
     std::string args; is >> args;
     int f_type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 
@@ -74,7 +92,7 @@ bool figure::do_roam(int terrainchoice, short NEXT_ACTION) {
     if (roam_length >= max_roam_length) { // roam over, return home
         destination_tile.set(0);
         roam_length = 0;
-        set_destination(0);
+        set_destination(nullptr);
         route_remove();
         advance_action(NEXT_ACTION);
         return true;
@@ -95,6 +113,18 @@ int figure::target_is_alive() {
     return 0;
 }
 
+resource_tile figure::find_resource_tile(e_resource resource) {
+    switch (resource) {
+    case RESOURCE_REEDS:
+        return map_routing_citizen_found_reeds(tile);
+
+    case RESOURCE_TIMBER:
+        return map_routing_citizen_found_timber(tile);
+    }
+
+    return { RESOURCE_NONE, tile2i::invalid };
+}
+
 static int get_nearest_enemy(int x, int y, int *distance) {
     int min_enemy_id = 0;
     int min_dist = 10000;
@@ -104,7 +134,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
             continue;
 
         int dist;
-        if (f->type == FIGURE_PROTESTER || f->type == FIGURE_ENEMY54_GLADIATOR)
+        if (f->type == FIGURE_PROTESTER || f->type == FIGURE_ENEMY54_REVOLTMAN)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
         else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
@@ -123,8 +153,8 @@ static int get_nearest_enemy(int x, int y, int *distance) {
     return min_enemy_id;
 }
 
-int figure::is_nearby(int category, int *distance, int max_distance, bool gang_on) {
-    int figure_id = 0;
+nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
+    figure_id fid = 0;
     int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
@@ -133,6 +163,11 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
         }
 
         if (!gang_on && f->targeted_by_figure_id) {
+            continue;
+        }
+
+        const bool should_avoid = avoid(f);
+        if (should_avoid) {
             continue;
         }
 
@@ -162,7 +197,7 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
                 if (category == NEARBY_HOSTILE) {
-                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_ENEMY54_GLADIATOR)
+                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_ENEMY54_REVOLTMAN)
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE
                         && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
@@ -176,15 +211,15 @@ int figure::is_nearby(int category, int *distance, int max_distance, bool gang_o
                 }
                 if (dist < lowest_distance) {
                     lowest_distance = dist;
-                    figure_id = i;
+                    fid = i;
                     //                    if (!gang_on)
                     //                        return figure_id;
                 }
             }
         }
     }
-    *distance = lowest_distance;
-    return figure_id;
+
+    return { fid, lowest_distance };
 }
 
 bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FAIL_ACTION) {
@@ -254,16 +289,12 @@ void figure::figure_delete_UNSAFE() {
             home()->remove_figure(3);
         break;
 
-    case FIGURE_ENEMY_CAESAR_LEGIONARY:
+    case FIGURE_ENEMY_KINGDOME_INFANTRY:
         g_city.kingdome.mark_soldier_killed();
         break;
 
     default:
         ; // nothing
-    }
-
-    if (empire_city_id) {
-        g_empire.city(empire_city_id)->remove_trader(id);
     }
 
     route_remove();
@@ -282,6 +313,19 @@ figure_impl *figure::dcast() {
 
     if (!_ptr) {
         figure_impl::acquire(type, *this);
+    }
+
+    assert(!!_ptr);
+    return _ptr;
+}
+
+const figure_impl *figure::dcast() const {
+    if (!id) {
+        return nullptr;
+    }
+
+    if (!_ptr) {
+        figure_impl::acquire(type, *(figure*)this);
     }
 
     assert(!!_ptr);
@@ -333,7 +377,7 @@ void figure::poof() {
 }
 
 bool figure::is_enemy() {
-    return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
+    return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_KINGDOME_INFANTRY;
 }
 
 bool figure::is_herd() {
@@ -353,14 +397,14 @@ void figure::set_home(int _id) {
     dcast()->on_update_home();
 };
 
-void figure::set_destination(int _id) {
+void figure::set_destination(building_id _id) {
     destination_building_id = _id;
 };
 void figure::set_home(building* b) {
     home_building_id = b->id;
 };
 void figure::set_destination(building* b) {
-    destination_building_id = b->id;
+    destination_building_id = b ? b->id : 0;
 };
 
 bool figure::has_home(int _id) {
@@ -467,13 +511,25 @@ void figure_impl::on_post_load() {
     on_change_terrain(0, base.terrain_type);
 }
 
+void figure_impl::on_attacked(figure *attacker) {
+    if (base.state != FIGURE_STATE_ALIVE) {
+        return;
+    }
+
+    if (action_state(FIGURE_ACTION_149_CORPSE)) {
+        return;
+    }
+
+    kill();
+}
+
 void figure_impl::on_change_terrain(int old, int current) {
     const bool is_water = (!!(current & TERRAIN_WATER) || !!(current & TERRAIN_DEEPWATER)
                             && !(current & TERRAIN_SHORE))
                             && !(current & TERRAIN_BUILDING);
 
-    const bool is_swim_animaion = base.anim.id == animkeys().swim;
-    const bool is_walk_animaion = base.anim.id == animkeys().walk;
+    const bool is_swim_animaion = base.anim.key == animkeys().swim;
+    const bool is_walk_animaion = base.anim.key == animkeys().walk;
     const bool is_moving_animation = is_swim_animaion || is_walk_animaion;
 
     if (!is_moving_animation) {
@@ -509,8 +565,27 @@ void figure_impl::figure_roaming_action() {
     }
 }
 
-void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight, vec2i* coord_out) {
-    base.draw_figure_main(ctx, base.cached_pos, highlight, coord_out);
+vec2i figure::main_sprite_pixel() const {
+    return lookup_tile_to_pixel(tile);
+}
+
+vec2i figure::cart_sprite_pixel() const {
+    vec2i r = main_cached_pos + cart_offset + default_cart_offset;
+    return r;
+}
+
+void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
+    const image_t *img = image_get(cart_image_id);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    command.image_id = cart_image_id;
+    command.pixel = pixel;
+    command.mask = COLOR_MASK_NONE;
+
+    is_cart_drawn = true;
+}
+
+void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_figure_main(ctx, base.main_cached_pos, highlight);
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
@@ -522,11 +597,11 @@ bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
 }
 
-void figure_impl::main_update_image() {
+void figure_impl::main_image_update() {
     if (base.state == FIGURE_STATE_DYING) {
-        base.sprite_image_id = base.anim.start() + base.anim.current_frame();
+        base.main_image_id = base.anim.start() + base.anim.current_frame();
     } else {
-        base.sprite_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
+        base.main_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
     }
 }
 
@@ -565,7 +640,7 @@ metainfo figure_impl::get_info() const {
 }
 
 figure_impl::static_params figure_impl::static_params::dummy;
-void figure_impl::static_params::load(archive arch) {
+void figure_impl::static_params::base_load(archive arch) {
     anim.load(arch);
     assert(anim.data.size() > 0);
 
@@ -580,7 +655,7 @@ void figure_impl::static_params::load(archive arch) {
 
 void figure_impl::update_animation() {
     xstring animkey;
-    if (!base.anim.id) {
+    if (!base.anim.key) {
         animkey = animkeys().walk;
     }
  
@@ -592,13 +667,6 @@ void figure_impl::update_animation() {
         image_set_animation(animkey);
     }
 }
-
-struct fproperty {
-    xstring domain;
-    xstring name;
-
-    std::function<bvariant(figure &, const xstring &)> handler;
-};
 
 const fproperty fproperties[] = {
     //{ tags().stored, xstring("*"),
@@ -618,7 +686,7 @@ const fproperty fproperties[] = {
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
-    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(g_empire.city_name(f.empire_city_id)); }},
+    { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
 };
@@ -650,6 +718,137 @@ figure_impl *figures::create(e_figure_type e, figure &f) {
     return f.acquire_impl<figure_impl>();
 }
 
+void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
+    painter ctx = game.painter();
+    // base
+    ImageDraw::img_generic(ctx, main_image_id, pixel.x, pixel.y);
+    // flag
+    ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - image_get(cart_image_id)->height);
+    // flag number
+    int number = 0;
+    int id = resource_id;
+    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
+        number = id - MAP_FLAG_INVASION_MIN + 1;
+    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
+        number = id - MAP_FLAG_FISHING_MIN + 1;
+    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
+        number = id - MAP_FLAG_HERD_MIN + 1;
+    }
+
+    if (number > 0) {
+        text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
+    }
+}
+
+
+bool figure::has_cart() const {
+    return (use_cart && cart_image_id != 0);
+}
+
+vec2i figure::adjust_pixel_offset(const vec2i pixel) {
+    // determining x/y offset on tile
+    vec2i offset(0, 0);
+    if (use_cross_country) {
+        auto cc_offets = tile_pixel_coords();
+        offset = cc_offets;
+        offset.y -= missile_damage;
+    } else {
+        int dir = figure_image_normalize_direction(direction);
+        int adjusted_progress = progress_on_tile;
+        if (progress_on_tile >= 8) {
+            adjusted_progress -= 15;
+        }
+
+        switch (dir) {
+        case DIR_0_TOP_RIGHT:
+            offset.x += 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
+            break;
+        case DIR_1_RIGHT:
+            offset.x += 4 * adjusted_progress;
+            offset.y = 0;
+            break;
+        case DIR_2_BOTTOM_RIGHT:
+            offset.x += 2 * adjusted_progress;
+            offset.y += adjusted_progress;
+            break;
+        case DIR_3_BOTTOM:
+            offset.x = 0;
+            offset.y += 2 * adjusted_progress;
+            break;
+        case DIR_4_BOTTOM_LEFT:
+            offset.x -= 2 * adjusted_progress;
+            offset.y += adjusted_progress;
+            break;
+        case DIR_5_LEFT:
+            offset.x -= 4 * adjusted_progress;
+            offset.y = 0;
+            break;
+        case DIR_6_TOP_LEFT:
+            offset.x -= 2 * adjusted_progress;
+            offset.y -= adjusted_progress;
+            break;
+        case DIR_7_TOP:
+            offset.x = 0;
+            offset.y -= 2 * adjusted_progress;
+            break;
+        }
+        offset.y -= current_height;
+    }
+
+    if (!!game_features::gameplay_change_citizen_road_offset && id && type != FIGURE_BALLISTA) {
+        // an attempt to not let people walk through each other
+        offset += crowd_offsets[id % crowd_offsets_size];
+    }
+
+    return { pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8 };
+}
+
+void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
+    int x_correction = 0;
+    int y_correction = 3;
+
+    y_correction = dcast()->y_correction(y_correction);
+
+    const image_t *img = is_enemy_image ? image_get_enemy(PACK_ENEMY_ASSYRIAN, main_image_id) : image_get(main_image_id);
+    auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
+    command.image_id = main_image_id;
+    command.pixel = pixel + vec2i{ x_correction, y_correction };
+    command.mask = COLOR_MASK_NONE;
+}
+
+void figure::city_draw_figure(painter &ctx, int highlight) {
+    // This is to update the sprite's direction when rotating the city view.
+    // Unfortunately, because the only thing we have at the time of file loading is
+    // the raw sprite image id, it doesn't work if we haven't performed at least a
+    // single frame of figure action after loading a file (i.e. if paused instantly)
+    figure_image_update(true);
+
+    // if (coord_out != nullptr) {
+    //     highlight = 0;
+    //     *coord_out = cached_pos;
+    // }
+
+    if (cart_image_id) {
+        switch (type) {
+        case FIGURE_MAP_FLAG:
+            draw_map_flag(main_cached_pos, highlight);
+            break;
+
+        default:
+            dcast()->figure_draw(ctx, main_cached_pos, highlight);
+            break;
+        }
+    } else {
+        draw_figure_main(ctx, main_cached_pos, highlight);
+        //if (!is_enemy_image && highlight) {
+        //    ImageDraw::img_sprite(ctx, main_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
+        //}
+    }
+
+    is_main_drawn = true;
+}
+
 void figure::bind(io_buffer* iob) {
     figure* f = this;
     int tmpe;
@@ -659,9 +858,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 
     //    f->sprite_image_id = buf->read_i16() + 18;
-    f->sprite_image_id -= 18;
-    iob->bind(BIND_SIGNATURE_UINT16, &f->sprite_image_id);
-    f->sprite_image_id += 18;
+    f->main_image_id -= 18;
+    iob->bind(BIND_SIGNATURE_UINT16, &f->main_image_id);
+    f->main_image_id += 18;
 
     iob->bind(BIND_SIGNATURE_INT16, &f->anim.frame);
     iob->bind(BIND_SIGNATURE_UINT16, &f->next_figure);
@@ -711,7 +910,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->cc_direction);
     iob->bind(BIND_SIGNATURE_UINT8, &f->speed_multiplier);
     iob->bind(BIND_SIGNATURE_INT16, &f->home_building_id);
-    iob->bind(BIND_SIGNATURE_INT16, &f->immigrant_home_building_id);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &f->destination_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->formation_id);       // formation: 10
     iob->bind(BIND_SIGNATURE_UINT8, &f->index_in_formation); // 3
@@ -725,7 +924,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_missile);
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.x);
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
     iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
@@ -740,7 +939,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
+    iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
     iob->bind(BIND_SIGNATURE_INT16, &f->target_figure_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->targeted_by_figure_id);
@@ -757,17 +956,16 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
-    iob->bind(BIND_SIGNATURE_INT32, &f->market_lady_resource_image_offset); // 03 00 00 00
+    iob->bind____skip(4); 
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...
-    iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_returning_home_id);     // 26
+    iob->bind____skip(2);
     iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...
-    iob->bind(BIND_SIGNATURE_INT16, &f->market_lady_bought_amount);         // 200
+    iob->bind____skip(2);         // 200
     iob->bind____skip(115);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->draw_debug_mode);     // 6
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[0]); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[1]); // -1
-    iob->bind(BIND_SIGNATURE_INT16, &f->data.value[2]); // -1
-    iob->bind____skip(44);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->draw_mode);     // 6
+    static_assert(sizeof(figure::runtime_data) == 32, "runtime_data more then 32 bytes");
+    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 6 + 26
+    iob->bind____skip(18);
     iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);
 
@@ -777,5 +975,5 @@ void figure::bind(io_buffer* iob) {
 
     iob->bind____skip(2);
 
-    draw_debug_mode = 0;
+    draw_mode = 0;
 }

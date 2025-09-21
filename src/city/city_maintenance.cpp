@@ -19,6 +19,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "game/game_config.h"
 #include "game/undo.h"
+#include "game/difficulty.h"
 
 void fire_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
@@ -67,10 +68,10 @@ void city_maintenance_t::check_fire_collapse() {
         const model_building *model = model_get_building(b.type);
 
         /////// COLLAPSE
-        int damage_risk_increase = model->damage_risk;
-        damage_risk_increase += scenario_additional_damage(b.type, e_damage_collapse);
-
         if (!b.damage_proof) {
+            int damage_risk_increase = model->damage_risk;
+            damage_risk_increase += scenario_additional_damage(b.type, e_damage_collapse);
+            damage_risk_increase = difficulty_multiply_risk(damage_risk_increase);
             b.damage_risk += damage_risk_increase;
         }
 
@@ -83,12 +84,13 @@ void city_maintenance_t::check_fire_collapse() {
         /////// FIRE
         int random_building = (b.id + map_random_get(b.tile)) & 7;
         if (!b.fire_proof && random_building == random_global) {
-            int expected_fire_risk = building_impl::params(b.type).fire_risk_update;
-            expected_fire_risk += model->fire_risk;
+            int fire_risk_increase = building_impl::params(b.type).fire_risk_update;
+            fire_risk_increase += model->fire_risk;
+            fire_risk_increase += scenario_additional_damage(b.type, e_damage_fire);
+            fire_risk_increase = b.dcast()->get_fire_risk(fire_risk_increase);
+            fire_risk_increase = difficulty_multiply_risk(fire_risk_increase);
 
-            expected_fire_risk += scenario_additional_damage(b.type, e_damage_fire);
-            expected_fire_risk = b.dcast()->get_fire_risk(expected_fire_risk);
-            b.fire_risk += expected_fire_risk;
+            b.fire_risk += fire_risk_increase;
             //            if (climate == CLIMATE_NORTHERN)
             //                b->fire_risk = 0;
             //            else if (climate == CLIMATE_DESERT)
@@ -181,15 +183,18 @@ void city_maintenance_t::check_kingdome_access() {
         } else if (b.type == BUILDING_SENET_HOUSE) {
             OZZY_PROFILER_SECTION("Game/Run/Tick/Check Road Access/Senet");
             b.distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_hippodrome(b.tile.x(), b.tile.y(), &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b.road_network_id = map_road_network_get(road_grid_offset);
-                b.distance_from_entry = map_routing_distance(road_grid_offset);
-                b.road_access.x(x_road);
-                b.road_access.y(y_road);
+            const bool closest_road = !!game_features::gameplay_building_road_closest;
+            tile2i road = map_road_to_largest_network(b.tile, b.size, closest_road);
+            if (road.valid()) {
+                b.road_network_id = map_road_network_get(road);
+                b.distance_from_entry = map_routing_distance(road);
+                b.road_access = road;
+                b.has_road_access = true;
+            } else {
+                b.road_access = map_get_road_access_tile(b.tile, b.size);
+                b.has_road_access = b.road_access.valid();
             }
-        } else if (building_type_any_of(b, BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST)) {
+        } else if (building_type_any_of(b, { BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST })) {
             if (b.is_main()) {
                 auto complex = b.dcast_temple_complex();
                 int orientation = (5 - (complex->runtime_data().variant / 2)) % 4;
