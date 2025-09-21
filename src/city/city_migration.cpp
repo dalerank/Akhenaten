@@ -10,8 +10,20 @@ city_migration_defaults_t g_migration_params;
 svector<sentiment_step_t, 16> g_migration_sentiment_influence;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
-    g_config_arch.r("migration_defaults", g_migration_params);
-    g_config_arch.r("migration_sentiment_influence", g_migration_sentiment_influence);
+    g_config_arch.r_section("migration_defaults", [] (archive arch) {
+        auto &d = g_migration_params;
+        arch.r("max_immigration_amount_per_batch", d.max_immigration_amount_per_batch);
+        arch.r("max_emigration_amount_per_batch", d.max_emigration_amount_per_batch);
+        arch.r("max_newcomers_per_update", d.max_newcomers_per_update);
+        arch.r("max_leftovers_per_update ", d.max_leftovers_per_update);        
+    });
+
+    g_migration_sentiment_influence.clear();
+    g_config_arch.r_array("migration_sentiment_influence", [] (archive arch) {
+        sentiment_step_t step; 
+        arch.r(step);
+        g_migration_sentiment_influence.push_back(step);
+    });
     assert(!g_migration_sentiment_influence.empty());
 }
 
