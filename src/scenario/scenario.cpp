@@ -90,13 +90,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
             building_stages.push_back({key, buildings});
         });
 
-        arch.r_array("invasion_points", [&] (archive parch) {
-            int index = std::clamp(parch.r_int("index"), 0, MAX_INVASION_POINTS_LAND);
-            bool issea = parch.r_bool("sea");
-            auto& points = issea ? invasion_points_sea : invasion_points_land;
-            points[index] = parch.r_tile2i("pos");
-        });
-
+        arch.r("invasion_points_land", invasion_points_land);
+        arch.r("invasion_points_sea", invasion_points_sea);
         arch.r("win_criteria", win_criteria);
         arch.r("vars", vars);
     });
