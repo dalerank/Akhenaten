@@ -1,30 +1,30 @@
 log_info("akhenaten: walker sounds started")
 
-var walker_sounds = [
+walker_sounds = [
   // apothecary
   {type: "apothecary_malaria_not_a_problem",             sound:"apothecary_e02.wav"},
   {type: "apothecary_malaria_outbreak_could_strike",     sound:"apothecary_e03.wav"},
- // artisan
- {type: "artisan_work_my_tools_need_for_monument", 			sound:"artisan_e01.wav"},
- {type: "artisan_work_i_write_history_of_egypt", 				sound:"artisan_e02.wav"},
- // barge
- {type: "barge_have_no_place_for_dock", 								sound:"barge_e01.wav"},
- {type: "barge_docked_wait_for_dockpushers", 						sound:"barge_e02.wav"},
- {type: "barge_city_not_trades", 												sound:"barge_e03.wav"},
- {type: "barge_i_like_to_trage", 												sound:"barge_e04.wav"},
- {type: "barge_amazing_trades", 												sound:"barge_e05.wav"},
-  // brick
-  {type: "brick_bricklaying_time_at_monument",           sound:"brick_e01.wav"},
-  {type: "brick_monument_will_be_strong",                sound:"brick_e02.wav"},
- // caravan
- {type: "caravan_city_not_trades", 											sound:"caravan_e01.wav"},
- {type: "caravan_buy_for_less_sell_for_more", 					sound:"caravan_e02.wav"},
- {type: "caravan_its_my_life", 													sound:"caravan_e03.wav"},
- {type: "caravan_amazing_trades", 											sound:"caravan_e04.wav"},
- {type: "caravan_bad_trades", 													sound:"caravan_e05.wav"},
- // carpenter
- {type: "carpenter_work_my_tools_need_for_monument", 		sound:"carpenter_e01.wav"},
- {type: "carpenter_this_monument_will_be_short", 				sound:"carpenter_e02.wav"},
+  // artisan
+  {type: "artisan_work_my_tools_need_for_monument", 			sound:"artisan_e01.wav"},
+  {type: "artisan_work_i_write_history_of_egypt", 				sound:"artisan_e02.wav"},
+  // barge
+  {type: "barge_have_no_place_for_dock", 								sound:"barge_e01.wav"},
+  {type: "barge_docked_wait_for_dockpushers", 						sound:"barge_e02.wav"},
+  {type: "barge_city_not_trades", 												sound:"barge_e03.wav"},
+  {type: "barge_i_like_to_trage", 												sound:"barge_e04.wav"},
+  {type: "barge_amazing_trades", 												sound:"barge_e05.wav"},
+   // brick
+   {type: "brick_bricklaying_time_at_monument",           sound:"brick_e01.wav"},
+   {type: "brick_monument_will_be_strong",                sound:"brick_e02.wav"},
+  // caravan
+  {type: "caravan_city_not_trades", 											sound:"caravan_e01.wav"},
+  {type: "caravan_buy_for_less_sell_for_more", 					sound:"caravan_e02.wav"},
+  {type: "caravan_its_my_life", 													sound:"caravan_e03.wav"},
+  {type: "caravan_amazing_trades", 											sound:"caravan_e04.wav"},
+  {type: "caravan_bad_trades", 													sound:"caravan_e05.wav"},
+  // carpenter
+  {type: "carpenter_work_my_tools_need_for_monument", 		sound:"carpenter_e01.wav"},
+  {type: "carpenter_this_monument_will_be_short", 				sound:"carpenter_e02.wav"},
   // cartpusher
   {type: "cartpusher_no_one_available_to_unload",        sound:"cartpusher_e01.wav"},
   {type: "cartpusher_no_one_can_accept_these_goods",     sound:"cartpusher_e02.wav"},

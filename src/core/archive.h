@@ -90,6 +90,15 @@ struct archive {
     template<typename T>
     void r(pcstr name, T& v);
 
+    template<typename T>
+    void r(pcstr name, std::unordered_set<T> &v) {
+        this->r_array(name, [&] (archive arch) {
+            T itemv;
+            arch.r(itemv);
+            v.insert(itemv);
+        });
+    }
+
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
         getproperty(-1, name);

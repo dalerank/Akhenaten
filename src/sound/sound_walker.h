@@ -1,28 +1,36 @@
 #pragma once
 
 #include "core/archive.h"
-#include "core/xstring.h"
-#include "content/vfs.h"
 
 struct figure_sound_t {
-    xstring id;
-    xstring fname;
-    textid phrase;
+    xstring key;
+    xstring sound;
+    int group;
+    int text;
     xstring phrase_key;
-
-    void load(archive arch);
+    bool operator==(const figure_sound_t &other) const noexcept { return key == other.key; }
+    bool operator!=(const figure_sound_t &other) const noexcept { return key != other.key; }
+    bool operator<(const figure_sound_t &other) const noexcept { return key < other.key; }
 };
 
+template<>
+struct std::hash<figure_sound_t> {
+    std::size_t operator()(const figure_sound_t &k) const noexcept {
+        return (size_t)k.key._get();
+    }
+};
+ANK_CONFIG_STRUCT(figure_sound_t, key, sound)
+
 struct figure_sounds_t {
-    std::vector<figure_sound_t> data;
+    std::unordered_set<figure_sound_t> sounds;
 
     void load(archive arch, pcstr section = "sounds");
 
     const figure_sound_t &operator[](xstring key) const {
-        static figure_sound_t dummy{ "", "", {0, 0}, "#undefined_phrase" };
+        static figure_sound_t dummy{ "", "", 0, 0, "#undefined_phrase" };
 
-        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.id == key; });
-        return (it == data.end()) ? dummy : *it;
+        auto it = sounds.find({ key });
+        return (it == sounds.end()) ? dummy : *it;
     }
 };
 

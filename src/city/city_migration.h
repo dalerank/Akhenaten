@@ -16,8 +16,12 @@ struct city_migration_defaults_t {
     uint8_t max_emigration_amount_per_batch;
     uint8_t max_newcomers_per_update;
     uint8_t max_leftovers_per_update;
-    svector<sentiment_step_t, 16> sentiment_influence;
 };
+ANK_CONFIG_STRUCT(city_migration_defaults_t, 
+                  max_immigration_amount_per_batch,
+                  max_emigration_amount_per_batch,
+                  max_newcomers_per_update,
+                  max_leftovers_per_update)
 
 struct city_migration_t {
     uint8_t immigration_queue_size;

@@ -15,6 +15,7 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "core/log.h"
+#include "content/vfs.h"
 #include <string>
 
 #include <iostream>
