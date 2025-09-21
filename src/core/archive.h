@@ -661,7 +661,7 @@ void archive::r_stable_array(pcstr name, T &arr) {
             getindex(-1, i);
             if (isobject(-1)) {
                 value_type item;
-                archive_helper::reader(archive(state), item);
+                archive_helper::reader(*this, item);
                 arr[std::hash<value_type>()(item)] = item;
             }
             pop(1);
