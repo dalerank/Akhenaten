@@ -21,8 +21,8 @@ struct music_data_t {
     xstring combat_short;
 
     struct soundtrack {
-        xstring name;
-        vfs::path file;
+        xstring key;
+        xstring file;
     };
 
     struct pop_soundtrack {
@@ -30,23 +30,20 @@ struct music_data_t {
         xstring track;
     };
 
-    svector<soundtrack, 64> tracks;
+    svector<soundtrack, 64> soundtracks;
     svector<pop_soundtrack, 16> music_populations;
 };
+ANK_CONFIG_STRUCT(music_data_t::soundtrack, key, file)
 ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, track)
 ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short)
 
 music_data_t g_music;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks) {
-    g_music.tracks.clear();
-    g_config_arch.r_objects("soundtracks", [] (pcstr key, archive arch) {
-        auto &track = g_music.tracks.emplace_back();
-        track.name = key;
-        track.file = arch.r_string("file");
-    });
-
     g_config_arch.r("music", g_music);
+    
+    g_music.soundtracks.clear();
+    g_config_arch.r("soundtracks", g_music.soundtracks);
 
     g_music.music_populations.clear();
     g_config_arch.r("music_populations", g_music.music_populations);
@@ -61,18 +58,18 @@ declare_console_command_p(playtrack) {
 void sound_manager_t::play_track(const xstring track) {
     stop_music();
 
-    auto it = std::find_if(g_music.tracks.begin(), g_music.tracks.end(), [track] (auto &t) { return t.name == track; });
+    auto it = std::find_if(g_music.soundtracks.begin(), g_music.soundtracks.end(), [track] (auto &t) { return t.key == track; });
 
-    if (it == g_music.tracks.end()) {
+    if (it == g_music.soundtracks.end()) {
         return;
     }
 
     int volume = g_settings.get_sound(SOUND_MUSIC)->volume;
 
     volume = volume * 0.4;
-    vfs::path corrected_filename = it->file;
+    vfs::path corrected_filename = it->file.c_str();
     if (strncmp(it->file.c_str(), vfs::content_audio, strlen(vfs::content_audio)) != 0) {
-        corrected_filename = vfs::path(vfs::content_audio, it->file);
+        corrected_filename = vfs::path(vfs::content_audio, it->file.c_str());
     }
 
     corrected_filename = vfs::content_file(corrected_filename);
