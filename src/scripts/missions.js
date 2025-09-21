@@ -1,6 +1,7 @@
 log_info("akhenaten: missions started")
 
 mission_sounds = []
+
 for (var i = 0; i < 38; i++) {
 	mission_sounds[i] = {
 		mission: i,

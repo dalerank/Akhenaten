@@ -10,7 +10,12 @@ city_migration_defaults_t g_migration_params;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
     g_config_arch.r_section("migration_defaults", [] (archive arch) {
-        archive_helper::reader(arch, g_migration_params);
+        auto &d = g_migration_params;
+        arch.r("max_immigration_amount_per_batch", d.max_immigration_amount_per_batch);
+        arch.r("max_emigration_amount_per_batch", d.max_emigration_amount_per_batch);
+        arch.r("max_newcomers_per_update", d.max_newcomers_per_update);
+        arch.r("max_leftovers_per_update", d.max_leftovers_per_update);
+        arch.r("sentiment_influence", d.sentiment_influence);
     });
     assert(!g_migration_params.sentiment_influence.empty());
 }
