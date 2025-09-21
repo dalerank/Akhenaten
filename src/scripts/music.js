@@ -1,6 +1,6 @@
 log_info("akhenaten: music started")
 
-var soundtracks = {
+soundtracks = {
 	none: { file:"" },
 	setup: { file:"AUDIO/Music/Setup.mp3"},
 	combat_short: { file:"AUDIO/Music/Battle.mp3"},
@@ -44,16 +44,16 @@ var soundtracks = {
 	city_37: { file:"AUDIO/Music/Ra.mp3" },
 }
 
-var music = {
-	menu_track: "setup",
-	combat_long: "combat_long",
-	combat_short: "combat_short",
+music = {
+	menu_track: "setup"
+	combat_long: "combat_long"
+	combat_short: "combat_short"
 }
 
-var music_populations = {
-	_1000 : { pop:1000, track:"city_1" },
-	_2000 : { pop:2000, track:"city_2" },
-	_5000 : { pop:5000, track:"city_3" },
-	_7000 : { pop:7000, track:"city_4" },
-	_ee   : { pop:99000, track:"city_5" },
-}
+music_populations = [
+	{ pop:1000, track:"city_1" },
+	{ pop:2000, track:"city_2" },
+	{ pop:5000, track:"city_3" },
+	{ pop:7000, track:"city_4" },
+	{ pop:99000, track:"city_5" },
+]

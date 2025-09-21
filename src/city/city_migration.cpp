@@ -12,12 +12,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
     g_config_arch.r("migration_defaults", g_migration_params);
     assert(!g_migration_params.sentiment_influence.empty());
 }
-ANK_CONFIG_STRUCT(city_migration_defaults_t,
-    max_immigration_amount_per_batch,
-    max_emigration_amount_per_batch,
-    max_newcomers_per_update,
-    max_leftovers_per_update,
-    sentiment_influence)
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
