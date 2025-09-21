@@ -164,6 +164,7 @@ struct archive {
     }
 
     vec2i r_vec2i_impl(pcstr x, pcstr y);
+    bool r_desc_impl(image_desc &desc);
 
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
@@ -561,7 +562,6 @@ namespace archive_helper {                                                      
         call_load_if_exists(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{});   \
     }                                                                                             \
 }
-ANK_CONFIG_STRUCT(image_desc, pack, id, offset)
 
 template<> inline void archive::r<int>(pcstr name, int &v) { v = r_int(name); }
 template<> inline void archive::r<int8_t>(pcstr name, int8_t &v) { v = r_int(name); }
@@ -572,6 +572,7 @@ template<> inline void archive::r<bool>(pcstr name, bool &v) { v = r_bool(name);
 template<> inline void archive::r<vec2i>(pcstr name, vec2i &v) { v = r_vec2i(name); }
 template<> inline void archive::r<xstring>(pcstr name, xstring &v) { v = r_string(name); }
 template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(name); }
+template<> inline void archive::r<image_desc>(pcstr name, image_desc &v) { r_desc(name, v); }
 
 namespace archive_helper {
     template<typename T, std::size_t N>
@@ -616,6 +617,7 @@ namespace archive_helper {
 
     inline void reader(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
     inline void reader(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = {t.x, t.y}; }
+    inline void reader(archive arch, image_desc &v) { arch.r_desc_impl(v); }
 }
 
 template<typename T>

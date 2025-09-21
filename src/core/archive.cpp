@@ -320,17 +320,25 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
 bool archive::r_desc(pcstr name, image_desc &desc) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
-    bool ok = false;
+    bool ok = r_desc_impl(desc);
+    js_pop(vm, 1);
+    return ok;
+}
+
+bool archive::r_desc_impl(image_desc &desc) {
+    auto vm = (js_State *)state;
     if (js_isundefined(vm, -1)) {
-        ;
-    } else if (js_isobject(vm, -1)) {
+        return false;
+    } 
+    
+    if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "pack"); desc.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); desc.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "offset"); desc.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        ok = true;
+        return true;
     }
-    js_pop(vm, 1);
-    return ok;
+
+    return false;
 }
 
 void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
