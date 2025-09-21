@@ -6,13 +6,11 @@
 #include "js/js_game.h"
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
-city_migration_t::params g_migration_params;
+city_migration_defaults_t g_migration_params;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
-    g_config_arch.r_section("migration_defaults", [] (archive arch) {
-        arch.r(g_migration_params);
-        assert(!g_migration_params.sentiment_influence.empty());
-    });
+    g_config_arch.r("migration_defaults", g_migration_params);
+    assert(!g_migration_params.sentiment_influence.empty());
 }
 
 void city_migration_t::nobles_leave_city(int num_people) {
@@ -74,7 +72,7 @@ void city_migration_t::create_immigrants(int num_people) {
     }
 }
 
-city_migration_t::params& city_migration_t::current_params() {
+city_migration_defaults_t& city_migration_t::current_params() {
     return g_migration_params;
 }
 

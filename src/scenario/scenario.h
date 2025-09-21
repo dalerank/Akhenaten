@@ -14,6 +14,7 @@
 #include "core/settings_vars.h"
 
 #include <cstdint>
+#include <unordered_map>
 
 struct scenario_data_buffers {
     buffer* mission_index = nullptr;
@@ -240,7 +241,7 @@ struct scenario_data_t {
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     resource_allow_vec init_resources;
     std::array<extra_damage_t, BUILDING_MAX> extra_damage;
-    std::vector<building_stage_t> building_stages;
+    std::unordered_map<xstring, building_stage_t> stages;
     settings_vars_t vars;
 
     struct {

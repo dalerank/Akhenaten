@@ -84,11 +84,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         std::fill(extra_damage.begin(), extra_damage.end(), extra_damage_t{ BUILDING_NONE, 0, 0 });
         arch.r_stable_array("extra_damage", extra_damage);
 
-        building_stages.clear();
-        arch.r_objects("stages", [&](pcstr key, archive sarch) {
-            auto buildings = archive::r_array_num<e_building_type>(sarch);
-            building_stages.push_back({key, buildings});
-        });
+        stages.clear();
+        arch.r("stages", stages);
 
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
