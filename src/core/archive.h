@@ -733,7 +733,7 @@ void g_archive::r(pcstr name, std::array<T, N> &v) {
 }
 
 template<typename T>
-bool g_archive::r(pcstr name, T &obj) {
+inline bool g_archive::r(pcstr name, T &obj) {
     if (!state) {
         return true;
     }

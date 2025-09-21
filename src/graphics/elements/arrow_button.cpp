@@ -29,10 +29,8 @@ ANK_CONFIG_STRUCT(arrow_button_images_t,
                   arrow_button_up)
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options) {
-    g_config_arch.r_section("uioptions", [] (archive arch) {
-        arch.r(g_arrow_button_images);
-        assert(g_arrow_button_images.arrow_button_tiny_down.valid() && "Incorrect image desc loaded");
-    });
+    g_config_arch.r("uioptions", g_arrow_button_images);
+    assert(g_arrow_button_images.arrow_button_tiny_down.valid() && "Incorrect image desc loaded");
 }
 
 void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny) {

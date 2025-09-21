@@ -33,6 +33,7 @@ struct music_data_t {
     svector<soundtrack, 64> tracks;
     svector<pop_soundtrack, 16> pop_tracks;
 };
+ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short)
 
 music_data_t g_music;
 
@@ -44,11 +45,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks) {
         track.file = arch.r_string("file");
     });
 
-    g_config_arch.r_section("music", [] (archive arch) {
-        g_music.menu_track = arch.r_string("menu_track");
-        g_music.combat_long = arch.r_string("combat_long");
-        g_music.combat_short = arch.r_string("combat_short");
-    });
+    g_config_arch.r("music", g_music);
 
     g_music.pop_tracks.clear();
     g_config_arch.r_objects("music_populations", [] (pcstr key, archive arch) {
