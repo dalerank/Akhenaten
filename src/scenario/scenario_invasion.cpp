@@ -40,6 +40,18 @@ std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_enemies) {
     g_config_arch.r("enemy_barbarian", g_enemy_properties[ENEMY_0_BARBARIAN]);
+    g_config_arch.r("enemy_assyrian", g_enemy_properties[ENEMY_1_ASSYRIAN]);
+    g_config_arch.r("enemy_canaanite", g_enemy_properties[ENEMY_2_CANAANITE]);
+    g_config_arch.r("enemy_egyptian", g_enemy_properties[ENEMY_3_EGYPTIAN]);
+    g_config_arch.r("enemy_hittite", g_enemy_properties[ENEMY_4_HITTITE]);
+    g_config_arch.r("enemy_hyksos", g_enemy_properties[ENEMY_5_HYKSOS]);
+    g_config_arch.r("enemy_kushite", g_enemy_properties[ENEMY_6_KUSHITE]);
+    g_config_arch.r("enemy_libian", g_enemy_properties[ENEMY_7_LIBIAN]);
+    g_config_arch.r("enemy_nubian", g_enemy_properties[ENEMY_8_NUBIAN]);
+    g_config_arch.r("enemy_persian", g_enemy_properties[ENEMY_9_PERSIAN]);
+    g_config_arch.r("enemy_phoenician", g_enemy_properties[ENEMY_10_PHOENICIAN]);
+    g_config_arch.r("enemy_roman", g_enemy_properties[ENEMY_11_ROMAN]);
+    g_config_arch.r("enemy_seapeople", g_enemy_properties[ENEMY_12_SEAPEOPLE]);
 }
 
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
