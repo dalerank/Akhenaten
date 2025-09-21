@@ -39,12 +39,7 @@ declare_console_command_p(start_invasion_fast) {
 std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_enemies) {
-    g_config_arch.r_section("enemy_barbarian", [] (archive arch) {
-        e_enemy_type type = arch.r_type<e_enemy_type>("type");
-        auto& enemies = g_enemy_properties[type];
-
-        arch.r(enemies);
-    });
+    g_config_arch.r("enemy_barbarian", g_enemy_properties[ENEMY_0_BARBARIAN]);
 }
 
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
