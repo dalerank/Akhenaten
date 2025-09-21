@@ -140,7 +140,7 @@ void figure::figure_phrase_determine() {
 
     if (!phrase_key.empty()) {
         figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key);
-        phrase = reaction.phrase;
+        phrase = { reaction.group, reaction.text };
         return;
     }
 
@@ -162,7 +162,7 @@ void figure::figure_phrase_determine() {
 
     if (!phrase_key.empty()) {
         figure_sound_t reaction = dcast()->get_sound_reaction(phrase_key.c_str());
-        phrase = reaction.phrase;
+        phrase = { reaction.group, reaction.text };
     }
 }
 
@@ -195,7 +195,7 @@ static int figure_play_phrase_file(figure *f, e_figure_type type, xstring key) {
             }
         } else {
             auto reaction = f->dcast()->get_sound_reaction(key);
-            path.printf("Voice/Walker/%s", reaction.fname.c_str());
+            path.printf("Voice/Walker/%s", reaction.sound.c_str());
         }
 
         g_sound.speech_play_file(path, 255);
