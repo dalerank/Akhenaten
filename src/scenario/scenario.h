@@ -158,13 +158,13 @@ struct scenario_data_t {
     int player_faction;
 
     struct win_criterias_t {
-        struct win_criteria_t population;
-        struct win_criteria_t culture;
-        struct win_criteria_t prosperity;
-        struct win_criteria_t monuments;
-        struct win_criteria_t kingdom;
-        struct win_criteria_t housing_count;
-        struct win_criteria_t housing_level;
+        win_criteria_t population;
+        win_criteria_t culture;
+        win_criteria_t prosperity;
+        win_criteria_t monuments;
+        win_criteria_t kingdom;
+        win_criteria_t housing_count;
+        win_criteria_t housing_level;
         struct {
             int enabled;
             int years;

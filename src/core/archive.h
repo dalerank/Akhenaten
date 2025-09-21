@@ -79,10 +79,10 @@ struct archive {
     inline std::array<T, S> r_sarray(pcstr name);
 
     template<typename T, std::size_t N>
-    void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
+    inline void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
 
     template<typename T, std::size_t N, typename = std::enable_if_t<std::is_enum_v<T> || std::is_arithmetic_v<T>>>
-    void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
+    inline void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
 
     template<typename T>
     void r(T& s);
@@ -91,7 +91,7 @@ struct archive {
     void r(pcstr name, T& v);
 
     template<typename T>
-    void r(pcstr name, std::unordered_set<T> &v) {
+    inline void r(pcstr name, std::unordered_set<T> &v) {
         this->r_array(name, [&] (archive arch) {
             T itemv;
             arch.r(itemv);
@@ -322,10 +322,10 @@ struct g_archive : public archive {
     }
 
     template<typename T, std::size_t N>
-    void r(pcstr name, svector<T, N> &v);
+    inline void r(pcstr name, svector<T, N> &v);
 
     template<typename T>
-    void r(pcstr name, std::unordered_set<T>& v) {
+    inline void r(pcstr name, std::unordered_set<T>& v) {
         this->r_array(name, [&] (archive arch) {
             T itemv; arch.r(itemv);
             v.insert(itemv);
@@ -555,12 +555,12 @@ constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
 // Clang checks constexpr if more strictly, and even when the condition is false, it still checks 
 // the syntactic correctness of the code inside the block.
 template<typename ArchiveT, typename Type>
-void call_load_if_exists(ArchiveT js_j, Type &js_t, std::true_type) {
+inline void call_load_if_exists(ArchiveT js_j, Type &js_t, std::true_type) {
     js_t.load(js_j);
 }
 
 template<typename ArchiveT, typename Type>
-void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
+inline void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
     // nothing to do, class has no load function
 }
 
@@ -586,10 +586,10 @@ template<> inline void archive::r<bstring<256>>(pcstr name, bstring<256> &v) { v
 
 namespace archive_helper {
     template<typename T, std::size_t N>
-    void reader(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
+    inline void reader(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
 
     template<typename T, std::size_t N>
-    void reader(archive arch, pcstr name, svector<T, N>& v) {
+    inline void reader(archive arch, pcstr name, svector<T, N>& v) {
         if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
             arch.r_array_num<T>(name, v);
         } else {
@@ -600,7 +600,7 @@ namespace archive_helper {
     }
 
     template<typename T>
-    void reader(archive arch, pcstr name, std::vector<T> &v) {
+    inline void reader(archive arch, pcstr name, std::vector<T> &v) {
         if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
             arch.r_array_num<T>(name, v);
         } else {
@@ -611,7 +611,7 @@ namespace archive_helper {
     }
 
     template<typename T>
-    void reader(archive arch, pcstr name, std::unordered_map<xstring, T> &v) { 
+    inline void reader(archive arch, pcstr name, std::unordered_map<xstring, T> &v) {
         arch.r_objects(name, [&] (pcstr key, archive sarch) {
             auto &item = v[key];
             sarch.r<T>(item);
@@ -619,9 +619,9 @@ namespace archive_helper {
     }
     
     template<typename T>
-    void reader(archive arch, pcstr name, T& v) {
+    inline void reader(archive arch, pcstr name, T &v) {
         arch.r_section(name, [&] (archive sarch) {
-            archive_helper::reader(sarch, v);
+            reader(sarch, v);
         });
     }
 
@@ -631,7 +631,7 @@ namespace archive_helper {
 }
 
 template<typename T>
-void archive::r(T &s) { archive_helper::reader(*this, s); }
+inline void archive::r(T &s) { archive_helper::reader(*this, s); }
 
 template<size_t S, typename T>
 inline std::array<T, S> archive::r_sarray(pcstr name) {
@@ -662,7 +662,7 @@ inline std::array<T, S> archive::r_sarray(pcstr name) {
 }
 
 template<typename T>
-void archive::r_stable_array(pcstr name, T &arr) {
+inline void archive::r_stable_array(pcstr name, T &arr) {
     getproperty(-1, name);
     if (isarray(-1)) {
         int length = getlength(-1);
@@ -681,7 +681,7 @@ void archive::r_stable_array(pcstr name, T &arr) {
 }
 
 template<typename T>
-void archive::r(pcstr name, T& v) {
+inline void archive::r(pcstr name, T& v) {
     if constexpr (std::is_enum_v<T>) {
         v = this->r_type<T>(name);
     } else if constexpr(std::is_arithmetic_v<T>) {
@@ -692,7 +692,7 @@ void archive::r(pcstr name, T& v) {
 }
 
 template<typename T, std::size_t N>
-void g_archive::r(pcstr name, svector<T, N> &v) {
+inline void g_archive::r(pcstr name, svector<T, N> &v) {
     getglobal(name);
     v.clear();
     if (isarray(-1)) {
@@ -718,7 +718,7 @@ void g_archive::r(pcstr name, svector<T, N> &v) {
 }
 
 template<typename T, std::size_t N>
-void g_archive::r(pcstr name, std::array<T, N> &v) {
+inline void g_archive::r(pcstr name, std::array<T, N> &v) {
     getglobal(name);
     auto it = v.begin();
     if (isarray(-1)) {
@@ -752,7 +752,7 @@ inline bool g_archive::r(pcstr name, T &obj) {
 }
 
 template<typename T>
-void g_archive::r_stable_array(pcstr name, T &arr) {
+inline void g_archive::r_stable_array(pcstr name, T &arr) {
     getglobal(name);
     if (isarray(-1)) {
         int length = getlength(-1);
