@@ -35,14 +35,14 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets) {
 }
 
 struct cart_image_desc : public image_desc {
-    e_resource res;
+    e_resource resource;
 };
-ANK_CONFIG_STRUCT(cart_image_desc, res, pack, id, offset)
+ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
 
 template<>
 struct std::hash<cart_image_desc> {
     [[nodiscard]] size_t operator()(const cart_image_desc &desc) const noexcept {
-        return desc.res;
+        return desc.resource;
     }
 };
 
