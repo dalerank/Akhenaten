@@ -201,8 +201,8 @@ struct archive {
 
     template<typename T>
     inline void r_variants_impl(archive s_arch, T &container) {
-        fixed_memory_resource<xstring, 128> keys_buffer;
-        std::pmr::vector<xstring> keys{ &keys_buffer };
+        fixed_memory_resource<pcstr, 128> keys_buffer;
+        std::pmr::vector<pcstr> keys{ &keys_buffer };
         {
             pcstr key;
             pushiterator(s_arch, -1, 1);
@@ -213,7 +213,7 @@ struct archive {
         }
 
         for (const auto &key : keys) {
-            getproperty(s_arch, -1, key.c_str());
+            getproperty(s_arch, -1, key);
             if (isstring(-1)) {
                 const xstring str = tostring(-1);
                 container.set(key, str);
