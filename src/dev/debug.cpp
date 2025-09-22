@@ -406,7 +406,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             //
             if (building_is_farm(b->type)) {
                 const auto farm = b->dcast_farm();
-                debug_text(ctx, str,x1 + 40,y + 20,40,"fert.",map_get_fertility_for_farm(b->tile.grid_offset()),COLOR_FONT_ORANGE_LIGHT);
+                debug_text(ctx, str,x1 + 40,y + 20,40,"fert.", map_get_fertility_for_farm(b->tile.grid_offset()),COLOR_FONT_ORANGE_LIGHT);
                 debug_text(ctx, str, x0, y + 30, 0, "", farm->progress(), COLOR_GREEN);
                 debug_text(ctx, str, x1 + 10, y + 30, 4, ":", farm->progress() / 20, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 40, y + 30, 40, "exp.", farm->expected_produce(), COLOR_GREEN);
@@ -592,7 +592,17 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         }
         break;
+
+    case e_debug_render_invasion_point:
+        //d = map_is_invasion_point(grid_offset);
+        //if (d) {
+        //    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
+        //    text_draw(ctx, (d == 1) ? "L" : "S", x, y + 15, FONT_SMALL_PLAIN, (d == 1) ? COLOR_RED : COLOR_RED);
+        //}
+        break;
     }
+
+
 }
 
 void draw_debug_figures() {
