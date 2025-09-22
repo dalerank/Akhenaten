@@ -26,6 +26,8 @@
 struct building_penalty {
     e_building_type type = BUILDING_NONE;
     int penalty = - 1;
+
+    enum { max_elements = BUILDING_MAX };
 };
 ANK_CONFIG_STRUCT(building_penalty, type, penalty)
 
@@ -36,18 +38,18 @@ struct std::hash<building_penalty> {
     }
 };
 
-std::array<building_penalty, BUILDING_MAX> routing_amphibia_buildings;
-std::array<building_penalty, BUILDING_MAX> routing_citizen_buildings;
-std::array<building_penalty, BUILDING_MAX> routing_noncitizen_buildings;
+stable_array<building_penalty> routing_amphibia_buildings;
+stable_array<building_penalty> routing_citizen_buildings;
+stable_array<building_penalty> routing_noncitizen_buildings;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_routing_config) {
     routing_amphibia_buildings.fill({ BUILDING_NONE, -1 });
     routing_citizen_buildings.fill({ BUILDING_NONE, -1 });
     routing_noncitizen_buildings.fill({ BUILDING_NONE, 0 }); // why it  0
 
-    g_config_arch.r_stable_array("routing_amphibia", routing_amphibia_buildings);
-    g_config_arch.r_stable_array("routing_citizen", routing_citizen_buildings);
-    g_config_arch.r_stable_array("routing_noncitizen", routing_noncitizen_buildings);
+    g_config_arch.r("routing_amphibia", routing_amphibia_buildings);
+    g_config_arch.r("routing_citizen", routing_citizen_buildings);
+    g_config_arch.r("routing_noncitizen", routing_noncitizen_buildings);
 }
 
 static int get_land_type_citizen_building(int grid_offset) {

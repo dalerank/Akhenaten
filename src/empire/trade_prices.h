@@ -10,6 +10,7 @@ struct trade_price {
     int32_t sell;
 
     inline e_resource key() const { return res; }
+    enum { max_elements = RESOURCES_MAX };
 };
 ANK_CONFIG_STRUCT(trade_price, res, buy, sell)
 

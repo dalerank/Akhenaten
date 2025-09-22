@@ -13,6 +13,8 @@ struct imagepak_handle {
     bool custom = false;
     bool delayed = true;
     imagepak *handle = nullptr;
+
+    enum { max_elements = 128 };
 };
 ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
 
@@ -32,7 +34,7 @@ struct imagepak_holder_t {
     color *tmp_image_data = nullptr;
     int last_active_index = -1;
 
-    std::array<imagepak_handle, 128> pak_list;
+    stable_array<imagepak_handle> pak_list;
     std::vector<const image_t *> image_cache;
 };
 
