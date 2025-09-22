@@ -200,39 +200,44 @@ struct archive {
     }
 
     template<typename T>
+    inline void r_variants_impl(archive s_arch, T &container) {
+        fixed_memory_resource<xstring, 128> keys_buffer;
+        std::pmr::vector<xstring> keys{ &keys_buffer };
+        {
+            pcstr key;
+            pushiterator(s_arch, -1, 1);
+            while ((key = nextiterator(s_arch, -1))) {
+                keys.push_back(key);
+            }
+            pop(s_arch, 1);
+        }
+
+        for (const auto &key : keys) {
+            getproperty(s_arch, -1, key.c_str());
+            if (isstring(-1)) {
+                const xstring str = tostring(-1);
+                container.set(key, str);
+            } else if (isboolean(-1)) {
+                const bool v = toboolean(-1);
+                container.set(key, v);
+            } else if (isnumber(-1)) {
+                const float f = tonumber(-1);
+                container.set(key, f);
+            } else if (isobject(-1)) {
+                ;
+                // result = variant_t(variant_object_t{ name });
+            } else if (isarray(-1)) {
+                ;
+                //result = variant_t(variant_array_t{ name });
+            }
+            pop(s_arch, 1);
+        }
+    }
+
+    template<typename T>
     inline void r_variants(pcstr name, T &container) {
         this->r_section(name, [&] (archive s_arch) {
-            fixed_memory_resource<xstring, 128> keys_buffer;
-            std::pmr::vector<xstring> keys{ &keys_buffer };
-            {
-                pcstr key;
-                pushiterator(s_arch, -1, 1);
-                while ((key = nextiterator(s_arch, -1))) {
-                    keys.push_back(key);
-                }
-                pop(s_arch, 1);
-            }
-
-            for (const auto &key : keys) {
-                getproperty(s_arch, -1, key.c_str());
-                if (isstring(-1)) {
-                    const xstring str = tostring(-1);
-                    container.set(key, str);
-                } else if (isboolean(-1)) {
-                    const bool v = toboolean(-1);
-                    container.set(key, v);
-                } else if (isnumber(-1)) {
-                    const float f = tonumber(-1);
-                    container.set(key, f);
-                } else if (isobject(-1)) {
-                    ;
-                   // result = variant_t(variant_object_t{ name });
-                } else if (isarray(-1)) {
-                    ;
-                    //result = variant_t(variant_array_t{ name });
-                }
-                pop(s_arch, 1);
-            }
+            r_variants_impl(s_arch, container);
         });
     }
 
@@ -276,6 +281,42 @@ protected:
             pop(1);
         }
         return true;
+    }
+
+    template<typename T>
+    inline void r_struct(pcstr name, T &v);
+
+    template<typename T>
+    inline void r_struct(pcstr name, std::unordered_map<xstring, T> &v) {
+        this->r_objects(name, [&] (pcstr key, archive sarch) {
+            auto &item = v[key];
+            sarch.r<T>(item);
+        });
+    }
+
+    template<typename T>
+    inline void r_struct(pcstr name, std::vector<T> &v) {
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+            this->r_array_num<T>(name, v);
+        } else {
+            this->r_array(name, v, [] (archive it_arch, T &it) {
+                it_arch.r<T>(it);
+            });
+        }
+    }
+
+    template<typename T, std::size_t N>
+    inline void r_struct(pcstr name, std::array<T, N> &v) { v = this->r_sarray<N, T>(name); }
+
+    template<typename T, std::size_t N>
+    inline void r_struct(pcstr name, svector<T, N> &v) {
+        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
+            this->r_array_num<T>(name, v);
+        } else {
+            this->r_array(name, v, [] (archive it_arch, T &it) {
+                it_arch.r<T>(it);
+            });
+        }
     }
 
     void getproperty(int idx, pcstr name);
@@ -564,9 +605,24 @@ inline void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
     // nothing to do, class has no load function
 }
 
+namespace archive_helper {
+    template<typename T>
+    inline void reader(archive js_j, T &js_t);
+
+    template<>
+    inline void reader<vec2i>(archive arch, vec2i &v) { v = arch.r_vec2i_impl("x", "y"); }
+
+    template<>
+    inline void reader<tile2i>(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = { t.x, t.y }; }
+
+    template<>
+    inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
+}
+
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
-    inline void reader(archive js_j, Type& js_t) {                                                \
+    template<>                                                                                    \
+    inline void reader<Type>(archive js_j, Type& js_t) {                                          \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
         call_load_if_exists(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{});   \
     }                                                                                             \
@@ -584,54 +640,15 @@ template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(
 template<> inline void archive::r<image_desc>(pcstr name, image_desc &v) { r_desc(name, v); }
 template<> inline void archive::r<bstring<256>>(pcstr name, bstring<256> &v) { v = r_string(name); }
 
-namespace archive_helper {
-    template<typename T, std::size_t N>
-    inline void reader(archive arch, pcstr name, std::array<T, N>& v) { v = arch.r_sarray<N, T>(name); }
-
-    template<typename T, std::size_t N>
-    inline void reader(archive arch, pcstr name, svector<T, N>& v) {
-        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-            arch.r_array_num<T>(name, v);
-        } else {
-            arch.r_array(name, v, [] (archive it_arch, T &it) {
-                it_arch.r<T>(it);
-            });
-        }
-    }
-
-    template<typename T>
-    inline void reader(archive arch, pcstr name, std::vector<T> &v) {
-        if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-            arch.r_array_num<T>(name, v);
-        } else {
-            arch.r_array(name, v, [] (archive it_arch, T &it) {
-                it_arch.r<T>(it);
-            });
-        }
-    }
-
-    template<typename T>
-    inline void reader(archive arch, pcstr name, std::unordered_map<xstring, T> &v) {
-        arch.r_objects(name, [&] (pcstr key, archive sarch) {
-            auto &item = v[key];
-            sarch.r<T>(item);
-        });
-    }
-    
-    template<typename T>
-    inline void reader(archive arch, pcstr name, T &v) {
-        arch.r_section(name, [&] (archive sarch) {
-            reader(sarch, v);
-        });
-    }
-
-    inline void reader(archive arch, vec2i& v) { v = arch.r_vec2i_impl("x", "y"); }
-    inline void reader(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = {t.x, t.y}; }
-    inline void reader(archive arch, image_desc &v) { arch.r_desc_impl(v); }
-}
-
 template<typename T>
 inline void archive::r(T &s) { archive_helper::reader(*this, s); }
+
+template<typename T>
+inline void archive::r_struct(pcstr name, T &v) {
+    this->r_section(name, [&] (archive sarch) {
+        archive_helper::reader(sarch, v);
+    });
+}
 
 template<size_t S, typename T>
 inline std::array<T, S> archive::r_sarray(pcstr name) {
@@ -687,7 +704,7 @@ inline void archive::r(pcstr name, T& v) {
     } else if constexpr(std::is_arithmetic_v<T>) {
         v = this->r<T>(name);
     } else {
-        archive_helper::reader(*this, name, v);
+        this->r_struct(name, v);
     }
 }
 
