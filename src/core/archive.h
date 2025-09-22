@@ -7,6 +7,7 @@
 #include "grid/point.h"
 #include "core/fixed_memory_resource.h"
 #include "core/svector.h"
+#include "core/stable_array.h"
 #include "graphics/image_desc.h"
 
 #include <vector>
@@ -305,6 +306,11 @@ protected:
         }
     }
 
+    template<typename T>
+    inline void r_struct(pcstr name, stable_array<T> &v) {
+        this->r_stable_array(name, v);
+    }
+
     template<typename T, std::size_t N>
     inline void r_struct(pcstr name, std::array<T, N> &v) { v = this->r_sarray<N, T>(name); }
 
@@ -374,10 +380,15 @@ struct g_archive : public archive {
     }
 
     template<typename T, std::size_t N>
-    void r(pcstr name, std::array<T, N> &v);
+    inline void r(pcstr name, std::array<T, N> &v);
 
     template<typename T>
-    void r_stable_array(pcstr name, T &arr);
+    inline void r_stable_array(pcstr name, T &arr);
+
+    template<typename T>
+    inline void r(pcstr name, stable_array<T>& arr) {
+        r_stable_array(name, arr);
+    }
 
     template<typename T>
     inline bool r_section(pcstr name, T read_func) {

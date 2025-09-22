@@ -4,6 +4,7 @@
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "graphics/animation.h"
+#include "core/stable_array.h"
 
 #include "js/js_game.h"
 
@@ -23,21 +24,14 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 
 
 std::array<vec2i, 8> g_cart_offsets; //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_offsets) {
-    int i = 0;
-    g_config_arch.r("cart_offsets", g_cart_offsets);
-}
-
 std::array<vec2i, 8> g_sled_offsets; // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_sled_offsets) {
-    int i = 0;
-    g_config_arch.r("sled_offsets", g_sled_offsets);
-}
 
 struct cart_image_desc : public image_desc {
     e_resource resource;
+    enum { max_elements = RESOURCES_MAX };
 };
 ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
+stable_array<cart_image_desc> g_cart_images;
 
 template<>
 struct std::hash<cart_image_desc> {
@@ -46,10 +40,10 @@ struct std::hash<cart_image_desc> {
     }
 };
 
-std::array<cart_image_desc, RESOURCES_MAX> g_cart_images;
-
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
-    g_config_arch.r_stable_array("cart_images", g_cart_images);
+    g_config_arch.r("cart_images", g_cart_images);
+    g_config_arch.r("cart_offsets", g_cart_offsets);
+    g_config_arch.r("sled_offsets", g_sled_offsets);
 }
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {

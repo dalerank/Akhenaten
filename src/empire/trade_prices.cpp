@@ -4,10 +4,10 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-std::array<trade_price, RESOURCES_MAX> g_default_prices;
+stable_array<trade_price> g_default_prices;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_default_prices) {
-    g_config_arch.r_stable_array("default_prices", g_default_prices);
+    g_config_arch.r("default_prices", g_default_prices);
 }
 
 trade_price prices[RESOURCES_MAX];
