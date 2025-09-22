@@ -62,5 +62,5 @@ public:
 };
 
 namespace archive_helper {
-	inline void reader(archive arch, pcstr name, settings_vars_t &v) { arch.r_variants(name, v); }
+	inline void reader(archive arch, settings_vars_t &v) { arch.r_variants_impl(arch, v); }
 }
