@@ -12,8 +12,8 @@ struct figure_enemy_info_window : public figure_info_window {
     virtual void window_info_background(object_info &c) override;
     virtual bool check(object_info &c) override {
         figure *f = c.figure_get_id() ? figure_get(c) : nullptr;
-        return (f && f->type >= FIGURE_ENEMY43_SPEAR
-                    && f->type <= FIGURE_ENEMY53_AXE);
+        return (f && f->type >= FIGURE_ENEMY_EGYPTIAN_SPEAR
+                    && f->type <= FIGURE_ENEMY_EGYPTIAN_AXE);
     }
 };
 
@@ -32,7 +32,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
     int image_id = FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[f->type];
     int enemy_type = formation_get(formation_id)->enemy_type;
     switch (f->type) {
-    case FIGURE_ENEMY43_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_SPEAR:
         image_id = 44;
         //switch (enemy_type) {
         //case ENEMY_5_PERGAMUM:
@@ -50,7 +50,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //}
         break;
 
-    case FIGURE_ENEMY44_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_SWORD:
         image_id = 45;
         //switch (enemy_type) {
         //case ENEMY_5_PERGAMUM:
@@ -64,7 +64,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY45_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
         image_id = 31;
         //switch (enemy_type) {
         //case ENEMY_7_ETRUSCAN:
@@ -78,7 +78,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY49_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
         image_id = 21;
         //switch (enemy_type) {
         //case ENEMY_0_BARBARIAN:
@@ -92,7 +92,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY50_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
         image_id = 40;
         //switch (enemy_type) {
         //case ENEMY_2_GAUL:
@@ -103,7 +103,7 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY51_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
         image_id = 20;
         //switch (enemy_type) {
         //case ENEMY_1_NUMIDIAN:

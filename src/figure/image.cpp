@@ -245,24 +245,24 @@ int figure::figure_image_corpse_offset() {
     case FIGURE_FCHARIOTEER:
         type_offset = 144;
         break;
-    case FIGURE_ENEMY44_SWORD:
-    case FIGURE_ENEMY45_SWORD:
-    case FIGURE_ENEMY50_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
         type_offset = 593;
         break;
-    case FIGURE_ENEMY47_ELEPHANT:
+    case FIGURE_ENEMY_EGYPTIAN_ELEPHANT:
         type_offset = 705;
         break;
-    case FIGURE_ENEMY46_CAMEL:
-    case FIGURE_ENEMY48_CHARIOT:
-    case FIGURE_ENEMY52_MOUNTED_ARCHER:
-    case FIGURE_ENEMY53_AXE:
+    case FIGURE_ENEMY_EGYPTIAN_CAMEL:
+    case FIGURE_ENEMY_EGYPTIAN_CHARIOT:
+    case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
+    case FIGURE_ENEMY_EGYPTIAN_AXE:
         type_offset = 745;
         break;
-    case FIGURE_ENEMY51_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_SPEAR:
         type_offset = 641;
         break;
-    case FIGURE_ENEMY49_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
         formation* m = formation_get(formation_id);
         if (m->enemy_type == ENEMY_0_BARBARIAN)
             type_offset = 441;

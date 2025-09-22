@@ -17,11 +17,11 @@ void figure::play_die_sound() {
     switch (type) {
     case FIGURE_BIRDS: effect = SOUND_EFFECT_SHEEP_DIE; break;
     case FIGURE_ANTELOPE: effect = SOUND_EFFECT_ZEBRA_DIE; break;
-    case FIGURE_ENEMY46_CAMEL: effect = SOUND_EFFECT_CAMEL; break;
-    case FIGURE_ENEMY47_ELEPHANT: effect = SOUND_EFFECT_ELEPHANT_DIE; break;
+    case FIGURE_ENEMY_EGYPTIAN_CAMEL: effect = SOUND_EFFECT_CAMEL; break;
+    case FIGURE_ENEMY_EGYPTIAN_ELEPHANT: effect = SOUND_EFFECT_ELEPHANT_DIE; break;
 
-    case FIGURE_ENEMY48_CHARIOT:
-    case FIGURE_ENEMY52_MOUNTED_ARCHER:
+    case FIGURE_ENEMY_EGYPTIAN_CHARIOT:
+    case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
         effect = SOUND_EFFECT_HORSE2;
         break;
 
@@ -30,13 +30,13 @@ void figure::play_die_sound() {
     case FIGURE_INFANTRY:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
-    case FIGURE_ENEMY43_SPEAR:
-    case FIGURE_ENEMY44_SWORD:
-    case FIGURE_ENEMY45_SWORD:
-    case FIGURE_ENEMY49_FAST_SWORD:
-    case FIGURE_ENEMY50_SWORD:
-    case FIGURE_ENEMY51_SPEAR:
-    case FIGURE_ENEMY53_AXE:
+    case FIGURE_ENEMY_EGYPTIAN_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_AXE:
     case FIGURE_ENEMY54_REVOLTMAN:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
     case FIGURE_ENEMY_KINGDOME_MOUNTED:
@@ -77,10 +77,10 @@ void figure::play_hit_sound() {
         break;
 
     case FIGURE_FCHARIOTEER:
-    case FIGURE_ENEMY45_SWORD:
-    case FIGURE_ENEMY48_CHARIOT:
-    case FIGURE_ENEMY50_SWORD:
-    case FIGURE_ENEMY52_MOUNTED_ARCHER:
+    case FIGURE_ENEMY_EGYPTIAN_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_CHARIOT:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
     case FIGURE_ENEMY54_REVOLTMAN:
         if (city_sound_update_hit_soldier())
             effect = SOUND_EFFECT_SWORD_SWING;
@@ -91,29 +91,29 @@ void figure::play_hit_sound() {
             effect = SOUND_EFFECT_LIGHT_SWORD;
         break;
 
-    case FIGURE_ENEMY43_SPEAR:
-    case FIGURE_ENEMY51_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
         if (city_sound_update_hit_spear())
             effect = SOUND_EFFECT_SPEAR;
         break;
 
-    case FIGURE_ENEMY44_SWORD:
-    case FIGURE_ENEMY49_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
         if (city_sound_update_hit_club())
             effect = SOUND_EFFECT_CLUB;
 
         break;
-    case FIGURE_ENEMY53_AXE:
+    case FIGURE_ENEMY_EGYPTIAN_AXE:
         if (city_sound_update_hit_axe())
             effect = SOUND_EFFECT_AXE;
 
         break;
 
-    case FIGURE_ENEMY46_CAMEL:
+    case FIGURE_ENEMY_EGYPTIAN_CAMEL:
         effect = SOUND_EFFECT_CAMEL;
         break;
 
-    case FIGURE_ENEMY47_ELEPHANT:
+    case FIGURE_ENEMY_EGYPTIAN_ELEPHANT:
         if (city_sound_update_hit_elephant())
             effect = SOUND_EFFECT_ELEPHANT;
         else {

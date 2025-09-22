@@ -48,8 +48,9 @@ void figure::enemy_initial(formation* m) {
             }
         }
     }
-    if (type == FIGURE_ENEMY43_SPEAR || type == FIGURE_ENEMY46_CAMEL || type == FIGURE_ENEMY51_SPEAR
-        || type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
+
+    if (type == FIGURE_ENEMY_EGYPTIAN_SPEAR || type == FIGURE_ENEMY_EGYPTIAN_CAMEL || type == FIGURE_ENEMY_EGYPTIAN_SPEAR
+        || type == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER) {
         // missile throwers
         wait_ticks_missile++;
         tile2i tile = {0, 0};
@@ -62,6 +63,7 @@ void figure::enemy_initial(formation* m) {
                 attack_image_offset = 0;
             }
         }
+
         if (attack_image_offset) {
             e_figure_type missile_type;
             switch (m->enemy_type) {
@@ -120,8 +122,8 @@ void figure::enemy_fighting(const formation* m) {
     if (!m->recent_fight)
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
 
-    if (type != FIGURE_ENEMY46_CAMEL && type != FIGURE_ENEMY47_ELEPHANT) {
-        if (type == FIGURE_ENEMY48_CHARIOT || type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
+    if (type != FIGURE_ENEMY_EGYPTIAN_CAMEL && type != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {
+        if (type == FIGURE_ENEMY_EGYPTIAN_CHARIOT || type == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER) {
             if (city_sound_update_march_horse())
                 g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
 
@@ -227,7 +229,6 @@ void figure::enemy43_spear_action() {
     formation *m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_missile_direction(m);
-    is_enemy_image = 1;
 
     switch (m->enemy_type) {
     case ENEMY_3_EGYPTIAN:
@@ -253,6 +254,7 @@ void figure::enemy43_spear_action() {
         main_image_id = 601 + dir + 8 * anim.frame;
     }
 }
+
 void figure::enemy44_sword_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -261,7 +263,6 @@ void figure::enemy44_sword_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     switch (m->enemy_type) {
     case ENEMY_3_EGYPTIAN:
@@ -293,7 +294,6 @@ void figure::enemy45_sword_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     switch (m->enemy_type) {
     case ENEMY_3_EGYPTIAN:
@@ -315,6 +315,7 @@ void figure::enemy45_sword_action() {
     else
         main_image_id = 449 + dir + 8 * anim.frame;
 }
+
 void figure::enemy_camel_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -323,7 +324,6 @@ void figure::enemy_camel_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK)
         main_image_id = 601 + dir + 8 * anim.frame;
@@ -336,6 +336,7 @@ void figure::enemy_camel_action() {
     else
         main_image_id = 601 + dir + 8 * anim.frame;
 }
+
 void figure::enemy_elephant_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -344,7 +345,6 @@ void figure::enemy_elephant_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK || action_state == FIGURE_ACTION_150_ATTACK)
         main_image_id = 601 + dir + 8 * anim.frame;
@@ -353,6 +353,7 @@ void figure::enemy_elephant_action() {
     else
         main_image_id = 601 + dir + 8 * anim.frame;
 }
+
 void figure::enemy_chariot_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -361,7 +362,6 @@ void figure::enemy_chariot_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK || action_state == FIGURE_ACTION_150_ATTACK)
         main_image_id = 697 + dir + 8 * (anim.frame / 2);
@@ -379,7 +379,6 @@ void figure::enemy49_fast_sword_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     int attack_id, corpse_id, normal_id;
     if (m->enemy_type == ENEMY_0_BARBARIAN) {
@@ -408,6 +407,7 @@ void figure::enemy49_fast_sword_action() {
     else
         main_image_id = normal_id + dir + 8 * anim.frame;
 }
+
 void figure::enemy50_sword_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -416,7 +416,6 @@ void figure::enemy50_sword_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (m->enemy_type != ENEMY_2_CANAANITE && m->enemy_type != ENEMY_3_EGYPTIAN)
         return;
@@ -433,6 +432,7 @@ void figure::enemy50_sword_action() {
     else
         main_image_id = 449 + dir + 8 * anim.frame;
 }
+
 void figure::enemy51_spear_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -441,7 +441,6 @@ void figure::enemy51_spear_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_missile_direction(m);
-    is_enemy_image = 1;
 
     if (m->enemy_type != ENEMY_1_ASSYRIAN)
         return;
@@ -468,7 +467,6 @@ void figure::enemy52_mounted_archer_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_missile_direction(m);
-    is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK)
         main_image_id = 601 + dir + 8 * anim.frame;
@@ -481,6 +479,7 @@ void figure::enemy52_mounted_archer_action() {
     else
         main_image_id = 601 + dir + 8 * anim.frame;
 }
+
 void figure::enemy53_axe_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -489,7 +488,6 @@ void figure::enemy53_axe_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (m->enemy_type != ENEMY_2_CANAANITE)
         return;
@@ -575,6 +573,7 @@ void figure::enemy_gladiator_action() {
         //sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + dir + 8 * anim.frame;
     }
 }
+
 void figure::enemy_kingdome_soldier_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
@@ -585,7 +584,6 @@ void figure::enemy_kingdome_soldier_action() {
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
-    is_enemy_image = 1;
 
     if (direction == DIR_FIGURE_ATTACK) {
         main_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir + 8 * ((attack_image_offset - 12) / 2);

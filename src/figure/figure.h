@@ -104,7 +104,6 @@ public:
     uint16_t cart_image_id;
     bool use_cart;
     animation_context anim;
-    bool is_enemy_image;
 
     uint8_t alternative_location_index;
     bool flotsam_visible;

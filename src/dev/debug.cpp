@@ -44,6 +44,7 @@
 #include "platform/renderer.h"
 #include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
+#include "scenario/scenario_invasion.h"
 
 #include "js/js_game.h"
 
@@ -594,11 +595,11 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_invasion_point:
-        //d = map_is_invasion_point(grid_offset);
-        //if (d) {
-        //    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
-        //    text_draw(ctx, (d == 1) ? "L" : "S", x, y + 15, FONT_SMALL_PLAIN, (d == 1) ? COLOR_RED : COLOR_RED);
-        //}
+        d = map_invasion_point(tile2i(grid_offset));
+        if (d) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
+            text_draw((d == 1) ? "L" : "S", x, y + 15, FONT_SMALL_PLAIN, (d == 1) ? COLOR_RED : COLOR_RED);
+        }
         break;
     }
 
