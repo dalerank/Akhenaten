@@ -377,7 +377,7 @@ void figure::poof() {
 }
 
 bool figure::is_enemy() {
-    return type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY_KINGDOME_INFANTRY;
+    return type >= FIGURE_ENEMY_EGYPTIAN_SPEAR && type <= FIGURE_ENEMY_KINGDOME_INFANTRY;
 }
 
 bool figure::is_herd() {
@@ -810,7 +810,7 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
 
     y_correction = dcast()->y_correction(y_correction);
 
-    const image_t *img = is_enemy_image ? image_get_enemy(PACK_ENEMY_ASSYRIAN, main_image_id) : image_get(main_image_id);
+    const image_t *img = image_get(main_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = main_image_id;
     command.pixel = pixel + vec2i{ x_correction, y_correction };
@@ -854,7 +854,7 @@ void figure::bind(io_buffer* iob) {
     int tmpe;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
     iob->bind(BIND_SIGNATURE_UINT8, &tmpe);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
     iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 
     //    f->sprite_image_id = buf->read_i16() + 18;

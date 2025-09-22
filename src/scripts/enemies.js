@@ -1,11 +1,22 @@
 log_info("akhenaten: enemies info started")
 
+figure_barbarian_fast_sword = {
+    animations : {
+        walk : { pack:PACK_SPR_MAIN, id:54, max_frames:12 },
+        death : { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false },
+        fire : { pack:PACK_SPR_MAIN, id:56, max_frames:12 },
+        attack : { pack:PACK_SPR_MAIN, id:197, max_frames:12 },
+    },
+    terrain_usage : TERRAIN_USAGE_ANY,
+    max_amount : 25,
+}
+
 enemy_barbarian = {
     type : ENEMY_0_BARBARIAN 
     percentage_type1 : 100
     percentage_type2 : 0 
     percentage_type3 : 0
-    figure_types : [FIGURE_ENEMY49_FAST_SWORD, FIGURE_NONE, FIGURE_NONE]
+    figure_types : [FIGURE_ENEMY_BARBARIAN_FAST_SPEAR, FIGURE_NONE, FIGURE_NONE]
     layout : FORMATION_ENEMY_MOB
 }
 

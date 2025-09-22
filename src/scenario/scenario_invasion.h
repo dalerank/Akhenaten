@@ -64,4 +64,6 @@ void scenario_invasion_start_from_console(int attack_type, int enemy_type, int s
 
 void scenario_invasion_process();
 
+int map_invasion_point(tile2i point);
+
 tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, int attack_type, int invasion_id);

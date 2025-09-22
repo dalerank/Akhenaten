@@ -123,7 +123,7 @@ void scenario_invasion_foreach_warning(std::function<void(vec2i, int)> callback)
     }
 }
 
-int scenario_invasion_count(void) {
+int scenario_invasion_count() {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (g_scenario.invasions[i].type)
@@ -336,6 +336,22 @@ void scenario_invasion_process() {
             }
         }
     }
+}
+
+int map_invasion_point(tile2i point) {
+    auto &lands = g_scenario.invasion_points_land;
+    const auto it_land = std::find_if(lands.begin(), lands.end(), [point] (auto &p) { return p == point; });
+    if (it_land != lands.end()) {
+        return 1;
+    }
+
+    auto &sea = g_scenario.invasion_points_sea;
+    const auto it_sea = std::find_if(sea.begin(), sea.end(), [point] (auto &p) { return p == point; });
+    if (it_sea != sea.end()) {
+        return 2;
+    }
+
+    return 0;
 }
 
 int scenario_invasion_start_from_seth() {

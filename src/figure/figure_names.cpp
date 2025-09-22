@@ -157,17 +157,17 @@ int figure_name_get(int type, int enemy) {
     case FIGURE_NATIVE_TRADER:
         return get_next_name(data.enemy_barbarian, 430, 32);
 
-    case FIGURE_ENEMY43_SPEAR:
-    case FIGURE_ENEMY44_SWORD:
-    case FIGURE_ENEMY45_SWORD:
-    case FIGURE_ENEMY46_CAMEL:
-    case FIGURE_ENEMY47_ELEPHANT:
-    case FIGURE_ENEMY48_CHARIOT:
-    case FIGURE_ENEMY49_FAST_SWORD:
-    case FIGURE_ENEMY50_SWORD:
-    case FIGURE_ENEMY51_SPEAR:
-    case FIGURE_ENEMY52_MOUNTED_ARCHER:
-    case FIGURE_ENEMY53_AXE:
+    case FIGURE_ENEMY_EGYPTIAN_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_CAMEL:
+    case FIGURE_ENEMY_EGYPTIAN_ELEPHANT:
+    case FIGURE_ENEMY_EGYPTIAN_CHARIOT:
+    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
+    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
+    case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
+    case FIGURE_ENEMY_EGYPTIAN_AXE:
         switch (enemy) {
         //case ENEMY_8_GREEK:
         //    return get_next_name(&data.enemy_greek, 463, 32);
