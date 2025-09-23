@@ -17,29 +17,6 @@ grid_xx g_desirability_grid = {0, FS_INT8};
  
 desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
 
-void desirability_t::influence_t::load(archive iarch) {
-    size = iarch.r_int("size", 1);
-    value = iarch.r_int("value", 0);
-    step = iarch.r_int("step", 0);
-    step_size = iarch.r_int("step_size", 0);
-    range = iarch.r_int("range", 0);
-}
-
-void desirability_t::archive_load(archive arch) {
-    std::pair<pcstr, desirability_t::influence_t *> items[] = {
-        {"plaza", &influence.plaza},
-        {"earthquake", &influence.earthquake},
-        {"garden", &influence.garden},
-        {"rubble", &influence.rubble},
-    };
-
-    for (auto &it : items) {
-        arch.r_section(it.first, [item = it.second] (archive iarch) {
-            item->load(iarch);
-        });
-    }
-}
-
 void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int desirability) {
     int partially_outside_map = 0;
     int x = tile.x();
@@ -110,10 +87,10 @@ void desirability_t::update_terrain() {
             influence_t tileinf;
             if (map_property_is_plaza_or_earthquake(tile)) {                
                 if (terrain & TERRAIN_ROAD) {
-                    tileinf = influence.plaza;
+                    tileinf = env_influence.plaza;
                 } else if (terrain & TERRAIN_ROCK) {
                     // earthquake fault line: slight negative
-                    tileinf = influence.earthquake;
+                    tileinf = env_influence.earthquake;
                 } else {
                     // invalid plaza/earthquake flag
                     assert(false);
@@ -121,9 +98,9 @@ void desirability_t::update_terrain() {
                     continue;
                 }
             } else if (terrain & TERRAIN_GARDEN) {
-                tileinf = influence.garden;
+                tileinf = env_influence.garden;
             } else if (terrain & TERRAIN_RUBBLE) {
-                tileinf = influence.rubble;
+                tileinf = env_influence.rubble;
             }
 
             if (tileinf.size > 0) {

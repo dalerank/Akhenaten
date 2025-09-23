@@ -10,20 +10,14 @@ struct desirability_t {
         int step = 0;
         int step_size = 0;
         int range = 0;
-
-         void load(archive arch);
     };
 
-    struct {
+    struct env_influence_t {
         influence_t plaza;
         influence_t earthquake;
         influence_t garden;
         influence_t rubble;
-    } influence;
-
-    void archive_unload() {}
-    void archive_init() {}
-    void archive_load(archive arch);
+    } env_influence;
 
     void update_terrain();
     void clear_map();
@@ -37,5 +31,8 @@ struct desirability_t {
     int get_max(tile2i tile, int size);
     int get_avg(tile2i tile, int size);
 };
+ANK_CONFIG_STRUCT(desirability_t::influence_t, size, value, step, step_size, range)
+ANK_CONFIG_STRUCT(desirability_t::env_influence_t, plaza, earthquake, garden, rubble)
+ANK_CONFIG_STRUCT(desirability_t, env_influence)
 
 extern desirability_t g_desirability;

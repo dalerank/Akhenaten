@@ -228,6 +228,7 @@ void figure::cart_image_update() {
         }
     }
 }
+
 int figure::figure_image_corpse_offset() {
     int type_offset = 96;
     switch (type) {
@@ -262,15 +263,15 @@ int figure::figure_image_corpse_offset() {
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
         type_offset = 641;
         break;
-    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
-        formation* m = formation_get(formation_id);
-        if (m->enemy_type == ENEMY_0_BARBARIAN)
-            type_offset = 441;
-        else if (m->enemy_type == ENEMY_1_ASSYRIAN)
-            type_offset = 641;
-        else if (m->enemy_type == ENEMY_4_HITTITE)
-            type_offset = 593;
-        break;
+    //case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+    //    formation* m = formation_get(formation_id);
+    //    if (m->enemy_type == ENEMY_0_BARBARIAN)
+    //        type_offset = 441;
+    //    else if (m->enemy_type == ENEMY_1_ASSYRIAN)
+    //        type_offset = 641;
+    //    else if (m->enemy_type == ENEMY_4_HITTITE)
+    //        type_offset = 593;
+    //    break;
     }
     return CORPSE_IMAGE_OFFSETS[wait_ticks / 2];// +type_offset;
 }

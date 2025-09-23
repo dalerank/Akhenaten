@@ -62,8 +62,8 @@ public:
     size_type size_bytes() const noexcept { return size() * sizeof(T); }
 
 public:
-    const_iterator begin() const noexcept { return iterator{ data() }; }
-    const_iterator end() const noexcept { return iterator{ data() + size() }; }
+    const_iterator begin() const noexcept { return const_iterator{ data() }; }
+    const_iterator end() const noexcept { return const_iterator{ data() + size() }; }
     
     iterator begin() noexcept { return iterator{ data() }; }
     iterator end() noexcept { return iterator{ data() + size() }; }
