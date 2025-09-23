@@ -20,10 +20,10 @@ public:
 
 class figure_barbarian_fast_sword : public figure_enemy_fast_sword {
 public:
-    FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_FAST_SWORD, figure_barbarian_fast_sword)
+    FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_SWORD, figure_barbarian_fast_sword)
     figure_barbarian_fast_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_FAST_SWORD, "barb_swd" }; }
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "barb_swd" }; }
 
     struct static_params : public figure_model {} FIGURE_STATIC_DATA_T;
 };
