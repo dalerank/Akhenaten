@@ -651,6 +651,7 @@ template<> inline void archive::r<uint8_t>(pcstr name, uint8_t &v) { v = r_uint(
 template<> inline void archive::r<uint16_t>(pcstr name, uint16_t &v) { v = r_uint(name); }
 template<> inline void archive::r<uint32_t>(pcstr name, uint32_t &v) { v = r_uint(name); }
 template<> inline void archive::r<bool>(pcstr name, bool &v) { v = r_bool(name); }
+template<> inline void archive::r<float>(pcstr name, float &v) { v = r_float(name); }
 template<> inline void archive::r<vec2i>(pcstr name, vec2i &v) { v = r_vec2i(name); }
 template<> inline void archive::r<xstring>(pcstr name, xstring &v) { v = r_string(name); }
 template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(name); }
