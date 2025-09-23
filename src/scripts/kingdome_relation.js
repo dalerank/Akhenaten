@@ -11,6 +11,7 @@ kingdome_relation = {
 	player_salary_above_king_penalty : 1
 	player_salary_less_king_promotion : 1
 	first_debt_penalty : -5
+	second_debt_penalty : -10
 	last_debt_rating_cap : 10
 
 	gift_rules : [
