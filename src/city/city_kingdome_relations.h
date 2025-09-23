@@ -124,8 +124,6 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
         int8_t second_debt_penalty;
         int8_t last_debt_rating_cap;
 
-        void archive_unload() {}
-        void archive_init() {}
         void archive_load(archive arch);
     };
 

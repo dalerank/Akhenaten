@@ -8,7 +8,7 @@
 
 int animation_t::global_hashtime = 0;
 
-bool animation_t::load(archive arch) {
+bool animation_t::archive_load(archive arch) {
     duration = std::max(1, duration);
     loop = arch.r_bool("loop", true);
     hashtime = global_hashtime;

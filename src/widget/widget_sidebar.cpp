@@ -81,7 +81,7 @@ void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
     arch.r_desc("def_image", def_image);
-    slider.load(arch);
+    slider.archive_load(arch);
 
     if (game.session.active) {
         init();
@@ -239,7 +239,7 @@ void ui::sidebar_window_collapsed::load(archive arch, pcstr section) {
     arch.r_desc("relief_block", relief_block);
     extra_block_x = arch.r_int("extra_block_x");
     expanded_offset_x = arch.r_int("expanded_offset_x");
-    slider.load(arch);
+    slider.archive_load(arch);
 
     if (game.session.active) {
         init();
@@ -367,7 +367,7 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     }
 }
 
-void ui::slide_driver::load(archive arch) {
+void ui::slide_driver::archive_load(archive arch) {
     deceleration_offset_x = arch.r_int("deceleration_offset_x");
     slide_acceleration_millis = arch.r_int("slide_acceleration_millis");
     slide_speed_x = arch.r_int("slide_speed_x");

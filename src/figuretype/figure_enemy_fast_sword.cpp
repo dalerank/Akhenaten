@@ -1,0 +1,1 @@
+#include "figure_enemy_fast_sword.h"
