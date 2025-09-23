@@ -32,10 +32,10 @@ void figure::play_die_sound() {
     case FIGURE_TOWER_SENTRY:
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
-    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+   // case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
     case FIGURE_ENEMY_EGYPTIAN_SWORD:
-    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
+   // case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_AXE:
     case FIGURE_ENEMY54_REVOLTMAN:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
@@ -92,12 +92,12 @@ void figure::play_hit_sound() {
         break;
 
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
-    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
+    //case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
         if (city_sound_update_hit_spear())
             effect = SOUND_EFFECT_SPEAR;
         break;
 
-    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+    //case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
         if (city_sound_update_hit_club())
             effect = SOUND_EFFECT_CLUB;
