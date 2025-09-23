@@ -4,8 +4,7 @@
 #include "core/runtime_item.h"
 #include "city/city_component.h"
 #include "city/constants.h"
-#include "core/svector.h"
-#include "core/tokenum.h"
+#include "core/archive.h"
 
 enum e_gift { 
     GIFT_MODEST = 0,
@@ -19,7 +18,6 @@ enum e_gift {
     GIFT_KINGDOM_MODEST = 8,
     GIFT_COUNT,
 };
-
 extern const token_holder<e_gift, GIFT_MODEST, GIFT_COUNT> e_gift_tokens;
 
 enum e_debt_state {
@@ -36,6 +34,22 @@ struct kingdome_gift {
 };
 
 struct event_send_gift_to_kingdome { int gift_size; };
+
+struct gift_rule {
+    e_gift id;
+    float rate;
+    float minimum;
+
+    enum { max_elements = GIFT_COUNT };
+};
+
+template<>
+struct std::hash<gift_rule> {
+    [[nodiscard]] size_t operator()(const gift_rule &d) const noexcept {
+        return d.id;
+    }
+};
+ANK_CONFIG_STRUCT(gift_rule, id, rate, minimum)
 
 struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     kingdome_gift gifts[3];
@@ -104,13 +118,7 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     void reset();
 
     struct static_params {
-        struct gift_rule {
-            e_gift id;
-            float rate;
-            float minimum;
-        };
-
-        svector<gift_rule, 16> gift_rules;
+        stable_array<gift_rule> gift_rules;
         svector<int, 16> salary_ranks;
         svector<uint8_t, 4> gift_relation_change_first;
         svector<uint8_t, 4> gift_relation_change_second;
@@ -123,9 +131,21 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
         int8_t first_debt_penalty;
         int8_t second_debt_penalty;
         int8_t last_debt_rating_cap;
-
-        void archive_load(archive arch);
     };
 
     static const static_params &params();
 };
+ANK_CONFIG_STRUCT(kingdome_relation_t::static_params,
+                  gift_rules, 
+                  salary_ranks, 
+                  gift_relation_change_first, 
+                  gift_relation_change_second, 
+                  gift_relation_change_third, 
+                  gift_relation_change_last, 
+                  months_since_gift_locker, 
+                  tribute_not_paid_years_penalty, 
+                  player_salary_above_king_penalty, 
+                  player_salary_less_king_promotion, 
+                  first_debt_penalty, 
+                  second_debt_penalty, 
+                  last_debt_rating_cap)
