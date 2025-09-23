@@ -7,6 +7,9 @@ public:
     FIGURE_METAINFO(FIGURE_CONSTABLE, figure_constable)
     figure_constable(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;
@@ -16,7 +19,6 @@ public:
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_CRIME; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
-    virtual const animations_t &anim() const override;
 
     bool fight_enemy(int category, int max_distance);
 };

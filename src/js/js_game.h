@@ -38,9 +38,14 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
     void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" #a); a.archive_init(); }
 
-#define ANK_CONFIG_OBJECT_VARIABLE_N(a, name) \
-    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(name, [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" name); a.archive_init(); }
+#define ANK_CONFIG_OBJECT_VARIABLE_N(a, name)                   \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a);             \
+    void config_load_ ## a() {                                  \
+        call_unload_if_exists(a);                               \
+        const bool ok = g_config_arch.r(name, a);               \
+        call_init_if_exists(a);                                 \
+        { assert(ok && "Variable not exist in config:" name); } \
+    }
 
 #define ANK_CONFIG_ARRAY_VARIABLE(a, name) \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
@@ -48,7 +53,7 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
 
 #define ANK_CONFIG_OBJECTS_VARIABLE(a, name) \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.archive_unload(); g_config_arch.r_objects(name, [] (archive arch) { a.archive_load(arch); }); a.archive_init(); }
+    void config_load_ ## a() { g_config_arch.r(name, a); call_init_if_exists(js_t, std::bool_constant<class_has_init_function_v<decltype(a)>>{}); }
 
 #define ANK_ARRAY_VARIABLE(a) a; \
     ANK_CONFIG_ARRAY_VARIABLE(a, #a)

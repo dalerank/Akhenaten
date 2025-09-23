@@ -16,7 +16,7 @@ enemy_barbarian = {
     percentage_type1 : 100
     percentage_type2 : 0 
     percentage_type3 : 0
-    figure_types : [FIGURE_ENEMY_BARBARIAN_FAST_SPEAR, FIGURE_NONE, FIGURE_NONE]
+    figure_types : [FIGURE_ENEMY_BARBARIAN_FAST_SWORD, FIGURE_NONE, FIGURE_NONE]
     layout : FORMATION_ENEMY_MOB
 }
 

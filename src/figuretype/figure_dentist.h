@@ -16,6 +16,6 @@ public:
     virtual figure_phrase_t phrase() const override { return {FIGURE_DENTIST, "dentist"}; }
     //virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
+    virtual e_overlay get_overlay() const override { return OVERLAY_DENTIST; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };

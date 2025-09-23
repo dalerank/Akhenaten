@@ -594,27 +594,32 @@ struct g_archive_section {
 
 #define ANK_CONFIG_STRUCT_FROM(v1) js_j.r(#v1, js_t.v1); 
 
-template<typename, typename = void>
-struct class_has_load_function : std::false_type {};
+template<typename, typename = void> struct class_has_load_function : std::false_type {};
+template<typename T> struct class_has_load_function<T, std::void_t<decltype(std::declval<T &>().archive_load(nullptr))>> : std::true_type {};
+template<typename T> constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
 
-template<typename T>
-struct class_has_load_function<T, std::void_t<decltype(std::declval<T &>().load(nullptr))>> : std::true_type {};
+template<typename, typename = void> struct class_has_unload_function : std::false_type {};
+template<typename T> struct class_has_unload_function<T, std::void_t<decltype(std::declval<T &>().archive_unload(nullptr))>> : std::true_type {};
+template<typename T> constexpr bool class_has_unload_function_v = class_has_unload_function<T>::value;
 
-template<typename T>
-constexpr bool class_has_load_function_v = class_has_load_function<T>::value;
+template<typename, typename = void> struct class_has_init_function : std::false_type {};
+template<typename T> struct class_has_init_function<T, std::void_t<decltype(std::declval<T &>().archive_init())>> : std::true_type {};
+template<typename T> constexpr bool class_has_init_function_v = class_has_init_function<T>::value;
 
 // The problem is that  clang SFINAE trait class_has_load_function is working incorrectly. 
 // Clang checks constexpr if more strictly, and even when the condition is false, it still checks 
 // the syntactic correctness of the code inside the block.
-template<typename ArchiveT, typename Type>
-inline void call_load_if_exists(ArchiveT js_j, Type &js_t, std::true_type) {
-    js_t.load(js_j);
-}
+template<typename ArchiveT, typename Type> inline void call_load_if_exists_impl(ArchiveT js_j, Type &js_t, std::true_type) { js_t.archive_load(js_j); }
+template<typename ArchiveT, typename Type> inline void call_load_if_exists_impl(ArchiveT js_j, Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
+template<typename ArchiveT, typename Type> inline void call_load_if_exists(ArchiveT js_j, Type &js_t) { call_load_if_exists_impl(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{}); }
 
-template<typename ArchiveT, typename Type>
-inline void call_load_if_exists(ArchiveT js_j, Type &js_t, std::false_type) {
-    // nothing to do, class has no load function
-}
+template<typename Type> inline void call_unload_if_exists_impl(Type &js_t, std::true_type) { js_t.archive_unload(); }
+template<typename Type> inline void call_unload_if_exists_impl(Type &js_t, std::false_type) { /* nothing to do, class has no load function */ }
+template<typename Type> inline void call_unload_if_exists(Type &js_t) { call_unload_if_exists_impl(js_t, std::bool_constant<class_has_unload_function_v<Type>>{}); }
+
+template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::true_type) { js_t.archive_init(); }
+template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
+template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_if_exists_impl(js_t, std::bool_constant<class_has_init_function_v<Type>>{}); }
 
 namespace archive_helper {
     template<typename T>
@@ -634,8 +639,9 @@ namespace archive_helper {
 namespace archive_helper {                                                                        \
     template<>                                                                                    \
     inline void reader<Type>(archive js_j, Type& js_t) {                                          \
+        call_unload_if_exists(js_t);                                                              \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
-        call_load_if_exists(js_j, js_t, std::bool_constant<class_has_load_function_v<Type>>{});   \
+        call_load_if_exists(js_j, js_t);                                                          \
     }                                                                                             \
 }
 

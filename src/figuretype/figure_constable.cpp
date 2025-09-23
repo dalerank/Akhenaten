@@ -12,7 +12,7 @@
 #include "graphics/image.h"
 #include "building/building_house.h"
 
-figures::model_t<figure_constable> constable_m;
+figure_constable::static_params constable_m;
 
 void figure_constable::figure_before_action() {
     building *h = home();
@@ -118,10 +118,6 @@ int figure_constable::provide_service() {
         base.min_max_seen -= 10;
 
     return houses_serviced;
-}
-
-const animations_t &figure_constable::anim() const {
-    return constable_m.anim;
 }
 
 bool figure_constable::fight_enemy(int category, int max_distance) {

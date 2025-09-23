@@ -7,6 +7,9 @@ public:
     FIGURE_METAINFO(FIGURE_JUGGLER, figure_juggler)
     figure_juggler(figure *f) : figure_entertainer(f) {}
 
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
+
     virtual void on_create() override {}
     virtual void update_shows() override;
     virtual svector<e_building_type, 4> allow_venue_types() const override;
@@ -15,5 +18,4 @@ public:
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
-    virtual const animations_t &anim() const override;
 };

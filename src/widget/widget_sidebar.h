@@ -19,7 +19,7 @@ struct slide_driver {
     int slide_speed_x;
     int position;
 
-    void load(archive arch);
+    void archive_load(archive arch);
     void update(int &x_offset, int expanded_offset_x, std::function<void()> callback);
 };
 

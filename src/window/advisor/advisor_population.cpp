@@ -36,8 +36,6 @@ struct advisor_population_graph {
         x_axis_offset = arch.r_vec2i("x_axis_offset");
         x_axis_width = arch.r_int("x_axis_width");
     }
-
-    void archive_init() {}
 };
 
 advisor_population_graph ANK_VARIABLE(advisor_population_graph_census);
