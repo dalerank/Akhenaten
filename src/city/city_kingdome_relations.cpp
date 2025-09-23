@@ -42,29 +42,6 @@ declare_console_command_p(addkingdome) {
     g_city.kingdome.change(amount);
 }
 
-void kingdome_relation_t::static_params::archive_load(archive arch) {
-    arch.r_array_num<int>("salary_ranks", salary_ranks);
-    arch.r_array_num<uint8_t>("gift_relation_change_first", gift_relation_change_first);
-    arch.r_array_num<uint8_t>("gift_relation_change_second", gift_relation_change_second);
-    arch.r_array_num<uint8_t>("gift_relation_change_third", gift_relation_change_third);
-    arch.r_array_num<uint8_t>("gift_relation_change_last", gift_relation_change_last);
-    arch.r_array_num<int8_t>("tribute_not_paid_years_penalty", tribute_not_paid_years_penalty);
-
-    months_since_gift_locker = arch.r_int("months_since_gift_locker", 12);
-    player_salary_above_king_penalty = arch.r_int("player_salary_above_king_penalty", 1);
-    player_salary_less_king_promotion = arch.r_int("player_salary_less_king_promotion", 1);
-    first_debt_penalty = arch.r_int("first_debt_penalty", -5);
-    second_debt_penalty = arch.r_int("second_debt_penalty", -10);
-    last_debt_rating_cap = arch.r_int("last_debt_rating_cap", 10);
-
-    gift_rules.clear();
-    arch.r_array("gift_rules", gift_rules, [&](archive sarch, auto &rule) {
-        rule.id = sarch.r_type<e_gift>("id");
-        rule.rate = sarch.r_float("rate");
-        rule.minimum = arch.r_float("minimum");
-    });
-}
-
 declare_console_command_p(addsavings) {
     std::string args;
     is >> args;
