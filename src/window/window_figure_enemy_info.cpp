@@ -92,8 +92,8 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
-        image_id = 40;
+    //case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
+     //   image_id = 40;
         //switch (enemy_type) {
         //case ENEMY_2_GAUL:
         //    image_id = 40;
@@ -103,8 +103,8 @@ void figure_enemy_info_window::window_info_background(object_info &c) {
         //    break;
         //}
         break;
-    case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
-        image_id = 20;
+    //case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
+    //    image_id = 20;
         //switch (enemy_type) {
         //case ENEMY_1_NUMIDIAN:
         //    image_id = 20;
