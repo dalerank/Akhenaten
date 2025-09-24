@@ -925,7 +925,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.x);
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
     iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
     iob->bind(BIND_SIGNATURE_UINT8, &f->allow_move_type);

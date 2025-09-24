@@ -301,7 +301,7 @@ bool figure_docker::fetch_export_resource(building* b) {
     }
 
     auto ship = figure_get<figure_trade_ship>(ship_id);
-    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->base.trader_amount_bought >= ship->max_capacity()) {
+    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->total_bought() >= ship->max_capacity()) {
         return false;
     }
 
@@ -314,7 +314,7 @@ bool figure_docker::fetch_export_resource(building* b) {
         return false;
     }
 
-    ship->base.trader_amount_bought++;
+    ship->runtime_data().amount_bought += 100;
     set_destination(warehouse_id);
     advance_action(FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
     base.wait_ticks = 0;

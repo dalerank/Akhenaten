@@ -14,22 +14,13 @@
 #include "graphics/elements/lang_text.h"
 #include "figure/trader.h"
 
-void figure_trader::buy(int amounts) {
-    base.trader_amount_bought += amounts;
-}
-
-void figure_trader::sell(int amounts) {
-    base.resource_amount_full += amounts;
-    //    resource_amount_loads += amounts / 100;
-}
-
 bool figure_trader::can_buy(building* b, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
     }
 
-    if (base.trader_total_bought() >= 800) {
+    if (total_bought() >= 800) {
         return false;
     }
 
@@ -113,7 +104,7 @@ bool figure_trader::can_sell(building* b, empire_city_handle city) {
 }
 
 int figure_trader::get_closest_storageyard(tile2i tile, empire_city_handle city, int distance_from_entry, tile2i &warehouse) {
-    const resource_list exportable = base.trader_amount_bought < 800 
+    const resource_list exportable = total_bought() < 800 
                                         ? g_empire.exportable_resources_from_city(city.handle)
                                         : resource_list{};
 

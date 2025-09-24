@@ -71,10 +71,6 @@ void figure_trade_caravan::static_params::archive_load(archive arch)  {
     max_capacity = arch.r_int("max_capacity", 800);
 };
 
-int figure::trader_total_bought() {
-    return trader_amount_bought;
-}
-
 int figure::trader_total_sold() {
     return resource_amount_full;
 }

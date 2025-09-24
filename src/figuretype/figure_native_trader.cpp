@@ -12,7 +12,7 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_native_trader> native_trader_m;
+figure_native_trader::static_params native_trader_m;
 
 void figure_native_trader::figure_action() {
     //    is_ghost = false;
@@ -70,7 +70,7 @@ void figure_native_trader::figure_action() {
             if (can_buy(destination(), { g_city.ourcity().name_id })) {
                 e_resource resource = empire_trader().get_buy_resource(destination(), { g_city.ourcity().name_id }, 100);
                 empire_trader().record_bought_resource(resource);
-                base.trader_amount_bought += 3;
+                runtime_data().amount_bought += 300;
             } else {
                 tile2i tile;
                 int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
