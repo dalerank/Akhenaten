@@ -350,7 +350,6 @@ public:
     void noble_action();
     void indigenous_native_action();
     void enemy43_spear_action();
-    void enemy44_sword_action();
     void enemy45_sword_action();
     void enemy_camel_action();
     void enemy_elephant_action();
