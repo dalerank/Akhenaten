@@ -295,7 +295,7 @@ int figure::figure_image_direction() {
     return dir;
 }
 
-int figure_image_normalize_direction(int direction) {
+int figure::figure_image_normalize_direction(int direction) {
     int normalized_direction = direction - city_view_orientation();
     if (normalized_direction < 0)
         normalized_direction += 8;

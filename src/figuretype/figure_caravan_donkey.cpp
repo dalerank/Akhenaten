@@ -42,7 +42,7 @@ void figure_caravan_donkey::figure_action() {
     else
         follow_ticks(1);
 
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     int image_id = anim(animkeys().walk).first_img();
     base.main_image_id = image_id + dir + 8 * base.anim.frame;
 }

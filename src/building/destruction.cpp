@@ -39,11 +39,6 @@ void building_destroy_by_poof(building* b, bool clouds) {
     } while (true);
 }
 
-void building_destroy_by_rioter(building* b) {
-    b = b->main();
-    b->destroy_by_fire();
-}
-
 int building_destroy_first_of_type(e_building_type type) {
     int i = building_id_first(type);
     if (i < MAX_BUILDINGS) {

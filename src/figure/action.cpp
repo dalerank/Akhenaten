@@ -275,7 +275,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-        case FIGURE_TOMB_ROBER: rioter_action(); break;
             //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
             //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 36: editor_flag_action(); break;

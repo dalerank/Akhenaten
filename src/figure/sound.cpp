@@ -37,7 +37,6 @@ void figure::play_die_sound() {
     case FIGURE_ENEMY_EGYPTIAN_SWORD:
    // case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_AXE:
-    case FIGURE_ENEMY54_REVOLTMAN:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
     case FIGURE_ENEMY_KINGDOME_MOUNTED:
     case FIGURE_ENEMY_KINGDOME_INFANTRY:
@@ -81,7 +80,6 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY_EGYPTIAN_CHARIOT:
     case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
     case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
-    case FIGURE_ENEMY54_REVOLTMAN:
         if (city_sound_update_hit_soldier())
             effect = SOUND_EFFECT_SWORD_SWING;
         break;

@@ -451,7 +451,7 @@ void formation_calculate_figures(void) {
         if (!::smart_cast<figure_soldier>(f) && !f->is_enemy() && !f->is_herd())
             continue;
 
-        if (f->type == FIGURE_ENEMY54_REVOLTMAN)
+        if (f->type == FIGURE_RIOTER)
             continue;
 
         int index = formation_add_figure(

@@ -51,19 +51,28 @@ figure_water_carrier = {
 
 figure_protestor = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false },
-	},
-	terrain_usage : TERRAIN_USAGE_ANY,
-	max_amount : 25,
+		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+	}
+	terrain_usage : TERRAIN_USAGE_ANY
+	max_amount : 25
 }
 
 figure_robber = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false },
-	},
-	terrain_usage : TERRAIN_USAGE_ANY,
+		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+	}
+	terrain_usage : TERRAIN_USAGE_ANY
+	max_amount : 25
+}
+
+figure_rioter = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+	}
+	terrain_usage : TERRAIN_USAGE_ANY
 	max_amount : 25,
 }
 

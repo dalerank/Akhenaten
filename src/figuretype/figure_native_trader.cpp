@@ -93,7 +93,7 @@ void figure_native_trader::figure_action() {
 void figure_native_trader::update_animation() {
     figure_impl::update_animation();
 
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     if (action_state() == FIGURE_ACTION_149_CORPSE) {
         base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
