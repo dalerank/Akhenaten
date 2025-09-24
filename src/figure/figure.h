@@ -176,7 +176,6 @@ public:
     uint8_t current_height;
     uint8_t target_height;
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-    uint8_t trade_ship_failed_dock_attempts;
     uint8_t phrase_sequence_exact;
     textid phrase;
     xstring phrase_key;

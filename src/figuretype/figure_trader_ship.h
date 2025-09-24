@@ -28,6 +28,7 @@ public:
     struct runtime_data_t {
         empire_trader_handle trader;
         empire_city_handle empire_city;
+        uint8_t failed_dock_attempts;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
