@@ -100,9 +100,10 @@ bool figure_trade_ship::lost_queue() {
 
 bool figure_trade_ship::done_trading() {
     building* b = destination();
+    auto& d = runtime_data();
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_DOCK && b->num_workers > 0) {
-        if (base.trade_ship_failed_dock_attempts >= 10) {
-            base.trade_ship_failed_dock_attempts = 11;
+        if (d.failed_dock_attempts >= 10) {
+            d.failed_dock_attempts = 11;
             return true;
         }
         return false;
@@ -125,6 +126,7 @@ void figure_trade_ship::figure_action() {
     base.allow_move_type = EMOVE_DEEPWATER;
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
+    auto& d = runtime_data();
     switch (action_state()) {
     case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
         load_resource(base.resource_id, 1200);
@@ -176,12 +178,12 @@ void figure_trade_ship::figure_action() {
 
     case FIGURE_ACTION_112_TRADE_SHIP_MOORED:
         if (lost_queue()) {
-            base.trade_ship_failed_dock_attempts = 0;
+            d.failed_dock_attempts = 0;
             base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
             base.wait_ticks = 0;
             base.destination_tile = scenario_map_river_entry();
         } else if (done_trading()) {
-            base.trade_ship_failed_dock_attempts = 0;
+            d.failed_dock_attempts = 0;
             base.action_state = FIGURE_ACTION_115_TRADE_SHIP_LEAVING;
             base.wait_ticks = 0;
             base.destination_tile = scenario_map_river_entry();
@@ -232,7 +234,7 @@ void figure_trade_ship::figure_action() {
                 base.destination_tile = free_dock.tile;
             }
 
-            if (base.trade_ship_failed_dock_attempts >= 10) {
+            if (d.failed_dock_attempts >= 10) {
                 advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             }
             base.wait_ticks = 0;
@@ -257,8 +259,10 @@ void figure_trade_ship::figure_action() {
 }
 
 void figure_trade_ship::debug_show_properties() {
-    game_debug_show_property("trader_id", runtime_data().trader.handle);
-    game_debug_show_property("empire_city_id", runtime_data().empire_city.handle);
+    auto& d = runtime_data();
+    game_debug_show_property("trader_id", d.trader.handle);
+    game_debug_show_property("empire_city_id", d.empire_city.handle);
+    game_debug_show_property("trade_ship_failed_dock_attempts", d.failed_dock_attempts);
 }
 
 sound_key figure_trade_ship::phrase_key() const {
@@ -335,7 +339,7 @@ void figure_trade_ship::update_day() {
             }
         }
     }
-    base.trade_ship_failed_dock_attempts++;
+    runtime_data().failed_dock_attempts++;
 }
 
 bvariant figure_trade_ship::get_property(const xstring& domain, const xstring& name) const {

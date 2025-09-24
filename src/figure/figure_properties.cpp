@@ -83,7 +83,6 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("current_height", f->current_height);
         game_debug_show_property("target_height", f->target_height);
         game_debug_show_property("collecting_item_id", f->collecting_item_id);
-        game_debug_show_property("trade_ship_failed_dock_attempts", f->trade_ship_failed_dock_attempts);
         game_debug_show_property("phrase_sequence_exact", f->phrase_sequence_exact);
         game_debug_show_property("phrase_group", f->phrase.group);
         game_debug_show_property("phrase_id", f->phrase.id);
