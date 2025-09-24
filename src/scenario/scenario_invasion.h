@@ -29,11 +29,6 @@ struct invasion_warning_t {
     int invasion_id;
 };
 
-struct invasion_data_t {
-    int last_internal_invasion_id;
-    std::array<invasion_warning_t, 101> warnings;
-};
-
 struct enemy_properties_t {
     int percentage_type1;
     int percentage_type2;
@@ -41,9 +36,16 @@ struct enemy_properties_t {
     std::array<e_figure_type, 3> figure_types;
     e_formation_layout layout;
 };
+extern std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
 ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, layout)
 
-extern std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
+struct invasion_data_t {
+    int last_internal_invasion_id;
+    int min_invasion_amount;
+    int max_invasion_amount;
+    std::array<invasion_warning_t, 101> warnings;
+};
+ANK_CONFIG_STRUCT(invasion_data_t, min_invasion_amount, max_invasion_amount)
 extern invasion_data_t g_invasions;
 
 void scenario_invasion_clear();

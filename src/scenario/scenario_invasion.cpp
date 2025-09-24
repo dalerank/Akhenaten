@@ -57,7 +57,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_enemies) {
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
 
 invasion_warning_t g_invasion_warning;
-invasion_data_t g_invasions;
+invasion_data_t ANK_VARIABLE_N(g_invasions, "invasions");
 
 void scenario_invasion_clear(void) {
     auto &data = g_invasions;
@@ -160,8 +160,7 @@ tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_poi
     int soldiers_per_formation[3][4];
     tile2i invasion_tile;
 
-    amount = difficulty_adjust_enemies(amount);
-    amount = std::min(amount, 150);
+    amount = std::clamp<int>(difficulty_adjust_enemies(amount), data.min_invasion_amount, data.max_invasion_amount);
 
     data.last_internal_invasion_id++;
     if (data.last_internal_invasion_id > 32000) {
