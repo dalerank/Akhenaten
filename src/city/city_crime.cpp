@@ -5,7 +5,7 @@
 #include "game/game_events.h"
 #include "city/city_message.h"
 #include "grid/road_access.h"
-#include "figure/figure.h"
+#include "figuretype/figure_robber.h"
 #include "building/building_house.h"
 #include "core/random.h"
 #include "game/tutorial.h"
@@ -38,7 +38,7 @@ static void generate_rioter(building* b) {
     int target_building_id = formation_rioter_get_target_building(&x_target, &y_target);
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
-        figure* f = figure_create(FIGURE_TOMB_ROBER, road_tile, DIR_4_BOTTOM_LEFT);
+        figure* f = figure_create(FIGURE_RIOTER, road_tile, DIR_4_BOTTOM_LEFT);
         f->advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
@@ -50,65 +50,14 @@ static void generate_rioter(building* b) {
         }
     }
 
-    building_destroy_by_rioter(b);
+    auto bmain = b->main();
+    bmain->destroy_by_fire();
+
     g_city.ratings.monument_record_rioter();
     g_city.change_happiness(20);
     g_tutorials_flags.on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
-}
-
-void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
-    bool show_popup_message = false;
-    if (g_city.sentiment.last_mugger_message <= 0) {
-        g_city.sentiment.last_mugger_message = 90;
-        show_popup_message = true;
-    }
-
-    events::emit(event_message{ show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset });
-}
-
-static void generate_robber(building* b) {
-    g_city.sentiment.criminals++;
-    auto house = b->dcast_house();
-
-    if (!house) {
-        return;
-    }
-
-    auto &housed = house->runtime_data();
-    if (housed.criminal_active > 60 && g_city.sentiment.can_create_mugger) {
-        housed.criminal_active -= 60;
-        tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
-        if (road_tile.valid()) {
-            figure* f = figure_create(FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
-            f->advance_action(FIGURE_ACTION_120_MUGGER_CREATED);
-            f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
-
-            g_city.ratings.monument_record_criminal();
-            int taxes_this_year = city_finance_overview_this_year()->income.taxes;
-            if (taxes_this_year > 20) {
-                int money_stolen = taxes_this_year / 4;
-                if (money_stolen > 400) {
-                    money_stolen = 400 - random_byte() / 2;
-                }
-
-                city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
-                city_finance_process_stolen(money_stolen);              
-            } else {
-                const int treasury = g_city.finance.treasury;
-                int money_stolen = 0;
-                if (treasury > 0) {
-                    money_stolen = (random_byte() / 2) % 100;
-                }
-
-                if (money_stolen > 0) {
-                    city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
-                    city_finance_process_stolen(money_stolen);
-                }
-            }
-        }
-    }
 }
 
 static void generate_protestor(building* b) {
@@ -155,12 +104,9 @@ void city_t::figures_generate_criminals() {
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {
                 if (min_happiness <= 10) {
-                    // if (GAME_ENV == ENGINE_ENV_C3) { // Temporary disable rioters in Egypt
-                    //     generate_rioter(min_building);
-                    // } else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-                    generate_robber(min_building);
+                    figure_robber::create(min_building);
                 } else if (min_happiness < 30) {
-                    generate_robber(min_building);
+                    figure_robber::create(min_building);
                 } else if (min_happiness < 50) {
                     generate_protestor(min_building);
                 }
@@ -168,7 +114,7 @@ void city_t::figures_generate_criminals() {
         } else if (sentiment < 60) {
             if (random_byte() >= sentiment + 40) {
                 if (min_happiness < 30) {
-                    generate_robber(min_building);
+                    figure_robber::create(min_building);
                 } else if (min_happiness < 50) {
                     generate_protestor(min_building);
                 }

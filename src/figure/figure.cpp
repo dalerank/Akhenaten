@@ -134,7 +134,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
             continue;
 
         int dist;
-        if (f->type == FIGURE_PROTESTER || f->type == FIGURE_ENEMY54_REVOLTMAN)
+        if (f->type == FIGURE_PROTESTER || f->type == FIGURE_RIOTER)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
         else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
@@ -197,7 +197,7 @@ nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, st
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
                 if (category == NEARBY_HOSTILE) {
-                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_ENEMY54_REVOLTMAN)
+                    if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_RIOTER)
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE
                         && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)

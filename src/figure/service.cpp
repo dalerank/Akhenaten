@@ -57,11 +57,11 @@ int figure::figure_service_provide_coverage() {
         });
         break;
  
-    case FIGURE_TOMB_ROBER:
-        if (figure_rioter_collapse_building() == 1) {
-            return 1;
-        }
-        break;
+    //case FIGURE_TOMB_ROBER:
+    //    if (figure_rioter_collapse_building() == 1) {
+    //        return 1;
+    //    }
+    //    break;
 
     default:
         houses_serviced = dcast()->provide_service();

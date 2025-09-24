@@ -109,7 +109,7 @@ void figure_soldier::update_image(const formation* m, int &dir) {
         dir = base.previous_tile_direction;
     }
 
-    dir = figure_image_normalize_direction(dir);
+    dir = base.figure_image_normalize_direction(dir);
 }
 
 bool figure_soldier::play_die_sound() {

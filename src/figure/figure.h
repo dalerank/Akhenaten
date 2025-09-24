@@ -346,7 +346,6 @@ public:
     bool do_exitbuilding(bool invisible, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
-    void rioter_action();
     void editor_flag_action();
     void noble_action();
     void indigenous_native_action();
@@ -379,8 +378,6 @@ public:
 
     int target_is_alive();
 
-    int figure_rioter_collapse_building();
-
     void enemy_initial(formation* m);
     void enemy_marching(const formation* m);
     void enemy_fighting(const formation* m);
@@ -397,6 +394,7 @@ public:
     void hit_opponent();
     void figure_combat_handle_attack();
     void figure_combat_attack_figure_at(int grid_offset);
+    int figure_image_normalize_direction(int dir);
 
     // sound.c
     void play_die_sound();

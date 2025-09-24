@@ -24,7 +24,7 @@
 #include "figure/trader.h"
 #include "city/city_figures.h"
 
-figures::model_t<figure_docker> docker_m;
+figure_docker::static_params docker_m;
 
 bool figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
@@ -508,7 +508,7 @@ sound_key figure_docker::phrase_key() const {
 }
 
 void figure_docker::update_animation() {
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
     if (action_state(FIGURE_ACTION_149_CORPSE)) {
         base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);

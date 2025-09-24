@@ -229,7 +229,7 @@ void figure_entertainer::figure_action() {
 }
 
 void figure_entertainer::update_animation() {
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
     //if (type() == FIGURE_CHARIOR_RACER) {
     //    base.cart_image_id = 0;

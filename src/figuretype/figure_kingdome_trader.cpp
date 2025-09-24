@@ -216,7 +216,7 @@ sound_key figure_trade_caravan::phrase_key() const {
 }
 
 void figure_trade_caravan::update_animation() {
-    int dir = figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
+    int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     base.main_image_id = anim(animkeys().walk).first_img() + dir + 8 * base.anim.frame;
 }
 

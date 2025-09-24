@@ -368,7 +368,7 @@ void formation_seth_kill_enemies() {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (f->is_enemy() && f->type != FIGURE_ENEMY54_REVOLTMAN) {
+        if (f->is_enemy() && f->type != FIGURE_RIOTER) {
             f->kill();
             to_kill--;
             if (!grid_offset)
