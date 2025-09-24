@@ -58,11 +58,6 @@ public:
     tile2i reid_tile() const;
 };
 
-struct building_dest {
-    int bid;
-    tile2i tile;
-};
-
 building_dest map_get_free_destination_dock(int ship_id);
 building_dest map_get_queue_destination_dock(int ship_id);
 bool map_tile_is_connected_to_open_water(tile2i tile);
