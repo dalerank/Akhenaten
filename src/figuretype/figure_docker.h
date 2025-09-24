@@ -25,6 +25,6 @@ public:
     bool fetch_export_resource(building* dock);
     bool try_import_resource(building *b, e_resource resource, empire_city_handle city_id);
     bool try_export_resource(building *b, e_resource resource, empire_city_handle city_id);
-    int get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &import_resource);
-    int get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, tile2i &warehouse, e_resource &export_resource);
+    building_dest get_closest_warehouse_for_import(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource &import_resource);
+    building_dest get_closest_warehouse_for_export(tile2i pos, empire_city_handle city, int distance_from_entry, int road_network_id, e_resource &export_resource);
 };

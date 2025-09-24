@@ -105,6 +105,11 @@ struct blocked_tile {
 };
 using blocked_tile_vec = svector<blocked_tile, 36>;
 
+struct building_dest {
+    building_id bid;
+    tile2i tile;
+};
+
 enum e_labor_state {
     LABOR_STATE_NONE,
     LABOR_STATE_PRESENT,
