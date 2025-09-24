@@ -29,6 +29,7 @@ public:
         empire_trader_handle trader;
         empire_city_handle empire_city;
         uint8_t failed_dock_attempts;
+        uint16_t amount_bought;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
@@ -51,6 +52,7 @@ public:
     bool lost_queue();
     bool done_trading();
     int is_trading() const;
+    uint16_t total_bought() const { return runtime_data().amount_bought; }
 
     int max_capacity() const { return current_params().max_capacity; }
 };

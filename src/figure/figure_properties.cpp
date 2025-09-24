@@ -75,7 +75,6 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("movement_ticks_watchdog", f->movement_ticks_watchdog);
         game_debug_show_property("leading_figure_id", f->leading_figure_id);
         game_debug_show_property("cart_offset", f->cart_offset);
-        game_debug_show_property("trader_amount_bought", f->trader_amount_bought);
         game_debug_show_property("name", f->name);
         game_debug_show_property("terrain_usage", f->terrain_usage);
         game_debug_show_property("allow_move_type", f->allow_move_type);

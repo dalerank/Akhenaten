@@ -168,7 +168,6 @@ public:
     uint8_t wait_ticks_missile;
     vec2i cart_offset;
 
-    uint16_t trader_amount_bought;
     uint16_t name;
     uint8_t terrain_usage;
     e_move_type allow_move_type;
@@ -376,7 +375,6 @@ public:
     int get_carrying_amount();
     void cart_image_update();
     
-    int trader_total_bought();
     int trader_total_sold();
 
     int target_is_alive();

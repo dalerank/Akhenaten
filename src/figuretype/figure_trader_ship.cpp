@@ -130,7 +130,7 @@ void figure_trade_ship::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
         load_resource(base.resource_id, 1200);
-        base.trader_amount_bought = 0;
+        d.amount_bought = 0;
         //            is_ghost = true;
         base.wait_ticks++;
         if (base.wait_ticks > 20) {
@@ -263,6 +263,7 @@ void figure_trade_ship::debug_show_properties() {
     game_debug_show_property("trader_id", d.trader.handle);
     game_debug_show_property("empire_city_id", d.empire_city.handle);
     game_debug_show_property("trade_ship_failed_dock_attempts", d.failed_dock_attempts);
+    game_debug_show_property("trader_amount_bought", d.amount_bought);
 }
 
 sound_key figure_trade_ship::phrase_key() const {

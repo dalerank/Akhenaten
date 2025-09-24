@@ -24,6 +24,7 @@ public:
     struct runtime_data_t {
         empire_trader_handle trader;
         empire_city_handle empire_city;
+        uint16_t amount_bought;
     } FIGURE_RUNTIME_DATA_T;
 
     struct static_params : figure_model {
@@ -44,6 +45,9 @@ public:
     virtual xstring action_tip() const override;
     virtual void debug_show_properties() override;
     virtual bvariant get_property(const xstring& domain, const xstring& name) const override;
+    virtual uint16_t total_bought() const override { return runtime_data().amount_bought; }
+    virtual void buy(int amounts) override { runtime_data().amount_bought += amounts; }
+    virtual void sell(int amounts) override { base.resource_amount_full += amounts; }
 
     empire_trader_handle empire_trader() const { return runtime_data().trader; }
     empire_city_handle empire_city() const { return runtime_data().empire_city; }
