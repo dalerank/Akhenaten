@@ -1,5 +1,4 @@
-#ifndef CITY_SOUND_H
-#define CITY_SOUND_H
+#pragma once
 
 int city_sound_update_march_enemy(void);
 
@@ -24,5 +23,3 @@ int city_sound_update_hit_elephant(void);
 int city_sound_update_die_citizen(void);
 
 int city_sound_update_die_soldier(void);
-
-#endif // CITY_SOUND_H

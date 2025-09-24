@@ -304,6 +304,7 @@ void figure_soldier::figure_action() {
 void figure_soldier_infantry::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
+    xstring animkey = animkeys().walk;
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
         //int image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY);
         //if (base.attack_image_offset < 12)
@@ -311,20 +312,20 @@ void figure_soldier_infantry::update_image(const formation *m, int &dir) {
         //else {
         //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
         //}
-        image_set_animation(soldier_infantry_m.anim["attack"]);
+        animkey = animkeys().attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        image_set_animation(soldier_infantry_m.anim["death"]);
+        animkey = animkeys().death;
     } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
         //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
         //    image_id = image_id + dir + 144;
         //else {
         //    image_id = image_id + dir;
         //}
-        image_set_animation(soldier_infantry_m.anim["walk"]);
+        animkey = animkeys().walk;
         base.anim.frame = 0;
-    } else {
-        image_set_animation(soldier_infantry_m.anim["walk"]);
     }
+
+    image_set_animation(animkey);
 }
 
 void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
