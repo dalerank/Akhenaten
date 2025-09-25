@@ -437,7 +437,7 @@ void figure_impl::acquire(e_figure_type e, figure &f) {
         }
     }
 
-    //assert(false && "Cant find building type in config");
+    assert(false && "Cant find building type in config");
     f.acquire_impl<figure_impl>();
 }
 
