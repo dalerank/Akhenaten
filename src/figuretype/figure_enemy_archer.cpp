@@ -1,12 +1,15 @@
-#include "figure_enemy_fast_sword.h"
+#include "figure_enemy_archer.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
 
-figure_barbarian_sword::static_params barbarian_sword_m;
+figure_barbarian_archer::static_params barbarian_archer_m;
 
-void figure_enemy_fast_sword::figure_action() {
-    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");
+void figure_enemy_archer::on_create() {
+}
+
+void figure_enemy_archer::figure_action() {
+    OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyArcher");
 
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);
@@ -43,7 +46,7 @@ void figure_enemy_fast_sword::figure_action() {
     }
 }
 
-void figure_enemy_fast_sword::update_animation() {
+void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
         animkey = animkeys().attack;
