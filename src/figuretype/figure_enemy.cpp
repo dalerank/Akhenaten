@@ -12,6 +12,10 @@ void figure_enemy::figure_action() {
     assert(false && "you should implement this function in derived class");
 }
 
+void figure_enemy::update_animation() {
+    figure_impl::update_animation();
+}
+
 void figure_enemy::enemy_initial(formation *m) {
     base.map_figure_update();
     base.anim.frame = 0;
