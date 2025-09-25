@@ -11,7 +11,7 @@ public:
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
 
-    virtual sound_key phrase_key() const override;
+    //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
