@@ -43,7 +43,7 @@ void scenario_editor_clear_predator_herd_points(void) {
     g_scenario.is_saved = 0;
 }
 
-map_point scenario_editor_predator_herd_point(int id) {
+tile2i scenario_editor_predator_herd_point(int id) {
     return g_scenario.herd_points_predator[id];
 }
 
@@ -61,7 +61,7 @@ void scenario_editor_clear_fishing_points(void) {
     g_scenario.is_saved = 0;
 }
 
-map_point scenario_editor_fishing_point(int id) {
+tile2i scenario_editor_fishing_point(int id) {
     return g_scenario.fishing_points[id];
 }
 
@@ -96,7 +96,7 @@ void scenario_editor_clear_invasion_points(void) {
     g_scenario.is_saved = 0;
 }
 
-map_point scenario_editor_land_invasion_point(int id) {
+tile2i scenario_editor_land_invasion_point(int id) {
     return g_scenario.invasion_points_land[id];
 }
 
@@ -106,7 +106,7 @@ void scenario_editor_set_land_invasion_point(int id, int x, int y) {
     g_scenario.is_saved = 0;
 }
 
-map_point scenario_editor_earthquake_point(void) {
+tile2i scenario_editor_earthquake_point(void) {
     return g_scenario.earthquake_point;
 }
 

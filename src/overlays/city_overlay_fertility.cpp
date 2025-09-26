@@ -71,7 +71,7 @@ xstring city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i) const {
 
 xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (building_is_farm(b->type)) {
-        map_point tile = b->tile;
+        tile2i tile = b->tile;
         int fertility = map_get_fertility_for_farm(tile.grid_offset());
         if (fertility > 80)
             return ui::str(66, 63);

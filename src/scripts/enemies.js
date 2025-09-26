@@ -8,6 +8,7 @@ figure_barbarian_archer = {
         attack : { pack:PACK_ENEMY_BARBARIAN, id:2, max_frames:12 }
     }
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 

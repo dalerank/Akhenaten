@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <vector>
 
+#include "grid/point.h"
+
 /**
  * @file
  * Read to or write from memory buffer.
@@ -12,6 +14,7 @@
 /**
  * Struct representing a buffer to read from / write to
  */
+class tile2i;
 class buffer {
 private:
     std::vector<uint8_t> data;
@@ -44,6 +47,7 @@ public:
     int8_t read_i8();
     int16_t read_i16();
     int32_t read_i32();
+    void read_t2i(tile2i &value);
     int64_t read_i64();
     size_t read_raw(void* value, size_t max_size);
 
@@ -54,6 +58,7 @@ public:
     void write_i8(int8_t value);
     void write_i16(int16_t value);
     void write_i32(int32_t value);
+    void write_t2i(const tile2i &value);
     void write_i64(int64_t value);
     void write_raw(const void* value, size_t s);
 

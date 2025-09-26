@@ -40,8 +40,7 @@ void figure::enemy_initial(formation* m) {
             int formationx = formation_layout_position_x(m->layout, index_in_formation);
             int formationy = formation_layout_position_y(m->layout, index_in_formation);
 
-            destination_tile.set(m->destination_x + formationx,
-                                 m->destination_y + formationy);
+            destination_tile = m->destination.shifted(formationx,formationy);
 
             if (calc_general_direction(tile, destination_tile) < 8) {
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
@@ -97,7 +96,7 @@ void figure::enemy_initial(formation* m) {
     }
 }
 
-void figure::enemy_marching(const formation* m) {
+void figure::enemy_marching(formation* m) {
     wait_ticks--;
     if (wait_ticks <= 0) {
         wait_ticks = 50;
@@ -105,7 +104,7 @@ void figure::enemy_marching(const formation* m) {
         int formationx = formation_layout_position_x(m->layout, index_in_formation);
         int formationy = formation_layout_position_y(m->layout, index_in_formation);
 
-        destination_tile.set(m->destination_x + formationx, m->destination_y + formationy);
+        destination_tile = m->destination.shifted(formationx, formationy);
         if (calc_general_direction(tile, destination_tile) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;
@@ -119,7 +118,7 @@ void figure::enemy_marching(const formation* m) {
     }
 }
 
-void figure::enemy_fighting(const formation* m) {
+void figure::enemy_fighting(formation* m) {
     if (!m->recent_fight)
         action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
 
@@ -220,40 +219,6 @@ int figure::get_missile_direction(const formation* m) {
         dir = previous_tile_direction;
     }
     return figure_image_normalize_direction(dir);
-}
-
-void figure::enemy43_spear_action() {
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
-
-    speed_multiplier = 1;
-    formation *m = formation_get(formation_id);
-    enemy_action(m);
-    int dir = get_missile_direction(m);
-
-    switch (m->enemy_type) {
-    case ENEMY_3_EGYPTIAN:
-    case ENEMY_4_HITTITE:
-    case ENEMY_5_HYKSOS:
-    case ENEMY_6_KUSHITE:
-        break;
-    default:
-        return;
-    }
-    if (action_state == FIGURE_ACTION_150_ATTACK) {
-        if (attack_image_offset >= 12)
-            main_image_id = 745 + dir + 8 * ((attack_image_offset - 12) / 2);
-        else
-            main_image_id = 745 + dir;
-    } else if (action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
-        main_image_id = 697 + dir + 8 * figure_image_missile_launcher_offset();
-    } else if (action_state == FIGURE_ACTION_149_CORPSE) {
-        main_image_id = 793 + figure_image_corpse_offset();
-    } else if (direction == DIR_FIGURE_ATTACK) {
-        main_image_id = 745 + dir + 8 * (anim.frame / 2);
-    } else {
-        main_image_id = 601 + dir + 8 * anim.frame;
-    }
 }
 
 void figure::enemy45_sword_action() {

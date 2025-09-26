@@ -59,7 +59,7 @@ int city_view_absolute_orientation(int orientation_relative);
 void city_view_reset_orientation(void);
 
 screen_tile city_view_get_camera_screentile();
-map_point city_view_get_camera_mappoint();
+tile2i city_view_get_camera_mappoint();
 vec2i camera_get_position();
 vec2i camera_get_pixel_offset_internal(painter &ctx);
 void city_view_get_camera_max_tile(int* x, int* y);

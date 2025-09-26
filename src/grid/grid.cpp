@@ -345,6 +345,7 @@ grid_area map_grid_get_area(tile2i start, tile2i end) {
         tmin.set_x(end.x());
         tmax.set_x(start.x());
     }
+
     if (start.y() < end.y()) {
         tmin.set_y(start.y());
         tmax.set_y(end.y());

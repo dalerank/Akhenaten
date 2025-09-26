@@ -69,7 +69,7 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
 }
 
 void figure::zebra_action() {
-    const formation* m = formation_get(formation_id);
+    formation* m = formation_get(formation_id);
     //    terrain_usage = TERRAIN_USAGE_ANIMAL;
     //    use_cross_country = false;
     //    is_ghost = false;
@@ -82,11 +82,7 @@ void figure::zebra_action() {
         if (wait_ticks > 200) {
             wait_ticks = id & 0x1f;
             action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, index_in_formation),
-                                 m->destination_y + formation_layout_position_y(FORMATION_HERD, index_in_formation));
-            //                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD,
-            //                index_in_formation); destination_tile.y() = m->destination_y +
-            //                formation_layout_position_y(FORMATION_HERD, index_in_formation);
+            destination_tile = m->destination.shifted(formation_layout_position_x(FORMATION_HERD, index_in_formation), formation_layout_position_y(FORMATION_HERD, index_in_formation));
             roam_length = 0;
         }
         break;

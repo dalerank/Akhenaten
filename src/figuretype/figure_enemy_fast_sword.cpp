@@ -45,11 +45,11 @@ void figure_enemy_fast_sword::figure_action() {
 
 void figure_enemy_fast_sword::update_animation() {
     xstring animkey = animkeys().walk;
-    if (action_state() == FIGURE_ACTION_150_ATTACK) {
+    if (action_state() == FIGURE_ACTION_154_ENEMY_FIGHTING) {
         animkey = animkeys().attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (action_state() == FIGURE_ACTION_153_ENEMY_MARCHING) {
         animkey = animkeys().walk;
         base.anim.frame = 0;
     }

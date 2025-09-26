@@ -10,6 +10,10 @@ public:
     virtual void figure_action() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
+    virtual bool is_archer() const { return false; }
+    virtual bool is_spearman() const { return false; }
+    virtual bool is_mounted_archer() const { return false; }
+    virtual e_figure_type missile_type() const { return FIGURE_NONE; }
 
     //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }

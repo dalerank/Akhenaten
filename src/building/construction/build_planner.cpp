@@ -1220,7 +1220,7 @@ void build_planner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
 }
 
-void build_planner::draw_bridge(map_point tile, vec2i pixel, int type, painter &ctx) {
+void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx) {
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction);
 

@@ -821,7 +821,7 @@ static void button_go_to_problem(int param1, int param2) {
     }
 
     if (grid_offset > 0 && grid_offset < 26244) {
-        camera_go_to_mappoint(map_point(grid_offset));
+        camera_go_to_mappoint(tile2i(grid_offset));
     }
 
     window_city_show();

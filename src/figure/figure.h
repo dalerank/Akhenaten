@@ -349,7 +349,6 @@ public:
     void editor_flag_action();
     void noble_action();
     void indigenous_native_action();
-    void enemy43_spear_action();
     void enemy45_sword_action();
     void enemy_camel_action();
     void enemy_elephant_action();
@@ -378,8 +377,8 @@ public:
     int target_is_alive();
 
     void enemy_initial(formation* m);
-    void enemy_marching(const formation* m);
-    void enemy_fighting(const formation* m);
+    void enemy_marching(formation* m);
+    void enemy_fighting(formation* m);
     void enemy_action(formation* m);
     int get_direction();
     int get_missile_direction(const formation* m);
