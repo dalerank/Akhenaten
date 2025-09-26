@@ -897,12 +897,12 @@ info_window_work_camp = {
     })
 }
 
-legion_info_window = {
+batalion_info_window = {
     ui : {
         background    : outer_panel({size: [34, 24]}),
         title             : text({pos: [0, 16], size: [px(31), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
 
-        legion_icon   : image({ pack:PACK_GENERAL, id:127, pos:[30, 30] }),
+        batalion_icon   : image({ pack:PACK_GENERAL, id:127, pos:[30, 30] }),
         morale_img    : image({ pack:PACK_GENERAL, id:54, pos:[30, 50] }),
         describe          : text({pos: [30, 140], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(28) }),
 

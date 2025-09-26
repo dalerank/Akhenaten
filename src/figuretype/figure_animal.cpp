@@ -82,7 +82,8 @@ void figure::zebra_action() {
         if (wait_ticks > 200) {
             wait_ticks = id & 0x1f;
             action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            destination_tile = m->destination.shifted(formation_layout_position_x(FORMATION_HERD, index_in_formation), formation_layout_position_y(FORMATION_HERD, index_in_formation));
+            tile2i formation_t = formation_layout_position(FORMATION_HERD, index_in_formation);
+            destination_tile = m->destination.shifted(formation_t);
             roam_length = 0;
         }
         break;

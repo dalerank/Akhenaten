@@ -53,6 +53,7 @@ public:
 
     inline self mod(int x, int y) { return self(this->x() % x, this->y() % y); }
     inline self add(self o) { return self(this->x() + o.x(), this->y() + o.y()); }
+    inline self sub(self o) { return self(this->x() - o.x(), this->y() - o.y()); }
     inline self div(float d) { return self(this->x() / d, this->y() / d); }
     inline bool valid() const { return (p_X >= 0 && p_Y >= 0 && p_X < MAX_TILE_I && p_Y < MAX_TILE_I); }
 

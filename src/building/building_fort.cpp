@@ -2,7 +2,7 @@
 
 #include "building/rotation.h"
 #include "figure/formation.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
 #include "window/building/common.h"
@@ -106,7 +106,7 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     int ground_id = params().anim[animkeys().ground].first_img();
     map_building_tiles_add(ground->id, fort_tile_add, 4, ground_id, TERRAIN_BUILDING);
 
-    base.formation_id = formation_legion_create_for_fort(&base);
+    base.formation_id = formation_batalion_create_for_fort(&base);
     ground->formation_id = base.formation_id;
 }
 
@@ -141,5 +141,5 @@ void building_fort::highlight_waypoints() {
 }
 
 void building_fort::spawn_figure() {
-    formation_legion_update_recruit_status(&base);
+    formation_batalion_update_recruit_status(&base);
 }

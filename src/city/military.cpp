@@ -8,7 +8,7 @@
 #include "core/calc.h"
 #include "empire/empire.h"
 #include "figure/formation.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "scenario/distant_battle.h"
 
 void city_military_t::clear_infantry_batalions() {
@@ -33,7 +33,7 @@ void city_military_t::update_totals() {
     infantry_batalions = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation* m = formation_get(i);
-        if (m->in_use && m->is_legion) {
+        if (m->in_use && m->batalion_id) {
             infantry_batalions++;
             total_soldiers += m->num_figures;
             if (m->empire_service && m->num_figures > 0) {
@@ -186,7 +186,7 @@ static int player_has_won() {
             pct_loss = 0;
         }
     }
-    formation_legions_kill_in_distant_battle(pct_loss);
+    formation_batalions_kill_in_distant_battle(pct_loss);
     return won;
 }
 
@@ -233,7 +233,7 @@ static void update_aftermath() {
                 events::emit(event_message{ true, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, city_data.map.exit_point.grid_offset() });
             }
             city_data.distant_battle.roman_months_traveled = 0;
-            formation_legions_return_from_distant_battle();
+            formation_batalions_return_from_distant_battle();
         }
     } else if (city_data.distant_battle.city_foreign_months_left > 0) {
         city_data.distant_battle.city_foreign_months_left--;

@@ -307,12 +307,13 @@ static void set_figures_to_initial(const formation* m) {
 }
 
 bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &outtile) {
-    int base_offset = MAP_OFFSET(formation_layout_position_x(m->layout, 0), formation_layout_position_y(m->layout, 0));
-    int figure_offsets[50];
-    figure_offsets[0] = 0;
+    tile2i base_offset = formation_layout_position(m->layout, 0);
+    tile2i figure_offsets[50];
+    figure_offsets[0] = tile2i(0, 0);
     for (int i = 1; i < m->num_figures; i++) {
-        figure_offsets[i] = MAP_OFFSET(formation_layout_position_x(m->layout, i), formation_layout_position_y(m->layout, i)) - base_offset;
+        figure_offsets[i] = formation_layout_position(m->layout, i).sub(base_offset);
     }
+
     map_routing_noncitizen_can_travel_over_land(tile, tile2i(-1, -1), 0, 600);
     for (int r = 0; r <= 10; r++) {
         grid_area area = map_grid_get_area(tile, 1, r);
@@ -321,23 +322,24 @@ bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &
         map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
             int can_move = 1;
             for (int fig = 0; fig < m->num_figures; fig++) {
-                int grid_offset = tile.grid_offset() + figure_offsets[fig];
-                if (!map_grid_is_valid_offset(grid_offset)) {
+                tile2i tile = tile.shifted(figure_offsets[fig]);
+                if (!tile.valid()) {
                     can_move = 0;
                     break;
                 }
 
-                if (map_terrain_is(grid_offset, TERRAIN_IMPASSABLE_ENEMY)) {
+                if (map_terrain_is(tile, TERRAIN_IMPASSABLE_ENEMY)) {
                     can_move = 0;
                     break;
                 }
 
-                if (map_routing_distance(grid_offset) <= 0) {
+                if (map_routing_distance(tile) <= 0) {
                     can_move = 0;
                     break;
                 }
 
-                if (map_has_figure_at(grid_offset) && figure_get(map_figure_id_get(grid_offset))->formation_id != m->id) {
+                figure_id tile_figure_id = map_figure_id_get(tile);
+                if (tile_figure_id && figure_get(tile_figure_id)->formation_id != m->id) {
                     can_move = 0;
                     break;
                 }
@@ -588,7 +590,7 @@ void formation_enemy_update(void) {
         int roman_distance = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation* m = formation_get(i);
-            if (m->in_use && !m->is_herd && !m->is_legion)
+            if (m->in_use && !m->is_herd && !m->batalion_id)
                 update_enemy_formation(m, &roman_distance);
         }
     }

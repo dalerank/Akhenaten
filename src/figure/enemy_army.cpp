@@ -87,7 +87,7 @@ void enemy_army_calculate_kingdome_influence(void) {
 
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation* m = formation_get(i);
-        if (m->in_use != 1 || !m->is_legion)
+        if (m->in_use != 1 || !m->batalion_id)
             continue;
 
         if (m->num_figures > 0)

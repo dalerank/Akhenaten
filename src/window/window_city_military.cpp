@@ -10,7 +10,7 @@
 #include "graphics/window.h"
 #include "grid/point.h"
 #include "figure/formation.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "sound/sound.h"
 
 static int selected_legion_formation_id;

@@ -9,7 +9,7 @@
 #include "core/calc.h"
 #include "game/state.h"
 #include "figure/figure.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "figure/figure_phrase.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"

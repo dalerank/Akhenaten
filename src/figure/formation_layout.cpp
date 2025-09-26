@@ -27,10 +27,7 @@ static const int FORMATION_LAYOUT_POSITION_Y[13][16] = {{0, 0, 1, 1, 0, 1, -1, -
                                                         {0, 0, 2, 2, 0, 2, -2, -2, -2, -2, 0, 2, 4, 4, 4, 4},
                                                         {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3}};
 
-int formation_layout_position_x(int layout, int index) {
-    return FORMATION_LAYOUT_POSITION_X[layout][index];
-}
-
-int formation_layout_position_y(int layout, int index) {
-    return FORMATION_LAYOUT_POSITION_Y[layout][index];
+tile2i formation_layout_position(int layout, int index) {
+    return tile2i( FORMATION_LAYOUT_POSITION_X[layout][index],
+             FORMATION_LAYOUT_POSITION_Y[layout][index] );
 }

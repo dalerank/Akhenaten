@@ -11,7 +11,7 @@
 #include "widget/city/ornaments.h"
 #include "core/svector.h"
 #include "core/profiler.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "game/resource.h"
 #include "game/undo.h"
 #include "graphics/view/view.h"
@@ -246,7 +246,7 @@ void building::clear_related_data() {
         city_buildings_remove_distribution_center(this);
 
     if (building_is_fort(type)) {
-        formation_legion_delete_for_fort(this);
+        formation_batalion_delete_for_fort(this);
     }
 
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {

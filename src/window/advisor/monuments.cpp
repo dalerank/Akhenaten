@@ -6,7 +6,7 @@
 #include "city/ratings.h"
 #include "city/city_resource.h"
 #include "empire/empire.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"

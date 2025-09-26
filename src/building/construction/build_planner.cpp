@@ -37,7 +37,7 @@
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "clear.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"

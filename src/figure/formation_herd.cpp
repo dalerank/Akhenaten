@@ -319,7 +319,7 @@ void formation_herd_update() {
 
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->is_legion && m->max_figures > 0) {
+        if (m->in_use && m->is_herd && !m->batalion_id && m->max_figures > 0) {
             update_herd_formation(m);
         }
     }
@@ -328,7 +328,7 @@ void formation_herd_update() {
 bool formation_herd_breeding_ground_at(tile2i tile, int size) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->is_legion) {
+        if (m->in_use && m->is_herd && !m->batalion_id) {
             if (m->tile.x() >= tile.x() && m->tile.x() < tile.x() + size && m->tile.y() >= tile.y() && m->tile.y() < tile.y() + size)
                 return true;
         }
