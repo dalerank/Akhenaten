@@ -61,7 +61,7 @@ void info_window_vacant_lot::init(object_info &c) {
         return;
     }
 
-    map_point road_tile = map_closest_road_within_radius(house->tile(), 1, 2);
+    tile2i road_tile = map_closest_road_within_radius(house->tile(), 1, 2);
     int text_id = road_tile.valid() ? 1 : 2;
 
     ui["describe"] = ui::str(128, text_id);

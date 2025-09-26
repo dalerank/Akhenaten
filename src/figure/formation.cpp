@@ -384,13 +384,11 @@ void formation_clear_monthly_counters(formation* m) {
 }
 
 void formation_set_destination(formation* m, tile2i tile) {
-    m->destination_x = tile.x();
-    m->destination_y = tile.y();
+    m->destination = tile;
 }
 
 void formation_set_destination_building(formation* m, int x, int y, int building_id) {
-    m->destination_x = x;
-    m->destination_y = y;
+    m->destination = tile2i{ x, y };
     m->destination_building_id = building_id;
 }
 
@@ -585,11 +583,10 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->layout);      // 9
         iob->bind(BIND_SIGNATURE_INT16, &f->morale);      // 100
 
-        iob->bind(BIND_SIGNATURE_UINT32, f->home);        // 44
-        iob->bind(BIND_SIGNATURE_UINT32, f->standard_tile);    //
-        iob->bind(BIND_SIGNATURE_UINT32, f->tile);             // 44
-        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_x); // 49
-        iob->bind(BIND_SIGNATURE_UINT16, &f->destination_y); // 49
+        iob->bind(BIND_SIGNATURE_TILE2I, f->home);        // 44
+        iob->bind(BIND_SIGNATURE_TILE2I, f->standard_tile);    //
+        iob->bind(BIND_SIGNATURE_TILE2I, f->tile);             // 44
+        iob->bind(BIND_SIGNATURE_TILE2I, f->destination); // 49
         
         iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);

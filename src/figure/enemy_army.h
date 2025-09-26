@@ -7,8 +7,7 @@ struct enemy_army {
     int formation_id;
     int layout;
     tile2i home;
-    int destination_x;
-    int destination_y;
+    tile2i destination;
     int destination_building_id;
     int num_legions;
     int ignore_roman_soldiers;

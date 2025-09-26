@@ -315,7 +315,7 @@ static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)
         events::emit(event_city_warning{ "#place_flag_with_id" });
 }
 
-static void place_building(map_point tile) {
+static void place_building(tile2i tile) {
     int image_id;
     int size;
     e_building_type type;
@@ -361,7 +361,7 @@ static void update_terrain_after_elevation_changes(void) {
     scenario_editor_updated_terrain();
 }
 
-static void place_access_ramp(map_point tile) {
+static void place_access_ramp(tile2i tile) {
     int orientation = 0;
     if (editor_tool_can_place_access_ramp(tile, &orientation)) {
         int terrain_mask = ~(TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_CANAL);
@@ -380,7 +380,7 @@ static void place_access_ramp(map_point tile) {
     }
 }
 
-static void place_road(map_point start_tile, map_point end_tile) {
+static void place_road(tile2i start_tile, tile2i end_tile) {
     const auto &params = building_impl::params(BUILDING_ROAD);
     int items_placed = params.planer_construction_place(g_city_planner, start_tile, end_tile, 0, 0);
     if (items_placed) {
@@ -388,7 +388,7 @@ static void place_road(map_point start_tile, map_point end_tile) {
     }
 }
 
-void editor_tool_end_use(map_point tile) {
+void editor_tool_end_use(tile2i tile) {
     if (!data.build_in_progress)
         return;
     data.build_in_progress = 0;

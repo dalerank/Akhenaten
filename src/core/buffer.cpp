@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cstring>
 
+#include "grid/point.h"
+
 void safe_realloc_for_size(buffer** p_buf, int size) {
     // this function is ONLY valid for buffers created on the HEAP.
     if (*p_buf == nullptr)
@@ -124,6 +126,7 @@ int16_t buffer::read_i16() {
 
     return result;
 }
+
 int32_t buffer::read_i32() {
     int32_t result = 0;
     if (is_valid(sizeof(result))) {
@@ -135,6 +138,12 @@ int32_t buffer::read_i32() {
     }
 
     return result;
+}
+
+void buffer::read_t2i(tile2i &tile) {
+    int x = read_i16();
+    int y = read_i16();
+    tile.set(x, y);
 }
 
 int64_t buffer::read_i64() {
@@ -194,12 +203,19 @@ void buffer::write_i8(int8_t value) {
         data.at(index++) = value & 0xff;
     }
 }
+
 void buffer::write_i16(int16_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;
         data.at(index++) = (value >> 8) & 0xff;
     }
 }
+
+void buffer::write_t2i(const tile2i &tile) {
+    write_i16(tile.x());
+    write_i16(tile.y());
+}
+
 void buffer::write_i32(int32_t value) {
     if (is_valid(sizeof(value))) {
         data.at(index++) = value & 0xff;

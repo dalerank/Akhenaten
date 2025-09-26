@@ -38,8 +38,7 @@ void figure_enemy::enemy_initial(formation *m) {
             int formationx = formation_layout_position_x(m->layout, base.index_in_formation);
             int formationy = formation_layout_position_y(m->layout, base.index_in_formation);
 
-            base.destination_tile.set(m->destination_x + formationx,
-                m->destination_y + formationy);
+            base.destination_tile = m->destination.shifted(formationx, formationy);
 
             if (calc_general_direction(tile(), base.destination_tile) < 8) {
                 advance_action(FIGURE_ACTION_153_ENEMY_MARCHING);
@@ -47,8 +46,7 @@ void figure_enemy::enemy_initial(formation *m) {
         }
     }
 
-    if (type() == FIGURE_ENEMY_EGYPTIAN_SPEAR || type() == FIGURE_ENEMY_EGYPTIAN_CAMEL || type() == FIGURE_ENEMY_EGYPTIAN_SPEAR
-        || type() == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER) {
+    if (is_archer() || is_mounted_archer() || type() == FIGURE_ENEMY_EGYPTIAN_CAMEL || is_spearman()) {
         // missile throwers
         base.wait_ticks_missile++;
         tile2i tile = { 0, 0 };
@@ -63,29 +61,20 @@ void figure_enemy::enemy_initial(formation *m) {
         }
 
         if (base.attack_image_offset) {
-            e_figure_type missile_type;
-            switch (m->enemy_type) {
-            case ENEMY_3_EGYPTIAN:
-            case ENEMY_4_HITTITE:
-            case ENEMY_5_HYKSOS:
-            case ENEMY_6_KUSHITE:
-                missile_type = FIGURE_ARROW;
-                break;
+            e_figure_type missilet = missile_type();
+            assert(missilet != FIGURE_NONE && "archer should has missile");
+            // missile_type = FIGURE_SPEAR;
 
-            default:
-                missile_type = FIGURE_SPEAR;
-                break;
-            }
             if (base.attack_image_offset == 1) {
-                if (tile.x() == -1 || tile.y() == -1) {
+                if (!tile.valid()) {
                     map_point_get_last_result(tile);
                 }
 
                 figure *f = figure_get(base.target_figure_id);
-                figure_missile::create(base.home_building_id, tile, f->tile, missile_type);
+                figure_missile::create(base.home_building_id, tile, f->tile, missilet);
                 formation_record_missile_fired(m);
             }
-            if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())
+            if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow())
                 g_sound.play_effect(SOUND_EFFECT_ARROW);
 
             base.attack_image_offset++;
@@ -103,11 +92,12 @@ void figure_enemy::enemy_marching(formation *m) {
         int formationx = formation_layout_position_x(m->layout, base.index_in_formation);
         int formationy = formation_layout_position_y(m->layout, base.index_in_formation);
 
-        base.destination_tile.set(m->destination_x + formationx, m->destination_y + formationy);
+        base.destination_tile = m->destination.shifted(formationx, formationy);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
             advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
             return;
         }
+
         set_destination(m->destination_building_id);
         route_remove();
     }

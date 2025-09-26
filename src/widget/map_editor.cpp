@@ -23,7 +23,7 @@
 #include "game/game.h"
 
 struct map_editor_data_t {
-    map_point current_tile;
+    tile2i current_tile;
     int selected_grid_offset;
     int new_start_grid_offset;
     int capture_input;
@@ -32,7 +32,7 @@ struct map_editor_data_t {
 map_editor_data_t g_map_editor_data;
 local_render_context_t draw_context;
 
-static void draw_flags(vec2i pixel, map_point point) {
+static void draw_flags(vec2i pixel, tile2i point) {
     painter ctx = game.painter();
     int figure_id = map_figure_id_get(point);
     while (figure_id) {
@@ -179,7 +179,7 @@ static bool handle_cancel_construction_button(const touch_t * t) {
     return true;
 }
 
-static void handle_first_touch(map_point tile) {
+static void handle_first_touch(tile2i tile) {
     auto &data = g_map_editor_data;
     const touch_t * first = get_earliest_touch();
 

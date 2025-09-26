@@ -63,7 +63,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
 
 /////// ORNAMENTS
 
-static void draw_hippodrome_ornaments(vec2i pixel, map_point point, painter &ctx) {
+static void draw_hippodrome_ornaments(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
     int x = pixel.x;
     int y = pixel.y;

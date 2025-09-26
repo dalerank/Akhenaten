@@ -24,7 +24,7 @@ static int is_clear_terrain(tile2i tile, xstring& warning) {
     return result;
 }
 
-static int is_edge(map_point tile, xstring& warning) {
+static int is_edge(tile2i tile, xstring& warning) {
     int result = tile.x() == 0 || tile.y() == 0 || tile.x() == scenario_map_data()->width - 1
                  || tile.y() == scenario_map_data()->height - 1;
     if (!result)
@@ -33,7 +33,7 @@ static int is_edge(map_point tile, xstring& warning) {
     return result;
 }
 
-static int is_water(map_point tile, xstring& warning) {
+static int is_water(tile2i tile, xstring& warning) {
     int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
     if (!result)
         warning = "#editor_need_open_water";
@@ -41,7 +41,7 @@ static int is_water(map_point tile, xstring& warning) {
     return result;
 }
 
-static int is_deep_water(map_point tile, xstring& warning) {
+static int is_deep_water(tile2i tile, xstring& warning) {
     int result = map_terrain_is(tile.grid_offset(), TERRAIN_WATER)
                  && map_terrain_count_directly_adjacent_with_type(tile.grid_offset(), TERRAIN_WATER) == 4;
     if (!result)
@@ -50,7 +50,7 @@ static int is_deep_water(map_point tile, xstring& warning) {
     return result;
 }
 
-int editor_tool_can_place_flag(int type, map_point tile, xstring& warning) {
+int editor_tool_can_place_flag(int type, tile2i tile, xstring& warning) {
     switch (type) {
     case TOOL_ENTRY_POINT:
     case TOOL_EXIT_POINT:
@@ -73,7 +73,7 @@ int editor_tool_can_place_flag(int type, map_point tile, xstring& warning) {
     }
 }
 
-int editor_tool_can_place_access_ramp(map_point tile, int* orientation_index) {
+int editor_tool_can_place_access_ramp(tile2i tile, int* orientation_index) {
     if (!map_grid_is_inside(tile, 2))
         return 0;
 
@@ -125,7 +125,7 @@ int editor_tool_can_place_access_ramp(map_point tile, int* orientation_index) {
     return 0;
 }
 
-int editor_tool_can_place_building(map_point tile, int num_tiles, int* blocked_tiles) {
+int editor_tool_can_place_building(tile2i tile, int num_tiles, int* blocked_tiles) {
     bool blocked = false;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = tile.grid_offset(); // + TILE_GRID_OFFSETS[i];

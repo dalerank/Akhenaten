@@ -60,7 +60,7 @@ void figure_hyena::on_create() {
 }
 
 void figure_hyena::figure_action() {
-    const formation *m = formation_get(base.formation_id);
+    formation *m = formation_get(base.formation_id);
     g_city.figures.add_animal();
 
     switch (action_state()) {
@@ -69,11 +69,7 @@ void figure_hyena::figure_action() {
         if (base.wait_ticks > 400) {
             base.wait_ticks = id() & 0x1f;
             base.action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            base.destination_tile.set(m->destination_x + formation_layout_position_x(FORMATION_HERD, base.index_in_formation),
-                m->destination_y + formation_layout_position_y(FORMATION_HERD, base.index_in_formation));
-            //                destination_tile.x() = m->destination_x + formation_layout_position_x(FORMATION_HERD,
-            //                index_in_formation); destination_tile.y() = m->destination_y +
-            //                formation_layout_position_y(FORMATION_HERD, index_in_formation);
+            base.destination_tile = m->destination.shifted(formation_layout_position_x(FORMATION_HERD, base.index_in_formation),formation_layout_position_y(FORMATION_HERD, base.index_in_formation));
             base.roam_length = 0;
         }
         break;

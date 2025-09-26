@@ -82,8 +82,7 @@ struct formation {
     int building_id;
     tile2i standard_tile;
     int standard_figure_id;
-    int destination_x;
-    int destination_y;
+    tile2i destination;
     int destination_building_id;
 
     /* Movement */

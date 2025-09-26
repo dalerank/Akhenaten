@@ -24,8 +24,7 @@ void enemy_armies_clear(void) {
         enemy_armies[i].formation_id = 0;
         enemy_armies[i].layout = 0;
         enemy_armies[i].home.set(0, 0);
-        enemy_armies[i].destination_x = 0;
-        enemy_armies[i].destination_y = 0;
+        enemy_armies[i].destination = tile2i::invalid;
         enemy_armies[i].destination_building_id = 0;
         enemy_armies[i].ignore_roman_soldiers = 0;
     }
@@ -129,10 +128,11 @@ void enemy_armies_save_state(buffer* buf, buffer* totals_buf) {
         buf->write_i32(enemy_armies[i].layout);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(enemy_armies[i].destination_x);
+        buf->write_t2i(enemy_armies[i].destination);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(enemy_armies[i].destination_y);
+        // buf->write_i32(enemy_armies[i].destination.y());
+        buf->write_i32(0);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         buf->write_i32(enemy_armies[i].destination_building_id);
@@ -164,10 +164,11 @@ void enemy_armies_load_state(buffer* buf, buffer* totals_buf) {
         enemy_armies[i].layout = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].destination_x = buf->read_i32();
+        buf->read_t2i(enemy_armies[i].destination);
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].destination_y = buf->read_i32();
+        // enemy_armies[i].destination_y = buf->read_i32();
+        int tmp = buf->read_i32();
     }
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].destination_building_id = buf->read_i32();

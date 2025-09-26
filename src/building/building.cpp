@@ -1164,7 +1164,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     hx = tilex();
     hy = tiley() - 8;
     map_grid_bound(&hx, &hy);
-    map_point road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
+    tile2i road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
         map_highlight_set(road_tile, ehighligth_blue);
     }

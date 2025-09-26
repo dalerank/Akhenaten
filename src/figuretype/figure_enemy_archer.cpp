@@ -13,6 +13,7 @@ void figure_enemy_archer::figure_action() {
 
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);
+    // int dir = get_missile_direction(m);
     g_city.figures_add_enemy();
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
     //int formationx = formation_layout_position_x(m->layout, index_in_formation);
@@ -33,7 +34,7 @@ void figure_enemy_archer::figure_action() {
         break;
 
     case FIGURE_ACTION_152_ENEMY_WAITING:
-        base.map_figure_update(); // ???? WTF
+        base.map_figure_update(); // ???? WTF 
         break;
 
     case FIGURE_ACTION_153_ENEMY_MARCHING:
@@ -48,11 +49,11 @@ void figure_enemy_archer::figure_action() {
 
 void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
-    if (action_state() == FIGURE_ACTION_150_ATTACK) {
+    if (action_state() == FIGURE_ACTION_154_ENEMY_FIGHTING) {
         animkey = animkeys().attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (action_state() == FIGURE_ACTION_153_ENEMY_MARCHING) {
         animkey = animkeys().walk;
         base.anim.frame = 0;
     }

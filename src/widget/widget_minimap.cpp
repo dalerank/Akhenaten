@@ -165,7 +165,7 @@ void minimap_window::set_bounds(vec2i ds) {
     absolute_tile = tile2i((GRID_LENGTH - ds.x) / 2 + 1, ((2 * GRID_LENGTH) + 1 - ds.y) / 2);
 
     //    int camera_x, camera_y;
-    map_point camera_tile = city_view_get_camera_mappoint();
+    tile2i camera_tile = city_view_get_camera_mappoint();
     vec2i view_size_tiles = city_view_get_viewport_size_tiles();
 
     if ((scenario_map_data()->width - ds.x) / 2 > 0) {
@@ -329,7 +329,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
 }
 
 void minimap_window::draw_viewport_rectangle(painter &ctx) {
-    map_point camera_tile = city_view_get_camera_mappoint();
+    tile2i camera_tile = city_view_get_camera_mappoint();
     vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
     vec2i view_size_tiles = city_view_get_viewport_size_tiles();
 

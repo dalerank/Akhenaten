@@ -81,8 +81,8 @@ static void draw_status(void) {
         break;
     }
 
-    map_point entry = scenario_map_entry();
-    map_point exit = scenario_map_exit();
+    tile2i entry = scenario_map_entry();
+    tile2i exit = scenario_map_exit();
     int people_text;
     e_font people_font = FONT_NORMAL_YELLOW;
     if (entry.x() == -1) {
@@ -121,8 +121,8 @@ static void draw_status(void) {
     }
 
     if (scenario_editor_earthquake_severity() > 0) {
-        map_point earthquake = scenario_editor_earthquake_point();
-        if (earthquake.x() == -1 || earthquake.y() == -1) {
+        tile2i earthquake = scenario_editor_earthquake_point();
+        if (!earthquake.valid()) {
             lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_YELLOW);
         } else {
             lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_BLACK_ON_DARK);

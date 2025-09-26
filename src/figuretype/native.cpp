@@ -37,6 +37,7 @@ void figure::indigenous_native_action() {
             poof();
         }
         break;
+
     case FIGURE_ACTION_158_NATIVE_CREATED:
         anim.frame = 0;
         wait_ticks++;
@@ -55,7 +56,7 @@ void figure::indigenous_native_action() {
             } else {
                 const formation* m = formation_get(0);
                 action_state = FIGURE_ACTION_159_NATIVE_ATTACKING;
-                destination_tile.set(m->destination_x, m->destination_y);
+                destination_tile = m->destination;
                 //                    destination_tile.x() = m->destination_x;
                 //                    destination_tile.y() = m->destination_y;
                 set_destination(m->destination_building_id);

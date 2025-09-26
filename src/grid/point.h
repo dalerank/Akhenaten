@@ -8,7 +8,7 @@
 enum { _X = 0, _Y = 1, _GRID_OFFSET = 2, _ABS_X = 3, _ABS_Y = 4 };
 constexpr uint32_t MAX_TILE_I = 228;
 
-class map_point {
+class tile2i {
 private:
     // by and large, X/Y coords in the game logic are RELATIVE TO MAP AREA / STARTING OFFSET.
     int p_X = -1;
@@ -18,12 +18,15 @@ private:
     int p_ABS_Y = -1;
 
 public:
-    using self = map_point;
+    using self = tile2i;
     // SETTERS / GETTERS
     int x(int v);
     int y(int v);
+
     int x();
+    const int x() const { return p_X;}
     int y();
+    const int y() const { return p_Y; }
 
     int grid_offset(int v);
     int grid_offset();
@@ -31,8 +34,8 @@ public:
     int abs_x(int v);
     int abs_y(int v);
 
-    const int abs_x(void);
-    const int abs_y(void);
+    int abs_x();
+    int abs_y();
 
     inline float dist(self o) { return ::sqrtf(dist_sq(o)); }
     inline float dist_sq(self o) { return ::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2); }
@@ -61,6 +64,8 @@ public:
 
     // direct access to private fields, for iob read/write without recalc
     int* private_access(int i);
+    const int* private_access(int i) const;
+
     void set_x(int v) { set(v, y()); }
     void set_y(int v) { set(x(), v); }
 
@@ -69,17 +74,15 @@ public:
     void invalidate_offset() { p_GRID_OFFSET = -1; p_ABS_X = -1; p_ABS_Y = -1; }
 
     // CONSTRUCTORS / DESTRUCTOR
-    explicit map_point(); // default constructor
-    explicit map_point(int _grid_offset);
-    map_point(int _x, int _y);
+    explicit tile2i(); // default constructor
+    explicit tile2i(int _grid_offset);
+    tile2i(int _x, int _y);
 
     // COMPARISON
     inline bool operator==(self rhs) { return p_GRID_OFFSET == rhs.p_GRID_OFFSET; }
     inline bool operator!=(self rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
     static const self invalid;
 };
-
-using tile2i = map_point;
 
 /**
  * Stores the X and Y to the passed point.

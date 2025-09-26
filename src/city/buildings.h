@@ -115,12 +115,12 @@ void city_buildings_earn_triumphal_arch();
 void city_buildings_build_triumphal_arch();
 void city_buildings_remove_triumphal_arch();
 
-map_point city_buildings_main_native_meeting_center();
+tile2i city_buildings_main_native_meeting_center();
 void city_buildings_set_main_native_meeting_center(int x, int y);
 
 int city_buildings_is_mission_post_operational();
 void city_buildings_set_mission_post_operational();
 
-map_point city_building_get_festival_square_position();
+tile2i city_building_get_festival_square_position();
 
 int city_buildings_unknown_value();

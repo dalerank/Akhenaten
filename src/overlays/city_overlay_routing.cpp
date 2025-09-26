@@ -31,7 +31,7 @@ int city_overlay_routing::get_column_height(const building *b) const {
     return COLUMN_TYPE_NONE;
 }
 
-inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, painter &ctx) const {
+inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
     int grid_offset = point.grid_offset();
 
     color color_mask = 0;
@@ -101,7 +101,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, map_point point, 
 
 xstring city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const building *b) const {
     if (building_is_farm(b->type)) {
-        map_point tile = b->tile;
+        tile2i tile = b->tile;
         int fertility = 0;
         if (fertility > 80)
             return ui::str(66, 63);
