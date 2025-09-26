@@ -6,7 +6,7 @@
 #include "city/ratings.h"
 #include "city/city_resource.h"
 #include "empire/empire.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/generic_button.h"
@@ -142,7 +142,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         // can send to distant battle
         ui.button("", vec2i{ 38, 96 }, vec2i{ 560, 40 }, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
             .onclick([] (int, int) {
-                formation_legions_dispatch_to_distant_battle();
+                formation_batalions_dispatch_to_distant_battle();
                 window_empire_show();
             });
 

@@ -3,7 +3,7 @@
 #include "graphics/window.h"
 #include "building/building_barracks.h"
 #include "city/object_info.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 
 struct info_window_recruiter : public building_info_window_t<info_window_recruiter> {
     virtual void init(object_info &c) override;
@@ -21,7 +21,7 @@ info_window_recruiter brecruiter_infow;
 void info_window_recruiter::init(object_info &c) {
     building_info_window::init(c);
 
-    int barracks_soldiers_requested = formation_legion_recruits_needed();
+    int barracks_soldiers_requested = formation_batalion_recruits_needed();
     barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
 
     building_recruiter *baracks = c.building_get()->dcast_recruiter();

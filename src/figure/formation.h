@@ -57,8 +57,8 @@ struct formation {
     /* General variables */
     int in_use;    /**< Flag whether this entry is in use */
     int is_herd;   /**< Flag to indicate herd */
-    int is_legion; /**< Flag to indicate (own) legion */
-    int legion_id; /**< Legion ID (0-5 for own troops) */
+    int is_batalion; /**< Flag to indicate (own) legion */
+    uint8_t batalion_id; /**< Batalion ID (0-5 for own troops) */
     e_formation_layout layout;
     int direction;
     int orientation;

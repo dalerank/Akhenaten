@@ -142,8 +142,8 @@ void figure_soldier::figure_action() {
     if (base.formation_at_rest || action_state() == FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT)
         layout = FORMATION_AT_REST;
 
-    const vec2i offset{ formation_layout_position_x(layout, base.index_in_formation), formation_layout_position_y(layout, base.index_in_formation) };
-    tile2i formation_position = m->tile.shifted(offset.x, offset.y);
+    const tile2i offset = formation_layout_position(layout, base.index_in_formation);
+    tile2i formation_position = m->tile.shifted(offset);
 
     switch (action_state()) {
     case FIGURE_ACTION_80_SOLDIER_AT_REST:
@@ -184,8 +184,7 @@ void figure_soldier::figure_action() {
         break;
     case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
         base.formation_at_rest = 0;
-        base.destination_tile = m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
-                                                    formation_layout_position_y(m->layout, base.index_in_formation));
+        base.destination_tile = m->standard_tile.shifted(formation_layout_position(m->layout, base.index_in_formation));
         if (base.alternative_location_index) {
             base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);
         }
@@ -210,8 +209,7 @@ void figure_soldier::figure_action() {
         base.formation_at_rest = 0;
         base.anim.frame = 0;
         base.map_figure_update();
-        base.destination_tile = m->standard_tile.shifted(formation_layout_position_x(m->layout, base.index_in_formation),
-                                                     formation_layout_position_y(m->layout, base.index_in_formation));
+        base.destination_tile = m->standard_tile.shifted(formation_layout_position(m->layout, base.index_in_formation));
 
         if (base.alternative_location_index) {
             base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);

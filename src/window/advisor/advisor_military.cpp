@@ -2,7 +2,7 @@
 
 #include "city/city.h"
 #include "city/military.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
@@ -101,8 +101,8 @@ void ui::advisor_military_window::ui_draw_foreground(UiFlags flags) {
         for (int i = 0; i < 6 && i < num_legions; i++) {
             const formation *form = formation_get(formation_for_legion(i + 1 + g_advisor_mil_scrollbar.scroll_position));
             ui.button("", vec2i{ 22, 77 + 44 * i }, vec2i{ 560, 40 }, fonts_vec{ FONT_NORMAL_BLACK_ON_DARK });
-            ui.image({ PACK_GENERAL, 127, form->legion_id }, vec2i{ 32, 82 + 44 * i });
-            ui.label(ui::str(138, form->legion_id), vec2i{ 84, 83 + 44 * i }, FONT_NORMAL_WHITE_ON_DARK);
+            ui.image({ PACK_GENERAL, 127, form->batalion_id }, vec2i{ 32, 82 + 44 * i });
+            ui.label(ui::str(138, form->batalion_id), vec2i{ 84, 83 + 44 * i }, FONT_NORMAL_WHITE_ON_DARK);
 
             pcstr type_str = "";
             switch (form->figure_type) {
@@ -152,7 +152,7 @@ static void button_go_to_legion(int legion_id, int param2) {
 static void button_return_to_fort(int legion_id, int param2) {
     formation* m = formation_get(formation_for_legion(legion_id + g_advisor_mil_scrollbar.scroll_position));
     if (!m->in_distant_battle) {
-        formation_legion_return_home(m);
+        formation_batalion_return_home(m);
     }
 }
 

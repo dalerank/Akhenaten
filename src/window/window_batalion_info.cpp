@@ -1,4 +1,4 @@
-#include "window_legion_info.h"
+#include "window_batalion_info.h"
 
 #include "figure/formation.h"
 #include "city/object_info.h"
@@ -10,13 +10,13 @@
 #include "figure/figure.h"
 #include "grid/building.h"
 #include "graphics/window.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "window/window_city.h"
 #include "window/window_city_military.h"
 #include "sound/sound.h"
 #include "core/calc.h"
 
-legion_info_window legion_infow;
+batalion_info_window batalion_infow;
 
 static pcstr buttons[] = { "formation_1", "formation_2", "formation_3", "formation_4", "formation_5" };
 
@@ -67,7 +67,7 @@ military_data_t g_military_data;
 //    }
 //}
 
-void legion_info_window::change_layout(e_formation_layout new_layout) {
+void batalion_info_window::change_layout(e_formation_layout new_layout) {
     auto& data = g_military_data;
     building* b= data.context_for_callback->building_get();
 
@@ -82,7 +82,7 @@ void legion_info_window::change_layout(e_formation_layout new_layout) {
     //    return;
 
     // store layout in case of mop up
-    formation_legion_change_layout(m, new_layout);
+    formation_batalion_change_layout(m, new_layout);
     switch (new_layout) {
     case 0:
         g_sound.speech_play_file("Wavs/cohort1.wav", 255);
@@ -103,12 +103,12 @@ void legion_info_window::change_layout(e_formation_layout new_layout) {
     window_city_military_show(b->formation_id);
 }
 
-void legion_info_window::window_info_foreground(object_info &c) {
+void batalion_info_window::window_info_foreground(object_info &c) {
     building_info_window::window_info_foreground(c);
     //c.help_id = 87;
 }
 
-void legion_info_window::init(object_info &c) {
+void batalion_info_window::init(object_info &c) {
     building_info_window::init(c);
 
     building *fort = c.building_get();
@@ -116,8 +116,8 @@ void legion_info_window::init(object_info &c) {
 
     g_military_data.context_for_callback = &c;
 
-    ui["title"] = ui::str(138, m->legion_id);
-    ui["legion_icon"].image(m->legion_id);
+    ui["title"] = ui::str(138, m->batalion_id);
+    ui["batalion_icon"].image(m->batalion_id);
 
     const int morale = (21.f - m->morale / 5) / 21.f;
     ui["morale_img"].image(morale);
@@ -204,13 +204,13 @@ void legion_info_window::init(object_info &c) {
         building* b = data.context_for_callback->building_get();
         formation *m = formation_get(b->formation_id);
         if (!m->in_distant_battle && m->is_at_fort != 1) {
-            formation_legion_return_home(m);
+            formation_batalion_return_home(m);
             window_city_show();
         }
     });
 }
 
-void legion_info_window::window_info_background(object_info &c) {
+void batalion_info_window::window_info_background(object_info &c) {
     building_info_window::window_info_background(c);
 
     update_describe_layout(c);
@@ -225,7 +225,7 @@ void legion_info_window::window_info_background(object_info &c) {
 //    return textid{0xffff, (uint8_t)window_building_get_legion_info_tooltip_text(&c)};
 //}
 
-bool legion_info_window::check(object_info &c) {
+bool batalion_info_window::check(object_info &c) {
     building *b = c.building_get();
     if (!b->is_valid()) {
         return false;
@@ -240,7 +240,7 @@ bool legion_info_window::check(object_info &c) {
     return true;
 }
 
-void legion_info_window::update_describe_layout(object_info &c) {
+void batalion_info_window::update_describe_layout(object_info &c) {
     int title_id, text_id;
     building* b = c.building_get();
 

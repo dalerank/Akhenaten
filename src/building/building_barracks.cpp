@@ -8,7 +8,7 @@
 #include "city/city_labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "grid/grid.h"
@@ -42,7 +42,7 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
     int min_distance = INFINITE;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (!m->in_use || !m->is_legion)
+        if (!m->in_use || !m->batalion_id)
             continue;
 
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)

@@ -74,7 +74,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     }
 
     // top icon
-    int icon_image_id = anim("sign").first_img() + formation_get(base.formation_id)->legion_id;
+    int icon_image_id = anim("sign").first_img() + formation_get(base.formation_id)->batalion_id;
     const vec2i icon_offset = vec2i(0, -image_get(icon_image_id)->height);
     ImageDraw::img_generic(ctx, icon_image_id, pixel + flag_offset + pole_offset + icon_offset);
 }

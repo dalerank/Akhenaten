@@ -69,7 +69,8 @@ void figure_hyena::figure_action() {
         if (base.wait_ticks > 400) {
             base.wait_ticks = id() & 0x1f;
             base.action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            base.destination_tile = m->destination.shifted(formation_layout_position_x(FORMATION_HERD, base.index_in_formation),formation_layout_position_y(FORMATION_HERD, base.index_in_formation));
+            tile2i formation_t = formation_layout_position(FORMATION_HERD, base.index_in_formation);
+            base.destination_tile = m->destination.shifted(formation_t);
             base.roam_length = 0;
         }
         break;

@@ -37,11 +37,9 @@ void figure::enemy_initial(formation* m) {
         if (m->recent_fight) {
             action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
         } else {
-            int formationx = formation_layout_position_x(m->layout, index_in_formation);
-            int formationy = formation_layout_position_y(m->layout, index_in_formation);
+            tile2i formation_t = formation_layout_position(m->layout, index_in_formation);
 
-            destination_tile = m->destination.shifted(formationx,formationy);
-
+            destination_tile = m->destination.shifted(formation_t);
             if (calc_general_direction(tile, destination_tile) < 8) {
                 action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
             }
@@ -101,10 +99,9 @@ void figure::enemy_marching(formation* m) {
     if (wait_ticks <= 0) {
         wait_ticks = 50;
 
-        int formationx = formation_layout_position_x(m->layout, index_in_formation);
-        int formationy = formation_layout_position_y(m->layout, index_in_formation);
+        tile2i formation_t = formation_layout_position(m->layout, index_in_formation);
 
-        destination_tile = m->destination.shifted(formationx, formationy);
+        destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile, destination_tile) == DIR_FIGURE_NONE) {
             action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
             return;

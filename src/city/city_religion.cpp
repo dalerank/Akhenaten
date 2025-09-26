@@ -13,7 +13,7 @@
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "city_floods.h"
 #include "game/settings.h"
 #include "game/tutorial.h"

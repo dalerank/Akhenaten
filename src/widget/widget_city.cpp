@@ -228,7 +228,7 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     highlighted_formation = 0;
     if (!!game_features::gameui_highlight_legions) {
-        highlighted_formation = formation_legion_at(current_tile);
+        highlighted_formation = formation_batalion_at(current_tile);
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
         }
@@ -641,7 +641,7 @@ bool screen_city_t::handle_legion_click(tile2i tile) {
         return false;
     }
 
-    int formation_id = formation_legion_at(tile);
+    int formation_id = formation_batalion_at(tile);
     if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
         window_city_military_show(formation_id);
         return true;
@@ -854,11 +854,11 @@ void screen_city_t::military_map_click(int legion_formation_id, tile2i tile) {
         return;
     }
 
-    int other_formation_id = formation_legion_at_building(tile.grid_offset());
+    int other_formation_id = formation_batalion_at_building(tile.grid_offset());
     if (other_formation_id && other_formation_id == legion_formation_id) {
-        formation_legion_return_home(m);
+        formation_batalion_return_home(m);
     } else {
-        formation_legion_move_to(m, tile);
+        formation_batalion_move_to(m, tile);
         g_sound.speech_play_file("Wavs/cohort5.wav", 255);
     }
 
