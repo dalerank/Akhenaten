@@ -117,6 +117,7 @@ top_menu_widget = {
 	    routing_amphibia: menu_item({text:"xxx Routing amphibia", parameter:e_debug_render_routing_amphibia})
 	    routing_water   : menu_item({text:"xxx Routing water", parameter:e_debug_render_routing_water})
 		invasion_point  : menu_item({text:"xxx Inv. points", parameter: e_debug_render_invasion_point})
+		tile_random     : menu_item({text:"xxx Tile random", parameter: e_debug_render_tile_random})
 	},
 
 	ui : {

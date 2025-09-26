@@ -25,6 +25,7 @@
 #include "grid/terrain.h"
 #include "grid/vegetation.h"
 #include "grid/gardens.h"
+#include "grid/random.h"
 #include "widget/city/building_ghost.h"
 #include "game/game.h"
 
@@ -601,6 +602,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             text_draw((d == 1) ? "L" : "S", x, y + 15, FONT_SMALL_PLAIN, (d == 1) ? COLOR_RED : COLOR_RED);
         }
         break;
+
+    case e_debug_render_tile_random:
+        d = map_random_get(tile2i(grid_offset));
+        if (d) {
+            snprintf((char*)str, 30, "%d", d);
+            debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_LIGHT_BLUE, FONT_SMALL_PLAIN);
+        }
     }
 
 
