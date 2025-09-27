@@ -14,7 +14,7 @@
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "core/string.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"

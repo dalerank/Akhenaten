@@ -10,7 +10,7 @@
 #include "empire/empire_city.h"
 #include "empire/empire_object.h"
 #include "empire/type.h"
-#include "figure/formation_legion.h"
+#include "figure/formation_batalion.h"
 #include "game/game.h"
 #include "scenario/scenario.h"
 
