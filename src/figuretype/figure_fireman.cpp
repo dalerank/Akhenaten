@@ -17,7 +17,7 @@
 figures::model_t<figure_fireman> fireman_m;
 
 void figure_fireman::on_create() {
-
+    figure_impl::on_create();
 }
 
 void figure_fireman::figure_before_action() {

@@ -8,6 +8,7 @@
 figures::model_t<figure_hippo> hippo_m;
 
 void figure_hippo::on_create() {
+    figure_impl::on_create();
     base.allow_move_type = EMOVE_AMPHIBIAN;
 }
 

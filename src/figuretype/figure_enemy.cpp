@@ -8,6 +8,10 @@
 #include "figuretype/figure_missile.h"
 #include "figure/properties.h"
 
+void figure_enemy::on_create() {
+    figure_impl::on_create();
+}
+
 void figure_enemy::figure_action() {
     assert(false && "you should implement this function in derived class");
 }
@@ -52,9 +56,10 @@ void figure_enemy::enemy_initial(formation *m) {
         tile2i tile = { 0, 0 };
         if (base.wait_ticks_missile > figure_properties_for_type(type())->missile_delay) {
             base.wait_ticks_missile = 0;
-            if (figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4, &tile)) {
+            const bool found_target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4, &tile);
+            if (found_target) {
                 base.attack_image_offset = 1;
-                base.direction = calc_missile_shooter_direction(tile, tile);
+                base.direction = calc_missile_shooter_direction(tile, base.destination_tile);
             } else {
                 base.attack_image_offset = 0;
             }
@@ -98,6 +103,7 @@ void figure_enemy::enemy_marching(formation *m) {
         }
 
         set_destination(m->destination_building_id);
+
         route_remove();
     }
 

@@ -65,6 +65,7 @@ water_dest map_water_get_closest_wharf(figure &boat) {
 }
 
 void figure_fishing_boat::on_create() {
+    figure_impl::on_create();
     base.allow_move_type = EMOVE_WATER;
 }
 

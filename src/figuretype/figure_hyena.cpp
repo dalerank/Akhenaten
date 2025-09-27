@@ -56,7 +56,7 @@ int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
 }
 
 void figure_hyena::on_create() {
-
+    figure_impl::on_create();
 }
 
 void figure_hyena::figure_action() {

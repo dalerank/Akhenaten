@@ -14,6 +14,7 @@ void figure_crocodile::static_params::archive_load(archive arch) {
 }
 
 void figure_crocodile::on_create() {
+    figure_impl::on_create();
     base.allow_move_type = EMOVE_AMPHIBIAN;
 }
 

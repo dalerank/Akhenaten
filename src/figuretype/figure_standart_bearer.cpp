@@ -3,7 +3,7 @@
 figures::model_t<figure_standard_bearer> standard_bearer_m;
 
 void figure_standard_bearer::on_create() {
-
+    figure_impl::on_create();
 }
 
 void figure_standard_bearer::figure_action() {
