@@ -474,7 +474,7 @@ void formation_calculate_figures(void) {
                     if (m->figure_type == FIGURE_STANDARD_BEARER)
                         total_strength += m->num_figures / 2;
 
-                    enemy_army_totals_add_legion_formation(total_strength);
+                    enemy_army_totals_add_batalion_formation(total_strength);
                     if (m->figure_type == FIGURE_STANDARD_BEARER) {
                         if (!was_halted && m->is_halted)
                             g_sound.play_effect(SOUND_EFFECT_FORMATION_SHIELD);
