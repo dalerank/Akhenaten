@@ -16,7 +16,7 @@ static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 
 static const int FLOTSAM_TYPE_3[] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 void figure_flotsam::on_create() {
-
+    figure_impl::on_create();
 }
 
 void figure_flotsam::figure_action() {

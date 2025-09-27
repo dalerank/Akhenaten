@@ -50,6 +50,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
 }
 
 void figure_warship::on_create() {
+    figure_impl::on_create();
     base.allow_move_type = EMOVE_WATER;
     runtime_data().active_order = e_order_goto_wharf;
 }

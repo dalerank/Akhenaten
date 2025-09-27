@@ -6,6 +6,7 @@
 figure_barbarian_archer::static_params barbarian_archer_m;
 
 void figure_enemy_archer::on_create() {
+    figure_impl::on_create();
 }
 
 void figure_enemy_archer::figure_action() {
@@ -55,7 +56,6 @@ void figure_enemy_archer::update_animation() {
         animkey = animkeys().death;
     } else if (action_state() == FIGURE_ACTION_153_ENEMY_MARCHING) {
         animkey = animkeys().walk;
-        base.anim.frame = 0;
     }
 
     image_set_animation(animkey);
