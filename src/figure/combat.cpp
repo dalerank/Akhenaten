@@ -215,16 +215,15 @@ void figure::hit_opponent() {
     figure* opponent = figure_get(opponent_id);
     formation* opponent_formation = formation_get(opponent->formation_id);
 
-    const figure_properties* props = figure_properties_for_type(type);
-    const figure_properties* opponent_props = figure_properties_for_type(opponent->type);
-    int cat = opponent_props->category;
-    if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL)
+    const figure_properties& props = figure_properties_for_type(type);
+    const figure_properties& opponent_props = figure_properties_for_type(opponent->type);
+    if (category() == figure_category_citizen || category() == figure_category_criminal) {
         attack_image_offset = 12;
-    else {
+    } else {
         attack_image_offset = 0;
     }
-    int figure_attack = props->attack_value;
-    int opponent_defense = opponent_props->defense_value;
+    int figure_attack = props.attack_value;
+    int opponent_defense = opponent_props.defense_value;
 
     // attack modifiers
     // if (type == /*FIGURE_WOLF*/)
@@ -252,15 +251,15 @@ void figure::hit_opponent() {
         }
     }
 
-    int max_damage = opponent_props->max_damage;
+   const int opponent_max_damage = opponent_props.max_damage;
     int net_attack = figure_attack - opponent_defense;
     if (net_attack < 0)
         net_attack = 0;
 
     opponent->damage += net_attack;
-    if (opponent->damage <= max_damage)
+    if (opponent->damage <= opponent_max_damage) {
         play_hit_sound();
-    else {
+    } else {
         opponent->kill();
         opponent->wait_ticks = 0;
         opponent->play_die_sound();
@@ -301,11 +300,9 @@ void figure::figure_combat_handle_attack() {
         hit_opponent();
 }
 
-void figure::figure_combat_attack_figure_at(int grid_offset) {
-    int figure_category = figure_properties_for_type(type)->category;
-    
-    if (figure_category <= FIGURE_CATEGORY_INACTIVE
-        || figure_category >= FIGURE_CATEGORY_CRIMINAL
+void figure::figure_combat_attack_figure_at(int grid_offset) {    
+    if (category() <= figure_category_inactive
+        || category() >= figure_category_criminal
         || action_state == FIGURE_ACTION_150_ATTACK) {
         return;
     }
@@ -322,29 +319,31 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             continue;
         }
 
-        int opponent_category = figure_properties_for_type(opponent->type)->category;
+        e_figure_category opponent_category = opponent->category();
+        e_figure_category my_category = category();
         int attack = 0;
         if (opponent->state != FIGURE_STATE_ALIVE)
             attack = 0;
         else if (opponent->action_state == FIGURE_ACTION_149_CORPSE)
             attack = 0;
-        else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_NATIVE) {
-            if (opponent->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+        else if (my_category == figure_category_armed && opponent_category == figure_category_native) {
+            if (opponent->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
                 attack = 1;
+            }
 
-        } else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_CRIMINAL)
+        } else if (my_category == figure_category_armed && opponent_category == figure_category_criminal)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_HOSTILE)
+        else if (my_category == figure_category_armed && opponent_category == figure_category_hostile)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CITIZEN)
+        else if (my_category == figure_category_hostile && opponent_category == figure_category_citizen)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ARMED)
+        else if (my_category == figure_category_hostile && opponent_category == figure_category_armed)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_CRIMINAL)
+        else if (my_category == figure_category_hostile && opponent_category == figure_category_criminal)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_ARMED && opponent_category == FIGURE_CATEGORY_ANIMAL)
+        else if (my_category == figure_category_armed && opponent_category == figure_category_animal)
             attack = 1;
-        else if (figure_category == FIGURE_CATEGORY_HOSTILE && opponent_category == FIGURE_CATEGORY_ANIMAL)
+        else if (my_category == figure_category_hostile && opponent_category == figure_category_animal)
             attack = 1;
 
         if (attack && opponent->action_state == FIGURE_ACTION_150_ATTACK && opponent->num_attackers >= 2)

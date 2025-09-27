@@ -452,7 +452,7 @@ void formation_calculate_figures(void) {
             continue;
         }
         
-        const int max_damage = figure_properties_for_type(f->type)->max_damage;
+        const int max_damage = figure_properties_for_type(f->type).max_damage;
         int index = formation_add_figure(f->formation_id, i, f->formation_at_rest != 1, f->damage, max_damage);
         f->index_in_formation = index;
     }

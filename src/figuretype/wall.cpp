@@ -69,13 +69,13 @@ void figure::ballista_action() {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
-                wait_ticks_missile = figure_properties_for_type(type)->missile_delay;
+                wait_ticks_missile = figure_properties_for_type(type).missile_delay;
             }
         }
         break;
     case FIGURE_ACTION_181_BALLISTA_FIRING:
         wait_ticks_missile++;
-        if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
+        if (wait_ticks_missile > figure_properties_for_type(type).missile_delay) {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 direction = calc_missile_shooter_direction(tile, tile);

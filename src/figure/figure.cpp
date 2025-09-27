@@ -153,7 +153,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
     return min_enemy_id;
 }
 
-nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
+nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::function<bool(figure *)> avoid) {
     figure_id fid = 0;
     int lowest_distance = max_distance;
     for (int i = 1; i < MAX_FIGURES; i++) {
@@ -172,15 +172,14 @@ nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, st
         }
 
         bool category_check = false;
-        auto props = figure_properties_for_type(f->type);
-        switch (category) {
+        switch (rule) {
         case NEARBY_ANY: // any dude
-            if (props->category != 0)
+            if (f->category() != 0)
                 category_check = true;
             break;
 
         case NEARBY_ANIMAL: // animal
-            if (props->category == 6 || f->is_herd())
+            if (f->category() == figure_category_animal || f->is_herd())
                 category_check = true;
             break;
 
@@ -196,7 +195,7 @@ nearby_result figure::is_nearby(int category, int max_distance, bool gang_on, st
             if (dist <= max_distance) {
                 if (f->targeted_by_figure_id)
                     dist *= 2; // penalty
-                if (category == NEARBY_HOSTILE) {
+                if (rule == NEARBY_HOSTILE) {
                     if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_RIOTER)
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->type == FIGURE_INDIGENOUS_NATIVE
@@ -369,6 +368,14 @@ void figure::set_direction_to(building *b) {
 void figure::clear_impl() {
     memset(&_ptr_buffer, 0, sizeof(ptr_buffer_t));
     _ptr = nullptr;
+}
+
+e_figure_category figure::category() const {
+    return figure_impl::params(type).category;
+}
+
+uint16_t figure::max_damage() const {
+    return figure_impl::params(type).max_damage;
 }
 
 void figure::poof() {
@@ -651,6 +658,7 @@ void figure_impl::static_params::base_load(archive arch) {
     meta.text_id = arch.r_int("info_text_id");
     permission = arch.r_type<e_permission>("permission");
     is_enemy = arch.r_bool("is_enemy");
+    category = arch.r_type<e_figure_category>("category");
 }
 
 void figure_impl::update_animation() {
@@ -871,7 +879,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->type);
     iob->bind(BIND_SIGNATURE_UINT8, &f->resource_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->use_cross_country);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_friendly);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &f->state);
     iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->action_state_before_attack);
