@@ -88,7 +88,7 @@ vec2i figure::tile_pixel_coords() {
 }
 
 void figure::image_set_animation(const animation_t &anim) {
-    if (anim.id > 0) {
+    if (anim.pack > 0 || anim.id > 0) {
         this->anim.setup(anim);
         return;
     }
