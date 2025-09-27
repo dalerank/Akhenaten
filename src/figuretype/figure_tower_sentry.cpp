@@ -157,7 +157,7 @@ void figure_tower_sentry::figure_action() {
     case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
         move_ticks_tower_sentry(1);
         base.wait_ticks_missile++;
-        if (base.wait_ticks_missile > figure_properties_for_type(type())->missile_delay) {
+        if (base.wait_ticks_missile > figure_properties_for_type(type()).missile_delay) {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(&base, 10, &tile)) {
                 base.direction = calc_missile_shooter_direction(tile, tile);

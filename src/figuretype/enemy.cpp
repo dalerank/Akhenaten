@@ -51,7 +51,7 @@ void figure::enemy_initial(formation* m) {
         // missile throwers
         wait_ticks_missile++;
         tile2i tile = {0, 0};
-        if (wait_ticks_missile > figure_properties_for_type(type)->missile_delay) {
+        if (wait_ticks_missile > figure_properties_for_type(type).missile_delay) {
             wait_ticks_missile = 0;
             if (figure_combat_get_missile_target_for_enemy(this, 10, g_city.figures.soldiers < 4, &tile)) {
                 attack_image_offset = 1;

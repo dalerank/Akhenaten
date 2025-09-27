@@ -63,9 +63,9 @@ void figure_missile::missile_hit_target(int target_id, int legionary_type) {
         break;
     }
 
-    const figure_properties *target_props = figure_properties_for_type(target->type);
-    int max_damage = target_props->max_damage;
-    int damage_inflicted = figure_properties_for_type(type())->missile_attack_value - target_props->missile_defense_value;
+    const figure_properties& target_props = figure_properties_for_type(target->type);
+    int max_damage = target_props.max_damage;
+    int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
 
     formation *m = formation_get(target->formation_id);
     if (damage_inflicted < 0) {
@@ -141,9 +141,9 @@ void figure_bolt::figure_action() {
     int target_id = get_non_citizen_on_tile();
     if (target_id) {
         figure* target = figure_get(target_id);
-        const figure_properties* target_props = figure_properties_for_type(target->type);
-        int max_damage = target_props->max_damage;
-        int damage_inflicted = figure_properties_for_type(type())->missile_attack_value - target_props->missile_defense_value;
+        const figure_properties& target_props = figure_properties_for_type(target->type);
+        int max_damage = target_props.max_damage;
+        int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
         if (damage_inflicted < 0) {
             damage_inflicted = 0;
         }

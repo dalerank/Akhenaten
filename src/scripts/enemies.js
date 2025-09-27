@@ -7,6 +7,12 @@ figure_barbarian_archer = {
         death : { pack:PACK_ENEMY_BARBARIAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_BARBARIAN, id:2, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50  
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
     is_enemy : true
@@ -19,6 +25,10 @@ figure_barbarian_sword = {
         death : { pack:PACK_ENEMY_BARBARIAN, id:4, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_BARBARIAN, id:5, max_frames:9 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -40,6 +50,12 @@ figure_assyrian_archer = {
         bow_attack : { pack:PACK_ENEMY_ASSYRIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_ASSYRIAN, id:3, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50  
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -50,6 +66,10 @@ figure_assyrian_sword = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ASSYRIAN, id:6, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -60,6 +80,10 @@ figure_assyrian_transport_ship = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -70,6 +94,10 @@ figure_assyrian_war_ship = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -81,6 +109,10 @@ figure_assyrian_chariot = {
         attack : { pack:PACK_ENEMY_ASSYRIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_ASSYRIAN, id:15, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -102,6 +134,12 @@ figure_canaanite_archer = {
         bow_attack : { pack:PACK_ENEMY_CANAANITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_CANAANITE, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -112,6 +150,10 @@ figure_canaanite_sword = {
         death : { pack:PACK_ENEMY_CANAANITE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_CANAANITE, id:6, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -122,6 +164,10 @@ figure_canaanite_transport_ship = {
         death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:2, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -132,6 +178,10 @@ figure_canaanite_war_ship = {
         death : { pack:PACK_ENEMY_CANAANITE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -143,6 +193,10 @@ figure_canaanite_chariot = {
         attack : { pack:PACK_ENEMY_CANAANITE, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_CANAANITE, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -164,6 +218,10 @@ figure_egyptian_galera = {
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:2, max_frames:1 }
         idle_ready : { pack:PACK_ENEMY_EGYPTIAN, id:3, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -174,6 +232,10 @@ figure_egyptian_war_ship = {
         death : { pack:PACK_ENEMY_EGYPTIAN, id:5, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:6, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -185,6 +247,12 @@ figure_egyptian_archer = {
         bow_attack : { pack:PACK_ENEMY_EGYPTIAN, id:9, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_EGYPTIAN, id:10, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -195,6 +263,12 @@ figure_egyptiane_spearman = {
         death : { pack:PACK_ENEMY_EGYPTIAN, id:12, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_EGYPTIAN, id:13, max_frames:8 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -205,6 +279,10 @@ figure_egyptian_chariot = {
         death : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_EGYPTIAN, id:15, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -226,6 +304,12 @@ figure_hittite_archer = {
         bow_attack : { pack:PACK_ENEMY_HITTITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_HITTITE, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -246,6 +330,10 @@ figure_hittite_transport_ship = {
         death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -256,6 +344,10 @@ figure_hittite_war_ship = {
         death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -266,6 +358,10 @@ figure_hittite_chariot = {
         death : { pack:PACK_ENEMY_HITTITE, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_HITTITE, id:15, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -287,6 +383,12 @@ figure_hyksos_archer = {
         bow_attack : { pack:PACK_ENEMY_HYKSOS, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_HYKSOS, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -297,6 +399,10 @@ figure_hyksos_sword = {
         death : { pack:PACK_ENEMY_HYKSOS, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_HYKSOS, id:6, max_frames:8 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -307,6 +413,10 @@ figure_hyksos_transport_ship = {
         death : { pack:PACK_ENEMY_HYKSOS, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HYKSOS, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -317,6 +427,10 @@ figure_hyksos_war_ship = {
         death : { pack:PACK_ENEMY_HYKSOS, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HYKSOS, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -328,6 +442,10 @@ figure_hyksos_chariot = {
         attack : { pack:PACK_ENEMY_HYKSOS, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_HYKSOS, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -349,6 +467,12 @@ figure_kushite_spearman = {
         attack : { pack:PACK_ENEMY_KUSHITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_KUSHITE, id:2, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -359,6 +483,10 @@ figure_kushite_axeman = {
         death : { pack:PACK_ENEMY_KUSHITE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_KUSHITE, id:6, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -369,6 +497,10 @@ figure_kushite_transport_ship = {
         death : { pack:PACK_ENEMY_KUSHITE, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_KUSHITE, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -379,6 +511,10 @@ figure_kushite_war_ship = {
         death : { pack:PACK_ENEMY_KUSHITE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_KUSHITE, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -390,6 +526,10 @@ figure_kushite_chariot = {
         attack : { pack:PACK_ENEMY_KUSHITE, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_KUSHITE, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -411,6 +551,12 @@ figure_libian_archer = {
         bow_attack : { pack:PACK_ENEMY_LIBIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_LIBIAN, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -431,6 +577,10 @@ figure_libian_transport_ship = {
         death : { pack:PACK_ENEMY_LIBIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_LIBIAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -441,6 +591,10 @@ figure_libian_war_ship = {
         death : { pack:PACK_ENEMY_LIBIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_LIBIAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -452,6 +606,10 @@ figure_libian_chariot = {
         attack : { pack:PACK_ENEMY_LIBIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_LIBIAN, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -473,6 +631,12 @@ figure_nubian_archer = {
         attack : { pack:PACK_ENEMY_NUBIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_NUBIAN, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -483,6 +647,10 @@ figure_nubian_axeman = {
         death : { pack:PACK_ENEMY_NUBIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_NUBIAN, id:6, max_frames:8 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -493,6 +661,10 @@ figure_nubian_transport_ship = {
         death : { pack:PACK_ENEMY_NUBIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_NUBIAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -503,6 +675,10 @@ figure_nubian_war_ship = {
         death : { pack:PACK_ENEMY_NUBIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_NUBIAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -514,6 +690,10 @@ figure_nubian_chariot = {
         attack : { pack:PACK_ENEMY_NUBIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_NUBIAN, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -535,6 +715,12 @@ figure_persian_archer = {
         attack : { pack:PACK_ENEMY_PERSIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_PERSIAN, id:3, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -545,6 +731,10 @@ figure_persian_axeman = {
         death : { pack:PACK_ENEMY_PERSIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_PERSIAN, id:6, max_frames:8 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -555,6 +745,10 @@ figure_persian_transport_ship = {
         death : { pack:PACK_ENEMY_PERSIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_PERSIAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -565,6 +759,10 @@ figure_persian_war_ship = {
         death : { pack:PACK_ENEMY_PERSIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_PERSIAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -576,6 +774,10 @@ figure_persian_chariot = {
         attack : { pack:PACK_ENEMY_PERSIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_PERSIAN, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -597,6 +799,12 @@ figure_phoenician_spearman = {
         attack : { pack:PACK_ENEMY_PHOENICIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_PHOENICIAN, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -617,6 +825,10 @@ figure_phoenician_transport_ship = {
         death : { pack:PACK_ENEMY_PHOENICIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_PHOENICIAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -627,6 +839,10 @@ figure_phoenician_war_ship = {
         death : { pack:PACK_ENEMY_PHOENICIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_PHOENICIAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -638,6 +854,10 @@ figure_phoenician_chariot = {
         attack : { pack:PACK_ENEMY_PHOENICIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_PHOENICIAN, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -659,6 +879,12 @@ figure_roman_archer = {
         attack : { pack:PACK_ENEMY_ROMAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_ROMAN, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -669,6 +895,10 @@ figure_roman_legioner = {
         death : { pack:PACK_ENEMY_ROMAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ROMAN, id:6, max_frames:9 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -679,6 +909,10 @@ figure_roman_transport_ship = {
         death : { pack:PACK_ENEMY_ROMAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ROMAN, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -689,6 +923,10 @@ figure_roman_war_ship = {
         death : { pack:PACK_ENEMY_ROMAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ROMAN, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -700,6 +938,10 @@ figure_roman_chariot = {
         attack : { pack:PACK_ENEMY_ROMAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_ROMAN, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -714,54 +956,76 @@ enemy_roman = {
 }
 
 // seapeople
-figure_roman_archer = {
+figure_seapeople_archer = {
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_SEAPEOPLE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_SEAPEOPLE, id:3, max_frames:7 }
     }
+
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
 
-figure_roman_legioner = {
+figure_seapeople_axeman = {
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_SEAPEOPLE, id:6, max_frames:9 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
 
-figure_roman_transport_ship = {
+figure_seapeople_transport_ship = {
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_SEAPEOPLE, id:9, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
 
-figure_roman_war_ship = {
+figure_seapeople_war_ship = {
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_SEAPEOPLE, id:12, max_frames:1 }
     }
+
+    category: figure_category_hostile
+    max_damage : 290
+    attack_value : 17
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
 
-figure_roman_chariot = {
+figure_seapeople_chariot = {
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_SEAPEOPLE, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_SEAPEOPLE, id:16, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 120
+    attack_value : 9
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }

@@ -258,3 +258,26 @@ constexpr figure_id INVALID_FIGURE_ID = 0;
 
 using e_figure_type_tokens_t = token_holder<e_figure_type, FIGURE_NONE, FIGURE_MAX>;
 extern const e_figure_type_tokens_t e_figure_type_tokens;
+
+enum e_figure_category {
+    figure_category_inactive = 0,
+    figure_category_citizen = 1,
+    figure_category_armed = 2,
+    figure_category_hostile = 3,
+    figure_category_criminal = 4,
+    figure_category_native = 5,
+    figure_category_animal = 6,
+    figure_category_missile = 7,
+    figure_category_military = 8,
+    figure_category_transport = 9,
+    figure_category_worker = 10,
+    figure_category_entertainer = 11,
+    figure_category_religious = 12,
+    figure_category_merchant = 13,
+    figure_category_special = 14,
+
+    figure_category_max = 15,
+};
+
+using e_figure_category_tokens_t = token_holder<e_figure_category, figure_category_inactive, figure_category_max>;
+extern const e_figure_category_tokens_t e_figure_category_tokens;

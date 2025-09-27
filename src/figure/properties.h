@@ -1,17 +1,8 @@
 #pragma once
 
-enum e_figure_category {
-    FIGURE_CATEGORY_INACTIVE = 0,
-    FIGURE_CATEGORY_CITIZEN = 1,
-    FIGURE_CATEGORY_ARMED = 2,
-    FIGURE_CATEGORY_HOSTILE = 3,
-    FIGURE_CATEGORY_CRIMINAL = 4,
-    FIGURE_CATEGORY_NATIVE = 5,
-    FIGURE_CATEGORY_ANIMAL = 6
-};
+#include "figure/figure_type.h"
 
 struct figure_properties {
-    int category;
     int max_damage;
     int attack_value;
     int defense_value;
@@ -20,4 +11,4 @@ struct figure_properties {
     int missile_delay;
 };
 
-const figure_properties* figure_properties_for_type(int type);
+const figure_properties& figure_properties_for_type(e_figure_type type);
