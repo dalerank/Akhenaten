@@ -384,8 +384,8 @@ void formation_set_destination(formation* m, tile2i tile) {
     m->destination = tile;
 }
 
-void formation_set_destination_building(formation* m, int x, int y, int building_id) {
-    m->destination = tile2i{ x, y };
+void formation_set_destination_building(formation* m, tile2i tile, int building_id) {
+    m->destination = tile;
     m->destination_building_id = building_id;
 }
 
@@ -447,8 +447,8 @@ void formation_calculate_figures(void) {
         if (f->type == FIGURE_RIOTER)
             continue;
 
-        const bool soldier = !!::smart_cast<figure_soldier>(f);
-        if (!soldier && !soldier && !f->is_enemy() && !f->is_herd()) {
+        // const bool soldier = !!::smart_cast<figure_soldier>(f);
+        if (f->formation_id == 0 /* !soldier && !f->is_enemy() && !f->is_herd() */) {
             continue;
         }
         
@@ -461,30 +461,35 @@ void formation_calculate_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use && !m->is_herd) {
-            if (m->batalion_id || m->is_herd) {
-                if (m->num_figures > 0) {
-                    int was_halted = m->is_halted;
-                    m->is_halted = 1;
-                    for (int fig = 0; fig < m->num_figures; fig++) {
-                        int figure_id = m->figures[fig];
-                        if (figure_id && figure_get(figure_id)->direction != DIR_8_NONE)
-                            m->is_halted = 0;
-                    }
-                    int total_strength = m->num_figures;
-                    if (m->figure_type == FIGURE_STANDARD_BEARER)
-                        total_strength += m->num_figures / 2;
+            if (m->batalion_id == 0) {
+                continue;
+            }
 
-                    enemy_army_totals_add_batalion_formation(total_strength);
-                    if (m->figure_type == FIGURE_STANDARD_BEARER) {
-                        if (!was_halted && m->is_halted)
-                            g_sound.play_effect(SOUND_EFFECT_FORMATION_SHIELD);
-                    }
+            if (m->own_batalion && m->num_figures > 0) {
+                int was_halted = m->is_halted;
+                m->is_halted = 1;
+                for (int fig = 0; fig < m->num_figures; fig++) {
+                    int figure_id = m->figures[fig];
+                    if (figure_id && figure_get(figure_id)->direction != DIR_8_NONE)
+                        m->is_halted = 0;
                 }
-            } else {
-                // enemy
-                if (m->num_figures <= 0)
+                int total_strength = m->num_figures;
+                if (m->figure_type == FIGURE_STANDARD_BEARER)
+                    total_strength += m->num_figures / 2;
+
+                enemy_army_totals_add_batalion_formation(total_strength);
+                if (m->figure_type == FIGURE_STANDARD_BEARER) {
+                    if (!was_halted && m->is_halted)
+                        g_sound.play_effect(SOUND_EFFECT_FORMATION_SHIELD);
+                }
+
+            }
+
+            // enemy
+            if (!m->own_batalion) {
+                if (m->num_figures <= 0) {
                     formation_clear(m->id);
-                else {
+                } else {
                     enemy_army_totals_add_enemy_formation(m->num_figures);
                 }
             }
