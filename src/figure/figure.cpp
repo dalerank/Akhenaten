@@ -376,10 +376,6 @@ void figure::poof() {
     set_state(FIGURE_STATE_DEAD);
 }
 
-bool figure::is_enemy() {
-    return type >= FIGURE_ENEMY_EGYPTIAN_SPEAR && type <= FIGURE_ENEMY_KINGDOME_INFANTRY;
-}
-
 bool figure::is_herd() {
     return type >= FIGURE_BIRDS && type <= FIGURE_ANTELOPE;
 }
@@ -505,6 +501,7 @@ void figure::kill() {
 
 void figure_impl::on_create() {
     assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
+    base.flags |= (params().is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
 }
 
 void figure_impl::on_post_load() {
@@ -651,6 +648,7 @@ void figure_impl::static_params::base_load(archive arch) {
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
     permission = arch.r_type<e_permission>("permission");
+    is_enemy = arch.r_bool("is_enemy");
 }
 
 void figure_impl::update_animation() {
@@ -864,10 +862,14 @@ void figure::bind(io_buffer* iob) {
 
     iob->bind(BIND_SIGNATURE_INT16, &f->anim.frame);
     iob->bind(BIND_SIGNATURE_UINT16, &f->next_figure);
+    
+    if (f->next_figure >= MAX_FIGURES)
+        f->next_figure = 0;
+
     iob->bind(BIND_SIGNATURE_UINT8, &f->type);
     iob->bind(BIND_SIGNATURE_UINT8, &f->resource_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->use_cross_country);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->is_friendly);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_friendly);
     iob->bind(BIND_SIGNATURE_UINT8, &f->state);
     iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
     iob->bind(BIND_SIGNATURE_UINT8, &f->action_state_before_attack);
@@ -878,7 +880,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT32, f->previous_tile);
     iob->bind(BIND_SIGNATURE_UINT16, &f->missile_damage);
     iob->bind(BIND_SIGNATURE_UINT16, &f->damage);
-    iob->bind____skip(4);
+    iob->bind_u32(f->flags);
     iob->bind(BIND_SIGNATURE_UINT32, f->destination_tile);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_on_tile);              // 9
@@ -956,7 +958,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
-    iob->bind____skip(4); 
+    iob->bind____skip(4);
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...
     iob->bind____skip(2);
     iob->bind____skip(14);                                                  // 00 00 00 00 00 00 00 ...

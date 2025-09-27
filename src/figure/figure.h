@@ -41,6 +41,7 @@ class figure_caravan_donkey;
 class figure_transport_ship;
 class figure_stonemason;
 class figure_warship;
+class figure_enemy;
 
 struct animation_t;
 
@@ -83,6 +84,12 @@ enum e_figure_draw_mode {
     e_figure_cross_country_move = 0x20,
 };
 
+enum e_figure_flag {
+    e_figure_flag_none = 0,
+    e_figure_flag_enemy = 0x1,
+    e_figure_flag_friendly = 0x2,
+};
+
 class figure {
 public: 
     using ptr_buffer_t = char[16];
@@ -111,7 +118,6 @@ public:
     e_figure_type type;
 
     bool use_cross_country;
-    bool is_friendly;
     e_figure_state state;
     uint8_t faction_id; // 1 = city, 0 = enemy
     uint8_t action_state_before_attack;
@@ -191,8 +197,6 @@ public:
     vec2i main_cached_pos;
     vec2i cart_cached_pos;
 
-    // pharaoh
-
     // 7 bytes 00 00 00 00 00 00 00
     unsigned char routing_try_reroute_counter;
     uint16_t collecting_item_max;
@@ -200,6 +204,7 @@ public:
 
     // 115 bytes
     uint8_t draw_mode;
+    uint32_t flags;
     char festival_remaining_dances;
     
     figure_impl *dcast();
@@ -229,16 +234,17 @@ public:
     bool in_roam_history(int goffset);
     void add_roam_history(int goffset);
 
-    bool is_dead(); // figure.c
-    bool is_enemy();
+    bool is_dead(); 
+    inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
+    inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
     bool is_herd();
-    bool is_formation();        // formation_legion.c
-    bool is_attacking_native(); // combat.c
-    bool is_citizen();          // missile.c
+    bool is_formation();        
+    bool is_attacking_native(); 
+    bool is_citizen();          
     bool is_non_citizen();
-    bool is_fighting_friendly(); // routing.c
+    bool is_fighting_friendly(); 
     bool is_fighting_enemy();
-    e_minimap_figure_color get_figure_color(); // minimap.c
+    e_minimap_figure_color get_figure_color(); 
 
     void kill();
 
@@ -452,6 +458,7 @@ public:
         uint8_t speed_mult;
         metainfo meta;
         e_permission permission;
+        bool is_enemy;
 
     protected:
         void base_load(archive arch);
@@ -519,6 +526,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(warship)
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
+    ALLOW_SMART_CAST_FIGURE_I(enemy)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -587,6 +595,7 @@ GENERATE_SMART_CAST_FIGURE(caravan_donkey)
 GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
+GENERATE_SMART_CAST_FIGURE(enemy)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

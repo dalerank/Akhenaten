@@ -5,6 +5,10 @@ int calc_general_direction(tile2i from, tile2i to) {
     int x_to = to.x();
     int y_from = from.y();
     int y_to = to.y();
+    if (x_from == x_to && y_from == y_to) {
+        return DIR_0_TOP_RIGHT;
+    }
+
     if (x_from < x_to) {
         if (y_from > y_to)
             return DIR_1_RIGHT;

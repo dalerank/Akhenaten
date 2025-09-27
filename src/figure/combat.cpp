@@ -129,6 +129,7 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
 
     return 0;
 }
+
 int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, int attack_citizens, tile2i* tile) {
     figure* min_figure = 0;
     int min_distance = max_distance;
@@ -166,7 +167,7 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         int distance;
         if (::smart_cast<figure_soldier>(f)) {
             distance = calc_maximum_distance(enemy->tile, f->tile);
-        } else if (attack_citizens && f->is_friendly) {
+        } else if (attack_citizens && f->is_friendly()) {
             distance = calc_maximum_distance(enemy->tile, f->tile) + 5;
         } else {
             continue;

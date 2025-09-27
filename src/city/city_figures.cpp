@@ -114,6 +114,7 @@ bool city_t::figures_has_security_breach() {
 }
 
 figure *figure_get(int id) {
+    assert(id >= 0 || id < MAX_FIGURES);
     return g_figure_data.figures[id];
 }
 
@@ -137,8 +138,8 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->type = type;
     f->use_cross_country = false;
     f->terrain_usage = -1;
-    f->is_friendly = true;
-    //f->created_sequence = g_figure_data.created_sequence++;
+    //f->flags = 0;
+
     f->direction = dir;
     f->roam_length = 0;
     f->source_tile = tile;

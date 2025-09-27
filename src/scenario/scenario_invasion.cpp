@@ -252,7 +252,6 @@ tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_poi
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 figure* f = figure_create(figure_type, invasion_tile, orientation);
                 f->faction_id = 0;
-                f->is_friendly = false;
                 f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;

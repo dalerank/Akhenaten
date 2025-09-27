@@ -9,6 +9,7 @@ figure_barbarian_archer = {
     }
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 

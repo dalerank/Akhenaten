@@ -132,8 +132,17 @@ bool map_has_figure_but(tile2i tile, int id) {
 int map_figure_foreach_until(int grid_offset, int test) {
     if (map_figure_id_get(grid_offset) > 0) {
         int figure_id = map_figure_id_get(grid_offset);
+        if (figure_id >= MAX_FIGURES) {
+            return 0;
+        }
+
+        int last_figure_id = figure_id;
         while (figure_id) {
             figure* f = figure_get(figure_id);
+            if (figure_id >= MAX_FIGURES) {
+                return 0;
+            }
+
             if (!f->type) {
                 return 0;
             }
@@ -158,6 +167,7 @@ int map_figure_foreach_until(int grid_offset, int test) {
                 return figure_id;
             }
 
+            last_figure_id = figure_id;
             if (figure_id != f->next_figure) {
                 figure_id = f->next_figure;
             } else {
