@@ -396,9 +396,11 @@ void figure::set_home(int _id) {
 void figure::set_destination(building_id _id) {
     destination_building_id = _id;
 };
+
 void figure::set_home(building* b) {
     home_building_id = b->id;
 };
+
 void figure::set_destination(building* b) {
     destination_building_id = b ? b->id : 0;
 };
