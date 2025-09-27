@@ -514,7 +514,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
 
 static void update_enemy_formation(formation* m, int* roman_distance) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
-    if (enemy_army_is_stronger_than_legions()) {
+    if (enemy_army_is_stronger_than_batalions()) {
         if (m->figure_type != FIGURE_ARCHER)
             army->ignore_roman_soldiers = 1;
     }

@@ -63,7 +63,7 @@ void enemy_army_totals_clear(void) {
     g_city_army.enemy_strength = 0;
 }
 
-void enemy_army_totals_add_legion_formation(int strength) {
+void enemy_army_totals_add_batalion_formation(int strength) {
     g_city_army.legion_formations++;
     g_city_army.legion_strength += strength;
 }
@@ -110,7 +110,7 @@ void enemy_army_calculate_kingdome_influence(void) {
     }
 }
 
-int enemy_army_is_stronger_than_legions() {
+int enemy_army_is_stronger_than_batalions() {
     return g_city_army.enemy_strength > 2 * g_city_army.legion_strength;
 }
 
