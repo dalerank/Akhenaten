@@ -118,6 +118,7 @@ top_menu_widget = {
 	    routing_water   : menu_item({text:"xxx Routing water", parameter:e_debug_render_routing_water})
 		invasion_point  : menu_item({text:"xxx Inv. points", parameter: e_debug_render_invasion_point})
 		tile_random     : menu_item({text:"xxx Tile random", parameter: e_debug_render_tile_random})
+		soldier_strength  : menu_item({text:"xxx Sld. strength", parameter: e_debug_render_soldier_strength})
 	},
 
 	ui : {
