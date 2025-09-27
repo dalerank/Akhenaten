@@ -55,7 +55,8 @@ io_buffer::~io_buffer() {
 ////
 
 void default_bind(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_NONE);
+    //iob->bind(BIND_SIGNATURE_NONE);
+    iob->bind____skip(0);
 }
 io_buffer* iob_none = new io_buffer(default_bind);
 io_buffer* iob_ = new io_buffer([](io_buffer* iob, size_t version) {

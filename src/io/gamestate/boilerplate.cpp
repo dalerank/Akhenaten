@@ -136,7 +136,7 @@ static void pre_load() { // do we NEED this...?
     building_clear_all();
     building_storage_clear_all();
     g_city.figures.init_figures();
-    enemy_armies_clear();
+    g_enemy_armies.clear();
     figure_name_init();
     formations_clear();
     figure_route_clear_all();
