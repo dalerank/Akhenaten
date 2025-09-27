@@ -219,7 +219,7 @@ inline tile2i map_grid_area_first(tile2i tmin, tile2i tmax, T func) {
         }
     }
 
-    return tile2i(-1, -1);
+    return tile2i::invalid;
 }
 
 template<typename T>
