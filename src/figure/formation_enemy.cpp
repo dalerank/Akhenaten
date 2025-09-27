@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
+#include "figuretype/figure_enemy.h"
 #include "figure/route.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
@@ -235,14 +236,12 @@ static void set_enemy_target_building(formation* m) {
             }
         }
     }
+
     if (best_building) {
-        if (best_building->type == BUILDING_STORAGE_YARD)
-            formation_set_destination_building(m,
-                                               best_building->tile.x() + 1,
-                                               best_building->tile.y(),
-                                               best_building->id + 1);
-        else {
-            formation_set_destination_building(m, best_building->tile.x(), best_building->tile.y(), best_building->id);
+        if (best_building->type == BUILDING_STORAGE_YARD) {
+            formation_set_destination_building(m, best_building->tile.shifted(1, 0), best_building->id + 1);
+        } else {
+            formation_set_destination_building(m, best_building->tile, best_building->id);
         }
     }
 }
@@ -279,18 +278,25 @@ static void set_native_target_building(formation* m) {
     }
 
     if (min_building) {
-        formation_set_destination_building(m, min_building->tile.x(), min_building->tile.y(), min_building->id);
+        formation_set_destination_building(m, min_building->tile, min_building->id);
     }
 }
 
-static void approach_target(formation* m) {
-    if (map_routing_noncitizen_can_travel_over_land(m->home, m->destination, m->destination_building_id, 400)
-        || map_routing_noncitizen_can_travel_through_everything(m->home, m->destination)) {
-        tile2i dest;
+void formation_enemy_approach_target(formation* m) {
+    bool can_reach = map_routing_enemy_can_travel_over_land(m->home, m->destination, m->destination_building_id, 400);
+    
+    if (!can_reach) {
+        can_reach = map_routing_noncitizen_can_travel_through_everything(m->home, m->destination);
+    }
 
-        if (map_routing_get_closest_tile_within_range(m->home, m->destination, 8, 20, dest)) {
-            formation_set_destination(m, dest);
-        }
+    if (!can_reach) {
+        return;
+    }
+
+    tile2i dest;
+    const bool found = map_routing_get_closest_tile_within_range(m->home, m->destination, 8, 20, dest);
+    if (found) {
+        formation_set_destination(m, dest);
     }
 }
 
@@ -306,56 +312,46 @@ static void set_figures_to_initial(const formation* m) {
     }
 }
 
-bool formation_enemy_move_formation_to(const formation* m, tile2i tile, tile2i &outtile) {
+formation_destination formation_enemy_move_formation_to(const formation* m, tile2i tile) {
     tile2i base_offset = formation_layout_position(m->layout, 0);
-    tile2i figure_offsets[50];
+    std::array<tile2i, 50> figure_offsets;
     figure_offsets[0] = tile2i(0, 0);
     for (int i = 1; i < m->num_figures; i++) {
         figure_offsets[i] = formation_layout_position(m->layout, i).sub(base_offset);
     }
 
-    map_routing_noncitizen_can_travel_over_land(tile, tile2i(-1, -1), 0, 600);
+    map_routing_enemy_can_travel_over_land(tile, tile2i(-1, -1), 0, 600);
     for (int r = 0; r <= 10; r++) {
         grid_area area = map_grid_get_area(tile, 1, r);
 
-        bool found = false;
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
-            int can_move = 1;
+        tile2i ftile = map_grid_area_first(area.tmin, area.tmax, [m, &figure_offsets] (tile2i nt) {
             for (int fig = 0; fig < m->num_figures; fig++) {
-                tile2i tile = tile.shifted(figure_offsets[fig]);
-                if (!tile.valid()) {
-                    can_move = 0;
-                    break;
+                tile2i pr_tile = nt.shifted(figure_offsets[fig]);
+                if (!pr_tile.valid()) {                   
+                    return false;
                 }
 
-                if (map_terrain_is(tile, TERRAIN_IMPASSABLE_ENEMY)) {
-                    can_move = 0;
-                    break;
+                if (map_terrain_is(pr_tile, TERRAIN_IMPASSABLE_ENEMY)) {
+                    return false;
                 }
 
-                if (map_routing_distance(tile) <= 0) {
-                    can_move = 0;
-                    break;
+                if (map_routing_distance(pr_tile) <= 0) {
+                    return false;
                 }
 
-                figure_id tile_figure_id = map_figure_id_get(tile);
+                figure_id tile_figure_id = map_figure_id_get(pr_tile);
                 if (tile_figure_id && figure_get(tile_figure_id)->formation_id != m->id) {
-                    can_move = 0;
-                    break;
+                    return false;
                 }
             }
-            if (can_move) {
-                outtile = tile;
-                found = true;
-                return;
-            }
+            return true;
         });
 
-        if (found) {
-            return true;
+        if (ftile.valid()) {
+            return { true, ftile };
         }
     }
-    return false;
+    return { false, tile2i::invalid };
 }
 
 void formation_seth_kill_enemies() {
@@ -398,7 +394,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     } else if (m->wait_ticks < 32) {
         regroup = 1;
         state->duration_advance = 4;
-    } else if (army->ignore_roman_soldiers) {
+    } else if (army->ignore_pharaoh_soldiers) {
         halt = 0;
         regroup = 0;
         advance = 1;
@@ -485,45 +481,49 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     } else if (pursue_target) {
         if (target_formation_id > 0) {
             const formation* target = formation_get(target_formation_id);
-            if (target->num_figures > 0)
+            if (target->num_figures > 0) {
                 formation_set_destination(m, target->home);
+            }
 
         } else {
             formation_set_destination(m, army->destination);
         }
+
     } else if (regroup) {
         int layout = army->layout;
         tile2i army_home = army->home;
         int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] + army_home.x();
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] + army_home.y();
-        tile2i desttile;
-        if (formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset), desttile)) {
-            formation_set_destination(m, desttile);
+        auto destination = formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset));
+        if (destination.valid) {
+            formation_set_destination(m, destination.tile);
         }
 
     } else if (advance) {
         int layout = army->layout;
         int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] + army->destination.x();
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] + army->destination.y();
-        tile2i desttile;
-        if (formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset), desttile)) {
-            formation_set_destination(m, desttile);
+        auto destination = formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset));
+        if (destination.valid) {
+            formation_set_destination(m, destination.tile);
         }
     }
 }
 
-static void update_enemy_formation(formation* m, int* roman_distance) {
+static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_batalions()) {
-        if (m->figure_type != FIGURE_ARCHER)
-            army->ignore_roman_soldiers = 1;
+        const auto figure = figure_get<figure_enemy>(m->figure_type);
+        army->ignore_pharaoh_soldiers = figure && figure->ignore_pharaoh_soldiers();
     }
-    formation_decrease_monthly_counters(m);
-    if (g_city.figures.soldiers <= 0)
-        formation_clear_monthly_counters(m);
 
-    for (int n = 0; n < formation::max_figures_count; n++) {
-        figure* f = figure_get(m->figures[n]);
+    formation_decrease_monthly_counters(m);
+    if (g_city.figures.soldiers <= 0) {
+        formation_clear_monthly_counters(m);
+    }
+
+    for (figure_id fid : m->figures) {
+        figure* f = figure_get(fid);
         if (f->action_state == FIGURE_ACTION_150_ATTACK) {
             figure* opponent = figure_get(f->opponent_id);
             if (!opponent->is_dead() && ::smart_cast<figure_soldier>(opponent)) {
@@ -531,67 +531,78 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
             }
         }
     }
+
     if (formation_has_low_morale(m)) {
-        for (int n = 0; n < formation::max_figures_count; n++) {
-            figure* f = figure_get(m->figures[n]);
-            if (f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != FIGURE_ACTION_149_CORPSE
-                && f->action_state != FIGURE_ACTION_148_FLEEING) {
+        for (figure_id fid : m->figures) {
+            figure* f = figure_get(fid);
+            if (f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_148_FLEEING) {
                 f->action_state = FIGURE_ACTION_148_FLEEING;
                 f->route_remove();
             }
         }
         return;
     }
-    if (m->figures[0]) {
+
+    if (m->figures[0] > 0) {
         figure* f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE)
             formation_set_home(m, f->tile);
     }
+
     if (!army->formation_id) {
         army->formation_id = m->id;
         army->home = m->home;
         army->layout = m->layout;
-        *roman_distance = 0;
-        map_routing_noncitizen_can_travel_over_land(m->home, tile2i(-2, -2), 100000, 300);
-        tile2i tile;
-        if (map_soldier_strength_get_max(m->home, 16, tile)) {
-            *roman_distance = 1;
-        } else if (map_soldier_strength_get_max(m->home, 32, tile)) {
-            *roman_distance = 2;
+
+        *pharaoh_batalion_distance = 0;
+        map_routing_enemy_can_travel_over_land(m->home, tile2i(-2, -2), 100000, 300);
+   
+        auto strength_tile = map_soldier_strength_get_max(m->home, 16);
+        if (strength_tile.strength > 0) {
+            *pharaoh_batalion_distance = 1;
+        } else {
+            strength_tile = map_soldier_strength_get_max(m->home, 32);
+            if (strength_tile.strength > 0) {
+                *pharaoh_batalion_distance = 2;
+            }
+        }
+        
+        if (army->ignore_pharaoh_soldiers) {
+            *pharaoh_batalion_distance = 0;
         }
 
-        if (army->ignore_roman_soldiers)
-            *roman_distance = 0;
-
-        if (*roman_distance == 1) {
+        if (*pharaoh_batalion_distance == 1) {
             // attack roman legion
-            army->destination = tile;
+            army->destination = strength_tile.tile;
             army->destination_building_id = 0;
         } else {
             set_enemy_target_building(m);
-            approach_target(m);
+            formation_enemy_approach_target(m);
+
             army->destination = m->destination;
             army->destination_building_id = m->destination_building_id;
         }
     }
-    m->enemy_legion_index = army->num_legions++;
-    m->wait_ticks++;
-    formation_set_destination_building(m, army->destination.x(), army->destination.y(), army->destination_building_id);
 
-    update_enemy_movement(m, *roman_distance);
+    m->enemy_legion_index = army->num_batalions++;
+    m->wait_ticks++;
+
+    formation_set_destination_building(m, army->destination, army->destination_building_id);
+    update_enemy_movement(m, *pharaoh_batalion_distance);
 }
 
 void formation_enemy_update(void) {
-    if (enemy_army_total_enemy_formations() <= 0)
-        enemy_armies_clear_ignore_roman_soldiers();
-    else {
+    if (enemy_army_total_enemy_formations() <= 0) {
+        enemy_armies_clear_ignore_pharaoh_soldiers();
+    } else {
         enemy_army_calculate_kingdome_influence();
         enemy_armies_clear_formations();
-        int roman_distance = 0;
+        int pharaoh_batalion_distance = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation* m = formation_get(i);
-            if (m->in_use && !m->is_herd && !m->batalion_id)
-                update_enemy_formation(m, &roman_distance);
+            if (m->in_use && !m->is_herd && !m->own_batalion) {
+                update_enemy_formation(m, &pharaoh_batalion_distance);
+            }
         }
     }
     set_native_target_building(formation_get(0));

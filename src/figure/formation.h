@@ -60,7 +60,7 @@ struct formation {
     /* General variables */
     int in_use;    /**< Flag whether this entry is in use */
     int is_herd;   /**< Flag to indicate herd */
-    int is_batalion; /**< Flag to indicate (own) legion */
+    bool own_batalion; /**< Flag to indicate (own) legion */
     uint8_t batalion_id; /**< Batalion ID (0-5 for own troops) */
     e_formation_layout layout;
     int direction;
@@ -164,7 +164,7 @@ void formation_decrease_monthly_counters(formation* m);
 void formation_clear_monthly_counters(formation* m);
 
 void formation_set_destination(formation* m, tile2i tile);
-void formation_set_destination_building(formation* m, int x, int y, int building_id);
+void formation_set_destination_building(formation* m, tile2i tile, int building_id);
 void formation_set_home(formation* m, tile2i tile);
 
 void formation_clear_figures(void);

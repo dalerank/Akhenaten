@@ -289,21 +289,16 @@ static void update_herd_formation(formation* m) {
             formation_set_destination(m, m->home);
             move_animals(m, attacking_animals, terrain_mask);
         } else {
-            tile2i rtile;
             set_figures_to_initial(m);
 
-            /*if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home, roam_distance,
-            m->herd_direction, &x_tile, &y_tile)) { m->herd_direction = 0; if (formation_enemy_move_formation_to(m,
-            x_tile, y_tile, &x_tile, &y_tile)) { formation_set_destination(m, x_tile, y_tile); if (m->figure_type ==
-            FIGURE_WOLF && city_sound_update_march_wolf()) sound_effect_play(SOUND_EFFECT_WOLF_HOWL); move_animals(m,
-            attacking_animals);
-                }
-            }*/
-
-            if (get_roaming_destination(m->id, allow_negative_desirability, m->home, roam_distance, m->herd_direction, rtile)) {
+            tile2i rtile;
+            const bool found = get_roaming_destination(m->id, allow_negative_desirability, m->home, roam_distance, m->herd_direction, rtile);
+            if (found) {
                 m->herd_direction = 0;
-                if (formation_enemy_move_formation_to(m, rtile, rtile)) {
-                    formation_set_destination(m, rtile);
+                
+                auto destination = formation_enemy_move_formation_to(m, rtile);
+                if (destination.valid) {
+                    formation_set_destination(m, destination.tile);
                     move_animals(m, attacking_animals, terrain_mask);
                 }
             }
