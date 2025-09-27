@@ -124,7 +124,7 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
 }
 
 static void move_animals(const formation* m, int attacking_animals, int terrain_mask) {
-    for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
+    for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] <= 0)
             continue;
 
@@ -183,7 +183,7 @@ static bool can_spawn_ostrich(formation* m) {
 }
 
 static void set_figures_to_initial(const formation* m) {
-    for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
+    for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
             if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK
@@ -238,7 +238,7 @@ static void update_herd_formation(formation* m) {
     }
 
     int attacking_animals = 0;
-    for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+    for (int fig = 0; fig < formation::max_figures_count; fig++) {
         int figure_id = m->figures[fig];
         if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK)
             attacking_animals++;

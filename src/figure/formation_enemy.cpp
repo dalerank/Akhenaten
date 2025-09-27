@@ -295,7 +295,7 @@ static void approach_target(formation* m) {
 }
 
 static void set_figures_to_initial(const formation* m) {
-    for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
+    for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
             if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK) {
@@ -522,7 +522,7 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
     if (g_city.figures.soldiers <= 0)
         formation_clear_monthly_counters(m);
 
-    for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+    for (int n = 0; n < formation::max_figures_count; n++) {
         figure* f = figure_get(m->figures[n]);
         if (f->action_state == FIGURE_ACTION_150_ATTACK) {
             figure* opponent = figure_get(f->opponent_id);
@@ -532,7 +532,7 @@ static void update_enemy_formation(formation* m, int* roman_distance) {
         }
     }
     if (formation_has_low_morale(m)) {
-        for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+        for (int n = 0; n < formation::max_figures_count; n++) {
             figure* f = figure_get(m->figures[n]);
             if (f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != FIGURE_ACTION_149_CORPSE
                 && f->action_state != FIGURE_ACTION_148_FLEEING) {

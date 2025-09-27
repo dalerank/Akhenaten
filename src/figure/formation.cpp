@@ -5,6 +5,7 @@
 #include "core/profiler.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
+#include "figuretype/figure_enemy.h"
 #include "figure/formation_enemy.h"
 #include "figure/formation_herd.h"
 #include "figure/formation_batalion.h"
@@ -226,11 +227,7 @@ int formation_get_num_forts() {
 }
 
 int formation_get_max_forts() {
-    if (!!game_features::gameplay_enable_extra_forts)
-        return MAX_LEGIONS + 4;
-    else {
-        return MAX_LEGIONS;
-    }
+    return MAX_BATALIONS + (!!game_features::gameplay_enable_extra_forts ? 4 : 0);
 }
 
 int formation_for_legion(int legion_index) {
@@ -399,7 +396,7 @@ void formation_set_home(formation* m, tile2i tile) {
 void formation_clear_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations[i];
-        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+        for (int fig = 0; fig < formation::max_figures_count; fig++) {
             f->figures[fig] = 0;
         }
         f->num_figures = 0;
@@ -417,12 +414,13 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
     if (deployed)
         f->is_at_fort = 0;
 
-    for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+    for (int fig = 0; fig < formation::max_figures_count; fig++) {
         if (!f->figures[fig]) {
             f->figures[fig] = figure_id;
             return fig;
         }
     }
+
     return 0; // shouldn't happen
 }
 
@@ -446,14 +444,16 @@ void formation_calculate_figures(void) {
         if (f->state != FIGURE_STATE_ALIVE)
             continue;
 
-        if (!::smart_cast<figure_soldier>(f) && !f->is_enemy() && !f->is_herd())
-            continue;
-
         if (f->type == FIGURE_RIOTER)
             continue;
 
-        int index = formation_add_figure(
-          f->formation_id, i, f->formation_at_rest != 1, f->damage, figure_properties_for_type(f->type)->max_damage);
+        const bool soldier = !!::smart_cast<figure_soldier>(f);
+        if (!soldier && !soldier && !f->is_enemy() && !f->is_herd()) {
+            continue;
+        }
+        
+        const int max_damage = figure_properties_for_type(f->type)->max_damage;
+        int index = formation_add_figure(f->formation_id, i, f->formation_at_rest != 1, f->damage, max_damage);
         f->index_in_formation = index;
     }
 
@@ -574,7 +574,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->figure_type); // 69
         iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
 
-        for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+        for (int fig = 0; fig < formation::max_figures_count; fig++) {
             iob->bind(BIND_SIGNATURE_INT16, &f->figures[fig]);
         }
 
@@ -593,8 +593,10 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_id);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_INT16, &f->attack_type);
-        iob->bind(BIND_SIGNATURE_INT16, &f->legion_recruit_type);
-        iob->bind(BIND_SIGNATURE_INT16, &f->has_military_training);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_recruit_type);
+        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->has_military_training);
+        iob->bind____skip(1);
 
         iob->bind____skip(2);                                  //     vv 6 hp per ostich?
         iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18

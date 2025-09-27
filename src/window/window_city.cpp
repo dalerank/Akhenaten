@@ -158,7 +158,7 @@ static void cycle_legion(void) {
         current_legion_id = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             legion_id++;
-            if (legion_id > MAX_LEGIONS)
+            if (legion_id > MAX_BATALIONS)
                 legion_id = 1;
 
             const formation* m = formation_get(legion_id);
