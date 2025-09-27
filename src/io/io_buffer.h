@@ -112,6 +112,10 @@ public:
             IO_BRANCH(p_buf->read_raw((uint8_t*)ext, size), p_buf->write_raw((uint8_t*)ext, size))
         }
     }
+
+    void bind_i32(int32_t &v) { bind(BIND_SIGNATURE_INT32, &v); }
+    void bind_u32(uint32_t &v) { bind(BIND_SIGNATURE_UINT32, &v); }
+
     void bind(bind_signature_e signature, tile2i &tile) {
         tile.invalidate_offset();
         bind(BIND_SIGNATURE_UINT16, tile.private_access(_X));        // 44
@@ -124,13 +128,15 @@ public:
         }
     }
 
-    void bind(bind_signature_e signature, size_t size = -1) {
-        if (size > 0)
-            return p_buf->skip(size);
-    }
+    //void bind(bind_signature_e signature, size_t size = -1) {
+    //    if (size > 0)
+    //        return p_buf->skip(size);
+    //}
 
     void bind____skip(size_t size) {
-        return bind(BIND_SIGNATURE_SKIP, size);
+        //bind(BIND_SIGNATURE_SKIP, size);
+        if (size > 0)
+            p_buf->skip(size);
     }
 
     // these will VALIDATE the buffer, set the ACCESS FLAG, then fire the external CALLBACK
