@@ -26,6 +26,7 @@
 #include "grid/vegetation.h"
 #include "grid/gardens.h"
 #include "grid/random.h"
+#include "grid/soldier_strength.h"
 #include "widget/city/building_ghost.h"
 #include "game/game.h"
 
@@ -603,10 +604,19 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
+    case e_debug_render_soldier_strength:
+        d = map_soldier_strength_get(grid_offset);
+        if (d) {
+            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
+            snprintf((char *)str, 30, "%d", d);
+            text_draw(str, x, y + 15, FONT_SMALL_PLAIN, COLOR_RED);
+        }
+        break;
+
     case e_debug_render_tile_random:
         d = map_random_get(tile2i(grid_offset));
         if (d) {
-            snprintf((char*)str, 30, "%d", d);
+            snprintf((char *)str, 30, "%d", d);
             debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_LIGHT_BLUE, FONT_SMALL_PLAIN);
         }
     }

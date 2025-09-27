@@ -79,6 +79,7 @@ enum e_debug_render {
     e_debug_render_routing_water = 36,
     e_debug_render_invasion_point = 37,
     e_debug_render_tile_random = 38,
+    e_debug_render_soldier_strength = 39,
 
     e_debug_render_size
 };
