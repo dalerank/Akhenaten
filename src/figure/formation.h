@@ -7,16 +7,16 @@
 
 // #define MAX_FORMATIONS 250
 
-#define MAX_LEGIONS 6
-#define MAX_FORMATION_FIGURES 16
+#define MAX_BATALIONS 6
 
-enum {
-    LEGION_RECRUIT_NONE = 0,
-    LEGION_RECRUIT_ARCHER = 1,
-    LEGION_RECRUIT_CHARIOTEER = 2,
-    LEGION_RECRUIT_INFANTRY = 3 };
+enum e_batalion_recruit_type {
+    BATALION_RECRUIT_NONE = 0,
+    BATALION_RECRUIT_ARCHER = 1,
+    BATALION_RECRUIT_CHARIOTEER = 2,
+    BATALION_RECRUIT_INFANTRY = 3 
+};
 
-enum {
+enum e_formation_attack_type {
     FORMATION_ATTACK_FOOD_CHAIN = 0,
     FORMATION_ATTACK_GOLD_STORES = 1,
     FORMATION_ATTACK_BEST_BUILDINGS = 2,
@@ -51,6 +51,9 @@ struct formation_state {
 };
 
 struct formation {
+    enum {
+        max_figures_count = 16
+    };
     int id;         /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
 
@@ -72,7 +75,7 @@ struct formation {
     e_figure_type figure_type;          /**< Type of figure in this formation */
     int num_figures;                    /**< Current number of figures in the formation */
     int max_figures;                    /**< Maximum number of figures */
-    int figures[MAX_FORMATION_FIGURES]; /**< Figure IDs */
+    int figures[max_figures_count];     /**< Figure IDs */
     int total_damage;                   /**< Total damage of all figures added */
     int max_total_damage;               /**< Maximum total damage of all figures added */
 
@@ -95,12 +98,12 @@ struct formation {
     int missile_attack_formation_id;
 
     /* Legion-related */
-    int empire_service;        /**< Flag to indicate this legion is selected for empire service */
-    int in_distant_battle;     /**< Flag to indicate this legion is away in a distant battle */
-    int cursed_by_seth;        /**< Flag to indicate this legion is cursed */
-    int has_military_training; /**< Flag to indicate this legion has had military training */
-    int legion_recruit_type;   /**< Recruit type: none if this legion is fully occupied */
-    int is_at_fort;            /**< Flag to indicate this legion is resting at the fort */
+    int empire_service;        /**< Flag to indicate this batalion is selected for empire service */
+    int in_distant_battle;     /**< Flag to indicate this batalion is away in a distant battle */
+    int cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
+    uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
+    uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
+    int is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
 
     /* Enemy-related */
     int enemy_type;

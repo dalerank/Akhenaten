@@ -46,7 +46,7 @@ void formation_batalion_delete_for_fort(building* fort) {
 int formation_batalion_recruits_needed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->legion_recruit_type != LEGION_RECRUIT_NONE)
+        if (m->in_use && m->batalion_id && m->batalion_recruit_type != BATALION_RECRUIT_NONE)
             return 1;
     }
     return 0;
@@ -54,22 +54,22 @@ int formation_batalion_recruits_needed(void) {
 
 void formation_batalion_update_recruit_status(building* b) {
     formation* m = formation_get(b->formation_id);
-    m->legion_recruit_type = LEGION_RECRUIT_NONE;
+    m->batalion_recruit_type = BATALION_RECRUIT_NONE;
     if (!m->is_at_fort || m->cursed_by_seth || m->num_figures == m->max_figures)
         return;
     if (m->num_figures < m->max_figures) {
         building_fort *fort = b->dcast_fort();
         e_figure_type type = fort->runtime_data().figure_type;
         if (type == FIGURE_INFANTRY)
-            m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
+            m->batalion_recruit_type = BATALION_RECRUIT_INFANTRY;
         else if (type == FIGURE_ARCHER)
-            m->legion_recruit_type = LEGION_RECRUIT_ARCHER;
+            m->batalion_recruit_type = BATALION_RECRUIT_ARCHER;
         else if (type == FIGURE_FCHARIOTEER)
-            m->legion_recruit_type = LEGION_RECRUIT_CHARIOTEER;
+            m->batalion_recruit_type = BATALION_RECRUIT_CHARIOTEER;
 
     } else { // too many figures
         int too_many = m->num_figures - m->max_figures;
-        for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && too_many > 0; i--) {
+        for (int i = formation::max_figures_count - 1; i >= 0 && too_many > 0; i--) {
             if (m->figures[i]) {
                 figure_get(m->figures[i])->action_state = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
                 too_many--;
@@ -120,7 +120,7 @@ void formation_batalion_move_to(formation* m, tile2i tile) {
         events::emit(event_city_warning{ "#company_morale_too_low" });
     }
 
-    for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
+    for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
         figure* f = figure_get(m->figures[i]);
         if (f->action_state == FIGURE_ACTION_149_CORPSE || f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
@@ -144,7 +144,7 @@ void formation_batalion_return_home(formation* m) {
 
     m->is_at_fort = 1;
     formation_batalion_restore_layout(m);
-    for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
+    for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
         figure* f = figure_get(m->figures[i]);
         if (f->action_state == FIGURE_ACTION_149_CORPSE || f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
@@ -269,7 +269,7 @@ int formation_batalion_curse(void) {
     if (!best_legion)
         return 0;
 
-    for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
+    for (int i = 0; i < formation::max_figures_count; i++) {
         if (best_legion->figures[i] > 0)
             figure_get(best_legion->figures[i])->action_state = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
     }
@@ -310,13 +310,13 @@ void formation_batalion_update(void) {
             formation_clear_monthly_counters(m);
         }
 
-        for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+        for (int n = 0; n < formation::max_figures_count; n++) {
             if (figure_get(m->figures[n])->action_state == FIGURE_ACTION_150_ATTACK)
                 formation_record_fight(m);
         }
         if (formation_has_low_morale(m)) {
             // flee back to fort
-            for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+            for (int n = 0; n < formation::max_figures_count; n++) {
                 figure* f = figure_get(m->figures[n]);
                 if (f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != FIGURE_ACTION_149_CORPSE
                     && f->action_state != FIGURE_ACTION_148_FLEEING) {
@@ -326,7 +326,7 @@ void formation_batalion_update(void) {
             }
         } else if (m->layout == FORMATION_MOP_UP) {
             if ((enemy_army_total_enemy_formations() + g_city.figures.rioters + g_city.figures.attacking_natives) > 0) {
-                for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+                for (int n = 0; n < formation::max_figures_count; n++) {
                     if (m->figures[n] != 0) {
                         figure* f = figure_get(m->figures[n]);
                         if (f->action_state != FIGURE_ACTION_150_ATTACK

@@ -36,8 +36,8 @@ bool building_recruiter::static_params::is_unique_building() const {
     return exist;
 }
 
-static int get_closest_legion_needing_soldiers(building* barracks) {
-    int recruit_type = LEGION_RECRUIT_NONE;
+static int get_closest_batalion_needing_soldiers(building* barracks) {
+    int recruit_type = BATALION_RECRUIT_NONE;
     int min_formation_id = 0;
     int min_distance = INFINITE;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
@@ -45,16 +45,16 @@ static int get_closest_legion_needing_soldiers(building* barracks) {
         if (!m->in_use || !m->batalion_id)
             continue;
 
-        if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE)
+        if (m->in_distant_battle || m->batalion_recruit_type == BATALION_RECRUIT_NONE)
             continue;
 
-        if (m->legion_recruit_type == LEGION_RECRUIT_INFANTRY && barracks->stored_amount_first <= 0)
+        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY && barracks->stored_amount_first <= 0)
             continue;
 
         building* fort = building_get(m->building_id);
         int dist = calc_maximum_distance(barracks->tile, fort->tile);
-        if (m->legion_recruit_type > recruit_type || (m->legion_recruit_type == recruit_type && dist < min_distance)) {
-            recruit_type = m->legion_recruit_type;
+        if (m->batalion_recruit_type > recruit_type || (m->batalion_recruit_type == recruit_type && dist < min_distance)) {
+            recruit_type = m->batalion_recruit_type;
             min_formation_id = m->id;
             min_distance = dist;
         }
@@ -84,7 +84,7 @@ bool building_recruiter::create_soldier() {
         return false;
     }
 
-    int formation_id = get_closest_legion_needing_soldiers(&base);
+    int formation_id = get_closest_batalion_needing_soldiers(&base);
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
@@ -93,7 +93,9 @@ bool building_recruiter::create_soldier() {
         if (base.stored_amount_first > 0) {
             base.stored_amount_first -= 100;
         }
-        int academy_id = get_closest_military_academy(building_get(m->building_id));
+
+        building* fort = building_get(m->building_id);
+        int academy_id = get_closest_military_academy(fort);
         if (academy_id) {
             building* academy = building_get(academy_id);
             tile2i road = map_get_road_access_tile(academy->tile, academy->size);
