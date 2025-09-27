@@ -19,8 +19,10 @@
 #include <cmath>
 
 struct routing_stats_t {
-    int total_routes_calculated;
-    int enemy_routes_calculated;
+    uint32_t enemy_routes_calculated;
+    uint32_t noncitizen_routes_calculated;
+    uint32_t amphibia_routes_calculated;
+    uint32_t total_routes_calculated;
 };
 
 routing_stats_t g_routing_stats = {0, 0};
@@ -453,13 +455,20 @@ bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_
 }
 
 static void callback_travel_noncitizen_land_through_building(int next_offset, int dist) {
-    if (!has_fighting_enemy(next_offset)) {
-        if (map_grid_get(routing_land_noncitizen, next_offset) == NONCITIZEN_0_PASSABLE
-            || map_grid_get(routing_land_noncitizen, next_offset) == NONCITIZEN_2_CLEARABLE
-            || (map_grid_get(routing_land_noncitizen, next_offset) == NONCITIZEN_1_BUILDING
-                && map_building_at(next_offset) == g_routing_state_data.through_building_id)) {
-            enqueue(next_offset, dist);
-        }
+    if (has_fighting_enemy(next_offset)) {
+        return;
+    }
+
+    if (map_grid_get(routing_land_noncitizen, next_offset) == NONCITIZEN_0_PASSABLE) {
+        return enqueue(next_offset, dist);
+    }
+       
+    if (map_grid_get(routing_land_noncitizen, next_offset) == NONCITIZEN_2_CLEARABLE) {
+        return enqueue(next_offset, dist);
+    }
+        
+    if (g_routing_state_data.through_building_id > 0 && map_building_at(next_offset) == g_routing_state_data.through_building_id) {
+        return enqueue(next_offset, dist);
     }
 }
 
@@ -469,10 +478,14 @@ static void callback_travel_amphibia_land_water_through_building(int next_offset
     }
 
     const int32_t pas = map_grid_get(routing_land_amphibia, next_offset);
-    if (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_0_PASSABLE
-        || (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_1_BUILDING
-            && map_building_at(next_offset) == g_routing_state_data.through_building_id)) {
-        enqueue(next_offset, dist);
+    if (map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_0_PASSABLE) {
+        return enqueue(next_offset, dist);
+    }
+
+    if (g_routing_state_data.through_building_id > 0 
+        && map_grid_get(routing_land_amphibia, next_offset) == AMPHIBIA_1_BUILDING
+        && map_building_at(next_offset) == g_routing_state_data.through_building_id) {
+        return enqueue(next_offset, dist);
     }
 }
 
@@ -503,8 +516,10 @@ static void callback_travel_noncitizen_land(int next_offset, int dist) {
 bool map_routing_amphibia_can_travel_over_land_water(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
     int src_offset = src.grid_offset();
     int dst_offset = dst.grid_offset();
+
     ++g_routing_stats.total_routes_calculated;
     ++g_routing_stats.enemy_routes_calculated;
+    
     if (only_through_building_id > 0) {
         g_routing_state_data.through_building_id = only_through_building_id;
         route_queue(src_offset, dst_offset, callback_travel_amphibia_land_water_through_building);
@@ -515,11 +530,46 @@ bool map_routing_amphibia_can_travel_over_land_water(tile2i src, tile2i dst, int
     return map_grid_get(routing_distance, dst_offset) != 0;
 }
 
+bool map_routing_enemy_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
+    int src_offset = src.grid_offset();
+    int dst_offset = dst.grid_offset();
+
+    ++g_routing_stats.total_routes_calculated;
+    ++g_routing_stats.enemy_routes_calculated;
+
+    if (only_through_building_id > 0) {
+        g_routing_state_data.through_building_id = only_through_building_id;
+        route_queue(src_offset, dst_offset, callback_travel_noncitizen_land_through_building);
+    } else {
+        route_queue_max(src_offset, dst_offset, max_tiles, callback_travel_noncitizen_land);
+    }
+
+    return map_grid_get(routing_distance, dst_offset) != 0;
+}
+
+static void callback_travel_enemy_through_everything(int next_offset, int dist) {
+    if (map_grid_get(routing_land_noncitizen, next_offset) >= NONCITIZEN_0_PASSABLE)
+        enqueue(next_offset, dist);
+}
+
+bool map_routing_enemy_can_travel_through_everything(tile2i src, tile2i dst) {
+    int src_offset = src.grid_offset();
+    int dst_offset = dst.grid_offset();
+
+    ++g_routing_stats.total_routes_calculated;
+    ++g_routing_stats.enemy_routes_calculated;
+    
+    route_queue(src_offset, dst_offset, callback_travel_enemy_through_everything);
+    return map_grid_get(routing_distance, dst_offset) != 0;
+}
+
 bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles) {
     int src_offset = src.grid_offset();
     int dst_offset = dst.grid_offset();
+
     ++g_routing_stats.total_routes_calculated;
-    ++g_routing_stats.enemy_routes_calculated;
+    ++g_routing_stats.noncitizen_routes_calculated;
+
     if (only_through_building_id > 0) {
         g_routing_state_data.through_building_id = only_through_building_id;
         route_queue(src_offset, dst_offset, callback_travel_noncitizen_land_through_building);
@@ -582,10 +632,11 @@ io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob, size_t version) 
     iob->bind____skip(4);
     iob->bind____skip(4); // resets to zero at the start of a new scenario
     iob->bind____skip(4); // unused counter
-    iob->bind(BIND_SIGNATURE_UINT32, &g_routing_stats.enemy_routes_calculated);
-    iob->bind(BIND_SIGNATURE_UINT32, &g_routing_stats.total_routes_calculated);
-    iob->bind____skip(4); // unused counter
-    iob->bind____skip(8); // ??? coords?
+    iob->bind_u32(g_routing_stats.total_routes_calculated);
+    iob->bind_u32(g_routing_stats.enemy_routes_calculated);
+    iob->bind_u32(g_routing_stats.noncitizen_routes_calculated);
+    iob->bind_u32(g_routing_stats.amphibia_routes_calculated);
+    iob->bind____skip(4); // ??? coords?
     iob->bind____skip(8); // ??? coords?
     iob->bind____skip(2); // ??? something empire map related?
     iob->bind____skip(8); // ??? something storage related?
