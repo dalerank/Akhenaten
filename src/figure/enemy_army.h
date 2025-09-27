@@ -5,21 +5,31 @@
 
 struct enemy_army {
     int formation_id;
-    int layout;
+    uint8_t layout;
     tile2i home;
     tile2i destination;
-    int destination_building_id;
-    int num_legions;
-    int ignore_roman_soldiers;
+    uint16_t destination_building_id;
+    uint8_t num_batalions;
+    bool ignore_pharaoh_soldiers;
 };
 
-void enemy_armies_clear(void);
+struct enemy_armies_t {   
+    enum {
+        MAX_ENEMY_ARMIES = 125,
+    };
+
+    void clear(void);
+
+    enemy_army data[MAX_ENEMY_ARMIES];
+};
+
+extern enemy_armies_t g_enemy_armies;
 
 const enemy_army* enemy_army_get(int invasion_id);
 
 enemy_army* enemy_army_get_editable(int invasion_id);
 
-void enemy_armies_clear_ignore_roman_soldiers(void);
+void enemy_armies_clear_ignore_pharaoh_soldiers();
 
 void enemy_armies_clear_formations(void);
 
