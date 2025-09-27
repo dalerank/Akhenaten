@@ -319,11 +319,11 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y) {
 }
 
 bool figure::is_fighting_friendly() {
-    return is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+    return is_friendly() && action_state == FIGURE_ACTION_150_ATTACK;
 }
 
 bool figure::is_fighting_enemy() {
-    return !is_friendly && action_state == FIGURE_ACTION_150_ATTACK;
+    return !is_friendly() && action_state == FIGURE_ACTION_150_ATTACK;
 }
 
 static int has_fighting_friendly(int grid_offset) {
