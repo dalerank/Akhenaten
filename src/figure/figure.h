@@ -116,7 +116,7 @@ public:
 
     uint8_t alternative_location_index;
     bool flotsam_visible;
-    uint16_t next_figure;
+    figure_id next_figure;
     e_figure_type type;
 
     bool use_cross_country;

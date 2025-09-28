@@ -16,12 +16,6 @@
 static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0};
 static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};
 
-static void offset_to_view_offset(int dx, int dy, int* view_dx, int* view_dy) {
-    // we're assuming map is always oriented north
-    *view_dx = (dx - dy) * 30;
-    *view_dy = (dx + dy) * 15;
-}
-
 static void draw_flat_tile_editor(vec2i pos, color color_mask) {
     painter ctx = game.painter();
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
@@ -100,9 +94,8 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
 
 static void draw_brush_tile(const void* data, int dx, int dy) {
     screen_tile* view = (screen_tile*)data;
-    int view_dx, view_dy;
-    offset_to_view_offset(dx, dy, &view_dx, &view_dy);
-    draw_flat_tile_editor(vec2i{view->x + view_dx, view->y + view_dy}, COLOR_MASK_GREEN);
+    vec2i view_t = map_tile_to_view({ dx, dy });
+    draw_flat_tile_editor(vec2i{view->x + view_t.x, view->y + view_t.y}, COLOR_MASK_GREEN);
 }
 
 static void draw_brush(painter &ctx, tile2i tile, int x, int y) {

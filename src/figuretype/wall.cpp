@@ -111,24 +111,18 @@ void figure_tower_sentry_reroute(void) {
             f->progress_on_tile = 1;
             f->map_figure_remove();
             f->previous_tile = f->tile = tile2i(x_tile, y_tile);
-            //            f->previous_tile.x() = f->tile.x() = x_tile;
-            //            f->previous_tile.y() = f->tile.y() = y_tile;
+
             f->cc_coords.x = 15 * x_tile;
             f->cc_coords.y = 15 * y_tile;
-            //            f->tile.grid_offset() = MAP_OFFSET(x_tile, y_tile);
+
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
             f->destination_tile = f->source_tile;
-            //            f->destination_tile.x() = f->source_tile.x();
-            //            f->destination_tile.y() = f->source_tile.y();
         } else {
             // Teleport back to tower
             f->map_figure_remove();
             building* b = f->home();
             f->source_tile = f->tile = tile2i(b->tile.x(), b->tile.y());
-            //            f->source_tile.x() = f->tile.x() = b->tile.x();
-            //            f->source_tile.y() = f->tile.y() = b->tile.y();
-            //            f->tile.grid_offset() = MAP_OFFSET(f->tile.x(), f->tile.y());
             f->map_figure_add();
             f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             f->route_remove();

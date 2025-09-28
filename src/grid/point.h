@@ -31,6 +31,7 @@ public:
     int grid_offset(int v);
     int grid_offset();
     int grid_offset() const;
+
     int abs_x(int v);
     int abs_y(int v);
 
@@ -57,7 +58,12 @@ public:
     inline self div(float d) { return self(this->x() / d, this->y() / d); }
     inline bool valid() const { return (p_X >= 0 && p_Y >= 0 && p_X < MAX_TILE_I && p_Y < MAX_TILE_I); }
 
-    inline self operator*(int times) { return self(this->x() * 2, this->y() * 2); }
+    inline self operator*(int times) { return self(this->x() * times, this->y() * times); }
+    inline vec2i to_view() { 
+        int x = (p_X - p_Y) * 30;
+        int y = (p_X + p_Y) * 15;
+        return { x, y };
+    }
 
     // SET BY CONSTRUCTION
     void set(int _x, int _y);
@@ -84,6 +90,8 @@ public:
     inline bool operator!=(self rhs) { return p_GRID_OFFSET != rhs.p_GRID_OFFSET; }
     static const self invalid;
 };
+
+inline vec2i map_tile_to_view(tile2i tile) { return tile.to_view(); }
 
 /**
  * Stores the X and Y to the passed point.

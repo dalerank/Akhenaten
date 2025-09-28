@@ -622,9 +622,7 @@ bool figure::move_ticks_cross_country(int num_ticks) {
     }
     tile2i old = tile;
     tile.set(cc_coords.x / 15, cc_coords.y / 15);
-    //    tile.x() = cc_coords.x / 15;
-    //    tile.y() = cc_coords.y / 15;
-    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
+
     if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) {
         in_building_wait_ticks = 8;
     } else if (in_building_wait_ticks) {
@@ -701,11 +699,10 @@ int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst) {
             f->cross_country_advance();
         }
         f->tile.set(f->cc_coords.x / 15, f->cc_coords.y / 15);
-        //        f->tile.x() = f->cc_coords.x / 15;
-        //        f->tile.y() = f->cc_coords.y / 15;
-        if (height)
+
+        if (height) {
             height--;
-        else {
+        } else {
             int grid_offset = MAP_OFFSET(f->tile.x(), f->tile.y());
             if (map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_GATEHOUSE | TERRAIN_TREE))
                 break;

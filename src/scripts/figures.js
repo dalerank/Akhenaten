@@ -353,7 +353,7 @@ figure_ostrich_hunter = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:46, max_frames:8, loop:false }
-		hunt : { pack:PACK_SPR_MAIN, id:47, max_frames:12 }
+		hunt : { pack:PACK_SPR_MAIN, id:47, max_frames:12, loop:false }
 		figth : { pack:PACK_SPR_MAIN, id:48, max_frames:12 }
 		//work_in_field : { pack:PACK_SPR_MAIN, id:49, max_frames:12, loop:false }
 		pack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false }

@@ -105,6 +105,7 @@ void figure_ostrich_hunter::figure_action() {
             if (!base.target_figure_id) {
                 return advance_action(ACTION_8_RECALCULATE);
             }
+
             base.wait_ticks = current_params().missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
                 advance_action(ACTION_11_OSTRICH_HUNTER_WALK);
@@ -115,7 +116,7 @@ void figure_ostrich_hunter::figure_action() {
             } else {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);
                 figure* f = figure_get(base.target_figure_id);
-                figure_missile::create(base.home_building_id, tile(), f->tile, FIGURE_HUNTER_ARROW);
+                figure_missile::create(id(), tile(), f->tile, FIGURE_HUNTER_ARROW);
             }
         }
         break;

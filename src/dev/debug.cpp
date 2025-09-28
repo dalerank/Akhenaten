@@ -228,7 +228,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     // globals
     int d = 0;
-    uint8_t str[30];
+    uint8_t str[64];
     int b_id = map_building_at(grid_offset);
     building* b = building_get(b_id);
 
@@ -481,6 +481,10 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         if (!(point.x() % 5) && !(point.y() % 5)) {
             snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
             debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+
+            vec2i voff = point.to_view();
+            snprintf((char *)str, 48, "(%d,%d) (%d,%d)", pixel.x, pixel.y, voff.x, voff.y);
+            debug_text_a(ctx, str, x, y + 20, 0, (const char*)str, COLOR_BLUE, FONT_SMALL_PLAIN);
         }
         break;
 
@@ -1287,7 +1291,7 @@ void draw_debug_ui(int x, int y) {
         debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
         debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", g_city_view.viewport.size_pixels.x / 60, g_city_view.viewport.size_pixels.y / 30);
-        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.y, g_city_view.viewport.size_pixels.y);
+        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.x, g_city_view.viewport.size_pixels.y);
 
         debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
         debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());
