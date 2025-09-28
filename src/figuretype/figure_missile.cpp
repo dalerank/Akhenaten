@@ -14,7 +14,8 @@ figure_javelin::static_params javelin_m;
 figure_bolt::static_params bolt_m;
 
 void figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
-    auto missile = figure_create(type, src, DIR_0_TOP_RIGHT)->dcast<figure_missile>();
+    auto f = figure_create(type, src, DIR_0_TOP_RIGHT);
+    auto missile = f->dcast<figure_missile>();
     if (missile) {
         missile->set_home(0);
         missile->base.missile_damage = (type == FIGURE_BOLT ? 60 : 10);
@@ -42,6 +43,26 @@ int figure_missile::get_citizen_on_tile() {
     return map_figure_foreach_until(tile(), TEST_SEARCH_CITIZEN);
 }
 
+void figure_missile::set_image_direction(vec2i src, vec2i dst) {
+    float dx = dst.x - src.x;
+    float dy = dst.y - src.y;
+    float angle_rad = atan2(dy, dx);
+    float angle_deg = angle_rad * 180.0f / M_PI;
+    if (angle_deg < 0) {
+        angle_deg += 360.0f;
+    }
+    angle_deg = angle_deg - 22.5f - 90.f;
+    if (angle_deg < 0) {
+        angle_deg += 360.0f;
+    }
+    int index = (int)(angle_deg / 11.25f + 0.5f) % 32;
+    runtime_data().image_direction = (32 - index) % 32;
+}
+
+figure *figure_missile::shooter() const { 
+    return figure_get(runtime_data().shooter_id); 
+}
+
 void figure_missile::figure_action() {
     base.use_cross_country = true;
     base.progress_on_tile++;
@@ -59,10 +80,19 @@ void figure_missile::figure_action() {
     }
 }
 
-void figure_missile::missile_hit_target(int target_id, int legionary_type) {
+void figure_missile::main_image_update() {
+    set_image_direction(base.tile.to_view(), base.destination_tile.to_view());
+    base.main_image_id = anim(animkeys().walk).first_img() + runtime_data().image_direction;
+}
+
+void figure_missile::cart_image_update() {
+    // nothing
+}
+
+void figure_missile::missile_hit_target(figure_id target_id, int legionary_type) {
     figure* target = figure_get(target_id);
 
-    while (target) {
+    while (target->id) {
         if (target->is_dead()) {
             target = figure_get(target->next_figure);
             continue;
@@ -94,8 +124,8 @@ void figure_missile::missile_hit_target(int target_id, int legionary_type) {
     }
 
     poof();
-    // for missiles: building_id contains the figure who shot it
-    int missile_formation = figure_get(base.homeID())->formation_id;
+
+    int missile_formation = shooter()->formation_id;
     formation_record_missile_attack(m, missile_formation);
 }
 

@@ -109,19 +109,8 @@ void figure::figure_image_update(bool refresh_only) {
 
     anim.update(refresh_only);
 
-    switch (type) {
-    case FIGURE_JAVELIN:
-    case FIGURE_ARROW:
-    case FIGURE_HUNTER_ARROW: {
-        int dir = (16 + direction - 2 * city_view_orientation()) % 16;
-        main_image_id = anim.base + 16 + dir;
-        break;
-    }
-
-    default:
-        dcast()->main_image_update();
-        dcast()->cart_image_update();
-    }
+    dcast()->main_image_update();
+    dcast()->cart_image_update();
 }
 
 image_desc resource_to_sled_image(e_resource res) {

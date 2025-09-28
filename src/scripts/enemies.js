@@ -5,7 +5,7 @@ figure_barbarian_archer = {
     animations : {
         walk : { pack:PACK_ENEMY_BARBARIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_BARBARIAN, id:1, max_frames:8, loop:false }
-        attack : { pack:PACK_ENEMY_BARBARIAN, id:2, max_frames:12 }
+        attack : { pack:PACK_ENEMY_BARBARIAN, id:2, max_frames:12, loop: false }
     }
 
     category: figure_category_hostile

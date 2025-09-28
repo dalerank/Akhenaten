@@ -5,6 +5,7 @@
 class figure_enemy : public figure_impl {
 public:
     figure_enemy(figure *f) : figure_impl(f) {}
+    virtual figure_enemy *dcast_enemy() override { return this; }
 
     virtual void on_create() override;
     virtual void figure_action() override;

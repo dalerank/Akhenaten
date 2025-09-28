@@ -18,6 +18,7 @@ template<typename T>
 void figure_enemy_archer::static_params_t<T>::archive_load(archive arch) {
     missile_attack_value = arch.r_int("missile_attack_value");
     missile_delay = arch.r_int("missile_delay");
+    attack_distance = arch.r_int("attack_distance", 5);
 }
 
 void figure_enemy_archer::enemy_initial(formation *m) {
@@ -89,6 +90,91 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     }
 }
 
+void figure_enemy_archer::enemy_marching(formation *m) {
+    base.wait_ticks--;
+    if (base.wait_ticks <= 0) {
+        base.wait_ticks = 50;
+
+        tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+
+        base.destination_tile = m->destination.shifted(formation_t);
+        if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
+            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            return;
+        }
+
+        set_destination(m->destination_building_id);
+
+        route_remove();
+    }
+
+    base.move_ticks(base.speed_multiplier);
+    if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+    }
+
+    float dist = tile().dist(base.destination_tile);
+    if (dist < attack_distance()) {
+        advance_action(FIGURE_ACTION_154_ENEMY_FIGHTING);
+    }
+}
+
+void figure_enemy_archer::enemy_fighting(formation *m) {
+    if (!m->recent_fight) {
+        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+    }
+
+    if (city_sound_update_march_enemy()) {
+        g_sound.play_effect(SOUND_EFFECT_MARCHING);
+    }
+
+    figure_id target_id = base.target_figure_id;
+    figure *target_f = figure_get(target_id);
+    if (target_id && target_f->is_dead()) {
+        base.target_figure_id = 0;
+        target_id = 0;
+    }
+
+    if (target_id <= 0) {
+        target_id = figure_combat_get_target_for_enemy(tile());
+        if (target_id) {
+            figure *target = figure_get(target_id);
+            base.destination_tile = target->tile;
+            base.target_figure_id = target_id;
+            //target_figure_created_sequence = target->created_sequence;
+            target->targeted_by_figure_id = id();
+            route_remove();
+        }
+    }
+
+    if (m->destination_building_id > 0) {
+        building *b = building_get(m->destination_building_id);
+        float dist = tile().dist(b->tile);
+        if (dist < attack_distance()) {
+            base.direction = calc_missile_shooter_direction(tile(), b->tile);
+            figure_missile::create(id(), tile(), b->tile, missile_type());
+            base.wait_ticks = missile_delay();
+            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            return;
+        }
+    }
+
+    if (target_id > 0) {
+        base.move_ticks(base.speed_multiplier);
+        if (direction() == DIR_FIGURE_NONE) {
+            figure *target = figure_get(base.target_figure_id);
+            base.destination_tile = target->tile;
+            route_remove();
+        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            base.target_figure_id = 0;
+        }
+    } else {
+        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        base.wait_ticks = 50;
+    }
+}
+
 void figure_enemy_archer::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyArcher");
 
@@ -97,8 +183,6 @@ void figure_enemy_archer::figure_action() {
     // int dir = get_missile_direction(m);
     g_city.figures_add_enemy();
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
-    //int formationx = formation_layout_position_x(m->layout, index_in_formation);
-    //int formationy = formation_layout_position_y(m->layout, index_in_formation);
 
     switch (action_state()) {
     case FIGURE_ACTION_148_FLEEING:
@@ -110,32 +194,42 @@ void figure_enemy_archer::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_151_ENEMY_INITIAL:
+    case ACTION_151_ENEMY_ARCHER_INITIAL:
         enemy_initial(m);
         break;
 
-    case FIGURE_ACTION_152_ENEMY_WAITING:
+    case ACTION_152_ENEMY_ARCHER_WAITING:
         base.map_figure_update(); // ???? WTF 
         break;
 
-    case FIGURE_ACTION_153_ENEMY_MARCHING:
+    case ACTION_153_ENEMY_ARCHER_MARCHING:
         enemy_marching(m);
         break;
 
-    case FIGURE_ACTION_154_ENEMY_FIGHTING:
+    case ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE:
         enemy_fighting(m);
+        break;
+
+    case ACTION_155_ENEMY_ARCHER_RELOAD:
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
+            advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
+            base.anim.frame = 0;
+        }
         break;
     }
 }
 
 void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
-    if (action_state() == FIGURE_ACTION_154_ENEMY_FIGHTING) {
+    if (action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE) {
         animkey = animkeys().attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == FIGURE_ACTION_153_ENEMY_MARCHING) {
+    } else if (action_state() == ACTION_153_ENEMY_ARCHER_MARCHING) {
         animkey = animkeys().walk;
+    } else if (action_state() == ACTION_155_ENEMY_ARCHER_RELOAD) {
+        animkey = animkeys().attack;
     }
 
     image_set_animation(animkey);
