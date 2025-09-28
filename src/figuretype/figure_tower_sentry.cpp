@@ -1,6 +1,5 @@
 #include "figure_tower_sentry.h"
 
-#include "figure/properties.h"
 #include "figure/enemy_army.h"
 #include "figure/combat.h"
 #include "city/city_figures.h"
@@ -11,11 +10,16 @@
 
 figures::model_t<figure_tower_sentry> figure_tower_sentry_m;
 
-static const int TOWER_SENTRY_FIRING_OFFSETS[]
-= { 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+static const int TOWER_SENTRY_FIRING_OFFSETS[] = 
+{ 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+};
+
+void figure_tower_sentry::static_params::archive_load(archive arch) {
+    missile_delay = arch.r_int("missile_delay");
+}
 
 void figure_tower_sentry::tower_sentry_pick_target() {
     if (enemy_army_total_enemy_formations() <= 0)
@@ -157,7 +161,7 @@ void figure_tower_sentry::figure_action() {
     case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
         move_ticks_tower_sentry(1);
         base.wait_ticks_missile++;
-        if (base.wait_ticks_missile > figure_properties_for_type(type()).missile_delay) {
+        if (base.wait_ticks_missile > current_params().missile_delay) {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(&base, 10, &tile)) {
                 base.direction = calc_missile_shooter_direction(tile, tile);

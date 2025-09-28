@@ -6,7 +6,6 @@
 #include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/movement.h"
-#include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/figure_missile.h"
 #include "graphics/image.h"
@@ -62,6 +61,7 @@ void figure::ballista_action() {
     case FIGURE_ACTION_149_CORPSE:
         poof();
         break;
+
     case FIGURE_ACTION_180_BALLISTA_CREATED:
         wait_ticks++;
         if (wait_ticks > 20) {
@@ -69,13 +69,14 @@ void figure::ballista_action() {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
-                wait_ticks_missile = figure_properties_for_type(type).missile_delay;
+                wait_ticks_missile = 100; // figure_properties_for_type(type).missile_delay;
             }
         }
         break;
+
     case FIGURE_ACTION_181_BALLISTA_FIRING:
         wait_ticks_missile++;
-        if (wait_ticks_missile > figure_properties_for_type(type).missile_delay) {
+        if (wait_ticks_missile > 100) { // figure_properties_for_type(type).missile_delay) {
             tile2i tile;
             if (figure_combat_get_missile_target_for_soldier(this, 15, &tile)) {
                 direction = calc_missile_shooter_direction(tile, tile);

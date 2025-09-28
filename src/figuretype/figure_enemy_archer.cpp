@@ -2,11 +2,91 @@
 
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/sound.h"
+#include "sound/sound.h"
+#include "figure/combat.h"
+#include "figuretype/figure_missile.h"
+#include "figure/formation_layout.h"
 
 figure_barbarian_archer::static_params barbarian_archer_m;
 
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();
+}
+
+template<typename T>
+void figure_enemy_archer::static_params_t<T>::archive_load(archive arch) {
+    missile_attack_value = arch.r_int("missile_attack_value");
+    missile_delay = arch.r_int("missile_delay");
+}
+
+void figure_enemy_archer::enemy_initial(formation *m) {
+    base.map_figure_update();
+    base.anim.frame = 0;
+    route_remove();
+    base.wait_ticks--;
+    if (base.wait_ticks <= 0) {
+        if (base.index_in_formation == 0) {
+            if (m->layout == FORMATION_ENEMY_MOB) {
+                g_sound.speech_play_file("Wavs/drums.wav", 255);
+            } else if (m->layout == FORMATION_ENEMY12) {
+                g_sound.speech_play_file("Wavs/horn2.wav", 255);
+            } else {
+                g_sound.speech_play_file("Wavs/horn1.wav", 255);
+            }
+        }
+
+        if (m->recent_fight) {
+            advance_action(FIGURE_ACTION_154_ENEMY_FIGHTING);
+        } else {
+            tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+
+            base.destination_tile = m->destination.shifted(formation_t);
+
+            int dir = calc_general_direction(tile(), base.destination_tile);
+            if (dir < 8) {
+                advance_action(FIGURE_ACTION_153_ENEMY_MARCHING);
+            }
+        }
+    }
+
+    assert(is_archer() || is_mounted_archer() || is_spearman());
+    // missile throwers
+    base.wait_ticks_missile++;
+    target_figure target;
+    if (base.wait_ticks_missile > missile_delay()) {
+        base.wait_ticks_missile = 0;
+        target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4);
+        if (target.fid) {
+            base.attack_image_offset = 1;
+            base.direction = calc_missile_shooter_direction(target.tile, base.destination_tile);
+        } else {
+            base.attack_image_offset = 0;
+        }
+    }
+
+    if (base.attack_image_offset) {
+        e_figure_type missilet = missile_type();
+        assert(missilet != FIGURE_NONE && "archer should has missile");
+
+        if (base.attack_image_offset == 1) {
+            if (!target.tile.valid()) {
+                map_point_get_last_result(target.tile);
+            }
+
+            figure *f = figure_get(base.target_figure_id);
+            figure_missile::create(base.home_building_id, target.tile, f->tile, missilet);
+            formation_record_missile_fired(m);
+        }
+
+        if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+            g_sound.play_effect(SOUND_EFFECT_ARROW);
+        }
+
+        base.attack_image_offset++;
+        if (base.attack_image_offset > 100)
+            base.attack_image_offset = 0;
+    }
 }
 
 void figure_enemy_archer::figure_action() {

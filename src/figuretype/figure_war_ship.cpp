@@ -3,7 +3,6 @@
 #include "figure/route.h"
 #include "figure/image.h"
 #include "figure_shipwreck.h"
-#include "figure/properties.h"
 #include "grid/water.h"
 #include "grid/figure.h"
 #include "city/city_message.h"
@@ -267,7 +266,6 @@ void figure_warship_info_window::window_info_background(object_info &c) {
     figure_warship *f = c.figure_get<figure_warship>();
     const short order = f->runtime_data().active_order;
 
-    const figure_properties& target_props = figure_properties_for_type(f->type());
     ui["repair"].darkened = (f->base.damage == 0) ? UiFlags_Grayscale : UiFlags_None;
     ui["return_to_wharf"].darkened = (f->base.action_state == FIGURE_ACTION_203_WARSHIP_MOORED) ? UiFlags_Grayscale : UiFlags_None;
 

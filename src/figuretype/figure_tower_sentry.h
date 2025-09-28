@@ -7,6 +7,11 @@ public:
     FIGURE_METAINFO(FIGURE_TOWER_SENTRY, figure_tower_sentry)
     figure_tower_sentry(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figure_model {
+        uint8_t missile_delay;
+        virtual void archive_load(archive arch) override;
+    } FIGURE_STATIC_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;

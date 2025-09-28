@@ -1,7 +1,6 @@
 #include "figure_ostrich_hunter.h"
 
 #include "core/calc.h"
-#include "figure/properties.h"
 #include "grid/figure.h"
 #include "grid/routing/routing.h"
 #include "graphics/animkeys.h"
@@ -95,7 +94,7 @@ void figure_ostrich_hunter::figure_action() {
                 advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
             }
         } else {
-            base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW).missile_delay;
+            base.wait_ticks = current_params().missile_delay;
             advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
         }
         break;
@@ -106,7 +105,7 @@ void figure_ostrich_hunter::figure_action() {
             if (!base.target_figure_id) {
                 return advance_action(ACTION_8_RECALCULATE);
             }
-            base.wait_ticks = figure_properties_for_type(FIGURE_HUNTER_ARROW).missile_delay;
+            base.wait_ticks = current_params().missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
                 advance_action(ACTION_11_OSTRICH_HUNTER_WALK);
                 scared_animals_in_area(prey->tile, /*dist*/16);

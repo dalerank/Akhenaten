@@ -8,7 +8,6 @@
 #include "figure/formation_layout.h"
 #include "figure/image.h"
 #include "figure/movement.h"
-#include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/figure_missile.h"
 #include "graphics/image.h"
@@ -44,7 +43,7 @@ figures::model_t<figure_soldier_charioteer> soldier_charioterr_m;
 void figure::javelin_launch_missile() {
     tile2i tile = {-1, -1};
     wait_ticks_missile++;
-    if (wait_ticks_missile > figure_properties_for_type(type).missile_delay) {
+    if (wait_ticks_missile > 100) { //figure_properties_for_type(type).missile_delay) {
         wait_ticks_missile = 0;
         if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
             attack_image_offset = 1;

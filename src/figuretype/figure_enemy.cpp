@@ -5,8 +5,6 @@
 #include "city/sound.h"
 #include "figure/combat.h"
 #include "figure/formation_layout.h"
-#include "figuretype/figure_missile.h"
-#include "figure/properties.h"
 
 void figure_enemy::on_create() {
     figure_impl::on_create();
@@ -47,44 +45,6 @@ void figure_enemy::enemy_initial(formation *m) {
             if (dir < 8) {
                 advance_action(FIGURE_ACTION_153_ENEMY_MARCHING);
             }
-        }
-    }
-
-    if (is_archer() || is_mounted_archer() || type() == FIGURE_ENEMY_EGYPTIAN_CAMEL || is_spearman()) {
-        // missile throwers
-        base.wait_ticks_missile++;
-        target_figure target;
-        if (base.wait_ticks_missile > figure_properties_for_type(type()).missile_delay) {
-            base.wait_ticks_missile = 0;
-            target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4);
-            if (target.fid) {
-                base.attack_image_offset = 1;
-                base.direction = calc_missile_shooter_direction(target.tile, base.destination_tile);
-            } else {
-                base.attack_image_offset = 0;
-            }
-        }
-
-        if (base.attack_image_offset) {
-            e_figure_type missilet = missile_type();
-            assert(missilet != FIGURE_NONE && "archer should has missile");
-            // missile_type = FIGURE_SPEAR;
-
-            if (base.attack_image_offset == 1) {
-                if (!target.tile.valid()) {
-                    map_point_get_last_result(target.tile);
-                }
-
-                figure *f = figure_get(base.target_figure_id);
-                figure_missile::create(base.home_building_id, target.tile, f->tile, missilet);
-                formation_record_missile_fired(m);
-            }
-            if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow())
-                g_sound.play_effect(SOUND_EFFECT_ARROW);
-
-            base.attack_image_offset++;
-            if (base.attack_image_offset > 100)
-                base.attack_image_offset = 0;
         }
     }
 }

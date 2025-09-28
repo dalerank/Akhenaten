@@ -9,7 +9,6 @@
 #include "figure/formation_enemy.h"
 #include "figure/formation_herd.h"
 #include "figure/formation_batalion.h"
-#include "figure/properties.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
 #include "sound/sound.h"

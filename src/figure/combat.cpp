@@ -4,7 +4,6 @@
 #include "city/city_figures.h"
 #include "figure/formation.h"
 #include "figure/movement.h"
-#include "figure/properties.h"
 #include "figure/route.h"
 #include "game/difficulty.h"
 #include "grid/figure.h"
@@ -218,8 +217,8 @@ void figure::hit_opponent() {
     figure* opponent = figure_get(opponent_id);
     formation* opponent_formation = formation_get(opponent->formation_id);
 
-    const figure_properties& props = figure_properties_for_type(type);
-    const figure_properties& opponent_props = figure_properties_for_type(opponent->type);
+    //const figure_properties& props = figure_properties_for_type(type);
+    //const figure_properties& opponent_props = figure_properties_for_type(opponent->type);
     if (category() == figure_category_citizen || category() == figure_category_criminal) {
         attack_image_offset = 12;
     } else {
