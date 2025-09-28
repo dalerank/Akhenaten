@@ -378,8 +378,12 @@ uint16_t figure::max_damage() const {
     return figure_impl::params(type).max_damage;
 }
 
-uint8_t figure::attack_value() const {
+int8_t figure::attack_value() const {
     return figure_impl::params(type).attack_value;
+}
+
+int8_t figure::defense_value() const {
+    return figure_impl::params(type).defense_value;
 }
 
 void figure::poof() {
@@ -665,6 +669,7 @@ void figure_impl::static_params::base_load(archive arch) {
     category = arch.r_type<e_figure_category>("category");
     max_damage = arch.r_int("max_damage", 100);
     attack_value = arch.r_int("attack_value", 0);
+    defense_value = arch.r_int("defense_value", 0);
 }
 
 void figure_impl::update_animation() {
