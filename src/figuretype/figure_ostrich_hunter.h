@@ -22,6 +22,7 @@ public:
         virtual void archive_load(archive arch) override;
 
         int max_hunting_distance;
+        int8_t missile_delay;
     } FIGURE_STATIC_DATA_T;
 
     virtual void figure_before_action() override;

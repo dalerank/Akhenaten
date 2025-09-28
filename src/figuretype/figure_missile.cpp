@@ -3,24 +3,31 @@
 #include "grid/figure.h"
 #include "sound/sound.h"
 #include "graphics/animkeys.h"
-#include "figure/properties.h"
 #include "city/city_figures.h"
+#include "figuretype/figure_enemy_archer.h"
 #include "game/game_events.h"
 
-figures::model_t<figure_hunter_arrow> hunter_arrow_m;
-figures::model_t<figure_arrow> arrow_m;
-figures::model_t<figure_spear> spear_m;
-figures::model_t<figure_javelin> javelin_m;
-figures::model_t<figure_bolt> bolt_m;
+figure_hunter_arrow::static_params hunter_arrow_m;
+figure_arrow::static_params arrow_m;
+figure_spear::static_params spear_m;
+figure_javelin::static_params javelin_m;
+figure_bolt::static_params bolt_m;
 
-void figure_missile::create(int building_id, tile2i src, tile2i dst, e_figure_type type) {
-    figure* f = figure_create(type, src, DIR_0_TOP_RIGHT);
-    if (f->id) {
-        f->missile_damage = (type == FIGURE_BOLT ? 60 : 10);
-        f->set_home(building_id);
-        f->destination_tile = dst;
-        f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * dst.x(), 15 * dst.y(), 1);
+void figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
+    auto missile = figure_create(type, src, DIR_0_TOP_RIGHT)->dcast<figure_missile>();
+    if (missile) {
+        missile->set_home(0);
+        missile->base.missile_damage = (type == FIGURE_BOLT ? 60 : 10);
+        missile->base.destination_tile = dst;
+        missile->base.set_cross_country_direction(missile->base.cc_coords.x, missile->base.cc_coords.y, 15 * dst.x(), 15 * dst.y(), 1);
+        missile->runtime_data().shooter_id = fid;
     }
+}
+
+void figure_missile::on_create() {
+    auto &d = runtime_data();
+    auto shooter = figure_get<figure_enemy_archer>(d.shooter_id);
+    d.missile_attack_value = (shooter ? shooter->missile_attack_value() : 10);
 }
 
 void figure_missile::figure_before_action() {
@@ -63,9 +70,8 @@ void figure_missile::missile_hit_target(int target_id, int legionary_type) {
         break;
     }
 
-    const figure_properties& target_props = figure_properties_for_type(target->type);
     int target_max_damage = target->max_damage();
-    int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
+    int damage_inflicted = runtime_data().missile_attack_value - target->missile_defense_value();
 
     formation *m = formation_get(target->formation_id);
     if (damage_inflicted < 0) {
@@ -141,18 +147,17 @@ void figure_bolt::figure_action() {
     int target_id = get_non_citizen_on_tile();
     if (target_id) {
         figure* target = figure_get(target_id);
-        const figure_properties& target_props = figure_properties_for_type(target->type);
-        int max_damage = target->max_damage();
-        int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
+        int target_max_damage = target->max_damage();
+        int damage_inflicted = runtime_data().missile_attack_value - target->missile_defense_value();
         if (damage_inflicted < 0) {
             damage_inflicted = 0;
         }
 
         int target_damage = damage_inflicted + target->damage;
-        if (target_damage <= max_damage) {
+        if (target_damage <= target_max_damage) {
             target->damage = target_damage;
         } else { // poof target
-            target->damage = max_damage + 1;
+            target->damage = target_max_damage + 1;
             target->kill();
             target->wait_ticks = 0;
             target->play_die_sound();
@@ -166,6 +171,7 @@ void figure_bolt::figure_action() {
         g_sound.play_effect(SOUND_EFFECT_BALLISTA_HIT_GROUND);
         poof();
     }
+
     int dir = (16 + direction() - 2 * city_view_orientation()) % 16;
     base.main_image_id = anim(animkeys().walk).first_img() + 32 + dir;
 }

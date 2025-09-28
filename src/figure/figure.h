@@ -42,6 +42,8 @@ class figure_transport_ship;
 class figure_stonemason;
 class figure_warship;
 class figure_enemy;
+class figure_enemy_archer;
+class figure_missile;
 
 struct animation_t;
 
@@ -258,6 +260,7 @@ public:
     uint16_t max_damage() const;
     int8_t attack_value() const;
     int8_t defense_value() const;
+    int8_t missile_defense_value() const;
 
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
@@ -467,6 +470,7 @@ public:
         uint16_t max_damage;
         int8_t attack_value;
         int8_t defense_value;
+        int8_t missile_defense_value;
 
     protected:
         void base_load(archive arch);
@@ -535,6 +539,8 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
     ALLOW_SMART_CAST_FIGURE_I(enemy)
+    ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
+    ALLOW_SMART_CAST_FIGURE_I(missile)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -604,6 +610,8 @@ GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
 GENERATE_SMART_CAST_FIGURE(enemy)
+GENERATE_SMART_CAST_FIGURE(enemy_archer)
+GENERATE_SMART_CAST_FIGURE(missile)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

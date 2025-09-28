@@ -26,7 +26,6 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 
-#include "figure/properties.h"
 #include "graphics/image_groups.h"
 #include "grid/building.h"
 #include "grid/terrain.h"

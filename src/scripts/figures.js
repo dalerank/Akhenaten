@@ -660,7 +660,7 @@ figure_architector = {
     city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9}
     city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10}
 	}
-	
+
   category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
@@ -973,6 +973,7 @@ figure_constable = {
 	category: figure_category_citizen
 	max_damage: 100
 	attack_value: 5
+	defense_value: 3
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	max_roam_length : 640,
 }

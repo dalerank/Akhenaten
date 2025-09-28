@@ -1,7 +1,6 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
-#include "figure/properties.h"
 #include "city/city.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"
@@ -382,6 +381,10 @@ int8_t figure::attack_value() const {
     return figure_impl::params(type).attack_value;
 }
 
+int8_t figure::missile_defense_value() const {
+    return figure_impl::params(type).missile_defense_value;
+}
+
 int8_t figure::defense_value() const {
     return figure_impl::params(type).defense_value;
 }
@@ -670,6 +673,7 @@ void figure_impl::static_params::base_load(archive arch) {
     max_damage = arch.r_int("max_damage", 100);
     attack_value = arch.r_int("attack_value", 0);
     defense_value = arch.r_int("defense_value", 0);
+    missile_defense_value = arch.r_int("missile_defense_value", 0);
 }
 
 void figure_impl::update_animation() {

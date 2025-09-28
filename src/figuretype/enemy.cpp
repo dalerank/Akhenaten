@@ -8,7 +8,6 @@
 #include "figure/formation_layout.h"
 #include "figure/image.h"
 #include "figure/movement.h"
-#include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/figure_missile.h"
 #include "graphics/image.h"
