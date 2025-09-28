@@ -385,7 +385,6 @@ public:
 
     int target_is_alive();
 
-    void enemy_initial(formation* m);
     void enemy_marching(formation* m);
     void enemy_fighting(formation* m);
     void enemy_action(formation* m);

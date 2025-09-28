@@ -130,7 +130,7 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
     return 0;
 }
 
-int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, int attack_citizens, tile2i* tile) {
+target_figure figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, int attack_citizens) {
     figure* min_figure = 0;
     int min_distance = max_distance;
     for (figure* f: map_figures()) {
@@ -164,6 +164,7 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         case FIGURE_SPEAR:
             continue;
         }
+
         int distance;
         if (::smart_cast<figure_soldier>(f)) {
             distance = calc_maximum_distance(enemy->tile, f->tile);
@@ -172,17 +173,19 @@ int figure_combat_get_missile_target_for_enemy(figure* enemy, int max_distance, 
         } else {
             continue;
         }
+
         if (distance < min_distance
             && figure_movement_can_launch_cross_country_missile(enemy->tile, f->tile)) {
             min_distance = distance;
             min_figure = f;
         }
     }
+
     if (min_figure) {
-        map_point_store_result(min_figure->tile, *tile);
-        return min_figure->id;
+        return { min_figure->id, min_figure->tile };
     }
-    return 0;
+
+    return { 0, tile2i::invalid };
 }
 
 bool figure::is_attacking_native() {
@@ -251,7 +254,7 @@ void figure::hit_opponent() {
         }
     }
 
-   const int opponent_max_damage = opponent_props.max_damage;
+   const int opponent_max_damage = opponent->max_damage();
     int net_attack = figure_attack - opponent_defense;
     if (net_attack < 0)
         net_attack = 0;

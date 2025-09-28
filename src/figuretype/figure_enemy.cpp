@@ -53,13 +53,13 @@ void figure_enemy::enemy_initial(formation *m) {
     if (is_archer() || is_mounted_archer() || type() == FIGURE_ENEMY_EGYPTIAN_CAMEL || is_spearman()) {
         // missile throwers
         base.wait_ticks_missile++;
-        tile2i tile = { 0, 0 };
+        target_figure target;
         if (base.wait_ticks_missile > figure_properties_for_type(type()).missile_delay) {
             base.wait_ticks_missile = 0;
-            const bool found_target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4, &tile);
-            if (found_target) {
+            target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4);
+            if (target.fid) {
                 base.attack_image_offset = 1;
-                base.direction = calc_missile_shooter_direction(tile, base.destination_tile);
+                base.direction = calc_missile_shooter_direction(target.tile, base.destination_tile);
             } else {
                 base.attack_image_offset = 0;
             }
@@ -71,12 +71,12 @@ void figure_enemy::enemy_initial(formation *m) {
             // missile_type = FIGURE_SPEAR;
 
             if (base.attack_image_offset == 1) {
-                if (!tile.valid()) {
-                    map_point_get_last_result(tile);
+                if (!target.tile.valid()) {
+                    map_point_get_last_result(target.tile);
                 }
 
                 figure *f = figure_get(base.target_figure_id);
-                figure_missile::create(base.home_building_id, tile, f->tile, missilet);
+                figure_missile::create(base.home_building_id, target.tile, f->tile, missilet);
                 formation_record_missile_fired(m);
             }
             if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow())

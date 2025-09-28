@@ -3,7 +3,6 @@
 #include "figure/figure_type.h"
 
 struct figure_properties {
-    int max_damage;
     int attack_value;
     int defense_value;
     int missile_defense_value;
