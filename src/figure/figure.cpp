@@ -44,7 +44,7 @@ static const vec2i crowd_offsets[] = {
 };
 constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
-static std::map<e_figure_type, const figure_impl::static_params *> *figure_impl_params = nullptr;
+static std::array<const figure_impl::static_params *, FIGURE_MAX> figure_impl_params;
 
 using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
 const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
@@ -631,15 +631,15 @@ void figure_impl::kill() {
 }
 
 void figure_impl::params(e_figure_type e, const static_params &p) {
-    if (!figure_impl_params) {
-        figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();
-    }
-    figure_impl_params->insert(std::make_pair(e, &p));
+    //if (!figure_impl_params) {
+    //    figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();
+    //}
+    figure_impl_params[e] = &p;
 }
 
 const figure_impl::static_params &figure_impl::params(e_figure_type e) {
-    auto it = figure_impl_params->find(e);
-    return (it == figure_impl_params->end()) ? figure_impl::static_params::dummy : *it->second;
+    const auto& cfg = figure_impl_params[e];
+    return (!cfg ? figure_impl::static_params::dummy : *cfg);
 }
 
 void figure_impl::advance_action(int action, tile2i t) {
