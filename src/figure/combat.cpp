@@ -225,7 +225,7 @@ void figure::hit_opponent() {
     } else {
         attack_image_offset = 0;
     }
-    int figure_attack = props.attack_value;
+    int figure_attack = attack_value();
     int opponent_defense = opponent_props.defense_value;
 
     // attack modifiers
@@ -237,9 +237,11 @@ void figure::hit_opponent() {
         figure_attack += 4; // attack opponent on the (exposed) back
         events::emit( event_sound_effect{ SOUND_EFFECT_SWORD_SWING });
     }
+
     if (m->is_halted && m->figure_type == FIGURE_STANDARD_BEARER && attack_is_same_direction(attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
     }
+
     // defense modifiers
     if (opponent_formation->is_halted
         && (opponent_formation->figure_type == FIGURE_STANDARD_BEARER

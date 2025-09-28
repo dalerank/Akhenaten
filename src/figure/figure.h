@@ -256,6 +256,7 @@ public:
 
     e_figure_category category() const;
     uint16_t max_damage() const;
+    uint8_t attack_value() const;
 
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
@@ -463,6 +464,7 @@ public:
         bool is_enemy;
         e_figure_category category;
         uint16_t max_damage;
+        uint8_t attack_value;
 
     protected:
         void base_load(archive arch);
