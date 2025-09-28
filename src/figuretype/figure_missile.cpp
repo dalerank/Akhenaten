@@ -64,7 +64,7 @@ void figure_missile::missile_hit_target(int target_id, int legionary_type) {
     }
 
     const figure_properties& target_props = figure_properties_for_type(target->type);
-    int max_damage = target_props.max_damage;
+    int target_max_damage = target->max_damage();
     int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
 
     formation *m = formation_get(target->formation_id);
@@ -77,10 +77,10 @@ void figure_missile::missile_hit_target(int target_id, int legionary_type) {
     }
 
     int target_damage = damage_inflicted + target->damage;
-    if (target_damage <= max_damage) {
+    if (target_damage <= target_max_damage) {
         target->damage = target_damage;
     } else { // poof target
-        target->damage = max_damage + 1;
+        target->damage = target_max_damage + 1;
         target->kill();
         target->wait_ticks = 0;
         target->play_die_sound();
@@ -142,7 +142,7 @@ void figure_bolt::figure_action() {
     if (target_id) {
         figure* target = figure_get(target_id);
         const figure_properties& target_props = figure_properties_for_type(target->type);
-        int max_damage = target_props.max_damage;
+        int max_damage = target->max_damage();
         int damage_inflicted = figure_properties_for_type(type()).missile_attack_value - target_props.missile_defense_value;
         if (damage_inflicted < 0) {
             damage_inflicted = 0;

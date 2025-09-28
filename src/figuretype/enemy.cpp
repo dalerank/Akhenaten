@@ -18,82 +18,6 @@
 #include "sound/effect.h"
 #include "sound/sound.h"
 
-void figure::enemy_initial(formation* m) {
-    map_figure_update();
-    anim.frame = 0;
-    route_remove();
-    wait_ticks--;
-    if (wait_ticks <= 0) {
-        if (index_in_formation == 0) {
-            if (m->layout == FORMATION_ENEMY_MOB) {
-                g_sound.speech_play_file("Wavs/drums.wav", 255);
-            } else if (m->layout == FORMATION_ENEMY12) {
-                g_sound.speech_play_file("Wavs/horn2.wav", 255);
-            } else {
-                g_sound.speech_play_file("Wavs/horn1.wav", 255);
-            }
-        }
-
-        if (m->recent_fight) {
-            action_state = FIGURE_ACTION_154_ENEMY_FIGHTING;
-        } else {
-            tile2i formation_t = formation_layout_position(m->layout, index_in_formation);
-
-            destination_tile = m->destination.shifted(formation_t);
-            if (calc_general_direction(tile, destination_tile) < 8) {
-                action_state = FIGURE_ACTION_153_ENEMY_MARCHING;
-            }
-        }
-    }
-
-    if (type == FIGURE_ENEMY_EGYPTIAN_SPEAR || type == FIGURE_ENEMY_EGYPTIAN_CAMEL || type == FIGURE_ENEMY_EGYPTIAN_SPEAR
-        || type == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER) {
-        // missile throwers
-        wait_ticks_missile++;
-        tile2i tile = {0, 0};
-        if (wait_ticks_missile > figure_properties_for_type(type).missile_delay) {
-            wait_ticks_missile = 0;
-            if (figure_combat_get_missile_target_for_enemy(this, 10, g_city.figures.soldiers < 4, &tile)) {
-                attack_image_offset = 1;
-                direction = calc_missile_shooter_direction(tile, tile);
-            } else {
-                attack_image_offset = 0;
-            }
-        }
-
-        if (attack_image_offset) {
-            e_figure_type missile_type;
-            switch (m->enemy_type) {
-            case ENEMY_3_EGYPTIAN:
-            case ENEMY_4_HITTITE:
-            case ENEMY_5_HYKSOS:
-            case ENEMY_6_KUSHITE:
-                missile_type = FIGURE_ARROW;
-                break;
-
-            default:
-                missile_type = FIGURE_SPEAR;
-                break;
-            }
-            if (attack_image_offset == 1) {
-                if (tile.x() == -1 || tile.y() == -1) {
-                    map_point_get_last_result(tile);
-                }
-
-                figure* f = figure_get(target_figure_id);
-                figure_missile::create(home_building_id, tile, f->tile, missile_type);
-                formation_record_missile_fired(m);
-            }
-            if (missile_type == FIGURE_ARROW && city_sound_update_shoot_arrow())
-                g_sound.play_effect(SOUND_EFFECT_ARROW);
-
-            attack_image_offset++;
-            if (attack_image_offset > 100)
-                attack_image_offset = 0;
-        }
-    }
-}
-
 void figure::enemy_marching(formation* m) {
     wait_ticks--;
     if (wait_ticks <= 0) {
@@ -181,7 +105,7 @@ void figure::enemy_action(formation* m) {
         }
         break;
     case FIGURE_ACTION_151_ENEMY_INITIAL:
-        enemy_initial(m);
+        //enemy_initial(m);
         break;
     case FIGURE_ACTION_152_ENEMY_WAITING:
         map_figure_update();
