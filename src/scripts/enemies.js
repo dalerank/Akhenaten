@@ -11,6 +11,7 @@ figure_barbarian_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 3
     missile_attack_value : 6
     missile_delay : 50  
     terrain_usage : TERRAIN_USAGE_ANY
@@ -29,6 +30,7 @@ figure_barbarian_sword = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 4
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -54,6 +56,7 @@ figure_assyrian_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 2
     missile_attack_value : 6
     missile_delay : 50  
     terrain_usage : TERRAIN_USAGE_ANY
@@ -70,6 +73,7 @@ figure_assyrian_sword = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -113,6 +117,7 @@ figure_assyrian_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 4
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -138,6 +143,7 @@ figure_canaanite_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 2
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -154,6 +160,7 @@ figure_canaanite_sword = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 4
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -197,6 +204,7 @@ figure_canaanite_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -251,6 +259,7 @@ figure_egyptian_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 2
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -267,6 +276,7 @@ figure_egyptiane_spearman = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 3
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -283,6 +293,7 @@ figure_egyptian_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 4
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -310,6 +321,7 @@ figure_hittite_archer = {
     attack_value : 6
     missile_attack_value : 6
     missile_delay : 50 
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -334,6 +346,7 @@ figure_hittite_transport_ship = {
     category: figure_category_hostile
     max_damage : 290
     attack_value : 0
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -362,6 +375,7 @@ figure_hittite_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -389,6 +403,7 @@ figure_hyksos_archer = {
     attack_value : 6
     missile_attack_value : 6
     missile_delay : 50 
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -403,6 +418,7 @@ figure_hyksos_sword = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -446,6 +462,7 @@ figure_hyksos_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -471,6 +488,7 @@ figure_kushite_spearman = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 4
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -487,6 +505,7 @@ figure_kushite_axeman = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -530,6 +549,7 @@ figure_kushite_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -557,6 +577,7 @@ figure_libian_archer = {
     attack_value : 6
     missile_attack_value : 6
     missile_delay : 50 
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -567,6 +588,11 @@ figure_libian_sword = {
         death : { pack:PACK_ENEMY_LIBIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_LIBIAN, id:6, max_frames:12 }
     }
+
+    category: figure_category_hostile
+    max_damage : 90
+    attack_value : 7
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -610,6 +636,7 @@ figure_libian_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 4
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -636,6 +663,7 @@ figure_nubian_archer = {
     max_damage : 50
     attack_value : 6
     missile_attack_value : 6
+    defense_value: 1
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
@@ -651,6 +679,7 @@ figure_nubian_axeman = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -694,6 +723,7 @@ figure_nubian_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -719,6 +749,7 @@ figure_persian_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 1
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -749,6 +780,7 @@ figure_persian_transport_ship = {
     category: figure_category_hostile
     max_damage : 290
     attack_value : 0
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -763,6 +795,7 @@ figure_persian_war_ship = {
     category: figure_category_hostile
     max_damage : 290
     attack_value : 17
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -778,6 +811,7 @@ figure_persian_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -805,6 +839,7 @@ figure_phoenician_spearman = {
     attack_value : 6
     missile_attack_value : 6
     missile_delay : 50 
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -829,6 +864,7 @@ figure_phoenician_transport_ship = {
     category: figure_category_hostile
     max_damage : 290
     attack_value : 0
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -843,6 +879,7 @@ figure_phoenician_war_ship = {
     category: figure_category_hostile
     max_damage : 290
     attack_value : 17
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -858,6 +895,7 @@ figure_phoenician_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -883,6 +921,7 @@ figure_roman_archer = {
     category: figure_category_hostile
     max_damage : 50
     attack_value : 6
+    defense_value: 1
     missile_attack_value : 6
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
@@ -899,6 +938,7 @@ figure_roman_legioner = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -942,6 +982,7 @@ figure_roman_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -969,6 +1010,7 @@ figure_seapeople_archer = {
     attack_value : 6
     missile_attack_value : 6
     missile_delay : 50 
+    defense_value: 1
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -983,6 +1025,7 @@ figure_seapeople_axeman = {
     category: figure_category_hostile
     max_damage : 90
     attack_value : 7
+    defense_value: 2
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }
@@ -1026,6 +1069,7 @@ figure_seapeople_chariot = {
     category: figure_category_hostile
     max_damage : 120
     attack_value : 9
+    defense_value: 3
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
 }

@@ -226,7 +226,7 @@ void figure::hit_opponent() {
         attack_image_offset = 0;
     }
     int figure_attack = attack_value();
-    int opponent_defense = opponent_props.defense_value;
+    int opponent_defense = opponent->defense_value();
 
     // attack modifiers
     // if (type == /*FIGURE_WOLF*/)
