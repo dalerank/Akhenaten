@@ -106,7 +106,7 @@ top_menu_widget = {
 	    figures 		: menu_item({text:"xxx Figures", parameter:e_debug_render_figures})
 	    height 			: menu_item({text:"xxx Height", parameter:e_debug_render_height})
 	    marshland_depl	: menu_item({text:"xxx Vegetation Growth", parameter:e_debug_render_vegetation_growth})
-	    damage_fire 	: menu_item({text:"xxx Dmg fire", parameter:e_debug_render_damage_fire})
+	    damage_fire 	: menu_item({text:"xxx Damage", parameter:e_debug_render_damage})
 	    desirability 	: menu_item({text:"xxx Desirability", parameter:e_debug_render_desirability})
 	    shoreline   	: menu_item({text:"xxx River Shore", parameter:e_debug_render_river_shore})
 	    entertainment  	: menu_item({text:"xxx Entertainment", parameter:e_debug_render_overall_entertainment})

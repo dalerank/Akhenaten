@@ -19,9 +19,10 @@ public:
     virtual void main_image_update() override;
     virtual void cart_image_update() override;
 
-    int get_non_citizen_on_tile();
-    int get_citizen_on_tile();
-    void missile_hit_target(figure_id target_id, int legionary_type);
+    figure_id get_non_citizen_on_tile();
+    figure_id get_citizen_on_tile();
+    void missile_hit_figure(figure_id target_id, int legionary_type);
+    void missile_hit_building(building_id target_id);
     void set_image_direction(vec2i src, vec2i dst);
     figure* shooter() const;
 

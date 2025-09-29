@@ -309,7 +309,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_road_access);
         iob->bind____skip(1);
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->damage_risk);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->damage_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->fire_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->fire_duration);
         iob->bind(BIND_SIGNATURE_UINT8, &b->fire_proof);

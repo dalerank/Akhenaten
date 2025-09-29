@@ -610,10 +610,6 @@ bool figure::move_ticks_cross_country(int num_ticks) {
     bool is_at_destination = false;
     while (num_ticks > 0) {
         num_ticks--;
-        if (missile_damage > 0)
-            missile_damage--;
-        else
-            missile_damage = 0;
         if (cc_delta.x + cc_delta.y <= 0) {
             is_at_destination = true;
             break;
@@ -623,14 +619,14 @@ bool figure::move_ticks_cross_country(int num_ticks) {
     tile2i old = tile;
     tile.set(cc_coords.x / 15, cc_coords.y / 15);
 
-    if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) {
+    if (map_terrain_is(tile, TERRAIN_BUILDING)) {
         in_building_wait_ticks = 8;
     } else if (in_building_wait_ticks) {
         in_building_wait_ticks--;
     }
 
     map_figure_add();
-    if (tile.grid_offset() != old.grid_offset()) {
+    if (tile != old) {
         previous_tile = old;
     }
 

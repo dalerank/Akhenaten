@@ -457,6 +457,19 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
+void building::force_damage(bool fire, int8_t value) {
+    const bool valid = (state == BUILDING_STATE_VALID || state == BUILDING_STATE_MOTHBALLED);
+    if (!valid) {
+        return;
+    }
+
+    if (fire) {
+        fire_risk += value;
+    } else {    
+        damage_risk += value;
+    }
+}
+
 void building::destroy_by_collapse() {
     assert(is_main());
 
