@@ -3,6 +3,7 @@
 #include "grid/figure.h"
 #include "sound/sound.h"
 #include "graphics/animkeys.h"
+#include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figuretype/figure_enemy_archer.h"
 #include "game/game_events.h"
@@ -35,11 +36,11 @@ void figure_missile::figure_before_action() {
 
 }
 
-int figure_missile::get_non_citizen_on_tile() {
+figure_id figure_missile::get_non_citizen_on_tile() {
     return map_figure_foreach_until(tile(), TEST_SEARCH_NON_CITIZEN);
 }
 
-int figure_missile::get_citizen_on_tile() {
+figure_id figure_missile::get_citizen_on_tile() {
     return map_figure_foreach_until(tile(), TEST_SEARCH_CITIZEN);
 }
 
@@ -70,12 +71,22 @@ void figure_missile::figure_action() {
         poof();
     }
 
-    int should_die = base.move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile();
-    if (target_id) {
-        missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
+    bool should_die = base.move_ticks_cross_country(4);
+    figure_id target_id = get_non_citizen_on_tile();
+    if (target_id && target_id != runtime_data().shooter_id) {
+        missile_hit_figure(target_id, FIGURE_STANDARD_BEARER);
         events::emit(event_sound_effect{ SOUND_EFFECT_ARROW_HIT });
-    } else if (should_die) {
+        return;
+    } 
+
+    building* b = building_at(tile());
+    if (b->is_valid()) {
+        missile_hit_building(b->id);
+        events::emit(event_sound_effect{ SOUND_EFFECT_ARROW_HIT });
+        return;
+    }
+
+    if (should_die) {
         poof();
     }
 }
@@ -89,7 +100,19 @@ void figure_missile::cart_image_update() {
     // nothing
 }
 
-void figure_missile::missile_hit_target(figure_id target_id, int legionary_type) {
+void figure_missile::missile_hit_building(building_id target_id) {
+    building *b = building_get(target_id);
+
+    if (!b->is_valid()) {
+        return;
+    }
+
+    b->force_damage(false, runtime_data().missile_attack_value);
+
+    poof();
+}
+
+void figure_missile::missile_hit_figure(figure_id target_id, int legionary_type) {
     figure* target = figure_get(target_id);
 
     while (target->id) {
@@ -139,7 +162,7 @@ void figure_spear::figure_action() {
     int should_die = base.move_ticks_cross_country(4);
     int target_id = get_citizen_on_tile();
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_STANDARD_BEARER);
+        missile_hit_figure(target_id, FIGURE_STANDARD_BEARER);
         events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
     } else if (should_die) {
         poof();
@@ -159,7 +182,7 @@ void figure_javelin::figure_action() {
     int should_die = base.move_ticks_cross_country(4);
     int target_id = get_non_citizen_on_tile();
     if (target_id) {
-        missile_hit_target(target_id, FIGURE_ENEMY_KINGDOME_INFANTRY);
+        missile_hit_figure(target_id, FIGURE_ENEMY_KINGDOME_INFANTRY);
         g_sound.play_effect(SOUND_EFFECT_JAVELIN);
     } else if (should_die) {
         poof();

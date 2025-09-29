@@ -183,7 +183,7 @@ public:
     tile2i tile;
     uint8_t orientation;
     short native_meeting_center_id;
-    unsigned short road_network_id;
+    uint16_t road_network_id;
     short houses_covered;
     short percentage_houses_covered;
     short distance_from_entry;
@@ -192,14 +192,14 @@ public:
     unsigned char figure_roam_direction;
     bool has_water_access;
     bool has_open_water_access;
-    int prev_part_building_id;
-    int next_part_building_id;
+    figure_id prev_part_building_id;
+    figure_id next_part_building_id;
     e_resource first_material_id;
     e_resource second_material_id;
     short stored_amount_first;
     short stored_amount_second;
     bool has_well_access;
-    short num_workers;
+    uint16_t num_workers;
     e_fancy_state fancy_state;
     e_labor_category labor_category;
     e_resource output_resource_first_id;
@@ -212,22 +212,22 @@ public:
     uint8_t spawned_worker_this_month;
     uint8_t curse_days_left;
     uint8_t blessing_days_left;
-    short damage_risk;
-    short fire_risk;
+    uint16_t damage_risk;
+    uint16_t fire_risk;
     short fire_duration;
-    unsigned char health_proof;
-    unsigned char fire_proof; // cannot catch fire or collapse
-    unsigned char damage_proof;
-    unsigned char map_random_7bit;
+    uint8_t health_proof;
+    uint8_t fire_proof; // cannot catch fire or collapse
+    uint8_t damage_proof;
+    uint8_t map_random_7bit;
     short formation_id;
     bool has_plague;
-    signed char desirability;
+    int8_t desirability;
     bool is_deleted;
     bool is_adjacent_to_water;
     e_destroy_reason destroy_reason;
     uint16_t storage_id;
     union {
-        signed char native_anger;
+        int8_t native_anger;
     } sentiment;
     animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
@@ -311,6 +311,7 @@ public:
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
+    void force_damage(bool fire, int8_t value);
     void destroy_by_collapse();
     void destroy_by_flooded();
     void destroy_by_fire();

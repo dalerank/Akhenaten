@@ -134,6 +134,7 @@ e_victory_state city_t::determine_victory_state() {
             if (scenario_criteria_time_limit_enabled() || scenario_criteria_survival_enabled())
                 has_criteria = 1;
         }
+
         if (game.simtime.year >= scenario_criteria_max_year()) {
             if (scenario_criteria_time_limit_enabled())
                 state = e_victory_state_lost;
