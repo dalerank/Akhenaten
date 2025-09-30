@@ -280,7 +280,6 @@ void figure::action_perform() {
         case 36: editor_flag_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
-        case 45: enemy45_sword_action(); break;
         case 46: enemy_camel_action(); break;
         case 47: enemy_elephant_action(); break;
         case 48: enemy_chariot_action(); break;

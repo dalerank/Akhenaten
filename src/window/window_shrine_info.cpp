@@ -13,7 +13,7 @@ struct shrine_info_window : public building_info_window_t<shrine_info_window> {
         xstring text;
     };
 
-    std::vector<option> gods;
+    svector<option, 8> gods;
 
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {

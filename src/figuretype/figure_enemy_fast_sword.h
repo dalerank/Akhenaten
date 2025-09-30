@@ -2,9 +2,26 @@
 
 #include "figuretype/figure_enemy.h"
 
+enum e_action_enemy_fast_sword {
+    ACTION_151_ENEMY_FAST_SWORD_INITIAL = 151,
+    ACTION_152_ENEMY_FAST_SWORD_WAITING = 152,
+    ACTION_153_ENEMY_FAST_SWORD_MARCHING = 153,
+    ACTION_154_ENEMY_FAST_SWORD_ATTACK = 154,
+};
+
 class figure_enemy_fast_sword : public figure_enemy {
 public:
     figure_enemy_fast_sword(figure *f) : figure_enemy(f) {}
+
+    template<typename T>
+    struct static_params_t : public figures::model_t<T> {
+        uint16_t interval_attack_delay = 100; // how often attack (lower is more often)
+        virtual void archive_load(archive arch) override;
+    };
+
+    struct runtime_data_t {
+        uint8_t damage_action = 0;
+    } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override {}
     virtual void figure_action() override;
@@ -15,7 +32,11 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
-    bool fight_enemy(int category, int max_distance);
+    virtual void enemy_initial(formation *m) override;
+    virtual void enemy_marching(formation *m) override;
+    virtual void enemy_fighting(formation *m) override;
+
+    virtual int8_t interval_attack_delay() const { return 100; }
 };
 
 class figure_barbarian_sword : public figure_enemy_fast_sword {
@@ -23,8 +44,9 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_SWORD, figure_barbarian_sword)
     figure_barbarian_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public static_params_t<figure_barbarian_sword> {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "barb_swd" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };

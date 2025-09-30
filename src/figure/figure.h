@@ -363,7 +363,6 @@ public:
     void editor_flag_action();
     void noble_action();
     void indigenous_native_action();
-    void enemy45_sword_action();
     void enemy_camel_action();
     void enemy_elephant_action();
     void enemy_chariot_action();

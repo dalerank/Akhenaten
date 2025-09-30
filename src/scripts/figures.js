@@ -309,6 +309,8 @@ figure_crocodile = {
 	max_damage: 200
 	attack_value: 7
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
+	max_hungry : 25
+	max_hunting_distance : 10
 	chase_speed_mult : 2
 }
 
