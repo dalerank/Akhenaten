@@ -26,7 +26,8 @@ void building_pavilion::static_params::archive_load(archive arch) {
     }
 
     for (auto &pdir : place_dir) {
-        pdir.load(arch, bstring32().printf("place_dir_%d", std::distance(place_dir, &pdir)).c_str());
+        bstring32 key; key.printf("place_dir_%d", std::distance(place_dir, &pdir));
+        arch.r(key, pdir);
     }
 
     dancer_tile = anim[animkeys().base].first_img();
@@ -43,12 +44,6 @@ void building_pavilion::static_params::preview_offset::load(archive arch, pcstr 
         booth = d_arch.r_vec2i("booth");
         stand_b_img = d_arch.r_int("stand_b_img");
         stand_e_img = d_arch.r_int("stand_e_img");
-    });
-}
-
-void pavilion_place_offset::load(archive arch, pcstr section) {
-    arch.r_array(section, items, [this] (archive d_arch, auto &item) {
-        d_arch.r(item);
     });
 }
 

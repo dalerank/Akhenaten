@@ -9,8 +9,9 @@ struct pavilion_place_offset {
         bool main;
     };
     svector<item, 8> items;
-    void load(archive arch, pcstr section);
-};
+}; 
+ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)
+ANK_CONFIG_STRUCT(pavilion_place_offset, items)
 
 class building_pavilion : public building_entertainment {
 public:
@@ -52,4 +53,3 @@ public:
 
     virtual void spawn_figure() override;
 };
-ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)
