@@ -101,6 +101,7 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
             return f->id;
         }
     }
+
     return 0;
 }
 

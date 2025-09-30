@@ -141,36 +141,6 @@ int figure::get_missile_direction(const formation* m) {
     return figure_image_normalize_direction(dir);
 }
 
-void figure::enemy45_sword_action() {
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
-
-    speed_multiplier = 1;
-    formation* m = formation_get(formation_id);
-    enemy_action(m);
-    int dir = get_direction();
-
-    switch (m->enemy_type) {
-    case ENEMY_3_EGYPTIAN:
-    case ENEMY_4_HITTITE:
-    case ENEMY_5_HYKSOS:
-        break;
-    default:
-        return;
-    }
-    if (action_state == FIGURE_ACTION_150_ATTACK) {
-        if (attack_image_offset >= 12)
-            main_image_id = 545 + dir + 8 * ((attack_image_offset - 12) / 2);
-        else
-            main_image_id = 545 + dir;
-    } else if (action_state == FIGURE_ACTION_149_CORPSE)
-        main_image_id = 593 + figure_image_corpse_offset();
-    else if (direction == DIR_FIGURE_ATTACK)
-        main_image_id = 545 + dir + 8 * (anim.frame / 2);
-    else
-        main_image_id = 449 + dir + 8 * anim.frame;
-}
-
 void figure::enemy_camel_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;

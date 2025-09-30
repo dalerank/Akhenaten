@@ -15,14 +15,13 @@ public:
     figure_enemy_archer(figure *f) : figure_enemy(f) {}
     virtual figure_enemy_archer *dcast_enemy_archer() override { return this; }
 
-    struct base_params_t {
+    template<typename T>
+    struct static_params_t : public figures::model_t<T> {
         int8_t missile_attack_value;
         int8_t missile_delay;
         int8_t attack_distance;
-    };
+        e_figure_type misslie_type = FIGURE_ARROW;
 
-    template<typename T>
-    struct static_params_t : public base_params_t, public figures::model_t<T> {
         virtual void archive_load(archive arch) override;
     };
 
@@ -52,7 +51,6 @@ public:
     figure_barbarian_archer(figure *f) : figure_enemy_archer(f) {}
 
     struct static_params : public static_params_t<figure_barbarian_archer> {
-        e_figure_type misslie_type = FIGURE_ARROW;
     } FIGURE_STATIC_DATA_T;
 
     virtual e_figure_type missile_type() const override { return current_params().misslie_type; }

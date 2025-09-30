@@ -19,6 +19,7 @@ void figure_enemy_archer::static_params_t<T>::archive_load(archive arch) {
     missile_attack_value = arch.r_int("missile_attack_value");
     missile_delay = arch.r_int("missile_delay");
     attack_distance = arch.r_int("attack_distance", 5);
+    misslie_type = arch.r_type<e_figure_type>("misslie_type", FIGURE_ARROW);
 }
 
 void figure_enemy_archer::enemy_initial(formation *m) {
@@ -38,15 +39,14 @@ void figure_enemy_archer::enemy_initial(formation *m) {
         }
 
         if (m->recent_fight) {
-            advance_action(FIGURE_ACTION_154_ENEMY_FIGHTING);
+            advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
         } else {
             tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
 
             base.destination_tile = m->destination.shifted(formation_t);
-
             int dir = calc_general_direction(tile(), base.destination_tile);
             if (dir < 8) {
-                advance_action(FIGURE_ACTION_153_ENEMY_MARCHING);
+                advance_action(ACTION_153_ENEMY_ARCHER_MARCHING);
             }
         }
     }
@@ -99,29 +99,28 @@ void figure_enemy_archer::enemy_marching(formation *m) {
 
         base.destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
             return;
         }
 
         set_destination(m->destination_building_id);
-
         route_remove();
     }
 
     base.move_ticks(base.speed_multiplier);
     if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
     }
 
     float dist = tile().dist(base.destination_tile);
     if (dist < attack_distance()) {
-        advance_action(FIGURE_ACTION_154_ENEMY_FIGHTING);
+        advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
     }
 }
 
 void figure_enemy_archer::enemy_fighting(formation *m) {
     if (!m->recent_fight) {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
     }
 
     if (city_sound_update_march_enemy()) {
@@ -166,11 +165,11 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             base.destination_tile = target->tile;
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
             base.target_figure_id = 0;
         }
     } else {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
         base.wait_ticks = 50;
     }
 }
