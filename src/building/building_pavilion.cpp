@@ -22,7 +22,8 @@ building_pavilion::static_params pavilion_m;
 
 void building_pavilion::static_params::archive_load(archive arch) {
     for (auto &pdir : preview_dir) {
-        pdir.load(arch, bstring32().printf("preview_dir_%d", std::distance(preview_dir, &pdir)).c_str());
+        bstring32 key; key.printf("preview_dir_%d", std::distance(preview_dir, &pdir));
+        arch.r(key, pdir);
     }
 
     for (auto &pdir : place_dir) {
@@ -34,17 +35,6 @@ void building_pavilion::static_params::archive_load(archive arch) {
     booth_tile = anim[animkeys().booth].first_img();
     musician_tile_s = anim[animkeys().stand_sn_s].first_img();
     musician_tile_e = anim[animkeys().stand_sn_e].first_img();
-}
-
-void building_pavilion::static_params::preview_offset::load(archive arch, pcstr section) {
-    arch.r_section(section, [this] (archive d_arch) {
-        stand = d_arch.r_vec2i("stand");
-        stand_b = d_arch.r_vec2i("stand_b");
-        stand_e = d_arch.r_vec2i("stand_e");
-        booth = d_arch.r_vec2i("booth");
-        stand_b_img = d_arch.r_int("stand_b_img");
-        stand_e_img = d_arch.r_int("stand_e_img");
-    });
 }
 
 void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
