@@ -46,18 +46,11 @@ void building_pavilion::static_params::preview_offset::load(archive arch, pcstr 
     });
 }
 
-void building_pavilion::static_params::place_offset::load(archive arch, pcstr section) {
+void pavilion_place_offset::load(archive arch, pcstr section) {
     arch.r_array(section, items, [this] (archive d_arch, auto &item) {
-        item.load(d_arch);
+        d_arch.r(item);
     });
 }
-
-void building_pavilion::static_params::place_offset::item::load(archive arch) {
-    main = arch.r_bool("main");
-    offset = arch.r_vec2i("offset");
-    type = arch.r_type<e_building_type>("type");
-}
-
 
 void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(4, 4);

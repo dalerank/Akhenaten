@@ -85,7 +85,8 @@ bool model_load_file(const char* filepath,
     for (int i = 0; i < NUM_BUILDINGS; i++) {
         ptr += index_of(ptr, '{', filesize);
 
-        ptr = get_value(ptr, end_ptr, &buildings[i].cost);
+        int tmp;
+        ptr = get_value(ptr, end_ptr, &tmp);
         ptr = get_value(ptr, end_ptr, &buildings[i].desirability_value);
         ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step);
         ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step_size);

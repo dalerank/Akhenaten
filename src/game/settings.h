@@ -47,7 +47,8 @@ struct sound_settings {
 };
 
 struct game_settings {
-    static constexpr int MAX_PERSONAL_SAVINGS = 100;
+    static constexpr uint8_t MAX_PERSONAL_SAVINGS = 100;
+    static constexpr uint8_t MAX_DIFFICULTY_LEVEL = 4;
     // display settings
     vec2i display_size;
     // sound settings
@@ -79,7 +80,7 @@ struct game_settings {
         void increase() { state = std::clamp<e_difficulty>((e_difficulty)(state + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
         void decrease() { state = std::clamp<e_difficulty>((e_difficulty)(state - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
-        e_difficulty operator()() const { return state; }
+        e_difficulty operator()() const { return (e_difficulty)std::clamp<uint8_t>(state, 0, MAX_DIFFICULTY_LEVEL); }
 
         e_difficulty state;
     } difficulty;

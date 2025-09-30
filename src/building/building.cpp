@@ -14,6 +14,7 @@
 #include "figure/formation_batalion.h"
 #include "game/resource.h"
 #include "game/undo.h"
+#include "game/settings.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -1251,7 +1252,7 @@ void building_impl::static_params::archive_load(archive arch) {
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
-    cost = arch.r_int("cost");
+    arch.r("cost", cost);
 
     city_labor_t::set_category(type, labor_category);
 
@@ -1407,9 +1408,9 @@ bool building_impl::static_params::plane_ghost_allow_tile(build_planner &p, tile
     return (map_has_figure_at(tile) == false);
 }
 
-int building_impl::static_params::get_cost() const {
-    const int mcost = model_get_building(type)->cost;
-    return cost > 0 ? cost : mcost;
+uint16_t building_impl::static_params::get_cost() const {
+    const uint16_t mcost = this->cost[g_settings.difficulty()];
+    return mcost;
 }
 
 io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t version) {
