@@ -24,15 +24,10 @@ struct shrine_info_window : public building_info_window_t<shrine_info_window> {
         inherited::load(arch, section);
 
         gods.clear();
-        arch.r_objects("gods", [this] (pcstr key, archive g_arch) {
-            auto &config = gods.emplace_back();
-            config.type = g_arch.r_type<e_building_type>("type");
-            config.title = g_arch.r_string("title");
-            config.text = g_arch.r_string("text");
-            g_arch.r_desc("image", config.image);
-        });
+        arch.r("gods", gods);
     }
 };
+ANK_CONFIG_STRUCT(shrine_info_window::option, type, image, title, text)
 
 shrine_info_window shrine_infow;
 

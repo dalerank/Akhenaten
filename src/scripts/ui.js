@@ -694,13 +694,13 @@ shrine_info_window = {
         button_close : close_button({}),
     },
 
-    gods : {
-        osiris       : { type: BUILDING_SHRINE_OSIRIS, image : {pack:PACK_UNLOADED, id:21, offset:21}, title:[161, 0], text:[161, 1] },
-        ra           : { type: BUILDING_SHRINE_RA, image : {pack:PACK_UNLOADED, id:21, offset:22}, title:[161, 2], text:[161, 3] },
-        ptah         : { type: BUILDING_SHRINE_PTAH, image : {pack:PACK_UNLOADED, id:21, offset:23}, title:[161, 4], text:[161, 5] },
-        seth         : { type: BUILDING_SHRINE_SETH, image : {pack:PACK_UNLOADED, id:21, offset:24}, title:[161, 6], text:[161, 7] },
-        bast         : { type: BUILDING_SHRINE_BAST, image : {pack:PACK_UNLOADED, id:21, offset:25}, title:[161, 8], text:[161, 9] },
-    }
+    gods : [
+        { type: BUILDING_SHRINE_OSIRIS, image : {pack:PACK_UNLOADED, id:21, offset:21}, title:[161, 0], text:[161, 1] },
+        { type: BUILDING_SHRINE_RA, image : {pack:PACK_UNLOADED, id:21, offset:22}, title:[161, 2], text:[161, 3] },
+        { type: BUILDING_SHRINE_PTAH, image : {pack:PACK_UNLOADED, id:21, offset:23}, title:[161, 4], text:[161, 5] },
+        { type: BUILDING_SHRINE_SETH, image : {pack:PACK_UNLOADED, id:21, offset:24}, title:[161, 6], text:[161, 7] },
+        { type: BUILDING_SHRINE_BAST, image : {pack:PACK_UNLOADED, id:21, offset:25}, title:[161, 8], text:[161, 9] },
+    ]
 }
 
 info_window_mastaba = {
