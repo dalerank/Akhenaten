@@ -1049,7 +1049,7 @@ void build_planner::construction_cancel() {
 
 void build_planner::construction_update(tile2i tile) {
     end = tile;
-    if (end == tile2i(-1, -1)) {
+    if (!end.valid()) {
         return;
     }
 
@@ -1059,7 +1059,7 @@ void build_planner::construction_update(tile2i tile) {
     }
 
     map_property_clear_constructing_and_deleted();
-    int current_cost = model_get_building(build_type)->cost;
+    uint16_t current_cost = building_impl::params(build_type).get_cost();
     int global_rotation = building_rotation_global_rotation();
     int items_placed = 1;
 

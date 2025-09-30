@@ -2,6 +2,16 @@
 
 #include "building/building_entertainment.h"
 
+struct pavilion_place_offset {
+    struct item {
+        e_building_type type = BUILDING_NONE;
+        vec2i offset;
+        bool main;
+    };
+    svector<item, 8> items;
+    void load(archive arch, pcstr section);
+};
+
 class building_pavilion : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion, building_entertainment)
@@ -20,19 +30,8 @@ public:
             void load(archive arch, pcstr section);
         };
 
-        struct place_offset {
-            struct item {
-                e_building_type type = BUILDING_NONE;
-                vec2i offset;
-                bool main;
-                void load(archive arch);
-            };
-            svector<item, 8> items;
-            void load(archive arch, pcstr section);
-        };
-
         preview_offset preview_dir[8];
-        place_offset place_dir[8];
+        pavilion_place_offset place_dir[8];
 
         using inherited::archive_load;
         virtual void archive_load(archive arch) override;
@@ -53,3 +52,4 @@ public:
 
     virtual void spawn_figure() override;
 };
+ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)

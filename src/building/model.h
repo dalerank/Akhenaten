@@ -6,7 +6,6 @@
  * Building model
  */
 struct model_building {
-    int cost;                   /**< Cost of structure or of one tile of a structure (for walls) */
     int desirability_value;     /**< Initial desirability value */
     int desirability_step;      /**< Desirability step (in tiles) */
     int desirability_step_size; /**< Desirability step size */

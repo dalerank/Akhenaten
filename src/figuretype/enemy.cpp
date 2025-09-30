@@ -264,16 +264,14 @@ void figure::enemy49_fast_sword_action() {
 }
 
 void figure::enemy50_sword_action() {
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
-
     speed_multiplier = 1;
     formation* m = formation_get(formation_id);
     enemy_action(m);
     int dir = get_direction();
 
-    if (m->enemy_type != ENEMY_2_CANAANITE && m->enemy_type != ENEMY_3_EGYPTIAN)
+    if (m->enemy_type != ENEMY_2_CANAANITE && m->enemy_type != ENEMY_3_EGYPTIAN) {
         return;
+    }
 
     if (action_state == FIGURE_ACTION_150_ATTACK) {
         if (attack_image_offset >= 12)

@@ -468,7 +468,7 @@ public:
         bool check_water_access;
         xstring info_title_id;
         int num_types;
-        int cost;
+        std::array<uint16_t, 5> cost;
         struct {
             bool canals;
             bool roads;
@@ -506,7 +506,7 @@ public:
         virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
         virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
         virtual bool is_unique_building() const { return unique_building; }
-        virtual int get_cost() const;
+        virtual uint16_t get_cost() const;
     };
 
     building_impl(building &b) : base(b) {}

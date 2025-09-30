@@ -197,7 +197,7 @@ void build_menu_widget::draw_menu_buttons() {
             lang_text_draw_centered(tgroup.c_str(), x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         }
 
-        int cost = model_get_building(type)->cost;
+        uint16_t cost = building_impl::params(type).get_cost();
         if (type == BUILDING_MENU_FORTS) {
             cost = 0;
         }
