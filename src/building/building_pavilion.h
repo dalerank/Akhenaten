@@ -13,6 +13,12 @@ struct pavilion_place_offset {
 ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)
 ANK_CONFIG_STRUCT(pavilion_place_offset, items)
 
+struct pavilion_preview_offset {
+    vec2i stand, stand_b, stand_e, booth;
+    int stand_b_img = 0, stand_e_img = 0;
+};
+ANK_CONFIG_STRUCT(pavilion_preview_offset, stand, stand_b, stand_e, booth, stand_b_img, stand_e_img);
+
 class building_pavilion : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_PAVILLION, building_pavilion, building_entertainment)
@@ -25,13 +31,7 @@ public:
         int musician_tile_s = 0;
         int musician_tile_e = 0;
 
-        struct preview_offset {
-            vec2i stand, stand_b, stand_e, booth;
-            int stand_b_img = 0, stand_e_img = 0;
-            void load(archive arch, pcstr section);
-        };
-
-        preview_offset preview_dir[8];
+        pavilion_preview_offset preview_dir[8];
         pavilion_place_offset place_dir[8];
 
         using inherited::archive_load;
