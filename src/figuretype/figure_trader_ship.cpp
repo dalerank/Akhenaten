@@ -321,10 +321,6 @@ void figure_trade_ship::poof() {
     figure_carrier::poof();
 }
 
-const animations_t &figure_trade_ship::anim() const {
-    return trader_ship_m.anim;
-}
-
 void figure_trade_ship::update_day() {
     const bool on_raid = action_state(FIGURE_ACTION_114_TRADE_SHIP_ANCHORED, FIGURE_ACTION_112_TRADE_SHIP_MOORED);
     if (!on_raid) {

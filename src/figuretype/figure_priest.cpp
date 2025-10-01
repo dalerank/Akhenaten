@@ -180,10 +180,6 @@ e_overlay figure_priest::get_overlay() const {
     return OVERLAY_NONE;
 }
 
-const animations_t &figure_priest::anim() const {
-    return priest_m.anim;
-}
-
 void figure_priest::update_animation() {
     building* temple = home();
     xstring animkey = {};

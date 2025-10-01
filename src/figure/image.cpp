@@ -87,6 +87,10 @@ vec2i figure::tile_pixel_coords() {
     return {x, y};
 }
 
+void figure::image_set_animation(const xstring &anim) {
+    image_set_animation(dcast()->anim(anim));
+}
+
 void figure::image_set_animation(const animation_t &anim) {
     if (anim.pack > 0 || anim.id > 0) {
         this->anim.setup(anim);

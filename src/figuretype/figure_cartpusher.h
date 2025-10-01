@@ -36,7 +36,7 @@ public:
         uint8_t wait_on_calculate_destination;
 
         virtual void archive_load(archive arch) override;
-    } BUILDING_STATIC_DATA_T;
+    } FIGURE_STATIC_DATA_T;
 
     virtual void figure_before_action() override;
     virtual void before_poof() override;

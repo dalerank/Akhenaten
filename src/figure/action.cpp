@@ -198,15 +198,14 @@ void figure::action_perform() {
         use_cross_country = false;
 
         // base lookup data
-        const auto &params = figure_impl::params(type);
+        const auto &params = figure_static_params::get(type);
         if (params.terrain_usage != -1 && terrain_usage == 0xff) {
             terrain_usage = params.terrain_usage;
         }
         max_roam_length = params.max_roam_length;
         speed_multiplier = params.speed_mult;
         if (!this->anim.key) {
-            const animation_t &def_anim = params.anim[animkeys().walk];
-            image_set_animation(def_anim);
+            image_set_animation(animkeys().walk);
         }
 
         // check for building being alive (at the start of the action)

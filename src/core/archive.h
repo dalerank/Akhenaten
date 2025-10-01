@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include <variant>
 
 struct animation_t;
@@ -93,10 +94,21 @@ struct archive {
 
     template<typename T>
     inline void r(pcstr name, std::unordered_set<T> &v) {
+        v.clear();
         this->r_array(name, [&] (archive arch) {
             T itemv;
             arch.r(itemv);
             v.insert(itemv);
+        });
+    }
+
+    template<typename N, typename T>
+    inline void r(pcstr name, std::unordered_map<N, T> &v) {
+        v.clear();
+        this->r_objects(name, [&] (pcstr key, archive arch) {
+            auto &itemv = v[key];
+            itemv.key = key;
+            arch.r(itemv);
         });
     }
 

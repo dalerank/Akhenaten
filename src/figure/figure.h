@@ -43,6 +43,7 @@ class figure_stonemason;
 class figure_warship;
 class figure_enemy;
 class figure_enemy_archer;
+class figure_fireman;
 class figure_missile;
 
 struct animation_t;
@@ -306,6 +307,7 @@ public:
 
     // image.c
     void image_set_animation(const animation_t &anim);
+    void image_set_animation(const xstring &anim);
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void figure_image_update(bool refresh_only);
     void figure_image_set_sled_offset(int direction);
@@ -439,7 +441,7 @@ public:
 #define FIGURE_RUNTIME_DATA_T FIGURE_RUNTIME_DATA(runtime_data_t)
 
 #define FIGURE_STATIC_DATA(type) ;                              \
-    static const type &current_params() { return (const type &)params(TYPE); }
+    static const type &current_params() { return (const type &)figure_static_params::get(TYPE); }
 
 #define FIGURE_STATIC_DATA_T FIGURE_STATIC_DATA(static_params)
 
@@ -450,31 +452,36 @@ struct fproperty {
     std::function<bvariant(figure&, const xstring&)> handler;
 };
 
+struct figure_static_params {
+    static figure_static_params dummy;
+
+    e_figure_type ftype;
+    pcstr name;
+
+    int8_t terrain_usage;
+    animations_t animations;
+    figure_sounds_t sounds;
+    uint16_t max_roam_length;
+    uint8_t speed_mult;
+    metainfo meta;
+    e_permission permission;
+    bool is_enemy;
+    e_figure_category category;
+    uint16_t max_damage;
+    int8_t attack_value;
+    int8_t defense_value;
+    int8_t missile_defense_value;
+
+    static void set(e_figure_type, const figure_static_params &);
+    static const figure_static_params &get(e_figure_type);
+
+protected:
+    void base_load(archive arch);
+};
+ANK_CONFIG_STRUCT(figure_static_params, terrain_usage)
+
 class figure_impl {
 public:
-    struct static_params {
-        static static_params dummy;
-
-        e_figure_type ftype;
-        pcstr name;
-        animations_t anim;
-        figure_sounds_t sounds;
-        int8_t terrain_usage;
-        uint16_t max_roam_length;
-        uint8_t speed_mult;
-        metainfo meta;
-        e_permission permission;
-        bool is_enemy;
-        e_figure_category category;
-        uint16_t max_damage;
-        int8_t attack_value;
-        int8_t defense_value;
-        int8_t missile_defense_value;
-
-    protected:
-        void base_load(archive arch);
-    };
-
     figure_impl(figure *f) : base(*f) {}
 
     virtual void on_create();
@@ -502,8 +509,8 @@ public:
     virtual void cart_image_update() { base.cart_image_update(); }
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
-    virtual const animations_t &anim() const { return params().anim; }
-    virtual const static_params &params() const { return params(type()); }
+    virtual const animations_t &anim() const { return params().animations; }
+    virtual const figure_static_params &params() const { return figure_static_params::get(type()); }
     virtual void kill();
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
@@ -514,8 +521,6 @@ public:
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
 
-    static void params(e_figure_type, const static_params &);
-    static const static_params &params(e_figure_type);
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
 
@@ -540,6 +545,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
     ALLOW_SMART_CAST_FIGURE_I(missile)
+    ALLOW_SMART_CAST_FIGURE_I(fireman)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -611,6 +617,7 @@ GENERATE_SMART_CAST_FIGURE(stonemason)
 GENERATE_SMART_CAST_FIGURE(enemy)
 GENERATE_SMART_CAST_FIGURE(enemy_archer)
 GENERATE_SMART_CAST_FIGURE(missile)
+GENERATE_SMART_CAST_FIGURE(fireman)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {
@@ -631,7 +638,7 @@ using FigureCtorIterator = FuncLinkedList<create_figure_function_cb>;
 using FigureStaticParamIterator = FuncLinkedList<load_figure_static_params_cb>;
 
 template<typename T>
-struct model_t : public figure_impl::static_params {
+struct model_t : public figure_static_params {
     using figure_type = T;
     static constexpr e_figure_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
@@ -645,7 +652,7 @@ struct model_t : public figure_impl::static_params {
         static FigureCtorIterator config_handler(&create);
         static FigureStaticParamIterator static_params_handler(&static_params_load);
         
-        figure_impl::params(TYPE, *this);
+        figure_static_params::set(TYPE, *this);
     }
 
     void archive_load() {
@@ -663,7 +670,7 @@ struct model_t : public figure_impl::static_params {
     }
 
     static void static_params_load() {
-        const model_t &item = static_cast<const model_t &>(figure_impl::params(TYPE));
+        const model_t &item = static_cast<const model_t &>(figure_static_params::get(TYPE));
         assert(item.TYPE == TYPE);
         const_cast<model_t &>(item).archive_load();
     }

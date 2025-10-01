@@ -17,17 +17,9 @@ struct loc_textid {
     uint16_t id;
     xstring text;
 
-    bool operator==(const loc_textid& other) const noexcept {
-        return key == other.key;
-    }
-
-    bool operator!=(const loc_textid& other) const noexcept {
-        return key != other.key;
-    }
-
-    bool operator<(const loc_textid& other) const noexcept {
-        return key < other.key;
-    }
+    bool operator==(const loc_textid& other) const noexcept { return key == other.key; }
+    bool operator!=(const loc_textid& other) const noexcept { return key != other.key; }
+    bool operator<(const loc_textid& other) const noexcept { return key < other.key; }
 };
 ANK_CONFIG_STRUCT(loc_textid, key, group, id, text)
 

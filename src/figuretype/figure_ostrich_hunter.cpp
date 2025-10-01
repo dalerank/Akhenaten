@@ -196,10 +196,6 @@ figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {
     return ostrich_hunter_m.sounds[key];
 }
 
-const animations_t &figure_ostrich_hunter::anim() const {
-    return ostrich_hunter_m.anim;
-}
-
 void figure_ostrich_hunter::update_animation() {
     xstring animkey;
     switch (action_state()) {

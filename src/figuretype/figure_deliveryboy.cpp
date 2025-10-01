@@ -56,10 +56,6 @@ figure_sound_t figure_delivery_boy::get_sound_reaction(xstring key) const {
     return delivery_boy_m.sounds[key];
 }
 
-const animations_t &figure_delivery_boy::anim() const {
-    return delivery_boy_m.anim;
-}
-
 void figure_delivery_boy::update_animation() {
     figure_impl::update_animation();
 }

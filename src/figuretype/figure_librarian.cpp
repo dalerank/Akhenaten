@@ -18,7 +18,3 @@ int figure_librarian::provide_service() {
     });
     return houses_serviced;
 }
-
-const animations_t &figure_librarian::anim() const {
-    return librarian_m.anim;
-}

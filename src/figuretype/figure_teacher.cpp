@@ -95,7 +95,3 @@ int figure_teacher::provide_service() {
     });
     return houses_serviced;
 }
-
-const animations_t &figure_teacher::anim() const {
-    return teacher_m.anim;
-}

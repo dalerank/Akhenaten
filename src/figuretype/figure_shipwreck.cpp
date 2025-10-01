@@ -51,6 +51,6 @@ figure *figure_shipwreck::create(tile2i tile) {
     f->progress_on_tile = random_byte() & 7;
     f->advance_action(FIGURE_ACTION_15_RETURNING2);
     f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x(), 15 * f->destination_tile.y(), 0);
-    f->image_set_animation(shipwreck_m.anim[animkeys().walk]);
+    f->image_set_animation(animkeys().walk);
     return f;
 }

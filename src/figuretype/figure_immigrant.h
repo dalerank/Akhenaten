@@ -37,7 +37,6 @@ public:
     virtual figure_phrase_t phrase() const override { return {FIGURE_IMMIGRANT, "immigrant"}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
-    virtual const animations_t &anim() const override;
     virtual void debug_show_properties() override;
     virtual void debug_draw() override;
     virtual bool is_home(const building *b) const override {

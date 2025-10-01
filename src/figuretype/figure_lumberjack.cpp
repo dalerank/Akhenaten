@@ -70,10 +70,6 @@ void figure_lumberjack::figure_action() {
     }
 }
 
-const animations_t &figure_lumberjack::anim() const {
-    return lumberjack_m.anim;
-}
-
 void figure_lumberjack::update_animation() {
     figure_impl::update_animation();
 

@@ -335,11 +335,11 @@ void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
         //else {
         //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
         //}
-        image_set_animation(soldier_charioterr_m.anim["attack"]);
+        image_set_animation(anim("attack"));
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        image_set_animation(soldier_charioterr_m.anim["death"]);
+        image_set_animation(anim("death"));
     } else {
-        image_set_animation(soldier_charioterr_m.anim["walk"]);
+        image_set_animation(anim("walk"));
     }
 }
 
@@ -353,18 +353,18 @@ void figure_soldier_archer::update_image(const formation *m, int &dir) {
         //else {
         //    image_id = image_id + 96 + dir + 8 * ((base.attack_image_offset - 12) / 2);
         //}
-        image_set_animation(soldier_archer_m.anim["attack"]);
+        image_set_animation(anim("attack"));
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
-        image_set_animation(soldier_archer_m.anim["death"]);
+        image_set_animation(anim("death"));
     } else if (action_state() == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
         //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
         //    image_id = image_id + dir + 144;
         //else {
         //    image_id = image_id + dir;
         //}
-        image_set_animation(soldier_archer_m.anim["walk"]);
+        image_set_animation(anim("walk"));
         base.anim.frame = 0;
     } else {
-        image_set_animation(soldier_archer_m.anim["walk"]);
+        image_set_animation(anim("walk"));
     }
 }

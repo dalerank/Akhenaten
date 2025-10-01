@@ -1256,7 +1256,7 @@ void building_impl::static_params::archive_load(archive arch) {
 
     city_labor_t::set_category(type, labor_category);
 
-    anim.load(arch);
+    arch.r("animations", anim.data);
 }
 
 void building_impl::static_params::planer_setup_preview_graphics(build_planner &planer) const {
