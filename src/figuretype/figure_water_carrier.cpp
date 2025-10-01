@@ -93,11 +93,6 @@ sound_key figure_water_carrier::phrase_key() const {
     return keys[index];
 }
 
-const animations_t &figure_water_carrier::anim() const {
-    return water_carrier_m.anim;
-}
-
-
 int figure_water_carrier::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = ((building *)b)->dcast_house();

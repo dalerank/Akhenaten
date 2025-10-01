@@ -74,7 +74,3 @@ sound_key figure_governor::phrase_key() const {
 
     return {};
 }
-
-const animations_t &figure_governor::anim() const {
-    return governor_m.anim;
-}

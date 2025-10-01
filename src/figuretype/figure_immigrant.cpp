@@ -149,7 +149,7 @@ void figure_immigrant::update_animation() {
     switch (action_state()) {
     case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
     case FIGURE_ACTION_6_IMMIGRANT_LEAVING:
-        base.cart_image_id = immigrant_m.anim["cart"].first_img() + dir;
+        base.cart_image_id = anim("cart").first_img() + dir;
         base.figure_image_set_cart_offset((dir + 4) % 8);
         break;
     }
@@ -167,10 +167,6 @@ figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
 sound_key figure_immigrant::phrase_key() const {
     svector<sound_key, 10> keys = {"i_need_here", "work_for_all", "cheap_food"};
     return keys[rand() % keys.size()];
-}
-
-const animations_t &figure_immigrant::anim() const {
-    return immigrant_m.anim;
 }
 
 void figure_immigrant::debug_show_properties() {

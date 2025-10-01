@@ -31,6 +31,5 @@ public:
     virtual figure_phrase_t phrase() const override { return {FIGURE_OSTRICH_HUNTER, "oshunter"}; }
     virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
-    virtual const animations_t &anim() const override;
     virtual void update_animation() override;
 };

@@ -262,10 +262,6 @@ figure_sound_t figure_fireman::get_sound_reaction(xstring key) const {
     return fireman_m.sounds[key];
 }
 
-const animations_t &figure_fireman::anim() const {
-    return fireman_m.anim;
-}
-
 void figure_fireman::update_animation() {
     figure_impl::update_animation();
 

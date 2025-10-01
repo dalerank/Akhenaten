@@ -21,7 +21,6 @@ public:
     virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_LABOR; }
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
-    virtual const animations_t &anim() const override;
 
     tile2i mastaba_tile4work(building *b);
 };

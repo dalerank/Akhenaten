@@ -87,6 +87,6 @@ figure *figure_fishing_point::create(tile2i tile) {
     fish->progress_on_tile = random_byte() & 7;
     fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
     fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
-    fish->image_set_animation(fishing_point_m.anim["point"]);
+    fish->image_set_animation("point");
     return fish;
 }

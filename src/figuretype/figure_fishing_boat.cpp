@@ -266,10 +266,6 @@ bool figure_fishing_boat::window_info_background(object_info &c) {
     return true;
 }
 
-const animations_t &figure_fishing_boat::anim() const {
-    return fishing_boat_m.anim;
-}
-
 void figure_fishing_boat::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {

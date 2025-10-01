@@ -7,6 +7,7 @@
 #include "graphics/graphics.h"
 
 int animation_t::global_hashtime = 0;
+animation_t animations_t::dummy;
 
 bool animation_t::archive_load(archive arch) {
     duration = std::max(1, duration);
@@ -20,15 +21,6 @@ bool animation_t::archive_load(archive arch) {
 int animation_t::first_img() const {
     int image_id = image_id_from_group(pack, id) + offset;   
     return image_id;
-}
-
-void animations_t::load(archive arch, pcstr section) {
-    data.clear();
-    arch.r_objects(section, [this](pcstr key, archive anim_arch) {
-        data.push_back({});
-        data.back().key = key;
-        archive_helper::reader(anim_arch, data.back());
-    });
 }
 
 void animation_context::setup(const animation_t &anim) {

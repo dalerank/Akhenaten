@@ -5,7 +5,7 @@
 #include "graphics/animkeys.h"
 #include "core/system_time.h"
 
-#include <vector>
+#include <unordered_map>
 
 struct animation_timer {
     time_millis last_update;
@@ -59,16 +59,14 @@ struct animation_context {
 };
 
 struct animations_t {
-    std::vector<animation_t> data;
-
-    void load(archive arch, pcstr section = "animations");
+    std::unordered_map<xstring, animation_t> data;
+    static animation_t dummy;
 
     const animation_t &operator[](const xstring &key) const {
-        static animation_t dummy;
         if (data.empty()) {
             return dummy;
         }
-        auto it = std::find_if(data.begin(), data.end(), [key] (auto &it) { return it.key == key; });
-        return (it == data.end()) ? dummy : *it;
+        auto it = data.find(key);
+        return (it == data.end()) ? dummy : it->second;
     }
 };

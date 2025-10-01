@@ -176,7 +176,7 @@ void figure_info_window::init(object_info &c) {
         }
     }
 
-    const auto &meta = figure_impl::params(f->type).meta;
+    const auto &meta = figure_static_params::get(f->type).meta;
     c.help_id = meta.help_id;
     c.group_id = meta.text_id;
 

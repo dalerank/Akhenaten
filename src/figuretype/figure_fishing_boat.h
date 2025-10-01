@@ -35,6 +35,5 @@ public:
     virtual sound_key phrase_key() const override { return {}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual bool window_info_background(object_info &ctx) override;
-    virtual const animations_t &anim() const override;
     virtual void update_animation() override;
 };

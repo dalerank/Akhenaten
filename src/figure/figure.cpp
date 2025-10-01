@@ -44,7 +44,7 @@ static const vec2i crowd_offsets[] = {
 };
 constexpr int crowd_offsets_size = (int)std::size(crowd_offsets);
 
-static std::array<const figure_impl::static_params *, FIGURE_MAX> figure_impl_params;
+static std::array<const figure_static_params *, FIGURE_MAX> figure_impl_params;
 
 using e_permission_tokens_t = token_holder<e_permission, epermission_none, epermission_count>;
 const e_permission_tokens_t ANK_CONFIG_ENUM(e_permission_tokens);
@@ -370,23 +370,23 @@ void figure::clear_impl() {
 }
 
 e_figure_category figure::category() const {
-    return figure_impl::params(type).category;
+    return figure_static_params::get(type).category;
 }
 
 uint16_t figure::max_damage() const {
-    return figure_impl::params(type).max_damage;
+    return figure_static_params::get(type).max_damage;
 }
 
 int8_t figure::attack_value() const {
-    return figure_impl::params(type).attack_value;
+    return figure_static_params::get(type).attack_value;
 }
 
 int8_t figure::missile_defense_value() const {
-    return figure_impl::params(type).missile_defense_value;
+    return figure_static_params::get(type).missile_defense_value;
 }
 
 int8_t figure::defense_value() const {
-    return figure_impl::params(type).defense_value;
+    return figure_static_params::get(type).defense_value;
 }
 
 void figure::poof() {
@@ -630,16 +630,16 @@ void figure_impl::kill() {
     base.kill();
 }
 
-void figure_impl::params(e_figure_type e, const static_params &p) {
+void figure_static_params::set(e_figure_type e, const figure_static_params &p) {
     //if (!figure_impl_params) {
     //    figure_impl_params = new std::map<e_figure_type, const figure_impl::static_params *>();
     //}
     figure_impl_params[e] = &p;
 }
 
-const figure_impl::static_params &figure_impl::params(e_figure_type e) {
+const figure_static_params &figure_static_params::get(e_figure_type e) {
     const auto& cfg = figure_impl_params[e];
-    return (!cfg ? figure_impl::static_params::dummy : *cfg);
+    return (!cfg ? figure_static_params::dummy : *cfg);
 }
 
 void figure_impl::advance_action(int action, tile2i t) {
@@ -653,13 +653,13 @@ void figure_impl::set_destination(building *b, tile2i t) {
 }
 
 metainfo figure_impl::get_info() const {
-    return params(type()).meta;
+    return params().meta;
 }
 
-figure_impl::static_params figure_impl::static_params::dummy;
-void figure_impl::static_params::base_load(archive arch) {
-    anim.load(arch);
-    assert(anim.data.size() > 0);
+figure_static_params figure_static_params::dummy;
+void figure_static_params::base_load(archive arch) {
+    arch.r("animations", animations.data);
+    assert(animations.data.size() > 0);
 
     sounds.load(arch);
     terrain_usage = arch.r_int("terrain_usage");
@@ -702,7 +702,7 @@ const fproperty fproperties[] = {
     { tags().text, xstring("*"),
         [] (figure &b, const xstring &name) {
              int id = atoi(name.c_str());
-             const auto &m = figure_impl::params(b.type).meta;
+             const auto &m = figure_static_params::get(b.type).meta;
              return bvariant(ui::str(m.text_id, id));
         }
     },

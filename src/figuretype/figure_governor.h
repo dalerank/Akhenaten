@@ -11,5 +11,4 @@ public:
     virtual void figure_action() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_GOVERNOR, "governor"}; }
     virtual sound_key phrase_key() const override;
-    virtual const animations_t &anim() const override;
 };
