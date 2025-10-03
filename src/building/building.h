@@ -440,6 +440,14 @@ struct bproperty {
     std::function<bvariant(building&, const xstring&)> handler;
 };
 
+struct building_desirability_t {
+    int8_t value;
+    int8_t step;
+    int8_t step_size;
+    int8_t range;
+};
+ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
+
 class building_impl {
 public:
     struct static_params {
@@ -469,6 +477,8 @@ public:
         xstring info_title_id;
         int num_types;
         std::array<uint16_t, 5> cost;
+        building_desirability_t desirability;
+
         struct {
             bool canals;
             bool roads;

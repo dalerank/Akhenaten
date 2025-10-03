@@ -87,13 +87,15 @@ bool model_load_file(const char* filepath,
 
         int tmp;
         ptr = get_value(ptr, end_ptr, &tmp);
-        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_value);
-        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step);
-        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_step_size);
-        ptr = get_value(ptr, end_ptr, &buildings[i].desirability_range);
+        ptr = get_value(ptr, end_ptr, &tmp);
+        ptr = get_value(ptr, end_ptr, &tmp);
+        ptr = get_value(ptr, end_ptr, &tmp);
+        ptr = get_value(ptr, end_ptr, &tmp);
         ptr = get_value(ptr, end_ptr, &buildings[i].laborers);
         ptr = get_value(ptr, end_ptr, &buildings[i].fire_risk);
         ptr = get_value(ptr, end_ptr, &buildings[i].damage_risk);
+        logs::info("Building %s: laborers:[%d], fire_risk:[%d], damage_risk: [%d]",
+            e_building_type_tokens.name((e_building_type)i), buildings[i].laborers, buildings[i].fire_risk, buildings[i].damage_risk);
     }
 
     // parse houses data
