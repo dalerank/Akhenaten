@@ -788,7 +788,7 @@ e_house_progress building_house::check_evolve_desirability() {
     const model_house& model = model_get_house(level);
     const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model.evolve_desirability;
 
-    const int current_des = base.desirability;
+    const int current_des = base.current_desirability;
     e_house_progress status;
 
     auto &d = runtime_data();

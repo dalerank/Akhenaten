@@ -65,15 +65,13 @@ static std::array<const building_impl::static_params *, BUILDING_MAX> *building_
 
 building_impl::static_params building_impl::static_params::dummy;
 
-void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int orientation) {
+void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     assert(!_ptr);
     const auto &props = building_impl::params(_tp);
     type = _tp;
     tile = _tl;
     state = BUILDING_STATE_CREATED;
-    // faction_id = 1;
     size = props.building_size;
-    //creation_sequence_index = building_extra_data.created_sequence++;
     distance_from_entry = 0;
 
     map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
@@ -81,10 +79,25 @@ void building::new_fill_in_data_for_type(e_building_type _tp, tile2i _tl, int or
     fire_proof = props.fire_proof;
     damage_proof = props.damage_proof;
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
+    des_influence = props.desirability.to_influence();
 
     // unique data
     output_resource_first_id = RESOURCE_NONE;
     dcast()->on_create(orientation);
+}
+
+desirability_t::influence_t building_desirability_t::to_influence() const {
+    desirability_t::influence_t inf;
+    e_difficulty diff = g_settings.difficulty();
+    auto get = [&] (auto &arr) { return (diff >= 0 && diff < (int)arr.size()) ? arr[diff] : 0; };
+
+    inf.size = 0;
+    inf.value = get(value);
+    inf.step = get(step);
+    inf.step_size = get(step_size);
+    inf.range = get(range);
+
+    return inf;
 }
 
 void building_impl::acquire(e_building_type e, building &b) {

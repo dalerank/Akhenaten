@@ -6,6 +6,7 @@
 #include "grid/property.h"
 #include "grid/image.h"
 #include "game/game_config.h"
+#include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"

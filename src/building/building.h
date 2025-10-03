@@ -17,6 +17,7 @@
 #include "figure/figure_type.h"
 #include "game/resource.h"
 #include "grid/point.h"
+#include "grid/desirability.h"
 #include "sound/sound_city.h"
 #include "core/variant.h"
 #include "model.h"
@@ -221,7 +222,7 @@ public:
     uint8_t map_random_7bit;
     short formation_id;
     bool has_plague;
-    int8_t desirability;
+    int8_t current_desirability;
     bool is_deleted;
     bool is_adjacent_to_water;
     e_destroy_reason destroy_reason;
@@ -229,6 +230,10 @@ public:
     union {
         int8_t native_anger;
     } sentiment;
+
+    // runtime data, not saves to disk
+    desirability_t::influence_t des_influence;
+
     animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
@@ -276,7 +281,7 @@ public:
     void clear_related_data();
     void clear_impl();
     void reset_impl();
-    void new_fill_in_data_for_type(e_building_type type, tile2i tile, int orientation);
+    void initialize(e_building_type type, tile2i tile, int orientation);
 
     e_overlay get_overlay() const;
     int get_figure_id(int i) const { return figure_ids[i]; };
@@ -441,10 +446,12 @@ struct bproperty {
 };
 
 struct building_desirability_t {
-    int8_t value;
-    int8_t step;
-    int8_t step_size;
-    int8_t range;
+    svector<int8_t, 6> value;
+    svector<int8_t, 6> step;
+    svector<int8_t, 6> step_size;
+    svector<int8_t, 6> range;
+
+    desirability_t::influence_t to_influence() const;
 };
 ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
 
