@@ -2302,7 +2302,7 @@ building_scribal_school = {
   building_size : 2
   labor_category : LABOR_CATEGORY_EDUCATION
   cost : [ 30, 50, 70, 100, 150 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
+  desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
 }
 
 building_temple_complex_osiris = {
@@ -2476,10 +2476,10 @@ building_temple_complex_altar = {
 building_temple_complex_oracle = {
   animations : {
     preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
-    base_n  :  { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    base_w  :  { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
-    base_e  :  { pack:PACK_TEMPLE_NILE, id:3 },
-    base_s  :  { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    base_n  : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
+    base_w  : { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
+    base_e  : { pack:PACK_TEMPLE_NILE, id:3 },
+    base_s  : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
     fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
     fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:3 },
   },

@@ -9,9 +9,9 @@
 void building_update_desirability(void) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Building Update Desirability");
     buildings_valid_do([] (building &b) {
-        b.desirability = g_desirability.get_max(b.tile, b.size);
+        b.current_desirability = g_desirability.get_max(b.tile, b.size);
         if (b.is_adjacent_to_water) {
-            b.desirability += 10;
+            b.current_desirability += 10;
         }
 
         const int elevation = map_elevation_at(b.tile.grid_offset());
@@ -19,19 +19,19 @@ void building_update_desirability(void) {
         case 0:
             break;
         case 1:
-            b.desirability += 10;
+            b.current_desirability += 10;
             break;
         case 2:
-            b.desirability += 12;
+            b.current_desirability += 12;
             break;
         case 3:
-            b.desirability += 14;
+            b.current_desirability += 14;
             break;
         case 4:
-            b.desirability += 16;
+            b.current_desirability += 16;
             break;
         default:
-            b.desirability += 18;
+            b.current_desirability += 18;
             break;
         }
     });

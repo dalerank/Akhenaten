@@ -34,7 +34,7 @@ void game_settings::load_default_settings() {
 
     scroll_speed = 70;
 
-    difficulty.state = DIFFICULTY_HARD;
+    difficulty.set(DIFFICULTY_HARD);
     tooltips = e_tooltip_show_full;
     warnings = true;
     gods_enabled = true;
@@ -87,7 +87,8 @@ void game_settings::load_settings(buffer* buf) {
     victory_video = buf->read_i32();
 
     assert(!buf->at_end());
-    difficulty.state = (e_difficulty)buf->read_i32();
+    e_difficulty difficulty_value = (e_difficulty)buf->read_i32();
+    difficulty.set(difficulty_value);
     gods_enabled = buf->read_i32();
 }
 
@@ -145,7 +146,7 @@ void game_settings::save() {
         buf->write_i32(personal_savings[i]);
     }
     buf->write_i32(victory_video);
-    buf->write_u8(difficulty.state);
+    buf->write_u8(difficulty());
     buf->skip(3);
     buf->write_i32(gods_enabled);
 

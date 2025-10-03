@@ -77,12 +77,14 @@ struct game_settings {
     buffer *inf_file = nullptr;
 
     struct difficulty_t {
-        void increase() { state = std::clamp<e_difficulty>((e_difficulty)(state + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
-        void decrease() { state = std::clamp<e_difficulty>((e_difficulty)(state - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+        void increase() { _state = std::clamp<e_difficulty>((e_difficulty)(_state + 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
+        void decrease() { _state = std::clamp<e_difficulty>((e_difficulty)(_state - 1), DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
-        e_difficulty operator()() const { return (e_difficulty)std::clamp<uint8_t>(state, 0, MAX_DIFFICULTY_LEVEL); }
+        inline e_difficulty operator()() const { return _state; }
+        void set(e_difficulty v) { _state = std::clamp<e_difficulty>(v, DIFFICULTY_VERY_EASY, DIFFICULTY_VERY_HARD); }
 
-        e_difficulty state;
+    private:
+        e_difficulty _state;
     } difficulty;
 
     game_settings();

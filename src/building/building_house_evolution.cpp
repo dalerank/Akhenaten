@@ -22,7 +22,7 @@ void building_house::determine_evolve_text() {
     const model_house& model = model_get_house(level);
     housed.evolve_text = "";
     // desirability
-    if (base.desirability <= model.devolve_desirability) {
+    if (base.current_desirability <= model.devolve_desirability) {
         housed.evolve_text = "#house_low_desirabilty";
         return;
     }
@@ -162,7 +162,7 @@ void building_house::determine_evolve_text() {
     // this house will evolve if ...
 
     // desirability
-    if (base.desirability < model.evolve_desirability) {
+    if (base.current_desirability < model.evolve_desirability) {
         if (housed.worst_desirability_building_id) {
             housed.evolve_text = "";
         } else {
@@ -347,8 +347,7 @@ void building_house::determine_worst_desirability_building() {
                 continue;
             }
 
-            const auto &desirability = params().desirability;
-            int8_t des = desirability.value;
+            int8_t des = b->des_influence.value;
             if (des >= 0) {
                 continue;
             }
@@ -359,8 +358,8 @@ void building_house::determine_worst_desirability_building() {
             }
 
             // simplified desirability calculation
-            int step_size = desirability.step_size;
-            int range = desirability.range;
+            int step_size = b->des_influence.step_size;
+            int range = b->des_influence.range;
             int dist = calc_maximum_distance(vec2i(x, y), tile());
             if (dist <= range) {
                 while (--dist > 1) {

@@ -94,7 +94,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     b->clear_impl();
 
     memset(b->runtime_data, 0, sizeof(b->runtime_data));
-    b->new_fill_in_data_for_type(type, tile, orientation);
+    b->initialize(type, tile, orientation);
 
     events::emit(event_building_create{ b->id });
 
@@ -330,7 +330,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind____skip(1); // 
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 1
 
-        iob->bind(BIND_SIGNATURE_INT8, &b->desirability);
+        iob->bind(BIND_SIGNATURE_INT8, &b->current_desirability);
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_deleted);
         iob->bind(BIND_SIGNATURE_UINT8, &b->is_adjacent_to_water);
 
@@ -356,6 +356,8 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
             b->disease_days = 0;
             b->health_proof = 0;
         }
+
+        b->des_influence = building_impl::params(b->type).desirability.to_influence();
     }
     //building_extra_data.created_sequence = 0;
 });
