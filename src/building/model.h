@@ -6,12 +6,7 @@
  * Building model
  */
 struct model_building {
-    int desirability_value;     /**< Initial desirability value */
-    int desirability_step;      /**< Desirability step (in tiles) */
-    int desirability_step_size; /**< Desirability step size */
-    int desirability_range;     /**< Max desirability range */
     int laborers;               /**< Number of people a building employs */
-    // pharaoh
     int fire_risk;
     int damage_risk;
 };

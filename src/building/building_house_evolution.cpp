@@ -347,8 +347,8 @@ void building_house::determine_worst_desirability_building() {
                 continue;
             }
 
-            const model_building *model = model_get_building(b->type);
-            int des = model->desirability_value;
+            const auto &desirability = params().desirability;
+            int8_t des = desirability.value;
             if (des >= 0) {
                 continue;
             }
@@ -359,8 +359,8 @@ void building_house::determine_worst_desirability_building() {
             }
 
             // simplified desirability calculation
-            int step_size = model->desirability_step_size;
-            int range = model->desirability_range;
+            int step_size = desirability.step_size;
+            int range = desirability.range;
             int dist = calc_maximum_distance(vec2i(x, y), tile());
             if (dist <= range) {
                 while (--dist > 1) {

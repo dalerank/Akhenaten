@@ -73,7 +73,8 @@ void desirability_t::add_to_terrain(tile2i tile, int size, int desirability, int
 void desirability_t::update_buildings() {
     buildings_valid_do([this] (building &b) {
         const model_building *model = model_get_building(b.type);
-        add_to_terrain(b.tile, b.size, model->desirability_value, model->desirability_step, model->desirability_step_size, model->desirability_range);
+        const auto &desirability = building_impl::params(b.type).desirability;
+        add_to_terrain(b.tile, b.size, desirability.value, desirability.step, desirability.step_size, desirability.range);
     });
 }
 

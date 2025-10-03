@@ -1253,6 +1253,7 @@ void building_impl::static_params::archive_load(archive arch) {
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
     arch.r("cost", cost);
+    arch.r("desirability", desirability);
 
     city_labor_t::set_category(type, labor_category);
 
