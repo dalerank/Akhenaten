@@ -28,10 +28,8 @@ public:
     } FIGURE_RUNTIME_DATA_T;
 
     struct static_params : figure_model {
-        int wait_ticks_after_create;
+        uint16_t wait_ticks_after_create;
         uint16_t max_capacity;
-
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override;
@@ -54,3 +52,4 @@ public:
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 };
+ANK_CONFIG_STRUCT(figure_trade_caravan::static_params, wait_ticks_after_create, max_capacity)

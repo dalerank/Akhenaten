@@ -10,11 +10,6 @@
 
 figure_barbarian_sword::static_params barbarian_sword_m;
 
-template<typename T>
-void figure_enemy_fast_sword::static_params_t<T>::archive_load(archive arch) {
-    interval_attack_delay = arch.r_int("interval_attack_delay");
-}
-
 void figure_enemy_fast_sword::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");
 
