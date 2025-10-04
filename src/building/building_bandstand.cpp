@@ -24,15 +24,17 @@
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 
-building_bandstand::static_params bandstand_m;
-
-void building_bandstand::static_params::archive_load(archive arch) {
-   stand_sn_n = anim["stand_sn_n"].first_img();
-   stand_sn_s = anim["stand_sn_s"].first_img();
-   stand_we_w = anim["stand_we_w"].first_img();
-   stand_we_e = anim["stand_we_e"].first_img();
-   booth = anim["booth"].first_img();
+namespace parts {
+    xstring stand_sn_n("stand_sn_n");
+    xstring stand_sn_s("stand_sn_s");
+    xstring stand_we_w("stand_we_w");
+    xstring stand_we_e("stand_we_e");
+    xstring musician_sn("musician_sn");
+    xstring musician_we("musician_we");
+    xstring booth("booth");
 }
+
+building_bandstand::static_params bandstand_m;
 
 bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
@@ -63,24 +65,24 @@ void building_bandstand::static_params::planer_ghost_preview(build_planner &plan
 
         switch (orientation / 2) {
         case 0:
-            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_sn_n].first_img(), pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_sn_s].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
             break;
         case 1:
-            planer.draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_we_w].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_we_e].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
             break;
         case 2:
-            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_n, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.stand_sn_s, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_sn_n].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_sn_s].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
             break;
         case 3:
-            planer.draw_building_ghost(ctx, bandstand_m.stand_we_w, pixel, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.stand_we_e, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, bandstand_m.booth, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_we_w].first_img(), pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::stand_we_e].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
             break;
         }
     }
@@ -199,16 +201,16 @@ void building_bandstand::spawn_figure() {
 }
 
 bool building_bandstand::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
-    int imgs[] = {bandstand_m.booth, bandstand_m.stand_sn_n, bandstand_m.stand_sn_s, bandstand_m.stand_we_e, bandstand_m.stand_we_w};
+    xstring imgs[] = { parts::booth, parts::stand_sn_n, parts::stand_sn_s, parts::stand_we_e, parts::stand_we_w };
     int image_id = map_image_at(tile);
-    const auto it = std::find(std::begin(imgs), std::end(imgs), image_id);
+    const auto it = std::find_if(std::begin(imgs), std::end(imgs), [&] (auto &p) { return first_img(p) == image_id; });
     return (it == std::end(imgs));
 }
 
 bool building_bandstand::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
-    int imgs[] = {bandstand_m.booth, bandstand_m.stand_sn_n, bandstand_m.stand_sn_s, bandstand_m.stand_we_e, bandstand_m.stand_we_w};
+    xstring imgs[] = {parts::booth, parts::stand_sn_n, parts::stand_sn_s, parts::stand_we_e, parts::stand_we_w};
     int image_id = map_image_at(tile);
-    const auto it = std::find(std::begin(imgs), std::end(imgs), image_id);
+    const auto it = std::find_if(std::begin(imgs), std::end(imgs), [&] (auto &p) { return first_img(p) == image_id; });
     if (it != std::end(imgs)) {
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
         command.image_id = image_id;
@@ -239,16 +241,18 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, tile2i 
     }
 
     building* next_tile = base.next();
-    xstring anim_key = (direction == 0) ? "musician_sn" : "musician_we";
-    d.musician_ctx.setup(anim(anim_key));
+    const xstring& anim_key = (direction == 0) ? parts::musician_sn : parts::musician_we;
+    d.musician_ctx = anim(anim_key);
+
     draw_normal_anim(ctx, d.musician_ctx, pixel, tile, color_mask);
 }
 
 void building_bandstand::on_tick(bool refresh_only) {
     inherited::on_tick(refresh_only);
 
-    runtime_data().musician_ctx.update(refresh_only);
-    runtime_data().juggler_ctx.update(refresh_only);
+    auto &d = runtime_data();
+    d.musician_ctx.update(refresh_only);
+    d.juggler_ctx.update(refresh_only);
 }
 
 void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask) {
@@ -257,11 +261,11 @@ void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i ti
         return;
     }
 
-    if (map_image_at(tile) != bandstand_m.booth) {
+    if (map_image_at(tile) != first_img(parts::booth)) {
         return;
     }
     
-    d.juggler_ctx.setup(anim("juggler"));
+    d.juggler_ctx = anim("juggler");
     draw_normal_anim(ctx, d.juggler_ctx, pixel, tile, color_mask);
 }
 
@@ -269,8 +273,8 @@ bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2
     const bool is_deleted = drawing_building_as_deleted(&base) || map_property_is_deleted(tile);
     int color_mask = is_deleted ? COLOR_MASK_RED : COLOR_MASK_NONE;
 
-    const int direction = (map_image_at(tile) == bandstand_m.stand_sn_n) ? 1 :
-                          (map_image_at(tile) == bandstand_m.stand_we_e) ? 0 : -1;
+    const int direction = (map_image_at(tile) == first_img(parts::stand_sn_n)) ? 1 :
+                          (map_image_at(tile) == first_img(parts::stand_we_e)) ? 0 : -1;
 
     draw_shows_juggler(ctx, point, tile, direction, color_mask);
     draw_shows_musicians(ctx, point, tile, direction, color_mask);
