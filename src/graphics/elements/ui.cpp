@@ -741,8 +741,12 @@ void ui::eimg::load(archive arch, element *parent, items &elems) {
     isometric = arch.r_bool("isometric");
 }
 
-void ui::eimg::image(image_desc image) {
+void ui::eimg::image(const image_desc& image) {
     img_desc = image;
+}
+
+void ui::eimg::image(const animation_t& anim) {
+    img_desc = anim.to_desc();
 }
 
 void ui::eimg::image(int image) {
@@ -972,6 +976,10 @@ void ui::eimage_button::draw(UiFlags gflags) {
     if (!_tooltip.empty() && btn->hovered) {
         tooltipctx.set(0, _tooltip);
     }
+}
+
+void ui::eimage_button::image(const animation_t &d) { 
+    img_desc = d.to_desc(); 
 }
 
 void ui::etext::load(archive arch, element* parent, items &elems) {
