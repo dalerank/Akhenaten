@@ -10,7 +10,6 @@ public:
 
     struct static_params : public building_model {
         uint8_t spawn_interval;
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA(static_params);
 
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
@@ -20,3 +19,4 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_JUGGLER_SCHOOL; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
+ANK_CONFIG_STRUCT(building_juggler_school::static_params, spawn_interval)
