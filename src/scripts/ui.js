@@ -424,16 +424,20 @@ sidebar_window_extra = {
 }
 
 sidebar_window_collapsed = {
-    extra_block        : {pack:PACK_GENERAL, id:121, offset:1},
-    relief_block       : {pack:PACK_GENERAL, id:121, offset:5},
-    expanded_offset_x  : 42,
-    deceleration_offset_x : 5,
-    slide_acceleration_millis : 65, 
-    slide_speed_x      : 7,
+    extra_block        : {pack:PACK_GENERAL, id:121, offset:1}
+    relief_block       : {pack:PACK_GENERAL, id:121, offset:5}
+    expanded_offset_x  : 42
+    extra_block_x      : 0 
+
+    slider : {
+        deceleration_offset_x     : 5
+        slide_acceleration_millis : 65
+        slide_speed_x             : 7
+    }
 
     ui : {
         // 68-xx tooltips for buttons
-        background       : image({pos:[0, 30], pack:PACK_GENERAL, id:121, offset:1}),
+        background      : image({pos:[0, 30], pack:PACK_GENERAL, id:121, offset:1}),
         expand         : image_button({pos:[8, 30], pack:PACK_GENERAL, id:110, offset:10, tooltip:[68, 12]}),
 
         build_house    : image_button({pos:[9, 21+30], pack:PACK_GENERAL, id:136, offset:90, tooltip:[68, 20]}),
@@ -460,9 +464,12 @@ sidebar_window_expanded = {
     relief_block       : {pack:PACK_GENERAL, id:121, offset:4},
     extra_block_x      : -24,
     expanded_offset_x  : 186,
-    deceleration_offset_x : 125,
-    slide_acceleration_millis : 65,
-    slide_speed_x      : 7,
+
+    slider : {
+        deceleration_offset_x : 125
+        slide_acceleration_millis : 65
+        slide_speed_x      : 7
+    }
 
     ui : {
         // 68-xx tooltips for buttons

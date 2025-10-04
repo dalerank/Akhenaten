@@ -18,28 +18,25 @@
 #include "js/js_game.h"
 #include "city/city.h"
 
-struct overlay_menu_t {
-    struct overlay_submenu {
-        xstring title;
-        svector<e_overlay, 16> ids;
-    };
+struct overlay_submenu_t {
+    xstring title;
+    svector<e_overlay, 16> ids;
+};
+ANK_CONFIG_STRUCT(overlay_submenu_t, title, ids)
 
-    svector<overlay_submenu, 16> menus;
+struct overlay_menu_t {
+    svector<overlay_submenu_t, 16> menus;
 
     void archive_unload() { menus.clear(); }
     auto &emplace_back() { return menus.emplace_back(); }
-  
-    void archive_load(overlay_submenu& menu, archive arch) {
-        menu.title = arch.r_string("title");
-        arch.r_array_num<e_overlay>("ids", menu.ids);
-    }
 
     void archive_init() {
         assert(!menus.empty() && "Overlay menu not loaded!");
     }
 };
+ANK_CONFIG_STRUCT(overlay_menu_t, menus)
 
-overlay_menu_t ANK_ARRAY_VARIABLE(overlay_menu);
+overlay_menu_t ANK_VARIABLE(overlay_menu);
 
 struct overlay_menu_widget : public autoconfig_window_t<overlay_menu_widget> {
     int selected_menu;

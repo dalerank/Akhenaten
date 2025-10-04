@@ -1354,7 +1354,7 @@ building_bandstand = {
   animations : {
     booth : {pack:PACK_GENERAL, id:114},
     square : {pack:PACK_GENERAL, id:58},
-    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true },
+    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true },   
     stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
     stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
     stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},

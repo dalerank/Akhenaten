@@ -17,6 +17,7 @@ figure_barbarian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -34,6 +35,7 @@ figure_barbarian_sword = {
     defense_value: 4
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    interval_attack_delay : 100
     max_amount : 25
 }
 
