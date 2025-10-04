@@ -79,10 +79,6 @@ int figure_trade_ship::is_trading() const {
     return TRADE_SHIP_NONE;
 }
 
-void figure_trade_ship::static_params::archive_load(archive arch) {
-    max_capacity = arch.r_int("max_capacity", 1200);
-};
-
 bool figure_trade_ship::lost_queue() {
     building* b = destination();
 
