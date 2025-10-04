@@ -14,14 +14,6 @@ void figure_enemy_archer::on_create() {
     figure_impl::on_create();
 }
 
-template<typename T>
-void figure_enemy_archer::static_params_t<T>::archive_load(archive arch) {
-    missile_attack_value = arch.r_int("missile_attack_value");
-    missile_delay = arch.r_int("missile_delay");
-    attack_distance = arch.r_int("attack_distance", 5);
-    misslie_type = arch.r_type<e_figure_type>("misslie_type", FIGURE_ARROW);
-}
-
 void figure_enemy_archer::enemy_initial(formation *m) {
     base.map_figure_update();
     base.anim.frame = 0;

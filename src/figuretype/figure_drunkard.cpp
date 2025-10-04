@@ -10,11 +10,6 @@
 
 figure_drunkard::static_params drunkard_m;
 
-void figure_drunkard::static_params::archive_load(archive arch) {
-    womit_delay = arch.r_int("womit_delay", 25);
-    walk_delay = arch.r_int("walk_delay", 25);
-}
-
 void figure_drunkard::figure_before_action() {
     building *b = home();
     if (b->state != BUILDING_STATE_VALID) {

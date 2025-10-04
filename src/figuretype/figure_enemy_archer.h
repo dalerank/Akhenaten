@@ -15,14 +15,18 @@ public:
     figure_enemy_archer(figure *f) : figure_enemy(f) {}
     virtual figure_enemy_archer *dcast_enemy_archer() override { return this; }
 
-    template<typename T>
-    struct static_params_t : public figures::model_t<T> {
+    struct base_params_t {
         int8_t missile_attack_value;
         int8_t missile_delay;
         int8_t attack_distance;
-        e_figure_type misslie_type = FIGURE_ARROW;
+        e_figure_type missile_type = FIGURE_ARROW;
+    };
 
-        virtual void archive_load(archive arch) override;
+    template<typename T>
+    struct static_params_t : public base_params_t, public figures::model_t<T> {
+        virtual void archive_load(archive arch) override {
+            arch.r<base_params_t>(*this);
+        }
     };
 
     virtual void on_create() override;
@@ -44,6 +48,8 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m)override;
 };
+ANK_CONFIG_STRUCT(figure_enemy_archer::base_params_t, 
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_barbarian_archer : public figure_enemy_archer {
 public:
@@ -53,7 +59,7 @@ public:
     struct static_params : public static_params_t<figure_barbarian_archer> {
     } FIGURE_STATIC_DATA_T;
 
-    virtual e_figure_type missile_type() const override { return current_params().misslie_type; }
+    virtual e_figure_type missile_type() const override { return current_params().missile_type; }
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_ARCHER, "barb_arch" }; }
     virtual int8_t missile_attack_value() const override { return current_params().missile_attack_value; }
