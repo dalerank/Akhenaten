@@ -65,10 +65,6 @@ void building_apothecary::spawn_figure() {
     //    }
 }
 
-void building_apothecary::static_params::archive_load(archive arch) {
-    max_serve_clients = arch.r_int("max_serve_clients");
-}
-
 void building_apothecary::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
     set_animation(animkey);
@@ -101,8 +97,4 @@ bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i
 
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
-}
-
-void building_mortuary::static_params::archive_load(archive arch) {
-    max_serve_clients = arch.r_int("max_serve_clients");
 }
