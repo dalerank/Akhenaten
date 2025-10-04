@@ -217,9 +217,11 @@ static js_Ast *arrayliteral(js_State *J)
 	if (J->lookahead == ']')
 		return NULL;
 	head = tail = LIST(arrayelement(J));
-	while (jsP_accept(J, ',')) {
-		if (J->lookahead != ']')
-			tail = tail->b = LIST(arrayelement(J));
+	while (jsP_accept(J, ',') || jsP_accept(J, ';') || J->newline) {
+		if (J->lookahead == ']')
+			break;
+
+		tail = tail->b = LIST(arrayelement(J));
 	}
 	return jsP_list(head);
 }
@@ -277,6 +279,7 @@ static js_Ast *objectliteral(js_State *J)
 	while (jsP_accept(J, ',') || jsP_accept(J, ';') || J->newline) {
 		if (J->lookahead == '}')
 			break;
+
 		tail = tail->b = LIST(propassign(J));
 	}
 	return jsP_list(head);
