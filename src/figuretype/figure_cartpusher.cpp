@@ -32,10 +32,6 @@ static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void figure_cartpusher::static_params::archive_load(archive arch) {
-    wait_on_calculate_destination = arch.r_int("wait_on_calculate_destination", 30);
-}
-
 void figure_carrier::load_resource(e_resource resource, int amount) {
     base.resource_id = resource;
     base.resource_amount_full = amount;

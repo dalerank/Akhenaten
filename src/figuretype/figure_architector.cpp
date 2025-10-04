@@ -7,10 +7,6 @@
 
 figure_architector::static_params architector_m;
 
-void figure_architector::static_params::archive_load(archive arch) {
-    max_service_buildings = arch.r_int("max_service_buildings");
-}
-
 void figure_architector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Architector");
     //    building *b = building_get(building_id);
