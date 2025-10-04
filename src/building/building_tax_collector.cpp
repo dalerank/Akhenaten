@@ -24,10 +24,6 @@
 building_tax_collector::static_params  btax_collector_m;
 building_tax_collector_up::static_params btax_collector_up_m;
 
-void building_tax_collector::static_params::archive_load(archive arch) {
-    max_deben_storage = arch.r_int("max_deben_storage");
-}
-
 void building_tax_collector::spawn_figure() {
     if (!has_road_access()) {
         return;
