@@ -19,8 +19,6 @@ public:
     struct static_params_t : public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
 
-        using inherited::archive_load;
-        virtual void archive_load(archive arch) override;
         virtual int planer_setup_orientation(int orientation) const override;
         virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const override;
         virtual int planer_update_building_variant(build_planner &planer) const override { return 0; }

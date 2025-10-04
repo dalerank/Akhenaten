@@ -12,10 +12,6 @@
 
 building_water_lift::static_params water_lift_m;
 
-void building_water_lift::static_params::archive_load(archive arch) {
-
-}
-
 void building_water_lift::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     const int baseid = anim[animkeys().base].first_img();
     const int imgid = baseid + planer.relative_orientation;

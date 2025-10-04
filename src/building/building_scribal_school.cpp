@@ -15,9 +15,6 @@
 
 building_scribal_school::static_params scribal_school_m;
 
-void building_scribal_school::static_params::archive_load(archive arch) {
-}
-
 void building_scribal_school::update_month() {
     if (base.stored_amount_first <= 0) {
         return;

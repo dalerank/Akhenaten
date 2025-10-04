@@ -21,10 +21,6 @@ declare_console_command(addbarley, game_cheat_add_resource<RESOURCE_BARLEY>);
 
 building_brewery::static_params brewery_m;
 
-void building_brewery::static_params::archive_load(archive arch) {
-
-}
-
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &ranim = anim(animkeys().work);
     building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);

@@ -31,10 +31,6 @@ int building_fishing_wharf::static_params::planer_construction_update(build_plan
     return 1;
 }
 
-void building_fishing_wharf::static_params::archive_load(archive arch) {
-
-}
-
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = anim(animkeys().base).first_img();
