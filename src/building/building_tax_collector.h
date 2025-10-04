@@ -14,8 +14,6 @@ public:
 
     struct static_params : public building_model {
         uint16_t max_deben_storage;
-
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA_T;
 
     virtual void spawn_figure() override;
@@ -29,6 +27,7 @@ public:
     int16_t deben_storage() const { return base.deben_storage; }
     int16_t tax_storage() const { return runtime_data().tax_income_or_storage; }
 };
+ANK_CONFIG_STRUCT(building_tax_collector::static_params, max_deben_storage)
 
 class building_tax_collector_up : public building_tax_collector {
 public:
