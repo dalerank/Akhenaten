@@ -56,6 +56,8 @@ struct animation_context {
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start() const { return base + offset; }
     inline bool finished() const { return was_finished || current_frame() >= max_frames; }
+
+    animation_context& operator=(const animation_t &anim) { setup(anim); return *this; }
 };
 
 struct animations_t {
