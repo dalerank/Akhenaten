@@ -66,11 +66,6 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     emp_city.trader_figure_ids[free_slot] = caravan->id();
 }
 
-void figure_trade_caravan::static_params::archive_load(archive arch)  {
-    wait_ticks_after_create = arch.r_int("wait_ticks_after_create");
-    max_capacity = arch.r_int("max_capacity", 800);
-};
-
 int figure::trader_total_sold() {
     return resource_amount_full;
 }

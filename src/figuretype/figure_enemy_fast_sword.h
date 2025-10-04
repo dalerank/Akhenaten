@@ -13,10 +13,15 @@ class figure_enemy_fast_sword : public figure_enemy {
 public:
     figure_enemy_fast_sword(figure *f) : figure_enemy(f) {}
 
+    struct base_params_t {
+        uint16_t interval_attack_delay;
+    };
+
     template<typename T>
-    struct static_params_t : public figures::model_t<T> {
-        uint16_t interval_attack_delay = 100; // how often attack (lower is more often)
-        virtual void archive_load(archive arch) override;
+    struct static_params_t : public base_params_t, public figures::model_t<T> {
+        virtual void archive_load(archive arch) override {
+            arch.r<base_params_t>(*this);
+        }
     };
 
     struct runtime_data_t {
@@ -38,6 +43,8 @@ public:
 
     virtual int8_t interval_attack_delay() const { return 100; }
 };
+
+ANK_CONFIG_STRUCT(figure_enemy_fast_sword::base_params_t, interval_attack_delay)
 
 class figure_barbarian_sword : public figure_enemy_fast_sword {
 public:
