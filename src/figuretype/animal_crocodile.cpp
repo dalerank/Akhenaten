@@ -7,12 +7,6 @@
 
 figure_crocodile::static_params crocodile_m;
 
-void figure_crocodile::static_params::archive_load(archive arch) {
-    max_hungry = arch.r_int("max_hungry", 25);
-    max_hunting_distance = arch.r_int("max_hunting_distance", 10);
-    chase_speed_mult = arch.r_int("chase_speed_mult", 2);
-}
-
 void figure_crocodile::on_create() {
     figure_impl::on_create();
     base.allow_move_type = EMOVE_AMPHIBIAN;
