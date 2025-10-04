@@ -17,10 +17,6 @@ static const int TOWER_SENTRY_FIRING_OFFSETS[] =
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
 };
 
-void figure_tower_sentry::static_params::archive_load(archive arch) {
-    missile_delay = arch.r_int("missile_delay");
-}
-
 void figure_tower_sentry::tower_sentry_pick_target() {
     if (enemy_army_total_enemy_formations() <= 0)
         return;

@@ -9,7 +9,6 @@ public:
 
     struct static_params : public figure_model {
         uint8_t missile_delay;
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
@@ -26,3 +25,4 @@ public:
     int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile);
     void move_ticks_tower_sentry(int num_ticks);
 };
+ANK_CONFIG_STRUCT(figure_tower_sentry::static_params, missile_delay)
