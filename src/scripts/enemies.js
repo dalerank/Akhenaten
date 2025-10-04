@@ -6,6 +6,7 @@ figure_barbarian_archer = {
         walk : { pack:PACK_ENEMY_BARBARIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_BARBARIAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_BARBARIAN, id:2, max_frames:12, loop: false }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:55 }
     }
 
     category: figure_category_hostile
@@ -27,6 +28,7 @@ figure_barbarian_sword = {
         walk : { pack:PACK_ENEMY_BARBARIAN, id:3, max_frames:12 }
         death : { pack:PACK_ENEMY_BARBARIAN, id:4, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_BARBARIAN, id:5, max_frames:9 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:54 }
     }
 
     category: figure_category_hostile
@@ -55,6 +57,7 @@ figure_assyrian_archer = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_ASSYRIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_ASSYRIAN, id:3, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -73,6 +76,7 @@ figure_assyrian_sword = {
         walk : { pack:PACK_ENEMY_ASSYRIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ASSYRIAN, id:6, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:54 }
     }
 
     category: figure_category_hostile
@@ -89,6 +93,7 @@ figure_assyrian_transport_ship = {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:9, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -104,6 +109,7 @@ figure_assyrian_war_ship = {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:12, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -120,6 +126,7 @@ figure_assyrian_chariot = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_ASSYRIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_ASSYRIAN, id:15, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -147,6 +154,7 @@ figure_canaanite_archer = {
         death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_CANAANITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_CANAANITE, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -165,6 +173,7 @@ figure_canaanite_sword = {
         walk : { pack:PACK_ENEMY_CANAANITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_CANAANITE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_CANAANITE, id:6, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -181,6 +190,7 @@ figure_canaanite_transport_ship = {
         swim : { pack:PACK_ENEMY_CANAANITE, id:0, max_frames:4 }
         death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:2, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -196,6 +206,7 @@ figure_canaanite_war_ship = {
         swim : { pack:PACK_ENEMY_CANAANITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_CANAANITE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:12, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -212,6 +223,7 @@ figure_canaanite_chariot = {
         death : { pack:PACK_ENEMY_CANAANITE, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_CANAANITE, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_CANAANITE, id:16, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -239,6 +251,7 @@ figure_egyptian_galera = {
         death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:2, max_frames:1 }
         idle_ready : { pack:PACK_ENEMY_EGYPTIAN, id:3, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -254,6 +267,7 @@ figure_egyptian_war_ship = {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:4, max_frames:4 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:5, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:6, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -270,6 +284,7 @@ figure_egyptian_archer = {
         death : { pack:PACK_ENEMY_EGYPTIAN, id:8, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_EGYPTIAN, id:9, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_EGYPTIAN, id:10, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -288,6 +303,7 @@ figure_egyptiane_spearman = {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:12, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_EGYPTIAN, id:13, max_frames:8 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -306,6 +322,7 @@ figure_egyptian_chariot = {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_EGYPTIAN, id:15, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -333,6 +350,7 @@ figure_hittite_archer = {
         death : { pack:PACK_ENEMY_HITTITE, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_HITTITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_HITTITE, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -351,6 +369,7 @@ figure_hittite_spearman = {
         walk : { pack:PACK_ENEMY_HITTITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_HITTITE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_HITTITE, id:6, max_frames:8 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
@@ -361,6 +380,7 @@ figure_hittite_transport_ship = {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:9, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -377,6 +397,7 @@ figure_hittite_war_ship = {
         swim : { pack:PACK_ENEMY_HITTITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:12, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -392,6 +413,7 @@ figure_hittite_chariot = {
         walk : { pack:PACK_ENEMY_HITTITE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_HITTITE, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_HITTITE, id:15, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile

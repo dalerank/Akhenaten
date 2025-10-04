@@ -246,11 +246,11 @@ static int is_problem_message(const lang_message* msg) {
 
 static int get_message_image_id(const lang_message* msg) {
     auto &data = g_message_dialog_data;
-    if (!msg->image.id)
+    if (!msg->image.id) {
         return 0;
-    else if (data.text_id == 0) {
+    } else if (data.text_id == 0) {
         // message id = 0 ==> "about": fixed image position
-        return image_id_from_group(GROUP_PORTRAITS);
+        return image_id_from_group(PACK_UNLOADED, 25);
     } else {
         return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
     }
