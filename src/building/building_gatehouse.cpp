@@ -173,7 +173,8 @@ void building_gatehouse::on_create(int orientation) {
 
 void building_gatehouse::update_image_set(building& maingate) {
     const int city_orientation = city_view_orientation() / 2;
-    int image_id = mud_gatehouse_m.anim["base"].first_img();
+    const auto bparams = params(maingate.type);
+    int image_id = bparams.anim["base"].first_img();
     int map_orientation = city_view_orientation();
 
     building &backside = *maingate.next();
@@ -181,10 +182,9 @@ void building_gatehouse::update_image_set(building& maingate) {
 
     static const xstring txs[4] = { "base_n", "base_w", "base_second_n", "base_second_w" };
     int ids[4] = {};
-    const auto &params = building_impl::params(maingate.type);
     for (int i = 0; i < 4; ++i) {
         const auto &tx = txs[i];
-        ids[i] = params.anim[tx].first_img();
+        ids[i] = bparams.anim[tx].first_img();
     }
     if (building_rotation == 0 || building_rotation == 2) {
         switch (city_orientation) {
