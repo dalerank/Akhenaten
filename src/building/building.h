@@ -532,6 +532,8 @@ struct building_static_params {
     virtual bool is_unique_building() const { return unique_building; }
     virtual uint16_t get_cost() const;
 
+    inline const int first_img(const xstring &anim_key) const { return anim[anim_key].first_img(); }
+
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
 };
@@ -695,6 +697,7 @@ public:
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
     inline const animation_t &anim(const xstring &key) const { return params().anim[key]; }
+    inline const int first_img(const xstring &key) const { return anim(key).first_img(); }
  
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
