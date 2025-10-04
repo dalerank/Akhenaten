@@ -5,7 +5,7 @@
 #include "empire/empire_city.h"
 #include "grid/point.h"
 
-enum {
+enum e_trade_ship_rule {
     TRADE_SHIP_NONE = 0,
     TRADE_SHIP_BUYING = 1,
     TRADE_SHIP_SELLING = 2,
@@ -22,7 +22,6 @@ public:
 
     struct static_params : public figure_model {
         uint16_t max_capacity;
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -55,3 +54,4 @@ public:
 
     int max_capacity() const { return current_params().max_capacity; }
 };
+ANK_CONFIG_STRUCT(figure_trade_ship::static_params, max_capacity)
