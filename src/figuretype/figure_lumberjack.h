@@ -17,8 +17,6 @@ public:
 
     struct static_params : public figure_model {
         int max_amount;
-
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
@@ -29,3 +27,4 @@ public:
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };
+ANK_CONFIG_STRUCT(figure_lumberjack::static_params, max_amount)

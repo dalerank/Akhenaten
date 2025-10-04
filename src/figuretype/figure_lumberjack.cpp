@@ -11,10 +11,6 @@
 
 figure_lumberjack::static_params lumberjack_m;
 
-void figure_lumberjack::static_params::archive_load(archive arch) {
-    max_amount = arch.r_int("max_amount");
-}
-
 void figure_lumberjack::figure_action() {
     switch (action_state()) {
     case ACTION_8_LUMBERJACK_RECALCULATE:
