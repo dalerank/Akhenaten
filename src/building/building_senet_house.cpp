@@ -65,7 +65,7 @@ void building_senet_house::spawn_figure() {
         const short spent = std::min<short>(base.stored_amount_first, 20);
         base.stored_amount_first -= spent;
 
-        create_roaming_figure(FIGURE_DRUNKARD, (e_figure_action)figure_drunkard::ACTION_14_DRUNKARD_CREATED, BUILDING_SLOT_DRUNKARD);
+        create_roaming_figure(FIGURE_DRUNKARD, (e_figure_action)ACTION_14_DRUNKARD_CREATED, BUILDING_SLOT_DRUNKARD);
         return;
     }
 }
