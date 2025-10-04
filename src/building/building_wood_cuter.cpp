@@ -14,10 +14,6 @@
 
 building_wood_cutter::static_params bwood_cutter_m;
 
-void building_wood_cutter::static_params::archive_load(archive arch) {
-    max_gatherers = arch.r_int("max_gatherers", 1);
-}
-
 void building_wood_cutter::on_create(int orientation) {
     runtime_data().max_gatheres = current_params().max_gatherers;
 }
