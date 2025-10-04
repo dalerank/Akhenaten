@@ -47,6 +47,7 @@ class figure_fireman;
 class figure_missile;
 
 struct animation_t;
+struct figure_static_params;
 
 constexpr int MAX_FIGURES = 2000;
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
@@ -113,7 +114,7 @@ public:
     uint16_t main_image_id;
     uint16_t cart_image_id;
     bool use_cart;
-    animation_context anim;
+    animation_context animctx;
 
     uint8_t alternative_location_index;
     bool flotsam_visible;
@@ -248,6 +249,8 @@ public:
     bool is_fighting_friendly(); 
     bool is_fighting_enemy();
     e_minimap_figure_color get_figure_color(); 
+    const figure_static_params &params() const;
+    const animation_t &anim(const xstring &key);
 
     void kill();
 
@@ -560,9 +563,9 @@ public:
 
     inline uint8_t direction() const { return base.direction; }
     inline const building *home() const { return base.home(); }
-    inline const animation_t &anim(const xstring &anim_key) const { return anim()[anim_key]; }
-    inline animation_context &animation() { return base.anim; }
-    inline const animation_context &animation() const { return base.anim; }
+    inline const animation_t &anim(const xstring &anim_key) const { return base.anim(anim_key); }
+    inline animation_context &animation() { return base.animctx; }
+    inline const animation_context &animation() const { return base.animctx; }
     inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
            void advance_action(int action, tile2i t);
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }

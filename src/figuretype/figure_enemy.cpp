@@ -20,7 +20,7 @@ void figure_enemy::update_animation() {
 
 void figure_enemy::enemy_initial(formation *m) {
     base.map_figure_update();
-    base.anim.frame = 0;
+    base.animctx.frame = 0;
     route_remove();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {

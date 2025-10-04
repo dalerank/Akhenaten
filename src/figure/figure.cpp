@@ -510,6 +510,10 @@ e_minimap_figure_color figure::get_figure_color() {
     return dcast()->minimap_color();
 }
 
+const figure_static_params& figure::params() const {
+    return figure_static_params::get(type);
+}
+
 void figure::kill() {
     if (state != FIGURE_STATE_ALIVE) {
         return;
@@ -545,8 +549,8 @@ void figure_impl::on_change_terrain(int old, int current) {
                             && !(current & TERRAIN_SHORE))
                             && !(current & TERRAIN_BUILDING);
 
-    const bool is_swim_animaion = base.anim.key == animkeys().swim;
-    const bool is_walk_animaion = base.anim.key == animkeys().walk;
+    const bool is_swim_animaion = base.animctx.key == animkeys().swim;
+    const bool is_walk_animaion = base.animctx.key == animkeys().walk;
     const bool is_moving_animation = is_swim_animaion || is_walk_animaion;
 
     if (!is_moving_animation) {
@@ -616,9 +620,9 @@ bool figure_impl::can_move_by_water() const {
 
 void figure_impl::main_image_update() {
     if (base.state == FIGURE_STATE_DYING) {
-        base.main_image_id = base.anim.start() + base.anim.current_frame();
+        base.main_image_id = base.animctx.start() + base.animctx.current_frame();
     } else {
-        base.main_image_id = base.anim.start() + base.figure_image_direction() + 8 * base.anim.current_frame();
+        base.main_image_id = base.animctx.start() + base.figure_image_direction() + 8 * base.animctx.current_frame();
     }
 }
 
@@ -678,7 +682,7 @@ void figure_static_params::base_load(archive arch) {
 
 void figure_impl::update_animation() {
     xstring animkey;
-    if (!base.anim.key) {
+    if (!base.animctx.key) {
         animkey = animkeys().walk;
     }
  
@@ -708,7 +712,7 @@ const fproperty fproperties[] = {
     },
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
-    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { return bvariant(ui::str(64, f.type)); }},
+    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(clname); }},
     { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
@@ -766,6 +770,10 @@ void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
 
 bool figure::has_cart() const {
     return (use_cart && cart_image_id != 0);
+}
+
+const animation_t &figure::anim(const xstring &key) {
+    return params().animations[key];
 }
 
 vec2i figure::adjust_pixel_offset(const vec2i pixel) {
@@ -885,7 +893,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &f->main_image_id);
     f->main_image_id += 18;
 
-    iob->bind(BIND_SIGNATURE_INT16, &f->anim.frame);
+    iob->bind(BIND_SIGNATURE_INT16, &f->animctx.frame);
     iob->bind(BIND_SIGNATURE_UINT16, &f->next_figure);
     
     if (f->next_figure >= MAX_FIGURES)

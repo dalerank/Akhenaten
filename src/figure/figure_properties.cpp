@@ -109,18 +109,18 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
-        game_debug_show_property("key", f->anim.key, true);
-        game_debug_show_property("base", f->anim.base);
-        game_debug_show_property("offset", f->anim.offset);
-        game_debug_show_property("hashtime", f->anim.hashtime);
-        game_debug_show_property("pos", f->anim.pos);
-        game_debug_show_property("frame_duration", f->anim.frame_duration);
-        game_debug_show_property("max_frames", f->anim.max_frames);
-        game_debug_show_property("frame", f->anim.frame);
-        game_debug_show_property("can_reverse", f->anim.can_reverse);
-        game_debug_show_property("loop", f->anim.loop);
-        game_debug_show_property("is_reverse", f->anim.is_reverse);
-        game_debug_show_property("was_finished", f->anim.was_finished);
+        game_debug_show_property("key", f->animctx.key, true);
+        game_debug_show_property("base", f->animctx.base);
+        game_debug_show_property("offset", f->animctx.offset);
+        game_debug_show_property("hashtime", f->animctx.hashtime);
+        game_debug_show_property("pos", f->animctx.pos);
+        game_debug_show_property("frame_duration", f->animctx.frame_duration);
+        game_debug_show_property("max_frames", f->animctx.max_frames);
+        game_debug_show_property("frame", f->animctx.frame);
+        game_debug_show_property("can_reverse", f->animctx.can_reverse);
+        game_debug_show_property("loop", f->animctx.loop);
+        game_debug_show_property("is_reverse", f->animctx.is_reverse);
+        game_debug_show_property("was_finished", f->animctx.was_finished);
 
         ImGui::TreePop();
     }

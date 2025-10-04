@@ -93,25 +93,25 @@ void figure::image_set_animation(const xstring &anim) {
 
 void figure::image_set_animation(const animation_t &anim) {
     if (anim.pack > 0 || anim.id > 0) {
-        this->anim.setup(anim);
+        this->animctx = anim;
         return;
     }
 }
 
 void figure::image_set_animation(int collection, int group, int offset, int max_frames, int duration, bool loop) {
-    anim.base = image_id_from_group(collection, group);
-    anim.offset = offset;
-    anim.max_frames = max_frames;
-    anim.frame_duration = std::max(1, duration);
-    anim.loop = loop;
+    animctx.base = image_id_from_group(collection, group);
+    animctx.offset = offset;
+    animctx.max_frames = max_frames;
+    animctx.frame_duration = std::max(1, duration);
+    animctx.loop = loop;
 }
 
 void figure::figure_image_update(bool refresh_only) {
-    if (!anim.valid()) {
+    if (!animctx.valid()) {
         return;
     }
 
-    anim.update(refresh_only);
+    animctx.update(refresh_only);
 
     dcast()->main_image_update();
     dcast()->cart_image_update();

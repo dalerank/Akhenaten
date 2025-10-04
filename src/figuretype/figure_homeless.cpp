@@ -79,7 +79,7 @@ void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
     switch (action_state()) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         base.wait_ticks++;
         if (base.wait_ticks > 51) {
             base.wait_ticks = 0;

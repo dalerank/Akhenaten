@@ -130,7 +130,7 @@ void figure_enemy_fast_sword::enemy_marching(formation *m) {
 
 void figure_enemy_fast_sword::enemy_initial(formation *m) {
     base.map_figure_update();
-    base.anim.frame = 0;
+    base.animctx.frame = 0;
     route_remove();
     base.wait_ticks--;
 
@@ -170,7 +170,7 @@ void figure_enemy_fast_sword::update_animation() {
         animkey = animkeys().death;
     } else if (action_state() == ACTION_153_ENEMY_FAST_SWORD_MARCHING) {
         animkey = animkeys().walk;
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
     }
 
     image_set_animation(animkey);

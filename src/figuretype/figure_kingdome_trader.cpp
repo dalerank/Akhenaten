@@ -121,7 +121,7 @@ void figure_trade_caravan::figure_action() {
             }
             go_to_next_storageyard(base_tile, 0);
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case ACTION_101_TRADE_CARAVAN_ARRIVING:
@@ -168,7 +168,7 @@ void figure_trade_caravan::figure_action() {
                 go_to_next_storageyard(tile(), -1);
             }
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case ACTION_104_TRADE_CARAVAN_RECALC_LEAVING:
@@ -212,7 +212,7 @@ sound_key figure_trade_caravan::phrase_key() const {
 
 void figure_trade_caravan::update_animation() {
     int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
-    base.main_image_id = anim(animkeys().walk).first_img() + dir + 8 * base.anim.frame;
+    base.main_image_id = anim(animkeys().walk).first_img() + dir + 8 * base.animctx.frame;
 }
 
 bvariant figure_trade_caravan::get_property(const xstring& domain, const xstring& name) const {

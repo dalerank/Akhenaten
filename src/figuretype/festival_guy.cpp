@@ -54,7 +54,7 @@ void figure_festival_guy::update_animation() {
 void figure_festival_guy::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_10_FESTIVAL_GUY_CREATED:
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (--base.wait_ticks <= 0) {
             advance_action(FIGURE_ACTION_11_FESTIVAL_GUY_GOTO_SQUARE);
         }

@@ -16,7 +16,7 @@ void figure_enemy_archer::on_create() {
 
 void figure_enemy_archer::enemy_initial(formation *m) {
     base.map_figure_update();
-    base.anim.frame = 0;
+    base.animctx.frame = 0;
     route_remove();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
@@ -205,7 +205,7 @@ void figure_enemy_archer::figure_action() {
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-            base.anim.frame = 0;
+            base.animctx.frame = 0;
         }
         break;
     }

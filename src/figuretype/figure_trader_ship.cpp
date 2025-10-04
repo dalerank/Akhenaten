@@ -148,7 +148,7 @@ void figure_trade_ship::figure_action() {
             
             advance_action(FIGURE_ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
@@ -196,7 +196,7 @@ void figure_trade_ship::figure_action() {
         default: base.direction = DIR_0_TOP_RIGHT; break;
         }
 
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
         break;
 
@@ -235,7 +235,7 @@ void figure_trade_ship::figure_action() {
             }
             base.wait_ticks = 0;
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:

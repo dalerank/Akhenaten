@@ -54,7 +54,7 @@ std::pair<e_resource, int> acquire_resource_for_getting_deliveryman(building* sr
 
 void figure_storageyard_cart::do_retrieve(int action_done) {
     base.wait_ticks++;
-    base.anim.frame = 0;
+    base.animctx.frame = 0;
     if (base.wait_ticks < 4) {
         return;
     }

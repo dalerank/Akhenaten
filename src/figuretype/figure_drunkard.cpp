@@ -23,14 +23,14 @@ void figure_drunkard::figure_action() {
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
     case ACTION_12_DRUNKARD_CREATED_SOBER: // spawning
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (base.wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
             building_id bid = building_closest_route(*home(),
                 [] (building &b) { return b.type == BUILDING_SENET_HOUSE; });
 
             if (bid > 0) {
-                base.anim.offset = 0;
+                base.animctx.offset = 0;
                 set_destination(bid);
                 advance_action(ACTION_9_DRUNKARD_GOTO_SENET_HOUSE);
             } else {
@@ -40,7 +40,7 @@ void figure_drunkard::figure_action() {
         break;
 
     case ACTION_14_DRUNKARD_CREATED: // spawning
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (base.wait_ticks++ >= 10) {
             tile2i dest(-1, -1);
             building_id bid = building_closest_route(*home(),
@@ -51,7 +51,7 @@ void figure_drunkard::figure_action() {
                 });
 
             if (bid > 0) {
-                base.anim.offset = 0;
+                base.animctx.offset = 0;
                 set_destination(bid);
                 advance_action(ACTION_11_DRUNKARD_RETURN_HOME);
             } else {

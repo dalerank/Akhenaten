@@ -129,6 +129,6 @@ void figure_hyena::update_animation() {
     } else if (action_state() == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     } else {
-        base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * base.animctx.frame;
     }
 }

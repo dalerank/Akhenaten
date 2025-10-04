@@ -44,7 +44,7 @@ void figure_sled::update_animation() {
 }
 
 void figure_sled::do_deliver(int action_done) {
-    base.anim.frame = 0;
+    base.animctx.frame = 0;
     base.wait_ticks++;
 
     int carrying = base.get_carrying_amount();

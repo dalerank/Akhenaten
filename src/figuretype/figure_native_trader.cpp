@@ -60,7 +60,7 @@ void figure_native_trader::figure_action() {
                 poof();
             }
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE:
@@ -84,7 +84,7 @@ void figure_native_trader::figure_action() {
                 }
             }
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
     }
 
@@ -98,7 +98,7 @@ void figure_native_trader::update_animation() {
         base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.animctx.frame;
     }
 
     int cart_img = anim("cart").first_img();

@@ -106,7 +106,7 @@ void figure::zebra_action() {
     } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
     } else {
-        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * anim.frame;
+        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * animctx.frame;
     }
 }
 

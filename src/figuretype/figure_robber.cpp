@@ -67,8 +67,8 @@ void figure_robber::figure_action() {
             advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
             route_remove();
         } else if (direction() == DIR_FIGURE_ATTACK) {
-            if (base.anim.frame > 12) {
-                base.anim.frame = 0;
+            if (base.animctx.frame > 12) {
+                base.animctx.frame = 0;
             }
         }
     }
@@ -83,7 +83,7 @@ void figure_robber::figure_action() {
     base.wait_ticks++;
     if (base.wait_ticks > 200) {
         poof();
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
     }
 }
 

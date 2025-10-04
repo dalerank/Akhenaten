@@ -356,7 +356,7 @@ void figure_docker::figure_action() {
     case FIGURE_ACTION_132_DOCKER_IDLING:
         base.resource_id = RESOURCE_NONE;
         base.cart_image_id = 0;
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (!deliver_import_resource(b)) {
             fetch_export_resource(b);
         }
@@ -364,7 +364,7 @@ void figure_docker::figure_action() {
 
     case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
         base.cart_image_id = 0;
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (dock.queued_docker_id <= 0) {
             dock.queued_docker_id = id();
             base.wait_ticks = 0;
@@ -420,7 +420,7 @@ void figure_docker::figure_action() {
             advance_action(FIGURE_ACTION_132_DOCKER_IDLING);
             base.wait_ticks = 0;
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
@@ -471,7 +471,7 @@ void figure_docker::figure_action() {
             }
             base.wait_ticks = 0;
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
@@ -490,7 +490,7 @@ void figure_docker::figure_action() {
                 fetch_export_resource(b);
             }
         }
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
     }
 }
@@ -514,7 +514,7 @@ void figure_docker::update_animation() {
         base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 44);
         base.cart_image_id = 0;
     } else {
-        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.anim.frame;
+        base.main_image_id = image_id_from_group(PACK_SPR_MAIN, 43) + dir + 8 * base.animctx.frame;
     }
 
     if (base.cart_image_id) {

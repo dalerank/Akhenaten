@@ -286,7 +286,10 @@ figure_sound_t figure_market_buyer::get_sound_reaction(xstring key) const {
 
 bool figure_market_buyer::window_info_background(object_info &c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
+    figure *f = c.figure_get();
+
+    const uint16_t big_image = f->anim(animkeys().big_image).first_img();
+    ImageDraw::img_generic(ctx, big_image, c.offset + vec2i{28, 112});
 
     lang_text_draw(254, base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);

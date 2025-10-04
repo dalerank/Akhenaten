@@ -15,12 +15,12 @@ void figure_lumberjack::figure_action() {
     switch (action_state()) {
     case ACTION_8_LUMBERJACK_RECALCULATE:
     case ACTION_14_LUMBERJACK_CREATED: // spawning
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         if (--base.wait_ticks <= 0) {
             const auto rtile = base.find_resource_tile(RESOURCE_TIMBER);
 
             if (rtile.res == RESOURCE_TIMBER) {
-                base.anim.offset = 0;
+                base.animctx.offset = 0;
                 do_goto(rtile.tile, TERRAIN_USAGE_PREFER_ROADS);
                 advance_action(ACTION_9_LUMBERJACK_GOTO_RESOURCE);
             } else {
