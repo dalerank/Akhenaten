@@ -2,6 +2,12 @@
 
 #include "building/building.h"
 
+struct building_gatehouse_ghost {
+    svector<vec2i, 8> main_view_offset;
+    svector<vec2i, 8> part_view_offset;
+};
+ANK_CONFIG_STRUCT(building_gatehouse_ghost, main_view_offset, part_view_offset)
+
 class building_gatehouse : public building_impl {
 public:
     building_gatehouse(building &b) : building_impl(b) {}
@@ -14,16 +20,10 @@ public:
 
     template<typename T>
     struct static_params_t : public buildings::model_t<T> {
-        struct {
-            svector<vec2i, 8> main_view_offset;
-            svector<vec2i, 8> part_view_offset;
-        } ghost;
+        building_gatehouse_ghost ghost;
 
         virtual void archive_load(archive arch) override {
-            arch.r_section("ghost", [this] (archive ghost_arch) {
-                ghost.main_view_offset = ghost_arch.r_array_vec2i("main");
-                ghost.part_view_offset = ghost_arch.r_array_vec2i("part");
-            });
+            arch.r("ghost", ghost);
         }
 
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
