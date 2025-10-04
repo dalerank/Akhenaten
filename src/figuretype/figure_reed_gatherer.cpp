@@ -8,10 +8,6 @@
 
 figure_reed_gatherer::static_params figure_reed_gatherer_m;
 
-void figure_reed_gatherer::static_params::archive_load(archive arch) {
-    max_amount = arch.r_int("max_amount");
-}
-
 void figure_reed_gatherer::figure_before_action() {
     building *b = home();
     if (b->state != BUILDING_STATE_VALID) {
