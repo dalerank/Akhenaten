@@ -50,5 +50,5 @@ void figure_explosion::update_animation() {
     } else {
         base.main_image_id = img_id + MAX_CLOUD_IMAGE_OFFSETS;
     }
-    base.anim.base = 0;
+    base.animctx.base = 0;
 }

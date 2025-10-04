@@ -39,7 +39,7 @@ void figure_emigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
     switch (action_state()) {
     case FIGURE_ACTION_4_EMIGRANT_CREATED:
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         base.wait_ticks++;
         if (base.wait_ticks >= 5) {
             advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
@@ -65,7 +65,7 @@ void figure_emigrant::figure_action() {
     case 10:
         base.wait_ticks--;
         if (base.wait_ticks > 0) {
-            base.anim.frame = 0;
+            base.animctx.frame = 0;
             break;
         }
 

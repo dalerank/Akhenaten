@@ -45,7 +45,7 @@ void figure_governor::figure_action() {
     base.wait_ticks++;
     if (base.wait_ticks > 200) {
         poof();
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
     }
 }
 

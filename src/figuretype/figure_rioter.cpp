@@ -51,8 +51,8 @@ void figure_rioter::figure_action() {
             advance_action( FIGURE_ACTION_120_RIOTER_CREATED );
             route_remove();
         } else if (direction() == DIR_FIGURE_ATTACK) {
-            if (base.anim.frame > 12) {
-                base.anim.frame = 0;
+            if (base.animctx.frame > 12) {
+                base.animctx.frame = 0;
             }
         }
         break;

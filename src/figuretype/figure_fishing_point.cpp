@@ -24,7 +24,7 @@ void figure_fishing_point::figure_action() {
     base.use_cross_country = true;
     bool animation_finished = false;
     auto &d = runtime_data();
-    if (base.anim.frame == 0) {
+    if (base.animctx.frame == 0) {
         base.progress_on_tile++;
         if (base.progress_on_tile > 14) { // wrap around
             base.progress_on_tile = 0;
@@ -77,13 +77,13 @@ bool figure_fishing_point::can_move_by_water() const {
 }
 
 void figure_fishing_point::main_image_update() {
-    base.main_image_id = base.anim.start() + base.anim.current_frame();
+    base.main_image_id = base.animctx.start() + base.animctx.current_frame();
 }
 
 figure *figure_fishing_point::create(tile2i tile) {
     random_generate_next();
     figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
-    fish->anim.frame = random_byte() & 0x1f;
+    fish->animctx.frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
     fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
     fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);

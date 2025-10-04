@@ -78,7 +78,7 @@ void figure_ostrich::update_animation() {
     case ACTION_15_ANIMAL_TERRIFIED: // terrified
     case 14:                         // scared
         image_set_animation(anim("idle"));
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:

@@ -128,7 +128,7 @@ void figure_tower_sentry::figure_action() {
     tower_sentry_pick_target();
     switch (action_state()) {
     case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         wait_ticks++;
         if (wait_ticks > 40) {
             wait_ticks = 0;

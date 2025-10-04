@@ -33,12 +33,12 @@ void figure_shipwreck::figure_action() {
 }
 
 void figure_shipwreck::update_animation() {
-    base.main_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
+    base.main_image_id = anim(animkeys().walk).first_img() + base.animctx.frame / 16;
 }
 
 bool figure_shipwreck::window_info_background(object_info &c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, big_people_image(type()), c.offset + vec2i{28, 112});
+    ImageDraw::img_generic(ctx, anim(animkeys().big_image).first_img(), c.offset + vec2i{28, 112});
     lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     return true;
@@ -47,7 +47,7 @@ bool figure_shipwreck::window_info_background(object_info &c) {
 figure *figure_shipwreck::create(tile2i tile) {
     random_generate_next();
     figure* f = figure_create(FIGURE_SHIPWRECK, tile, DIR_0_TOP_RIGHT);
-    f->anim.frame = random_byte() & 0x1f;
+    f->animctx.frame = random_byte() & 0x1f;
     f->progress_on_tile = random_byte() & 7;
     f->advance_action(FIGURE_ACTION_15_RETURNING2);
     f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x(), 15 * f->destination_tile.y(), 0);

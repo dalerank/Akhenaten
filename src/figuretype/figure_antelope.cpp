@@ -76,7 +76,7 @@ void figure_antelope::update_animation() {
     case ACTION_15_ANIMAL_TERRIFIED: // terrified
     case 14:                         // scared
         image_set_animation(animkeys().idle);
-        base.anim.frame = 0;
+        base.animctx.frame = 0;
         break;
 
     case FIGURE_ACTION_149_CORPSE:
@@ -95,7 +95,7 @@ void figure_antelope::update_animation() {
         break;
     }
 
-    base.main_image_id = anim(animkeys().walk).first_img() + base.anim.frame / 16;
+    base.main_image_id = anim(animkeys().walk).first_img() + base.animctx.frame / 16;
 }
 
 void figure_antelope::before_poof() {
