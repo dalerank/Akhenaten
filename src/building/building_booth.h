@@ -5,13 +5,9 @@
 class building_booth : public building_entertainment {
 public:
     BUILDING_METAINFO(BUILDING_BOOTH, building_booth, building_entertainment)
-
     virtual building_booth *dcast_booth() override { return this; }
 
     struct static_params : public building_model {
-        int booth = 0;
-
-        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
         virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const override;

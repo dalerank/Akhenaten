@@ -28,10 +28,6 @@
 
 building_booth::static_params booth_m;
 
-void building_booth::static_params::archive_load(archive arch) {
-    booth = anim[animkeys().booth].first_img();
-}
-
 bool building_booth::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
     const bool has_figure = map_has_figure_at(tile);
@@ -50,17 +46,17 @@ void building_booth::static_params::planer_ghost_preview(build_planner &planer, 
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        const auto &params = current_params();
-        int square_id = params.anim[animkeys().square].first_img();
+        int square_id = first_img(animkeys().square);
         for (int i = 0; i < building_size * building_size; i++) {
             ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
         }
 
+        const int booth = first_img(animkeys().booth);
         switch (orientation / 2) {
-        case 0: planer.draw_building_ghost(ctx, params.booth, pixel, COLOR_MASK_GREEN); break;
-        case 1: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
-        case 2: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
-        case 3: planer.draw_building_ghost(ctx, params.booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
+        case 0: planer.draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN); break;
+        case 1: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;
+        case 2: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ 0, 30 }, COLOR_MASK_GREEN); break;
+        case 3: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN); break;
         }
     }
 }
@@ -140,7 +136,7 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
     int grid_offset = tile.grid_offset();
     auto &d = runtime_data();
-    if (d.juggler_visited && map_image_at(grid_offset) == current_params().booth) {
+    if (d.juggler_visited && map_image_at(grid_offset) == first_img(animkeys().booth)) {
         const animation_t &anim = this->anim(animkeys().juggler);
         building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
     }
@@ -149,12 +145,12 @@ bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 
 bool building_booth::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
-    return (current_params().booth != image_id);
+    return (first_img(animkeys().booth)!= image_id);
 }
 
 bool building_booth::force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     int image_id = map_image_at(tile);
-    if (current_params().booth == image_id) {
+    if (first_img(animkeys().booth) == image_id) {
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_full);
         command.image_id = image_id;
         command.pixel = pixel;
