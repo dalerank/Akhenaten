@@ -53,7 +53,7 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
 
 #define ANK_CONFIG_OBJECTS_VARIABLE(a, name) \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { g_config_arch.r(name, a); call_init_if_exists(js_t, std::bool_constant<class_has_init_function_v<decltype(a)>>{}); }
+    void config_load_ ## a() { g_config_arch.r(name, a); call_init_if_exists(a); }
 
 #define ANK_ARRAY_VARIABLE(a) a; \
     ANK_CONFIG_ARRAY_VARIABLE(a, #a)
