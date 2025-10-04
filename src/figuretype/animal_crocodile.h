@@ -26,7 +26,6 @@ public:
         uint16_t max_hungry;
         uint16_t max_hunting_distance;
         uint8_t chase_speed_mult;
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -40,3 +39,5 @@ public:
     virtual void update_animation() override;
     virtual void update_day() override;
 };
+ANK_CONFIG_STRUCT(figure_crocodile::static_params, 
+    max_hungry, max_hunting_distance, chase_speed_mult)
