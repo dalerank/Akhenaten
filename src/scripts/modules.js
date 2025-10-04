@@ -43,6 +43,7 @@ import ui_advisors_window
 import ui_terrain_info
 import ui
 import ui_figure_trader_window
+import ui_figure_enemy_window
 import ui_top_menu_widget
 import ui_advisor_religion
 import fonts

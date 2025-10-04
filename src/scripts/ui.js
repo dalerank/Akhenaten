@@ -578,12 +578,6 @@ figure_carrier_info_window = {
     })
 }
 
-info_window_figure_enemy = {
-    ui : {
-        background  : { type : "outer_panel",   pos: [0, 0], size: [29, 22]},
-    }
-}
-
 temple_info_window = {
     ui : {
         background   : outer_panel({ pos: [0, 0], size: [29, 18]}),
