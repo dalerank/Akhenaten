@@ -15,10 +15,6 @@
 
 building_festival_square::static_params festival_square_m;
 
-void building_festival_square::static_params::archive_load(archive arch) {
-    square = anim[animkeys().square].first_img();
-}
-
 void building_festival_square::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(5, 5); // TODO
 }
@@ -61,7 +57,7 @@ void building_festival_square::on_place_update_tiles(int orientation, int varian
         return;
     }
 
-    map_add_venue_plaza_tiles(id(), size, tile(), festival_square_m.square, false);
+    map_add_venue_plaza_tiles(id(), size, tile(), first_img(animkeys().square), false);
     g_city.buildings.festival_square = this->tile();
 }
 
