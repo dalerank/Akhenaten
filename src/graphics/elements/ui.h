@@ -152,7 +152,8 @@ struct element {
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void text_color(color) {}
     virtual void image(int) {}
-    virtual void image(image_desc) {}
+    virtual void image(const animation_t&) {}
+    virtual void image(const image_desc&) {}
     virtual image_desc image() const { return {}; }
     virtual void font(int) {}
     virtual e_font font() const { return FONT_INVALID; }
@@ -182,6 +183,7 @@ struct element {
     inline void operator=(const xstring &t) { text(t.c_str()); }
     inline void operator=(const textid &t) { text(ui::str(t.group, t.id)); }
     inline void operator=(const image_desc &t) { image(t); }
+    inline void operator=(const animation_t &t) { image(t); }
     void update_pos(const margini &r);
     vec2i screen_pos() const;
 
@@ -236,7 +238,8 @@ struct eimg : public element {
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
-    virtual void image(image_desc image) override;
+    virtual void image(const image_desc& image) override;
+    virtual void image(const animation_t& image) override;
     virtual void image(int image) override;
     virtual image_desc image() const override { return img_desc; }
 };
@@ -396,8 +399,9 @@ struct eimage_button : public element {
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
     virtual element &onrclick(std::function<void(int, int)> func) override { _rfunc = func; return *this; }
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
-    virtual void tooltip(const xstring &t) override { _tooltip = t; }
-    virtual void image(image_desc d) override { img_desc = d; }
+    virtual void tooltip(const xstring& t) override { _tooltip = t; }
+    virtual void image(const image_desc& d) override { img_desc = d; }
+    virtual void image(const animation_t& d) override;
     virtual void image(int v) override { img_desc.offset = v; }
 
     virtual eimage_button *dcast_image_button() override { return this; }
