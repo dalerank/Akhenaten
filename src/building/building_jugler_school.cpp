@@ -9,10 +9,6 @@
 
 building_juggler_school::static_params juggler_school_m;
 
-void building_juggler_school::static_params::archive_load(archive arch) {
-    spawn_interval = arch.r_int("spawn_interval", 10);
-}
-
 void building_juggler_school::update_day() {
     building_impl::update_day();
 
