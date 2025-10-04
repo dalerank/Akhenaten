@@ -8,7 +8,7 @@ public:
     virtual building_statue *dcast_statue() override { return this; }
 
     struct statue_params_t {
-        std::vector<image_desc> var;
+        svector<image_desc, 8> variants;
         int get_image(e_building_type type, int orientation, int variant) const;
     };
 
@@ -16,7 +16,10 @@ public:
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
 
-        virtual void archive_load(archive arch) override;
+        virtual void archive_load(archive arch) override {
+            inherited::archive_load(arch);
+            arch.r("variants", this->variants);
+        }
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
@@ -48,6 +51,7 @@ public:
     uint8_t service() const { return runtime_data().service; }
     void set_service(uint8_t v) { runtime_data().service = v; }
 };
+ANK_CONFIG_STRUCT(building_statue::statue_params_t, variants)
 
 class building_small_statue : public building_statue {
 public:
