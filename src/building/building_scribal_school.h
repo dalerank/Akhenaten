@@ -8,10 +8,6 @@ public:
     virtual building_scribal_school *dcast_scribal_school() override { return this; }
 
     struct static_params : public building_model {
-        using inherited = model_t<building_scribal_school>;
-
-        using inherited::archive_load;
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA(static_params);
 
     virtual void spawn_figure() override;

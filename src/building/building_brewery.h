@@ -8,8 +8,7 @@ public:
 
     virtual building_brewery *dcast_brewery() override { return this; }
 
-    struct static_params : public buildings::model_t<building_brewery> {
-        virtual void archive_load(archive arch) override;
+    struct static_params : public building_model {
     } BUILDING_STATIC_DATA(static_params);
 
     virtual bool is_workshop() const override { return true; }

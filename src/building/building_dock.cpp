@@ -28,10 +28,6 @@
 
 building_dock::static_params dock_m;
 
-void building_dock::static_params::archive_load(archive arch) {
-
-}
-
 int building_dock::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     const auto result = map_shore_determine_orientation(end, building_size, true);
     planer.draw_as_constructing = result.match;
