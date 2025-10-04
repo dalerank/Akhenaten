@@ -24,6 +24,7 @@ public:
 
         virtual void archive_load(archive arch) override {
             arch.r("ghost", ghost);
+            assert(!ghost.main_view_offset.empty() && !ghost.part_view_offset.empty());
         }
 
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
