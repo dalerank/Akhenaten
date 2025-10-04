@@ -618,6 +618,23 @@ template<typename, typename = void> struct class_has_init_function : std::false_
 template<typename T> struct class_has_init_function<T, std::void_t<decltype(std::declval<T &>().archive_init())>> : std::true_type {};
 template<typename T> constexpr bool class_has_init_function_v = class_has_init_function<T>::value;
 
+namespace archive_helper {
+    template<typename T>
+    inline void reader(archive js_j, T &js_t);
+
+    template<>
+    inline void reader<vec2i>(archive arch, vec2i &v) { v = arch.r_vec2i_impl("x", "y"); }
+
+    template<>
+    inline void reader<tile2i>(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = { t.x, t.y }; }
+
+    template<>
+    inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
+
+    template<typename T> struct class_has_archive_reader : std::false_type {};
+    template<typename T> constexpr bool class_has_archive_reader_v = class_has_archive_reader<T>::value;
+}
+
 // The problem is that  clang SFINAE trait class_has_load_function is working incorrectly. 
 // Clang checks constexpr if more strictly, and even when the condition is false, it still checks 
 // the syntactic correctness of the code inside the block.
@@ -633,22 +650,14 @@ template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::tr
 template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
 template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_if_exists_impl(js_t, std::bool_constant<class_has_init_function_v<Type>>{}); }
 
-namespace archive_helper {
-    template<typename T>
-    inline void reader(archive js_j, T &js_t);
+template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists_impl(ArchiveT js_j, Type &js_t, std::true_type) { js_j.r(js_t); return true; }
+template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists_impl(ArchiveT js_j, Type &js_t, std::false_type) { return false; /*nothing to do, class has no load function*/ }
+template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists(ArchiveT js_j, Type &js_t) { return call_struct_reader_if_exists_impl(js_j, js_t, std::bool_constant<archive_helper::class_has_archive_reader_v<Type>>{}); }
 
-    template<>
-    inline void reader<vec2i>(archive arch, vec2i &v) { v = arch.r_vec2i_impl("x", "y"); }
-
-    template<>
-    inline void reader<tile2i>(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = { t.x, t.y }; }
-
-    template<>
-    inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
-}
 
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
+    template<> struct class_has_archive_reader<Type> : std::true_type {};                         \
     template<>                                                                                    \
     inline void reader<Type>(archive js_j, Type& js_t) {                                          \
         call_unload_if_exists(js_t);                                                              \
