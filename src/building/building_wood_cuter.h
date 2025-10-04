@@ -10,7 +10,6 @@ public:
 
     struct static_params : public building_model {
         uint8_t max_gatherers;
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -27,3 +26,4 @@ public:
 
     bool can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person);
 };
+ANK_CONFIG_STRUCT(building_wood_cutter::static_params, max_gatherers)
