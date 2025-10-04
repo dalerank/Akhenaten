@@ -34,8 +34,6 @@ public:
 
     struct static_params : public figure_model {
         uint8_t wait_on_calculate_destination;
-
-        virtual void archive_load(archive arch) override;
     } FIGURE_STATIC_DATA_T;
 
     virtual void figure_before_action() override;
@@ -54,3 +52,4 @@ public:
     void determine_granaryman_destination();
     void determine_storageyard_cart_destination();
 };
+ANK_CONFIG_STRUCT(figure_cartpusher::static_params, wait_on_calculate_destination)
