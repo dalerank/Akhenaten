@@ -12,7 +12,6 @@ public:
         int warship_progress_cost;
         int transport_progress_cost;
         int fishingboat_progress_cost;
-        virtual void archive_load(archive arch) override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     } BUILDING_STATIC_DATA_T;
 
@@ -38,3 +37,4 @@ public:
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 };
+ANK_CONFIG_STRUCT(building_shipyard::static_params, warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)
