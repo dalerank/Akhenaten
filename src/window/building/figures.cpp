@@ -21,18 +21,6 @@
 #include "dev/debug.h"
 #include "game/game.h"
 
-const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
-     8,  13, 13, 9,  4,  13, 8,  16, 7,  4, 18, 42, 26, 41, 8,  1,  33, 10, 11, 25, 8,  25, 15, 15, 15,
-     60, 12, 14, 5,  52, 52, 2,  3,  6,  6, 13, 8,  8,  17, 12, 58, 21, 50, 8,  8,  8,  28, 30, 23, 8,
-     8,  8,  34, 39, 33, 43, 27, 48, 63, 8, 8,  8,  8,  8,  53, 8,  38, 62, 54, 55, 56, 8,  8
-};
-
-int big_people_image(e_figure_type type) {
-    int result = 0;
-    result = image_id_from_group(GROUP_PORTRAITS) + type;
-    return result;
-}
-
 int inventory_to_resource_id(int value) {
     switch (value) {
     case 0:

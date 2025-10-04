@@ -5,6 +5,7 @@ figure_fireman = {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 }
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false }
     fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
+    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
   }
 
   sounds : {
@@ -46,6 +47,7 @@ figure_water_carrier = {
     low_entertainment : {sound: "water_g08.wav", group:237, text:7},
     city_is_good : {sound: "water_g09.wav", group:237, text:8},
     city_is_amazing : {sound: "water_g10.wav", group:237, text:9},
+    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
   },
   terrain_usage : TERRAIN_USAGE_ROADS,
   max_roam_length : 640,
@@ -55,6 +57,7 @@ figure_protestor = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_PROTESTER }
 	}
 
 	category : figure_category_criminal
@@ -67,6 +70,7 @@ figure_robber = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ROBBER }
 	}
 
 	category : figure_category_criminal
@@ -79,6 +83,7 @@ figure_tomb_robber = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ROBER }
 	}
 
 	category : figure_category_criminal
@@ -91,6 +96,7 @@ figure_rioter = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ROBBER }
 	}
 
 	category : figure_category_criminal
@@ -109,6 +115,7 @@ figure_festival_guy = {
 		priest_ptah_walk: {pack:PACK_SPR_MAIN, id:187, max_frames:12}
 		priest_seth_walk: {pack:PACK_SPR_MAIN, id:193, max_frames:12}
 		priest_bast_walk: {pack:PACK_SPR_MAIN, id:208, max_frames:12}
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_GUY }
 	}
 
 	category: figure_category_citizen
@@ -124,6 +131,7 @@ figure_tower_sentry = {
 		death : { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false }
 		fire : { pack:PACK_SPR_MAIN, id:56, max_frames:12 }
 		attack : { pack:PACK_SPR_MAIN, id:197, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOWER_SENTRY }
 	}
 
 	category: figure_category_armed
@@ -146,6 +154,7 @@ figure_priest = {
 		seth_death : {  pack:PACK_SPR_MAIN, id:194, loop:false }
 		bast_walk : {  pack:PACK_SPR_MAIN, id:208, max_frames:12 }
 		bast_death : { pack:PACK_SPR_MAIN, id:209, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_PRIEST }
 	}
 
 	sounds : {
@@ -234,11 +243,12 @@ figure_priest = {
 
 figure_ostrich = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 },
-		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false },
-		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 },
-		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 },
-	},
+		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
+		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
+		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
+		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
+	}
 
 	category: figure_category_animal
 	max_damage: 100
@@ -254,6 +264,7 @@ figure_hyena = {
 		death : { pack:PACK_SPR_MAIN, id:163, max_frames:8, duration:3, loop:false }
 		idle : { pack:PACK_SPR_MAIN, id:164, max_frames:6 }
 		eating : { pack:PACK_SPR_MAIN, id:165, max_frames:6 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HYENA }
 	}
 
 	category: figure_category_animal
@@ -269,6 +280,7 @@ figure_antelope = {
 		eating : { pack:PACK_SPR_AMBIENT, id:32, max_frames:7 }
 		idle : { pack:PACK_SPR_AMBIENT, id:33, max_frames:8 }
 		run : { pack:PACK_SPR_AMBIENT, id:34, max_frames:8 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ANTELOPE }
 	}
 
 	category: figure_category_animal
@@ -290,6 +302,7 @@ figure_birds = {
 	animations : {
 		flying : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
 		eating : { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BIRDS }
 	}
 
 	category: figure_category_inactive
@@ -306,6 +319,7 @@ figure_crocodile = {
 		idle : { pack:PACK_SPR_MAIN, id:23, max_frames:1, loop: false }
 		swim_idle : { pack:PACK_SPR_MAIN, id:27, max_frames:11 }
 		eating : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CROCODILE }
 	}
 
 	category: figure_category_hostile
@@ -327,6 +341,7 @@ figure_hippo = {
 		sweem_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 }
 		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 }
 		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HIPPO }
 	}
 
 	category: figure_category_animal
@@ -341,6 +356,7 @@ figure_immigrant = {
 		death : { pack: PACK_SPR_MAIN, id: 15, max_frames:8, loop:false }
 		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 }
    	cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+   	big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_IMMIGRANT }
 	}
 
 	sounds : {
@@ -364,6 +380,7 @@ figure_ostrich_hunter = {
 		pack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false }
 		unpack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false, start_frame:11, reverse:true }
 		move_pack : { pack:PACK_SPR_MAIN, id:51, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
 	},
 	sounds : {
 		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 }
@@ -384,6 +401,7 @@ figure_hunter_arrow = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
 		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
 	}
 
 	category: figure_category_inactive
@@ -401,6 +419,7 @@ figure_antelope_hunter = {
 		figth_apcked : { pack:PACK_SPR_AMBIENT, id:40, max_frames:12 },
 		pack : { pack:PACK_SPR_AMBIENT, id:41, max_frames:18, loop:false },
 		move_pack : { pack:PACK_SPR_AMBIENT, id:42, max_frames:12 },
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
 	},
 	sounds : {
 		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 },
@@ -415,6 +434,7 @@ figure_antelope_hunter_arrow = {
 	animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:43, max_frames:12 }
 		shadow : { pack:PACK_SPR_AMBIENT, id:44, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
 	}
 
 	category: figure_category_inactive
@@ -427,6 +447,7 @@ figure_arrow = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
 		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARROW }
 	}
 
 	category: figure_category_inactive
@@ -444,6 +465,7 @@ figure_spear = {
   max_damage : 100
   missile_attack_value : 20
   terrain_usage : TERRAIN_USAGE_ANY,
+  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SPEAR }
 }
 
 figure_javelin = {
@@ -457,6 +479,7 @@ figure_javelin = {
   missile_attack_value : 5
   missile_delay : 70
   terrain_usage : TERRAIN_USAGE_ANY
+  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_JAVELIN }
 }
 
 figure_bolt = {
@@ -468,6 +491,7 @@ figure_bolt = {
   max_damage : 100
   missile_attack_value : 100
   terrain_usage : TERRAIN_USAGE_ANY,
+  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BOLT }
 }
 
 figure_standard_bearer = {
@@ -476,8 +500,9 @@ figure_standard_bearer = {
 		pole : { pack:PACK_GENERAL, id:54, offset:0, max_frames:21 }
 		flag_infantry : { pack:PACK_GENERAL, id:126, offset:0, max_frames:9, duration:6 }
 		flag_archers  : { pack:PACK_GENERAL, id:126, offset:10, max_frames:9, duration:6 }
-		flag_chariots : { pack:PACK_GENERAL, id:126, offset:20, max_frames:9, duration:6 },
+		flag_chariots : { pack:PACK_GENERAL, id:126, offset:20, max_frames:9, duration:6 }
 		sign : { pack:PACK_GENERAL, id:3 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STANDARD_BEARER }
 	}
 	category: figure_category_armed
   max_damage : 80
@@ -498,6 +523,7 @@ figure_magistrate = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 212, max_frames:12 }
 		death : { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MAGISTRATE }
 	}
 
 	sounds : {
@@ -531,6 +557,7 @@ figure_lumberjack = {
 		death: { pack:PACK_SPR_MAIN, id:74, max_frames:8, loop:false  }
 		work : { pack:PACK_SPR_MAIN, id:75, max_frames:12 }
 		back : { pack:PACK_SPR_MAIN, id:76, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LUMBERJACK }
 	}
 	sounds : {
 		hunting : {sound:"woodcutter_e01.wav", group:209, text:0 }
@@ -547,6 +574,7 @@ figure_lumberjack = {
 figure_flotsam = {
 	animations : {
 		walk : {pack:PACK_SPR_AMBIENT, id:0, max_frames: 12}
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FLOTSAM }
 	}
 
 	category: figure_category_inactive
@@ -558,6 +586,7 @@ figure_scriber = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
 	}
 
 	category: figure_category_citizen
@@ -570,6 +599,7 @@ figure_dentist = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DENTIST }
 	}
 
 	category: figure_category_citizen
@@ -583,6 +613,7 @@ figure_embalmer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:184, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:185, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMBALMER }
 	}
 	
 	category: figure_category_citizen
@@ -621,6 +652,7 @@ figure_physician = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:71, max_frames:12 }
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHYSICIAN }
 	}
 
 	sounds : {
@@ -650,6 +682,7 @@ figure_architector = {
 		death : { pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false }
     work_ground : { pack:PACK_SPR_AMBIENT, id:49, max_frames:6 }
     work_stand : { pack:PACK_SPR_AMBIENT, id:50, max_frames:6 }
+    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHITECT }
 	}
 
 	sounds : {
@@ -679,6 +712,7 @@ figure_market_buyer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:16, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:17, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_BUYER }
 	}
 	sounds : {
 		goto_store : {sound:"mkt_buyer_e01.wav", group:244, text:0 }
@@ -704,6 +738,7 @@ figure_delivery_boy = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:9, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:10, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DELIVERY_BOY }
 	}
 
 	sounds : {
@@ -724,6 +759,7 @@ figure_carpenter = {
 		work_ground : { pack:PACK_SPR_MAIN, id:147, max_frames:7 }
 		work_wall : { pack:PACK_SPR_MAIN, id:148, max_frames:7 }
 		climbing : { pack:PACK_SPR_MAIN, id:149, max_frames:3 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CARPENTER }
 	}
 
 	category: figure_category_citizen
@@ -738,6 +774,7 @@ figure_stonemason = {
 		work_ground : { pack:PACK_SPR_MAIN, id:152, max_frames:7 }
 		work_wall : { pack:PACK_SPR_MAIN, id:153, max_frames:7 }
 		climbing : { pack:PACK_SPR_MAIN, id:154, max_frames:3 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STONEMASON }
 	}
 
   category: figure_category_citizen
@@ -758,6 +795,7 @@ figure_cartpusher = {
     i_have_no_destination : { sound:"cartpusher_e01.wav", group:223, text:0}
     back_to_home : { sound:"cartpusher_e02.wav", group:223, text:1}
     delivering_items : { sound:"cartpusher_e03.wav", group:223, text:2}
+    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CART_PUSHER }
 	}
 
 	wait_on_calculate_destination : 30
@@ -770,6 +808,7 @@ figure_docker = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:43, max_frames:12 }
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DOCKER }
 	}
 
 	category: figure_category_citizen
@@ -783,6 +822,7 @@ figure_bricklayer = {
 		death : {pack:PACK_SPR_MAIN, id:110, max_frames:8, loop:false }
 		work : {pack:PACK_SPR_MAIN, id:111, max_frames:12, duration:4 }
 		idle : {pack:PACK_SPR_MAIN, id:112, max_frames:8, duration:2 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BRICKLAYER }
 	}
 
 	sounds : {
@@ -800,6 +840,7 @@ figure_storageyard_cart = {
 		walk : { pack: PACK_SPR_MAIN, id:43, max_frames:12 }
 		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
 		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STORAGEYARD_CART }
 	}
 
 	category: figure_category_citizen
@@ -811,6 +852,7 @@ figure_governor = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id:189, max_frames:12 }
 		death : { pack: PACK_SPR_MAIN, id:190, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_GOVERNOR }
 	}
 
 	category: figure_category_citizen
@@ -823,6 +865,7 @@ figure_trade_ship = {
 		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 }
 		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 }
 		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_SHIP }
 	}
 
 	sounds : {
@@ -842,6 +885,7 @@ figure_trade_ship = {
 figure_shipwreck = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SHIPWRECK }
 	}
 
 	category: figure_category_inactive
@@ -854,6 +898,7 @@ figure_emigrant = {
 		walk : { pack:PACK_SPR_MAIN, id:2, max_frames:12 }
 		death : { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false }
 		cart : { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMIGRANT }
 	}
 
 	sounds : {
@@ -878,6 +923,7 @@ figure_sled = {
 		limestone : { pack:PACK_SPR_MAIN, id:170, max_frames:1 }
 		clay : { pack:PACK_SPR_MAIN, id:171, max_frames:1 }
 		bricks : { pack:PACK_SPR_MAIN, id:172, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED }
 	}
 
 	category: figure_category_citizen
@@ -888,6 +934,7 @@ figure_sled = {
 figure_sled_puller = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:121, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED_PULLER }
 	}
 
 	category: figure_category_citizen
@@ -899,6 +946,7 @@ figure_trade_caravan = {
 	animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
 		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN }
 	}
 
 	category: figure_category_citizen
@@ -912,6 +960,7 @@ figure_caravan_donkey = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:52, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:53, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN_DONKEY }
 	}
 	category: figure_category_citizen
 	max_damage : 20
@@ -922,6 +971,7 @@ figure_homeless = {
 	animations : {
 		walk : { pack: PACK_SPR_MAIN, id: 12, max_frames:12 }
 		death : { pack: PACK_SPR_MAIN, id: 13, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HOMELESS }
 	}
 
   category: figure_category_citizen
@@ -935,6 +985,7 @@ figure_drunkard = {
 		back : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
 		womit : { pack:PACK_SPR_MAIN, id:204, max_frames:12, duration:4 }
 		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DRUNKARD }
 	}
 
 	category: figure_category_citizen
@@ -949,6 +1000,7 @@ figure_teacher = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:201, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TEACHER }
 	}
 
   category: figure_category_citizen
@@ -962,6 +1014,7 @@ figure_librarian = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LIBRARIAN }
 	}
 
 	category: figure_category_citizen
@@ -976,6 +1029,7 @@ figure_constable = {
 		walk : { pack:PACK_SPR_MAIN, id:20, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false }
 		attack : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CONSTABLE }
 	}
 
 	category: figure_category_citizen
@@ -990,6 +1044,7 @@ figure_herbalist = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:180, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HERBALIST }
 	}
 
 	sounds : {
@@ -1008,6 +1063,7 @@ figure_dancer = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
 		death : { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DANCER }
 	}
 
 	sounds : {
@@ -1035,6 +1091,7 @@ figure_musician = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 },
 		death : { pack:PACK_SPR_MAIN, id:192, max_frames:8, loop:false },
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MUSICIAN }
 	}
 
 	sounds : {
@@ -1063,6 +1120,7 @@ figure_soldier_infantry = {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:64, max_frames:12 }
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false }
 		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_INFANTRY }
 	}
 
 	category: figure_category_armed
@@ -1075,6 +1133,7 @@ figure_fishing_point = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_POINT }
 	}
 
 	category: figure_category_inactive
@@ -1086,6 +1145,7 @@ figure_fishing_spot = {
 	animations : {
 		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
 		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_SPOT }
 	}
 
 	terrain_usage : TERRAIN_USAGE_ANY,
@@ -1098,6 +1158,7 @@ figure_fishing_boat = {
 		death : {pack:PACK_SPR_MAIN, id:135, max_frames:8, loop:false }
 		work : {pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 }
 		idle : {pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_BOAT }
 	}
 
 	category: figure_category_citizen
@@ -1112,6 +1173,7 @@ figure_ferry_boat = {
 		swim : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 }
 		death : {pack:PACK_SPR_MAIN, id:138, max_frames:8, loop:false }
 		idle : {pack:PACK_SPR_MAIN, id:139, offset:3, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
 	}
 
 	category: figure_category_citizen
@@ -1126,6 +1188,7 @@ figure_warship = {
 		death : {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false }
 		attack : {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 }
 		idle : {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_WARSHIP }
 	}
 
 	orders : {
@@ -1153,6 +1216,7 @@ figure_transport_ship = {
 		swim : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 }
 		death : {pack:PACK_SPR_MAIN, id:35, max_frames:8, loop:false }
 		idle : {pack:PACK_SPR_MAIN, id:35, offset:8, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRANSPORT_SHIP }
 	}
 
 	category: figure_category_citizen
@@ -1165,6 +1229,7 @@ figure_soldier_archer = {
 		walk : {pack:PACK_SPR_MAIN, id:61, max_frames:12 }
 		death : {pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false }
 		attack : {pack:PACK_SPR_MAIN, id:63, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHER }
 	}
 
 	category: figure_category_armed
@@ -1180,6 +1245,7 @@ figure_soldier_charioteer = {
 		walk : {pack:PACK_SPR_MAIN, id:67, max_frames:12 }
 		death : {pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false }
 		attack : {pack:PACK_SPR_MAIN, id:69, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FCHARIOTEER }
 	}
 
 	category: figure_category_armed
@@ -1192,6 +1258,7 @@ figure_juggler = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_JUGGLER }
 	}
 
 	sounds : {
@@ -1218,6 +1285,7 @@ figure_senet_player = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:132, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:133, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SENET_PLAYER }
 	}
 
 	sounds : {
@@ -1244,6 +1312,7 @@ figure_market_trader = {
 	animations : {
 		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 }
 		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_TRADER }
 	}
 
 	sounds : {
@@ -1262,6 +1331,7 @@ figure_labor_seeker = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:206, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LABOR_SEEKER }
 	}
 	sounds : {
 		no_jobs : { sound:"Labor_e01.wav", group:213, text:0}
@@ -1290,6 +1360,7 @@ figure_reed_gatherer = {
 		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false }
 		work : { pack:PACK_SPR_MAIN, id:39, max_frames:15 }
 		back : { pack:PACK_SPR_MAIN, id:40, max_frames:12 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_REED_GATHERER }
 	}
 
 	category: figure_category_citizen
@@ -1301,6 +1372,7 @@ figure_reed_gatherer = {
 figure_explosion = {
 	animations : {
 		poof : { pack:PACK_SPR_AMBIENT, id:12, max_frames:12 },
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_EXPLOSION }
 	}
 
 	category: figure_category_inactive
@@ -1312,6 +1384,7 @@ figure_tax_collector = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:41, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TAX_COLLECTOR }
 	}
 
 	sounds : {
