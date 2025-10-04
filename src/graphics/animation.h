@@ -30,6 +30,7 @@ struct animation_t {
     static int global_hashtime;
 
     bool archive_load(archive arch);
+    image_desc to_desc() const { return { pack, id, offset }; }
     int first_img() const;
 };
 ANK_CONFIG_STRUCT(animation_t, pos, pack, id, offset, max_frames, duration, start_frame, can_reverse, reverse)
