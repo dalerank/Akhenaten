@@ -9,7 +9,6 @@ public:
 
     struct static_params : public building_model {
         int max_serve_clients;
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA(static_params);
 
     virtual void spawn_figure() override;
@@ -19,6 +18,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;
 };
+ANK_CONFIG_STRUCT(building_apothecary::static_params, max_serve_clients)
 
 class building_mortuary : public building_impl {
 public:
@@ -26,7 +26,6 @@ public:
 
     struct static_params : public building_model {
         uint16_t max_serve_clients;
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA(static_params);
 
     virtual void spawn_figure() override;
@@ -37,3 +36,4 @@ public:
     virtual void update_graphic() override;
     virtual void update_count() const override;
 };
+ANK_CONFIG_STRUCT(building_mortuary::static_params, max_serve_clients)
