@@ -884,6 +884,7 @@ struct model_t : public building_static_params {
         g_config_arch.r_section(name, [&] (archive arch) {
             building_static_params::archive_load(arch);
             loaded = true;
+            call_struct_reader_if_exists(arch, *this);
             this->archive_load(arch);
         });
         assert(loaded);
