@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "building/building_type.h"
+#include "core/archive.h"
 
 enum e_selected_rating {
     e_selected_rating_none = 0,
@@ -27,6 +28,7 @@ struct city_ratings_t {
         int32_t library;
         int32_t academy;
     } culture_points;
+
     int32_t prosperity_treasury_last_year;
     int32_t prosperity_max;
     int32_t monument_destroyed_buildings;
@@ -51,3 +53,4 @@ struct city_ratings_t {
     void update_culture_rating();
     void update_monument_rating();
 };
+ANK_CONFIG_STRUCT(city_ratings_t::point, coverage, points)

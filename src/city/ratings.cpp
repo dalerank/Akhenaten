@@ -34,11 +34,6 @@ struct rating_points {
     void archive_unload() { points.clear(); }
     auto &emplace_back() { return points.emplace_back(); }
 
-    void archive_load(city_ratings_t::point& step, archive arch) {
-        step.coverage = arch.r_int("coverage");
-        step.points = arch.r_int("points");
-    }
-
     void archive_init() {
         assert(!points.empty());
     }
@@ -52,12 +47,13 @@ struct rating_points {
         return 0;
     }
 };
+ANK_CONFIG_STRUCT(rating_points, points)
 
-rating_points ANK_ARRAY_VARIABLE(culture_religion_rating_points);
-rating_points ANK_ARRAY_VARIABLE(culture_booth_rating_points);
-rating_points ANK_ARRAY_VARIABLE(culture_school_rating_points);
-rating_points ANK_ARRAY_VARIABLE(culture_academy_rating_points);
-rating_points ANK_ARRAY_VARIABLE(culture_library_rating_points);
+rating_points ANK_OBJECTS_VARIABLE(culture_religion_rating_points);
+rating_points ANK_OBJECTS_VARIABLE(culture_booth_rating_points);
+rating_points ANK_OBJECTS_VARIABLE(culture_school_rating_points);
+rating_points ANK_OBJECTS_VARIABLE(culture_academy_rating_points);
+rating_points ANK_OBJECTS_VARIABLE(culture_library_rating_points);
 
 int city_ratings_t::selected_explanation() {
     switch (selected) {
