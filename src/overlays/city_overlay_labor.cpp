@@ -26,8 +26,7 @@ int city_overlay_labor::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    int need_workers = model_get_building(b->type)->laborers;
-    if (!need_workers) {
+    if (!b->max_workers) {
         return COLUMN_TYPE_NONE;
     }
 
@@ -61,8 +60,7 @@ bool city_overlay_labor::show_building(const building *b) const {
             return true;
         }
 
-        int need_workers = model_get_building(b->type)->laborers;
-        if (need_workers > 0 && b->num_workers <= 0) {
+        if (b->max_workers > 0 && b->num_workers <= 0) {
             return true;
         }
     }

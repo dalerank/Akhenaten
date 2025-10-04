@@ -361,7 +361,7 @@ void city_labor_t::calculate_workers_needed_per_category() {
             return;
         }
 
-        categories[category].workers_needed += model_get_building(b.type)->laborers;
+        categories[category].workers_needed += b.max_workers;
         categories[category].total_houses_covered += b.houses_covered;
         categories[category].buildings++;
     });
@@ -492,7 +492,7 @@ void city_labor_t::allocate_workers_to_water() {
                     b->num_workers = workers_per_building;
                 }
             } else {
-                b->num_workers = model_get_building(b->type)->laborers;
+                b->num_workers = b->max_workers;
             }
         }
     }
@@ -530,7 +530,7 @@ void city_labor_t::allocate_workers_to_non_water_buildings() {
         }
 
         if (b.percentage_houses_covered > 0) {
-            int required_workers = model_get_building(b.type)->laborers;
+            const int required_workers = b.max_workers;
             if (category_workers_needed[cat]) {
                 short num_workers = calc_adjust_with_percentage<short>(categories[cat].workers_allocated, b.percentage_houses_covered) / 100;
                 if (num_workers > required_workers) {
@@ -568,7 +568,7 @@ void city_labor_t::allocate_workers_to_non_water_buildings() {
             continue;
 
         if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
-            int required_workers = model_get_building(b->type)->laborers;
+            int required_workers = b->max_workers;
             if (b->num_workers < required_workers) {
                 int needed = required_workers - b->num_workers;
                 if (needed > category_workers_needed[cat]) {

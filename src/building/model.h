@@ -3,15 +3,6 @@
 #include "building/building_type.h"
 
 /**
- * Building model
- */
-struct model_building {
-    int laborers;               /**< Number of people a building employs */
-    int fire_risk;
-    int damage_risk;
-};
-
-/**
  * House model
  */
 struct model_house {
@@ -48,5 +39,4 @@ struct model_house {
 };
 
 bool model_load();
-const model_building* model_get_building(int type);
 const model_house& model_get_house(int level);

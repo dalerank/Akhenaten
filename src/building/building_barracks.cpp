@@ -68,7 +68,7 @@ static int get_closest_military_academy(building* fort) {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
         if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MILITARY_ACADEMY
-            && b->num_workers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
+            && b->num_workers >= (b->max_workers / 2)) {
             int dist = calc_maximum_distance(fort->tile, b->tile);
             if (dist < min_distance) {
                 min_distance = dist;

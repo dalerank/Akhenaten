@@ -80,7 +80,7 @@ void granary_info_window::init(object_info &c) {
         food_index++;
     }
    
-    int laborers = model_get_building(BUILDING_GRANARY)->laborers;
+    const uint8_t laborers = granary->max_workers();
     ui["workers_text"].text_var("%u %s (%d %s", granary->num_workers(), ui::str(8, 12), laborers, ui::str(69, 0));
 
     ui["orders"].onclick([&c] {

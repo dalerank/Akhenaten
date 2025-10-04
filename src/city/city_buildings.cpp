@@ -6,6 +6,7 @@
 #include "city/city_warnings.h"
 #include "city/city.h"
 #include "game/game_events.h"
+#include "game/settings.h"
 #include "city/city_population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"
@@ -251,6 +252,7 @@ void building_update_state(void) {
 }
 
 io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
+    e_difficulty diff = g_settings.difficulty();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
@@ -357,7 +359,11 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
             b->health_proof = 0;
         }
 
+        auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[ std::min<int>(diff, arr.size()-1) ]; };
         b->des_influence = building_impl::params(b->type).desirability.to_influence();
+        b->fire_risk_increase = approach_diff(building_impl::params(b->type).fire_risk);
+        b->damage_risk_increase = approach_diff(building_impl::params(b->type).damage_risk);
+        b->max_workers = approach_diff(building_impl::params(b->type).laborers);
     }
     //building_extra_data.created_sequence = 0;
 });

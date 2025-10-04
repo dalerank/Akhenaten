@@ -655,8 +655,7 @@ int building_monument_count_temple_complex(void) {
 }
 
 bool building_monument_has_labour_problems(building *b) {
-    const model_building *model = model_get_building(b->type);
-    return (b->num_workers < model->laborers);
+    return (b->num_workers < b->max_workers);
 }
 
 int building_monument_working(e_building_type type) {

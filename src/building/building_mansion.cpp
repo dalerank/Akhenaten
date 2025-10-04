@@ -53,7 +53,6 @@ int building_mansion::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
-    int max_workers = model()->laborers;
     switch (type()) {
     case BUILDING_PERSONAL_MANSION: 
     case BUILDING_FAMILY_MANSION:

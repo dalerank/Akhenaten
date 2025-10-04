@@ -153,7 +153,7 @@ void building_info_window::init(object_info &c) {
     c.group_id = params.meta.text_id;
 
     if (ui.contains("mothball")) {
-        int workers_needed = model_get_building(b->type)->laborers;
+        int workers_needed = b->max_workers;
         ui["mothball"].onclick([&c, b, workers_needed] {
             if (workers_needed) {
                 b->mothball_toggle();
@@ -178,7 +178,7 @@ void building_info_window::update_buttons(object_info &c) {
     building *b = building_get(c);
 
     if (ui.contains("mothball")) {
-        int workers_needed = model_get_building(b->type)->laborers;
+        const int workers_needed = b->max_workers;
         ui["mothball"].enabled = workers_needed > 0;
         if (workers_needed) {
             ui["mothball"] = (b->state == BUILDING_STATE_VALID ? "x" : "");

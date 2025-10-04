@@ -200,7 +200,8 @@ public:
     short stored_amount_first;
     short stored_amount_second;
     bool has_well_access;
-    uint16_t num_workers;
+    uint8_t num_workers;
+    uint8_t max_workers;
     e_fancy_state fancy_state;
     e_labor_category labor_category;
     e_resource output_resource_first_id;
@@ -215,6 +216,10 @@ public:
     uint8_t blessing_days_left;
     uint16_t damage_risk;
     uint16_t fire_risk;
+
+    int8_t damage_risk_increase;
+    int8_t fire_risk_increase;
+
     short fire_duration;
     uint8_t health_proof;
     uint8_t fire_proof; // cannot catch fire or collapse
@@ -486,6 +491,10 @@ public:
         std::array<uint16_t, 5> cost;
         building_desirability_t desirability;
 
+        std::array<uint8_t, 5> laborers;
+        std::array<int8_t, 5> fire_risk;
+        std::array<int8_t, 5> damage_risk;
+
         struct {
             bool canals;
             bool roads;
@@ -651,8 +660,7 @@ public:
     inline void common_spawn_labor_seeker(int min_houses) { base.common_spawn_labor_seeker(min_houses); }
     inline bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE) { return base.common_spawn_figure_trigger(min_houses, slot); }
     inline bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) { return base.common_spawn_roamer(type, min_houses, created_action); }
-    inline const model_building *model() const { return model_get_building(type()); }
-    inline int max_workers() const { return model_get_building(type())->laborers; }
+    inline int max_workers() const { return base.max_workers; }
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
     inline int get_figure_id(int i) const { return base.get_figure_id(i); }
     inline int need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }

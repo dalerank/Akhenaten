@@ -205,7 +205,7 @@ void figure_entertainer::figure_action() {
 
         if (do_gotobuilding(destination())) {
             building *b_dst = destination();
-            int labores = b_dst ? model_get_building(b_dst->type)->laborers : 999;
+            const uint8_t labores = b_dst ? b_dst->max_workers : 200;
             if (b_dst && b_dst->num_workers > labores / 2) {
                 update_shows();
             } else {
