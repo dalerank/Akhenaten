@@ -130,7 +130,8 @@ figure_tower_sentry = {
 	max_damage : 40
 	attack_value : 6
 	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 25,
+	max_amount : 25
+	missile_delay : 40
 }
 
 figure_priest = {
@@ -241,7 +242,9 @@ figure_ostrich = {
 
 	category: figure_category_animal
 	max_damage: 100
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	terrain_usage : TERRAIN_USAGE_ANIMAL
+	max_hunting_distance : 15
+	missile_delay : 50
 }
 
 figure_hyena = {
@@ -538,6 +541,7 @@ figure_lumberjack = {
 	max_damage: 40
 	attack_value: 4
 	terrain_usage : TERRAIN_USAGE_ANY
+	max_amount : 50
 }
 
 figure_flotsam = {
@@ -755,6 +759,8 @@ figure_cartpusher = {
     back_to_home : { sound:"cartpusher_e02.wav", group:223, text:1}
     delivering_items : { sound:"cartpusher_e03.wav", group:223, text:2}
 	}
+
+	wait_on_calculate_destination : 30
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS,

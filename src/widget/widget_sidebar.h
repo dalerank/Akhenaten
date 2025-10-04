@@ -19,7 +19,6 @@ struct slide_driver {
     int slide_speed_x;
     int position;
 
-    void archive_load(archive arch);
     void update(int &x_offset, int expanded_offset_x, std::function<void()> callback);
 };
 
@@ -27,14 +26,17 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     int focus_tooltip_text_id;
     int x_offset;
 
+    // static
     image_desc extra_block;
     image_desc relief_block;
     image_desc def_image;
-    vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;
-    int opened_menu;
     slide_driver slider;
+
+    // dynamic
+    int opened_menu;
+    vec2i extra_block_size;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
@@ -59,12 +61,15 @@ struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_coll
     int focus_tooltip_text_id;
     int x_offset;
 
+    // static
     image_desc extra_block;
     image_desc relief_block;
-    vec2i extra_block_size;
     int extra_block_x;
     int expanded_offset_x;
     slide_driver slider;
+
+    // dynamic
+    vec2i extra_block_size;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
@@ -84,7 +89,20 @@ struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_coll
 struct sidebar_window {
 };
 
-}
+} // namespace ui
+
+ANK_CONFIG_STRUCT(ui::slide_driver, 
+    deceleration_offset_x, slide_acceleration_millis, slide_speed_x)
+
+ANK_CONFIG_STRUCT(ui::sidebar_window_expanded, 
+    extra_block, relief_block, 
+    extra_block_x, expanded_offset_x,
+    def_image, slider)
+
+ANK_CONFIG_STRUCT(ui::sidebar_window_collapsed,
+    extra_block, relief_block,
+    extra_block_x, expanded_offset_x,
+    slider)
 
 void widget_sidebar_city_init();
 int widget_sidebar_city_offset_x();
