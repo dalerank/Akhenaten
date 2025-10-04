@@ -26,7 +26,7 @@ building_large_statue::static_params large_statue_m;
 int building_statue::statue_params_t::get_image(e_building_type type, int orientation, int variant) const {
     int image_id = 0;
 
-    int size = this->var.size();
+    int size = this->variants.size();
 
     if (!size) {
         return 0;
@@ -41,17 +41,7 @@ int building_statue::statue_params_t::get_image(e_building_type type, int orient
     while (variant > (size - 1)) { variant -= size; }
 
     variant %= size;
-    return image_group(this->var[variant]);
-}
-
-template<typename T>
-void building_statue::static_params_t<T>::archive_load(archive arch) {
-    inherited::archive_load(arch);
-    arch.r_array("variants", var, [] (archive arch, auto &item) {
-        item.pack = arch.r_int("pack");
-        item.id = arch.r_int("id");
-        item.offset = arch.r_int("offset");
-    });
+    return image_group(this->variants[variant]);
 }
 
 template<typename T>
@@ -63,7 +53,7 @@ void building_statue::static_params_t<T>::planer_setup_preview_graphics(build_pl
 template<typename T>
 int building_statue::static_params_t<T>::planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const {
     assert(building_is_statue(type));
-    int size = this->var.size();
+    int size = this->variants.size();
 
     return rand() % size;
 }
@@ -74,7 +64,7 @@ int building_statue::static_params_t<T>::planer_next_building_variant(e_building
         return 0;
     }
 
-    int size = this->var.size();
+    int size = this->variants.size();
     if (!size) {
         return variant;
     }
