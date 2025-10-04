@@ -496,9 +496,8 @@ void building_granary::spawn_figure() {
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     draw_stores(point, mask, ctx);
-    int max_workers = model_get_building(BUILDING_GRANARY)->laborers;
     building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, granary_m.anim["work"], mask);
-    if (num_workers() > max_workers / 2) {
+    if (num_workers() > max_workers() / 2) {
         building_draw_normal_anim(ctx, point + vec2i{96, -4}, &base, tile, granary_m.anim["work"], mask);
     }
 

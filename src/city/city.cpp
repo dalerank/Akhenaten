@@ -1449,7 +1449,7 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
             return;
         }
 
-        int pct_workers = calc_percentage<int>(granary->num_workers(), model_get_building(granary->type())->laborers);
+        const int pct_workers = granary->pct_workers();
         if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 100) {
             return;
         }

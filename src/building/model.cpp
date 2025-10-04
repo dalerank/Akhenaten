@@ -10,19 +10,11 @@
 
 #define TMP_BUFFER_SIZE 100000
 
-// int NUM_BUILDINGS = 0;
-// int NUM_HOUSES = 0;
-
 static const uint8_t ALL_BUILDINGS[] = {'A', 'L', 'L', ' ', 'B', 'U', 'I', 'L', 'D', 'I', 'N', 'G', 'S', 0};
 static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E', 'S', 0};
 
-// static model_building buildings[400]; // 130 in C3, more in Pharaoh, can't be bothered to make this dynamic
-// static model_house houses[20];
-
 struct model_data_t {
-    model_building buildings[5][400];
     model_house houses[5][20];
-    //    int difficulty_level_cached = 0;
 };
 
 model_data_t g_model_data;
@@ -50,7 +42,6 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
 bool model_load_file(const char* filepath,
                      int NUM_BUILDINGS,
                      int NUM_HOUSES,
-                     model_building* buildings,
                      model_house* houses) {
     buffer buf(TMP_BUFFER_SIZE);
     int filesize = 0;
@@ -91,11 +82,9 @@ bool model_load_file(const char* filepath,
         ptr = get_value(ptr, end_ptr, &tmp);
         ptr = get_value(ptr, end_ptr, &tmp);
         ptr = get_value(ptr, end_ptr, &tmp);
-        ptr = get_value(ptr, end_ptr, &buildings[i].laborers);
-        ptr = get_value(ptr, end_ptr, &buildings[i].fire_risk);
-        ptr = get_value(ptr, end_ptr, &buildings[i].damage_risk);
-        logs::info("Building %s: laborers:[%d], fire_risk:[%d], damage_risk: [%d]",
-            e_building_type_tokens.name((e_building_type)i), buildings[i].laborers, buildings[i].fire_risk, buildings[i].damage_risk);
+        ptr = get_value(ptr, end_ptr, &tmp);
+        ptr = get_value(ptr, end_ptr, &tmp);
+        ptr = get_value(ptr, end_ptr, &tmp);
     }
 
     // parse houses data
@@ -134,28 +123,23 @@ bool model_load_file(const char* filepath,
 bool model_load(void) {
     auto& data = g_model_data;
 
-    if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.buildings[0], data.houses[0])) {
+    if (!model_load_file("Pharaoh_Model_VeryEasy.txt", 237, 20, data.houses[0])) {
         return false;
     }
-    if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.buildings[1], data.houses[1])) {
+    if (!model_load_file("Pharaoh_Model_Easy.txt", 237, 20, data.houses[1])) {
         return false;
     }
-    if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.buildings[2], data.houses[2])) {
+    if (!model_load_file("Pharaoh_Model_Normal.txt", 237, 20, data.houses[2])) {
         return false;
     }
-    if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.buildings[3], data.houses[3])) {
+    if (!model_load_file("Pharaoh_Model_Hard.txt", 237, 20, data.houses[3])) {
         return false;
     }
-    if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.buildings[4], data.houses[4])) {
+    if (!model_load_file("Pharaoh_Model_Impossible.txt", 237, 20, data.houses[4])) {
         return false;
     }
 
     return true;
-}
-
-// const model_building MODEL_ROADBLOCK = {40, 0, 0, 0, 0};
-const model_building* model_get_building(int type) {
-    return &g_model_data.buildings[g_settings.difficulty()][type];
 }
 
 const model_house& model_get_house(int level) {

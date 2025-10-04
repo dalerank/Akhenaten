@@ -60,7 +60,7 @@ void building_hunting_lodge::spawn_figure() {
         return;
     }
 
-    if (base.num_workers < model_get_building(BUILDING_HUNTING_LODGE)->laborers) {
+    if (base.num_workers < base.max_workers) {
         common_spawn_labor_seeker(params().min_houses_coverage);
     }
 

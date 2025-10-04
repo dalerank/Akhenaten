@@ -56,7 +56,7 @@ textid get_employment_info_text_id(object_info* c, building* b, int consider_hou
     uint8_t text_id;
     const int city_population = g_city.population.current;
 
-    if (b->num_workers >= model_get_building(b->type)->laborers)
+    if (b->num_workers >= b->max_workers)
         text_id = 0;
     else if (city_population <= 0)
         text_id = 16; // no people in city
@@ -85,19 +85,18 @@ void draw_employment_details(object_info* c, building* b, int y_offset, int text
     ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
     if (text_id) {
         int width = lang_text_draw_amount(8, 12, b->num_workers, c->offset.x + 60, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(b->max_workers, '(', "", c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw(69, 0, c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw(69, text_id, c->offset.x + 70, y_offset + 26, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         int width = lang_text_draw_amount(8, 12, b->num_workers, c->offset.x + 60, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
-        width += text_draw_number(model_get_building(b->type)->laborers, '(', "", c->offset.x + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
+        width += text_draw_number(b->max_workers, '(', "", c->offset.x + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
         lang_text_draw(69, 0, c->offset.x + 70 + width, y_offset + 16, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
 
 void draw_employment_details_ui(ui::widget &ui, object_info &c, building* b, int text_id) {
-    int laborers = model_get_building(b->type)->laborers;
-    ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), laborers, ui::str(69, 0));
+    ui["workers_text"].text_var("%d %s (%d %s", b->num_workers, ui::str(8, 12), b->max_workers, ui::str(69, 0));
     if (text_id < 0) {
         text_id = get_employment_info_text_id(&c, b, 1).id;
     } 

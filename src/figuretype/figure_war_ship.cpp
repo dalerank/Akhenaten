@@ -227,7 +227,7 @@ void figure_warship::figure_action_common() {
 
     case FIGURE_ACTION_203_WARSHIP_MOORED:
     {
-        int pct_workers = calc_percentage<int>(b->num_workers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage<int>(b->num_workers, b->max_workers);
         int max_wait_ticks = 5 * (102 - pct_workers);
 
         if (pct_workers > 0) {

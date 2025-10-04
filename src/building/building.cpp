@@ -81,6 +81,12 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
     des_influence = props.desirability.to_influence();
 
+    e_difficulty diff = g_settings.difficulty();
+    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
+    max_workers = approach_diff(props.laborers);
+    fire_risk_increase = approach_diff(props.fire_risk);
+    damage_risk_increase = approach_diff(props.damage_risk);
+
     // unique data
     output_resource_first_id = RESOURCE_NONE;
     dcast()->on_create(orientation);
@@ -89,13 +95,13 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
 desirability_t::influence_t building_desirability_t::to_influence() const {
     desirability_t::influence_t inf;
     e_difficulty diff = g_settings.difficulty();
-    auto get = [&] (auto &arr) { return (diff >= 0 && diff < (int)arr.size()) ? arr[diff] : 0; };
+    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
 
     inf.size = 0;
-    inf.value = get(value);
-    inf.step = get(step);
-    inf.step_size = get(step_size);
-    inf.range = get(range);
+    inf.value = approach_diff(value);
+    inf.step = approach_diff(step);
+    inf.step_size = approach_diff(step_size);
+    inf.range = approach_diff(range);
 
     return inf;
 }
@@ -702,7 +708,7 @@ void building::check_labor_problem() {
 }
 
 int building::worker_percentage() const {
-    return calc_percentage<int>(num_workers, model_get_building(type)->laborers);
+    return calc_percentage<int>(num_workers, max_workers);
 }
 
 int building::figure_spawn_timer() {
@@ -1056,7 +1062,7 @@ void building_impl::on_place_checks() {
     const bool has_road = map_has_road_access(tile(), size());
     warnings.add_if(!has_road, "#needs_road_access");
 
-    const bool need_workers = (model()->laborers > 0 && g_city.labor.workers_needed >= 10);
+    const bool need_workers = (base.max_workers > 0 && g_city.labor.workers_needed >= 10);
     warnings.add_if(need_workers, "#city_needs_more_workers");
 }
 
@@ -1153,7 +1159,7 @@ const bproperty bproperties[] = {
 
     { tags().building, tags().name, [] (building &b, const xstring &) { return bvariant(b.cls_name()); }},
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
-    { tags().model, tags().laborers, [] (building &b, const xstring &) { const auto model = model_get_building(b.type); return bvariant(model->laborers); }},
+    { tags().model, tags().laborers, [] (building &b, const xstring &) { return bvariant(b.max_workers); }},
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
     { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},

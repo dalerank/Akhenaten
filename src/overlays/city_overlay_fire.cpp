@@ -10,8 +10,6 @@
 city_overlay_fire g_city_overlay_fire;
 
 int city_overlay_fire::get_column_height(const building *b) const {
-    auto model = model_get_building(b->type);
-
     if (b->prev_part_building_id || b->fire_proof) {
         return COLUMN_TYPE_NONE;
     }
