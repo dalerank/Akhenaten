@@ -61,13 +61,12 @@ declare_console_command_p(destroytype) {
 const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
 const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> ANK_CONFIG_ENUM(e_building_type_tokens);
 
-static std::array<const building_impl::static_params *, BUILDING_MAX> *building_impl_params = nullptr;
-
-building_impl::static_params building_impl::static_params::dummy;
+static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
+building_static_params building_static_params::dummy;
 
 void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     assert(!_ptr);
-    const auto &props = building_impl::params(_tp);
+    const auto &props = building_static_params::get(_tp);
     type = _tp;
     tile = _tl;
     state = BUILDING_STATE_CREATED;
@@ -169,17 +168,17 @@ xstring building_impl::get_sound() {
     return snd::get_building_info_sound(type());
 }
 
-void building_impl::params(e_building_type e, const static_params &p) {
+void building_static_params::register_model(e_building_type e, const building_static_params &p) {
     if (!building_impl_params) {
-        building_impl_params = new std::array<const building_impl::static_params *, BUILDING_MAX>();
+        building_impl_params = new std::array<const building_static_params *, BUILDING_MAX>();
         std::fill(building_impl_params->begin(), building_impl_params->end(), nullptr);
     }
     (*building_impl_params)[e] = &p;
 }
 
-const building_impl::static_params &building_impl::params(e_building_type e) {
+const building_static_params &building_static_params::get(e_building_type e) {
     auto p = building_impl_params->at(e);
-    return (p == nullptr) ? building_impl::static_params::dummy : *p;
+    return (p == nullptr) ? building_static_params::dummy : *p;
 }
 
 const building_impl *building::dcast() const {
@@ -608,7 +607,7 @@ bool building::is_ajacent_tile(tile2i t) const {
 }
 
 xstring building::cls_name() const {
-    const auto &params = building_impl::params(type);
+    const auto &params = building_static_params::get(type);
     if (!params.info_title_id.empty()) {
         return params.info_title_id;
     }
@@ -1010,7 +1009,7 @@ bool building_is_draggable(e_building_type type) {
         return true;
     }
 
-    return building_impl::params(type).is_draggable;
+    return building_static_params::get(type).is_draggable;
 }
 
 int building::mothball_toggle() {
@@ -1152,7 +1151,7 @@ const bproperty bproperties[] = {
     { tags().text, xstring("*"),
         [] (building &b, const xstring &name) {
              int id = atoi(name.c_str());
-             const auto &m = building_impl::params(b.type).meta;
+             const auto &m = building_static_params::get(b.type).meta;
              return bvariant(ui::str(m.text_id, id));
         }
     },
@@ -1235,7 +1234,7 @@ void building_impl::on_tick(bool refresh_only) {
     base.anim.update(refresh_only);
 }
 
-void building_impl::static_params::archive_load(archive arch) {
+void building_static_params::archive_load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
     fire_risk_update = arch.r_int("fire_risk_update", 50);
@@ -1279,7 +1278,7 @@ void building_impl::static_params::archive_load(archive arch) {
     arch.r("animations", anim.data);
 }
 
-void building_impl::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+void building_static_params::planer_setup_preview_graphics(build_planner &planer) const {
     int img_id = anim[animkeys().base].first_img();
     if (!img_id) {
         img_id = anim[animkeys().preview].first_img();
@@ -1288,11 +1287,11 @@ void building_impl::static_params::planer_setup_preview_graphics(build_planner &
     planer.set_tiles_building(img_id, building_size);
 }
 
-int building_impl::static_params::planer_update_building_variant(build_planner &planer) const {
+int building_static_params::planer_update_building_variant(build_planner &planer) const {
     return planer.building_variant;
 }
 
-int building_impl::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+int building_static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     int special_flags = planer.special_flags;
     if ((special_flags & e_building_flag::Meadow) || (special_flags & e_building_flag::Rock)
         || (special_flags & e_building_flag::Trees) || (special_flags & e_building_flag::NearbyWater)
@@ -1360,7 +1359,7 @@ void add_building(building *b, int orientation, int variant) {
     }
 }
 
-int building_impl::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+int building_static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     // by default, get size from building's properties
     assert(building_size > 0);
 
@@ -1393,11 +1392,11 @@ int building_impl::static_params::planer_construction_place(build_planner &plane
     return 1;
 }
 
-void building_impl::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     planer.draw_tile_graphics_array(ctx, start, end, pixel);
 }
 
-void building_impl::static_params::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+void building_static_params::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
     for (int row = 0; row < planer.size.y; row++) {
         for (int column = 0; column < planer.size.x; column++) {
             vec2i current_coord = planer.pixel_coord_offset(row, column);
@@ -1407,7 +1406,7 @@ void building_impl::static_params::planer_ghost_blocked(build_planner &planer, p
     }
 }
 
-bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) const {
+bool building_static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
     case e_building_flag::Meadow: return needs.meadow;
     case e_building_flag::Rock: return needs.rock;
@@ -1424,11 +1423,11 @@ bool building_impl::static_params::planer_is_need_flag(e_building_flags flag) co
     return false;
 }
 
-bool building_impl::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
+bool building_static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
     return (map_has_figure_at(tile) == false);
 }
 
-uint16_t building_impl::static_params::get_cost() const {
+uint16_t building_static_params::get_cost() const {
     const uint16_t mcost = this->cost[g_settings.difficulty()];
     return mcost;
 }

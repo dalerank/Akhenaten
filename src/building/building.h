@@ -460,80 +460,85 @@ struct building_desirability_t {
 };
 ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
 
+struct building_static_params {
+    e_building_type type;
+    static building_static_params dummy;
+    pcstr name;
+    bool fire_proof;
+    int8_t fire_risk_update;
+    bool damage_proof;
+    bool is_draggable;
+    xstring meta_id;
+    metainfo meta;
+    e_resource input_resource;
+    e_resource input_resource_second;
+    e_resource output_resource;
+    e_resource output_resource_second;
+    int output_resource_second_rate;
+    e_labor_category labor_category;
+    animations_t anim;
+    uint8_t building_size;
+    uint8_t min_houses_coverage;
+    int window_info_height_id;
+    int planer_relative_orientation;
+    uint16_t production_rate;
+    bool unique_building;
+    bool check_water_access;
+    xstring info_title_id;
+    int num_types;
+    std::array<uint16_t, 5> cost;
+    building_desirability_t desirability;
+
+    std::array<uint8_t, 5> laborers;
+    std::array<int8_t, 5> fire_risk;
+    std::array<int8_t, 5> damage_risk;
+
+    struct {
+        bool canals;
+        bool roads;
+        bool ferries;
+    } updates;
+
+    struct {
+        bool meadow;
+        bool rock;
+        bool ore;
+        bool altar;
+        bool oracle;
+        bool nearby_water;
+        bool groundwater;
+        bool shoreline;
+        bool canals;
+        bool floodplain_shoreline;
+    } needs;
+
+    void archive_load(archive arch);
+
+    virtual void planer_setup_build(build_planner &planer) const {}
+    virtual int planer_setup_orientation(int orientation) const { return orientation; }
+    virtual void planer_setup_preview_graphics(build_planner &planer) const;
+    virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
+    virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
+    virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const { return global_orientation; }
+    virtual int planer_update_building_variant(build_planner &p) const;
+    virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
+    virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
+    virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
+    virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
+    virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
+    virtual bool planer_is_need_flag(e_building_flags flag) const;
+    virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
+    virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
+    virtual bool is_unique_building() const { return unique_building; }
+    virtual uint16_t get_cost() const;
+
+    static void register_model(e_building_type, const building_static_params &);
+    static const building_static_params &get(e_building_type);
+};
+
 class building_impl {
 public:
-    struct static_params {
-        e_building_type type;
-        static static_params dummy;
-        pcstr name;
-        bool fire_proof;
-        int8_t fire_risk_update;
-        bool damage_proof;
-        bool is_draggable;
-        xstring meta_id;
-        metainfo meta;
-        e_resource input_resource;
-        e_resource input_resource_second;
-        e_resource output_resource;
-        e_resource output_resource_second;
-        int output_resource_second_rate;
-        e_labor_category labor_category;
-        animations_t anim;
-        uint8_t building_size;
-        uint8_t min_houses_coverage;
-        int window_info_height_id;
-        int planer_relative_orientation;
-        uint16_t production_rate;
-        bool unique_building;
-        bool check_water_access;
-        xstring info_title_id;
-        int num_types;
-        std::array<uint16_t, 5> cost;
-        building_desirability_t desirability;
-
-        std::array<uint8_t, 5> laborers;
-        std::array<int8_t, 5> fire_risk;
-        std::array<int8_t, 5> damage_risk;
-
-        struct {
-            bool canals;
-            bool roads;
-            bool ferries;
-        } updates;
-
-        struct {
-            bool meadow;
-            bool rock;
-            bool ore;
-            bool altar;
-            bool oracle;
-            bool nearby_water;
-            bool groundwater;
-            bool shoreline;
-            bool canals;
-            bool floodplain_shoreline;
-        } needs;
-
-        void archive_load(archive arch);
-
-        virtual void planer_setup_build(build_planner &planer) const {}
-        virtual int planer_setup_orientation(int orientation) const { return orientation; }
-        virtual void planer_setup_preview_graphics(build_planner &planer) const;
-        virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
-        virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
-        virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const { return global_orientation; }
-        virtual int planer_update_building_variant(build_planner &p) const;
-        virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
-        virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
-        virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
-        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
-        virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
-        virtual bool planer_is_need_flag(e_building_flags flag) const;
-        virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
-        virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
-        virtual bool is_unique_building() const { return unique_building; }
-        virtual uint16_t get_cost() const;
-    };
+    using static_params = building_static_params;
 
     building_impl(building &b) : base(b) {}
     virtual void on_create(int orientation) {}
@@ -569,8 +574,8 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
-    virtual const static_params &params() const { return params(type()); }
-    virtual const static_params &params() { return params(type()); }
+    virtual const building_static_params &params() const { return building_static_params::get(type()); }
+    virtual const building_static_params &params() { return building_static_params::get(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
@@ -581,6 +586,8 @@ public:
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
+
+    static const static_params &params(e_building_type type) { return building_static_params::get(type); }
 
     #define ALLOW_SMART_CAST_BUILDING_I(type) virtual building_##type *dcast_##type() { return nullptr; }
     ALLOW_SMART_CAST_BUILDING_I(farm)
@@ -704,8 +711,6 @@ public:
     xstring get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
 
-    static void params(e_building_type, const static_params &);
-    static const static_params &params(e_building_type);
     static void acquire(e_building_type e, building &b);
 
     building &base;
@@ -856,7 +861,7 @@ using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
 using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
 
 template<typename T>
-struct model_t : public building_impl::static_params {
+struct model_t : public building_static_params {
     using building_type = T;
     static constexpr e_building_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
@@ -868,13 +873,13 @@ struct model_t : public building_impl::static_params {
         static BuildingCtorIterator ctor_handler(&create);
         static BuildingParamIterator static_params_handler(&static_params_load);
 
-        building_impl::params(TYPE, *this);
+        building_static_params::register_model(TYPE, *this);
     }
 
-    void archive_load() {
+    void initialize() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
-            static_params::archive_load(arch);
+            building_static_params::archive_load(arch);
             loaded = true;
             this->archive_load(arch);
         });
@@ -888,7 +893,7 @@ struct model_t : public building_impl::static_params {
     static void static_params_load() {
         const model_t &item = static_cast<const model_t&>(building_impl::params(TYPE));
         assert(item.TYPE == TYPE);
-        const_cast<model_t&>(item).archive_load();
+        const_cast<model_t&>(item).initialize();
     }
 
     static building_impl *create(e_building_type e, building &b) {
