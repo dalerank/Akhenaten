@@ -9,13 +9,6 @@ public:
     virtual building_bandstand *dcast_bandstand() override { return this; }
 
     struct static_params : public building_model {
-        int stand_sn_n = 0;
-        int stand_sn_s = 0;
-        int stand_we_w = 0;
-        int stand_we_e = 0;
-        int booth = 0;
-
-        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
         virtual bool plane_ghost_allow_tile(build_planner& p, tile2i tile) const override;
