@@ -9,8 +9,6 @@ public:
 
     struct static_params : public building_model {
         int fire_animations;
-
-        virtual void archive_load(archive arch) override;
     } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
@@ -26,3 +24,4 @@ public:
     static custom_span<uint16_t> get_all();
     static std::pair<int, tile2i> get_closest_from(tile2i tile);
 };
+ANK_CONFIG_STRUCT(building_burning_ruin::static_params, fire_animations)
