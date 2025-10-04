@@ -19,9 +19,7 @@ public:
     figure_ostrich_hunter(figure *f) : figure_impl(f) {}
 
     struct static_params : public figure_model {
-        virtual void archive_load(archive arch) override;
-
-        int max_hunting_distance;
+        uint8_t max_hunting_distance;
         int8_t missile_delay;
     } FIGURE_STATIC_DATA_T;
 
@@ -33,3 +31,4 @@ public:
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
     virtual void update_animation() override;
 };
+ANK_CONFIG_STRUCT(figure_ostrich_hunter::static_params, max_hunting_distance, missile_delay)

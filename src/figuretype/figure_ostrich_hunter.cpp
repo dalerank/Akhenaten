@@ -11,10 +11,6 @@
 
 figure_ostrich_hunter::static_params ostrich_hunter_m;
 
-void figure_ostrich_hunter::static_params::archive_load(archive arch) {
-    max_hunting_distance = arch.r_int("max_hunting_distance", 15);
-}
-
 static void scared_animals_in_area(tile2i center, int size) {
     map_grid_area_foreach(center, size, [] (tile2i tile) {
         figure *f = map_figure_get(tile);
