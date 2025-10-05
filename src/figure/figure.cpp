@@ -885,7 +885,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
     iob->bind(BIND_SIGNATURE_UINT8, &tmpe);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->flotsam_visible);
 
     //    f->sprite_image_id = buf->read_i16() + 18;
     f->main_image_id -= 18;
