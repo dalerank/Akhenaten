@@ -46,7 +46,7 @@ struct grid_xx {
     int initialized;
     e_grid_data_type datatype;
     size_t size_field;
-    int size_total;
+    uint32_t size_total;
 
     void* items_xx;
 };
@@ -54,6 +54,14 @@ struct grid_xx {
 struct grid_area {
     tile2i tmin;
     tile2i tmax;
+
+    template<typename T>
+    void for_each_bound(T f) {
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) { f(tile2i(xx, tmin.y())); }
+        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) { f(tile2i(tmax.x(), yy)); }
+        for (int xx = tmax.x(), endx = tmin.x(); xx >= endx; xx--) { f(tile2i(xx, tmax.y())); }
+        for (int yy = tmax.y(), endy = tmin.y(); yy >= endy; yy--) { f(tile2i(tmin.x(), yy)); }
+    }
 
     template<typename T>
     void for_each(T f) {
@@ -106,6 +114,7 @@ struct grid_area {
 };
 
 using grid_tiles = std::vector<tile2i>;
+using grid_tiles_sm = svector<tile2i, 32>;
 
 void map_grid_init(grid_xx& grid);
 int32_t map_grid_get(grid_xx& grid, uint32_t at);
@@ -149,6 +158,8 @@ void map_grid_bound(int* x, int* y);
 void map_grid_bound_area(tile2i &tmin, tile2i &tmax);
 grid_area map_grid_get_area(tile2i tile, int size, int radius);
 grid_tiles map_grid_get_tiles(building *b, int radius);
+grid_tiles_sm map_grid_get_tiles_sm(building *b, int radius);
+grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius);
 grid_area map_grid_get_area(tile2i start, tile2i end);
 grid_tiles map_grid_get_tiles(tile2i start, tile2i end);
 bool map_tile_is_inside_area(tile2i tile, tile2i start, tile2i end, vec2i size = vec2i{0, 0});
