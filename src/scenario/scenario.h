@@ -12,6 +12,7 @@
 #include "scenario/scenario_difficulty.h"
 #include "core/archive.h"
 #include "core/settings_vars.h"
+#include "figure/formation.h"
 
 #include <cstdint>
 #include <unordered_map>
@@ -88,7 +89,7 @@ struct invasion_t {
     int type;
     int amount;
     int from;
-    int attack_type;
+    e_formation_attack_type attack_type;
     int month;
 };
 

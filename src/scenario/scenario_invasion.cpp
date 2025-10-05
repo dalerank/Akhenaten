@@ -150,7 +150,7 @@ static void determine_formations(int num_soldiers, int* num_formations, int sold
     }
 }
 
-tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, int attack_type, int invasion_id) {
+tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id) {
     auto &data = g_invasions;
     if (amount <= 0) {
         return tile2i::invalid;

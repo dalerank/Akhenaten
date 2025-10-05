@@ -125,7 +125,7 @@ static void button_from(int param1, int param2) {
 }
 
 static void set_attack(int value) {
-    data.invasion.attack_type = value;
+    data.invasion.attack_type = (e_formation_attack_type)value;
 }
 
 static void button_attack(int param1, int param2) {

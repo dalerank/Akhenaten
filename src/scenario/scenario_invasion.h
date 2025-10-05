@@ -68,4 +68,4 @@ void scenario_invasion_process();
 
 int map_invasion_point(tile2i point);
 
-tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, int attack_type, int invasion_id);
+tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id);

@@ -167,7 +167,7 @@ void scenario_editor_invasion_delete(int index) {
     g_scenario.invasions[index].amount = 0;
     g_scenario.invasions[index].type = 0;
     g_scenario.invasions[index].from = 8;
-    g_scenario.invasions[index].attack_type = 0;
+    g_scenario.invasions[index].attack_type = FORMATION_ATTACK_FOOD_CHAIN;
     sort_invasions();
     g_scenario.is_saved = 0;
 }

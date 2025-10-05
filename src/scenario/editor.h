@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/resource.h"
+#include "figure/formation.h"
 
 struct editor_request {
     int year;
@@ -15,7 +16,7 @@ struct editor_invasion {
     int type;
     int amount;
     int from;
-    int attack_type;
+    e_formation_attack_type attack_type;
 };
 
 struct editor_price_change {
