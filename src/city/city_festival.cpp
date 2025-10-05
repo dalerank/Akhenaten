@@ -11,6 +11,7 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "game/game_config.h"
+#include "figuretype/festival_guy.h"
 #include "graphics/image_groups.h"
 
 bool city_festival_t::is_planned() {
@@ -104,8 +105,10 @@ void city_festival_t::execute_festival() {
                 f->set_home(b);
                 f->set_destination(square);
                 f->destination_tile = tile_on_square;
-                f->festival_remaining_dances = rand() % 10;
                 f->wait_ticks = rand() % 10;
+
+                auto fguy = f->dcast_festival_guy();
+                fguy->runtime_data().festival_remaining_dances = rand() % 10;
             }
             break;
         }
