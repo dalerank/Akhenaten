@@ -523,6 +523,7 @@ public:
     virtual void debug_draw() {}
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
+    virtual void formation_reset_to_initial(const formation *m) {}
 
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
