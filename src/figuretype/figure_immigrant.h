@@ -25,6 +25,7 @@ public:
 
     struct runtime_data_t {
         uint16_t adv_home_building_id;
+        uint8_t migrant_num_people;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_destroy() override;

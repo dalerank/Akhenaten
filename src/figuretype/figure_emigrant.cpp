@@ -8,9 +8,10 @@
 #include "building/building_house.h"
 #include "city/city.h"
 #include "game/game_events.h"
+#include "widget/debug_console.h"
 #include "js/js_game.h"
 
-figures::model_t<figure_emigrant> emigrant_m;
+figure_emigrant::static_params emigrant_m;
 
 void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
     auto house = building_get(ev.bid)->dcast_house();
@@ -25,14 +26,19 @@ void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
         house->change_to_vacant_lot();
     }
 
-    figure* f = figure_create(FIGURE_EMIGRANT, house->tile(), DIR_0_TOP_RIGHT);
+    auto em = figure_create(FIGURE_EMIGRANT, house->tile(), DIR_0_TOP_RIGHT)->dcast_emigrant();
     if (house->house_level() >= HOUSE_COMMON_MANOR) {
         g_city.migration.nobles_leave_city(ev.num_people);
     }
 
-    f->action_state = FIGURE_ACTION_4_EMIGRANT_CREATED;
-    f->wait_ticks = 0;
-    f->migrant_num_people = ev.num_people;
+    em->advance_action(FIGURE_ACTION_4_EMIGRANT_CREATED);
+    em->base.wait_ticks = 0;
+    em->runtime_data().migrant_num_people = ev.num_people;
+}
+
+void figure_emigrant::debug_show_properties() {
+    auto &d = runtime_data();
+    game_debug_show_property("migrant_num_people", d.migrant_num_people);
 }
 
 void figure_emigrant::figure_action() {

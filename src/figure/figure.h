@@ -45,6 +45,8 @@ class figure_enemy;
 class figure_enemy_archer;
 class figure_fireman;
 class figure_missile;
+class figure_emigrant;
+class figure_homeless;
 
 struct animation_t;
 struct figure_static_params;
@@ -168,7 +170,6 @@ public:
     short formation_id;
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
-    uint8_t migrant_num_people;
     bool is_main_drawn;
     bool is_cart_drawn;
     uint8_t min_max_seen;
@@ -226,6 +227,8 @@ public:
 
     #define ALLOW_SMART_CAST_FIGURE(type) figure_##type *dcast_##type() { return dcast<figure_##type>(); }
     ALLOW_SMART_CAST_FIGURE(immigrant)
+    ALLOW_SMART_CAST_FIGURE(emigrant)
+    ALLOW_SMART_CAST_FIGURE(homeless)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -530,6 +533,8 @@ public:
 
     #define ALLOW_SMART_CAST_FIGURE_I(type) virtual figure_##type *dcast_##type() { return nullptr; }
     ALLOW_SMART_CAST_FIGURE_I(immigrant)
+    ALLOW_SMART_CAST_FIGURE_I(emigrant)
+    ALLOW_SMART_CAST_FIGURE_I(homeless)
     ALLOW_SMART_CAST_FIGURE_I(cartpusher)
     ALLOW_SMART_CAST_FIGURE_I(storageyard_cart)
     ALLOW_SMART_CAST_FIGURE_I(trade_ship)
@@ -603,6 +608,8 @@ GENERATE_SMART_CAST(figure_impl)
 #define GENERATE_SMART_CAST_FIGURE(type) GENERATE_SMART_CAST_CUSTOM(figure_##type, type)
 GENERATE_SMART_CAST_FIGURE(fishing_point)
 GENERATE_SMART_CAST_FIGURE(immigrant)
+GENERATE_SMART_CAST_FIGURE(emigrant)
+GENERATE_SMART_CAST_FIGURE(homeless)
 GENERATE_SMART_CAST_FIGURE(cartpusher)
 GENERATE_SMART_CAST_FIGURE(storageyard_cart)
 GENERATE_SMART_CAST_FIGURE(trade_ship)

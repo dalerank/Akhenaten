@@ -31,7 +31,7 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
 
     const int rand_ticks = (rand() & 0x7f);
     imm->base.wait_ticks = 10 + rand_ticks;
-    imm->base.migrant_num_people = ev.num_people;
+    imm->runtime_data().migrant_num_people = ev.num_people;
     imm->set_immigrant_home(ev.bid);
 }
 
@@ -66,6 +66,7 @@ void figure_immigrant::on_destroy() {
 void figure_immigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Immigrant");
     building* home = immigrant_home();
+    auto &d = runtime_data();
 
     switch (action_state()) {
     case FIGURE_ACTION_1_IMMIGRANT_CREATED:
@@ -125,7 +126,7 @@ void figure_immigrant::figure_action() {
         if (do_enterbuilding(false, home)) {
             building_house *house = home->dcast_house();
             if (house) {
-                house->add_population(base.migrant_num_people);
+                house->add_population(d.migrant_num_people);
             } else {
                 advance_action(ACTION_8_RECALCULATE);
             }
