@@ -18,6 +18,15 @@ void figure_enemy::update_animation() {
     figure_impl::update_animation();
 }
 
+void figure_enemy::formation_reset_to_initial(const formation *m) {
+    if (is_attack()) {
+        return;
+    }
+   
+    base.action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+    base.wait_ticks = 0;
+}
+
 void figure_enemy::enemy_initial(formation *m) {
     base.map_figure_update();
     base.animctx.frame = 0;
