@@ -47,6 +47,7 @@ class figure_fireman;
 class figure_missile;
 class figure_emigrant;
 class figure_homeless;
+class figure_festival_guy;
 
 struct animation_t;
 struct figure_static_params;
@@ -209,7 +210,6 @@ public:
     // 115 bytes
     uint8_t draw_mode;
     uint32_t flags;
-    char festival_remaining_dances;
     
     figure_impl *dcast();
     const figure_impl *dcast() const;
@@ -228,6 +228,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(immigrant)
     ALLOW_SMART_CAST_FIGURE(emigrant)
     ALLOW_SMART_CAST_FIGURE(homeless)
+    ALLOW_SMART_CAST_FIGURE(festival_guy)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -554,6 +555,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
     ALLOW_SMART_CAST_FIGURE_I(missile)
     ALLOW_SMART_CAST_FIGURE_I(fireman)
+    ALLOW_SMART_CAST_FIGURE_I(festival_guy)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -628,6 +630,7 @@ GENERATE_SMART_CAST_FIGURE(enemy)
 GENERATE_SMART_CAST_FIGURE(enemy_archer)
 GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
+GENERATE_SMART_CAST_FIGURE(festival_guy)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

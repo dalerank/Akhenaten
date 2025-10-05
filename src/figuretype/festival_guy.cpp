@@ -4,7 +4,7 @@
 #include "city/city.h"
 #include "city/buildings.h"
 
-figures::model_t<figure_festival_guy> festival_guy_m;
+figure_festival_guy::static_params festival_guy_m;
 
 void figure_festival_guy::update_animation() {
     building* temple = home();

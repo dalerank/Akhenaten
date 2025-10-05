@@ -758,7 +758,7 @@ void figure::draw_debug() {
         //debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "service[0]", data.value[0], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "service[1]", data.value[1], COLOR_WHITE);
         //debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "service[2]", data.value[2], COLOR_WHITE);
-        debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
+        // debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
     }
 
     if (!!(draw_mode & e_figure_cross_country_move)) { // CROSS-COUNTRY MOVEMENT
