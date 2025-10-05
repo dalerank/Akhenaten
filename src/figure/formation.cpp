@@ -500,40 +500,39 @@ void formation_calculate_figures(void) {
 
 static void update_direction(int formation_id, int first_figure_direction) {
     formation* f = &g_formations[formation_id];
-    if (f->unknown_fired)
+    if (f->unknown_fired) {
         f->unknown_fired--;
-    else if (f->missile_fired)
+    } else if (f->missile_fired) {
         f->direction = first_figure_direction;
-    else if (f->layout == FORMATION_DOUBLE_LINE_1 || f->layout == FORMATION_SINGLE_LINE_1) {
-        if (f->home.y() < f->prev.y_home)
+    } else if (f->layout == FORMATION_DOUBLE_LINE_1 || f->layout == FORMATION_SINGLE_LINE_1) {
+        if (f->home.y() < f->prev.home.y())
             f->direction = DIR_0_TOP_RIGHT;
-        else if (f->home.y() > f->prev.y_home)
+        else if (f->home.y() > f->prev.home.y())
             f->direction = DIR_4_BOTTOM_LEFT;
 
     } else if (f->layout == FORMATION_DOUBLE_LINE_2 || f->layout == FORMATION_SINGLE_LINE_2) {
-        if (f->home.x() < f->prev.x_home)
+        if (f->home.x() < f->prev.home.x())
             f->direction = DIR_6_TOP_LEFT;
-        else if (f->home.x() > f->prev.x_home)
+        else if (f->home.x() > f->prev.home.x())
             f->direction = DIR_2_BOTTOM_RIGHT;
 
     } else if (f->layout == FORMATION_TORTOISE || f->layout == FORMATION_COLUMN) {
-        int dx = (f->home.x() < f->prev.x_home) ? (f->prev.x_home - f->home.x()) : (f->home.x() - f->prev.x_home);
-        int dy = (f->home.y() < f->prev.y_home) ? (f->prev.y_home - f->home.y()) : (f->home.y() - f->prev.y_home);
+        int dx = (f->home.x() < f->prev.home.x()) ? (f->prev.home.x() - f->home.x()) : (f->home.x() - f->prev.home.x());
+        int dy = (f->home.y() < f->prev.home.y()) ? (f->prev.home.y() - f->home.y()) : (f->home.y() - f->prev.home.y());
         if (dx > dy) {
-            if (f->home.x() < f->prev.x_home)
+            if (f->home.x() < f->prev.home.x())
                 f->direction = DIR_6_TOP_LEFT;
-            else if (f->home.x() > f->prev.x_home)
+            else if (f->home.x() > f->prev.home.x())
                 f->direction = DIR_2_BOTTOM_RIGHT;
 
         } else {
-            if (f->home.y() < f->prev.y_home)
+            if (f->home.y() < f->prev.home.y())
                 f->direction = DIR_0_TOP_RIGHT;
-            else if (f->home.y() > f->prev.y_home)
+            else if (f->home.y() > f->prev.home.y())
                 f->direction = DIR_4_BOTTOM_LEFT;
         }
     }
-    f->prev.x_home = f->home.x();
-    f->prev.y_home = f->home.y();
+    f->prev.home = f->home;
 }
 
 static void update_directions(void) {
@@ -632,8 +631,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_herd); // 2
         iob->bind(BIND_SIGNATURE_UINT8, &f->enemy_type);
         iob->bind(BIND_SIGNATURE_UINT8, &f->direction);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->prev.x_home);
-        iob->bind(BIND_SIGNATURE_UINT16, &f->prev.y_home);
+        iob->bind(BIND_SIGNATURE_TILE2I, f->prev.home);
         iob->bind(BIND_SIGNATURE_UINT8, &f->unknown_fired);
         iob->bind(BIND_SIGNATURE_UINT8, &f->orientation);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
