@@ -92,6 +92,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         attacking |= (dist < 2);
         if (attacking) {
             d.damage_action++;
+            m->recent_fight = 6;
             if (d.damage_action > interval_attack_delay()) {
                 b->force_damage(false, base.attack_value());
                 d.damage_action = 0;
@@ -153,6 +154,17 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
         return;
     } 
 
+    if (base.destination_building_id) {
+        building *b = building_get(base.destination_building_id);
+        grid_tiles_sm adjacent_tiles = map_grid_get_adjacent_tiles_sm(b, 1);
+        auto it = std::find(adjacent_tiles.begin(), adjacent_tiles.end(), tile());
+        if (it != adjacent_tiles.end()) {
+            m->recent_fight = 3;
+            advance_action(ACTION_154_ENEMY_FAST_SWORD_ATTACK);
+            return;
+        }
+    }
+
     tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
     base.destination_tile = m->destination.shifted(formation_t);
 
@@ -170,7 +182,6 @@ void figure_enemy_fast_sword::update_animation() {
         animkey = animkeys().death;
     } else if (action_state() == ACTION_153_ENEMY_FAST_SWORD_MARCHING) {
         animkey = animkeys().walk;
-        base.animctx.frame = 0;
     }
 
     image_set_animation(animkey);

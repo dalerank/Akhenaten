@@ -95,6 +95,15 @@ int figure::find_mop_up_target() {
     return target_id;
 }
 
+void figure_soldier::formation_reset_to_initial(const formation *m) {
+    if (is_attack()) {
+        return;
+    }
+
+    base.action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+    base.wait_ticks = 0;
+}
+
 void figure_soldier::update_image(const formation* m, int &dir) {
     if (action_state() == FIGURE_ACTION_150_ATTACK) {
         dir = base.attack_direction;

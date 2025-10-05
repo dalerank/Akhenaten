@@ -39,6 +39,8 @@ public:
     virtual int8_t missile_delay() const { return 0; }
     virtual int8_t attack_distance() const { return -1; }
 
+    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE; }
+
     //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;

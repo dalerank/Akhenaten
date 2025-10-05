@@ -40,6 +40,7 @@ public:
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m) override;
+    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_FAST_SWORD_ATTACK; }
 
     virtual int8_t interval_attack_delay() const { return 100; }
 };
