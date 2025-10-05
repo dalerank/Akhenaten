@@ -2,11 +2,11 @@ log_info("akhenaten: building info started")
 
 building_small_statue = {
   variants : [
-    {pack: PACK_GENERAL, id: 61, offset:1},
-    {pack: PACK_GENERAL, id: 61, offset:5},
-    {pack: PACK_EXPANSION, id: 37, offset:1},
-    {pack: PACK_EXPANSION, id: 37, offset:5},
-    {pack: PACK_TEMPLE_RA, id: 1, offset:27},
+    {pack: PACK_GENERAL, id: 61, offset:1}
+    {pack: PACK_GENERAL, id: 61, offset:5}
+    {pack: PACK_EXPANSION, id: 37, offset:1}
+    {pack: PACK_EXPANSION, id: 37, offset:5}
+    {pack: PACK_TEMPLE_RA, id: 1, offset:27}
   ]
   window_info_height_id : 1
   info_help_id:79
