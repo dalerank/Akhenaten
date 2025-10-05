@@ -122,7 +122,7 @@ int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animal
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence) {
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, tile);
     if (!formation_id)
         return 0;
@@ -383,9 +383,9 @@ void formation_set_destination(formation* m, tile2i tile) {
     m->destination = tile;
 }
 
-void formation_set_destination_building(formation* m, tile2i tile, int building_id) {
-    m->destination = tile;
-    m->destination_building_id = building_id;
+void formation::set_destination_building(tile2i tile, int building_id) {
+    destination = tile;
+    destination_building_id = building_id;
 }
 
 void formation_set_home(formation* m, tile2i tile) {
@@ -596,7 +596,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_id);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_INT16, &f->attack_type);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
+        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_recruit_type);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->has_military_training);

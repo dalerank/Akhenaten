@@ -21,7 +21,10 @@ enum e_formation_attack_type {
     FORMATION_ATTACK_GOLD_STORES = 1,
     FORMATION_ATTACK_BEST_BUILDINGS = 2,
     FORMATION_ATTACK_TROOPS = 3,
-    FORMATION_ATTACK_RANDOM = 4
+    FORMATION_ATTACK_SIMPLE = 4,
+    FORMATION_ATTACK_RANDOM = 5,
+
+    FORMATION_ATTACK_MAX
 };
 
 enum e_formation_layout {
@@ -108,7 +111,7 @@ struct formation {
     /* Enemy-related */
     int enemy_type;
     int enemy_legion_index;
-    int attack_type;
+    e_formation_attack_type attack_type;
     int invasion_id;
     int invasion_sequence;
     formation_state enemy_state;
@@ -123,6 +126,8 @@ struct formation {
         int x_home;
         int y_home;
     } prev;
+
+    void set_destination_building(tile2i tile, int building_id);
 };
 
 void formations_clear(void);
@@ -131,7 +136,7 @@ void formation_clear(int formation_id);
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
 
@@ -164,7 +169,6 @@ void formation_decrease_monthly_counters(formation* m);
 void formation_clear_monthly_counters(formation* m);
 
 void formation_set_destination(formation* m, tile2i tile);
-void formation_set_destination_building(formation* m, tile2i tile, int building_id);
 void formation_set_home(formation* m, tile2i tile);
 
 void formation_clear_figures(void);
