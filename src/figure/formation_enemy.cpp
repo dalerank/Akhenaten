@@ -18,32 +18,63 @@
 #include "grid/routing/routing.h"
 #include "grid/soldier_strength.h"
 #include "grid/terrain.h"
+#include "js/js_game.h"
 
-static const int ENEMY_ATTACK_PRIORITY[4][100] = {
-  {BUILDING_GRANARY,
-   BUILDING_STORAGE_YARD,
-   BUILDING_BAZAAR,
-   BUILDING_BARLEY_FARM,
-   BUILDING_FLAX_FARM,
-   BUILDING_GRAIN_FARM,
-   BUILDING_LETTUCE_FARM,
-   BUILDING_POMEGRANATES_FARM,
-   BUILDING_CHICKPEAS_FARM,
-   0},
+using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
+using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
 
-  {BUILDING_TOWN_PALACE, 
-   BUILDING_VILLAGE_PALACE,
-   BUILDING_TAX_COLLECTOR_UPGRADED,
-   BUILDING_TAX_COLLECTOR,
-   0},
+struct enemy_attack_priority_t {
+    stage_attack_rules food_chain;
+    stage_attack_rules gold_stores;
+    stage_attack_rules best_buildings;
+    stage_attack_rules troops;
+    stage_attack_rules simple;
+    stage_attack_rules random;
 
-  {BUILDING_DYNASTY_MANSION,    BUILDING_FAMILY_MANSION,      BUILDING_PERSONAL_MANSION,   BUILDING_HOUSE_PALATIAL_ESTATE,
-   BUILDING_HOUSE_MODEST_ESTATE, BUILDING_HOUSE_STATELY_MANOR, BUILDING_HOUSE_ELEGANT_MANOR, BUILDING_HOUSE_SPACIOUS_MANOR,
-   BUILDING_HOUSE_COMMON_MANOR,  BUILDING_HOUSE_FANCY_RESIDENCE,  BUILDING_HOUSE_ELEGANT_RESIDENCE,  BUILDING_HOUSE_SPACIOUS_RESIDENCE,
-   BUILDING_HOUSE_COMMON_RESIDENCE, BUILDING_HOUSE_SPACIOUS_APARTMENT, BUILDING_HOUSE_MODEST_APARTMENT, BUILDING_HOUSE_SPACIOUS_HOMESTEAD,
-   BUILDING_HOUSE_MODEST_HOMESTEAD,   BUILDING_HOUSE_ORDINARY_COTTAGE,   BUILDING_HOUSE_ROUGH_COTTAGE,  BUILDING_HOUSE_COMMON_SHANTY,
-   BUILDING_HOUSE_MEAGER_SHANTY,  BUILDING_HOUSE_STURDY_HUT,    BUILDING_HOUSE_CRUDE_HUT,   0},
-  {BUILDING_MILITARY_ACADEMY, BUILDING_POLICE_STATION, 0}};
+    stage_attack_weight food_chain_w;
+    stage_attack_weight gold_stores_w;
+    stage_attack_weight best_buildings_w;
+    stage_attack_weight troops_w;
+    stage_attack_weight simple_w;
+    stage_attack_weight random_w;
+
+    struct attack_pairs {
+        stage_attack_rules *rules;
+        stage_attack_weight *weights;
+    };
+
+    std::array<attack_pairs, FORMATION_ATTACK_MAX> data = { {
+        {&food_chain, &food_chain_w},
+        {&gold_stores, &gold_stores_w},
+        {&best_buildings, &best_buildings_w},
+        {&troops, &troops_w},
+        {&simple, &simple_w},
+        {&random, &random_w }
+    } };
+
+    const stage_attack_weight &get_weights(e_formation_attack_type rule) {
+        return *data[rule].weights;
+    }
+};
+ANK_CONFIG_STRUCT(enemy_attack_priority_t,
+    food_chain, gold_stores, best_buildings, troops, simple)
+
+struct enemy_attack_rules_t {
+    enemy_attack_priority_t priority;
+
+    void archive_load(archive arch) {
+        for (auto &it : priority.data) {
+            std::fill(it.weights->begin(), it.weights->end(), 0);
+            for (int i = 0; i < it.rules->size(); i++) {
+                uint16_t btype = it.rules->at(i);
+                it.weights->at(btype) = (it.rules->size() - i) + 1;
+            }
+        }
+    }
+};
+ANK_CONFIG_STRUCT(enemy_attack_rules_t, priority)
+
+enemy_attack_rules_t ANK_VARIABLE(enemy_attack_rules);
 
 static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
       {
@@ -178,70 +209,70 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
      }
 };
 
-static const int ENEMY_SIMPLE_ATTACK_PRIORITY[100] = {
-    79,  78,  77,  29, 28,  27,  26,  25,  85,  84,  32, 33, 98, 65, 66,  67,  68,  69,  87,  86, 30,
-    31,  47,  52,  46, 48,  53,  51,  24,  23,  22,  21, 20, 46, 48, 114, 113, 112, 111, 110, 71, 72,
-    70,  74,  75,  76, 60,  61,  62,  63,  64,  34,  36, 37, 35, 94, 19,  18,  17,  16,  15,  49, 106,
-    107, 109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14,  13,  12,  11,  10,  0
-};
-
 static void set_enemy_target_building(formation* m) {
-    int attack = m->attack_type;
-    if (attack == FORMATION_ATTACK_RANDOM)
-        attack = random_byte() & 3;
-
-    int best_type_index = 100;
-    building* best_building = 0;
-    int min_distance = 10000;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
-            continue;
-
-        for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
-            if (b->type == ENEMY_ATTACK_PRIORITY[attack][n]) {
-                int distance = calc_maximum_distance(m->home, b->tile);
-                if (n < best_type_index) {
-                    best_type_index = n;
-                    best_building = b;
-                    min_distance = distance;
-                } else if (distance < min_distance) {
-                    best_building = b;
-                    min_distance = distance;
-                }
-                break;
-            }
-        }
+    e_formation_attack_type attack = m->attack_type;
+    if (attack == FORMATION_ATTACK_RANDOM) {
+        attack = (e_formation_attack_type)(random_byte() % FORMATION_ATTACK_RANDOM);
     }
-    if (!best_building) {
-        // no target buildings left: take rioter attack priority
-        for (int i = 1; i < MAX_BUILDINGS; i++) {
-            building* b = building_get(i);
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile.grid_offset()))
-                continue;
 
-            for (int n = 0; n < 100 && n <= best_type_index && ENEMY_SIMPLE_ATTACK_PRIORITY[n]; n++) {
-                if (b->type == (e_building_type)(ENEMY_SIMPLE_ATTACK_PRIORITY[n])) {
-                    int distance = calc_maximum_distance(m->home, b->tile);
-                    if (n < best_type_index) {
-                        best_type_index = n;
-                        best_building = b;
-                        min_distance = distance;
-                    } else if (distance < min_distance) {
-                        best_building = b;
-                        min_distance = distance;
-                    }
-                    break;
+    auto get_best_target = [&] (const stage_attack_weight& weights) {
+        building *best_building = nullptr;
+        int max_score = -9999;
+        for (auto b = building_begin(); b != building_end(); ++b) {
+            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+                continue;
+            }
+
+            const int weight = weights[b->type];
+            if (weight > 0) {
+                int distance = calc_maximum_distance(m->home, b->tile);
+                int score = weight - distance;
+                if (score > max_score) {
+                    best_building = b;
+                    max_score = score;
                 }
             }
         }
+
+        return best_building;
+    };
+
+    auto get_closes_buildings = [&] () {
+        building *best_building = nullptr;
+        int min_distance = 9999;
+        for (auto b = building_begin(); b != building_end(); ++b) {
+            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+                continue;
+            }
+
+            int distance = calc_maximum_distance(m->home, b->tile);
+            if (distance < min_distance) {
+                best_building = b;
+                min_distance = distance;
+            }
+        }
+
+        return best_building;
+    };
+
+    const auto &formation_attack_weights = enemy_attack_rules.priority.get_weights(attack);
+    building* best_building = get_best_target(formation_attack_weights);
+
+    if (!best_building) {
+        // no target buildings left: take common attack priority
+        best_building = get_best_target(enemy_attack_rules.priority.simple_w);
+    }
+
+    if (!best_building) {
+        // no target building left: take closest for attack
+        best_building = get_closes_buildings();
     }
 
     if (best_building) {
         if (best_building->type == BUILDING_STORAGE_YARD) {
-            formation_set_destination_building(m, best_building->tile.shifted(1, 0), best_building->id + 1);
+            m->set_destination_building(best_building->tile.shifted(1, 0), best_building->id + 1);
         } else {
-            formation_set_destination_building(m, best_building->tile, best_building->id);
+            m->set_destination_building(best_building->tile, best_building->id);
         }
     }
 }
@@ -278,7 +309,7 @@ static void set_native_target_building(formation* m) {
     }
 
     if (min_building) {
-        formation_set_destination_building(m, min_building->tile, min_building->id);
+        m->set_destination_building(min_building->tile, min_building->id);
     }
 }
 
@@ -301,14 +332,13 @@ void formation_enemy_approach_target(formation* m) {
 }
 
 static void set_figures_to_initial(const formation* m) {
-    for (int i = 0; i < formation::max_figures_count; i++) {
-        if (m->figures[i] > 0) {
-            figure* f = figure_get(m->figures[i]);
-            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK) {
-                f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
-                f->wait_ticks = 0;
-            }
+    for (auto& fid: m->figures) {
+        figure* f = figure_get(fid);
+        if (!f->is_alive()) {
+            continue;
         }
+            
+        f->dcast()->formation_reset_to_initial(m);
     }
 }
 
@@ -587,7 +617,7 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance)
     m->enemy_legion_index = army->num_batalions++;
     m->wait_ticks++;
 
-    formation_set_destination_building(m, army->destination, army->destination_building_id);
+    m->set_destination_building(army->destination, army->destination_building_id);
     update_enemy_movement(m, *pharaoh_batalion_distance);
 }
 
