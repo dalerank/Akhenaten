@@ -307,7 +307,7 @@ void scenario_editor_update_subtitle(const char* new_description) {
 }
 
 void scenario_editor_set_enemy(int enemy_id) {
-    g_scenario.enemy_id = enemy_id;
+    g_scenario.enemy_id = (e_enemy_type)enemy_id;
     g_scenario.is_saved = 0;
 }
 
