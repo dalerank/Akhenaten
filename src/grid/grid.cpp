@@ -342,7 +342,7 @@ grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius) {
 
     while (part) {
         grid_area area = map_grid_get_area(part->tile, part->size, radius);
-        area.for_each_bound([&] (auto &t) { tiles.push_back(t); });
+        area.for_each_bound([&] (tile2i t) { tiles.push_back(t); });
         part = part->has_next() ? part->next() : nullptr;
     }
 
