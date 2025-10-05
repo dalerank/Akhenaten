@@ -313,13 +313,36 @@ grid_area map_grid_get_area(tile2i tile, int size, int radius) {
     return t;
 }
 
-grid_tiles map_grid_get_tiles(building *b, int radius) {
+template<typename T>
+T& map_grid_get_tiles_impl(building *b, int radius, T& arr) {
     building *part = b;
-    grid_tiles tiles;
-    tiles.reserve(std::pow(b->size, 2) * 2);
     while (part) {
         grid_area area = map_grid_get_area(part->tile, part->size, radius);
-        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { tiles.push_back(tile); });
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) { arr.push_back(tile); });
+        part = part->has_next() ? part->next() : nullptr;
+    }
+
+    return arr;
+}
+
+grid_tiles map_grid_get_tiles(building *b, int radius) {
+    grid_tiles tiles;
+    tiles.reserve(std::pow(b->size, 2) * 2);
+    return map_grid_get_tiles_impl(b, radius, tiles);
+}
+
+grid_tiles_sm map_grid_get_tiles_sm(building *b, int radius) {
+    grid_tiles_sm tiles;
+    return map_grid_get_tiles_impl(b, radius, tiles);
+}
+
+grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius) {
+    building *part = b;
+    grid_tiles_sm tiles;
+
+    while (part) {
+        grid_area area = map_grid_get_area(part->tile, part->size, radius);
+        area.for_each_bound([&] (auto &t) { tiles.push_back(t); });
         part = part->has_next() ? part->next() : nullptr;
     }
 
