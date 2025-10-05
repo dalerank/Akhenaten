@@ -3,6 +3,11 @@
 #include <array>
 #include <algorithm>
 
+template <typename T>
+struct stable_array_max_elements {
+    enum { max_elements = 0 };
+};
+
 template<typename T>
 class stable_array {
 public:
@@ -22,6 +27,7 @@ public:
 
 public:
     stable_array() noexcept {
+        static_assert(stable_array_max_elements<T>::max_elements != 0 && "max elements not defined");
     }
 
     template <std::size_t N>
@@ -35,7 +41,7 @@ public:
     }
 
     template <typename U, std::size_t N>
-    stable_array(std::array<U, T::max_elements>& arr) noexcept
+    stable_array(std::array<U, stable_array_max_elements<T>::max_elements>& arr) noexcept
         : _data(arr) {
     }
 
@@ -72,5 +78,5 @@ public:
     reverse_iterator rend() const noexcept { return reverse_iterator(begin()); }
 
 private:
-    std::array<T, T::max_elements> _data;
+    std::array<T, stable_array_max_elements<T>::max_elements> _data;
 };

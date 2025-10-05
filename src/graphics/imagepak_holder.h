@@ -13,10 +13,13 @@ struct imagepak_handle {
     bool custom = false;
     bool delayed = true;
     imagepak *handle = nullptr;
-
-    enum { max_elements = 128 };
 };
 ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom, delayed)
+
+template<>
+struct stable_array_max_elements<imagepak_handle> {
+    enum { max_elements = 128 };
+};
 
 template<>
 struct std::hash<imagepak_handle> {

@@ -8,11 +8,13 @@ struct trade_price {
     e_resource res;
     int32_t buy;
     int32_t sell;
-
-    inline e_resource key() const { return res; }
-    enum { max_elements = RESOURCES_MAX };
 };
 ANK_CONFIG_STRUCT(trade_price, res, buy, sell)
+
+template<>
+struct stable_array_max_elements<trade_price> {
+    enum { max_elements = RESOURCES_MAX };
+};
 
 template<>
 struct std::hash<trade_price> {

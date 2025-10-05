@@ -28,10 +28,12 @@ std::array<vec2i, 8> g_sled_offsets; // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}
 
 struct cart_image_desc : public image_desc {
     e_resource resource;
+};
+
+template<>
+struct stable_array_max_elements<cart_image_desc> {
     enum { max_elements = RESOURCES_MAX };
 };
-ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
-stable_array<cart_image_desc> g_cart_images;
 
 template<>
 struct std::hash<cart_image_desc> {
@@ -39,6 +41,9 @@ struct std::hash<cart_image_desc> {
         return desc.resource;
     }
 };
+
+ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
+stable_array<cart_image_desc> g_cart_images;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
     g_config_arch.r("cart_images", g_cart_images);

@@ -723,14 +723,29 @@ inline void archive::r_stable_array(pcstr name, T &arr) {
     if (isarray(-1)) {
         int length = getlength(-1);
         using value_type = typename T::value_type;
-        for (int i = 0; i < length; ++i) {
-            getindex(-1, i);
-            if (isobject(-1)) {
-                value_type item;
-                archive_helper::reader(*this, item);
-                arr[std::hash<value_type>()(item)] = item;
+        constexpr bool is_arithmetic = std::is_arithmetic_v<value_type>;
+        if constexpr (is_arithmetic) {
+            // numbers
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                if (isnumber(-1)) {
+                    double v = isnumber(-1) ? tonumber(-1) : 0.0;
+                    value_type item = value_type(v);
+                    arr[std::hash<value_type>()(item)] = item;
+                }
+                pop(1);
             }
-            pop(1);
+        } else {
+            // objects
+            for (int i = 0; i < length; ++i) {
+                getindex(-1, i);
+                if (isobject(-1)) {
+                    value_type item;
+                    archive_helper::reader(*this, item);
+                    arr[std::hash<value_type>()(item)] = item;
+                }
+                pop(1);
+            }
         }
     }
     pop(1);
