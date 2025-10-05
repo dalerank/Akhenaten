@@ -133,12 +133,16 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
         return figure_get(0);
     }
 
+    const auto &params = figure_static_params::get(type);
+
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
     f->use_cross_country = false;
     f->terrain_usage = -1;
-    //f->flags = 0;
+
+    f->flags = 0;
+    f->flags |= (params.is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
 
     f->direction = dir;
     f->roam_length = 0;

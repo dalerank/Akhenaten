@@ -85,6 +85,7 @@ figure_barbarian_sword = {
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
     interval_attack_delay : 25
+    is_enemy : true
     max_amount : 25
 }
 
@@ -104,7 +105,7 @@ figure_assyrian_archer = {
         death : { pack:PACK_ENEMY_ASSYRIAN, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_ASSYRIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_ASSYRIAN, id:3, max_frames:12 }
-        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:54 }
     }
 
     category: figure_category_hostile
@@ -115,6 +116,8 @@ figure_assyrian_archer = {
     missile_delay : 50  
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -123,7 +126,7 @@ figure_assyrian_sword = {
         walk : { pack:PACK_ENEMY_ASSYRIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ASSYRIAN, id:6, max_frames:12 }
-        big_image : { pack:PACK_UNLOADED, id:25, offset:54 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:55 }
     }
 
     category: figure_category_hostile
@@ -132,6 +135,7 @@ figure_assyrian_sword = {
     defense_value: 3
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -148,6 +152,7 @@ figure_assyrian_transport_ship = {
     attack_value : 0
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -164,6 +169,7 @@ figure_assyrian_war_ship = {
     attack_value : 17
     missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -212,6 +218,7 @@ figure_canaanite_archer = {
     missile_delay : 50 
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -342,6 +349,7 @@ figure_egyptian_archer = {
     missile_defense_value : 0
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -408,6 +416,7 @@ figure_hittite_archer = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -498,6 +507,7 @@ figure_hyksos_archer = {
     defense_value: 1
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -590,6 +600,7 @@ figure_kushite_spearman = {
     missile_delay : 50 
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_SPEAR
     max_amount : 25
 }
 
@@ -682,6 +693,7 @@ figure_libian_archer = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -774,6 +786,7 @@ figure_nubian_archer = {
     missile_delay : 50 
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -866,6 +879,7 @@ figure_persian_archer = {
     missile_delay : 50 
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -959,6 +973,7 @@ figure_phoenician_spearman = {
     defense_value: 1
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_SPEAR
     max_amount : 25
 }
 
@@ -1047,6 +1062,7 @@ figure_roman_archer = {
     missile_delay : 50 
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 
@@ -1139,6 +1155,7 @@ figure_seapeople_archer = {
     defense_value: 1
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_ARROW
     max_amount : 25
 }
 

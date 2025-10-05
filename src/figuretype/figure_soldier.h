@@ -26,6 +26,9 @@ public:
     FIGURE_METAINFO(FIGURE_INFANTRY, figure_soldier_infantry);
     figure_soldier_infantry(figure *f) : figure_soldier(f) {}
 
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
+
     virtual figure_phrase_t phrase() const override { return {FIGURE_INFANTRY, "infantry"}; }
     virtual void update_image(const formation *m, int &dir) override;
 };

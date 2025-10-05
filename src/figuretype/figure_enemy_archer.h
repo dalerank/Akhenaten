@@ -29,15 +29,18 @@ public:
         }
     };
 
+    virtual const base_params_t &base_params() const = 0;
+
     virtual void on_create() override;
     virtual void figure_action() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
 
-    virtual int8_t missile_attack_value() const { return 0; }
-    virtual int8_t missile_delay() const { return 0; }
-    virtual int8_t attack_distance() const { return -1; }
+    virtual int8_t missile_attack_value() const { return base_params().missile_attack_value; }
+    virtual int8_t missile_delay() const { return base_params().missile_delay;}
+    virtual int8_t attack_distance() const { return base_params().attack_distance; }
+    virtual e_figure_type missile_type() const override { return base_params().missile_type; }
 
     virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE; }
 
@@ -61,10 +64,18 @@ public:
     struct static_params : public static_params_t<figure_barbarian_archer> {
     } FIGURE_STATIC_DATA_T;
 
-    virtual e_figure_type missile_type() const override { return current_params().missile_type; }
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_ARCHER, "barb_arch" }; }
-    virtual int8_t missile_attack_value() const override { return current_params().missile_attack_value; }
-    virtual int8_t missile_delay() const override { return current_params().missile_delay; }
-    virtual int8_t attack_distance() const override { return current_params().attack_distance; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
+
+class figure_assyrian_archer : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_ASSYRIAN_ARCHER, figure_assyrian_archer)
+    figure_assyrian_archer(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public static_params_t<figure_assyrian_archer> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_ARCHER, "assr_arch" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
