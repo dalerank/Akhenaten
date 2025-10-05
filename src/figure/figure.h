@@ -119,7 +119,6 @@ public:
     animation_context animctx;
 
     uint8_t alternative_location_index;
-    bool flotsam_visible;
     figure_id next_figure;
     e_figure_type type;
 

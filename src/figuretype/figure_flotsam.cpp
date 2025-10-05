@@ -9,7 +9,7 @@
 
 #include "js/js_game.h"
 
-figures::model_t<figure_flotsam> flotsam_m;
+figure_flotsam::static_params flotsam_m;
 
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0};
@@ -25,6 +25,7 @@ void figure_flotsam::figure_action() {
         return;
     }
 
+    auto &d = runtime_data();
     base.cart_image_id = 0;
     base.terrain_usage = TERRAIN_USAGE_ANY;
 
@@ -43,10 +44,10 @@ void figure_flotsam::figure_action() {
         break;
 
     case FIGURE_ACTION_129_FLOTSAM_FLOATING:
-        if (base.flotsam_visible) {
-            base.flotsam_visible = false;
+        if (d.flotsam_visible) {
+            d.flotsam_visible = false;
         } else {
-            base.flotsam_visible = true;
+            d.flotsam_visible = true;
             base.wait_ticks++;
             base.move_ticks(1);
             base.height_adjusted_ticks = 0;
