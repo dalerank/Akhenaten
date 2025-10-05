@@ -9,6 +9,7 @@
 #include "figure/formation_layout.h"
 
 figure_barbarian_archer::static_params barbarian_archer_m;
+figure_assyrian_archer::static_params assyrian_archer_m;
 
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();
@@ -61,6 +62,9 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     if (base.attack_image_offset) {
         e_figure_type missilet = missile_type();
         assert(missilet != FIGURE_NONE && "archer should has missile");
+        if (missilet == FIGURE_NONE) {
+            missilet = FIGURE_SPEAR;
+        }
 
         if (base.attack_image_offset == 1) {
             if (!target.tile.valid()) {

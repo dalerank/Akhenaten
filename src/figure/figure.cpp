@@ -525,7 +525,6 @@ void figure::kill() {
 
 void figure_impl::on_create() {
     assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
-    base.flags |= (params().is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
 }
 
 void figure_impl::on_post_load() {

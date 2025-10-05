@@ -28,7 +28,6 @@ public:
         uint8_t damage_action = 0;
     } FIGURE_RUNTIME_DATA_T;
 
-    virtual void on_create() override {}
     virtual void figure_action() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
@@ -44,7 +43,6 @@ public:
 
     virtual int8_t interval_attack_delay() const { return 100; }
 };
-
 ANK_CONFIG_STRUCT(figure_enemy_fast_sword::base_params_t, interval_attack_delay)
 
 class figure_barbarian_sword : public figure_enemy_fast_sword {
@@ -56,5 +54,17 @@ public:
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "barb_swd" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
+
+class figure_assyrian_sword : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_ASSYRIAN_SWORD, figure_assyrian_sword)
+    figure_assyrian_sword(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_assyrian_sword> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "assr_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };

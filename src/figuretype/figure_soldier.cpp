@@ -36,7 +36,7 @@ static const vec2i ALTERNATIVE_POINTS[] = {
 };
 
 
-figures::model_t<figure_soldier_infantry> soldier_infantry_m;
+figure_soldier_infantry::static_params soldier_infantry_m;
 figures::model_t<figure_soldier_archer> soldier_archer_m;
 figures::model_t<figure_soldier_charioteer> soldier_charioterr_m;
 
