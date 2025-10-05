@@ -39,7 +39,10 @@ struct gift_rule {
     e_gift id;
     float rate;
     float minimum;
+};
 
+template<>
+struct stable_array_max_elements<gift_rule> {
     enum { max_elements = GIFT_COUNT };
 };
 
