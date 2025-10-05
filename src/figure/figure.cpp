@@ -974,7 +974,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
+    iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
     iob->bind(BIND_SIGNATURE_INT16, &f->target_figure_id);
     iob->bind(BIND_SIGNATURE_INT16, &f->targeted_by_figure_id);
     iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->created_sequence);

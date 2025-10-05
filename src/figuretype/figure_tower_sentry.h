@@ -11,6 +11,10 @@ public:
         uint8_t missile_delay;
     } FIGURE_STATIC_DATA_T;
 
+    struct runtime_data_t {
+        uint8_t wait_ticks_next_target;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;

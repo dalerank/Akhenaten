@@ -121,8 +121,11 @@ int figure_constable::provide_service() {
 }
 
 bool figure_constable::fight_enemy(int category, int max_distance) {
-    if (!g_city.figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0)
+    if (!g_city.figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
         return false;
+    }
+
+    auto &d = runtime_data();
 
     switch (action_state()) {
     case FIGURE_ACTION_150_ATTACK:
@@ -133,15 +136,15 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
     case FIGURE_ACTION_77_POLICEMAN_AT_ENEMY:
         return false;
     }
-    base.wait_ticks_next_target++;
-    if (base.wait_ticks_next_target < 10)
+    d.wait_ticks_next_target++;
+    if (d.wait_ticks_next_target < 10)
         return false;
 
-    base.wait_ticks_next_target = 0;
+    d.wait_ticks_next_target = 0;
     auto result = base.is_nearby(NEARBY_HOSTILE);
     if (result.fid > 0 && result.distance <= max_distance) {
         figure* enemy = figure_get(result.fid);
-        base.wait_ticks_next_target = 0;
+        d.wait_ticks_next_target = 0;
         advance_action(FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY);
         base.destination_tile = enemy->tile;
         base.target_figure_id = result.fid;

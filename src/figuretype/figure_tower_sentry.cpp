@@ -8,7 +8,7 @@
 #include "grid/terrain.h"
 #include "game/game_config.h"
 
-figures::model_t<figure_tower_sentry> figure_tower_sentry_m;
+figure_tower_sentry::static_params figure_tower_sentry_m;
 
 static const int TOWER_SENTRY_FIRING_OFFSETS[] = 
 { 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -24,12 +24,14 @@ void figure_tower_sentry::tower_sentry_pick_target() {
     if (action_state() == FIGURE_ACTION_150_ATTACK || action_state() == FIGURE_ACTION_149_CORPSE)
         return;
 
-    if (base.in_building_wait_ticks)
+    if (base.in_building_wait_ticks) {
         return;
+    }
 
-    base.wait_ticks_next_target++;
-    if (base.wait_ticks_next_target >= 40) {
-        base.wait_ticks_next_target = 0;
+    auto &d = runtime_data();
+    d.wait_ticks_next_target++;
+    if (d.wait_ticks_next_target >= 40) {
+        d.wait_ticks_next_target = 0;
         tile2i tile;
         if (figure_combat_get_missile_target_for_soldier(&base, 10, &tile)) {
             base.action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;

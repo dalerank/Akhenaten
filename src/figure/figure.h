@@ -190,7 +190,6 @@ public:
     textid phrase;
     xstring phrase_key;
     uint8_t phrase_sequence_city;
-    uint8_t wait_ticks_next_target;
     figure_id target_figure_id;
     short targeted_by_figure_id;
     //unsigned short created_sequence;
