@@ -70,7 +70,6 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("cc_delta_xy", f->cc_delta_xy);
         game_debug_show_property("cc_direction", f->cc_direction);
         game_debug_show_property("speed_multiplier", f->speed_multiplier);
-        game_debug_show_property("migrant_num_people", f->migrant_num_people);
         game_debug_show_property("min_max_seen", f->min_max_seen);
         game_debug_show_property("movement_ticks_watchdog", f->movement_ticks_watchdog);
         game_debug_show_property("leading_figure_id", f->leading_figure_id);

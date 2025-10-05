@@ -19,12 +19,20 @@ class figure_emigrant : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_EMIGRANT, figure_emigrant)
     figure_emigrant(figure *f) : figure_impl(f) {}
+    virtual figure_emigrant *dcast_emigrant() override { return this; }
 
-    virtual void on_create() override {}
+    struct static_params : public figure_model {
+    } FIGURE_STATIC_DATA_T;
+
+    struct runtime_data_t {
+        uint8_t migrant_num_people;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void figure_action() override;
     virtual void figure_roaming_action() override { /*nothing*/ }
     virtual void update_animation() override;
     virtual figure_phrase_t phrase() const override { return {FIGURE_EMIGRANT, "emigrant"}; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
+    virtual void debug_show_properties() override;
     virtual sound_key phrase_key() const override;
 };

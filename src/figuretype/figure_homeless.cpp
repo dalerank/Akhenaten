@@ -15,13 +15,15 @@
 #include "graphics/view/lookup.h"
 #include "js/js_game.h"
 
-figures::model_t<figure_homeless> homeless_m;
+figure_homeless::static_params homeless_m;
 
 void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
-    figure *f = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT);
-    f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
-    f->wait_ticks = 0;
-    f->migrant_num_people = ev.num_people;
+    auto homeless = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT)->dcast_homeless();
+
+    homeless->advance_action(FIGURE_ACTION_7_HOMELESS_CREATED);
+    homeless->base.wait_ticks = 0;
+    homeless->runtime_data().migrant_num_people = ev.num_people;
+
     g_city.population.remove_homeless(ev.num_people);
 }
 
@@ -77,6 +79,8 @@ void figure_homeless::on_destroy() {
 
 void figure_homeless::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Homeless");
+    auto &d = runtime_data();
+
     switch (action_state()) {
     case FIGURE_ACTION_7_HOMELESS_CREATED:
         base.animctx.frame = 0;
@@ -115,7 +119,7 @@ void figure_homeless::figure_action() {
             building *b = building_get(runtime_data().adv_home_building_id);
             if (do_enterbuilding(false, b)) {
                 building_house *house = b->dcast_house();
-                house->add_population(base.migrant_num_people);
+                house->add_population(d.migrant_num_people);
             }
         }
         break;
