@@ -61,13 +61,13 @@ struct formation {
     int faction_id; /**< 1 = player, 0 = everyone else */
 
     /* General variables */
-    int in_use;    /**< Flag whether this entry is in use */
-    int is_herd;   /**< Flag to indicate herd */
+    bool in_use;    /**< Flag whether this entry is in use */
+    bool is_herd;   /**< Flag to indicate herd */
     bool own_batalion; /**< Flag to indicate (own) legion */
     uint8_t batalion_id; /**< Batalion ID (0-5 for own troops) */
     e_formation_layout layout;
-    int direction;
-    int orientation;
+    uint8_t direction;
+    uint8_t orientation;
 
     int morale;
     int months_from_home;
@@ -123,8 +123,7 @@ struct formation {
 
     struct {
         e_formation_layout layout;
-        int x_home;
-        int y_home;
+        tile2i home;
     } prev;
 
     void set_destination_building(tile2i tile, int building_id);
