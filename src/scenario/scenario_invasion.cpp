@@ -21,7 +21,7 @@
 #include "js/js_game.h"
 
 declare_console_command_p(start_invasion) {
-    int enemy_type = parse_integer_from<bstring32>(is); // 0 type, 1 kingdome, 2 seth natives
+    e_enemy_type enemy_type = (e_enemy_type)parse_integer_from<bstring32>(is); // 0 type, 1 kingdome, 2 seth natives
     int size = parse_integer_from<bstring32>(is);
     int invasion_point = parse_integer_from<bstring32>(is);
     scenario_invasion_start_from_console(ATTACK_TYPE_ENEMIES, enemy_type, size, invasion_point);
@@ -150,7 +150,7 @@ static void determine_formations(int num_soldiers, int* num_formations, int sold
     }
 }
 
-tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id) {
+tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id) {
     auto &data = g_invasions;
     if (amount <= 0) {
         return tile2i::invalid;
@@ -265,7 +265,7 @@ tile2i scenario_start_invasion_impl(int enemy_type, int amount, int invasion_poi
 }
 
 void scenario_invasion_process() {
-    int enemy_id = g_scenario.enemy_id;
+    e_enemy_type enemy_id = g_scenario.enemy_id;
     for (auto& warning : g_invasions.warnings) {
         if (!warning.in_use)
             continue;
@@ -380,7 +380,7 @@ bool scenario_invasion_start_from_kingdome(int size) {
     return false;
 }
 
-void scenario_invasion_start_from_console(int attack_type, int enemy_type, int size, int invasion_point) {
+void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, int invasion_point) {
     auto &data = g_invasions;
     switch (attack_type) {
     case ATTACK_TYPE_ENEMIES: {

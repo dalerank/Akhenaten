@@ -26,10 +26,12 @@
 struct building_penalty {
     e_building_type type = BUILDING_NONE;
     int penalty = - 1;
+};
 
+template<>
+struct stable_array_max_elements<building_penalty> {
     enum { max_elements = BUILDING_MAX };
 };
-ANK_CONFIG_STRUCT(building_penalty, type, penalty)
 
 template<>
 struct std::hash<building_penalty> {
@@ -37,6 +39,7 @@ struct std::hash<building_penalty> {
         return bp.type;
     }
 };
+ANK_CONFIG_STRUCT(building_penalty, type, penalty)
 
 stable_array<building_penalty> routing_amphibia_buildings;
 stable_array<building_penalty> routing_citizen_buildings;

@@ -150,7 +150,7 @@ struct scenario_data_t {
     int image_id;
     uint8_t subtitle[64];
     uint8_t brief_description[522];
-    int enemy_id;
+    e_enemy_type enemy_id;
     bool is_open_play;
     int open_play_scenario_id;
     bool is_custom;

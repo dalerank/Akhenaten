@@ -122,7 +122,7 @@ int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animal
     return formation_id;
 }
 
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence) {
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence) {
     int formation_id = formation_create(figure_type, layout, orientation, tile);
     if (!formation_id)
         return 0;
@@ -271,7 +271,7 @@ void formation_change_morale(formation* m, int amount) {
 
 void formation_update_morale_after_death(formation* m) {
     formation_calculate_figures();
-    int pct_dead = calc_percentage(1, m->num_figures);
+    int pct_dead = calc_percentage<int>(1, m->num_figures);
     int morale;
     if (pct_dead < 8)
         morale = -5;
@@ -605,7 +605,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(2);                                  //     vv 6 hp per ostich?
         iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18
         iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage); // 50
-        iob->bind(BIND_SIGNATURE_INT16, &f->recent_fight);
+        iob->bind(BIND_SIGNATURE_INT8, &f->recent_fight);
+        iob->bind____skip(1);
         iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // --> 8 --> 0 ??????
         iob->bind____skip(4);
@@ -618,7 +619,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         f->enemy_state.duration_halt = 0;
         f->enemy_legion_index = 0;
 
-        iob->bind(BIND_SIGNATURE_INT16, &f->is_halted);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->is_halted);
+        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_fired);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_timeout);
         iob->bind(BIND_SIGNATURE_INT16, &f->missile_attack_formation_id);

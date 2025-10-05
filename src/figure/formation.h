@@ -69,47 +69,47 @@ struct formation {
     uint8_t direction;
     uint8_t orientation;
 
-    int morale;
-    int months_from_home;
-    int months_low_morale;
-    int months_very_low_morale;
+    int16_t morale;
+    uint8_t months_from_home;
+    uint8_t months_low_morale;
+    uint8_t months_very_low_morale;
 
     /* Figures */
     e_figure_type figure_type;          /**< Type of figure in this formation */
-    int num_figures;                    /**< Current number of figures in the formation */
-    int max_figures;                    /**< Maximum number of figures */
+    uint8_t num_figures;                    /**< Current number of figures in the formation */
+    uint8_t max_figures;                    /**< Maximum number of figures */
     int figures[max_figures_count];     /**< Figure IDs */
-    int total_damage;                   /**< Total damage of all figures added */
-    int max_total_damage;               /**< Maximum total damage of all figures added */
+    int16_t total_damage;                   /**< Total damage of all figures added */
+    int16_t max_total_damage;               /**< Maximum total damage of all figures added */
 
     /* Position */
     tile2i tile;
     tile2i home;
-    int building_id;
+    uint16_t building_id;
     tile2i standard_tile;
-    int standard_figure_id;
+    uint16_t standard_figure_id;
     tile2i destination;
-    int destination_building_id;
+    uint16_t destination_building_id;
 
     /* Movement */
-    int wait_ticks;
-    int is_halted;
-    int recent_fight;
-    int unknown_fired;
-    int missile_fired;
-    int missile_attack_timeout;
-    int missile_attack_formation_id;
+    int16_t wait_ticks;
+    bool is_halted;
+    int8_t recent_fight;
+    uint8_t unknown_fired;
+    int16_t missile_fired;
+    int16_t missile_attack_timeout;
+    int16_t missile_attack_formation_id;
 
     /* Legion-related */
-    int empire_service;        /**< Flag to indicate this batalion is selected for empire service */
-    int in_distant_battle;     /**< Flag to indicate this batalion is away in a distant battle */
-    int cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
+    uint8_t empire_service;        /**< Flag to indicate this batalion is selected for empire service */
+    uint8_t in_distant_battle;     /**< Flag to indicate this batalion is away in a distant battle */
+    int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
     uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
     int is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
 
     /* Enemy-related */
-    int enemy_type;
+    e_enemy_type enemy_type;
     int enemy_legion_index;
     e_formation_attack_type attack_type;
     int invasion_id;
@@ -119,7 +119,7 @@ struct formation {
     /* Herd-related */
     uint8_t herd_direction;
     uint8_t failed_creation_count;
-    int herd_ostrich_spawn_delay;
+    uint8_t herd_ostrich_spawn_delay;
 
     struct {
         e_formation_layout layout;
@@ -135,7 +135,7 @@ void formation_clear(int formation_id);
 
 formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
-int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, int enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
+int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
 
