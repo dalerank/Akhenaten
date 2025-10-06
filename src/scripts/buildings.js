@@ -627,7 +627,9 @@ building_granary = {
   info_text_id: 98
   info_help_id: 3
   building_size : 4
-  update_roads : true
+  planner_update_rule : {
+    roads : true
+  }
   cost: [ 50, 70, 100, 200, 300 ]
   desirability : { value:[-8], step:[1], step_size:[2], range: [4] }
 }
@@ -1561,7 +1563,9 @@ building_ferry = {
   building_size : 2,
   check_water_access : true,
   need_shoreline : true,
-  update_ferries : true,
+  planner_update_rule : {
+    ferries : true
+  }
   fire_proof : true,
   planer_relative_orientation: 1,
   info_help_id: 85,
@@ -2301,7 +2305,9 @@ building_water_lift = {
   window_info_height_id : 1
   fire_proof : 1
   building_size : 2
-  update_canals : true
+  planner_update_rule : { 
+    canals : true
+  }
   check_water_access : true
   need_shoreline : true
   need_floodplain_shoreline : true

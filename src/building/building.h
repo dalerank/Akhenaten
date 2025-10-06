@@ -460,6 +460,13 @@ struct building_desirability_t {
 };
 ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
 
+struct building_planner_update_rule {
+    bool canals;
+    bool roads;
+    bool ferries;
+};
+ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries)
+
 struct building_static_params {
     e_building_type type;
     static building_static_params dummy;
@@ -493,11 +500,7 @@ struct building_static_params {
     svector<int8_t, 5> fire_risk;
     svector<int8_t, 5> damage_risk;
 
-    struct {
-        bool canals;
-        bool roads;
-        bool ferries;
-    } updates;
+    building_planner_update_rule planner_update_rule;
 
     struct {
         bool meadow;
@@ -537,6 +540,7 @@ struct building_static_params {
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
 };
+ANK_CONFIG_STRUCT(building_static_params, planner_update_rule)
 
 class building_impl {
 public:
