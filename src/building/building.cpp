@@ -1234,7 +1234,7 @@ void building_impl::on_tick(bool refresh_only) {
     base.anim.update(refresh_only);
 }
 
-void building_static_params::archive_load(archive arch) {
+void building_static_params::base_load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
     fire_risk_update = arch.r_int("fire_risk_update", 50);
@@ -1270,10 +1270,6 @@ void building_static_params::archive_load(archive arch) {
     cost.fill(0);
     arch.r("cost", cost);
     arch.r("desirability", desirability);
-
-    arch.r("laborers", laborers);
-    arch.r("fire_risk", fire_risk);
-    arch.r("fire_risk", fire_risk);
 
     city_labor_t::set_category(type, labor_category);
 
