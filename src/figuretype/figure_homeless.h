@@ -4,6 +4,14 @@
 
 struct event_create_homeless { tile2i tile; int num_people; pcstr location; };
 
+enum e_homeless_action {
+    ACTION_6_HOMELESS_LEAVING = 6,
+    ACTION_7_HOMELESS_CREATED = 7,
+    ACTION_8_HOMELESS_GOING_TO_HOUSE = 8,
+    ACTION_9_HOMELESS_ENTERING_HOUSE = 9,
+    ACTION_10_HOMELESS_ENTERING_HOUSE = 10,
+};
+
 class figure_homeless : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_HOMELESS, figure_homeless)
