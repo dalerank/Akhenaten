@@ -204,8 +204,8 @@ void building_update_state(void) {
         if (b->state != BUILDING_STATE_VALID) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
                 const auto &params = b->dcast()->params();
-                canals_recalc |= params.updates.canals;
-                water_routes_recalc |= params.updates.ferries;
+                canals_recalc |= params.planner_update_rule.canals;
+                water_routes_recalc |= params.planner_update_rule.ferries;
                 //roads_recalc |= params.updates.roads;
 
                 if (b->type == BUILDING_MUD_TOWER || b->type == BUILDING_MUD_GATEHOUSE) {
