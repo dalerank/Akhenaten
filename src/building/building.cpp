@@ -1274,6 +1274,10 @@ void building_static_params::archive_load(archive arch) {
     arch.r("cost", cost);
     arch.r("desirability", desirability);
 
+    arch.r("laborers", laborers);
+    arch.r("fire_risk", fire_risk);
+    arch.r("fire_risk", fire_risk);
+
     city_labor_t::set_category(type, labor_category);
 
     arch.r("animations", anim.data);
