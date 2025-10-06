@@ -908,7 +908,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->previous_tile_direction);
     iob->bind(BIND_SIGNATURE_INT8, &f->attack_direction);
-    iob->bind(BIND_SIGNATURE_UINT32, f->tile);
+    iob->bind(BIND_SIGNATURE_TILE2I, f->tile);
     iob->bind(BIND_SIGNATURE_UINT32, f->previous_tile);
     iob->bind(BIND_SIGNATURE_UINT16, &f->missile_damage);
     iob->bind(BIND_SIGNATURE_UINT16, &f->damage);

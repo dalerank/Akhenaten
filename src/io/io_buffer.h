@@ -27,6 +27,7 @@ enum bind_signature_e {
     BIND_SIGNATURE_RAW,
 
     BIND_SIGNATURE_TILE2I,
+    BIND_SIGNATURE_VEC2I,
 
     BIND_SIGNATURE_GRID,
 };

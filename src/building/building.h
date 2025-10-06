@@ -489,9 +489,9 @@ struct building_static_params {
     std::array<uint16_t, 5> cost;
     building_desirability_t desirability;
 
-    std::array<uint8_t, 5> laborers;
-    std::array<int8_t, 5> fire_risk;
-    std::array<int8_t, 5> damage_risk;
+    svector<uint8_t, 5> laborers;
+    svector<int8_t, 5> fire_risk;
+    svector<int8_t, 5> damage_risk;
 
     struct {
         bool canals;
