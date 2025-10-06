@@ -515,7 +515,7 @@ struct building_static_params {
         bool floodplain_shoreline;
     } needs;
 
-    void archive_load(archive arch);
+    void base_load(archive arch);
 
     virtual void planer_setup_build(build_planner &planer) const {}
     virtual int planer_setup_orientation(int orientation) const { return orientation; }
@@ -540,7 +540,7 @@ struct building_static_params {
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
 };
-ANK_CONFIG_STRUCT(building_static_params, planner_update_rule)
+ANK_CONFIG_STRUCT(building_static_params, laborers, fire_risk, damage_risk, planner_update_rule)
 
 class building_impl {
 public:
@@ -886,7 +886,9 @@ struct model_t : public building_static_params {
     void initialize() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
-            building_static_params::archive_load(arch);
+            building_static_params &base = *this;
+            arch.r(base);
+            building_static_params::base_load(arch);
             loaded = true;
             call_struct_reader_if_exists(arch, *this);
             this->archive_load(arch);
