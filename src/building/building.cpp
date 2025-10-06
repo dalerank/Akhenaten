@@ -1270,6 +1270,7 @@ void building_static_params::archive_load(archive arch) {
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
+    cost.fill(0);
     arch.r("cost", cost);
     arch.r("desirability", desirability);
 

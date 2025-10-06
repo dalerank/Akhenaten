@@ -78,10 +78,10 @@ struct archive {
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
     template<size_t S, typename T = int>
-    inline std::array<T, S> r_sarray(pcstr name);
+    inline void r_sarray(pcstr name, std::array<T, S> &v);
 
     template<typename T, std::size_t N>
-    inline void r(pcstr name, std::array<T, N>& v) { v = this->r_sarray<N, T>(name); }
+    inline void r(pcstr name, std::array<T, N>& v) { this->r_sarray<N, T>(name, v); }
 
     template<typename T, std::size_t N, typename = std::enable_if_t<std::is_enum_v<T> || std::is_arithmetic_v<T>>>
     inline void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
@@ -324,7 +324,7 @@ protected:
     }
 
     template<typename T, std::size_t N>
-    inline void r_struct(pcstr name, std::array<T, N> &v) { v = this->r_sarray<N, T>(name); }
+    inline void r_struct(pcstr name, std::array<T, N> &v) { this->r_sarray<N, T>(name, v); }
 
     template<typename T, std::size_t N>
     inline void r_struct(pcstr name, svector<T, N> &v) {
@@ -690,10 +690,9 @@ inline void archive::r_struct(pcstr name, T &v) {
 }
 
 template<size_t S, typename T>
-inline std::array<T, S> archive::r_sarray(pcstr name) {
+inline void archive::r_sarray(pcstr name, std::array<T, S> &v) {
     getproperty(-1, name);
-    std::array<T, S> result;
-    auto it = result.begin();
+    auto it = v.begin();
     if (isarray(-1)) {
         int length = getlength(-1);
         length = std::min<int>(S, length);
@@ -714,7 +713,6 @@ inline std::array<T, S> archive::r_sarray(pcstr name) {
         }
     }
     pop(1);
-    return result;
 }
 
 template<typename T>
