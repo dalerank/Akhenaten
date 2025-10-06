@@ -20,7 +20,7 @@ figure_homeless::static_params homeless_m;
 void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
     auto homeless = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT)->dcast_homeless();
 
-    homeless->advance_action(FIGURE_ACTION_7_HOMELESS_CREATED);
+    homeless->advance_action(ACTION_7_HOMELESS_CREATED);
     homeless->base.wait_ticks = 0;
     homeless->runtime_data().migrant_num_people = ev.num_people;
 
@@ -82,7 +82,7 @@ void figure_homeless::figure_action() {
     auto &d = runtime_data();
 
     switch (action_state()) {
-    case FIGURE_ACTION_7_HOMELESS_CREATED:
+    case ACTION_7_HOMELESS_CREATED:
         base.animctx.frame = 0;
         base.wait_ticks++;
         if (base.wait_ticks > 51) {
@@ -94,28 +94,27 @@ void figure_homeless::figure_action() {
                 if (road_tile.valid()) {
                     b->set_figure(BUILDING_SLOT_IMMIGRANT, id());
                     runtime_data().adv_home_building_id = building_id;
-                    advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
+                    advance_action(ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 } else {
                     poof();
                 }
             } else {
-                advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
+                advance_action(ACTION_6_HOMELESS_LEAVING);
             }
         }
         break;
 
-    case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
+    case ACTION_8_HOMELESS_GOING_TO_HOUSE:
         if (!base.has_home()) {
             base.direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
+            advance_action(ACTION_6_HOMELESS_LEAVING);
         } else {
             building *ihome = building_get(runtime_data().adv_home_building_id);
-            do_gotobuilding(ihome, true, TERRAIN_USAGE_ANY, FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE);
+            do_gotobuilding(ihome, true, TERRAIN_USAGE_ANY, ACTION_9_HOMELESS_ENTERING_HOUSE);
         }
         break;
 
-    case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
-        {
+    case ACTION_9_HOMELESS_ENTERING_HOUSE: {
             building *b = building_get(runtime_data().adv_home_building_id);
             if (do_enterbuilding(false, b)) {
                 building_house *house = b->dcast_house();
@@ -126,7 +125,7 @@ void figure_homeless::figure_action() {
 
     case ACTION_16_HOMELESS_RANDOM:
         base.roam_wander_freely = false;
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_HOMELESS_LEAVING, FIGURE_ACTION_6_HOMELESS_LEAVING);
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_6_HOMELESS_LEAVING, ACTION_6_HOMELESS_LEAVING);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             base.routing_try_reroute_counter++;
             if (base.routing_try_reroute_counter > 20) {
@@ -136,11 +135,11 @@ void figure_homeless::figure_action() {
             base.state = FIGURE_STATE_ALIVE;
             base.destination_tile = random_around_point(tile(), tile(), /*step*/2, /*bias*/4, /*max_dist*/8);
             base.direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_6_HOMELESS_LEAVING);
+            advance_action(ACTION_6_HOMELESS_LEAVING);
         }
         break;
 
-    case FIGURE_ACTION_6_HOMELESS_LEAVING:
+    case ACTION_6_HOMELESS_LEAVING:
         if (do_goto(g_city.map.exit_point, TERRAIN_USAGE_ANY)) {
             poof();
         }
@@ -169,7 +168,7 @@ void figure_homeless::figure_action() {
                 if (road_tile.valid()) {
                     b->set_figure(BUILDING_SLOT_IMMIGRANT, id());
                     runtime_data().adv_home_building_id = building_id;
-                    advance_action(FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE);
+                    advance_action(ACTION_8_HOMELESS_GOING_TO_HOUSE);
                 }
             }
         }
