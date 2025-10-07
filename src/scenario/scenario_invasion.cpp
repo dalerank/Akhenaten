@@ -18,6 +18,7 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "dev/debug.h"
+#include "core/log.h"
 #include "js/js_game.h"
 
 declare_console_command_p(start_invasion) {
@@ -233,10 +234,16 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
     // spawn the lot!
     int seq = 0;
     for (int type = 0; type < 3; type++) {
-        if (formations_per_type[type] <= 0)
+        if (formations_per_type[type] <= 0) {
             continue;
+        }
 
         e_figure_type figure_type = g_enemy_properties[enemy_type].figure_types[type];
+        if (figure_type == FIGURE_NONE) {
+            logs::error("No figure type for %s enemy", e_enemy_type_tokens.name(enemy_type));
+            continue;
+        }
+
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(figure_type,
                                                       invasion_tile,
