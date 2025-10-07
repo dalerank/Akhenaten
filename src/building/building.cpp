@@ -1241,10 +1241,7 @@ void building_static_params::base_load(archive arch) {
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
-    building_size = arch.r_int("building_size");
     production_rate = arch.r_uint("production_rate", 100);
-    info_title_id = arch.r_string("info_title_id");
-    num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
 
     city_labor_t::set_category(type, labor_category);

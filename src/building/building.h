@@ -551,7 +551,7 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
-    output_resource_second_rate)
+    output_resource_second_rate, num_types, building_size, info_title_id)
 
 class building_impl {
 public:
