@@ -846,7 +846,9 @@ building_dock = {
     work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  planer_relative_orientation: 1
+  planner_update_rule : {
+    relative_orientation: true
+  }
   min_houses_coverage : 50
   building_size : 3
   info_help_id:82
@@ -1639,9 +1641,9 @@ building_ferry = {
   }
   planner_update_rule : {
     ferries : true
+    relative_orientation: 1
   }
   fire_proof : true,
-  planer_relative_orientation: 1,
   info_help_id: 85,
   info_text_id: 91,
   labor_category : LABOR_CATEGORY_GOVERNMENT
@@ -1667,7 +1669,9 @@ building_transport_wharf = {
   fire_proof : false,
   check_water_access : true,
   window_info_height_id: 1,
-  planer_relative_orientation: 1,
+  planer_update_rule : {
+    relative_orientation: 1
+  }
   info_help_id: 85,
   info_text_id: 174,
   needs : {
@@ -1698,7 +1702,10 @@ building_warship_wharf = {
   info_help_id: 84,
   info_text_id: 175,
   window_info_height_id: 1,
-  planer_relative_orientation: 1,
+  planer_update_rule : {
+    relative_orientation: 1
+  }
+
   needs : {
     shoreline : true
   }
@@ -1728,7 +1735,9 @@ building_fishing_wharf = {
   }
   building_size : 2
   window_info_height_id: 1
-  planer_relative_orientation: 1
+  planer_update_rule : {
+    relative_orientation: 1
+  }
   info_help_id: 84
   info_text_id: 102
   check_water_access : true
@@ -1759,7 +1768,9 @@ building_shipyard = {
   }
   building_size : 3
   window_info_height_id : 1
-  planer_relative_orientation: 1
+  planer_update_rule : {
+    relative_orientation: 1
+  }
   info_help_id: 82
   info_text_id: 100
   check_water_access : true
@@ -2473,13 +2484,13 @@ building_water_lift = {
   building_size : 2
   planner_update_rule : { 
     canals : true
+    relative_orientation: true
   }
   check_water_access : true
   needs : {
     shoreline : true
     floodplain_shoreline : true
   }
-  planer_relative_orientation: 1
   info_help_id: 59
   info_text_id: 107
   cost : [ 6, 12, 25, 50, 100 ]

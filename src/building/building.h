@@ -473,8 +473,9 @@ struct building_planner_update_rule {
     bool roads;
     bool ferries;
     bool is_draggable;
+    int relative_orientation;
 };
-ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable)
+ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable, relative_orientation)
 
 struct building_planner_need_rule {
     bool meadow;
@@ -505,7 +506,6 @@ struct building_static_params {
     animations_t animations;
     uint8_t building_size;
     uint8_t min_houses_coverage;
-    int planer_relative_orientation;
     uint16_t production_rate;
     bool unique_building;
     bool check_water_access;
