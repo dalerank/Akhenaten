@@ -265,7 +265,7 @@ void game_undo_perform() {
     map_routing_update_land();
     map_routing_update_walls();
     data.num_buildings = 0;
-    int vacant_lot_image = building_impl::params(BUILDING_HOUSE_VACANT_LOT).anim["base"].first_img();
+    int vacant_lot_image = building_impl::params(BUILDING_HOUSE_VACANT_LOT).base_img();
     for (int i = 0; data.newhouses_offsets[i] != 0; i++) {
         int grid_offset = data.newhouses_offsets[i] - 1;
 

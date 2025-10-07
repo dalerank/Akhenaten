@@ -150,7 +150,7 @@ void building_road::set_image(tile2i tile) {
         return;
     }
 
-    int base_img = current_params().anim[animkeys().base].first_img();
+    int base_img = current_params().base_img();
     if (is_paved(tile)) {
         const terrain_image img = map_image_context_get_paved_road(tile);
         map_image_set(tile, base_img + img.group_offset + img.item_offset);

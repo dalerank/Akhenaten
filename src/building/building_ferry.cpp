@@ -30,14 +30,14 @@ void building_ferry::update_month() {
 }
 
 void building_ferry::on_place_update_tiles(int orientation, int variant) {
-    int img_id = anim(animkeys().base).first_img() + orientation;
+    int img_id = base_img() + orientation;
     map_water_add_building(id(), tile(), size(), img_id);
     map_building_tiles_add(id(), tile(), size(), img_id, TERRAIN_BUILDING|TERRAIN_ROAD|TERRAIN_FERRY_ROUTE);
 }
 
 void building_ferry::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
-    int image_id = anim(animkeys().base).first_img() + image_offset;
+    int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
 

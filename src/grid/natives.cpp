@@ -103,7 +103,7 @@ void map_natives_init() {
                 map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
             } else if (image_id == image_crops) {
                 type = BUILDING_UNUSED_NATIVE_CROPS_93;
-                int img_id = building_impl::params(BUILDING_BARLEY_FARM).anim[animkeys().farmland].first_img();
+                int img_id = building_impl::params(BUILDING_BARLEY_FARM).first_img(animkeys().farmland);
                 map_image_set(grid_offset, img_id + random_bit);
             } else { // unknown building
                 map_building_tiles_remove(0, tile2i(x, y));

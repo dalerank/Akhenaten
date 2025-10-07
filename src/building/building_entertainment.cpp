@@ -108,10 +108,8 @@ void building_entertainment::place_latch_on_venue(e_building_type type, int dx, 
         }
         break;
 
-    case BUILDING_PAVILLION:
-    {
-        int base_id = anim(animkeys().base).first_img();
-        map_building_tiles_add(id(), point, 2, base_id, TERRAIN_BUILDING);
+    case BUILDING_PAVILLION: {
+        map_building_tiles_add(id(), point, 2, base_img(), TERRAIN_BUILDING);
     }
     break;
     }

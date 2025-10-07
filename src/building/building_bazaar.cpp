@@ -241,8 +241,7 @@ void building_bazaar::update_graphic() {
 
     base.fancy_state = (g_desirability.get(base.tile) <= 30) ? efancy_normal : efancy_good;
     pcstr animkey = (base.fancy_state == efancy_normal) ? "base" : "fancy";
-    const animation_t &anim = bazaar_m.anim[animkey];
-    map_building_tiles_add(base.id, base.tile, base.size, anim.first_img(), TERRAIN_BUILDING);
+    map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
 
     building_impl::update_graphic();
 }
@@ -314,8 +313,8 @@ int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     pcstr animkey = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
-    const animation_t &anim = bazaar_m.anim[animkey];
-    building_draw_normal_anim(ctx, point, &base, tile, anim, color_mask);
+    const animation_t &ranim = anim(animkey);
+    building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
 
     return true;
 }

@@ -31,7 +31,7 @@ void building_festival_square::static_params::planer_ghost_preview(build_planner
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        int square_id = current_params().anim[animkeys().square].first_img();
+        int square_id = first_img(animkeys().square);
         bool is_exist = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
         int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
         for (int i = 0; i < building_size * building_size; i++) {

@@ -496,9 +496,9 @@ void building_granary::spawn_figure() {
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     draw_stores(point, mask, ctx);
-    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, granary_m.anim["work"], mask);
+    building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, anim("work"), mask);
     if (num_workers() > max_workers() / 2) {
-        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &base, tile, granary_m.anim["work"], mask);
+        building_draw_normal_anim(ctx, point + vec2i{96, -4}, &base, tile, anim("work"), mask);
     }
 
     return false;
@@ -510,7 +510,7 @@ textid building_granary::get_tooltip() const {
 
 void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) {
     int last_spot_filled = 0;
-    int resources_id = granary_m.anim["resources"].first_img();
+    int resources_id = first_img("resources");
 
     const auto &d = runtime_data();
     for (int r = 1; r < 9; r++) {

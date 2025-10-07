@@ -47,7 +47,7 @@
 building_storage_yard::static_params storage_yard_m;
 
 void building_storage_yard::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    planer.set_tiles_building(anim[animkeys().base].first_img(), 3);
+    planer.set_tiles_building(base_img(), 3);
 }
 
 int building_storage_yard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
@@ -62,7 +62,7 @@ void building_storage_yard::static_params::planer_ghost_preview(build_planner &p
     vec2i corner_offset{ -5, -45 };
     vec2i place_offset{ 0, 0 };
 
-    int image_id_hut = anim[animkeys().base].first_img();
+    int image_id_hut = base_img();
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
@@ -842,7 +842,7 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
 
     tile2i shifted_tile = tile().shifted(offset[corner]);
 
-    int base_image = storage_yard_m.anim["base"].first_img();
+    int base_image = base_img();
     map_building_tiles_add(id(), shifted_tile, 1, base_image, TERRAIN_BUILDING);
 
     building* prev = &base;

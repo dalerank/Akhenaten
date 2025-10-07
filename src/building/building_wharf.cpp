@@ -10,19 +10,19 @@ void building_wharf::on_create(int orientation) {
 
 void building_wharf::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, anim(animkeys().base).first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), params().building_size, base_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }
 
 void building_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), size(), anim(animkeys().base).first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
 }
 
 void building_wharf::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
-    int image_id = anim(animkeys().base).first_img() + image_offset;
+    int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
 
@@ -59,7 +59,7 @@ void building_wharf::update_graphic() {
     }
 
     int image_warf = map_image_at(tile());
-    int image_warf_base = anim(animkeys().base).first_img();
+    int image_warf_base = base_img();
     xstring animkey;
     if (!ship_moored()) {
         if (image_warf == image_warf_base) animkey = animkeys().wait_n;

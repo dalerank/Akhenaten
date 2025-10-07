@@ -34,34 +34,34 @@ int building_temple_complex::static_params_t<T>::planer_update_relative_orientat
 template<class T>
 void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
     int EMPTY______ = 0;
-    int main______n = this->anim["main_n"].first_img();
-    int main______w = this->anim["main_w"].first_img();
-    int oracle____n = this->anim["oracle_n"].first_img();
-    int oracle____w = this->anim["oracle_w"].first_img();
-    int altar_____n = this->anim["altar_n"].first_img();
-    int altar_____w = this->anim["altar_w"].first_img();
+    int main______n = this->first_img("main_n");
+    int main______w = this->first_img("main_w");
+    int oracle____n = this->first_img("oracle_n");
+    int oracle____w = this->first_img("oracle_w");
+    int altar_____n = this->first_img("altar_n");
+    int altar_____w = this->first_img("altar_w");
 
-    int tiles_____0 = this->anim["tiles_0"].first_img();
-    int tiles_____1 = this->anim["tiles_1"].first_img();
-    int tiles_____2 = this->anim["tiles_2"].first_img();
-    int tiles_____3 = this->anim["tiles_3"].first_img();
+    int tiles_____0 = this->first_img("tiles_0");
+    int tiles_____1 = this->first_img("tiles_1");
+    int tiles_____2 = this->first_img("tiles_2");
+    int tiles_____3 = this->first_img("tiles_3");
 
-    int statue1_image_id = this->anim["statue_1"].first_img();
+    int statue1_image_id = this->first_img("statue_1");
     int statue____0 = statue1_image_id + 0; // north
     int statue____1 = statue1_image_id + 1; // east
     int statue____2 = statue1_image_id + 2; // south
     int statue____3 = statue1_image_id + 3; // west
 
-    int statue2n = this->anim["statue_2n"].first_img();
+    int statue2n = this->first_img("statue_2n");
     int statue_2n_F = statue2n + 0; // north
     int statue_2n_B = statue2n + 1;
-    int statue2e = this->anim["statue_2e"].first_img();
+    int statue2e = this->first_img("statue_2e");
     int statue_2e_A = statue2e + 0; // east
     int statue_2e_B = statue2e + 1;
-    int statue2s = this->anim["statue_2s"].first_img();
+    int statue2s = this->first_img("statue_2s");
     int statue_2s_A = statue2s + 0; // south
     int statue_2s_B = statue2s + 1;
-    int statue2w = this->anim["statue_2w"].first_img();
+    int statue2w = this->first_img("statue_2w");
     int statue_2w_A = statue2w + 0; // west
     int statue_2w_B = statue2w + 1;
 

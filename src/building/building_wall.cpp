@@ -303,7 +303,7 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
     }
 
     if (image_offset) {
-        const int id = current_params().anim[animkeys().base].first_img();
+        const int id = building_mud_wall_m.base_img();
         map_image_set(grid_offset, id + image_offset);
     }
 }
@@ -325,7 +325,7 @@ void building_mud_wall::set_image(tile2i tile) {
     }
 
     terrain_image img = get_terrain_image(tile);
-    const int id = current_params().anim[animkeys().base].first_img();
+    const int id = building_mud_wall_m.base_img();
     const int img_id = id + img.group_offset + img.item_offset;
     map_image_set(tile, img_id);
     map_property_set_multi_tile_size(tile.grid_offset(), 1);

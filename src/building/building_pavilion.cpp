@@ -31,10 +31,10 @@ void building_pavilion::static_params::archive_load(archive arch) {
         arch.r(key, pdir);
     }
 
-    dancer_tile = anim[animkeys().base].first_img();
-    booth_tile = anim[animkeys().booth].first_img();
-    musician_tile_s = anim[animkeys().stand_sn_s].first_img();
-    musician_tile_e = anim[animkeys().stand_sn_e].first_img();
+    dancer_tile = base_img();
+    booth_tile = first_img(animkeys().booth);
+    musician_tile_s = first_img(animkeys().stand_sn_s);
+    musician_tile_e = first_img(animkeys().stand_sn_e);
 }
 
 void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
@@ -55,15 +55,14 @@ void building_pavilion::static_params::planer_ghost_preview(build_planner &plane
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        const auto &params = building_impl::params(BUILDING_PAVILLION);
-        int square_id = params.anim[animkeys().square].first_img();
+        int square_id = first_img(animkeys().square);
         for (int i = 0; i < building_size * building_size; i++) {
             ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
         }
-        int stand_sn_n = params.anim[animkeys().stand_sn_n].first_img();
-        int stand_sn_s = params.anim[animkeys().stand_sn_s].first_img();
-        int booth = params.anim[animkeys().booth].first_img();
-        int stand = params.anim[animkeys().base].first_img();
+        int stand_sn_n = first_img(animkeys().stand_sn_n);
+        int stand_sn_s = first_img(animkeys().stand_sn_s);
+        int booth = first_img(animkeys().booth);
+        int stand = base_img();
         const auto &preview_conf = pavilion_m.preview_dir[orientation];
 
         build_planner::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);

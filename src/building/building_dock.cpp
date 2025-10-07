@@ -35,7 +35,7 @@ int building_dock::static_params::planer_construction_update(build_planner &plan
 }
 
 void building_dock::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    const int imgid = anim[animkeys().base].first_img() + planer.relative_orientation;
+    const int imgid = base_img() + planer.relative_orientation;
     planer.set_tiles_building(imgid, this->building_size);
 }
 
@@ -46,7 +46,7 @@ void building_dock::on_create(int orientation) {
 
 void building_dock::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, anim(animkeys().base).first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), params().building_size, base_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }
@@ -76,12 +76,12 @@ void building_dock::update_month() {
 
 void building_dock::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
-    int image_id = anim(animkeys().base).first_img() + image_offset;
+    int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), 3, image_id);
 }
 
 void building_dock::on_place_update_tiles(int orientation, int variant) {
-    int img_id = anim(animkeys().base).first_img() + orientation;
+    int img_id = base_img() + orientation;
     map_water_add_building(id(), tile(), size(), img_id);
 }
 
@@ -153,7 +153,7 @@ void building_dock::update_graphic() {
     if (num_idle_dockers > 0) {
         int image_dock = map_image_at(tile());
         xstring animkey;
-        int image_dock_base = anim(animkeys().base).first_img();
+        int image_dock_base = base_img();
 
         if (image_dock == image_dock_base) animkey = animkeys().work_n;
         else if (image_dock == image_dock_base + 1) animkey = animkeys().work_w;

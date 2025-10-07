@@ -58,31 +58,31 @@ void building_bandstand::static_params::planer_ghost_preview(build_planner &plan
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        int square_id = bandstand_m.anim[animkeys().square].first_img();
+        int square_id = animations[animkeys().square].first_img();
         for (int i = 0; i < building_size * building_size; i++) {
             ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
         }
 
         switch (orientation / 2) {
         case 0:
-            planer.draw_building_ghost(ctx, anim[parts::stand_sn_n].first_img(), pixel, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::stand_sn_s].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_sn_n].first_img(), pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_sn_s].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::booth].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
             break;
         case 1:
-            planer.draw_building_ghost(ctx, anim[parts::stand_we_w].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::stand_we_e].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_we_w].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_we_e].first_img(), pixel + vec2i{ 60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
             break;
         case 2:
-            planer.draw_building_ghost(ctx, anim[parts::stand_sn_n].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::stand_sn_s].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_sn_n].first_img(), pixel + vec2i{ -30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_sn_s].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::booth].first_img(), pixel + vec2i{ 0, 60 }, COLOR_MASK_GREEN);
             break;
         case 3:
-            planer.draw_building_ghost(ctx, anim[parts::stand_we_w].first_img(), pixel, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::stand_we_e].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
-            planer.draw_building_ghost(ctx, anim[parts::booth].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_we_w].first_img(), pixel, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::stand_we_e].first_img(), pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN);
+            planer.draw_building_ghost(ctx, animations[parts::booth].first_img(), pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
             break;
         }
     }
@@ -163,7 +163,7 @@ void building_bandstand::map_add_bandstand_tiles() {
     int offset = bandstand_main_img_offset(base.orientation);
     int offset_add = bandstand_add_img_offset(base.orientation);
 
-    int stand_sn_s = building_impl::params(BUILDING_BANDSTAND).anim["stand_sn_s"].first_img();
+    int stand_sn_s = first_img("stand_sn_s");
     auto &d = runtime_data();
     map_image_set(d.latched_venue_main_grid_offset, stand_sn_s + offset);
     map_image_set(d.latched_venue_add_grid_offset, stand_sn_s + offset_add);

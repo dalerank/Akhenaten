@@ -47,7 +47,7 @@ reservoir_range_data_t reservoir_range_data;
 
 static int get_building_image_id(int map_x, int map_y, int type) {
     const auto &props = building_impl::params((e_building_type)type);
-    int image_id = props.anim["base"].first_img();
+    int image_id = props.base_img();
     if (type == BUILDING_MUD_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
         int image_offset;

@@ -11,7 +11,7 @@
 building_warship_wharf::static_params warship_wharf_m;
 
 void building_warship_wharf::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    planer.set_tiles_building(anim[animkeys().base].first_img() + planer.relative_orientation, building_size);
+    planer.set_tiles_building(base_img() + planer.relative_orientation, building_size);
 }
 
 int building_warship_wharf::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {

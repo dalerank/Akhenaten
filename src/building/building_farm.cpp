@@ -162,16 +162,16 @@ int building_farm::get_crops_image(e_building_type type, int growth) {
 }
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
-    const auto &anim = params(type).anim;
+    const auto &p = params(type);
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
-        int base = anim[animkeys().farmland].first_img();
+        int base = p.first_img(animkeys().farmland);
         int fert_average = map_get_fertility_for_farm(tile);
         int fertility_index = std::clamp<int>(fert_average / 12, 0, 7);
 
         return base + fertility_index;
     }
 
-    return anim[animkeys().farm_house].first_img();
+    return p.first_img(animkeys().farm_house);
 }
 
 bool building_farm::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {

@@ -73,3 +73,5 @@ struct animations_t {
         return (it == data.end()) ? dummy : it->second;
     }
 };
+
+template<> inline void archive::r<animations_t>(pcstr name, animations_t &v) { r(name, v.data);  }

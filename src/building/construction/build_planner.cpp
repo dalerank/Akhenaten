@@ -214,7 +214,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     int items_placed = 0;
     game_undo_restore_building_state();
     const auto &bparams = building_impl::params(BUILDING_HOUSE_VACANT_LOT);
-    int vacant_lot_id = bparams.anim[animkeys().preview].first_img();
+    int vacant_lot_id = bparams.first_img(animkeys().preview);
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
