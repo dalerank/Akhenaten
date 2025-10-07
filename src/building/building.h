@@ -472,15 +472,15 @@ struct building_planner_update_rule {
     bool canals;
     bool roads;
     bool ferries;
+    bool is_draggable;
 };
-ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries)
+ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable)
 
 struct building_static_params {
     static building_static_params dummy;
     e_building_type type;
     pcstr name;
     bool fire_proof, damage_proof;
-    bool is_draggable;
     xstring meta_id;
     metainfo meta;
     building_input input;
