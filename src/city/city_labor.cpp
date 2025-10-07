@@ -301,7 +301,7 @@ labor_priority_t DEFAULT_PRIORITY[] = {
 };
 
 static bool is_industry_disabled(building* b) {
-    int resource = b->output_resource_first_id;
+    int resource = b->output.resource;
     return g_city.resource.mothballed[resource];
 }
 

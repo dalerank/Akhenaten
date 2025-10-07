@@ -27,7 +27,7 @@ void info_window_farm::init(object_info &c) {
         reason = { 177, 5 };
     } else {
         if (!b->has_road_access) { reason = { 69, 25 }; }
-        else if (g_city.resource.is_mothballed(b->output_resource_first_id)) { reason.id = 4; }
+        else if (g_city.resource.is_mothballed(b->output.resource)) { reason.id = 4; }
         else if (b->curse_days_left > 4) { reason.id = 11; }
         else if (b->num_workers <= 0) { reason.id = 5; }
         else reason.id = approximate_value(b->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6));

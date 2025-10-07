@@ -24,7 +24,7 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
 
         textid trouble_text{ c.group_id, 0 };
         if (!b->has_road_access) { trouble_text = {69, 25}; }
-        else if (g_city.resource.is_mothballed(b->output_resource_first_id)) { trouble_text.id = 4; }
+        else if (g_city.resource.is_mothballed(b->output.resource)) { trouble_text.id = 4; }
         else if (b->num_workers <= 0) { trouble_text.id = 5; }
         else if (!b->workshop_has_resources()) { trouble_text.id = 11; }
         else { trouble_text.id = approximate_value(b->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6)); }
@@ -51,7 +51,7 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
 
         textid trouble_text{ c.group_id, 0 };
         if (!b->has_road_access) { trouble_text = {69, 25}; }
-        else if (g_city.resource.is_mothballed(b->output_resource_first_id)) { trouble_text.id = 4; }
+        else if (g_city.resource.is_mothballed(b->output.resource)) { trouble_text.id = 4; }
         else if (b->num_workers <= 0) { trouble_text.id = 5; }
         else if (!b->workshop_has_resources()) { trouble_text.id = 11; }
         else { trouble_text.id = approximate_value(b->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6)); }

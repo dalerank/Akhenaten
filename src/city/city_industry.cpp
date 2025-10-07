@@ -87,7 +87,7 @@ float get_farm_produce_uptick_per_day(building &b) {
 void city_industry_t::update_production() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Industry Update");
     buildings_valid_do([] (building &b) {
-        if (!b.output_resource_first_id) {
+        if (!b.output.resource) {
             return;
         }
 
@@ -113,7 +113,7 @@ void building_industry_update_farms(void) {
 
     buildings_valid_farms_do([] (building &b) {
         building_farm *farm = b.dcast_farm();
-        assert(b.output_resource_first_id != RESOURCE_NONE);
+        assert(b.output.resource != RESOURCE_NONE);
 
         if (!farm) {
             return;
@@ -178,7 +178,7 @@ void building_industry_update_wheat_production() {
 
     buildings_valid_do([] (building &b) {
         assert(b.type == BUILDING_GRAIN_FARM);
-        if (!b.output_resource_first_id) {
+        if (!b.output.resource) {
             return;
         }
 
