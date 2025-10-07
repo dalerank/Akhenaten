@@ -127,7 +127,9 @@ building_house_crude_hut = {
   },
   building_size : 1,
   num_types : 2,
-  is_draggable : true,
+  planner_update_rule : {
+    is_draggable : true
+  }
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [3] }
   laborers:[0], fire_risk:[3], damage_risk: [0]
@@ -1775,7 +1777,9 @@ building_plaza = {
     preview : { pack:PACK_GENERAL, id:168 },
     base : { pack:PACK_GENERAL, id:168 },
   },
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
   fire_proof : true
   damage_proof : true
   info_help_id : 80
@@ -1790,7 +1794,9 @@ building_garden = {
     preview : { pack:PACK_GENERAL, id:59 },
     base : { pack:PACK_GENERAL, id:59 },
   },
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
   fire_proof : true
   damage_proof : true
   info_help_id:80
@@ -1858,7 +1864,9 @@ building_road = {
   }
   building_size : 1
   cost : [ 1, 2, 5, 10, 15 ]
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
 }
 
 building_irrigation_ditch = {
@@ -1867,7 +1875,9 @@ building_irrigation_ditch = {
     base : { pack:PACK_TERRAIN, id:33 },
   }
   building_size : 1
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
   need_canals : false
   cost : [ 2, 4, 7, 10, 15 ]
 }
@@ -2172,7 +2182,9 @@ building_brick_wall = {
     base : { pack:PACK_GENERAL, id:138 },
   }
   building_size : 1
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
   window_info_height_id : 1
   cost : [ 7, 12, 25, 40, 70 ]
 }
@@ -2183,7 +2195,9 @@ building_mud_wall = {
     base : { pack:PACK_GENERAL, id:138 },
   }
   building_size : 1
-  is_draggable : true
+  planner_update_rule : {
+    is_draggable : true
+  }
   window_info_height_id : 1
   cost : [ 7, 12, 25, 40, 70 ]
   desirability : {

@@ -1017,7 +1017,7 @@ bool building_is_draggable(e_building_type type) {
         return true;
     }
 
-    return building_static_params::get(type).is_draggable;
+    return building_static_params::get(type).planner_update_rule.is_draggable;
 }
 
 int building::mothball_toggle() {
@@ -1245,7 +1245,6 @@ void building_static_params::base_load(archive arch) {
     building_size = arch.r_int("building_size");
     unique_building = arch.r_bool("unique_building");
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
-    is_draggable = arch.r_bool("is_draggable");
     production_rate = arch.r_uint("production_rate", 100);
     check_water_access = arch.r_bool("check_water_access");
     info_title_id = arch.r_string("info_title_id");
