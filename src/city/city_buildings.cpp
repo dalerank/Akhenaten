@@ -345,8 +345,8 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
         iob->bind(BIND_SIGNATURE_INT16, &b->fancy_state); // 2
-        iob->bind(BIND_SIGNATURE_INT8, &b->first_material_id);
-        iob->bind(BIND_SIGNATURE_INT8, &b->second_material_id);
+        iob->bind(BIND_SIGNATURE_INT8, &b->input.resource);
+        iob->bind(BIND_SIGNATURE_INT8, &b->input.resource_second);
         // 59 additional bytes
         iob->bind____skip(59); // temp for debugging
         //            assert(iob->get_offset() - sind == 264);

@@ -218,9 +218,9 @@ void building_workshop_add_raw_material(building* b, int amount, e_resource res)
     if (b->id > 0
         && building_is_workshop(b->type)
         && b->need_resource(res)) {
-        if (b->first_material_id == res) {
+        if (b->input.resource == res) {
             b->stored_amount_first += amount;
-        } else if (b->second_material_id == res) {
+        } else if (b->input.resource_second == res) {
             b->stored_amount_second += amount;
         } else {
             assert(false);

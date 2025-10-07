@@ -168,6 +168,12 @@ building* building_get(building_id id);
 
 struct event_building_create { building_id bid; };
 
+struct building_input {
+    e_resource resource;
+    e_resource resource_second;
+};
+ANK_CONFIG_STRUCT(building_input, resource, resource_second)
+
 class building {
 public:
     enum { max_figures = 4 };
@@ -196,8 +202,7 @@ public:
     bool has_open_water_access;
     figure_id prev_part_building_id;
     figure_id next_part_building_id;
-    e_resource first_material_id;
-    e_resource second_material_id;
+    building_input input;
     short stored_amount_first;
     short stored_amount_second;
     bool has_well_access;
@@ -469,12 +474,6 @@ struct building_planner_update_rule {
     bool ferries;
 };
 ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries)
-
-struct building_input {
-    e_resource resource;
-    e_resource resource_second;
-};
-ANK_CONFIG_STRUCT(building_input, resource, resource_second)
 
 struct building_static_params {
     e_building_type type;

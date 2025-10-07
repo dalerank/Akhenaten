@@ -49,7 +49,7 @@ void info_window_education::init(object_info &c) {
     const auto &meta = b->dcast()->get_info();
     c.help_id = meta.help_id;
 
-    ui["resource_icon"].image(b->first_material_id);
+    ui["resource_icon"].image(b->input.resource);
     ui["resource_stored"] = bstring32(b->stored_amount());
 
     textid text{ meta.text_id, 1 };
