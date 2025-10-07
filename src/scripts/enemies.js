@@ -294,7 +294,7 @@ enemy_canaanite = {
     percentage_type1 : 50
     percentage_type2 : 40
     percentage_type3 : 10
-    figures : [FIGURE_ENEMY_CANAANITE_ARCHER, FIGURE_ENEMY_CANAANITE_SWORD, FIGURE_ENEMY_CANAANITE_CHARIOT]
+    figure_types : [FIGURE_ENEMY_CANAANITE_ARCHER, FIGURE_ENEMY_CANAANITE_SWORD, FIGURE_ENEMY_CANAANITE_CHARIOT]
     layout : FORMATION_ENEMY_MOB
 }
 

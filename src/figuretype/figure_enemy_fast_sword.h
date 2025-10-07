@@ -65,6 +65,18 @@ public:
     struct static_params : public static_params_t<figure_assyrian_sword> {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "assr_swd" }; }
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_SWORD, "assr_swd" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
+
+class figure_canaanite_sword : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_CANAANITE_SWORD, figure_canaanite_sword)
+    figure_canaanite_sword(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_canaanite_sword> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_SWORD, "cana_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };

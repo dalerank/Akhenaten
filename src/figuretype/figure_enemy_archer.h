@@ -79,3 +79,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_ARCHER, "assr_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+
+class figure_canaanite_archer : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_CANAANITE_ARCHER, figure_canaanite_archer)
+    figure_canaanite_archer(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public static_params_t<figure_canaanite_archer> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "cana_arch" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
