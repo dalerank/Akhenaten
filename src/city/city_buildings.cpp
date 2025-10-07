@@ -307,7 +307,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
 
         iob->bind(BIND_SIGNATURE_INT16, &b->num_workers);
         iob->bind(BIND_SIGNATURE_UINT8, &b->labor_category); // FF
-        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_first_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &b->output.resource);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_road_access);
         iob->bind____skip(1);
 
@@ -341,7 +341,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->show_on_problem_overlay); // 1
         iob->bind(BIND_SIGNATURE_UINT16, &b->deben_storage); // 2
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_open_water_access); // 1
-        iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_id); // 1
+        iob->bind(BIND_SIGNATURE_UINT8, &b->output.resource_second); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
         iob->bind(BIND_SIGNATURE_INT16, &b->fancy_state); // 2

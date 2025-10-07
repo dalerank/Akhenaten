@@ -33,8 +33,6 @@ buildings::model_t<building_mine_gems> gems_mine_m;
 
 void building_mine::on_create(int orientation) {
     building_industry::on_create(orientation);
-
-    base.output_resource_first_id = params().output_resource;
 }
 
 void building_mine::update_graphic() {

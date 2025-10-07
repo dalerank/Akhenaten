@@ -27,6 +27,7 @@ const xstring id_property_t::progress = "progress";
 const xstring id_property_t::tax_income_or_storage = "tax_income_or_storage";
 const xstring id_property_t::num_workers = "num_workers";
 const xstring id_property_t::output_resource = "output_resource";
+const xstring id_property_t::second_output_resource = "second_output_resource";
 const xstring id_property_t::first_material = "first_material";
 const xstring id_property_t::second_material = "second_material";
 const xstring id_property_t::first_material_stored = "first_material_stored";

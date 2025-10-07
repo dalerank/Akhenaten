@@ -25,6 +25,7 @@ struct id_property_t {
     static const xstring tax_income_or_storage;
     static const xstring num_workers;
     static const xstring output_resource;
+    static const xstring second_output_resource;
     static const xstring first_material;
     static const xstring second_material;
     static const xstring second_material_stored;

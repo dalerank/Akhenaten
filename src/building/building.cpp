@@ -87,7 +87,11 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     damage_risk_increase = approach_diff(props.damage_risk);
 
     // unique data
-    output_resource_first_id = RESOURCE_NONE;
+    input.resource = params().input.resource;
+    input.resource_second = params().input.resource_second;
+    output.resource = params().output_resource;
+    output.resource_second = params().output_resource_second;
+
     dcast()->on_create(orientation);
 }
 
@@ -527,8 +531,8 @@ void building::destroy_on_fire_impl(bool plagued) {
 
     //int was_tent = b->house_size && b->data.house.level <= HOUSE_STURDY_HUT;
     state = BUILDING_STATE_DELETED_BY_GAME;
-    output_resource_first_id = RESOURCE_NONE;
-    output_resource_second_id = RESOURCE_NONE;
+    output.resource = RESOURCE_NONE;
+    output.resource_second = RESOURCE_NONE;
     distance_from_entry = 0;
     clear_related_data();
 
@@ -676,7 +680,7 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
-        figure* f = create_cartpusher(output_resource_first_id, amounts_to_carry);
+        figure* f = create_cartpusher(output.resource, amounts_to_carry);
         stored_amount_first -= amounts_to_carry;
         return f;
     }
@@ -910,7 +914,7 @@ bool building_is_water_crossing(e_building_type type) {
 }
 
 bool building_is_industry_type(building* b) {
-    return b->output_resource_first_id || b->dcast_industry();
+    return b->output.resource || b->dcast_industry();
 }
 
 bool building_is_industry(e_building_type type) {
@@ -1034,16 +1038,7 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
-    if (p.input.resource) {
-        base.input.resource = p.input.resource;
-    }
 
-    if (p.input.resource_second) {
-        base.input.resource_second = p.input.resource_second;
-    }
-
-    base.output_resource_first_id = p.output_resource;
-    base.output_resource_second_id = p.output_resource_second;
     base.output_resource_second_rate = p.output_resource_second_rate;
 
     on_place_update_tiles(orientation, variant);
@@ -1142,7 +1137,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
-    assert(base.output_resource_first_id == RESOURCE_NONE);
+    assert(base.output.resource == RESOURCE_NONE);
 }
 
 const bproperty bproperties[] = {
@@ -1164,7 +1159,8 @@ const bproperty bproperties[] = {
     { tags().building, tags().name, [] (building &b, const xstring &) { return bvariant(b.cls_name()); }},
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { return bvariant(b.max_workers); }},
-    { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
+    { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource)); }},
+    { tags().building, tags().second_output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource_second)); }},
     { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
     { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource_second)); }},

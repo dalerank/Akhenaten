@@ -172,6 +172,7 @@ struct building_input {
     e_resource resource;
     e_resource resource_second;
 };
+using building_output = building_input;
 ANK_CONFIG_STRUCT(building_input, resource, resource_second)
 
 class building {
@@ -210,8 +211,7 @@ public:
     uint8_t max_workers;
     e_fancy_state fancy_state;
     e_labor_category labor_category;
-    e_resource output_resource_first_id;
-    e_resource output_resource_second_id;
+    building_output output;
     uint8_t output_resource_second_rate;
     bool has_road_access;
     uint8_t disease_days;

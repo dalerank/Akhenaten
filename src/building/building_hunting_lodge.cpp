@@ -82,7 +82,7 @@ void building_hunting_lodge::spawn_figure() {
 
     figure* fcart = base.common_spawn_goods_output_cartpusher();
     if (fcart) {
-        events::emit(event_produced_resources{ base.output_resource_first_id, fcart->get_carrying_amount() });
+        events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
         base.figure_spawn_delay = 10;
     }
 }

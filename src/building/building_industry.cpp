@@ -57,7 +57,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 }
 
 bool building_industry::can_play_animation() const {
-    if (g_city.resource.is_mothballed(base.output_resource_first_id)) {
+    if (g_city.resource.is_mothballed(base.output.resource)) {
         return false;
     }
 
@@ -75,7 +75,7 @@ void building_industry::update_production() {
     auto &d = runtime_data();
     d.has_raw_materials = false;
 
-    if (g_city.resource.is_mothballed(base.output_resource_first_id)) {
+    if (g_city.resource.is_mothballed(base.output.resource)) {
         return;
     }
 
@@ -114,7 +114,7 @@ void building_industry::on_create(int orientation) {
 }
 
 int building_industry::stored_amount(e_resource r) const {
-    if (base.output_resource_first_id == r) {
+    if (base.output.resource == r) {
         return runtime_data().ready_production;
     }
     return building_impl::stored_amount(r);
@@ -163,20 +163,20 @@ void building_industry::spawn_figure() {
     if (has_produced_resource) {
         start_production();
         const int expected_produce = ready_production();
-        create_cartpusher(base.output_resource_first_id, expected_produce);
-        events::emit(event_produced_resources{ base.output_resource_first_id, expected_produce });
+        create_cartpusher(base.output.resource, expected_produce);
+        events::emit(event_produced_resources{ base.output.resource, expected_produce });
     }
 }
 
 void building_industry::update_count() const {
     building_impl::update_count();
 
-    if (base.output_resource_first_id != RESOURCE_NONE) {
-        g_city.buildings.increase_industry_count(base.output_resource_first_id, num_workers() > 0);
+    if (base.output.resource != RESOURCE_NONE) {
+        g_city.buildings.increase_industry_count(base.output.resource, num_workers() > 0);
     }
 
-    if (base.output_resource_second_id != RESOURCE_NONE) {
-        g_city.buildings.increase_industry_count(base.output_resource_second_id, num_workers() > 0);
+    if (base.output.resource_second != RESOURCE_NONE) {
+        g_city.buildings.increase_industry_count(base.output.resource_second, num_workers() > 0);
     }
 }
 

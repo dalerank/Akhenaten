@@ -443,7 +443,7 @@ void building_farm::spawn_figure() {
     bool is_floodplain = building_is_floodplain_farm(base);
     if (!is_floodplain && has_road_access()) { // only for meadow farms
         common_spawn_labor_seeker(params().min_houses_coverage);
-        if (building_farm_time_to_deliver(false, base.output_resource_first_id)) { // UGH!!
+        if (building_farm_time_to_deliver(false, base.output.resource)) { // UGH!!
             spawn_figure_harvests();
         }
     } else if (is_floodplain) {
@@ -534,8 +534,8 @@ void building_farm::spawn_figure_harvests() {
             d.ready_production = d.progress * farm_fertility / 100;
             {
                 const int expected_produce = this->expected_produce();
-                events::emit(event_produced_resources{ base.output_resource_first_id, expected_produce });
-                figure *f = create_cartpusher(base.output_resource_first_id, expected_produce);
+                events::emit(event_produced_resources{ base.output.resource, expected_produce });
+                figure *f = create_cartpusher(base.output.resource, expected_produce);
                 building_farm *farm = dcast_farm();
                 farm->deplete_soil();
 
@@ -550,12 +550,12 @@ void building_farm::spawn_figure_harvests() {
                 base.num_workers = 0;
             }
 
-            if (base.output_resource_second_id != RESOURCE_NONE) {
+            if (base.output.resource_second != RESOURCE_NONE) {
                 const int rate = std::max<int>(1, base.output_resource_second_rate);
                 const int expected_produce = this->expected_produce();
                 const int second_produce_expected = expected_produce / rate;
-                events::emit(event_produced_resources{ base.output_resource_first_id, second_produce_expected });
-                figure *f = create_cartpusher(base.output_resource_second_id, second_produce_expected, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                events::emit(event_produced_resources{ base.output.resource_second, second_produce_expected });
+                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
                 f->sender_building_id = id();
             }
         }
@@ -566,8 +566,8 @@ void building_farm::spawn_figure_harvests() {
             }
 
             const int amount = expected_produce();
-            events::emit(event_produced_resources{ base.output_resource_first_id, amount });
-            create_cartpusher(base.output_resource_first_id, amount);
+            events::emit(event_produced_resources{ base.output.resource, amount });
+            create_cartpusher(base.output.resource, amount);
             start_production();
         }
     }
@@ -597,7 +597,7 @@ void building_farm::update_tiles_image() {
 
     if (!is_flooded) {
         int img_id = anim(animkeys().farmland).first_img();
-        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output_resource_first_id - 1), progress());
+        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output.resource - 1), progress());
     }
 }
 
