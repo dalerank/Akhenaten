@@ -87,10 +87,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     damage_risk_increase = approach_diff(props.damage_risk);
 
     // unique data
-    input.resource = params().input.resource;
-    input.resource_second = params().input.resource_second;
-    output.resource = params().output_resource;
-    output.resource_second = params().output_resource_second;
+    input = params().input;
+    output = params().output;
 
     dcast()->on_create(orientation);
 }
@@ -1240,7 +1238,6 @@ void building_static_params::archive_unload() {
 }
 
 void building_static_params::base_load(archive arch) {
-    output_resource_second = arch.r_type<e_resource>("output_resource_second");
     output_resource_second_rate = arch.r_int("output_resource_second_rate");
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");

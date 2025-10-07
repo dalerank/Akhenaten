@@ -486,8 +486,7 @@ struct building_static_params {
     xstring meta_id;
     metainfo meta;
     building_input input;
-    e_resource output_resource;
-    e_resource output_resource_second;
+    building_output output;
     int output_resource_second_rate;
     e_labor_category labor_category;
     animations_t animations;
@@ -550,8 +549,8 @@ struct building_static_params {
     static const building_static_params &get(e_building_type);
 };
 ANK_CONFIG_STRUCT(building_static_params, 
-    labor_category, fire_risk_update, fire_proof, damage_proof, input,
-    output_resource,  animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
+    labor_category, fire_risk_update, fire_proof, damage_proof, input, output,
+    animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
 
 class building_impl {
 public:
