@@ -1243,7 +1243,6 @@ void building_static_params::base_load(archive arch) {
     meta.text_id = arch.r_int("info_text_id");
     building_size = arch.r_int("building_size");
     unique_building = arch.r_bool("unique_building");
-    planer_relative_orientation = arch.r_int("planer_relative_orientation");
     production_rate = arch.r_uint("production_rate", 100);
     check_water_access = arch.r_bool("check_water_access");
     info_title_id = arch.r_string("info_title_id");
@@ -1258,7 +1257,7 @@ void building_static_params::planer_setup_preview_graphics(build_planner &planer
     if (!img_id) {
         img_id = animations[animkeys().preview].first_img();
     }
-    img_id += planer_relative_orientation * planer.relative_orientation;
+    img_id += planner_update_rule.relative_orientation * planer.relative_orientation;
     planer.set_tiles_building(img_id, building_size);
 }
 
