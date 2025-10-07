@@ -474,8 +474,9 @@ struct building_planner_update_rule {
     bool ferries;
     bool is_draggable;
     int relative_orientation;
+    bool unique_building;
 };
-ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable, relative_orientation)
+ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable, relative_orientation, unique_building)
 
 struct building_planner_need_rule {
     bool meadow;
@@ -488,9 +489,10 @@ struct building_planner_need_rule {
     bool shoreline;
     bool canals;
     bool floodplain_shoreline;
+    bool water_access;
 };
 ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
-    nearby_water, groundwater, shoreline, canals, floodplain_shoreline)
+    nearby_water, groundwater, shoreline, canals, floodplain_shoreline, water_access)
 
 struct building_static_params {
     static building_static_params dummy;
@@ -507,8 +509,6 @@ struct building_static_params {
     uint8_t building_size;
     uint8_t min_houses_coverage;
     uint16_t production_rate;
-    bool unique_building;
-    bool check_water_access;
     xstring info_title_id;
     int num_types;
     std::array<uint16_t, 5> cost;
@@ -539,7 +539,7 @@ struct building_static_params {
     virtual bool planer_is_need_flag(e_building_flags flag) const;
     virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
     virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
-    virtual bool is_unique_building() const { return unique_building; }
+    virtual bool is_unique_building() const { return planner_update_rule.unique_building; }
     virtual uint16_t get_cost() const;
 
     inline const int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }

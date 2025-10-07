@@ -62,7 +62,7 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
 
 water_access_tiles map_water_get_access_points(building &b, int orientation, int offset) {
     const auto &params = building_impl::params(b.type);
-    if (!params.check_water_access) {
+    if (!params.needs.water_access) {
         return {{-1, -1},{-1, -1}};
     }
 
