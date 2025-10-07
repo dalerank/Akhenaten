@@ -1248,16 +1248,6 @@ void building_static_params::base_load(archive arch) {
     production_rate = arch.r_uint("production_rate", 100);
     check_water_access = arch.r_bool("check_water_access");
     info_title_id = arch.r_string("info_title_id");
-    needs.meadow = arch.r_bool("need_meadow");
-    needs.rock = arch.r_bool("need_rock");
-    needs.ore = arch.r_bool("need_ore");
-    needs.altar = arch.r_bool("need_altar");
-    needs.oracle = arch.r_bool("need_oracle");
-    needs.nearby_water = arch.r_bool("need_nearby_water");
-    needs.groundwater = arch.r_bool("need_groundwater");
-    needs.shoreline = arch.r_bool("need_shoreline");
-    needs.canals = arch.r_bool("need_canals");
-    needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
 

@@ -476,6 +476,21 @@ struct building_planner_update_rule {
 };
 ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries, is_draggable)
 
+struct building_planner_need_rule {
+    bool meadow;
+    bool rock;
+    bool ore;
+    bool altar;
+    bool oracle;
+    bool nearby_water;
+    bool groundwater;
+    bool shoreline;
+    bool canals;
+    bool floodplain_shoreline;
+};
+ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
+    nearby_water, groundwater, shoreline, canals, floodplain_shoreline)
+
 struct building_static_params {
     static building_static_params dummy;
     e_building_type type;
@@ -505,19 +520,7 @@ struct building_static_params {
     svector<int8_t, 5> damage_risk;
 
     building_planner_update_rule planner_update_rule;
-
-    struct {
-        bool meadow;
-        bool rock;
-        bool ore;
-        bool altar;
-        bool oracle;
-        bool nearby_water;
-        bool groundwater;
-        bool shoreline;
-        bool canals;
-        bool floodplain_shoreline;
-    } needs;
+    building_planner_need_rule needs;
 
     void archive_unload();
     void base_load(archive arch);
