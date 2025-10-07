@@ -505,7 +505,6 @@ struct building_static_params {
     animations_t animations;
     uint8_t building_size;
     uint8_t min_houses_coverage;
-    int window_info_height_id;
     int planer_relative_orientation;
     uint16_t production_rate;
     bool unique_building;
