@@ -69,7 +69,7 @@ void building_garden::on_place_checks() {  /*nothing*/ }
 
 void building_garden::set_image(int grid_offset) {
     tile2i tile(grid_offset);
-    int garden_base = garden_m.anim[animkeys().base].first_img();
+    int garden_base = garden_m.base_img();
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
@@ -115,7 +115,7 @@ void building_garden::set_image(int grid_offset) {
 }
 
 void building_garden::determine_tile(int grid_offset) {
-    int base_image = garden_m.anim[animkeys().base].first_img();
+    int base_image = garden_m.base_img();
     int image_id = map_image_at(grid_offset);
     if (image_id >= base_image && image_id <= base_image + 6) {
         map_terrain_add(grid_offset, TERRAIN_GARDEN);

@@ -63,7 +63,7 @@ void building_mastaba::static_params_t<T>::planer_setup_preview_graphics(build_p
 
 template<class T>
 void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int image_id = this->anim[animkeys().base].first_img();
+    int image_id = this->base_img();
     auto get_image = [image_id] (tile2i tile, tile2i start, vec2i size) {
         if (tile == start) {
             return image_id;
@@ -243,7 +243,7 @@ void building_mastaba::add_workers(figure_id fid) {
 }
 
 int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile2i end) {
-    int image_id = small_mastaba_m.anim[animkeys().base].first_img();
+    int image_id = small_mastaba_m.base_img();
     int base_image_id = image_id - 7;
     bool insidex = (tile.x() > start.x() && tile.x() < end.x());
     bool insidey = (tile.y() > start.y() && tile.y() < end.y());
@@ -277,7 +277,7 @@ int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile
 }
 
 int building_small_mastabe_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer) {
-    int image_base_bricks = building_impl::params(type).anim["base_bricks"].first_img();
+    int image_base_bricks = building_impl::params(type).first_img("base_bricks");
 
     int image_id = image_base_bricks + (layer - 1) * 8 + 4;
     int random = (image_base_bricks + 96 + (layer - 1) + (tile.x() + tile.y()) % 1 * 6);
@@ -313,8 +313,8 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         return false;
     }
 
-    int clear_land_id = anim("empty_land").first_img();
-    int image_grounded = small_mastaba_m.anim[animkeys().base].first_img() + 5;
+    int clear_land_id = first_img("empty_land");
+    int image_grounded = base_img() + 5;
     building *main = base.main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
 
@@ -342,7 +342,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             }
         }
 
-        int image_stick = small_mastaba_m.anim[animkeys().base].first_img() + 5 + 8;
+        int image_stick = small_mastaba_m.base_img() + 5 + 8;
         const image_t *img = image_get(image_stick);
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
@@ -426,7 +426,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
 }
 
 bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    int image_grounded = small_mastaba_m.anim[animkeys().base].first_img() + 5;
+    int image_grounded = small_mastaba_m.base_img() + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
     building *main = base.main();
 
@@ -648,7 +648,7 @@ void building_small_mastaba::on_place(int orientation, int variant) {
 
     base.prev_part_building_id = 0;
 
-    int empty_img = anim(animkeys().base).first_img() + 108;
+    int empty_img = base_img() + 108;
     map_mastaba_tiles_add(id(), tile(), base.size, empty_img, TERRAIN_BUILDING);
 
     svector<mastaba_part, 10> parts;
@@ -766,7 +766,7 @@ void building_medium_mastaba::on_place(int orientation, int variant) {
 
     base.prev_part_building_id = 0;
 
-    int empty_img = anim(animkeys().base).first_img() + 108;
+    int empty_img =  base_img() + 108;
     map_mastaba_tiles_add(id(), tile(), base.size, empty_img, TERRAIN_BUILDING);
 
     svector<mastaba_part, 21> parts;

@@ -60,7 +60,7 @@ void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &plan
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
     } else {
-        int image_id = this->anim[animkeys().base].first_img();
+        int image_id = this->base_img();
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
             planer.draw_building_ghost(ctx, image_id, main_pixel);
@@ -80,7 +80,7 @@ void building_fort::static_params_t<T>::planer_ghost_blocked(build_planner &plan
 
 void building_fort::on_place_update_tiles(int orientation, int variant) {
     base.prev_part_building_id = 0;
-    int image_id = params().anim[animkeys().base].first_img();
+    int image_id = base_img();
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 
     auto &d = runtime_data();
@@ -103,7 +103,7 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     ground->next_part_building_id = 0;
     tile2i fort_tile_add = tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
 
-    int ground_id = params().anim[animkeys().ground].first_img();
+    int ground_id = params().first_img(animkeys().ground);
     map_building_tiles_add(ground->id, fort_tile_add, 4, ground_id, TERRAIN_BUILDING);
 
     base.formation_id = formation_batalion_create_for_fort(&base);
@@ -120,11 +120,11 @@ void building_fort::on_place_checks() {
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (map_property_is_draw_tile(tile.grid_offset())) {
         int mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
-        const auto &anim = params().anim[animkeys().picture];
+        const auto &ranim = anim(animkeys().picture);
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-        command.image_id = anim.first_img();
-        command.pixel = point + anim.pos;
+        command.image_id = ranim.first_img();
+        command.pixel = point + ranim.pos;
         command.mask = color_mask;
     }
 

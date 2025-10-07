@@ -306,7 +306,7 @@ template<bool use_offset>
 static int house_image_group(int level) {
     const e_building_type btype = e_building_type(BUILDING_HOUSE_VACANT_LOT + level);
     const auto &params = building_impl::params(btype);
-    const auto anim = params.anim["house"];
+    const auto anim = params.animations["house"];
     int image_id = image_id_from_group(anim.pack, anim.id);
 
     return image_id + (use_offset ? anim.offset : 0);

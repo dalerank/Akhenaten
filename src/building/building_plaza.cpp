@@ -75,8 +75,7 @@ int is_two_tile_square_plaza(int grid_offset) {
 void building_plaza::set_image(int grid_offset) {
     tile2i btile(grid_offset);
 
-    const auto &cparams = building_impl::params(TYPE);
-    int base_image_id = cparams.anim[animkeys().base].first_img();
+    int base_image_id = plaza_m.base_img();
     if (map_terrain_is(btile, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(btile)
         && !map_image_at(btile)) {
         int image_id = base_image_id;

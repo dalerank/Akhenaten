@@ -162,6 +162,7 @@ enum e_fancy_state {
 
 class building_work_camp;
 class building_farm;
+struct building_static_params;
 
 building* building_get(building_id id);
 
@@ -342,6 +343,8 @@ public:
     const T *dcast() const {
         return smart_cast<T *>(dcast());
     }
+
+    const building_static_params &params() const;
     
     #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); };
     ALLOW_SMART_CAST_BUILDING(farm)
@@ -483,7 +486,7 @@ struct building_static_params {
     e_resource output_resource_second;
     int output_resource_second_rate;
     e_labor_category labor_category;
-    animations_t anim;
+    animations_t animations;
     uint8_t building_size;
     uint8_t min_houses_coverage;
     int window_info_height_id;
@@ -515,6 +518,7 @@ struct building_static_params {
         bool floodplain_shoreline;
     } needs;
 
+    void archive_unload();
     void base_load(archive arch);
 
     virtual void planer_setup_build(build_planner &planer) const {}
@@ -535,12 +539,13 @@ struct building_static_params {
     virtual bool is_unique_building() const { return unique_building; }
     virtual uint16_t get_cost() const;
 
-    inline const int first_img(const xstring &anim_key) const { return anim[anim_key].first_img(); }
+    inline const int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }
+    const int base_img() const;
 
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
 };
-ANK_CONFIG_STRUCT(building_static_params, laborers, fire_risk, damage_risk, planner_update_rule)
+ANK_CONFIG_STRUCT(building_static_params, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
 
 class building_impl {
 public:
@@ -700,8 +705,9 @@ public:
     inline bool has_road_access() const { return base.has_road_access; }
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
-    inline const animation_t &anim(const xstring &key) const { return params().anim[key]; }
-    inline const int first_img(const xstring &key) const { return anim(key).first_img(); }
+    inline const animation_t &anim(const xstring &key) const { return params().animations[key]; }
+    inline const int first_img(const xstring &key) const { return  params().first_img(key); }
+    inline const int base_img() const { return  params().base_img(); }
  
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }

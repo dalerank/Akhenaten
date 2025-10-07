@@ -107,7 +107,7 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
     const auto &params = building_impl::params(BUILDING_GARDENS);
-    const auto &anim = params.anim["base"].first_img();
+    const auto &anim = params.base_img();
     if (map_grid_inside_map_area(grid_offset, 1)) {
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
         command.image_id = anim;

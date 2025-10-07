@@ -109,7 +109,7 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
 
 void building_shipyard::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
-    int image_id = anim(animkeys().base).first_img() + image_offset;
+    int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), building_shipyard_m.building_size, image_id);
 }
 
@@ -147,7 +147,7 @@ void building_shipyard::on_create(int orientation) {
 
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), size(), anim(animkeys().base).first_img() + orientation_rel);
+    map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
 }
 
 bool building_shipyard::add_resource(e_resource resource, int amount) {

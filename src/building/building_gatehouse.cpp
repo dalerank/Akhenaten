@@ -150,13 +150,13 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
     }
 
     if (back_tile.orientation == 0 || back_tile.orientation == 2) {
-        int image_id = this->anim["base_n"].first_img();
-        int image_sec_id = this->anim["base_second_n"].first_img();
+        int image_id = this->first_img("base_n");
+        int image_sec_id = this->first_img("base_second_n");
         planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
         planer.draw_building_ghost(ctx, image_id, main_pixel);
     } else {
-        int image_id = this->anim["base_w"].first_img();
-        int image_sec_id = this->anim["base_second_w"].first_img();
+        int image_id = this->first_img("base_w");
+        int image_sec_id = this->first_img("base_second_w");
         planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
         planer.draw_building_ghost(ctx, image_id, ground_pixel);
     }
@@ -174,7 +174,7 @@ void building_gatehouse::on_create(int orientation) {
 void building_gatehouse::update_image_set(building& maingate) {
     const int city_orientation = city_view_orientation() / 2;
     const auto bparams = params(maingate.type);
-    int image_id = bparams.anim["base"].first_img();
+    int image_id = bparams.base_img();
     int map_orientation = city_view_orientation();
 
     building &backside = *maingate.next();
@@ -184,7 +184,7 @@ void building_gatehouse::update_image_set(building& maingate) {
     int ids[4] = {};
     for (int i = 0; i < 4; ++i) {
         const auto &tx = txs[i];
-        ids[i] = bparams.anim[tx].first_img();
+        ids[i] = bparams.first_img(tx);
     }
     if (building_rotation == 0 || building_rotation == 2) {
         switch (city_orientation) {
@@ -303,7 +303,7 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
     if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) || (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1)
         || (orientation == DIR_4_BOTTOM_LEFT && xy == EDGE_X0Y0)
         || (orientation == DIR_6_TOP_LEFT && xy == EDGE_X1Y0)) {
-        int image_id = mud_gatehouse_m.anim["base"].first_img();
+        int image_id = base_img();
         int color_mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
 
         if (base.orientation == 1) {
@@ -351,7 +351,7 @@ void building_tower_gatehouse::static_params::planer_ghost_preview(build_planner
         return;
     }
     
-    int image_id = this->anim["base"].first_img();
+    int image_id = this->base_img();
     image_id += (result.orientation == 0 || result.orientation == 2) ? 1 : 0;
     planer.update_tiles_building(image_id);
 
@@ -371,7 +371,7 @@ void building_tower_gatehouse::update_map_orientation(int map_orientation) {
     building_impl::update_map_orientation(map_orientation);
 
     int offset = ((map_orientation / 2) + base.orientation) % 2;
-    int image_id = anim("base").first_img() + offset;
+    int image_id = base_img() + offset;
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 

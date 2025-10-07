@@ -65,7 +65,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
         if (type == BUILDING_UNUSED_NATIVE_CROPS_93) {
             image_id = image_id_from_group(GROUP_EDITOR_BUILDING_CROPS);
         } else {
-            image_id =  props.anim["base"].first_img();
+            image_id =  props.base_img();
         }
         draw_building_image(image_id, screen_x, screen_y);
     }
@@ -78,7 +78,7 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
         blocked = true;
     else {
         const auto &params = building_impl::params(BUILDING_ROAD);
-        image_id = params.anim["base"].first_img();
+        image_id = params.base_img();
         if (!map_terrain_has_adjacent_y_with_type(tile.grid_offset(), TERRAIN_ROAD)
             && map_terrain_has_adjacent_x_with_type(tile.grid_offset(), TERRAIN_ROAD)) {
             image_id++;

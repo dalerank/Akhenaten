@@ -33,7 +33,7 @@ int building_fishing_wharf::static_params::planer_construction_update(build_plan
 
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    int img_id = anim(animkeys().base).first_img();
+    int img_id = base_img();
     map_water_add_building(id(), tile(), size(), img_id + orientation_rel);
 }
 
@@ -78,7 +78,7 @@ void building_fishing_wharf::update_graphic() {
     }
 
     int image_warf = map_image_at(tile());
-    int image_warf_base = anim(animkeys().base).first_img();
+    int image_warf_base = base_img();
     const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
     xstring animkey;
     if (f->action_state != FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF) {
@@ -151,7 +151,7 @@ void building_fishing_wharf::on_undo() {
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
-    int image_id = this->anim(animkeys().base).first_img() + image_offset;
+    int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }
 

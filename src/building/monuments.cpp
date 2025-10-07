@@ -383,9 +383,9 @@ int building_image_get(building *b) {
             auto monument = b->dcast_monument();
             switch (monument->runtime_data().phase) {
             case MONUMENT_START:
-                return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img();
+                return building_impl::params(BUILDING_SMALL_MASTABA).base_img();
             default:
-                return building_impl::params(BUILDING_SMALL_MASTABA).anim[animkeys().base].first_img() + 1;
+                return building_impl::params(BUILDING_SMALL_MASTABA).base_img() + 1;
             }
         }
 
@@ -397,9 +397,9 @@ int building_image_get(building *b) {
             auto monument = b->dcast_monument();
             switch (monument->runtime_data().phase) {
             case MONUMENT_START:
-                return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img();
+                return building_impl::params(BUILDING_MEDIUM_MASTABA).base_img();
             default:
-                return building_impl::params(BUILDING_MEDIUM_MASTABA).anim[animkeys().base].first_img() + 1;
+                return building_impl::params(BUILDING_MEDIUM_MASTABA).base_img() + 1;
             }
         }
 

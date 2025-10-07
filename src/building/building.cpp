@@ -168,6 +168,8 @@ xstring building_impl::get_sound() {
     return snd::get_building_info_sound(type());
 }
 
+const int building_static_params::base_img() const { return first_img(animkeys().base); }
+
 void building_static_params::register_model(e_building_type e, const building_static_params &p) {
     if (!building_impl_params) {
         building_impl_params = new std::array<const building_static_params *, BUILDING_MAX>();
@@ -604,6 +606,10 @@ void building::mark_plague(int days) {
 bool building::is_ajacent_tile(tile2i t) const {
     grid_area area = map_grid_get_area(tile, size, 1);
     return area.contains(t);
+}
+
+const building_static_params &building::params() const {
+    return building_static_params::get(type);
 }
 
 xstring building::cls_name() const {
@@ -1045,8 +1051,7 @@ void building_impl::on_place(int orientation, int variant) {
 }
 
 void building_impl::on_place_update_tiles(int orientation, int variant) {
-    const int img_id = anim(animkeys().base).first_img();
-    map_building_tiles_add(id(), tile(), base.size, img_id, TERRAIN_BUILDING);
+    map_building_tiles_add(id(), tile(), base.size, base_img(), TERRAIN_BUILDING);
 }
 
 void building_impl::on_place_checks() {
@@ -1234,6 +1239,10 @@ void building_impl::on_tick(bool refresh_only) {
     base.anim.update(refresh_only);
 }
 
+void building_static_params::archive_unload() {
+    cost.fill(0);
+}
+
 void building_static_params::base_load(archive arch) {
     labor_category = arch.r_type<e_labor_category>("labor_category");
     fire_proof = arch.r_bool("fire_proof");
@@ -1267,19 +1276,14 @@ void building_static_params::base_load(archive arch) {
     needs.floodplain_shoreline = arch.r_bool("need_floodplain_shoreline");
     num_types = arch.r_int("num_types");
     min_houses_coverage = arch.r_int("min_houses_coverage", 100);
-    cost.fill(0);
-    arch.r("cost", cost);
-    arch.r("desirability", desirability);
 
     city_labor_t::set_category(type, labor_category);
-
-    arch.r("animations", anim.data);
 }
 
 void building_static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    int img_id = anim[animkeys().base].first_img();
+    int img_id = base_img();
     if (!img_id) {
-        img_id = anim[animkeys().preview].first_img();
+        img_id = animations[animkeys().preview].first_img();
     }
     img_id += planer_relative_orientation * planer.relative_orientation;
     planer.set_tiles_building(img_id, building_size);
@@ -1311,7 +1315,7 @@ int building_static_params::planer_construction_update(build_planner &planer, ti
 
 void add_building(building *b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    const auto &params = b->dcast()->params();
+    const auto &params = b->params();
     switch (b->type) {
         // houses
     case BUILDING_HOUSE_STURDY_HUT:
@@ -1335,7 +1339,7 @@ void add_building(building *b, int orientation, int variant) {
     case BUILDING_HOUSE_PALATIAL_ESTATE:
         //add_building_tiles_image(b, params.anim["house"].first_img());
         {
-            int image_id = params.anim["house"].first_img();
+            int image_id = params.animations["house"].first_img();
             map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
         }
         break;
