@@ -411,7 +411,9 @@ building_farm_grain = {
   info_text_id:112
   progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -439,7 +441,9 @@ building_farm_chickpeas = {
   info_text_id:182,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -467,7 +471,9 @@ building_farm_lettuce = {
   info_text_id:113,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -495,7 +501,9 @@ building_farm_pomegranates = {
   info_text_id:114,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[12], fire_risk:[4], damage_risk: [1]
@@ -523,7 +531,9 @@ building_farm_barley = {
   info_text_id:181,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -551,7 +561,9 @@ building_farm_flax = {
   info_text_id: 115,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -579,7 +591,9 @@ building_farm_henna = {
   info_text_id:306,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -607,7 +621,9 @@ building_farm_figs = {
   info_text_id:183,
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  need_meadow : true
+  needs : {
+    meadow : true
+  }
   cost: [ 8, 10, 15, 20, 50 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[10], fire_risk:[0], damage_risk: [0]
@@ -836,7 +852,9 @@ building_dock = {
   info_help_id:82
   info_text_id:101
   check_water_access : true
-  need_shoreline : true
+  needs : {
+    shoreline : true
+  }
   window_info_height_id : 1
   cost: [ 20, 40, 70, 100, 150 ]
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
@@ -1164,7 +1182,9 @@ building_water_supply = {
   info_help_id:61,
   info_text_id:108,
   building_size : 2,
-  need_groundwater : true,
+  needs : { 
+    groundwater : true
+  }
   cost: [ 10, 20, 40, 80, 140 ]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
   laborers:[5], fire_risk:[0], damage_risk: [0]
@@ -1184,7 +1204,9 @@ building_well = {
   building_size : 1,
   info_help_id:62,
   info_text_id:109,
-  need_groundwater : true,
+  needs : {
+    groundwater : true
+  }
   labor_category : LABOR_CATEGORY_WATER_HEALTH
   cost: [ 1, 2, 5, 10, 20 ]
   laborers:[0], fire_risk:[0], damage_risk: [0]
@@ -1612,7 +1634,9 @@ building_ferry = {
   },
   building_size : 2,
   check_water_access : true,
-  need_shoreline : true,
+  needs : {
+    shoreline : true
+  }
   planner_update_rule : {
     ferries : true
   }
@@ -1646,7 +1670,9 @@ building_transport_wharf = {
   planer_relative_orientation: 1,
   info_help_id: 85,
   info_text_id: 174,
-  need_shoreline : true,
+  needs : {
+    shoreline : true
+  }
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 100
   cost: [40, 70, 100, 150, 300 ]
@@ -1673,7 +1699,9 @@ building_warship_wharf = {
   info_text_id: 175,
   window_info_height_id: 1,
   planer_relative_orientation: 1,
-  need_shoreline : true,
+  needs : {
+    shoreline : true
+  }
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 100
   cost: [ 120, 150, 200, 300, 400 ]
@@ -1704,7 +1732,9 @@ building_fishing_wharf = {
   info_help_id: 84
   info_text_id: 102
   check_water_access : true
-  need_shoreline : true
+  needs : {
+    shoreline : true
+  }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   min_houses_coverage : 100
   cost: [40, 70, 100, 150, 300 ]
@@ -1733,7 +1763,9 @@ building_shipyard = {
   info_help_id: 82
   info_text_id: 100
   check_water_access : true
-  need_shoreline : true
+  needs : {
+    shoreline : true
+  }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 50
   cost : [ 70, 100, 150, 200, 300 ]
@@ -1818,7 +1850,9 @@ building_village_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 4,
-  need_groundwater : true,
+  needs : {
+    groundwater : true
+  }
   cost : [ 100, 200, 300, 400, 500 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [1]
@@ -1836,7 +1870,9 @@ building_town_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 5,
-  need_groundwater : true,
+  needs : {
+    groundwater : true
+  }
   cost : [ 200, 300, 400, 500, 800 ]
   desirability : { value:[8], step:[2], step_size:[-1], range: [6] }
   laborers:[30], fire_risk:[4], damage_risk: [1]
@@ -1853,7 +1889,9 @@ building_city_palace = {
   info_help_id:77,
   info_text_id:105,
   building_size : 6,
-  need_groundwater : true,
+  needs : {
+    groundwater : true
+  }
   cost : [ 300, 400, 500, 800, 1000 ]
 }
 
@@ -1878,7 +1916,9 @@ building_irrigation_ditch = {
   planner_update_rule : {
     is_draggable : true
   }
-  need_canals : false
+  needs : {
+    canals : false
+  }
   cost : [ 2, 4, 7, 10, 15 ]
 }
 
@@ -1896,7 +1936,9 @@ building_clay_pit = {
   production_rate : 100,
   info_help_id:92,
   info_text_id:121,
-  need_nearby_water : true,
+  needs : {
+    nearby_water : true
+  }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 8, 15, 30, 50, 100 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [2] }
@@ -1941,8 +1983,10 @@ building_mine_copper = {
   info_text_id:193,
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true,
-  need_ore : true,
+  needs : {
+    rock : true
+    ore : true
+  }
   cost: [ 50, 75, 100, 150, 300 ]
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[10], fire_risk:[0], damage_risk: [2]
@@ -1961,7 +2005,9 @@ building_mine_gems = {
   info_help_id:93,
   info_text_id:163,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true
+  needs : {
+    rock : true
+  }
   cost: [ 50, 75, 100, 150, 300 ]
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[8], fire_risk:[0], damage_risk: [2]
@@ -1981,7 +2027,9 @@ building_sandstone_quarry = {
   info_text_id:162,
   //help_id:92, type:"sandstone_quarry", text_id:194
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true
+  needs : {
+    rock : true
+  }
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
@@ -2014,7 +2062,9 @@ building_stone_quarry = {
   info_text_id:162,
   //info_help_id:92, info_text_id:118
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true
+  needs : {
+    rock : true
+  }
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [2]
@@ -2034,7 +2084,9 @@ building_granite_quarry = {
   info_text_id:162,
   //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true
+  needs : {
+    rock : true
+  }
   cost: [ 20, 40, 80, 150, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
@@ -2054,7 +2106,9 @@ building_limestone_quarry = {
   info_text_id:162,
   //help_id:93, text_id:119}
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  need_rock : true
+  needs : {
+    rock : true
+  }
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [2]
@@ -2073,8 +2127,10 @@ building_mine_gold = {
   info_help_id:93
   info_text_id:162
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  need_rock : true
-  need_ore : true
+  needs : {
+    rock : true
+    ore : true
+  }
   cost: [ 50, 100, 150, 250, 400 ]
   desirability : { value:[-16], step:[2], step_size:[3], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [2]
@@ -2419,8 +2475,10 @@ building_water_lift = {
     canals : true
   }
   check_water_access : true
-  need_shoreline : true
-  need_floodplain_shoreline : true
+  needs : {
+    shoreline : true
+    floodplain_shoreline : true
+  }
   planer_relative_orientation: 1
   info_help_id: 59
   info_text_id: 107
@@ -2691,17 +2749,19 @@ building_temple_complex_bast = {
 building_temple_complex_altar = {
   animations : {
     preview : { pack:PACK_TEMPLE_NILE, id:7},
-    base_n  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
-    base_w  : { pack:PACK_TEMPLE_NILE, id:2 },
-    base_e  : { pack:PACK_TEMPLE_NILE, id:2, offset:0 },
-    base_s  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
-    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:0 },
-    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:1 },
-  },
+    base_n  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
+    base_w  : { pack:PACK_TEMPLE_NILE, id:2 }
+    base_e  : { pack:PACK_TEMPLE_NILE, id:2, offset:0 }
+    base_s  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
+    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:0 }
+    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:1 }
+  }
 
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
-  need_altar : true,
+  needs : {
+    altar : true
+  }
   damage_proof : true,
   fire_proof : true,
   cost: [ 180, 250, 300, 500, 800 ]
@@ -2720,7 +2780,9 @@ building_temple_complex_oracle = {
 
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
-  need_oracle : true,
+  needs : {
+    oracle : true
+  }
   damage_proof : true,
   fire_proof : true
   cost: [ 180, 250, 300, 500, 800 ]
@@ -2728,12 +2790,14 @@ building_temple_complex_oracle = {
 
 building_temple_complex_altar_ra = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:42},
-  },
+    preview : { pack:PACK_GENERAL, id:42}
+  }
 
   building_size : 3,
   labor_category : LABOR_CATEGORY_RELIGION,
-  need_altar : true,
+  needs : {
+    altar : true
+  }
   damage_proof : true,
   fire_proof : true,
   cost: [ 180, 250, 300, 500, 800 ]
