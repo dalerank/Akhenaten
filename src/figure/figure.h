@@ -43,6 +43,7 @@ class figure_stonemason;
 class figure_warship;
 class figure_enemy;
 class figure_enemy_archer;
+class figure_enemy_spearman;
 class figure_fireman;
 class figure_missile;
 class figure_emigrant;
@@ -228,6 +229,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(emigrant)
     ALLOW_SMART_CAST_FIGURE(homeless)
     ALLOW_SMART_CAST_FIGURE(festival_guy)
+    ALLOW_SMART_CAST_FIGURE(enemy_spearman)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -375,7 +377,6 @@ public:
     void enemy_chariot_action();
     void enemy49_fast_sword_action();
     void enemy50_sword_action();
-    void enemy51_spear_action();
     void enemy52_mounted_archer_action();
     void enemy53_axe_action();
     void enemy_gladiator_action();
@@ -552,6 +553,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
     ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
+    ALLOW_SMART_CAST_FIGURE_I(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE_I(missile)
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
@@ -627,6 +629,7 @@ GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
 GENERATE_SMART_CAST_FIGURE(enemy)
 GENERATE_SMART_CAST_FIGURE(enemy_archer)
+GENERATE_SMART_CAST_FIGURE(enemy_spearman)
 GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)

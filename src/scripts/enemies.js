@@ -226,7 +226,7 @@ figure_canaanite_sword = {
     animations : {
         walk : { pack:PACK_ENEMY_CANAANITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_CANAANITE, id:5, max_frames:8, loop:false }
-        attack : { pack:PACK_ENEMY_CANAANITE, id:6, max_frames:12 }
+        attack : { pack:PACK_ENEMY_CANAANITE, id:6, max_frames:10 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
@@ -353,7 +353,7 @@ figure_egyptian_archer = {
     max_amount : 25
 }
 
-figure_egyptiane_spearman = {
+figure_egyptian_spearman = {
     animations : {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:12, max_frames:8, loop:false }
