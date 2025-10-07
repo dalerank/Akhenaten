@@ -121,15 +121,15 @@ void building_impl::acquire(e_building_type e, building &b) {
 }
 
 bool building_impl::required_resource(e_resource r) const {
-    return base.first_material_id == r || base.second_material_id == r;
+    return base.input.resource == r || base.input.resource_second== r;
 }
 
 int building_impl::stored_amount(e_resource r) const {
-    if (base.first_material_id == r) {
+    if (base.input.resource == r) {
         return base.stored_amount_first;
     }
 
-    if (base.second_material_id == r) {
+    if (base.input.resource_second == r) {
         return base.stored_amount_second;
     }
 
@@ -137,17 +137,17 @@ int building_impl::stored_amount(e_resource r) const {
 }
 
 resource_vec building_impl::required_resources() const { 
-    if (base.first_material_id == RESOURCE_NONE && base.second_material_id == RESOURCE_NONE) {
+    if (base.input.resource == RESOURCE_NONE && base.input.resource_second == RESOURCE_NONE) {
         return {}; 
     }
 
     resource_vec r;
-    if (base.first_material_id != RESOURCE_NONE) {
-        r.push_back(base.first_material_id);
+    if (base.input.resource != RESOURCE_NONE) {
+        r.push_back(base.input.resource);
     }
 
-    if (base.second_material_id != RESOURCE_NONE) {
-        r.push_back(base.second_material_id);
+    if (base.input.resource_second != RESOURCE_NONE) {
+        r.push_back(base.input.resource_second);
     }
 
     return r;
@@ -470,7 +470,7 @@ int building::stored_amount(int idx) const {
 bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;
-    if (second_material_id != RESOURCE_NONE) {
+    if (input.resource_second != RESOURCE_NONE) {
         has_second_material = (stored_amount_second > 100);
     }
 
@@ -1035,11 +1035,11 @@ void building_impl::on_place(int orientation, int variant) {
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
     if (p.input.resource) {
-        base.first_material_id = p.input.resource;
+        base.input.resource = p.input.resource;
     }
 
     if (p.input.resource_second) {
-        base.second_material_id = p.input.resource_second;
+        base.input.resource_second = p.input.resource_second;
     }
 
     base.output_resource_first_id = p.output_resource;
@@ -1165,9 +1165,9 @@ const bproperty bproperties[] = {
     { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
     { tags().model, tags().laborers, [] (building &b, const xstring &) { return bvariant(b.max_workers); }},
     { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output_resource_first_id)); }},
-    { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.first_material_id)); }},
+    { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource)); }},
     { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
-    { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.second_material_id)); }},
+    { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource_second)); }},
     { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_second); }},
     { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
 };
