@@ -274,8 +274,6 @@ void figure::action_perform() {
         }
 
         switch (type) {
-            //            case 30: common_action(12, GROUP_FIGURE_TEACHER_LIBRARIAN); break; //30
-            //            case 32: common_action(12, GROUP_FIGURE_BATHHOUSE_WORKER); break;
         case 36: editor_flag_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
         case 41: indigenous_native_action(); break;
@@ -284,7 +282,6 @@ void figure::action_perform() {
         case 48: enemy_chariot_action(); break;
         case 49: enemy49_fast_sword_action(); break;
         case 50: enemy50_sword_action(); break; // 50
-        case 51: enemy51_spear_action(); break;
         case 52: enemy52_mounted_archer_action(); break;
         case 53: enemy53_axe_action(); break;
         case 54: enemy_gladiator_action(); break;

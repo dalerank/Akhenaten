@@ -256,32 +256,6 @@ void figure::enemy50_sword_action() {
         main_image_id = 449 + dir + 8 * animctx.frame;
 }
 
-void figure::enemy51_spear_action() {
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
-
-    speed_multiplier = 2;
-    formation* m = formation_get(formation_id);
-    enemy_action(m);
-    int dir = get_missile_direction(m);
-
-    if (m->enemy_type != ENEMY_1_ASSYRIAN)
-        return;
-
-    if (action_state == FIGURE_ACTION_150_ATTACK) {
-        if (attack_image_offset >= 12)
-            main_image_id = 593 + dir + 8 * ((attack_image_offset - 12) / 2);
-        else
-            main_image_id = 593 + dir;
-    } else if (action_state == FIGURE_ACTION_151_ENEMY_INITIAL)
-        main_image_id = 545 + dir + 8 * figure_image_missile_launcher_offset();
-    else if (action_state == FIGURE_ACTION_149_CORPSE)
-        main_image_id = 641 + figure_image_corpse_offset();
-    else if (direction == DIR_FIGURE_ATTACK)
-        main_image_id = 593 + dir + 8 * (animctx.frame / 2);
-    else
-        main_image_id = 449 + dir + 8 * animctx.frame;
-}
 void figure::enemy52_mounted_archer_action() {
     //    figure_image_increase_offset(12);
     //    cart_image_id = 0;
