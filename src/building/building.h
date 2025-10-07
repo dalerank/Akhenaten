@@ -476,12 +476,10 @@ struct building_planner_update_rule {
 ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries)
 
 struct building_static_params {
-    e_building_type type;
     static building_static_params dummy;
+    e_building_type type;
     pcstr name;
-    bool fire_proof;
-    int8_t fire_risk_update;
-    bool damage_proof;
+    bool fire_proof, damage_proof;
     bool is_draggable;
     xstring meta_id;
     metainfo meta;
@@ -549,8 +547,9 @@ struct building_static_params {
     static const building_static_params &get(e_building_type);
 };
 ANK_CONFIG_STRUCT(building_static_params, 
-    labor_category, fire_risk_update, fire_proof, damage_proof, input, output,
-    animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
+    labor_category, fire_proof, damage_proof, input, output,
+    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
+    output_resource_second_rate)
 
 class building_impl {
 public:

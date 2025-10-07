@@ -82,8 +82,7 @@ void city_maintenance_t::check_fire_collapse() {
         /////// FIRE
         int random_building = (b.id + map_random_get(b.tile)) & 7;
         if (!b.fire_proof && random_building == random_global) {
-            int fire_risk_increase = building_impl::params(b.type).fire_risk_update;
-            fire_risk_increase += b.fire_risk_increase;
+            int fire_risk_increase = b.fire_risk_increase;
             fire_risk_increase += scenario_additional_damage(b.type, e_damage_fire);
             fire_risk_increase = b.dcast()->get_fire_risk(fire_risk_increase);
             fire_risk_increase = difficulty_multiply_risk(fire_risk_increase);
