@@ -122,12 +122,12 @@ int building_industry::stored_amount(e_resource r) const {
 
 void building_industry::start_production() {
     bool can_start_b = true;
-    if (base.second_material_id != RESOURCE_NONE) {
+    if (base.input.resource_second != RESOURCE_NONE) {
         can_start_b = (base.stored_amount_second >= 100);
     } 
 
     bool can_start_a = true;
-    if (base.first_material_id != RESOURCE_NONE) {
+    if (base.input.resource != RESOURCE_NONE) {
         can_start_a = (base.stored_amount_first >= 100);
     }
 

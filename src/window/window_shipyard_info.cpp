@@ -31,7 +31,7 @@ void shipyard_info_window::init(object_info &c) {
     window_building_play_sound(&c, shipyard->get_sound());
 
     ui["warning_text"] = ui::str(c.group_id, 1);
-    ui["resource_icon"].image(shipyard->base.first_material_id);
+    ui["resource_icon"].image(shipyard->base.input.resource);
 
     const int wood_stored = shipyard->base.stored_amount(RESOURCE_TIMBER);
     ui["resource_stored"].text_var("%s %u", ui::str(c.group_id, 7), wood_stored);

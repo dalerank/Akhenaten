@@ -25,7 +25,7 @@ void scribal_school_info_window::init(object_info &c) {
     window_building_play_sound(&c, b->get_sound());
 
     ui["warning_text"] = ui::str(c.group_id, 1);
-    ui["resource_icon"].image(b->base.first_material_id);
+    ui["resource_icon"].image(b->base.input.resource);
 
     const int papyrus_stored = b->base.stored_amount(RESOURCE_PAPYRUS);
     textid reason{ c.group_id, 0 };
