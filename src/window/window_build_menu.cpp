@@ -113,7 +113,7 @@ void build_menu_widget::button_menu_item(int item) {
 
     e_building_type type = ctrl->type(selected_submenu, item);
     const auto &params = building_impl::params(type);
-    if (params.unique_building && g_city.buildings.count_total(type)) {
+    if (params.planner_update_rule.unique_building && g_city.buildings.count_total(type)) {
         return;
     }
 
@@ -156,7 +156,7 @@ void build_menu_widget::draw_menu_buttons() {
         xstring tgroup = loc_title(type, ui::str(28, (uint8_t)type) );
 
         const auto &params = building_impl::params(type);
-        if (params.unique_building) {
+        if (params.planner_update_rule.unique_building) {
             const bool has_building = g_city.buildings.count_total(type);
 
             font = has_building ? FONT_NORMAL_BLACK_ON_DARK : font;

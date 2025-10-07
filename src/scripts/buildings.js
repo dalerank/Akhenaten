@@ -853,8 +853,8 @@ building_dock = {
   building_size : 3
   info_help_id:82
   info_text_id:101
-  check_water_access : true
   needs : {
+    water_access : true
     shoreline : true
   }
   window_info_height_id : 1
@@ -865,15 +865,17 @@ building_dock = {
 
 building_personal_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:85 },
-    base : { pack:PACK_GENERAL, id:85 },
-    work : { pos:[30, -70], pack:PACK_GENERAL, id:85, offset:1, max_frames:12, duration:3 },
+    preview : { pack:PACK_GENERAL, id:85 }
+    base : { pack:PACK_GENERAL, id:85 }
+    work : { pos:[30, -70], pack:PACK_GENERAL, id:85, offset:1, max_frames:12, duration:3 }
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 3
   info_help_id:78
   info_text_id:103
-  unique_building : true
+  planner_update_rule : {
+    unique_building : true
+  }
   window_info_height_id : 1
   cost: [ 30, 50, 100, 200, 400 ]
   desirability : { value:[12], step:[2], step_size:[-2], range: [4] }
@@ -882,15 +884,17 @@ building_personal_mansion = {
 
 building_village_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:85 },
-    base : { pack:PACK_GENERAL, id:85 },
+    preview : { pack:PACK_GENERAL, id:85 }
+    base : { pack:PACK_GENERAL, id:85 }
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:85, offset:1, max_frames:12 }
-  },
-  labor_category : LABOR_CATEGORY_GOVERNMENT,
-  building_size : 4,
-  info_help_id:78,
-  info_text_id:103,
-  unique_building : true,
+  }
+  labor_category : LABOR_CATEGORY_GOVERNMENT
+  building_size : 4
+  info_help_id:78
+  info_text_id:103
+  planner_update_rule : {
+    unique_building : true
+  }
   window_info_height_id : 1
   cost: [ 80,  100, 150, 200, 400 ]
   desirability : { value:[12], step:[2], step_size:[-2], range: [4] }
@@ -899,15 +903,17 @@ building_village_mansion = {
 
 building_family_mansion = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:86 },
-    base : { pack:PACK_GENERAL, id:86 },
+    preview : { pack:PACK_GENERAL, id:86 }
+    base : { pack:PACK_GENERAL, id:86 }
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:86, offset:1, max_frames:12 }
-  },
-  labor_category : LABOR_CATEGORY_GOVERNMENT,
-  building_size : 4,
-  info_help_id:78,
-  info_text_id:103,
-  unique_building : true,
+  }
+  labor_category : LABOR_CATEGORY_GOVERNMENT
+  building_size : 4
+  info_help_id:78
+  info_text_id:103
+  planner_update_rule : {
+    unique_building : true
+  }
   window_info_height_id : 1
   cost: [ 80, 120, 150, 200, 300 ]
   desirability : { value:[20], step:[2], step_size:[-3], range: [5] }
@@ -917,7 +923,9 @@ building_family_mansion = {
 building_dynasty_mansion = {
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 4
-  unique_building : true
+  planner_update_rule : {
+    unique_building : true
+  }
   window_info_height_id : 1
   cost: [ 140, 200, 300, 400, 500 ]
   desirability : { value:[28], step:[2], step_size:[-4], range: [6] }
@@ -1417,7 +1425,9 @@ building_recruiter = {
   info_help_id:37
   info_text_id:136
   building_size : 3
-  unique_building : true
+  planner_update_rule : {
+    unique_building : true
+  }
   cost: [ 30, 50, 100, 200, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [3] }
   laborers:[10], fire_risk:[4], damage_risk: [1]
@@ -1559,7 +1569,9 @@ building_festival_square = {
   info_text_id: 188,
   fire_proof : true,
   damage_proof : true,
-  unique_building : true
+  planner_update_rule : {
+    unique_building : true
+  }
   cost : [ 100, 250, 500, 1000, 1500 ]
   desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
 }
@@ -1635,8 +1647,8 @@ building_ferry = {
     minimap: {pack:PACK_GENERAL, id:149, offset:210}
   },
   building_size : 2,
-  check_water_access : true,
   needs : {
+    water_access : true,
     shoreline : true
   }
   planner_update_rule : {
@@ -1667,7 +1679,6 @@ building_transport_wharf = {
   },
   building_size : 2,
   fire_proof : false,
-  check_water_access : true,
   window_info_height_id: 1,
   planer_update_rule : {
     relative_orientation: 1
@@ -1675,6 +1686,7 @@ building_transport_wharf = {
   info_help_id: 85,
   info_text_id: 174,
   needs : {
+    water_access : true,
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_MILITARY,
@@ -1698,7 +1710,6 @@ building_warship_wharf = {
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
   },
   building_size : 3,
-  check_water_access : true,
   info_help_id: 84,
   info_text_id: 175,
   window_info_height_id: 1,
@@ -1707,6 +1718,7 @@ building_warship_wharf = {
   }
 
   needs : {
+    water_access : true,
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_MILITARY,
@@ -1740,8 +1752,8 @@ building_fishing_wharf = {
   }
   info_help_id: 84
   info_text_id: 102
-  check_water_access : true
   needs : {
+    water_access : true
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
@@ -1773,8 +1785,8 @@ building_shipyard = {
   }
   info_help_id: 82
   info_text_id: 100
-  check_water_access : true
   needs : {
+    water_access : true
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
@@ -1857,7 +1869,9 @@ building_village_palace = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 2,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true
+  }
   info_help_id:77,
   info_text_id:105,
   building_size : 4,
@@ -1877,7 +1891,9 @@ building_town_palace = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 2,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true,
+  }
   info_help_id:77,
   info_text_id:105,
   building_size : 5,
@@ -1896,7 +1912,9 @@ building_city_palace = {
     work : { pos : [-1, -1], pack:PACK_GENERAL, id:18, offset:1, max_frames:12 }
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true
+  }
   info_help_id:77,
   info_text_id:105,
   building_size : 6,
@@ -2486,8 +2504,8 @@ building_water_lift = {
     canals : true
     relative_orientation: true
   }
-  check_water_access : true
   needs : {
+    water_access : true
     shoreline : true
     floodplain_shoreline : true
   }
@@ -2626,7 +2644,9 @@ building_temple_complex_osiris = {
   }
 
   building_size : 3
-  unique_building : true
+  planner_update_rule : {
+    unique_building : true
+  }
   damage_proof : true
   fire_proof : true
   labor_category : LABOR_CATEGORY_RELIGION
@@ -2656,7 +2676,9 @@ building_temple_complex_ra = {
   },
 
   building_size : 3,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true,
+  }
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION,
@@ -2686,7 +2708,9 @@ building_temple_complex_ptah = {
   },
 
   building_size : 3,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true
+  }
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION
@@ -2716,7 +2740,9 @@ building_temple_complex_seth = {
   },
 
   building_size : 3,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true,
+  }
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION
@@ -2748,7 +2774,9 @@ building_temple_complex_bast = {
   },
 
   building_size : 3,
-  unique_building : true,
+  planner_update_rule : {
+    unique_building : true
+  }
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION
