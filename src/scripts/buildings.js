@@ -127,7 +127,6 @@ building_house_crude_hut = {
   },
   building_size : 1,
   num_types : 2,
-  fire_risk_update : 40,
   is_draggable : true,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [3] }
@@ -140,7 +139,6 @@ building_house_sturdy_hut = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [3] }
@@ -153,7 +151,6 @@ building_house_meager_shanty = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
@@ -166,7 +163,6 @@ building_house_common_shanty = {
     minimap: {pack: PACK_GENERAL, id:148},
   },
   building_size : 1,
-  fire_risk_update : 40,
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }

@@ -1238,7 +1238,6 @@ void building_static_params::archive_unload() {
 }
 
 void building_static_params::base_load(archive arch) {
-    output_resource_second_rate = arch.r_int("output_resource_second_rate");
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
