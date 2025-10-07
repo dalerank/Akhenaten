@@ -1034,12 +1034,12 @@ void building_impl::on_place(int orientation, int variant) {
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
-    if (p.input_resource) {
-        base.first_material_id = p.input_resource;
+    if (p.input.resource) {
+        base.first_material_id = p.input.resource;
     }
 
-    if (p.input_resource_second) {
-        base.second_material_id = p.input_resource_second;
+    if (p.input.resource_second) {
+        base.second_material_id = p.input.resource_second;
     }
 
     base.output_resource_first_id = p.output_resource;
@@ -1244,13 +1244,6 @@ void building_static_params::archive_unload() {
 }
 
 void building_static_params::base_load(archive arch) {
-    labor_category = arch.r_type<e_labor_category>("labor_category");
-    fire_proof = arch.r_bool("fire_proof");
-    fire_risk_update = arch.r_int("fire_risk_update", 50);
-    damage_proof = arch.r_bool("damage_proof");
-    input_resource = arch.r_type<e_resource>("input_resource");
-    input_resource_second = arch.r_type<e_resource>("input_resource_second");
-    output_resource = arch.r_type<e_resource>("output_resource");
     output_resource_second = arch.r_type<e_resource>("output_resource_second");
     output_resource_second_rate = arch.r_int("output_resource_second_rate");
     meta_id = arch.r_string("meta_id");

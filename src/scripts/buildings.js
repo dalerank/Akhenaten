@@ -373,7 +373,9 @@ building_cattle_ranch = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   }
   min_houses_coverage : 100
-  input_resource : RESOURCE_STRAW
+  input : {
+    resource : RESOURCE_STRAW
+  }
   output_resource : RESOURCE_MEAT
   building_size : 3
   info_help_id:1
@@ -712,7 +714,9 @@ building_weaponsmith = {
     copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 },
   }
 
-  input_resource : RESOURCE_COPPER
+  input : {
+    resource : RESOURCE_COPPER
+  }
   output_resource : RESOURCE_WEAPONS
   labor_category : LABOR_CATEGORY_MILITARY
   window_info_height_id : 1
@@ -768,7 +772,9 @@ building_bricklayers_guild = {
   }
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  input_resource : RESOURCE_BRICKS
+  input : {
+    resource : RESOURCE_BRICKS
+  }
   min_houses_coverage : 100
   info_help_id:92
   info_text_id:172
@@ -1167,7 +1173,9 @@ building_papyrus_maker = {
     work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:10, duration:4 },
     reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
-  input_resource : RESOURCE_REEDS,
+  input : {
+    resource : RESOURCE_REEDS,
+  }
   output_resource : RESOURCE_PAPYRUS,
   production_rate : 50,
   building_size : 2,
@@ -1186,7 +1194,9 @@ building_weaver = {
     work : { pos : [19, -39], pack:PACK_GENERAL, id:122, offset:1, max_frames:12, duration:4 },
     flax : { pos : [45, 3], pack:PACK_GENERAL, id:206 },
   },
-  input_resource : RESOURCE_FLAX,
+  input : {
+    resource : RESOURCE_FLAX
+  }
   output_resource : RESOURCE_LINEN,
   building_size : 2,
   window_info_height_id : 1,
@@ -1204,7 +1214,9 @@ building_jewels_workshop = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
     work : { pos : [7, -10], pack:PACK_GENERAL, id:119, offset:1, max_frames:9 },
   },
-  input_resource: RESOURCE_GEMS,
+  input : {
+    resource: RESOURCE_GEMS
+  }
   output_resource : RESOURCE_LUXURY_GOODS,
   building_size : 2,
   window_info_height_id : 1,
@@ -1672,7 +1684,9 @@ building_shipyard = {
   transport_progress_cost : 400
   warship_progress_cost : 400
   fishingboat_progress_cost : 100
-  input_resource : RESOURCE_TIMBER
+  input : {
+    resource : RESOURCE_TIMBER
+  }
   building_size : 3
   window_info_height_id : 1
   planer_relative_orientation: 1
@@ -1846,7 +1860,9 @@ building_brewery = {
     work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
     barley : { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
   },
-  input_resource : RESOURCE_BARLEY,
+  input : {
+    resource : RESOURCE_BARLEY
+  }
   output_resource : RESOURCE_BEER,
   progress_max : 400,
   window_info_height_id : 1,
@@ -2138,7 +2154,9 @@ building_senet_house = {
     base : { pack:PACK_GENERAL, id:17 },
     work : { pos:[30, -35], pack:PACK_GENERAL, id:17, offset:1, max_frames:18, duration:5 },
   }
-  input_resource : RESOURCE_BEER
+  input : {
+    resource : RESOURCE_BEER
+  }
   window_info_height_id : 2
   info_help_id:74
   info_text_id:73
@@ -2171,8 +2189,10 @@ building_bricks_workshop = {
     straw : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     clay : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
-  input_resource : RESOURCE_CLAY,
-  input_resource_second : RESOURCE_STRAW,
+  input : {
+    resource : RESOURCE_CLAY
+    resource_second : RESOURCE_STRAW
+  }
   output_resource : RESOURCE_BRICKS,
   progress_max : 400,
   production_rate : 20,
@@ -2194,8 +2214,10 @@ building_chariots_workshop = {
     timber : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
     weapon : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
-  input_resource : RESOURCE_TIMBER,
-  input_resource_second : RESOURCE_WEAPONS,
+  input : {
+    resource : RESOURCE_TIMBER
+    resource_second : RESOURCE_WEAPONS
+  }
   output_resource : RESOURCE_CHARIOTS,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -2213,7 +2235,9 @@ building_pottery = {
     work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:12 },
     clay : { pos:[60, 30], pack:PACK_GENERAL, id:205, offset:9 },
   },
-  input_resource : RESOURCE_CLAY,
+  input : {
+    resource : RESOURCE_CLAY
+  }
   output_resource : RESOURCE_POTTERY,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -2232,8 +2256,10 @@ building_lamp_workshop = {
     work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
     clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
   },
-  input_resource : RESOURCE_OIL,
-  input_resource_second : RESOURCE_TIMBER,
+  input : {
+    resource : RESOURCE_OIL
+    resource_second : RESOURCE_TIMBER
+  }
   output_resource : RESOURCE_LAMPS,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -2251,7 +2277,9 @@ building_paint_workshop = {
     work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
     clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
   },
-  input_resource : RESOURCE_OIL,
+  input : {
+    resource : RESOURCE_OIL
+  }
   output_resource : RESOURCE_PAINT,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -2411,7 +2439,9 @@ building_scribal_school = {
     work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
     papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
   }
-  input_resource : RESOURCE_PAPYRUS
+  input : {
+    resource : RESOURCE_PAPYRUS
+  }
   info_help_id: 68, info_text_id: 85
   window_info_height_id : 1
   min_houses_coverage : 50

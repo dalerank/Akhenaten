@@ -470,6 +470,12 @@ struct building_planner_update_rule {
 };
 ANK_CONFIG_STRUCT(building_planner_update_rule, canals, roads, ferries)
 
+struct building_input {
+    e_resource resource;
+    e_resource resource_second;
+};
+ANK_CONFIG_STRUCT(building_input, resource, resource_second)
+
 struct building_static_params {
     e_building_type type;
     static building_static_params dummy;
@@ -480,8 +486,7 @@ struct building_static_params {
     bool is_draggable;
     xstring meta_id;
     metainfo meta;
-    e_resource input_resource;
-    e_resource input_resource_second;
+    building_input input;
     e_resource output_resource;
     e_resource output_resource_second;
     int output_resource_second_rate;
@@ -545,7 +550,9 @@ struct building_static_params {
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
 };
-ANK_CONFIG_STRUCT(building_static_params, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
+ANK_CONFIG_STRUCT(building_static_params, 
+    labor_category, fire_risk_update, fire_proof, damage_proof, input,
+    output_resource,  animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability)
 
 class building_impl {
 public:
