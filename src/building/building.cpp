@@ -1241,7 +1241,6 @@ void building_static_params::base_load(archive arch) {
     meta_id = arch.r_string("meta_id");
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
-    window_info_height_id = arch.r_int("window_info_height_id");
     building_size = arch.r_int("building_size");
     unique_building = arch.r_bool("unique_building");
     planer_relative_orientation = arch.r_int("planer_relative_orientation");
