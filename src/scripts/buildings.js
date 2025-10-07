@@ -157,7 +157,7 @@ building_house_meager_shanty = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_common_shanty = {
@@ -170,7 +170,7 @@ building_house_common_shanty = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_rough_cottage = {
@@ -182,7 +182,7 @@ building_house_rough_cottage = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[0], fire_risk:[5], damage_risk: [0]
+  laborers:[0], fire_risk:[5], damage_risk: [3]
 }
 
 building_house_ordinary_cottage = {
@@ -194,7 +194,7 @@ building_house_ordinary_cottage = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[0], fire_risk:[5], damage_risk: [0]
+  laborers:[0], fire_risk:[5], damage_risk: [3]
 }
 
 building_house_modest_homestead = {
@@ -206,7 +206,7 @@ building_house_modest_homestead = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-1], step:[1], step_size:[1], range: [1] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_spacious_homestead = {
@@ -218,7 +218,7 @@ building_house_spacious_homestead = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[-1], step:[1], step_size:[1], range: [1] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_modest_apartment = {
@@ -230,7 +230,7 @@ building_house_modest_apartment = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[0], step:[0], step_size:[0], range: [0] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [5]
 }
 
 building_house_spacious_apartment = {
@@ -242,7 +242,7 @@ building_house_spacious_apartment = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[0], step:[0], step_size:[0], range: [0] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [5]
 }
 
 building_house_common_residence = {
@@ -254,7 +254,7 @@ building_house_common_residence = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[0], step:[0], step_size:[0], range: [0] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_spacious_residence = {
@@ -266,7 +266,7 @@ building_house_spacious_residence = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[0], step:[0], step_size:[0], range: [0] }
-  laborers:[0], fire_risk:[4], damage_risk: [0]
+  laborers:[0], fire_risk:[4], damage_risk: [4]
 }
 
 building_house_elegant_residence = {
@@ -278,7 +278,7 @@ building_house_elegant_residence = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[1], step:[2], step_size:[-1], range: [2] }
-  laborers:[0], fire_risk:[3], damage_risk: [0]
+  laborers:[0], fire_risk:[3], damage_risk: [5]
 }
 
 building_house_fancy_residence = {
@@ -290,7 +290,7 @@ building_house_fancy_residence = {
   num_types : 2,
   window_info_height_id : 5,
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[0], fire_risk:[3], damage_risk: [0]
+  laborers:[0], fire_risk:[3], damage_risk: [5]
 }
 
 building_house_common_manor = {
@@ -302,7 +302,7 @@ building_house_common_manor = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-  laborers:[0], fire_risk:[2], damage_risk: [0]
+  laborers:[0], fire_risk:[2], damage_risk: [6]
 }
 
 building_house_spacious_manor = {
@@ -314,7 +314,7 @@ building_house_spacious_manor = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-  laborers:[0], fire_risk:[2], damage_risk: [0]
+  laborers:[0], fire_risk:[2], damage_risk: [6]
 }
 
 building_house_elegant_manor = {
@@ -326,7 +326,7 @@ building_house_elegant_manor = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[4], step:[2], step_size:[-1], range: [6] }
-  laborers:[0], fire_risk:[2], damage_risk: [0]
+  laborers:[0], fire_risk:[2], damage_risk: [6]
 }
 
 building_house_stately_manor = {
@@ -338,7 +338,7 @@ building_house_stately_manor = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[4], step:[2], step_size:[-1], range: [6] }
-  laborers:[0], fire_risk:[2], damage_risk: [0]
+  laborers:[0], fire_risk:[2], damage_risk: [6]
 }
 
 building_house_modest_estate = {
@@ -350,7 +350,7 @@ building_house_modest_estate = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[5], step:[2], step_size:[-1], range: [6] }
-  laborers:[0], fire_risk:[2], damage_risk: [0]
+  laborers:[0], fire_risk:[2], damage_risk: [6]
 }
 
 building_house_palatial_estate = {
@@ -362,7 +362,7 @@ building_house_palatial_estate = {
   num_types : 1,
   window_info_height_id : 5,
   desirability : { value:[5], step:[2], step_size:[-1], range: [6] }
-  laborers:[0], fire_risk:[1], damage_risk: [0]
+  laborers:[0], fire_risk:[1], damage_risk: [7]
 }
 
 building_cattle_ranch = {
@@ -376,14 +376,16 @@ building_cattle_ranch = {
   input : {
     resource : RESOURCE_STRAW
   }
-  output_resource : RESOURCE_MEAT
+  output : {
+    resource : RESOURCE_MEAT
+  }
   building_size : 3
   info_help_id:1
   info_text_id:117
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   cost : [ 15, 20, 30, 50, 80 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[1], damage_risk: [0]
+  laborers:[12], fire_risk:[1], damage_risk: [2]
 }
 
 building_farm_grain = {
@@ -398,8 +400,10 @@ building_farm_grain = {
     farmland: { pack:PACK_GENERAL, id:37, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   }
-  output_resource : RESOURCE_GRAIN
-  output_resource_second : RESOURCE_STRAW
+  output : {
+    resource : RESOURCE_GRAIN
+    resource_second : RESOURCE_STRAW
+  }
   output_resource_second_rate : 10
 
   building_size : 3
@@ -427,7 +431,9 @@ building_farm_chickpeas = {
     farmland: { pack:PACK_GENERAL, id:37, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_CHICKPEAS,
+  output : {
+    resource : RESOURCE_CHICKPEAS
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -453,7 +459,9 @@ building_farm_lettuce = {
     farmland: { pack:PACK_GENERAL, id:37, offset:15 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_LETTUCE,
+  output : {
+    resource : RESOURCE_LETTUCE
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -479,7 +487,9 @@ building_farm_pomegranates = {
     farmland: { pack:PACK_GENERAL, id:37, offset:20 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_POMEGRANATES,
+  output : {
+    resource : RESOURCE_POMEGRANATES
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -505,7 +515,9 @@ building_farm_barley = {
     farmland: { pack:PACK_GENERAL, id:37, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_BARLEY,
+  output : {
+    resource : RESOURCE_BARLEY
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -531,7 +543,9 @@ building_farm_flax = {
     farmland: { pack:PACK_GENERAL, id:37, offset:0 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_FLAX,
+  output : {
+    resource : RESOURCE_FLAX
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -557,7 +571,9 @@ building_farm_henna = {
     farmland: { pack:PACK_GENERAL, id:37 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_HENNA,
+  output : {
+    resource : RESOURCE_HENNA
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -583,7 +599,9 @@ building_farm_figs = {
     farmland: { pack:PACK_GENERAL, id:37 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
-  output_resource : RESOURCE_FIGS,
+  output : {
+    resource : RESOURCE_FIGS,
+  }
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
@@ -633,6 +651,7 @@ building_granary = {
     roads : true
   }
   cost: [ 50, 70, 100, 200, 300 ]
+  laborers:[20], fire_risk:[0], damage_risk: [5]
   desirability : { value:[-8], step:[1], step_size:[2], range: [4] }
 }
 
@@ -647,6 +666,7 @@ building_shrine_osiris = {
   info_text_id: 161,
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
+  laborers:[0], fire_risk:[0], damage_risk: [2]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
 }
 
@@ -661,6 +681,7 @@ building_shrine_ra = {
   info_text_id: 161,
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
+  laborers:[0], fire_risk:[0], damage_risk: [2]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
 }
 
@@ -675,6 +696,7 @@ building_shrine_ptah = {
   info_text_id: 161,
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
+  laborers:[0], fire_risk:[0], damage_risk: [2]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
 }
 
@@ -689,6 +711,7 @@ building_shrine_seth = {
   info_text_id: 161,
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
+  laborers:[0], fire_risk:[0], damage_risk: [2]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
 }
 
@@ -703,6 +726,7 @@ building_shrine_bast = {
   info_text_id: 161,
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
+  laborers:[0], fire_risk:[0], damage_risk: [2]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
 }
 
@@ -717,7 +741,9 @@ building_weaponsmith = {
   input : {
     resource : RESOURCE_COPPER
   }
-  output_resource : RESOURCE_WEAPONS
+  output : {
+    resource : RESOURCE_WEAPONS
+  }
   labor_category : LABOR_CATEGORY_MILITARY
   window_info_height_id : 1
   info_help_id: 98
@@ -725,7 +751,7 @@ building_weaponsmith = {
   building_size: 2
   cost: [ 24, 40, 80, 120, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [2]
 }
 
 building_courthouse = {
@@ -793,7 +819,7 @@ building_carpenters_guild = {
   building_size : 2
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [2]
 }
 
 building_dock = {
@@ -1018,7 +1044,7 @@ building_juggler_school = {
   building_size : 2
   cost : [ 10, 20, 50, 100, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[5], fire_risk:[4], damage_risk: [0]
+  laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
 building_dancer_school = {
@@ -1033,7 +1059,7 @@ building_dancer_school = {
   window_info_height_id : 1
   cost : [ 30, 50, 100, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-   laborers:[10], fire_risk:[4], damage_risk: [0]
+   laborers:[10], fire_risk:[4], damage_risk: [2]
 }
 
 building_storage_yard = {
@@ -1075,7 +1101,7 @@ building_bazaar = {
   info_text_id: 97
   cost: [ 8, 15, 30, 50, 100 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [6] }
-  laborers:[5], fire_risk:[4], damage_risk: [0]
+  laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
 building_work_camp = {
@@ -1091,7 +1117,7 @@ building_work_camp = {
   building_size : 2,
   cost:  [ 12, 20, 40, 80, 120 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[20], fire_risk:[4], damage_risk: [0]
+  laborers:[20], fire_risk:[4], damage_risk: [2]
 }
 
 building_booth = {
@@ -1107,7 +1133,7 @@ building_booth = {
   building_size : 2
   cost : [ 10, 20, 40, 80, 150 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [2]
 }
 
 building_apothecary = {
@@ -1124,7 +1150,7 @@ building_apothecary = {
   building_size : 1
   cost : [ 6, 10, 15, 30, 50 ]
   desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
-  laborers:[5], fire_risk:[4], damage_risk: [0]
+  laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
 building_water_supply = {
@@ -1163,6 +1189,7 @@ building_well = {
   need_groundwater : true,
   labor_category : LABOR_CATEGORY_WATER_HEALTH
   cost: [ 1, 2, 5, 10, 20 ]
+  laborers:[0], fire_risk:[0], damage_risk: [0]
   desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
 }
 
@@ -1174,9 +1201,11 @@ building_papyrus_maker = {
     reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
   input : {
-    resource : RESOURCE_REEDS,
+    resource : RESOURCE_REEDS
   }
-  output_resource : RESOURCE_PAPYRUS,
+  output : {
+    resource : RESOURCE_PAPYRUS
+  }
   production_rate : 50,
   building_size : 2,
   info_help_id:1,
@@ -1184,7 +1213,7 @@ building_papyrus_maker = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost: [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [2]
 }
 
 building_weaver = {
@@ -1197,7 +1226,9 @@ building_weaver = {
   input : {
     resource : RESOURCE_FLAX
   }
-  output_resource : RESOURCE_LINEN,
+  output : {
+    resource : RESOURCE_LINEN
+  }
   building_size : 2,
   window_info_height_id : 1,
   info_help_id:97,
@@ -1205,7 +1236,7 @@ building_weaver = {
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 16, 30, 50, 100, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [3]
 }
 
 building_jewels_workshop = {
@@ -1217,7 +1248,9 @@ building_jewels_workshop = {
   input : {
     resource: RESOURCE_GEMS
   }
-  output_resource : RESOURCE_LUXURY_GOODS,
+  output : {
+    resource : RESOURCE_LUXURY_GOODS
+  }
   building_size : 2,
   window_info_height_id : 1,
   info_help_id:99,
@@ -1234,7 +1267,9 @@ building_reed_gatherer = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19, duration:4 },
   }
-  output_resource : RESOURCE_REEDS
+  output : {
+    resource : RESOURCE_REEDS
+  }
   building_size : 2
   window_info_height_id : 1
   info_help_id : 92
@@ -1243,7 +1278,7 @@ building_reed_gatherer = {
   min_houses_coverage : 100
   cost: [ 10, 20, 40, 80, 120 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[8], fire_risk:[2], damage_risk: [0]
+  laborers:[8], fire_risk:[2], damage_risk: [3]
 }
 
 building_wood_cutter = {
@@ -1253,7 +1288,9 @@ building_wood_cutter = {
     work : { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:12 },
     wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
   }
-  output_resource : RESOURCE_TIMBER
+  output : {
+    resource : RESOURCE_TIMBER
+  }
   building_size : 2
   window_info_height_id : 1
   info_help_id:94
@@ -1263,7 +1300,7 @@ building_wood_cutter = {
   max_gatherers : 1
   cost: [ 10, 20, 40, 80, 140 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [3] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [3]
 }
 
 building_small_mastaba = {
@@ -1327,7 +1364,7 @@ building_tax_collector = {
   min_houses_coverage : 50
   cost: [ 15, 20, 40, 70, 100 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-  laborers:[6], fire_risk:[4], damage_risk: [0]
+  laborers:[6], fire_risk:[4], damage_risk: [3]
 }
 
 building_tax_collector_up = {
@@ -1343,7 +1380,7 @@ building_tax_collector_up = {
   building_size : 2
   cost: [ 15, 24, 40, 80, 100 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [3]
 }
 
 building_recruiter = {
@@ -1384,7 +1421,7 @@ building_bandstand = {
   building_size : 3
   cost : [ 30, 50, 100, 150, 200 ]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [3]
 }
 
 building_pavilion = {
@@ -1486,7 +1523,7 @@ building_pavilion = {
   window_info_height_id : 2,
   cost : [ 100, 200, 300, 500, 800 ]
   desirability : { value:[6], step:[1], step_size:[-1], range: [6] }
-  laborers:[20], fire_risk:[4], damage_risk: [0]
+  laborers:[20], fire_risk:[4], damage_risk: [4]
 }
 
 building_festival_square = {
@@ -1532,6 +1569,8 @@ building_brick_tower = {
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
   cost : [ 50, 100, 150, 300, 500 ]
+  desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
+  laborers:[20], fire_risk:[0], damage_risk: [4]
 }
 
 building_clay_tower = {
@@ -1546,6 +1585,7 @@ building_clay_tower = {
   min_houses_coverage : 50
   cost : [ 50, 80, 100, 150, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
+  laborers:[20], fire_risk:[4], damage_risk: [4]
 }
 
 building_mud_tower = {
@@ -1585,7 +1625,7 @@ building_ferry = {
   labor_category : LABOR_CATEGORY_GOVERNMENT
   cost: [8, 15, 30, 50, 100 ]
   desirability : { value:[-5], step:[2], step_size:[2], range: [4] }
-  laborers:[5], fire_risk:[0], damage_risk: [0]
+  laborers:[5], fire_risk:[0], damage_risk: [2]
 }
 
 building_transport_wharf = {
@@ -1657,7 +1697,9 @@ building_fishing_wharf = {
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
     minimap: {pack:PACK_GENERAL, id:149, offset:160}
   }
-  output_resource : RESOURCE_FISH
+  output : {
+    resource : RESOURCE_FISH
+  }
   building_size : 2
   window_info_height_id: 1
   planer_relative_orientation: 1
@@ -1713,7 +1755,7 @@ building_dentist = {
   window_info_height_id : 1
   cost : [ 10, 15, 30, 50, 80 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[2], fire_risk:[4], damage_risk: [0]
+  laborers:[2], fire_risk:[4], damage_risk: [2]
 }
 
 building_mortuary = {
@@ -1729,7 +1771,7 @@ building_mortuary = {
   window_info_height_id : 1
   cost : [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-3], step:[2], step_size:[1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [2]
 }
 
 building_plaza = {
@@ -1840,7 +1882,9 @@ building_clay_pit = {
     base : { pos : [-1, -1], pack:PACK_GENERAL, id:40 },
     work : { pos : [18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
   },
-  output_resource : RESOURCE_CLAY,
+  output : {
+    resource : RESOURCE_CLAY
+  }
   progress_max : 200,
   building_size : 2,
   production_rate : 100,
@@ -1863,7 +1907,9 @@ building_brewery = {
   input : {
     resource : RESOURCE_BARLEY
   }
-  output_resource : RESOURCE_BEER,
+  output : {
+    resource : RESOURCE_BEER
+  }
   progress_max : 400,
   window_info_height_id : 1,
   production_rate : 50,
@@ -1872,7 +1918,7 @@ building_brewery = {
   building_size : 2
   cost: [ 15, 25, 50, 80, 120 ]
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [2]
 }
 
 building_mine_copper = {
@@ -1881,7 +1927,9 @@ building_mine_copper = {
     base : { pack:PACK_GENERAL, id:196 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
   },
-  output_resource : RESOURCE_COPPER,
+  output : {
+    resource : RESOURCE_COPPER
+  }
   window_info_height_id : 1,
   info_help_id:93,
   info_text_id:193,
@@ -1900,7 +1948,9 @@ building_mine_gems = {
     base : { pack:PACK_GENERAL, id:188 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
   },
-  output_resource : RESOURCE_GEMS,
+  output : {
+    resource : RESOURCE_GEMS
+  }
   building_size : 2,
   info_help_id:93,
   info_text_id:163,
@@ -1917,7 +1967,9 @@ building_sandstone_quarry = {
     base : { pack:PACK_GENERAL, id:197 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   },
-  output_resource : RESOURCE_SANDSTONE,
+  output : {
+    resource : RESOURCE_SANDSTONE
+  }
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
@@ -1948,7 +2000,9 @@ building_stone_quarry = {
     base : { pack:PACK_GENERAL, id:187 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   },
-  output_resource : RESOURCE_STONE,
+  output : {
+    resource : RESOURCE_STONE
+  }
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
@@ -1957,6 +2011,7 @@ building_stone_quarry = {
   need_rock : true
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
+  laborers:[12], fire_risk:[0], damage_risk: [2]
 }
 
 building_granite_quarry = {
@@ -1965,7 +2020,9 @@ building_granite_quarry = {
     base : { pack:PACK_GENERAL, id:38 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   },
-  output_resource : RESOURCE_GRANITE,
+  output : {
+    resource : RESOURCE_GRANITE
+  }
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
@@ -1983,7 +2040,9 @@ building_limestone_quarry = {
     base : { pack:PACK_GENERAL, id:170 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
-  output_resource : RESOURCE_LIMESTONE,
+  output : {
+    resource : RESOURCE_LIMESTONE
+  }
   building_size : 2,
   info_help_id:93,
   info_text_id:162,
@@ -1992,6 +2051,7 @@ building_limestone_quarry = {
   need_rock : true
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
+  laborers:[12], fire_risk:[0], damage_risk: [2]
 }
 
 building_mine_gold = {
@@ -2000,7 +2060,9 @@ building_mine_gold = {
     base : { pack:PACK_GENERAL, id:185 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 },
   }
-  output_resource : RESOURCE_GOLD
+  output : {
+    resource : RESOURCE_GOLD
+  }
   building_size : 2
   info_help_id:93
   info_text_id:162
@@ -2178,7 +2240,7 @@ building_bullfight_school = {
   building_size : 2
   cost: [ 50, 80, 100, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[15], fire_risk:[4], damage_risk: [0]
+  laborers:[15], fire_risk:[4], damage_risk: [3]
 }
 
 building_bricks_workshop = {
@@ -2193,7 +2255,9 @@ building_bricks_workshop = {
     resource : RESOURCE_CLAY
     resource_second : RESOURCE_STRAW
   }
-  output_resource : RESOURCE_BRICKS,
+  output : {
+    resource : RESOURCE_BRICKS
+  }
   progress_max : 400,
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -2203,7 +2267,7 @@ building_bricks_workshop = {
   window_info_height_id : 1
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[2], damage_risk: [0]
+  laborers:[12], fire_risk:[2], damage_risk: [3]
 }
 
 building_chariots_workshop = {
@@ -2218,14 +2282,16 @@ building_chariots_workshop = {
     resource : RESOURCE_TIMBER
     resource_second : RESOURCE_WEAPONS
   }
-  output_resource : RESOURCE_CHARIOTS,
+  output : {
+    resource : RESOURCE_CHARIOTS
+  }
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
   window_info_height_id : 1
   cost: [ 50, 100, 150, 300, 500 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
-  laborers:[30], fire_risk:[4], damage_risk: [0]
+  laborers:[30], fire_risk:[4], damage_risk: [3]
 }
 
 building_pottery = {
@@ -2238,7 +2304,9 @@ building_pottery = {
   input : {
     resource : RESOURCE_CLAY
   }
-  output_resource : RESOURCE_POTTERY,
+  output : {
+    resource : RESOURCE_POTTERY
+  }
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
@@ -2260,14 +2328,16 @@ building_lamp_workshop = {
     resource : RESOURCE_OIL
     resource_second : RESOURCE_TIMBER
   }
-  output_resource : RESOURCE_LAMPS,
+  output : {
+    resource : RESOURCE_LAMPS
+  }
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
   window_info_height_id : 1
   cost: [ 20, 30, 50, 100, 150 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [0]
+  laborers:[12], fire_risk:[4], damage_risk: [3]
 }
 
 building_paint_workshop = {
@@ -2280,7 +2350,9 @@ building_paint_workshop = {
   input : {
     resource : RESOURCE_OIL
   }
-  output_resource : RESOURCE_PAINT,
+  output : {
+    resource : RESOURCE_PAINT
+  }
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
@@ -2316,7 +2388,7 @@ building_physician = {
   building_size : 2
   cost: [ 10, 15, 30, 50, 100 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[8], fire_risk:[3], damage_risk: [0]
+  laborers:[8], fire_risk:[3], damage_risk: [3]
 }
 
 building_water_lift = {
@@ -2344,9 +2416,7 @@ building_water_lift = {
   info_text_id: 107
   cost : [ 6, 12, 25, 50, 100 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers: [5]
-  fire_risk: [0]
-  damage_risk: [0]
+  laborers:[8], fire_risk:[0], damage_risk: [3]
 }
 
 building_firehouse = {
@@ -2362,7 +2432,7 @@ building_firehouse = {
   building_size : 1
   cost: [ 6, 12, 25, 40, 60 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[6], fire_risk:[0], damage_risk: [0]
+  laborers:[6], fire_risk:[0], damage_risk: [2]
 }
 
 building_police_station = {
@@ -2378,7 +2448,7 @@ building_police_station = {
   building_size : 1
   cost: [ 6, 12, 25, 40, 60 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[6], fire_risk:[2], damage_risk: [0]
+  laborers:[6], fire_risk:[2], damage_risk: [2]
 }
 
 building_architect_post = {
@@ -2393,7 +2463,7 @@ building_architect_post = {
   info_text_id: 104
   window_info_height_id : 1
   cost: [ 6, 12, 25, 40, 60 ]
-  laborers:[5], fire_risk:[0], damage_risk: [0]
+  laborers:[5], fire_risk:[2], damage_risk: [0]
 }
 
 building_conservatory = {
@@ -2409,7 +2479,7 @@ building_conservatory = {
   building_size : 3
   cost : [ 20, 50, 90, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[8], fire_risk:[4], damage_risk: [0]
+  laborers:[8], fire_risk:[4], damage_risk: [2]
 }
 
 building_hunting_lodge = {
@@ -2421,7 +2491,9 @@ building_hunting_lodge = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
-  output_resource : RESOURCE_GAMEMEAT
+  output : {
+    resource : RESOURCE_GAMEMEAT
+  }
   window_info_height_id : 1
   info_help_id:90
   info_text_id:154
@@ -2429,7 +2501,7 @@ building_hunting_lodge = {
   min_houses_coverage : 100
   cost: [ 5, 10, 25, 40, 60 ]
   desirability : { value:[-4], step:[1], step_size:[2], range: [4] }
-  laborers:[6], fire_risk:[5], damage_risk: [0]
+  laborers:[6], fire_risk:[5], damage_risk: [2]
 }
 
 building_scribal_school = {
@@ -2449,7 +2521,7 @@ building_scribal_school = {
   labor_category : LABOR_CATEGORY_EDUCATION
   cost : [ 30, 50, 70, 100, 150 ]
   desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
-  laborers:[10], fire_risk:[6], damage_risk: [0]
+  laborers:[10], fire_risk:[6], damage_risk: [2]
 }
 
 building_temple_complex_osiris = {
