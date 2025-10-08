@@ -369,6 +369,7 @@ figure_egyptian_spearman = {
     missile_delay : 50 
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_SPEAR
     max_amount : 25
 }
 
@@ -394,7 +395,7 @@ enemy_egyptian = {
     percentage_type1 : 80
     percentage_type2 : 20
     percentage_type3 : 0
-    figure_types: [FIGURE_ENEMY_EGYPTIAN_ARCHER, FIGURE_ENEMY_EGYPTIAN_SWORD, FIGURE_ENEMY_EGYPTIAN_CHARIOT]
+    figure_types: [FIGURE_ENEMY_EGYPTIAN_ARCHER, FIGURE_ENEMY_EGYPTIAN_SPEAR, FIGURE_ENEMY_EGYPTIAN_CHARIOT]
     layout: FORMATION_ENEMY_MOB
 }
 
@@ -428,6 +429,15 @@ figure_hittite_spearman = {
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
     terrain_usage : TERRAIN_USAGE_ANY
+    category: figure_category_hostile
+    max_damage : 50
+    attack_value : 6
+    missile_attack_value : 6
+    missile_delay : 50 
+    defense_value: 3
+    missile_defense_value : 0
+    terrain_usage : TERRAIN_USAGE_ANY
+    missile_type : FIGURE_SPEAR
     max_amount : 25
 }
 
