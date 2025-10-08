@@ -69,6 +69,7 @@ private:
     void stop_channel(int channel);
     void free_custom_audio_stream();
     bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
+    bool init_audio_with_timeout(const char *driver_name, int timeout_ms = 2000);
     int get_custom_audio_stream(uint8_t *dst, int len);
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
     vfs::path speech_filename(xstring filename);

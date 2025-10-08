@@ -484,7 +484,9 @@ struct figure_static_params {
 protected:
     void base_load(archive arch);
 };
-ANK_CONFIG_STRUCT(figure_static_params, terrain_usage)
+ANK_CONFIG_STRUCT(figure_static_params, is_enemy, max_roam_length, permission, 
+    animations, terrain_usage, terrain_usage, category, attack_value, defense_value,
+    missile_defense_value)
 
 class figure_impl {
 public:
@@ -673,6 +675,8 @@ struct model_t : public figure_static_params {
     void archive_load() {
         bool loaded = false;
         g_config_arch.r_section(name, [&] (archive arch) {
+            figure_static_params &base = *this;
+            arch.r(base);
             figure_static_params::base_load(arch);
             loaded = true;
             call_struct_reader_if_exists(arch, *this);
