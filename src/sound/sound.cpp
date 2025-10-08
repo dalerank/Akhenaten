@@ -197,6 +197,20 @@ void sound_manager_t::init_channel(int index, vfs::path filename) {
     _channels[index].filename = filename;
 }
 
+bool sound_manager_t::init_audio_with_timeout(const char *driver_name, int timeout_ms) {
+    auto future = std::async(std::launch::async, [driver_name] () {
+        return SDL_AudioInit(driver_name) == 0
+            && Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == 0;
+    });
+
+    if (future.wait_for(std::chrono::milliseconds(timeout_ms)) == std::future_status::timeout) {
+        SDL_Log("Audio initialization timeout - no audio device available?");
+        return false;
+    }
+
+    return future.get();
+}
+
 void sound_manager_t::allocate_channels() {
     if (!initialized) {
         return;
@@ -230,13 +244,13 @@ void sound_manager_t::open() {
             continue;
         }
 
-        if (0 == SDL_AudioInit(driver_name)
-            && 0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
+        const bool ok = init_audio_with_timeout(driver_name, 1000);
+        if (ok) {
             logs::info("Using audio driver: %s", driver_name);
             init_channels();
             return;
         } else {
-            logs::info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
+          logs::info("Not using audio driver %s, reason: %s", driver_name, SDL_GetError());
         }
     }
 

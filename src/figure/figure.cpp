@@ -661,22 +661,13 @@ metainfo figure_impl::get_info() const {
 
 figure_static_params figure_static_params::dummy;
 void figure_static_params::base_load(archive arch) {
-    arch.r("animations", animations.data);
     assert(animations.data.size() > 0);
 
     sounds.load(arch);
-    terrain_usage = arch.r_int("terrain_usage");
-    max_roam_length = arch.r_int("max_roam_length");
     speed_mult = arch.r_int("speed_mult", 1);
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");
-    permission = arch.r_type<e_permission>("permission");
-    is_enemy = arch.r_bool("is_enemy");
-    category = arch.r_type<e_figure_category>("category");
     max_damage = arch.r_int("max_damage", 100);
-    attack_value = arch.r_int("attack_value", 0);
-    defense_value = arch.r_int("defense_value", 0);
-    missile_defense_value = arch.r_int("missile_defense_value", 0);
 }
 
 void figure_impl::update_animation() {
