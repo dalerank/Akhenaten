@@ -140,11 +140,24 @@ public:
 
 class figure_nubian_archer : public figure_enemy_archer {
 public:
-    FIGURE_METAINFO(FIGURE_ENEMY_LIBIAN_ARCHER, figure_nubian_archer)
+    FIGURE_METAINFO(FIGURE_ENEMY_NUBIAN_ARCHER, figure_nubian_archer)
     figure_nubian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_nubian_archer> {} FIGURE_STATIC_DATA_T;
+    struct static_params : public static_params_t<figure_nubian_archer> {
+    } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_LIBIAN_ARCHER, "nubn_arch" }; }
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_ARCHER, "nubn_arch" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
+
+class figure_persian_archer : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_ARCHER, figure_persian_archer)
+    figure_persian_archer(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public static_params_t<figure_persian_archer> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_ARCHER, "pers_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };

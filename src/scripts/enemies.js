@@ -861,6 +861,7 @@ figure_nubian_transport_ship = {
         swim : { pack:PACK_ENEMY_NUBIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_NUBIAN, id:8, max_frames:11, loop:false }
         idle : { pack:PACK_ENEMY_NUBIAN, id:9, max_frames:1 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -894,6 +895,7 @@ figure_nubian_chariot = {
         death : { pack:PACK_ENEMY_NUBIAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_NUBIAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_NUBIAN, id:16, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -922,6 +924,7 @@ figure_persian_archer = {
         death : { pack:PACK_ENEMY_PERSIAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_PERSIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_PERSIAN, id:3, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -937,11 +940,12 @@ figure_persian_archer = {
     max_amount : 25
 }
 
-figure_persian_axeman = {
+figure_persian_spearman = {
     animations : {
         walk : { pack:PACK_ENEMY_PERSIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_PERSIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_PERSIAN, id:6, max_frames:8 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1021,6 +1025,7 @@ figure_phoenician_spearman = {
         death : { pack:PACK_ENEMY_PHOENICIAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_PHOENICIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_PHOENICIAN, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1041,6 +1046,7 @@ figure_phoenician_swordman = {
         walk : { pack:PACK_ENEMY_PHOENICIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_PHOENICIAN, id:6, max_frames:9 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
     terrain_usage : TERRAIN_USAGE_ANY
     max_amount : 25
@@ -1114,6 +1120,7 @@ figure_roman_archer = {
         death : { pack:PACK_ENEMY_ROMAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ROMAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_ROMAN, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1134,6 +1141,7 @@ figure_roman_legioner = {
         walk : { pack:PACK_ENEMY_ROMAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ROMAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_ROMAN, id:6, max_frames:9 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1184,6 +1192,7 @@ figure_roman_chariot = {
         death : { pack:PACK_ENEMY_ROMAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_ROMAN, id:15, max_frames:12 }
         attack2 : { pack:PACK_ENEMY_ROMAN, id:16, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1212,6 +1221,7 @@ figure_seapeople_archer = {
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_SEAPEOPLE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_SEAPEOPLE, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1232,6 +1242,7 @@ figure_seapeople_axeman = {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_SEAPEOPLE, id:6, max_frames:9 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -1299,6 +1310,6 @@ enemy_seapeople = {
     percentage_type1 : 80
     percentage_type2 : 10
     percentage_type3 : 10
-    figure_types: [FIGURE_ENEMY_SEAPEOPLE_ARCHER, FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, FIGURE_ENEMY_SEAPEOPLE_CHARIOT]
+    figure_types: [FIGURE_ENEMY_SEAPEOPLE_ARCHER, FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, FIGURE_NONE]
     layout: FORMATION_COLUMN
 }
