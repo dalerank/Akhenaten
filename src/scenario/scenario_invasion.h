@@ -36,7 +36,6 @@ struct enemy_properties_t {
     std::array<e_figure_type, 3> figure_types;
     e_formation_layout layout;
 };
-extern std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
 ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, layout)
 
 struct invasion_data_t {
