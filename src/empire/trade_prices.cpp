@@ -4,17 +4,13 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-stable_array<trade_price> g_default_prices;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_default_prices) {
-    g_config_arch.r("default_prices", g_default_prices);
-}
+stable_array<trade_price> ANK_VARIABLE(default_prices);
 
 trade_price prices[RESOURCES_MAX];
 
 void trade_prices_reset() {
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        prices[i] = g_default_prices[i];
+        prices[i] = default_prices[i];
     }
 }
 
