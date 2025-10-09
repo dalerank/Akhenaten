@@ -6,10 +6,10 @@
 #include "js/js_game.h"
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
-city_migration_defaults_t ANK_VARIABLE(migration_params);
+city_migration_defaults_t ANK_VARIABLE(migration_defaults);
 svector<sentiment_step_t, 16> g_migration_sentiment_influence;
 
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_defaults) {
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_influence) {
     g_migration_sentiment_influence.clear();
     g_config_arch.r("migration_sentiment_influence", g_migration_sentiment_influence);
     assert(!g_migration_sentiment_influence.empty());
@@ -20,7 +20,7 @@ void city_migration_t::nobles_leave_city(int num_people) {
 }
 
 void city_migration_t::update_status() {
-    auto& params = migration_params;
+    auto& params = migration_defaults;
 
     const auto &sentiment = g_city.sentiment;
     auto it = std::find_if(g_migration_sentiment_influence.begin(), g_migration_sentiment_influence.end(), [&] (const auto& t) {
@@ -75,7 +75,7 @@ void city_migration_t::create_immigrants(int num_people) {
 }
 
 city_migration_defaults_t& city_migration_t::current_params() {
-    return migration_params;
+    return migration_defaults;
 }
 
 void city_migration_t::create_emigrants(int num_people) {
@@ -87,7 +87,7 @@ void city_migration_t::create_migrants() {
     emigrated_today = 0;
     refused_immigrants_today = 0;
 
-    auto& params = migration_params;
+    auto& params = migration_defaults;
     if (immigration_amount_per_batch > 0) {
         if (immigration_amount_per_batch >= params.max_immigration_amount_per_batch) {
             create_immigrants(immigration_amount_per_batch);
