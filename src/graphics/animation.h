@@ -5,8 +5,6 @@
 #include "graphics/animkeys.h"
 #include "core/system_time.h"
 
-#include <unordered_map>
-
 struct animation_timer {
     time_millis last_update;
     bool should_update;

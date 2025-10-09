@@ -663,7 +663,6 @@ figure_static_params figure_static_params::dummy;
 void figure_static_params::base_load(archive arch) {
     assert(animations.data.size() > 0);
 
-    sounds.load(arch);
     speed_mult = arch.r_int("speed_mult", 1);
     meta.help_id = arch.r_int("info_help_id");
     meta.text_id = arch.r_int("info_text_id");

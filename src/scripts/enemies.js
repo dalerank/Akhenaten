@@ -436,7 +436,6 @@ figure_hittite_spearman = {
     missile_delay : 50 
     defense_value: 3
     missile_defense_value : 0
-    terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
     max_amount : 25
 }
