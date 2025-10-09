@@ -681,7 +681,7 @@ enemy_kushite = {
     percentage_type1 : 50
     percentage_type2 : 30
     percentage_type3 : 20
-    figure_types: [FIGURE_ENEMY_KUSHITE_SPEARMAN, FIGURE_ENEMY_KUSHITE_AXEMAN, FIGURE_ENEMY_KUSHITE_CHARIOT]
+    figure_types: [FIGURE_ENEMY_KUSHITE_SPEARMAN, FIGURE_ENEMY_KUSHITE_AXEMAN, FIGURE_NONE]
     layout: FORMATION_ENEMY_DOUBLE_LINE
 }
 
