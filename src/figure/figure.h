@@ -486,7 +486,7 @@ protected:
 };
 ANK_CONFIG_STRUCT(figure_static_params, is_enemy, max_roam_length, permission, 
     animations, terrain_usage, terrain_usage, category, attack_value, defense_value,
-    missile_defense_value)
+    missile_defense_value, sounds)
 
 class figure_impl {
 public:

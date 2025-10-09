@@ -8,31 +8,22 @@ struct figure_sound_t {
     int group;
     int text;
     xstring phrase_key;
-    bool operator==(const figure_sound_t &other) const noexcept { return key == other.key; }
-    bool operator!=(const figure_sound_t &other) const noexcept { return key != other.key; }
-    bool operator<(const figure_sound_t &other) const noexcept { return key < other.key; }
-};
-
-template<>
-struct std::hash<figure_sound_t> {
-    std::size_t operator()(const figure_sound_t &k) const noexcept {
-        return (size_t)k.key._get();
-    }
 };
 ANK_CONFIG_STRUCT(figure_sound_t, key, sound)
 
+using figure_sounds_map = std::unordered_map<xstring, figure_sound_t>;
 struct figure_sounds_t {
-    std::unordered_set<figure_sound_t> sounds;
+    figure_sounds_map data;
 
-    void load(archive arch, pcstr section = "sounds");
-
-    const figure_sound_t &operator[](xstring key) const {
+    const figure_sound_t &operator[](const xstring& key) const {
         static figure_sound_t dummy{ "", "", 0, 0, "#undefined_phrase" };
 
-        auto it = sounds.find({ key });
-        return (it == sounds.end()) ? dummy : *it;
+        auto it = data.find( key );
+        return (it == data.end()) ? dummy : it->second;
     }
 };
+
+template<> inline void archive::r<figure_sounds_t>(pcstr name, figure_sounds_t &v) { r(name, v.data); }
 
 namespace snd {
     xstring get_walker_reaction(xstring reaction);

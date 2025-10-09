@@ -359,47 +359,62 @@ protected:
 
 struct g_archive : public archive {
     template<typename T>
-    inline void r_array(pcstr name, T read_func) {
+    inline bool r_array(pcstr name, T read_func) {
         if (!state) {
-            return;
+            return false;
         }
 
         getglobal(name);
         r_array_impl(read_func);
         pop(1);
+        return true;
     }
 
     template<typename T, typename F>
-    inline void r_array(pcstr name, T &arr, F read_func) {
+    inline bool r_array(pcstr name, T &arr, F read_func) {
         if (!state) {
-            return;
+            return false;
         }
 
         getglobal(name);
         r_array_impl(arr, read_func);
         pop(1);
+        return true;
     }
 
     template<typename T, std::size_t N>
-    inline void r(pcstr name, svector<T, N> &v);
+    inline bool r(pcstr name, svector<T, N> &v);
 
     template<typename T>
-    inline void r(pcstr name, std::unordered_set<T>& v) {
+    inline bool r(pcstr name, std::unordered_set<T>& v) {
+        v.clear();
         this->r_array(name, [&] (archive arch) {
             T itemv; arch.r(itemv);
             v.insert(itemv);
         });
+        return true;
+    }
+
+    template<typename N, typename T>
+    inline bool r(pcstr name, std::unordered_map<N, T> &v) {
+        v.clear();
+        this->r_objects(name, [&] (pcstr key, archive arch) {
+            auto &itemv = v[key];
+            itemv.key = key;
+            arch.r(itemv);
+        });
+        return true;
     }
 
     template<typename T, std::size_t N>
-    inline void r(pcstr name, std::array<T, N> &v);
+    inline bool r(pcstr name, std::array<T, N> &v);
 
     template<typename T>
-    inline void r_stable_array(pcstr name, T &arr);
+    inline bool r_stable_array(pcstr name, T &arr);
 
     template<typename T>
-    inline void r(pcstr name, stable_array<T>& arr) {
-        r_stable_array(name, arr);
+    inline bool r(pcstr name, stable_array<T>& arr) {
+        return r_stable_array(name, arr);
     }
 
     template<typename T>
@@ -431,9 +446,9 @@ struct g_archive : public archive {
     }
 
     template<typename T>
-    inline void r_objects(pcstr name, T read_func) {
+    inline bool r_objects(pcstr name, T read_func) {
         if (!state) {
-            return;
+            return false;
         }
 
         getglobal(name);
@@ -456,6 +471,7 @@ struct g_archive : public archive {
             }
         }
         pop(1);
+        return true;
     }
 };
 
@@ -761,7 +777,7 @@ inline void archive::r(pcstr name, T& v) {
 }
 
 template<typename T, std::size_t N>
-inline void g_archive::r(pcstr name, svector<T, N> &v) {
+inline bool g_archive::r(pcstr name, svector<T, N> &v) {
     getglobal(name);
     v.clear();
     if (isarray(-1)) {
@@ -784,10 +800,11 @@ inline void g_archive::r(pcstr name, svector<T, N> &v) {
         }
     }
     pop(1);
+    return true;
 }
 
 template<typename T, std::size_t N>
-inline void g_archive::r(pcstr name, std::array<T, N> &v) {
+inline bool g_archive::r(pcstr name, std::array<T, N> &v) {
     getglobal(name);
     auto it = v.begin();
     if (isarray(-1)) {
@@ -809,6 +826,7 @@ inline void g_archive::r(pcstr name, std::array<T, N> &v) {
         }
     }
     pop(1);
+    return true;
 }
 
 template<typename T>
@@ -821,7 +839,7 @@ inline bool g_archive::r(pcstr name, T &obj) {
 }
 
 template<typename T>
-inline void g_archive::r_stable_array(pcstr name, T &arr) {
+inline bool g_archive::r_stable_array(pcstr name, T &arr) {
     getglobal(name);
     if (isarray(-1)) {
         int length = getlength(-1);
@@ -837,4 +855,5 @@ inline void g_archive::r_stable_array(pcstr name, T &arr) {
         }
     }
     pop(1);
+    return true;
 }
