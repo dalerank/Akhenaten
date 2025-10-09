@@ -395,6 +395,15 @@ struct g_archive : public archive {
         return true;
     }
 
+    template<typename T>
+    inline bool update(pcstr name, std::unordered_set<T> &v) {
+        this->r_array(name, [&] (archive arch) {
+            T itemv; arch.r(itemv);
+            v.insert(itemv);
+        });
+        return true;
+    }
+
     template<typename N, typename T>
     inline bool r(pcstr name, std::unordered_map<N, T> &v) {
         v.clear();

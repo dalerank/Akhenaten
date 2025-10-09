@@ -14,9 +14,9 @@ struct game_language {
 };
 ANK_CONFIG_STRUCT(game_language, lang, caption, key, table)
 
-using game_languages = svector<game_language, 12>;
+using game_languages_vec = svector<game_language, 12>;
 
-const game_languages& get_available_languages();
+const game_languages_vec & get_available_languages();
 
 pcstr lang_text_from_key(pcstr key);
 textid loc_text_from_key(pcstr key);

@@ -31,14 +31,11 @@ struct std::hash<loc_textid> {
 };
 
 std::unordered_set<loc_textid> g_localization;
-game_languages g_game_languages;
+game_languages_vec ANK_VARIABLE(game_languages);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
     g_localization.clear();
     lang_reload_localized_tables();
-
-    g_game_languages.clear();
-    g_config_arch.r("game_languages", g_game_languages);
 }
 
 bool lang_reload_localized_files() {
@@ -65,7 +62,7 @@ bool lang_reload_localized_tables() {
     g_config_arch.r(localization_table.c_str(), g_localization);
 
     // restore the default localization (english), for values without translates
-    g_config_arch.r("localization_en", g_localization);
+    g_config_arch.update("localization_en", g_localization);
 
     return true;
 }
@@ -75,8 +72,8 @@ textid loc_text_from_key(pcstr key) {
     return (it != g_localization.end()) ? textid{it->group, it->id} : textid{ 0, 0 };
 }
 
-const game_languages& get_available_languages() {
-    return g_game_languages;
+const game_languages_vec & get_available_languages() {
+    return game_languages;
 }
 
 pcstr lang_text_from_key(pcstr key) {
@@ -113,13 +110,13 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font fon
 
 game_language lang_get_current_language() {
     const xstring current_lang = game_features::gameopt_language.to_string();
-    auto find_lang = std::find_if(g_game_languages.begin(), g_game_languages.end(),
+    auto find_lang = std::find_if(game_languages.begin(), game_languages.end(),
         [current_lang] (const game_language &lang) {
         return lang.lang == current_lang;
     });
 
-    if (find_lang == g_game_languages.end()) {
-        return g_game_languages.front();
+    if (find_lang == game_languages.end()) {
+        return game_languages.front();
     }
 
     return *find_lang;
