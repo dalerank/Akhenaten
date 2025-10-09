@@ -37,23 +37,35 @@ declare_console_command_p(start_invasion_fast) {
     }
 }
 
-std::array<enemy_properties_t, ENEMY_COUNT> g_enemy_properties;
+enemy_properties_t ANK_VARIABLE(enemy_barbarian);
+enemy_properties_t ANK_VARIABLE(enemy_assyrian);
+enemy_properties_t ANK_VARIABLE(enemy_canaanite);
+enemy_properties_t ANK_VARIABLE(enemy_egyptian);
+enemy_properties_t ANK_VARIABLE(enemy_hittite);
+enemy_properties_t ANK_VARIABLE(enemy_hyksos);
+enemy_properties_t ANK_VARIABLE(enemy_kushite);
+enemy_properties_t ANK_VARIABLE(enemy_libian);
+enemy_properties_t ANK_VARIABLE(enemy_nubian);
+enemy_properties_t ANK_VARIABLE(enemy_persian);
+enemy_properties_t ANK_VARIABLE(enemy_phoenician);
+enemy_properties_t ANK_VARIABLE(enemy_roman);
+enemy_properties_t ANK_VARIABLE(enemy_seapeople);
 
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_enemies) {
-    g_config_arch.r("enemy_barbarian", g_enemy_properties[ENEMY_0_BARBARIAN]);
-    g_config_arch.r("enemy_assyrian", g_enemy_properties[ENEMY_1_ASSYRIAN]);
-    g_config_arch.r("enemy_canaanite", g_enemy_properties[ENEMY_2_CANAANITE]);
-    g_config_arch.r("enemy_egyptian", g_enemy_properties[ENEMY_3_EGYPTIAN]);
-    g_config_arch.r("enemy_hittite", g_enemy_properties[ENEMY_4_HITTITE]);
-    g_config_arch.r("enemy_hyksos", g_enemy_properties[ENEMY_5_HYKSOS]);
-    g_config_arch.r("enemy_kushite", g_enemy_properties[ENEMY_6_KUSHITE]);
-    g_config_arch.r("enemy_libian", g_enemy_properties[ENEMY_7_LIBIAN]);
-    g_config_arch.r("enemy_nubian", g_enemy_properties[ENEMY_8_NUBIAN]);
-    g_config_arch.r("enemy_persian", g_enemy_properties[ENEMY_9_PERSIAN]);
-    g_config_arch.r("enemy_phoenician", g_enemy_properties[ENEMY_10_PHOENICIAN]);
-    g_config_arch.r("enemy_roman", g_enemy_properties[ENEMY_11_ROMAN]);
-    g_config_arch.r("enemy_seapeople", g_enemy_properties[ENEMY_12_SEAPEOPLE]);
-}
+std::array<enemy_properties_t *, ENEMY_COUNT> g_enemy_properties = {
+    &enemy_barbarian,
+    &enemy_assyrian,
+    &enemy_canaanite,
+    &enemy_egyptian,
+    &enemy_hittite,
+    &enemy_hyksos,
+    &enemy_kushite,
+    &enemy_libian,
+    &enemy_nubian,
+    &enemy_persian,
+    &enemy_phoenician,
+    &enemy_roman,
+    &enemy_seapeople,
+};
 
 static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
 
@@ -169,9 +181,9 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
     }
 
     // calculate soldiers per type
-    int num_type1 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type].percentage_type1);
-    int num_type2 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type].percentage_type2);
-    int num_type3 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type].percentage_type3);
+    int num_type1 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type]->percentage_type1);
+    int num_type2 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type]->percentage_type2);
+    int num_type3 = calc_adjust_with_percentage(amount, g_enemy_properties[enemy_type]->percentage_type3);
     num_type1 += amount - (num_type1 + num_type2 + num_type3); // assign leftovers to type1
 
     for (int t = 0; t < 3; t++) {
@@ -238,7 +250,7 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
             continue;
         }
 
-        e_figure_type figure_type = g_enemy_properties[enemy_type].figure_types[type];
+        e_figure_type figure_type = g_enemy_properties[enemy_type]->figure_types[type];
         if (figure_type == FIGURE_NONE) {
             logs::error("No figure type for %s enemy", e_enemy_type_tokens.name(enemy_type));
             continue;
@@ -247,7 +259,7 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
         for (int i = 0; i < formations_per_type[type]; i++) {
             int formation_id = formation_create_enemy(figure_type,
                                                       invasion_tile,
-                                                      g_enemy_properties[enemy_type].layout,
+                                                      g_enemy_properties[enemy_type]->layout,
                                                       orientation,
                                                       enemy_type,
                                                       attack_type,
