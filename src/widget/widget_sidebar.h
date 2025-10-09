@@ -22,7 +22,7 @@ struct slide_driver {
     void update(int &x_offset, int expanded_offset_x, std::function<void()> callback);
 };
 
-struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expanded> {
+struct sidebar_window_expanded_t : public autoconfig_window {
     int focus_tooltip_text_id;
     int x_offset;
 
@@ -44,7 +44,7 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
 
-    virtual void load(archive arch, pcstr section) override;
+    virtual void archive_load(archive arch) override;
     virtual void init() override;
 
     void init_ui();
@@ -55,9 +55,11 @@ struct sidebar_window_expanded : public autoconfig_window_t<sidebar_window_expan
     void collapse();
 
     void draw_sidebar_extra(vec2i offset);
+
+    sidebar_window_expanded_t() : autoconfig_window("sidebar_window_expanded") {}
 };
 
-struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_collapsed> {
+struct sidebar_window_collapsed_t : public autoconfig_window {
     int focus_tooltip_text_id;
     int x_offset;
 
@@ -77,8 +79,10 @@ struct sidebar_window_collapsed : public autoconfig_window_t<sidebar_window_coll
     virtual int draw_background(UiFlags flags) override { return 0; }
     virtual void ui_draw_foreground(UiFlags flags) override;
 
-    virtual void load(archive arch, pcstr section) override;
+    virtual void archive_load(archive arch) override;
     virtual void init() override;
+
+    sidebar_window_collapsed_t() : autoconfig_window("sidebar_window_collapsed") {}
 
     void refresh_build_menu_buttons();
 
@@ -94,12 +98,12 @@ struct sidebar_window {
 ANK_CONFIG_STRUCT(ui::slide_driver, 
     deceleration_offset_x, slide_acceleration_millis, slide_speed_x)
 
-ANK_CONFIG_STRUCT(ui::sidebar_window_expanded, 
+ANK_CONFIG_STRUCT(ui::sidebar_window_expanded_t, 
     extra_block, relief_block, 
     extra_block_x, expanded_offset_x,
     def_image, slider)
 
-ANK_CONFIG_STRUCT(ui::sidebar_window_collapsed,
+ANK_CONFIG_STRUCT(ui::sidebar_window_collapsed_t,
     extra_block, relief_block,
     extra_block_x, expanded_offset_x,
     slider)

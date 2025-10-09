@@ -107,8 +107,8 @@ void figure_info_window::window_info_foreground(object_info &c) {
     c.nfigure.drawn = 1;
 }
 
-void figure_info_window::load(archive arch, pcstr section) {
-    common_info_window::load(arch, section);
+void figure_info_window::archive_load(archive arch) {
+    common_info_window::archive_load(arch);
     assert(elements.size() > 0);
 }
 

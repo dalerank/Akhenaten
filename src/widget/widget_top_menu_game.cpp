@@ -37,11 +37,13 @@
 #include "widget/widget_city.h"
 #include "dev/debug.h"
 
+#include "js/js_game.h"
+
 static void button_rotate_left(int param1, int param2);
 static void button_rotate_reset(int param1, int param2);
 static void button_rotate_right(int param1, int param2);
 
-struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
+struct top_menu_widget_t : autoconfig_window {
     int offset_rotate;
     int offset_rotate_basic;
 
@@ -60,6 +62,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     } states;
 
     ui::widget headers;
+
+    top_menu_widget_t() : autoconfig_window("top_menu_widget") {}
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override;
@@ -97,8 +101,8 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void debug_opt_text(int opt, bool v);
     void debug_render_text(int opt, const xstring name, bool v);
 
-    virtual void load(archive arch, pcstr section) override {
-        autoconfig_window::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        autoconfig_window::archive_load(arch);
 
         offset = arch.r_vec2i("offset");
         item_height = arch.r_int("item_height");
@@ -107,7 +111,6 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
         offset_rotate_basic = arch.r_int("offset_rotate_basic");
         sidebar_offset = arch.r_int("sidebar_offset");
 
-        headers.load(arch, "headers");
         for (auto &header : headers.elements) {
             auto impl = header->dcast_menu_header();
             if (impl) {
@@ -120,8 +123,9 @@ struct top_menu_widget : autoconfig_window_t<top_menu_widget> {
     void update_date(event_advance_day);
     void update_finance(event_finance_changed ev);
 };
+ANK_CONFIG_STRUCT(top_menu_widget_t, headers)
 
-top_menu_widget g_top_menu;
+top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
 int orientation_button_state = 0;
 int orientation_button_pressed = 0;
@@ -132,11 +136,11 @@ static generic_button orientation_buttons_ph[] = {
     {36 - 12, 0, 12, 21, button_rotate_right, button_none, 0, 0},
 };
 
-void top_menu_widget::on_mission_start() {
+void top_menu_widget_t::on_mission_start() {
     init();
 }
 
-void top_menu_widget::init() {
+void top_menu_widget_t::init() {
     ui["date"].onrclick([] {
         window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
     });
@@ -154,7 +158,7 @@ void top_menu_widget::init() {
     events::subscribe([this] (event_finance_changed ev) { update_finance(ev); });
 }
 
-void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
+void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
     auto menu = headers[header].dcast_menu_header();
     if (!menu) {
         return;
@@ -163,7 +167,7 @@ void top_menu_widget::menu_item_update(pcstr header, int item, pcstr text) {
     menu->item(item).text = text;
 }
 
-void top_menu_widget::update_date(event_advance_day ev) {
+void top_menu_widget_t::update_date(event_advance_day ev) {
     pcstr month_str = ui::str(25, ev.month);
     bstring32 text;
     if (ev.year >= 0) {
@@ -177,7 +181,7 @@ void top_menu_widget::update_date(event_advance_day ev) {
     ui["date"] = text;
 }
 
-void top_menu_widget::update_finance(event_finance_changed ev) {
+void top_menu_widget_t::update_finance(event_finance_changed ev) {
     color treasure_color = ev.value < 0 ? COLOR_FONT_RED : COLOR_WHITE;
     e_font treasure_font = (ev.value >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
     ui["funds"].font(treasure_font);
@@ -185,12 +189,12 @@ void top_menu_widget::update_finance(event_finance_changed ev) {
     ui["funds"].text_var("%s %d", ui::str(6, 0), ev.value);
 }
 
-void top_menu_widget::debug_render_text(int opt, const xstring name, bool v) {
+void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
     bstring128 text(v ? "ON " : "OFF", name.c_str() + 3);
     menu_item_update("debug_render", opt, text);
 }
 
-void top_menu_widget::debug_opt_text(int opt, bool v) {
+void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
     static option debug_text_opt[] = {
         {"Pages ON", "Pages OFF"},
@@ -215,7 +219,7 @@ void top_menu_widget::debug_opt_text(int opt, bool v) {
     menu_item_update("debug", opt, v ? current.on : current.off);
 }
 
-void top_menu_widget::debug_change_opt(menu_item &item) {
+void top_menu_widget_t::debug_change_opt(menu_item &item) {
     int opt = item.parameter;
     switch (opt) {
     case e_debug_show_console: 
@@ -254,7 +258,7 @@ void top_menu_widget::debug_change_opt(menu_item &item) {
     }
 }
 
-void top_menu_widget::debug_render_change_opt(menu_item &item) {
+void top_menu_widget_t::debug_render_change_opt(menu_item &item) {
     int opt = item.parameter;
     set_debug_render_mode((opt == debug_render_mode()) ? e_debug_render_none : e_debug_render(opt));
     auto *render = headers["debug_render"].dcast_menu_header();
@@ -279,7 +283,7 @@ static void button_rotate_right(int param1, int param2) {
     events::emit(event_rotate_map{ HOTKEY_ROTATE_MAP_RIGHT });
 }
 
-void top_menu_widget::draw_elements_impl() {
+void top_menu_widget_t::draw_elements_impl() {
     vec2i cur_offset = offset;
     const e_font hightlight_font = !!game_features::gameui_highlight_top_menu_hover ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT;
     for (auto &it : headers.elements) {
@@ -306,7 +310,7 @@ void top_menu_widget::draw_elements_impl() {
     }
 }
 
-xstring top_menu_widget::get_selected_header(const mouse* m) {
+xstring top_menu_widget_t::get_selected_header(const mouse* m) {
     for (auto &it : headers.elements) {
         ui::emenu_header *header = it->dcast_menu_header();
 
@@ -321,12 +325,12 @@ xstring top_menu_widget::get_selected_header(const mouse* m) {
     return {};
 }
 
-xstring top_menu_widget::bar_handle_mouse(const mouse* m) {
+xstring top_menu_widget_t::bar_handle_mouse(const mouse* m) {
     focus_menu_id = get_selected_header(m);
     return get_selected_header(m);
 }
 
-void top_menu_widget::calculate_menu_dimensions(menu_header& menu) {
+void top_menu_widget_t::calculate_menu_dimensions(menu_header& menu) {
     int max_width = 0;
     int height_pixels = item_height;
     for (const auto &item: menu.items) {
@@ -344,7 +348,7 @@ void top_menu_widget::calculate_menu_dimensions(menu_header& menu) {
     menu.calculated_height_blocks = height_pixels / 16;
 }
 
-void top_menu_widget::sub_menu_draw_text(const xstring header, const xstring focus_item_id) {
+void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring focus_item_id) {
     auto &impl = ((ui::emenu_header *)&headers[header])->impl;
 
     if (impl.calculated_width_blocks == 0 || impl.calculated_height_blocks == 0) {
@@ -363,7 +367,7 @@ void top_menu_widget::sub_menu_draw_text(const xstring header, const xstring foc
     }
 }
 
-xstring top_menu_widget::get_subitem(const mouse* m, menu_header &menu) {
+xstring top_menu_widget_t::get_subitem(const mouse* m, menu_header &menu) {
     int y_offset = TOP_MENU_HEIGHT + offset.y * 2;
 
     for (const auto &item: menu.items) {
@@ -381,7 +385,7 @@ xstring top_menu_widget::get_subitem(const mouse* m, menu_header &menu) {
     return {};
 }
 
-xstring top_menu_widget::menu_handle_mouse(const mouse* m, menu_header* menu, xstring& focus_item_id) {
+xstring top_menu_widget_t::menu_handle_mouse(const mouse* m, menu_header* menu, xstring& focus_item_id) {
     if (!menu) {
         return "";
     }
@@ -407,7 +411,7 @@ xstring top_menu_widget::menu_handle_mouse(const mouse* m, menu_header* menu, xs
     return item_id;
 }
 
-void top_menu_widget::header_update_text(pcstr header, pcstr text) {
+void top_menu_widget_t::header_update_text(pcstr header, pcstr text) {
     auto &impl = ((ui::emenu_header *)&headers[header])->impl;
 
     headers[header].text(text);
@@ -433,7 +437,7 @@ std::pair<bstring64, bstring64> split_string(pcstr input) {
     return result;
 }
 
-void top_menu_widget::item_update_text(pcstr path, pcstr text) {
+void top_menu_widget_t::item_update_text(pcstr path, pcstr text) {
     auto pair = split_string(path);
     auto header = headers[pair.first].dcast_menu_header();
     auto &item = header->item(pair.second);
@@ -441,33 +445,33 @@ void top_menu_widget::item_update_text(pcstr path, pcstr text) {
 }
 
 void widget_top_menu_clear_state() {
-    auto& data = g_top_menu;
+    auto& data = top_menu_widget;
 
     data.open_sub_menu = "";
     data.focus_menu_id = "";
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget::set_text_for_autosave() {
+void top_menu_widget_t::set_text_for_autosave() {
     item_update_text("options/autosave_options", ui::str(19, g_settings.monthly_autosave ? 51 : 52));
 }
 
-void top_menu_widget::set_text_for_tooltips() {
+void top_menu_widget_t::set_text_for_tooltips() {
     item_update_text("help/mouse", ui::str(3, g_settings.tooltips + 2));
 }
 
-void top_menu_widget::set_text_for_warnings() {
+void top_menu_widget_t::set_text_for_warnings() {
     item_update_text("help/warnings", ui::str(3, g_settings.warnings ? 6 : 5));
 }
 
-void top_menu_widget::set_text_for_debug_city() {
+void top_menu_widget_t::set_text_for_debug_city() {
     auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
         debug_opt_text(i, get_debug_draw_option(i));
     }
 }
 
-void top_menu_widget::set_text_for_debug_render() {
+void top_menu_widget_t::set_text_for_debug_render() {
     auto *render = headers["debug_render"].dcast_menu_header();
     if (!render) {
         return;
@@ -478,7 +482,7 @@ void top_menu_widget::set_text_for_debug_render() {
     }
 }
 
-void top_menu_widget::file_handle(menu_item &item) {
+void top_menu_widget_t::file_handle(menu_item &item) {
     if (item.id == "new_game") { 
         widget_top_menu_clear_state();
         popup_dialog::show_yesno("#popup_dialog_quit", [] (bool confirmed) {
@@ -542,7 +546,7 @@ void top_menu_widget::file_handle(menu_item &item) {
     }
 }
 
-void top_menu_widget::options_handle(menu_item &item) {
+void top_menu_widget_t::options_handle(menu_item &item) {
     if (item.id == "display_options") { 
         widget_top_menu_clear_state();
         ui::display_options_window::show(window_city_show); 
@@ -571,7 +575,7 @@ void top_menu_widget::options_handle(menu_item &item) {
     }
 }
 
-void top_menu_widget::help_handle(menu_item &item) {
+void top_menu_widget_t::help_handle(menu_item &item) {
     if (item.id == "help") { 
         widget_top_menu_clear_state();
         window_go_back();
@@ -592,13 +596,13 @@ void top_menu_widget::help_handle(menu_item &item) {
     }
 }
 
-void top_menu_widget::advisors_handle(menu_item &item) {
+void top_menu_widget_t::advisors_handle(menu_item &item) {
     widget_top_menu_clear_state();
     window_go_back();
     window_advisors_show_advisor((e_advisor)item.parameter);
 }
 
-void top_menu_widget::sub_menu_init() {
+void top_menu_widget_t::sub_menu_init() {
     auto *options = headers["options"].dcast_menu_header();
     if (options) {
         options->item(0).hidden = system_is_fullscreen_only();
@@ -640,13 +644,13 @@ void top_menu_widget::sub_menu_init() {
     set_text_for_debug_render();
 }
 
-void top_menu_widget::sub_menu_draw_background(int flags) {
+void top_menu_widget_t::sub_menu_draw_background(int flags) {
     window_city_draw_panels();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
 }
 
-void top_menu_widget::sub_menu_draw_foreground(int) {
+void top_menu_widget_t::sub_menu_draw_foreground(int) {
     if (!open_sub_menu) {
         return;
     }
@@ -657,15 +661,15 @@ void top_menu_widget::sub_menu_draw_foreground(int) {
 void widget_sub_menu_show() {
     static window_type window = {
         WINDOW_TOP_MENU,
-        [] (int flags) { g_top_menu.sub_menu_draw_background(flags); },
-        [] (int flags) { g_top_menu.sub_menu_draw_foreground(flags); },
+        [] (int flags) { top_menu_widget.sub_menu_draw_background(flags); },
+        [] (int flags) { top_menu_widget.sub_menu_draw_foreground(flags); },
         widget_top_menu_handle_input
     };
-    g_top_menu.sub_menu_init();
+    top_menu_widget.sub_menu_init();
     window_show(&window);
 }
 
-void top_menu_widget::draw_background_impl() {
+void top_menu_widget_t::draw_background_impl() {
     painter ctx = game.painter();
 
     int img_id = image_group(background);
@@ -680,7 +684,7 @@ void top_menu_widget::draw_background_impl() {
     ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0);
 }
 
-void top_menu_widget::draw_rotate_buttons() {
+void top_menu_widget_t::draw_rotate_buttons() {
     // Orientation icon
     painter ctx = game.painter();
     if (orientation_button_pressed) {
@@ -691,7 +695,7 @@ void top_menu_widget::draw_rotate_buttons() {
     }
 }
 
-void top_menu_widget::draw_foreground(UiFlags flags) {
+void top_menu_widget_t::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Topmenu");
 
     draw_background_impl();
@@ -710,10 +714,10 @@ void top_menu_widget::draw_foreground(UiFlags flags) {
 }
 
 void widget_top_menu_draw() {
-    g_top_menu.draw_foreground(0);
+    top_menu_widget.draw_foreground(0);
 }
 
-bool top_menu_widget::handle_input_submenu(const mouse* m, const hotkeys* h) {
+bool top_menu_widget_t::handle_input_submenu(const mouse* m, const hotkeys* h) {
     if (m->right.went_up || h->escape_pressed) {
         widget_top_menu_clear_state();
         window_go_back();
@@ -736,7 +740,7 @@ bool top_menu_widget::handle_input_submenu(const mouse* m, const hotkeys* h) {
     return false;
 }
 
-int top_menu_widget::ui_handle_mouse(const mouse *m) {
+int top_menu_widget_t::ui_handle_mouse(const mouse *m) {
     autoconfig_window::ui_handle_mouse(m);
 
     xstring menu_id = bar_handle_mouse(m);
@@ -757,7 +761,7 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     int button_id = 0;
     int handled = false;
 
-    handled = generic_buttons_handle_mouse(m, { g_top_menu.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
+    handled = generic_buttons_handle_mouse(m, { top_menu_widget.offset_rotate, 0}, orientation_buttons_ph, 3, &button_id);
     if (button_id) {
         orientation_button_state = button_id;
         if (handled)
@@ -767,12 +771,12 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (button_id) { /**/ }
-    else if (!!g_top_menu.open_sub_menu) { g_top_menu.handle_input_submenu(m, h); }
-    else { g_top_menu.ui_handle_mouse(m); }
+    else if (!!top_menu_widget.open_sub_menu) { top_menu_widget.handle_input_submenu(m, h); }
+    else { top_menu_widget.ui_handle_mouse(m); }
 }
 
 int widget_top_menu_get_tooltip_text(tooltip_context* c) {
-    auto& data = g_top_menu;
+    auto& data = top_menu_widget;
     //if (data.focus_menu_id)
     //    return 50 + data.focus_menu_id;
     //

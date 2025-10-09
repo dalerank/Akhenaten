@@ -182,7 +182,7 @@ static ui::element::ptr create_element(const xstring type) {
     return elm;
 }
 
-static void load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
+void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements) {
     e_font default_font = arch.r_type<e_font>("default_font", FONT_INVALID);
     
     const int last_index = elements.size();
@@ -609,7 +609,7 @@ void ui::element::load(archive arch, element *parent, element::items &items) {
         int i = 0;
     });
 
-    load_elements(arch, "ui", this, items);
+    ui_widget_load_elements(arch, "ui", this, items);
 }
 
 pcstr ui::element::text_from_key(pcstr key) {
@@ -663,12 +663,12 @@ void ui::widget::draw(UiFlags flags) {
     }
 }
 
-void ui::widget::load(archive arch, pcstr section) {
+void ui::widget::archive_load(archive arch) {
     elements.clear();
     pos = arch.r_vec2i("pos");
     e_font default_font = arch.r_type<e_font>("default_font", FONT_NORMAL_BLACK_ON_LIGHT);
     
-    load_elements(arch, section, nullptr, elements);
+    ui_widget_load_elements(arch, "ui", nullptr, elements);
 
     for (auto &e:  elements) {
         if (e->font() == FONT_INVALID) {
@@ -679,9 +679,7 @@ void ui::widget::load(archive arch, pcstr section) {
 
 void ui::widget::load(pcstr section) {
     io.name = section;
-    g_config_arch.r_section(section, [this] (archive arch) {
-        this->load(arch);
-    });
+    g_config_arch.r(section, *this);
 }
 
 bool ui::widget::contains(const xstring &id) const {

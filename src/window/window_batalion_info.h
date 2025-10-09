@@ -8,9 +8,9 @@ struct batalion_info_window : public building_info_window_t<batalion_info_window
     virtual void window_info_foreground(object_info &c) override;
     virtual bool check(object_info &c) override;
 
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
+    using widget::archive_load;
+    virtual void archive_load(archive arch) override {
+        common_info_window::archive_load(arch);
     }
 
     void update_describe_layout(object_info &c);

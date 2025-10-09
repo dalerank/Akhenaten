@@ -7,8 +7,8 @@
 struct figure_info_window : public common_info_window {
     figure_info_window();
 
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override;
+    using widget::archive_load;
+    virtual void archive_load(archive arch) override;
 
     virtual void window_info_background(object_info &c) override;
     virtual void window_info_foreground(object_info &c) override;

@@ -21,9 +21,9 @@ void window_granary_orders_show(object_info &c);
 struct granary_info_window : public building_info_window_t<granary_info_window> {
     int resource_text_group;
 
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
+    using widget::archive_load;
+    virtual void archive_load(archive arch) override {
+        common_info_window::archive_load(arch);
 
         resource_text_group = arch.r_int("resource_text_group");
     }

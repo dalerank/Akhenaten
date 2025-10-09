@@ -32,8 +32,9 @@ autoconfig_window::autoconfig_window(pcstr s) {
     autoconfig_registry().push_back(this);
 }
 
-void autoconfig_window::load(archive arch, pcstr section) {
-    ui::widget::load(arch, section);
+void autoconfig_window::archive_load(archive arch) {
+    ui::widget::archive_load(arch);
+
     assert(elements.size() > 0);
     _is_inited = false;
 }

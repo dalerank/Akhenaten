@@ -98,7 +98,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
 
-    virtual void load(archive arch, pcstr section) override;
+    virtual void archive_load(archive arch) override;
 
     void draw_map();
     void draw_empire_object(const empire_object *obj);
@@ -143,8 +143,8 @@ void empire_window::init() {
 
 }
 
-inline void empire_window::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
+inline void empire_window::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
 
     trade_column_spacing = arch.r_int("trade_column_spacing");
     trade_row_spacing = arch.r_int("trade_row_spacing");

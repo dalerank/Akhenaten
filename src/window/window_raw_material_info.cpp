@@ -6,9 +6,9 @@
 #include "window/building/common.h"
 
 struct info_window_raw_material : building_info_window_t<info_window_raw_material> {
-    using building_info_window::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
+    using building_info_window::archive_load;
+    virtual void archive_load(archive arch) override {
+        common_info_window::archive_load(arch);
     }
 
     virtual void init(object_info &c) override;

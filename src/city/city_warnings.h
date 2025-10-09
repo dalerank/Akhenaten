@@ -30,7 +30,7 @@ struct window_warnings : autoconfig_window_t<window_warnings> {
     virtual int get_tooltip_text() override { return 0; }
     virtual int handle_mouse(const mouse *m) override;
     virtual void draw_foreground(UiFlags flags) override;
-    virtual void load(archive arch, pcstr section) override;
+    virtual void archive_load(archive arch) override;
 
     template<typename ... Args>
     void show_console_var(pcstr fmt, Args... args) {

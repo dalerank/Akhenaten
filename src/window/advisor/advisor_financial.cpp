@@ -11,26 +11,27 @@
 #include "graphics/window.h"
 #include "game/game.h"
 
-ui::advisor_financial_window g_advisor_financial_window;
+#include "js/js_game.h"
 
-void ui::advisor_financial_window::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
+ui::advisor_financial_window_t ANK_VARIABLE(advisor_financial_window)
+
+void ui::advisor_financial_window_t::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
     ui.label(text, vec2i{ row_text_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_last_year), vec2i{ row_last_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_this_year), vec2i{ row_this_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     y += 15;
 }
 
-void ui::advisor_financial_window::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
+void ui::advisor_financial_window_t::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
 
-    row_text_x = arch.r_int("row_text_x");
     row_last_year_x = arch.r_int("row_last_year_x");
     row_this_year_x = arch.r_int("row_this_year_x");
     line_start_x = arch.r_int("line_start_x");
     line_size_x = arch.r_int("line_size_x");
 }
 
-int ui::advisor_financial_window::draw_background(UiFlags flags) {
+int ui::advisor_financial_window_t::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
     const int treasury = g_city.finance.treasury;
@@ -50,7 +51,7 @@ int ui::advisor_financial_window::draw_background(UiFlags flags) {
     return 0;
 }
 
-void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
+void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 
@@ -114,10 +115,10 @@ void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
     ui.end_widget();
 }
 
-int ui::advisor_financial_window::get_tooltip_text() {
+int ui::advisor_financial_window_t::get_tooltip_text() {
     return 0;
 }
 
-advisor_window* ui::advisor_financial_window::instance() {
-    return &g_advisor_financial_window;
+advisor_window* ui::advisor_financial_window_t::instance() {
+    return &advisor_financial_window;
 }

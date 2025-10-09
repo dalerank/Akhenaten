@@ -42,7 +42,7 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     virtual void draw_foreground(UiFlags flags) override;
     virtual int draw_background(UiFlags flags) override { return 0; }
 
-    virtual void load(archive arch, pcstr) override;
+    virtual void archive_load(archive arch) override;
     virtual void init() override;
     virtual void on_mission_start() override;
     

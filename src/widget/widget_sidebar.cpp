@@ -34,6 +34,8 @@
 #include "sound/sound.h"
 #include "game/game.h"
 
+#include "js/js_game.h"
+
 #define MINIMAP_Y_OFFSET 59
 
 struct btnid {
@@ -56,40 +58,39 @@ const btnid button_ids[] = {
     {"build_admin", BUILDING_MENU_ADMINISTRATION },
 };
 
-ui::sidebar_window_expanded g_sidebar_expanded;
-ui::sidebar_window_collapsed g_sidebar_collapsed;
+ui::sidebar_window_expanded_t ANK_VARIABLE(sidebar_window_expanded);
+ui::sidebar_window_collapsed_t ANK_VARIABLE(sidebar_window_collapsed);
 
 ui::sidebar_window g_sidebar;
 
-void ui::sidebar_window_expanded::draw_sidebar_extra(vec2i offset) {
+void ui::sidebar_window_expanded_t::draw_sidebar_extra(vec2i offset) {
     int extra_height = sidebar_extra_draw(offset);
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_height;
     sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
 }
 
-void ui::sidebar_window_expanded::refresh_build_menu_buttons() {
+void ui::sidebar_window_expanded_t::refresh_build_menu_buttons() {
     for (const auto &btn: button_ids) {
         ui[btn.id].readonly = (g_building_menu_ctrl.count_items(btn.type) == 0);
     }
 }
 
-void ui::sidebar_window_expanded::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
-    arch.r(*this);
+void ui::sidebar_window_expanded_t::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
 
     if (game.session.active) {
         init();
     }
 }
 
-void ui::sidebar_window_expanded::init() {
+void ui::sidebar_window_expanded_t::init() {
     extra_block_size = image_get(extra_block)->size();
 
     init_ui();
     subscribe_events();
 }
 
-void ui::sidebar_window_expanded::subscribe_events() {
+void ui::sidebar_window_expanded_t::subscribe_events() {
     events::subscribe([this] (event_building_change_mode ev) {
         image_desc img = ev.img;
         if (img.id == 0 && img.pack == 0) {
@@ -100,7 +101,7 @@ void ui::sidebar_window_expanded::subscribe_events() {
     });
 }
 
-void ui::sidebar_window_expanded::init_ui() {
+void ui::sidebar_window_expanded_t::init_ui() {
     ui["goto_problem"].onclick([] {
         int grid_offset = city_message_next_problem_area_grid_offset();
         if (grid_offset) {
@@ -136,7 +137,7 @@ void ui::sidebar_window_expanded::init_ui() {
     ui["collapse"].onclick([this] { collapse(); });
 }
 
-void ui::sidebar_window_expanded::collapse() {
+void ui::sidebar_window_expanded_t::collapse() {
     city_view_start_sidebar_toggle();
     slider.slide_mode = slider.e_slide_collapse;
     slider.position = 0;
@@ -145,7 +146,7 @@ void ui::sidebar_window_expanded::collapse() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_expanded::expand() {
+void ui::sidebar_window_expanded_t::expand() {
     city_view_start_sidebar_toggle();
     city_view_toggle_sidebar(false);
     slider.slide_mode = slider.e_slide_expand;
@@ -155,7 +156,7 @@ void ui::sidebar_window_expanded::expand() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
+void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_SECTION("Render/Frame/Window/City/Sidebar Expanded");
 
     x_offset = screen_width();
@@ -201,7 +202,7 @@ void ui::sidebar_window_expanded::ui_draw_foreground(UiFlags flags) {
     draw_debug_ui(10, 30);
 }
 
-void ui::sidebar_window_collapsed::collapse() {
+void ui::sidebar_window_collapsed_t::collapse() {
     city_view_start_sidebar_toggle();
     slider.slide_mode = slider.e_slide_collapse;
     slider.position = 0;
@@ -210,13 +211,13 @@ void ui::sidebar_window_collapsed::collapse() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_collapsed::refresh_build_menu_buttons() {
+void ui::sidebar_window_collapsed_t::refresh_build_menu_buttons() {
     for (const auto &btn : button_ids) {
         ui[btn.id].enabled = (g_building_menu_ctrl.count_items(btn.type) > 0);
     }
 }
 
-void ui::sidebar_window_collapsed::expand() {
+void ui::sidebar_window_collapsed_t::expand() {
     city_view_start_sidebar_toggle();
     city_view_toggle_sidebar(false);
     slider.slide_mode = slider.e_slide_expand;
@@ -226,16 +227,15 @@ void ui::sidebar_window_collapsed::expand() {
     g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
-void ui::sidebar_window_collapsed::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
-    arch.r(*this);
+void ui::sidebar_window_collapsed_t::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
     
     if (game.session.active) {
         init();
     }
 }
 
-void ui::sidebar_window_collapsed::init() {
+void ui::sidebar_window_collapsed_t::init() {
     extra_block_size = image_get(extra_block)->size();
 
     ui["expand"].onclick([this] {
@@ -257,12 +257,12 @@ void ui::sidebar_window_collapsed::init() {
     widget_minimap_init();
 }
 
-void ui::sidebar_window_collapsed::ui_draw_foreground(UiFlags flags) {
+void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
         if (slider.slide_mode == slider.e_slide_collapse) {
             city_view_toggle_sidebar(false);
-            g_sidebar_expanded.expand();
+            sidebar_window_expanded.expand();
         }
     });
 
@@ -277,28 +277,28 @@ void ui::sidebar_window_collapsed::ui_draw_foreground(UiFlags flags) {
 }
 
 void widget_sidebar_city_init() {
-    g_sidebar_expanded.init();
-    g_sidebar_collapsed.init();
+    sidebar_window_expanded.init();
+    sidebar_window_collapsed.init();
 }
 
 int widget_sidebar_city_offset_x() {
     return (city_view_is_sidebar_collapsed())
-             ? g_sidebar_collapsed.pos.x
-             : g_sidebar_expanded.pos.x;
+             ? sidebar_window_collapsed.pos.x
+             : sidebar_window_expanded.pos.x;
 }
 
 int widget_sidebar_city_offset_max() {
     return (city_view_is_sidebar_collapsed())
-             ? g_sidebar_collapsed.expanded_offset_x
-             : g_sidebar_expanded.expanded_offset_x;
+             ? sidebar_window_collapsed.expanded_offset_x
+             : sidebar_window_expanded.expanded_offset_x;
 }
 
 int widget_sidebar_city_collapsed_max() {
-    return g_sidebar_collapsed.expanded_offset_x;
+    return sidebar_window_collapsed.expanded_offset_x;
 }
 
 int widget_sidebar_city_expanded_max() {
-    return g_sidebar_expanded.expanded_offset_x;
+    return sidebar_window_expanded.expanded_offset_x;
 }
 
 void widget_sidebar_city_draw_foreground() {
@@ -306,25 +306,25 @@ void widget_sidebar_city_draw_foreground() {
 
     bool collapsed = city_view_is_sidebar_collapsed();
     if (!collapsed) {
-        g_sidebar_expanded.ui_draw_foreground(UiFlags_None);
+        sidebar_window_expanded.ui_draw_foreground(UiFlags_None);
     }
     
     // extra bar spacing on the right over all sidebar
     int sw = screen_width();
-    int s_num = ceil((float)(screen_height() - g_sidebar_expanded.extra_block_size.y) / (float)g_sidebar_expanded.extra_block_size.y) + 1;
+    int s_num = ceil((float)(screen_height() - sidebar_window_expanded.extra_block_size.y) / (float)sidebar_window_expanded.extra_block_size.y) + 1;
     for (int i = s_num; i > 0; --i) {
-        ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, i * g_sidebar_expanded.extra_block_size.y - 32 });
+        ui::eimage(sidebar_window_expanded.extra_block, { sw + sidebar_window_expanded.extra_block_x, i * sidebar_window_expanded.extra_block_size.y - 32 });
     }
-    ui::eimage(g_sidebar_expanded.extra_block, { sw + g_sidebar_expanded.extra_block_x, 0 });
+    ui::eimage(sidebar_window_expanded.extra_block, { sw + sidebar_window_expanded.extra_block_x, 0 });
 
     if (collapsed) {
-        g_sidebar_collapsed.ui_draw_foreground(UiFlags_None);
+        sidebar_window_collapsed.ui_draw_foreground(UiFlags_None);
     }
 }
 
 void widget_sidebar_city_draw_foreground_military() {
     widget_sidebar_city_draw_foreground();
-    widget_minimap_draw({screen_width() - g_sidebar_expanded.expanded_offset_x + 8, MINIMAP_Y_OFFSET}, 1);
+    widget_minimap_draw({screen_width() - sidebar_window_expanded.expanded_offset_x + 8, MINIMAP_Y_OFFSET}, 1);
 }
 
 int widget_sidebar_city_handle_mouse(const mouse* m) {
@@ -333,9 +333,9 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
     }
 
     if (city_view_is_sidebar_collapsed()) {
-        g_sidebar_collapsed.ui_handle_mouse(m);
+        sidebar_window_collapsed.ui_handle_mouse(m);
     } else {
-        g_sidebar_expanded.ui_handle_mouse(m);
+        sidebar_window_expanded.ui_handle_mouse(m);
     }
 
     if (!city_view_is_sidebar_collapsed()) {
@@ -350,9 +350,9 @@ int widget_sidebar_city_handle_mouse(const mouse* m) {
 
 int widget_sidebar_city_handle_mouse_build_menu(const mouse* m) {
     if (city_view_is_sidebar_collapsed()) {
-        return g_sidebar_collapsed.ui_handle_mouse(m);
+        return sidebar_window_collapsed.ui_handle_mouse(m);
     } else {
-        return g_sidebar_expanded.ui_handle_mouse(m);
+        return sidebar_window_expanded.ui_handle_mouse(m);
     }
 }
 

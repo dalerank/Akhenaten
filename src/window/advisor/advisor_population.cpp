@@ -412,8 +412,8 @@ void ui::advisor_population_window::ui_draw_foreground(UiFlags flags) {
     ui.end_widget();
 }
 
-void ui::advisor_population_window::load(archive arch, pcstr section) {
-    advisor_window::load(arch, section);
+void ui::advisor_population_window::archive_load(archive arch) {
+    advisor_window::archive_load(arch);
 
     arch.r_desc("graph_bar_1", graph_bar[1]);
     arch.r_desc("graph_bar_2", graph_bar[2]);

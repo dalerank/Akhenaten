@@ -24,8 +24,8 @@ struct trade_prices_window : autoconfig_window_t<trade_prices_window> {
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override {}
 
-    virtual void load(archive arch, pcstr section) override {
-        autoconfig_window::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        autoconfig_window::archive_load(arch);
 
         next_row_offset = arch.r_vec2i("next_row_offset");
         next_item_offset = arch.r_vec2i("next_item_offset");

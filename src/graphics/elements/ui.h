@@ -4,7 +4,6 @@
 #include <memory>
 #include <functional>
 
-#include "core/svector.h"
 #include "core/archive.h"
 #include "core/variant.h"
 
@@ -416,7 +415,7 @@ struct widget {
     g_archive_section io;
 
     virtual void draw(UiFlags flags = UiFlags_None);
-    virtual void load(archive arch, pcstr section = "ui");
+    virtual void archive_load(archive arch);
     void load(pcstr section);
 
     widget() : ui(*this) {}
@@ -542,3 +541,21 @@ struct widget {
 };
 
 } // ui
+
+void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements);
+
+template<> 
+inline void archive::r<ui::widget>(pcstr name, ui::widget &v) { 
+    v.elements.clear();
+    v.pos = r_vec2i("pos");
+    e_font default_font = r_type<e_font>("default_font", FONT_NORMAL_BLACK_ON_LIGHT);
+
+    ui_widget_load_elements(*this, name, nullptr, v.elements);
+
+    for (auto &e : v.elements) {
+        if (e->font() == FONT_INVALID) {
+            e->font(default_font);
+        }
+    }
+}
+ANK_CONFIG_STRUCT(ui::widget, pos)

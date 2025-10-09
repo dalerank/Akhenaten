@@ -25,8 +25,8 @@ int building_info_window::window_info_handle_mouse(const mouse *m, object_info &
     return b->dcast()->window_info_handle_mouse(m, c);
 }
 
-void building_info_window::load(archive arch, pcstr section) {
-    common_info_window::load(arch, section);
+void building_info_window::archive_load(archive arch) {
+    common_info_window::archive_load(arch);
     first_advisor = arch.r_type<e_advisor>("first_advisor");
 }
 

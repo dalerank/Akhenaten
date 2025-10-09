@@ -20,8 +20,8 @@
 
 window_warnings g_warning_manager;
 
-void window_warnings::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
+void window_warnings::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
 
     max_items = arch.r_int("max_items", 5);
     timeout_ms = arch.r_int("timeout_ms", 15000);
