@@ -137,6 +137,18 @@ public:
     struct static_params : public static_params_t<figure_phoenician_swordman> {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SWORDMAN, "nubn_axe" }; }
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SWORDMAN, "phoe_swd" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
+
+class figure_roman_legioner : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_ROMAN_LEGIONER, figure_roman_legioner)
+    figure_roman_legioner(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_roman_legioner> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_LEGIONER, "roma_leg" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
