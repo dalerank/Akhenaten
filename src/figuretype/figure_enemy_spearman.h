@@ -103,3 +103,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_SPEARMAN, "pers_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+
+class figure_phoenician_spearman : public figure_enemy_spearman {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SPEARMAN, figure_phoenician_spearman)
+    figure_phoenician_spearman(figure *f) : figure_enemy_spearman(f) {}
+
+    struct static_params : public static_params_t<figure_phoenician_spearman> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SPEARMAN, "phoe_spr" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
