@@ -80,3 +80,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_SWORD, "cana_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
+
+class figure_hyksos_sword : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_HYKSOS_SWORDMAN, figure_hyksos_sword)
+    figure_hyksos_sword(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_hyksos_sword> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "hyks_swd" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
