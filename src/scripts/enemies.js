@@ -1210,7 +1210,7 @@ enemy_roman = {
     percentage_type1 : 50
     percentage_type2 : 50
     percentage_type3 : 0
-    figure_types: [FIGURE_ENEMY_ROMAN_ARCHER, FIGURE_ENEMY_ROMAN_LEGIONER, FIGURE_ENEMY_ROMAN_CHARIOT]
+    figure_types: [FIGURE_ENEMY_ROMAN_ARCHER, FIGURE_ENEMY_ROMAN_LEGIONER, FIGURE_NONE]
     layout: FORMATION_COLUMN
 }
 

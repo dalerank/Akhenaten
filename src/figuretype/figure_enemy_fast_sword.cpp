@@ -16,6 +16,7 @@ figure_kushite_axeman::static_params kushite_axeman_m;
 figure_libian_sword::static_params libian_sword_m;
 figure_nubian_axeman::static_params nubian_axeman_m;
 figure_phoenician_swordman::static_params phoenician_swordman_m;
+figure_roman_legioner::static_params figure_roman_legioner_m;
 
 void figure_enemy_fast_sword::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");
