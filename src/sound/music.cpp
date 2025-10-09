@@ -35,19 +35,9 @@ struct music_data_t {
 };
 ANK_CONFIG_STRUCT(music_data_t::soundtrack, key, file)
 ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, track)
-ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short)
+ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short, soundtracks, music_populations)
 
-music_data_t g_music;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_soundtracks) {
-    g_config_arch.r("music", g_music);
-    
-    g_music.soundtracks.clear();
-    g_config_arch.r("soundtracks", g_music.soundtracks);
-
-    g_music.music_populations.clear();
-    g_config_arch.r("music_populations", g_music.music_populations);
-}
+music_data_t ANK_VARIABLE(music);
 
 declare_console_command_p(playtrack) {
     std::string args;
@@ -58,9 +48,9 @@ declare_console_command_p(playtrack) {
 void sound_manager_t::play_track(const xstring track) {
     stop_music();
 
-    auto it = std::find_if(g_music.soundtracks.begin(), g_music.soundtracks.end(), [track] (auto &t) { return t.key == track; });
+    auto it = std::find_if(music.soundtracks.begin(), music.soundtracks.end(), [track] (auto &t) { return t.key == track; });
 
-    if (it == g_music.soundtracks.end()) {
+    if (it == music.soundtracks.end()) {
         return;
     }
 
@@ -75,12 +65,12 @@ void sound_manager_t::play_track(const xstring track) {
     corrected_filename = vfs::content_file(corrected_filename);
     play_music(corrected_filename, volume);
 
-    g_music.current_track = track;
+    music.current_track = track;
 }
 
 void sound_manager_t::play_intro() {
     if (g_settings.get_sound(SOUND_MUSIC)->enabled) {
-        play_track(g_music.menu_track);
+        play_track(music.menu_track);
     }
 }
 
@@ -92,8 +82,8 @@ void sound_manager_t::play_editor() {
 
 void sound_manager_t::music_update(bool force) {
     OZZY_PROFILER_SECTION("Game/Sound/Music Update");
-    if (g_music.next_check && !force) {
-        --g_music.next_check;
+    if (music.next_check && !force) {
+        --music.next_check;
         return;
     }
 
@@ -105,14 +95,14 @@ void sound_manager_t::music_update(bool force) {
     int total_enemies = g_city.figures_total_invading_enemies();
 
     if (total_enemies >= 32) {
-        track = g_music.combat_long;
+        track = music.combat_long;
     } else if (total_enemies > 0) {
-        track = g_music.combat_short;
+        track = music.combat_short;
     } else {
-        track = g_music.music_populations.front().track;
+        track = music.music_populations.front().track;
         const int city_population = g_city.population.current;
 
-        for (const auto &p : g_music.music_populations) {
+        for (const auto &p : music.music_populations) {
             if (p.pop > city_population) {
                 break;
             }
@@ -120,12 +110,12 @@ void sound_manager_t::music_update(bool force) {
         }
     }
 
-    if (track == g_music.current_track) {
+    if (track == music.current_track) {
         return;
     }
 
     play_track(track);
-    g_music.next_check = 10;
+    music.next_check = 10;
 }
 
 void sound_manager_t::on_sound_effect(event_sound_effect ev) {
@@ -138,6 +128,6 @@ void sound_manager_t::on_sound_track(event_sound_track ev) {
 
 void sound_manager_t::music_stop() {
     stop_music();
-    g_music.current_track = "";
-    g_music.next_check = 0;
+    music.current_track = "";
+    music.next_check = 0;
 }
