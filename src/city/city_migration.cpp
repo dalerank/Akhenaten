@@ -7,13 +7,7 @@
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
 city_migration_defaults_t ANK_VARIABLE(migration_defaults);
-svector<sentiment_step_t, 16> g_migration_sentiment_influence;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_migration_influence) {
-    g_migration_sentiment_influence.clear();
-    g_config_arch.r("migration_sentiment_influence", g_migration_sentiment_influence);
-    assert(!g_migration_sentiment_influence.empty());
-}
+svector<sentiment_step_t, 16> ANK_VARIABLE(migration_sentiment_influence);
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
@@ -23,11 +17,11 @@ void city_migration_t::update_status() {
     auto& params = migration_defaults;
 
     const auto &sentiment = g_city.sentiment;
-    auto it = std::find_if(g_migration_sentiment_influence.begin(), g_migration_sentiment_influence.end(), [&] (const auto& t) {
+    auto it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [&] (const auto& t) {
         return sentiment.value > t.s; 
     });
 
-    percentage_by_sentiment = (it != g_migration_sentiment_influence.end()) ? it->i : 0;
+    percentage_by_sentiment = (it != migration_sentiment_influence.end()) ? it->i : 0;
     percentage = percentage_by_sentiment;
 
     immigration_amount_per_batch = 0;
