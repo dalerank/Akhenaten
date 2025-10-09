@@ -22,15 +22,11 @@ struct std::hash<building_sound_t> {
 };
 ANK_CONFIG_STRUCT(building_sound_t, type, sound)
 
-std::unordered_set<building_sound_t> g_building_sounds;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_sounds) {
-    g_config_arch.r("building_sounds", g_building_sounds);
-}
+std::unordered_set<building_sound_t> ANK_VARIABLE(building_sounds);
 
 xstring snd::get_building_info_sound(e_building_type type) {
-    auto it = g_building_sounds.find({ type });
+    auto it = building_sounds.find({ type });
 
     static xstring empty_sound = "Wavs/empty.wav";
-    return (it == g_building_sounds.end()) ? empty_sound : it->sound;
+    return (it == building_sounds.end()) ? empty_sound : it->sound;
 }
