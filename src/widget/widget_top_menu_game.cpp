@@ -104,13 +104,6 @@ struct top_menu_widget_t : autoconfig_window {
     virtual void archive_load(archive arch) override {
         autoconfig_window::archive_load(arch);
 
-        offset = arch.r_vec2i("offset");
-        item_height = arch.r_int("item_height");
-        arch.r_desc("background", background);
-        spacing = arch.r_int("spacing");
-        offset_rotate_basic = arch.r_int("offset_rotate_basic");
-        sidebar_offset = arch.r_int("sidebar_offset");
-
         for (auto &header : headers.elements) {
             auto impl = header->dcast_menu_header();
             if (impl) {
@@ -123,7 +116,8 @@ struct top_menu_widget_t : autoconfig_window {
     void update_date(event_advance_day);
     void update_finance(event_finance_changed ev);
 };
-ANK_CONFIG_STRUCT(top_menu_widget_t, headers)
+ANK_CONFIG_STRUCT(top_menu_widget_t, 
+    headers, offset, item_height, background, spacing, offset_rotate_basic, sidebar_offset)
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
