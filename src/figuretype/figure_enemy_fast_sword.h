@@ -116,3 +116,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "libn_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
+
+class figure_nubian_axeman : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_NUBIAN_AXEMAN, figure_nubian_axeman)
+     figure_nubian_axeman(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_nubian_axeman> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_AXEMAN, "nubn_axe" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
