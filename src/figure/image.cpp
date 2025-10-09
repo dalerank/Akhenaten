@@ -23,8 +23,8 @@ static const int MISSILE_LAUNCHER_OFFSETS[128] = {
 };
 
 
-std::array<vec2i, 8> g_cart_offsets; //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
-std::array<vec2i, 8> g_sled_offsets; // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+std::array<vec2i, 8> ANK_VARIABLE(cart_offsets); //= { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
+std::array<vec2i, 8> ANK_VARIABLE(sled_offsets); // = { {17, -7}, {22, -1}, {17, 7}, {0, 11}, {-17, 6}, {-22, -1}, {-17, -7}, {0, -12} };
 
 struct cart_image_desc : public image_desc {
     e_resource resource;
@@ -43,13 +43,7 @@ struct std::hash<cart_image_desc> {
 };
 
 ANK_CONFIG_STRUCT(cart_image_desc, resource, pack, id, offset)
-stable_array<cart_image_desc> g_cart_images;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_cart_images) {
-    g_config_arch.r("cart_images", g_cart_images);
-    g_config_arch.r("cart_offsets", g_cart_offsets);
-    g_config_arch.r("sled_offsets", g_sled_offsets);
-}
+stable_array<cart_image_desc> ANK_VARIABLE(cart_images);
 
 static void cc_coords_to_pixel_offset(int cross_country_x, int cross_country_y, int* pixel_x, int* pixel_y) {
     int dir = city_view_orientation();
@@ -154,12 +148,12 @@ int cart_image_offset_from_amount(int amount) {
 }
 
 image_desc resource2cartanim(e_resource resource_id) {
-    image_desc ret = g_cart_images[resource_id];
+    image_desc ret = cart_images[resource_id];
     if (ret.pack && ret.id) {
         return ret;
     }
 
-    return g_cart_images[RESOURCE_NONE];
+    return cart_images[RESOURCE_NONE];
 }
 
 void figure::cart_image_update() {
@@ -275,11 +269,11 @@ int figure::figure_image_corpse_offset() {
 }
 
 void figure::figure_image_set_sled_offset(int direction) {
-    cart_offset = g_sled_offsets[direction];
+    cart_offset = sled_offsets[direction];
 }
 
 void figure::figure_image_set_cart_offset(int direction) {
-    cart_offset = g_cart_offsets[direction];
+    cart_offset = cart_offsets[direction];
 }
 
 int figure::figure_image_missile_launcher_offset() {
