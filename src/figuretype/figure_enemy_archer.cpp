@@ -18,6 +18,7 @@ figure_libian_archer::static_params libian_archer_m;
 figure_nubian_archer::static_params nubian_archer_m;
 figure_persian_archer::static_params persian_archer_m;
 figure_roman_archer::static_params roman_archer_m;
+figure_seapeople_archer::static_params seapeople_archer_m;
 
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();

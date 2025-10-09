@@ -173,3 +173,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_ARCHER, "roma_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+
+class figure_seapeople_archer : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_SEAPEOPLE_ARCHER, figure_seapeople_archer)
+    figure_seapeople_archer(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public static_params_t<figure_seapeople_archer> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_ARCHER, "seap_arch" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
