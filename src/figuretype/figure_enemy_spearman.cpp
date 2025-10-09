@@ -12,6 +12,7 @@ figure_egyptian_spearman::static_params egyptian_spearman_m;
 figure_hittite_spearman::static_params hittite_spearman_m;
 figure_kushite_spearman::static_params kushite_spearman_m;
 figure_persian_spearman::static_params persian_spearman_m;
+figure_phoenician_spearman::static_params phoenician_spearman_m;
 
 void figure_enemy_spearman::on_create() {
     figure_impl::on_create();

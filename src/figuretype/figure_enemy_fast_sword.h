@@ -128,3 +128,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_AXEMAN, "nubn_axe" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
+
+class figure_phoenician_swordman : public figure_enemy_fast_sword {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SWORDMAN, figure_phoenician_swordman)    
+    figure_phoenician_swordman(figure *f) : figure_enemy_fast_sword(f) {}
+
+    struct static_params : public static_params_t<figure_phoenician_swordman> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SWORDMAN, "nubn_axe" }; }
+    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
+};
