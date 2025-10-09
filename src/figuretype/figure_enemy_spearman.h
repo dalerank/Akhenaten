@@ -61,7 +61,8 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_SPEAR, figure_egyptian_spearman)
     figure_egyptian_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_egyptian_spearman> {} FIGURE_STATIC_DATA_T;
+    struct static_params : public static_params_t<figure_egyptian_spearman> {
+    } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_EGYPTIAN_SPEAR, "egpt_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
@@ -72,8 +73,21 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_SPEARMAN, figure_hittite_spearman)
     figure_hittite_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_hittite_spearman> {} FIGURE_STATIC_DATA_T;
+    struct static_params : public static_params_t<figure_hittite_spearman> {
+    } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_SPEARMAN, "hitt_spr" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
+
+class figure_kushite_spearman : public figure_enemy_spearman {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_KUSHITE_SPEARMAN, figure_kushite_spearman)
+    figure_kushite_spearman(figure *f) : figure_enemy_spearman(f) {}
+
+    struct static_params : public static_params_t<figure_kushite_spearman> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_SPEARMAN, "kush_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };

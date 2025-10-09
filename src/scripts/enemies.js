@@ -592,7 +592,7 @@ enemy_hyksos = {
     layout : FORMATION_COLUMN
 }
 
-// hyksos
+// kushite
 figure_kushite_spearman = {
     animations : {
         walk : { pack:PACK_ENEMY_KUSHITE, id:0, max_frames:12 }
