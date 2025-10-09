@@ -113,3 +113,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_ARCHER, "hitt_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+
+class figure_hyksos_archer : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_HYKSOS_ARCHER, figure_hyksos_archer)
+    figure_hyksos_archer(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public static_params_t<figure_hyksos_archer> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_ARCHER, "hyks_arch" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};

@@ -11,6 +11,7 @@
 figure_barbarian_sword::static_params barbarian_sword_m;
 figure_assyrian_sword::static_params assyrian_sword_m;
 figure_canaanite_sword::static_params canaanite_sword_m;
+figure_hyksos_sword::static_params hyksos_sword_m;
 
 void figure_enemy_fast_sword::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");

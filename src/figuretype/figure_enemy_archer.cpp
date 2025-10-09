@@ -13,6 +13,7 @@ figure_assyrian_archer::static_params assyrian_archer_m;
 figure_canaanite_archer::static_params canaanite_archer_m;
 figure_egyptian_archer::static_params egyptian_archer_m;
 figure_hittite_archer::static_params hittite_archer_m;
+figure_hyksos_archer::static_params hyksos_archer_m;
 
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();
