@@ -188,6 +188,7 @@ figure_assyrian_chariot = {
     defense_value: 4
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -219,6 +220,7 @@ figure_canaanite_archer = {
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -236,6 +238,7 @@ figure_canaanite_sword = {
     defense_value: 4
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -252,6 +255,7 @@ figure_canaanite_transport_ship = {
     attack_value : 0
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -268,6 +272,7 @@ figure_canaanite_war_ship = {
     attack_value : 17
     missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -286,6 +291,7 @@ figure_canaanite_chariot = {
     defense_value: 1
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -294,7 +300,7 @@ enemy_canaanite = {
     percentage_type1 : 50
     percentage_type2 : 40
     percentage_type3 : 10
-    figure_types : [FIGURE_ENEMY_CANAANITE_ARCHER, FIGURE_ENEMY_CANAANITE_SWORD, FIGURE_ENEMY_CANAANITE_CHARIOT]
+    figure_types : [FIGURE_ENEMY_CANAANITE_ARCHER, FIGURE_ENEMY_CANAANITE_SWORD, FIGURE_NONE]
     layout : FORMATION_ENEMY_MOB
 }
 
@@ -313,6 +319,7 @@ figure_egyptian_galera = {
     attack_value : 17
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -329,6 +336,7 @@ figure_egyptian_war_ship = {
     attack_value : 17
     missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -350,6 +358,7 @@ figure_egyptian_archer = {
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -370,6 +379,7 @@ figure_egyptian_spearman = {
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
+    is_enemy : true
     max_amount : 25
 }
 
@@ -387,6 +397,7 @@ figure_egyptian_chariot = {
     defense_value: 4
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -418,6 +429,7 @@ figure_hittite_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -437,6 +449,7 @@ figure_hittite_spearman = {
     defense_value: 3
     missile_defense_value : 0
     missile_type : FIGURE_SPEAR
+    is_enemy : true
     max_amount : 25
 }
 
@@ -454,6 +467,7 @@ figure_hittite_transport_ship = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -470,6 +484,7 @@ figure_hittite_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -487,6 +502,7 @@ figure_hittite_chariot = {
     defense_value: 1
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -506,6 +522,7 @@ figure_hyksos_archer = {
         death : { pack:PACK_ENEMY_HYKSOS, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_HYKSOS, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_HYKSOS, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -517,6 +534,7 @@ figure_hyksos_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -525,6 +543,7 @@ figure_hyksos_sword = {
         walk : { pack:PACK_ENEMY_HYKSOS, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_HYKSOS, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_HYKSOS, id:6, max_frames:8 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -533,6 +552,7 @@ figure_hyksos_sword = {
     defense_value: 2
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -548,6 +568,7 @@ figure_hyksos_transport_ship = {
     attack_value : 0
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -563,6 +584,7 @@ figure_hyksos_war_ship = {
     attack_value : 17
     missile_defense_value : 2
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -580,6 +602,7 @@ figure_hyksos_chariot = {
     defense_value: 3
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -599,6 +622,7 @@ figure_kushite_spearman = {
         death : { pack:PACK_ENEMY_KUSHITE, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_KUSHITE, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_KUSHITE, id:2, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -610,6 +634,7 @@ figure_kushite_spearman = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
+    is_enemy : true
     max_amount : 25
 }
 
@@ -618,6 +643,7 @@ figure_kushite_axeman = {
         walk : { pack:PACK_ENEMY_KUSHITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_KUSHITE, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_KUSHITE, id:6, max_frames:12 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -626,6 +652,7 @@ figure_kushite_axeman = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -641,6 +668,7 @@ figure_kushite_transport_ship = {
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -656,6 +684,7 @@ figure_kushite_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -673,6 +702,7 @@ figure_kushite_chariot = {
     defense_value: 1
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -692,6 +722,7 @@ figure_libian_archer = {
         death : { pack:PACK_ENEMY_LIBIAN, id:1, max_frames:8, loop:false }
         bow_attack : { pack:PACK_ENEMY_LIBIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_LIBIAN, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -703,6 +734,7 @@ figure_libian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -710,7 +742,8 @@ figure_libian_sword = {
     animations : {
         walk : { pack:PACK_ENEMY_LIBIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_LIBIAN, id:5, max_frames:8, loop:false }
-        attack : { pack:PACK_ENEMY_LIBIAN, id:6, max_frames:12 }
+        attack : { pack:PACK_ENEMY_LIBIAN, id:6, max_frames:10 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -719,6 +752,7 @@ figure_libian_sword = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -734,6 +768,7 @@ figure_libian_transport_ship = {
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -749,6 +784,7 @@ figure_libian_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -766,6 +802,7 @@ figure_libian_chariot = {
     defense_value: 4
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -785,6 +822,7 @@ figure_nubian_archer = {
         death : { pack:PACK_ENEMY_NUBIAN, id:1, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_NUBIAN, id:2, max_frames:12 }
         dagger_attack : { pack:PACK_ENEMY_NUBIAN, id:3, max_frames:7 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -796,6 +834,7 @@ figure_nubian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -804,6 +843,7 @@ figure_nubian_axeman = {
         walk : { pack:PACK_ENEMY_NUBIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_NUBIAN, id:5, max_frames:8, loop:false }
         attack : { pack:PACK_ENEMY_NUBIAN, id:6, max_frames:8 }
+        big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
     category: figure_category_hostile
@@ -812,6 +852,7 @@ figure_nubian_axeman = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -827,6 +868,7 @@ figure_nubian_transport_ship = {
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -842,6 +884,7 @@ figure_nubian_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -859,6 +902,7 @@ figure_nubian_chariot = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -867,7 +911,7 @@ enemy_nubian = {
     percentage_type1 : 60
     percentage_type2 : 20
     percentage_type3 : 20
-    figure_types: [FIGURE_ENEMY_NUBIAN_ARCHER, FIGURE_ENEMY_NUBIAN_AXEMAN, FIGURE_ENEMY_NUBIAN_CHARIOT]
+    figure_types: [FIGURE_ENEMY_NUBIAN_ARCHER, FIGURE_ENEMY_NUBIAN_AXEMAN, FIGURE_NONE]
     layout: FORMATION_ENEMY_DOUBLE_LINE
 }
 
@@ -889,6 +933,7 @@ figure_persian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -904,6 +949,7 @@ figure_persian_axeman = {
     attack_value : 7
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -920,6 +966,7 @@ figure_persian_transport_ship = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -936,6 +983,7 @@ figure_persian_war_ship = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -953,6 +1001,7 @@ figure_persian_chariot = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -983,6 +1032,7 @@ figure_phoenician_spearman = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1009,6 +1059,7 @@ figure_phoenician_transport_ship = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1025,6 +1076,7 @@ figure_phoenician_war_ship = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1042,6 +1094,7 @@ figure_phoenician_chariot = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1072,6 +1125,7 @@ figure_roman_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1088,6 +1142,7 @@ figure_roman_legioner = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1103,6 +1158,7 @@ figure_roman_transport_ship = {
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1118,6 +1174,7 @@ figure_roman_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1135,6 +1192,7 @@ figure_roman_chariot = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1165,6 +1223,7 @@ figure_seapeople_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1181,6 +1240,7 @@ figure_seapeople_axeman = {
     defense_value: 2
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1196,6 +1256,7 @@ figure_seapeople_transport_ship = {
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1211,6 +1272,7 @@ figure_seapeople_war_ship = {
     attack_value : 17
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
@@ -1228,6 +1290,7 @@ figure_seapeople_chariot = {
     defense_value: 3
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    is_enemy : true
     max_amount : 25
 }
 
