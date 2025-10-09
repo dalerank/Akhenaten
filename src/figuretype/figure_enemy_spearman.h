@@ -91,3 +91,15 @@ public:
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_SPEARMAN, "kush_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+
+class figure_persian_spearman : public figure_enemy_spearman {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_SPEARMAN, figure_persian_spearman)
+    figure_persian_spearman(figure *f) : figure_enemy_spearman(f) {}
+
+    struct static_params : public static_params_t<figure_persian_spearman> {
+    } FIGURE_STATIC_DATA_T;
+
+    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_SPEARMAN, "pers_spr" }; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+};
