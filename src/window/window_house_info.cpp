@@ -21,9 +21,9 @@
 struct info_window_house : public building_info_window_t<info_window_house> {
     int help_id;
 
-    using building_info_window::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
+    using building_info_window::archive_load;
+    virtual void archive_load(archive arch) override {
+        common_info_window::archive_load(arch);
         help_id = arch.r_int("help_id");
     }
 

@@ -86,8 +86,8 @@ int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     return 0;
 }
 
-void ui::advisor_imperial_window::load(archive arch, pcstr section) {
-    autoconfig_window::load(arch, section);
+void ui::advisor_imperial_window::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
 
 
 }

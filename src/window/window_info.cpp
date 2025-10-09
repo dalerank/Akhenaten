@@ -403,8 +403,8 @@ void common_info_window::update_buttons(object_info &c) {
     }
 }
 
-void common_info_window::load(archive arch, pcstr section) {
-    widget::load(arch, section);
+void common_info_window::archive_load(archive arch) {
+    widget::archive_load(arch);
 
     if (check(g_object_info)) {
         init(g_object_info);

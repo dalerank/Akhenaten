@@ -11,9 +11,9 @@
 #include "city/city.h"
 
 struct shipyard_info_window : public building_info_window_t<shipyard_info_window> {
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
+    using widget::archive_load;
+    virtual void archive_load(archive arch) override {
+        widget::archive_load(arch);
     }
 
     virtual void init(object_info &c) override;

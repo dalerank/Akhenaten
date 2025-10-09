@@ -13,7 +13,7 @@ struct advisor_imperial_window : public advisor_window_t<advisor_imperial_window
     virtual void draw_foreground(UiFlags flags) override;
     virtual void init() override {}
 
-    virtual void load(archive arch, pcstr) override;
+    virtual void archive_load(archive arch) override;
 
     void handle_request(int index);
 

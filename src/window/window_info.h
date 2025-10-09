@@ -21,7 +21,7 @@ struct common_info_window : public ui::widget {
     virtual void update_buttons(object_info &c);
 
     using widget::load;
-    virtual void load(archive arch, pcstr section) override;
+    virtual void archive_load(archive arch) override;
     virtual void init(object_info &c);
     virtual void update(object_info &c) {}
 
@@ -31,6 +31,7 @@ struct common_info_window : public ui::widget {
 
     static void register_handlers();
 };
+
 
 int window_building_info_get_type();
 void window_building_info_show_storage_orders();

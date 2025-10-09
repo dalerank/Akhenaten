@@ -93,7 +93,7 @@ struct window_advisors : public ui::widget {
         ui::advisor_education_window::instance(),
         ui::advisor_entertainment_window::instance(),
         ui::advisor_religion_window::instance(),
-        ui::advisor_financial_window::instance(),
+        ui::advisor_financial_window_t::instance(),
         ui::advisor_chief_window::instance(),
         ui::advisor_monuments_window::instance(),
         // sub-advisors begin here
@@ -113,12 +113,9 @@ struct window_advisors : public ui::widget {
 
     void set_advisor_window();
 };
+ANK_CONFIG_STRUCT(window_advisors, focus_button_id)
 
-window_advisors g_window_advisors;
-
-void ANK_REGISTER_CONFIG_ITERATOR(config_load_advisors_window) {
-    g_window_advisors.load("advisors_window");
-}
+window_advisors ANK_VARIABLE(advisors_window);
 
 void window_advisors::set_advisor_window() {
     if (sub_advisors[current_advisor]) {
@@ -180,7 +177,7 @@ void window_advisors::init() {
 
     for (auto &btn : btns) {
         ui[btn.id].onclick([advisor = btn.adv] {
-            g_window_advisors.set_advisor(advisor);
+            advisors_window.set_advisor(advisor);
         });
 
         ui[btn.id].onrclick([advisor = btn.adv] {
@@ -247,7 +244,7 @@ void window_advisors::handle_input(const mouse* m, const hotkeys* h) {
 void window_advisors_show_checked() {
     e_availability avail = g_city.is_advisor_available(ADVISOR_LABOR);
     if (avail == AVAILABLE) {
-        g_window_advisors.set_advisor(g_settings.last_advisor);
+        advisors_window.set_advisor(g_settings.last_advisor);
         window_advisors_show();
     } else {
         pcstr text = (avail == NOT_AVAILABLE ? "#not_available_in_this_assignment" : "#not_available_yet");
@@ -262,7 +259,7 @@ int window_advisors_show_advisor(e_advisor advisor) {
         events::emit(event_city_warning{ text });
         return 0;
     }
-    g_window_advisors.set_advisor(advisor);
+    advisors_window.set_advisor(advisor);
     window_advisors_show();
     return 1;
 }
@@ -270,12 +267,12 @@ int window_advisors_show_advisor(e_advisor advisor) {
 void window_advisors_show() {
     static window_type window = {
         WINDOW_ADVISORS,
-        [] (int flags) { g_window_advisors.draw_background(flags); },
-        [] (int flags) { g_window_advisors.draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { g_window_advisors.handle_input(m, h); },
+        [] (int flags) { advisors_window.draw_background(flags); },
+        [] (int flags) { advisors_window.draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { advisors_window.handle_input(m, h); },
         nullptr
     };
 
-    g_window_advisors.init();
+    advisors_window.init();
     window_show(&window);
 }

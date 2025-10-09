@@ -5,11 +5,6 @@
 #include "city/city_resource.h"
 
 struct scribal_school_info_window : public building_info_window_t<scribal_school_info_window> {
-    using widget::load;
-    virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
-    }
-
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
         return c.building_get()->type == BUILDING_SCRIBAL_SCHOOL;

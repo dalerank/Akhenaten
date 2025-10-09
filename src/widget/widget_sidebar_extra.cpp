@@ -59,8 +59,8 @@ struct sidebar_window_extra : public autoconfig_window_t<sidebar_window_extra> {
     void draw_objective(pcstr prefix, int text_group, int text_id, objective &obj);
     int calculate_displayable_info(int info_to_display, int available_height);
 
-    virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        widget::archive_load(arch);
 
         ui["dec_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_DECREASE_GAME_SPEED }); });
         ui["inc_speed"].onclick([] { events::emit( event_change_gamespeed{ HOTKEY_INCREASE_GAME_SPEED }); });

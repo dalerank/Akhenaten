@@ -35,8 +35,8 @@ struct build_menu_widget : public autoconfig_window_t<build_menu_widget> {
     int button_index_to_submenu_item(int index);
     xstring loc_title(e_building_type type, xstring def);
 
-    virtual void load(archive arch, pcstr section) override {
-        widget::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        widget::archive_load(arch);
 
         btn_w_add = arch.r_int("btn_w_add", 128);
         btn_w_tot_margin = arch.r_int("btn_w_tot_margin", 10);

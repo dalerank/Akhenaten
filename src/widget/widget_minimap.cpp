@@ -40,7 +40,7 @@ void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, 
     }
 }
 
-void minimap_window::load(archive arch, pcstr) {
+void minimap_window::archive_load(archive arch) {
     draw_size = arch.r_vec2i("draw_size");
     set_bounds(draw_size);
 

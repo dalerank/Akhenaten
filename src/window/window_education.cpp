@@ -17,9 +17,9 @@
 #include "game/game.h"
 
 struct info_window_education : building_info_window_t<info_window_education> {
-    using building_info_window::load;
-    virtual void load(archive arch, pcstr section) override {
-        common_info_window::load(arch, section);
+    using building_info_window::archive_load;
+    virtual void archive_load(archive arch) override {
+        common_info_window::archive_load(arch);
     }
 
     virtual void init(object_info &c) override;

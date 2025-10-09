@@ -21,8 +21,8 @@ struct info_window_storageyard_orders : building_info_window_t<info_window_stora
 
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 
-    virtual void load(archive arch, pcstr section) override {
-        building_info_window::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        building_info_window::archive_load(arch);
 
         parent_window_offset = arch.r_vec2i("parent_window_offset");
     }

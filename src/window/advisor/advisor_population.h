@@ -13,7 +13,7 @@ struct advisor_population_window : public advisor_window_t<advisor_population_wi
     virtual void draw_foreground(UiFlags flags) override {}
     virtual int draw_background(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual void load(archive arch, pcstr section = "ui") override;
+    virtual void archive_load(archive arch) override;
     virtual void init() override;
 
     static advisor_window *instance();

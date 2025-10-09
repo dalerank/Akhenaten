@@ -20,8 +20,8 @@ struct shrine_info_window : public building_info_window_t<shrine_info_window> {
         return !!c.building_get<building_shrine>();
     }
 
-    virtual void load(archive arch, pcstr section) override {
-        inherited::load(arch, section);
+    virtual void archive_load(archive arch) override {
+        inherited::archive_load(arch);
 
         gods.clear();
         arch.r("gods", gods);

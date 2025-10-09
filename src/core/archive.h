@@ -695,6 +695,7 @@ template<> inline void archive::r<int>(pcstr name, int &v) { v = r_int(name); }
 template<> inline void archive::r<int8_t>(pcstr name, int8_t &v) { v = r_int(name); }
 template<> inline void archive::r<uint8_t>(pcstr name, uint8_t &v) { v = r_uint(name); }
 template<> inline void archive::r<uint16_t>(pcstr name, uint16_t &v) { v = r_uint(name); }
+template<> inline void archive::r<short>(pcstr name, short &v) { v = r_int(name); }
 template<> inline void archive::r<uint32_t>(pcstr name, uint32_t &v) { v = r_uint(name); }
 template<> inline void archive::r<bool>(pcstr name, bool &v) { v = r_bool(name); }
 template<> inline void archive::r<float>(pcstr name, float &v) { v = r_float(name); }
