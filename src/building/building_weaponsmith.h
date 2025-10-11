@@ -6,9 +6,6 @@ class building_weaponsmith : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_WEAPONSMITH, building_weaponsmith, building_industry)
 
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
-
     virtual void on_place_checks() override;
     virtual bool need_road_access() const override { return true; }
     virtual bool can_play_animation() const override;

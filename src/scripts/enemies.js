@@ -1140,7 +1140,7 @@ figure_roman_legioner = {
     animations : {
         walk : { pack:PACK_ENEMY_ROMAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ROMAN, id:5, max_frames:8, loop:false }
-        attack : { pack:PACK_ENEMY_ROMAN, id:6, max_frames:9 }
+        attack : { pack:PACK_ENEMY_ROMAN, id:6, max_frames:8 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 

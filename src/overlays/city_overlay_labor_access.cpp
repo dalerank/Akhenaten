@@ -36,7 +36,7 @@ int city_overlay_labor_access::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    const auto &params = b->dcast()->params();
+    const auto &params = b->dcast()->current_params();
     if (!params.min_houses_coverage) {
         return COLUMN_TYPE_NONE;
     }
@@ -50,7 +50,7 @@ bool city_overlay_labor_access::show_building(const building *b) const {
         return false;
     }
 
-    const auto &params = b->dcast()->params();
+    const auto &params = b->dcast()->current_params();
     if (!params.min_houses_coverage) {
         return false;
     }

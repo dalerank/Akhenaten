@@ -13,8 +13,9 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/routing/routing.h"
+#include "js/js_game.h"
 
-building_burning_ruin::static_params burning_ruin_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_burning_ruin);
 svector<uint16_t, 2500> g_burning_ruins;
 
 tile2i building_burning_ruin::can_be_accessed() {

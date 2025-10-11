@@ -15,8 +15,9 @@
 #include "sound/sound_building.h"
 #include "building/monuments.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
-building_work_camp::static_params work_camp_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_work_camp);
 
 building* building_work_camp::determine_worker_needed() {
     building *result = nullptr;

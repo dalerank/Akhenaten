@@ -9,8 +9,10 @@ building_small_statue = {
     {pack: PACK_TEMPLE_RA, id: 1, offset:27}
   ]
   window_info_height_id : 1
-  info_help_id:79
-  info_text_id:80
+  meta : {
+    help_id:79
+    text_id:80
+  }
   building_size : 1
   cost : [ 3, 5, 8, 13, 21 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
@@ -24,8 +26,10 @@ building_medium_statue = {
     {pack: PACK_EXPANSION, id: 36, offset:5},
   ]
   window_info_height_id : 1
-  info_help_id:79
-  info_text_id:80
+  meta : {
+    help_id:79
+    text_id:80
+  }
   building_size : 2
   cost : [ 12, 18, 24, 30, 50 ]
   desirability : { value:[10], step:[1], step_size:[-2], range: [4] }
@@ -39,8 +43,10 @@ building_large_statue = {
     {pack: PACK_EXPANSION, id: 35, offset:5},
   ]
   window_info_height_id : 1
-  info_help_id:79
-  info_text_id:80
+  meta : {
+    help_id:79
+    text_id:80
+  }
   building_size : 3
   cost : [ 30, 45, 60, 90, 150 ]
   desirability : { value:[14], step:[2], step_size:[-2], range: [5] }
@@ -67,8 +73,7 @@ building_fort_charioteers = {
   window_info_height_id : 1
   fire_proof : 1
   damage_proof : 1
-  info_help_id:87
-  info_text_id:89
+  meta : { help_id:87, text_id:89 }
   cost : [ 500, 700, 900, 1300, 2000 ]
   desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
 }
@@ -85,8 +90,7 @@ building_fort_infantry = {
   window_info_height_id : 1
   fire_proof : 1
   damage_proof : 1
-  info_help_id:87
-  info_text_id:89
+  meta : { help_id:87, text_id:89 }
   cost : [ 200, 300, 500, 800, 1200 ]
   desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
 }
@@ -103,8 +107,7 @@ building_fort_archers = {
   window_info_height_id : 1
   fire_proof : 1
   damage_proof : 1
-  info_help_id:87
-  info_text_id:89
+  meta : { help_id:87, text_id:89 }
   cost : [ 200, 300, 500, 800, 1200 ]
   desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
 }
@@ -378,8 +381,7 @@ building_cattle_ranch = {
     resource : RESOURCE_MEAT
   }
   building_size : 3
-  info_help_id:1
-  info_text_id:117
+  meta : { help_id:1, text_id:117 }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   cost : [ 15, 20, 30, 50, 80 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -407,8 +409,7 @@ building_farm_grain = {
   building_size : 3
   fire_proof : true
   damage_proof : true
-  info_help_id:90
-  info_text_id:112
+  meta : { help_id:90, text_id:112 }
   progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   needs : {
@@ -437,8 +438,7 @@ building_farm_chickpeas = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:90,
-  info_text_id:182,
+  meta : { help_id:90, text_id:182 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -467,8 +467,7 @@ building_farm_lettuce = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:91,
-  info_text_id:113,
+  meta : { help_id:91, text_id:113 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -497,8 +496,7 @@ building_farm_pomegranates = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:91,
-  info_text_id:114,
+  meta : { help_id:91, text_id:114 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -527,8 +525,7 @@ building_farm_barley = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:89,
-  info_text_id:181,
+  meta : { help_id:89, text_id:181 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -557,8 +554,7 @@ building_farm_flax = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id: 90,
-  info_text_id: 115,
+  meta : { help_id: 90, text_id: 115 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -587,8 +583,7 @@ building_farm_henna = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:90,
-  info_text_id:306,
+  meta : { help_id:90, text_id:306 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -617,8 +612,7 @@ building_farm_figs = {
   building_size : 3,
   fire_proof : true,
   damage_proof : true,
-  info_help_id:90,
-  info_text_id:183,
+  meta : { help_id:90, text_id:183 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs : {
@@ -658,8 +652,7 @@ building_granary = {
   min_houses_coverage : 100
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   window_info_height_id : 1
-  info_text_id: 98
-  info_help_id: 3
+  meta : { help_id: 3, text_id: 98 }
   building_size : 4
   planner_update_rule : {
     roads : true
@@ -671,13 +664,12 @@ building_granary = {
 
 building_shrine_osiris = {
   animations : {
-    preview : {pack:PACK_GENERAL, id:75, },
-    base : {pack:PACK_GENERAL, id:75, offset:0 },
-  },
-  labor_category : LABOR_CATEGORY_RELIGION,
-  window_info_height_id : 4,
-  info_help_id: 67,
-  info_text_id: 161,
+    preview : {pack:PACK_GENERAL, id:75, }
+    base : {pack:PACK_GENERAL, id:75, offset:0 }
+  }
+  labor_category : LABOR_CATEGORY_RELIGION
+  window_info_height_id : 4
+  meta : { help_id: 67, text_id: 161 }
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
   laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -691,8 +683,7 @@ building_shrine_ra = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
-  info_help_id: 67,
-  info_text_id: 161,
+  meta : { help_id: 67, text_id: 161 }
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
   laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -706,8 +697,7 @@ building_shrine_ptah = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
-  info_help_id: 67,
-  info_text_id: 161,
+  meta : { help_id: 67, text_id: 161 }
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
   laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -721,8 +711,7 @@ building_shrine_seth = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
-  info_help_id: 67,
-  info_text_id: 161,
+  meta : { help_id: 67, text_id: 161 }
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
   laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -736,8 +725,7 @@ building_shrine_bast = {
   },
   labor_category : LABOR_CATEGORY_RELIGION,
   window_info_height_id : 4,
-  info_help_id: 67,
-  info_text_id: 161,
+  meta : { help_id: 67, text_id: 161 }
   building_size : 1
   cost: [ 20, 30, 50, 80, 120 ]
   laborers:[0], fire_risk:[0], damage_risk: [2]
@@ -760,8 +748,7 @@ building_weaponsmith = {
   }
   labor_category : LABOR_CATEGORY_MILITARY
   window_info_height_id : 1
-  info_help_id: 98
-  info_text_id: 124
+  meta : { help_id: 98, text_id: 124 }
   building_size: 2
   cost: [ 24, 40, 80, 120, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -777,8 +764,7 @@ building_courthouse = {
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 3
-  info_text_id:176
-  info_help_id:75
+  meta : { help_id:75, text_id:176 }
   cost: [ 30, 50, 100, 200, 400 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [3] }
   laborers:[10], fire_risk:[0], damage_risk: [1]
@@ -797,8 +783,7 @@ building_stonemason_guild = {
   
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size: 2
-  info_text_id: 173
-  info_help_id: 363
+  meta : { help_id: 363, text_id: 173 }
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
@@ -816,8 +801,7 @@ building_bricklayers_guild = {
     resource : RESOURCE_BRICKS
   }
   min_houses_coverage : 100
-  info_help_id:92
-  info_text_id:172
+  meta : { help_id:92, text_id:172 }
   building_size : 2
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
@@ -851,8 +835,7 @@ building_dock = {
   }
   min_houses_coverage : 50
   building_size : 3
-  info_help_id:82
-  info_text_id:101
+  meta : { help_id:82, text_id:101 }
   needs : {
     water_access : true
     shoreline : true
@@ -871,8 +854,7 @@ building_personal_mansion = {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 3
-  info_help_id:78
-  info_text_id:103
+  meta : { help_id:78, text_id:103 }
   planner_update_rule : {
     unique_building : true
   }
@@ -890,8 +872,7 @@ building_village_mansion = {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 4
-  info_help_id:78
-  info_text_id:103
+  meta : { help_id:78, text_id:103 }
   planner_update_rule : {
     unique_building : true
   }
@@ -909,8 +890,7 @@ building_family_mansion = {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 4
-  info_help_id:78
-  info_text_id:103
+  meta : { help_id:78, text_id:103 }
   planner_update_rule : {
     unique_building : true
   }
@@ -940,8 +920,7 @@ building_temple_osiris = {
   }
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  info_help_id: 67
-  info_text_id: 92
+  meta : { help_id: 67, text_id: 92 }
   window_info_height_id : 1
   cost: [ 30, 50, 80, 150, 300 ]
   desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
@@ -956,8 +935,7 @@ building_temple_ra = {
   }
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  info_help_id: 67
-  info_text_id: 93
+  meta : { help_id: 67, text_id: 93 }
   window_info_height_id : 1
   cost: [ 30, 50, 80, 150, 300 ]
   desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
@@ -972,8 +950,7 @@ building_temple_ptah = {
   }
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  info_help_id: 67
-  info_text_id: 94
+  meta : { help_id: 67, text_id: 94 }
   window_info_height_id : 1
   cost: [ 30, 50, 80, 150, 300 ]
   desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
@@ -988,8 +965,7 @@ building_temple_seth = {
   }
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  info_help_id: 67
-  info_text_id: 95
+  meta : { help_id: 67, text_id: 95 }
   window_info_height_id : 1
   cost: [ 30, 50, 80, 150, 300 ]
   desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
@@ -1004,8 +980,7 @@ building_temple_bast = {
   }
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  info_help_id: 67
-  info_text_id: 96
+  meta : { help_id: 67, text_id: 96 }
   window_info_height_id : 1
   cost: [ 30, 50, 80, 150, 300 ]
   desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
@@ -1019,8 +994,7 @@ building_library = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 },
   }
   window_info_height_id : 1
-  info_help_id: 70
-  info_text_id: 87
+  meta : { help_id: 70, text_id: 87 }
   building_size : 3
   cost : [ 90, 140, 200, 300, 400 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
@@ -1034,8 +1008,7 @@ building_military_academy = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
   },
   window_info_height_id : 1,
-  info_help_id: 88,
-  info_text_id: 135,
+  meta : { help_id: 88, text_id: 135 }
   building_size : 4,
   cost : [ 240, 300, 500, 1000, 1500 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
@@ -1049,8 +1022,7 @@ building_military_academy_adv = {
     work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
   },
   window_info_height_id : 1,
-  info_help_id: 88,
-  info_text_id: 135,
+  meta : { help_id: 88, text_id: 135 }
   building_size : 4,
   cost : [ 300, 500, 1000, 1500, 2000 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
@@ -1065,8 +1037,7 @@ building_juggler_school = {
   }
   spawn_interval : 10
   window_info_height_id : 1
-  info_help_id:75
-  info_text_id:77
+  meta : { help_id:75, text_id:77 }
   building_size : 2
   cost : [ 10, 20, 50, 100, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -1080,8 +1051,7 @@ building_dancer_school = {
     work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2 },
   }
   building_size : 4
-  info_help_id:75
-  info_text_id:76
+  meta : { help_id:75, text_id:76 }
   window_info_height_id : 1
   cost : [ 30, 50, 100, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -1096,8 +1066,7 @@ building_storage_yard = {
     work : { pos : [10, -10], pack:PACK_SPR_AMBIENT, id:51, offset:1, max_frames:14, duration:3 },
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  info_help_id : 4
-  info_text_id:99
+  meta : { help_id : 4, text_id:99 }
   building_size : 3
   min_houses_coverage : 100
   cost: [ 14, 30, 50, 100, 150 ]
@@ -1123,8 +1092,7 @@ building_bazaar = {
   }
   building_size : 2
   window_info_height_id : 1
-  info_help_id: 2
-  info_text_id: 97
+  meta : { help_id: 2, text_id: 97 }
   cost: [ 8, 15, 30, 50, 100 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [6] }
   laborers:[5], fire_risk:[4], damage_risk: [2]
@@ -1138,8 +1106,7 @@ building_work_camp = {
     minimap: {pack:PACK_GENERAL, id:149, offset:160},
   },
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  info_help_id: 81,
-  info_text_id: 179,
+  meta : { help_id: 81, text_id: 179 }
   building_size : 2,
   cost:  [ 12, 20, 40, 80, 120 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -1154,8 +1121,7 @@ building_booth = {
   }
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   window_info_height_id : 2
-  info_help_id:71
-  info_text_id:72
+  meta : { help_id:71, text_id:72 }
   building_size : 2
   cost : [ 10, 20, 40, 80, 150 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
@@ -1171,8 +1137,7 @@ building_apothecary = {
   labor_category : LABOR_CATEGORY_WATER_HEALTH
   max_serve_clients : 100
   window_info_height_id : 1
-  info_help_id:63
-  info_text_id:81
+  meta : { help_id:63, text_id:81 }
   building_size : 1
   cost : [ 6, 10, 15, 30, 50 ]
   desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
@@ -1189,8 +1154,7 @@ building_water_supply = {
   },
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   fire_proof : true,
-  info_help_id:61,
-  info_text_id:108,
+  meta : { help_id:61, text_id:108 }
   building_size : 2,
   needs : { 
     groundwater : true
@@ -1212,8 +1176,7 @@ building_well = {
   window_info_height_id : 4,
   fire_proof : true,
   building_size : 1,
-  info_help_id:62,
-  info_text_id:109,
+  meta : { help_id:62, text_id:109 }
   needs : {
     groundwater : true
   }
@@ -1238,8 +1201,7 @@ building_papyrus_maker = {
   }
   production_rate : 50,
   building_size : 2,
-  info_help_id:1,
-  info_text_id:190,
+  meta : { help_id:1, text_id:190 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   cost: [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -1261,8 +1223,7 @@ building_weaver = {
   }
   building_size : 2,
   window_info_height_id : 1,
-  info_help_id:97,
-  info_text_id:123,
+  meta : { help_id:97, text_id:123 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 16, 30, 50, 100, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -1283,8 +1244,7 @@ building_jewels_workshop = {
   }
   building_size : 2,
   window_info_height_id : 1,
-  info_help_id:99,
-  info_text_id:125,
+  meta : { help_id:99, text_id:125 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
@@ -1302,8 +1262,7 @@ building_reed_gatherer = {
   }
   building_size : 2
   window_info_height_id : 1
-  info_help_id : 92
-  info_text_id : 116
+  meta : { help_id : 92, text_id : 116 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   cost: [ 10, 20, 40, 80, 120 ]
@@ -1323,8 +1282,7 @@ building_wood_cutter = {
   }
   building_size : 2
   window_info_height_id : 1
-  info_help_id:94
-  info_text_id:120
+  meta : { help_id:94, text_id:120 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   max_gatherers : 1
@@ -1345,8 +1303,7 @@ building_small_mastaba = {
   info_title_id:[198, 18],
   fire_proof :  true,
   damage_proof : true,
-  info_help_id:4,
-  info_text_id:120,
+  meta : { help_id:4, text_id:120 }
   // todo
 }
 
@@ -1372,8 +1329,7 @@ building_medium_mastaba = {
   info_title_id:[198, 19],
   fire_proof :  true,
   damage_proof : true,
-  info_help_id:4,
-  info_text_id:120,
+  meta : { help_id:4, text_id:120 }
 }
 
 building_medium_mastaba_part_side = building_medium_mastaba
@@ -1388,8 +1344,7 @@ building_tax_collector = {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   window_info_height_id : 1
-  info_help_id:76
-  info_text_id:106
+  meta : { help_id:76, text_id:106 }
   building_size : 2
   min_houses_coverage : 50
   cost: [ 15, 20, 40, 70, 100 ]
@@ -1405,8 +1360,7 @@ building_tax_collector_up = {
   },
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   window_info_height_id : 1,
-  info_help_id:76,
-  info_text_id:120,
+  meta : { help_id:76, text_id:120 }
   building_size : 2
   cost: [ 15, 24, 40, 80, 100 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
@@ -1422,8 +1376,7 @@ building_recruiter = {
   labor_category : LABOR_CATEGORY_MILITARY
   window_info_height_id : 3
   min_houses_coverage : 100
-  info_help_id:37
-  info_text_id:136
+  meta : { help_id:37, text_id:136 }
   building_size : 3
   planner_update_rule : {
     unique_building : true
@@ -1448,8 +1401,7 @@ building_bandstand = {
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   fire_proof: true
   window_info_height_id : 3
-  info_help_id:72
-  info_text_id:71
+  meta : { help_id:72, text_id:71 }
   building_size : 3
   cost : [ 30, 50, 100, 150, 200 ]
   desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
@@ -1549,8 +1501,7 @@ building_pavilion = {
     {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
     {type: BUILDING_BOOTH, offset:[2, 0], main:false}
   ],
-  info_help_id: 73,
-  info_text_id: 74,
+  meta : { help_id: 73, text_id: 74 }
   building_size : 4,
   window_info_height_id : 2,
   cost : [ 100, 200, 300, 500, 800 ]
@@ -1565,8 +1516,7 @@ building_festival_square = {
   },
   building_size : 5,
   window_info_height_id: 1,
-  info_help_id: 366,
-  info_text_id: 188,
+  meta : { help_id: 366, text_id: 188 }
   fire_proof : true,
   damage_proof : true,
   planner_update_rule : {
@@ -1586,8 +1536,7 @@ building_roadblock = {
   fire_proof : true,
   damage_proof : true,
   window_info_height_id : 1,
-  info_help_id: 358,
-  info_text_id: 155,
+  meta : { help_id: 358, text_id: 155 }
   labor_category : LABOR_CATEGORY_GOVERNMENT,
   cost : [1, 2, 5, 10, 20 ]
 }
@@ -1630,8 +1579,7 @@ building_mud_tower = {
   building_size : 2
   fire_proof : true
   window_info_height_id : 1
-  info_help_id: 85
-  info_text_id: 159
+  meta : { help_id: 85, text_id: 159 }
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 50
   cost: [ 30, 50, 100, 150, 200 ]
@@ -1656,8 +1604,7 @@ building_ferry = {
     relative_orientation: 1
   }
   fire_proof : true,
-  info_help_id: 85,
-  info_text_id: 91,
+  meta : { help_id: 85, text_id: 91 }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   cost: [8, 15, 30, 50, 100 ]
   desirability : { value:[-5], step:[2], step_size:[2], range: [4] }
@@ -1683,8 +1630,7 @@ building_transport_wharf = {
   planer_update_rule : {
     relative_orientation: 1
   }
-  info_help_id: 85,
-  info_text_id: 174,
+  meta : { help_id: 85, text_id: 174 }
   needs : {
     water_access : true,
     shoreline : true
@@ -1710,8 +1656,7 @@ building_warship_wharf = {
     wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
   },
   building_size : 3,
-  info_help_id: 84,
-  info_text_id: 175,
+  meta : { help_id: 84, text_id: 175 }
   window_info_height_id: 1,
   planer_update_rule : {
     relative_orientation: 1
@@ -1750,8 +1695,7 @@ building_fishing_wharf = {
   planer_update_rule : {
     relative_orientation: 1
   }
-  info_help_id: 84
-  info_text_id: 102
+  meta : { help_id: 84, text_id: 102 }
   needs : {
     water_access : true
     shoreline : true
@@ -1783,8 +1727,7 @@ building_shipyard = {
   planer_update_rule : {
     relative_orientation: 1
   }
-  info_help_id: 82
-  info_text_id: 100
+  meta : { help_id: 82, text_id: 100 }
   needs : {
     water_access : true
     shoreline : true
@@ -1803,8 +1746,7 @@ building_dentist = {
     work : { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 },
   },
   building_size : 1
-  info_help_id:65
-  info_text_id:84
+  meta : { help_id:65, text_id:84 }
   window_info_height_id : 1
   cost : [ 10, 15, 30, 50, 80 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
@@ -1819,8 +1761,7 @@ building_mortuary = {
   }
   max_serve_clients : 1000
   building_size : 2
-  info_help_id:66
-  info_text_id:82
+  meta : { help_id:66, text_id:82 }
   window_info_height_id : 1
   cost : [ 20, 30, 50, 100, 200 ]
   desirability : { value:[-3], step:[2], step_size:[1], range: [2] }
@@ -1837,8 +1778,7 @@ building_plaza = {
   }
   fire_proof : true
   damage_proof : true
-  info_help_id : 80
-  info_text_id : 137
+  meta : { help_id : 80, text_id : 137 }
   building_size : 1
   cost : [ 3, 5, 10, 15, 20 ]
   desirability : { value:[4], step:[1], step_size:[-2], range: [2] }
@@ -1854,8 +1794,7 @@ building_garden = {
   }
   fire_proof : true
   damage_proof : true
-  info_help_id:80
-  info_text_id:79
+  meta : { help_id:80, text_id:79 }
   building_size : 1
   cost : [ 3, 5, 10, 15, 20 ]
   desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
@@ -1872,8 +1811,7 @@ building_village_palace = {
   planner_update_rule : {
     unique_building : true
   }
-  info_help_id:77,
-  info_text_id:105,
+  meta : { help_id:77, text_id:105 }
   building_size : 4,
   needs : {
     groundwater : true
@@ -1894,8 +1832,7 @@ building_town_palace = {
   planner_update_rule : {
     unique_building : true,
   }
-  info_help_id:77,
-  info_text_id:105,
+  meta : { help_id:77, text_id:105 }
   building_size : 5,
   needs : {
     groundwater : true
@@ -1915,8 +1852,7 @@ building_city_palace = {
   planner_update_rule : {
     unique_building : true
   }
-  info_help_id:77,
-  info_text_id:105,
+  meta : { help_id:77, text_id:105 }
   building_size : 6,
   needs : {
     groundwater : true
@@ -1963,8 +1899,7 @@ building_clay_pit = {
   progress_max : 200,
   building_size : 2,
   production_rate : 100,
-  info_help_id:92,
-  info_text_id:121,
+  meta : { help_id:92, text_id:121 }
   needs : {
     nearby_water : true
   }
@@ -1990,8 +1925,7 @@ building_brewery = {
   progress_max : 400,
   window_info_height_id : 1,
   production_rate : 50,
-  info_help_id:96,
-  info_text_id:122,
+  meta : { help_id:96, text_id:122 }
   building_size : 2
   cost: [ 15, 25, 50, 80, 120 ]
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
@@ -2008,8 +1942,7 @@ building_mine_copper = {
     resource : RESOURCE_COPPER
   }
   window_info_height_id : 1,
-  info_help_id:93,
-  info_text_id:193,
+  meta : { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
@@ -2031,8 +1964,7 @@ building_mine_gems = {
     resource : RESOURCE_GEMS
   }
   building_size : 2,
-  info_help_id:93,
-  info_text_id:163,
+  meta : { help_id:93, text_id:163 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
     rock : true
@@ -2052,8 +1984,7 @@ building_sandstone_quarry = {
     resource : RESOURCE_SANDSTONE
   }
   building_size : 2,
-  info_help_id:93,
-  info_text_id:162,
+  meta : { help_id:93, text_id:162 }
   //help_id:92, type:"sandstone_quarry", text_id:194
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
@@ -2070,8 +2001,7 @@ building_marble_quarry = {
     base : { pack:PACK_GENERAL, id:197 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
   },
-  info_help_id:95,
-  info_text_id:118,
+  meta : { help_id:95, text_id:118 }
   cost: [ 15, 30, 50, 80, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
@@ -2087,9 +2017,8 @@ building_stone_quarry = {
     resource : RESOURCE_STONE
   }
   building_size : 2,
-  info_help_id:93,
-  info_text_id:162,
-  //info_help_id:92, info_text_id:118
+  meta : { help_id:93, text_id:162 }
+
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
     rock : true
@@ -2109,8 +2038,7 @@ building_granite_quarry = {
     resource : RESOURCE_GRANITE
   }
   building_size : 2,
-  info_help_id:93,
-  info_text_id:162,
+  meta : { help_id:93, text_id:162 }
   //help_id:92, text_id:192
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
@@ -2131,8 +2059,7 @@ building_limestone_quarry = {
     resource : RESOURCE_LIMESTONE
   }
   building_size : 2,
-  info_help_id:93,
-  info_text_id:162,
+  meta : { help_id:93, text_id:162 }
   //help_id:93, text_id:119}
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
@@ -2153,8 +2080,7 @@ building_mine_gold = {
     resource : RESOURCE_GOLD
   }
   building_size : 2
-  info_help_id:93
-  info_text_id:162
+  meta : { help_id:93, text_id:162 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   needs : {
     rock : true
@@ -2183,8 +2109,7 @@ building_clay_gatehouse = {
   }
 
   building_size : 1
-  info_help_id:85
-  info_text_id:90
+  meta : { help_id:85, text_id:90 }
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
@@ -2208,8 +2133,7 @@ building_brick_gatehouse = {
   }
 
   building_size : 1
-  info_help_id:85
-  info_text_id:90
+  meta : { help_id:85, text_id:90 }
   cost : [ 60, 90, 150, 250, 300 ]
   desirability : { value:[-7], step:[1], step_size:[1], range: [6] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
@@ -2228,8 +2152,7 @@ building_tower_gatehouse = {
 
   info_title_id:"#tower_gatehouse"
   building_size : 2
-  info_help_id:85
-  info_text_id:90
+  meta : { help_id:85, text_id:90 }
   cost : [ 200, 300, 400, 500, 600 ]
   desirability : { value:[4], step:[1], step_size:[1], range: [3] }
   laborers:[6], fire_risk:[0], damage_risk: [2]
@@ -2253,8 +2176,7 @@ building_mud_gatehouse = {
   }
   
   building_size : 1
-  info_help_id:85
-  info_text_id:90
+  meta : { help_id:85, text_id:90 }
   window_info_height_id : 1
   cost : [ 50, 70, 100, 150, 200 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
@@ -2298,8 +2220,7 @@ building_vacant_lot = {
     preview : { pack:PACK_GENERAL, id:36 },
     base : { pack:PACK_GENERAL, id:36 },
   },
-  info_help_id:128,
-  info_text_id:-1,
+  meta : { help_id:128, text_id:-1 }
   building_size : 1,
   desirability : { value:[-2], step:[1], step_size:[1], range: [3] }
   laborers:[0], fire_risk:[3], damage_risk: [0]
@@ -2315,8 +2236,7 @@ building_senet_house = {
     resource : RESOURCE_BEER
   }
   window_info_height_id : 2
-  info_help_id:74
-  info_text_id:73
+  meta : { help_id:74, text_id:73 }
   building_size : 4
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   cost : [ 300, 400, 500, 700, 1000 ]
@@ -2330,8 +2250,7 @@ building_bullfight_school = {
     base : { pack:PACK_CUSTOM, id:0 },
   }
   window_info_height_id : 1
-  info_help_id:75
-  info_text_id:78
+  meta : { help_id:75, text_id:78 }
   building_size : 2
   cost: [ 50, 80, 100, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -2357,8 +2276,7 @@ building_bricks_workshop = {
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
-  info_help_id:1,
-  info_text_id:180,
+  meta : { help_id:1, text_id:180 }
   window_info_height_id : 1
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -2405,8 +2323,7 @@ building_pottery = {
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
-  info_help_id:1,
-  info_text_id:126,
+  meta : { help_id:1, text_id:126 }
   window_info_height_id : 1
   cost: [ 12, 20, 30, 40, 50 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
@@ -2478,8 +2395,7 @@ building_physician = {
     work : { pos : [60, -60], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
   }
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  info_help_id: 64,
-  info_text_id: 83,
+  meta : { help_id: 64, text_id: 83 }
   building_size : 2
   cost: [ 10, 15, 30, 50, 100 ]
   desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
@@ -2509,8 +2425,7 @@ building_water_lift = {
     shoreline : true
     floodplain_shoreline : true
   }
-  info_help_id: 59
-  info_text_id: 107
+  meta : { help_id: 59, text_id: 107 }
   cost : [ 6, 12, 25, 50, 100 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
   laborers:[8], fire_risk:[0], damage_risk: [3]
@@ -2524,8 +2439,7 @@ building_firehouse = {
   },
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
   window_info_height_id : 1,
-  info_help_id: 355,
-  info_text_id: 164,
+  meta : { help_id: 355, text_id: 164 }
   building_size : 1
   cost: [ 6, 12, 25, 40, 60 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
@@ -2540,8 +2454,7 @@ building_police_station = {
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   window_info_height_id : 1
-  info_help_id: 86
-  info_text_id: 88
+  meta : { help_id: 86, text_id: 88 }
   building_size : 1
   cost: [ 6, 12, 25, 40, 60 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
@@ -2556,8 +2469,7 @@ building_architect_post = {
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 1
-  info_help_id: 81
-  info_text_id: 104
+  meta : { help_id: 81, text_id: 104 }
   window_info_height_id : 1
   cost: [ 6, 12, 25, 40, 60 ]
   laborers:[5], fire_risk:[2], damage_risk: [0]
@@ -2571,8 +2483,7 @@ building_conservatory = {
   }
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   window_info_height_id : 1
-  info_help_id:75
-  info_text_id:75
+  meta : { help_id:75, text_id:75 }
   building_size : 3
   cost : [ 20, 50, 90, 150, 200 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
@@ -2592,8 +2503,7 @@ building_hunting_lodge = {
     resource : RESOURCE_GAMEMEAT
   }
   window_info_height_id : 1
-  info_help_id:90
-  info_text_id:154
+  meta : { help_id:90, text_id:154 }
   building_size : 2
   min_houses_coverage : 100
   cost: [ 5, 10, 25, 40, 60 ]
@@ -2611,7 +2521,7 @@ building_scribal_school = {
   input : {
     resource : RESOURCE_PAPYRUS
   }
-  info_help_id: 68, info_text_id: 85
+  meta : { help_id: 68, text_id: 85 }
   window_info_height_id : 1
   min_houses_coverage : 50
   building_size : 2

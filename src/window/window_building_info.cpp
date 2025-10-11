@@ -68,7 +68,7 @@ void building_info_window::common_info_background(object_info& c) {
     building_info_window::window_info_background(c);
 
     building* b = building_get(c);
-    auto params = b->dcast()->params();
+    auto params = b->dcast()->current_params();
 
     window_building_play_sound(&c, b->get_sound()); // TODO: change to firehouse
 
@@ -148,7 +148,7 @@ void building_info_window::init(object_info &c) {
     b->dcast()->highlight_waypoints();
     c.bid = b->main()->id;
 
-    const auto &params = b->dcast()->params();
+    const auto &params = b->dcast()->current_params();
     c.help_id = params.meta.help_id;
     c.group_id = params.meta.text_id;
 

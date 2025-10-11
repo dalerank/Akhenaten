@@ -10,10 +10,9 @@
 #include "city/city_warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"
-
 #include "widget/city/ornaments.h"
 
-building_scribal_school::static_params scribal_school_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_scribal_school);
 
 void building_scribal_school::update_month() {
     if (base.stored_amount_first <= 0) {
@@ -66,7 +65,7 @@ void building_scribal_school::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;

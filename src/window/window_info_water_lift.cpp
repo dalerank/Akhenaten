@@ -18,7 +18,7 @@ void info_window_water_lift::init(object_info &c) {
     building_info_window::init(c);
 
     building *b = c.building_get();
-    const auto &params = b->dcast()->params();
+    const auto &params = b->dcast()->current_params();
 
     window_building_play_sound(&c, b->get_sound());
 }

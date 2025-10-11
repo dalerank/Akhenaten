@@ -23,6 +23,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_WELL; }
     virtual bool can_play_animation() const override;
 };
+ANK_CONFIG_STRUCT(building_well::static_params, meta)
 
 struct well_info_window : public building_info_window_t<well_info_window> {
     virtual void init(object_info &c) override;

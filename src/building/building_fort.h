@@ -8,7 +8,8 @@ struct building_fort_ghost {
     svector<vec2i, 4> ground_view_offset;
     svector<vec2i, 32> ground_check_offset;
 };
-ANK_CONFIG_STRUCT(building_fort_ghost, main_view_offset, ground_view_offset, ground_check_offset)
+ANK_CONFIG_STRUCT(building_fort_ghost,
+    main_view_offset, ground_view_offset, ground_check_offset)
 
 class building_fort : public building_impl {
 public:
@@ -19,17 +20,13 @@ public:
     struct static_params_t : buildings::model_t<T> {
         building_fort_ghost ghost;
 
-        virtual void archive_load(archive arch) override {
-            arch.r("ghost", ghost);
-        }
-
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
         virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
     };
 
     struct runtime_data_t {
         e_figure_type figure_type;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
@@ -42,36 +39,36 @@ public:
 class building_fort_ground : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
+    virtual building_fort_ground *dcast_fort_ground() override { return this; }
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
-
-    virtual building_fort_ground *dcast_fort_ground() { return this; }
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_fort_ground::static_params, meta)
 
 class building_fort_charioteers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_CHARIOTEERS, building_fort_charioteers, building_fort)
 
-    using static_params = static_params_t<building_fort_charioteers>;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    struct static_params : public static_params_t<building_fort_charioteers> {
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_fort_charioteers::static_params, ghost)
 
 class building_fort_archers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_ARCHERS, building_fort_archers, building_fort)
 
-    using static_params = static_params_t<building_fort_archers>;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    struct static_params : public static_params_t<building_fort_archers> {
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_fort_archers::static_params, ghost)
 
 class building_fort_infantry : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_INFANTRY, building_fort_infantry, building_fort)
 
-    using static_params = static_params_t<building_fort_infantry>;
-
-    static const static_params &current_params() { return (const static_params &)params(TYPE); }
+    struct static_params : public static_params_t<building_fort_infantry> {
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_fort_infantry::static_params, ghost)

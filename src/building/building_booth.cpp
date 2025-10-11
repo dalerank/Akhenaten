@@ -25,8 +25,9 @@
 #include "construction/build_planner.h"
 #include "city/city_labor.h"
 #include "figure/figure.h"
+#include "js/js_game.h"
 
-building_booth::static_params booth_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_booth);
 
 bool building_booth::static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
@@ -94,7 +95,7 @@ void building_booth::on_place_update_tiles(int orientation, int variant) {
     int image_id = anim(animkeys().square).first_img();
 
     // add underlying plaza first
-    map_add_venue_plaza_tiles(id(), params().building_size, tile(), image_id, false);
+    map_add_venue_plaza_tiles(id(), current_params().building_size, tile(), image_id, false);
     int absolute_orientation = (abs(orientation * 2 + (8 - city_view_orientation())) % 8) / 2;
 
     // add additional building parts, update graphics accordingly

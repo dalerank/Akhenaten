@@ -20,8 +20,9 @@
 #include "graphics/elements/lang_text.h"
 #include "window/window_figure_info.h"
 #include "core/profiler.h"
+#include "js/js_game.h"
 
-figure_caravan_donkey::static_params caravan_donkey_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_caravan_donkey);
 
 empire_city_handle figure_caravan_donkey::empire_city() const {
     auto head = head_of_caravan();

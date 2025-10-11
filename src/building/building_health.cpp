@@ -14,11 +14,11 @@
 #include "widget/city/ornaments.h"
 #include "city/city.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <iostream>
 
-building_apothecary::static_params apothercary_m;
-building_mortuary::static_params mortuary_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_apothecary);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 declare_console_command_p(plague_start) {
     std::string args; is >> args;

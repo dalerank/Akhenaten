@@ -44,7 +44,7 @@ static void draw_building_image(int image_id, int x, int y) {
 }
 
 static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_type type) {
-    const auto &props = building_impl::params(type);
+    const auto &props = building_static_params::get(type);
     painter ctx = game.painter();
 
     int num_tiles = props.building_size * props.building_size;
@@ -77,7 +77,7 @@ static void draw_road(painter &ctx, tile2i tile, int x, int y) {
     if (map_terrain_is(tile, TERRAIN_NOT_CLEAR))
         blocked = true;
     else {
-        const auto &params = building_impl::params(BUILDING_ROAD);
+        const auto &params = building_static_params::get(BUILDING_ROAD);
         image_id = params.base_img();
         if (!map_terrain_has_adjacent_y_with_type(tile.grid_offset(), TERRAIN_ROAD)
             && map_terrain_has_adjacent_x_with_type(tile.grid_offset(), TERRAIN_ROAD)) {

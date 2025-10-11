@@ -22,13 +22,6 @@ public:
         e_figure_type missile_type = FIGURE_ARROW;
     };
 
-    template<typename T>
-    struct static_params_t : public base_params_t, public figures::model_t<T> {
-        virtual void archive_load(archive arch) override {
-            arch.r<base_params_t>(*this);
-        }
-    };
-
     virtual const base_params_t &base_params() const = 0;
 
     virtual void on_create() override;
@@ -53,135 +46,157 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m)override;
 };
-ANK_CONFIG_STRUCT(figure_enemy_archer::base_params_t, 
-    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_barbarian_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_ARCHER, figure_barbarian_archer)
     figure_barbarian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_barbarian_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_ARCHER, "barb_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_barbarian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_assyrian_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_ASSYRIAN_ARCHER, figure_assyrian_archer)
     figure_assyrian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_assyrian_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_ARCHER, "assr_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_assyrian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_canaanite_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_CANAANITE_ARCHER, figure_canaanite_archer)
     figure_canaanite_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_canaanite_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "cana_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_canaanite_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_egyptian_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_ARCHER, figure_egyptian_archer)
     figure_egyptian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_egyptian_archer> {} FIGURE_STATIC_DATA_T;
+    struct static_params : public base_params_t, public figure_model {
+    } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "egpt_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_egyptian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_hittite_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_ARCHER, figure_hittite_archer)
     figure_hittite_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_hittite_archer> {} FIGURE_STATIC_DATA_T;
+    struct static_params : public base_params_t, public figure_model {
+    } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_ARCHER, "hitt_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_hittite_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_hyksos_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_HYKSOS_ARCHER, figure_hyksos_archer)
     figure_hyksos_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_hyksos_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_ARCHER, "hyks_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_hyksos_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_libian_archer : public figure_enemy_archer {
 public:
-    FIGURE_METAINFO(FIGURE_ENEMY_LIBIAN_ARCHER, figure_hyksos_archer)
+    FIGURE_METAINFO(FIGURE_ENEMY_LIBIAN_ARCHER, figure_libian_archer)
     figure_libian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_libian_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_LIBIAN_ARCHER, "libn_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_libian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_nubian_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_NUBIAN_ARCHER, figure_nubian_archer)
     figure_nubian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_nubian_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_ARCHER, "nubn_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_nubian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_persian_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_ARCHER, figure_persian_archer)
     figure_persian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_persian_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_ARCHER, "pers_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_persian_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_roman_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_ROMAN_ARCHER, figure_roman_archer)
     figure_roman_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_roman_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_ARCHER, "roma_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_roman_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_seapeople_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_SEAPEOPLE_ARCHER, figure_seapeople_archer)
     figure_seapeople_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public static_params_t<figure_seapeople_archer> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_ARCHER, "seap_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_seapeople_archer::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)

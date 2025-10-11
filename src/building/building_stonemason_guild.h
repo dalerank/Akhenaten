@@ -6,9 +6,6 @@ class building_stonemason_guild : public building_guild {
 public:
     BUILDING_METAINFO(BUILDING_STONEMASONS_GUILD, building_stonemason_guild, building_guild)
 
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
-
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual void update_graphic() override;

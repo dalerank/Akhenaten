@@ -94,8 +94,8 @@ enum e_figure_draw_mode {
 
 enum e_figure_flag {
     e_figure_flag_none = 0,
-    e_figure_flag_enemy = 0x1,
-    e_figure_flag_friendly = 0x2,
+    e_figure_flag_enemy = 1 << 0,
+    e_figure_flag_friendly = 1 << 1,
 };
 
 class figure {
@@ -312,6 +312,8 @@ public:
     void figure_route_add();
     void route_remove();
 
+    void reset_flags();
+
     // image.c
     void image_set_animation(const animation_t &anim);
     void image_set_animation(const xstring &anim);
@@ -480,16 +482,17 @@ struct figure_static_params {
 
     static void set(e_figure_type, const figure_static_params &);
     static const figure_static_params &get(e_figure_type);
+    static figure_static_params &ref(e_figure_type);
 
-protected:
-    void base_load(archive arch);
+    void initialize();
 };
 ANK_CONFIG_STRUCT(figure_static_params, is_enemy, max_roam_length, permission, 
     animations, terrain_usage, terrain_usage, category, attack_value, defense_value,
-    missile_defense_value, sounds)
+    missile_defense_value, sounds, speed_mult, speed_mult)
 
 class figure_impl {
 public:
+    using static_params = figure_static_params;
     figure_impl(figure *f) : base(*f) {}
 
     virtual void on_create();
@@ -518,7 +521,7 @@ public:
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return params().animations; }
-    virtual const figure_static_params &params() const { return figure_static_params::get(type()); }
+    virtual const static_params &params() const { return figure_static_params::get(type()); }
     virtual void kill();
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
@@ -672,27 +675,15 @@ struct model_t : public figure_static_params {
         figure_static_params::set(TYPE, *this);
     }
 
-    void archive_load() {
-        bool loaded = false;
-        g_config_arch.r_section(name, [&] (archive arch) {
-            figure_static_params &base = *this;
-            arch.r(base);
-            figure_static_params::base_load(arch);
-            loaded = true;
-            call_struct_reader_if_exists(arch, *this);
-            this->archive_load(arch);
-        });
-        assert(loaded);
-    }
-
-    virtual void archive_load(archive) {
-        /*overload options*/
-    }
-
     static void static_params_load() {
-        const model_t &item = static_cast<const model_t &>(figure_static_params::get(TYPE));
+        figure_static_params &base = figure_static_params::ref(TYPE);
+        model_t &item = (model_t &)base;
         assert(item.TYPE == TYPE);
-        const_cast<model_t &>(item).archive_load();
+
+        bool loaded = g_config_arch.r(item.name, base);
+        assert(loaded);
+
+        item.initialize();
     }
 
     static figure_impl *create(e_figure_type e, figure &f) {

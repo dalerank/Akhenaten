@@ -61,7 +61,7 @@ void building_hunting_lodge::spawn_figure() {
     }
 
     if (base.num_workers < base.max_workers) {
-        common_spawn_labor_seeker(params().min_houses_coverage);
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
     }
 
     int spawn_delay = spawn_timer();

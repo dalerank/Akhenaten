@@ -213,7 +213,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     int needs_road_warning = 0;
     int items_placed = 0;
     game_undo_restore_building_state();
-    const auto &bparams = building_impl::params(BUILDING_HOUSE_VACANT_LOT);
+    const auto &bparams = building_static_params::get(BUILDING_HOUSE_VACANT_LOT);
     int vacant_lot_id = bparams.first_img(animkeys().preview);
     for (int y = area.tmin.y(), endy = area.tmax.y(); y <= endy; y++) {
         for (int x = area.tmin.x(), endx = area.tmax.x(); x <= endx; x++) {
@@ -462,13 +462,13 @@ void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
 }
 
 void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
-    const auto &params = building_impl::params(type);
+    const auto &params = building_static_params::get(type);
     int random_value = tile.grid_offset();
     custom_building_variant = params.planer_setup_building_variant(type, tile, random_value);
 }
 
 void build_planner::next_building_variant() {
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     custom_building_variant = params.planer_next_building_variant(build_type, end, custom_building_variant);
     update_orientations();
 }
@@ -494,7 +494,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
         return;
     }
 
-    const auto &params = building_impl::params(type);
+    const auto &params = building_static_params::get(type);
     params.planer_setup_build(*this);
 
     setup_building_variant(end, build_type);
@@ -507,7 +507,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 }
 
 void build_planner::setup_build_flags() {
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
                                       e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine,
@@ -594,7 +594,7 @@ void build_planner::setup_build_flags() {
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     
     vec2i init_tiles_size;
     switch (build_type) {
@@ -615,7 +615,7 @@ void build_planner::setup_build_graphics() {
 
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // check terrain at coords
@@ -772,7 +772,7 @@ void build_planner::update_requirements_check() {
         }
     }
 
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     can_place = params.planer_can_place(*this, start, end, can_place);
 
     if (special_flags & e_building_flag::RiverAccess) {
@@ -787,7 +787,7 @@ void build_planner::update_special_case_orientations_check() {
 
     // for special buildings that require oriented terrain
     if (special_flags & e_building_flag::ShoreLine) {
-        const auto &params = building_impl::params(build_type);
+        const auto &params = building_static_params::get(build_type);
         int shoreline_size = (additional_req_param1 > 0) ? additional_req_param1 : params.building_size;
         shore_orientation result = map_shore_determine_orientation(end, shoreline_size, true);
         if (special_flags & e_building_flag::FloodplainShore) {
@@ -856,7 +856,7 @@ void build_planner::update_unique_only_one_check() {
 
     bool unique_already_placed = false;
 
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     bool is_unique_building = params.is_unique_building();
     if (is_unique_building) {
         unique_already_placed = g_city.buildings.count_total(build_type);
@@ -955,7 +955,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     int prev_variant = building_variant;
    //int global_rotation = building_rotation_global_rotation();
 
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
 
     relative_orientation = params.planer_update_relative_orientation(*this, end, relative_orientation);
     building_variant = params.planer_update_building_variant(*this);
@@ -1021,7 +1021,7 @@ void build_planner::construction_start(tile2i tile) {
     start = tile;
     end = tile;
 
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     if (game_undo_start_build(build_type)) {
         in_progress = true;
         const bool can_start = params.planer_can_construction_start(*this, start);
@@ -1059,11 +1059,11 @@ void build_planner::construction_update(tile2i tile) {
     }
 
     map_property_clear_constructing_and_deleted();
-    uint16_t current_cost = building_impl::params(build_type).get_cost();
+    uint16_t current_cost = building_static_params::get(build_type).get_cost();
     int global_rotation = building_rotation_global_rotation();
     int items_placed = 1;
 
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
         last_items_cleared = building_construction_clear_land(true, start, end);
@@ -1137,7 +1137,7 @@ void build_planner::construction_finalize() { // confirm final placement
     }
 
     // attempt placing, restore terrain data on failure
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     if (!place()) {
         map_property_clear_constructing_and_deleted();
         if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH })) {
@@ -1319,7 +1319,7 @@ void build_planner::draw(painter &ctx) {
     }
 
     vec2i pixel = pixel_coords_cache[0][0];
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
         params.planer_ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
@@ -1343,7 +1343,7 @@ void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
     vec2i pixel = pixel_coords_cache[0][0];
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     params.planer_ghost_preview(*this, ctx, start, end, pixel);
 }
 
@@ -1361,7 +1361,7 @@ bool build_planner::place() {
     // Check warnings for placement and create building/update tiles accordingly.
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
-    const auto &params = building_impl::params(build_type);
+    const auto &params = building_static_params::get(build_type);
     int placement_cost = params.get_cost();
 
     switch (build_type) {

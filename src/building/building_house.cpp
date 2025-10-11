@@ -305,7 +305,7 @@ resource_list building_house::consume_resources() {
 template<bool use_offset>
 static int house_image_group(int level) {
     const e_building_type btype = e_building_type(BUILDING_HOUSE_VACANT_LOT + level);
-    const auto &params = building_impl::params(btype);
+    const auto &params = building_static_params::get(btype);
     const auto anim = params.animations["house"];
     int image_id = image_id_from_group(anim.pack, anim.id);
 
@@ -355,7 +355,7 @@ void building_house::change_to(building &b, e_building_type new_type) {
         }
     } else {
         image_id += img_offset;
-        image_id += map_random_get(b.tile) & (house->params().num_types - 1);
+        image_id += map_random_get(b.tile) & (house->current_params().num_types - 1);
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);

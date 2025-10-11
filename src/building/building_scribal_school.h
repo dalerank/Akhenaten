@@ -7,9 +7,6 @@ public:
     BUILDING_METAINFO(BUILDING_SCRIBAL_SCHOOL, building_scribal_school, building_impl);
     virtual building_scribal_school *dcast_scribal_school() override { return this; }
 
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
-
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_SCRIBAL_SCHOOL; }
     virtual void update_graphic() override;

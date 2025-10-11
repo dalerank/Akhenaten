@@ -3,8 +3,9 @@
 #include "core/random.h"
 #include "city/city.h"
 #include "city/buildings.h"
+#include "js/js_game.h"
 
-figure_festival_guy::static_params festival_guy_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_festival_guy);
 
 void figure_festival_guy::update_animation() {
     building* temple = home();

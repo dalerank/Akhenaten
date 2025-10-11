@@ -28,7 +28,7 @@ cart_offsets = [
   {x:0, y:-12}
 ]
 
- sled_offsets = [
+sled_offsets = [
   {x:-17, y:9},
   {x:22, y:-1},
   {x:-15, y:-5},

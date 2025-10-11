@@ -85,7 +85,7 @@ int build_menu_widget::draw_background(UiFlags flags) {
 }
 
 xstring build_menu_widget::loc_title(e_building_type type, xstring def) {
-    const auto &params = building_impl::params(type);
+    const auto &params = building_static_params::get(type);
     const auto &title = params.info_title_id;
 
     if (!title) {
@@ -112,7 +112,7 @@ void build_menu_widget::button_menu_item(int item) {
     g_screen_city.clear_current_tile();
 
     e_building_type type = ctrl->type(selected_submenu, item);
-    const auto &params = building_impl::params(type);
+    const auto &params = building_static_params::get(type);
     if (params.planner_update_rule.unique_building && g_city.buildings.count_total(type)) {
         return;
     }
@@ -155,7 +155,7 @@ void build_menu_widget::draw_menu_buttons() {
         e_building_type type = ctrl->type(selected_submenu, item_index);
         xstring tgroup = loc_title(type, ui::str(28, (uint8_t)type) );
 
-        const auto &params = building_impl::params(type);
+        const auto &params = building_static_params::get(type);
         if (params.planner_update_rule.unique_building) {
             const bool has_building = g_city.buildings.count_total(type);
 
@@ -197,7 +197,7 @@ void build_menu_widget::draw_menu_buttons() {
             lang_text_draw_centered(tgroup.c_str(), x_offset - label_margin + btn_w_tot_offset, y_offset + text_offset + item.size.y * i, btn_text_w_size.x, font);
         }
 
-        uint16_t cost = building_impl::params(type).get_cost();
+        uint16_t cost = building_static_params::get(type).get_cost();
         if (type == BUILDING_MENU_FORTS) {
             cost = 0;
         }

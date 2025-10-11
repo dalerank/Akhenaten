@@ -102,7 +102,7 @@ void building_fishing_wharf::spawn_figure() {
 
     auto &d = runtime_data();
     if (has_road_access()) {
-        common_spawn_labor_seeker(params().min_houses_coverage);
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1) {

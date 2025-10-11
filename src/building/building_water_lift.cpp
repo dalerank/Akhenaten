@@ -71,7 +71,7 @@ void building_water_lift::update_day() {
         map_canal_fill_from_offset(tile2i(d.output_tiles[1]), 10);
     }
 
-    map_terrain_add_with_radius(tile(), params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
+    map_terrain_add_with_radius(tile(), current_params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
 }
 
 int building_water_lift::animation_speed(int speed) const {

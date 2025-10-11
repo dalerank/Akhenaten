@@ -4,8 +4,9 @@
 #include "core/log.h"
 #include "city/city.h"
 #include "figure/service.h"
+#include "js/js_game.h"
 
-figure_architector::static_params architector_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
 void figure_architector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Architector");
@@ -83,7 +84,7 @@ void figure_architector::on_action_changed(int saved_action) {
 }
 
 figure_sound_t figure_architector::get_sound_reaction(xstring key) const {
-    return architector_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 int figure_architector::provide_service() {

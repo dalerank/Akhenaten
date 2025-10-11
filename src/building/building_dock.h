@@ -56,6 +56,7 @@ public:
     tile2i wait_tile() const;
     tile2i reid_tile() const;
 };
+ANK_CONFIG_STRUCT(building_dock::static_params, meta)
 
 building_dest map_get_free_destination_dock(int ship_id);
 building_dest map_get_queue_destination_dock(int ship_id);

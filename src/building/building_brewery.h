@@ -9,7 +9,7 @@ public:
     virtual building_brewery *dcast_brewery() override { return this; }
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual bool is_workshop() const override { return true; }
     virtual e_overlay get_overlay() const override { return OVERLAY_BREWERY; }
@@ -17,3 +17,4 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
 };
+ANK_CONFIG_STRUCT(building_brewery::static_params, meta)

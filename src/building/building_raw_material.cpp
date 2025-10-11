@@ -25,11 +25,12 @@
 #include "graphics/animation.h"
 #include "construction/build_planner.h"
 #include "city/city_finance.h"
+#include "js/js_game.h"
 
 building_mine_copper::static_params copper_mine_m;
-buildings::model_t<building_clay_pit> clay_pit_m;
-buildings::model_t<building_mine_gold> gold_mine_m;
-buildings::model_t<building_mine_gems> gems_mine_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_clay_pit);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gold);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gems);
 
 void building_mine::on_create(int orientation) {
     building_industry::on_create(orientation);

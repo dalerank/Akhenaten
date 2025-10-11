@@ -22,13 +22,6 @@ public:
         e_figure_type missile_type = FIGURE_ARROW;
     };
 
-    template<typename T>
-    struct static_params_t : public base_params_t, public figures::model_t<T> {
-        virtual void archive_load(archive arch) override {
-            arch.r<base_params_t>(*this);
-        }
-    };
-
     virtual const base_params_t &base_params() const = 0;
 
     virtual void on_create() override;
@@ -53,65 +46,73 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m)override;
 };
-ANK_CONFIG_STRUCT(figure_enemy_spearman::base_params_t,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_egyptian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_SPEAR, figure_egyptian_spearman)
     figure_egyptian_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_egyptian_spearman> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_EGYPTIAN_SPEAR, "egpt_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_egyptian_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_hittite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_SPEARMAN, figure_hittite_spearman)
     figure_hittite_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_hittite_spearman> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_SPEARMAN, "hitt_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_hittite_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_kushite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_KUSHITE_SPEARMAN, figure_kushite_spearman)
     figure_kushite_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_kushite_spearman> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_SPEARMAN, "kush_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_kushite_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_persian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_SPEARMAN, figure_persian_spearman)
     figure_persian_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_persian_spearman> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_SPEARMAN, "pers_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_persian_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_phoenician_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SPEARMAN, figure_phoenician_spearman)
     figure_phoenician_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public static_params_t<figure_phoenician_spearman> {
+    struct static_params : public base_params_t, public figure_model {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SPEARMAN, "phoe_spr" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(figure_phoenician_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)

@@ -5,11 +5,7 @@
 class building_reed_gatherer : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_REED_GATHERER, building_reed_gatherer, building_industry)
-
     virtual building_reed_gatherer *dcast_reed_gatherer() override { return this; }
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

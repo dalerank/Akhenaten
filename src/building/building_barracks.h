@@ -36,6 +36,7 @@ public:
     bool create_tower_sentry();
     bool create_soldier();
 };
+ANK_CONFIG_STRUCT(building_recruiter::static_params, meta)
 
 void building_barracks_request_tower_sentry();
 void building_barracks_decay_tower_sentry_request();

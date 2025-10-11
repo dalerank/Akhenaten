@@ -79,5 +79,7 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(register_enum_##enumt) = 1;} \
     static config::EnumIterator ANK_CONFIG_CC1(config_handler, __LINE__)(register_enum_##enumt); void register_enum_##enumt(config::type_enum) { js_register_tokens(enumt); }
 
+#define REPLICATE_STATIC_PARAMS_FROM_CONFIG(class_name) class_name::static_params ANK_VARIABLE_N(model_##class_name, #class_name)
+
 void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);

@@ -6,8 +6,9 @@
 #include "core/random.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
+#include "js/js_game.h"
 
-building_reed_gatherer::static_params building_reed_gatherer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
     runtime_data().max_gatheres = 1;
@@ -45,7 +46,7 @@ void building_reed_gatherer::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;

@@ -11,7 +11,7 @@ public:
     struct static_params : public building_model {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void spawn_figure() override;
     virtual bool ship_moored() const override;

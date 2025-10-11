@@ -420,7 +420,7 @@ void map_image_set_road_floodplain(tile2i tile) {
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_FLOODPLAIN)) {
         map_image_set(grid_offset, image_group(floodplain_tile) + 87);
     } else {
-        int base_img = building_impl::params(BUILDING_ROAD).base_img();
+        int base_img = building_static_params::get(BUILDING_ROAD).base_img();
         map_image_set(grid_offset, base_img + img.group_offset + img.item_offset + 49);
     }
 }

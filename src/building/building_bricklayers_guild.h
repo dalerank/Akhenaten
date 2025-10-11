@@ -7,7 +7,7 @@ public:
     BUILDING_METAINFO(BUILDING_BRICKLAYERS_GUILD, building_bricklayers_guild, building_guild)
 
     struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
@@ -16,3 +16,4 @@ public:
 
     bool can_spawn_bricklayer_man(int max_gatherers_per_building);
 };
+ANK_CONFIG_STRUCT(building_bricklayers_guild::static_params, meta)

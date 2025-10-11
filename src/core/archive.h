@@ -656,8 +656,8 @@ namespace archive_helper {
     template<>
     inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
 
-    template<typename T> struct class_has_archive_reader : std::false_type {};
-    template<typename T> constexpr bool class_has_archive_reader_v = class_has_archive_reader<T>::value;
+    template<typename T> 
+    constexpr inline bool class_has_archive_reader() { return false; }
 }
 
 // The problem is that  clang SFINAE trait class_has_load_function is working incorrectly. 
@@ -675,14 +675,9 @@ template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::tr
 template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
 template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_if_exists_impl(js_t, std::bool_constant<class_has_init_function_v<Type>>{}); }
 
-template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists_impl(ArchiveT js_j, Type &js_t, std::true_type) { js_j.r(js_t); return true; }
-template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists_impl(ArchiveT js_j, Type &js_t, std::false_type) { return false; /*nothing to do, class has no load function*/ }
-template<typename ArchiveT, typename Type> inline bool call_struct_reader_if_exists(ArchiveT js_j, Type &js_t) { return call_struct_reader_if_exists_impl(js_j, js_t, std::bool_constant<archive_helper::class_has_archive_reader_v<Type>>{}); }
-
-
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
-    template<> struct class_has_archive_reader<Type> : std::true_type {};                         \
+    template<> constexpr inline bool class_has_archive_reader<Type>() { return true; }            \
     template<>                                                                                    \
     inline void reader<Type>(archive js_j, Type& js_t) {                                          \
         call_unload_if_exists(js_t);                                                              \

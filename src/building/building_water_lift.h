@@ -9,12 +9,12 @@ public:
     struct static_params : public building_model {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         int input_tiles[2];
         int output_tiles[2];
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;

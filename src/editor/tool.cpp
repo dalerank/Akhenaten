@@ -219,7 +219,7 @@ void editor_tool_update_use(tile2i tile) {
         return;
 
     if (data.type == TOOL_ROAD) {
-        const auto &params = building_impl::params(BUILDING_ROAD);
+        const auto &params = building_static_params::get(BUILDING_ROAD);
         params.planer_construction_update(g_city_planner, data.start_tile, tile);
         return;
     }
@@ -381,7 +381,7 @@ static void place_access_ramp(tile2i tile) {
 }
 
 static void place_road(tile2i start_tile, tile2i end_tile) {
-    const auto &params = building_impl::params(BUILDING_ROAD);
+    const auto &params = building_static_params::get(BUILDING_ROAD);
     int items_placed = params.planer_construction_place(g_city_planner, start_tile, end_tile, 0, 0);
     if (items_placed) {
         scenario_editor_updated_terrain();

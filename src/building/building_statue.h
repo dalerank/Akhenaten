@@ -16,10 +16,6 @@ public:
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
 
-        virtual void archive_load(archive arch) override {
-            inherited::archive_load(arch);
-            arch.r("variants", this->variants);
-        }
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
@@ -57,28 +53,31 @@ class building_small_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_STATUE, building_small_statue, building_statue)
 
-    virtual const statue_params_t &statue_params() { return current_params(); }
+    struct static_params : public static_params_t<building_small_statue> {
+    } BUILDING_STATIC_DATA_T;
 
-    using static_params = static_params_t<building_small_statue>;
-    BUILDING_STATIC_DATA(static_params);
+    virtual const statue_params_t &statue_params() { return current_params(); }
 };
+ANK_CONFIG_STRUCT(building_small_statue::static_params, variants)
 
 class building_medium_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_STATUE, building_medium_statue, building_statue)
 
-    virtual const statue_params_t &statue_params() { return current_params(); }
+    struct static_params : public static_params_t<building_medium_statue> {
+    } BUILDING_STATIC_DATA_T;
 
-    using static_params = static_params_t<building_medium_statue>;
-    BUILDING_STATIC_DATA(static_params);
+    virtual const statue_params_t &statue_params() { return current_params(); }
 };
+ANK_CONFIG_STRUCT(building_medium_statue::static_params, variants)
 
 class building_large_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_LARGE_STATUE, building_large_statue, building_statue)
 
-    virtual const statue_params_t &statue_params() { return current_params(); }
+    struct static_params : public static_params_t<building_large_statue> {
+    } BUILDING_STATIC_DATA_T;
 
-    using static_params = static_params_t<building_large_statue>;
-    BUILDING_STATIC_DATA(static_params);
+    virtual const statue_params_t &statue_params() { return current_params(); }
 };
+ANK_CONFIG_STRUCT(building_large_statue::static_params, variants)

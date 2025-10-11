@@ -641,8 +641,14 @@ void figure_static_params::set(e_figure_type e, const figure_static_params &p) {
 }
 
 const figure_static_params &figure_static_params::get(e_figure_type e) {
-    const auto& cfg = figure_impl_params[e];
+    const auto* cfg = figure_impl_params[e];
     return (!cfg ? figure_static_params::dummy : *cfg);
+}
+
+figure_static_params &figure_static_params::ref(e_figure_type e) {
+    auto *cfg = figure_impl_params[e];
+    assert(cfg);
+    return *const_cast<figure_static_params*>(cfg);
 }
 
 void figure_impl::advance_action(int action, tile2i t) {
@@ -660,13 +666,11 @@ metainfo figure_impl::get_info() const {
 }
 
 figure_static_params figure_static_params::dummy;
-void figure_static_params::base_load(archive arch) {
+void figure_static_params::initialize() {
     assert(animations.data.size() > 0);
 
-    speed_mult = arch.r_int("speed_mult", 1);
-    meta.help_id = arch.r_int("info_help_id");
-    meta.text_id = arch.r_int("info_text_id");
-    max_damage = arch.r_int("max_damage", 100);
+    if (speed_mult == 0) speed_mult = 1;
+    if (max_damage == 0) max_damage = 100;
 }
 
 void figure_impl::update_animation() {

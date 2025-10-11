@@ -34,11 +34,11 @@ public:
         pavilion_preview_offset preview_dir[8];
         pavilion_place_offset place_dir[8];
 
-        using inherited::archive_load;
-        virtual void archive_load(archive arch) override;
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    } BUILDING_STATIC_DATA(static_params);
+
+        void archive_load(archive arch);
+    } BUILDING_STATIC_DATA_T;
     
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
@@ -53,3 +53,4 @@ public:
 
     virtual void spawn_figure() override;
 };
+ANK_CONFIG_STRUCT(building_pavilion::static_params, meta)

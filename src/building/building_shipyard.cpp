@@ -22,8 +22,9 @@
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "city/city_labor.h"
+#include "js/js_game.h"
 
-building_shipyard::static_params building_shipyard_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shipyard);
 
 int building_shipyard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
@@ -35,7 +36,7 @@ void building_shipyard::spawn_figure() {
     if (!map_has_road_access(tile(), size())) {
         return;
     }
-    common_spawn_labor_seeker(params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     
     if (has_figure_of_type(BUILDING_SLOT_BOAT, FIGURE_FISHING_BOAT)) {
         return;
@@ -110,7 +111,7 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
 void building_shipyard::update_map_orientation(int orientation) {
     int image_offset = city_view_relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
-    map_water_add_building(id(), tile(), building_shipyard_m.building_size, image_id);
+    map_water_add_building(id(), tile(), current_params().building_size, image_id);
 }
 
 bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {

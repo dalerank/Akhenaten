@@ -7,18 +7,19 @@
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
+#include "js/js_game.h"
 
-figure_barbarian_archer::static_params barbarian_archer_m;
-figure_assyrian_archer::static_params assyrian_archer_m;
-figure_canaanite_archer::static_params canaanite_archer_m;
-figure_egyptian_archer::static_params egyptian_archer_m;
-figure_hittite_archer::static_params hittite_archer_m;
-figure_hyksos_archer::static_params hyksos_archer_m;
-figure_libian_archer::static_params libian_archer_m;
-figure_nubian_archer::static_params nubian_archer_m;
-figure_persian_archer::static_params persian_archer_m;
-figure_roman_archer::static_params roman_archer_m;
-figure_seapeople_archer::static_params seapeople_archer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hittite_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyksos_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_libian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_nubian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_persian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_archer)
 
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();
