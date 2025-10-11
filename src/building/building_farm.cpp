@@ -190,7 +190,7 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
     d.worker_frame = context.frame;
 
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
-    command.image_id = context.start() + direction + 8 * context.current_frame();
+    command.image_id = context.start_frame() + direction + 8 * context.current_frame();
     command.pixel = coords + context.pos;
     command.mask = color_mask;
 }
@@ -404,7 +404,7 @@ void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     }
 
     vec2i pos = pixel + base.anim.pos;
-    ImageDraw::img_sprite(ctx, base.anim.start() + base.anim.current_frame(), pos, mask);
+    ImageDraw::img_sprite(ctx, base.anim.start_frame() + base.anim.current_frame(), pos, mask);
 }
 
 e_sound_channel_city building_farm::sound_channel() const {

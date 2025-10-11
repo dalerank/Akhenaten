@@ -171,7 +171,7 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     auto &anim_dockers = base.anim;
     auto &d = runtime_data();
     if (anim_dockers.valid()) {
-        int img_id = anim_dockers.start() + (d.docker_anim_frame / anim_dockers.frame_duration) * 4;
+        int img_id = anim_dockers.start_frame() + (d.docker_anim_frame / anim_dockers.frame_duration) * 4;
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
         command.image_id = img_id;
