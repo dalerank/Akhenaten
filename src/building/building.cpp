@@ -1135,7 +1135,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
 
     vec2i pos = pixel + ranim.pos;
     auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
-    command.image_id = ranim.start() + ranim.current_frame();
+    command.image_id = ranim.start_frame() + ranim.current_frame();
     command.pixel = pos;
     command.mask = mask;
     command.flags = ranim.flags;

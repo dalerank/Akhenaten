@@ -77,7 +77,7 @@ bool figure_fishing_point::can_move_by_water() const {
 }
 
 void figure_fishing_point::main_image_update() {
-    base.main_image_id = base.animctx.start() + base.animctx.current_frame();
+    base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
 }
 
 figure *figure_fishing_point::create(tile2i tile) {

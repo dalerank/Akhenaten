@@ -65,7 +65,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     ImageDraw::img_generic(ctx, img, pixel + pole_offset);
 
     // flag
-    const image_t *flag = image_get(base.animctx.start());
+    const image_t *flag = image_get(base.animctx.start_frame());
     const vec2i flag_offset = vec2i(0, -flag->height);
     //if (m->is_halted) 
     {
@@ -83,5 +83,5 @@ void figure_standard_bearer::before_poof() {
 }
 
 void figure_standard_bearer::main_image_update() {
-    base.main_image_id = base.animctx.start() + base.animctx.current_frame();
+    base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
 }

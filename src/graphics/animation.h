@@ -53,7 +53,8 @@ struct animation_context {
     void update(bool refresh_only);
     inline bool valid() const { return base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
-    inline int start() const { return base + offset; }
+    inline int start_frame() const { return base + offset; }
+    inline void restart() { was_finished = false; frame = 0; }
     inline bool finished() const { return was_finished || current_frame() >= max_frames; }
 
     animation_context& operator=(const animation_t &anim) { setup(anim); return *this; }

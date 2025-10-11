@@ -619,9 +619,9 @@ bool figure_impl::can_move_by_water() const {
 
 void figure_impl::main_image_update() {
     if (base.state == FIGURE_STATE_DYING) {
-        base.main_image_id = base.animctx.start() + base.animctx.current_frame();
+        base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
     } else {
-        base.main_image_id = base.animctx.start() + base.figure_image_direction() + 8 * base.animctx.current_frame();
+        base.main_image_id = base.animctx.start_frame() + base.figure_image_direction() + 8 * base.animctx.current_frame();
     }
 }
 

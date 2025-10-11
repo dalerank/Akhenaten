@@ -159,7 +159,7 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
     auto &anim_wharf = base.anim;
     auto &d = runtime_data();
     if (anim_wharf.valid()) {
-        int img_id = anim_wharf.start() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
+        int img_id = anim_wharf.start_frame() + (d.docker_anim_frame / anim_wharf.frame_duration) * 4;
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
         command.image_id = img_id;
