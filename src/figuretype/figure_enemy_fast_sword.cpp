@@ -7,17 +7,18 @@
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
+#include "js/js_game.h"
 
-figure_barbarian_sword::static_params barbarian_sword_m;
-figure_assyrian_sword::static_params assyrian_sword_m;
-figure_canaanite_sword::static_params canaanite_sword_m;
-figure_hyksos_sword::static_params hyksos_sword_m;
-figure_kushite_axeman::static_params kushite_axeman_m;
-figure_libian_sword::static_params libian_sword_m;
-figure_nubian_axeman::static_params nubian_axeman_m;
-figure_phoenician_swordman::static_params phoenician_swordman_m;
-figure_roman_legioner::static_params roman_legioner_m;
-figure_seapeople_axeman::static_params sepeople_axeman_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_sword)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_sword)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_sword)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyksos_sword)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_kushite_axeman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_libian_sword)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_nubian_axeman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_swordman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_legioner)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_axeman)
 
 void figure_enemy_fast_sword::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");

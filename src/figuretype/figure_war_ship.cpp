@@ -15,18 +15,9 @@
 #include "graphics/image_desc.h"
 #include "building/building_warship_wharf.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-figure_warship::static_params warship_m;
-figure_warship_info_window figure_warship_infow;
-
-void figure_warship::static_params::archive_load(archive arch) {
-    orders_info.fill(0);
-    arch.r_objects("orders", [this] (pcstr key, archive or_arch) {
-        int id = or_arch.r_int("id");
-        int text = or_arch.r_int("text");
-        orders_info[id] = text;
-    });
-}
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_warship)
 
 water_dest map_water_get_wharf_for_new_warship(figure &boat) {
     building_warship_wharf *wharf = nullptr;
@@ -244,37 +235,4 @@ void figure_warship::figure_action_common() {
         }
     } break;
     }
-}
-
-pcstr button_ids[] = { "hold_position", "engage_nearby", "seek_and_destroy", "repair", "return_to_wharf" };
-void figure_warship_info_window::init(object_info &c) {
-    figure_info_window::init(c);
-
-    figure_warship *f = c.figure_get<figure_warship>();
-
-    for (const pcstr id: button_ids) {
-        ui[id].onclick([f, this] (int p1, int p2) {
-            const auto &params = f->params();
-            f->runtime_data().active_order = p1;
-        });
-    }
-}
-
-void figure_warship_info_window::window_info_background(object_info &c) {
-    figure_info_window::window_info_background(c);
-
-    figure_warship *f = c.figure_get<figure_warship>();
-    const short order = f->runtime_data().active_order;
-
-    ui["repair"].darkened = (f->base.damage == 0) ? UiFlags_Grayscale : UiFlags_None;
-    ui["return_to_wharf"].darkened = (f->base.action_state == FIGURE_ACTION_203_WARSHIP_MOORED) ? UiFlags_Grayscale : UiFlags_None;
-
-    for (const pcstr id : button_ids) {
-        auto imgbtn = ui[id].dcast_image_button();
-        imgbtn->select(order == imgbtn->param1);
-    }
-
-    const auto &orders_info = f->current_params().orders_info;
-    ui["action_header"] = ui::str(c.group_id, orders_info[order]);
-    ui["action_text"] = ui::str(c.group_id, orders_info[order] + 1);
 }

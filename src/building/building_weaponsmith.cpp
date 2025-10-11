@@ -15,7 +15,7 @@
 #include "city/city_resource.h"
 #include <iostream>
 
-building_weaponsmith::static_params weaponsmith_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_weaponsmith);
 
 declare_console_command(addweapons, game_cheat_add_resource<RESOURCE_WEAPONS>);
 declare_console_command(addcopper, game_cheat_add_resource<RESOURCE_COPPER>);

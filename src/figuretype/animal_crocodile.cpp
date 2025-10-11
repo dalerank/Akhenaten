@@ -4,8 +4,9 @@
 #include "grid/terrain.h"
 #include "city/city.h"
 #include "core/random.h"
+#include "js/js_game.h"
 
-figure_crocodile::static_params crocodile_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_crocodile);
 
 void figure_crocodile::on_create() {
     figure_impl::on_create();

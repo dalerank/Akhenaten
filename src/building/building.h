@@ -54,8 +54,8 @@ class building_recruiter;
 class building_pavilion;
 class building_statue;
 class building_ferry;
-class building_fort_ground;
 class building_fort;
+class building_fort_ground;
 class building_fishing_wharf;
 class building_warship_wharf;
 class building_shipyard;
@@ -174,6 +174,12 @@ struct building_input {
 };
 using building_output = building_input;
 ANK_CONFIG_STRUCT(building_input, resource, resource_second)
+
+struct metainfo {
+    uint16_t help_id;
+    uint16_t text_id;
+};
+ANK_CONFIG_STRUCT(metainfo, help_id, text_id)
 
 class building {
 public:
@@ -447,7 +453,7 @@ private:
 #define BUILDING_RUNTIME_DATA_T BUILDING_RUNTIME_DATA(runtime_data_t)
 
 #define BUILDING_STATIC_DATA(type) ;                                                                    \
-    static const type &current_params() { return (const type &)params(TYPE); }
+    static const type &current_params() { return (const type &)building_static_params::get(TYPE); }
 
 #define BUILDING_STATIC_DATA_T BUILDING_STATIC_DATA(static_params)
 
@@ -513,6 +519,7 @@ struct building_static_params {
     int num_types;
     std::array<uint16_t, 5> cost;
     building_desirability_t desirability;
+    uint16_t progress_max;
 
     svector<uint8_t, 5> laborers;
     svector<int8_t, 5> fire_risk;
@@ -522,7 +529,7 @@ struct building_static_params {
     building_planner_need_rule needs;
 
     void archive_unload();
-    void base_load(archive arch);
+    void initialize();
 
     virtual void planer_setup_build(build_planner &planer) const {}
     virtual int planer_setup_orientation(int orientation) const { return orientation; }
@@ -547,11 +554,13 @@ struct building_static_params {
 
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
+    static building_static_params &ref(e_building_type e);
 };
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
-    output_resource_second_rate, num_types, building_size, info_title_id)
+    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, 
+    meta_id, production_rate, min_houses_coverage)
 
 class building_impl {
 public:
@@ -587,12 +596,12 @@ public:
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_fire_risk(int value) const { return value; }
     virtual textid get_tooltip() const { return {0, 0}; }
-    virtual int ready_production() const { return params().production_rate; }
+    virtual int ready_production() const { return current_params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
-    virtual const building_static_params &params() const { return building_static_params::get(type()); }
-    virtual const building_static_params &params() { return building_static_params::get(type()); }
+    virtual const static_params &current_params() const { return building_static_params::get(type()); }
+    virtual const static_params &current_params() { return building_static_params::get(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
@@ -603,8 +612,6 @@ public:
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
-
-    static const static_params &params(e_building_type type) { return building_static_params::get(type); }
 
     #define ALLOW_SMART_CAST_BUILDING_I(type) virtual building_##type *dcast_##type() { return nullptr; }
     ALLOW_SMART_CAST_BUILDING_I(farm)
@@ -711,9 +718,9 @@ public:
     inline bool has_road_access() const { return base.has_road_access; }
     inline short distance_from_entry() const { return base.distance_from_entry; }
     inline int road_network() const { return base.road_network_id; }
-    inline const animation_t &anim(const xstring &key) const { return params().animations[key]; }
-    inline const int first_img(const xstring &key) const { return  params().first_img(key); }
-    inline const int base_img() const { return  params().base_img(); }
+    inline const animation_t &anim(const xstring &key) const { return current_params().animations[key]; }
+    inline const int first_img(const xstring &key) const { return  current_params().first_img(key); }
+    inline const int base_img() const { return  current_params().base_img(); }
  
     virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
@@ -833,8 +840,8 @@ GENERATE_SMART_CAST_BUILDING(recruiter)
 GENERATE_SMART_CAST_BUILDING(pavilion)
 GENERATE_SMART_CAST_BUILDING(statue)
 GENERATE_SMART_CAST_BUILDING(ferry)
-GENERATE_SMART_CAST_BUILDING(fort_ground)
 GENERATE_SMART_CAST_BUILDING(fort)
+GENERATE_SMART_CAST_BUILDING(fort_ground)
 GENERATE_SMART_CAST_BUILDING(fishing_wharf)
 GENERATE_SMART_CAST_BUILDING(warship_wharf)
 GENERATE_SMART_CAST_BUILDING(shipyard)
@@ -895,27 +902,15 @@ struct model_t : public building_static_params {
         building_static_params::register_model(TYPE, *this);
     }
 
-    void initialize() {
-        bool loaded = false;
-        g_config_arch.r_section(name, [&] (archive arch) {
-            building_static_params &base = *this;
-            arch.r(base);
-            building_static_params::base_load(arch);
-            loaded = true;
-            call_struct_reader_if_exists(arch, *this);
-            this->archive_load(arch);
-        });
-        assert(loaded);
-    }
-
-    virtual void archive_load(archive) {
-        /*overload options*/
-    }
-
     static void static_params_load() {
-        const model_t &item = static_cast<const model_t&>(building_impl::params(TYPE));
-        assert(item.TYPE == TYPE);
-        const_cast<model_t&>(item).initialize();
+        building_static_params &base = building_static_params::ref(TYPE);
+        model_t &item = (model_t&)base;
+        assert(item.type == TYPE);
+
+        const bool loaded = g_config_arch.r(base.name, base);
+        assert(loaded);
+
+        item.initialize();
     }
 
     static building_impl *create(e_building_type e, building &b) {

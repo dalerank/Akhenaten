@@ -12,7 +12,7 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 
-building_wood_cutter::static_params bwood_cutter_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_wood_cutter);
 
 void building_wood_cutter::on_create(int orientation) {
     runtime_data().max_gatheres = current_params().max_gatherers;
@@ -46,7 +46,7 @@ bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, 
 void building_wood_cutter::spawn_figure() {
     check_labor_problem();
     if (has_road_access()) {
-        common_spawn_labor_seeker(params().min_houses_coverage);
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
         if (spawn_delay == -1) {

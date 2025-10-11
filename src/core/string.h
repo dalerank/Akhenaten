@@ -21,11 +21,6 @@ struct textid {
     textid &operator=(vec2i v) { group = v.x; id = v.y; return *this; }
 };
 
-struct metainfo {
-    uint16_t help_id;
-    uint16_t text_id;
-};
-
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength);
 int string_length(const uint8_t* str);
 const uint8_t* string_from_ascii(const char* str, bool extended = false);

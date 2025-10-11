@@ -32,7 +32,4 @@ ANK_CONFIG_STRUCT(building_tax_collector::static_params, max_deben_storage)
 class building_tax_collector_up : public building_tax_collector {
 public:
     BUILDING_METAINFO(BUILDING_TAX_COLLECTOR_UPGRADED, building_tax_collector_up, building_tax_collector)
-
-    struct static_params : public building_tax_collector::static_params {
-    } BUILDING_STATIC_DATA_T;
 };

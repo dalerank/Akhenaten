@@ -29,3 +29,4 @@ public:
     virtual void update_map_orientation(int map_orientation) override;
     virtual void on_undo() override;
 };
+ANK_CONFIG_STRUCT(building_booth::static_params, meta)

@@ -18,14 +18,14 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-
+#include "js/js_game.h"
 #include "graphics/image.h"
 
 #define INFINITE 10000
 
 int g_tower_sentry_request = 0;
 
-building_recruiter::static_params brecruiter_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_recruiter);
 
 bool building_recruiter::static_params::is_unique_building() const {
     if (!!game_features::gameplay_change_multiple_barracks) {
@@ -206,7 +206,7 @@ void building_recruiter::spawn_figure() {
     check_labor_problem();
     //    map_point road;
     if (base.has_road_access) {
-        common_spawn_labor_seeker(params().min_houses_coverage);
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
         int pct_workers = worker_percentage();
         int spawn_delay = figure_spawn_timer();
         //        if (pct_workers >= 100)

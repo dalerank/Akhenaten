@@ -418,7 +418,7 @@ void building_temple_complex::update_map_orientation(int orientation) {
         int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
         pcstr orient_key[] = { "main_n", "main_e", "main_s", "main_w" };
         int image_id = anim(orient_key[orientation]).first_img();
-        map_building_tiles_add(id(), tile(), params().building_size, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(id(), tile(), current_params().building_size, image_id, TERRAIN_BUILDING);
     }
 
     building *altar = get_altar();

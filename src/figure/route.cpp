@@ -215,6 +215,12 @@ void figure::route_remove() {
         routing_path_id = 0;
     }
 }
+
+void figure::reset_flags() {
+    flags = 0;
+    flags |= (params().is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
+}
+
 int figure_route_get_direction(int path_id, int index) {
     auto &data = g_figure_route_data;
     return data.direction_paths[path_id][index];

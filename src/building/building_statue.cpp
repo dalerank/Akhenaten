@@ -19,9 +19,11 @@
 #include "window/window_building_info.h"
 #include "construction/build_planner.h"
 
-building_small_statue::static_params small_statue_m;
-building_medium_statue::static_params medium_statue_m;
-building_large_statue::static_params large_statue_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_statue);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_statue);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_statue);
 
 int building_statue::statue_params_t::get_image(e_building_type type, int orientation, int variant) const {
     int image_id = 0;

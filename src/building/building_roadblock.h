@@ -6,12 +6,11 @@
 class building_routeblock : public building_impl {
 public:
     building_routeblock(building &b) : building_impl(b) {}
+    virtual building_routeblock *dcast_routeblock() override { return this; }
 
     struct runtime_data_t {
         short exceptions;
     } BUILDING_RUNTIME_DATA(runtime_data_t);
-
-    virtual building_routeblock *dcast_routeblock() override { return this; }
 
     virtual void set_permission(e_permission) {}
     virtual bool get_permission(e_permission) { return false; }
@@ -20,11 +19,6 @@ public:
 class building_roadblock : public building_routeblock {
 public:
     BUILDING_METAINFO(BUILDING_ROADBLOCK, building_roadblock, building_routeblock)
-
-    struct static_params : public building_model {
-
-    } BUILDING_STATIC_DATA_T;
-
     virtual building_roadblock *dcast_roadblock() override { return this; }
 
     virtual void on_place_checks() override;

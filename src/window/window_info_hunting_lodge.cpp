@@ -18,7 +18,7 @@ void info_window_hunting_lodge::init(object_info &c) {
 
     building *b = c.building_get();
 
-    const auto &params = b->dcast()->params();
+    const auto &params = b->dcast()->current_params();
 
     textid reason{ c.group_id, 0 };
     if (!b->has_road_access) {

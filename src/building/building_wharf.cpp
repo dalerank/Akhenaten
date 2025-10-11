@@ -10,7 +10,7 @@ void building_wharf::on_create(int orientation) {
 
 void building_wharf::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, base_img() + orientation_rel);
+    map_water_add_building(id(), tile(), current_params().building_size, base_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }

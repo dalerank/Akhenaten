@@ -7,14 +7,6 @@ public:
     building_industry(building &b) : building_impl(b) {}
     virtual building_industry *dcast_industry() override { return this; }
 
-    template<typename T>
-    struct static_params_t : public buildings::model_t<T> {
-        uint16_t progress_max;
-        virtual void archive_load(archive arch) override {
-            progress_max = arch.r_int("progress_max", 200);
-        }
-    };
-
     struct runtime_data_t : public no_copy_assignment {
         short ready_production;
         short progress;
@@ -30,7 +22,7 @@ public:
         int unk_40[40];
         int unk_12[10];
         e_figure_type processed_figure;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual int produce_uptick_per_day() const { return base.num_workers; }
     virtual void update_production();

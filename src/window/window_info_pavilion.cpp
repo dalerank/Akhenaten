@@ -18,7 +18,7 @@ void info_window_pavilion::init(object_info &c) {
     building_info_window::init(c);
 
     auto ent = c.building_get<building_entertainment>();
-    const auto &params = ent->params();
+    const auto &params = ent->current_params();
 
     window_building_play_sound(&c, ent->get_sound());
 

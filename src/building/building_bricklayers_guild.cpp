@@ -14,10 +14,10 @@
 #include "widget/city/ornaments.h"
 #include "game/game.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <iostream>
 
-building_bricklayers_guild::static_params bricklayers_guild_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
 declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
@@ -53,7 +53,7 @@ void building_bricklayers_guild::spawn_figure() {
         return;
     }
 
-    base.common_spawn_labor_seeker(params().min_houses_coverage);
+    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
     int pct_workers = base.worker_percentage();
     if (pct_workers < 50) {
         return;

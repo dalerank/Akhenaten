@@ -7,8 +7,9 @@
 #include "figuretype/figure_shipwreck.h"
 #include "city/city.h"
 #include "city/city_message.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_transport_ship> transport_ship_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_transport_ship);
 
 water_dest map_water_get_wharf_for_new_transport_ship(figure &boat) {
     building_transport_wharf *wharf = nullptr;

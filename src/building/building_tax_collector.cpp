@@ -20,9 +20,10 @@
 #include "widget/city/ornaments.h"
 #include "figuretype/figure_tax_collector.h"
 #include "figuretype/figure_cartpusher.h"
+#include "js/js_game.h"
 
-building_tax_collector::static_params  btax_collector_m;
-building_tax_collector_up::static_params btax_collector_up_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector_up);
 
 void building_tax_collector::spawn_figure() {
     if (!has_road_access()) {
@@ -34,7 +35,7 @@ void building_tax_collector::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
 
     int pct_workers = worker_percentage();
     int spawn_delay;

@@ -9,7 +9,15 @@
 #include "city/city.h"
 #include "core/random.h"
 
-figure_ostrich_hunter::static_params ostrich_hunter_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_ostrich_hunter)
+
+static_assert(archive_helper::class_has_archive_reader<figure_ostrich_hunter::static_params>() == true, "");
+
+void figure_ostrich_hunter::static_params::archive_init() {
+    assert(max_hunting_distance > 0);
+}
 
 static void scared_animals_in_area(tile2i center, int size) {
     map_grid_area_foreach(center, size, [] (tile2i tile) {
@@ -41,7 +49,7 @@ void figure_ostrich_hunter::figure_action() {
 
     switch (action_state()) {
     case ACTION_8_RECALCULATE: {
-            auto result = base.is_nearby(NEARBY_ANIMAL, ostrich_hunter_m.max_hunting_distance, false);
+            auto result = base.is_nearby(NEARBY_ANIMAL, current_params().max_hunting_distance, false);
             base.target_figure_id = result.fid;
             if (base.target_figure_id) {
                 figure_get(base.target_figure_id)->targeted_by_figure_id = id();
@@ -189,7 +197,7 @@ sound_key figure_ostrich_hunter::phrase_key() const {
 }
 
 figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {
-    return ostrich_hunter_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 void figure_ostrich_hunter::update_animation() {

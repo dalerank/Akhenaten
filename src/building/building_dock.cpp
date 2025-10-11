@@ -25,8 +25,9 @@
 #include "figuretype/figure_trader_ship.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
+#include "js/js_game.h"
 
-building_dock::static_params dock_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dock);
 
 int building_dock::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     const auto result = map_shore_determine_orientation(end, building_size, true);
@@ -46,7 +47,7 @@ void building_dock::on_create(int orientation) {
 
 void building_dock::on_place(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    map_water_add_building(id(), tile(), params().building_size, base_img() + orientation_rel);
+    map_water_add_building(id(), tile(), current_params().building_size, base_img() + orientation_rel);
 
     building_impl::on_place(orientation, variant);
 }
@@ -91,7 +92,7 @@ void building_dock::spawn_figure() {
     }
 
     check_labor_problem();
-    common_spawn_labor_seeker(params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     int pct_workers = worker_percentage();
     int max_dockers;
     if (pct_workers >= 75) {

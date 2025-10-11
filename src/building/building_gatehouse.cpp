@@ -15,9 +15,11 @@
 #include "grid/image.h"
 #include "city/city.h"
 
-building_brick_gatehouse::static_params brick_gatehouse_m;
-building_mud_gatehouse::static_params mud_gatehouse_m;
-building_tower_gatehouse::static_params tower_gatehouse_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_gatehouse);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_gatehouse);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tower_gatehouse);
 
 building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(build_planner &planer, tile2i end, int city_orientation) {
     int local_rotation = -1;
@@ -173,7 +175,7 @@ void building_gatehouse::on_create(int orientation) {
 
 void building_gatehouse::update_image_set(building& maingate) {
     const int city_orientation = city_view_orientation() / 2;
-    const auto bparams = params(maingate.type);
+    const auto& bparams = maingate.params();
     int image_id = bparams.base_img();
     int map_orientation = city_view_orientation();
 

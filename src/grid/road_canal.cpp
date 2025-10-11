@@ -36,7 +36,7 @@ bool map_can_place_road_under_canal(tile2i tile) {
 }
 
 bool map_can_place_canal_on_road(tile2i tile) {
-    const auto &params = building_impl::params(BUILDING_ROAD);
+    const auto &params = building_static_params::get(BUILDING_ROAD);
     int base_img = params.base_img();
     int image_id = map_image_at(tile) - base_img;
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50)

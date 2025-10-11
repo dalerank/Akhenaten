@@ -253,7 +253,6 @@ figure_ostrich = {
 	category: figure_category_animal
 	max_damage: 100
 	terrain_usage : TERRAIN_USAGE_ANIMAL
-	max_hunting_distance : 15
 	missile_delay : 50
 }
 
@@ -381,7 +380,8 @@ figure_ostrich_hunter = {
 		unpack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false, start_frame:11, reverse:true }
 		move_pack : { pack:PACK_SPR_MAIN, id:51, max_frames:12 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
-	},
+	}
+	
 	sounds : {
 		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 }
     back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 }
@@ -394,7 +394,7 @@ figure_ostrich_hunter = {
 	missile_attack_value: 4
 	missile_delay: 50
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
-	max_hunting_distance : 30,
+  max_hunting_distance : 15
 }
 
 figure_hunter_arrow = {

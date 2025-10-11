@@ -6,8 +6,9 @@
 #include "widget/city/ornaments.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "js/js_game.h"
 
-building_juggler_school::static_params juggler_school_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_juggler_school);
 
 void building_juggler_school::update_day() {
     building_impl::update_day();

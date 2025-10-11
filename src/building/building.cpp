@@ -156,9 +156,9 @@ resource_vec building_impl::required_resources() const {
 }
 
 metainfo building_impl::get_info() const {
-    const auto &metainfo = !params().meta_id.empty()
-                                ? base.get_info(params().meta_id)
-                                : params().meta;
+    const auto &metainfo = !current_params().meta_id.empty()
+                                ? base.get_info(current_params().meta_id)
+                                : current_params().meta;
     return metainfo;
 }
 
@@ -184,6 +184,13 @@ const building_static_params &building_static_params::get(e_building_type e) {
     auto p = building_impl_params->at(e);
     return (p == nullptr) ? building_static_params::dummy : *p;
 }
+
+building_static_params &building_static_params::ref(e_building_type e) {
+    auto *cfg = building_impl_params->at(e);
+    assert(cfg);
+    return *const_cast<building_static_params *>(cfg);
+}
+
 
 const building_impl *building::dcast() const {
     if (!_ptr) {
@@ -1032,7 +1039,7 @@ int building::mothball_toggle() {
 }
 
 void building_impl::on_place(int orientation, int variant) {
-    auto &p = params();
+    const auto &p = current_params();
     
     base.fire_proof = p.fire_proof;
     base.damage_proof = p.damage_proof;
@@ -1237,12 +1244,9 @@ void building_static_params::archive_unload() {
     cost.fill(0);
 }
 
-void building_static_params::base_load(archive arch) {
-    meta_id = arch.r_string("meta_id");
-    meta.help_id = arch.r_int("info_help_id");
-    meta.text_id = arch.r_int("info_text_id");
-    production_rate = arch.r_uint("production_rate", 100);
-    min_houses_coverage = arch.r_int("min_houses_coverage", 100);
+void building_static_params::initialize() {
+    if (production_rate == 0 ) production_rate = 100;
+    if (min_houses_coverage == 0) min_houses_coverage = 100;
 
     city_labor_t::set_category(type, labor_category);
 }

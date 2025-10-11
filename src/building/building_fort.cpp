@@ -24,10 +24,12 @@
 #include "city/city_labor.h"
 #include "game/undo.h"
 
-building_fort_charioteers::static_params fort_charioteers_m;
-building_fort_archers::static_params fort_archers_m;
-building_fort_infantry::static_params fort_infantry_m;
-building_fort_ground::static_params fort_ground_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_charioteers);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_archers);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_infantry);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_ground);
 
 template<typename T>
 void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
@@ -38,7 +40,7 @@ void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &plan
         blocked = true;
     }
 
-    const auto &ground_params = building_impl::params(BUILDING_FORT_GROUND);
+    const auto &ground_params = building_static_params::get(BUILDING_FORT_GROUND);
     int fort_size = this->building_size;
     int ground_size = ground_params.building_size;
     int global_rotation = building_rotation_global_rotation();
@@ -103,7 +105,7 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     ground->next_part_building_id = 0;
     tile2i fort_tile_add = tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
 
-    int ground_id = params().first_img(animkeys().ground);
+    int ground_id = current_params().first_img(animkeys().ground);
     map_building_tiles_add(ground->id, fort_tile_add, 4, ground_id, TERRAIN_BUILDING);
 
     base.formation_id = formation_batalion_create_for_fort(&base);

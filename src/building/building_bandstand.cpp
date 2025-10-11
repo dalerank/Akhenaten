@@ -24,6 +24,8 @@
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 
+#include "js/js_game.h"
+
 namespace parts {
     xstring stand_sn_n("stand_sn_n");
     xstring stand_sn_s("stand_sn_s");
@@ -34,7 +36,7 @@ namespace parts {
     xstring booth("booth");
 }
 
-building_bandstand::static_params bandstand_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bandstand);
 
 bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
@@ -121,7 +123,7 @@ void building_bandstand::on_place_checks() {
 }
 
 void building_bandstand::on_place_update_tiles(int orientation, int variant) {
-    int size = params().building_size;
+    int size = current_params().building_size;
     int image_id = anim(animkeys().square).first_img();
 
     // add underlying plaza first

@@ -22,11 +22,6 @@ public:
     struct static_params_t : public buildings::model_t<T> {
         building_gatehouse_ghost ghost;
 
-        virtual void archive_load(archive arch) override {
-            arch.r("ghost", ghost);
-            assert(!ghost.main_view_offset.empty() && !ghost.part_view_offset.empty());
-        }
-
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
         virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
     };
@@ -48,8 +43,9 @@ public:
     BUILDING_METAINFO(BUILDING_BRICK_GATEHOUSE, building_brick_gatehouse, building_gatehouse)
 
     struct static_params : public static_params_t<self_type> {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_brick_gatehouse::static_params, ghost)
 
 class building_mud_gatehouse : public building_gatehouse {
 public:
@@ -58,8 +54,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 
     struct static_params : public static_params_t<self_type> {
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 };
+ANK_CONFIG_STRUCT(building_mud_gatehouse::static_params, ghost)
 
 class building_tower_gatehouse : public building_impl {
 public:
@@ -72,9 +69,10 @@ public:
         virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
         virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
 
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void update_map_orientation(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_create(int orientation) override;
 };
+ANK_CONFIG_STRUCT(building_tower_gatehouse::static_params, fire_proof)

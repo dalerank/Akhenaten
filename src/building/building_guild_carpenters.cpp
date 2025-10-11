@@ -39,7 +39,7 @@ void building_carpenters_guild::spawn_figure() {
         return;
     }
 
-    base.common_spawn_labor_seeker(params().min_houses_coverage);
+    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
     int pct_workers = base.worker_percentage();
     if (pct_workers < 50) {
         return;

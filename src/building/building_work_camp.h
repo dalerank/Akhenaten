@@ -6,11 +6,7 @@
 class building_work_camp : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_WORK_CAMP, building_work_camp, building_impl)
-
     building_work_camp *dcast_work_camp() override { return this; }
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 
     virtual void spawn_figure() override;
     virtual void update_graphic() override;

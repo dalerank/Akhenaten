@@ -35,3 +35,4 @@ public:
 
     void map_add_bandstand_tiles();
 };
+ANK_CONFIG_STRUCT(building_bandstand::static_params, meta)

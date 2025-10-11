@@ -203,7 +203,7 @@ void building_update_state(void) {
 
         if (b->state != BUILDING_STATE_VALID) {
             if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-                const auto &params = b->dcast()->params();
+                const auto &params = b->dcast()->current_params();
                 canals_recalc |= params.planner_update_rule.canals;
                 water_routes_recalc |= params.planner_update_rule.ferries;
                 //roads_recalc |= params.updates.roads;
@@ -360,10 +360,11 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         }
 
         auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[ std::min<int>(diff, arr.size()-1) ]; };
-        b->des_influence = building_impl::params(b->type).desirability.to_influence();
-        b->fire_risk_increase = approach_diff(building_impl::params(b->type).fire_risk);
-        b->damage_risk_increase = approach_diff(building_impl::params(b->type).damage_risk);
-        b->max_workers = approach_diff(building_impl::params(b->type).laborers);
+        const auto &params = building_static_params::get(b->type);
+        b->des_influence = params.desirability.to_influence();
+        b->fire_risk_increase = approach_diff(params.fire_risk);
+        b->damage_risk_increase = approach_diff(params.damage_risk);
+        b->max_workers = approach_diff(params.laborers);
     }
     //building_extra_data.created_sequence = 0;
 });

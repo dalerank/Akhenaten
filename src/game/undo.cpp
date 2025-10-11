@@ -170,7 +170,7 @@ static void add_building_to_terrain(building* b) {
         return;
     }
 
-    int size = building_impl::params(b->type).building_size;
+    int size = building_static_params::get(b->type).building_size;
     map_building_tiles_add(b->id, b->tile, size, 0, 0);
     b->state = BUILDING_STATE_VALID;
 
@@ -265,7 +265,7 @@ void game_undo_perform() {
     map_routing_update_land();
     map_routing_update_walls();
     data.num_buildings = 0;
-    int vacant_lot_image = building_impl::params(BUILDING_HOUSE_VACANT_LOT).base_img();
+    int vacant_lot_image = building_static_params::get(BUILDING_HOUSE_VACANT_LOT).base_img();
     for (int i = 0; data.newhouses_offsets[i] != 0; i++) {
         int grid_offset = data.newhouses_offsets[i] - 1;
 

@@ -12,8 +12,9 @@
 #include "graphics/elements/ui.h"
 #include "widget/city/ornaments.h"
 #include "city/city_labor.h"
+#include "js/js_game.h"
 
-building_well::static_params well_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_well);
 well_info_window well_infow;
 
 void building_well::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
@@ -73,7 +74,7 @@ void well_info_window::init(object_info &c) {
     }
 }
 
-inline bool well_info_window::check(object_info &c) {
+bool well_info_window::check(object_info &c) {
     building *b = c.building_get();
     return b->dcast_well();
 }

@@ -7,12 +7,13 @@
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
+#include "js/js_game.h"
 
-figure_egyptian_spearman::static_params egyptian_spearman_m;
-figure_hittite_spearman::static_params hittite_spearman_m;
-figure_kushite_spearman::static_params kushite_spearman_m;
-figure_persian_spearman::static_params persian_spearman_m;
-figure_phoenician_spearman::static_params phoenician_spearman_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_spearman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hittite_spearman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_kushite_spearman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_persian_spearman)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_spearman)
 
 void figure_enemy_spearman::on_create() {
     figure_impl::on_create();

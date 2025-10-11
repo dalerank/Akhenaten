@@ -1,7 +1,6 @@
 #pragma once
 
 #include "figure/figure.h"
-#include "window/window_figure_info.h"
 
 class figure_warship : public figure_impl {
 public:
@@ -15,13 +14,18 @@ public:
         e_order_max,
     };
 
+    struct order_t {
+        xstring key;
+        int8_t id;
+        int8_t text;
+    };
+
     FIGURE_METAINFO(FIGURE_WARSHIP, figure_warship)
     figure_warship(figure *f) : figure_impl(f) {}
     virtual figure_warship *dcast_warship() override { return this; }
 
     struct static_params : public figure_model {
-        std::array<short, e_order_max> orders_info;
-        virtual void archive_load(archive arch) override;
+        std::unordered_map<xstring, order_t> orders_info;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -42,11 +46,5 @@ public:
     void figure_action_goto_wharf();
     void figure_action_common();
 };
-
-struct figure_warship_info_window : public figure_info_window_t<figure_warship_info_window> {
-    virtual void init(object_info &c) override;
-    virtual void window_info_background(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return !!c.figure_get<figure_warship>();
-    }
-};
+ANK_CONFIG_STRUCT(figure_warship::order_t, id, text)
+ANK_CONFIG_STRUCT(figure_warship::static_params, orders_info)

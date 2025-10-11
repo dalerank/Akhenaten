@@ -6,8 +6,9 @@
 #include "graphics/window.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
+#include "js/js_game.h"
 
-building_roadblock::static_params roadblock_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_roadblock);
 
 void building_roadblock::on_place_checks() {
     /*nothing*/

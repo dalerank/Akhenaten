@@ -162,7 +162,7 @@ int building_farm::get_crops_image(e_building_type type, int growth) {
 }
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
-    const auto &p = params(type);
+    const auto &p = building_static_params::get(type);
     if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
         int base = p.first_img(animkeys().farmland);
         int fert_average = map_get_fertility_for_farm(tile);
@@ -442,7 +442,7 @@ void building_farm::update_count() const {
 void building_farm::spawn_figure() {
     bool is_floodplain = building_is_floodplain_farm(base);
     if (!is_floodplain && has_road_access()) { // only for meadow farms
-        common_spawn_labor_seeker(params().min_houses_coverage);
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
         if (building_farm_time_to_deliver(false, base.output.resource)) { // UGH!!
             spawn_figure_harvests();
         }

@@ -52,7 +52,7 @@ void building_festival_square::on_place_update_tiles(int orientation, int varian
     d.booth_corner_grid_offset = tile().grid_offset();
     base.orientation = orientation;
 
-    int size = params().building_size;
+    int size = current_params().building_size;
     if (!map_grid_is_inside(tile(), size)) {
         return;
     }

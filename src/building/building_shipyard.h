@@ -37,4 +37,5 @@ public:
     virtual bool add_resource(e_resource resource, int amount) override;
     virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 };
-ANK_CONFIG_STRUCT(building_shipyard::static_params, warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)
+ANK_CONFIG_STRUCT(building_shipyard::static_params,
+    warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)

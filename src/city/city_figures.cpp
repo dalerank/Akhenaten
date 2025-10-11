@@ -60,6 +60,7 @@ void city_figures_t::on_post_load() {
             continue;
         }
 
+        figure->reset_flags();
         figure->dcast()->on_post_load();
     }
 }
@@ -141,8 +142,7 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->use_cross_country = false;
     f->terrain_usage = -1;
 
-    f->flags = 0;
-    f->flags |= (params.is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
+    f->reset_flags();
 
     f->direction = dir;
     f->roam_length = 0;
