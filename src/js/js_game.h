@@ -79,7 +79,29 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(register_enum_##enumt) = 1;} \
     static config::EnumIterator ANK_CONFIG_CC1(config_handler, __LINE__)(register_enum_##enumt); void register_enum_##enumt(config::type_enum) { js_register_tokens(enumt); }
 
-#define REPLICATE_STATIC_PARAMS_FROM_CONFIG(class_name) class_name::static_params ANK_VARIABLE_N(model_##class_name, #class_name)
+template<typename T, typename = void>
+struct has_static_params : std::false_type {};
+
+template<typename T>
+struct has_static_params<T, std::void_t<typename T::static_params>> : std::true_type {};
+
+template<typename T, typename = void>
+struct static_params_type;
+
+template<typename T>
+struct static_params_type<T, std::enable_if_t<has_static_params<T>::value>> {
+    using model_type = typename T::static_params;
+};
+
+template<typename T>
+struct static_params_type<T, std::enable_if_t<!has_static_params<T>::value>> {
+    using model_type = typename T::model_type;
+};
+
+template<typename T>
+using static_params_type_t = typename static_params_type<T>::model_type;
+
+#define REPLICATE_STATIC_PARAMS_FROM_CONFIG(class_name) static_params_type<class_name>::model_type ANK_VARIABLE_N(model_##class_name, #class_name)
 
 void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);

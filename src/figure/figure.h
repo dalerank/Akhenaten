@@ -49,6 +49,7 @@ class figure_missile;
 class figure_emigrant;
 class figure_homeless;
 class figure_festival_guy;
+class figure_ostrich;
 
 struct animation_t;
 struct figure_static_params;
@@ -230,6 +231,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(homeless)
     ALLOW_SMART_CAST_FIGURE(festival_guy)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
+    ALLOW_SMART_CAST_FIGURE(ostrich)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -384,7 +386,6 @@ public:
     void enemy_gladiator_action();
     void enemy_kingdome_soldier_action();
     void ballista_action();
-    void zebra_action();
     void hippodrome_horse_action();
 
     nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
@@ -437,8 +438,10 @@ public:
     }
 };
 
-#define FIGURE_METAINFO(type, clsid) using self_type = clsid;   \
-    using figure_model = figures::model_t<self_type>;           \
+#define FIGURE_METAINFO(type, clsid)                            \
+    using self_type = clsid;                                    \
+    using figure_model = figures::model_t<clsid>;               \
+    using model_type = figure_model;                            \
     static constexpr pcstr CLSID = #clsid;                      \
     static constexpr e_figure_type TYPE = type;                                               
 
@@ -492,7 +495,6 @@ ANK_CONFIG_STRUCT(figure_static_params, is_enemy, max_roam_length, permission,
 
 class figure_impl {
 public:
-    using static_params = figure_static_params;
     figure_impl(figure *f) : base(*f) {}
 
     virtual void on_create();
@@ -521,7 +523,7 @@ public:
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
     virtual const animations_t &anim() const { return params().animations; }
-    virtual const static_params &params() const { return figure_static_params::get(type()); }
+    virtual const figure_static_params &params() const { return figure_static_params::get(type()); }
     virtual void kill();
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
@@ -562,6 +564,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(missile)
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
+    ALLOW_SMART_CAST_FIGURE_I(ostrich)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -638,6 +641,7 @@ GENERATE_SMART_CAST_FIGURE(enemy_spearman)
 GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)
+GENERATE_SMART_CAST_FIGURE(ostrich)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {
@@ -677,13 +681,11 @@ struct model_t : public figure_static_params {
 
     static void static_params_load() {
         figure_static_params &base = figure_static_params::ref(TYPE);
-        model_t &item = (model_t &)base;
-        assert(item.TYPE == TYPE);
 
-        bool loaded = g_config_arch.r(item.name, base);
+        bool loaded = g_config_arch.r(CLSID, base);
         assert(loaded);
 
-        item.initialize();
+        base.initialize();
     }
 
     static figure_impl *create(e_figure_type e, figure &f) {
@@ -696,3 +698,9 @@ struct model_t : public figure_static_params {
 
 } // end namespace figures
     
+namespace archive_helper {
+    template<typename T>
+    inline void reader(archive, figures::model_t<T> &) {
+        // nothing to do, loaded in base class
+    }
+}

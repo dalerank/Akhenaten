@@ -656,8 +656,7 @@ namespace archive_helper {
     template<>
     inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
 
-    template<typename T> 
-    constexpr inline bool class_has_archive_reader() { return false; }
+    template<typename T> constexpr bool class_has_archive_reader() { return false; }
 }
 
 // The problem is that  clang SFINAE trait class_has_load_function is working incorrectly. 
@@ -677,7 +676,7 @@ template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_
 
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
-    template<> constexpr inline bool class_has_archive_reader<Type>() { return true; }            \
+    template<> constexpr bool class_has_archive_reader<Type>() { return true; }                   \
     template<>                                                                                    \
     inline void reader<Type>(archive js_j, Type& js_t) {                                          \
         call_unload_if_exists(js_t);                                                              \

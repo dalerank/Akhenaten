@@ -443,7 +443,8 @@ private:
     static constexpr e_building_type TYPE = type;                                                       \
     static constexpr pcstr CLSID = #clsid;                                                              \
     using self_type = clsid;                                                                            \
-    using building_model = buildings::model_t<self_type>;                                               \
+    using building_model = buildings::model_t<clsid>;                                                   \
+    using model_type = building_model;                                                                  \
     using inherited = base_class;                                                                       
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
@@ -564,8 +565,6 @@ ANK_CONFIG_STRUCT(building_static_params,
 
 class building_impl {
 public:
-    using static_params = building_static_params;
-
     building_impl(building &b) : base(b) {}
     virtual void on_create(int orientation) {}
     virtual void on_place(int orientation, int variant);
@@ -600,8 +599,8 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
-    virtual const static_params &current_params() const { return building_static_params::get(type()); }
-    virtual const static_params &current_params() { return building_static_params::get(type()); }
+    virtual const building_static_params &current_params() const { return building_static_params::get(type()); }
+    virtual const building_static_params &current_params() { return building_static_params::get(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
@@ -904,13 +903,11 @@ struct model_t : public building_static_params {
 
     static void static_params_load() {
         building_static_params &base = building_static_params::ref(TYPE);
-        model_t &item = (model_t&)base;
-        assert(item.type == TYPE);
 
-        const bool loaded = g_config_arch.r(base.name, base);
+        const bool loaded = g_config_arch.r(CLSID, base);
         assert(loaded);
 
-        item.initialize();
+        base.initialize();
     }
 
     static building_impl *create(e_building_type e, building &b) {
@@ -922,3 +919,10 @@ struct model_t : public building_static_params {
 };
 
 } // buildings
+
+namespace archive_helper {
+    template<typename T> 
+    inline void reader(archive, buildings::model_t<T> &) {
+        // nothing to do, loaded in base class
+    }
+}

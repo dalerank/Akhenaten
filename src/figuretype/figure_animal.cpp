@@ -67,49 +67,6 @@ bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
     }
 }
 
-void figure::zebra_action() {
-    formation* m = formation_get(formation_id);
-    //    terrain_usage = TERRAIN_USAGE_ANIMAL;
-    //    use_cross_country = false;
-    //    is_ghost = false;
-    g_city.figures.add_animal();
-    //    figure_image_increase_offset(12);
-
-    switch (action_state) {
-    case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
-        wait_ticks++;
-        if (wait_ticks > 200) {
-            wait_ticks = id & 0x1f;
-            action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-            tile2i formation_t = formation_layout_position(FORMATION_HERD, index_in_formation);
-            destination_tile = m->destination.shifted(formation_t);
-            roam_length = 0;
-        }
-        break;
-
-    case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-        move_ticks(2);
-        if (direction == DIR_FIGURE_NONE || direction == DIR_FIGURE_CAN_NOT_REACH) {
-            direction = previous_tile_direction;
-            action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
-            wait_ticks = id & 0x1f;
-
-        } else if (direction == DIR_FIGURE_REROUTE) {
-            route_remove();
-        }
-
-        break;
-    }
-    int dir = figure_image_direction();
-    if (action_state == FIGURE_ACTION_149_CORPSE) {
-        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + 96 + figure_image_corpse_offset();
-    } else if (action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
-        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir;
-    } else {
-        main_image_id = image_id_from_group(GROUP_FIGURE_CROCODILE) + dir + 8 * animctx.frame;
-    }
-}
-
 static void set_horse_destination(int state) {
     //    building *b = building_get(building_id);
     //    int orientation = city_view_orientation();

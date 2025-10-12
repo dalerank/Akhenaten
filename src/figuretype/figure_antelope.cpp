@@ -9,8 +9,9 @@
 #include "graphics/image.h"
 #include "sound/sound.h"
 #include "graphics/animation.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_antelope> antelope_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_antelope)
 
 void figure_antelope::figure_action() {
     const formation* m = formation_get(base.formation_id);

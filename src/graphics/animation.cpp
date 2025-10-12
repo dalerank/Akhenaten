@@ -36,6 +36,7 @@ void animation_context::setup(const animation_t &anim) {
     pos = anim.pos;
     loop = anim.loop;
     was_finished = false;
+    sframe = anim.start_frame;
     frame = anim.start_frame;
     is_reverse = anim.reverse;
     can_reverse = is_reverse || anim.can_reverse;
@@ -44,27 +45,36 @@ void animation_context::setup(const animation_t &anim) {
 }
 
 void animation_context::update(bool refresh_only) {
+    if (was_finished) {
+        tick_updated = true;
+        return;
+    }
+
     if (!can_reverse) {
         frame += refresh_only ? 0 : 1;
         if (frame >= max_frames * frame_duration) {
             was_finished = !loop;
             frame = loop ? 0 : (max_frames * frame_duration - 1);
         }
-    } else {
-        if (is_reverse) {
-            frame -= refresh_only ? 0 : 1;
-            if (frame < 1) {
-                frame = 0;
-                is_reverse = false;
-                was_finished = !loop;
-            }
-        } else {
-            frame += refresh_only ? 0 : 1;
-            if (frame >= (max_frames+1) * frame_duration) {
-                frame = max_frames * frame_duration;
-                is_reverse = true;
-            }
+        tick_updated = true;
+        return;
+    } 
+
+    if (is_reverse) {
+        frame -= refresh_only ? 0 : 1;
+        if (frame < 1) {
+            frame = 0;
+            is_reverse = false;
+            was_finished = !loop;
         }
+        tick_updated = true;
+        return;
+    } 
+
+    frame += refresh_only ? 0 : 1;
+    if (frame >= (max_frames + 1) * frame_duration) {
+        frame = max_frames * frame_duration;
+        is_reverse = true;
     }
     tick_updated = true;
 }

@@ -26,6 +26,8 @@
 
 #include "js/js_game.h"
 
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bandstand);
+
 namespace parts {
     xstring stand_sn_n("stand_sn_n");
     xstring stand_sn_s("stand_sn_s");
@@ -35,8 +37,6 @@ namespace parts {
     xstring musician_we("musician_we");
     xstring booth("booth");
 }
-
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bandstand);
 
 bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);

@@ -41,6 +41,7 @@ struct animation_context {
     vec2i pos;
     uint8_t frame_duration = 1;
     uint16_t max_frames;
+    uint16_t sframe;
     uint16_t frame;
     uint32_t flags;
     bool can_reverse;
@@ -54,8 +55,17 @@ struct animation_context {
     inline bool valid() const { return base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start_frame() const { return base + offset; }
-    inline void restart() { was_finished = false; frame = 0; }
-    inline bool finished() const { return was_finished || current_frame() >= max_frames; }
+    inline void restart() { was_finished = false; frame = sframe; }
+    inline bool finished() const {
+        if (was_finished) return true;
+        
+        const int cframe = current_frame();
+        if (is_reverse) {
+            return cframe == 0;
+        }
+        
+        return cframe >= max_frames;
+    }
 
     animation_context& operator=(const animation_t &anim) { setup(anim); return *this; }
 };
