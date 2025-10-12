@@ -62,7 +62,7 @@ void building_booth::static_params::planer_ghost_preview(build_planner &planer, 
     }
 }
 
-void building_booth::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+void building_booth::preview::setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(2, 2);
 }
 

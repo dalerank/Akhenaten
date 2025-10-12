@@ -34,8 +34,11 @@ public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard, building_storage)
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
 
+    struct preview : building_planer_renderer {
+        virtual void setup_preview_graphics(build_planner &planer) const override;
+    };
+
     struct static_params : public building_model {
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     } BUILDING_STATIC_DATA_T;

@@ -22,11 +22,17 @@ public:
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
+    struct preview : building_planer_renderer {
+        virtual void setup_preview_graphics(build_planner &planer) const override;
+    };
+
+    struct base_params {
+        vec2i init_tiles;
+    };
+
     template<typename T>
-    struct static_params_t : public buildings::model_t<T> {
+    struct static_params_t : public base_params, public buildings::model_t<T> {
         virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
-        virtual vec2i init_tiles_size() const { return vec2i(0, 0); }
     };
     
     bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
@@ -50,7 +56,6 @@ public:
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
     struct static_params : public static_params_t<building_small_mastaba> {
-        virtual vec2i init_tiles_size() const { return vec2i(10, 4); }
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
@@ -58,6 +63,7 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
+ANK_CONFIG_STRUCT(building_small_mastaba::static_params, init_tiles);
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
@@ -90,7 +96,6 @@ public:
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
     struct static_params : public static_params_t<building_medium_mastaba> {
-        virtual vec2i init_tiles_size() const { return vec2i(14, 6); }
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
@@ -98,6 +103,7 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
+ANK_CONFIG_STRUCT(building_medium_mastaba::static_params, init_tiles);
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:

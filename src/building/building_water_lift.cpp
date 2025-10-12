@@ -12,10 +12,11 @@
 
 building_water_lift::static_params water_lift_m;
 
-void building_water_lift::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    const int baseid = base_img();
+void building_water_lift::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const int baseid = params.base_img();
     const int imgid = baseid + planer.relative_orientation;
-    planer.set_tiles_building(imgid, building_size);
+    planer.set_tiles_building(imgid, params.building_size);
 }
 
 int building_water_lift::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {

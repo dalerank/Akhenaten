@@ -25,10 +25,30 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_statue);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_statue);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_statue);
 
-int building_statue::statue_params_t::get_image(e_building_type type, int orientation, int variant) const {
+template<typename T>
+const building_statue::statue_params_t &statue_static_params(const building_static_params& params) {
+    const auto& bparams = (const T::static_params &)params;
+    return (const building_statue::statue_params_t &)bparams;
+}
+
+int building_statue::get_image(e_building_type type, int orientation, int variant) {
+    const auto &params = building_static_params::get(type);
+
+    auto get_statue_params = [&] {
+        switch(type) {
+        case BUILDING_SMALL_STATUE: return statue_static_params<building_small_statue>(params);
+        case BUILDING_MEDIUM_STATUE: return statue_static_params<building_medium_statue>(params);
+        case BUILDING_LARGE_STATUE: return statue_static_params<building_large_statue>(params);
+        }
+
+        static building_statue::statue_params_t dummy;
+        return dummy;
+    };
+    const auto &statue_params = get_statue_params();
+
     int image_id = 0;
 
-    int size = this->variants.size();
+    int size = statue_params.variants.size();
 
     if (!size) {
         return 0;
@@ -43,13 +63,13 @@ int building_statue::statue_params_t::get_image(e_building_type type, int orient
     while (variant > (size - 1)) { variant -= size; }
 
     variant %= size;
-    return image_group(this->variants[variant]);
+    return image_group(statue_params.variants[variant]);
 }
 
-template<typename T>
-void building_statue::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
-    int statue_img = get_image(T::TYPE, planer.relative_orientation, planer.building_variant);
-    planer.set_tiles_building(statue_img, this->building_size);
+void building_statue::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    int statue_img = get_image(planer.build_type, planer.relative_orientation, planer.building_variant);
+    planer.set_tiles_building(statue_img, params.building_size);
 }
 
 template<typename T>
@@ -95,7 +115,8 @@ void building_statue::on_create(int o) {
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
-    int image_id = statue_params().get_image(type(), orientation_rel, variant);
+
+    int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
 }
 
@@ -108,7 +129,7 @@ void building_statue::update_map_orientation(int map_orientation) {
     int combined = 0;
 
     int orientation = combined % 4 - (map_orientation / 2);
-    int image_id = statue_params().get_image(type(), orientation - 1, variant);
+    int image_id = get_image(type(), orientation - 1, variant);
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }
 

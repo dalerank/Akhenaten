@@ -6,15 +6,15 @@
 
 building_transport_wharf::static_params transport_wharf_m;
 
-void building_transport_wharf::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    planer.set_tiles_building(base_img() + planer.relative_orientation, building_size);
+void building_transport_wharf::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    planer.set_tiles_building(params.base_img() + planer.relative_orientation, params.building_size);
 }
 
 int building_transport_wharf::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
     planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
     return 1;
 }
-
 
 void building_transport_wharf::spawn_figure() {
     check_labor_problem();

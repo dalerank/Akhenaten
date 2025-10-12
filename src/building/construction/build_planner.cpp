@@ -595,7 +595,7 @@ void build_planner::setup_build_flags() {
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
     
     vec2i init_tiles_size;
     switch (build_type) {
@@ -609,7 +609,7 @@ void build_planner::setup_build_graphics() {
         break;
 
     default: // regular buildings 
-        params.planer_setup_preview_graphics(*this);
+        preview.setup_preview_graphics(*this);
         break;
     }
 }
