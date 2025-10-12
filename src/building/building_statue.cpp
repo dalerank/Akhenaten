@@ -27,7 +27,8 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_statue);
 
 template<typename T>
 const building_statue::statue_params_t &statue_static_params(const building_static_params& params) {
-    const auto& bparams = (const T::static_params &)params;
+    using static_params = typename T::static_params;
+    const auto& bparams = (const static_params &)params;
     return (const building_statue::statue_params_t &)bparams;
 }
 

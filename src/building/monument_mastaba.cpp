@@ -53,7 +53,8 @@ struct mastaba_part {
 
 template<typename T>
 const building_mastaba::base_params &mastaba_base_params(const building_static_params &params) {
-    const auto &bparams = (const T::static_params &)params;
+    using static_params = typename T::static_params;
+    const auto &bparams = (const static_params &)params;
     return (const building_mastaba::base_params &)bparams;
 }
 
