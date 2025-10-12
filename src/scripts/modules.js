@@ -46,6 +46,7 @@ import ui_figure_trader_window
 import ui_figure_enemy_window
 import ui_top_menu_widget
 import ui_advisor_religion
+import ui_advisor_finance
 import fonts
 import routing
 import ui_bazaar_window

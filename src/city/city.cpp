@@ -1354,6 +1354,9 @@ struct cproperty {
 bvariant city_get_property(const xstring &domain, const xstring &name) {
     static cproperty cproperties[] = {
         { tags().city, "tax_percentage", [] (const xstring&) { return bvariant(g_city.finance.tax_percentage); }},
+        { tags().city, "estimated_tax_income", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_income); }},
+        { tags().city, "percentage_taxed_people", [] (const xstring&) { return bvariant(g_city.taxes.percentage_taxed_people); }},
+        { tags().city, "estimated_tax_uncollected", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_uncollected); }},
         { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
         { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},
         { tags().city, "population_youngs", [] (const xstring&) { return bvariant(g_city.population.academy_age); }},

@@ -55,15 +55,14 @@ void building_storage_room::add_import(e_resource resource) {
 }
 
 void building_storage_room::remove_export(e_resource resource) {
-    events::emit(event_stats_remove_resource{ resource, 100 });
-
     base.stored_amount_first -= 100;
     if (base.stored_amount_first <= 0) {
         runtime_data().resource_id = RESOURCE_NONE;
     }
 
-    int price = trade_price_sell(resource);
-    city_finance_process_export(price);
+    uint32_t price = trade_price_sell(resource);
+    events::emit(event_stats_remove_resource{ resource, 100 });
+    events::emit(event_finance_process_request{ efinance_request_export, price });
 
     set_image(resource);
 }

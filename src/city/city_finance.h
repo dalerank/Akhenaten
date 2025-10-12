@@ -8,6 +8,7 @@ enum e_finance_request_type {
     efinance_request_kigdome,
     efinance_request_disasters,
     efinance_request_import,
+    efinance_request_export,
 };
 
 struct finance_request_t {
@@ -121,17 +122,14 @@ class figure;
 
 struct event_gold_extract { int amount; };
 
-int city_finance_estimated_tax_uncollected();
-
-void city_finance_process_export(int price);
 void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat();
 void city_finance_process_console(int amount);
 void city_finance_process_stolen(int stolen);
 void city_finance_process_construction(int cost);
 
-void city_finance_update_interest(void);
-void city_finance_update_salary(void);
+void city_finance_update_interest();
+void city_finance_update_salary();
 
 const finance_overview* city_finance_overview_last_year();
 const finance_overview* city_finance_overview_this_year();
