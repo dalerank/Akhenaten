@@ -671,6 +671,7 @@ void figure_static_params::initialize() {
 
     if (speed_mult == 0) speed_mult = 1;
     if (max_damage == 0) max_damage = 100;
+    if (corpse_time_delay == 0) corpse_time_delay = 128;
 }
 
 void figure_impl::update_animation() {
