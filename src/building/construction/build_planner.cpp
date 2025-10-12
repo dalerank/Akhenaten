@@ -462,9 +462,9 @@ void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
 }
 
 void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
-    const auto &params = building_static_params::get(type);
+    const auto &preview = building_planer_renderer::get(type);
     int random_value = tile.grid_offset();
-    custom_building_variant = params.planer_setup_building_variant(type, tile, random_value);
+    custom_building_variant = preview.setup_building_variant(type, tile, random_value);
 }
 
 void build_planner::next_building_variant() {

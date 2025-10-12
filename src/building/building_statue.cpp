@@ -32,20 +32,21 @@ const building_statue::statue_params_t &statue_static_params(const building_stat
     return (const building_statue::statue_params_t &)bparams;
 }
 
-int building_statue::get_image(e_building_type type, int orientation, int variant) {
+const building_statue::statue_params_t& get_statue_params(e_building_type type) {
     const auto &params = building_static_params::get(type);
 
-    auto get_statue_params = [&] {
-        switch(type) {
-        case BUILDING_SMALL_STATUE: return statue_static_params<building_small_statue>(params);
-        case BUILDING_MEDIUM_STATUE: return statue_static_params<building_medium_statue>(params);
-        case BUILDING_LARGE_STATUE: return statue_static_params<building_large_statue>(params);
-        }
+    switch (params.type) {
+    case BUILDING_SMALL_STATUE: return statue_static_params<building_small_statue>(params);
+    case BUILDING_MEDIUM_STATUE: return statue_static_params<building_medium_statue>(params);
+    case BUILDING_LARGE_STATUE: return statue_static_params<building_large_statue>(params);
+    }
 
-        static building_statue::statue_params_t dummy;
-        return dummy;
-    };
-    const auto &statue_params = get_statue_params();
+    static building_statue::statue_params_t dummy;
+    return dummy;
+};
+
+int building_statue::get_image(e_building_type type, int orientation, int variant) {
+    const auto &statue_params = get_statue_params(type);
 
     int image_id = 0;
 
@@ -73,10 +74,11 @@ void building_statue::preview::setup_preview_graphics(build_planner &planer) con
     planer.set_tiles_building(statue_img, params.building_size);
 }
 
-template<typename T>
-int building_statue::static_params_t<T>::planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const {
+int building_statue::preview::setup_building_variant(e_building_type type, tile2i tile, int variant) const {
     assert(building_is_statue(type));
-    int size = this->variants.size();
+
+    const auto &statue_params = get_statue_params(type);
+    int size = statue_params.variants.size();
 
     return rand() % size;
 }
