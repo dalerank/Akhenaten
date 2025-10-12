@@ -30,37 +30,38 @@ int building_temple_complex::static_params_t<T>::planer_update_relative_orientat
     return global_rotation + 1;
 }
 
-template<class T>
-void building_temple_complex::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
+void building_temple_complex::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+
     int EMPTY______ = 0;
-    int main______n = this->first_img("main_n");
-    int main______w = this->first_img("main_w");
-    int oracle____n = this->first_img("oracle_n");
-    int oracle____w = this->first_img("oracle_w");
-    int altar_____n = this->first_img("altar_n");
-    int altar_____w = this->first_img("altar_w");
+    int main______n = params.first_img("main_n");
+    int main______w = params.first_img("main_w");
+    int oracle____n = params.first_img("oracle_n");
+    int oracle____w = params.first_img("oracle_w");
+    int altar_____n = params.first_img("altar_n");
+    int altar_____w = params.first_img("altar_w");
 
-    int tiles_____0 = this->first_img("tiles_0");
-    int tiles_____1 = this->first_img("tiles_1");
-    int tiles_____2 = this->first_img("tiles_2");
-    int tiles_____3 = this->first_img("tiles_3");
+    int tiles_____0 = params.first_img("tiles_0");
+    int tiles_____1 = params.first_img("tiles_1");
+    int tiles_____2 = params.first_img("tiles_2");
+    int tiles_____3 = params.first_img("tiles_3");
 
-    int statue1_image_id = this->first_img("statue_1");
+    int statue1_image_id = params.first_img("statue_1");
     int statue____0 = statue1_image_id + 0; // north
     int statue____1 = statue1_image_id + 1; // east
     int statue____2 = statue1_image_id + 2; // south
     int statue____3 = statue1_image_id + 3; // west
 
-    int statue2n = this->first_img("statue_2n");
+    int statue2n = params.first_img("statue_2n");
     int statue_2n_F = statue2n + 0; // north
     int statue_2n_B = statue2n + 1;
-    int statue2e = this->first_img("statue_2e");
+    int statue2e = params.first_img("statue_2e");
     int statue_2e_A = statue2e + 0; // east
     int statue_2e_B = statue2e + 1;
-    int statue2s = this->first_img("statue_2s");
+    int statue2s = params.first_img("statue_2s");
     int statue_2s_A = statue2s + 0; // south
     int statue_2s_B = statue2s + 1;
-    int statue2w = this->first_img("statue_2w");
+    int statue2w = params.first_img("statue_2w");
     int statue_2w_A = statue2w + 0; // west
     int statue_2w_B = statue2w + 1;
 

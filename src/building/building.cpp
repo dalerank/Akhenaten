@@ -1252,15 +1252,6 @@ void building_static_params::initialize() {
     city_labor_t::set_category(type, labor_category);
 }
 
-void building_static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    int img_id = base_img();
-    if (!img_id) {
-        img_id = animations[animkeys().preview].first_img();
-    }
-    img_id += planner_update_rule.relative_orientation * planer.relative_orientation;
-    planer.set_tiles_building(img_id, building_size);
-}
-
 int building_static_params::planer_update_building_variant(build_planner &planer) const {
     return planer.building_variant;
 }
@@ -1408,6 +1399,16 @@ void building_planer_renderer::register_model(e_building_type e, const building_
         std::fill(building_planer_rends->begin(), building_planer_rends->end(), nullptr);
     }
     (*building_planer_rends)[e] = &p;
+}
+
+void building_planer_renderer::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    int img_id = params.base_img();
+    if (!img_id) {
+        img_id = params.first_img(animkeys().preview);
+    }
+    img_id += params.planner_update_rule.relative_orientation * planer.relative_orientation;
+    planer.set_tiles_building(img_id, params.building_size);
 }
 
 const building_planer_renderer &building_planer_renderer::get(e_building_type e) {

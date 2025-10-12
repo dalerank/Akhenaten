@@ -46,8 +46,9 @@
 
 building_storage_yard::static_params storage_yard_m;
 
-void building_storage_yard::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    planer.set_tiles_building(base_img(), 3);
+void building_storage_yard::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    planer.set_tiles_building(params.base_img(), 3);
 }
 
 int building_storage_yard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {

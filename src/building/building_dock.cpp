@@ -35,9 +35,10 @@ int building_dock::static_params::planer_construction_update(build_planner &plan
     return 1;
 }
 
-void building_dock::static_params::planer_setup_preview_graphics(build_planner &planer) const {
-    const int imgid = base_img() + planer.relative_orientation;
-    planer.set_tiles_building(imgid, this->building_size);
+void building_dock::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const int imgid = params.base_img() + planer.relative_orientation;
+    planer.set_tiles_building(imgid, params.building_size);
 }
 
 void building_dock::on_create(int orientation) {

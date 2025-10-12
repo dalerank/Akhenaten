@@ -9,18 +9,17 @@ public:
 
     struct statue_params_t {
         svector<image_desc, 8> variants;
-        int get_image(e_building_type type, int orientation, int variant) const;
     };
 
     struct preview : public building_planer_renderer {
         virtual int setup_orientation(int orientation) const override { return 1; }
+        virtual void setup_preview_graphics(build_planner &planer) const override;
     };
 
     template<class T>
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
 
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
@@ -49,6 +48,7 @@ public:
 
     uint8_t service() const { return runtime_data().service; }
     void set_service(uint8_t v) { runtime_data().service = v; }
+    static int get_image(e_building_type type, int orientation, int variant);
 };
 ANK_CONFIG_STRUCT(building_statue::statue_params_t, variants)
 

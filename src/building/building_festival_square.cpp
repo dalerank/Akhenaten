@@ -16,7 +16,7 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_festival_square);
 
-void building_festival_square::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+void building_festival_square::preview::setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(5, 5); // TODO
 }
 

@@ -10,10 +10,10 @@ public:
 
     struct preview : public building_planer_renderer {
         virtual bool ghost_allow_tile(build_planner & p, tile2i tile) const override;
+        virtual void setup_preview_graphics(build_planner &planer) const override;
     };
 
     struct static_params : public building_model {
-        virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     } BUILDING_STATIC_DATA_T;
 

@@ -44,7 +44,7 @@ bool building_bandstand::preview::ghost_allow_tile(build_planner& p, tile2i tile
     return (is_road || !has_figure);
 }
 
-void building_bandstand::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+void building_bandstand::preview::setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(3, 3);
 }
 

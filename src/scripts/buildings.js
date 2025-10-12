@@ -1293,17 +1293,18 @@ building_wood_cutter = {
 
 building_small_mastaba = {
   animations : {
-    preview : { pack:PACK_MASTABA, id:2, offset:7 },
-    base : { pack:PACK_MASTABA, id:2, offset:7 },
-    base_bricks : { pack:PACK_MASTABA, id:1, offset:0 },
-    empty_land : {pack:PACK_TERRAIN, id:10},
-    enter : {pack:PACK_GENERAL, id:114},
-  },
-  building_size : 2,
-  info_title_id:[198, 18],
-  fire_proof :  true,
-  damage_proof : true,
+    preview : { pack:PACK_MASTABA, id:2, offset:7 }
+    base : { pack:PACK_MASTABA, id:2, offset:7 }
+    base_bricks : { pack:PACK_MASTABA, id:1, offset:0 }
+    empty_land : {pack:PACK_TERRAIN, id:10}
+    enter : {pack:PACK_GENERAL, id:114}
+  }
+  building_size : 2
+  info_title_id:[198, 18]
+  fire_proof :  true
+  damage_proof : true
   meta : { help_id:4, text_id:120 }
+  init_tiles : [10, 4]
   // todo
 }
 
@@ -1330,6 +1331,7 @@ building_medium_mastaba = {
   fire_proof :  true,
   damage_proof : true,
   meta : { help_id:4, text_id:120 }
+  init_tiles : [14, 6]
 }
 
 building_medium_mastaba_part_side = building_medium_mastaba

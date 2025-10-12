@@ -39,7 +39,7 @@ void building_pavilion::static_params::archive_load(archive arch) {
     musician_tile_e = first_img(animkeys().stand_sn_e);
 }
 
-void building_pavilion::static_params::planer_setup_preview_graphics(build_planner &planer) const {
+void building_pavilion::preview::setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(4, 4);
 }
 

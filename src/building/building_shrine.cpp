@@ -2,8 +2,9 @@
 
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_shrine_osiris> shrine_osiris_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_osiris);
 buildings::model_t<building_shrine_ra>   shrine_ra_m;
 buildings::model_t<building_shrine_ptah> shrine_ptah_m;
 buildings::model_t<building_shrine_seth> shrine_seth_m;

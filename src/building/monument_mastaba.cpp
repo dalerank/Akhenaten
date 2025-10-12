@@ -52,12 +52,32 @@ struct mastaba_part {
 };
 
 template<typename T>
-void building_mastaba::static_params_t<T>::planer_setup_preview_graphics(build_planner &planer) const {
+const building_mastaba::base_params &mastaba_base_params(const building_static_params &params) {
+    const auto &bparams = (const T::static_params &)params;
+    return (const building_mastaba::base_params &)bparams;
+}
+
+void building_mastaba::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+
+    auto get_base_params = [&] {
+        switch (planer.build_type) {
+        case BUILDING_SMALL_MASTABA: return mastaba_base_params<building_small_mastaba>(params);
+        case BUILDING_MEDIUM_MASTABA: return mastaba_base_params<building_medium_mastaba>(params);
+        }
+
+        static building_mastaba::base_params dummy;
+        return dummy;
+    };
+    const auto &base_params = get_base_params();
+
+    const vec2i init_tiles = base_params.init_tiles;
+
     switch (city_view_orientation() / 2) {
-    case 0: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
-    case 1: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
-    case 2: planer.init_tiles(init_tiles_size().y, init_tiles_size().x); break;
-    case 3: planer.init_tiles(init_tiles_size().x, init_tiles_size().y); break;
+    case 0: planer.init_tiles(init_tiles.y, init_tiles.x); break;
+    case 1: planer.init_tiles(init_tiles.x, init_tiles.y); break;
+    case 2: planer.init_tiles(init_tiles.y, init_tiles.x); break;
+    case 3: planer.init_tiles(init_tiles.x, init_tiles.y); break;
     }
 }
 
@@ -90,7 +110,7 @@ void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &p
     };
 
     vec2i size{ 1, 1 };
-    vec2i size_b = init_tiles_size();
+    vec2i size_b = init_tiles;
     switch (city_view_orientation() / 2) {
     case 0: size = { size_b.x, size_b.y }; break;
     case 1: size = { size_b.y, size_b.x }; break;
@@ -214,11 +234,11 @@ void building_small_mastaba::update_day() {
         return;
     }
 
-    building_mastaba::update_day(current_params().init_tiles_size());
+    building_mastaba::update_day(current_params().init_tiles);
 }
 
 bool building_small_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles_size());
+    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
 }
 
 void building_mastaba::remove_worker(figure_id fid) {
@@ -719,7 +739,7 @@ bool building_small_mastaba::draw_ornaments_and_animations_height(painter &ctx, 
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles_size());
+    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 declare_console_command_p(monumentnext) {
@@ -745,7 +765,7 @@ declare_console_command_p(monumentnext) {
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) {
-    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles_size());
+    return draw_ornaments_and_animations_flat_impl(base, ctx, point, tile, mask, current_params().init_tiles);
 }
 
 bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -758,7 +778,7 @@ bool building_medium_mastaba::draw_ornaments_and_animations_height(painter &ctx,
         return false;
     }
 
-    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles_size());
+    return draw_ornaments_and_animations_hight_impl(base, ctx, point, tile, color_mask, current_params().init_tiles);
 }
 
 void building_medium_mastaba::on_place(int orientation, int variant) {
@@ -849,5 +869,5 @@ void building_medium_mastaba::update_day() {
         return;
     }
 
-    building_mastaba::update_day(current_params().init_tiles_size());
+    building_mastaba::update_day(current_params().init_tiles);
 }
