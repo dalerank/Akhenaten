@@ -32,7 +32,26 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_infantry);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_ground);
 
 template<typename T>
-void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+const building_fort::base_params &fort_static_params(const building_static_params &params) {
+    using static_params = typename T::static_params;
+    const auto &bparams = (const static_params &)params;
+    return (const building_fort::base_params &)bparams;
+}
+
+const building_fort::base_params &get_fort_params(e_building_type type) {
+    const auto &params = building_static_params::get(type);
+
+    switch (params.type) {
+    case BUILDING_FORT_CHARIOTEERS: return fort_static_params<building_fort_charioteers>(params);
+    case BUILDING_FORT_ARCHERS: return fort_static_params<building_fort_archers>(params);
+    case BUILDING_FORT_INFANTRY: return fort_static_params<building_fort_infantry>(params);
+    }
+
+    static building_fort::base_params dummy;
+    return dummy;
+};
+
+void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     bool fully_blocked = false;
     bool blocked = false;
     if (formation_get_num_forts_cached() >= formation_get_max_forts() || g_city.finance.is_out_of_money()) {
@@ -41,11 +60,13 @@ void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &plan
     }
 
     const auto &ground_params = building_static_params::get(BUILDING_FORT_GROUND);
-    int fort_size = this->building_size;
+    const auto &params = building_static_params::get(planer.build_type);
+    int fort_size = params.building_size;
     int ground_size = ground_params.building_size;
     int global_rotation = building_rotation_global_rotation();
 
-    vec2i tile_ground_offset = this->ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
+    const auto &base_params = get_fort_params(planer.build_type);
+    vec2i tile_ground_offset = base_params.ghost.ground_check_offset[global_rotation * 4 + (city_view_orientation() / 2)];
     tile2i tile_ground = end.shifted(tile_ground_offset.x, tile_ground_offset.y);
 
     blocked_tile_vec blocked_tiles_fort;
@@ -55,14 +76,14 @@ void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &plan
     blocked |= !!planer.is_blocked_for_building(tile_ground, ground_size, blocked_tiles_ground);
 
     int orientation_index = building_rotation_get_storage_fort_orientation(global_rotation) / 2;
-    vec2i main_pixel = pixel + this->ghost.main_view_offset[orientation_index];
-    vec2i ground_pixel = pixel + this->ghost.ground_view_offset[orientation_index];
+    vec2i main_pixel = pixel + base_params.ghost.main_view_offset[orientation_index];
+    vec2i ground_pixel = pixel + base_params.ghost.ground_view_offset[orientation_index];
 
     if (blocked) {
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_fort);
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_ground);
     } else {
-        int image_id = this->base_img();
+        int image_id = params.base_img();
         if (orientation_index == 0 || orientation_index == 3) {
             // draw fort first, then ground
             planer.draw_building_ghost(ctx, image_id, main_pixel);
@@ -75,9 +96,8 @@ void building_fort::static_params_t<T>::planer_ghost_preview(build_planner &plan
     }
 }
 
-template<typename T>
-void building_fort::static_params_t<T>::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    planer_ghost_preview(planer, ctx, start, end, pixel);
+void building_fort::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    ghost_preview(planer, ctx, start, end, pixel);
 }
 
 void building_fort::on_place_update_tiles(int orientation, int variant) {

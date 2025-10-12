@@ -21,6 +21,25 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_gatehouse);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_gatehouse);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tower_gatehouse);
 
+template<typename T>
+const building_gatehouse::gatehouse_params_t &gatehouse_static_params(const building_static_params &params) {
+    using static_params = typename T::static_params;
+    const auto &bparams = (const static_params &)params;
+    return (const building_gatehouse::gatehouse_params_t &)bparams;
+}
+
+const building_gatehouse::gatehouse_params_t &get_gatehouse_params(e_building_type type) {
+    const auto &params = building_static_params::get(type);
+
+    switch (params.type) {
+    case BUILDING_BRICK_GATEHOUSE: return gatehouse_static_params<building_brick_gatehouse>(params);
+    case BUILDING_MUD_GATEHOUSE: return gatehouse_static_params<building_mud_gatehouse>(params);
+    }
+
+    static building_gatehouse::gatehouse_params_t dummy;
+    return dummy;
+};
+
 building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(build_planner &planer, tile2i end, int city_orientation) {
     int local_rotation = -1;
     blocked_tile_vec tmp_tiles;
@@ -111,8 +130,7 @@ building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(b
     return { tile_second_part, local_rotation };
 }
 
-template<typename T>
-void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     bool fully_blocked = false;
     bool blocked = false;
     if (g_city.finance.is_out_of_money()) {
@@ -142,8 +160,9 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
     }
 
     const int final_rot = (city_orientation + back_tile.orientation) % 8;
-    vec2i main_pixel = pixel + this->ghost.main_view_offset[final_rot];
-    vec2i ground_pixel = pixel + this->ghost.part_view_offset[final_rot];
+    const auto &gate_params = get_gatehouse_params(planer.build_type);
+    vec2i main_pixel = pixel + gate_params.ghost.main_view_offset[final_rot];
+    vec2i ground_pixel = pixel + gate_params.ghost.part_view_offset[final_rot];
 
     if (blocked) {
         planer.draw_partially_blocked(ctx, fully_blocked, blocked_tiles_main);
@@ -151,22 +170,22 @@ void building_gatehouse::static_params_t<T>::planer_ghost_preview(build_planner 
         return;
     }
 
+    const auto &params = building_static_params::get(planer.build_type);
     if (back_tile.orientation == 0 || back_tile.orientation == 2) {
-        int image_id = this->first_img("base_n");
-        int image_sec_id = this->first_img("base_second_n");
+        int image_id = params.first_img("base_n");
+        int image_sec_id = params.first_img("base_second_n");
         planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
         planer.draw_building_ghost(ctx, image_id, main_pixel);
     } else {
-        int image_id = this->first_img("base_w");
-        int image_sec_id = this->first_img("base_second_w");
+        int image_id = params.first_img("base_w");
+        int image_sec_id = params.first_img("base_second_w");
         planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
         planer.draw_building_ghost(ctx, image_id, ground_pixel);
     }
 }
 
-template<typename T>
-void building_gatehouse::static_params_t<T>::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    planer_ghost_preview(planer, ctx, start, end, pixel);
+void building_gatehouse::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    ghost_preview(planer, ctx, start, end, pixel);
 }
 
 void building_gatehouse::on_create(int orientation) {
@@ -337,11 +356,12 @@ bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, 
     return true;
 }
 
-void building_tower_gatehouse::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {  
+void building_tower_gatehouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {  
     uint32_t restricted_terrain = TERRAIN_ALL;
     restricted_terrain -= TERRAIN_WALL;
     
-    auto result = map_adjust_building_determine_orientation(end, this->building_size, true, true, BUILDING_MUD_GATEHOUSE);
+    const auto &params = building_static_params::get(planer.build_type);
+    auto result = map_adjust_building_determine_orientation(end, params.building_size, true, true, BUILDING_MUD_GATEHOUSE);
     
     blocked_tile_vec blocked_tiles;
     bool fully_blocked = (!result.match);
@@ -353,19 +373,20 @@ void building_tower_gatehouse::static_params::planer_ghost_preview(build_planner
         return;
     }
     
-    int image_id = this->base_img();
+    int image_id = params.base_img();
     image_id += (result.orientation == 0 || result.orientation == 2) ? 1 : 0;
     planer.update_tiles_building(image_id);
 
-    inherited::planer_ghost_preview(planer, ctx, tile, end, pixel);
+    building_planer_renderer::ghost_preview(planer, ctx, tile, end, pixel);
 }
 
-void building_tower_gatehouse::static_params::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    planer_ghost_preview(planer, ctx, start, end, pixel);
+void building_tower_gatehouse::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    ghost_preview(planer, ctx, start, end, pixel);
 }
 
-int building_tower_gatehouse::static_params::planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
-    auto match = map_adjust_building_determine_orientation(tile, this->building_size, true, true, BUILDING_MUD_GATEHOUSE);
+int building_tower_gatehouse::preview::can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
+    const auto &params = building_static_params::get(p.build_type);
+    auto match = map_adjust_building_determine_orientation(tile, params.building_size, true, true, BUILDING_MUD_GATEHOUSE);
     return (match.orientation < 0 ? CAN_NOT_PLACE : state);
 }
 

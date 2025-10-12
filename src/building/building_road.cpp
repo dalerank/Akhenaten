@@ -65,7 +65,7 @@ int building_road::preview::construction_place(build_planner &planer, tile2i sta
     return items_placed;
 }
 
-void building_road::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_road::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     int grid_offset = end.grid_offset();
     bool blocked = false;
     int image_id = 0;
@@ -151,7 +151,8 @@ void building_road::set_image(tile2i tile) {
         return;
     }
 
-    int base_img = current_params().base_img();
+    const auto &params = building_static_params::get(TYPE);
+    int base_img = params.base_img();
     if (is_paved(tile)) {
         const terrain_image img = map_image_context_get_paved_road(tile);
         map_image_set(tile, base_img + img.group_offset + img.item_offset);

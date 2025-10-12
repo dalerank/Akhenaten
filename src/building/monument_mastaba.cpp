@@ -58,19 +58,21 @@ const building_mastaba::base_params &mastaba_base_params(const building_static_p
     return (const building_mastaba::base_params &)bparams;
 }
 
+const building_mastaba::base_params &get_mastaba_params(e_building_type type) {
+    const auto &params = building_static_params::get(type);
+
+    switch (params.type) {
+    case BUILDING_SMALL_STATUE: return mastaba_base_params<building_small_mastaba>(params);
+    case BUILDING_MEDIUM_STATUE: return mastaba_base_params<building_medium_mastaba>(params);
+    }
+
+    static building_mastaba::base_params dummy;
+    return dummy;
+};
+
 void building_mastaba::preview::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);
-
-    auto get_base_params = [&] {
-        switch (planer.build_type) {
-        case BUILDING_SMALL_MASTABA: return mastaba_base_params<building_small_mastaba>(params);
-        case BUILDING_MEDIUM_MASTABA: return mastaba_base_params<building_medium_mastaba>(params);
-        }
-
-        static building_mastaba::base_params dummy;
-        return dummy;
-    };
-    const auto &base_params = get_base_params();
+    const auto &base_params = get_mastaba_params(planer.build_type);
 
     const vec2i init_tiles = base_params.init_tiles;
 
@@ -82,9 +84,11 @@ void building_mastaba::preview::setup_preview_graphics(build_planner &planer) co
     }
 }
 
-template<class T>
-void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    int image_id = this->base_img();
+void building_mastaba::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const auto &base_params = get_mastaba_params(planer.build_type);
+
+    int image_id = params.base_img();
     auto get_image = [image_id] (tile2i tile, tile2i start, vec2i size) {
         if (tile == start) {
             return image_id;
@@ -111,7 +115,7 @@ void building_mastaba::static_params_t<T>::planer_ghost_preview(build_planner &p
     };
 
     vec2i size{ 1, 1 };
-    vec2i size_b = init_tiles;
+    vec2i size_b = base_params.init_tiles;
     switch (city_view_orientation() / 2) {
     case 0: size = { size_b.x, size_b.y }; break;
     case 1: size = { size_b.y, size_b.x }; break;

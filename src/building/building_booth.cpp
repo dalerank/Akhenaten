@@ -35,7 +35,8 @@ bool building_booth::preview::ghost_allow_tile(build_planner &p, tile2i tile) co
     return (is_road || !has_figure);
 }
 
-void building_booth::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_booth::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
     int orientation = 0;
 
     bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_booth, &orientation);
@@ -43,16 +44,16 @@ void building_booth::static_params::planer_ghost_preview(build_planner &planer, 
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (!can_build) { // no can place
-        for (int i = 0; i < building_size * building_size; i++) {
+        for (int i = 0; i < params.building_size * params.building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        int square_id = first_img(animkeys().square);
-        for (int i = 0; i < building_size * building_size; i++) {
-            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, COLOR_MASK_GREEN);
+        int square_id = params.first_img(animkeys().square);
+        for (int i = 0; i < params.building_size * params.building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, COLOR_MASK_GREEN);
         }
 
-        const int booth = first_img(animkeys().booth);
+        const int booth = params.first_img(animkeys().booth);
         switch (orientation / 2) {
         case 0: planer.draw_building_ghost(ctx, booth, pixel, COLOR_MASK_GREEN); break;
         case 1: planer.draw_building_ghost(ctx, booth, pixel + vec2i{ 30, 15 }, COLOR_MASK_GREEN); break;

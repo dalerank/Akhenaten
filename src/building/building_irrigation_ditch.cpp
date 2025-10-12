@@ -11,8 +11,9 @@
 #include "city/city_buildings.h"
 #include "city/city.h"
 #include "game/undo.h"
+#include "js/js_game.h"
 
-building_irrigation_ditch::static_params irrigation_ditch_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_irrigation_ditch);
 
 int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
@@ -55,7 +56,7 @@ int building_irrigation_ditch::preview::construction_place(build_planner &planer
     return items_placed;
 }
 
-bool building_irrigation_ditch::static_params::is_road_tile_for_canal(tile2i tile, int gate_orientation) const {
+bool building_irrigation_ditch::preview::is_road_tile_for_canal(tile2i tile, int gate_orientation) const {
     bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
     if (map_terrain_is(tile, TERRAIN_BUILDING)) {
         building *b = building_at(tile);
@@ -72,7 +73,7 @@ bool building_irrigation_ditch::static_params::is_road_tile_for_canal(tile2i til
     return is_road;
 }
 
-bool building_irrigation_ditch::static_params::map_is_straight_road_for_canal(tile2i tile) const {
+bool building_irrigation_ditch::preview::map_is_straight_road_for_canal(tile2i tile) const {
     int road_tiles_x = is_road_tile_for_canal(tile.shifted(1, 0), 2) | is_road_tile_for_canal(tile.shifted(-1, 0), 2);
     int road_tiles_y = is_road_tile_for_canal(tile.shifted(0, -1), 1) | is_road_tile_for_canal(tile.shifted(0, 1), 1);
 
@@ -87,7 +88,7 @@ bool building_irrigation_ditch::static_params::map_is_straight_road_for_canal(ti
     return false;
 }
 
-void building_irrigation_ditch::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_irrigation_ditch::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     bool blocked = false;
     if (!map_can_place_initial_road_or_canal(end.grid_offset(), true)) {
         blocked = true;

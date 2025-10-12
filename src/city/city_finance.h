@@ -7,6 +7,7 @@ enum e_finance_request_type {
     efinance_request_festival,
     efinance_request_kigdome,
     efinance_request_disasters,
+    efinance_request_import,
 };
 
 struct finance_request_t {
@@ -122,7 +123,6 @@ struct event_gold_extract { int amount; };
 
 int city_finance_estimated_tax_uncollected();
 
-void city_finance_process_import(int price);
 void city_finance_process_export(int price);
 void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat();

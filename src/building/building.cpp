@@ -1300,20 +1300,6 @@ void add_building(building *b, int orientation, int variant) {
     }
 }
 
-void building_static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
-    planer.draw_tile_graphics_array(ctx, start, end, pixel);
-}
-
-void building_static_params::planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
-    for (int row = 0; row < planer.size.y; row++) {
-        for (int column = 0; column < planer.size.x; column++) {
-            vec2i current_coord = planer.pixel_coord_offset(row, column);
-            color color_mask = (planer.is_blocked_tile(row, column) || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-            planer.draw_flat_tile(current_coord, color_mask, ctx);
-        }
-    }
-}
-
 bool building_static_params::planer_is_need_flag(e_building_flags flag) const {
     switch (flag) {
     case e_building_flag::Meadow: return needs.meadow;
@@ -1342,6 +1328,20 @@ void building_planer_renderer::register_model(e_building_type e, const building_
         std::fill(building_planer_rends->begin(), building_planer_rends->end(), nullptr);
     }
     (*building_planer_rends)[e] = &p;
+}
+
+void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
+    for (int row = 0; row < planer.size.y; row++) {
+        for (int column = 0; column < planer.size.x; column++) {
+            vec2i current_coord = planer.pixel_coord_offset(row, column);
+            color color_mask = (planer.is_blocked_tile(row, column) || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
+            planer.draw_flat_tile(current_coord, color_mask, ctx);
+        }
+    }
+}
+
+void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    planer.draw_tile_graphics_array(ctx, start, end, pixel);
 }
 
 int building_planer_renderer::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {

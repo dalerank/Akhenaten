@@ -776,8 +776,8 @@ void build_planner::update_requirements_check() {
         }
     }
 
-    const auto &params = building_static_params::get(build_type);
-    can_place = params.planer_can_place(*this, start, end, can_place);
+    const auto &preview = building_planer_renderer::get(build_type);
+    can_place = preview.can_place(*this, start, end, can_place);
 
     if (special_flags & e_building_flag::RiverAccess) {
         if (!map_tile_is_connected_to_open_water(end)) {
@@ -1324,13 +1324,13 @@ void build_planner::draw(painter &ctx) {
     }
 
     vec2i pixel = pixel_coords_cache[0][0];
-    const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
     if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
-        params.planer_ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
+        preview.ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
     } else if (tiles_blocked_total > 0) {
         // draw green blueprint with red (blocked) tiles
-        params.planer_ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/false);
+        preview.ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/false);
     } else if (!draw_as_constructing) {
         // draw normal building ghost (green)
         draw_graphics(ctx);
@@ -1348,8 +1348,8 @@ void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
     vec2i pixel = pixel_coords_cache[0][0];
-    const auto &params = building_static_params::get(build_type);
-    params.planer_ghost_preview(*this, ctx, start, end, pixel);
+    const auto &preview = building_planer_renderer::get(build_type);
+    preview.ghost_preview(*this, ctx, start, end, pixel);
 }
 
 bool build_planner::place() {

@@ -13,12 +13,9 @@ public:
     building_farm(building &b) : building_impl(b) {}
     virtual building_farm *dcast_farm() override { return this; }
 
-    template<class T>
-    struct static_params_t : public buildings::model_t<T> {
-        using inherited = buildings::model_t<T>;
-
+    struct preview : building_planer_renderer {
         int is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const;
-        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
     struct runtime_data_t : public no_copy_assignment {
@@ -71,50 +68,34 @@ public:
 
 struct building_farm_grain : public building_farm {
     BUILDING_METAINFO(BUILDING_GRAIN_FARM, building_farm_grain, building_farm);
-
-    using static_params = static_params_t<building_farm_grain>;
 };
 
 struct building_farm_lettuce : public building_farm {
     BUILDING_METAINFO(BUILDING_LETTUCE_FARM, building_farm_lettuce, building_farm);
-
-    using static_params = static_params_t<building_farm_lettuce>;
 };
 
 struct building_farm_chickpeas : public building_farm {
     BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas, building_farm);
-
-    using static_params = static_params_t<building_farm_chickpeas>;
 };
 
 struct building_farm_pomegranates : public building_farm {
     BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates, building_farm);
-
-    using static_params = static_params_t<building_farm_pomegranates>;
 };
 
 struct building_farm_barley : public building_farm {
     BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley, building_farm);
-
-    using static_params = static_params_t<building_farm_barley>;
 };
 
 struct building_farm_flax : public building_farm {
     BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax, building_farm);
-
-    using static_params = static_params_t<building_farm_flax>;
 };
 
 struct building_farm_henna : public building_farm {
     BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna, building_farm);
-
-    using static_params = static_params_t<building_farm_henna>;
 };
 
 struct building_farm_figs : public building_farm {
     BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs, building_farm);
-
-    using static_params = static_params_t<building_farm_figs>;
 };
 
 bool building_farm_time_to_deliver(bool floodplains, int resource_id = 0);

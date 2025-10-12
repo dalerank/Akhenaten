@@ -16,12 +16,13 @@ public:
     building_fort(building &b) : building_impl(b) {}
     virtual building_fort *dcast_fort() override { return this; }
 
-    template<typename T>
-    struct static_params_t : buildings::model_t<T> {
+    struct base_params {
         building_fort_ghost ghost;
+    };
 
-        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void planer_ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
+    struct preview : building_planer_renderer {
+        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
     };
 
     struct runtime_data_t {
@@ -46,7 +47,7 @@ class building_fort_charioteers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_CHARIOTEERS, building_fort_charioteers, building_fort)
 
-    struct static_params : public static_params_t<building_fort_charioteers> {
+    struct static_params : public base_params, public building_model {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_charioteers::static_params, ghost)
@@ -55,7 +56,7 @@ class building_fort_archers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_ARCHERS, building_fort_archers, building_fort)
 
-    struct static_params : public static_params_t<building_fort_archers> {
+    struct static_params : public base_params, public building_model {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_archers::static_params, ghost)
@@ -64,7 +65,7 @@ class building_fort_infantry : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_INFANTRY, building_fort_infantry, building_fort)
 
-    struct static_params : public static_params_t<building_fort_infantry> {
+    struct static_params : public base_params, public building_model {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_infantry::static_params, ghost)
