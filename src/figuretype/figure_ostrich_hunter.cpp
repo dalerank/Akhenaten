@@ -13,8 +13,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_ostrich_hunter)
 
-static_assert(archive_helper::class_has_archive_reader<figure_ostrich_hunter::static_params>() == true, "");
-
 void figure_ostrich_hunter::static_params::archive_init() {
     assert(max_hunting_distance > 0);
 }
@@ -30,10 +28,11 @@ static void scared_animals_in_area(tile2i center, int size) {
 
 void figure_ostrich_hunter::figure_action() {
     figure* prey = figure_get(base.target_figure_id);
-    int dist = 0;
-    if (base.target_figure_id) {
-        dist = calc_maximum_distance(tile(), prey->tile);
+    if (!prey->is_valid()) {
+        base.target_figure_id = 0;
     }
+
+    const int dist = base.target_figure_id ? calc_maximum_distance(tile(), prey->tile) : 0;
 
     if (tile() == base.previous_tile) {
         base.movement_ticks_watchdog++;

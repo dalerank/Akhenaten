@@ -40,11 +40,7 @@ class building_fort_ground : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
     virtual building_fort_ground *dcast_fort_ground() override { return this; }
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
-ANK_CONFIG_STRUCT(building_fort_ground::static_params, meta)
 
 class building_fort_charioteers : public building_fort {
 public:

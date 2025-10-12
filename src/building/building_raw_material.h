@@ -49,3 +49,4 @@ public:
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
     virtual void on_before_collapse() override;
 };
+ANK_CONFIG_STRUCT(building_mine_copper::static_params, meta)

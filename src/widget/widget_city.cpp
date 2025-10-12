@@ -106,7 +106,7 @@ static void draw_TEST(vec2i pixel, tile2i point, painter &ctx) {
     //    if (tx==40 && ty==44)
     //        return ImageDraw::isometric_footprint_from_drawtile(image_id_from_group(GROUP_TERRAIN_GARDEN), x, y,
     //        COLOR_CHANNEL_RED);
-    const auto &params = building_impl::params(BUILDING_GARDENS);
+    const auto &params = building_static_params::get(BUILDING_GARDENS);
     const auto &anim = params.base_img();
     if (map_grid_inside_map_area(grid_offset, 1)) {
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
@@ -787,7 +787,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
         return;
     }
 
-    int size = building_impl::params(type).building_size;
+    int size = building_static_params::get(type).building_size;
     if (type == BUILDING_STORAGE_YARD) {
         size = 3;
     }

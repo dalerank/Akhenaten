@@ -27,7 +27,7 @@
 #include "city/city_finance.h"
 #include "js/js_game.h"
 
-building_mine_copper::static_params copper_mine_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_copper);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_clay_pit);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gold);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gems);
@@ -65,7 +65,7 @@ bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags f
         return !game_features::gameplay_copper_mine_can_build_near_mountains && needs.ore;
     }
 
-    return building_industry::static_params::planer_is_need_flag(flag);
+    return building_model::planer_is_need_flag(flag);
 }
 
 int building_clay_pit::get_fire_risk(int value) const {

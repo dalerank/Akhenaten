@@ -16,10 +16,10 @@
 
 #include <iostream>
 
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brewery);
+
 declare_console_command(addbeer, game_cheat_add_resource<RESOURCE_BEER>);
 declare_console_command(addbarley, game_cheat_add_resource<RESOURCE_BARLEY>);
-
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brewery);
 
 bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     const auto &ranim = anim(animkeys().work);
