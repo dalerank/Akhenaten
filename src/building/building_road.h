@@ -19,3 +19,4 @@ public:
     static bool set_road(tile2i tile);
     static bool is_paved(tile2i tile);
 };
+ANK_CONFIG_STRUCT(building_road::static_params, meta)

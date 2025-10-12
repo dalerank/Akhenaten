@@ -18,8 +18,9 @@
 #include "graphics/window.h"
 #include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"
+#include "js/js_game.h"
 
-building_road::static_params road_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_road);
 
 bool building_road::set_road(tile2i tile) {
     bool tile_set = false;

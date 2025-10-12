@@ -15,11 +15,11 @@
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 #include "construction/build_planner.h"
-
+#include "js/js_game.h"
 #include "dev/debug.h"
 #include <iostream>
 
-building_fishing_wharf::static_params fishing_wharf_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fishing_wharf);
 
 declare_console_command_p(killfishboats) {
     figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);

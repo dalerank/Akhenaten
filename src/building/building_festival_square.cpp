@@ -12,8 +12,9 @@
 #include "grid/building.h"
 #include "grid/orientation.h"
 #include "city/city_labor.h"
+#include "js/js_game.h"
 
-building_festival_square::static_params festival_square_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_festival_square);
 
 void building_festival_square::static_params::planer_setup_preview_graphics(build_planner &planer) const {
     planer.init_tiles(5, 5); // TODO
