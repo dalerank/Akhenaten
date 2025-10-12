@@ -28,7 +28,7 @@
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <cmath>
 #include <iostream>
 
@@ -43,7 +43,7 @@ const int QUARTER_GRANARY = 800;
 declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
 declare_console_command(addgamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
-buildings::model_t<building_granary> granary_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 
 int building_granary::amount(e_resource resource) const {
     if (!resource_is_food(resource)) {
@@ -522,7 +522,10 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
                 vec2i spot_pos = granary_offsets_ph[spot];
-                ImageDraw::img_generic(ctx, resources_id + r, point + spot_pos + vec2i{110, -74}, color_mask);
+                auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+                command.image_id = resources_id + r;
+                command.pixel = point + spot_pos + vec2i{ 110, -74 };
+                command.mask = color_mask;
             }
 
             last_spot_filled += spots_filled;
