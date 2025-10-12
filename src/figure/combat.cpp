@@ -198,7 +198,7 @@ void figure::figure_combat_handle_corpse() {
     }
 
     wait_ticks++;
-    if (wait_ticks >= 128) {
+    if (wait_ticks >= params().corpse_time_delay) {
         wait_ticks = 127;
         poof();
     }
