@@ -704,4 +704,9 @@ namespace archive_helper {
     inline void reader(archive, figures::model_t<T> &) {
         // nothing to do, loaded in base class
     }
+
+    template<typename T>
+    inline void reader(figures::model_t<T> &) {
+        // nothing to do, loaded in base class
+    }
 }

@@ -29,8 +29,9 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dock);
 
-int building_dock::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    const auto result = map_shore_determine_orientation(end, building_size, true);
+int building_dock::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const auto result = map_shore_determine_orientation(end, params.building_size, true);
     planer.draw_as_constructing = result.match;
     return 1;
 }

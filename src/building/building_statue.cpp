@@ -83,13 +83,13 @@ int building_statue::preview::setup_building_variant(e_building_type type, tile2
     return rand() % size;
 }
 
-template<typename T>
-int building_statue::static_params_t<T>::planer_next_building_variant(e_building_type type, tile2i tile, int variant) const {
+int building_statue::preview::next_building_variant(e_building_type type, tile2i tile, int variant) const {
     if (variant < 0) {
         return 0;
     }
 
-    int size = this->variants.size();
+    const auto &statue_params = get_statue_params(type);
+    int size = statue_params.variants.size();
     if (!size) {
         return variant;
     }
@@ -98,13 +98,11 @@ int building_statue::static_params_t<T>::planer_next_building_variant(e_building
     return variant;
 }
 
-template<class T>
-int building_statue::static_params_t<T>::planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
+int building_statue::preview::update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
     return global_rotation + 1;;
 }
 
-template<class T>
-int building_statue::static_params_t<T>::planer_update_building_variant(build_planner &planer) const {
+int building_statue::preview::update_building_variant(build_planner &planer) const {
     return planer.custom_building_variant; 
 }
 

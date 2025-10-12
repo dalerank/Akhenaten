@@ -1252,30 +1252,6 @@ void building_static_params::initialize() {
     city_labor_t::set_category(type, labor_category);
 }
 
-int building_static_params::planer_update_building_variant(build_planner &planer) const {
-    return planer.building_variant;
-}
-
-int building_static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    int special_flags = planer.special_flags;
-    if ((special_flags & e_building_flag::Meadow) || (special_flags & e_building_flag::Rock)
-        || (special_flags & e_building_flag::Trees) || (special_flags & e_building_flag::NearbyWater)
-        || (special_flags & e_building_flag::Walls) || (special_flags & e_building_flag::Groundwater)
-        || (special_flags & e_building_flag::Water) || (special_flags & e_building_flag::ShoreLine)
-        || (special_flags & e_building_flag::Road) || (special_flags & e_building_flag::Intersection)) {
-        return 0;
-    }
-
-    int real_orientation = (city_view_orientation() / 2) % 2 ;
-    if (real_orientation == 0) {
-        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
-    } else {
-        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
-    }
-
-    return 0;
-}
-
 void add_building(building *b, int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     const auto &params = b->params();
@@ -1324,39 +1300,6 @@ void add_building(building *b, int orientation, int variant) {
     }
 }
 
-int building_static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
-    // by default, get size from building's properties
-    assert(building_size > 0);
-
-    // correct building placement for city orientations
-    switch (city_view_orientation()) {
-    case DIR_2_BOTTOM_RIGHT:
-        end = end.shifted(-building_size + 1, 0);
-        break;
-
-    case DIR_4_BOTTOM_LEFT:
-        end = end.shifted(-building_size + 1, -building_size + 1);
-        break;
-
-    case DIR_6_TOP_LEFT:
-        end = end.shifted(0, -building_size + 1);
-        break;
-    }
-
-    // create building
-    planer.last_created_building = nullptr;
-    building *b = building_create(type, end, orientation);
-    game_undo_add_building(b);
-    if (b->id <= 0) { // building creation failed????
-        return 0;
-    }
-
-    add_building(b, orientation, variant);
-    planer.last_created_building = b;
-
-    return 1;
-}
-
 void building_static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     planer.draw_tile_graphics_array(ctx, start, end, pixel);
 }
@@ -1400,6 +1343,65 @@ void building_planer_renderer::register_model(e_building_type e, const building_
     }
     (*building_planer_rends)[e] = &p;
 }
+
+int building_planer_renderer::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+    // by default, get size from building's properties
+    const auto &params = building_static_params::get(planer.build_type);
+    assert(params.building_size > 0);
+
+    // correct building placement for city orientations
+    switch (city_view_orientation()) {
+    case DIR_2_BOTTOM_RIGHT:
+        end = end.shifted(-params.building_size + 1, 0);
+        break;
+
+    case DIR_4_BOTTOM_LEFT:
+        end = end.shifted(-params.building_size + 1, -params.building_size + 1);
+        break;
+
+    case DIR_6_TOP_LEFT:
+        end = end.shifted(0, -params.building_size + 1);
+        break;
+    }
+
+    // create building
+    planer.last_created_building = nullptr;
+    building *b = building_create(planer.build_type, end, orientation);
+    game_undo_add_building(b);
+    if (b->id <= 0) { // building creation failed????
+        return 0;
+    }
+
+    add_building(b, orientation, variant);
+    planer.last_created_building = b;
+
+    return 1;
+}
+
+int building_planer_renderer::update_building_variant(build_planner &planer) const {
+    return planer.building_variant;
+}
+
+int building_planer_renderer::construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    int special_flags = planer.special_flags;
+    if ((special_flags & e_building_flag::Meadow) || (special_flags & e_building_flag::Rock)
+        || (special_flags & e_building_flag::Trees) || (special_flags & e_building_flag::NearbyWater)
+        || (special_flags & e_building_flag::Walls) || (special_flags & e_building_flag::Groundwater)
+        || (special_flags & e_building_flag::Water) || (special_flags & e_building_flag::ShoreLine)
+        || (special_flags & e_building_flag::Road) || (special_flags & e_building_flag::Intersection)) {
+        return 0;
+    }
+
+    int real_orientation = (city_view_orientation() / 2) % 2;
+    if (real_orientation == 0) {
+        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
+    } else {
+        planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
+    }
+
+    return 0;
+}
+
 
 void building_planer_renderer::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);

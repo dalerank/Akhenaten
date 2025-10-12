@@ -49,6 +49,7 @@ struct animation_context {
     bool is_reverse = false;
     bool was_finished = false;
     bool tick_updated = false;
+    std::function<void()> on_finished_cb;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);
@@ -56,6 +57,9 @@ struct animation_context {
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start_frame() const { return base + offset; }
     inline void restart() { was_finished = false; frame = sframe; }
+    inline void restart(std::function<void()> cb) {
+        restart(); on_finished_cb = cb;
+    }
     inline bool finished() const {
         if (was_finished) return true;
         

@@ -468,8 +468,8 @@ void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
 }
 
 void build_planner::next_building_variant() {
-    const auto &params = building_static_params::get(build_type);
-    custom_building_variant = params.planer_next_building_variant(build_type, end, custom_building_variant);
+    const auto &preview = building_planer_renderer::get(build_type);
+    custom_building_variant = preview.next_building_variant(build_type, end, custom_building_variant);
     update_orientations();
 }
 
@@ -959,10 +959,10 @@ void build_planner::update_orientations(bool check_if_changed) {
     int prev_variant = building_variant;
    //int global_rotation = building_rotation_global_rotation();
 
-    const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
 
-    relative_orientation = params.planer_update_relative_orientation(*this, end, relative_orientation);
-    building_variant = params.planer_update_building_variant(*this);
+    relative_orientation = preview.update_relative_orientation(*this, end, relative_orientation);
+    building_variant = preview.update_building_variant(*this);
 
     relative_orientation = relative_orientation % 4;
     absolute_orientation = city_view_absolute_orientation(relative_orientation);
@@ -1068,6 +1068,7 @@ void build_planner::construction_update(tile2i tile) {
     int items_placed = 1;
 
     const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
         last_items_cleared = building_construction_clear_land(true, start, end);
@@ -1101,7 +1102,7 @@ void build_planner::construction_update(tile2i tile) {
         break;
 
     default:
-        items_placed = params.planer_construction_update(*this, start, end);
+        items_placed = preview.construction_update(*this, start, end);
     }
 
     if (items_placed >= 0) {
@@ -1366,6 +1367,7 @@ bool build_planner::place() {
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
     const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
     int placement_cost = params.get_cost();
 
     switch (build_type) {
@@ -1408,7 +1410,7 @@ bool build_planner::place() {
 
     default:
         {
-            int construction_placed = params.planer_construction_place(*this, start, end, absolute_orientation, building_variant);
+            int construction_placed = preview.construction_place(*this, start, end, absolute_orientation, building_variant);
             if (construction_placed == 0) {
                 return false;
             }

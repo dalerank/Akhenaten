@@ -25,8 +25,9 @@ declare_console_command_p(killfishboats) {
     figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
 }
 
-int building_fishing_wharf::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    const auto result = map_shore_determine_orientation(end, building_size, true);
+int building_fishing_wharf::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const auto result = map_shore_determine_orientation(end, params.building_size, true);
     planer.draw_as_constructing = result.match;
     return 1;
 }

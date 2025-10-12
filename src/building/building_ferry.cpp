@@ -8,14 +8,15 @@
 #include "grid/routing/routing.h"
 #include "graphics/elements/ui.h"
 #include "construction/build_planner.h"
-
+#include "js/js_game.h"
 #include "io/gamefiles/lang.h"
 
-building_ferry::static_params ferry_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
 info_window_ferry ferry_infow;
 
-int building_ferry::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
-    planer.draw_as_constructing = map_shore_determine_orientation(end, building_size, true).match;
+int building_ferry::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    planer.draw_as_constructing = map_shore_determine_orientation(end, params.building_size, true).match;
     return 1;
 }
 

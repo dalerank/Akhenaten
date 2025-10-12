@@ -51,7 +51,7 @@ void building_storage_yard::preview::setup_preview_graphics(build_planner &plane
     planer.set_tiles_building(params.base_img(), 3);
 }
 
-int building_storage_yard::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+int building_storage_yard::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
     planer.mark_construction(end, { 3, 3 }, TERRAIN_ALL, false);
     return 1;
 }
