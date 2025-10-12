@@ -41,10 +41,6 @@ int ui::advisor_financial_window_t::draw_background(UiFlags flags) {
     ui["treasury"].text_var("%s %d", prefix, std::abs(treasury));
     ui["treasury"].font(font);
 
-    // ${city.finance.tax_percentage} ${60.4} ${8.0} ${city.finance.estimated_tax_income}
-    ui["tax_value"].text_var("%d%% %s %s %d", g_city.finance.tax_percentage, ui::str(60, 4), ui::str(8, 0), g_city.finance.estimated_tax_income);
-    ui["tax_payers"].text_var("%d%% %s %s %d Db", g_city.taxes.percentage_taxed_people, ui::str(60, 5), ui::str(60, 22), city_finance_estimated_tax_uncollected());
-
     ui["dec_tax"].onclick([] { events::emit(event_finance_change_tax{ -1 }); });
     ui["inc_tax"].onclick([] { events::emit(event_finance_change_tax{ +1 }); });
 
