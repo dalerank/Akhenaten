@@ -23,8 +23,9 @@
 #include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "grid/tiles.h"
+#include "js/js_game.h"
 
-building_garden::static_params garden_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_garden);
 
 int building_garden::static_params::place_impl(tile2i start, tile2i end, bool place) const {
     game_undo_restore_map(1);
@@ -69,7 +70,7 @@ void building_garden::on_place_checks() {  /*nothing*/ }
 
 void building_garden::set_image(int grid_offset) {
     tile2i tile(grid_offset);
-    int garden_base = garden_m.base_img();
+    int garden_base = building_static_params::get(BUILDING_GARDENS).base_img();
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
@@ -115,7 +116,7 @@ void building_garden::set_image(int grid_offset) {
 }
 
 void building_garden::determine_tile(int grid_offset) {
-    int base_image = garden_m.base_img();
+    int base_image = building_static_params::get(BUILDING_GARDENS).base_img();
     int image_id = map_image_at(grid_offset);
     if (image_id >= base_image && image_id <= base_image + 6) {
         map_terrain_add(grid_offset, TERRAIN_GARDEN);

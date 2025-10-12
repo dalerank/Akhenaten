@@ -14,7 +14,7 @@ public:
 
         bool map_is_straight_road_for_canal(tile2i tile) const;
         bool is_road_tile_for_canal(tile2i tile, int gate_orientation) const;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void on_place_checks() override;
 };

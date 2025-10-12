@@ -11,7 +11,7 @@ public:
     struct static_params : public building_model {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         int booth_corner_grid_offset;
@@ -19,8 +19,7 @@ public:
         uint8_t juggler_visited;
         uint8_t musician_visited;
         uint8_t dancer_visited;
-    };
-    BUILDING_RUNTIME_DATA(runtime_data_t)
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -31,3 +30,4 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_map_orientation(int map_orientation) override;
 };
+ANK_CONFIG_STRUCT(building_festival_square::static_params, meta)
