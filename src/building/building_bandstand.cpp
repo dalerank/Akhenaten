@@ -38,7 +38,7 @@ namespace parts {
     xstring booth("booth");
 }
 
-bool building_bandstand::static_params::plane_ghost_allow_tile(build_planner& p, tile2i tile) const {
+bool building_bandstand::preview::ghost_allow_tile(build_planner& p, tile2i tile) const {
     const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
     const bool has_figure = map_has_figure_at(tile);
     return (is_road || !has_figure);

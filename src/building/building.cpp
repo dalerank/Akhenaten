@@ -62,6 +62,7 @@ const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT
 const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> ANK_CONFIG_ENUM(e_building_type_tokens);
 
 static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
+static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
 building_static_params building_static_params::dummy;
 
 void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
@@ -1396,8 +1397,22 @@ bool building_static_params::planer_is_need_flag(e_building_flags flag) const {
     return false;
 }
 
-bool building_static_params::plane_ghost_allow_tile(build_planner &p, tile2i tile) const {
+bool building_planer_renderer::ghost_allow_tile(build_planner &p, tile2i tile) const {
     return (map_has_figure_at(tile) == false);
+};
+const building_planer_renderer building_planer_renderer::dummy;
+
+void building_planer_renderer::register_model(e_building_type e, const building_planer_renderer &p) {
+    if (!building_planer_rends) {
+        building_planer_rends = new std::array<const building_planer_renderer *, BUILDING_MAX>();
+        std::fill(building_planer_rends->begin(), building_planer_rends->end(), nullptr);
+    }
+    (*building_planer_rends)[e] = &p;
+}
+
+const building_planer_renderer &building_planer_renderer::get(e_building_type e) {
+    auto p = building_planer_rends->at(e);
+    return (p == nullptr) ? building_planer_renderer::dummy : *p;
 }
 
 uint16_t building_static_params::get_cost() const {

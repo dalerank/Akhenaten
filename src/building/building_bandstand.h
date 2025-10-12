@@ -8,10 +8,13 @@ public:
     BUILDING_METAINFO(BUILDING_BANDSTAND, building_bandstand, building_entertainment)
     virtual building_bandstand *dcast_bandstand() override { return this; }
 
+    struct preview : public building_planer_renderer {
+        virtual bool ghost_allow_tile(build_planner & p, tile2i tile) const override;
+    };
+
     struct static_params : public building_model {
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
         virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual bool plane_ghost_allow_tile(build_planner& p, tile2i tile) const override;
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -36,3 +39,10 @@ public:
     void map_add_bandstand_tiles();
 };
 ANK_CONFIG_STRUCT(building_bandstand::static_params, meta)
+
+namespace buildings {
+    template<>
+    struct planer_t<building_bandstand> {
+        using planer_type = building_bandstand::preview;
+    };
+}

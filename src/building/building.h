@@ -501,6 +501,14 @@ struct building_planner_need_rule {
 ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
     nearby_water, groundwater, shoreline, canals, floodplain_shoreline, water_access)
 
+struct building_planer_renderer {
+    static const building_planer_renderer dummy;
+    virtual bool ghost_allow_tile(build_planner &p, tile2i tile) const;
+
+    static void register_model(e_building_type e, const building_planer_renderer &p);
+    static const building_planer_renderer& get(e_building_type e);
+};
+
 struct building_static_params {
     static building_static_params dummy;
     e_building_type type;
@@ -546,7 +554,7 @@ struct building_static_params {
     virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
     virtual bool planer_is_need_flag(e_building_flags flag) const;
     virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
-    virtual bool plane_ghost_allow_tile(build_planner &p, tile2i tile) const;
+
     virtual bool is_unique_building() const { return planner_update_rule.unique_building; }
     virtual uint16_t get_cost() const;
 
@@ -599,8 +607,6 @@ public:
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
     virtual void draw_tooltip(tooltip_context *c) {};
-    virtual const building_static_params &current_params() const { return building_static_params::get(type()); }
-    virtual const building_static_params &current_params() { return building_static_params::get(type()); }
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
@@ -694,6 +700,8 @@ public:
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
     inline int get_figure_id(int i) const { return base.get_figure_id(i); }
     inline int need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
+    inline const building_static_params &current_params() const { return building_static_params::get(type()); }
+    inline const building_static_params &current_params() { return building_static_params::get(type()); }
     figure *get_figure_in_slot(int i);
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
@@ -886,6 +894,11 @@ using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
 using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
 
 template<typename T>
+struct planer_t {
+    using planer_type = building_planer_renderer;
+};
+
+template<typename T>
 struct model_t : public building_static_params {
     using building_type = T;
     static constexpr e_building_type TYPE = T::TYPE;
@@ -897,8 +910,10 @@ struct model_t : public building_static_params {
 
         static BuildingCtorIterator ctor_handler(&create);
         static BuildingParamIterator static_params_handler(&static_params_load);
+        static planer_t<T>::planer_type planer_renderer;
 
         building_static_params::register_model(TYPE, *this);
+        building_planer_renderer::register_model(TYPE, planer_renderer);
     }
 
     static void static_params_load() {
