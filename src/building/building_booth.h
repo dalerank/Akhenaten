@@ -34,10 +34,3 @@ public:
     virtual void on_undo() override;
 };
 ANK_CONFIG_STRUCT(building_booth::static_params, meta)
-
-namespace buildings {
-    template<>
-    struct planer_t<building_booth> {
-        using planer_type = building_booth::preview;
-    };
-}

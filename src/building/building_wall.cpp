@@ -367,7 +367,7 @@ int building_mud_wall::static_params::planer_construction_place(build_planner &p
     return items_placed;
 }
 
-bool building_mud_wall::static_params::planer_can_construction_start(build_planner &p, tile2i start) const {
+bool building_mud_wall::preview::can_construction_start(build_planner &p, tile2i start) const {
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
 }
 

@@ -9,8 +9,11 @@ class building_mud_wall : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_MUD_WALL, building_mud_wall, building_impl)
 
+    struct preview : building_planer_renderer {
+        virtual bool can_construction_start(build_planner &p, tile2i start) const override;
+    };
+
     struct static_params : public building_model {
-        virtual bool planer_can_construction_start(build_planner &p, tile2i start) const override;
         virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual int planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
         //virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;

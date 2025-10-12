@@ -12,6 +12,10 @@ public:
         int get_image(e_building_type type, int orientation, int variant) const;
     };
 
+    struct preview : public building_planer_renderer {
+        virtual int setup_orientation(int orientation) const override { return 1; }
+    };
+
     template<class T>
     struct static_params_t : public statue_params_t, public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
@@ -20,7 +24,6 @@ public:
         virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
         virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
-        virtual int planer_setup_orientation(int orientation) const override { return 1; }
         virtual int planer_update_building_variant(build_planner &planer) const override;
     };
 

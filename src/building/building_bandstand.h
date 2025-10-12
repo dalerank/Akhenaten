@@ -39,10 +39,3 @@ public:
     void map_add_bandstand_tiles();
 };
 ANK_CONFIG_STRUCT(building_bandstand::static_params, meta)
-
-namespace buildings {
-    template<>
-    struct planer_t<building_bandstand> {
-        using planer_type = building_bandstand::preview;
-    };
-}

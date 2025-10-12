@@ -504,6 +504,9 @@ ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
 struct building_planer_renderer {
     static const building_planer_renderer dummy;
     virtual bool ghost_allow_tile(build_planner &p, tile2i tile) const;
+    virtual bool can_construction_start(build_planner &p, tile2i start) const { return true; }
+    virtual int setup_orientation(int orientation) const { return orientation; }
+    virtual void setup_build(build_planner &planer) const {}
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static const building_planer_renderer& get(e_building_type e);
@@ -540,14 +543,11 @@ struct building_static_params {
     void archive_unload();
     void initialize();
 
-    virtual void planer_setup_build(build_planner &planer) const {}
-    virtual int planer_setup_orientation(int orientation) const { return orientation; }
     virtual void planer_setup_preview_graphics(build_planner &planer) const;
     virtual int planer_setup_building_variant(e_building_type type, tile2i tile, int variant) const { return variant; }
     virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const { return (variant + 1) % 4; }
     virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const { return global_orientation; }
     virtual int planer_update_building_variant(build_planner &p) const;
-    virtual bool planer_can_construction_start(build_planner &p, tile2i start) const { return true; }
     virtual int planer_construction_update(build_planner &p, tile2i start, tile2i end) const;
     virtual int planer_construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
     virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
@@ -573,6 +573,8 @@ ANK_CONFIG_STRUCT(building_static_params,
 
 class building_impl {
 public:
+    using preview = building_planer_renderer;                                                           
+
     building_impl(building &b) : base(b) {}
     virtual void on_create(int orientation) {}
     virtual void on_place(int orientation, int variant);
@@ -894,11 +896,6 @@ using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
 using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
 
 template<typename T>
-struct planer_t {
-    using planer_type = building_planer_renderer;
-};
-
-template<typename T>
 struct model_t : public building_static_params {
     using building_type = T;
     static constexpr e_building_type TYPE = T::TYPE;
@@ -910,7 +907,7 @@ struct model_t : public building_static_params {
 
         static BuildingCtorIterator ctor_handler(&create);
         static BuildingParamIterator static_params_handler(&static_params_load);
-        static planer_t<T>::planer_type planer_renderer;
+        static typename T::preview planer_renderer;
 
         building_static_params::register_model(TYPE, *this);
         building_planer_renderer::register_model(TYPE, planer_renderer);

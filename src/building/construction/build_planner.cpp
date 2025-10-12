@@ -495,10 +495,11 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     }
 
     const auto &params = building_static_params::get(type);
-    params.planer_setup_build(*this);
+    const auto &preview = building_planer_renderer::get(type);
+    preview.setup_build(*this);
 
     setup_building_variant(end, build_type);
-    relative_orientation = params.planer_setup_orientation(relative_orientation); // force these buildings to start in a specific orientation
+    relative_orientation = preview.setup_orientation(relative_orientation); // force these buildings to start in a specific orientation
     update_orientations(false);
 
     // load building data
@@ -1024,10 +1025,10 @@ void build_planner::construction_start(tile2i tile) {
     start = tile;
     end = tile;
 
-    const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
     if (game_undo_start_build(build_type)) {
         in_progress = true;
-        const bool can_start = params.planer_can_construction_start(*this, start);
+        const bool can_start = preview.can_construction_start(*this, start);
 
         if (!can_start) {
             construction_cancel();
