@@ -514,6 +514,9 @@ struct building_planer_renderer {
     virtual int update_building_variant(build_planner &p) const;
     virtual int construction_update(build_planner &p, tile2i start, tile2i end) const;
     virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const;
+    virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
+    virtual void ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
+    virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static const building_planer_renderer& get(e_building_type e);
@@ -549,11 +552,8 @@ struct building_static_params {
 
     void archive_unload();
     void initialize();
-    
-    virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
-    virtual void planer_ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
+        
     virtual bool planer_is_need_flag(e_building_flags flag) const;
-    virtual int planer_can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
 
     virtual bool is_unique_building() const { return planner_update_rule.unique_building; }
     virtual uint16_t get_cost() const;

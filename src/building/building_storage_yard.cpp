@@ -41,10 +41,10 @@
 #include "figuretype/figure_storageyard_cart.h"
 #include "construction/build_planner.h"
 #include "figuretype/figure_sled.h"
-
+#include "js/js_game.h"
 #include <cmath>
 
-building_storage_yard::static_params storage_yard_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_yard);
 
 void building_storage_yard::preview::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);
@@ -56,14 +56,15 @@ int building_storage_yard::preview::construction_update(build_planner &planer, t
     return 1;
 }
 
-void building_storage_yard::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+void building_storage_yard::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
     int global_rotation = building_rotation_global_rotation();
     int index_rotation = building_rotation_get_storage_fort_orientation(global_rotation);
     int corner = building_rotation_get_corner(index_rotation);
     vec2i corner_offset{ -5, -45 };
     vec2i place_offset{ 0, 0 };
 
-    int image_id_hut = base_img();
+    int image_id_hut = params.base_img();
     int image_id_space = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     for (int i = 0; i < 9; i++) {
         if (i == corner) {

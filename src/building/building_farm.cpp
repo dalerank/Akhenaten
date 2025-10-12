@@ -32,19 +32,20 @@
 #include "grid/tiles.h"
 #include "dev/debug.h"
 #include "figuretype/figure_cartpusher.h"
+#include "js/js_game.h"
 
 #include <iostream>
 
 constexpr int CROPS_OFFSETS = 6;
 
-building_farm_grain::static_params farm_grain_m;
-building_farm_lettuce::static_params farm_lettuce_m;
-building_farm_chickpeas::static_params farm_chickpeas_m;
-building_farm_pomegranates::static_params farm_pomegranates_m;
-building_farm_barley::static_params farm_barley_m;
-building_farm_flax::static_params farm_flax_m;
-building_farm_henna::static_params farm_henna_m;
-building_farm_figs::static_params farm_figs_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_grain);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_lettuce);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_chickpeas);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_pomegranates);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_barley);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_flax);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_henna);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_figs);
 
 declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
 declare_console_command_p(farmgrow) {
@@ -108,8 +109,7 @@ void building_farm::map_building_tiles_add_farm(e_building_type type, int buildi
     map_building_tiles_add(building_id, tile, b->size, get_farm_image(type, tile), TERRAIN_BUILDING);
 }
 
-template<class T>
-int building_farm::static_params_t<T>::is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const {
+int building_farm::preview::is_blocked(tile2i tile, int size, blocked_tile_vec &blocked_tiles) const {
     int orientation_index = city_view_orientation() / 2;
     int blocked = 0;
     int num_tiles = (size * size);
@@ -127,19 +127,19 @@ int building_farm::static_params_t<T>::is_blocked(tile2i tile, int size, blocked
     return blocked;
 }
 
-template<class T>
-void building_farm::static_params_t<T>::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_farm::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
     blocked_tile_vec blocked_tiles_farm;
 
-    const bool blocked = is_blocked(end, this->building_size, blocked_tiles_farm);
+    const bool blocked = is_blocked(end, params.building_size, blocked_tiles_farm);
     if (blocked) {
         planer.draw_partially_blocked(ctx, false, blocked_tiles_farm);
         return;
     }
 
-    int image_id = get_farm_image(this->TYPE, end);
+    int image_id = get_farm_image(planer.build_type, end);
     planer.draw_building_ghost(ctx, image_id, pixel + vec2i{ -60, 30 });
-    draw_crops(ctx, this->TYPE, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
+    draw_crops(ctx, planer.build_type, 0, end, pixel + vec2i{ -60, 30 }, COLOR_MASK_GREEN);
 }
 
 int building_farm::get_crops_image(e_building_type type, int growth) {

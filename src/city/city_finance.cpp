@@ -78,11 +78,6 @@ int city_finance_estimated_tax_uncollected(void) {
     return city_data.finance.estimated_tax_uncollected;
 }
 
-void city_finance_process_import(int price) {
-    city_data.finance.treasury -= price;
-    city_data.finance.this_year.expenses.imports += price;
-}
-
 void city_finance_process_export(int price) {
     city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
@@ -175,6 +170,11 @@ void city_finance_t::process_request(finance_request_t request) {
     case efinance_request_disasters:
         city_data.finance.treasury -= request.deben;
         city_data.finance.this_year.expenses.disasters += request.deben;
+        break;
+
+    case efinance_request_import:
+        city_data.finance.treasury -= request.deben;
+        city_data.finance.this_year.expenses.imports += request.deben;
         break;
 
     default:

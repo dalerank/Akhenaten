@@ -24,15 +24,11 @@ public:
 
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
+        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
     struct base_params {
         vec2i init_tiles;
-    };
-
-    template<typename T>
-    struct static_params_t : public base_params, public buildings::model_t<T> {
-        virtual void planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
     
     bool draw_ornaments_and_animations_flat_impl(building &base, painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
@@ -55,7 +51,7 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba, building_mastaba)
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
-    struct static_params : public static_params_t<building_small_mastaba> {
+    struct static_params : public base_params, public building_model {
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
@@ -95,7 +91,7 @@ public:
 
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
-    struct static_params : public static_params_t<building_medium_mastaba> {
+    struct static_params : public base_params, public building_model {
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;

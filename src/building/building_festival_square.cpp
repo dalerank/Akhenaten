@@ -20,7 +20,8 @@ void building_festival_square::preview::setup_preview_graphics(build_planner &pl
     planer.init_tiles(5, 5); // TODO
 }
 
-void building_festival_square::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+void building_festival_square::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
     int orientation = 0;
 
     bool can_build = map_orientation_for_venue_with_map_orientation(end, e_venue_mode_festival_square, &orientation);
@@ -28,15 +29,15 @@ void building_festival_square::static_params::planer_ghost_preview(build_planner
     orientation = abs(orientation + (8 - city_view_orientation())) % 8;
 
     if (can_build != 1) { // no can place
-        for (int i = 0; i < building_size * building_size; i++) {
+        for (int i = 0; i < params.building_size * params.building_size; i++) {
             planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else { // can place (theoretically)
-        int square_id = first_img(animkeys().square);
+        int square_id = params.first_img(animkeys().square);
         bool is_exist = g_city.buildings.count_total(BUILDING_FESTIVAL_SQUARE);
         int color_mask = is_exist ? COLOR_MASK_RED : COLOR_MASK_GREEN;
-        for (int i = 0; i < building_size * building_size; i++) {
-            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % building_size) - (i / building_size)) * 30, ((i % building_size) + (i / building_size)) * 15 }, color_mask);
+        for (int i = 0; i < params.building_size * params.building_size; i++) {
+            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, color_mask);
         }
     }
 }

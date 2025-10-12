@@ -25,11 +25,10 @@ public:
 
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
+        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
     struct static_params : public building_model {
-        using inherited = buildings::model_t<building_pavilion>;
-
         int dancer_tile = 0;
         int booth_tile = 0;
         int musician_tile_s = 0;
@@ -37,8 +36,6 @@ public:
 
         pavilion_preview_offset preview_dir[8];
         pavilion_place_offset place_dir[8];
-
-        virtual void planer_ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
 
         void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
@@ -56,4 +53,4 @@ public:
 
     virtual void spawn_figure() override;
 };
-ANK_CONFIG_STRUCT(building_pavilion::static_params, meta)
+ANK_CONFIG_STRUCT(building_pavilion::static_params, meta);

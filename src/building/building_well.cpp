@@ -17,14 +17,14 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_well);
 well_info_window well_infow;
 
-void building_well::static_params::planer_ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+void building_well::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     if (!!game_features::gameui_show_water_structure_range) {
         city_view_foreach_tile_in_range(ctx, tile.grid_offset(), 1, 2, [] (vec2i pixel, tile2i point, painter &ctx) {
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE, g_zoom.get_scale());
         });
     }
 
-    inherited::planer_ghost_preview(planer, ctx, tile, end, pixel);
+    building_planer_renderer::ghost_preview(planer, ctx, tile, end, pixel);
 }
 
 void building_well::update_month() {
