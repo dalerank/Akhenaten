@@ -660,6 +660,7 @@ building_granary = {
   cost: [ 50, 70, 100, 200, 300 ]
   laborers:[20], fire_risk:[0], damage_risk: [5]
   desirability : { value:[-8], step:[1], step_size:[2], range: [4] }
+  begin_spot_pos : [110, -74]
 }
 
 building_shrine_osiris = {

@@ -30,6 +30,10 @@ public:
 
     virtual building_granary *dcast_granary() override { return this; }
 
+    struct static_params : building_model {
+        vec2i begin_spot_pos;
+    } BUILDING_STATIC_DATA_T;
+
     struct runtime_data_t {
         short resource_stored[16];
     } BUILDING_RUNTIME_DATA(runtime_data_t);
@@ -63,6 +67,7 @@ public:
     template<e_building_type T>
     int better_getting_storage();
 };
+ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos);
 
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst);

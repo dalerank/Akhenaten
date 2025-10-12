@@ -513,6 +513,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
     int resources_id = first_img("resources");
 
     const auto &d = runtime_data();
+    const vec2i begin_spot_pos = current_params().begin_spot_pos;
     for (int r = 1; r < 9; r++) {
         if (d.resource_stored[r] > 0) {
             int spots_filled = ceil((float)(d.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
@@ -524,7 +525,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
                 vec2i spot_pos = granary_offsets_ph[spot];
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
                 command.image_id = resources_id + r;
-                command.pixel = point + spot_pos + vec2i{ 110, -74 };
+                command.pixel = point + spot_pos + begin_spot_pos;
                 command.mask = color_mask;
             }
 
