@@ -35,7 +35,7 @@ bool building_road::set_road(tile2i tile) {
     return tile_set;
 }
 
-bool building_road::static_params::planer_can_construction_start(build_planner &p, tile2i start) const {
+bool building_road::preview::can_construction_start(build_planner &p, tile2i start) const {
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
 }
 

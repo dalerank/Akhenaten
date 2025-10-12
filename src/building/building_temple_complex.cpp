@@ -21,8 +21,7 @@ tile2i building_part_offset(int orientation, int size) {
     return offset;
 }
 
-template<class T>
-int building_temple_complex::static_params_t<T>::planer_setup_orientation(int orientation) const { 
+int building_temple_complex::preview::setup_orientation(int orientation) const { 
     return 1;
 }
 

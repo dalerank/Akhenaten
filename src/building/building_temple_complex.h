@@ -15,11 +15,14 @@ public:
 
     virtual building_temple_complex *dcast_temple_complex() override { return this; }
 
+    struct preview : building_planer_renderer {
+        virtual int setup_orientation(int orientation) const override;
+    };
+
     template<class T>
     struct static_params_t : public buildings::model_t<T> {
         using inherited = buildings::model_t<T>;
 
-        virtual int planer_setup_orientation(int orientation) const override;
         virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const override;
         virtual int planer_update_building_variant(build_planner &planer) const override { return 0; }
         virtual void planer_setup_preview_graphics(build_planner &planer) const override;
