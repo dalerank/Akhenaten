@@ -39,14 +39,14 @@ bool building_irrigation_ditch::preview::can_construction_start(build_planner &p
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_CANALS, start);
 }
 
-int building_irrigation_ditch::static_params::planer_construction_update(build_planner &p, tile2i start, tile2i end) const {
+int building_irrigation_ditch::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
     int items_placed = building_construction_place_canal(/*measure_only*/true, start, end);
     map_canal_update_all_tiles(0);
 
     return items_placed;
 }
 
-int building_irrigation_ditch::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+int building_irrigation_ditch::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     int items_placed = building_construction_place_canal(false, start, end);
 
     map_canal_update_all_tiles(0);

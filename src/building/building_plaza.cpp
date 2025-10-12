@@ -20,10 +20,11 @@
 #include "grid/image.h"
 #include "game/undo.h"
 #include "window/window_figure_info.h"
+#include "js/js_game.h"
 
-building_plaza::static_params plaza_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_plaza);
 
-int building_plaza::static_params::planer_place(build_planner &planer, tile2i start, tile2i end) const {
+int building_plaza::preview::planer_place(build_planner &planer, tile2i start, tile2i end) const {
     grid_area area = map_grid_get_area(start, end);
     game_undo_restore_map(1);
 
@@ -51,11 +52,11 @@ int building_plaza::static_params::planer_place(build_planner &planer, tile2i st
     return items_placed;
 }
 
-int building_plaza::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+int building_plaza::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
     return planer_place(planer, start, end);
 }
 
-int building_plaza::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+int building_plaza::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     return planer_place(planer, start, end);
 }
 
@@ -75,7 +76,8 @@ int is_two_tile_square_plaza(int grid_offset) {
 void building_plaza::set_image(int grid_offset) {
     tile2i btile(grid_offset);
 
-    int base_image_id = plaza_m.base_img();
+    const auto &params = building_static_params::get(BUILDING_PLAZA);
+    int base_image_id = params.base_img();
     if (map_terrain_is(btile, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(btile)
         && !map_image_at(btile)) {
         int image_id = base_image_id;

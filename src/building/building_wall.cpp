@@ -13,7 +13,7 @@
 #include "game/game_events.h"
 #include "js/js_game.h"
 
-building_mud_wall::static_params building_mud_wall_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_wall);
 
 void ANK_PERMANENT_CALLBACK(event_building_update_walls, ev) {
     building_mud_wall::update_area_walls( ev.tile, ev.size );
@@ -303,7 +303,7 @@ void building_mud_wall::set_wall_gatehouse_image_manually(int grid_offset) {
     }
 
     if (image_offset) {
-        const int id = building_mud_wall_m.base_img();
+        const int id = building_static_params::get(TYPE).base_img();
         map_image_set(grid_offset, id + image_offset);
     }
 }
@@ -325,7 +325,7 @@ void building_mud_wall::set_image(tile2i tile) {
     }
 
     terrain_image img = get_terrain_image(tile);
-    const int id = building_mud_wall_m.base_img();
+    const int id = building_static_params::get(TYPE).base_img();
     const int img_id = id + img.group_offset + img.item_offset;
     map_image_set(tile, img_id);
     map_property_set_multi_tile_size(tile.grid_offset(), 1);
@@ -357,12 +357,12 @@ bool building_mud_wall::set_wall(tile2i tile) {
     return tile_set;
 }
 
-int building_mud_wall::static_params::planer_construction_update(build_planner &p, tile2i start, tile2i end) const {
+int building_mud_wall::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
     int items_placed = place_wall(true, start, end);
     return items_placed;
 }
 
-int building_mud_wall::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+int building_mud_wall::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     int items_placed = place_wall(false, start, end);
     return items_placed;
 }

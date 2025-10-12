@@ -27,7 +27,7 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_garden);
 
-int building_garden::static_params::place_impl(tile2i start, tile2i end, bool place) const {
+int building_garden::preview::place_impl(tile2i start, tile2i end, bool place) const {
     game_undo_restore_map(1);
 
     grid_area area = map_grid_get_area(start, end);
@@ -57,11 +57,11 @@ int building_garden::static_params::place_impl(tile2i start, tile2i end, bool pl
     return items_placed;
 }
 
-int building_garden::static_params::planer_construction_update(build_planner &planer, tile2i start, tile2i end) const {
+int building_garden::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {
     return place_impl(start, end, false);
 }
 
-int building_garden::static_params::planer_construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+int building_garden::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     planer.should_update_land_routing = true;
     return place_impl(start, end, true);
 }

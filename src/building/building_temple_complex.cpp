@@ -8,6 +8,7 @@
 #include "building/rotation.h"
 #include "graphics/view/lookup.h"
 #include "construction/build_planner.h"
+#include "js/js_game.h"
 
 tile2i building_part_offset(int orientation, int size) {
     tile2i offset = { 0, 0 };
@@ -25,8 +26,7 @@ int building_temple_complex::preview::setup_orientation(int orientation) const {
     return 1;
 }
 
-template<class T>
-int building_temple_complex::static_params_t<T>::planer_update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
+int building_temple_complex::preview::update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
     return global_rotation + 1;
 }
 
@@ -310,11 +310,11 @@ void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, 
     }
 }
 
-building_temple_complex_osiris::static_params building_temple_complex_osiris_m;
-building_temple_complex_ra::static_params building_temple_complex_ra_m;
-building_temple_complex_ptah::static_params building_temple_complex_ptah_m;
-building_temple_complex_seth::static_params building_temple_complex_seth_m;
-building_temple_complex_bast::static_params building_temple_complex_bast_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_osiris);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_ra);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_ptah);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_seth);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_bast);
 
 void building_temple_complex::on_create(int orientation) {
     runtime_data().variant = (10 - (2 * orientation)) % 8; // ugh!

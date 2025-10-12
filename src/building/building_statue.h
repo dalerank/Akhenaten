@@ -15,15 +15,9 @@ public:
         virtual int setup_orientation(int orientation) const override { return 1; }
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int setup_building_variant(e_building_type type, tile2i tile, int variant) const override;
-    };
-
-    template<class T>
-    struct static_params_t : public statue_params_t, public buildings::model_t<T> {
-        using inherited = buildings::model_t<T>;
-
-        virtual int planer_next_building_variant(e_building_type type, tile2i tile, int variant) const override;
-        virtual int planer_update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
-        virtual int planer_update_building_variant(build_planner &planer) const override;
+        virtual int next_building_variant(e_building_type type, tile2i tile, int variant) const override;
+        virtual int update_relative_orientation(build_planner &p, tile2i tile, int global_orientation) const override;
+        virtual int update_building_variant(build_planner &planer) const override;
     };
 
     struct runtime_data_t {
@@ -56,7 +50,7 @@ class building_small_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_STATUE, building_small_statue, building_statue)
 
-    struct static_params : public static_params_t<building_small_statue> {
+    struct static_params : public statue_params_t, public building_model {
     } BUILDING_STATIC_DATA_T;
 
     virtual const statue_params_t &statue_params() { return current_params(); }
@@ -67,7 +61,7 @@ class building_medium_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_STATUE, building_medium_statue, building_statue)
 
-    struct static_params : public static_params_t<building_medium_statue> {
+    struct static_params : public statue_params_t, public building_model {
     } BUILDING_STATIC_DATA_T;
 
     virtual const statue_params_t &statue_params() { return current_params(); }
@@ -78,7 +72,7 @@ class building_large_statue : public building_statue {
 public:
     BUILDING_METAINFO(BUILDING_LARGE_STATUE, building_large_statue, building_statue)
 
-    struct static_params : public static_params_t<building_large_statue> {
+    struct static_params : public statue_params_t, public building_model {
     } BUILDING_STATIC_DATA_T;
 
     virtual const statue_params_t &statue_params() { return current_params(); }

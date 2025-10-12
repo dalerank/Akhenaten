@@ -8,9 +8,9 @@ public:
 
     virtual building_fishing_wharf *dcast_fishing_wharf() override { return this; }
 
-    struct static_params : public building_model {
-        virtual int planer_construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    } BUILDING_STATIC_DATA_T;
+    struct preview : public building_planer_renderer {
+        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
+    };
 
     struct runtime_data_t : public building_wharf::runtime_data_t {
         bool has_fish;
@@ -30,4 +30,3 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
-ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, meta)

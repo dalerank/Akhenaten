@@ -118,10 +118,10 @@ void figure_ostrich_hunter::figure_action() {
                 advance_action(ACTION_13_WAIT_FOR_ACTION);
             } else {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);
-                base.animctx.restart();
-
-                figure* f = figure_get(base.target_figure_id);
-                figure_missile::create(id(), tile(), f->tile, FIGURE_HUNTER_ARROW);
+                base.animctx.restart([this] {
+                    figure *f = figure_get(base.target_figure_id);
+                    figure_missile::create(id(), tile(), f->tile, FIGURE_HUNTER_ARROW);
+                });
             }
         }
         break;
