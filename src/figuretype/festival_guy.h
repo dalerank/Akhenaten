@@ -5,6 +5,7 @@ class figure_festival_guy : public figure_impl
 public:
     FIGURE_METAINFO(FIGURE_FESTIVAL_GUY, figure_festival_guy)
     figure_festival_guy(figure* f) : figure_impl(f) {}
+    virtual figure_festival_guy* dcast_festival_guy() override { return this; }
 
     struct runtime_data_t {
         int8_t festival_remaining_dances;
