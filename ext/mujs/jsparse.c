@@ -240,6 +240,8 @@ static js_Ast *propname(js_State *J)
 	return name;
 }
 
+static js_Ast *objectliteral(js_State *J);
+
 static js_Ast *propassign(js_State *J)
 {
 	js_Ast *name, *value, *arg, *body;
@@ -262,6 +264,20 @@ static js_Ast *propassign(js_State *J)
 			body = funbody(J);
 			return EXP3(PROP_SET, name, LIST(arg), body);
 		}
+
+		if (J->lookahead == '{') {
+			jsP_accept(J, '{');
+			value = EXP1(OBJECT, objectliteral(J));
+			jsP_expect(J, '}');
+			return EXP2(PROP_VAL, name, value);
+		}
+
+		if (J->lookahead == '[') {
+			jsP_accept(J, '[');
+			value = EXP1(ARRAY, arrayliteral(J));
+			jsP_expect(J, ']');
+			return EXP2(PROP_VAL, name, value);
+		}
 	}
 
 	jsP_expect(J, ':');
@@ -269,8 +285,7 @@ static js_Ast *propassign(js_State *J)
 	return EXP2(PROP_VAL, name, value);
 }
 
-static js_Ast *objectliteral(js_State *J)
-{
+static js_Ast *objectliteral(js_State *J) {
 	js_Ast *head, *tail;
 	if (J->lookahead == '}')
 		return NULL;
@@ -832,12 +847,23 @@ static js_Ast *statement(js_State *J)
 
 	/* labelled statement or expression statement */
 	if (J->lookahead == TK_IDENTIFIER) {
+		const char *ident_text = J->text;
 		a = expression(J, 0);
 		if (a->type == EXP_IDENTIFIER && jsP_accept(J, ':')) {
 			a->type = AST_IDENTIFIER;
 			b = statement(J);
 			return STM2(LABEL, a, b);
 		}
+
+		if (a->type == EXP_IDENTIFIER && J->lookahead == '{') {
+			js_Ast *obj;
+			jsP_accept(J, '{');
+			obj = EXP1(OBJECT, objectliteral(J));
+			jsP_expect(J, '}');
+			jsP_semicolon(J);
+			return EXP2(ASS, a, obj);
+		}
+
 		jsP_semicolon(J);
 		return a;
 	}
