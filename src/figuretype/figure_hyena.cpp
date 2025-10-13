@@ -2,8 +2,9 @@
 
 #include "city/city.h"
 #include "figure/formation_layout.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_hyena> hyena_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyena);
 
 int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
     int min_figure_id = 0;

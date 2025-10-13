@@ -142,8 +142,7 @@ static void jsP_expect(js_State *J, int x) {
 	}
 }
 
-static void jsP_semicolon(js_State *J)
-{
+static void jsP_semicolon(js_State *J) {
 	if (J->lookahead == ';') {
 		jsP_next(J);
 		return;

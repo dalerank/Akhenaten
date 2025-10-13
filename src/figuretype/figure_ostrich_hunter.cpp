@@ -8,7 +8,6 @@
 #include "city/city_figures.h"
 #include "city/city.h"
 #include "core/random.h"
-
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_ostrich_hunter)

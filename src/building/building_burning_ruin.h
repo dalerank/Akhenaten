@@ -7,9 +7,9 @@ public:
     BUILDING_METAINFO(BUILDING_BURNING_RUIN, building_burning_ruin, building_impl)
     virtual building_burning_ruin *dcast_burning_ruin() override { return this; }
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         int fire_animations;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void on_tick(bool refresh_only) override;

@@ -17,12 +17,13 @@
 #include "game/game.h"
 #include "widget/city/ornaments.h"
 #include "window/window_building_info.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_temple_osiris> temple_osiris_m;
-buildings::model_t<building_temple_ra> temple_ra_m;
-buildings::model_t<building_temple_ptah> temple_ptah_m;
-buildings::model_t<building_temple_seth> temple_seth_m;
-buildings::model_t<building_temple_bast> temple_bast_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_osiris);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_ra);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_ptah);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_seth);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_bast);
 
 e_overlay building_temple::get_overlay() const {
     switch(type()) {

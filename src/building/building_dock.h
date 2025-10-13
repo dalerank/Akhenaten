@@ -19,7 +19,7 @@ public:
         bool reparing;
         short progress;
         bool has_fish;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual building_dock *dcast_dock() override { return this; }
 
@@ -27,9 +27,6 @@ public:
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA(static_params);
 
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -59,7 +56,6 @@ public:
     tile2i wait_tile() const;
     tile2i reid_tile() const;
 };
-ANK_CONFIG_STRUCT(building_dock::static_params, meta)
 
 building_dest map_get_free_destination_dock(int ship_id);
 building_dest map_get_queue_destination_dock(int ship_id);

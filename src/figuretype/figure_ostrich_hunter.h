@@ -18,7 +18,7 @@ public:
     FIGURE_METAINFO(FIGURE_OSTRICH_HUNTER, figure_ostrich_hunter)
     figure_ostrich_hunter(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint8_t max_hunting_distance;
         int8_t missile_delay;
 

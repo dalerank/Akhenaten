@@ -4,8 +4,9 @@
 #include "building/building_statue.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
+#include "js/js_game.h"
 
-figure_stonemason::static_params stonemason_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_stonemason);
 
 void figure_stonemason::figure_action() {
     base.use_cross_country = false;

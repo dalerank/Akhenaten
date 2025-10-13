@@ -4,8 +4,9 @@
 #include "figuretype/figure_entertainer.h"
 #include "widget/city/ornaments.h"
 #include "city/city_labor.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_conservatory> conservatory_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_conservatory);
 
 void building_conservatory::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {

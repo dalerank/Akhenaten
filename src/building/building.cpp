@@ -1143,7 +1143,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
-    assert(base.output.resource == RESOURCE_NONE);
+    assert(base.output.resource == current_params().output.resource);
 }
 
 const bproperty bproperties[] = {
@@ -1300,7 +1300,9 @@ void add_building(building *b, int orientation, int variant) {
     }
 }
 
-bool building_static_params::planer_is_need_flag(e_building_flags flag) const {
+bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_flags flag) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const auto &needs = params.needs;
     switch (flag) {
     case e_building_flag::Meadow: return needs.meadow;
     case e_building_flag::Rock: return needs.rock;

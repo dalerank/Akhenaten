@@ -8,8 +8,9 @@
 #include "graphics/elements/ui.h"
 #include "window/building/figures.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_shipwreck> shipwreck_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_shipwreck);
 
 void figure_shipwreck::figure_action() {
     base.height_adjusted_ticks = 0;

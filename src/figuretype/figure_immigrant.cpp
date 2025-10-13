@@ -15,7 +15,7 @@
 
 #include "js/js_game.h"
 
-figure_immigrant::static_params immigrant_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_immigrant);
 
 void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     auto house = building_get(ev.bid)->dcast_house();;
@@ -162,7 +162,7 @@ bool figure_immigrant::can_move_by_water() const {
 }
 
 figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
-    return immigrant_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 sound_key figure_immigrant::phrase_key() const {

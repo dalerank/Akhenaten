@@ -17,8 +17,9 @@
 #include "graphics/image_desc.h"
 #include "building/building_fishing_wharf.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_fishing_boat> fishing_boat_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_boat);
 
 water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
     building_wharf *wharf = nullptr;

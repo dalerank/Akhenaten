@@ -6,8 +6,9 @@
 #include "graphics/image.h"
 #include "city/city_figures.h"
 #include "building/building_bazaar.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_delivery_boy> delivery_boy_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_delivery_boy);
 
 void figure_delivery_boy::figure_before_action() {
     figure* leader = figure_get(base.leading_figure_id);
@@ -53,7 +54,7 @@ sound_key figure_delivery_boy::phrase_key() const {
 }
 
 figure_sound_t figure_delivery_boy::get_sound_reaction(xstring key) const {
-    return delivery_boy_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 void figure_delivery_boy::update_animation() {

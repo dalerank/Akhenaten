@@ -5,10 +5,9 @@
 #include "city/city_health.h"
 #include "city/city.h"
 #include "figure/service.h"
-
 #include "js/js_game.h"
 
-figures::model_t<figure_physician> fphysician_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_physician);
 
 void figure_physician::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Physician");
@@ -99,5 +98,5 @@ int figure_physician::provide_service() {
 }
 
 figure_sound_t figure_physician::get_sound_reaction(xstring key) const {
-    return fphysician_m.sounds[key];
+    return current_params().sounds[key];
 }

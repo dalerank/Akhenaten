@@ -13,7 +13,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle);
 
-buildings::model_t<building_temple_complex_altar_ra> temple_complex_altar_ra;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_ra);
 
 void building_temple_complex_upgrade::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);

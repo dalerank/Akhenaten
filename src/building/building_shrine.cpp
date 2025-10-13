@@ -5,10 +5,10 @@
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_osiris);
-buildings::model_t<building_shrine_ra>   shrine_ra_m;
-buildings::model_t<building_shrine_ptah> shrine_ptah_m;
-buildings::model_t<building_shrine_seth> shrine_seth_m;
-buildings::model_t<building_shrine_bast> shrine_bast_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_ra);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_ptah);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_seth);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_bast);
 
 void building_shrine::on_place_checks() {
     construction_warnings warnings;

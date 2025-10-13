@@ -4,10 +4,10 @@
 #include "grid/road_access.h"
 #include "building/building_house.h"
 #include "graphics/image.h"
-
+#include "js/js_game.h"
 #include "city/city.h"
 
-figures::model_t<figure_governor> governor_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_governor);
 
 void figure_governor::figure_action() {
     switch (action_state()) {

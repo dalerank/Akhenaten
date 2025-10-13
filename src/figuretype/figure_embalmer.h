@@ -7,8 +7,6 @@ public:
     FIGURE_METAINFO(FIGURE_EMBALMER, figure_embalmer)
     figure_embalmer(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {};
-
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;

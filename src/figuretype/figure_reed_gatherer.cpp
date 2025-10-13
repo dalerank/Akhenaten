@@ -3,10 +3,10 @@
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
 #include "game/game_config.h"
-
+#include "js/js_game.h"
 #include "grid/routing/routing.h"
 
-figure_reed_gatherer::static_params figure_reed_gatherer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_reed_gatherer);
 
 void figure_reed_gatherer::figure_before_action() {
     building *b = home();

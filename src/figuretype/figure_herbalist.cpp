@@ -3,8 +3,9 @@
 #include "core/profiler.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_herbalist> herbalist_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_herbalist);
 
 void figure_herbalist::figure_before_action() {
     building* b = home();
@@ -46,7 +47,7 @@ void figure_herbalist::figure_action() {
 }
 
 figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
-    return herbalist_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 sound_key figure_herbalist::phrase_key() const {

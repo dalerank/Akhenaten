@@ -24,7 +24,7 @@ public:
     figure_warship(figure *f) : figure_impl(f) {}
     virtual figure_warship *dcast_warship() override { return this; }
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         std::unordered_map<xstring, order_t> orders_info;
     } FIGURE_STATIC_DATA_T;
 

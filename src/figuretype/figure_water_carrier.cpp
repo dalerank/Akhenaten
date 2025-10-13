@@ -7,8 +7,9 @@
 #include "grid/building.h"
 #include "graphics/animation.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_water_carrier> water_carrier_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_water_carrier);
 
 void figure_water_carrier::figure_before_action() {
     building* b = home();
@@ -107,5 +108,5 @@ int figure_water_carrier::provide_service() {
 }
 
 figure_sound_t figure_water_carrier::get_sound_reaction(xstring key) const {
-    return water_carrier_m.sounds[key];
+    return current_params().sounds[key];
 }

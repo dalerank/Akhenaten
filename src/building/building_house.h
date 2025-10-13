@@ -11,19 +11,13 @@ enum e_house_progress {
 
 struct model_house;
 
-#define HOUSE_METAINFO(type, clsid)                                                                 \
-    BUILDING_METAINFO(type, clsid, building_house);                                                 \
-    using static_params = static_params_t<clsid>;                                                   \
-    static const static_params &current_params() { return (const static_params &)building_static_params::get(type); }
+#define HOUSE_METAINFO(type, clsid) BUILDING_METAINFO(type, clsid, building_house);
 
 class building_house : public building_impl {
 public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
-    template<typename T>
-    struct static_params_t : buildings::model_t<T> {
-    };
 
     struct runtime_data_t : no_copy_assignment {
         //e_house_level level;

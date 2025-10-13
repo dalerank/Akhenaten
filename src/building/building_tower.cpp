@@ -12,9 +12,10 @@
 #include "building/building_barracks.h"
 #include "city/city_warnings.h"
 #include "building/building_wall.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_brick_tower> brick_tower_m;
-buildings::model_t<building_mud_tower> mud_tower_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_tower);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_tower);
 
 void building_tower::on_create(int orientation) {
     map_terrain_remove_with_radius(tile(), current_params().building_size, 0, TERRAIN_WALL);

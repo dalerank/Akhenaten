@@ -9,8 +9,9 @@
 #include "graphics/image.h"
 #include "graphics/animation.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_priest> priest_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_priest);
 
 void figure_priest::figure_before_action() {
     building* b = home();
@@ -217,7 +218,7 @@ void figure_priest::update_animation() {
 }
 
 figure_sound_t figure_priest::get_sound_reaction(xstring key) const {
-    return priest_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 

@@ -59,13 +59,14 @@ int building_mine_gold::produce_uptick_per_day() const {
     }
 }
 
-bool building_mine_copper::static_params::planer_is_need_flag(e_building_flags flag) const {
+bool building_mine_copper::preview::is_need_flag(build_planner &planer, e_building_flags flag) const {
+    const auto &params = building_static_params::get(planer.build_type);
     switch (flag) {
     case e_building_flag::Ore:
-        return !game_features::gameplay_copper_mine_can_build_near_mountains && needs.ore;
+        return !game_features::gameplay_copper_mine_can_build_near_mountains && params.needs.ore;
     }
 
-    return building_model::planer_is_need_flag(flag);
+    return building_planer_renderer::is_need_flag(planer, flag);
 }
 
 int building_clay_pit::get_fire_risk(int value) const {

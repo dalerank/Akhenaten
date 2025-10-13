@@ -6,10 +6,9 @@
 #include "core/random.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
-
 #include "js/js_game.h"
 
-figure_flotsam::static_params flotsam_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_flotsam);
 
 static const int FLOTSAM_TYPE_0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int FLOTSAM_TYPE_12[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0};

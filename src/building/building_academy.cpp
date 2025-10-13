@@ -1,4 +1,5 @@
 #include "building_academy.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_academy> academy_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_academy);
 

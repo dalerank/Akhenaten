@@ -7,8 +7,9 @@
 #include "figure_missile.h"
 #include "grid/terrain.h"
 #include "game/game_config.h"
+#include "js/js_game.h"
 
-figure_tower_sentry::static_params figure_tower_sentry_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_tower_sentry);
 
 static const int TOWER_SENTRY_FIRING_OFFSETS[] = 
 { 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -22,7 +22,7 @@ public:
     FIGURE_METAINFO(FIGURE_CROCODILE, figure_crocodile)
     figure_crocodile(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint16_t max_hungry;
         uint16_t max_hunting_distance;
         uint8_t chase_speed_mult;

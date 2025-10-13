@@ -15,14 +15,14 @@ public:
     figure_enemy_spearman(figure *f) : figure_enemy(f) {}
     virtual figure_enemy_spearman *dcast_enemy_spearman() override { return this; }
 
-    struct base_params_t {
+    struct static_params : public figure_static_params {
         int8_t missile_attack_value;
         int8_t missile_delay;
         int8_t attack_distance;
         e_figure_type missile_type = FIGURE_ARROW;
     };
 
-    virtual const base_params_t &base_params() const = 0;
+    const static_params &current_params() const { return (const static_params &)figure_enemy::current_params(); };
 
     virtual void on_create() override;
     virtual void figure_action() override;
@@ -30,10 +30,10 @@ public:
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
 
-    virtual int8_t missile_attack_value() const { return base_params().missile_attack_value; }
-    virtual int8_t missile_delay() const { return base_params().missile_delay; }
-    virtual int8_t attack_distance() const { return base_params().attack_distance; }
-    virtual e_figure_type missile_type() const override { return base_params().missile_type; }
+    virtual int8_t missile_attack_value() const { return current_params().missile_attack_value; }
+    virtual int8_t missile_delay() const { return current_params().missile_delay; }
+    virtual int8_t attack_distance() const { return current_params().attack_distance; }
+    virtual e_figure_type missile_type() const override { return current_params().missile_type; }
 
     virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE; }
 
@@ -46,73 +46,46 @@ public:
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m)override;
 };
+ANK_CONFIG_STRUCT(figure_enemy_spearman::static_params,
+    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_egyptian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_SPEAR, figure_egyptian_spearman)
     figure_egyptian_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_EGYPTIAN_SPEAR, "egpt_spr" }; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(figure_egyptian_spearman::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+
 
 class figure_hittite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_SPEARMAN, figure_hittite_spearman)
     figure_hittite_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_SPEARMAN, "hitt_spr" }; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(figure_hittite_spearman::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_kushite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_KUSHITE_SPEARMAN, figure_kushite_spearman)
     figure_kushite_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_SPEARMAN, "kush_spr" }; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(figure_kushite_spearman::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_persian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_SPEARMAN, figure_persian_spearman)
     figure_persian_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_SPEARMAN, "pers_spr" }; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(figure_persian_spearman::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
 
 class figure_phoenician_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SPEARMAN, figure_phoenician_spearman)
     figure_phoenician_spearman(figure *f) : figure_enemy_spearman(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SPEARMAN, "phoe_spr" }; }
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(figure_phoenician_spearman::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)

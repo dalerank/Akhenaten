@@ -52,7 +52,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_ARCHER, figure_barbarian_archer)
     figure_barbarian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_ARCHER, "barb_arch" }; }
@@ -66,7 +66,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_ASSYRIAN_ARCHER, figure_assyrian_archer)
     figure_assyrian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_ARCHER, "assr_arch" }; }
@@ -80,7 +80,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_CANAANITE_ARCHER, figure_canaanite_archer)
     figure_canaanite_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "cana_arch" }; }
@@ -94,7 +94,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_ARCHER, figure_egyptian_archer)
     figure_egyptian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "egpt_arch" }; }
@@ -108,7 +108,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_ARCHER, figure_hittite_archer)
     figure_hittite_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_ARCHER, "hitt_arch" }; }
@@ -122,7 +122,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_HYKSOS_ARCHER, figure_hyksos_archer)
     figure_hyksos_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_ARCHER, "hyks_arch" }; }
@@ -136,7 +136,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_LIBIAN_ARCHER, figure_libian_archer)
     figure_libian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_LIBIAN_ARCHER, "libn_arch" }; }
@@ -150,7 +150,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_NUBIAN_ARCHER, figure_nubian_archer)
     figure_nubian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_ARCHER, "nubn_arch" }; }
@@ -164,7 +164,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_ARCHER, figure_persian_archer)
     figure_persian_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_ARCHER, "pers_arch" }; }
@@ -178,7 +178,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_ROMAN_ARCHER, figure_roman_archer)
     figure_roman_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_ARCHER, "roma_arch" }; }
@@ -192,7 +192,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_SEAPEOPLE_ARCHER, figure_seapeople_archer)
     figure_seapeople_archer(figure *f) : figure_enemy_archer(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_ARCHER, "seap_arch" }; }

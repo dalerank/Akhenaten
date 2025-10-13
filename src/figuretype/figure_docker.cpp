@@ -23,8 +23,9 @@
 #include "figuretype/figure_trader_ship.h"
 #include "figure/trader.h"
 #include "city/city_figures.h"
+#include "js/js_game.h"
 
-figure_docker::static_params docker_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_docker);
 
 bool figure_docker::try_import_resource(building* b, e_resource resource, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();

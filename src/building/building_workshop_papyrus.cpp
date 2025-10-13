@@ -10,10 +10,10 @@
 #include "graphics/image.h"
 #include "empire/empire.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <iostream>
 
-buildings::model_t<building_papyrus_maker> papyrus_maker_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_papyrus_maker);
 
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 

@@ -30,13 +30,13 @@ public:
 
     virtual building_granary *dcast_granary() override { return this; }
 
-    struct static_params : building_model {
+    struct static_params : building_static_params {
         vec2i begin_spot_pos;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         short resource_stored[16];
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;

@@ -17,8 +17,9 @@
 #include "widget/city/ornaments.h"
 #include "graphics/animation.h"
 #include "figuretype/figure_entertainer.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_dancer_school> dancer_school_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dancer_school);
 
 void building_dancer_school::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {

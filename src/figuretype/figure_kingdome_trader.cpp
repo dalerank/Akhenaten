@@ -31,10 +31,9 @@
 #include "widget/debug_console.h"
 #include "core/object_property.h"
 #include "figure/trader.h"
-
 #include "js/js_game.h"
 
-figure_trade_caravan::static_params trade_caravan_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);
 
 void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     tile2i entry = g_city.map.entry_point;
@@ -53,7 +52,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
 
     caravan->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
     caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
-    caravan->base.wait_ticks = trade_caravan_m.wait_ticks_after_create;
+    caravan->base.wait_ticks = caravan->current_params().wait_ticks_after_create;
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
     donkey1->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
