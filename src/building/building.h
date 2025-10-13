@@ -443,8 +443,7 @@ private:
     static constexpr e_building_type TYPE = type;                                                       \
     static constexpr pcstr CLSID = #clsid;                                                              \
     using self_type = clsid;                                                                            \
-    using building_model = buildings::model_t<clsid>;                                                   \
-    using model_type = building_model;                                                                  \
+    using model_type = buildings::model_t<clsid>;                                                       \
     using inherited = base_class;                                                                       
 
 #define BUILDING_RUNTIME_DATA(type) ;                                                                   \
@@ -517,6 +516,7 @@ struct building_planer_renderer {
     virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const;
     virtual void ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
     virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
+    virtual bool is_need_flag(build_planner &p, e_building_flags flag) const;
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static const building_planer_renderer& get(e_building_type e);
@@ -552,8 +552,6 @@ struct building_static_params {
 
     void archive_unload();
     void initialize();
-        
-    virtual bool planer_is_need_flag(e_building_flags flag) const;
 
     virtual bool is_unique_building() const { return planner_update_rule.unique_building; }
     virtual uint16_t get_cost() const;
@@ -702,8 +700,6 @@ public:
     inline int pct_workers() const { return calc_percentage<int>(num_workers(), max_workers()); }
     inline int get_figure_id(int i) const { return base.get_figure_id(i); }
     inline int need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
-    inline const building_static_params &current_params() const { return building_static_params::get(type()); }
-    inline const building_static_params &current_params() { return building_static_params::get(type()); }
     figure *get_figure_in_slot(int i);
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
@@ -747,6 +743,10 @@ public:
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
 
     static void acquire(e_building_type e, building &b);
+
+    struct static_params : building_static_params {};
+    inline const static_params &current_params() const { return (const static_params&)building_static_params::get(type()); }
+    inline const static_params &current_params() { return (static_params&)building_static_params::get(type()); }
 
     building &base;
 };
@@ -896,20 +896,26 @@ using BuildingCtorIterator = FuncLinkedList<create_building_function_cb>;
 using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb>;
 
 template<typename T>
-struct model_t : public building_static_params {
+struct model_t {
     using building_type = T;
     static constexpr e_building_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
 
+    static typename T::static_params& static_params() { 
+        static typename T::static_params _instance;
+        return _instance;
+    }
+
     model_t() {
-        name = CLSID;
-        type = TYPE;
+        static_params().name = CLSID;
+        static_params().type = TYPE;
 
         static BuildingCtorIterator ctor_handler(&create);
         static BuildingParamIterator static_params_handler(&static_params_load);
+        
         static typename T::preview planer_renderer;
 
-        building_static_params::register_model(TYPE, *this);
+        building_static_params::register_model(TYPE, static_params());
         building_planer_renderer::register_model(TYPE, planer_renderer);
     }
 
@@ -918,6 +924,8 @@ struct model_t : public building_static_params {
 
         const bool loaded = g_config_arch.r(CLSID, base);
         assert(loaded);
+
+        g_config_arch.r(CLSID, static_params());
 
         base.initialize();
     }
@@ -933,13 +941,14 @@ struct model_t : public building_static_params {
 } // buildings
 
 namespace archive_helper {
-    template<typename T> 
-    inline void reader(archive, buildings::model_t<T> &) {
-        // nothing to do, loaded in base class
+    template<typename T>
+    inline void reader(archive arch, buildings::model_t<T> &model) {
+        archive_helper::reader(arch, model.static_params());
     }
 
-    template<typename T>
-    inline void reader(buildings::model_t<T> &) {
-        // nothing to do, loaded in base class
+    template<>
+    inline void reader<building_impl::static_params>(archive arch, building_impl::static_params &params) {
+        building_static_params &bparams = (building_static_params&)params;
+        archive_helper::reader(arch, bparams);
     }
 }

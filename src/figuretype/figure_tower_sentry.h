@@ -7,7 +7,7 @@ public:
     FIGURE_METAINFO(FIGURE_TOWER_SENTRY, figure_tower_sentry)
     figure_tower_sentry(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint8_t missile_delay;
     } FIGURE_STATIC_DATA_T;
 

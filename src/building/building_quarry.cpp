@@ -2,11 +2,12 @@
 
 #include "building/building_raw_material.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_sandstone_quarry> sandstone_quarry_m;
-buildings::model_t<building_stone_quarry> stone_quarry_m;
-buildings::model_t<building_limestone_quarry> limestone_quarry_m;
-buildings::model_t<building_granite_quarry> granite_quarry_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_sandstone_quarry);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_stone_quarry);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_limestone_quarry);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granite_quarry);
 
 bool building_sandstone_quarry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_draw_normal_anim(ctx, point + vec2i{54, 15}, &base, tile, anim("work"), color_mask);

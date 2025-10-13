@@ -2,8 +2,9 @@
 
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_scriber> scriber_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_scriber);
 
 void figure_scriber::figure_action() {
     switch (action_state()) {

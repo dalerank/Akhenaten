@@ -15,7 +15,7 @@
 #include "graphics/view/lookup.h"
 #include "js/js_game.h"
 
-figure_homeless::static_params homeless_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_homeless);
 
 void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
     auto homeless = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT)->dcast_homeless();

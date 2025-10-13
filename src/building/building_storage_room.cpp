@@ -9,8 +9,9 @@
 #include "empire/trade_prices.h"
 #include "city/city_finance.h"
 #include "core/log.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_storage_room> storage_room_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_room);
 
 void building_storage_room::on_create(int orientation) {
 }

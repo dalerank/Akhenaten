@@ -4,8 +4,9 @@
 #include "building/building_statue.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
+#include "js/js_game.h"
 
-figure_carpenter::static_params carpenter_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_carpenter);
 
 void figure_carpenter::figure_action() {
     base.use_cross_country = false;

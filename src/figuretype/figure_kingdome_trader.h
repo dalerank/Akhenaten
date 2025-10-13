@@ -27,7 +27,7 @@ public:
         uint16_t amount_bought;
     } FIGURE_RUNTIME_DATA_T;
 
-    struct static_params : figure_model {
+    struct static_params : figure_static_params {
         uint16_t wait_ticks_after_create;
         uint16_t max_capacity;
     } FIGURE_STATIC_DATA_T;

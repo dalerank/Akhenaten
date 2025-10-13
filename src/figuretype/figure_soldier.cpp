@@ -16,6 +16,7 @@
 #include "grid/grid.h"
 #include "grid/point.h"
 #include "sound/sound.h"
+#include "js/js_game.h"
 
 static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6}, {0, -1}, {1, -1},  {1, 0},   {1, 1},   {0, 1},   {-1, 1},  {-1, 0},  {-1, -1}, {0, -2},  {1, -2},  {2, -2},
@@ -35,10 +36,9 @@ static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6},
 };
 
-
-figure_soldier_infantry::static_params soldier_infantry_m;
-figures::model_t<figure_soldier_archer> soldier_archer_m;
-figures::model_t<figure_soldier_charioteer> soldier_charioterr_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_infantry);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_archer);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_charioteer);
 
 void figure::javelin_launch_missile() {
     tile2i tile = {-1, -1};

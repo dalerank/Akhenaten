@@ -12,10 +12,10 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <iostream>
 
-buildings::model_t<building_pottery> pottery_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pottery);
 
 declare_console_command(addpottery, game_cheat_add_resource<RESOURCE_POTTERY>);
 

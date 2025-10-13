@@ -6,10 +6,9 @@
 #include "figure_lumberjack.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
-
 #include "js/js_game.h"
 
-figure_lumberjack::static_params lumberjack_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_lumberjack);
 
 void figure_lumberjack::figure_action() {
     switch (action_state()) {

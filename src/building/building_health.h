@@ -7,9 +7,9 @@ public:
     BUILDING_METAINFO(BUILDING_APOTHECARY, building_apothecary, building_impl)
     virtual building_apothecary *dcast_apothecary() override { return this; }
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         int max_serve_clients;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
@@ -24,9 +24,9 @@ class building_mortuary : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_MORTUARY, building_mortuary, building_impl)
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         uint16_t max_serve_clients;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }

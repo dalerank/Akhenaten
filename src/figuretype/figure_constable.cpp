@@ -11,8 +11,9 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figure_constable::static_params constable_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_constable);
 
 void figure_constable::figure_before_action() {
     building *h = home();

@@ -8,9 +8,6 @@ public:
     FIGURE_METAINFO(FIGURE_NATIVE_TRADER, figure_native_trader)
     figure_native_trader(figure *f) : figure_trader(f) {}
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     struct runtime_data_t {
         uint16_t amount_bought;
     } FIGURE_RUNTIME_DATA_T;

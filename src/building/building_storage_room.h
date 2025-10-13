@@ -13,7 +13,7 @@ public:
 
     struct runtime_data_t {
         e_resource resource_id;
-    } BUILDING_RUNTIME_DATA(runtime_data_t);
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }

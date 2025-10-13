@@ -5,8 +5,9 @@
 #include "figure/service.h"
 #include "building/building_house.h"
 #include "building/building_entertainment.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_senet_player> senet_player_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_senet_player);
 
 void figure_senet_player::update_shows() {
     building_entertainment *entertainment = destination()->dcast_entertainment();
@@ -91,5 +92,5 @@ int figure_senet_player::provide_service() {
 }
 
 figure_sound_t figure_senet_player::get_sound_reaction(xstring key) const {
-    return senet_player_m.sounds[key];
+    return current_params().sounds[key];
 }

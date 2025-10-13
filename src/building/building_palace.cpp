@@ -28,6 +28,7 @@
 #include "scenario/scenario.h"
 #include "sound/sound_building.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 struct info_window_palace : public building_info_window_t<info_window_palace> {
     virtual void init(object_info &c) override;
@@ -36,13 +37,13 @@ struct info_window_palace : public building_info_window_t<info_window_palace> {
     }
 };
 
-buildings::model_t<building_village_palace> village_building_palace_m;
-buildings::model_t<building_town_palace> town_building_palace_m;
-buildings::model_t<building_city_palace> city_building_palace_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
 info_window_palace palace_infow;
 
 void building_palace::on_create(int orientation) {
-    base.labor_category = village_building_palace_m.labor_category;
+    base.labor_category = current_params().labor_category;
 }
 
 void building_palace::on_post_load() {

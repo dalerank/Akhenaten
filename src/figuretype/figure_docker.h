@@ -9,9 +9,6 @@ public:
     FIGURE_METAINFO(FIGURE_DOCKER, figure_docker)
     figure_docker(figure *f) : figure_carrier(f) {}
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual void on_create() override {}
     virtual figure_phrase_t phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
     virtual void on_destroy() override;

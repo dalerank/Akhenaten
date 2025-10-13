@@ -13,8 +13,9 @@
 #include "city/city.h"
 #include "figure/service.h"
 #include "grid/building.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_fireman> fireman_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fireman);
 
 void figure_fireman::on_create() {
     figure_impl::on_create();
@@ -259,7 +260,7 @@ int figure_fireman::provide_service() {
 }
 
 figure_sound_t figure_fireman::get_sound_reaction(xstring key) const {
-    return fireman_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 void figure_fireman::update_animation() {

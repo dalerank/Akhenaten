@@ -5,8 +5,9 @@
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_jewels_workshop> jewels_workshop_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_jewels_workshop);
 
 bool building_jewels_workshop::can_play_animation() const {
     if (base.stored_amount() < 100) {

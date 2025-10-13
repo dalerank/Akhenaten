@@ -440,8 +440,7 @@ public:
 
 #define FIGURE_METAINFO(type, clsid)                            \
     using self_type = clsid;                                    \
-    using figure_model = figures::model_t<clsid>;               \
-    using model_type = figure_model;                            \
+    using model_type = figures::model_t<clsid>;                 \
     static constexpr pcstr CLSID = #clsid;                      \
     static constexpr e_figure_type TYPE = type;                                               
 
@@ -523,8 +522,7 @@ public:
     virtual void cart_image_update() { base.cart_image_update(); }
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
-    virtual const animations_t &anim() const { return params().animations; }
-    virtual const figure_static_params &params() const { return figure_static_params::get(type()); }
+    virtual const animations_t &anim() const { return current_params().animations; }
     virtual void kill();
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
@@ -607,8 +605,13 @@ public:
     inline void set_home(building *b) { base.set_home(b); }
     inline void set_direction_to(building *b) { return base.set_direction_to(b); }
     inline bool is_alive() const { return base.is_alive(); }
-    inline e_permission get_permission() const { return params().permission; }
+    inline e_permission get_permission() const { return current_params().permission; }
 
+    struct static_params : figure_static_params {};
+    inline const static_params &current_params() const { return (const static_params &)figure_static_params::get(type()); }
+    inline const static_params &current_params() { return (static_params &)figure_static_params::get(type()); }
+    inline const static_params &params() const { return (const static_params &)figure_static_params::get(type()); }
+    inline const static_params &params() { return (static_params &)figure_static_params::get(type()); }
 
     metainfo get_info() const;
 
@@ -663,21 +666,26 @@ using FigureCtorIterator = FuncLinkedList<create_figure_function_cb>;
 using FigureStaticParamIterator = FuncLinkedList<load_figure_static_params_cb>;
 
 template<typename T>
-struct model_t : public figure_static_params {
+struct model_t {
     using figure_type = T;
     static constexpr e_figure_type TYPE = T::TYPE;
     static constexpr pcstr CLSID = T::CLSID;
 
+    static typename T::static_params &static_params() {
+        static typename T::static_params _instance;
+        return _instance;
+    }
+
     model_t() {
         static_assert(sizeof(T) == sizeof(figure_impl), "Derived class contains extra data");
 
-        name = CLSID;
-        ftype = TYPE;
+        static_params().name = CLSID;
+        static_params().ftype = TYPE;
 
         static FigureCtorIterator config_handler(&create);
         static FigureStaticParamIterator static_params_handler(&static_params_load);
         
-        figure_static_params::set(TYPE, *this);
+        figure_static_params::set(TYPE, static_params());
     }
 
     static void static_params_load() {
@@ -685,6 +693,8 @@ struct model_t : public figure_static_params {
 
         bool loaded = g_config_arch.r(CLSID, base);
         assert(loaded);
+
+        g_config_arch.r(CLSID, static_params());
 
         base.initialize();
     }
@@ -698,15 +708,16 @@ struct model_t : public figure_static_params {
 };
 
 } // end namespace figures
-    
+
 namespace archive_helper {
     template<typename T>
-    inline void reader(archive, figures::model_t<T> &) {
-        // nothing to do, loaded in base class
+    inline void reader(archive arch, figures::model_t<T> &model) {
+        archive_helper::reader(arch, model.static_params());
     }
 
-    template<typename T>
-    inline void reader(figures::model_t<T> &) {
-        // nothing to do, loaded in base class
+    template<>
+    inline void reader<figure_impl::static_params>(archive arch, figure_impl::static_params &params) {
+        figure_static_params &fparams = (figure_static_params &)params;
+        archive_helper::reader(arch, fparams);
     }
 }

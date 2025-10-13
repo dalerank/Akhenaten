@@ -1,8 +1,8 @@
 #include "building_library.h"
 
-struct library_model : public buildings::model_t<building_library> {
-} library_m;
+#include "js/js_game.h"
 
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_library)
 
 void building_library::spawn_figure() {
     common_spawn_roamer(FIGURE_LIBRARIAN, 50, FIGURE_ACTION_125_ROAMING);

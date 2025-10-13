@@ -16,10 +16,10 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "dev/debug.h"
-
+#include "js/js_game.h"
 #include <iostream>
 
-buildings::model_t<building_architect_post> architect_post_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_architect_post);
 info_window_architect_post architect_post_infow;
 
 declare_console_command_p(nodamage) {

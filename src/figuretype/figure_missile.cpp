@@ -7,12 +7,13 @@
 #include "city/city_figures.h"
 #include "figuretype/figure_enemy_archer.h"
 #include "game/game_events.h"
+#include "js/js_game.h"
 
-figure_hunter_arrow::static_params hunter_arrow_m;
-figure_arrow::static_params arrow_m;
-figure_spear::static_params spear_m;
-figure_javelin::static_params javelin_m;
-figure_bolt::static_params bolt_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_spear);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_javelin);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bolt);
 
 void figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
     auto f = figure_create(type, src, DIR_0_TOP_RIGHT);

@@ -5,8 +5,9 @@
 #include "city/ratings.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_magistrate> magistrate_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_magistrate);
 
 void figure_magistrate::figure_action() {
     switch (action_state()) {
@@ -132,7 +133,7 @@ int figure_magistrate::provide_service() {
 }
 
 figure_sound_t figure_magistrate::get_sound_reaction(xstring key) const {
-    return magistrate_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 // Same as policeman, but can't fight

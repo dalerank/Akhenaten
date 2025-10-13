@@ -12,7 +12,7 @@ public:
         virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         int warship_progress_cost;
         int transport_progress_cost;
         int fishingboat_progress_cost;

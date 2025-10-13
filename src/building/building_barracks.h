@@ -15,7 +15,7 @@ public:
     BUILDING_METAINFO(BUILDING_RECRUITER, building_recruiter, building_impl)
     virtual building_recruiter *dcast_recruiter() override { return this; }
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         virtual bool is_unique_building() const override;
     } BUILDING_STATIC_DATA_T;
 

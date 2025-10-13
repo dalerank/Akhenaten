@@ -12,7 +12,7 @@ public:
         int16_t tax_income_or_storage;
     } BUILDING_RUNTIME_DATA_T;
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         uint16_t max_deben_storage;
     } BUILDING_STATIC_DATA_T;
 

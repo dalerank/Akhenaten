@@ -8,8 +8,9 @@
 #include "building/building_house.h"
 #include "core/random.h"
 #include "grid/road_access.h"
+#include "js/js_game.h"
 
-figure_robber::static_params robber_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_robber);
 
 void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
     bool show_popup_message = false;

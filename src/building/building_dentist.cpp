@@ -3,8 +3,9 @@
 #include "building/building_health.h"
 #include "io/gamefiles/lang.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_dentist> dentist_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dentist);
 
 void building_dentist::update_graphic() {
     const xstring &animkey = can_play_animation()

@@ -8,9 +8,9 @@ public:
 
     virtual building_juggler_school *dcast_juggler_school() override { return this; }
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         uint8_t spawn_interval;
-    } BUILDING_STATIC_DATA(static_params);
+    } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_BOOTH; }
     virtual void spawn_figure() override;

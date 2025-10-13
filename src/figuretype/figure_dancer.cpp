@@ -7,8 +7,9 @@
 #include "sound/sound.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_dancer> dancer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_dancer);
 
 void figure_dancer::update_shows() {
     auto ent = destination()->dcast_entertainment();
@@ -88,5 +89,5 @@ int figure_dancer::provide_service() {
 }
 
 figure_sound_t figure_dancer::get_sound_reaction(xstring key) const {
-    return dancer_m.sounds[key];
+    return current_params().sounds[key];
 }

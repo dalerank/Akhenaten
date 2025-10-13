@@ -42,7 +42,7 @@ class building_brick_gatehouse : public building_gatehouse {
 public:
     BUILDING_METAINFO(BUILDING_BRICK_GATEHOUSE, building_brick_gatehouse, building_gatehouse)
 
-    struct static_params : public gatehouse_params_t, public building_model {
+    struct static_params : public gatehouse_params_t, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_brick_gatehouse::static_params, ghost)
@@ -53,7 +53,7 @@ public:
 
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 
-    struct static_params : public gatehouse_params_t, public building_model {
+    struct static_params : public gatehouse_params_t, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_mud_gatehouse::static_params, ghost)

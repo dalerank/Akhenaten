@@ -21,9 +21,6 @@ public:
     figure_emigrant(figure *f) : figure_impl(f) {}
     virtual figure_emigrant *dcast_emigrant() override { return this; }
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     struct runtime_data_t {
         uint8_t migrant_num_people;
     } FIGURE_RUNTIME_DATA_T;

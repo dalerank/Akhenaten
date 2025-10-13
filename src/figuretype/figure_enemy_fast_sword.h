@@ -17,7 +17,6 @@ public:
         uint16_t interval_attack_delay;
     };
 
-
     struct runtime_data_t {
         uint8_t damage_action = 0;
     } FIGURE_RUNTIME_DATA_T;
@@ -43,7 +42,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_BARBARIAN_SWORD, figure_barbarian_sword)
     figure_barbarian_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "barb_swd" }; }
@@ -56,7 +55,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_ASSYRIAN_SWORD, figure_assyrian_sword)
     figure_assyrian_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_SWORD, "assr_swd" }; }
@@ -69,7 +68,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_CANAANITE_SWORD, figure_canaanite_sword)
     figure_canaanite_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_SWORD, "cana_swd" }; }
@@ -82,7 +81,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_HYKSOS_SWORDMAN, figure_hyksos_sword)
     figure_hyksos_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "hyks_swd" }; }
@@ -95,7 +94,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_KUSHITE_AXEMAN, figure_kushite_axeman)
     figure_kushite_axeman(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_AXEMAN, "kush_axe" }; }
@@ -108,7 +107,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_LIBIAN_SWORDMAN, figure_libian_sword)
     figure_libian_sword(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "libn_swd" }; }
@@ -121,7 +120,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_NUBIAN_AXEMAN, figure_nubian_axeman)
      figure_nubian_axeman(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_AXEMAN, "nubn_axe" }; }
@@ -134,7 +133,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SWORDMAN, figure_phoenician_swordman)    
     figure_phoenician_swordman(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SWORDMAN, "phoe_swd" }; }
@@ -147,7 +146,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_ROMAN_LEGIONER, figure_roman_legioner)
     figure_roman_legioner(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_LEGIONER, "roma_leg" }; }
@@ -160,7 +159,7 @@ public:
     FIGURE_METAINFO(FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, figure_seapeople_axeman)
     figure_seapeople_axeman(figure *f) : figure_enemy_fast_sword(f) {}
 
-    struct static_params : public base_params_t, public figure_model {
+    struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, "seap_axe" }; }

@@ -32,7 +32,7 @@ public:
 
     virtual figure_cartpusher *dcast_cartpusher() override { return this; }
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint8_t wait_on_calculate_destination;
     } FIGURE_STATIC_DATA_T;
 
@@ -52,4 +52,5 @@ public:
     void determine_granaryman_destination();
     void determine_storageyard_cart_destination();
 };
-ANK_CONFIG_STRUCT(figure_cartpusher::static_params, wait_on_calculate_destination)
+ANK_CONFIG_STRUCT(figure_cartpusher::static_params,
+    wait_on_calculate_destination)

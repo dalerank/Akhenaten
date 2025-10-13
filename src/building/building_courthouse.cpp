@@ -5,11 +5,11 @@
 #include "graphics/elements/ui.h"
 #include "figure/figure.h"
 #include "window/window_building_info.h"
-
+#include "js/js_game.h"
 #include "graphics/animation.h"
 #include "city/city_labor.h"
 
-buildings::model_t<building_courthouse> courthouse_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_courthouse);
 
 struct info_window_courthouse : public building_info_window_t<info_window_courthouse> {
     virtual void init(object_info &c) override;

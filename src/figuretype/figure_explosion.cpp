@@ -3,10 +3,9 @@
 #include "core/profiler.h"
 #include "graphics/image.h"
 #include "graphics/animkeys.h"
-
 #include "js/js_game.h"
 
-figures::model_t<figure_explosion> explosion_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_explosion);
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 static const int CLOUD_CC_OFFSETS[] = {0, 7, 14, 7, 14, 7};

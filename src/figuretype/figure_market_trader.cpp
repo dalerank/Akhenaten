@@ -4,8 +4,9 @@
 #include "building/building_house.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figure/service.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_market_trader> market_trader_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_trader);
 
 void figure_market_trader::figure_action() {
     if (action_state() != FIGURE_ACTION_125_ROAMING) {
@@ -25,7 +26,7 @@ void figure_market_trader::figure_action() {
 }
 
 figure_sound_t figure_market_trader::get_sound_reaction(xstring key) const {
-    return market_trader_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 sound_key figure_market_trader::phrase_key() const {

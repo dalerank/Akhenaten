@@ -6,8 +6,9 @@
 #include "city/city_warnings.h"
 #include "city/city.h"
 #include "empire/empire.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_weaver> bweaver_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_weaver);
 
 void building_weaver::on_place_checks() {
     if (g_city.buildings.count_industry_active(RESOURCE_FLAX) <= 0) {

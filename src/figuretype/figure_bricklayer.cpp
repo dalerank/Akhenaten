@@ -3,8 +3,9 @@
 #include "building/monument_mastaba.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_bricklayer> bricklayer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bricklayer);
 
 void figure_bricklayer::figure_action() {
     base.use_cross_country = false;

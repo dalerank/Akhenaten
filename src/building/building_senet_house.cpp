@@ -12,9 +12,10 @@
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "empire/empire.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_senet_house> senet_house_m;
-buildings::model_t<building_bullfight_school> bullfight_school_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_senet_house);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bullfight_school);
 
 void building_senet_house::on_place_checks() {
     construction_warnings warnings;

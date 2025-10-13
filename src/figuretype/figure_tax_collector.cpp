@@ -12,8 +12,9 @@
 #include "city/city.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figure_tax_collector::static_params tax_collector_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_tax_collector);
 
 void figure_tax_collector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Tax Collector");
@@ -156,5 +157,5 @@ int figure_tax_collector::provide_service() {
 }
 
 figure_sound_t figure_tax_collector::get_sound_reaction(xstring key) const {
-    return tax_collector_m.sounds[key];
+    return current_params().sounds[key];
 }

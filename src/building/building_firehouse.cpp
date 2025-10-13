@@ -6,8 +6,9 @@
 #include "dev/debug.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_firehouse> firehouse_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
 
 declare_console_command_p(nofire) {
     buildings_valid_do([&] (building &b) {

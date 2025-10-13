@@ -6,8 +6,9 @@
 #include "io/gamefiles/lang.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_physician> bphysician_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_physician);
 
 void building_physician::spawn_figure() {
     common_spawn_roamer(FIGURE_PHYSICIAN, 50, FIGURE_ACTION_125_ROAMING);

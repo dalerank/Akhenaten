@@ -5,8 +5,9 @@
 #include "grid/building_tiles.h"
 #include "window/building/common.h"
 #include "city/city_warnings.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_water_supply> water_supply_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_supply);
 
 void building_water_supply::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), 4);

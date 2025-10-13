@@ -5,8 +5,9 @@
 #include "figure/service.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figure_juggler::static_params juggler_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_juggler);
 
 void figure_juggler::update_shows() {
     auto ent = destination()->dcast_entertainment();
@@ -104,5 +105,5 @@ int figure_juggler::provide_service() {
 }
 
 figure_sound_t figure_juggler::get_sound_reaction(xstring key) const {
-    return juggler_m.sounds[key];
+    return current_params().sounds[key];
 }

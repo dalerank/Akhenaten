@@ -7,9 +7,6 @@ public:
     FIGURE_METAINFO(FIGURE_CONSTABLE, figure_constable)
     figure_constable(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     struct runtime_data_t {
         uint8_t wait_ticks_next_target;
     } FIGURE_RUNTIME_DATA_T;

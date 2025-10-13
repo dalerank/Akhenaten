@@ -1,4 +1,6 @@
 #include "building_workshop.h"
 
-buildings::model_t<building_lamp_workshop> lamp_workshop_m;
-buildings::model_t<building_paint_workshop> paint_workshop_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_lamp_workshop);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_paint_workshop);

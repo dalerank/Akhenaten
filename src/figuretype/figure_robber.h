@@ -14,9 +14,6 @@ public:
     FIGURE_METAINFO(FIGURE_ROBBER, figure_robber)
     figure_robber(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual figure_phrase_t phrase() const override { return { FIGURE_ROBBER, "robber" }; }

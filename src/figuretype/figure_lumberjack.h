@@ -15,7 +15,7 @@ public:
     FIGURE_METAINFO(FIGURE_LUMBERJACK, figure_lumberjack)
     figure_lumberjack(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         int max_amount;
     } FIGURE_STATIC_DATA_T;
 
@@ -27,4 +27,5 @@ public:
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };
-ANK_CONFIG_STRUCT(figure_lumberjack::static_params, max_amount)
+ANK_CONFIG_STRUCT(figure_lumberjack::static_params,
+    max_amount)

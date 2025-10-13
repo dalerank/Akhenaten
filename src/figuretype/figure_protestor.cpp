@@ -1,8 +1,9 @@
 #include "figuretype/figure_protestor.h"
 
 #include "figure/service.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_protestor> protestor_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_protestor);
 
 void figure_protestor::figure_action() {
     //    terrain_usage = TERRAIN_USAGE_ROADS;

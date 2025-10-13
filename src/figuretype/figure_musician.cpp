@@ -6,8 +6,9 @@
 #include "city/city.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_musician> musician_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_musician);
 
 void figure_musician::update_shows() {
     building_entertainment* ent = destination()->dcast_entertainment();
@@ -97,5 +98,5 @@ int figure_musician::provide_service() {
 }
 
 figure_sound_t figure_musician::get_sound_reaction(xstring key) const {
-    return musician_m.sounds[key];
+    return current_params().sounds[key];
 }

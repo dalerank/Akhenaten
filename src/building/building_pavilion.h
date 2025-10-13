@@ -28,7 +28,7 @@ public:
         virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         int dancer_tile = 0;
         int booth_tile = 0;
         int musician_tile_s = 0;

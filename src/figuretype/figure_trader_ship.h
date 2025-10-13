@@ -20,7 +20,7 @@ public:
     figure_trade_ship(figure *f) : figure_carrier(f) {}
     virtual figure_trade_ship *dcast_trade_ship() override { return this; }
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint16_t max_capacity;
     } FIGURE_STATIC_DATA_T;
 

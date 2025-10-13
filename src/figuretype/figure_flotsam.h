@@ -7,9 +7,6 @@ public:
     FIGURE_METAINFO(FIGURE_FLOTSAM, figure_flotsam)
     figure_flotsam(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     struct runtime_data_t {
         short frame;
         bool flotsam_visible;

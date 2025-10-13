@@ -9,9 +9,6 @@ public:
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
 
-    struct static_params : public figure_model {
-    } FIGURE_STATIC_DATA_T;
-
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;

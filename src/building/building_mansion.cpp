@@ -16,10 +16,11 @@
 #include "graphics/animation.h"
 #include "grid/road_access.h"
 #include "figure/figure.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_personal_mansion> personal_mansion_m;
-buildings::model_t<building_family_mansion> family_mansion_m;
-buildings::model_t<building_dynasty_mansion> dynasty_mansion_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_personal_mansion);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_family_mansion);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dynasty_mansion);
 
 void building_mansion::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);

@@ -31,19 +31,20 @@
 #include "construction/build_planner.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"
+#include "js/js_game.h"
 
 #include <numeric>
 #include <string>
 
-building_small_mastaba::static_params small_mastaba_m;
-building_small_mastaba_part_side::static_params small_mastaba_side_m;
-building_small_mastaba_part_wall::static_params small_mastaba_wall_m;
-building_small_mastaba_part_entrance::static_params small_mastaba_entrance_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba_part_side);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba_part_wall);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_mastaba_part_entrance);
 
-building_medium_mastaba::static_params medium_mastaba_m;
-building_medium_mastaba_part_side::static_params medium_mastaba_side_m;
-building_medium_mastaba_part_wall::static_params medium_mastaba_wall_m;
-building_medium_mastaba_part_entrance::static_params medium_mastaba_entrance_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_side);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_wall);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_mastaba_part_entrance);
 
 struct mastaba_part {
     e_building_type type;
@@ -268,7 +269,7 @@ void building_mastaba::add_workers(figure_id fid) {
 }
 
 int building_mastaba::get_image(int orientation, tile2i tile, tile2i start, tile2i end) {
-    int image_id = small_mastaba_m.base_img();
+    int image_id = model_building_medium_mastaba.static_params().base_img();
     int base_image_id = image_id - 7;
     bool insidex = (tile.x() > start.x() && tile.x() < end.x());
     bool insidey = (tile.y() > start.y() && tile.y() < end.y());
@@ -367,7 +368,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
             }
         }
 
-        int image_stick = small_mastaba_m.base_img() + 5 + 8;
+        int image_stick = current_params().base_img() + 5 + 8;
         const image_t *img = image_get(image_stick);
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
@@ -451,7 +452,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
 }
 
 bool building_mastaba::draw_ornaments_and_animations_hight_impl(building &base, painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    int image_grounded = small_mastaba_m.base_img() + 5;
+    int image_grounded = current_params().base_img() + 5;
     color_mask = (color_mask ? color_mask : 0xffffffff);
     building *main = base.main();
 

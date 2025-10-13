@@ -22,7 +22,7 @@
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
-
+#include "js/js_game.h"
 #include "dev/debug.h"
 #include <iostream>
 
@@ -51,26 +51,26 @@ declare_console_command_p(housedown) {
 
 declare_console_var_int(house_up_delay, 1000)
 
-building_house_crude_hut::static_params house_crude_hut_m;
-building_house_sturdy_hut::static_params house_sturdy_hut_m;
-building_house_meager_shanty::static_params house_meager_shanty_m;
-building_house_common_shanty::static_params house_common_shanty_m;
-building_house_rough_cottage::static_params house_rough_cottage_m;
-building_house_ordinary_cottage::static_params house_ordinary_cottage_m;
-building_house_modest_homestead::static_params house_modest_homestead_m;
-building_house_spacious_homestead::static_params house_spacious_homestead_m;
-building_house_modest_apartment::static_params house_modest_apartment_m;
-building_house_spacious_apartment::static_params house_spacious_apartment_m;
-building_house_common_residence::static_params house_common_residence_m;
-building_house_spacious_residence::static_params house_spacious_residence_m;
-building_house_elegant_residence::static_params house_elegant_residence_m;
-building_house_fancy_residence::static_params house_fancy_residence_m;
-building_house_common_manor::static_params house_common_manor_m;
-building_house_spacious_manor::static_params house_spacious_manor_m;
-building_house_elegant_manor::static_params house_elegant_manor_m;
-building_house_stately_manor::static_params house_stately_manor_m;
-building_house_modest_estate::static_params house_modest_estate_m;
-building_house_palatial_estate::static_params house_palatial_estate_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_crude_hut);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_sturdy_hut);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_meager_shanty);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_shanty);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_rough_cottage);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_ordinary_cottage);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_homestead);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_homestead);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_apartment);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_apartment);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_residence);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_residence);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_residence);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_fancy_residence);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_manor);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_manor);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_manor);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_stately_manor);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_estate);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_palatial_estate);
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),

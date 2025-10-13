@@ -25,8 +25,9 @@
 #include "grid/routing/routing_terrain.h"
 #include "game/game_config.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-figure_cartpusher::static_params cartpusher_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_cartpusher);
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
@@ -498,7 +499,7 @@ void figure_cartpusher::figure_action() {
 }
 
 figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
-    return cartpusher_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 bool figure_cartpusher::can_move_by_water() const {

@@ -7,7 +7,7 @@ public:
     FIGURE_METAINFO(FIGURE_ARCHITECT, figure_architector)
     figure_architector(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         int max_service_buildings;
     } FIGURE_STATIC_DATA_T;
 
@@ -20,4 +20,5 @@ public:
     virtual void on_action_changed(int saved_action) override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };
-ANK_CONFIG_STRUCT(figure_architector::static_params, max_service_buildings)
+ANK_CONFIG_STRUCT(figure_architector::static_params,
+    max_service_buildings)

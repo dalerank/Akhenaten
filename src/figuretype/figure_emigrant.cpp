@@ -11,7 +11,7 @@
 #include "widget/debug_console.h"
 #include "js/js_game.h"
 
-figure_emigrant::static_params emigrant_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_emigrant);
 
 void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
     auto house = building_get(ev.bid)->dcast_house();
@@ -110,7 +110,7 @@ void figure_emigrant::update_animation() {
 }
 
 figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
-    return emigrant_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 sound_key figure_emigrant::phrase_key() const {

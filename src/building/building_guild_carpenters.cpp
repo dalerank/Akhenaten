@@ -8,9 +8,9 @@
 #include "city/city_buildings.h"
 #include "figuretype/figure_carpenter.h"
 #include <iostream>
+#include "js/js_game.h"
 
-buildings::model_t<building_carpenters_guild> guild_carpenters_m;
-
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
 declare_console_command(addtimber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 void building_carpenters_guild::update_graphic() {

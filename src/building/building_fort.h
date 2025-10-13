@@ -47,7 +47,7 @@ class building_fort_charioteers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_CHARIOTEERS, building_fort_charioteers, building_fort)
 
-    struct static_params : public base_params, public building_model {
+    struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_charioteers::static_params, ghost)
@@ -56,7 +56,7 @@ class building_fort_archers : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_ARCHERS, building_fort_archers, building_fort)
 
-    struct static_params : public base_params, public building_model {
+    struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_archers::static_params, ghost)
@@ -65,7 +65,7 @@ class building_fort_infantry : public building_fort {
 public:
     BUILDING_METAINFO(BUILDING_FORT_INFANTRY, building_fort_infantry, building_fort)
 
-    struct static_params : public base_params, public building_model {
+    struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_fort_infantry::static_params, ghost)

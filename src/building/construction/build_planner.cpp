@@ -509,13 +509,14 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 
 void build_planner::setup_build_flags() {
     const auto &params = building_static_params::get(build_type);
+    const auto &preview = building_planer_renderer::get(build_type);
 
     const e_building_flag flags[] = { e_building_flag::Meadow, e_building_flag::Rock, e_building_flag::Ore, e_building_flag::TempleUpgradeAltar,
                                       e_building_flag::TempleUpgradeOracle, e_building_flag::NearbyWater, e_building_flag::Groundwater, e_building_flag::ShoreLine,
                                       e_building_flag::Canals, e_building_flag::FloodplainShore };
 
     for (const auto flag: flags) {
-        const bool is_need = params.planer_is_need_flag(flag);
+        const bool is_need = preview.is_need_flag(*this, flag);
         if (is_need) {
             set_flag(flag);
         }

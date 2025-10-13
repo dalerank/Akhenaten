@@ -8,7 +8,7 @@ public:
 
     virtual building_wood_cutter *dcast_wood_cutter() override { return this; }
 
-    struct static_params : public building_model {
+    struct static_params : public building_static_params {
         uint8_t max_gatherers;
     } BUILDING_STATIC_DATA_T;
 

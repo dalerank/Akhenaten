@@ -5,10 +5,10 @@
 #include "game/game_config.h"
 #include "city/city_buildings.h"
 #include "building/building_house.h"
-
+#include "js/js_game.h"
 #include "grid/routing/routing.h"
 
-figure_drunkard::static_params drunkard_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_drunkard);
 
 void figure_drunkard::figure_before_action() {
     building *b = home();

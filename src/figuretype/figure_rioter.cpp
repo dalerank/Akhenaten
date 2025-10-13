@@ -6,10 +6,11 @@
 #include "city/city_message.h"
 #include "building/building_house.h"
 #include "grid/road_access.h"
+#include "js/js_game.h"
 
 static const int CRIMINAL_OFFSETS[] = { 0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1 };
 
-figure_rioter::static_params rioter_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_rioter);
 
 void figure_rioter::figure_action() {
     g_city.figures_add_rioter(!base.targeted_by_figure_id);

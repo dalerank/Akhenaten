@@ -15,7 +15,7 @@ public:
     FIGURE_METAINFO(FIGURE_REED_GATHERER, figure_reed_gatherer)
     figure_reed_gatherer(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         int max_amount;
     } FIGURE_STATIC_DATA_T;
 

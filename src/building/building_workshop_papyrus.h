@@ -5,7 +5,6 @@
 class building_papyrus_maker : public building_industry {
 public:
     BUILDING_METAINFO(BUILDING_PAPYRUS_WORKSHOP, building_papyrus_maker, building_industry)
-
     virtual building_papyrus_maker *dcast_papyrus_maker() override { return this; }
 
     virtual bool can_play_animation() const override;

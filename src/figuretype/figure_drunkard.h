@@ -16,7 +16,7 @@ public:
     FIGURE_METAINFO(FIGURE_DRUNKARD, figure_drunkard)
     figure_drunkard(figure *f) : figure_impl(f) {}
 
-    struct static_params : public figure_model {
+    struct static_params : public figure_static_params {
         uint16_t womit_delay;
         uint16_t walk_delay;
     } FIGURE_STATIC_DATA_T;

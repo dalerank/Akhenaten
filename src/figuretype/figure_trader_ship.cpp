@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-figure_trade_ship::static_params trader_ship_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_ship);
 
 void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     tile2i river_entry = scenario_map_river_entry();

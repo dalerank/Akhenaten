@@ -22,8 +22,9 @@
 #include "grid/building.h"
 #include "city/ratings.h"
 #include "city/city.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_market_buyer> market_buyer_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_buyer);
 
 void figure_market_buyer::figure_before_action() {
     building* b = home();
@@ -281,7 +282,7 @@ int figure_market_buyer::provide_service() {
 }
 
 figure_sound_t figure_market_buyer::get_sound_reaction(xstring key) const {
-    return market_buyer_m.sounds[key];
+    return current_params().sounds[key];
 }
 
 bool figure_market_buyer::window_info_background(object_info &c) {

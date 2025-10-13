@@ -51,7 +51,7 @@ public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA, building_small_mastaba, building_mastaba)
     virtual building_small_mastaba *dcast_small_mastaba() override { return this; }
 
-    struct static_params : public base_params, public building_model {
+    struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
@@ -64,25 +64,16 @@ ANK_CONFIG_STRUCT(building_small_mastaba::static_params, init_tiles);
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_SIDE, building_small_mastaba_part_side, building_small_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 class building_small_mastaba_part_wall : public building_small_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_WALL, building_small_mastaba_part_wall, building_small_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 class building_small_mastaba_part_entrance : public building_small_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_SMALL_MASTABA_ENTRANCE, building_small_mastaba_part_entrance, building_small_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba : public building_mastaba {
@@ -91,7 +82,7 @@ public:
 
     virtual building_medium_mastaba *dcast_medium_mastaba() override { return nullptr; }
 
-    struct static_params : public base_params, public building_model {
+    struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_place(int orientation, int variant) override;
@@ -104,25 +95,16 @@ ANK_CONFIG_STRUCT(building_medium_mastaba::static_params, init_tiles);
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_SIDE, building_medium_mastaba_part_side, building_medium_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba_part_wall : public building_medium_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_WALL, building_medium_mastaba_part_wall, building_medium_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 class building_medium_mastaba_part_entrance : public building_medium_mastaba {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_MASTABA_ENTRANCE, building_medium_mastaba_part_entrance, building_medium_mastaba)
-
-    struct static_params : public building_model {
-    } BUILDING_STATIC_DATA_T;
 };
 
 void map_mastaba_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);

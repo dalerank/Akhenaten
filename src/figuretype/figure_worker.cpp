@@ -9,10 +9,9 @@
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/ratings.h"
-
 #include "js/js_game.h"
 
-figure_worker::static_params worker_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
 
 auto any_mastaba_types = make_array(
     BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
@@ -229,5 +228,5 @@ sound_key figure_worker::phrase_key() const {
 }
 
 figure_sound_t figure_worker::get_sound_reaction(pcstr key) const {
-    return worker_m.sounds[key];
+    return current_params().sounds[key];
 }

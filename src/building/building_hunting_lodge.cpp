@@ -19,13 +19,13 @@
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
 #include "figure/figure.h"
+#include "js/js_game.h"
 
-buildings::model_t<building_hunting_lodge> hunting_lodge_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_hunting_lodge);
 
 void building_hunting_lodge::on_create(int orientation) {
-    base.labor_category = hunting_lodge_m.labor_category;
+    base.labor_category = current_params().labor_category;
 }
-
 
 int building_hunting_lodge::spawn_timer() {
     int pct_workers = worker_percentage();
