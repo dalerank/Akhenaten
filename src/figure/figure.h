@@ -710,11 +710,6 @@ struct model_t {
 } // end namespace figures
 
 namespace archive_helper {
-    template<typename T>
-    inline void reader(archive arch, figures::model_t<T> &model) {
-        archive_helper::reader(arch, model.static_params());
-    }
-
     template<>
     inline void reader<figure_impl::static_params>(archive arch, figure_impl::static_params &params) {
         figure_static_params &fparams = (figure_static_params &)params;

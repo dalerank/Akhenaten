@@ -941,11 +941,6 @@ struct model_t {
 } // buildings
 
 namespace archive_helper {
-    template<typename T>
-    inline void reader(archive arch, buildings::model_t<T> &model) {
-        archive_helper::reader(arch, model.static_params());
-    }
-
     template<>
     inline void reader<building_impl::static_params>(archive arch, building_impl::static_params &params) {
         building_static_params &bparams = (building_static_params&)params;
