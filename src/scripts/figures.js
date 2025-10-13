@@ -241,13 +241,13 @@ figure_priest = {
 	permission : epermission_priest
 }
 
-figure_ostrich = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
-		eating : { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
-		idle : { pack:PACK_SPR_MAIN, id:160, max_frames:8 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
+figure_ostrich {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
+		eating { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
+		idle { pack:PACK_SPR_MAIN, id:160, max_frames:8 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
 	}
 
 	category: figure_category_animal
@@ -369,8 +369,8 @@ figure_immigrant = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
-figure_ostrich_hunter = {
-	animations : {
+figure_ostrich_hunter {
+	animations {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:46, max_frames:8, loop:false }
 		hunt : { pack:PACK_SPR_MAIN, id:47, max_frames:12, loop:false }
