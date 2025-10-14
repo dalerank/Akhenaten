@@ -31,11 +31,6 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
 
         ui["workers_desc"].text(trouble_text);
     }
-
-    virtual bool check(object_info &c) override {
-        building *b = c.building_get();
-        return (b->type == BUILDING_BRICKS_WORKSHOP) || b->is_workshop();
-    }
 };
 
 struct brickworks_info_window : public building_info_window_t<brickworks_info_window> {
@@ -65,10 +60,6 @@ struct brickworks_info_window : public building_info_window_t<brickworks_info_wi
         } else {
             ui["warning_text"] = textid{ c.group_id, 1 };
         }
-    }
-    virtual bool check(object_info &c) override {
-        building *b = c.building_get();
-        return b->type == BUILDING_BRICKS_WORKSHOP;
     }
 };
 

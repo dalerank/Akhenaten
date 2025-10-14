@@ -7,6 +7,8 @@ class building;
 
 struct building_info_window : public common_info_window {
     e_advisor first_advisor = ADVISOR_NONE;
+    svector<e_building_type, 8> related_buildings;
+
     building_info_window();
 
     using widget::archive_load;
@@ -18,6 +20,10 @@ struct building_info_window : public common_info_window {
     
     virtual void init(object_info &c) override;
     virtual void update_buttons(object_info &c) override;
+    virtual bool check(object_info &c) override {
+        auto b = c.building_get();
+        return building_type_any_of(b->type, related_buildings);
+    }
 
     building *building_get(object_info &c);
 
