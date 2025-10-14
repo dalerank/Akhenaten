@@ -56,6 +56,7 @@ import economic
 import migration
 import ui_empire_window
 import ui_advisor_education
+import ui_advisor_imperial
 import music
 import invasions
 import enemies

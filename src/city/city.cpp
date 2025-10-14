@@ -845,7 +845,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.salary_rank);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.salary_so_far);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.mayour_salary);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.total);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.total);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.total);
@@ -1356,6 +1356,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().city, "tax_percentage", [] (const xstring&) { return bvariant(g_city.finance.tax_percentage); }},
         { tags().city, "estimated_tax_income", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_income); }},
         { tags().city, "percentage_taxed_people", [] (const xstring&) { return bvariant(g_city.taxes.percentage_taxed_people); }},
+        { tags().city, "personal_savings", [] (const xstring&) { return bvariant(g_city.kingdome.personal_savings); }},
         { tags().city, "estimated_tax_uncollected", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_uncollected); }},
         { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
         { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},

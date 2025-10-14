@@ -1,30 +1,30 @@
 log_info("akhenaten: figures info started")
 
-figure_fireman = {
-	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 }
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false }
-    fight_fire : { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
-    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
+figure_fireman {
+	animations {
+		walk { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 }
+		death { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false }
+    fight_fire { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
+    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
   }
 
-  sounds : {
-  	fighting_fire : {sound:"fireman_e01.wav", group: 242, text:0}
- 		going_to_fire : {sound:"fireman_e02.wav", group: 242, text:1}
- 		fighting_fire_also : {sound:"fireman_e03.WAV", group: 242, text:2}
- 		desease_can_start_at_any_moment : {sound:"fireman_g01.WAV", group: 242, text:3}
- 		no_food_in_city : {sound:"fireman_g02.WAV", group: 242, text:4}
- 		city_not_safety_workers_leaving : {sound:"fireman_g03.WAV", group: 242, text:5}
- 		need_workers : {sound:"fireman_g04.WAV", group: 242, text:6}
- 		hight_fire_level : {sound:"fireman_g05.WAV", group: 242, text:7}
- 		gods_are_angry : {sound:"fireman_g06.WAV", group: 242, text:8}
- 		need_more_workers : {sound:"fireman_g07.WAV", group: 242, text:9}
- 		low_entertainment : {sound:"fireman_g08.WAV", group: 242, text:10}
- 		gods_are_pleasures : {sound:"fireman_g09.WAV", group: 242, text:11}
- 		city_is_amazing : {sound:"fireman_g10.wav", group: 242, text:12}
+  sounds {
+  	fighting_fire {sound:"fireman_e01.wav", group: 242, text:0}
+ 		going_to_fire {sound:"fireman_e02.wav", group: 242, text:1}
+ 		fighting_fire_also {sound:"fireman_e03.WAV", group: 242, text:2}
+ 		desease_can_start_at_any_moment {sound:"fireman_g01.WAV", group: 242, text:3}
+ 		no_food_in_city {sound:"fireman_g02.WAV", group: 242, text:4}
+ 		city_not_safety_workers_leaving {sound:"fireman_g03.WAV", group: 242, text:5}
+ 		need_workers {sound:"fireman_g04.WAV", group: 242, text:6}
+ 		hight_fire_level {sound:"fireman_g05.WAV", group: 242, text:7}
+ 		gods_are_angry {sound:"fireman_g06.WAV", group: 242, text:8}
+ 		need_more_workers {sound:"fireman_g07.WAV", group: 242, text:9}
+ 		low_entertainment {sound:"fireman_g08.WAV", group: 242, text:10}
+ 		gods_are_pleasures {sound:"fireman_g09.WAV", group: 242, text:11}
+ 		city_is_amazing {sound:"fireman_g10.wav", group: 242, text:12}
   }
 
-  category: figure_category_citizen
+  category : figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_roam_length : 640
@@ -32,23 +32,25 @@ figure_fireman = {
 }
 
 figure_water_carrier = {
-	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 },
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false },
-  },
-  sounds : {
-  	desease_can_start_at_any_moment : {sound: "water_g01.wav", group:237, text:0},
-    no_food_in_city : {sound: "water_g02.wav", group:237, text:1},
-    city_have_no_army : {sound: "water_g03.wav", group:237, text:2},
-    need_workers : {sound: "water_g04.wav", group:237, text:3},
-    gods_are_angry : {sound: "water_g05.wav", group:237, text:4},
-    city_is_bad : {sound: "water_g06.wav", group:237, text:5},
-    much_unemployments : {sound: "water_g07.wav", group:237, text:6},
-    low_entertainment : {sound: "water_g08.wav", group:237, text:7},
-    city_is_good : {sound: "water_g09.wav", group:237, text:8},
-    city_is_amazing : {sound: "water_g10.wav", group:237, text:9},
-    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
-  },
+	animations {
+		walk { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 }
+		death { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false }
+  }
+
+  sounds {
+  	desease_can_start_at_any_moment {sound: "water_g01.wav", group:237, text:0}
+    no_food_in_city {sound: "water_g02.wav", group:237, text:1}
+    city_have_no_army {sound: "water_g03.wav", group:237, text:2}
+    need_workers {sound: "water_g04.wav", group:237, text:3}
+    gods_are_angry {sound: "water_g05.wav", group:237, text:4}
+    city_is_bad {sound: "water_g06.wav", group:237, text:5}
+    much_unemployments {sound: "water_g07.wav", group:237, text:6}
+    low_entertainment {sound: "water_g08.wav", group:237, text:7}
+    city_is_good {sound: "water_g09.wav", group:237, text:8}
+    city_is_amazing {sound: "water_g10.wav", group:237, text:9}
+    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
+  }
+  
   terrain_usage : TERRAIN_USAGE_ROADS,
   max_roam_length : 640,
 }

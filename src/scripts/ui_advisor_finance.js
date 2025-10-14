@@ -1,4 +1,4 @@
-log_info("akhenaten: building menu started")
+log_info("akhenaten: ui advisor financial started")
 
 advisor_financial_window = {
     row_text_x : 80,

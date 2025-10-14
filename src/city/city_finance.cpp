@@ -111,10 +111,6 @@ void city_finance_update_interest() {
     city_data.finance.this_year.expenses.interest = city_data.finance.interest_so_far;
 }
 
-void city_finance_update_salary() {
-    city_data.finance.this_year.expenses.salary = city_data.finance.salary_so_far;
-}
-
 void city_finance_t::calculate_totals() {
     finance_overview& this_year = city_data.finance.this_year;
     this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
@@ -149,28 +145,34 @@ void city_finance_t::estimate_wages() {
 void city_finance_t::process_request(finance_request_t request) {
     switch (request.type) {
     case efinance_request_festival:
-        city_data.finance.treasury -= request.deben;
-        city_data.finance.this_year.expenses.festivals += request.deben;
+        treasury -= request.deben;
+        this_year.expenses.festivals += request.deben;
         break;
 
     case efinance_request_kigdome:
-        city_data.finance.treasury -= request.deben;
-        city_data.finance.this_year.expenses.kingdome += request.deben;
+        treasury -= request.deben;
+        this_year.expenses.kingdome += request.deben;
         break;
 
     case efinance_request_disasters:
-        city_data.finance.treasury -= request.deben;
-        city_data.finance.this_year.expenses.disasters += request.deben;
+        treasury -= request.deben;
+        this_year.expenses.disasters += request.deben;
         break;
 
     case efinance_request_import:
-        city_data.finance.treasury -= request.deben;
-        city_data.finance.this_year.expenses.imports += request.deben;
+        treasury -= request.deben;
+        this_year.expenses.imports += request.deben;
         break;
 
     case efinance_request_export:
-        city_data.finance.treasury += request.deben;
-        city_data.finance.this_year.income.exports += request.deben;
+        treasury += request.deben;
+        this_year.income.exports += request.deben;
+        break;
+
+    case efinance_request_personal_salary:
+        this_year.expenses.mayour_salary += request.deben;
+        g_city.kingdome.personal_savings += request.deben;
+        treasury -= request.deben;
         break;
 
     default:
@@ -323,9 +325,7 @@ void city_finance_t::pay_monthly_salary() {
         return;
     }
 
-    salary_so_far += g_city.kingdome.salary_amount;
-    g_city.kingdome.personal_savings += g_city.kingdome.salary_amount;
-    treasury -= g_city.kingdome.salary_amount;
+    process_request({ efinance_request_personal_salary, g_city.kingdome.salary_amount });
 }
 
 static void reset_taxes() {
@@ -373,8 +373,8 @@ void city_finance_t::copy_amounts_to_last_year() {
     interest_so_far = 0;
 
     // salary
-    last_year.expenses.salary = salary_so_far;
-    salary_so_far = 0;
+    last_year.expenses.salary = this_year.expenses.salary;
+    this_year.expenses.salary = 0;
 
     // sundries
     last_year.expenses.festivals = this_year.expenses.festivals;
