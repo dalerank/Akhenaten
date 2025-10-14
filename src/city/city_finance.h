@@ -9,6 +9,7 @@ enum e_finance_request_type {
     efinance_request_disasters,
     efinance_request_import,
     efinance_request_export,
+    efinance_request_personal_salary,
 };
 
 struct finance_request_t {
@@ -41,8 +42,9 @@ struct finance_overview {
         int stolen;
         int tribute;
         uint16_t festivals;
-        int kingdome;
+        uint16_t kingdome;
         uint16_t disasters;
+        uint16_t mayour_salary;
         int total;
     } expenses;
 
@@ -90,7 +92,6 @@ struct city_finance_t {
     finance_overview last_year;
     finance_overview this_year;
     int32_t interest_so_far;
-    int32_t salary_so_far;
     int32_t wages_so_far;
     int32_t cheated_money;
     bool tribute_not_paid_last_year;
@@ -129,7 +130,6 @@ void city_finance_process_stolen(int stolen);
 void city_finance_process_construction(int cost);
 
 void city_finance_update_interest();
-void city_finance_update_salary();
 
 const finance_overview* city_finance_overview_last_year();
 const finance_overview* city_finance_overview_this_year();

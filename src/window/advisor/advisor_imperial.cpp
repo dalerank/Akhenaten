@@ -76,7 +76,6 @@ int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     ui["rating_label"].text_var("%s %u", ui::str(52, 0), g_city.kingdome.rating);
     ui["rating_advice"] = ui::str(52, g_city.kingdome.rating / 5 + 22);
     ui["player_rank"] = ui::str(32, g_city.kingdome.player_rank);
-    ui["personal_savings"].text_var("%s %u %s", ui::str(52, 1), g_city.kingdome.personal_savings, ui::str(6, 0));
     ui["salary_rank"].text_var("%s %u %s", ui::str(52, g_city.kingdome.salary_rank + 4), g_city.kingdome.salary_amount, ui::str(52, 3));
 
     ui["donate_to_city"].onclick([] { window_donate_to_city_show(); });
