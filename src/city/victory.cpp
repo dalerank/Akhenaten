@@ -211,7 +211,6 @@ void victory_state_t::continue_governing(int months) {
     g_city.mission.continue_months_chosen = months;
     g_city.kingdome.salary_rank = 0;
     g_city.kingdome.salary_amount = 0;
-    city_finance_update_salary();
 }
 
 void victory_state_t::stop_governing() {

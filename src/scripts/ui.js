@@ -241,11 +241,11 @@ info_window_vacant_lot = {
     }
 }
 
-info_window_statue = {
-    ui : {
-        background   : outer_panel({size: [29, 17] }), // pos/size setup from code
-        title          : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+info_window_statue {
+    ui {
+        background   : outer_panel({size[29, 17] }), // pos/size setup from code
+        title        : text({pos[0, 16], text:"${building.name}", size[px(28), px(1)], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        warning_text : text({pos[20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
 
         button_close : close_button({}),
         button_help  : help_button({}),
@@ -1105,13 +1105,13 @@ info_window_storageyard = {
     first_advisor       : ADVISOR_TRADE,
     ui : {
         background    : outer_panel({size: [29, 21] }),
-        title           : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        title         : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
    
         warning_text  : text({pos: [22, 36], wrap:px(28), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         storing       : text({ pos: [24, 90], text:"${loc.granary_storing} ${building.total_stored} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
         free_space    : text({ pos: [220, 90], text:"${loc.granary_space_for} ${building.free_space} ${loc.granary_units}", font : FONT_NORMAL_BLACK_ON_LIGHT }),
    
-    stored_items  : dummy({pos:[0, 110],
+        stored_items  : dummy({pos:[0, 110],
         ui : {
                 good0_icon : resource_icon({pos: [32, 0] }),
                 good0_text : text({pos: [54, 4], font: FONT_NORMAL_BLACK_ON_LIGHT }),

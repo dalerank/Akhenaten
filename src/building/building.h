@@ -567,7 +567,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
     output_resource_second_rate, num_types, building_size, info_title_id, progress_max, 
-    meta_id, production_rate, min_houses_coverage)
+    meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
 public:
