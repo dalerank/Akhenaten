@@ -2398,18 +2398,18 @@ building_architect_post = {
   laborers:[5], fire_risk:[2], damage_risk: [0]
 }
 
-building_conservatory = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:51 },
-    base : { pack:PACK_GENERAL, id:51 },
-    work : { pos : [82, 18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 },
+building_conservatory {
+  animations {
+    preview { pack:PACK_GENERAL, id:51 }
+    base { pack:PACK_GENERAL, id:51 }
+    work { pos[52, -18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 }
   }
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  meta : { help_id:75, text_id:75 }
+  meta { help_id:75, text_id:75 }
   building_size : 3
-  cost : [ 20, 50, 90, 150, 200 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[8], fire_risk:[4], damage_risk: [2]
+  cost [ 20, 50, 90, 150, 200 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers[8], fire_risk[4], damage_risk[2]
 }
 
 building_hunting_lodge = {
