@@ -45,7 +45,7 @@ mission8 { // Selima
 			year : 2649
 			month : 1
 			resource : RESOURCE_LUXURY_GOODS
-			amount : 200
+			amount : 2 // * 100
 			months_initial : 4
 		}
     ]
