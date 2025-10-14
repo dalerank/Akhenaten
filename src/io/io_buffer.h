@@ -117,7 +117,8 @@ public:
     void bind_i32(int32_t &v) { bind(BIND_SIGNATURE_INT32, &v); }
     void bind_u32(uint32_t &v) { bind(BIND_SIGNATURE_UINT32, &v); }
     void bind_i8(int8_t &v) { bind(BIND_SIGNATURE_INT8, &v); }
-    void bind_u8(int8_t &v) { bind(BIND_SIGNATURE_UINT8, &v); }
+    void bind_u8(uint8_t &v) { bind(BIND_SIGNATURE_UINT8, &v); }
+    void bind_bool(bool &v) { bind(BIND_SIGNATURE_UINT8, &v); }
 
     void bind(bind_signature_e signature, tile2i &tile) {
         tile.invalidate_offset();

@@ -61,6 +61,7 @@ void event_manager_t::load_mission_event(archive arch, event_ph_t &ev) {
     ev.amount.value = arch.r_int("amount");
     ev.month = arch.r_int("month");
     ev.tag_id = arch.r_int("tag_id");
+    ev.months_initial = arch.r_int("months_initial");
     
     switch (ev.type) {
     case EVENT_TYPE_REQUEST:
@@ -424,8 +425,10 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8, &event.event_trigger_type);
         iob->bind____skip(1);
         iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_INT16, &event.__unk07);
-        iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
-        iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
+        iob->bind_u8(event.months_initial);
+        iob->bind____skip(1);
+        iob->bind_u8(event.quest_months_left);
+        iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_INT8,  &event.event_state);
         iob->bind(BIND_SIGNATURE_INT8,  &event.is_overdue);
         iob->bind(BIND_SIGNATURE_INT8,  &event.is_active);
@@ -434,10 +437,11 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8,  &event.festival_deity);
         iob->bind(BIND_SIGNATURE_INT8,  &event.reserved_unk12);
         iob->bind(BIND_SIGNATURE_INT8,  &event.invasion_attack_target);
+        iob->bind_bool(event.appear_dialgow_shown);
         // ...
         // ...
         // ...
-        iob->bind____skip(25); // ???
+        iob->bind____skip(24); // ???
         iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
         iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);

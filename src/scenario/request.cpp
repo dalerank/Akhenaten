@@ -85,17 +85,18 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
             message.req_amount = request.resource_amount();
             message.req_resource = request.resource;
             message.req_months_left = request.months_to_comply;
-        }
-
-        if (event.quest_months_left == event.months_initial) {
+        } else if (!event.appear_dialgow_shown) {
             // initial quest message
+            event.appear_dialgow_shown = true;
             city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
                                    event.event_id, 0);
 
-        } else if (event.quest_months_left == 6) {
+        } 
+        
+        if (event.quest_months_left == 6) {
             // reminder of 6 months left
             city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
