@@ -16,7 +16,9 @@
 ui::advisor_financial_window_t ANK_VARIABLE(advisor_financial_window)
 
 void ui::advisor_financial_window_t::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
-    ui.label(text, vec2i{ row_text_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
+    auto ftext = ui.format(&g_city, text);
+
+    ui.label(ftext, vec2i{ row_text_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_last_year), vec2i{ row_last_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_this_year), vec2i{ row_this_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     y += 15;
@@ -92,11 +94,11 @@ void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
     int last_year_others = last_year->expenses.festivals + last_year->expenses.kingdome + last_year->expenses.disasters;
     int this_year_others = this_year->expenses.festivals + this_year->expenses.kingdome + this_year->expenses.disasters;
     svector<row, 32> rows_expenses = {
-        {ui::str(60, 11), last_year->expenses.imports, this_year->expenses.imports},
+        {rows.imports.c_str(), last_year->expenses.imports, this_year->expenses.imports},
         {ui::str(60, 12), last_year->expenses.wages, this_year->expenses.wages},
         {ui::str(60, 13), last_year->expenses.construction, this_year->expenses.construction},
         {interest, last_year->expenses.interest, last_year->expenses.interest},
-        {ui::str(60, 15), last_year->expenses.salary, this_year->expenses.salary},
+        {ui::str(60, 15), last_year->expenses.mayour_salary, this_year->expenses.mayour_salary},
         {ui::str(60, 16), last_year->expenses.stolen, this_year->expenses.stolen},
         {ui::str(60, 21), last_year->expenses.tribute, this_year->expenses.tribute},
         {ui::str(60, 22), last_year_others, this_year_others},
@@ -107,7 +109,7 @@ void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
     };
 
     line_y = ui["expenses_base"].pos.y;
-    draw_rows(rows_expenses);
+    draw_rows(rows_expenses);    
     ui.end_widget();
 }
 

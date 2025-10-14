@@ -38,7 +38,7 @@ struct finance_overview {
         int wages;
         int construction;
         int interest;
-        int salary;
+        int accountant_salary;
         int stolen;
         int tribute;
         uint16_t festivals;
