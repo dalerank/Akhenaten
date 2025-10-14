@@ -153,12 +153,13 @@ struct event_ph_t {
     int16_t on_refusal_action;
     e_event_trigger_type event_trigger_type;
     uint16_t tag_id;
-    int16_t months_initial;
-    int16_t quest_months_left;
+    uint8_t months_initial;
+    uint8_t quest_months_left;
     e_event_state event_state;
     bool is_overdue;
     bool is_active;
     bool can_comply_dialog_shown;
+    bool appear_dialgow_shown;
     int16_t __unk11;
     int8_t festival_deity;
     int8_t reserved_unk12;

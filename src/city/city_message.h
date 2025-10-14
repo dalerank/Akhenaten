@@ -282,7 +282,7 @@ struct city_message {
 
     int req_amount;
     int req_resource;
-    int req_months_left;
+    uint8_t req_months_left;
     int unk_07;
 
     int eventmsg_phrase_id;
