@@ -34,7 +34,7 @@ struct workshop_info_window : public building_info_window_t<workshop_info_window
 
     virtual bool check(object_info &c) override {
         building *b = c.building_get();
-        return (b->type == BUILDING_BRICKS_WORKSHOP) && b->is_workshop();
+        return (b->type == BUILDING_BRICKS_WORKSHOP) || b->is_workshop();
     }
 };
 
