@@ -27,7 +27,8 @@ int building_info_window::window_info_handle_mouse(const mouse *m, object_info &
 
 void building_info_window::archive_load(archive arch) {
     common_info_window::archive_load(arch);
-    first_advisor = arch.r_type<e_advisor>("first_advisor");
+    arch.r("first_advisor", first_advisor);
+    arch.r("related_buildings", related_buildings);
 }
 
 static void draw_native(object_info* c, int group_id) {
