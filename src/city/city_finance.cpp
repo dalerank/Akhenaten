@@ -116,7 +116,7 @@ void city_finance_t::calculate_totals() {
     this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
                               + this_year.income.gold_extracted;
 
-    this_year.expenses.total = this_year.expenses.stolen + this_year.expenses.salary + this_year.expenses.interest
+    this_year.expenses.total = this_year.expenses.stolen + this_year.expenses.mayour_salary + this_year.expenses.accountant_salary + this_year.expenses.interest
                                 + this_year.expenses.construction + this_year.expenses.wages
                                 + this_year.expenses.imports + this_year.expenses.festivals + this_year.expenses.kingdome + this_year.expenses.disasters;
 
@@ -124,7 +124,7 @@ void city_finance_t::calculate_totals() {
     last_year.income.total = last_year.income.donated + last_year.income.taxes + last_year.income.exports
                               + last_year.income.gold_extracted;
 
-    last_year.expenses.total = last_year.expenses.stolen + last_year.expenses.salary + last_year.expenses.interest
+    last_year.expenses.total = last_year.expenses.stolen + last_year.expenses.mayour_salary + last_year.expenses.accountant_salary + last_year.expenses.interest
                                 + last_year.expenses.construction + last_year.expenses.wages
                                 + last_year.expenses.imports + last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
 
@@ -373,8 +373,10 @@ void city_finance_t::copy_amounts_to_last_year() {
     interest_so_far = 0;
 
     // salary
-    last_year.expenses.salary = this_year.expenses.salary;
-    this_year.expenses.salary = 0;
+    last_year.expenses.accountant_salary = this_year.expenses.accountant_salary;
+    this_year.expenses.accountant_salary = 0;
+    last_year.expenses.mayour_salary = this_year.expenses.mayour_salary;
+    this_year.expenses.mayour_salary = 0;
 
     // sundries
     last_year.expenses.festivals = this_year.expenses.festivals;
@@ -393,7 +395,7 @@ void city_finance_t::copy_amounts_to_last_year() {
 
 void city_finance_t::pay_tribute() {
     int income = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_extracted;
-    int expenses = last_year.expenses.stolen + last_year.expenses.salary + last_year.expenses.interest
+    int expenses = last_year.expenses.stolen + last_year.expenses.mayour_salary + last_year.expenses.accountant_salary + last_year.expenses.interest
                    + last_year.expenses.construction + last_year.expenses.wages + last_year.expenses.imports
                    + last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
 
