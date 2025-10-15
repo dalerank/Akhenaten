@@ -122,9 +122,16 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
 
             case BUILDING_VILLAGE_PALACE:
             case BUILDING_TOWN_PALACE:
-            case BUILDING_CITY_PALACE:
-                city_finance_process_gold_extraction(amount_single_turn, &base);
-                dump_resource(amount_single_turn);
+            case BUILDING_CITY_PALACE: {
+                    e_finance_request_type request_type = efinance_request_gold_delivered;
+                    if (base.home()->dcast_mine()) {
+                        request_type = efinance_request_gold_delivered;
+                    } else if (base.home()->dcast_tax_collector()) {
+                        request_type = efinance_request_tax_collected;
+                    }
+                    events::emit(finance_request_t{ request_type, (uint32_t)amount_single_turn });
+                    dump_resource(amount_single_turn);
+                }
                 break;
 
             default:                              // workshop

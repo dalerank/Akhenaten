@@ -37,18 +37,18 @@ void tutorial_2_on_build_temple(event_building_create ev) {
     events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
 }
 
-void tutorial_2_on_gold_extracted(event_gold_extract ev) {
+void tutorial_2_on_update_day(event_advance_day ev) {
     auto &tut = g_tutorials_flags.tutorial_2;
 
     if (tut.gold_mined) {
         return;
     }
 
-    if (g_city.finance.this_year.income.gold_extracted < g_scenario.vars.get_int("gold_mined", 500)) {
+    if (g_city.finance.this_year.income.gold_delivered < g_scenario.vars.get_int("gold_mined", 500)) {
         return;
     }
 
-    events::unsubscribe(&tutorial_2_on_gold_extracted);
+    events::unsubscribe(&tutorial_2_on_update_day);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_gods });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.gold_mined = true;
@@ -78,7 +78,7 @@ void tutorial_2::init() {
 
     const bool gold_mined_500 = tut.gold_mined;
     events::emit_if(gold_mined_500, event_building_menu_update{ tutorial_stage.tutorial_gods });
-    events::subscribe_if(!gold_mined_500, &tutorial_2_on_gold_extracted);
+    events::subscribe_if(!gold_mined_500, &tutorial_2_on_update_day);
 
     const bool temples_built = tut.temples_built;
     events::emit_if(temples_built, event_building_menu_update{ tutorial_stage.tutorial_entertainment });

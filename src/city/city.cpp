@@ -135,8 +135,8 @@ e_availability city_t::is_advisor_available(e_advisor advisor) const {
 
 void city_t::init_campaign_mission() {
     finance.treasury = g_scenario.startup_funds();
-    finance.last_year.income.gold_extracted = 0;
-    finance.this_year.income.gold_extracted = 0;
+    finance.last_year.income.gold_delivered = 0;
+    finance.this_year.income.gold_delivered = 0;
 }
 
 void city_t::init_mission_resources(const resource_allow_vec& resources) {
@@ -877,8 +877,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.wages_so_far);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.expenses.wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.wages);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_extracted);
-    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.last_year.income.gold_extracted);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_delivered);
+    iob->bind(BIND_SIGNATURE_UINT32, &data.finance.last_year.income.gold_delivered);
     assert(iob->get_offset() == 30440);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.expenses.disasters);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.expenses.disasters);
@@ -1104,6 +1104,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_since_gift); // ok
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gift_overdose_penalty);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_4488);
+
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_MODEST].id);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_GENEROUS].id);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.gifts[GIFT_LAVISH].id);

@@ -82,7 +82,7 @@ void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
         {ui::str(60, 8) , last_year->income.taxes, this_year->income.taxes},
         {ui::str(60, 9) ,  last_year->income.exports, this_year->income.exports},
         {ui::str(60, 20) , last_year->income.donated, this_year->income.donated},
-        {ui::str(60, 24) , (int)last_year->income.gold_extracted, (int)this_year->income.gold_extracted},
+        {ui::str(60, 24) , (int)last_year->income.gold_delivered, (int)this_year->income.gold_delivered},
         {"", 0, 0, true, vec2i{line_start_x, 0} }, // sum lines
         {ui::str(60, 10) , (int)last_year->income.total, (int)this_year->income.total }
     };
