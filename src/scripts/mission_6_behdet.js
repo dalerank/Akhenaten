@@ -2,12 +2,15 @@ log_info("akhenaten: mission 6 behdet started")
 
 mission6 = { // Behdet
 	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true
 	player_rank : 1
 	next_mission : 8
 	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
 	house_tax_multipliers : [300, 200, 150, 100, 75]
+
+	env {
+	    has_animals : true
+	}
 
 	buildings : [   
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,

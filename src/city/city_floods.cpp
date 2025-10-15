@@ -216,6 +216,10 @@ void floods_t::update_next_flood_params() {
 }
 
 void floods_t::post_flood_prediction_message() {
+    if (g_scenario.env.hide_nilometer) {
+        return;
+    }
+
     if (quality_next == 100) {
         messages::popup(MESSAGE_FLOOD_PERFECT, 0, 0);
     } else if (quality_next >= 75) {
