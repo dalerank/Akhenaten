@@ -15,10 +15,6 @@ struct city_buildings_t {
     int32_t festival_building_id;
     tile2i festival_square;
 
-    bool mansion_placed;
-    int32_t mansion_building_id;
-    tile2i mansion;
-
     int32_t senet_house_placed;
 
     bool distribution_center_placed;
@@ -93,11 +89,6 @@ struct city_buildings_t {
     void check_buildings_twins();
 };
 
-
-bool city_buildings_has_mansion();
-int city_buildings_get_mansion_id();
-void city_buildings_add_mansion(building* mansion);
-void city_buildings_remove_mansion(building* mansion);
 
 bool city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building* center);

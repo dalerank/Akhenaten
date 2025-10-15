@@ -24,12 +24,20 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dynasty_mansion);
 
 void building_mansion::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
+    g_city.buildings.track_building(base, false);
+}
 
-    city_buildings_add_mansion(&base);
+void building_mansion::on_post_load() {
+    g_city.buildings.track_building(base, true);
+}
+
+void building_mansion::update_count() const {
+    const bool is_active = true;// (num_workers() > 0);
+    g_city.buildings.track_building(base, is_active);
 }
 
 void building_mansion::spawn_figure() {
-    common_spawn_figure_trigger(50);
+    common_spawn_figure_trigger(current_params().min_houses_coverage);
 
     if (base.has_figure(BUILDING_SLOT_GOVERNOR)) {
         return;
@@ -68,4 +76,18 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
         assert(false);
     }
     return true;
+}
+
+bool building_mansion::exist_in_city() {
+    const e_building_type types[] = {
+        BUILDING_PERSONAL_MANSION,
+        BUILDING_FAMILY_MANSION,
+        BUILDING_DYNASTY_MANSION
+    };
+
+    for (e_building_type type : types)
+        if (g_city.buildings.tracked_buildings[type].size() > 0)
+            return true;
+
+    return false;
 }

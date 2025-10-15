@@ -14,6 +14,7 @@
 #include "game/game_config.h"
 #include "core/random.h"
 #include "figure/figure.h"
+#include "building/building_mansion.h"
 
 #include <map>
 
@@ -321,7 +322,7 @@ void city_finance_t::pay_monthly_salary() {
         return;
     }
 
-    if (!city_buildings_has_mansion()) {
+    if (!building_mansion::exist_in_city()) {
         return;
     }
 

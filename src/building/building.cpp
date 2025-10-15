@@ -269,10 +269,6 @@ void building::clear_related_data() {
         storage_id = 0;
     }
 
-    if (is_governor_mansion()) {
-        city_buildings_remove_mansion(this);
-    }
-
     if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
         city_buildings_remove_distribution_center(this);
 
@@ -321,9 +317,6 @@ bool building::is_palace() {
 }
 bool building::is_tax_collector() {
     return building_is_tax_collector(type);
-}
-bool building::is_governor_mansion() {
-    return building_is_governor_mansion(type);
 }
 bool building::is_temple() {
     return building_is_temple(type);
