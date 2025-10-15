@@ -11,9 +11,13 @@ public:
     virtual void spawn_figure() override;
     virtual bool can_play_animation() const override { return true; }
     virtual void update_graphic() override;
+    virtual void on_post_load() override;
+    virtual void update_count() const override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MANSION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+
+    static bool exist_in_city();
 };
 
 class building_personal_mansion : public building_mansion {

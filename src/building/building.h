@@ -275,7 +275,6 @@ public:
     bool is_monument();
     bool is_palace();
     bool is_tax_collector();
-    bool is_governor_mansion();
     bool is_temple();
     bool is_temple_complex() const;
     bool is_shrine() const;
