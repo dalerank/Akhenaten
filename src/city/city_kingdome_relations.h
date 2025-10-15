@@ -55,7 +55,7 @@ struct std::hash<gift_rule> {
 ANK_CONFIG_STRUCT(gift_rule, id, rate, minimum)
 
 struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
-    kingdome_gift gifts[3];
+    kingdome_gift gifts[GIFT_COUNT];
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
@@ -91,7 +91,7 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 
     void load_scenario(int rank, int load_type);
     void init_donation_amount();
-    const kingdome_gift* get_gift(int size) { return &gifts[size]; }
+    const kingdome_gift *get_gift(int size);
     int can_send_gift(int size);
     void send_gift(int gift_size);
     int salary_for_rank(int rank);
@@ -99,6 +99,7 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
     void update_debt_state();
     void process_invasion();
     void update();
+    void update_gifts();
     int get_gift_cost(int size);
     void set_donation_amount(int amount);
     void change_donation_amount(int change);

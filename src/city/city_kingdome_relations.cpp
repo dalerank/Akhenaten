@@ -205,11 +205,19 @@ void kingdome_relation_t::process_invasion() {
 void kingdome_relation_t::update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Emperor Update");
     update_debt_state();
+    reset_gifts();
+    update_gifts();
+}
+
+void kingdome_relation_t::update_gifts() {
+    gifts[GIFT_MODEST].cost = get_gift_cost(GIFT_MODEST);
+    gifts[GIFT_GENEROUS].cost = get_gift_cost(GIFT_GENEROUS);
+    gifts[GIFT_LAVISH].cost = get_gift_cost(GIFT_LAVISH);
 }
 
 int kingdome_relation_t::get_gift_cost(int size) {
     auto it = std::find_if(params().gift_rules.begin(), params().gift_rules.end(),
-        [this] (const auto &rule) { return rule.id == g_city.kingdome.player_rank; });
+        [&] (const auto &rule) { return rule.id == size; });
 
     if (it != params().gift_rules.end()) {
         return int(personal_savings / it->rate + it->minimum);
@@ -271,6 +279,10 @@ void kingdome_relation_t::set_salary_rank(int rank) {
 
 void kingdome_relation_t::init_donation_amount() {
     donate_amount = calc_bound(donate_amount, 0, personal_savings);
+}
+
+const kingdome_gift *kingdome_relation_t::get_gift(int size) {
+    return &gifts[size];
 }
 
 void kingdome_relation_t::set_donation_amount(int amount) {

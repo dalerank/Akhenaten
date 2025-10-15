@@ -19,6 +19,7 @@ ui::gift_to_kingdome_window g_gift_to_kingdome_window;
 
 void ui::gift_to_kingdome_window::init() {
     autoconfig_window::init();
+    g_city.kingdome.update_gifts();
 
     if (selected_gift_size == GIFT_LAVISH && !g_city.kingdome.can_send_gift(GIFT_LAVISH)) {
         selected_gift_size = GIFT_GENEROUS;
