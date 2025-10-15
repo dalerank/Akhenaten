@@ -1216,24 +1216,24 @@ building_reed_gatherer = {
   laborers:[8], fire_risk:[2], damage_risk: [3]
 }
 
-building_wood_cutter = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:65 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:65 },
-    work : { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:12 },
-    wood : { pos : [65, 3], pack:PACK_GENERAL, id:202 },
+building_wood_cutter {
+  animations {
+    preview { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    base { pos : [0, 0], pack:PACK_GENERAL, id:65 }
+    work { pos : [30, -17], pack:PACK_GENERAL, id:65, offset:1, max_frames:12 }
+    wood { pos : [65, 3], pack:PACK_GENERAL, id:202 }
   }
-  output : {
+  output {
     resource : RESOURCE_TIMBER
   }
   building_size : 2
-  meta : { help_id:94, text_id:120 }
+  meta { help_id:94, text_id:120 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   max_gatherers : 1
-  cost: [ 10, 20, 40, 80, 140 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [3] }
-  laborers:[8], fire_risk:[4], damage_risk: [3]
+  cost [ 10, 20, 40, 80, 140 ]
+  desirability { value[-4], step[1], step_size[1], range[3] }
+  laborers[8], fire_risk[4], damage_risk[3]
 }
 
 building_small_mastaba = {

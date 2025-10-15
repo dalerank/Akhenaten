@@ -12,8 +12,10 @@ for (var i = 0; i < 38; i++) {
 
 mission0 = { // Nubt
 	start_message : 150 //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
-	city_has_animals : true
-	gods_least_mood : 50
+	env {
+		has_animals : true		
+	    gods_least_mood : 50
+	}
 	religion_enabled : false
 	hide_won_screen : true
 	player_rank : 0
@@ -49,8 +51,10 @@ mission0 = { // Nubt
 
 mission1 = {
 	start_message : 241 - 99, //MESSAGE_TUTORIAL_GOLD_AND_CRIME
-	city_has_animals : true,
-	gods_least_mood : 50,
+	env {
+		has_animals : true		
+	    gods_least_mood : 50
+	}
 	player_rank : 0,
 	hide_won_screen : true,
 	initial_funds : [7500, 5000, 3750, 2500, 2000],
@@ -75,8 +79,10 @@ mission1 = {
 
 mission2 = {
 	start_message : 242 - 99,
-	city_has_animals : true,
-	gods_least_mood : 50,
+	env {
+		has_animals : true		
+	    gods_least_mood : 50
+	}
 	player_rank : 0,
 	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
@@ -104,7 +110,9 @@ mission2 = {
 
 mission3 = {
 	start_message : 241 - 99
-	city_has_animals : true
+	env {
+		has_animals : true		
+	}
 	player_rank : 0
 	initial_funds : [7500, 5000, 3750, 2500, 2000]
 	rescue_loans : [7500, 5000, 3750, 2500, 2000]
@@ -131,7 +139,9 @@ mission3 = {
 
 mission4 = {
 	start_message : 241 - 99,
-	city_has_animals : true,
+	env {
+		has_animals : true		
+	}
 	player_rank : 1,
 	initial_funds : [7500, 5000, 3750, 2500, 2000],
 	rescue_loans : [7500, 5000, 3750, 2500, 2000],
@@ -177,7 +187,9 @@ mission4 = {
 
 mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true,
+	env {
+		has_animals : true		
+	}
 	player_rank : 1,
 	next_mission : 8,
 	initial_funds : [7500, 5000, 3750, 2500, 2000],
@@ -267,7 +279,9 @@ mission7 = { // Abydos
 
 mission9 = { // Abu
 	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true,
+	env {
+		has_animals : true		
+	}
 	player_rank : 1,
 	next_mission : 10,
 	choice_background : {pack:PACK_UNLOADED, id:12},
