@@ -10,6 +10,8 @@ enum e_finance_request_type {
     efinance_request_import,
     efinance_request_export,
     efinance_request_personal_salary,
+    efinance_request_gold_delivered,
+    efinance_request_tax_collected,
 };
 
 struct finance_request_t {
@@ -28,7 +30,7 @@ struct finance_overview {
     struct {
         int taxes;
         int exports;
-        uint32_t gold_extracted;
+        uint16_t gold_delivered;
         int donated;
         int total;
     } income;
@@ -121,9 +123,6 @@ struct city_finance_t {
 
 class figure;
 
-struct event_gold_extract { int amount; };
-
-void city_finance_process_gold_extraction(int amount, figure *f);
 void city_finance_process_cheat();
 void city_finance_process_console(int amount);
 void city_finance_process_stolen(int stolen);

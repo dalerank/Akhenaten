@@ -75,17 +75,6 @@ bool city_finance_t::is_out_of_money() const{
     return (treasury <= -5000);
 }
 
-void city_finance_process_gold_extraction(int amount, figure *f) {
-    city_data.finance.treasury += amount;
-
-    if (building_type_any_of(*f->home(), { BUILDING_GOLD_MINE })) {
-        city_data.finance.this_year.income.gold_extracted += amount;
-        events::emit(event_gold_extract{ amount });
-    } else if (building_type_any_of(*f->home(), { BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED })) {
-        city_data.finance.this_year.income.taxes += amount;
-    }
-}
-
 void city_finance_process_cheat() {
     if (city_data.finance.treasury < 5000) {
         city_data.finance.treasury += 1000;
@@ -115,7 +104,7 @@ void city_finance_update_interest() {
 void city_finance_t::calculate_totals() {
     finance_overview& this_year = city_data.finance.this_year;
     this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
-                              + this_year.income.gold_extracted;
+                              + this_year.income.gold_delivered;
 
     this_year.expenses.total = this_year.expenses.stolen + this_year.expenses.mayour_salary + this_year.expenses.accountant_salary + this_year.expenses.interest
                                 + this_year.expenses.construction + this_year.expenses.wages
@@ -123,7 +112,7 @@ void city_finance_t::calculate_totals() {
 
     finance_overview& last_year = city_data.finance.last_year;
     last_year.income.total = last_year.income.donated + last_year.income.taxes + last_year.income.exports
-                              + last_year.income.gold_extracted;
+                              + last_year.income.gold_delivered;
 
     last_year.expenses.total = last_year.expenses.stolen + last_year.expenses.mayour_salary + last_year.expenses.accountant_salary + last_year.expenses.interest
                                 + last_year.expenses.construction + last_year.expenses.wages
@@ -174,6 +163,16 @@ void city_finance_t::process_request(finance_request_t request) {
         this_year.expenses.mayour_salary += request.deben;
         g_city.kingdome.personal_savings += request.deben;
         treasury -= request.deben;
+        break;
+
+    case efinance_request_gold_delivered:
+        treasury += request.deben;
+        this_year.income.gold_delivered += request.deben;
+        break;
+
+    case efinance_request_tax_collected:
+        this_year.income.taxes += request.deben;
+        treasury += request.deben;
         break;
 
     default:
@@ -395,7 +394,7 @@ void city_finance_t::copy_amounts_to_last_year() {
 }
 
 void city_finance_t::pay_tribute() {
-    int income = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_extracted;
+    int income = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_delivered;
     int expenses = last_year.expenses.stolen + last_year.expenses.mayour_salary + last_year.expenses.accountant_salary + last_year.expenses.interest
                    + last_year.expenses.construction + last_year.expenses.wages + last_year.expenses.imports
                    + last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
