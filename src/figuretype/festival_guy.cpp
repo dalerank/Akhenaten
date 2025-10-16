@@ -44,6 +44,7 @@ void figure_festival_guy::update_animation() {
         break;
     case BUILDING_DANCE_SCHOOL:
         animkey = "dancer_walk";
+        break;
 
     default:
         assert(false);
