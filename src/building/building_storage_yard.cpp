@@ -527,9 +527,9 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
             space = space->next_room();
         }
 
-        if (space && available > 0) {
+        if (available > 0) {
             int amount = std::min(available, barracks_want);
-            return {STORAGEYARD_TASK_DELIVERING, &space->base, amount, RESOURCE_WEAPONS};
+            return {STORAGEYARD_TASK_DELIVERING, &warehouse->base, amount, RESOURCE_WEAPONS};
         }
     }
 
@@ -558,7 +558,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
 
         if (available > 0) {
             int amount = std::min(available, school_want);
-            return { STORAGEYARD_TASK_DELIVERING, &space->base, amount, RESOURCE_TIMBER };
+            return { STORAGEYARD_TASK_DELIVERING, &warehouse->base, amount, RESOURCE_TIMBER };
         }
     }
 
