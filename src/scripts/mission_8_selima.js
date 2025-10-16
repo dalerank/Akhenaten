@@ -15,6 +15,8 @@ mission8 { // Selima
 	env {
 		has_animals : true		
 	    hide_nilometer : true
+	    marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 
 	buildings [

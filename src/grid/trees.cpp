@@ -32,8 +32,10 @@ void map_tree_foreach_tile(void (*callback)(int grid_offset)) {
 
 void map_tree_growth_update() {
     OZZY_PROFILER_SECTION("Game/Map/Trees Growth Update");
-    for (int i = 0; i < trees_tiles_cache.size(); ++i)
-        vegetation_tile_update(trees_tiles_cache.at(i));
+    const auto &opt = g_scenario.env.tree_grow;
+    for (int tile_offset : trees_tiles_cache) {
+        vegetation_tile_update(tile_offset, opt);
+    }
 }
 
 void map_tree_update_image(int grid_offset) {

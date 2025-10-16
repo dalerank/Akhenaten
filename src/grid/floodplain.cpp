@@ -43,7 +43,7 @@ void foreach_floodplain_row(int is_flooding, int row, void (*callback)(int is_fl
     }
 
     auto &cache = floodplain_tiles_caches_by_row[row];
-    for (const auto &grid_offset: cache) {
+    for (int grid_offset: cache) {
         callback(is_flooding, grid_offset, row);
     }
 }
