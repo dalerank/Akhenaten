@@ -14,15 +14,15 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "grid/routing/queue.h"
+#include "js/js_game.h"
 
 tile_cache marshland_tiles_cache;
+grid_xx g_terrain_vegetation_growth = {0, FS_UINT8};
 
 void foreach_marshland_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < marshland_tiles_cache.size(); i++)
-        callback(marshland_tiles_cache.at(i));
+    for (int grid_offset: marshland_tiles_cache)
+        callback(grid_offset);
 }
-
-grid_xx g_terrain_vegetation_growth = {0, FS_UINT8};
 
 int map_get_vegetation_growth(int grid_offset) {
     return map_grid_get(g_terrain_vegetation_growth, grid_offset);
@@ -33,11 +33,15 @@ void map_vegetation_deplete(int grid_offset) {
     map_tiles_update_vegetation(grid_offset);
 }
 
-void vegetation_tile_update(int grid_offset) {
-    int growth = map_get_vegetation_growth(grid_offset);
+void vegetation_tile_update(int grid_offset, vegetation_opt opt) {
+    int growth = g_terrain_vegetation_growth.get(grid_offset);
+    if (opt.random_max == 0) {
+        return;
+    }
+
     if (growth < 255) {
         random_generate_next();
-        int r = random_short() % 10 + 5;
+        int r = random_short() % opt.random_max + opt.random_min;
         growth = std::clamp(growth + r, 0, 255);
 
         map_grid_set(g_terrain_vegetation_growth, grid_offset, growth);
@@ -49,8 +53,10 @@ void vegetation_tile_update(int grid_offset) {
 
 void map_vegetation_growth_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Vegetation Groth Update");
-    for (int i = 0, size = marshland_tiles_cache.size(); i < size; ++i)
-        vegetation_tile_update(marshland_tiles_cache.at(i));
+    const auto &opt = g_scenario.env.marshland_grow;
+    for (int tile_offset : marshland_tiles_cache) {
+        vegetation_tile_update(tile_offset, opt);
+    }
 }
 
 io_buffer* iob_vegetation_growth = new io_buffer([](io_buffer* iob, size_t version) {

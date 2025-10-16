@@ -10,11 +10,23 @@ for (var i = 0; i < 38; i++) {
 	}
 }
 
+default_marshland_grow {
+	random_max : 10
+	random_min : 5
+}
+
+default_tree_grow {
+	random_max : 2
+	random_min : 1	
+}
+
 mission0 = { // Nubt
 	start_message : 150 //TUTORIAL_HOUSING_AND_ROADS, 248 = 150 + 99 - 1
 	env {
 		has_animals : true		
 	    gods_least_mood : 50
+	    marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	religion_enabled : false
 	hide_won_screen : true
@@ -54,6 +66,8 @@ mission1 = {
 	env {
 		has_animals : true		
 	    gods_least_mood : 50
+	    marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	player_rank : 0,
 	hide_won_screen : true,
@@ -106,12 +120,17 @@ mission2 = {
 		pottery_step2_stored : 200
 		victory_last_action_delay : 3
 	}
+
+	marshland_grow : default_marshland_grow
+	tree_grow : default_tree_grow
 }
 
 mission3 = {
 	start_message : 241 - 99
 	env {
 		has_animals : true		
+		marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	player_rank : 0
 	initial_funds : [7500, 5000, 3750, 2500, 2000]
@@ -141,6 +160,8 @@ mission4 = {
 	start_message : 241 - 99,
 	env {
 		has_animals : true		
+		marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	player_rank : 1,
 	initial_funds : [7500, 5000, 3750, 2500, 2000],
@@ -189,6 +210,8 @@ mission7 = { // Abydos
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	env {
 		has_animals : true		
+		marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	player_rank : 1,
 	next_mission : 8,
@@ -281,6 +304,8 @@ mission9 = { // Abu
 	start_message : 0, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
 	env {
 		has_animals : true		
+		marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
 	}
 	player_rank : 1,
 	next_mission : 10,

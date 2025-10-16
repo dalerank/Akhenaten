@@ -49,6 +49,8 @@ struct grid_xx {
     uint32_t size_total;
 
     void* items_xx;
+
+    inline int32_t get(uint32_t grid_offset);
 };
 
 struct grid_area {
@@ -138,6 +140,8 @@ tile2i map_random_choose(T &arr, tile2i avoid) {
 
     return arr[0];
 }
+
+inline int32_t grid_xx::get(uint32_t grid_offset) { return map_grid_get(*this, grid_offset); }
 
 void map_grid_and(grid_xx& grid, uint32_t at, int mask);
 void map_grid_or(grid_xx& grid, uint32_t at, int mask);

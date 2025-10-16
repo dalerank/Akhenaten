@@ -1,14 +1,20 @@
 log_info("akhenaten: mission 5 timna started")
 
-mission5 = { // Timna
+mission5 { // Timna
 	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
-	city_has_animals : true
-	player_rank : 1
-	initial_funds : [7500, 5000, 3750, 2500, 2000]
-	rescue_loans : [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers : [300, 200, 150, 100, 75]
 
-	buildings : [
+	env {
+		has_animals : true
+		marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
+	}
+
+	player_rank : 1
+	initial_funds [7500, 5000, 3750, 2500, 2000]
+	rescue_loans [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers [300, 200, 150, 100, 75]
+
+	buildings [
 		         	BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE,
 					BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION,
@@ -21,24 +27,24 @@ mission5 = { // Timna
 
 					BUILDING_MORTUARY, BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD
 				]
-	stages : {
-		tutorial_irrigation : [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ]
-		tutorial_guilds : [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
+	stages {
+		tutorial_irrigation [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ]
+		tutorial_guilds [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL]
 	}
 	enable_scenario_events : false,
-	events : [
+	events [
 		{
 			year : 2850
 			resource : "copper"
 			amount : 500
 			deadline : 12
-		},
+		}
 		{
 			year : 2849
 			resource : "gems"
 			amount : 1500
 			deadline : 12
-		},
+		}
 		{
 			year : 2848
 			resource : "deben"
@@ -47,27 +53,27 @@ mission5 = { // Timna
 		}
 	]
 
-	attacks : [
+	attacks  [
 		{
 			year : 2848
 			type : "bedouin"
 			amount : 4
-			pepeat_after : [6]
+			pepeat_after [6]
 		}
-	],
+	]
 
-	gifts : [
+	gifts [
 		{
 				from: "pharaoh"
-				condition: {
+				condition {
 					kingdome : 65
 					resource : RESOURCE_CHICKPEAS
-					amount : [1600, 2400]
+					amount [1600, 2400]
 				}
 		}
 	]
 
-	trade_routes : [
+	trade_routes [
 		{
 			city : "meninefer"
 			reputation : 60

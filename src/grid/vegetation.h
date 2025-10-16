@@ -1,11 +1,12 @@
 #pragma once
 
+#include "envinronment.h"
 #include "tile_cache.h"
 
 extern tile_cache marshland_tiles_cache;
 
 void foreach_marshland_tile(void (*callback)(int grid_offset));
-void vegetation_tile_update(int grid_offset);
+void vegetation_tile_update(int grid_offset, vegetation_opt opt);
 
 int map_get_vegetation_growth(int grid_offset);
 inline int map_get_vegetation_growth(tile2i tile) { return map_get_vegetation_growth(tile.grid_offset()); }

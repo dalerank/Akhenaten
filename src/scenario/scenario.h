@@ -13,6 +13,7 @@
 #include "core/archive.h"
 #include "core/settings_vars.h"
 #include "figure/formation.h"
+#include "grid/envinronment.h"
 
 #include <cstdint>
 #include <unordered_map>
@@ -275,6 +276,8 @@ struct scenario_data_t {
         bool has_animals;
         uint8_t gods_least_mood;
         bool hide_nilometer;
+        vegetation_opt marshland_grow;
+        vegetation_opt tree_grow;
     } env;
 
     struct meta_t {
@@ -309,7 +312,7 @@ struct scenario_data_t {
     }
 };
 ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers)
-ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood, hide_nilometer)
+ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood, hide_nilometer, marshland_grow, tree_grow)
 ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
