@@ -93,7 +93,14 @@ void figure_trade_caravan::debug_show_properties() {
 
 void figure_trade_caravan::on_create() {
     figure_trader::on_create();
-    runtime_data().trader = empire_create_trader();
+    auto trader = empire_create_trader();
+
+    if (!trader.valid()) {
+        poof();
+        return;
+    }
+
+    runtime_data().trader = trader;
 }
 
 void figure_trade_caravan::on_destroy() {
