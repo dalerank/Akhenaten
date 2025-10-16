@@ -78,7 +78,9 @@ empire_trader_handle empire_create_trader() {
     auto& traders = g_empire_traders.traders;
     auto it = std::find_if(traders.begin() + 1, traders.end(), [] (auto& t) { return t.is_active == false; });
 
-    assert(it != traders.end());
+    if (it == traders.end()) {
+        return {};
+    }
 
     auto& trader = *it;
     memset(&trader, 0, sizeof(trader));
