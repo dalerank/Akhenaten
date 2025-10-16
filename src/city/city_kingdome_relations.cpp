@@ -332,7 +332,7 @@ void kingdome_relation_t::advance_month() {
         gift_overdose_penalty = 0;
     }
 
-    rating = calc_bound(rating, 0, rating_cap);
+    rating = calc_bound(rating, 0, (rating_cap == 0 ? 100 : rating_cap));
 }
 
 void kingdome_relation_t::advance_year() {
