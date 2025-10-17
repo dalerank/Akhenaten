@@ -14,22 +14,6 @@
 #include "scenario/distant_battle.h"
 #include "building/building_fort.h"
 
-int formation_batalion_create_for_fort(building* b) {
-    formation_calculate_legion_totals();
-
-    building_fort *fort = b->dcast_fort();
-    formation* m = formation_create_legion(b->id, b->tile.x(), b->tile.y(), fort->runtime_data().figure_type);
-    if (!m->id)
-        return 0;
-
-    figure* standard = figure_create(FIGURE_STANDARD_BEARER, tile2i(0, 0), DIR_0_TOP_RIGHT);
-    m->standard_figure_id = standard->id;
-    standard->formation_id = m->id;
-    standard->set_home(fort->id());
-
-    return m->id;
-}
-
 void formation_batalion_delete_for_fort(building* fort) {
     if (fort->formation_id > 0) {
         formation* m = formation_get(fort->formation_id);
@@ -46,7 +30,7 @@ void formation_batalion_delete_for_fort(building* fort) {
 int formation_batalion_recruits_needed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->batalion_recruit_type != BATALION_RECRUIT_NONE)
+        if (m->in_use && m->batalion_id && m->own_batalion && m->batalion_recruit_type != BATALION_RECRUIT_NONE)
             return 1;
     }
     return 0;
@@ -180,7 +164,7 @@ void formation_batalions_dispatch_to_distant_battle(void) {
     int roman_strength = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->empire_service && m->num_figures > 0) {
+        if (m->in_use && m->own_batalion && m->batalion_id && m->empire_service && m->num_figures > 0) {
             roman_strength += dispatch_soldiers(m);
             num_legions++;
         }
@@ -224,7 +208,7 @@ static void kill_soldiers(formation* m, int kill_percentage) {
 void formation_batalions_kill_in_distant_battle(int kill_percentage) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->in_distant_battle)
+        if (m->in_use && m->own_batalion && m->batalion_id && m->in_distant_battle)
             kill_soldiers(m, kill_percentage);
     }
 }
@@ -245,7 +229,7 @@ static void return_soldiers(formation* m) {
 void formation_batalions_return_from_distant_battle(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->in_distant_battle)
+        if (m->in_use && m->own_batalion && m->batalion_id && m->in_distant_battle)
             return_soldiers(m);
     }
 }
