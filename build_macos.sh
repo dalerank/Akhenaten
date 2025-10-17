@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-cmake --build ./build --target clean
+CORES=$(sysctl -n hw.ncpu)
+
+cmake --build ./build --target clean -- -j"$CORES"
 cmake -B build -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
-cmake --build ./build
+cmake --build ./build -- -j"$CORES"
 
 cd build/akhenaten.app/Contents/MacOS
 
