@@ -113,6 +113,7 @@ e_formation_id building_fort::create_batalion() {
     m->morale = 50;
     m->is_at_fort = 1;
     m->batalion_id = m->id - 1;
+    m->max_figures = 16;
     assert(m->batalion_id <= 9);
 
     building_fort_ground *fort_ground = ground();
@@ -128,6 +129,9 @@ e_formation_id building_fort::create_batalion() {
     return m->id;
 }
 
+const building_fort::base_params &building_fort::base_params_ref() const {
+    return get_fort_params(type());
+}
 
 void building_fort::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
     ghost_preview(planer, ctx, start, end, pixel);

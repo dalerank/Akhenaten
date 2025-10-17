@@ -2,6 +2,7 @@
 
 #include "core/buffer.h"
 #include "figure/figure_type.h"
+#include "game/game_environment.h"
 #include "grid/point.h"
 #include "core/tokenum.h"
 
@@ -141,7 +142,7 @@ formation* formation_get(int formation_id);
 formation *formation_get_free(int start_index);
 
 template<typename F>
-void formation_foreach(F func) {
+inline void formations_foreach(F func) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use) {
@@ -151,8 +152,8 @@ void formation_foreach(F func) {
 }
 
 template<typename T, typename F>
-void formation_get(T& arr, F func) {
-    formation_foreach([&] (auto *m) {
+inline void formations_get(T& arr, F func) {
+    formations_foreach([&] (auto *m) {
         if (func(m)) {
             arr.push_back(m);
         }

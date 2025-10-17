@@ -5,7 +5,7 @@
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
-#include "figure/figure.h"
+#include "figuretype/figure_soldier.h"
 #include "figure/route.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -55,7 +55,7 @@ void formation_batalion_update_recruit_status(building* b) {
         int too_many = m->num_figures - m->max_figures;
         for (int i = formation::max_figures_count - 1; i >= 0 && too_many > 0; i--) {
             if (m->figures[i]) {
-                figure_get(m->figures[i])->action_state = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+                figure_get(m->figures[i])->action_state = ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
                 too_many--;
             }
         }
@@ -111,7 +111,7 @@ void formation_batalion_move_to(formation* m, tile2i tile) {
         }
         if (prepare_to_move(m)) {
             f->alternative_location_index = 0;
-            f->action_state = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
+            f->action_state = ACTION_83_SOLDIER_GOING_TO_STANDARD;
             f->route_remove();
         }
     }
@@ -134,7 +134,7 @@ void formation_batalion_return_home(formation* m) {
             continue;
         }
         if (prepare_to_move(m)) {
-            f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+            f->action_state = ACTION_81_SOLDIER_GOING_TO_FORT;
             f->route_remove();
         }
     }
@@ -147,7 +147,7 @@ static int dispatch_soldiers(formation* m) {
         if (m->figures[fig] > 0) {
             figure* f = figure_get(m->figures[fig]);
             if (!f->is_dead())
-                f->action_state = FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE;
+                f->action_state = ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE;
         }
     }
     int strength_factor;
@@ -219,7 +219,7 @@ static void return_soldiers(formation* m) {
         if (m->figures[fig] > 0) {
             figure* f = figure_get(m->figures[fig]);
             if (!f->is_dead()) {
-                f->action_state = FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
+                f->action_state = ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
                 f->formation_at_rest = 1;
             }
         }
@@ -255,8 +255,9 @@ int formation_batalion_curse(void) {
 
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (best_legion->figures[i] > 0)
-            figure_get(best_legion->figures[i])->action_state = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+            figure_get(best_legion->figures[i])->action_state = ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
     }
+
     best_legion->cursed_by_seth = 96;
     formation_calculate_figures();
     return 1;
@@ -315,7 +316,7 @@ void formation_batalion_update(void) {
                         figure* f = figure_get(m->figures[n]);
                         if (f->action_state != FIGURE_ACTION_150_ATTACK
                             && f->action_state != FIGURE_ACTION_149_CORPSE) {
-                            f->action_state = FIGURE_ACTION_86_SOLDIER_MOPPING_UP;
+                            f->action_state = ACTION_86_SOLDIER_MOPPING_UP;
                         }
                     }
                 }
@@ -330,7 +331,7 @@ void formation_batalion_decrease_damage(void) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && ::smart_cast<figure_soldier>(f)) {
-            if (f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+            if (f->action_state == ACTION_80_SOLDIER_AT_REST) {
                 if (f->damage) {
                     f->damage--;
                 }

@@ -40,6 +40,7 @@ public:
 
     building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }
     e_formation_id create_batalion();
+    const base_params &base_params_ref() const;
 };
 
 class building_fort_ground : public building_impl {
