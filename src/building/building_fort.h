@@ -27,7 +27,7 @@ public:
 
     struct runtime_data_t {
         building_id ground;
-        formation_id formation_id;
+        formation_id fid;
         e_figure_type figure_type;
     } BUILDING_RUNTIME_DATA_T;
 
