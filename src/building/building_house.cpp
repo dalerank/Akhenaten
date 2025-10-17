@@ -1075,10 +1075,11 @@ void building_house::on_create(int orientation) {
 
 void building_house::on_destroy() {
     g_city.population.remove_home_removed(house_population());
+}
 
-    auto &d = runtime_data();
-    d.population = 0;
-    d.hsize = 0;
+void building_house::on_post_load() {
+    const int imgid = map_image_at(tile());
+    map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 }
 
 void building_house::on_place_checks() {

@@ -18,7 +18,6 @@ public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
-
     struct runtime_data_t : no_copy_assignment {
         //e_house_level level;
         uint16_t foods[8];
@@ -69,11 +68,12 @@ public:
         uint8_t drunkard_active;
         building_id worst_desirability_building_id;
         xstring evolve_text;
-    };
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     //virtual void on_place(int orientation, int variant) override;
     virtual void on_destroy() override;
+    virtual void on_post_load() override;
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
@@ -119,9 +119,6 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
-
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }                     
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
 };
 
 class building_house_crude_hut : public building_house {
