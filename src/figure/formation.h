@@ -5,9 +5,7 @@
 #include "grid/point.h"
 #include "core/tokenum.h"
 
-// #define MAX_FORMATIONS 250
-
-#define MAX_BATALIONS 6
+constexpr uint8_t MAX_BATALIONS = 6;
 
 enum e_batalion_recruit_type {
     BATALION_RECRUIT_NONE = 0,
@@ -53,11 +51,13 @@ struct formation_state {
     int duration_regroup;
 };
 
+using e_formation_id = uint8_t;
+
 struct formation {
     enum {
         max_figures_count = 16
     };
-    int id;         /**< ID of the formation */
+    e_formation_id id;         /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
 
     /* General variables */
@@ -106,7 +106,7 @@ struct formation {
     int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
     uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
-    int is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
+    bool is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
 
     /* Enemy-related */
     e_enemy_type enemy_type;
@@ -127,17 +127,37 @@ struct formation {
     } prev;
 
     void set_destination_building(tile2i tile, int building_id);
+    const bool valid() const { return id != 0; }
 };
 
 void formations_clear(void);
 
 void formation_clear(int formation_id);
 
-formation* formation_create_legion(int building_id, int x, int y, e_figure_type type);
 int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
 int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
+formation *formation_get_free(int start_index);
+
+template<typename F>
+void formation_foreach(F func) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = formation_get(i);
+        if (m->in_use) {
+            func(m);
+        }
+    }
+}
+
+template<typename T, typename F>
+void formation_get(T& arr, F func) {
+    formation_foreach([&] (auto *m) {
+        if (func(m)) {
+            arr.push_back(m);
+        }
+    });
+}
 
 void formation_toggle_empire_service(int formation_id);
 

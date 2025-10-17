@@ -36,23 +36,23 @@ bool building_recruiter::static_params::is_unique_building() const {
     return exist;
 }
 
-static int get_closest_batalion_needing_soldiers(building* barracks) {
+e_formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
     int recruit_type = BATALION_RECRUIT_NONE;
     int min_formation_id = 0;
     int min_distance = INFINITE;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (!m->in_use || !m->batalion_id)
+        if (!m->in_use || !m->own_batalion)
             continue;
 
         if (m->in_distant_battle || m->batalion_recruit_type == BATALION_RECRUIT_NONE)
             continue;
 
-        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY && barracks->stored_amount_first <= 0)
+        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY && base.stored_amount_first <= 0)
             continue;
 
         building* fort = building_get(m->building_id);
-        int dist = calc_maximum_distance(barracks->tile, fort->tile);
+        int dist = calc_maximum_distance(tile(), fort->tile);
         if (m->batalion_recruit_type > recruit_type || (m->batalion_recruit_type == recruit_type && dist < min_distance)) {
             recruit_type = m->batalion_recruit_type;
             min_formation_id = m->id;
@@ -84,7 +84,7 @@ bool building_recruiter::create_soldier() {
         return false;
     }
 
-    int formation_id = get_closest_batalion_needing_soldiers(&base);
+    int formation_id = get_closest_batalion_needing_soldiers();
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);

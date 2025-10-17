@@ -96,6 +96,39 @@ void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, 
     }
 }
 
+e_formation_id building_fort::create_batalion() {
+    formation_calculate_legion_totals();
+
+    formation *m = formation_get_free(1);
+    if (!m->id) {
+        return 0;
+    }
+
+    m->faction_id = 1;
+    m->in_use = 1;
+    m->own_batalion = true;
+    m->figure_type = runtime_data().figure_type;
+    m->building_id = id();
+    m->layout = FORMATION_DOUBLE_LINE_1;
+    m->morale = 50;
+    m->is_at_fort = 1;
+    m->batalion_id = m->id - 1;
+    assert(m->batalion_id <= 9);
+
+    building_fort_ground *fort_ground = ground();
+    m->home = fort_ground->tile();
+    m->tile = fort_ground->tile();
+    m->standard_tile = fort_ground->tile();
+
+    figure *standard = figure_create(FIGURE_STANDARD_BEARER, tile2i(0, 0), DIR_0_TOP_RIGHT);
+    m->standard_figure_id = standard->id;
+    standard->formation_id = m->id;
+    standard->set_home(id());
+
+    return m->id;
+}
+
+
 void building_fort::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
     ghost_preview(planer, ctx, start, end, pixel);
 }
@@ -123,12 +156,13 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     ground->prev_part_building_id = id();
     base.next_part_building_id = ground->id;
     ground->next_part_building_id = 0;
+    runtime_data().ground = ground->id;
     tile2i fort_tile_add = tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]);
 
     int ground_id = current_params().first_img(animkeys().ground);
     map_building_tiles_add(ground->id, fort_tile_add, 4, ground_id, TERRAIN_BUILDING);
 
-    base.formation_id = formation_batalion_create_for_fort(&base);
+    base.formation_id = create_batalion();
     ground->formation_id = base.formation_id;
 }
 

@@ -26,6 +26,8 @@ public:
     };
 
     struct runtime_data_t {
+        building_id ground;
+        e_formation_id formation_id;
         e_figure_type figure_type;
     } BUILDING_RUNTIME_DATA_T;
 
@@ -35,6 +37,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
     virtual void highlight_waypoints() override;
+
+    building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }
+    e_formation_id create_batalion();
 };
 
 class building_fort_ground : public building_impl {
