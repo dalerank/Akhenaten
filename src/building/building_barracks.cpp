@@ -37,7 +37,7 @@ bool building_recruiter::static_params::is_unique_building() const {
     return exist;
 }
 
-e_formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
+formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
     svector<formation*, 10> formations;
     formations_get(formations, [] (auto *m) {
         const bool in_use = m->in_use && m->own_batalion;

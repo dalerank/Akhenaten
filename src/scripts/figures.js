@@ -50,7 +50,7 @@ figure_water_carrier = {
     city_is_amazing {sound: "water_g10.wav", group:237, text:9}
     big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
   }
-  
+
   terrain_usage : TERRAIN_USAGE_ROADS,
   max_roam_length : 640,
 }
@@ -496,19 +496,21 @@ figure_bolt = {
   big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BOLT }
 }
 
-figure_standard_bearer = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
-		pole : { pack:PACK_GENERAL, id:54, offset:0, max_frames:21 }
-		flag_infantry : { pack:PACK_GENERAL, id:126, offset:0, max_frames:9, duration:6 }
-		flag_archers  : { pack:PACK_GENERAL, id:126, offset:10, max_frames:9, duration:6 }
-		flag_chariots : { pack:PACK_GENERAL, id:126, offset:20, max_frames:9, duration:6 }
-		sign : { pack:PACK_GENERAL, id:3 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STANDARD_BEARER }
+figure_standard_bearer {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
+		pole { pack:PACK_GENERAL, id:54, offset:0, max_frames:21 }
+		flag_infantry { pack:PACK_GENERAL, id:126, offset:0, max_frames:9, duration:6 }
+		flag_archers  { pack:PACK_GENERAL, id:126, offset:10, max_frames:9, duration:6 }
+		flag_chariots { pack:PACK_GENERAL, id:126, offset:20, max_frames:9, duration:6 }
+		sign { pack:PACK_GENERAL, id:3 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_STANDARD_BEARER }
 	}
+
+  is_soldier : true
 	category: figure_category_armed
   max_damage : 80
-	terrain_usage : TERRAIN_USAGE_ANY,
+	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_native_trader = {
@@ -1117,18 +1119,19 @@ figure_musician = {
 	permission: epermission_entertainer
 }
 
-figure_soldier_infantry = {
-	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:64, max_frames:12 }
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false }
-		attack : { pos : [0, 0], pack:PACK_SPR_MAIN, id:66, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_INFANTRY }
+figure_soldier_infantry {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:64, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false }
+		attack { pack:PACK_SPR_MAIN, id:66, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_INFANTRY }
 	}
 
+  is_soldier : true
 	category: figure_category_armed
   max_damage : 150
   attack_value : 10
-	terrain_usage : TERRAIN_USAGE_ANY,
+	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_fishing_point = {
@@ -1226,14 +1229,15 @@ figure_transport_ship = {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_soldier_archer = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:61, max_frames:12 }
-		death : {pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false }
-		attack : {pack:PACK_SPR_MAIN, id:63, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHER }
+figure_soldier_archer {
+	animations {
+		walk {pack:PACK_SPR_MAIN, id:61, max_frames:12 }
+		death {pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false }
+		attack {pack:PACK_SPR_MAIN, id:63, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHER }
 	}
 
+  is_soldier : true
 	category: figure_category_armed
   max_damage : 80
   attack_value : 4
@@ -1242,18 +1246,19 @@ figure_soldier_archer = {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_soldier_charioteer = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:67, max_frames:12 }
-		death : {pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false }
-		attack : {pack:PACK_SPR_MAIN, id:69, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FCHARIOTEER }
+figure_soldier_charioteer {
+	animations {
+		walk {pack:PACK_SPR_MAIN, id:67, max_frames:12 }
+		death {pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false }
+		attack {pack:PACK_SPR_MAIN, id:69, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FCHARIOTEER }
 	}
 
+  is_soldier : true
 	category: figure_category_armed
   max_damage : 120
   attack_value : 8
-	terrain_usage : TERRAIN_USAGE_ANY,
+	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_juggler = {

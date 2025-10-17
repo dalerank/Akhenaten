@@ -100,7 +100,6 @@ void formation_batalion_move_to(formation* m, tile2i tile) {
     m->is_at_fort = 0;
 
     if (m->morale <= 20) {
-
         events::emit(event_city_warning{ "#company_morale_too_low" });
     }
 
@@ -263,15 +262,10 @@ int formation_batalion_curse(void) {
     return 1;
 }
 
-bool figure::is_formation() {
-    if (::smart_cast<figure_soldier>(this) || type == FIGURE_STANDARD_BEARER)
-        return true;
-
-    return false;
-}
-
-int formation_batalion_at(tile2i tile) {
-    return map_figure_foreach_until(tile.grid_offset(), TEST_SEARCH_FORMATION);
+formation_id formation_batalion_at(tile2i tile) {
+    figure_id fid = map_figure_foreach_until(tile.grid_offset(), TEST_SEARCH_FORMATION);
+    figure *f = figure_get(fid);
+    return f->formation_id;
 }
 
 int formation_batalion_at_building(int grid_offset) {

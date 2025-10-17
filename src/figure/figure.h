@@ -97,6 +97,7 @@ enum e_figure_flag {
     e_figure_flag_none = 0,
     e_figure_flag_enemy = 1 << 0,
     e_figure_flag_friendly = 1 << 1,
+    e_figure_flag_soldier = 1 << 2,
 };
 
 class figure {
@@ -247,8 +248,8 @@ public:
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
+    inline bool is_soldier() const { return !!(flags & e_figure_flag_soldier); }
     bool is_herd();
-    bool is_formation();        
     bool is_attacking_native(); 
     bool is_citizen();          
     bool is_non_citizen();
@@ -476,6 +477,7 @@ struct figure_static_params {
     metainfo meta;
     e_permission permission;
     bool is_enemy;
+    bool is_soldier;
     e_figure_category category;
     uint16_t max_damage;
     int8_t attack_value;
@@ -490,7 +492,7 @@ struct figure_static_params {
     void initialize();
 };
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds, 
-    max_roam_length, speed_mult, meta, permission, is_enemy, category, attack_value, defense_value,
+    max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, category, attack_value, defense_value,
     missile_defense_value, corpse_time_delay)
 
 class figure_impl {

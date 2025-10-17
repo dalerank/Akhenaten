@@ -25,7 +25,7 @@ void formation_batalions_return_from_distant_battle();
 
 int formation_batalion_curse();
 
-int formation_batalion_at(tile2i tile);
+formation_id formation_batalion_at(tile2i tile);
 
 int formation_batalion_at_building(int grid_offset);
 

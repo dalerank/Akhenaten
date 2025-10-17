@@ -96,7 +96,7 @@ void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, 
     }
 }
 
-e_formation_id building_fort::create_batalion() {
+formation_id building_fort::create_batalion() {
     formation_calculate_legion_totals();
 
     formation *m = formation_get_free(1);
