@@ -884,7 +884,7 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
     scroll_map(m);
 
     if (m->right.went_up || h->escape_pressed) {
-        g_screen_city.capture_input = false;
+        capture_input = false;
         g_warning_manager.clear_all();
         window_city_show();
         return;
@@ -897,7 +897,7 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
     const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
 
     if (m_left_down || m_has_touch) {
-        const tile2i tile = g_screen_city.current_tile;
+        const tile2i tile = current_tile;
         military_map_click(legion_formation_id, tile);
     }
 }

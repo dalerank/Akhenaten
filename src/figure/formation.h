@@ -52,13 +52,13 @@ struct formation_state {
     int duration_regroup;
 };
 
-using e_formation_id = uint8_t;
+using formation_id = uint8_t;
 
 struct formation {
     enum {
         max_figures_count = 16
     };
-    e_formation_id id;         /**< ID of the formation */
+    formation_id id;         /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
 
     /* General variables */
