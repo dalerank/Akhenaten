@@ -12,7 +12,7 @@ enum e_trade_ship_rule {
 };
 
 struct empire_city;
-struct event_trade_ship_arrival { int cid; int max_traders; pcstr location; };
+struct event_trade_ship_arrival { int cid; uint8_t tid; pcstr location; };
 
 class figure_trade_ship : public figure_carrier {
 public:

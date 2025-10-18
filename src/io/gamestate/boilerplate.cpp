@@ -346,7 +346,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "scenario_is_custom", iob_scenario_is_custom); // ok
         FILEIO.push_chunk(8960, false, "city_sounds", iob_city_sounds);            // ok
         FILEIO.push_chunk(4, false, "building_extra_highest_id", iob_building_highest_id); // ok
-        FILEIO.push_chunk(8804, false, "figure_traders", iob_figure_traders);              // +4000 ???
+        FILEIO.push_chunk(8804, false, "empire_traders", iob_empire_traders);              // +4000 ???
 
         FILEIO.push_chunk(1000, true, "building_list_burning", iob_building_list_burning); // ok
         FILEIO.push_chunk(1000, true, "building_list_small", iob_building_list_small);     // ok
@@ -521,7 +521,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "scenario_is_custom", iob_scenario_is_custom);  // ok
         FILEIO.push_chunk(8960, false, "city_sounds", iob_city_sounds);             // ok
         FILEIO.push_chunk(4, false, "building_extra_highest_id", iob_building_highest_id);  // ok
-        FILEIO.push_chunk(8804, false, "figure_traders", iob_figure_traders);               // +4000 ???
+        FILEIO.push_chunk(8804, false, "empire_traders", iob_empire_traders);               // +4000 ???
         FILEIO.push_chunk(1000, false, "building_list_burning", iob_building_list_burning); // ok
         FILEIO.push_chunk(1000, false, "building_list_small", iob_building_list_small);     // ok
         FILEIO.push_chunk(8000, false, "building_list_large", iob_building_list_large);     // ok

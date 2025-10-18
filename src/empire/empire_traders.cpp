@@ -5,6 +5,8 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/graphics.h"
+#include "figuretype/figure_kingdome_trader.h"
+#include "figuretype/figure_trader_ship.h"
 #include "core/calc.h"
 #include "game/game.h"
 #include "dev/debug.h"
@@ -13,7 +15,7 @@
 
 empire_traders_manager g_empire_traders;
 
-declare_console_command_p(empire_traders_clear) {
+declare_console_command_p(empire_traders_reset) {
     g_empire_traders.clear_all();
     logs::info("Cleared all empire traders");
 };
@@ -36,6 +38,10 @@ void empire_trader::update() {
         return;
     }
 
+    if (state == estate_trading) {
+        return;
+    }
+
     if (movement_delay > 0) {
         movement_delay--;
         return;
@@ -48,7 +54,9 @@ void empire_trader::update() {
     }
 
     current_route_point++;
-    const auto& point = route.points[current_route_point];
+    const auto& point = (state == estate_returning_home)
+                            ? route.points[current_route_point]
+                            : route.points[route.num_points - current_route_point];
     current_position = point.p;
 
     if (is_at_destination()) {
@@ -57,7 +65,6 @@ void empire_trader::update() {
     }
 
     movement_delay = route.route_type == 1 ? 2 : 4;
-    animation_frame = (animation_frame + 1) % 4;
 }
 
 bool empire_trader::is_at_destination() const {
@@ -65,7 +72,8 @@ bool empire_trader::is_at_destination() const {
         return false;
     }
 
-    const empire_city* city = g_empire.city(destination_city_id);
+    const auto base_city_id = g_empire.get_city_for_trade_route(trade_route_id);
+    const empire_city* city = g_empire.city((state == estate_returning_home) ? base_city_id : destination_city_id);
     if (!city || !city->in_use) {
         return false;
     }
@@ -76,15 +84,24 @@ bool empire_trader::is_at_destination() const {
     }
 
     int distance = calc_maximum_distance(current_position, obj->pos);
-    return distance <= 3; 
+    return distance <= 40; 
 }
 
 void empire_trader::complete_trade() {
-    if (!returning_home) {
-        returning_home = true;
-        current_route_point = 0; 
-        movement_delay = 10; 
-    } else {
+    if (state == estate_moving_to_destination) {
+        state = estate_trading;
+        current_route_point = 0;
+        movement_delay = 10;
+        const auto base_city_id = g_empire.get_city_for_trade_route(trade_route_id);
+        if (is_ship) {
+            events::emit(event_trade_ship_arrival{ base_city_id, id, SOURCE_LOCATION });
+        } else {
+            events::emit(event_trade_caravan_arrival{ base_city_id, id, SOURCE_LOCATION });
+        }
+        return;
+    } 
+
+    if (state == estate_returning_home) {
         is_active = false;
     }
 }
@@ -120,18 +137,18 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
         destination_city_id = g_city.ourcity().name_id;
     }
 
+    const map_route_object& route = empire_get_route_object(trade_route_id);
     trader->trade_route_id = trade_route_id;
     trader->destination_city_id = destination_city_id;
     trader->current_route_point = 0;
     trader->movement_delay = 0;
     trader->is_active = true;
-    trader->returning_home = false;
-    trader->animation_frame = 0;
-    trader->direction = 0;
+    trader->state = empire_trader::estate_moving_to_destination;
+    trader->is_ship = (route.route_type == 2);
 
-    const map_route_object& route = empire_get_route_object(trade_route_id);
     if (route.in_use && route.num_points > 0) {
-        trader->current_position = route.points[0].p;
+        const auto &point = route.points[route.num_points - 1];
+        trader->current_position = point.p;
     }
 }
 
