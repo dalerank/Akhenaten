@@ -27,6 +27,7 @@ import missions
 import mission_5_timna
 import mission_6_behdet
 import mission_8_selima
+import mission_9_abu
 import figures
 import ui_hold_festival_window
 import localization
