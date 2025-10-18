@@ -10,7 +10,7 @@
 #include "empire/empire.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"

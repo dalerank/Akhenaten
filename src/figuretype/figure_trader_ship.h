@@ -1,7 +1,7 @@
 #pragma once
 
 #include "figuretype/figure_cartpusher.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "empire/empire_city.h"
 #include "grid/point.h"
 

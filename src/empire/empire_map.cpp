@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "empire/empire.h"
 #include "empire/empire_object.h"
+#include "empire/empire_traders.h"
 #include "empire/trade_route.h"
 #include "io/io.h"
 #include "type.h"
@@ -61,6 +62,7 @@ void empire_map_t::init_scenario() {
     viewport_height = EMPIRE_SIZE.y;
 
     empire_object_init_cities();
+    g_empire_traders.init();
 }
 
 void empire_map_t::set_viewport(vec2i size) {

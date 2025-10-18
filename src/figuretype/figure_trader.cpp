@@ -12,7 +12,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/lang_text.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 bool figure_trader::can_buy(building* b, empire_city_handle city) {
     building_storage_yard *warehouse = b->dcast_storage_yard();

@@ -2,8 +2,6 @@
 
 #include "game/resource.h"
 
-void city_trade_update();
-
 void city_trade_add_land_trade_route();
 void city_trade_add_sea_trade_route();
 

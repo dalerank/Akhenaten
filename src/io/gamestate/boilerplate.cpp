@@ -20,7 +20,7 @@
 #include "figure/enemy_army.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"

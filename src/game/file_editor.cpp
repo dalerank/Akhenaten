@@ -14,7 +14,7 @@
 #include "figure/formation.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figuretype/editor.h"
 #include "game/state.h"
 #include "graphics/image.h"

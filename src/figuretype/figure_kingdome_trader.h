@@ -2,7 +2,7 @@
 
 #include "figure_trader.h"
 #include "empire/empire_city.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 struct event_trade_caravan_arrival { int cid; int max_traders; pcstr location; };
 

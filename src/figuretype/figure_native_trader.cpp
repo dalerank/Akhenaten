@@ -1,6 +1,6 @@
 #include "figure_native_trader.h"
 
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figure/figure.h"
 
 #include "figure/image.h"

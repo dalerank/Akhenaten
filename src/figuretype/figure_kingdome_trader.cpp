@@ -19,7 +19,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
@@ -30,7 +30,6 @@
 #include "game/game.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
-#include "figure/trader.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);

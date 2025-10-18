@@ -10,6 +10,7 @@
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"
 #include "empire/empire_object.h"
+#include "empire/empire_traders.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "game/settings.h"
@@ -101,7 +102,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     virtual void archive_load(archive arch) override;
 
     void draw_map();
-    void draw_empire_object(const empire_object *obj);
+    void draw_empire_object(const empire_object &obj);
     void draw_paneling();
     void draw_object_info();
     void draw_city_want_sell(ui::element *e, UiFlags flags);
@@ -502,9 +503,9 @@ int empire_window::ui_handle_mouse(const mouse *m) {
     return 0;
 }
 
-void empire_window::draw_empire_object(const empire_object* obj) {
-    if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-        if (!g_empire.is_trade_route_open(obj->trade_route_id)) {
+void empire_window::draw_empire_object(const empire_object &obj) {
+    if (obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
+        if (!g_empire.is_trade_route_open(obj.trade_route_id)) {
             return;
         }
     }
@@ -513,30 +514,30 @@ void empire_window::draw_empire_object(const empire_object* obj) {
     int image_id;
     pcstr tooltip_text = "";
     if (scenario_empire_is_expanded()) {
-        pos = obj->expanded.pos;
-        image_id = obj->expanded.image_id;
+        pos = obj.expanded.pos;
+        image_id = obj.expanded.image_id;
     } else {
-        pos = obj->pos;
-        image_id = obj->image_id;
+        pos = obj.pos;
+        image_id = obj.image_id;
     }
 
     image_id = image_id_remap(image_id);
     const vec2i draw_pos = draw_offset + pos;
     const image_t *img = ui::eimage(image_id, draw_pos);
 
-    if (obj->type == EMPIRE_OBJECT_CITY) {
-        int empire_city_id = g_empire.get_city_for_object(obj->id);
+    if (obj.type == EMPIRE_OBJECT_CITY) {
+        int empire_city_id = g_empire.get_city_for_object(obj.id);
         const empire_city* city = g_empire.city(empire_city_id);
 
         // draw routes!
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
             if (city->is_open) {
-                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj->id))
+                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj.id))
                               ? ROUTE_OPEN_SELECTED 
                               : ROUTE_OPEN;
             } else {
-                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj->id))
+                state = (g_empire_map.selected_object() && selected_city == g_empire.get_city_for_object(obj.id))
                               ? ROUTE_CLOSED_SELECTED
                               : ROUTE_CLOSED;
             }
@@ -549,15 +550,15 @@ void empire_window::draw_empire_object(const empire_object* obj) {
 
         tooltip_text = ui::str(text_group, city->name_id);
 
-        switch (obj->text_align) {
-        case 0: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 1: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 2: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
-        case 3: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj->width); break;
+        switch (obj.text_align) {
+        case 0: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
+        case 1: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
+        case 2: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
+        case 3: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
         }
 
-    } else if (obj->type == EMPIRE_OBJECT_TEXT) {
-        const full_empire_object* full = empire_get_full_object(obj->id);
+    } else if (obj.type == EMPIRE_OBJECT_TEXT) {
+        const full_empire_object* full = empire_get_full_object(obj.id);
         vec2i text_pos = draw_offset + pos;
 
         tooltip_text = ui::str(196, full->city_name_id);
@@ -565,22 +566,22 @@ void empire_window::draw_empire_object(const empire_object* obj) {
         return;
     }
 
-    if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
+    if (obj.type == EMPIRE_OBJECT_BATTLE_ICON) {
         // handled later
         return;
     }
 
-    if (obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
+    if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
         if (city_military_months_until_distant_battle() <= 0)
             return;
-        if (city_military_distant_battle_enemy_months_traveled() != obj->distant_battle_travel_months)
+        if (city_military_distant_battle_enemy_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
     
-    if (obj->type == EMPIRE_OBJECT_KINGDOME_ARMY) {
+    if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
         if (!city_military_distant_battle_kingdome_army_is_traveling())
             return;
-        if (city_military_distant_battle_kingdome_months_traveled() != obj->distant_battle_travel_months)
+        if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
 
@@ -606,13 +607,24 @@ void empire_window::draw_map() {
 
     ui::eimage(image, draw_offset);
 
-    empire_object_foreach([this] (const empire_object *obj) {
+    empire_object_foreach([this] (const empire_object &obj) {
         draw_empire_object(obj);
     });
 
     scenario_invasion_foreach_warning([&] (vec2i pos, int image_id) {
         ui::eimage(image_id, draw_offset + pos);
     });
+
+    for (auto &trader: g_empire_traders.traders) {
+        if (!trader.is_active) {
+            continue;
+        }
+
+        int image_id = image_id_from_group(PACK_GENERAL, 179);
+
+        const vec2i draw_pos = draw_offset + trader.current_position;
+        ui::eimage(image_id, draw_pos);
+    }
 
     graphics_reset_clip_rectangle();
 }

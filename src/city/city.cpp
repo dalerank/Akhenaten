@@ -39,6 +39,7 @@
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "city/city_building_menu_ctrl.h"
+#include "empire/empire_traders.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -253,7 +254,8 @@ void city_t::update_tick(int simtick) {
         buildings_generate_figure();
         break;
     case 32:
-        city_trade_update();
+        g_empire_traders.update();
+        trade_update();
         break;
     case 33:
         buildings.update_counters();
