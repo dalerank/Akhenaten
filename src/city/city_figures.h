@@ -40,9 +40,8 @@ bool figure_type_none_of(const figure &f, Args ... args) {
     return (std::find(std::begin(types), std::end(types), f.type) == std::end(types));
 }
 
-template<typename T, typename ... Args>
-bool figure_type_any_of(const T &f, Args ... args) {
-    int types[] = { args... };
+template<typename T, typename F>
+bool figure_type_any_of(const T &f, const F& types) {
     e_figure_type type;
     if constexpr (std::is_same_v<e_figure_type, std::decay_t<T>>) {
         type = f;
@@ -51,13 +50,13 @@ bool figure_type_any_of(const T &f, Args ... args) {
     } else {
         type = f.type;
     }
-    return (std::find(std::begin(types), std::end(types), type) != std::end(types));
+    return (std::find(types.begin(), types.end(), type) != types.end());
 }
 
-template<typename ... Args, typename T>
-void figure_valid_do(T func, Args ... args) {
+template<typename T, typename F>
+void figure_valid_do(T func, const F& types) {
     for (auto *f : map_figures()) {
-        if (f->is_valid() && figure_type_any_of(*f, args...)) {
+        if (f->is_valid() && figure_type_any_of(*f, types)) {
             func(*f);
         }
     }
@@ -72,12 +71,12 @@ void figure_valid_do(T func) {
     }
 }
 
-template<typename ... Args>
-bool map_has_figure_types_at(tile2i tile, Args... types) {
+template<typename F>
+bool map_has_figure_types_at(tile2i tile, const F& types) {
     int figure_id = map_figure_id_get(tile);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        if (figure_type_any_of(*f, types...)) {
+        if (figure_type_any_of(*f, types)) {
             return true;
         }
         figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;

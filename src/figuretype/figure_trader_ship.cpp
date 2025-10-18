@@ -47,7 +47,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
 declare_console_command_p(sink_all_ships) {
     figure_valid_do([] (figure &f) {
         f.dcast()->kill();
-    }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
+    }, make_array(FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT));
 }
 
 int figure_trade_ship::is_trading() const {
