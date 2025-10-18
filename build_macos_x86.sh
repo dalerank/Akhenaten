@@ -3,7 +3,7 @@
 CORES=$(sysctl -n hw.ncpu)
 
 cmake --build ./build --target clean -- -j"$CORES"
-cmake -B build -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
+cmake -B build -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 cmake --build ./build -- -j"$CORES"
 
 cd build/akhenaten.app/Contents/MacOS
