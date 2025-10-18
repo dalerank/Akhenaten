@@ -54,16 +54,22 @@ mission6 = { // Behdet
 		{
 			name : "Byblos",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		},
 
 		{
 			name: "Perwadjyt",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		},
 
 		{
 			name: "Men-nefer",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		}
 	],
 
