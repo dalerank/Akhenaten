@@ -115,7 +115,7 @@ void city_fishing_points_t::update(int points_num) {
     }
 
     if (points_num >= 0) {
-        num_fishing_spots = std::min(MAX_FISH_POINTS, points_num);
+        num_fishing_spots = std::min<uint8_t>(MAX_FISH_POINTS, points_num);
     }
 
     tile_cache &river = river_tiles();
