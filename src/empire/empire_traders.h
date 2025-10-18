@@ -4,23 +4,28 @@
 #include "empire/empire_object.h"
 
 struct empire_trader {
-    int id;
-    int trade_route_id;
-    int destination_city_id;
-    vec2i current_position;
-    int current_route_point;
-    int movement_delay;
-    bool is_active;
-    bool returning_home;
-    int animation_frame;
-    int direction;
+    enum e_state {
+        estate_moving_to_destination,
+        estate_trading,
+        estate_returning_home,
+    };
 
-    int32_t bought_amount;
-    int32_t bought_value;
+    uint8_t id;
+    uint8_t trade_route_id;
+    uint8_t destination_city_id;
+    vec2i current_position;
+    uint8_t current_route_point;
+    uint8_t movement_delay;
+    bool is_ship;
+    bool is_active;
+    e_state state;
+
+    uint16_t bought_amount;
+    uint16_t bought_value;
     uint16_t bought_resources[RESOURCES_MAX];
 
-    int32_t sold_amount;
-    int32_t sold_value;
+    uint16_t sold_amount;
+    uint16_t sold_value;
     uint16_t sold_resources[RESOURCES_MAX];
     
     void update();

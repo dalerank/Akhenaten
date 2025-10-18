@@ -357,14 +357,14 @@ bool city_t::generate_trader_from(empire_city &city) {
         const bool has_river_entry = scenario_map_has_river_entry();
         const bool can_sea_trade = !city_trade_has_sea_trade_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
-            events::emit(event_trade_ship_arrival{ city.name_id, allow_traders, SOURCE_LOCATION });
+            g_empire_traders.create_trader(city.route_id, -1);            
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            events::emit(event_trade_caravan_arrival{ city.name_id, allow_traders, SOURCE_LOCATION });
+            g_empire_traders.create_trader(city.route_id, -1);
             return true;
         }
     }

@@ -83,30 +83,6 @@ declare_console_command_p(save_empire_routes) {
     vfs::file_close(fp);
 }
 
-declare_console_command_p(makeseatraders) {
-    for (auto &city : g_empire.get_cities()) {
-        if (city.in_use) {
-            city.is_sea_trade = true;
-        }
-    }
-};
-
-declare_console_command_p(spawn_empire_traders) {
-    int traders_created = 0;
-    
-    for (auto &city : g_empire.get_cities()) {
-        if (!city.in_use || !city.is_open) {
-            continue;
-        }
-        
-        // Создаем торговца на каждом активном торговом пути
-        g_empire_traders.create_trader(city.route_id, std::distance(g_empire.get_cities().data(), &city));
-        traders_created++;
-    }
-    
-    logs::info("Created %d empire traders on active trade routes", traders_created);
-};
-
 void empire_t::load_mission_metadata(const mission_id_t &missionid) {
     g_config_arch.r_section(missionid, [] (archive arch) {
         auto &data = g_empire;

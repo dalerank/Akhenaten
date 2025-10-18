@@ -19,6 +19,7 @@ struct empire_trader_handle {
     bool has_traded_max();
 
     bool valid() { return handle != 0; }
+    void back_to_city();
 
     e_resource get_buy_resource(building* storageyard, empire_city_handle city, int amount);
     e_resource get_sell_resource(building* warehouse, empire_city_handle city);
