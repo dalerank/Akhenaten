@@ -396,13 +396,13 @@ void figure::enemy_kingdome_soldier_action() {
     case FIGURE_ACTION_149_CORPSE:
         main_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + figure_image_corpse_offset() + 152;
         break;
-    case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
+    //case FIGURE_ACTION_84_SOLDIER_AT_STANDARD:
         //if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
         //    sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir + 144;
         //else {
         //    sprite_image_id = image_id_from_group(GROUP_BUILDING_FORT_LEGIONARY) + dir;
         //}
-        break;
+    //    break;
     default:
         main_image_id = image_id_from_group(GROUP_FIGURE_CAESAR_LEGIONARY) + 48 + dir + 8 * animctx.frame;
         break;

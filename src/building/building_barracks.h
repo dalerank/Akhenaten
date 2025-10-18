@@ -35,6 +35,7 @@ public:
     void set_priority(int v);
     bool create_tower_sentry();
     bool create_soldier();
+    formation_id get_closest_batalion_needing_soldiers();
 };
 ANK_CONFIG_STRUCT(building_recruiter::static_params, meta)
 

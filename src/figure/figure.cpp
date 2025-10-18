@@ -112,6 +112,12 @@ int figure::target_is_alive() {
     return 0;
 }
 
+void figure::reset_flags() {
+    flags = 0;
+    flags |= (params().is_enemy ? e_figure_flag_enemy : e_figure_flag_friendly);
+    flags |= (params().is_soldier ? e_figure_flag_soldier : e_figure_flag_none);
+}
+
 resource_tile figure::find_resource_tile(e_resource resource) {
     switch (resource) {
     case RESOURCE_REEDS:

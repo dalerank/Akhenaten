@@ -3,8 +3,6 @@
 #include "building/building.h"
 #include "figure/formation.h"
 
-int formation_batalion_create_for_fort(building* fort);
-
 void formation_batalion_delete_for_fort(building* fort);
 
 int formation_batalion_recruits_needed();
@@ -27,7 +25,7 @@ void formation_batalions_return_from_distant_battle();
 
 int formation_batalion_curse();
 
-int formation_batalion_at(tile2i tile);
+formation_id formation_batalion_at(tile2i tile);
 
 int formation_batalion_at_building(int grid_offset);
 

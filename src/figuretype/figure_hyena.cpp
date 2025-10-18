@@ -2,6 +2,7 @@
 
 #include "city/city.h"
 #include "figure/formation_layout.h"
+#include "figuretype/figure_soldier.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyena);
@@ -38,7 +39,7 @@ int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
         if (f->is_enemy() || f->is_herd()) {
             continue;
         }
-        if (::smart_cast<figure_soldier>(f) && f->action_state == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+        if (::smart_cast<figure_soldier>(f) && f->action_state == ACTION_80_SOLDIER_AT_REST) {
             continue;
         }
         int distance = calc_maximum_distance(tile, f->tile);

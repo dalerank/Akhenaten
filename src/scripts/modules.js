@@ -48,6 +48,7 @@ import ui_top_menu_widget
 import ui_advisor_religion
 import ui_advisor_finance
 import ui_advisor_health
+import houses
 import fonts
 import routing
 import ui_bazaar_window

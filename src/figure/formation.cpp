@@ -11,6 +11,7 @@
 #include "figure/formation_batalion.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
+#include "building/building_fort.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
 
@@ -20,7 +21,6 @@ const e_formation_layout_tokens_t ANK_CONFIG_ENUM(e_formation_layout_tokens);
 formation g_formations[250];
 
 struct formation_data_t {
-    int id_last_in_use;
     int id_last_formation;
     int num_formations;
 };
@@ -33,7 +33,6 @@ void formations_clear(void) {
         memset(&g_formations[i], 0, sizeof(formation));
         g_formations[i].id = i;
     }
-    data.id_last_in_use = 0;
     data.id_last_formation = 0;
     data.num_formations = 0;
 }
@@ -50,38 +49,6 @@ static int get_free_formation(int start_index) {
         }
     }
     return 0;
-}
-
-formation* formation_create_legion(int building_id, int x, int y, e_figure_type type) {
-    auto &data = g_formation_data;
-
-    int formation_id = get_free_formation(1);
-    if (!formation_id)
-        return &g_formations[0];
-
-    formation* m = &g_formations[formation_id];
-    m->faction_id = 1;
-    m->in_use = 1;
-    m->batalion_id = 1;
-    m->figure_type = type;
-    m->building_id = building_id;
-    m->layout = FORMATION_DOUBLE_LINE_1;
-    m->morale = 50;
-    m->is_at_fort = 1;
-    m->batalion_id = formation_id - 1;
-    if (m->batalion_id >= 9)
-        m->batalion_id = 9;
-
-    building* fort_ground = building_get(building_get(building_id)->next_part_building_id);
-    m->home = fort_ground->tile;
-    m->tile = fort_ground->tile;
-    m->standard_tile = fort_ground->tile;
-
-    data.num_formations++;
-    if (formation_id > data.id_last_in_use)
-        data.id_last_in_use = formation_id;
-
-    return m;
 }
 
 static int formation_create(e_figure_type figure_type, e_formation_layout layout, int orientation, tile2i tile) {
@@ -134,6 +101,11 @@ int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_l
     f->invasion_id = invasion_id;
     f->invasion_sequence = invasion_sequence;
     return formation_id;
+}
+
+formation *formation_get_free(int start_index) {
+    int formation_id = get_free_formation(start_index);
+    return formation_get(formation_id);
 }
 
 formation* formation_get(int formation_id) {
@@ -570,10 +542,10 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations[i];
         f->id = i;                                   // 10
-        iob->bind(BIND_SIGNATURE_UINT8, &f->in_use); // 1
+        iob->bind_bool(f->in_use); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->is_at_fort);
+        iob->bind_u8(f->batalion_id);
+        iob->bind_bool(f->is_at_fort);
         iob->bind(BIND_SIGNATURE_INT16, &f->figure_type); // 69
         iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
 
@@ -593,7 +565,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         
         iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_id);
+        iob->bind_u8(f->batalion_id);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
         iob->bind____skip(1);
@@ -654,7 +626,8 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
 });
 io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_formation_data;
-    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_in_use);
+    int tmp;
+    iob->bind(BIND_SIGNATURE_INT32, &tmp);
     iob->bind(BIND_SIGNATURE_INT32, &data.id_last_formation);
     iob->bind(BIND_SIGNATURE_INT32, &data.num_formations);
 });
