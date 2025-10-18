@@ -23,21 +23,16 @@ struct granary_info_window : public building_info_window_t<granary_info_window> 
 
     using widget::archive_load;
     virtual void archive_load(archive arch) override {
-        common_info_window::archive_load(arch);
+        building_info_window::archive_load(arch);
 
         resource_text_group = arch.r_int("resource_text_group");
     }
 
     virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override;
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 };
 
 granary_info_window granary_infow;
-
-bool granary_info_window::check(object_info &c) {
-    return c.building_get()->dcast_granary();
-}
 
 void granary_info_window::init(object_info &c) {
     building_info_window::init(c);
