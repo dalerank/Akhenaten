@@ -421,7 +421,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < g_empire.get_cities().size(); i++) {
         empire_city* city = &g_empire.get_cities()[i];
-        iob->bind(BIND_SIGNATURE_UINT8, &city->in_use);
+        iob->bind_u8(city->in_use);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &city->type);
         iob->bind(BIND_SIGNATURE_UINT8, &city->name_id);
@@ -436,7 +436,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
             iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
         }
 
-        iob->bind(BIND_SIGNATURE_INT16, &city->cost_to_open);
+        iob->bind_i16(city->cost_to_open);
         iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk01);
         iob->bind(BIND_SIGNATURE_INT16, &city->trader_entry_delay);
         iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk02);

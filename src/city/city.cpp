@@ -312,44 +312,33 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    int max_traders = 0;
-    int num_resources = 0;
     auto &trade_route = city.get_route();
+    int max_trade_limit = 0;
     for (const auto &r: resource_list::all) {
         if (city.buys_resource[r.type] || city.sells_resource[r.type]) {
-            ++num_resources;
-            int trade_limit = trade_route.limit(r.type);
-            if (trade_limit >= 1500 && trade_limit < 2500) {
-                max_traders += 1;
-            } else if (trade_limit >= 2500 && trade_limit < 4000) {
-                max_traders += 2;
-            } else if (trade_limit >= 4000) {
-                max_traders += 3;
-            }
+            const int trade_limit = trade_route.limit(r.type);
+            max_trade_limit = std::max(max_trade_limit, trade_limit);            
         }
     }
 
-    if (num_resources > 1) {
-        if (max_traders % num_resources)
-            max_traders = max_traders / num_resources + 1;
-        else
-            max_traders = max_traders / num_resources;
+    if (max_trade_limit == 0) {
+        return false;
     }
 
-    if (max_traders <= 0) {
+    auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
+    const int allow_traders = std::distance(city.trade_limits.begin(), it);
+
+    if (allow_traders <= 0) {
         return false;
     }
 
     // Find first available trader slot
-    bool can_create_trader = false;
-    for (int i = 0; i < max_traders; i++) {
-        if (!city.trader_figure_ids[i]) {
-            can_create_trader = true;
-            break;
-        }
+    int8_t trades_in_city = 0;
+    for (int i = 0; i < allow_traders; i++) {
+        trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    if (!can_create_trader) {
+    if (trades_in_city >= city.max_traders) {
         return false;
     }
 
@@ -366,14 +355,14 @@ bool city_t::generate_trader_from(empire_city &city) {
         const bool has_river_entry = scenario_map_has_river_entry();
         const bool can_sea_trade = !city_trade_has_sea_trade_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
-            events::emit(event_trade_ship_arrival{ city.name_id, max_traders, SOURCE_LOCATION });            
+            events::emit(event_trade_ship_arrival{ city.name_id, allow_traders, SOURCE_LOCATION });
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            events::emit(event_trade_caravan_arrival{ city.name_id, max_traders, SOURCE_LOCATION });
+            events::emit(event_trade_caravan_arrival{ city.name_id, allow_traders, SOURCE_LOCATION });
             return true;
         }
     }
