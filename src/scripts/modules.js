@@ -61,6 +61,7 @@ import ui_advisor_education
 import ui_advisor_imperial
 import ui_workshop_window
 import ui_sidebar_window
+import ui_batalion_window
 import music
 import invasions
 import enemies

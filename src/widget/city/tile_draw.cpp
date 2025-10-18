@@ -233,6 +233,8 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
             command.image_id = map_image_at(grid_offset);
             command.pixel = pixel;
+            // Увеличиваем virtual_xorder для правильного z-порядка верхних текстур
+            command.virtual_xorder = TILE_WIDTH_PIXELS;
         }
 
         //int terrain = map_terrain_get(grid_offset);
