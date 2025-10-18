@@ -3,6 +3,7 @@
 #include "core/tokenum.h"
 
 enum e_pack {
+    PACK_NONE = 0,
     PACK_UNLOADED,
     PACK_GENERAL,
     PACK_SPR_MAIN,

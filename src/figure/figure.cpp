@@ -712,7 +712,7 @@ const fproperty fproperties[] = {
     },
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
-    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(clname.c_str()); }},
+    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(lang_text_from_key(clname)); }},
     { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
