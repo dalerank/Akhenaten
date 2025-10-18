@@ -2,7 +2,7 @@
 
 #include "figure/figure.h"
 #include "figure/image.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figure_shipwreck.h"
 #include "building/building_dock.h"
 #include "game/game.h"

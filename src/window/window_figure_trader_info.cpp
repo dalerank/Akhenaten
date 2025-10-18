@@ -1,6 +1,6 @@
 #include "window/window_figure_info.h"
 
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "empire/empire.h"
 #include "window/building/figures.h"
 #include "graphics/image.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "building/building.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 class building_dock : public building_impl {
 public:

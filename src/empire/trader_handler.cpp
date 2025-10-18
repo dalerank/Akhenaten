@@ -12,25 +12,6 @@
 
 #include "city/trade.h"
 
-struct empire_trader
-{
-    int32_t bought_amount;
-    int32_t bought_value;
-    uint16_t bought_resources[RESOURCES_MAX];
-
-    int32_t sold_amount;
-    int32_t sold_value;
-    uint16_t sold_resources[RESOURCES_MAX];
-
-    bool is_active;
-};
-
-struct empire_traders_t {
-    std::array<empire_trader, 100> traders;
-};
-
-empire_traders_t g_empire_traders;
-
 void empire_traders_clear() {
     memset(&g_empire_traders, 0, sizeof(empire_traders_t));
 }

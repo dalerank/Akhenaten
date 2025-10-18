@@ -6,7 +6,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/figure_phrase.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
