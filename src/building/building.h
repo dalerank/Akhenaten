@@ -542,6 +542,7 @@ struct building_static_params {
     std::array<uint16_t, 5> cost;
     building_desirability_t desirability;
     uint16_t progress_max;
+    e_overlay overlay;
 
     svector<uint8_t, 5> laborers;
     svector<int8_t, 5> fire_risk;
@@ -566,7 +567,7 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
-    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, 
+    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
@@ -594,7 +595,7 @@ public:
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
     virtual bool force_draw_top_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) { return false; }
-    virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
+    virtual e_overlay get_overlay() const { return current_params().overlay; }
     virtual bool need_road_access() const { return true; }
     virtual bool can_play_animation() const;
     virtual void update_count() const;

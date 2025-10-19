@@ -2167,17 +2167,19 @@ building_police_station = {
   laborers:[6], fire_risk:[2], damage_risk: [2]
 }
 
-building_architect_post = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:81 },
-    base : { pack:PACK_GENERAL, id:81 },
-    work : { pos : [20, -35], pack:PACK_GENERAL, id:81, offset:1, max_frames:11 },
+building_architect_post {
+  animations {
+    _pack {pack:PACK_GENERAL}
+    preview { id:81 },
+    base { id:81 },
+    work { pos[20, -35], id:81, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  overlay: OVERLAY_DAMAGE
   building_size : 1
-  meta : { help_id: 81, text_id: 104 }
-  cost: [ 6, 12, 25, 40, 60 ]
-  laborers:[5], fire_risk:[2], damage_risk: [0]
+  meta { help_id: 81, text_id: 104 }
+  cost [ 6, 12, 25, 40, 60 ]
+  laborers[5], fire_risk[2], damage_risk[0]
 }
 
 building_conservatory {
