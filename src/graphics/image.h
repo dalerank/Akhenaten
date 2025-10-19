@@ -35,8 +35,10 @@ enum e_image_type {
 // typedef struct image;
 struct atlas_data_t {
     SDL_Texture* texture = nullptr;
-    //    std::vector<image*> images;
-    color* temp_pixel_buffer = nullptr;
+    struct {
+        color *pixel_buffer = nullptr;
+    } temp;
+
     int bmp_size;
     int width;
     int height;
@@ -112,7 +114,10 @@ struct image_t {
         uint16_t frame = 0;
     } debug;
 
-    color* temp_pixel_data = nullptr;
+    struct {
+        color* pixel_data;
+        void* surface;
+    } temp;
 
     inline vec2i size() const { return {width, height}; }
     const int isometric_size() const;

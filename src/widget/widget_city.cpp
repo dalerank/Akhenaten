@@ -443,10 +443,11 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
             command.image_id = image_id;
-            command.pixel = pixel;
-            command.mask = color_mask;
             const image_t* img = image_get(image_id);
-            //command.virtual_xorder = img->width;// +TILE_WIDTH_PIXELS;
+            int offset_y = 15 * (img->width / 58);
+            command.pixel = pixel - vec2i{ 0, offset_y };
+            command.mask = color_mask;
+            command.tag = (building_id == 261);
         }
 
         int image_alt_value = map_image_alt_at(grid_offset);
@@ -454,6 +455,8 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
             auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            const image_t *img = image_get(image_alt_id);
+            int offset_y = 15 * (img->width / 58);
             command.image_id = image_alt_id;
             command.pixel = pixel;
             command.mask = (0x00ffffff | (image_alt_alpha << 24));
@@ -499,8 +502,10 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     int image_id = map_image_at(tile);
     {
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+        const image_t *img = image_get(image_id);
+        int offset_y = 15 * (img->width / 58) - 1;
         command.image_id = image_id;
-        command.pixel = pixel;
+        command.pixel = pixel - vec2i(0, offset_y );
         command.mask = color_mask;
         //command.virtual_xorder = TILE_WIDTH_PIXELS;
     } 
@@ -511,7 +516,9 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     if (image_alt_id > 0 && image_alt_alpha > 0) {
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
         command.image_id = image_alt_id;
-        command.pixel = pixel;
+        const image_t *img = image_get(image_alt_id);
+        int offset_y = 15 * (img->width / 58) - 1;
+        command.pixel = pixel - vec2i(0, offset_y);
         command.mask = (0x00ffffff | (image_alt_alpha << 24));
         command.flags = ImgFlag_Alpha;
     }

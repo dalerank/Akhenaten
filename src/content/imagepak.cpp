@@ -35,15 +35,15 @@ static color to_argb(uint32_t c) {
     return (((c >> 24) & 0xff) << 24) | (((c & 0xff) << 16) | (((c >> 8) & 0xff) << 8) | ((c >> 16) & 0xff));
 }
 
-static int copy_to_atlas(const image_t* img) {
+static int copy_to_atlas(const image_t& img) {
     int pixels_count = 0;
-    atlas_data_t *p_atlas = img->atlas.p_atlas;
-    color *pixels = (color*)((SDL_Surface *)img->temp_pixel_data)->pixels;
+    atlas_data_t *p_atlas = img.atlas.p_atlas;
+    color *pixels = (color*)((SDL_Surface *)img.temp.surface)->pixels;
 
-    for (int y = 0; y < img->height; y++) {
-        color* pixel = &p_atlas->temp_pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
-        for (int x = 0; x < img->width; x++) {
-            color color = to_argb(pixels[y * img->width + x]);
+    for (int y = 0; y < img.height; y++) {
+        color* pixel = &p_atlas->temp.pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
+        for (int x = 0; x < img.width; x++) {
+            color color = to_argb(pixels[y * img.width + x]);
             pixel[x] = color;
             pixels_count++;
         }
@@ -56,7 +56,7 @@ static int convert_uncompressed(buffer* buf, const image_t &img) {
     atlas_data_t *p_atlas = img.atlas.p_atlas;
 
     for (int y = 0; y < img.height; y++) {
-        color* pixel = &p_atlas->temp_pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
+        color* pixel = &p_atlas->temp.pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
         for (int x = 0; x < img.width; x++) {
             color color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
@@ -86,7 +86,7 @@ static int convert_compressed(buffer* buf, int data_length, const image_t &img) 
             // control = number of concrete pixels
             for (int i = 0; i < control; i++) {
                 int dst = atlas_dst + y * p_atlas->width + x;
-                p_atlas->temp_pixel_buffer[dst] = to_32_bit(buf->read_u16());
+                p_atlas->temp.pixel_buffer[dst] = to_32_bit(buf->read_u16());
                 x++;
                 if (x >= img.width) {
                     y++;
@@ -117,7 +117,7 @@ static int convert_footprint_tile(buffer* buf, const image_t &img, int x_offset,
             int dst_index = (y + y_offset + img.atlas.offset.y) * p_atlas->width + img.atlas.offset.x + x + x_offset;
             if (dst_index >= p_atlas->bmp_size)
                 continue;
-            p_atlas->temp_pixel_buffer[dst_index] = to_32_bit(buf->read_u16());
+            p_atlas->temp.pixel_buffer[dst_index] = to_32_bit(buf->read_u16());
         }
     }
     return pixels_count;
@@ -156,8 +156,8 @@ static bool is_pixel_transparent(color pixel) {
     return (pixel & COLOR_CHANNEL_ALPHA) == ALPHA_TRANSPARENT;
 }
 
-static void convert_to_plain_white(const image_t &img) {
-    color* pixels = img.temp_pixel_data;
+static void convert_to_plain_white(image_t &img) {
+    color* pixels = img.temp.pixel_data;
     int atlas_width = img.atlas.p_atlas->width;
     for (int y = 0; y < img.height; y++) {
         for (int x = 0; x < img.width; x++) {
@@ -168,13 +168,13 @@ static void convert_to_plain_white(const image_t &img) {
     }
 }
 
-static void add_edge_to_letter(const image_t &img) {
+static void add_edge_to_letter(image_t &img) {
     int atlas_width = img.atlas.p_atlas->width;
     int oldsize = img.width * img.height;
     color* TEMP_BUFFER = new color[oldsize];
 
     // copy original glyph to the buffer
-    color* pixels_row = img.temp_pixel_data;
+    color* pixels_row = img.temp.pixel_data;
     auto p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img.height; y++) {
         for (int x = 0; x < img.width; x++)
@@ -184,7 +184,7 @@ static void add_edge_to_letter(const image_t &img) {
     }
 
     // paste back and create edges
-    pixels_row = img.temp_pixel_data;
+    pixels_row = img.temp.pixel_data;
     p_buffer_row = TEMP_BUFFER;
     auto edge_color = COLOR_BLACK;
     for (int y = 0; y < img.height; y++) {
@@ -207,7 +207,7 @@ static void add_edge_to_letter(const image_t &img) {
     }
 
     // paste white glyph in the center
-    pixels_row = img.temp_pixel_data;
+    pixels_row = img.temp.pixel_data;
     p_buffer_row = TEMP_BUFFER;
     for (int y = 0; y < img.height; y++) {
         for (int x = 0; x < img.width; x++) {
@@ -227,7 +227,7 @@ static int convert_font_glyph_to_bigger_space(buffer* buf, const image_t* img) {
     auto p_atlas = img->atlas.p_atlas;
 
     for (int y = 0; y < img->height - 2; y++) {
-        color* pixel = &p_atlas->temp_pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
+        color* pixel = &p_atlas->temp.pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
         for (int x = 0; x < img->width - 2; x++) {
             color color = to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
@@ -278,14 +278,14 @@ static buffer* load_external_data(const image_t &img) {
     return external_image_buf;
 }
 
-static int isometric_calculate_top_height(const image_t &img) {
+static int isometric_calculate_top_height(image_t &img) {
     int top_height = img.isometric_top_height();
     int tri_rows = img.height - top_height - HALF_TILE_HEIGHT_PIXELS * img.isometric_size() - 1;
 
     for (int d = 0; d < tri_rows; ++d) {  // diagonals
         for (int y = 0; y < d + 1; ++y) { // steps in the diagonal == y axis, too
             int x = 2 * (d - y);
-            color* row = &img.temp_pixel_data[y * img.atlas.p_atlas->width];
+            color* row = &img.temp.pixel_data[y * img.atlas.p_atlas->width];
             color* x_left = &row[x];
             color* x_right = &row[img.width - x - 2];
             if (!is_pixel_transparent(x_left[0]) || !is_pixel_transparent(x_left[1])
@@ -297,18 +297,18 @@ static int isometric_calculate_top_height(const image_t &img) {
     return top_height;
 }
 
-static void isometric_clear_top_height(const image_t &img) {
+static void isometric_clear_top_height(image_t &img) {
     for (int x = 0; x < img.width; ++x) {  // diagonals
         int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 2) : ((img.width - x) / 2)) + 2;
         for (int y = img.height - start_y; y >= 0; --y) { // steps in the diagonal == y axis, too
             int atlas_y = (y * img.atlas.p_atlas->width);
-            color &c = img.temp_pixel_data[atlas_y + x];
+            color &c = img.temp.pixel_data[atlas_y + x];
             c = 0;
         }
     }
 }
 
-static void isometric_clear_foot_bottom(const image_t &img) {
+static void isometric_clear_foot_bottom(image_t &img) {
     for (int x = 0; x < img.width; ++x) {  // diagonals
         int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 4) : ((img.width - x) / 4));
         if (x < 4 || x > img.width - 4) {
@@ -316,10 +316,13 @@ static void isometric_clear_foot_bottom(const image_t &img) {
         }
         for (int y = img.height - start_y; y < img.height; ++y) { // steps in the diagonal == y axis, too
             int atlas_y = (y * img.atlas.p_atlas->width);
-            color &c = img.temp_pixel_data[atlas_y + x];
+            color &c = img.temp.pixel_data[atlas_y + x];
             c = 0;
         }
     }
+
+    int start_y = 15 * (img.width / 58);
+    img.height = img.height - start_y;
 }
 
 static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
@@ -329,7 +332,7 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
     if (buf == nullptr)
         return false;
 
-    img.temp_pixel_data = &img.atlas.p_atlas->temp_pixel_buffer[(img.atlas.offset.y * img.atlas.p_atlas->width) + img.atlas.offset.x];
+    img.temp.pixel_data = &img.atlas.p_atlas->temp.pixel_buffer[(img.atlas.offset.y * img.atlas.p_atlas->width) + img.atlas.offset.x];
 
     if (img.type == IMAGE_TYPE_ISOMETRIC) {
         convert_isometric_footprint(buf, img);
@@ -407,10 +410,10 @@ span_const<uint16_t> imagepak::image_ids() {
 void imagepak::cleanup_and_destroy() {
     for (int i = 0; i < atlas_pages.size(); ++i) {
         auto atlas_data = atlas_pages.at(i);
-        if (atlas_data.temp_pixel_buffer != nullptr)
-            delete atlas_data.temp_pixel_buffer;
+        if (atlas_data.temp.pixel_buffer != nullptr)
+            delete atlas_data.temp.pixel_buffer;
 
-        atlas_data.temp_pixel_buffer = nullptr;
+        atlas_data.temp.pixel_buffer = nullptr;
         if (atlas_data.texture != nullptr) {
             SDL_DestroyTexture(atlas_data.texture);
         }
@@ -481,7 +484,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
         img.width = surface ? surface->w : 0;
         img.height = surface ? surface->h : 0;
-        img.temp_pixel_data = (color*)surface;
+        img.temp.surface = (void*)surface;
 
         img.unk01 = -1;
         img.unk02 = -1;
@@ -566,25 +569,25 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         atlas_data.width = i == packer.result.pages_needed - 1 ? packer.result.last_image_width : max_texture_sizes.x;
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_sizes.y;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
-        atlas_data.temp_pixel_buffer = new color[atlas_data.bmp_size];
-        memset(atlas_data.temp_pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
+        atlas_data.temp.pixel_buffer = new color[atlas_data.bmp_size];
+        memset(atlas_data.temp.pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
         atlas_pages.push_back(atlas_data);
     }
 
     // finish filling in image and atlas information
     for (int i = 0; i < entries_num; i++) {
-        image_t* img = &images_array.at(i);
+        image_t& img = images_array.at(i);
 
-        if (img->offset_mirror != 0) {
-            img->mirrored_img = &images_array.at(i + img->offset_mirror);
+        if (img.offset_mirror != 0) {
+            img.mirrored_img = &images_array.at(i + img.offset_mirror);
         }
 
-        image_packer_rect* rect = &packer.rects[i];
-        img->atlas.index = rect->output.image_index;
-        atlas_data_t* p_data = &atlas_pages.at(img->atlas.index);
-        img->atlas.p_atlas = p_data;
-        img->atlas.offset = rect->output.pos;
+        image_packer_rect& rect = packer.rects[i];
+        img.atlas.index = rect.output.image_index;
+        atlas_data_t* p_data = &atlas_pages.at(img.atlas.index);
+        img.atlas.p_atlas = p_data;
+        img.atlas.offset = rect.output.pos;
 
         // load and convert image bitmap data
         copy_to_atlas(img);
@@ -592,22 +595,22 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
-        atlas_data_t* atlas_data = &atlas_pages.at(i);
-        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->temp_pixel_buffer, atlas_data->width, atlas_data->height);
-        if (atlas_data->texture == nullptr) {
+        atlas_data_t& atlas_data = atlas_pages.at(i);
+        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        if (atlas_data.texture == nullptr) {
             return false;
         }
 
         // delete temp data buffer in the atlas
-        delete atlas_data->temp_pixel_buffer;
-        atlas_data->temp_pixel_buffer = nullptr;
+        delete atlas_data.temp.pixel_buffer;
+        atlas_data.temp.pixel_buffer = nullptr;
     }
 
     // remove pointers to raw data buffer in the images
     for (int i = 0; i < images_array.size(); ++i) {
         image_t &img = images_array.at(i);
-        SDL_FreeSurface((SDL_Surface *)img.temp_pixel_data);
-        img.temp_pixel_data = nullptr;
+        SDL_FreeSurface((SDL_Surface *)img.temp.surface);
+        img.temp.surface = nullptr;
     }
 
     image_packer_reset(packer);
@@ -839,8 +842,8 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         atlas_data.width = i == packer.result.pages_needed - 1 ? packer.result.last_image_width : max_texture_sizes.x;
         atlas_data.height = i == packer.result.pages_needed - 1 ? packer.result.last_image_height : max_texture_sizes.y;
         atlas_data.bmp_size = atlas_data.width * atlas_data.height;
-        atlas_data.temp_pixel_buffer = new color[atlas_data.bmp_size];
-        memset(atlas_data.temp_pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
+        atlas_data.temp.pixel_buffer = new color[atlas_data.bmp_size];
+        memset(atlas_data.temp.pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
         atlas_data.texture = nullptr;
         atlas_pages.push_back(atlas_data);
     }
@@ -863,12 +866,11 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
             img.mirrored_img = &images_array.at(img.sgx_index + img.offset_mirror);
         }
 
-        image_packer_rect* rect = &packer.rects[img.rect_index];
-        img.atlas.index = rect->output.image_index;
+        image_packer_rect& rect = packer.rects[img.rect_index];
+        img.atlas.index = rect.output.image_index;
         atlas_data_t* p_data = &atlas_pages.at(img.atlas.index);
         img.atlas.p_atlas = p_data;
-        img.atlas.offset = rect->output.pos;
-        //        p_data->images.push_back(img);
+        img.atlas.offset = rect.output.pos;
 
         // load and convert image bitmap data
         pak_buf->set_offset(img.sgx_data_offset);
@@ -877,21 +879,21 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
-        atlas_data_t* atlas_data = &atlas_pages.at(i);
-        atlas_data->texture = graphics_renderer()->create_texture_from_buffer(atlas_data->temp_pixel_buffer, atlas_data->width, atlas_data->height);
-        if (atlas_data->texture == nullptr)
+        atlas_data_t& atlas_data = atlas_pages.at(i);
+        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        if (atlas_data.texture == nullptr)
             return false;
 
         // delete temp data buffer in the atlas
-        delete atlas_data->temp_pixel_buffer;
-        atlas_data->temp_pixel_buffer = nullptr;
+        delete atlas_data.temp.pixel_buffer;
+        atlas_data.temp.pixel_buffer = nullptr;
 
         // ********* DEBUGGING **********
 #if defined(GAME_PLATFORM_WIN)
         if (game.save_debug_texture) {
             vfs::path fs_fpath;
             fs_fpath.printf("DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i);
-            graphics_renderer()->save_texture_to_file(fs_fpath.c_str(), atlas_data->texture);
+            graphics_renderer()->save_texture_to_file(fs_fpath.c_str(), atlas_data.texture);
         }
 #endif
         // ******************************
@@ -900,7 +902,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     // remove pointers to raw data buffer in the images
     for (int i = 0; i < images_array.size(); ++i) {
         auto img = images_array.at(i);
-        img.temp_pixel_data = nullptr;
+        img.temp.pixel_data = nullptr;
     }
 
     image_packer_reset(packer);
