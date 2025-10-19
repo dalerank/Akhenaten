@@ -446,9 +446,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
             command.pixel = pixel;
             command.mask = color_mask;
             const image_t* img = image_get(image_id);
-            // Увеличиваем virtual_xorder для правильного z-порядка верхних текстур зданий
-            // Это гарантирует, что они будут отрисовываться поверх фигур справа
-            command.virtual_xorder = img->width + TILE_WIDTH_PIXELS;
+            //command.virtual_xorder = img->width;// +TILE_WIDTH_PIXELS;
         }
 
         int image_alt_value = map_image_alt_at(grid_offset);
@@ -504,8 +502,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         command.image_id = image_id;
         command.pixel = pixel;
         command.mask = color_mask;
-        // Увеличиваем virtual_xorder для правильного z-порядка верхних текстур террейна
-        command.virtual_xorder = TILE_WIDTH_PIXELS;
+        //command.virtual_xorder = TILE_WIDTH_PIXELS;
     } 
 
     int image_alt_value = map_image_alt_at(tile);
