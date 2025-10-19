@@ -164,6 +164,7 @@ grid_area map_grid_get_area(tile2i tile, int size, int radius);
 grid_tiles map_grid_get_tiles(building *b, int radius);
 grid_tiles_sm map_grid_get_tiles_sm(building *b, int radius);
 grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius);
+grid_tiles_sm map_grid_get_adjacent_tiles_sm(tile2i center, int size);
 grid_area map_grid_get_area(tile2i start, tile2i end);
 grid_tiles map_grid_get_tiles(tile2i start, tile2i end);
 bool map_tile_is_inside_area(tile2i tile, tile2i start, tile2i end, vec2i size = vec2i{0, 0});

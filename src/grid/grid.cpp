@@ -349,6 +349,15 @@ grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius) {
     return tiles;
 }
 
+grid_tiles_sm map_grid_get_adjacent_tiles_sm(tile2i center, int size) {
+    grid_tiles_sm tiles;
+
+    grid_area area = map_grid_get_area(center, size, 1);
+    area.for_each_bound([&] (tile2i t) { tiles.push_back(t); });
+
+    return tiles;
+}
+
 grid_tiles map_grid_get_tiles(tile2i start, tile2i end) {
     grid_tiles tiles;
     tiles.reserve(16);

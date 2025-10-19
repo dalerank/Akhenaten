@@ -48,6 +48,7 @@ struct object_info {
     vec2i bgsize;
     inline vec2i bgsize_px() const { return bgsize * 16; }
     inline int bgwidth_px() const { return bgsize.x * 16; }
+    svector<e_figure_type, 16> forbidden_figure_types;
     int grid_offset = 0;
     int help_id;
     uint16_t group_id;
@@ -94,3 +95,4 @@ struct object_info {
         return smart_cast<T>(figure_get());
     }
 };
+ANK_CONFIG_STRUCT(object_info, forbidden_figure_types)
