@@ -502,10 +502,11 @@ info_window_farm = {
     })
 }
 
-info_window_architect_post = {
-  ui : __baseui(building_info_window, {
+info_window_architect_post {
+    related_buildings [BUILDING_ARCHITECT_POST]
+    ui : __baseui(building_info_window, {
 
-  })
+    })
 }
 
 info_window_firehouse = {
@@ -514,13 +515,13 @@ info_window_firehouse = {
   })
 }
 
-ruin_info_window = {
-    open_sounds : [ "wavs/fire.wav" ],
-    ui : {
-        background    : outer_panel({size: [29, 18]}),
-        title               : text({pos: [0, 16], text:"${140.0}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text  : text({pos: [0, 46], size: [px(29), 20], wrap:px(29), align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        subtitle          : text({pos: [32, 66], text:"${140.1}", size: [px(27), -1], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+ruin_info_window {
+    open_sounds [ "wavs/fire.wav" ]
+    ui {
+        background    : outer_panel({size[29, 18]}),
+        title         : text({pos[0, 16], text:"${140.0}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        warning_text  : text({pos[0, 46], size[px(29), 20], wrap:px(29), align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT }),
+        subtitle      : text({pos[32, 66], text:"${140.1}", size[px(27), -1], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
     }
 }
 
