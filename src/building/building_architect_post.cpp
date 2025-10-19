@@ -1,3 +1,12 @@
+/**
+ * @file building_architect_post.cpp
+ * @brief Implementation of the architect post building functionality
+ * 
+ * This file contains the implementation for the architect post building,
+ * which is responsible for spawning architect figures and managing
+ * building-related console commands for debugging purposes.
+ */
+
 #include "building_architect_post.h"
 
 #include "building/building.h"
@@ -20,14 +29,20 @@
 #include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_architect_post);
+
+// Global instance of the architect post info window
+// Options reading from config "info_window_architect_post"
 info_window_architect_post architect_post_infow;
 
+// Console command to remove damage risk from all buildings
 declare_console_command_p(nodamage) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
 }
 
+// Console command to collapse a specified number of buildings (default 10)
+// Excludes farms from collapse
 declare_console_command_p(collapse) {
     std::string args;
     is >> args;
@@ -47,7 +62,7 @@ declare_console_command_p(collapse) {
 }
 
 void building_architect_post::spawn_figure() {
-    common_spawn_roamer(FIGURE_ARCHITECT, 50, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, FIGURE_ACTION_60_ENGINEER_CREATED);
 }
 
 void building_architect_post::update_graphic() {
