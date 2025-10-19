@@ -234,7 +234,7 @@ void ImageDraw::apply_render_commands(painter& ctx) {
     std::sort(g_render_commands.begin(), g_render_commands.end(),
         [] (const auto& lhs, const auto& rhs) {
             if (lhs.pixel.y == rhs.pixel.y) {
-                return (lhs.pixel.x + lhs.virtual_xorder) > (rhs.pixel.x + rhs.virtual_xorder);
+                return lhs.pixel.x > rhs.pixel.x;
             }
 
             return lhs.pixel.y < rhs.pixel.y;
