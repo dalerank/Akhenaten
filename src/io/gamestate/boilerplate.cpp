@@ -67,6 +67,7 @@
 #include "window/window_mission_briefing.h"
 #include "empire/empire.h"
 #include "city/city_warnings.h"
+#include "empire/empire_traders.h"
 
 #include "chunks.h"
 #include "city/coverage.h"
@@ -715,7 +716,7 @@ void GamestateIO::start_loaded_file() {
 
         // traders / empire
         g_empire_map.init_scenario();
-        empire_traders_clear();
+        g_empire_traders.clear_all();
 
         // set up events
         scenario_earthquake_init();

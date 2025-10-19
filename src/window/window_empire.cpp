@@ -620,7 +620,7 @@ void empire_window::draw_map() {
             continue;
         }
 
-        const int image_id = image_id_from_group(PACK_GENERAL, trader.is_ship ? 179 : 180);
+        const int image_id = image_id_from_group(PACK_GENERAL, 179) + (trader.is_ship ? 0 : 1);
         const vec2i draw_pos = draw_offset + trader.current_position;
         ui::eimage(image_id, draw_pos);
     }

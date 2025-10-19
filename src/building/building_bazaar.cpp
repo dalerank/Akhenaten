@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
+#include "figuretype/figure_market_buyer.h"
 #include "graphics/elements/ui.h"
 #include "city/city.h"
 #include "city/city_labor.h"
@@ -240,7 +241,7 @@ void building_bazaar::update_graphic() {
     }
 
     base.fancy_state = (g_desirability.get(base.tile) <= 30) ? efancy_normal : efancy_good;
-    pcstr animkey = (base.fancy_state == efancy_normal) ? "base" : "fancy";
+    const xstring& animkey = (base.fancy_state == efancy_normal) ? animkeys().base : animkeys().fancy;
     map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
 
     building_impl::update_graphic();
@@ -267,7 +268,7 @@ void building_bazaar::spawn_figure() {
             building *dest = get_storage_destination();
             if (dest->id) {
                 base.figure_spawn_delay = 0;
-                figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
+                figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest, (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, BUILDING_SLOT_MARKET_BUYER);
                 f->collecting_item_id = d.fetch_inventory_id;
             }
         }
@@ -312,7 +313,7 @@ int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    pcstr animkey = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
+    const xstring& animkey = (base.fancy_state == efancy_normal) ? animkeys().base_work : animkeys().fancy_work;
     const animation_t &ranim = anim(animkey);
     building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
 

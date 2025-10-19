@@ -245,17 +245,17 @@ void building_bandstand::draw_shows_musicians(painter &ctx, vec2i pixel, tile2i 
 
     building* next_tile = base.next();
     const xstring& anim_key = (direction == 0) ? parts::musician_sn : parts::musician_we;
-    d.musician_ctx = anim(anim_key);
+    base.anims[musician_anim] = anim(anim_key);
 
-    draw_normal_anim(ctx, d.musician_ctx, pixel, tile, color_mask);
+    draw_normal_anim(ctx, base.anims[musician_anim], pixel, tile, color_mask);
 }
 
 void building_bandstand::on_tick(bool refresh_only) {
     inherited::on_tick(refresh_only);
 
     auto &d = runtime_data();
-    d.musician_ctx.update(refresh_only);
-    d.juggler_ctx.update(refresh_only);
+    base.anims[musician_anim].update(refresh_only);
+    base.anims[juggler_anim].update(refresh_only);
 }
 
 void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask) {
@@ -268,8 +268,8 @@ void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i ti
         return;
     }
     
-    d.juggler_ctx = anim("juggler");
-    draw_normal_anim(ctx, d.juggler_ctx, pixel, tile, color_mask);
+    base.anims[juggler_anim] = anim(animkeys().juggler);
+    draw_normal_anim(ctx, base.anims[juggler_anim], pixel, tile, color_mask);
 }
 
 bool building_bandstand::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
