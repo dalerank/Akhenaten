@@ -59,7 +59,7 @@ struct formation {
         max_figures_count = 16
     };
     formation_id id;         /**< ID of the formation */
-    int faction_id; /**< 1 = player, 0 = everyone else */
+    uint8_t faction_id; /**< 1 = player, 0 = everyone else */
 
     /* General variables */
     bool in_use;    /**< Flag whether this entry is in use */
@@ -79,7 +79,7 @@ struct formation {
     e_figure_type figure_type;          /**< Type of figure in this formation */
     uint8_t num_figures;                    /**< Current number of figures in the formation */
     uint8_t max_figures;                    /**< Maximum number of figures */
-    int figures[max_figures_count];     /**< Figure IDs */
+    uint16_t figures[max_figures_count];     /**< Figure IDs */
     int16_t total_damage;                   /**< Total damage of all figures added */
     int16_t max_total_damage;               /**< Maximum total damage of all figures added */
 

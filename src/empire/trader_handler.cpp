@@ -13,10 +13,6 @@
 
 #include "city/trade.h"
 
-void empire_traders_clear() {
-    g_empire_traders.clear_all();
-}
-
 int empire_trader_handle::record_bought_resource(e_resource resource) {
     auto& traders = g_empire_traders.traders;
     constexpr int amount = 100;
@@ -163,6 +159,7 @@ io_buffer*iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) 
     assert(data.traders.size() == 100);
     for (int i = 0; i < data.traders.size(); i++) {
         empire_trader& t = data.traders[i];
+        t.id = i;
         iob->bind_u16(t.bought_amount);
         iob->bind_u8(t.trade_route_id);
         iob->bind_u8(t.current_route_point);

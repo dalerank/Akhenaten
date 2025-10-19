@@ -25,5 +25,4 @@ struct empire_trader_handle {
     e_resource get_sell_resource(building* warehouse, empire_city_handle city);
 };
 
-void empire_traders_clear();
 empire_trader_handle empire_create_trader();

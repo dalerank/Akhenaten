@@ -109,7 +109,7 @@ private:
     figure_impl *_ptr = nullptr;
 
 public:
-    char runtime_data[32] = { 0 };
+    char runtime_data[40] = { 0 };
     e_resource resource_id;
     uint16_t resource_amount_full; // full load counter
 

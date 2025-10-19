@@ -36,29 +36,27 @@ void figure_market_buyer::figure_before_action() {
 void figure_market_buyer::figure_action() {
     bool ok = false;
     switch (action_state()) {
-    case 8:
-    case FIGURE_ACTION_144_MARKET_BUYER_CREATE:
+    case ACTION_144_MARKET_BUYER_CREATE:
         break;
 
-    case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
-        ok = do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
+    case ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
+        ok = do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_146_MARKET_BUYER_RETURNING);
         if (ok) {
             if (base.collecting_item_id > 3) {
                 if (!take_resource_from_storageyard(destination())) {
-                    advance_action(FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
+                    advance_action(ACTION_146_MARKET_BUYER_RETURNING);
                 }
 
             } else {
                 if (!take_food_from_storage(home(), destination())) {
-                    advance_action(FIGURE_ACTION_146_MARKET_BUYER_RETURNING);
+                    advance_action(ACTION_146_MARKET_BUYER_RETURNING);
                 }
             }
         }
         break;
 
-    case 9:
     case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
+    case ACTION_146_MARKET_BUYER_RETURNING:
         if (base.do_returnhome()) {
             home()->figure_spawn_delay = -3;
             //logs::info("stop");
@@ -69,9 +67,9 @@ void figure_market_buyer::figure_action() {
 
 sound_key figure_market_buyer::phrase_key() const {
     svector<sound_key, 10> keys;
-    if (action_state() == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         keys.push_back("goto_store");
-    } else if (action_state() == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+    } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
         keys.push_back("buyer_back_to_market");
     } 
 
@@ -295,11 +293,11 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     lang_text_draw(254, base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
-    if (action_state() == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(base.collecting_item_id);
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
-    } else if (action_state() == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+    } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(base.collecting_item_id);
         ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});

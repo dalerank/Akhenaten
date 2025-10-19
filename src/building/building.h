@@ -255,8 +255,9 @@ public:
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
     animation_context anim;
+    std::array<animation_context, 4> anims;
     std::array<figure_id, max_figures> figure_ids;
-    char runtime_data[512] = { 0 };
+    char runtime_data[186] = { 0 };
 
     building();
     building* main();

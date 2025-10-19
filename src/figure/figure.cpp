@@ -998,9 +998,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(2);         // 200
     iob->bind____skip(115);
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_mode);     // 6
-    static_assert(sizeof(figure::runtime_data) == 32, "runtime_data more then 32 bytes");
-    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 6 + 26
-    iob->bind____skip(18);
+    static_assert(sizeof(figure::runtime_data) == 40, "runtime_data more then 40 bytes");
+    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 40
+    iob->bind____skip(10);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);
 
