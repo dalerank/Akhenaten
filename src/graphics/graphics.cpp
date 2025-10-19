@@ -41,10 +41,10 @@ namespace ImageDraw
         if (!img_top) {
             return nullptr;
         }
-        pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
+        pos.y += HALF_TILE_HEIGHT_PIXELS * (img_top->isometric_size() + 1) - img_top->height;
 
         g_render.draw_image(ctx, img_top, pos, color_mask, 1.f, flags);
-        return img;
+        return img_top;
     }
 
     const image_t* img_sprite(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags)
