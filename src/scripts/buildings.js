@@ -2176,6 +2176,7 @@ building_architect_post {
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   overlay: OVERLAY_DAMAGE
+  min_houses_coverage : 50
   building_size : 1
   meta { help_id: 81, text_id: 104 }
   cost [ 6, 12, 25, 40, 60 ]

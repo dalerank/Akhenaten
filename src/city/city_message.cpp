@@ -551,8 +551,8 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &msg->is_read);
         iob->bind(BIND_SIGNATURE_UINT8, &msg->month);
 
-        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_body_id);  // FF FF
-        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_title_id); // FF FF
+        iob->bind_i16(msg->eventmsg_body_id);  // FF FF
+        iob->bind_i16(msg->eventmsg_title_id); // FF FF
         iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02);            // FF FF
 
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);

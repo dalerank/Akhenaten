@@ -1,6 +1,9 @@
 #include "empire.h"
 
 #include "core/profiler.h"
+#include "dev/debug.h"
+#include "js/js_game.h"
+#include <iostream>
 #include "empire/empire_traders.h"
 #include "city/buildings.h"
 #include "city/city_message.h"
@@ -97,6 +100,18 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
             city_arch.r(*city);
         });
     });
+}
+
+void empire_t::update_month() {
+    for (auto &city: cities) {
+        if (!city.in_use) {
+            continue;
+        } 
+        
+        if (city.months_under_siege > 0) {
+            city.months_under_siege--;
+        }
+    }
 }
 
 void empire_t::clear_cities_data() {
@@ -415,33 +430,89 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < g_empire.get_cities().size(); i++) {
-        empire_city* city = &g_empire.get_cities()[i];
-        iob->bind_u8(city->in_use);
+        empire_city& city = g_empire.get_cities()[i];
+        iob->bind_u8(city.in_use);
         iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_UINT8, &city->type);
-        iob->bind(BIND_SIGNATURE_UINT8, &city->name_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &city->route_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &city->is_open);
+        iob->bind(BIND_SIGNATURE_UINT8, &city.type);
+        iob->bind(BIND_SIGNATURE_UINT8, &city.name_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city.route_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city.is_open);
 
         for (int r = 0; r < RESOURCES_MAX; r++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &city->buys_resource[r]);
+            iob->bind_bool(city.buys_resource[r]);
         }
 
         for (int r = 0; r < RESOURCES_MAX; r++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &city->sells_resource[r]);
+            iob->bind_bool(city.sells_resource[r]);
         }
 
-        iob->bind_i16(city->cost_to_open);
-        iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk01);
-        iob->bind(BIND_SIGNATURE_INT16, &city->trader_entry_delay);
-        iob->bind(BIND_SIGNATURE_INT16, &city->ph_unk02);
-        iob->bind(BIND_SIGNATURE_INT16, &city->empire_object_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &city->is_sea_trade);
-        iob->bind____skip(1);
+        iob->bind_i16(city.cost_to_open);
+        iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk01);
+        iob->bind(BIND_SIGNATURE_INT16, &city.trader_entry_delay);
+        iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk02);
+        iob->bind(BIND_SIGNATURE_INT16, &city.empire_object_id);
+        iob->bind(BIND_SIGNATURE_UINT8, &city.is_sea_trade);
+        iob->bind_u8(city.months_under_siege);
 
-        for (int f = 0; f < 3; f++)
-            iob->bind(BIND_SIGNATURE_INT16, &city->trader_figure_ids[f]);
+        for (int f = 0; f < 3; f++) {
+            iob->bind(BIND_SIGNATURE_INT16, &city.trader_figure_ids[f]);
+        }
         
         iob->bind____skip(10);
     }
 });
+
+void empire_t::end_siege(int city_id) {
+    empire_city* city = this->city(city_id);
+    if (city && city->is_sieged()) {
+        city->set_under_siege(0);
+    }
+}
+
+void empire_t::end_all_sieges() {
+    for (auto &city : cities) {
+        if (city.in_use && city.is_sieged()) {
+            city.set_under_siege(0);
+        }
+    }
+}
+
+// Console commands for testing siege functionality
+declare_console_command_p(siege_city) {
+    std::string args; is >> args;
+    int city_id = atoi(args.empty() ? "0" : args.c_str());
+    
+    empire_city* city = g_empire.city(city_id);
+    if (city && city->in_use && city->can_trade()) {
+        city->set_under_siege(true);
+        std::cout << "City " << city_id << " is now under siege!" << std::endl;
+    } else {
+        std::cout << "City " << city_id << " cannot be sieged!" << std::endl;
+    }
+}
+
+declare_console_command_p(end_siege) {
+    std::string args; is >> args;
+    int city_id = atoi(args.empty() ? "0" : args.c_str());
+    
+    if (city_id == 0) {
+        g_empire.end_all_sieges();
+        std::cout << "All sieges ended!" << std::endl;
+    } else {
+        g_empire.end_siege(city_id);
+        std::cout << "Siege ended for city " << city_id << std::endl;
+    }
+}
+
+declare_console_command_p(list_cities) {
+    std::cout << "Empire Cities Status:" << std::endl;
+    for (int i = 0; i < empire_t::MAX_CITIES; i++) {
+        empire_city* city = g_empire.city(i);
+        if (city && city->in_use) {
+            std::cout << "City " << i << ": Type=" << (int)city->type 
+                      << ", Open=" << (city->is_open ? "Yes" : "No")
+                      << ", Sieged=" << (city->is_sieged() ? "Yes" : "No")
+                      << ", CanTrade=" << (city->can_trade() ? "Yes" : "No") << std::endl;
+        }
+    }
+}

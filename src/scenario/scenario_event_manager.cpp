@@ -5,6 +5,7 @@
 #include "core/log.h"
 #include "event_phrases.h"
 #include "io/gamefiles/lang.h"
+#include "empire/empire.h"
 #include "io/io.h"
 #include "io/io_buffer.h"
 #include "core/random.h"
@@ -51,24 +52,17 @@ declare_console_command_p(run_scenario_event) {
     auto date = game.simtime.date();
     it->event_trigger_type = EVENT_TRIGGER_ONCE;
     it->time.year = date.year;
-    it->month = date.month;
+    it->time.month = date.month;
     g_scenario.events.process_events();
 }
 
-void event_manager_t::load_mission_event(archive arch, event_ph_t &ev) {
-    ev.type = arch.r_type<e_event_type>("type");
-    ev.time.year = arch.r_int("year");
-    ev.amount.value = arch.r_int("amount");
-    ev.month = arch.r_int("month");
-    ev.tag_id = arch.r_int("tag_id");
-    ev.months_initial = arch.r_int("months_initial");
-    
-    switch (ev.type) {
+void event_ph_t::archive_load(archive arch) {    
+    switch (type) {
     case EVENT_TYPE_REQUEST:
-        ev.item.value = arch.r_type<e_resource>("resource");
+        item.value = arch.r_type<e_resource>("resource");
         break;
     case EVENT_TYPE_INVASION:
-        ev.item.value = arch.r_int("item");
+        item.value = arch.r_int("item");
         break;
     }
 }
@@ -83,13 +77,10 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
             return;
         }
 
-        sc_events.event_list.clear();
-
-        arch.r_array("events", [&] (archive arch) {
-            sc_events.event_list.push_back({});
-            auto &item = sc_events.event_list.back();
-            ev_mgr.load_mission_event(arch, item);
-        });
+        arch.r("events", sc_events.event_list);
+        for (int i = 0; i < sc_events.event_list.size(); ++i) {
+            sc_events.event_list[i].event_id = i;
+        }
 
         // first element should contain number of all elements
         sc_events.event_list.front().num_total_header = sc_events.event_list.size();
@@ -105,7 +96,7 @@ static void update_randomized_values(event_ph_t &event) {
     randomize_event_fields((int16_t*)&event.item, &seed);
     randomize_event_fields((int16_t*)&event.amount, &seed);
     randomize_event_fields((int16_t*)&event.time, &seed);
-    randomize_event_fields(event.location_fields, &seed);
+    randomize_event_fields(event.location_fields.data(), &seed);
     randomize_event_fields(event.route_fields, &seed);
 
     // some other unknown stuff also happens here.........
@@ -144,10 +135,10 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     update_randomized_values(*child);
 
     // calculate date of activation
-    int month_abs_parent = parent->time.year * 12 + parent->month; // field is YEARS in parent
+    int month_abs_parent = parent->time.year * 12 + parent->time.month; // field is YEARS in parent
     int month_abs_child = month_abs_parent + child->time.year;     // field is MONTHS in child
     child->time.year = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
-    child->month = month_abs_child % 12; // update proper month value relative to the year
+    child->time.month = month_abs_child % 12; // update proper month value relative to the year
     child->quest_months_left = month_abs_child - month_abs_parent;
 
     return true;
@@ -284,6 +275,37 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                                id, 0);
         break;
 
+    case EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: {
+            int8_t cityid = event.location_fields[0];
+            if (cityid == -1) {
+                svector<empire_city *, 16> trade_cities;
+                g_empire.select_cities(trade_cities, [&] (empire_city *city) { 
+                    int route_id = g_empire.trade_route_for_city(city->name_id);
+                    return g_empire.is_trade_route_open(route_id);
+                });
+                if (trade_cities.size() > 0) {
+                    cityid = trade_cities[rand() % trade_cities.size()]->name_id;
+                }
+            }
+
+            if (cityid == -1) {
+                cityid = g_empire.random_city();
+            }
+
+            if (cityid == -1) {
+                logs::debug("EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: no valid trade city found");
+                return;
+            }
+
+            empire_city_handle city{ static_cast<uint8_t>(cityid) };
+            city.set_under_siege(event.months_initial);
+            //reason.printf("O ${city.player_rank} ${game.player_name} military scouts have terrible new to report. It seems a siege now strikes at %s", city.name().c_str());
+            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+                               PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, PHRASE_trade_city_siege_reason,
+                               id, cityid); // 35, 4
+        }
+        break;
+
     case EVENT_TYPE_REPUTATION_DECREASE:
     case EVENT_TYPE_CITY_STATUS_CHANGE:
         break;
@@ -403,7 +425,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk01);
         iob->bind(BIND_SIGNATURE_INT16, &event.event_id);
         iob->bind(BIND_SIGNATURE_INT8, &event.type);
-        iob->bind(BIND_SIGNATURE_INT8, &event.month);
+        iob->bind(BIND_SIGNATURE_INT8, &event.time.month);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.value);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_fixed);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_min);
@@ -413,7 +435,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_min);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_max);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.year);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.unk01);
+        iob->bind____skip(2); // (BIND_SIGNATURE_INT16, &event.time.unk01);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.unk02);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.unk03);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
@@ -460,7 +482,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8, &event.on_refusal_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_defeat_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20a);
+        iob->bind(BIND_SIGNATURE_INT16, &event.reserved_1);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk20b);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk20c);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk21);

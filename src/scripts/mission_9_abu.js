@@ -96,12 +96,11 @@ mission9 = { // Abu
 
 	events : [
 		{
-			type: "EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED",
-			year : 2664,
-			month : 5,
-			city: "Selima Oasis",
-			amount : 1400,
-			deadline : 9,
+			type: "EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED"
+			time { year : 2664, month : 5 }
+			city: "Selima Oasis"
+			amount { value : 1400 }
+			deadline : 9
 		},
 	],
 

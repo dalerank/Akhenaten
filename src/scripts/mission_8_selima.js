@@ -48,11 +48,18 @@ mission8 { // Selima
 		{
             tag_id : 1
 			type: EVENT_TYPE_REQUEST
-			year : 2649
-			month : 1
+			time { year : 2649, month : 1 }
 			resource : RESOURCE_LUXURY_GOODS
-			amount : 2 // * 100
+			amount { value : 2 } // * 100
 			months_initial : 4
+		}
+
+		{
+			tag_id : 2
+			type: EVENT_TYPE_TRADE_CITY_UNDER_SIEGE
+			time { year : 2648, month : 2 }
+			location_fields : [-1]
+			months_initial : 12
 		}
     ]
 
