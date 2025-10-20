@@ -171,6 +171,7 @@ void game_t::advance_month() {
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this
+    g_empire.update_month();
     g_scenario.events.process_random_events();
     g_scenario.events.process_events();
 

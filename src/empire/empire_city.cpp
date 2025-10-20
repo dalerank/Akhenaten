@@ -14,6 +14,11 @@ void empire_city::remove_trader(int figure_id) {
 }
 
 bool empire_city::can_trade() const {
+    // Cannot trade if city is under siege
+    if (months_under_siege > 0) {
+        return false;
+    }
+    
     switch (type) {
         case EMPIRE_CITY_PHARAOH_TRADING:
         case EMPIRE_CITY_EGYPTIAN_TRADING:
@@ -69,6 +74,10 @@ bool empire_city_handle::sells_resource(e_resource r) const {
 
 void empire_city_handle::remove_trader(figure_id fid) {
     ref().remove_trader(fid);
+}
+
+void empire_city_handle::set_under_siege(uint8_t months) {
+    ref().set_under_siege(months);
 }
 
 xstring empire_city_handle::name() const {

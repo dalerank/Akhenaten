@@ -302,14 +302,9 @@ enum {
                                               //    PHRASE_route_closed_no_reason_C, // =
 
     //*****Trade City under Siege**********************************
-    PHRASE_siege_title,                // =
-    PHRASE_siege_initial_announcement, // =
-    PHRASE_siege_reason_A,             // =
-                                       //    PHRASE_siege_reason_B, // =
-                                       //    PHRASE_siege_reason_C, // =
-    PHRASE_siege_no_reason_A,          // =
-                                       //    PHRASE_siege_no_reason_B, // =
-                                       //    PHRASE_siege_no_reason_C, // =
+    PHRASE_trade_city_siege_title,            // =
+    PHRASE_trade_city_siege_announcement,     // =
+    PHRASE_trade_city_siege_reason,           // =
 
     // MESSAGE + TRIGGER EVENTS
     //*****Egyptian City Saved**********************************

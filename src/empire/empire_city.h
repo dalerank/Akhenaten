@@ -29,6 +29,7 @@ struct empire_city {
     int trader_figure_ids[3];
     svector<uint16_t, 5> trade_limits;
     uint8_t max_traders;
+    uint8_t months_under_siege;  // Track if city is under siege
 
     void remove_trader(int figure_id);
     bool can_trade() const;
@@ -43,6 +44,17 @@ struct empire_city {
     }
     void set_foreign() {
         type = EMPIRE_CITY_EGYPTIAN;
+    }
+    
+    void set_under_siege(uint8_t months) {
+        months_under_siege = months;
+        if (months_under_siege > 0) {
+            is_open = false;  // Close trade when under siege
+        }
+    }
+    
+    bool is_sieged() const {
+        return months_under_siege > 0;
     }
 };
 ANK_CONFIG_STRUCT(empire_city, is_sea_trade, max_traders, trade_limits)
@@ -61,6 +73,7 @@ struct empire_city_handle {
     bool sells_resource(e_resource r) const;
 
     void remove_trader(figure_id fid);
+    void set_under_siege(uint8_t months);
     xstring name() const;
 
     [[nodiscard]]

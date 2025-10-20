@@ -35,6 +35,8 @@ enum e_event_type {
     EVENT_TYPE_BLOOD_RIVER = 27,
     EVENT_TYPE_CRIME_WAVE = 28,
 
+    EVENT_TYPE_TRADE_CITY_UNDER_SIEGE = 29,
+
     EVENT_TYPE_MAX,
 };
 using e_event_type_tokens_t = token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX>;
@@ -131,24 +133,25 @@ struct event_ph_value {
     int16_t f_min;
     int16_t f_max;
 };
+ANK_CONFIG_STRUCT(event_ph_value, value)
 
 struct event_ph_date {
     int16_t year;
-    int16_t unk01;
+    int16_t month;
     int16_t unk02;
     int16_t unk03;
 };
+ANK_CONFIG_STRUCT(event_ph_date, year, month)
 
 struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
     int16_t event_id;
     e_event_type type;
-    int8_t month;
     event_ph_value item;
     event_ph_value amount;
     event_ph_date time;
-    int16_t location_fields[4];
+    std::array<int16_t, 4> location_fields;
     int16_t on_completed_action;
     int16_t on_refusal_action;
     e_event_trigger_type event_trigger_type;
@@ -182,14 +185,16 @@ struct event_ph_t {
     int8_t on_refusal_msgAlt;
     int8_t on_tooLate_msgAlt;
     int8_t on_defeat_msgAlt;
-    int16_t __unk20a;
+    int16_t reserved_1;
     int16_t __unk20b;
     int16_t __unk20c;
     int16_t __unk21;
     int16_t __unk22;
 
-    game_date_t date() { return {time.year, month}; }
+    game_date_t date() { return {time.year, time.month}; }
+    void archive_load(archive arch);
 };
+ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields)
 
 struct mission_id_t;
 struct event_manager_t {
@@ -209,5 +214,4 @@ struct event_manager_t {
     bool msg_load();
     bool msg_auto_phrases_load();
     void load_mission_metadata(const mission_id_t &missionid);
-    void load_mission_event(archive arch, event_ph_t &ev);
 };
