@@ -27,8 +27,6 @@ jobs:
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./artifacts/akhenaten.linux
-        cp ./data/pharaoh_fonts_pack.sgx ./artifacts/data/pharaoh_fonts_pack.sgx
-        cp ./data/pharaoh_custom_pack.sgx ./artifacts/data/pharaoh_custom_pack.sgx
         zip -r linux_build.zip ./artifacts
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip
         wget https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac/master/macos_build.zip
