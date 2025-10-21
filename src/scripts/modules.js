@@ -31,6 +31,8 @@ import mission_9_abu
 import figures
 import localization
 import localization_en
+import eventmsg
+import eventmsg_en
 import building_menu
 import desirability
 import kingdome_relation

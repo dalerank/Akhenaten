@@ -203,6 +203,7 @@ struct event_manager_t {
     event_ph_t* at(int id);
     void process_active_request(int id);
     void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
+    void process_event_city_under_siege(event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_events();
     void process_random_events();
     event_ph_t *create(const event_ph_t *parent);
@@ -210,8 +211,7 @@ struct event_manager_t {
     bool is_valid_event_index(int id);
     int get_auto_reason_phrase_id(int param_1, int param_2);
 
-    uint8_t* msg_text(int group_id, int index);
-    bool msg_load();
+    pcstr msg_text(int group_id, int index);
     bool msg_auto_phrases_load();
     void load_mission_metadata(const mission_id_t &missionid);
 };

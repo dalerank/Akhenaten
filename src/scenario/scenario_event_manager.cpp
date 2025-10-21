@@ -14,6 +14,7 @@
 #include "request.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "graphics/elements/lang_text.h"
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
@@ -27,10 +28,6 @@ const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 struct events_data_t {
     svector<event_ph_t, MAX_EVENTS> event_list;
     int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
-
-    uint8_t eventmsg_phrases_data[MAX_EVENTMSG_TEXT_DATA];
-    int eventmsg_line_offsets[NUM_PHRASES];
-    int eventmsg_group_offsets[NUM_PHRASES];
 };
 
 events_data_t g_scenario_events;
@@ -163,10 +160,9 @@ int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
     return g_scenario_events.auto_phrases[param_1][param_2];
 }
 
-uint8_t* event_manager_t::msg_text(int group_id, int index) {
+pcstr event_manager_t::msg_text(int group_id, int index) {
     auto& data = g_scenario_events;
-    int eventmsg_id = data.eventmsg_group_offsets[group_id] + index;
-    return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
+    return lang_text_from_message(group_id + index);
 }
 
 void event_manager_t::process_active_request(int id) {
@@ -190,6 +186,36 @@ void event_manager_t::process_active_request(int id) {
 
     e_event_action chain_action_next = EVENT_ACTION_COMPLETED;
     scenario_request_handle(event, -1, chain_action_next);
+}
+
+void event_manager_t::process_event_city_under_siege(event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
+    int8_t cityid = event.location_fields[0];
+    if (cityid == -1) {
+        svector<empire_city *, 16> trade_cities;
+        g_empire.select_cities(trade_cities, [&] (empire_city *city) {
+            int route_id = g_empire.trade_route_for_city(city->name_id);
+            return g_empire.is_trade_route_open(route_id);
+        });
+        if (trade_cities.size() > 0) {
+            cityid = trade_cities[rand() % trade_cities.size()]->name_id;
+        }
+    }
+
+    if (cityid == -1) {
+        cityid = g_empire.random_city();
+    }
+
+    if (cityid == -1) {
+        logs::debug("EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: no valid trade city found");
+        return;
+    }
+
+    empire_city_handle city{ static_cast<uint8_t>(cityid) };
+    city.set_under_siege(event.months_initial);
+    //reason.printf("O ${city.player_rank} ${game.player_name} military scouts have terrible new to report. It seems a siege now strikes at %s", city.name().c_str());
+    city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, event.event_id, caller_event_id,
+        PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, PHRASE_trade_city_siege_reason_A,
+        event.event_id, cityid); // 35, 4
 }
 
 void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
@@ -276,33 +302,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: {
-            int8_t cityid = event.location_fields[0];
-            if (cityid == -1) {
-                svector<empire_city *, 16> trade_cities;
-                g_empire.select_cities(trade_cities, [&] (empire_city *city) { 
-                    int route_id = g_empire.trade_route_for_city(city->name_id);
-                    return g_empire.is_trade_route_open(route_id);
-                });
-                if (trade_cities.size() > 0) {
-                    cityid = trade_cities[rand() % trade_cities.size()]->name_id;
-                }
-            }
-
-            if (cityid == -1) {
-                cityid = g_empire.random_city();
-            }
-
-            if (cityid == -1) {
-                logs::debug("EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: no valid trade city found");
-                return;
-            }
-
-            empire_city_handle city{ static_cast<uint8_t>(cityid) };
-            city.set_under_siege(event.months_initial);
-            //reason.printf("O ${city.player_rank} ${game.player_name} military scouts have terrible new to report. It seems a siege now strikes at %s", city.name().c_str());
-            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
-                               PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, PHRASE_trade_city_siege_reason,
-                               id, cityid); // 35, 4
+            process_event_city_under_siege(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
         }
         break;
 
@@ -313,6 +313,10 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_MESSAGE: {
         int phrase_id = -1; // TODO
         switch (event.subtype) {
+        case EVENT_SUBTYPE_CITY_UNDER_SIEGE:
+            process_event_city_under_siege(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
+            break;
+
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
             city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, id, caller_event_id,
                                    PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
@@ -556,81 +560,6 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //        return false;
     //
     //    return true;
-}
-
-bool event_manager_t::msg_load() {
-    auto& data = g_scenario_events;
-    buffer buf(TMP_BUFFER_SIZE);
-
-    int filesize = io_read_file_into_buffer("eventmsg.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
-    if (filesize == 0) {
-        logs::error("Eventmsg.txt not found");
-        return false;
-    }
-
-    // go through the file to assert number of lines
-    int num_lines = 0;
-    int guard = NUM_PHRASES;
-    int line_start_index;
-    const uint8_t* haystack = buf.get_data();
-    const uint8_t* ptr = haystack;
-    do {
-        guard--;
-        line_start_index = index_of_string(ptr, PHRASE, filesize);
-        if (line_start_index) {
-            ptr += line_start_index;
-            num_lines++;
-        }
-    } while (line_start_index && guard > 0);
-    if (num_lines != NUM_PHRASES) {
-        logs::error("Eventmsg.txt has incorrect no of lines %u", num_lines + 1);
-        return false;
-    }
-
-    // parse phrase data
-    buffer buf2(TMP_BUFFER_SIZE);
-    int offset = 0;
-    int group_offset = 0;
-    int group_offset_extra = 0;
-    ptr = haystack;
-    const uint8_t* ptr2 = haystack;
-    const uint8_t* end_ptr = &haystack[filesize];
-    for (int i = 0; i < NUM_PHRASES; i++) {
-        ptr += index_of_string(ptr, PHRASE, filesize);
-        const uint8_t* start_of_line = ptr - 1;
-
-        ptr += index_of(ptr, '"', filesize);
-        ptr2 = ptr + index_of(ptr, '"', filesize);
-        int size = ptr2 - ptr;
-
-        buf2.write_raw(ptr, size - 1);
-        buf2.write_u8(0);
-
-        data.eventmsg_line_offsets[i] = offset;
-        offset += size;
-        if (offset >= MAX_EVENTMSG_TEXT_DATA - 300) {
-            logs::error("Eventmsg data size too big to fit container. %u", offset);
-            return false;
-        }
-
-        // check if line is part of a new "group"
-        if (is_line_standalone_group(start_of_line, ptr - start_of_line)) {
-            if (group_offset < 298)
-                data.eventmsg_group_offsets[group_offset] = i;
-            else // Pyramid & extra messages
-                data.eventmsg_group_offsets[i] = i;
-            //                data.eventmsg_group_offsets[group_offset + 252] = i;
-            group_offset++;
-        } else {
-            data.eventmsg_group_offsets[group_offset_extra + 298] = i;
-            group_offset_extra++;
-        }
-    }
-    buf2.reset_offset();
-    buf2.read_raw(&data.eventmsg_phrases_data, offset);
-
-    logs::info("Event phrases loaded -- Data size: %u", offset);
-    return true;
 }
 
 bool event_manager_t::msg_auto_phrases_load() {

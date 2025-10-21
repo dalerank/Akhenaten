@@ -59,10 +59,10 @@ struct message_dialog_data_t {
     int text_id;
     int message_id;
     bool is_eventmsg;
-    uint8_t* title_text;
-    uint8_t* body_template;
+    pcstr title_text;
+    pcstr body_template;
     bstring1024 body_text;
-    uint8_t* phrase_template;
+    pcstr phrase_template;
     bstring256 phrase_text;
 
     void (*background_callback)();
@@ -198,8 +198,8 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
             data.title_text = g_scenario.events.msg_text(city_msg->eventmsg_title_id, 0);
             data.body_template = g_scenario.events.msg_text(city_msg->eventmsg_body_id, 0);
             data.phrase_template = g_scenario.events.msg_text(city_msg->eventmsg_phrase_id, 0);
-            eventmsg_template_combine(data.phrase_template, (uint8_t *)data.phrase_text.c_str(), true);
-            eventmsg_template_combine(data.body_template, (uint8_t *)data.body_text.c_str(), false);
+            eventmsg_template_combine((uint8_t *)data.phrase_template, (uint8_t *)data.phrase_text.c_str(), true);
+            eventmsg_template_combine((uint8_t *)data.body_template, (uint8_t *)data.body_text.c_str(), false);
         } else {
             data.is_eventmsg = false;
         }
@@ -343,7 +343,7 @@ static void draw_title(const lang_message* msg) {
     auto &data = g_message_dialog_data;
 
     painter ctx = game.painter();
-    uint8_t* text = msg->title.text;
+    pcstr text = (pcstr)msg->title.text;
     const city_message *city_msg = city_message_get(data.message_id);
     
     if (data.is_eventmsg)

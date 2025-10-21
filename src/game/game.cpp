@@ -400,11 +400,6 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    if (!g_scenario.events.msg_load()) {
-        logs::error("unable to load eventmsg.txt");
-        return false;
-    }
-
     if (!g_scenario.events.msg_auto_phrases_load()) {
         logs::error("unable to load event auto reason phrases");
         return false;
