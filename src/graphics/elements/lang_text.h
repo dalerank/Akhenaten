@@ -11,8 +11,9 @@ struct game_language {
     xstring lang;
     xstring caption;
     xstring table;
+    xstring message_table;
 };
-ANK_CONFIG_STRUCT(game_language, lang, caption, key, table)
+ANK_CONFIG_STRUCT(game_language, lang, caption, key, table, message_table)
 
 using game_languages_vec = svector<game_language, 12>;
 
@@ -20,6 +21,7 @@ const game_languages_vec & get_available_languages();
 
 pcstr lang_text_from_key(pcstr key);
 textid loc_text_from_key(pcstr key);
+pcstr lang_text_from_message(int id);
 
 int lang_text_get_width(int group, int number, e_font font);
 int lang_text_get_width(const char* str, e_font font);

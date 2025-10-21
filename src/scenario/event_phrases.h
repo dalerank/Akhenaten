@@ -1,5 +1,8 @@
 #pragma once
-enum {
+
+#include <cstdint>
+
+enum e_phrase_message : uint16_t {
     PHRASE_egyptian_city_attacked_title_P,                // =
     PHRASE_egyptian_city_attacked_title_C,                // =
     PHRASE_egyptian_city_attacked_initial_announcement_P, // =
@@ -302,9 +305,14 @@ enum {
                                               //    PHRASE_route_closed_no_reason_C, // =
 
     //*****Trade City under Siege**********************************
-    PHRASE_trade_city_siege_title,            // =
-    PHRASE_trade_city_siege_announcement,     // =
-    PHRASE_trade_city_siege_reason,           // =
+    PHRASE_trade_city_siege_title,
+    PHRASE_trade_city_siege_announcement,
+    PHRASE_trade_city_siege_reason_A,
+    PHRASE_trade_city_siege_reason_B,
+    PHRASE_trade_city_siege_reason_C,
+    PHRASE_trade_city_siege_no_reason_A,
+    PHRASE_trade_city_siege_no_reason_B,
+    PHRASE_trade_city_siege_no_reason_C,// =
 
     // MESSAGE + TRIGGER EVENTS
     //*****Egyptian City Saved**********************************
@@ -941,4 +949,6 @@ enum {
     PHRASE_pyramid_speedup_Ptah,                // =
     PHRASE_pyramid_speedup_Seth,                // =
     PHRASE_pyramid_speedup_Bast,                // =
+
+    PHRASE_END_OF_EVENT_PHRASES
 };
