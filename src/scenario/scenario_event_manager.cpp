@@ -18,17 +18,36 @@
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
-constexpr int NUM_PHRASES = 601;
-constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
 const e_event_type_tokens_t ANK_CONFIG_ENUM(e_event_type_tokens);
 const e_event_state_tokens_t e_event_state_tokens;
 const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 
+struct auto_phrase {
+    uint8_t id;
+    xstring text;
+    svector<uint8_t, 36> phrase_ids;
+};
+ANK_CONFIG_STRUCT(auto_phrase, id, text, phrase_ids)
+
 struct events_data_t {
     svector<event_ph_t, MAX_EVENTS> event_list;
-    int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
 };
+
+template <>
+struct stable_array_max_elements<auto_phrase>{
+    enum { max_elements = NUM_AUTO_PHRASE_VARIANTS };
+};
+
+template<>
+struct std::hash<auto_phrase> {
+    [[nodiscard]] size_t operator()(const auto_phrase &p) const noexcept {
+        return p.id;
+    }
+};
+
+using auto_phrases_t = stable_array<auto_phrase>;
+auto_phrases_t ANK_VARIABLE(eventmsg_auto_phrases);
 
 events_data_t g_scenario_events;
 
@@ -157,7 +176,7 @@ bool event_manager_t::is_valid_event_index(int id) {
 }
 
 int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
-    return g_scenario_events.auto_phrases[param_1][param_2];
+    return eventmsg_auto_phrases[param_1].phrase_ids[param_2];
 }
 
 pcstr event_manager_t::msg_text(int group_id, int index) {
@@ -560,47 +579,4 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //        return false;
     //
     //    return true;
-}
-
-bool event_manager_t::msg_auto_phrases_load() {
-    auto& data = g_scenario_events;
-    buffer buf(TMP_BUFFER_SIZE);
-
-    int filesize = io_read_file_into_buffer("auto reason phrases.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
-    if (filesize == 0) {
-        logs::error("Event auto phrases file not found");
-        return false;
-    }
-
-    // go through the file to assert number of lines
-    int num_lines = 0;
-    int guard = NUM_AUTO_PHRASE_VARIANTS;
-    int brace_index;
-    const uint8_t* haystack = buf.get_data();
-    const uint8_t* ptr = haystack;
-    do {
-        guard--;
-        brace_index = index_of(ptr, '{', filesize);
-        if (brace_index) {
-            ptr += brace_index;
-            num_lines++;
-        }
-    } while (brace_index && guard > 0);
-    if (num_lines != NUM_AUTO_PHRASE_VARIANTS) {
-        logs::error("Event auto phrases file has incorrect no of lines %u", num_lines + 1);
-        return false;
-    }
-
-    // parse phrase data
-    ptr = haystack;
-    const uint8_t* end_ptr = &haystack[filesize];
-    for (int i = 0; i < NUM_AUTO_PHRASE_VARIANTS; i++) {
-        ptr += index_of(ptr, '{', filesize);
-
-        for (int a = 0; a < 36; a++)
-            ptr = get_value(ptr, end_ptr, &data.auto_phrases[i][a]);
-    }
-
-    logs::info("Event auto phrases loaded");
-    return true;
 }

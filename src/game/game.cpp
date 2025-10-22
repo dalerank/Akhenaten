@@ -400,11 +400,6 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    if (!g_scenario.events.msg_auto_phrases_load()) {
-        logs::error("unable to load event auto reason phrases");
-        return false;
-    }
-
     if (!game_load_campaign_file()) {
         logs::error("unable to load campaign data");
         return false;

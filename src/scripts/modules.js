@@ -31,7 +31,6 @@ import mission_9_abu
 import figures
 import localization
 import localization_en
-import eventmsg
 import eventmsg_en
 import building_menu
 import desirability
@@ -67,6 +66,7 @@ import ui_advisor_imperial
 import ui_workshop_window
 import ui_sidebar_window
 import ui_batalion_window
+import eventmsg_phrase_auto
 import music
 import invasions
 import enemies
