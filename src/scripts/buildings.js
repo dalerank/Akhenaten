@@ -780,17 +780,19 @@ building_juggler_school = {
   laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
-building_dancer_school = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
-    work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2 },
+building_dancer_school {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    preview { id:52, }
+    base { id:52, }
+    work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
+
   building_size : 4
-  meta : { help_id:75, text_id:76 }
-  cost : [ 30, 50, 100, 150, 200 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-   laborers:[10], fire_risk:[4], damage_risk: [2]
+  meta { help_id:75, text_id:76 }
+  cost [ 30, 50, 100, 150, 200 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers[10], fire_risk[4], damage_risk[2]
 }
 
 building_storage_yard = {
@@ -1112,25 +1114,28 @@ building_recruiter = {
   laborers:[10], fire_risk:[4], damage_risk: [1]
 }
 
-building_bandstand = {
-  animations : {
-    booth : {pack:PACK_GENERAL, id:114},
-    square : {pack:PACK_GENERAL, id:58},
-    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true },   
-    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
-    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
-    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
-    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
-    musician_sn : { pos : [-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 },
-    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 },
+building_bandstand {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    booth { id:114 }
+    square { id:58}
+    stand_sn_s { id:92, offset:0 }
+    stand_sn_n { id:92, offset:1 }
+    stand_we_w { id:92, offset:2 }
+    stand_we_e { id:92, offset:3 }
+
+    juggler { pos[35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
+    musician_sn { pos[-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
+    musician_we { pos[48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
   }
+
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   fire_proof: true
-  meta : { help_id:72, text_id:71 }
+  meta { help_id:72, text_id:71 }
   building_size : 3
-  cost : [ 30, 50, 100, 150, 200 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [3]
+  cost [ 30, 50, 100, 150, 200 ]
+  desirability { value[4], step[1], step_size[-1], range[4] }
+  laborers[12], fire_risk[4], damage_risk[3]
 }
 
 building_pavilion = {
