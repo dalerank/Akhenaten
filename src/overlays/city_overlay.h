@@ -38,6 +38,7 @@ struct city_overlay {
     virtual bool show_building(const building *b) const;
     virtual e_overlay get_type() const { return OVERLAY_NONE; }
     virtual void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
+    virtual void draw_overlay_building_column(building *b, vec2i pixel, tile2i tile, painter &ctx) const;
 
     xstring title() const;
     void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
