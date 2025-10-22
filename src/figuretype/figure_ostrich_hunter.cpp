@@ -1,3 +1,4 @@
+
 #include "figure_ostrich_hunter.h"
 
 #include "core/calc.h"

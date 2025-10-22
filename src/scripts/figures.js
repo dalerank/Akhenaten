@@ -249,7 +249,7 @@ figure_ostrich {
 		walk { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
 		death { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
 		eating { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
-		idle { pack:PACK_SPR_MAIN, id:160, max_frames:8 }
+		idle { pack:PACK_SPR_MAIN, id:160, max_frames:7 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
 	}
 

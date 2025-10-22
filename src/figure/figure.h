@@ -245,6 +245,8 @@ public:
     bool in_roam_history(int goffset);
     void add_roam_history(int goffset);
 
+    void apply_damage(int hit_dmg);
+
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
@@ -535,6 +537,7 @@ public:
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
     virtual void formation_reset_to_initial(const formation *m) {}
+    virtual void apply_damage(int hit_dmg) { base.damage += hit_dmg; }
 
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
