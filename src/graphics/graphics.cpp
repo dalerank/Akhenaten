@@ -174,7 +174,11 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
 
     case render_command_t::ert_drawtile_full: {
             ImageDraw::isometric_from_drawtile(ctx, command.image_id, command.pixel, command.mask, command.flags);
-            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, command.pixel, command.mask, command.flags);
+
+            const image_t *img = image_get(command.image_id);
+            int offset_y = 15 * (img->width / 58);
+            const vec2i pixel = command.pixel - vec2i{ 0, offset_y };
+            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, pixel, command.mask, command.flags);
         }
         break;
 
