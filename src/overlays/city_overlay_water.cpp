@@ -12,6 +12,7 @@
 #include "figure/figure.h"
 #include "widget/city/tile_draw.h"
 #include "building/building_house.h"
+#include "widget/widget_city.h"
 
 static int terrain_on_water_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -34,8 +35,16 @@ void city_overlay_water::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx)
             //            ImageDraw::isometric_top_from_drawtile(map_image_at(grid_offset), x, y, color_mask,
             //            city_view_get_scale_float());
         }
-    } else if (map_building_at(tile)) {
-        city_overlay::draw_building_top(pixel, tile, ctx);
+
+        return;
+    } 
+
+    building *b = building_at(tile);
+    if (b->is_valid()) {
+        int column_height = get_column_height(b);
+        if (column_height != COLUMN_TYPE_NONE) {
+            draw_overlay_column(get_column_color(b), pixel, column_height, column_type, ctx);
+        }
     }
 }
 
@@ -51,30 +60,36 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
             command.pixel = pixel;
             command.mask = COLOR_MASK_NONE;
         }
-    } else {
-        int terrain = map_terrain_get(tile);
-        building* b = building_at(tile);
-        // draw houses, wells and water supplies either fully or flattened
-        if ((terrain & TERRAIN_BUILDING) && (building_is_house(b->type)) || show_building(b)) {
-            if (map_property_is_draw_tile(tile)) {
-                city_overlay::draw_building_footprint(ctx, pixel, tile, 0);
-            }
-        } else {
-            // draw groundwater levels
-            int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
-            switch (map_terrain_get(tile) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
-            case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
-            case TERRAIN_FOUNTAIN_RANGE:
-                image_id += 2;
-                break;
+        return true;
+    } 
 
-            case TERRAIN_GROUNDWATER:
-                image_id += 1;
-                break;
-            }
-            ImageDraw::isometric(ctx, image_id, pixel);
+    int terrain = map_terrain_get(tile);
+    building* b = building_at(tile);
+    // draw houses, wells and water supplies either fully or flattened
+    if ((terrain & TERRAIN_BUILDING) && (b->dcast_house() || show_building(b))) {
+        if (map_property_is_draw_tile(tile)) {
+            city_overlay::draw_building_footprint(ctx, pixel, tile, 0);          
         }
+
+        return true;
+    } 
+
+    // draw groundwater levels
+    int image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_WATER);
+    switch (map_terrain_get(tile) & (TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE)) {
+    case TERRAIN_GROUNDWATER | TERRAIN_FOUNTAIN_RANGE:
+    case TERRAIN_FOUNTAIN_RANGE:
+        image_id += 2;
+        break;
+
+    case TERRAIN_GROUNDWATER:
+        image_id += 1;
+        break;
     }
+    auto &command = ImageDraw::create_command(render_command_t::ert_generic);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = COLOR_MASK_NONE;
 
     return true;
 }
