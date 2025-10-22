@@ -229,7 +229,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         }
 
         if (draw) {
-            draw_flattened_footprint_building(b, pos, image_offset, 0, ctx);
+            draw_flattened_footprint_building(b, pos, image_offset, COLOR_MASK_NONE, ctx);
         }
     }
 }
@@ -256,15 +256,7 @@ bool city_overlay::show_building(const building *b) const {
     return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
 }
 
-void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
-    building* b = building_at(tile);
-
-    if (show_building(b)) {
-        map_render_set(tile, RENDER_TALL_TILE);
-        g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx);
-        return;
-    }
-
+void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i tile, painter &ctx) const {
     int column_height = get_column_height(b);
     e_column_color column_color = get_column_color(b);
     if (column_height == COLUMN_TYPE_NONE) {
@@ -279,4 +271,16 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
     if (draw) {
         draw_overlay_column(column_color, pixel, column_height, column_type, ctx);
     }
+}
+
+void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const {
+    building* b = building_at(tile);
+
+    if (show_building(b)) {
+        map_render_set(tile, RENDER_TALL_TILE);
+        g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx);
+        return;
+    }
+
+    draw_overlay_building_column(b, pixel, tile, ctx);
 }
