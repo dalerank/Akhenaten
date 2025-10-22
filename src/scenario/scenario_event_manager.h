@@ -212,6 +212,5 @@ struct event_manager_t {
     int get_auto_reason_phrase_id(int param_1, int param_2);
 
     pcstr msg_text(int group_id, int index);
-    bool msg_auto_phrases_load();
     void load_mission_metadata(const mission_id_t &missionid);
 };
