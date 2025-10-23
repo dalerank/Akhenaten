@@ -88,7 +88,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         } else if (!event.appear_dialgow_shown) {
             // initial quest message
             event.appear_dialgow_shown = true;
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
@@ -98,7 +98,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         
         if (event.quest_months_left == 6) {
             // reminder of 6 months left
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_reminder_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
@@ -111,7 +111,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
             event.quest_months_left = 24; // hardcoded
 
             // reprimand message
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_overdue_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,

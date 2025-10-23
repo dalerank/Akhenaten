@@ -31,11 +31,11 @@ enum e_message_dialog_type {
 };
 
 struct text_tag_substitution {
-    const char* tag;
-    const uint8_t* content;
+    pcstr tag;
+    pcstr content;
 } ;
 
-void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* tag_templates, int num_tags);
+void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);
 
 void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void));
 

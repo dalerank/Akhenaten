@@ -76,21 +76,21 @@ void figure_ostrich::figure_action() {
 void figure_ostrich::update_animation() {
     switch (action_state()) {
     case ACTION_8_OSTRICH_RECALCULATE:
-    case ACTION_19_OSTRICH_IDLE: // idle
+    case ACTION_19_OSTRICH_IDLE: 
         image_set_animation(animkeys().idle);
         break;
 
-    case ACTION_18_OSTRICH_ROOSTING: // roosting
+    case ACTION_18_OSTRICH_ROOSTING:
         image_set_animation(animkeys().eating);
         break;
 
-    case ACTION_16_OSTRICH_FLEEING: // fleeing
-    case ACTION_10_OSTRICH_GOING:   // on the move
+    case ACTION_16_OSTRICH_FLEEING: 
+    case ACTION_10_OSTRICH_GOING: 
         image_set_animation(animkeys().walk);
         break;
 
-    case ACTION_15_OSTRICH_TERRIFIED: // terrified
-    case 14:                         // scared
+    case ACTION_15_OSTRICH_TERRIFIED: 
+    case 14:                      
         image_set_animation(animkeys().idle);
         base.animctx.frame = 0;
         break;

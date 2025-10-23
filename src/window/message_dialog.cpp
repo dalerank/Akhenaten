@@ -93,29 +93,31 @@ struct player_message {
 
 player_message g_player_message_data;
 
-static void write_to_body_text_buffer(const uint8_t* in, uint8_t** out) {
-    int size = string_length(in);
+static void write_to_body_text_buffer(pcstr in, pstr* out) {
+    const size_t size = strlen(in);
     memcpy(*out, in, size);
     *out += size;
 }
-static void swap_tag(uint8_t* curr_byte, uint8_t** curr_byte_out, const uint8_t* tag, const uint8_t* content) {
+
+static void swap_tag(pcstr curr_byte, pstr* curr_byte_out, pcstr tag, pcstr content) {
     if (index_of_string(curr_byte, tag, 200) == 1) {
         write_to_body_text_buffer(content, curr_byte_out);
     }
 }
-void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* tag_templates, int num_tags) {
-    uint8_t* curr_byte_out = dst;
+
+void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution *tag_templates, int num_tags) {
+    pstr curr_byte_out = dst;
     memset(curr_byte_out, 0, 1);
     for (int c = 0; c < 1000; c++) {
-        uint8_t* curr_byte = (uint8_t*)src + c;
+        pcstr curr_byte = src + c;
 
         if ((char)*curr_byte == '[') { // found an opening bracket
-            uint8_t* tag_end_ptr = curr_byte + index_of(curr_byte, ']', 200);
+            pcstr tag_end_ptr = curr_byte + index_of((const uint8_t *)curr_byte, ']', 200);
             int size = static_cast<int>(tag_end_ptr - curr_byte - 1);
 
             // needs to go over all the possible tags...
             for (int i = 0; i < num_tags; ++i) {
-                swap_tag(curr_byte, &curr_byte_out, (const uint8_t *)tag_templates[i].tag, tag_templates[i].content);
+                swap_tag(curr_byte, &curr_byte_out, tag_templates[i].tag, tag_templates[i].content);
             }
 
             // go to the end of the tag, then resume
@@ -129,7 +131,8 @@ void text_fill_in_tags(const uint8_t* src, uint8_t* dst, text_tag_substitution* 
         }
     }
 }
-static void eventmsg_template_combine(uint8_t* template_ptr, uint8_t* out_ptr, bool phrase_modifier) {
+
+static void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
     auto &data = g_message_dialog_data;
     auto msg = city_message_get(data.message_id);
 
@@ -154,18 +157,18 @@ static void eventmsg_template_combine(uint8_t* template_ptr, uint8_t* out_ptr, b
     }
 
     text_tag_substitution tags[] = {
-      {"[greeting]", lang_get_string(32, 11 + g_scenario.settings.campaign_scenario_id)},
-      {"[player_name]", city_player_name()},
-      {"[reason_phrase]", (uint8_t*)data.phrase_text.c_str()},
-      {"[city_name]", lang_get_string(195, city_name_id)},
-      {"[a_foreign_army]", (uint8_t*)""}, // TODO
-      {"[amount]", (uint8_t*)amount.c_str()},
-      {"[amount_granted]", (uint8_t*)""}, // TODO
-      {"[item]", lang_get_string(23, 54 + (phrase_modifier ? msg->req_resource_past : msg->req_resource))},
-      {"[time_allotted]", (uint8_t*)time.c_str()},
-      {"[time_until_attack]", (uint8_t*)""}, // TODO
-      {"[travel_time]", (uint8_t*)""},       // TODO
-      {"[god]", (uint8_t*)""},               // TODO
+      {"[greeting]", (pcstr)lang_get_string(32, 11 + g_scenario.settings.campaign_scenario_id)},
+      {"[player_name]", (pcstr)city_player_name()},
+      {"[reason_phrase]", data.phrase_text.c_str()},
+      {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
+      {"[a_foreign_army]", ""}, // TODO
+      {"[amount]", amount.c_str()},
+      {"[amount_granted]", ""}, // TODO
+      {"[item]", (pcstr)lang_get_string(23, 54 + (phrase_modifier ? msg->req_resource_past : msg->req_resource))},
+      {"[time_allotted]", time.c_str()},
+      {"[time_until_attack]", ""}, // TODO
+      {"[travel_time]", ""},       // TODO
+      {"[god]", ""},               // TODO
     };
     text_fill_in_tags(template_ptr, out_ptr, tags, 12);
 }
@@ -198,8 +201,8 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
             data.title_text = g_scenario.events.msg_text(city_msg->eventmsg_title_id, 0);
             data.body_template = g_scenario.events.msg_text(city_msg->eventmsg_body_id, 0);
             data.phrase_template = g_scenario.events.msg_text(city_msg->eventmsg_phrase_id, 0);
-            eventmsg_template_combine((uint8_t *)data.phrase_template, (uint8_t *)data.phrase_text.c_str(), true);
-            eventmsg_template_combine((uint8_t *)data.body_template, (uint8_t *)data.body_text.c_str(), false);
+            eventmsg_template_combine(data.phrase_template, data.phrase_text.data(), true);
+            eventmsg_template_combine(data.body_template, data.body_text.data(), false);
         } else {
             data.is_eventmsg = false;
         }

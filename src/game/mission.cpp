@@ -190,7 +190,7 @@ bool game_scenario_beaten(int scenario_id) {
 }
 
 #define TMP_BUFFER_SIZE 10000
-static const uint8_t* CAMPAIGN_FILE_BEGIN = string_from_ascii("\n[MISSION_NAMES]\n");
+static const uint8_t* CAMPAIGN_FILE_BEGIN = (const uint8_t * )string_from_ascii("\n[MISSION_NAMES]\n");
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
     while (1) {
@@ -247,7 +247,7 @@ bool game_load_campaign_file() {
         if (comment != 1 && line_size > 0) {     // valid line!
             if (index_of(ptr, '[', line_size)) { // braced tag
                 data_line_idx = 0;
-                if (index_of_string(ptr, string_from_ascii("MISSION_NAMES"), line_size)) { // scenario names...
+                if (index_of_string((pcstr)ptr, string_from_ascii("MISSION_NAMES"), line_size)) { // scenario names...
                     action = -1;
                 } else { // start of a campaign block
                     g_mission_data.num_campaigns++;
@@ -262,7 +262,7 @@ bool game_load_campaign_file() {
                     g_mission_data.map_name_nums++;
                 } else { // mission data
                     auto campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 1];
-                    if (index_of_string(ptr, string_from_ascii("mission"), line_size)) { // mission step data
+                    if (index_of_string((pcstr)ptr, string_from_ascii("mission"), line_size)) { // mission step data
                         campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
                         ptr = skip_non_digits(ptr);
@@ -293,9 +293,7 @@ bool game_load_campaign_file() {
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
-                    } else if (index_of_string(ptr,
-                                               string_from_ascii("choicescreen"),
-                                               line_size)) { // choice screen data
+                    } else if (index_of_string((pcstr)ptr, string_from_ascii("choicescreen"), line_size)) { // choice screen data
                         if (campaign->num_steps == 0)
                             campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
@@ -314,7 +312,7 @@ bool game_load_campaign_file() {
                             step->previous_in_list = &prev_campaign->steps[prev_campaign->num_steps - 1];
                             step->previous_in_list->next_in_list = step;
                         }
-                    } else if (index_of_string(ptr, string_from_ascii("choice"), line_size)) { // choice branch data
+                    } else if (index_of_string((pcstr)ptr, string_from_ascii("choice"), line_size)) { // choice branch data
                         auto step = &campaign->steps[campaign->num_steps - 1]; // these MUST come after a valid CHOICESCREEN tag.
                         //auto branch = &step->branches[step->num_branches];
                         //ptr = skip_non_digits(ptr);

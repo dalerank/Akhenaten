@@ -186,15 +186,13 @@ struct event_ph_t {
     int8_t on_tooLate_msgAlt;
     int8_t on_defeat_msgAlt;
     int16_t reserved_1;
-    int16_t __unk20b;
-    int16_t __unk20c;
-    int16_t __unk21;
-    int16_t __unk22;
+    std::array<uint16_t, 4> reasons;
+    uint16_t rand_reason() const;
 
     game_date_t date() { return {time.year, time.month}; }
     void archive_load(archive arch);
 };
-ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields)
+ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields, reasons)
 
 struct mission_id_t;
 struct event_manager_t {
@@ -203,7 +201,7 @@ struct event_manager_t {
     event_ph_t* at(int id);
     void process_active_request(int id);
     void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
-    void process_event_city_under_siege(event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
+    void process_event_city_under_siege(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_events();
     void process_random_events();
     event_ph_t *create(const event_ph_t *parent);

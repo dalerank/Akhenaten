@@ -72,7 +72,13 @@ declare_console_command_p(run_scenario_event) {
     g_scenario.events.process_events();
 }
 
-void event_ph_t::archive_load(archive arch) {    
+uint16_t event_ph_t::rand_reason() const {
+    svector<uint16_t, 4> active_reasons;
+    std::copy_if(reasons.begin(), reasons.end(), std::back_inserter(active_reasons), [] (auto &p) { return p != -1; });
+    return active_reasons.size() > 0 ? active_reasons[rand() % active_reasons.size()] : 0xffff;
+}
+
+void event_ph_t::archive_load(archive arch) {
     switch (type) {
     case EVENT_TYPE_REQUEST:
         item.value = arch.r_type<e_resource>("resource");
@@ -161,10 +167,12 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
 }
 
 const event_ph_t* event_manager_t::at(int id) const {
+    assert(id >= 0 && id < g_scenario_events.event_list.size());
     return &g_scenario_events.event_list[id];
 }
 
 event_ph_t* event_manager_t::at(int id) {
+    assert(id >= 0 && id < g_scenario_events.event_list.size());
     return &g_scenario_events.event_list[id];
 }
 
@@ -207,7 +215,7 @@ void event_manager_t::process_active_request(int id) {
     scenario_request_handle(event, -1, chain_action_next);
 }
 
-void event_manager_t::process_event_city_under_siege(event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
+void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
     int8_t cityid = event.location_fields[0];
     if (cityid == -1) {
         svector<empire_city *, 16> trade_cities;
@@ -231,10 +239,16 @@ void event_manager_t::process_event_city_under_siege(event_ph_t& event, bool via
 
     empire_city_handle city{ static_cast<uint8_t>(cityid) };
     city.set_under_siege(event.months_initial);
-    //reason.printf("O ${city.player_rank} ${game.player_name} military scouts have terrible new to report. It seems a siege now strikes at %s", city.name().c_str());
-    city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, event.event_id, caller_event_id,
-        PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, PHRASE_trade_city_siege_reason_A,
-        event.event_id, cityid); // 35, 4
+
+    event_ph_t copy_event = event;
+    copy_event.location_fields[0] = (cityid + 1);
+    uint16_t reason = copy_event.rand_reason();
+    if (reason == 0xffff) {
+        reason = PHRASE_trade_city_siege_no_reason_A;
+    }
+    city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
+        PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, reason,
+        event.event_id, cityid);
 }
 
 void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
@@ -315,7 +329,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_PRICE_INCREASE:
     case EVENT_TYPE_PRICE_DECREASE:
     case EVENT_TYPE_REPUTATION_INCREASE:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
                                PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
                                id, 0);
         break;
@@ -337,25 +351,25 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             break;
 
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
-            city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, &event, caller_event_id,
                                    PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, &event, caller_event_id,
                                    PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, &event, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
-            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
                                    PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement, PHRASE_acknowledgement_no_reason_A,
                                    id, 0);
             break;
@@ -372,7 +386,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
             PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
             id, 0);
         break;
@@ -506,10 +520,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_defeat_msgAlt);
         iob->bind(BIND_SIGNATURE_INT16, &event.reserved_1);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20b);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20c);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk21);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk22);
+        iob->bind(BIND_SIGNATURE_RAW, event.reasons.data(), sizeof(event.reasons));
     }
 });
 
@@ -541,12 +552,12 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
 }
 
 static int next_skipping_lines_counter = 0;
-static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
+static bool is_line_standalone_group(pcstr start_of_line, int size) {
     if (next_skipping_lines_counter > 0) {
         next_skipping_lines_counter--;
         return false;
     }
-    if (index_of_string(start_of_line, (const uint8_t*)"_A", size)) {
+    if (index_of_string(start_of_line, "_A", size)) {
         next_skipping_lines_counter = 2;
         return true;
     }

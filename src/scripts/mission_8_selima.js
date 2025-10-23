@@ -58,8 +58,9 @@ mission8 { // Selima
 			tag_id : 2
 			type: EVENT_TYPE_TRADE_CITY_UNDER_SIEGE
 			time { year : 2648, month : 2 }
-			location_fields : [-1]
-			months_initial : 12
+			location_fields [-1, -1, -1, -1]
+			months_initial : 12,
+			reasons [PHRASE_trade_city_siege_no_reason_A, PHRASE_trade_city_siege_no_reason_B, PHRASE_trade_city_siege_no_reason_C, -1]
 		}
     ]
 

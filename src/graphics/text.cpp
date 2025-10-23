@@ -318,7 +318,7 @@ void text_draw_centered(const uint8_t* str, int x, int y, int box_width, e_font 
 
     text_draw(str, offset + x, y, font, color);
 }
-int text_draw_left(uint8_t* str, int x, int y, e_font font, color color) {
+int text_draw_left(pcstr str, int x, int y, e_font font, color color) {
     return text_draw(str, x - (int)text_get_width(str, font), y, font, color);
 }
 
