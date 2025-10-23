@@ -190,7 +190,7 @@ void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
 
 void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
-    static option debug_text_opt[] = {
+    static option debug_text_opt[e_debug_opt_size] = {
         {"Pages ON", "Pages OFF"},
         {"Game Time ON", "Game Time OFF"},
         {"Build Planner ON", "Build Planner OFF"},
@@ -199,7 +199,6 @@ void top_menu_widget_t::debug_opt_text(int opt, bool v) {
         {"Floods ON", "Floods OFF"},
         {"Camera ON", "Camera OFF"},
         {"Tile Cache ON", "Tile Cache OFF"},
-        {"Migration ON", "Migration OFF"},
         {"Sentiment ON", "Sentiment OFF"},
         {"Sound Channels ON", "Sound Channels OFF"},
         {"Properties ON", "Properties OFF"},

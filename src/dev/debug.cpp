@@ -58,6 +58,7 @@ game_debug_t g_debug;
 bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
+const token_holder<e_debug_option, e_debug_show_pages, e_debug_opt_size> ANK_CONFIG_ENUM(e_debug_option_tokens);
 
 declare_console_var_int(debugrender, 0);
 declare_console_var_int(debugtile, 0);
@@ -1106,30 +1107,6 @@ void draw_debug_ui(int x, int y) {
             debug_text(ctx, str, x, y + 1, cl, bstring256().printf("%03u: L%03u: R:%03u: %s", &ch - channels.begin(), ch.left_pan, ch.right_pan, ch.filename.c_str()).c_str(), 0);
             y += 12;
         }
-    }
-
-    if (g_debug_show_opts[e_debug_show_migration]) {
-        int cl = 180;
-        debug_text_a(ctx, str, x, y + 1, cl, "====================== migration ======================");
-        y += 12;
-        debug_text(ctx, str, x, y + 1, cl, "invading_cap:", g_city.migration.invading_cap);
-        debug_text(ctx, str, x, y + 13, cl, "migration_cap:", g_city.migration.migration_cap);
-        debug_text(ctx, str, x, y + 25, cl, "percentage_by_sentiment:", g_city.migration.percentage_by_sentiment);
-        debug_text(ctx, str, x, y + 37, cl, "emigration_message_shown:", g_city.migration.emigration_message_shown);
-        debug_text(ctx, str, x, y + 49, cl, "newcomers:", g_city.migration.newcomers);
-        debug_text(ctx, str, x, y + 61, cl, "percentage:", g_city.migration.percentage);
-        debug_text(ctx, str, x, y + 73, cl, "no_immigration_cause:", g_city.migration.no_immigration_cause);
-        debug_text(ctx, str, x, y + 85, cl, "refused_immigrants_today:", g_city.migration.refused_immigrants_today);
-        debug_text(ctx, str, x, y + 97, cl, "emigrated_today:", g_city.migration.emigrated_today);
-        debug_text(ctx, str, x, y + 109, cl, "immigrated_today:", g_city.migration.immigrated_today);
-        debug_text(ctx, str, x, y + 121, cl, "emigration_queue_size:", g_city.migration.emigration_queue_size);
-        debug_text(ctx, str, x, y + 133, cl, "immigration_queue_size:", g_city.migration.immigration_queue_size);
-        debug_text(ctx, str, x, y + 145, cl, "immigration_duration:", g_city.migration.immigration_duration);
-        debug_text(ctx, str, x, y + 157, cl, "emigration_amount_per_batch:", g_city.migration.emigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 169, cl, "emigration_duration:", g_city.migration.emigration_duration);
-        debug_text(ctx, str, x, y + 181, cl, "immigration_amount_per_batch:", g_city.migration.immigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 193, cl, "nobles_leave_city_this_year:", g_city.migration.nobles_leave_city_this_year);
-        y += 212;
     }
 
     if (g_debug_show_opts[e_debug_show_sentiment]) {
