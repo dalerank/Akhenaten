@@ -300,6 +300,7 @@ static void draw_scenario_info() {
             lang_text_draw(198, 0, INFO_X, line_y, FONT_NORMAL_BLACK_ON_DARK);
     }
 }
+
 static void draw_scores(int scenario_id) {
     painter ctx = game.painter();
     int rank = get_scenario_mission_rank(scenario_id);
@@ -322,11 +323,12 @@ static void draw_scores(int scenario_id) {
         lang_text_draw_multiline(305, 0, vec2i{INFO_X, INFO_Y}, INFO_W, FONT_NORMAL_YELLOW);
     }
 
-    uint8_t txt[200];
+    char txt[200];
     debug_text(ctx, txt, INFO_X, -100, 100, "rank", rank, COLOR_FONT_YELLOW);
     debug_text(ctx, txt, INFO_X, -80, 100, "unlocked", unlocked, COLOR_FONT_YELLOW);
     debug_text(ctx, txt, INFO_X, -60, 100, "beaten", beaten, COLOR_FONT_YELLOW);
 }
+
 static void draw_side_panel_info() {
     auto &data = g_window_scenario_selection;
     switch (data.dialog) {
@@ -373,12 +375,12 @@ static void draw_side_panel_info() {
         int scenario_id = scenario_campaign_scenario_id();
 
         // scenario name
-        uint8_t name[300];
+        bstring<300> name;
         string_copy(game_mission_get_name(scenario_id), name, 300);
         int i = index_of_string(name, string_from_ascii("("), 300);
         if (i > 0)
             name[i - 1] = '\0';
-        text_draw_centered(name, INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
+        text_draw_centered(name.c_str(), INFO_X, TITLE_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
         // subtitle
         text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
@@ -446,7 +448,7 @@ static void draw_foreground(int) {
         break;
     }
 
-    uint8_t txt[200];
+    char txt[200];
     debug_text(ctx, txt, INFO_X, -120, 0, "", FILEIO.get_file_version(), COLOR_FONT_YELLOW);
     //    draw_debug_line(txt, INFO_X + 100, -120, 0, "", get_junk2(), COLOR_FONT_YELLOW);
 

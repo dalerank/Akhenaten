@@ -144,7 +144,7 @@ void city_message_apply_sound_interval(int category) {
     }
 }
 
-void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2) {
+void city_message_post_full(bool use_popup, int template_id, const event_ph_t *event, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2) {
     auto& data = g_message_data;
     int id = data.new_message_id();
 
@@ -167,7 +167,6 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
 
-    const event_ph_t* event = g_scenario.events.at(event_id);
     msg->req_resource = event->item.value;
     msg->req_amount = event->amount.value; 
     if (msg->req_amount < 100) {
@@ -183,10 +182,16 @@ void city_message_post_full(bool use_popup, int template_id, int event_id, int p
         msg->req_months_left = event->months_initial;
     }
 
-    const event_ph_t* parent_event = g_scenario.events.at(parent_event_id);
-    msg->req_resource_past = parent_event->item.value;
-    msg->req_amount_past = parent_event->amount.value;
-    msg->req_city_past = parent_event->location_fields[0] - 1;
+    if (parent_event_id >= 0) {
+        const event_ph_t *parent_event = g_scenario.events.at(parent_event_id);
+        msg->req_resource_past = parent_event->item.value;
+        msg->req_amount_past = parent_event->amount.value;
+        msg->req_city_past = parent_event->location_fields[0] - 1;
+    } else {
+        msg->req_resource_past = -1;
+        msg->req_amount_past = -1;
+        msg->req_city_past = -1;
+    }
 
     // default for sound info / template
     int text_id = city_message_get_text_id(template_id);

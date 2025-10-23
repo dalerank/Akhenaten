@@ -360,11 +360,13 @@ struct message_manager_t {
 };
 
 extern message_manager_t g_message_manager;
+struct event_ph_t;
 
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
-void city_message_post_full(bool use_popup, int template_id, int event_id, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
+void city_message_post_full(bool use_popup, int template_id, const event_ph_t* event, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
+
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, int message_type, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay);
 

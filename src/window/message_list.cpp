@@ -120,7 +120,7 @@ static void draw_messages(int total_messages) {
             int oo = 45;
             e_font f = FONT_NORMAL_BLUE;
             color c = COLOR_WHITE;
-            uint8_t str[10];
+            char str[10];
 
             o += oo;
             debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_body_id, c);

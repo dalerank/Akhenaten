@@ -93,32 +93,26 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, e_font font) {
-    text_draw(ctx, string_from_ascii(text), x, y, font, color);
-    string_from_int(str, value, 0);
-    text_draw(ctx, str, x + indent, y, font, color);
+void debug_text(painter &ctx, pstr str, int x, int y, int indent, pcstr text, int value, color color, e_font font) {
+    text_draw(ctx, (const uint8_t *)string_from_ascii(text), x, y, font, color);
+    text_draw(ctx, (uint8_t*)bstring32(value).c_str(), x + indent, y, font, color);
 }
 
-void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, e_font font) {
-    text_draw(ctx, string_from_ascii(text), x, y, font, color);
+void debug_text_a(painter &ctx, pstr str, int x, int y, int indent, pcstr text, color color, e_font font) {
+    text_draw(ctx, (const uint8_t *)string_from_ascii(text), x, y, font, color);
 }
 
-void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color) {
+void debug_text_float(int x, int y, int indent, pcstr text, float value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, (int)value, 0);
-    int l = string_length(str);
-    auto p = &str[l];
-    string_copy(string_from_ascii("."), p, 2);
-    string_from_int(&str[l + 1], (double)(value - (double)(int)value) * 100.0f, 0);
-    text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
+    bstring64 buffer;
+    buffer.printf("0.2f", value);
+    text_draw(buffer.data(), x + indent, y, FONT_SMALL_OUTLINED, color);
 }
 
-void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color) {
+void debug_text_dual_left(int x, int y, int indent, int indent2, pcstr text, int value1, int value2, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, value1, 0);
-    text_draw_left(str, x + indent, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, value2, 0);
-    text_draw_left(str, x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
+    text_draw_left(bstring32(value1).c_str(), x + indent, y, FONT_SMALL_OUTLINED, color);
+    text_draw_left(bstring32(value2).c_str(), x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
 }
 
 void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color col) {
@@ -228,7 +222,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     // globals
     int d = 0;
-    uint8_t str[64];
+    char str[64];
     int b_id = map_building_at(grid_offset);
     building* b = building_get(b_id);
 
@@ -439,8 +433,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         d = map_sprite_animation_at(grid_offset);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 10, FONT_SMALL_OUTLINED, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 10, FONT_SMALL_OUTLINED, COLOR_WHITE);
         }
 
         // STATUES & MONUMENTS
@@ -480,11 +473,11 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         if (!(point.x() % 5) && !(point.y() % 5)) {
             snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
-            debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+            debug_text_a(ctx, str, x, y + 10, 0, str, COLOR_WHITE, FONT_SMALL_PLAIN);
 
             vec2i voff = point.to_view();
             snprintf((char *)str, 48, "(%d,%d) (%d,%d)", pixel.x, pixel.y, voff.x, voff.y);
-            debug_text_a(ctx, str, x, y + 20, 0, (const char*)str, COLOR_BLUE, FONT_SMALL_PLAIN);
+            debug_text_a(ctx, str, x, y + 20, 0, str, COLOR_BLUE, FONT_SMALL_PLAIN);
         }
         break;
 
@@ -492,15 +485,14 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         int image_id = map_image_at(grid_offset);
         const image_t *img = image_get(image_id);
         snprintf((char*)str, 30, "%d", img->isometric_top_height());
-        debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+        debug_text_a(ctx, str, x, y + 10, 0, str, COLOR_WHITE, FONT_SMALL_PLAIN);
         }
         break;
 
     case e_debug_render_floodplain_shore:
         d = map_get_floodplain_edge(point);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         }
         break;
@@ -531,7 +523,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_damage:
         if (b_id && b) {
             snprintf((char *)str, 30, "f:%d/d:%d", b->fire_risk, b->damage_risk);
-            text_draw(ctx, str, x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
+            text_draw(ctx, (uint8_t*)str, x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
         }
         break;
 
@@ -595,8 +587,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_river_shore:
         d = map_terrain_is(grid_offset, TERRAIN_SHORE);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         }
         break;
@@ -641,7 +632,7 @@ void figure::draw_debug() {
     building *b = home();
     building *bdest = destination();
 
-    uint8_t str[10];
+    char str[10];
     vec2i pixel = lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
     pixel.x -= 10;
@@ -733,8 +724,7 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 10, pixel.y + 40, 5, ":", roam_turn_direction, roam_turn_direction ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
 
         pixel.y += 50;
-        string_from_int(str, progress_on_tile, 0);
-        text_draw(ctx, str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
+        text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
     }
 
     if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
@@ -854,7 +844,7 @@ bstring256 get_terrain_type(pcstr def, int type) {
 }
 
 void draw_debug_ui(int x, int y) {
-    uint8_t str[300];
+    char str[300];
 
     painter ctx = game.painter();
     /////// DEBUG PAGES NAME
@@ -865,8 +855,7 @@ void draw_debug_ui(int x, int y) {
 
         color col = COLOR_GREEN;
 
-        string_from_int(str, DB1);
-        text_draw(str, x, y, FONT_SMALL_OUTLINED, col);
+        text_draw(bstring32(DB1).c_str(), x, y, FONT_SMALL_OUTLINED, col);
         text_draw((uint8_t*)string_from_ascii(":"), x + 14, y, FONT_SMALL_OUTLINED, col);
         x += 20;
         switch (DB1) {
@@ -891,8 +880,7 @@ void draw_debug_ui(int x, int y) {
         }
         y += 3;
         x -= 20;
-        string_from_int(str, DB2);
-        text_draw(str, x, y + 10, FONT_SMALL_OUTLINED, col);
+        text_draw(bstring32(DB2).c_str(), x, y + 10, FONT_SMALL_OUTLINED, col);
         text_draw((uint8_t*)string_from_ascii(":"), x + 14, y + 10, FONT_SMALL_OUTLINED, col);
         x += 20;
         switch (DB2) {
@@ -1044,8 +1032,8 @@ void draw_debug_ui(int x, int y) {
         int c8 = 360;
 
         if (g_city.religion.is_god_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", g_city.religion.gods[0].mood, g_city.religion.gods[0].target_mood);
-            debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", g_city.religion.gods[0].wrath_bolts, g_city.religion.gods[0].happy_ankhs);
+            debug_text_dual_left(x, y + 15, c0, c1, "Osiris:", g_city.religion.gods[0].mood, g_city.religion.gods[0].target_mood);
+            debug_text_dual_left(x + c2, y + 15, 0, c1, "", g_city.religion.gods[0].wrath_bolts, g_city.religion.gods[0].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 15, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_OSIRIS));
             debug_text(ctx, str, x + c4, y + 15, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_OSIRIS));
             debug_text(ctx, str, x + c5, y + 15, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
@@ -1054,8 +1042,8 @@ void draw_debug_ui(int x, int y) {
         }
 
         if (g_city.religion.is_god_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", g_city.religion.gods[1].mood, g_city.religion.gods[1].target_mood);
-            debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", g_city.religion.gods[1].wrath_bolts, g_city.religion.gods[1].happy_ankhs);
+            debug_text_dual_left(x, y + 25, c0, c1, "Ra:", g_city.religion.gods[1].mood, g_city.religion.gods[1].target_mood);
+            debug_text_dual_left(x + c2, y + 25, 0, c1, "", g_city.religion.gods[1].wrath_bolts, g_city.religion.gods[1].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 25, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_RA));
             debug_text(ctx, str, x + c4, y + 25, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_RA));
             debug_text(ctx, str, x + c5, y + 25, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_RA));
@@ -1064,8 +1052,8 @@ void draw_debug_ui(int x, int y) {
         }
 
         if (g_city.religion.is_god_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", g_city.religion.gods[2].mood, g_city.religion.gods[2].target_mood);
-            debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", g_city.religion.gods[2].wrath_bolts, g_city.religion.gods[2].happy_ankhs);
+            debug_text_dual_left(x, y + 35, c0, c1, "Ptah:", g_city.religion.gods[2].mood, g_city.religion.gods[2].target_mood);
+            debug_text_dual_left(x + c2, y + 35, 0, c1, "", g_city.religion.gods[2].wrath_bolts, g_city.religion.gods[2].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 35, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_PTAH));
             debug_text(ctx, str, x + c4, y + 35, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_PTAH));
             debug_text(ctx, str, x + c5, y + 35, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
@@ -1074,8 +1062,8 @@ void draw_debug_ui(int x, int y) {
         }
 
         if (g_city.religion.is_god_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", g_city.religion.gods[3].mood, g_city.religion.gods[3].target_mood);
-            debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", g_city.religion.gods[3].wrath_bolts, g_city.religion.gods[3].happy_ankhs);
+            debug_text_dual_left(x, y + 45, c0, c1, "Seth:", g_city.religion.gods[3].mood, g_city.religion.gods[3].target_mood);
+            debug_text_dual_left(x + c2, y + 45, 0, c1, "", g_city.religion.gods[3].wrath_bolts, g_city.religion.gods[3].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 45, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_SETH));
             debug_text(ctx, str, x + c4, y + 45, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_SETH));
             debug_text(ctx, str, x + c5, y + 45, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_SETH));
@@ -1084,8 +1072,8 @@ void draw_debug_ui(int x, int y) {
         }
 
         if (g_city.religion.is_god_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", g_city.religion.gods[4].mood, g_city.religion.gods[4].target_mood);
-            debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", g_city.religion.gods[4].wrath_bolts, g_city.religion.gods[4].happy_ankhs);
+            debug_text_dual_left(x, y + 55, c0, c1, "Bast:", g_city.religion.gods[4].mood, g_city.religion.gods[4].target_mood);
+            debug_text_dual_left(x + c2, y + 55, 0, c1, "", g_city.religion.gods[4].wrath_bolts, g_city.religion.gods[4].happy_ankhs);
             debug_text(ctx, str, x + c3, y + 55, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_BAST));
             debug_text(ctx, str, x + c4, y + 55, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_BAST));
             debug_text(ctx, str, x + c5, y + 55, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_BAST));
@@ -1212,7 +1200,7 @@ void draw_debug_ui(int x, int y) {
         // cursor
         text_draw(dot, x + rc_curr, y + 15, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
         text_draw(string_from_ascii("\'"), x + rc_curr, y + 25, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
-        debug_text_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr);  // current cycle
+        debug_text_float(x + rc_curr + 5, y + 25, 0, "", _c_curr);  // current cycle
         debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_floods.state); // current cycle
 
         debug_text(ctx, str, x, y + 35, 60, "debug:", g_floods.debug_period());
@@ -1279,26 +1267,26 @@ void draw_debug_ui(int x, int y) {
         city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
 
         y += 30;
-        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", mm_view.min.x, mm_view.min.y);
-        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", g_city_view.camera.position.x, g_city_view.camera.position.y);
-        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", mm_view.max.x, mm_view.max.y);
+        debug_text_dual_left(x, y - 15, 90, 40, "---min:", mm_view.min.x, mm_view.min.y);
+        debug_text_dual_left(x, y - 5, 90, 40, "camera:", g_city_view.camera.position.x, g_city_view.camera.position.y);
+        debug_text_dual_left(x, y + 5, 90, 40, "---max:", mm_view.max.x, mm_view.max.y);
 
-        debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
-        debug_text_dual_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
-        debug_text_dual_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
+        debug_text_dual_left(x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
+        debug_text_dual_left(x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
+        debug_text_dual_left(x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
 
-        debug_text_dual_left(str, x, y + 65, 90, 40, "---min:", 0, 0);
-        debug_text_dual_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
-        debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
+        debug_text_dual_left(x, y + 65, 90, 40, "---min:", 0, 0);
+        debug_text_dual_left(x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
+        debug_text_dual_left(x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
 
-        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", g_city_view.viewport.size_pixels.x / 60, g_city_view.viewport.size_pixels.y / 30);
-        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.x, g_city_view.viewport.size_pixels.y);
+        debug_text_dual_left(x, y + 105, 90, 40, "v.tiles:", g_city_view.viewport.size_pixels.x / 60, g_city_view.viewport.size_pixels.y / 30);
+        debug_text_dual_left(x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.x, g_city_view.viewport.size_pixels.y);
 
         debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
-        debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());
+        debug_text_float(x, y + 125, 50 + 40, "", g_zoom.get_scale());
 
-        debug_text_float(str, x, y + 135, 50, "target:", g_zoom.ftarget());
-        debug_text_float(str, x + 100, y + 135, 50, "delta:", g_zoom.fdelta());
+        debug_text_float(x, y + 135, 50, "target:", g_zoom.ftarget());
+        debug_text_float(x + 100, y + 135, 50, "delta:", g_zoom.fdelta());
 
         vec2i pixel = {mouse_get()->x, mouse_get()->y};
         debug_text(ctx, str, x, y + 145, 50, "mouse:", pixel.x);
@@ -1364,10 +1352,9 @@ void draw_debug_ui(int x, int y) {
             // debug_text(ctx, str, (cloud->render_x - x_offset) * scale, (cloud->render_y - y_offset) * scale, 50, "Cloud", i);
             debug_text(ctx, str, x, y - 20, 70, "---cloud ", i);
             debug_text_a(ctx, str, x, y - 10, 70, status_text);
-            debug_text_dual_left(str, x, y, 120, 40, "speed x,y:", cloud->speed.x.current_speed,
-                                 cloud->speed.y.current_speed);
-            debug_text_dual_left(str, x, y + 10, 120, 40, "pos x,y: ", cloud->x, cloud->y);
-            debug_text_dual_left(str, x, y + 20, 120, 40, "render pos x,y: ", cloud->render_x, cloud->render_y);
+            debug_text_dual_left(x, y, 120, 40, "speed x,y:", cloud->speed.x.current_speed, cloud->speed.y.current_speed);
+            debug_text_dual_left(x, y + 10, 120, 40, "pos x,y: ", cloud->x, cloud->y);
+            debug_text_dual_left(x, y + 20, 120, 40, "render pos x,y: ", cloud->render_x, cloud->render_y);
             y += 40;
         }
 
