@@ -16,7 +16,7 @@ void config_show_clouds_properties(bool header) {
             ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
             auto &config = g_clouds.config;
-            game_debug_show_property("Reset Clouds", [] { g_clouds.init_cloud_images(); });
+            game_debug_show_property("Reset Clouds", [i=0] { g_clouds.init_cloud_images(); });
             game_debug_show_property("num_cloud_ellipses", config.num_cloud_ellipses);
             game_debug_show_property("cloud_alpha_increase", config.cloud_alpha_increase);
             game_debug_show_property("cloud_columns", config.cloud_columns);
@@ -36,7 +36,7 @@ void config_show_clouds_properties(bool header) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
                 ImGui::AlignTextToFramePadding();
-                bool anim_open = ImGui::TreeNodeEx(bstring32("Cloud", i), ImGuiTreeNodeFlags_None, "Cloud %d", i);
+                bool anim_open = ImGui::TreeNodeEx(bstring32("Cloud", i).c_str(), ImGuiTreeNodeFlags_None, "Cloud %d", i);
                 ImGui::TableSetColumnIndex(1);
 
                 if (anim_open) {

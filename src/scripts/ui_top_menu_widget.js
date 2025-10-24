@@ -68,7 +68,6 @@ top_menu_widget = {
 		religion 		: menu_item({text: "", parameter: e_debug_show_religion})
 		tutorial 		: menu_item({text: "", parameter: e_debug_show_tutorial})
 		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
-		camera 			: menu_item({text: "", parameter: e_debug_show_camera})
 		tile_cache 		: menu_item({text: "", parameter: e_debug_show_tile_cache})
  		sound_channels  : menu_item({text: "", parameter: e_debug_show_sound_channels})
  		properties		: menu_item({text: "", parameter: e_debug_show_properties})
