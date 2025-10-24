@@ -40,6 +40,7 @@
 #include "graphics/view/view.h"
 #include "city/city_building_menu_ctrl.h"
 #include "empire/empire_traders.h"
+#include "graphics/clouds.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -1308,12 +1309,18 @@ io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version
     auto &data = g_city;
     static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
     for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
-        iob->bind(BIND_SIGNATURE_TILE2I, data.bookmarks.points[i]);
+        iob->bind_tile(data.bookmarks.points[i]);
     }
 });
 
-io_buffer *iob_building_list_small = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(5000);
+io_buffer *iob_city_utilities_data = new io_buffer([] (io_buffer *iob, size_t version) {
+    for (int i = 0; i < 16; ++i) {
+        vec2i dummy;
+        const bool is_valid = (i < g_clouds.clouds.size());
+        vec2i &ref = is_valid ? g_clouds.clouds[i].pos : dummy;
+        iob->bind_vec2i_compat(ref); // 4bytes
+    } // 64 bytes at all
+    iob->bind____skip(4936);
 });
 
 io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {

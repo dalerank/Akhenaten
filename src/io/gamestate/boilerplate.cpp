@@ -287,8 +287,8 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(file_version < 147 ? 32 : 36, true, "floodplain_settings", iob_floodplain_settings);
         FILEIO.push_chunk(288, false, "trade_prices", iob_trade_prices);
         FILEIO.push_chunk(51984, true, "moisture_grid", iob_moisture_grid);
-
         break;
+
     case FILE_FORMAT_MISSION_PAK:
     case FILE_FORMAT_SAVE_FILE:
         FILEIO.push_chunk(4, false, "scenario_mission_index", iob_scenario_mission_id);
@@ -350,7 +350,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(8804, false, "empire_traders", iob_empire_traders);              // +4000 ???
 
         FILEIO.push_chunk(1000, true, "building_list_burning", iob_building_list_burning); // ok
-        FILEIO.push_chunk(1000, true, "building_list_small", iob_building_list_small);     // ok
+        FILEIO.push_chunk(1000, true, "building_list_small", iob_city_utilities_data);     // ok
         FILEIO.push_chunk(8000, true, "building_list_large", iob_building_list_large);     // ok
 
         //                state->tutorial_part1 = create_savegame_piece(32, false, "");
@@ -524,7 +524,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(4, false, "building_extra_highest_id", iob_building_highest_id);  // ok
         FILEIO.push_chunk(8804, false, "empire_traders", iob_empire_traders);               // +4000 ???
         FILEIO.push_chunk(1000, false, "building_list_burning", iob_building_list_burning); // ok
-        FILEIO.push_chunk(1000, false, "building_list_small", iob_building_list_small);     // ok
+        FILEIO.push_chunk(1000, false, "building_list_small", iob_city_utilities_data);     // ok
         FILEIO.push_chunk(8000, false, "building_list_large", iob_building_list_large);     // ok
         FILEIO.push_chunk(32, false, "junk7a", iob_junk7a);                                 // unknown bytes
         FILEIO.push_chunk(24, false, "junk7b", iob_junk7b);                                 // unknown bytes
