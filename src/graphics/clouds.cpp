@@ -8,12 +8,11 @@
 #include "graphics/image.h"
 #include "game/game.h"
 #include "platform/renderer.h"
-
+#include "js/js_game.h"
 #include "dev/debug.h"
 
 #include <cmath>
 
-constexpr int NUM_CLOUD_ELLIPSES = 180;
 constexpr int CLOUD_ALPHA_INCREASE = 16;
 
 constexpr int CLOUD_WIDTH = 64;
@@ -32,10 +31,10 @@ constexpr int PAUSE_MIN_FRAMES = 2;
 
 constexpr float PI = 3.14159265358979323846;
 
-std::vector<atlas_data_t> atlas_pages;
-cloud_data g_cloud_data;
+cloud_data g_clouds;
+cloud_data::config ANK_VARIABLE(clouds_config)
 
-declare_console_ref_float(cloud_speed, g_cloud_data.clouds_speed)
+declare_console_ref_float(cloud_speed, g_clouds.clouds_speed)
 
 struct ellipse {
     int x;
@@ -138,12 +137,10 @@ static void generate_cloud_ellipse(color *pixels, const int width, const  int he
     }
 }
 
-static void init_cloud_images()
-{
+void cloud_data::init_cloud_images() {
     graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_CLOUDS, CLOUD_TEXTURE_WIDTH, CLOUD_TEXTURE_HEIGHT);
-    atlas_pages.reserve(NUM_CLOUDS);
-    for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &g_cloud_data.clouds[i];
+    for (int i = 0; i < clouds.size(); i++) {
+        cloud_type *cloud = &clouds[i];
         atlas_data_t atlas_data;
 
         image_t *img = &cloud->img;
@@ -161,18 +158,18 @@ static void init_cloud_images()
         img->atlas.offset.x = (i % CLOUD_COLUMNS) * CLOUD_WIDTH;
         img->atlas.offset.y = (i / CLOUD_COLUMNS) * CLOUD_HEIGHT;
 
-        atlas_pages.push_back(atlas_data);
+        atlas_pages[i] = atlas_data;
         img->atlas.p_atlas = &atlas_pages.at(i);
     }
 }
 
-static void generate_cloud(cloud_type *cloud) {
+void cloud_data::generate_cloud(cloud_type *cloud) {
     color pixels[CLOUD_WIDTH * CLOUD_HEIGHT] = {};
 
     const int width = random_from_min_to_range(static_cast<int>((CLOUD_WIDTH * 0.15f)), static_cast<int>((CLOUD_WIDTH * 0.2f)));
     const int height = random_from_min_to_range(static_cast<int>((CLOUD_HEIGHT * 0.15f)), static_cast<int>((CLOUD_HEIGHT * 0.2f)));
 
-    for (int i = 0; i < NUM_CLOUD_ELLIPSES; i++) {
+    for (int i = 0; i < clouds_config.num_cloud_ellipses; i++) {
         generate_cloud_ellipse(pixels, width, height);
     }
 
@@ -193,13 +190,14 @@ static void generate_cloud(cloud_type *cloud) {
     cloud->status = e_cloud_status_created;
 }
 
-static bool cloud_intersects(const cloud_type *cloud)
+bool cloud_data::cloud_intersects(const cloud_type *cloud)
 {
-    for (auto &i : g_cloud_data.clouds) {
+    for (auto &i : clouds) {
         const cloud_type *other = &i;
         if (other->status != e_cloud_status_moving) {
             continue;
         }
+
         if (other->pos.x < cloud->pos.x + cloud->side && other->pos.x + other->side > cloud->pos.x &&
             other->pos.y < cloud->pos.y + cloud->side && other->pos.y + other->side > cloud->pos.y) {
             return true;
@@ -208,7 +206,7 @@ static bool cloud_intersects(const cloud_type *cloud)
     return false;
 }
 
-static void position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i limit)
+void cloud_data::position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i limit)
 {
     const int offset_x = random_int_between(0, limit.x / 2);
 
@@ -219,17 +217,16 @@ static void position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i l
         cloud->status = e_cloud_status_moving;
         speed_clear(cloud->speed.x);
         speed_clear(cloud->speed.y);
-        g_cloud_data.movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
+        movement_timeout = random_int_between(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
     }
 }
 
-void clouds_pause()
+void cloud_data::pause()
 {
-    g_cloud_data.pause_frames = PAUSE_MIN_FRAMES;
+    pause_frames = PAUSE_MIN_FRAMES;
 }
 
-void draw_cloud(painter &ctx, const image_t *img, const vec2i pos, const color color, const float scale_x,
-                const float scale_y, const double angle) {
+void cloud_data::draw_cloud(painter &ctx, const image_t *img, const vec2i pos, const color color, const float scale_x, const float scale_y, const double angle) {
     if (!img->atlas.p_atlas) {
         return;
     }
@@ -243,11 +240,11 @@ void draw_cloud(painter &ctx, const image_t *img, const vec2i pos, const color c
         img->width,
         img->height,
     };
+
     ctx.draw(texture, pos, img->atlas.offset, size, color, scale_x, scale_y, angle, ImgFlag_Alpha, true);
 }
 
-void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const vec2i limit)
-{
+void cloud_data::draw(painter &ctx, const vec2i min_pos, const vec2i offset, const vec2i limit) {
    if (!game_features::gameplay_draw_cloud_shadows) {
        return;
    }
@@ -258,22 +255,22 @@ void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const ve
 
     double cloud_speed = 0;
 
-    if (g_cloud_data.pause_frames) {
-        g_cloud_data.pause_frames--;
+    if (pause_frames) {
+        pause_frames--;
     } else {
-        cloud_speed = g_cloud_data.clouds_speed * static_cast<float>(game.game_speed) / 100;
+        cloud_speed = clouds_speed * static_cast<float>(game.game_speed) / 100;
     }
 
-    for (auto & i : g_cloud_data.clouds) {
+    for (auto & i : clouds) {
         cloud_type *cloud = &i;
         if (cloud->status == e_cloud_status_inactive) {
             generate_cloud(cloud);
             continue;
         }
         if (cloud->status == e_cloud_status_created) {
-            if (g_cloud_data.movement_timeout > 0) {
-                g_cloud_data.movement_timeout--;
-            } else if (g_cloud_data.pause_frames <= 0) {
+            if (movement_timeout > 0) {
+                movement_timeout--;
+            } else if (pause_frames <= 0) {
                 position_cloud(cloud, min_pos, limit);
             }
             continue;

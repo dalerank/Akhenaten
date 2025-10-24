@@ -25,7 +25,7 @@ void config_show_clouds_properties(bool header) {
                 ImGui::TableSetColumnIndex(1);
 
                 if (anim_open) {
-                    const cloud_type *cloud = &g_cloud_data.clouds[i];
+                    const cloud_type *cloud = &g_clouds.clouds[i];
                     e_cloud_status status = cloud->status;
                     bstring32 status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
 
