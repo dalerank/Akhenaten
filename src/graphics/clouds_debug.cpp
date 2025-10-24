@@ -15,6 +15,21 @@ void config_show_clouds_properties(bool header) {
         {
             ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
+            auto &config = g_clouds.config;
+            game_debug_show_property("Reset Clouds", [] { g_clouds.init_cloud_images(); });
+            game_debug_show_property("num_cloud_ellipses", config.num_cloud_ellipses);
+            game_debug_show_property("cloud_alpha_increase", config.cloud_alpha_increase);
+            game_debug_show_property("cloud_columns", config.cloud_columns);
+            game_debug_show_property("cloud_rows", config.cloud_rows);
+            game_debug_show_property("cloud_width", config.cloud_width);
+            game_debug_show_property("cloud_height", config.cloud_height);
+            game_debug_show_property("cloud_size_ratio", config.cloud_size_ratio);
+            game_debug_show_property("cloud_scale", config.cloud_scale);
+            game_debug_show_property("cloud_min_creation_timeout", config.cloud_min_creation_timeout);
+            game_debug_show_property("cloud_max_creation_timeout", config.cloud_max_creation_timeout);
+            game_debug_show_property("pause_min_frames", config.pause_min_frames);
+
+            bstring32 status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
             for (int i = 0; i < g_clouds.clouds.size(); i++) {
                 ImGui::PushID(bstring32("CloudTable", i).hash());
 
@@ -27,7 +42,6 @@ void config_show_clouds_properties(bool header) {
                 if (anim_open) {
                     const auto &cloud = g_clouds.clouds[i];
                     e_cloud_status status = cloud.status;
-                    bstring32 status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
 
                     game_debug_show_property("status ", status_text[status]);
                     game_debug_show_property("speedx ", cloud.speed.x.current_speed);
