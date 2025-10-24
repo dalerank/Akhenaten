@@ -77,7 +77,6 @@ top_menu_widget = {
  		make_screenshot : menu_item({text: "", parameter: e_debug_make_screenshot})
  		make_full_screenshot : menu_item({text: "", parameter: e_debug_make_full_screenshot})
  		write_video     : menu_item({text: "", parameter: e_debug_write_video})
-		show_clouds     : menu_item({text: "", parameter: e_debug_show_clouds})
 	}
 
 	debug_render : {

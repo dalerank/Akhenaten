@@ -183,8 +183,7 @@ static void generate_cloud(cloud_type *cloud) {
 
     img->atlas.p_atlas->texture = graphics_renderer()->get_custom_texture(CUSTOM_IMAGE_CLOUDS);
 
-    cloud->x = 0;
-    cloud->y = 0;
+    cloud->pos = { 0, 0 };
     cloud->scale_x = 1 / static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
     cloud->scale_y = 1 / static_cast<float>((1.5 - random_fractional()) / CLOUD_SCALE);
     const int scaled_width = static_cast<int>(CLOUD_WIDTH * cloud->scale_x);
@@ -201,8 +200,8 @@ static bool cloud_intersects(const cloud_type *cloud)
         if (other->status != e_cloud_status_moving) {
             continue;
         }
-        if (other->x < cloud->x + cloud->side && other->x + other->side > cloud->x &&
-            other->y < cloud->y + cloud->side && other->y + other->side > cloud->y) {
+        if (other->pos.x < cloud->pos.x + cloud->side && other->pos.x + other->side > cloud->pos.x &&
+            other->pos.y < cloud->pos.y + cloud->side && other->pos.y + other->side > cloud->pos.y) {
             return true;
         }
     }
@@ -213,8 +212,8 @@ static void position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i l
 {
     const int offset_x = random_int_between(0, limit.x / 2);
 
-    cloud->x = limit.x - offset_x + cloud->side - min_pos.x;
-    cloud->y = (limit.y - offset_x) / 2 - cloud->side - min_pos.y;
+    cloud->pos = { limit.x - offset_x + cloud->side - min_pos.x,
+                    (limit.y - offset_x) / 2 - cloud->side - min_pos.y };
 
     if (!cloud_intersects(cloud)) {
         cloud->status = e_cloud_status_moving;
@@ -229,7 +228,7 @@ void clouds_pause()
     g_cloud_data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
-void draw_cloud(painter &ctx, const image_t *img, const int x, const int y, const color color, const float scale_x,
+void draw_cloud(painter &ctx, const image_t *img, const vec2i pos, const color color, const float scale_x,
                 const float scale_y, const double angle) {
     if (!img->atlas.p_atlas) {
         return;
@@ -240,7 +239,6 @@ void draw_cloud(painter &ctx, const image_t *img, const int x, const int y, cons
         return;
     }
 
-    const vec2i pos = {x, y};
     const vec2i size = {
         img->width,
         img->height,
@@ -280,22 +278,21 @@ void clouds_draw(painter &ctx, const vec2i min_pos, const vec2i offset, const ve
             }
             continue;
         }
-        if (cloud->x < -cloud->side || cloud->y >= limit.y) {
+        if (cloud->pos.x < -cloud->side || cloud->pos.y >= limit.y) {
             cloud->status = e_cloud_status_inactive;
             continue;
         }
 
-        cloud->render_x = cloud->x - offset.x;
-        cloud->render_y = cloud->y - offset.y;
+        cloud->render_pos = cloud->pos - offset;
 
         speed_set_target(cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
         // FIXME: smoothen clouds somehow, right now they are blocky
         draw_cloud(ctx, &cloud->img,
-            cloud->render_x, cloud->render_y, COLOR_MASK_NONE,
+            cloud->render_pos, COLOR_MASK_NONE,
             cloud->scale_x, cloud->scale_y, cloud->angle);
 
-        cloud->x += speed_get_delta(cloud->speed.x);
-        cloud->y += speed_get_delta(cloud->speed.y);
+        cloud->pos.x += speed_get_delta(cloud->speed.x);
+        cloud->pos.y += speed_get_delta(cloud->speed.y);
     }
 }

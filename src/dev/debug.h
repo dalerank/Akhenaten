@@ -33,7 +33,6 @@ enum e_debug_option {
     e_debug_make_screenshot,
     e_debug_make_full_screenshot,
     e_debug_write_video,
-    e_debug_show_clouds,
 
     e_debug_opt_size,
 };

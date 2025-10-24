@@ -7,14 +7,13 @@
 
 ANK_REGISTER_PROPS_ITERATOR(config_show_migration_properties);
 void config_show_migration_properties(bool header) {
-    static bool _debug_migration_open = false;
-
     if (header) {
-        ImGui::Checkbox("Migration", &_debug_migration_open);
         return;
-    }
+    }    
+    bool common_open = ImGui::TreeNodeEx("Migration", ImGuiTreeNodeFlags_None, "Migration");
+    if (common_open) {
+        ImGui::BeginTable("Migration", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-    if (_debug_migration_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
         auto &migration = g_city.migration;
         game_debug_show_property("invading_cap", migration.invading_cap);
         game_debug_show_property("migration_cap", migration.migration_cap);
@@ -35,5 +34,7 @@ void config_show_migration_properties(bool header) {
         game_debug_show_property("nobles_leave_city_this_year", migration.nobles_leave_city_this_year);
 
         ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 }

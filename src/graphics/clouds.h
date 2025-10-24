@@ -22,10 +22,8 @@ struct cloud_speed {
 
 struct cloud_type {
     image_t img;
-    int x = 0;
-    int y = 0;
-    int render_x = 0;
-    int render_y = 0;
+    vec2i pos = { 0, 0 };
+    vec2i render_pos = { 0, 0 };
     e_cloud_status status = e_cloud_status_inactive;
     cloud_speed speed = {};
     float scale_x = 1.f;
