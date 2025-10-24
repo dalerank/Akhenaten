@@ -70,7 +70,6 @@ top_menu_widget = {
 		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
 		camera 			: menu_item({text: "", parameter: e_debug_show_camera})
 		tile_cache 		: menu_item({text: "", parameter: e_debug_show_tile_cache})
- 		sentiment 		: menu_item({text: "", parameter: e_debug_show_sentiment})
  		sound_channels  : menu_item({text: "", parameter: e_debug_show_sound_channels})
  		properties		: menu_item({text: "", parameter: e_debug_show_properties})
  		show_console    : menu_item({text: "", parameter: e_debug_show_console})
