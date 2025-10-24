@@ -15,9 +15,6 @@ void config_show_sentiment_properties(bool header) {
     if (common_open) {
         ImGui::BeginTable("Sentiment", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        auto &migration = g_city.migration;
-        game_debug_show_property("invading_cap", migration.invading_cap);
-
         auto &sentiment = g_city.sentiment;
         game_debug_show_property("value:", sentiment.value);
         game_debug_show_property("previous_value:", sentiment.previous_value);

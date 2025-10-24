@@ -197,7 +197,6 @@ void top_menu_widget_t::debug_opt_text(int opt, bool v) {
         {"Religion ON", "Religion OFF"},
         {"Tutorial ON", "Tutorial OFF"},
         {"Floods ON", "Floods OFF"},
-        {"Camera ON", "Camera OFF"},
         {"Tile Cache ON", "Tile Cache OFF"},
         {"Sound Channels ON", "Sound Channels OFF"},
         {"Properties ON", "Properties OFF"},
