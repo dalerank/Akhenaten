@@ -15,7 +15,7 @@ void config_show_clouds_properties(bool header) {
         {
             ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-            for (int i = 0; i < NUM_CLOUDS; i++) {
+            for (int i = 0; i < g_clouds.clouds.size(); i++) {
                 ImGui::PushID(bstring32("CloudTable", i).hash());
 
                 ImGui::TableNextRow();
@@ -25,15 +25,15 @@ void config_show_clouds_properties(bool header) {
                 ImGui::TableSetColumnIndex(1);
 
                 if (anim_open) {
-                    const cloud_type *cloud = &g_clouds.clouds[i];
-                    e_cloud_status status = cloud->status;
+                    const auto &cloud = g_clouds.clouds[i];
+                    e_cloud_status status = cloud.status;
                     bstring32 status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
 
                     game_debug_show_property("status ", status_text[status]);
-                    game_debug_show_property("speedx ", cloud->speed.x.current_speed);
-                    game_debug_show_property("speedy ", cloud->speed.y.current_speed);
-                    game_debug_show_property("pos", cloud->pos);
-                    game_debug_show_property("render_pos", cloud->render_pos);
+                    game_debug_show_property("speedx ", cloud.speed.x.current_speed);
+                    game_debug_show_property("speedy ", cloud.speed.y.current_speed);
+                    game_debug_show_property("pos", cloud.pos);
+                    game_debug_show_property("render_pos", cloud.render_pos);
 
                     ImGui::TreePop();
                 }
