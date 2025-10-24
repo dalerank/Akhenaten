@@ -36,6 +36,7 @@ import building_menu
 import desirability
 import kingdome_relation
 import floodplain
+import clouds
 import ui_advisors_window
 import ui_terrain_info
 import ui_figure_info

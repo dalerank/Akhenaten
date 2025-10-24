@@ -33,14 +33,25 @@ struct cloud_type {
 };
 
 struct cloud_data {
-    cloud_type clouds[NUM_CLOUDS];
+    struct config {
+        int num_cloud_ellipses = 180;
+    };
+
+    std::array<cloud_type, NUM_CLOUDS> clouds;
+    std::array<atlas_data_t, NUM_CLOUDS> atlas_pages;
+
     int movement_timeout = 0;
     int pause_frames = 0;
     float clouds_speed = CLOUDS_SPEED_DEFAULT;
+    
+    void init_cloud_images();
+    bool cloud_intersects(const cloud_type *cloud);
+    void position_cloud(cloud_type *cloud, const vec2i min_pos, const vec2i limit);
+    void pause();
+    void draw_cloud(painter &ctx, const image_t *img, const vec2i pos, const color color, const float scale_x, const float scale_y, const double angle);
+    void draw(painter &ctx, const vec2i min_pos, const vec2i offset, const vec2i limit);
+    void generate_cloud(cloud_type *cloud);
 };
+ANK_CONFIG_STRUCT(cloud_data::config, num_cloud_ellipses)
 
-extern cloud_data g_cloud_data;
-
-void clouds_pause();
-
-void clouds_draw(painter &ctx, vec2i min_pos, vec2i offset, vec2i limit);
+extern cloud_data g_clouds;

@@ -130,7 +130,7 @@ void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
 
 void screen_city_t::update_clouds(painter &ctx) {
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
-        clouds_pause();
+        g_clouds.pause();
     }
 
     auto mm_view = g_city_view.get_scrollable_pixel_limits();
@@ -144,7 +144,7 @@ void screen_city_t::update_clouds(painter &ctx) {
         GRID_LENGTH * TILE_HEIGHT_PIXELS,
     };
 
-    clouds_draw(ctx, mm_view.min, offset, limit);
+    g_clouds.draw(ctx, mm_view.min, offset, limit);
 }
 
 void screen_city_t::clear_current_tile() {
