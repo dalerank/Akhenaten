@@ -29,7 +29,7 @@ void config_show_clouds_properties(bool header) {
             game_debug_show_property("cloud_max_creation_timeout", config.cloud_max_creation_timeout);
             game_debug_show_property("pause_min_frames", config.pause_min_frames);
 
-            bstring32 status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
+            pcstr status_text[3] = { "INACTIVE", "CREATED", "MOVING" };
             for (int i = 0; i < g_clouds.clouds.size(); i++) {
                 ImGui::PushID(bstring32("CloudTable", i).hash());
 

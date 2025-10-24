@@ -1109,29 +1109,6 @@ void draw_debug_ui(int x, int y) {
         }
     }
 
-    if (g_debug_show_opts[e_debug_show_sentiment]) {
-        int cl = 180;
-        debug_text(ctx, str, x, y + 1, cl, "value:", g_city.sentiment.value);
-        debug_text(ctx, str, x, y + 13, cl, "previous_value:", g_city.sentiment.previous_value);
-        debug_text(ctx, str, x, y + 25, cl, "message_delay:", g_city.sentiment.message_delay);
-        debug_text(ctx, str, x, y + 37, cl, "include_tents:", g_city.sentiment.include_huts);
-        debug_text(ctx, str, x, y + 49, cl, "unemployment_pct:", g_city.sentiment.unemployment_pct);
-        debug_text(ctx, str, x, y + 61, cl, "wages:", g_city.sentiment.wages);
-        debug_text(ctx, str, x, y + 73, cl, "low_mood_cause:", g_city.sentiment.low_mood_cause);
-        debug_text(ctx, str, x, y + 85, cl, "protesters:", g_city.sentiment.protesters);
-        debug_text(ctx, str, x, y + 97, cl, "criminals:", g_city.sentiment.criminals);
-        debug_text(ctx, str, x, y + 109, cl, "can_create_mugger:", g_city.sentiment.can_create_mugger);
-        debug_text(ctx, str, x, y + 121, cl, "can_create_protestor:", g_city.sentiment.can_create_protestor);
-        debug_text(ctx, str, x, y + 133, cl, "last_mugger_message:", g_city.sentiment.last_mugger_message);
-        debug_text(ctx, str, x, y + 145, cl, "contribution_taxes:", g_city.sentiment.contribution_taxes);
-        debug_text(ctx, str, x, y + 157, cl, "contribution_wages:", g_city.sentiment.contribution_wages);
-        debug_text(ctx, str, x, y + 169, cl, "contribution_employment:", g_city.sentiment.contribution_employment);
-        debug_text(ctx, str, x, y + 181, cl, "penalty_huts:", g_city.sentiment.contribution_penalty_huts);
-        debug_text(ctx, str, x, y + 193, cl, "monuments:", g_city.sentiment.contribution_monuments);
-        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", g_city.sentiment.contribution_religion_coverage);
-        y += 210;
-    }
-
     /////// FLOODS
     if (g_debug_show_opts[e_debug_show_floods]) {
         float _c_curr = g_floods.current_cycle();

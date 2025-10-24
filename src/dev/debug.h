@@ -26,7 +26,6 @@ enum e_debug_option {
     e_debug_show_floods,
     e_debug_show_camera,
     e_debug_show_tile_cache,
-    e_debug_show_sentiment,
     e_debug_show_sound_channels,
     e_debug_show_properties,
     e_debug_show_console,
