@@ -19,7 +19,6 @@ extern int debug_range_4;
 
 enum e_debug_option {
     e_debug_show_pages = 0,
-    e_debug_show_game_time,
     e_debug_show_build_planner,
     e_debug_show_religion,
     e_debug_show_tutorial,

@@ -949,23 +949,6 @@ void draw_debug_ui(int x, int y) {
         x -= 20;
     }
 
-    /////// TIME
-    if (g_debug_show_opts[e_debug_show_game_time]) {
-        debug_text(ctx, str, x, y + 15, 50, "tick:", game.simtime.tick);
-        debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", g_floods.is_start_cycle());
-        debug_text(ctx, str, x, y + 25, 50, "cycle:", g_floods.current_cycle());
-        debug_text(ctx, str, x + 90, y + 25, 60, "frame:", g_floods.current_subcycle());
-
-        debug_text(ctx, str, x, y + 35, 50, "day:", game.simtime.day);
-        debug_text(ctx, str, x, y + 45, 50, "month:", game.simtime.month);
-        debug_text(ctx, str, x, y + 55, 50, "year:", game.simtime.year);
-        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", game.simtime.absolute_tick(true)); // absolute tick of the year
-        debug_text(ctx, str, x, y + 75, 60, "year tick:", game.simtime.absolute_tick(false)); // absolute tick of the year
-        debug_text(ctx, str, x, y + 85, 60, "abs. day:", game.simtime.absolute_day(true));   // absolute day of the year
-        debug_text(ctx, str, x, y + 95, 60, "year day:", game.simtime.absolute_day(false));   // absolute day of the year
-        y += 80;
-    }
-
     /////// BUILD PLANNER
     if (g_debug_show_opts[e_debug_show_build_planner]) {
         int cl = 90;
