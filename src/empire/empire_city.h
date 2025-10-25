@@ -15,6 +15,7 @@ struct empire_city {
 
     uint8_t in_use; // this can be 2, so it's an int!
     e_empire_city type;
+    uint8_t lookup_id;
     uint8_t name_id;
     int route_id;
     bool is_open;

@@ -115,7 +115,11 @@ void empire_t::update_month() {
 }
 
 void empire_t::clear_cities_data() {
-    memset(cities, 0, sizeof(cities));
+    std::fill_n(cities, MAX_CITIES, empire_city{});
+
+    for (int i = 0; i < MAX_CITIES; ++i) {
+        cities[i].lookup_id = i;
+    }
 }
 
 empire_city* empire_t::city(int city_id) {
@@ -256,7 +260,8 @@ void empire_t::generate_traders() {
         }
 
         if (g_city.generate_trader_from(city)) {
-            g_empire_traders.create_trader(city.route_id, std::distance(cities, &city));
+            int lookup_id = std::distance(cities, &city);
+            g_empire_traders.create_trader(city.route_id, lookup_id);
             break;
         }
     }
@@ -431,6 +436,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < g_empire.get_cities().size(); i++) {
         empire_city& city = g_empire.get_cities()[i];
+        city.lookup_id = i;
         iob->bind_u8(city.in_use);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &city.type);

@@ -10,13 +10,17 @@ ANK_REGISTER_PROPS_ITERATOR(config_load_selected_empire_city_properties);
 ANK_REGISTER_PROPS_ITERATOR(config_load_all_empire_city_properties);
 
 void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
-    ImGui::PushID(0x80000000 | c->name_id);
+    if (!c->in_use) {
+        return;
+    }
+
+    ImGui::PushID(0x80000000 | c->lookup_id);
 
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
     pcstr city_name = ui::str(195, c->name_id);
-    bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_DefaultOpen, "%s", city_name);
+    bool common_open = ImGui::TreeNodeEx(city_name, ImGuiTreeNodeFlags_None, "%s", city_name);
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
@@ -82,35 +86,41 @@ void game_debug_show_properties_object(pcstr prefix, empire_city *c) {
 }
 
 void config_load_selected_empire_city_properties(bool header) {
-    static bool _debug_city_open = true;
-
     if (header) {
-        ImGui::Checkbox("Selected Empire City", &_debug_city_open);
         return;
     }
 
     int selected_object = g_empire_map.selected_object();
     int selected_city = selected_object ? g_empire.get_city_for_object(selected_object - 1) : 0;
+    
+    bool common_open = ImGui::TreeNodeEx("Selected Empire City", ImGuiTreeNodeFlags_None, "Selected Empire City");
+    if (common_open) {
+        if (selected_city > 0) {
+            ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+            empire_city *c = g_empire.city(selected_city);
+            game_debug_show_properties_object("City", c);
+            ImGui::EndTable();
+        } else {
+            ImGui::Text("No selected empire city");
+        }
 
-    if (_debug_city_open && selected_city > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        empire_city *c = g_empire.city(selected_city);
-        game_debug_show_properties_object("City", c);
-        ImGui::EndTable();
+        ImGui::TreePop();
     }
 }
 
 void config_load_all_empire_city_properties(bool header) {
-    static bool _debug_city_open = false;
-
     if (header) {
-        ImGui::Checkbox("Empire Cities", &_debug_city_open);
         return;
     }
 
-    if (_debug_city_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    bool common_open = ImGui::TreeNodeEx("Empire Cities", ImGuiTreeNodeFlags_None, "Empire Cities");
+    if (common_open) {
+        ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
         for (auto &city : g_empire.get_cities()) {
             game_debug_show_properties_object("City", &city);
         }
         ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 }
