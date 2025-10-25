@@ -11,7 +11,7 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_DefaultOpen, "Event %d", e.event_id);
+    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_None, "Event %d", e.event_id);
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
@@ -67,19 +67,20 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_event_properties);
 void config_load_event_properties(bool header) {
-    static bool _debug_events_open = false;
-
     if (header) {
-        ImGui::Checkbox("Events", &_debug_events_open);
         return;
     } 
 
-    if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    bool common_open = ImGui::TreeNodeEx("Events", ImGuiTreeNodeFlags_None, "Events");
+    if (common_open) {
+        ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
         for (int i = 0; i < g_scenario.events.events_count(); ++i) {
             event_ph_t *evt = g_scenario.events.at(i);
             assert(evt);
             game_debug_show_properties_object("Events", *evt);
         }
         ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 }
