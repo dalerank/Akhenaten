@@ -19,7 +19,6 @@ extern int debug_range_4;
 
 enum e_debug_option {
     e_debug_show_pages = 0,
-    e_debug_show_tutorial,
     e_debug_show_floods,
     e_debug_show_tile_cache,
     e_debug_show_sound_channels,
