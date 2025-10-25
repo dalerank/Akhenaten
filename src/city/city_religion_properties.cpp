@@ -69,20 +69,22 @@ void game_debug_show_properties_object(pcstr prefix, city_religion_t &religion, 
 }
 
 void config_load_god_properties(bool header) {
-    static bool _debug_gods_open = false;
-
     if (header) {
-        ImGui::Checkbox("Gods", &_debug_gods_open);
         return;
     } 
 
     auto &religion = g_city.religion;
-    if (_debug_gods_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        game_debug_show_properties_religion("Religion", religion);
+    bool common_open = ImGui::TreeNodeEx("Religion", ImGuiTreeNodeFlags_None, "Religion");
+    if (common_open) {
+        if (ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+            game_debug_show_properties_religion("Religion", religion);
 
-        for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
-            game_debug_show_properties_object("God", religion, g_city.religion.gods[i]);
+            for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
+                game_debug_show_properties_object("God", religion, g_city.religion.gods[i]);
+            }
+            ImGui::EndTable();
         }
-        ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 }

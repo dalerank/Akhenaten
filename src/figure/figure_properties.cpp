@@ -144,16 +144,21 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
 }
 
 void config_load_figure_properties(bool header) {
-    static bool _debug_figure_open = true;
-
     if (header) {
-        ImGui::Checkbox("Figure", &_debug_figure_open);
         return;
     } 
 
-    if (_debug_figure_open && g_debug_figure_id > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        figure *f = figure_get(g_debug_figure_id);
-        game_debug_show_properties_object("Figure", f);
-        ImGui::EndTable();
+    bool common_open = ImGui::TreeNodeEx("Figure", ImGuiTreeNodeFlags_None, "Figure");
+    if (common_open) {
+        if (g_debug_figure_id > 0) {
+            ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+            figure *f = figure_get(g_debug_figure_id);
+            game_debug_show_properties_object("Figure", f);
+            ImGui::EndTable();
+        } else {
+            ImGui::Text("No selected figure");
+        }
+
+        ImGui::TreePop();
     }
 }
