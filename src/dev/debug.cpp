@@ -6,6 +6,9 @@
 #include "graphics/text.h"
 
 #include "graphics/graphics.h"
+#include "widget/debug_console.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 
 #include "building/monuments.h"
 #include "building/building_entertainment.h"
@@ -58,10 +61,9 @@ game_debug_t g_debug;
 bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
-const token_holder<e_debug_option, e_debug_show_pages, e_debug_opt_size> ANK_CONFIG_ENUM(e_debug_option_tokens);
+const token_holder<e_debug_option, e_debug_show_floods, e_debug_opt_size> ANK_CONFIG_ENUM(e_debug_option_tokens);
 
 declare_console_var_int(debugrender, 0);
-declare_console_var_int(debugtile, 0);
 declare_console_var_int(debugbuildingid, 0);
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
@@ -844,111 +846,23 @@ bstring256 get_terrain_type(pcstr def, int type) {
     return buffer;
 }
 
+ANK_REGISTER_PROPS_ITERATOR(config_show_debug_properties);
+void config_show_debug_properties(bool header) {
+    if (header) {
+        return;
+    }
+
+    ImGui::BeginTable("Debug", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+
+    game_debug_show_property("Render Mode", e_debug_render_tokens.name((e_debug_render)debugrender()) );
+
+    ImGui::EndTable();
+}
+
 void draw_debug_ui(int x, int y) {
     char str[300];
 
     painter ctx = game.painter();
-    /////// DEBUG PAGES NAME
-    if (g_debug_show_opts[e_debug_show_pages]) {
-        y += 13;
-        int DB1 = abs(debugtile()) % 7;
-        int DB2 = abs(debugrender()) % 20;
-
-        color col = COLOR_GREEN;
-
-        text_draw(bstring32(DB1).c_str(), x, y, FONT_SMALL_OUTLINED, col);
-        text_draw((uint8_t*)string_from_ascii(":"), x + 14, y, FONT_SMALL_OUTLINED, col);
-        x += 20;
-        switch (DB1) {
-        case 1:
-            text_draw((uint8_t*)string_from_ascii("ACTION / STATE IDS"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 2:
-            text_draw((uint8_t*)string_from_ascii("ROUTING"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 3:
-            text_draw((uint8_t*)string_from_ascii("RESOURCES / CARRYING"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 4:
-            text_draw((uint8_t*)string_from_ascii("HOME IDS"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 5:
-            text_draw((uint8_t*)string_from_ascii("FESTIVAL"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 6:
-            text_draw((uint8_t*)string_from_ascii("CROSS-COUNTRY"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        }
-        y += 3;
-        x -= 20;
-        text_draw(bstring32(DB2).c_str(), x, y + 10, FONT_SMALL_OUTLINED, col);
-        text_draw((uint8_t*)string_from_ascii(":"), x + 14, y + 10, FONT_SMALL_OUTLINED, col);
-        x += 20;
-        switch (DB2) {
-        default:
-            break;
-        case e_debug_render_building:
-            text_draw((uint8_t*)string_from_ascii("BUILDING IDS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 2:
-            text_draw((uint8_t*)string_from_ascii("DRAW-TILES AND SIZES"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 3:
-            text_draw((uint8_t*)string_from_ascii("ROADS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 4:
-            text_draw((uint8_t*)string_from_ascii("ROUTING DISTANCE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 5:
-            text_draw((uint8_t*)string_from_ascii("CITIZEN ROUTING GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 6:
-            text_draw((uint8_t*)string_from_ascii("MOISTURE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 7:
-            text_draw((uint8_t*)string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 8:
-            text_draw((uint8_t*)string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 9:
-            text_draw((uint8_t*)string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 10:
-            text_draw((uint8_t*)string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 11:
-            text_draw((uint8_t*)string_from_ascii("LABOR"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 12:
-            text_draw((uint8_t*)string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 13:
-            text_draw((uint8_t*)string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 14:
-            text_draw((uint8_t*)string_from_ascii("IMAGE FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 15:
-            text_draw((uint8_t*)string_from_ascii("MARSHLAND DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 16:
-            text_draw((uint8_t*)string_from_ascii("MARSHLAND"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 17:
-            text_draw((uint8_t*)string_from_ascii("TERRAIN TYPE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 18:
-            text_draw((uint8_t*)string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 19:
-            text_draw((uint8_t*)string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        }
-        y += 10;
-        x -= 20;
-    }
-
     /////// RANDOM
     if (false) {
         auto randm = random_data_struct();
@@ -1096,11 +1010,7 @@ console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
     bind_debug_console_var_bool(name, v);
 }
 
-void game_debug_t::init() {
-    events::subscribe([] (event_debug_tile_change ev) {
-        debugtile.value += ev.value;
-    });    
-    
+void game_debug_t::init() {    
     events::subscribe([] (event_debug_render_change ev) {
         debugrender.value += ev.value;
     });
