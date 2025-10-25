@@ -967,18 +967,6 @@ void draw_debug_ui(int x, int y) {
         y += 100;
     }
 
-    if (g_debug_show_opts[e_debug_show_sound_channels]) {
-        const auto &channels = g_sound.channels();
-        int cl = 180;
-        for (const auto &ch: channels) {
-            if (!ch.playing) {
-                continue;
-            }
-            debug_text(ctx, str, x, y + 1, cl, bstring256().printf("%03u: L%03u: R:%03u: %s", &ch - channels.begin(), ch.left_pan, ch.right_pan, ch.filename.c_str()).c_str(), 0);
-            y += 12;
-        }
-    }
-
     /////// FLOODS
     if (g_debug_show_opts[e_debug_show_floods]) {
         float _c_curr = g_floods.current_cycle();

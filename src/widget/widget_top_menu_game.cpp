@@ -193,7 +193,6 @@ void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     static option debug_text_opt[e_debug_opt_size] = {
         {"Pages ON", "Pages OFF"},
         {"Floods ON", "Floods OFF"},
-        {"Sound Channels ON", "Sound Channels OFF"},
         {"Properties ON", "Properties OFF"},
         {"Show console", "Show console"},
         {"Screenshot", "Screenshot"},
