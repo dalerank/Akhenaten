@@ -7,6 +7,7 @@ import math
 import ui_common
 import ui_main_menu
 import rating_points
+import gods
 import common
 import images
 import city_sounds
