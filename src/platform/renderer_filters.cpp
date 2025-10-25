@@ -128,13 +128,18 @@ void config_load_filter_properties(bool header) {
 
     bool filter_changed = false;
     if (header) {
-        ImGui::Checkbox("Filters", &_debug_filter_open);
         return;
     }
 
-    if (_debug_filter_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    bool common_open = ImGui::TreeNodeEx("Filters", ImGuiTreeNodeFlags_None, "Filters");
+    if (common_open) {
+        ImGui::BeginTable("Filters", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+
         filter_changed = platform_render_bilaterial_options();
+
         ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 
     if (filter_changed) {
