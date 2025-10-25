@@ -15,7 +15,7 @@ void config_show_sound_properties(bool header) {
 
     bool common_open = ImGui::TreeNodeEx("Sound", ImGuiTreeNodeFlags_None, "Sound");
     if (common_open) {
-        ImGui::BeginTable("Religion", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+        ImGui::BeginTable("Sound", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
         const auto &channels = g_sound.channels();
         int cl = 180;
