@@ -25,6 +25,8 @@
 #include "dev/debug.h"
 #include "city/city_warnings.h"
 #include "game/game.h"
+#include "core/stable_array.h"
+#include "js/js_game.h"
 
 #include <algorithm>
 #include <array>
@@ -70,7 +72,10 @@ declare_console_command_p(ranotrade) {
     g_warning_manager.show_console_var("Ra no month trade %d", nomonth);
 }
 
-const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
+stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");
+
+
+e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
 
 void city_religion_t::reset() {
     static auto &city_data = g_city;
@@ -1142,4 +1147,8 @@ bool city_religion_t::osiris_create_shipwreck_flotsam() {
     } else {
         return false;
     }
+}
+
+const god_state::static_params_t &god_state::static_params() const {
+    return gods_static_data[type];
 }

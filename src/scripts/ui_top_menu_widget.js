@@ -63,7 +63,6 @@ top_menu_widget = {
 
 	debug {
 		pages 			: menu_item({text: "", parameter: e_debug_show_pages})
-		religion 		: menu_item({text: "", parameter: e_debug_show_religion})
 		tutorial 		: menu_item({text: "", parameter: e_debug_show_tutorial})
 		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
 		tile_cache 		: menu_item({text: "", parameter: e_debug_show_tile_cache})

@@ -192,7 +192,6 @@ void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
     static option debug_text_opt[e_debug_opt_size] = {
         {"Pages ON", "Pages OFF"},
-        {"Religion ON", "Religion OFF"},
         {"Tutorial ON", "Tutorial OFF"},
         {"Floods ON", "Floods OFF"},
         {"Tile Cache ON", "Tile Cache OFF"},
