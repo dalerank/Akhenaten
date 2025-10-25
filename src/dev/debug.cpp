@@ -949,39 +949,6 @@ void draw_debug_ui(int x, int y) {
         x -= 20;
     }
 
-    /////// BUILD PLANNER
-    if (g_debug_show_opts[e_debug_show_build_planner]) {
-        int cl = 90;
-        debug_text(ctx, str, x, y + 15, cl, "type:", g_city_planner.build_type);
-        debug_text(ctx, str, x, y + 25, cl, "in progress:", g_city_planner.in_progress);
-        debug_text(ctx, str, x, y + 35, cl, "draw as con.:", g_city_planner.draw_as_constructing);
-        debug_text(ctx, str, x, y + 45, cl, "orientation:", g_city_planner.absolute_orientation);
-        debug_text(ctx, str, x + 40, y + 45, cl, "", g_city_planner.relative_orientation);
-        debug_text(ctx, str, x, y + 55, cl, "variant:", g_city_planner.building_variant);
-        debug_text(ctx, str, x, y + 65, cl, "start:", g_city_planner.start.x());
-        debug_text(ctx, str, x + 40, y + 65, cl, "", g_city_planner.start.y());
-        debug_text(ctx, str, x, y + 75, cl, "end:", g_city_planner.end.x());
-        debug_text(ctx, str, x + 40, y + 75, cl, "", g_city_planner.end.y());
-
-        vec2i screen_start = tile_to_screen(g_city_planner.start);
-        vec2i screen_end = tile_to_screen(g_city_planner.end);
-        debug_text(ctx, str, x + 170, y + 65, 60, "screen:", screen_start.x);
-        debug_text(ctx, str, x + 170 + 40, y + 65, 60, "", screen_start.y);
-        debug_text(ctx, str, x + 170, y + 75, 60, "screen:", screen_end.x);
-        debug_text(ctx, str, x + 170 + 40, y + 75, 60, "", screen_end.y);
-
-        //        screen_tile screen_start2 = attempt_mappoint_to_screen(Planner.start);
-        //        screen_tile screen_end2 = attempt_mappoint_to_screen(Planner.end);
-        //        color col = (screen_start != screen_start2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
-        //        draw_debug_line(str, x + 300, y + 65, 60, "direct:", screen_start2.x, col); draw_debug_line(str, x +
-        //        300 + 40, y + 65, 60, "", screen_start2.y, col); col = (screen_end != screen_end2) ? COLOR_LIGHT_RED :
-        //        COLOR_LIGHT_GREEN; draw_debug_line(str, x + 300, y + 75, 60, "direct:", screen_end2.x, col);
-        //        draw_debug_line(str, x + 300 + 40, y + 75, 60, "", screen_end2.y, col);
-
-        debug_text(ctx, str, x, y + 85, cl, "cost:", g_city_planner.total_cost);
-        y += 90;
-    }
-
     /////// RANDOM
     if (false) {
         auto randm = random_data_struct();
