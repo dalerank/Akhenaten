@@ -16,9 +16,6 @@ void config_show_camera_properties(bool header) {
     if (common_open) {
         ImGui::BeginTable("Camera", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        auto &migration = g_city.migration;
-        game_debug_show_property("invading_cap", migration.invading_cap);
-
         painter ctx = game.painter();
 
         tile2i camera_tile = city_view_get_camera_mappoint();
