@@ -62,7 +62,6 @@ top_menu_widget = {
 	},
 
 	debug {
-		pages 			: menu_item({text: "", parameter: e_debug_show_pages})
 		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
  		properties		: menu_item({text: "", parameter: e_debug_show_properties})
  		show_console    : menu_item({text: "", parameter: e_debug_show_console})

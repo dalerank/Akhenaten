@@ -191,7 +191,6 @@ void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
 void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
     static option debug_text_opt[e_debug_opt_size] = {
-        {"Pages ON", "Pages OFF"},
         {"Floods ON", "Floods OFF"},
         {"Properties ON", "Properties OFF"},
         {"Show console", "Show console"},
