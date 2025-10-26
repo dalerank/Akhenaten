@@ -32,28 +32,17 @@ struct mouse : public vec2i {
     static const mouse &get();
     static mouse &ref();
     void set_position(vec2i p);
+    void set_left_down(int down);
+    void set_middle_down(int down);
+    void set_right_down(int down);
+    void set_scroll(int state);
+    void set_from_touch(const touch_t * first, const touch_t * last);
+    void reset_up_state(void);
+    void reset_scroll(void);
+    void reset_button_state(void);
+    void determine_button_state(void);
 };
 
 extern mouse g_mouse;
-
-
-void mouse_set_left_down(int down);
-
-void mouse_set_middle_down(int down);
-
-void mouse_set_right_down(int down);
-
-void mouse_set_scroll(int state);
-
-
-void mouse_set_from_touch(const touch_t * first, const touch_t * last);
-
-void mouse_reset_up_state(void);
-
-void mouse_reset_scroll(void);
-
-void mouse_reset_button_state(void);
-
-void mouse_determine_button_state(void);
 
 const mouse* mouse_in_dialog(const mouse* m);

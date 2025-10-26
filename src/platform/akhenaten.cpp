@@ -486,16 +486,17 @@ static void run_and_draw() {
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
+    auto &m = mouse::ref();
     if (!SDL_GetRelativeMouseMode()) {
-        mouse::ref().set_position({ event->x, event->y });
+        m.set_position({ event->x, event->y });
     }
 
     if (event->button == SDL_BUTTON_LEFT) {
-        mouse_set_left_down(is_down);
+        m.set_left_down(is_down);
     } else if (event->button == SDL_BUTTON_MIDDLE) {
-        mouse_set_middle_down(is_down);
+        m.set_middle_down(is_down);
     } else if (event->button == SDL_BUTTON_RIGHT) {
-        mouse_set_right_down(is_down);
+        m.set_right_down(is_down);
     }
 }
 
@@ -564,8 +565,9 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
 
         break;
     case SDL_MOUSEWHEEL:
-        if (event->wheel.which != SDL_TOUCH_MOUSEID)
-            mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+        if (event->wheel.which != SDL_TOUCH_MOUSEID) {
+            mouse::ref().set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+        }
 
         break;
 
