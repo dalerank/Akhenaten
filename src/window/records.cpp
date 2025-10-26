@@ -2,106 +2,136 @@
 
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/scrollbar.h"
-#include "graphics/view/view.h"
+#include "graphics/elements/scroll_list_panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "content/vfs.h"
 #include "game/player_data.h"
 #include "game/game.h"
 
-static void on_scroll(void);
+ui::records_window g_records_window;
 
-#define LIST_X 32
-#define LIST_Y 104
-#define LIST_WIDTH 33
-#define LIST_MAX_SIZE 21
+void ui::records_window::init() {
+    if (!panel) {
+        scrollable_list_ui_params ui_params;
+        ui_params.blocks_x = ui["records_panel"].size.x;
+        ui_params.blocks_y = ui["records_panel"].size.y + 1;
+        ui_params.draw_scrollbar_always = true;
 
-static scrollbar_t g_records_scrollbar = {{LIST_X + LIST_WIDTH * 16, LIST_Y - 12}, (LIST_MAX_SIZE + 1) * 16, on_scroll};
-
-struct records_data_t {
-    const dir_listing* file_list;
-};
-
-records_data_t g_records_data;
-
-void init() {
-    highscores_load();
-    g_records_scrollbar.init(0, highscores_count() - LIST_MAX_SIZE);
-}
-
-static void draw_background(int) {
-    painter ctx = game.painter();
-    ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
-}
-static void draw_foreground(int) {
-    graphics_set_to_dialog();
-
-    outer_panel_draw(vec2i{0, 0}, 40, 30);
-    inner_panel_draw({ LIST_X, LIST_Y - 12 }, { LIST_WIDTH, LIST_MAX_SIZE + 1 });
-
-    // title
-    lang_text_draw_centered(296, 0, 160, 20, 304, FONT_LARGE_BLACK_ON_LIGHT);
-
-    // high scores
-    e_font font = FONT_SMALL_SHADED;
-    for (int i = 0; i < LIST_MAX_SIZE; i++) {
-        const player_record* record = highscores_get(g_records_scrollbar.scroll_position + i);
-        if (record->nonempty) {
-            text_draw_number(record->score, '@', " ", LIST_X + 10, LIST_Y + 16 * i, font);
-            text_draw_number(records_calc_score(record), '@', " ", LIST_X + 80, LIST_Y + 16 * i, font);
-            text_draw_number(record->mission_idx, '@', " ", LIST_X + 150, LIST_Y + 16 * i, font);
-            text_draw_number(record->rating_culture, '@', " ", LIST_X + 180, LIST_Y + 16 * i, font);
-            text_draw_number(record->rating_prosperity, '@', " ", LIST_X + 220, LIST_Y + 16 * i, font);
-            text_draw_number(record->rating_kingdom, '@', " ", LIST_X + 260, LIST_Y + 16 * i, font);
-            text_draw_number(record->final_population, '@', " ", LIST_X + 310, LIST_Y + 16 * i, font);
-            text_draw_number(record->final_funds, '@', " ", LIST_X + 360, LIST_Y + 16 * i, font);
-            text_draw_number(record->completion_months, '@', " ", LIST_X + 410, LIST_Y + 16 * i, font);
-            text_draw_number(record->difficulty, '@', " ", LIST_X + 440, LIST_Y + 16 * i, font);
-            text_draw_number(record->unk09, '@', " ", LIST_X + 475, LIST_Y + 16 * i, font);
-            if (record->score_is_valid)
-                text_draw((uint8_t*)"V", LIST_X + 510, LIST_Y + 16 * i, font, 0);
-            else
-                text_draw((uint8_t*)"-", LIST_X + 510, LIST_Y + 16 * i, font, 0);
-        }
-
-        //        encoding_from_utf8(data.file_list->files[scrollbar.scroll_position + i], list_name, FILE_NAME_MAX);
-        //        e_font font = FONT_NORMAL_BLACK_ON_DARK;
-        //        text_ellipsize(list_name, font, MAX_FILE_WINDOW_TEXT_WIDTH);
-        //        text_draw(list_name, 160, LIST_Y + 2 + (16 * i), FONT_NORMAL_BLACK_ON_DARK, 0);
+        panel = new scroll_list_panel(ui["records_panel"].size.y,
+                                      button_none, 
+                                      button_none, 
+                                      button_none, 
+                                      button_none, 
+                                      ui_params, false, "", "");
     }
 
-    // bottom text
-    lang_text_draw_centered(31, 1, 160, 450, 304, FONT_NORMAL_BLACK_ON_LIGHT);
+    // Load highscores
+    highscores_load();
 
-    scrollbar_draw(vec2i{0, 0}, &g_records_scrollbar);
+    int first_entry_idx = panel ? panel->get_focused_entry_idx() : 0;
+    if (first_entry_idx < 0) {
+        first_entry_idx = 0;
+    }
 
+    for (int i = 0; i < ui["records_panel"].size.y; i++) {
+        const player_record *record = highscores_get(first_entry_idx + i);
+        bstring128 str;
+        if (record->nonempty) {
+            str.append(bstring32("S:", record->score));
+            str.append(bstring32("R:", records_calc_score(record)));
+            str.append(bstring32("M:", record->mission_idx));
+            str.append(bstring32("C:", record->rating_culture));
+            str.append(bstring32("P:", record->rating_prosperity));
+            str.append(bstring32("K:", record->rating_kingdom));
+            str.append(bstring32("P:", record->final_population));
+            str.append(bstring32("F:", record->final_funds));
+            str.append(bstring32("m:", record->completion_months));
+            str.append(bstring32("D:", record->difficulty));
+        }
+
+        panel->add_entry(str);
+    }
+
+    // Clear and populate panel
+    panel->clear_entry_list();
+    
+    int count = highscores_count();
+    for (int i = 0; i < count; i++) {
+        const player_record* record = highscores_get(i);
+        if (record->nonempty) {
+            // Create entry string - just a placeholder, actual rendering done in draw
+            bstring128 entry;
+            entry.printf("Record %d", i + 1);
+            panel->add_entry(entry.c_str());
+        }
+    }
+
+    _is_inited = true;
+}
+
+int ui::records_window::draw_background(UiFlags flags) {
+    autoconfig_window::draw_background(flags);
+    
+    painter ctx = game.painter();
+    ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
+    
+    return 0;
+}
+
+void ui::records_window::ui_draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+
+    ui.begin_widget(pos);
+    ui.draw(flags);
+
+    if (panel) {
+        panel->ui_params.pos = ui["records_panel"].pos;
+        panel->draw();
+    }
+
+    ui.end_widget();
     graphics_reset_dialog();
 }
 
-static void on_scroll(void) {
-    //    data.message_not_exist_start_time = 0;
+int ui::records_window::ui_handle_mouse(const mouse* m) {
+    int result = autoconfig_window::ui_handle_mouse(m);
+
+    const hotkeys *h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
+        window_go_back();
+        return result;
+    }
+
+    if (panel) {
+        ui.begin_widget(pos);
+        
+        mouse m_dialog = *m;
+        vec2i panel_offset = ui["records_panel"].pos;
+        m_dialog.x -= panel_offset.x;
+        m_dialog.y -= panel_offset.y;
+        
+        if (panel->input_handle(&m_dialog)) {
+        }
+        
+        ui.end_widget();
+    }
+
+    return result;
 }
 
-static void handle_input(const mouse* m, const hotkeys* h) {
-    if (input_go_back_requested(m, h))
-        window_go_back();
+void ui::records_window::show() {
+    static window_type instance = {
+        WINDOW_PLAYER_SELECTION,
+        [] (int flags) { g_records_window.draw_background(flags); },
+        [] (int flags) { g_records_window.ui_draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { g_records_window.ui_handle_mouse(m); }
+    };
 
-    const mouse* m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(vec2i{0, 0}, &g_records_scrollbar, m_dialog))
-        return;
+    g_records_window.init();
+    window_show(&instance);
 }
 
 void window_records_show(void) {
-    window_type window = {
-        WINDOW_PLAYER_SELECTION,
-        draw_background,
-        draw_foreground,
-        handle_input
-    };
-    init();
-    window_show(&window);
+    ui::records_window::show();
 }

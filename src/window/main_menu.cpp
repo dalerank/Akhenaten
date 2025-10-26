@@ -123,6 +123,10 @@ void main_menu_screen::init() {
         ui::window_features::show([] {});
     });
 
+    ui["show_mods"].onclick([] {
+
+    });
+
     ui["quit_game"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_quit", [] {
             app_request_exit();
