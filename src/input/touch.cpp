@@ -272,14 +272,14 @@ static void handle_mouse_direct(void) {
     int x = first->current_point.x;
     int y = first->current_point.y;
     system_set_mouse_position(&x, &y);
-    mouse_set_position(x, y);
+    mouse::ref().set_position({ x, y });
 }
 
 int touch_to_mouse(void) {
     auto &data = g_touch_data;
     const touch_t * first = get_earliest_touch();
     if (!first->in_use) {
-        if (mouse_get()->is_touch) {
+        if (mouse::get().is_touch) {
             mouse_reset_scroll();
             mouse_reset_button_state();
             return 1;

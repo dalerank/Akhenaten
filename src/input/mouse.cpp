@@ -10,7 +10,8 @@ mouse g_mouse;
 static mouse dialog;
 static time_millis last_click;
 
-const mouse* mouse_get() { return &g_mouse; }
+const mouse& mouse::get() { return g_mouse; }
+mouse& mouse::ref() { return g_mouse; }
 
 static void clear_mouse_button(mouse_button* button) {
     button->is_down = 0;
@@ -49,16 +50,15 @@ void mouse_set_from_touch(const touch_t* first, const touch_t* last) {
     clear_mouse_button(&data.middle);
 }
 
-void mouse_set_position(int x, int y) {
-    auto &data = g_mouse;
-
-    if (x != data.x || y != data.y)
+void mouse::set_position(vec2i p) {
+    if (p.x != this->x || p.y != this->y) {
         last_click = 0;
+    }
 
-    data.x = x;
-    data.y = y;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+    this->x = p.x;
+    this->y = p.y;
+    is_touch = 0;
+    is_inside_window = 1;
 }
 
 void mouse_set_left_down(int down) {

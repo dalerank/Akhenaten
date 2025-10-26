@@ -2,8 +2,8 @@
 #include "city/city_figures.h"
 
 figure *object_info::nfigure_t::get() const {
-    const int figure_id = ids[selected_index];
-    return ::figure_get(figure_id);
+    const figure_id fid = ids[selected_index];
+    return ::figure_get(fid);
 }
 
 void object_info::fill_figures_info(tile2i center) {

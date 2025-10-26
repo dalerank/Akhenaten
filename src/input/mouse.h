@@ -11,7 +11,11 @@ struct mouse_button {
     int system_change;
 };
 
-enum { SCROLL_NONE = 0, SCROLL_UP = -1, SCROLL_DOWN = 1 };
+enum e_scroll { 
+    SCROLL_NONE = 0, 
+    SCROLL_UP = -1, 
+    SCROLL_DOWN = 1 
+};
 
 struct mouse : public vec2i {
     int scrolled;         /**< Scroll state (up/down/none) */
@@ -22,14 +26,16 @@ struct mouse : public vec2i {
     int is_touch;         /**< Whether the mouse is a translated touch event */
 
     void set_inside_window(int inside);
+    vec2i pos() const { return *this; }
     void init();
+
+    static const mouse &get();
+    static mouse &ref();
+    void set_position(vec2i p);
 };
 
 extern mouse g_mouse;
 
-const mouse* mouse_get(void);
-
-void mouse_set_position(int x, int y);
 
 void mouse_set_left_down(int down);
 

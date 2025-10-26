@@ -70,7 +70,7 @@ struct object_info {
         xstring phrase_key;
         int selected_index;
         int drawn;
-        svector<int, 7> ids;
+        svector<figure_id, 7> ids;
         figure *get() const;
     } nfigure;
 

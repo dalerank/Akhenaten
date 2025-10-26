@@ -77,7 +77,7 @@ void window_city_draw_paused_and_time_left() {
 }
 
 static void draw_cancel_construction() {
-    if (!mouse_get()->is_touch || !g_city_planner.build_type) {
+    if (!mouse::get().is_touch || !g_city_planner.build_type) {
         return;
     }
 

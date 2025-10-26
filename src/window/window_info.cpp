@@ -181,11 +181,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     }
 
     // dialog placement
-    int s_width = screen_width();
-    int s_height = screen_height();
-    context.offset.x = center_in_city(16 * context.bgsize.x);
-    context.offset = *mouse_get();
-    context.offset = window_building_set_possible_position(context.offset, context.bgsize);
+    context.offset = window_building_set_possible_position(mouse::get().pos(), context.bgsize);
 }
 
 static void window_info_draw_background(int) {
@@ -386,7 +382,7 @@ void common_info_window::init(object_info &c) {
 void common_info_window::draw_tooltip(tooltip_context *c) {
     textid tx = get_tooltip(def_object_info);
     pcstr tooltip = (pcstr)lang_get_string(tx);
-    int button_id = ui::button_hover(mouse_get());
+    int button_id = ui::button_hover(&mouse::get());
     if (button_id > 0 && !(tooltip && *tooltip)) {
         tooltip = ui::button_tooltip(button_id - 1);
     }

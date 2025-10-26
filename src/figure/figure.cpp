@@ -69,8 +69,8 @@ declare_console_command_p(create_figure) {
         return;
     }
 
-    const mouse *m = mouse_get();
-    tile2i current_tile = g_screen_city.update_city_view_coords(*m);;
+    const mouse& m = mouse::get();
+    tile2i current_tile = g_screen_city.update_city_view_coords(m);;
     figure_create((e_figure_type)f_type, current_tile, 1);
 }
 
