@@ -623,10 +623,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
 }
 
-void draw_debug_figures() {
-
-}
-
 void figure::draw_debug() {
     if (draw_mode == 0) {
         return;

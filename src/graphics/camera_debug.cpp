@@ -48,7 +48,7 @@ void config_show_camera_properties(bool header) {
         game_debug_show_property("target", g_zoom.ftarget(), true);
         game_debug_show_property("delta", g_zoom.fdelta(), true);
 
-        vec2i pixel = { mouse_get()->x, mouse_get()->y };
+        vec2i pixel = mouse::get().pos();
         game_debug_show_property("mouse", pixel, true);
 
         vec2i viewp = pixel_to_viewport(pixel);

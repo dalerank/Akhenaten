@@ -523,11 +523,11 @@ void game_t::before_start_simulation() {
 
 void game_t::handle_input_frame() {
     OZZY_PROFILER_SECTION("Input/Frame/Current");
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
     const hotkeys *h = hotkey_state();
 
-    g_window_manager.handle_input(m ,h);
-    g_window_manager.handle_tooltip(m);
+    g_window_manager.handle_input(&m ,h);
+    g_window_manager.handle_tooltip(&m);
 
     g_window_manager.update_input_after();
 }

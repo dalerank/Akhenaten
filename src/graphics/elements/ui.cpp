@@ -411,7 +411,7 @@ pcstr ui::button_tooltip(uint32_t id) {
 
 image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
     const vec2i state_offset = g_state.offset();
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
 
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
@@ -420,13 +420,13 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool force_pressed = !!(flags & UiFlags_Selected);
     ibutton.hovered = !(darkened || grayscaled) && is_button_hover(ibutton, state_offset);
-    ibutton.pressed = (ibutton.hovered && m->left.is_down);
+    ibutton.pressed = (ibutton.hovered && m.left.is_down);
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
     time_millis current_time = time_get_millis();
     if (ibutton.pressed) {
         if (current_time - ibutton.pressed_since > 100) {
-            if (ibutton.button_type != IB_BUILD && ibutton.button_type != IB_OVERSEER && !mouse_get()->left.is_down)
+            if (ibutton.button_type != IB_BUILD && ibutton.button_type != IB_OVERSEER && !mouse::get().left.is_down)
                 ibutton.pressed = false;
         }
     }
@@ -561,14 +561,14 @@ void ui::icon(vec2i pos, e_advisor adv) {
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
 
     int size = tiny ? 17 : 24;
     g_state.buttons.push_back(arrow_button{pos.x, pos.y, -1, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
     const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
-    abutton.pressed = hovered && m->left.is_down;
+    abutton.pressed = hovered && m.left.is_down;
     abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
     abutton.state |= (down ? 0x10 : 0);
 
