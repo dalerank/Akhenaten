@@ -543,6 +543,7 @@ struct building_static_params {
     building_desirability_t desirability;
     uint16_t progress_max;
     e_overlay overlay;
+    uint16_t max_service;
 
     svector<uint8_t, 5> laborers;
     svector<int8_t, 5> fire_risk;
@@ -567,7 +568,7 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
-    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay,
+    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay, max_service,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
