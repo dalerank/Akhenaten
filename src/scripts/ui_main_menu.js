@@ -4,7 +4,11 @@ main_menu_screen {
 	ui {
 		background    : { type:"background"; pack:PACK_UNLOADED, id:14, offset:0 }
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5]})
-		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0]})
+		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0]
+			            // onclick: function() {
+			            //     log_info("akhenaten: call started")
+			            // }
+		})
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5]})
 		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0]})
 		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods"})

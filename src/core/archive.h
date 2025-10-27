@@ -34,6 +34,7 @@ struct archive {
     tile2i r_tile2i(pcstr name, pcstr i = "i", pcstr j = "j");
     bool r_anim(pcstr name, animation_t &anim);
     bool r_desc(pcstr name, image_desc &desc);
+    xstring r_function(pcstr name);
 
     enum e_variant_type {
         vt_none = 0,

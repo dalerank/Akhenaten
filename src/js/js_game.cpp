@@ -86,7 +86,36 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
-    //REGISTER_GLOBAL_FUNCTION(J, js_game_set_image, "set_image", 1);
+}
+
+void js_unref_function(xstring onclick_ref) {
+    js_State *J = js_vm_state();
+    assert(J);
+    if (!onclick_ref.empty()) {
+        js_unref(J, onclick_ref .c_str());
+    }
+}
+
+void js_call_function(xstring js_ref) {
+    if (js_ref.empty()) {
+        return;
+    }
+
+    js_State *J = js_vm_state();
+    assert(J);
+
+    // Get the function from registry using the reference
+    js_getregistry(J, js_ref.c_str());
+    if (js_iscallable(J, -1)) {
+        js_pushnull(J);  // 'this' context
+        int result = js_pcall(J, 0);
+        if (result != 0) {
+            logs::error("JS onclick callback error: %s", js_tostring(J, -1));
+            js_pop(J, 1);
+        }
+    } else {
+        js_pop(J, 1);
+    }
 }
 
 void config::refresh(archive arch) {

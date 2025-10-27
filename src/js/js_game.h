@@ -90,3 +90,5 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
 
 void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);
+void js_unref_function(xstring onclick_ref);
+void js_call_function(xstring onclick_ref);

@@ -350,11 +350,13 @@ struct egeneric_button : public elabel {
     int param2 = 0;
     std::function<void(int, int)> _func, _rfunc;
     xstring _tooltip;
+    xstring _js_onclick_ref;  // JS function reference for onclick
     uint8_t _border;
     bool _hbody;
     bool _split;
     bool _selected = false;
 
+    virtual ~egeneric_button();
     virtual void draw(UiFlags flags) override;
     virtual void load(archive arch, element *parent, items &elems) override;
     virtual void tooltip(textid t) override { _tooltip = ui::str(t); }
@@ -370,6 +372,9 @@ struct earrow_button : public element {
     bool tiny;
 
     std::function<void(int, int)> _func;
+    xstring _js_onclick_ref;  // JS function reference for onclick
+    
+    virtual ~earrow_button();
     virtual void load(archive elem, element *parent, items &elems) override;
     virtual void draw(UiFlags flags) override;
     virtual element &onclick(std::function<void(int, int)> func) override { _func = func; return *this; }
@@ -388,7 +393,9 @@ struct eimage_button : public element {
     xstring _tooltip;
 
     std::function<void(int, int)> _func, _rfunc;
+    xstring _js_onclick_ref;  // JS function reference for onclick
 
+    virtual ~eimage_button();
     virtual void load(archive elem, element* parent, items &elems) override;
     virtual void select(bool v) override { _selected = v; }
     virtual bool selected() const override { return _selected; }
