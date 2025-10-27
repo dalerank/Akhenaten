@@ -17,6 +17,7 @@ import buildings
 import overlays
 import building_sounds
 import images
+import population
 import ui_advisor_labor
 import ui_advisor_military
 import ui_advisor_ratings
