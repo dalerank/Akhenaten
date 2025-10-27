@@ -1,0 +1,1 @@
+* 10/27/2025 - support change log view in main menu

@@ -23,8 +23,9 @@ main_menu_screen {
 			ui {
 				update_game : large_button({ pos[32, 16], size[256, 25], text:"update now", enabled: false
 					                         onclick: main_menu_download_latest_version
-				})
+				                           })
 				new_version : text({pos[18, 53], text: game.version, font: FONT_SMALL_PLAIN, enabled: false})
+				changelog : text({pos[18, 73], size[560, 300], rich:true, text:"Loading changelog...", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})
 			}
 		})
 	}
