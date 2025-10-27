@@ -1,4 +1,4 @@
-#include "records.h"
+#include "window_mods.h"
 
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -10,21 +10,21 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-ui::records_window g_records_window;
+ui::mods_window g_mods_window;
 
-void ui::records_window::init() {
+void ui::mods_window::init() {
     if (!panel) {
         scrollable_list_ui_params ui_params;
-        ui_params.blocks_x = ui["records_panel"].size.x;
-        ui_params.blocks_y = ui["records_panel"].size.y + 1;
+        ui_params.blocks_x = ui["mods_panel"].size.x;
+        ui_params.blocks_y = ui["mods_panel"].size.y + 1;
         ui_params.draw_scrollbar_always = true;
 
-        panel = new scroll_list_panel(ui["records_panel"].size.y,
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      ui_params, false, "", "");
+        panel = new scroll_list_panel(ui["mods_panel"].size.y,
+            button_none,
+            button_none,
+            button_none,
+            button_none,
+            ui_params, false, "", "");
     }
 
     // Load highscores
@@ -35,7 +35,7 @@ void ui::records_window::init() {
         first_entry_idx = 0;
     }
 
-    for (int i = 0; i < ui["records_panel"].size.y; i++) {
+    for (int i = 0; i < ui["mods_panel"].size.y; i++) {
         const player_record *record = highscores_get(first_entry_idx + i);
         bstring128 str;
         if (record->nonempty) {
@@ -56,10 +56,10 @@ void ui::records_window::init() {
 
     // Clear and populate panel
     panel->clear_entry_list();
-    
+
     int count = highscores_count();
     for (int i = 0; i < count; i++) {
-        const player_record* record = highscores_get(i);
+        const player_record *record = highscores_get(i);
         if (record->nonempty) {
             // Create entry string - just a placeholder, actual rendering done in draw
             bstring128 entry;
@@ -71,23 +71,23 @@ void ui::records_window::init() {
     _is_inited = true;
 }
 
-int ui::records_window::draw_background(UiFlags flags) {
+int ui::mods_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
-    
+
     painter ctx = game.painter();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_SCORES_BACKGROUND));
-    
+
     return 0;
 }
 
-void ui::records_window::ui_draw_foreground(UiFlags flags) {
+void ui::mods_window::ui_draw_foreground(UiFlags flags) {
     graphics_set_to_dialog();
 
     ui.begin_widget(pos);
     ui.draw(flags);
 
     if (panel) {
-        panel->ui_params.pos = ui["records_panel"].pos;
+        panel->ui_params.pos = ui["mods_panel"].pos;
         panel->draw();
     }
 
@@ -95,7 +95,7 @@ void ui::records_window::ui_draw_foreground(UiFlags flags) {
     graphics_reset_dialog();
 }
 
-int ui::records_window::ui_handle_mouse(const mouse* m) {
+int ui::mods_window::ui_handle_mouse(const mouse *m) {
     int result = autoconfig_window::ui_handle_mouse(m);
 
     const hotkeys *h = hotkey_state();
@@ -106,35 +106,35 @@ int ui::records_window::ui_handle_mouse(const mouse* m) {
 
     if (panel) {
         ui.begin_widget(pos);
-        
+
         mouse m_dialog = *m;
-        vec2i panel_offset = ui["records_panel"].pos;
+        vec2i panel_offset = ui["mods_panel"].pos;
         m_dialog.x -= panel_offset.x;
         m_dialog.y -= panel_offset.y;
-        
+
         if (panel->input_handle(&m_dialog)) {
         }
-        
+
         ui.end_widget();
     }
 
     return result;
 }
 
-void ui::records_window::show() {
+void ui::mods_window::show() {
     static window_type instance = {
         WINDOW_PLAYER_SELECTION,
-        [] (int flags) { g_records_window.draw_background(flags); },
-        [] (int flags) { g_records_window.ui_draw_foreground(flags); },
-        [] (const mouse *m, const hotkeys *h) { g_records_window.ui_handle_mouse(m); }
+        [] (int flags) { g_mods_window.draw_background(flags); },
+        [] (int flags) { g_mods_window.ui_draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { g_mods_window.ui_handle_mouse(m); }
     };
 
-    g_records_window.init();
+    g_mods_window.init();
     window_show(&instance);
 }
 
-void window_records_show(void) {
-    ui::records_window::show();
+void window_mods_show(void) {
+    ui::mods_window::show();
 }
 
-ANK_FUNCTION(window_records_show)
+ANK_FUNCTION(window_mods_show)

@@ -1,5 +1,5 @@
 #include "platform.h"
-
+#include "js/js_game.h"
 #include "core/log.h"
 
 #include <SDL.h>
@@ -8,6 +8,8 @@
 #if defined(GAME_PLATFORM_WIN)
     #include <windows.h>
 #endif
+
+ANK_FUNCTION_NAMED_1(platform_open_url, [] (pcstr url) { platform.open_url(url, ""); }, pcstr)
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;

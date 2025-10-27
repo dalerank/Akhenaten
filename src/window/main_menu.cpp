@@ -21,6 +21,7 @@
 #include "sound/sound.h"
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
+#include "js/js_game.h"
 
 #ifdef GAME_PLATFORM_WIN
 #define CPPHTTPLIB_OPENSSL_SUPPORT
@@ -67,6 +68,7 @@ void main_menu_download_latest_version() {
     });
 #endif // GAME_PLATFORM_WIN
 }
+ANK_FUNCTION(main_menu_download_latest_version)
 
 int main_menu_screen::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
@@ -111,34 +113,10 @@ void main_menu_screen::init() {
         }
     });
 
-    ui["show_records"].onclick([] {
-        window_records_show();
-    });
-
-    ui["show_config"].onclick([] {
-        ui::window_features::show([] {});
-    });
-
-    ui["show_mods"].onclick([] {
-
-    });
-
     ui["quit_game"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_quit", [] {
             app_request_exit();
         });
-    });
-
-    ui["discord"].onclick([] {
-        platform.open_url("https://discord.gg/HS4njmBvpb", "");
-    });
-
-    ui["patreon"].onclick([] {
-        platform.open_url("https://www.patreon.com/imspinner", "");
-    });
-
-    ui["update_game"].onclick([] {
-        main_menu_download_latest_version();
     });
 }
 
