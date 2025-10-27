@@ -2,6 +2,7 @@
 
 #include <initializer_list>
 #include <assert.h>
+#include <math.h>
 
 struct vec2i {
     int x = 0;
@@ -23,6 +24,9 @@ struct vec2i {
     inline vec2i operator*=(float v) { *this = vec2i(this->x * v, this->y * v); return *this; }
     inline bool operator==(vec2i rhs) const { return (x == rhs.x && y == rhs.y); }
     inline bool operator!=(vec2i rhs) const { return !(*this == rhs); }
+
+    inline float dist(vec2i o) { return ::sqrtf(dist_sq(o)); }
+    inline float dist_sq(vec2i o) { int xx = x - o.x; int yy = y - o.y; return (xx * xx) + (yy * yy); }
 };
 
 struct rect {

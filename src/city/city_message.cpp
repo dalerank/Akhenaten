@@ -166,6 +166,7 @@ void city_message_post_full(bool use_popup, int template_id, const event_ph_t *e
     msg->param1 = param1;
     msg->param2 = param2;
     msg->sequence = data.next_message_sequence++;
+    msg->sender_faction = event->sender_faction;
 
     msg->req_resource = event->item.value;
     msg->req_amount = event->amount.value; 
@@ -558,7 +559,7 @@ io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
 
         iob->bind_i16(msg->eventmsg_body_id);  // FF FF
         iob->bind_i16(msg->eventmsg_title_id); // FF FF
-        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_02);            // FF FF
+        iob->bind(BIND_SIGNATURE_INT16, &msg->sender_faction);            // FF FF
 
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);
         iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount);

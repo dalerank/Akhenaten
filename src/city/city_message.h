@@ -278,7 +278,7 @@ struct city_message {
     //
     int16_t eventmsg_body_id;
     int16_t eventmsg_title_id;
-    int unk_02;
+    int16_t sender_faction;
     int req_city;
 
     int req_amount;

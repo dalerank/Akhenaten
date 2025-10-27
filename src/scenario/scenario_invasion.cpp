@@ -72,20 +72,21 @@ static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6,
 invasion_warning_t g_invasion_warning;
 invasion_data_t ANK_VARIABLE_N(g_invasions, "invasions");
 
-void scenario_invasion_clear(void) {
-    auto &data = g_invasions;
-    memset(data.warnings.data(), 0, data.warnings.size() * sizeof(invasion_warning_t));
+void invasion_data_t::clear(void) {
+    memset(warnings.data(), 0, warnings.size() * sizeof(invasion_warning_t));
 }
 
-void scenario_invasion_init() {
-    auto &data = g_invasions;
-    scenario_invasion_clear();
+void invasion_data_t::init() {
+    clear();
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
-    if (path_max == 0)
+
+    if (path_max == 0) {
         return;
-    invasion_warning_t* warning = &data.warnings[1];
+    }
+
     for (int i = 0; i < MAX_INVASIONS; i++) {
+        invasion_warning_t& warning = warnings[1];
         random_generate_next();
         if (!g_scenario.invasions[i].type) {
             continue;
@@ -96,28 +97,31 @@ void scenario_invasion_init() {
             || g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE) {
             continue;
         }
+
         for (int year = 1; year < 8; year++) {
             const empire_object* obj = empire_object_get_battle_icon(path_current, year);
-            if (!obj)
+            if (!obj) {
                 continue;
+            }
 
-            warning->in_use = 1;
-            warning->invasion_path_id = obj->invasion_path_id;
-            warning->warning_years = obj->invasion_years;
-            warning->pos = obj->pos;
-            warning->image_id = obj->image_id;
-            warning->invasion_id = i;
-            warning->empire_object_id = obj->id;
-            warning->month_notified = 0;
-            warning->year_notified = 0;
-            warning->months_to_go = 12 * g_scenario.invasions[i].year;
-            warning->months_to_go += g_scenario.invasions[i].month;
-            warning->months_to_go -= 12 * year;
-            ++warning;
+            warning.in_use = 1;
+            warning.invasion_path_id = obj->invasion_path_id;
+            warning.warning_years = obj->invasion_years;
+            warning.pos = obj->pos;
+            warning.image_id = obj->image_id;
+            warning.invasion_id = i;
+            warning.empire_object_id = obj->id;
+            warning.month_notified = 0;
+            warning.year_notified = 0;
+            warning.months_to_go = 12 * g_scenario.invasions[i].year;
+            warning.months_to_go += g_scenario.invasions[i].month;
+            warning.months_to_go -= 12 * year;
         }
+
         path_current++;
-        if (path_current > path_max)
+        if (path_current > path_max) {
             path_current = 1;
+        }
     }
 }
 
@@ -447,3 +451,7 @@ io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t versi
 
     // TODO
 });
+
+const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
+    return *g_enemy_properties[type];
+}

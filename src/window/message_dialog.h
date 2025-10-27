@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/string.h"
+#include "core/xstring.h"
 
 enum e_message_dialog_type {
     MESSAGE_DIALOG_ABOUT = 0,
@@ -31,8 +31,8 @@ enum e_message_dialog_type {
 };
 
 struct text_tag_substitution {
-    pcstr tag;
-    pcstr content;
+    xstring tag;
+    xstring content;
 } ;
 
 void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);

@@ -24,6 +24,7 @@
 #include "scenario/request.h"
 #include "window/advisors.h"
 #include "window/window_city.h"
+#include "scenario/scenario_invasion.h"
 #include "game/game.h"
 
 #define MAX_HISTORY 200
@@ -117,7 +118,7 @@ void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution *tag_templates
 
             // needs to go over all the possible tags...
             for (int i = 0; i < num_tags; ++i) {
-                swap_tag(curr_byte, &curr_byte_out, tag_templates[i].tag, tag_templates[i].content);
+                swap_tag(curr_byte, &curr_byte_out, tag_templates[i].tag.c_str(), tag_templates[i].content.c_str());
             }
 
             // go to the end of the tag, then resume
@@ -161,7 +162,7 @@ static void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phr
       {"[player_name]", (pcstr)city_player_name()},
       {"[reason_phrase]", data.phrase_text.c_str()},
       {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
-      {"[a_foreign_army]", ""}, // TODO
+      {"[a_foreign_army]", g_invasions.get_prop((e_enemy_type)msg->sender_faction).army_title},
       {"[amount]", amount.c_str()},
       {"[amount_granted]", ""}, // TODO
       {"[item]", (pcstr)lang_get_string(23, 54 + (phrase_modifier ? msg->req_resource_past : msg->req_resource))},

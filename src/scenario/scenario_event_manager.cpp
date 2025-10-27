@@ -93,6 +93,8 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
     auto &ev_mgr = *this;
     auto &sc_events = g_scenario_events;
 
+    sc_events.event_list.clear();
+    sc_events.event_list.push_back({}); // empty events to compatibilty old engine
     g_config_arch.r_section(missionid, [&] (archive arch) {
         const bool enable_scenario_events = arch.r_bool("enable_scenario_events");
         if (!enable_scenario_events) {
@@ -332,6 +334,15 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
                                PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
                                id, 0);
+        break;
+
+    case EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING: {
+            const int annoucement = event.reasons[0];
+            const int reason = event.reasons[1];
+            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
+                PHRASE_foreign_army_attacks_you_title, annoucement, reason,
+                id, 0);
+        }
         break;
 
     case EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: {

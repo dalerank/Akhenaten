@@ -811,6 +811,7 @@ enemy_libian = {
     percentage_type1 : 50
     percentage_type2 : 50
     percentage_type3 : 0
+    army_title [37, 33]
     figure_types: [FIGURE_ENEMY_LIBIAN_ARCHER, FIGURE_ENEMY_LIBIAN_SWORDMAN, FIGURE_NONE]
     layout : FORMATION_ENEMY_DOUBLE_LINE
 }
