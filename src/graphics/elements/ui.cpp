@@ -899,12 +899,17 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
+    _js_onclick_ref = arch.r_function("onclick");
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
         vec2i tmp_size;
         icon_texture = load_icon_texture(name_icon_texture, tmp_size);
     }
+}
+
+ui::eimage_button::~eimage_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -966,7 +971,15 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    btn->onclick(_func);
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (!_js_onclick_ref.empty()) {
+        btn->onclick([this](int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    } else {
+        btn->onclick(_func);
+    }
+    
     btn->tooltip(_tooltip);
     btn->parameter1 = param1;
     btn->parameter2 = param2;
@@ -1111,11 +1124,28 @@ void ui::earrow_button::load(archive arch, element *parent, items &elems) {
 
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
+    _js_onclick_ref = arch.r_function("onclick");
+}
+
+ui::earrow_button::~earrow_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::earrow_button::draw(UiFlags flags) {
-    ui::arw_button(pos, down, tiny)
-        .onclick(_func);
+    auto &btn = ui::arw_button(pos, down, tiny);
+    
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (!_js_onclick_ref.empty()) {
+        btn.onclick([this](int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    } else if (_func) {
+        btn.onclick(_func);
+    }
+}
+
+ui::egeneric_button::~egeneric_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
@@ -1139,7 +1169,14 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     }
 
     const bool clickable = !darkened && !readonly;
-    if (clickable && _func) btn->onclick(_func);
+    
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (clickable && !_js_onclick_ref.empty()) {
+        btn->onclick([this] (int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    }
+    if (clickable && _func && _js_onclick_ref.empty()) btn->onclick(_func);
     if (clickable && _rfunc) btn->onrclick(_rfunc);
 
     const vec2i offset = g_state.offset();
@@ -1159,4 +1196,5 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _border = arch.r_int("border", 1);
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
+    _js_onclick_ref = arch.r_function("onclick");
 }
