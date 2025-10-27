@@ -127,7 +127,7 @@ static void draw_messages(int total_messages) {
             o += oo;
             debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->eventmsg_title_id, c); // FF FF
             o += oo;
-            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->unk_02, c); // FF FF
+            debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->sender_faction, c); // FF FF
             o += oo;
             debug_text(ctx, str, data.x_text + o, data.y_text + 8 + 20 * i, 0, "", msg->req_city, c);
             ; // enum?

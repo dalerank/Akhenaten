@@ -69,7 +69,7 @@ void game_file_editor_clear_data(void) {
     figure_route_clear_all();
     g_empire_traders.clear_all();
     game.simtime.init(2098);
-    scenario_invasion_clear();
+    g_invasions.clear();
 }
 
 static void clear_map_data(void) {

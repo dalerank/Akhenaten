@@ -43,7 +43,7 @@ mission8 { // Selima
 		monuments  {enabled : true, goal : 18 }
 	}
 
-    enable_scenario_events : true,
+    enable_scenario_events : true
 	events [
 		{
             tag_id : 1
@@ -59,9 +59,18 @@ mission8 { // Selima
 			type: EVENT_TYPE_TRADE_CITY_UNDER_SIEGE
 			time { year : 2648, month : 2 }
 			location_fields [-1, -1, -1, -1]
-			months_initial : 12,
+			months_initial : 12
 			reasons [PHRASE_trade_city_siege_no_reason_A, PHRASE_trade_city_siege_no_reason_B, PHRASE_trade_city_siege_no_reason_C, -1]
 		}
+
+		{
+			tag_id : 3
+			type: EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING
+			time { year : 2648, month : 5 }
+			location_fields [-1, -1, -1, -1]
+			sender_faction: ENEMY_7_LIBIAN
+			reasons [PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1]
+		} 
     ]
 
     invasion_points_land [

@@ -36,6 +36,7 @@ enum e_event_type {
     EVENT_TYPE_CRIME_WAVE = 28,
 
     EVENT_TYPE_TRADE_CITY_UNDER_SIEGE = 29,
+    EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING = 30,
 
     EVENT_TYPE_MAX,
 };
@@ -192,7 +193,7 @@ struct event_ph_t {
     game_date_t date() { return {time.year, time.month}; }
     void archive_load(archive arch);
 };
-ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields, reasons)
+ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields, reasons, sender_faction)
 
 struct mission_id_t;
 struct event_manager_t {

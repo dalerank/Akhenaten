@@ -723,7 +723,7 @@ void GamestateIO::start_loaded_file() {
         scenario_revolt_init();
         scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
-        scenario_invasion_init();
+        g_invasions.init();
         city_military_determine_distant_battle_city();
         scenario_request_init();
         scenario_demand_change_init();
