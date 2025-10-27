@@ -68,8 +68,8 @@ struct object_info {
         int draw_debug_path;
         textid phrase;
         xstring phrase_key;
-        int selected_index;
-        int drawn;
+        uint8_t selected_index;
+        bool drawn;
         svector<figure_id, 7> ids;
         figure *get() const;
     } nfigure;
