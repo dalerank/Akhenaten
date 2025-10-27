@@ -24,11 +24,18 @@ struct type_enum{};
 using config_iterator_enum_function_cb = void(type_enum);
 using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
 
+using jsfunc_iterator_function_cb = void(js_State*);
+using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
+
 } // end namespace config
 
 #define ANK_DECLARE_CONFIG_ITERATOR(func) void func(); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func)
+
+#define ANK_DECLARE_JSFUNCTION_ITERATOR(func) void func(js_State*); \
+    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
+    static config::FunctionIterator ANK_CONFIG_CC1(func_handler, __LINE__)(func)
 
 #define ANK_REGISTER_CONFIG_ITERATOR(func) func(); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
@@ -66,6 +73,11 @@ using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
 
 #define ANK_VARIABLE_N(a, name) a; \
     ANK_CONFIG_OBJECT_VARIABLE_N(a, name)
+
+#define ANK_FUNCTION(func) \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func); \
+    void permanent_js2cpp_callback_##func(js_State* J); void register_js2cpp_callback_##func(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##func, #func, 0); }, J); } \
+    void permanent_js2cpp_callback_##func(js_State *J) { func(); }
 
 #define ANK_PERMANENT_CALLBACK(event, a) \
     tmp_register_permanent_callback_ ##event(); \
