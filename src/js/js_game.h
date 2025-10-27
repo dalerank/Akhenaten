@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <string>
+#include <mutex>
 
 // Helper functions to convert JS values to C++ types
 namespace js_helpers {

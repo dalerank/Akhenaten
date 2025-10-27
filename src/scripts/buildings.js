@@ -738,6 +738,7 @@ building_library = {
   cost : [ 90, 140, 200, 300, 400 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[30], fire_risk:[6], damage_risk: [1]
+  max_service: 800
 }
 
 building_military_academy = {
@@ -2100,6 +2101,7 @@ building_academy = {
   cost: [ 200, 250, 300, 400, 500 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
   laborers:[20], fire_risk:[4], damage_risk: [1]
+  max_service: 100
 }
 
 building_physician = {
@@ -2239,6 +2241,7 @@ building_scribal_school = {
   cost : [ 30, 50, 70, 100, 150 ]
   desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
   laborers:[10], fire_risk:[6], damage_risk: [2]
+  max_service: 75
 }
 
 building_temple_complex_osiris = {
