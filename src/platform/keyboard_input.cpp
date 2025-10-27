@@ -359,7 +359,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     // (or even as an "ESC" keypress) and SDL doesn't yet have a proper implementation 
     // for this, we'll treat the back button as a right mouse button when the mouse is active
     case SDLK_ESCAPE:
-        if (!mouse_get()->is_touch) {
+        if (!mouse::get().is_touch) {
             mouse_set_right_down(1);
             return;
         } else {
@@ -392,7 +392,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
 void platform_handle_key_up(SDL_KeyboardEvent* event) {
 #if defined(GAME_PLATFORM_ANDROID)
     // Right mouse button hack: read above for explanation
-    if ((event->keysym.sym == SDLK_ESCAPE || event->keysym.sym == SDLK_AC_BACK) && !mouse_get()->is_touch) {
+    if ((event->keysym.sym == SDLK_ESCAPE || event->keysym.sym == SDLK_AC_BACK) && !mouse::get().is_touch) {
         mouse_set_right_down(0);
         return;
     }
