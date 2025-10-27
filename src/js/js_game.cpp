@@ -86,6 +86,11 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
+
+    animation_t::global_hashtime = game.frame;
+    for (config::FunctionIterator *s = config::FunctionIterator::tail; s; s = s->next) {
+        s->func(J);
+    }
 }
 
 void js_unref_function(xstring onclick_ref) {

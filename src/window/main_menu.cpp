@@ -111,10 +111,6 @@ void main_menu_screen::init() {
         }
     });
 
-    ui["select_player"].onclick([] {
-        window_player_selection_show();
-    });
-
     ui["show_records"].onclick([] {
         window_records_show();
     });
