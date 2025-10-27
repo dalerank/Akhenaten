@@ -414,8 +414,13 @@ static void setup() {
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init
                                                                
-    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine
-    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine
+    pcstr base_path = vfs::platform_file_manager_get_base_path();
+    vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
+    js_vm_add_scripts_folder(scripts_base_path);    // setup script engine data scripts folder
+
+    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine user folder
+    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
+
     js_vm_setup();
     js_vm_sync();
 

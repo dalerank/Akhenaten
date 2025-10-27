@@ -118,7 +118,7 @@ using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 #define ANK_FUNCTION_NAMED(fname, func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { func(); }
+    void permanent_js2cpp_callback_##fname(js_State *J) { func(); js_pushundefined(J); }
 
 #define ANK_FUNCTION(func) \
     ANK_FUNCTION_NAMED(func, func)

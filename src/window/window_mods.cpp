@@ -8,6 +8,8 @@
 #include "input/input.h"
 #include "game/player_data.h"
 #include "game/game.h"
+#include "content/content.h"
+#include "window/popup_dialog.h"
 #include "js/js_game.h"
 
 ui::mods_window g_mods_window;
@@ -81,31 +83,29 @@ int ui::mods_window::draw_background(UiFlags flags) {
 }
 
 void ui::mods_window::ui_draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
-
     ui.begin_widget(pos);
     ui.draw(flags);
+    ui.end_widget();
 
+    graphics_set_to_dialog();
     if (panel) {
         panel->ui_params.pos = ui["mods_panel"].pos;
         panel->draw();
     }
-
-    ui.end_widget();
     graphics_reset_dialog();
 }
 
 int ui::mods_window::ui_handle_mouse(const mouse *m) {
-    int result = autoconfig_window::ui_handle_mouse(m);
-
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
         window_go_back();
-        return result;
+        return 0;
     }
 
+    int result = 0;
     if (panel) {
         ui.begin_widget(pos);
+        result = autoconfig_window::ui_handle_mouse(m);
 
         mouse m_dialog = *m;
         vec2i panel_offset = ui["mods_panel"].pos;
@@ -137,4 +137,10 @@ void window_mods_show(void) {
     ui::mods_window::show();
 }
 
+void platform_unpack_scripts() {
+    xstring vpath = vfs::platform_unpack_scripts();
+    popup_dialog::show_ok("#scripts_unpacked_to", vpath);
+}
+
 ANK_FUNCTION(window_mods_show)
+ANK_FUNCTION(platform_unpack_scripts)

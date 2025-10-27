@@ -120,16 +120,6 @@ void main_menu_screen::init() {
     });
 }
 
-void main_menu_handle_input(const mouse* m, const hotkeys* h) {
-    ui::handle_mouse(m);
-
-    if (h->escape_pressed) {
-        popup_dialog::show_yesno("#popup_dialog_quit", [] {
-            app_request_exit();
-        });
-    }
-}
-
 void main_menu_screen::show(bool restart_music) {
     if (restart_music) {
         g_sound.play_intro();

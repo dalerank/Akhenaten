@@ -6,19 +6,20 @@
 #include "graphics/elements/panel.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
+#include "io/gamefiles/lang.h"
 #include "input/input.h"
 
 popup_dialog g_popup_dialog;
 
-bool popup_dialog::init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
+bool popup_dialog::init(const xstring scheme, xstring header, xstring cbody, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
     load(scheme.c_str());
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return false;
     }
 
-    text = loc;
-    this->custom_text = custom_text;
+    text = header;
+    this->body = cbody;
     ok_clicked = 0;
     this->close_func = close_cb;
     num_buttons = buttons;
@@ -40,11 +41,9 @@ bool popup_dialog::init(const xstring scheme, textid loc, textid custom_text, wi
     ui["label_tip"] = num_buttons ? textid{ 0, 0 } : textid{ 13, 1 };
     ui["label_tip"].enabled = !num_buttons;
 
-    if (text.valid()) {
-        ui["header"] = text;
-        ui["text"] = textid{ text.group, (uint16_t)(text.id + 1) };
-    } else {
-        ui["header"] = custom_text;
+    ui["header"] = text;
+    ui["text"] = cbody;
+    if (cbody.empty()) {
         ui["text"] = "#popup_dialog_proceed";
     }
 
@@ -81,11 +80,22 @@ void popup_dialog::handle_input(const mouse* m, const hotkeys* h) {
 }
 
 void popup_dialog::show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
-    textid text = loc_text_from_key(loc_id);
-    show({}, text, buttons, close_func);
+    pcstr text = lang_text_from_key(loc_id);
+    show("", text, buttons, close_func);
+}
+
+void popup_dialog::show(textid text, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
+    xstring header = lang_get_xstring(text.group, text.id);
+    show(header, "", buttons, close_func);
 }
 
 void popup_dialog::show(textid text, textid custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
+    xstring header = lang_get_xstring(text.group, text.id);
+    xstring str = lang_get_xstring(custom.group, custom.id);
+    show(header, str, buttons, close_func);
+}
+
+void popup_dialog::show(xstring text, xstring custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func) {
     constexpr pcstr configs[] = { "window_popup_dialog_ok", "window_popup_dialog_ok", "window_popup_dialog_yesno" };
     bool ok = g_popup_dialog.init(configs[buttons], text, custom, close_func, buttons);
     if (!ok) {
