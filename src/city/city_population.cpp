@@ -12,8 +12,13 @@
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_homeless.h"
 #include "core/profiler.h"
+#include "js/js_game.h"
 
-static const int BIRTHS_PER_AGE_DECENNIUM[10] = {0, 3, 16, 9, 2, 0, 0, 0, 0, 0};
+#include <numeric>
+#include <algorithm>
+#include <array>
+
+city_population_rules_t ANK_VARIABLE(city_population_rules)
 
 static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
                                                                 {15, 8, 4, 8, 16, 25, 45, 70, 90, 100},
@@ -262,11 +267,7 @@ void city_population_t::calculate_working_people() {
 
 void city_population_t::recalculate() {
     int save_value = current;
-    current = 0;
-    for (int i = 0; i < 100; i++) {
-        current += at_age[i];
-    }
-
+    current = std::accumulate(std::begin(at_age), std::end(at_age), 0);
     highest_ever = std::max(current, highest_ever);
 }
 
@@ -342,12 +343,10 @@ static void remove_from_census_in_age_decennium(int decennium, int num_people) {
     }
 }
 
-static int get_people_in_age_decennium(int decennium) {
-    int pop = 0;
-    for (int i = 0; i < 10; i++) {
-        pop += city_data.population.at_age[10 * decennium + i];
-    }
-    return pop;
+int city_population_t::get_people_in_age_decennium(int decennium) {
+    const int start = 10 * decennium;
+    const int end = start + 10;
+    return std::accumulate(at_age.begin() + start, at_age.begin() + end, 0);
 }
 
 int city_population_t::average_age() {
@@ -400,12 +399,10 @@ void city_population_t::remove_for_troop_request(int num_people) {
     recalculate();
 }
 
-int city_population_people_of_working_age() {
-    if (!!game_features::gameplay_change_retire_at_60) {
-        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4) + get_people_in_age_decennium(5);
-    } else {
-        return get_people_in_age_decennium(2) + get_people_in_age_decennium(3) + get_people_in_age_decennium(4);
-    }
+int city_population_t::get_people_of_working_age() {
+    const int start_age = 20;  // decennium 2
+    const int end_age = !!game_features::gameplay_change_retire_at_60 ? 60 : 50;  // decennium 5 or 4
+    return std::accumulate(at_age.begin() + start_age, at_age.begin() + end_age, 0);
 }
 
 int city_population_percent_in_workforce(void) {
@@ -419,15 +416,11 @@ int city_population_percent_in_workforce(void) {
     return calc_percentage(city_data.labor.workers_available, city_data.population.current);
 }
 
-static int get_people_aged_between(int min, int max) {
-    int pop = 0;
-    for (int i = min; i < max; i++) {
-        pop += city_data.population.at_age[i];
-    }
-    return pop;
+int city_population_t::get_people_aged_between(int min, int max) {
+    return std::accumulate(at_age.begin() + min, at_age.begin() + max, 0);
 }
 
-void city_population_calculate_educational_age(void) {
+void city_population_t::calculate_educational_age() {
     city_data.population.school_age = get_people_aged_between(0, 14);
     city_data.population.academy_age = get_people_aged_between(14, 21);
 }
@@ -485,11 +478,11 @@ void city_population_t::yearly_advance_ages_and_calculate_deaths() {
     }
 }
 
-static void yearly_calculate_births(void) {
+void city_population_t::yearly_calculate_births() {
     city_data.population.yearly_births = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
         int people = get_people_in_age_decennium(decennium);
-        int births = calc_adjust_with_percentage(people, BIRTHS_PER_AGE_DECENNIUM[decennium]);
+        int births = calc_adjust_with_percentage<int>(people, city_population_rules.births_per_age_decennium[decennium]);
         int added = g_city.population.add_to_houses(births);
         city_data.population.at_age[0] += added;
         city_data.population.yearly_births += added;

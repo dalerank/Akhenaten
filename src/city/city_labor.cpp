@@ -310,13 +310,15 @@ int city_labor_t::workers_allocated(int category) const {
 }
 
 void city_labor_t::calculate_workers(int num_plebs, int num_patricians) {
-    g_city.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
+    auto &population = g_city.population;
+    population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
     if (!!game_features::gameplay_change_fixed_workers) {
-        g_city.population.working_age = calc_adjust_with_percentage(num_plebs, 38);
-        workers_available = g_city.population.working_age;
+        population.working_age = calc_adjust_with_percentage(num_plebs, 38);
+        workers_available = population.working_age;
     } else {
-        g_city.population.working_age = calc_adjust_with_percentage(city_population_people_of_working_age(), 60);
+        const int num_in_working_age = population.get_people_of_working_age();
+        population.working_age = calc_adjust_with_percentage(num_in_working_age, 60);
         workers_available = calc_adjust_with_percentage(g_city.population.working_age, g_city.population.percentage_plebs);
     }
 }

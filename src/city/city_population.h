@@ -2,8 +2,14 @@
 
 #include <cstdint>
 #include "building/building_type.h"
+#include "core/archive.h"
 
 struct event_population_changed { int value; };
+
+struct city_population_rules_t {
+    std::array<int8_t, 10> births_per_age_decennium = { 0, 3, 16, 9, 2, 0, 0, 0, 0, 0 };
+};
+ANK_CONFIG_STRUCT(city_population_rules_t, births_per_age_decennium);
 
 struct city_population_t {
     int32_t current;
@@ -57,6 +63,7 @@ struct city_population_t {
     void update_day();
     int percentage_in_shanties();
     int percentage_in_manors();
+    int get_people_in_age_decennium(int decennium);
 
     int add_to_houses(int num_people);
     int remove_from_houses(int num_people);
@@ -67,6 +74,10 @@ struct city_population_t {
     void evict_overcrowded();
     void update_migration();
     void calculate_working_people();
+    int get_people_of_working_age();
+    int get_people_aged_between(int min, int max);
+    void calculate_educational_age();
+    void yearly_calculate_births();
 
     void yearly_advance_ages_and_calculate_deaths();
     int at_month(int max_months, int month);
@@ -80,10 +91,6 @@ void city_population_set_last_used_house_remove(int building_id);
 
 void city_population_clear_capacity();
 void city_population_add_capacity(int people_in_house, int max_people);
-
-int city_population_people_of_working_age();
-
-void city_population_calculate_educational_age();
 
 void city_population_request_yearly_update();
 
