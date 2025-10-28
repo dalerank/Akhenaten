@@ -91,12 +91,6 @@ struct city_population_t {
     int at_month(int max_months, int month);
 };
 
-int city_population_last_used_house_add();
-void city_population_set_last_used_house_add(int building_id);
-
-int city_population_last_used_house_remove();
-void city_population_set_last_used_house_remove(int building_id);
-
 void city_population_clear_capacity();
 void city_population_add_capacity(int people_in_house, int max_people);
 

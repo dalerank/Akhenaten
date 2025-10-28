@@ -13,12 +13,18 @@
 #include "figuretype/figure_homeless.h"
 #include "core/profiler.h"
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 #include <numeric>
 #include <algorithm>
 #include <array>
+#include <iostream>
 
 city_population_rules_t ANK_VARIABLE(city_population_rules)
+
+declare_console_command_p(show_pop_milestone) {
+    g_city.population.reached_milestone(true);
+}
 
 static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
                                                                 {15, 8, 4, 8, 16, 25, 45, 70, 90, 100},
@@ -33,22 +39,6 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 
                                                                 {0, 0, 0, 0, 0, 0, 0, 2, 5, 10}};
 
 static auto &city_data = g_city;
-
-int city_population_last_used_house_add(void) {
-    return city_data.population.last_used_house_add;
-}
-
-void city_population_set_last_used_house_add(int building_id) {
-    city_data.population.last_used_house_add = building_id;
-}
-
-int city_population_last_used_house_remove(void) {
-    return city_data.population.last_used_house_remove;
-}
-
-void city_population_set_last_used_house_remove(int building_id) {
-    city_data.population.last_used_house_remove = building_id;
-}
 
 int city_population_t::add_to_houses(int num_people) {
     int added = 0;
@@ -71,14 +61,14 @@ int city_population_t::add_to_houses(int num_people) {
 
 int city_population_t::remove_from_houses(int num_people) {
     int removed = 0;
-    int building_id = city_population_last_used_house_remove();
+    int building_id = g_city.population.last_used_house_remove;
     for (int i = 1; i < 4 * MAX_BUILDINGS && removed < num_people; i++) {
         if (++building_id >= MAX_BUILDINGS)
             building_id = 1;
 
         auto house = building_get(building_id)->dcast_house();
         if (house && house->state() == BUILDING_STATE_VALID && house->hsize()) {
-            city_population_set_last_used_house_remove(building_id);
+            g_city.population.last_used_house_remove = building_id;
             if (house->house_population() > 0) {
                 ++removed;
                 --house->runtime_data().population;
@@ -192,17 +182,15 @@ int city_population_t::create_immigrants(int num_people) {
 
 void city_population_t::reached_milestone(bool force) {
     xstring message;
-    xstring title;
 
     for (const auto& ms: city_population_rules.milestones) {
         if (current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
             message = ms.message;
-            title = ms.title;
         }
     }
 
     if (!message.empty()) {
-        events::emit(event_message_population{ true, title });
+        events::emit(event_message_population{ true, message });
     }
 }
 

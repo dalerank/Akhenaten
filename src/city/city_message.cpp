@@ -71,8 +71,7 @@ void message_manager_t::init() {
     });
 
     events::subscribe([this] (event_message_population ev) {
-        int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
-        //post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, img_id);
+        post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, -1);
     });
 }
 
@@ -225,7 +224,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
     // TODO: remove this hack += 99
     //message_id += 99;
 
-    msg.MM_text_id = mm_text.crc();
+    msg.MM_text_id = lang_get_message_uid(mm_text);
     msg.is_read = 0;
     msg.year = game.simtime.year;
     msg.month = game.simtime.month;
