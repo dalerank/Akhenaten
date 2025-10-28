@@ -88,7 +88,7 @@ enum e_message_type {
 
 struct city_message {
     int sequence;
-    uint32_t MM_text_id;
+    uint16_t MM_text_id;
     int year;
     int month;
     int param1;
