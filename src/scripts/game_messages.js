@@ -153,7 +153,7 @@ game_messages {
         }
     }
     
-    message_money_display_window {
+    message_game_control_money_display_window {
         id: 15,
         pos [0, 24]
         size [30, 28]
@@ -168,7 +168,7 @@ game_messages {
         }
     }
     
-    message_population_display {
+    message_game_control_population_display {
         id: 16,
         pos [0, 24]
         size [30, 28]
@@ -183,7 +183,7 @@ game_messages {
         }
     }
    
-    message_date_display {
+    message_game_control_date_display {
         id: 17,
         pos [0, 24]
         size [30, 28]
@@ -198,7 +198,7 @@ game_messages {
         }
     }
     
-    message_overalay_selector {
+    message_overlay_selector {
         id: 18,
         pos [0, 24]
         size [30, 28]
@@ -558,7 +558,7 @@ game_messages {
         }
     }
 
-    message_tutorial_industry {
+    message_game_concept_industry {
         id: 46
         pos [0, 24]
         size [30, 28]
@@ -1225,6 +1225,7 @@ game_messages {
         pos [0, 88]
         size [30, 20]
         title { text: "Population milestone" }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         content { text: "100 people have moved into your village." }
     }
 
@@ -1233,6 +1234,7 @@ game_messages {
         pos [0, 88]
         size [30, 20]
         title { text: "Population milestone" }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         content { text: "Your budding town now houses five hundred residents." }
     }
 
@@ -1241,125 +1243,87 @@ game_messages {
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@17"
-        }
-        content {
-            text: "One thousand people now call your city home."
-        }
+        title { text: "Population milestone" }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        video { text: "@17" }
+        content { text: "One thousand people now call your city home." }
     }
     message_population_milestone_2000 {
         id: 103,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@17"
-        }
-        content {
-            text: "With two thousand residents, your city is growing in importance."
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@17" }
+        content { text: "With two thousand residents, your city is growing in importance." }
     }
     message_population_milestone_3000 {
         id: 104,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@17"
-        }
-        content {
-            text: "Your city's population has reached three thousand for the first time in history."
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@17" }
+        content { text: "Your city's population has reached three thousand for the first time in history." }
     }
     message_population_milestone_5000 {
         id: 105,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@18"
-        }
-        content {
-            text: "Your city is getting quite large.  Now five thousand people live here."
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@18" }
+        content { text: "Your city is getting quite large.  Now five thousand people live here." }
     }
     message_population_milestone_10000 {
         id: 106,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        content {
-            text: "Its population of ten thousand places your city in Egypt's top tier."
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@18" }
+        content { text: "Its population of ten thousand places your city in Egypt's top tier." }
     }
     message_population_milestone_15000 {
-        id: 107,
-        type: 2,
+        id: 107
+        type: 2
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@18"
-        }
-        content {
-            text: "Few cities can rival yours, which now houses fifteen thousand citizens."
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@18" }
+        content { text: "Few cities can rival yours, which now houses fifteen thousand citizens." }
     }
     message_population_milestone_20000 {
         id: 108,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@19"
-        }
-        content {
-            text: "Other governors and nomarchs are awed that your city houses twenty thousand people!"
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@19" }
+        content { text: "Other governors and nomarchs are awed that your city houses twenty thousand people!" }
     }
     message_population_milestone_25000 {
         id: 109,
         type: 2,
         pos [0, 88]
         size [30, 20]
-        title {
-            text: "Population milestone",
-        }
-        video {
-            text: "@19"
-        }
-        content {
-            text: "The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!"
-        }
+        image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
+        title { text: "Population milestone" }
+        video { text: "@19" }
+        content { text: "The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!" }
     }
+
     message_the_control_panel {
         id: 110,
         pos [0, 24]
         size [30, 20]
-        title {
-            text: "The Control Panel",
-        }
+        title { text: "The Control Panel"  }
         content {
             text: "This panel accesses all of the controls that you need to build and maintain your city.  The best way to understand its functions is simply to click on its various buttons - go ahead, you can't hurt anything!  If Mouse Help is turned ON (under 'Help' on the Menu Bar), put your cursor over any element for a short description of it.  For detailed explanations of every topic in Pharaoh, use the 'Help' item on the Menu Bar."
         }
@@ -1859,7 +1823,7 @@ game_messages {
             text: "Armed with a written language, the Eygptians recorded many of their stories, poems and hymns. These texts were stored in libraries associated with the Per-Ankh (house of life), or @163Scribal&School, which was adjacent to the Temple.  @L@LEgyptian literature sprang from an oral tradition, and for the most part literature was recorded as a reminder to the storyteller. Most Egyptians were illiterate, and many @387scribes were storytellers who used the written record to help them remember the stories, hymns and poems. Those who knew how to read, particularly those associated with the pharaoh's court, could gain access to the libraries and read papyri for themselves.  Some wealthy citizens had their own libraries. @L@LAncient Egyptian literature could be divided into several different genres, including autobiography, adventure tales, folktales, mythology, lament, poetry, and hymns, among others. Of these forms, autobiography was the oldest and came from the tradition of engraving a person's accomplishments on his tomb.  Satire was also popular."
         }
     }
-    message_entertainment {
+    message_history_entertainment {
         id: 165,
         pos [0, 88]
         size [30, 20]

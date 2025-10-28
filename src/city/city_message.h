@@ -128,7 +128,7 @@ struct messages {
 
 struct event_message { bool use_popup; xstring message_id; int param1; int param2; };
 struct event_message_god { int god; xstring message_id; };
-struct event_message_population { bool use_popup; xstring title; };
+struct event_message_population { bool use_popup; xstring message_id; };
 
 struct message_manager_t {
     city_message messages[MAX_MESSAGES];
