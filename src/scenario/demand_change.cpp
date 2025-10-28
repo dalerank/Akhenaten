@@ -35,14 +35,14 @@ void scenario_demand_change_process() {
         auto &trade_route = g_empire.get_route(route);
         if (g_scenario.demand_changes[i].is_rise) {
             if (trade_route.increase_limit(resource) && g_empire.is_trade_route_open(route))
-                events::emit(event_message{ true, MESSAGE_INCREASED_TRADING, city_id, resource });
+                events::emit(event_message{ true, "message_increased_trading", city_id, resource });
 
         } else {
             if (trade_route.decrease_limit(resource) && g_empire.is_trade_route_open(route)) {
                 if (trade_route.limit(resource) > 0)
-                    events::emit(event_message{ true, MESSAGE_DECREASED_TRADING, city_id, resource });
+                    events::emit(event_message{ true, "message_decreased_trading", city_id, resource });
                 else {
-                    events::emit(event_message{ true, MESSAGE_TRADE_STOPPED, city_id, resource });
+                    events::emit(event_message{ true, "message_trade_stopped", city_id, resource });
                 }
             }
         }

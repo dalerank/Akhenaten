@@ -472,7 +472,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
-        return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+        return text_draw_multiline(label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
         return rich_text_draw((uint8_t *)label, offset, box_width, 10, false);
@@ -1027,7 +1027,7 @@ void ui::etext::draw(UiFlags flags) {
         }
         text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + additionaly, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
+        text_draw_multiline(_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
         if (_shadow_color) {

@@ -7,6 +7,7 @@ import math
 import ui_common
 import ui_main_menu
 import rating_points
+import game_messages
 import gods
 import common
 import images
@@ -26,6 +27,9 @@ import images_remap
 import ui_overlay_menu
 import imagepaks
 import missions
+import mission_0_nubt
+import mission_1_
+import mission_2_
 import mission_5_timna
 import mission_6_behdet
 import mission_8_selima

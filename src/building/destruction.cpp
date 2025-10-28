@@ -54,26 +54,6 @@ int building_destroy_first_of_type(e_building_type type) {
     return 0;
 }
 
-//void building_destroy_last_placed(void) {
-//    int highest_sequence = 0;
-//    building* last_building = 0;
-//    for (int i = 1; i < MAX_BUILDINGS; i++) {
-//        building* b = building_get(i);
-//        if (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_VALID) {
-//            if (b->creation_sequence_index > highest_sequence) {
-//                highest_sequence = b->creation_sequence_index;
-//                last_building = b;
-//            }
-//        }
-//    }
-//    if (last_building) {
-//        city_message_post(true, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, last_building->tile.grid_offset());
-//        game_undo_disable();
-//        building_destroy_by_collapse(last_building);
-//        map_routing_update_land();
-//    }
-//}
-
 void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     if (map_building_damage_increase(grid_offset) > max_damage) {
         building_destroy_by_enemy(tile2i(grid_offset));

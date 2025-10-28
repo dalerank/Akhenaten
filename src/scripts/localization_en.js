@@ -186,6 +186,18 @@ localization_en = [
   {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"residents total"}
 
   {key: "#main_menu_mods", text:"Mods"}
+
+  {key: "#message_population_title", text:"Population Milestone"}
+  {key: "#message_population_100", text:"100 people have moved into your village"}
+  {key: "#message_population_500", text:"Your budding town now houses five hundred residents"}
+  {key: "#message_population_1000", text:"One thousand people now call your city home."}
+  {key: "#message_population_2000", text:"With two thousand residents, your city is growing in importance."}
+  {key: "#message_population_3000", text:"Your city's population has reached three thousand for the first time in history."}
+  {key: "#message_population_5000", text:"Your city is getting quite large.  Now five thousand people live here."}
+  {key: "#message_population_10000", text:"Its population of ten thousand places your city in Egypt's top tier."}
+  {key: "#message_population_15000", text:"New cities can rival yours, which now houses fifteen thousand citizens."}
+  {key: "#message_population_20000", text:"Other governors and nomarchs are awed that your city houses twenty thousand people!"}
+  {key: "#message_population_25000", text:"The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!"}
   
   {key: "#popup_dialog_quit", group:5, id:0 }
   {key: "#popup_dialog_open_trade", group:5, id:2 }

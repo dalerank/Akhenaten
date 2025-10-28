@@ -12,14 +12,14 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_robber);
 
-void city_show_message_criminal(int message_id, int money_stolen, int tile_offset) {
+void city_show_message_criminal(xstring message_id, int money_stolen, int tile_offset) {
     bool show_popup_message = false;
     if (g_city.sentiment.last_mugger_message <= 0) {
         g_city.sentiment.last_mugger_message = 90;
         show_popup_message = true;
     }
 
-    events::emit(event_message{ show_popup_message, MESSAGE_TUTORIAL_CRIME, money_stolen, tile_offset });
+    events::emit(event_message{ show_popup_message, "message_tutorial_crime", money_stolen, tile_offset });
 }
 
 
@@ -125,7 +125,7 @@ void figure_robber::create(building *b) {
                     money_stolen = 400 - random_byte() / 2;
                 }
 
-                city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
+                city_show_message_criminal("message_tutorial_crime", money_stolen, f->tile.grid_offset());
                 city_finance_process_stolen(money_stolen);
             } else {
                 const int treasury = g_city.finance.treasury;
@@ -135,7 +135,7 @@ void figure_robber::create(building *b) {
                 }
 
                 if (money_stolen > 0) {
-                    city_show_message_criminal(MESSAGE_TUTORIAL_CRIME, money_stolen, f->tile.grid_offset());
+                    city_show_message_criminal("message_tutorial_crime", money_stolen, f->tile.grid_offset());
                     city_finance_process_stolen(money_stolen);
                 }
             }

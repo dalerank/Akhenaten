@@ -391,7 +391,7 @@ void text_draw_label_and_number_centered(const char* label, int value, const cha
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_width, e_font font, uint32_t color) {
+int text_draw_multiline(pcstr str, int x_offset, int y_offset, int box_width, e_font font, uint32_t color) {
     int line_height = font_definition_for(font)->line_height;
     if (line_height < 11)
         line_height = 11;
@@ -411,7 +411,7 @@ int text_draw_multiline(const uint8_t* str, int x_offset, int y_offset, int box_
         int line_index = 0;
         while (has_more_characters && current_width < box_width) {
             int word_num_chars;
-            int word_width = get_word_width(str, font, &word_num_chars);
+            int word_width = get_word_width((const uint8_t*)str, font, &word_num_chars);
             current_width += word_width;
             if (current_width >= box_width) {
                 if (current_width == 0)

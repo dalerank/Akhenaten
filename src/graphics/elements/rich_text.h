@@ -2,6 +2,7 @@
 
 #include "graphics/color.h"
 #include "graphics/font.h"
+#include "core/xstring.h"
 #include "core/vec2i.h"
 
 struct mouse;
@@ -17,11 +18,10 @@ struct scrollbar_t;
  * @param adjust_width_on_no_scroll Whether to expand the text area into the scrollbar area
  * @return Width of the text in blocks
  */
-int rich_text_init(const uint8_t* text,
-                   vec2i ptext,
-                   int width_blocks,
-                   int height_blocks,
-                   bool adjust_width_on_no_scroll);
+int rich_text_init(const uint8_t* text, vec2i ptext, int width_blocks, int height_blocks, bool adjust_width_on_no_scroll);
+inline int rich_text_init(xstring text, vec2i ptext, int width_blocks, int height_blocks, bool adjust_width_on_no_scroll) {
+    return rich_text_init((const uint8_t *)text.c_str(), ptext, width_blocks, height_blocks, adjust_width_on_no_scroll);
+}
 
 /**
  * Sets fonts to use
@@ -50,6 +50,9 @@ int rich_text_get_clicked_link(const mouse* m);
  * @return Total number of lines required for the text
  */
 int rich_text_draw(const uint8_t* text, vec2i offset, int box_width, int height_lines, bool measure_only, bool centered = false);
+inline int rich_text_draw(xstring text, vec2i offset, int box_width, int height_lines, bool measure_only, bool centered = false) {
+    return rich_text_draw((const uint8_t *)text.c_str(), offset, box_width, height_lines, measure_only, centered);
+}
 
 /**
  * Draws rich text with specified color
@@ -62,6 +65,9 @@ int rich_text_draw(const uint8_t* text, vec2i offset, int box_width, int height_
  * @return Total number of lines required for the text
  */
 int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color);
+inline int rich_text_draw_colored(xstring text, vec2i offset, int box_width, int height_lines, color color) {
+    return rich_text_draw_colored((const uint8_t *)text.c_str(), offset, box_width, height_lines, color);
+}
 void rich_text_draw_scrollbar(vec2i pos);
 
 int rich_text_handle_mouse(const mouse* m, vec2i pos);

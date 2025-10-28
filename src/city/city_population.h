@@ -6,10 +6,18 @@
 
 struct event_population_changed { int value; };
 
+struct population_milestone {
+    uint32_t pop;
+    xstring title;
+    xstring message;
+};
+ANK_CONFIG_STRUCT(population_milestone, pop, title, message)
+
 struct city_population_rules_t {
     std::array<int8_t, 10> births_per_age_decennium = { 0, 3, 16, 9, 2, 0, 0, 0, 0, 0 };
+    svector<population_milestone, 16> milestones;
 };
-ANK_CONFIG_STRUCT(city_population_rules_t, births_per_age_decennium);
+ANK_CONFIG_STRUCT(city_population_rules_t, births_per_age_decennium, milestones);
 
 struct city_population_t {
     int32_t current;

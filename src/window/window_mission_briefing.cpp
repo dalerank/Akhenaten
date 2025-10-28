@@ -65,10 +65,10 @@ void ui::mission_briefing_window::init() {
     });
 
     int text_id = 200 + scenario_id; 
-    const lang_message *msg = lang_get_message(text_id);
+    const lang_message& msg = lang_get_message(text_id);
 
-    ui["title"] = (pcstr)msg->title.text;
-    ui["subtitle"] = (pcstr)msg->subtitle.text;
+    ui["title"] = msg.title.text;
+    ui["subtitle"] = msg.subtitle.text;
     ui["difficulty_label"] = ui::str(153, g_settings.difficulty() + 1);
 
     const pcstr widgets[] = { "goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5" };
@@ -92,7 +92,7 @@ void ui::mission_briefing_window::init() {
     ui["goal_immediate"].enabled = !!immediate_goal_text;
     ui["goal_immediate"] = immediate_goal_text;
 
-    ui["description_text"] = (pcstr)msg->content.text;
+    ui["description_text"] = msg.content.text;
 }
 
 int ui::mission_briefing_window::draw_background(UiFlags flags) {
