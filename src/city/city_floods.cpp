@@ -221,17 +221,17 @@ void floods_t::post_flood_prediction_message() {
     }
 
     if (quality_next == 100) {
-        messages::popup(MESSAGE_FLOOD_PERFECT, 0, 0);
+        messages::popup("message_perfect_inundation", 0, 0);
     } else if (quality_next >= 75) {
-        messages::popup(MESSAGE_FLOOD_EXCELLENT, 0, 0);
+        messages::popup("message_excellent_inundation", 0, 0);
     } else if (quality_next >= 50) {
-        messages::popup(MESSAGE_FLOOD_GOOD, 0, 0);
+        messages::popup("message_good_inundation", 0, 0);
     } else if (quality_next >= 25) {
-        messages::popup(MESSAGE_FLOOD_MEDIOCRE, 0, 0);
+        messages::popup("message_mediocre_inundation", 0, 0);
     } else if (quality_next > 0) {
-        messages::popup(MESSAGE_FLOOD_POOR, 0, 0);
+        messages::popup("message_poor_inundation", 0, 0);
     } else {
-        messages::popup(MESSAGE_FLOOD_FAIL, 0, 0);
+        messages::popup("message_no_inundation", 0, 0);
     }
 }
 

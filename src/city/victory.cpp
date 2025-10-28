@@ -183,7 +183,7 @@ void city_t::victory_check() {
                 window_mission_end_show_fired();
             else {
                 mission.fired_message_shown = 1;
-                messages::popup(MESSAGE_FIRED, 0, 0);
+                messages::popup("message_mission_defeat", 0, 0);
             }
             victory_state.force_win = 0;
         } else if (victory_state.state == e_victory_state_won) {

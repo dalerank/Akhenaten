@@ -49,7 +49,7 @@ void tutorial1_handle_fire(event_fire_damage) {
     }
 
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_fire });
-    messages::popup(MESSAGE_TUTORIAL_FIRE_IN_THE_VILLAGE, 0, 0);
+    messages::popup("message_fire_in_the_village", 0, 0);
 }
 
 void tutorial1_popultion_cap(city_migration_t& migration) {
@@ -75,7 +75,7 @@ void tutorial1_handle_population_for_granary(event_population_changed ev) {
     events::emit(event_building_menu_update{ "tutorial_food" });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.granary_opened = true;
-    messages::popup(MESSAGE_TUTORIAL_FOOD_OR_FAMINE, 0, 0);
+    messages::popup("message_tutorial_food_or_famine", 0, 0);
 }
 
 void tutorial1_handle_collapse(event_collase_damage) {
@@ -93,7 +93,7 @@ void tutorial1_handle_collapse(event_collase_damage) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_collapse });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.building_collapsed = true;
-    messages::popup(MESSAGE_TUTORIAL_COLLAPSED_BUILDING, 0, 0);
+    messages::popup("message_tutorial_collapsed_building", 0, 0);
 }
 
 void tutorial1_on_filled_granary(event_granary_resource_added ev) {
@@ -114,7 +114,7 @@ void tutorial1_on_filled_granary(event_granary_resource_added ev) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_water });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.gamemeat_stored = true;
-    messages::popup(MESSAGE_TUTORIAL_CLEAN_WATER, 0, 0);
+    messages::popup("message_tutorial_clean_water", 0, 0);
 }
 
 void tutorial1_handle_building_create(event_building_create ev) {

@@ -161,15 +161,15 @@ void city_festival_t::execute_festival() {
     g_city.religion.gods[planned.god].months_since_festival = 0;
     switch (planned.size) {
     case FESTIVAL_SMALL:
-        messages::popup(MESSAGE_SMALL_FESTIVAL, 0, 0);
+        messages::popup("message_common_festival", 0, 0);
         break;
 
     case FESTIVAL_LARGE:
-        messages::popup(MESSAGE_LARGE_FESTIVAL, 0, 0);
+        messages::popup("message_lavish_festival", 0, 0);
         break;
 
     case FESTIVAL_GRAND:
-        messages::popup(MESSAGE_GRAND_FESTIVAL, 0, 0);
+        messages::popup("message_grand_festival", 0, 0);
 
         if (!!game_features::gameplay_change_grandfestival) {
             g_city.religion.gods[planned.god].blessing_done = 0;

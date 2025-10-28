@@ -405,7 +405,7 @@ void formation_seth_kill_enemies() {
     }
 
     g_city.religion.spirit_of_seth_mark_used();
-    messages::popup(MESSAGE_SPIRIT_OF_MARS, 0, grid_offset);
+    messages::popup("message_spirit_of_seth", 0, grid_offset);
 }
 
 static void update_enemy_movement(formation* m, int roman_distance) {

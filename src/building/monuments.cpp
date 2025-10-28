@@ -507,7 +507,6 @@ bool building_monument_needs_resources(building *b) {
     return false;
 }
 
-constexpr int MESSAGE_MONUMENT_COMPLETE = 171;
 int building_monument_progress(building *b) {
     if (building_monument_needs_resources(b)) {
         return 0;
@@ -533,9 +532,9 @@ int building_monument_progress(building *b) {
 
     if (monumentd.phase == MONUMENT_FINISHED) {
         if (building_monument_is_temple_complex(b->type)) {
-            messages::popup(MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
+            messages::popup("message_monument_complete", 0, b->tile.grid_offset());
         } else if (b->type == BUILDING_SMALL_MASTABA) {
-            messages::popup(MESSAGE_MONUMENT_COMPLETE, 0, b->tile.grid_offset());
+            messages::popup("message_monument_complete", 0, b->tile.grid_offset());
         }
     }
     return 1;

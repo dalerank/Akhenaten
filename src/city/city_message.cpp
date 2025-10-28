@@ -20,11 +20,11 @@ auto& g_message_data = g_message_manager;
 
 static bool should_play_sound = true;
 
-void messages::popup(int message_id, int param1, int param2) {
+void messages::popup(xstring message_id, int param1, int param2) {
     events::emit(event_message{ true, message_id, param1, param2 });
 }
 
-void messages::god(int god, int message_id) {
+void messages::god(int god, xstring message_id) {
     events::emit(event_message_god{ god, message_id });
 }
 
@@ -72,7 +72,7 @@ void message_manager_t::init() {
 
     events::subscribe([this] (event_message_population ev) {
         int img_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 16;
-        post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, img_id);
+        //post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, img_id);
     });
 }
 
@@ -91,12 +91,12 @@ int message_manager_t::new_message_id() {
 }
 
 static int has_video(int text_id) {
-    const lang_message* msg = lang_get_message(text_id);
-    if (!msg->video.text) {
+    const lang_message& msg = lang_get_message(text_id);
+    if (!msg.video.text) {
         return 0;
     }
 
-    return vfs::file_exists((const char*)msg->video.text);
+    return vfs::file_exists(msg.video.text.c_str());
 }
 
 static void enqueue_message(int sequence) {
@@ -110,7 +110,7 @@ static void enqueue_message(int sequence) {
 }
 
 static void play_sound(int text_id) {
-    if (lang_get_message(text_id)->urgent == 1) {
+    if (lang_get_message(text_id).urgent) {
         g_sound.play_effect(SOUND_EFFECT_FANFARE_URGENT);
     } else {
         g_sound.play_effect(SOUND_EFFECT_FANFARE);
@@ -210,6 +210,12 @@ void city_message_post_full(bool use_popup, int template_id, const event_ph_t *e
 }
 
 city_message &message_manager_t::post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img) {
+    xstring mm_text = lang_get_message(message_id).title.text;
+
+    return post_common(use_popup, mm_text, param1, param2, god, bg_img);
+}
+
+city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, int param1, int param2, int god, int bg_img) {
     auto &data = g_message_data;
 
     int id = data.new_message_id();
@@ -224,9 +230,9 @@ city_message &message_manager_t::post_common(bool use_popup, int message_id, int
     city_message &msg = data.messages[id];
 
     // TODO: remove this hack += 99
-    message_id += 99;
+    //message_id += 99;
 
-    msg.MM_text_id = message_id;
+    msg.MM_text_id = mm_text.crc();
     msg.is_read = 0;
     msg.year = game.simtime.year;
     msg.month = game.simtime.month;
@@ -237,8 +243,8 @@ city_message &message_manager_t::post_common(bool use_popup, int message_id, int
     msg.hide_img = false;
     msg.background_img = bg_img;
 
-    int text_id = city_message_get_text_id(message_id);
-    int lang_msg_type = lang_get_message(text_id)->message_type;
+    int text_id = city_message_get_text_id(0);// message_id);
+    int lang_msg_type = lang_get_message(text_id).message_type;
     if (lang_msg_type == MESSAGE_TYPE_DISASTER || lang_msg_type == MESSAGE_TYPE_INVASION) {
         data.problem_count = 1;
     }
@@ -257,7 +263,7 @@ city_message &message_manager_t::post_common(bool use_popup, int message_id, int
     return msg;
 }
 
-city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, int message_type, int param1, short param2) {
+city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, xstring text, int param1, short param2) {
     auto& data = g_message_data;
     bool use_popup = false;
 
@@ -267,7 +273,7 @@ city_message &city_message_post_with_popup_delay(e_mesage_category category, boo
     }
     use_popup |= force_popup;
 
-    city_message &message = data.post_common(use_popup, message_type, param1, param2, GOD_UNKNOWN, 0);
+    city_message &message = data.post_common(use_popup, text, param1, param2, GOD_UNKNOWN, 0);
     data.message_count[category]++;
 
     return message;
@@ -354,39 +360,39 @@ int city_message_get_text_id(int message_id) {
 int city_message_get_advisor(int message_type) {
     message_type -= 99;
     switch (message_type) {
-    case MESSAGE_LOCAL_UPRISING:
+    //case MESSAGE_LOCAL_UPRISING:
     case MESSAGE_BARBARIAN_ATTACK:
-    case MESSAGE_KINGDOME_ARMY_ATTACK:
-    case MESSAGE_DISTANT_BATTLE:
-    case MESSAGE_ENEMIES_CLOSING:
-    case MESSAGE_ENEMIES_AT_THE_DOOR:
+    //case MESSAGE_KINGDOME_ARMY_ATTACK:
+    //case MESSAGE_DISTANT_BATTLE:
+    //case MESSAGE_ENEMIES_CLOSING:
+    //case MESSAGE_ENEMIES_AT_THE_DOOR:
         return MESSAGE_ADVISOR_MILITARY;
 
     case MESSAGE_KINGDOME_REQUESTS_GOODS:
     case MESSAGE_KINGDOME_REQUESTS_MONEY:
-    case MESSAGE_KINGDOME_REQUESTS_ARMY:
+    //case MESSAGE_KINGDOME_REQUESTS_ARMY:
     case MESSAGE_REQUEST_REMINDER:
-    case MESSAGE_REQUEST_RECEIVED:
+    //case MESSAGE_REQUEST_RECEIVED:
     case MESSAGE_REQUEST_REFUSED:
     case MESSAGE_REQUEST_REFUSED_OVERDUE:
-    case MESSAGE_REQUEST_RECEIVED_LATE:
+    //case MESSAGE_REQUEST_RECEIVED_LATE:
     case MESSAGE_REQUEST_CAN_COMPLY:
         return MESSAGE_ADVISOR_IMPERIAL;
 
     case MESSAGE_UNEMPLOYMENT:
     case MESSAGE_WORKERS_NEEDED:
-    case MESSAGE_KINGDOME_LOWERS_WAGES:
-    case MESSAGE_KINGDOME_RAISES_WAGES:
+    //case MESSAGE_KINGDOME_LOWERS_WAGES:
+    //case MESSAGE_KINGDOME_RAISES_WAGES:
         return MESSAGE_ADVISOR_LABOR;
 
     case MESSAGE_NOT_ENOUGH_FOOD:
     case MESSAGE_FOOD_NOT_DELIVERED:
         return MESSAGE_ADVISOR_POPULATION;
 
-    case MESSAGE_HEALTH_MALARIA_PROBLEM:
-    case MESSAGE_HEALTH_DISEASE:
-    case MESSAGE_HEALTH_PLAGUE:
-        return MESSAGE_ADVISOR_HEALTH;
+    //case MESSAGE_HEALTH_MALARIA_PROBLEM:
+    //case MESSAGE_HEALTH_DISEASE:
+    //case MESSAGE_HEALTH_PLAGUE:
+    //    return MESSAGE_ADVISOR_HEALTH;
 
     default:
         return MESSAGE_ADVISOR_NONE;
@@ -432,9 +438,9 @@ bool city_message_mark_population_shown(int population) {
     }
 }
 
-const city_message* city_message_get(int message_id) {
-    auto& data = g_message_data;
-    return &data.messages[message_id];
+const city_message& city_message_get(int message_id) {
+    const auto& data = g_message_data;
+    return data.messages[message_id];
 }
 
 int city_message_set_current(int message_id) {
@@ -492,8 +498,8 @@ int city_message_next_problem_area_grid_offset() {
     for (int i = 0; i < 999; i++) {
         city_message* msg = &data.messages[i];
         if (msg->MM_text_id && msg->year >= game.simtime.year - 1) {
-            const lang_message* lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
-            int lang_msg_type = lang_msg->message_type;
+            const lang_message& lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
+            int lang_msg_type = lang_msg.message_type;
             if (has_problem_area(msg, lang_msg_type))
                 data.problem_count++;
         }
@@ -511,7 +517,7 @@ int city_message_next_problem_area_grid_offset() {
         city_message* msg = &data.messages[i];
         if (msg->MM_text_id && msg->year >= current_year - 1) {
             int text_id = city_message_get_text_id(msg->MM_text_id);
-            int lang_msg_type = lang_get_message(text_id)->message_type;
+            int lang_msg_type = lang_get_message(text_id).message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
                 if (data.problem_index < index) {

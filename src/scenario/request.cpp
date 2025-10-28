@@ -58,7 +58,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     int pharaoh_alt_shift = (event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0);
     switch (event.event_state) {
     case e_event_state_finished:
-        messages::popup(MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
+        messages::popup("message_request_received", event.event_id, 0);
         if (!event.is_overdue) {
             g_city.kingdome.increase_success_request(3);
         }
@@ -68,7 +68,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
 
     case e_event_state_finished_late:
         assert(!event.is_overdue);
-        messages::popup(MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
+        messages::popup("message_request_received_late", event.event_id, 0);
         g_city.kingdome.increase_success_request(1);
         event.event_state = e_event_state_received;
         event.is_active = false;

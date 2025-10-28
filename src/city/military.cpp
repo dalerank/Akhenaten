@@ -192,22 +192,22 @@ static int player_has_won() {
 
 static void fight_distant_battle() {
     if (city_data.distant_battle.roman_months_to_travel_forth <= 0) {
-        events::emit(event_message{ true, MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS, 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_no_troops", 0, 0 });
         g_city.kingdome.change(-50);
         set_city_foreign();
     } else if (city_data.distant_battle.roman_months_to_travel_forth > 2) {
-        events::emit(event_message{ true, MESSAGE_DISTANT_BATTLE_LOST_TOO_LATE, 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_too_late", 0, 0 });
         g_city.kingdome.change(-25);
         set_city_foreign();
         city_data.distant_battle.roman_months_to_travel_back = city_data.distant_battle.roman_months_traveled;
     } else if (!player_has_won()) {
-        events::emit(event_message{ true, MESSAGE_DISTANT_BATTLE_LOST_TOO_WEAK, 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0 });
         g_city.kingdome.change(-10);
         set_city_foreign();
         city_data.distant_battle.roman_months_traveled = 0;
         // no return: all soldiers killed
     } else {
-        events::emit(event_message{ true, MESSAGE_DISTANT_BATTLE_WON, 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_won", 0, 0 });
         g_city.kingdome.change(25);
         city_buildings_earn_triumphal_arch();
         //building_menu_update(BUILDSET_NORMAL);
@@ -227,10 +227,10 @@ static void update_aftermath() {
         if (city_data.distant_battle.roman_months_to_travel_back <= 0) {
             if (city_data.distant_battle.city_foreign_months_left) {
                 // soldiers return - not in time
-                events::emit(event_message{ true, MESSAGE_TROOPS_RETURN_FAILED, 0, city_data.map.exit_point.grid_offset() });
+                events::emit(event_message{ true, "message_troops_return_failed", 0, city_data.map.exit_point.grid_offset() });
             } else {
                 // victorious
-                events::emit(event_message{ true, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, city_data.map.exit_point.grid_offset() });
+                events::emit(event_message{ true, "message_troops_return_victorious", 0, city_data.map.exit_point.grid_offset() });
             }
             city_data.distant_battle.roman_months_traveled = 0;
             formation_batalions_return_from_distant_battle();
@@ -238,7 +238,7 @@ static void update_aftermath() {
     } else if (city_data.distant_battle.city_foreign_months_left > 0) {
         city_data.distant_battle.city_foreign_months_left--;
         if (city_data.distant_battle.city_foreign_months_left <= 0) {
-            events::emit(event_message{ true, MESSAGE_DISTANT_BATTLE_CITY_RETAKEN, 0, 0 });
+            events::emit(event_message{ true, "message_city_retaken", 0, 0 });
             set_city_vulnerable();
         }
     }

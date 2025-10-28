@@ -75,7 +75,7 @@ uint16_t &game_speed() { return game.game_speed; }
 
 const std::vector<lang_pack> &get_def_lang_packs() {
     static std::vector<lang_pack> lang_packs = {
-        {"", "eng", "Pharaoh_Text", "Pharaoh_MM"},
+        {"", "eng", "Pharaoh_Text"},
     };
 
     return lang_packs;
@@ -304,7 +304,7 @@ static bool reload_language(int is_editor, int reload_images) {
     if (lang_dir.empty()) {
         lang_packs = get_def_lang_packs();
     } else {
-        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text", "Pharaoh_MM");
+        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text");
     }
 
     if (!lang_load(is_editor, lang_packs)) {

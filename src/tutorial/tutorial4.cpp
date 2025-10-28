@@ -54,7 +54,7 @@ void tutorial4_warehouse_beer_check(event_warehouse_filled ev) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_finance });
 
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    messages::popup(MESSAGE_TUTORIAL_FINANCES, 0, 0);
+    messages::popup("message_tutorial_finances", 0, 0);
 }
 
 bool tutorial4_is_success() {

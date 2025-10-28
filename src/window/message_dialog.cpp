@@ -72,8 +72,7 @@ struct message_dialog_data_t {
     uint16_t background_img;
     e_god god;
 
-    int x;
-    int y;
+    vec2i pos;
     int x_text;
     int y_text;
     int text_height_blocks;
@@ -135,25 +134,25 @@ void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution *tag_templates
 
 static void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
     auto &data = g_message_dialog_data;
-    auto msg = city_message_get(data.message_id);
+    const auto& msg = city_message_get(data.message_id);
 
     bstring32 amount;
-    bstring32 time; time.printf("%d", msg->req_months_left);
+    bstring32 time; time.printf("%d", msg.req_months_left);
     int city_name_id = 0;
 
     if (phrase_modifier) {
-        empire_city* city = g_empire.city(msg->req_city_past);
+        empire_city* city = g_empire.city(msg.req_city_past);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg->req_amount_past, msg->req_resource_past);
+        int value = stack_proper_quantity(msg.req_amount_past, msg.req_resource_past);
         amount.printf("%d", value);
     } else {
-        empire_city *city = g_empire.city(msg->req_city);
+        empire_city *city = g_empire.city(msg.req_city);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg->req_amount, msg->req_resource);
+        int value = stack_proper_quantity(msg.req_amount, msg.req_resource);
         amount.printf("%d", value);
     }
 
@@ -162,10 +161,10 @@ static void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phr
       {"[player_name]", (pcstr)city_player_name()},
       {"[reason_phrase]", data.phrase_text.c_str()},
       {"[city_name]", (pcstr)lang_get_string(195, city_name_id)},
-      {"[a_foreign_army]", g_invasions.get_prop((e_enemy_type)msg->sender_faction).army_title},
+      {"[a_foreign_army]", g_invasions.get_prop((e_enemy_type)msg.sender_faction).army_title},
       {"[amount]", amount.c_str()},
       {"[amount_granted]", ""}, // TODO
-      {"[item]", (pcstr)lang_get_string(23, 54 + (phrase_modifier ? msg->req_resource_past : msg->req_resource))},
+      {"[item]", (pcstr)lang_get_string(23, 54 + (phrase_modifier ? msg.req_resource_past : msg.req_resource))},
       {"[time_allotted]", time.c_str()},
       {"[time_until_attack]", ""}, // TODO
       {"[travel_time]", ""},       // TODO
@@ -196,24 +195,24 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
     data.god = GOD_UNKNOWN;
 
     if (message_id != -1) {
-        const city_message *city_msg = city_message_get(data.message_id);
-        if (city_msg->eventmsg_body_id != -1) {
+        const city_message& city_msg = city_message_get(data.message_id);
+        if (city_msg.eventmsg_body_id != -1) {
             data.is_eventmsg = true;
-            data.title_text = g_scenario.events.msg_text(city_msg->eventmsg_title_id, 0);
-            data.body_template = g_scenario.events.msg_text(city_msg->eventmsg_body_id, 0);
-            data.phrase_template = g_scenario.events.msg_text(city_msg->eventmsg_phrase_id, 0);
+            data.title_text = g_scenario.events.msg_text(city_msg.eventmsg_title_id, 0);
+            data.body_template = g_scenario.events.msg_text(city_msg.eventmsg_body_id, 0);
+            data.phrase_template = g_scenario.events.msg_text(city_msg.eventmsg_phrase_id, 0);
             eventmsg_template_combine(data.phrase_template, data.phrase_text.data(), true);
             eventmsg_template_combine(data.body_template, data.body_text.data(), false);
         } else {
             data.is_eventmsg = false;
         }
 
-        if (city_msg->god != GOD_UNKNOWN) {
-            data.god = (e_god)city_msg->god;
+        if (city_msg.god != GOD_UNKNOWN) {
+            data.god = (e_god)city_msg.god;
         }
 
-        if (city_msg->background_img) {
-            data.background_img = city_msg->background_img;
+        if (city_msg.background_img) {
+            data.background_img = city_msg.background_img;
         }
     } else {
         data.is_eventmsg = false;
@@ -223,13 +222,13 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
     data.background_callback = background_callback;
     data.show_video = false;
     data.background = false;
-    const lang_message *msg = lang_get_message(text_id);
+    const lang_message& msg = lang_get_message(text_id);
 
     if (!g_player_message_data.use_popup) {
         return;
     }
 
-    if (msg->video.text && video_start((char *)msg->video.text)) {
+    if (!msg.video.text.empty() && video_start(msg.video.text.c_str())) {
         data.show_video = true;
         video_init();
     } else if ((data.god != GOD_UNKNOWN) || (data.background_img > 0)) {
@@ -243,46 +242,46 @@ static int resource_image(int resource) {
     return image_id;
 }
 
-static int is_problem_message(const lang_message* msg) {
-    return msg->type == TYPE_MESSAGE
-           && (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION);
+static int is_problem_message(const lang_message& msg) {
+    return msg.type == TYPE_MESSAGE
+           && (msg.message_type == MESSAGE_TYPE_DISASTER || msg.message_type == MESSAGE_TYPE_INVASION);
 }
 
-static int get_message_image_id(const lang_message* msg) {
+static int get_message_image_id(const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    if (!msg->image.id) {
+    if (!msg.image.id) {
         return 0;
     } else if (data.text_id == 0) {
         // message id = 0 ==> "about": fixed image position
         return image_id_from_group(PACK_UNLOADED, 25);
     } else {
-        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg->image.id - 1;
+        return image_id_from_group(GROUP_MESSAGE_IMAGES) + msg.image.id - 1;
     }
 }
 
-static void draw_city_message_text(const lang_message* msg) {
+static void draw_city_message_text(const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    uint8_t* text = msg->content.text;
+    xstring text = msg.content.text;
     painter ctx = game.painter();
  
     if (data.is_eventmsg) {
-        text = (uint8_t *)data.body_text.c_str();
+        text = data.body_text;
     }
     
     if (!text) {
         return;
     }
     
-    if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
+    if (msg.message_type != MESSAGE_TYPE_TUTORIAL) {
         int width = lang_text_draw(25, g_player_message_data.month, data.x_text + 10, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
         width += lang_text_draw_year(g_player_message_data.year, data.x_text + 12 + width, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-        if (msg->message_type == MESSAGE_TYPE_DISASTER && g_player_message_data.param1) {
+        if (msg.message_type == MESSAGE_TYPE_DISASTER && g_player_message_data.param1) {
             if (data.text_id == MESSAGE_DIALOG_THEFT) {
                 // param1 = denarii
-                lang_text_draw_amount(8, 0, g_player_message_data.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw_amount(8, 0, g_player_message_data.param1, data.pos.x + 240, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
             } else {
                 // param1 = building type
-                lang_text_draw(41, g_player_message_data.param1, data.x + 240, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw(41, g_player_message_data.param1, data.pos.x + 240, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
             }
         } else {
             width += lang_text_draw(63, 5, data.x_text + width + 60, data.y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
@@ -290,18 +289,18 @@ static void draw_city_message_text(const lang_message* msg) {
         }
     }
 
-    switch (msg->message_type) {
+    switch (msg.message_type) {
         case MESSAGE_TYPE_DISASTER:
         case MESSAGE_TYPE_INVASION:
-            lang_text_draw(12, 1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-            rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
+            lang_text_draw(12, 1, data.pos.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+            rich_text_draw((const uint8_t*)text.c_str(), vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_EMIGRATION: {
             int city_sentiment = g_city.sentiment.low_mood_cause;
             if (city_sentiment >= 1 && city_sentiment <= 5) {
                 int max_width = 16 * (data.text_width_blocks - 1) - 64;
-                lang_text_draw_multiline(12, city_sentiment + 2, vec2i{data.x + 64, data.y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw_multiline(12, city_sentiment + 2, vec2i{data.pos.x + 64, data.y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
             }
             rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * (data.text_width_blocks - 1), data.text_height_blocks - 1, 0);
             break;
@@ -311,30 +310,30 @@ static void draw_city_message_text(const lang_message* msg) {
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
-            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
-            lang_text_draw(21, g_empire.city(g_player_message_data.param1)->name_id, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.pos.x + 64, data.y_text + 40);
+            lang_text_draw(21, g_empire.city(g_player_message_data.param1)->name_id, data.pos.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
-            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.x + 64, data.y_text + 40);
-            text_draw_money(g_player_message_data.param1, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.pos.x + 64, data.y_text + 40);
+            text_draw_money(g_player_message_data.param1, data.pos.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         default: {
             int lines = rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 56), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
-            if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
+            if (msg.message_type == MESSAGE_TYPE_IMPERIAL) {
                 // in C3, the data is fetched from the request structure.
                 // in Pharaoh, the data is stored with the message
                 //                const scenario_request *request = scenario_request_get(player_message.param1);
-                auto city_msg = city_message_get(data.message_id);
+                const auto& city_msg = city_message_get(data.message_id);
                 int y_offset = data.y_text + 86 + lines * 16;
-                ImageDraw::img_generic(ctx, resource_image(city_msg->req_resource), vec2i{data.x_text + 8, y_offset - 4});
-                int width = text_draw_number(stack_proper_quantity(city_msg->req_amount, city_msg->req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE_ON_DARK);
-                lang_text_draw(23, city_msg->req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+                ImageDraw::img_generic(ctx, resource_image(city_msg.req_resource), vec2i{data.x_text + 8, y_offset - 4});
+                int width = text_draw_number(stack_proper_quantity(city_msg.req_amount, city_msg.req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw(23, city_msg.req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 //                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-                width = lang_text_draw_amount(8, 4, city_msg->req_months_left, data.x_text + 200, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+                width = lang_text_draw_amount(8, 4, city_msg.req_months_left, data.x_text + 200, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 lang_text_draw(12, 2, data.x_text + 200 + width, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 //                }
             }
@@ -343,12 +342,12 @@ static void draw_city_message_text(const lang_message* msg) {
     }
 }
 
-static void draw_title(const lang_message* msg) {
+static void draw_title(const lang_message& msg) {
     auto &data = g_message_dialog_data;
 
     painter ctx = game.painter();
-    pcstr text = (pcstr)msg->title.text;
-    const city_message *city_msg = city_message_get(data.message_id);
+    xstring text = msg.title.text;
+    const city_message& city_msg = city_message_get(data.message_id);
     
     if (data.is_eventmsg)
         text = data.title_text;
@@ -360,57 +359,57 @@ static void draw_title(const lang_message* msg) {
     int image_id = get_message_image_id(msg);
     const image_t* img = image_id ? image_get(image_id) : 0;
     // title
-    if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
-        text_draw_centered(text, data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK_ON_LIGHT, 0);
+    if (msg.message_type == MESSAGE_TYPE_TUTORIAL) {
+        text_draw_centered(text.c_str(), data.pos.x, data.pos.y + msg.title.pos.y, 16 * msg.size.x, FONT_LARGE_BLACK_ON_LIGHT, 0);
     } else {
         // Center title in the dialog but ensure it does not overlap with the
         // image: if the title is too long, it will start 8px from the image.
-        int title_x_offset = img ? img->width + msg->image.x + 8 : 0;
-        text_draw_centered(text, data.x + title_x_offset, data.y + 14, 16 * msg->width_blocks - 2 * title_x_offset, FONT_LARGE_BLACK_ON_LIGHT, 0);
+        int title_x_offset = img ? img->width + msg.image.pos.x + 8 : 0;
+        text_draw_centered(text.c_str(), data.pos.x + title_x_offset, data.pos.y + 14, 16 * msg.size.x - 2 * title_x_offset, FONT_LARGE_BLACK_ON_LIGHT, 0);
     }
-    data.y_text = data.y + 48;
+    data.y_text = data.pos.y + 48;
 
     // picture
-    if (img && !city_msg->hide_img) {
-        int image_x = msg->image.x;
-        int image_y = msg->image.y;
-        ImageDraw::img_generic(ctx, image_id, vec2i{data.x + image_x, data.y + image_y});
+    if (img && !city_msg.hide_img) {
+        int image_x = msg.image.pos.x;
+        int image_y = msg.image.pos.y;
+        ImageDraw::img_generic(ctx, image_id, vec2i{data.pos.x + image_x, data.pos.y + image_y});
 
-        if (data.y + image_y + img->height + 8 > data.y_text)
-            data.y_text = data.y + image_y + img->height + 8;
+        if (data.pos.y + image_y + img->height + 8 > data.y_text)
+            data.y_text = data.pos.y + image_y + img->height + 8;
     }
 }
-static void draw_subtitle(const lang_message* msg) {
+static void draw_subtitle(const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    if (msg->subtitle.x && msg->subtitle.text) {
-        int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
-        int height = text_draw_multiline(msg->subtitle.text, data.x + msg->subtitle.x, data.y + msg->subtitle.y, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    if (msg.subtitle.pos.x && !msg.subtitle.text.empty()) {
+        int width = 16 * msg.size.x - 16 - msg.subtitle.pos.x;
+        int height = text_draw_multiline(msg.subtitle.text, data.pos.x + msg.subtitle.pos.x, data.pos.y + msg.subtitle.pos.y, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
-        if (data.y + msg->subtitle.y + height > data.y_text)
-            data.y_text = data.y + msg->subtitle.y + height;
+        if (data.pos.y + msg.subtitle.pos.y + height > data.y_text)
+            data.y_text = data.pos.y + msg.subtitle.pos.y + height;
     }
 }
-static void draw_content(const lang_message* msg) {
+static void draw_content(const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    uint8_t* text = msg->content.text;
+    xstring text = msg.content.text;
     if (data.is_eventmsg) {
-        text = (uint8_t*)data.body_text.c_str();
+        text = data.body_text;
     }
 
     if (!text) {
         return;
     }
     
-    int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
-    data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / 16;
-    data.text_width_blocks = rich_text_init(text, vec2i(data.x_text, data.y_text), msg->width_blocks - 4, data.text_height_blocks, /*adjust_width_on_no_scroll*/true);
+    int header_offset = msg.type == TYPE_MANUAL ? 48 : 32;
+    data.text_height_blocks = msg.size.y - 1 - (header_offset + data.y_text - data.pos.y) / 16;
+    data.text_width_blocks = rich_text_init(text, vec2i(data.x_text, data.y_text), msg.size.x - 4, data.text_height_blocks, /*adjust_width_on_no_scroll*/true);
 
     // content!
     inner_panel_draw({ data.x_text, data.y_text }, { data.text_width_blocks, data.text_height_blocks });
     graphics_set_clip_rectangle({data.x_text + 3, data.y_text + 3}, {16 * data.text_width_blocks - 6, 16 * data.text_height_blocks - 6});
     rich_text_clear_links();
 
-    if (msg->type == TYPE_MESSAGE) {
+    if (msg.type == TYPE_MESSAGE) {
         draw_city_message_text(msg);
     } else {
         rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 6), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
@@ -422,11 +421,10 @@ static void draw_content(const lang_message* msg) {
 static void draw_background_normal() {
     auto &data = g_message_dialog_data;
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    const lang_message* msg = lang_get_message(data.text_id);
-    data.x = msg->x;
-    data.y = msg->y;
-    data.x_text = data.x + 16;
-    outer_panel_draw(vec2i{data.x, data.y}, msg->width_blocks, msg->height_blocks);
+    const lang_message& msg = lang_get_message(data.text_id);
+    data.pos = msg.pos;
+    data.x_text = data.pos.x + 16;
+    outer_panel_draw(data.pos, msg.size.x, msg.size.y);
 
     draw_title(msg);
     draw_subtitle(msg);
@@ -436,71 +434,70 @@ static void draw_background_normal() {
 static void draw_background_image() {
     auto &data = g_message_dialog_data;
     painter ctx = game.painter();
-    const lang_message* msg = lang_get_message(data.text_id);
-    data.x = 32;
-    data.y = 28;
+    const lang_message& msg = lang_get_message(data.text_id);
+    data.pos = { 32, 28 };
 
     int small_font = 0;
     int lines_available = 4;
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL) {
         lines_available = 3;
     }
 
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     rich_text_clear_links();
-    int lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
+    int lines_required = rich_text_draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
     if (lines_required > lines_available) {
         small_font = 1;
         rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
+        lines_required = rich_text_draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
     }
 
-    outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
-    graphics_draw_rect(vec2i{data.x + 7, data.y + 7}, vec2i{402, 294}, COLOR_BLACK);
+    outer_panel_draw(data.pos, 26, 28);
+    graphics_draw_rect(data.pos + vec2i{7, 7}, vec2i{402, 294}, COLOR_BLACK);
 
-    int y_base = data.y + 308;
+    int y_base = data.pos.y + 308;
     int inner_height_blocks = 6;
     if (lines_required > lines_available) {
         // create space to cram an extra line into the dialog
         y_base = y_base - 8;
         inner_height_blocks += 1;
     }
-    inner_panel_draw({ data.x + 8, y_base }, { 25, inner_height_blocks });
-    text_draw_centered(msg->title.text, data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    inner_panel_draw({ data.pos.x + 8, y_base }, { 25, inner_height_blocks });
+    text_draw_centered(msg.title.text, data.pos.x + 8, data.pos.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
-    int width = lang_text_draw(25, g_player_message_data.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(g_player_message_data.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw(25, g_player_message_data.month, data.pos.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(g_player_message_data.year, data.pos.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
 
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER && data.text_id == MESSAGE_DIALOG_THEFT) {
-        lang_text_draw_amount(8, 0, g_player_message_data.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_DISASTER && data.text_id == MESSAGE_DIALOG_THEFT) {
+        lang_text_draw_amount(8, 0, g_player_message_data.param1, data.pos.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
     } else {
-        width += lang_text_draw(63, 5, data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-        text_draw(city_player_name(), data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
+        width += lang_text_draw(63, 5, data.pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+        text_draw(city_player_name(), data.pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
 
-    data.text_height_blocks = msg->height_blocks - 1 - (32 + data.y_text - data.y) / 16;
-    data.text_width_blocks = msg->width_blocks - 4;
+    data.text_height_blocks = msg.size.y - 1 - (32 + data.y_text - data.pos.y) / 16;
+    data.text_width_blocks = msg.size.x - 4;
     if (small_font) {
         // Draw in black and then white to create shadow effect
-        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
-        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
+        rich_text_draw_colored(msg.content.text, vec2i(data.pos.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
+        rich_text_draw_colored(msg.content.text, vec2i(data.pos.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
     } else {
-        rich_text_draw(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
+        rich_text_draw(msg.content.text, vec2i(data.pos.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
     }
 
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-        int y_text = data.y + 384;
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL) {
+        int y_text = data.pos.y + 384;
         if (lines_required > lines_available)
             y_text += 8;
 
         scenario_request request = scenario_request_get_visible(g_player_message_data.param1);
         if (request.is_valid()) {
-            text_draw_number(request.amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-            ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), vec2i{data.x + 70, y_text - 5});
-            lang_text_draw(23, request.resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
+            text_draw_number(request.amount, '@', " ", data.pos.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
+            ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), vec2i{data.pos.x + 70, y_text - 5});
+            lang_text_draw(23, request.resource, data.pos.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
             if (request.state <= e_event_state_overdue) {
-                width = lang_text_draw_amount(8, 4, request.months_to_comply, data.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);
-                lang_text_draw(12, 2, data.x + 200 + width, y_text, FONT_NORMAL_WHITE_ON_DARK);
+                width = lang_text_draw_amount(8, 4, request.months_to_comply, data.pos.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);
+                lang_text_draw(12, 2, data.pos.x + 200 + width, y_text, FONT_NORMAL_WHITE_ON_DARK);
             }
         }
     }
@@ -522,70 +519,69 @@ static void draw_background_image() {
 static void draw_background_video() {
     auto &data = g_message_dialog_data;
     painter ctx = game.painter();
-    const lang_message* msg = lang_get_message(data.text_id);
-    data.x = 32;
-    data.y = 28;
+    const lang_message& msg = lang_get_message(data.text_id);
+    data.pos = { 32, 28 };
 
     int small_font = 0;
     int lines_available = 4;
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL)
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL)
         lines_available = 3;
 
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     rich_text_clear_links();
-    int lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
+    int lines_required = rich_text_draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
     if (lines_required > lines_available) {
         small_font = 1;
         rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text_draw(msg->content.text, vec2i(0, 0), 384, lines_available, 1);
+        lines_required = rich_text_draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
     }
 
-    outer_panel_draw(vec2i{data.x, data.y}, 26, 28);
-    graphics_draw_rect(vec2i{data.x + 7, data.y + 7}, vec2i{402, 294}, COLOR_BLACK);
+    outer_panel_draw(data.pos, 26, 28);
+    graphics_draw_rect(data.pos + vec2i{7, 7}, vec2i{402, 294}, COLOR_BLACK);
 
-    int y_base = data.y + 308;
+    int y_base = data.pos.y + 308;
     int inner_height_blocks = 6;
     if (lines_required > lines_available) {
         // create space to cram an extra line into the dialog
         y_base = y_base - 8;
         inner_height_blocks += 1;
     }
-    inner_panel_draw({ data.x + 8, y_base }, { 25, inner_height_blocks });
-    text_draw_centered(msg->title.text, data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    inner_panel_draw({ data.pos.x + 8, y_base }, { 25, inner_height_blocks });
+    text_draw_centered(msg.title.text, data.pos.x + 8, data.pos.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
-    int width = lang_text_draw(25, g_player_message_data.month, data.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(g_player_message_data.year, data.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+    int width = lang_text_draw(25, g_player_message_data.month, data.pos.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(g_player_message_data.year, data.pos.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
 
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_DISASTER
         && data.text_id == MESSAGE_DIALOG_THEFT) {
-        lang_text_draw_amount(8, 0, g_player_message_data.param1, data.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+        lang_text_draw_amount(8, 0, g_player_message_data.param1, data.pos.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
     } else {
-        width += lang_text_draw(63, 5, data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-        text_draw(city_player_name(), data.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
+        width += lang_text_draw(63, 5, data.pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
+        text_draw(city_player_name(), data.pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
     }
 
-    data.text_height_blocks = msg->height_blocks - 1 - (32 + data.y_text - data.y) / 16;
-    data.text_width_blocks = msg->width_blocks - 4;
+    data.text_height_blocks = msg.size.y - 1 - (32 + data.y_text - data.pos.y) / 16;
+    data.text_width_blocks = msg.size.x - 4;
     if (small_font) {
         // Draw in black and then white to create shadow effect
-        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
-        rich_text_draw_colored(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
+        rich_text_draw_colored(msg.content.text, vec2i(data.pos.x + 16 + 1, y_base + 24 + 1), 384, data.text_height_blocks - 1, COLOR_BLACK);
+        rich_text_draw_colored(msg.content.text, vec2i(data.pos.x + 16, y_base + 24), 384, data.text_height_blocks - 1, COLOR_WHITE);
     } else {
-        rich_text_draw(msg->content.text, vec2i(data.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
+        rich_text_draw(msg.content.text, vec2i(data.pos.x + 16, y_base + 24), 384, data.text_height_blocks - 1, 0);
     }
 
-    if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-        int y_text = data.y + 384;
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL) {
+        int y_text = data.pos.y + 384;
         if (lines_required > lines_available)
             y_text += 8;
 
         scenario_request request = scenario_request_get_visible(g_player_message_data.param1);
-        text_draw_number(request.amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), data.x + 70, y_text - 5);
-        lang_text_draw(23, request.resource, data.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
+        text_draw_number(request.amount, '@', " ", data.pos.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
+        ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), data.pos.x + 70, y_text - 5);
+        lang_text_draw(23, request.resource, data.pos.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
         if (request.state <= e_event_state_overdue) {
-            width = lang_text_draw_amount(8, 4, request.months_to_comply, data.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);
-            lang_text_draw(12, 2, data.x + 200 + width, y_text, FONT_NORMAL_WHITE_ON_DARK);
+            width = lang_text_draw_amount(8, 4, request.months_to_comply, data.pos.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);
+            lang_text_draw(12, 2, data.pos.x + 200 + width, y_text, FONT_NORMAL_WHITE_ON_DARK);
         }
     }
 
@@ -635,41 +631,41 @@ static image_button* get_advisor_button() {
 
 static void draw_foreground_normal() {
     auto &data = g_message_dialog_data;
-    const lang_message* msg = lang_get_message(data.text_id);
+    const lang_message& msg = lang_get_message(data.text_id);
 
-    if (msg->type == TYPE_MANUAL && data.num_history > 0) {
-        image_buttons_draw({data.x + 16, data.y + 16 * msg->height_blocks - 36}, &image_button_back, 1);
-        lang_text_draw(12, 0, data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK_ON_LIGHT);
+    if (msg.type == TYPE_MANUAL && data.num_history > 0) {
+        image_buttons_draw({data.pos.x + 16, data.pos.y + 16 * msg.size.y - 36}, &image_button_back, 1);
+        lang_text_draw(12, 0, data.pos.x + 52, data.pos.y + 16 * msg.size.y - 31, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 
-    if (msg->type == TYPE_MESSAGE) {
-        image_buttons_draw({data.x + 16, data.y + 16 * msg->height_blocks - 40}, get_advisor_button(), 1);
-        if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
-            image_buttons_draw({data.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1);
+    if (msg.type == TYPE_MESSAGE) {
+        image_buttons_draw({data.pos.x + 16, data.pos.y + 16 * msg.size.y - 40}, get_advisor_button(), 1);
+        if (msg.message_type == MESSAGE_TYPE_DISASTER || msg.message_type == MESSAGE_TYPE_INVASION)
+            image_buttons_draw({data.pos.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1);
     }
-    image_buttons_draw({data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36}, &image_button_close, 1);
+    image_buttons_draw({data.pos.x + 16 * msg.size.x - 38, data.pos.y + 16 * msg.size.y - 36}, &image_button_close, 1);
     rich_text_draw_scrollbar(vec2i{0, 0});
 }
 
 static void draw_foreground_image() {
     auto &data = g_message_dialog_data;
 
-    image_buttons_draw({data.x + 16, data.y + 408}, get_advisor_button(), 1);
-    image_buttons_draw({data.x + 372, data.y + 410}, &image_button_close, 1);
-    const lang_message* msg = lang_get_message(data.text_id);
+    image_buttons_draw({data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1);
+    image_buttons_draw({data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1);
+    const lang_message& msg = lang_get_message(data.text_id);
     if (is_problem_message(msg)) {
-        image_buttons_draw({data.x + 48, data.y + 407}, &image_button_go_to_problem, 1);
+        image_buttons_draw({data.pos.x + 48, data.pos.y + 407}, &image_button_go_to_problem, 1);
     }
 }
 
 static void draw_foreground_video() {
     auto &data = g_message_dialog_data;
-    video_draw(data.x + 8, data.y + 8);
-    image_buttons_draw({data.x + 16, data.y + 408}, get_advisor_button(), 1);
-    image_buttons_draw({data.x + 372, data.y + 410}, &image_button_close, 1);
-    const lang_message* msg = lang_get_message(data.text_id);
+    video_draw(data.pos.x + 8, data.pos.y + 8);
+    image_buttons_draw({data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1);
+    image_buttons_draw({data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1);
+    const lang_message& msg = lang_get_message(data.text_id);
     if (is_problem_message(msg)) {
-        image_buttons_draw({data.x + 48, data.y + 407}, &image_button_go_to_problem, 1);
+        image_buttons_draw({data.pos.x + 48, data.pos.y + 407}, &image_button_go_to_problem, 1);
     }
 }
 
@@ -687,60 +683,60 @@ static void draw_foreground(int) {
     graphics_reset_dialog();
 }
 
-static bool handle_input_video(const mouse* m_dialog, const lang_message* msg) {
+static bool handle_input_video(const mouse* m_dialog, const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 408}, get_advisor_button(), 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
 
-    if (image_buttons_handle_mouse(m_dialog, {data.x + 372, data.y + 410}, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1, 0)) {
         return true;
     }
 
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(m_dialog, {data.x + 48, data.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+        if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 48, data.pos.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
             return true;
         }
     }
     return false;
 }
 
-static bool handle_input_godmsg(const mouse* m_dialog, const lang_message* msg) {
+static bool handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 408}, get_advisor_button(), 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
 
-    if (image_buttons_handle_mouse(m_dialog, {data.x + 372, data.y + 410}, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1, 0)) {
         return true;
     }
 
     if (is_problem_message(msg)) {
-        if (image_buttons_handle_mouse(m_dialog, {data.x + 48, data.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
+        if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 48, data.pos.y + 407}, &image_button_go_to_problem, 1, &data.focus_button_id)) {
             return true;
         }
     }
     return false;
 }
 
-static bool handle_input_normal(const mouse* m_dialog, const lang_message* msg) {
+static bool handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
     auto &data = g_message_dialog_data;
-    if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 16 * msg->height_blocks - 36}, &image_button_back, 1, 0)) {
+    if (msg.type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 16 * msg.size.y - 36}, &image_button_back, 1, 0)) {
         return true;
     }
 
-    if (msg->type == TYPE_MESSAGE) {
-        if (image_buttons_handle_mouse(m_dialog, {data.x + 16, data.y + 16 * msg->height_blocks - 40}, get_advisor_button(), 1, 0)) {
+    if (msg.type == TYPE_MESSAGE) {
+        if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 16 * msg.size.y - 40}, get_advisor_button(), 1, 0)) {
             return true;
         }
 
-        if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
-            if (image_buttons_handle_mouse(m_dialog, {data.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1, 0))
+        if (msg.message_type == MESSAGE_TYPE_DISASTER || msg.message_type == MESSAGE_TYPE_INVASION) {
+            if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 64, data.y_text + 36}, &image_button_go_to_problem, 1, 0))
                 return true;
         }
     }
 
-    if (image_buttons_handle_mouse(m_dialog, {data.x + 16 * msg->width_blocks - 38, data.y + 16 * msg->height_blocks - 36}, &image_button_close, 1, 0)) {
+    if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16 * msg.size.x - 38, data.pos.y + 16 * msg.size.y - 36}, &image_button_close, 1, 0)) {
         return true;
     }
 
@@ -763,7 +759,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_message_dialog_data;
     data.focus_button_id = 0;
     const mouse* m_dialog = mouse_in_dialog(m);
-    const lang_message* msg = lang_get_message(data.text_id);
+    const lang_message& msg = lang_get_message(data.text_id);
     bool handled;
     if (data.show_video) {
         handled = handle_input_video(m_dialog, msg);
@@ -816,9 +812,9 @@ static void button_advisor(int advisor, int param2) {
 static void button_go_to_problem(int param1, int param2) {
     auto &data = g_message_dialog_data;
     cleanup();
-    const lang_message* msg = lang_get_message(data.text_id);
+    const lang_message& msg = lang_get_message(data.text_id);
     int grid_offset = g_player_message_data.param2;
-    if (msg->message_type == MESSAGE_TYPE_INVASION) {
+    if (msg.message_type == MESSAGE_TYPE_INVASION) {
         int invasion_grid_offset = formation_grid_offset_for_invasion(g_player_message_data.param1);
         if (invasion_grid_offset > 0)
             grid_offset = invasion_grid_offset;

@@ -34,7 +34,7 @@ void tutorial_2_on_build_temple(event_building_create ev) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_entertainment });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.temples_built = true;
-    events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
+    events::emit(event_message{ true, "message_tutorial_entertainment", 0, 0 });
 }
 
 void tutorial_2_on_update_day(event_advance_day ev) {
@@ -52,7 +52,7 @@ void tutorial_2_on_update_day(event_advance_day ev) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_gods });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     tut.gold_mined = true;
-    events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
+    events::emit(event_message{ true, "message_tutorial_the_gods_of_egypt", 0, 0 });
 }
 
 bool tutorial2_is_success() {
@@ -110,10 +110,10 @@ xstring tutorial_2::goal_text() {
 void tutorial_2::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_gods) {
         events::emit(event_building_menu_update{ s });
-        events::emit(event_message{ true, MESSAGE_TUTORIAL_GODS_OF_EGYPT, 0, 0 });
+        events::emit(event_message{ true, "message_tutorial_the_gods_of_egypt", 0, 0 });
     } else if (s == tutorial_stage.tutorial_entertainment) {
         events::emit(event_building_menu_update{ s });
-        events::emit(event_message{ true, MESSAGE_TUTORIAL_ENTERTAINMENT, 0, 0 });
+        events::emit(event_message{ true, "message_tutorial_entertainment", 0, 0 });
     }
 }
 

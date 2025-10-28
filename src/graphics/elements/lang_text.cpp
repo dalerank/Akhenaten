@@ -233,5 +233,5 @@ int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width,
     if (!str) {
         return 0;
     }
-    return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
+    return text_draw_multiline((pcstr)str, offset.x, offset.y, box_width, font, 0);
 }

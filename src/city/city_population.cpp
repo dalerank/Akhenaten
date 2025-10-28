@@ -191,32 +191,18 @@ int city_population_t::create_immigrants(int num_people) {
 }
 
 void city_population_t::reached_milestone(bool force) {
-    int message = 0;
+    xstring message;
+    xstring title;
 
-    struct popm {
-        int pop;
-        int message;
-    };
-    constexpr popm milestones[] = {
-        {500, MESSAGE_POPULATION_500},
-        {1000, MESSAGE_POPULATION_1000},
-        {2000, MESSAGE_POPULATION_2000},
-        {3000, MESSAGE_POPULATION_3000},
-        {5000, MESSAGE_POPULATION_5000},
-        {10000, MESSAGE_POPULATION_10000},
-        {15000, MESSAGE_POPULATION_15000},
-        {20000, MESSAGE_POPULATION_20000},
-        {25000, MESSAGE_POPULATION_25000},
-    };
-
-    for (const auto& ms: milestones) {
+    for (const auto& ms: city_population_rules.milestones) {
         if (current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
             message = ms.message;
+            title = ms.title;
         }
     }
 
-    if (message > 0) {
-        events::emit(event_message_population{ true, message, 0, 0 });
+    if (!message.empty()) {
+        events::emit(event_message_population{ true, title });
     }
 }
 

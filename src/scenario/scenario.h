@@ -281,7 +281,7 @@ struct scenario_data_t {
     } env;
 
     struct meta_t {
-        uint16_t start_message;
+        xstring start_message;
         bool start_message_shown;
         bool hide_won_screen;
         std::array<int, 8> initial_funds = { 0 };

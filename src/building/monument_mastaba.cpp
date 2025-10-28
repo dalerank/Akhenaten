@@ -555,7 +555,7 @@ void building_mastaba::update_day(const vec2i tiles_size) {
     if (monumentd.phase >= 8) {
         finalize(&base, tiles_size);
         if (is_main()) {
-            city_message &message = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, MESSAGE_MASTABA_FINISHED, type(), tile().grid_offset());
+            city_message &message = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, "mastaba_history", type(), tile().grid_offset());
             message.hide_img = true;
         }
         return;

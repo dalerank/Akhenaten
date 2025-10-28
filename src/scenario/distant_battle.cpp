@@ -37,7 +37,7 @@ void scenario_distant_battle_process(void) {
             && game.simtime.month == g_scenario.invasions[i].month
             && g_scenario.empire.distant_battle_enemy_travel_months > 4
             && g_scenario.empire.distant_battle_kingdome_travel_months > 4 && !city_military_has_distant_battle()) {
-            events::emit(event_message{ true, MESSAGE_KINGDOME_REQUESTS_ARMY, 0, 0 });
+            events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0 });
             city_military_init_distant_battle(g_scenario.invasions[i].amount);
             return;
         }
