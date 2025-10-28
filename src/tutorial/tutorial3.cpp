@@ -146,8 +146,8 @@ xstring tutorial_3::goal_text() {
 
 void tutorial3_hunger_halt_immgrants(event_advance_month ev) {
     if(game.simtime.month >= 5) {
-       city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
-       events::unsubscribe(&tutorial3_hunger_halt_immgrants);
+        city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, "message_tutorial_hunger_halts_immigrants", 1200);
+        events::unsubscribe(&tutorial3_hunger_halt_immgrants);
     }
 }
 

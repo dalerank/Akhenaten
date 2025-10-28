@@ -37,6 +37,7 @@ struct lang_message {
     ltext video;
     ltext content;
     limage image;
+    uint8_t advisor;
     vec2i size;
     xstring key;
     vec2i pos;
@@ -51,7 +52,7 @@ struct lang_message {
 ANK_CONFIG_STRUCT(lang_message::limage, pos, id)
 ANK_CONFIG_STRUCT(lang_message::ltext, text, pos)
 ANK_CONFIG_STRUCT(lang_message, title, subtitle, video, content, image,
-    size, key, pos, type, message_type, id, urgent)
+    advisor, size, key, pos, type, message_type, id, urgent)
 
 template<>
 struct stable_array_max_elements<lang_message> {
@@ -109,7 +110,9 @@ const uint8_t* lang_get_string(textid text);
  * @return Message
  */
 const lang_message& lang_get_message(int id);
+const lang_message& lang_get_message(xstring id);
 xstring lang_get_message_id(int id);
+uint16_t lang_get_message_uid(xstring msg);
 
 enum e_text_info {
     e_text_title = 0,

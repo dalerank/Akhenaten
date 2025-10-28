@@ -117,7 +117,7 @@ void ui::hold_festival_window::init() {
     });
 
     ui["button_help"].onclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, -1, 0);
+        window_message_dialog_show("message_overseer_diversions", -1, 0);
     });
 
     for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {

@@ -196,7 +196,7 @@ void figure_fishing_boat::figure_action() {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             // cannot reach grounds
-            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
+            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, "message_fishing_boat_blocked", 12);
             poof();
         }
         break;

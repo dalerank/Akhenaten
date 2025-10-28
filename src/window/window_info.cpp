@@ -308,9 +308,10 @@ void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
         if (c.help_id > 0) {
-            window_message_dialog_show(c.help_id, -1, window_city_draw_all);
+            const xstring help_id = lang_get_message_id(c.help_id);
+            window_message_dialog_show(help_id, -1, window_city_draw_all);
         } else {
-            window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+            window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
         }
     });
 

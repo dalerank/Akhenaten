@@ -246,7 +246,7 @@ void empire_t::generate_traders() {
 
         if (city.is_sea_trade) {
             if (!g_city.buildings.has_working_dock()) {
-                city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK_PH, 384);
+                city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, "message_no_working_dock", 384);
                 continue;
             }
 

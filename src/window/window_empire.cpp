@@ -129,7 +129,7 @@ void empire_window::init() {
     ui["city_sell_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_selling(e, flags); });
     ui["city_buy_items"].ondraw([this] (ui::element *e, UiFlags flags) { draw_city_buy(e, flags); });
 
-    ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_EMPIRE_MAP, -1, 0); });
+    ui["button_help"].onclick([] { window_message_dialog_show("message_world_map", -1, 0); });
     ui["button_close"].onclick([] { window_city_show(); });
     ui["button_advisor"].onclick([] { window_advisors_show_advisor(ADVISOR_TRADE); });
 

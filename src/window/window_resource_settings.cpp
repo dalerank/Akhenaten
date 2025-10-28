@@ -48,7 +48,7 @@ void trade_resource_settings_window::init() {
 
     ui["stockpile_industry"].onclick([this] { g_city.resource.is_stockpiled(resource); });
 
-    ui["button_help"].onclick([] { window_message_dialog_show(MESSAGE_DIALOG_INDUSTRY, -1, 0); });
+    ui["button_help"].onclick([] { window_message_dialog_show("message_game_concept_industry", -1, 0); });
     ui["button_close"].onclick([] { window_go_back(); });
 
     const int stored = g_city.resource.yards_stored(resource);

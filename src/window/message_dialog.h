@@ -37,6 +37,6 @@ struct text_tag_substitution {
 
 void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);
 
-void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void));
+void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void));
 
-void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
+void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);

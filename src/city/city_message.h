@@ -31,74 +31,6 @@ enum e_message_advisor {
 };
 
 enum e_message_type {
-    MESSAGE_BARBARIAN_ATTACK = 23,
-    MESSAGE_KINGDOME_REQUESTS_GOODS = 28,
-    MESSAGE_KINGDOME_REQUESTS_MONEY = 29,
-    MESSAGE_REQUEST_REMINDER = 31,
-    MESSAGE_REQUEST_REFUSED = 33,
-    MESSAGE_REQUEST_REFUSED_OVERDUE = 34,
-    MESSAGE_UNEMPLOYMENT = 36,
-    MESSAGE_WORKERS_NEEDED = 37,
-    MESSAGE_WRATH_OF_CERES = 41,
-    MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE = 42,
-    MESSAGE_WRATH_OF_MERCURY = 43,
-    MESSAGE_WRATH_OF_MARS_NO_MILITARY = 44,
-    MESSAGE_WRATH_OF_VENUS = 45,
-    MESSAGE_NOT_ENOUGH_FOOD = 49,
-    MESSAGE_FOOD_NOT_DELIVERED = 50,
-    MESSAGE_THEFT = 52,
-    MESSAGE_TUTORIAL_FIRE = 53,
-    MESSAGE_TUTORIAL_COLLAPSE = 54,
-    MESSAGE_GODS_UNHAPPY = 55,
-    MESSAGE_TUTORIAL_WATER = 56,
-    MESSAGE_TUTORIAL_GROWING_YOUR_CITY = 57,
-    MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS = 58,
-    MESSAGE_TUTORIAL_RELIGION = 59,
-    MESSAGE_TUTORIAL_TAXES_INDUSTRY = 60,
-    MESSAGE_EARTHQUAKE = 62,
-    MESSAGE_GLADIATOR_REVOLT = 63,
-    MESSAGE_GLADIATOR_REVOLT_FINISHED = 73,
-    MESSAGE_EMPIRE_HAS_EXPANDED = 77,
-    MESSAGE_ROAD_TO_ROME_BLOCKED = 80,
-    MESSAGE_WRATH_OF_NEPTUNE = 81,
-    MESSAGE_WRATH_OF_MARS = 82,
-    MESSAGE_CERES_IS_UPSET = 91,
-    MESSAGE_NEPTUNE_IS_UPSET = 92,
-    MESSAGE_MERCURY_IS_UPSET = 93,
-    MESSAGE_MARS_IS_UPSET = 94,
-    MESSAGE_VENUS_IS_UPSET = 95,
-    MESSAGE_BLESSING_FROM_CERES = 96,
-    MESSAGE_BLESSING_FROM_NEPTUNE = 97,
-    MESSAGE_BLESSING_FROM_MERCURY = 98,
-    MESSAGE_BLESSING_FROM_MARS = 99,
-    MESSAGE_BLESSING_FROM_VENUS = 100,
-    MESSAGE_GODS_WRATHFUL = 101,
-    MESSAGE_SPIRIT_OF_MARS = 105,
-    MESSAGE_CAESAR_RESPECT_1 = 106,
-    MESSAGE_CAESAR_RESPECT_2 = 107,
-    MESSAGE_CAESAR_RESPECT_3 = 108,
-    MESSAGE_WORKING_HIPPODROME = 109,
-    MESSAGE_WORKING_COLOSSEUM = 110,
-    MESSAGE_EMIGRATION = 111,
-    MESSAGE_FIRED = 112,
-    MESSAGE_REQUEST_CAN_COMPLY = 314 - 99,
-    MESSAGE_ROAD_TO_ROME_OBSTRUCTED = 116,
-    MESSAGE_NO_WORKING_DOCK = 117,
-    MESSAGE_FISHING_BOAT_BLOCKED = 118,
-    MESSAGE_TUTORIAL_HEALTH = 119,
-    MESSAGE_LOCAL_UPRISING_SETH = 121,
-
-    //
-
-    MESSAGE_TEMPLATE_ATTACK_CHEAT = 122,
-    MESSAGE_TEMPLATE_UNUSED = 123,
-    MESSAGE_TEMPLATE_ATK_PHARAOH_6MO_1MO = 124,
-    MESSAGE_TEMPLATE_ATK_PHARAOH_1YR = 125,
-    MESSAGE_TEMPLATE_ATK_PHARAOH_INIT_2YR = 126,
-    MESSAGE_TEMPLATE_ATK_CITY_6MO_1MO = 127,
-    MESSAGE_TEMPLATE_ATK_CITY_1YR = 128,
-    MESSAGE_TEMPLATE_ATK_CITY_INIT_2YR = 129,
-    MESSAGE_TEMPLATE_REQUEST = 130,
     MESSAGE_TEMPLATE_GENERAL = 131,
     MESSAGE_TEMPLATE_GIFT = 132,
     MESSAGE_TEMPLATE_ATTACK_ALERT = 133,
@@ -124,8 +56,6 @@ enum e_message_type {
     MESSAGE_TEMPLATE_PRICE_DECREASE = 279,
     MESSAGE_TEMPLATE_FOREIGN_CITY_FALLS = 338,
     MESSAGE_TEMPLATE_FOREIGN_CITY_CONQUERED = 339,
-
-    MESSAGE_NO_WORKING_DOCK_PH = 316 - 99,
 
     MESSAGE_TUTORIAL_SOLDIERS_AND_FORT = 245 - 99,
     MESSAGE_TUTORIAL_REQUESTS_FROM_OTHER_CITIES = 251 - 99,
@@ -245,7 +175,6 @@ struct message_manager_t {
     void init_problem_areas();
     int new_message_id();
 
-    city_message& post_common(bool use_popup, int message_id, int param1, int param2, int god, int bg_img);
     city_message& post_common(bool use_popup, xstring message, int param1, int param2, int god, int bg_img);
 };
 
@@ -255,10 +184,10 @@ struct event_ph_t;
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 
-void city_message_post_full(bool use_popup, int template_id, const event_ph_t* event, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
+void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2);
 
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1, short param2);
-void city_message_post_with_message_delay(e_mesage_category category, int use_popup, int message_type, int delay);
+void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);
 
 void city_message_process_queue(void);
 void city_message_sort_and_compact(void);

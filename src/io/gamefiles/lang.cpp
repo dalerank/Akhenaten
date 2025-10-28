@@ -120,6 +120,15 @@ const uint8_t* lang_get_string(int group, int index) {
     return str;
 }
 
+uint16_t lang_get_message_uid(xstring msg) {
+    auto it = game_messages.find(msg);
+    if (it != game_messages.end()) {
+        return it->second.id;
+    }
+
+    return 0;
+}
+
 xstring lang_get_message_id(int id) {
     for (const auto &it : game_messages) {
         if (it.second.id == id) {
@@ -128,6 +137,16 @@ xstring lang_get_message_id(int id) {
     }
 
     return "unknow_message";
+}
+
+const lang_message &lang_get_message(xstring msg) {
+    auto it = game_messages.find(msg);
+    if (it != game_messages.end()) {
+        return it->second;
+    }
+
+    static lang_message dummy{};
+    return dummy;
 }
 
 const lang_message& lang_get_message(int id) {
