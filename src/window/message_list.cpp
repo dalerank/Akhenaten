@@ -228,7 +228,7 @@ static void on_scroll(void) {
 }
 
 static void button_help(int param1, int param2) {
-    window_message_dialog_show(MESSAGE_DIALOG_MESSAGES, -1, window_city_draw_all);
+    window_message_dialog_show("message_dialog_messages", -1, window_city_draw_all);
 }
 static void button_close(int param1, int param2) {
     window_city_show();
@@ -238,8 +238,9 @@ static void button_message(int param1, int param2) {
     int id = city_message_set_current(g_messages_scrollbar.scroll_position + param1);
     if (id < city_message_count()) {
         const city_message& msg = city_message_get(id);
+        const xstring mm_msg = lang_get_message_id(msg.MM_text_id);
         city_message_mark_read(id);
-        window_message_dialog_show_city_message(msg.MM_text_id, id, msg.year, msg.month, msg.param1, msg.param2, msg.MM_text_id, 0);
+        window_message_dialog_show_city_message(mm_msg, id, msg.year, msg.month, msg.param1, msg.param2, msg.MM_text_id, 0);
     }
 }
 

@@ -607,7 +607,7 @@ void city_labor_t::check_employment() {
 
     // workers needed message
     if (!orig_needed && workers_needed > 0) {
-         city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
+        city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, "message_workers_needed", 6);
     }
 }
 void city_labor_t::allocate_workers() {

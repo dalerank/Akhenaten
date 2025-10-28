@@ -136,15 +136,15 @@ void top_menu_widget_t::on_mission_start() {
 
 void top_menu_widget_t::init() {
     ui["date"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_date_display", -1, window_city_draw_all);
     });
 
     ui["population"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_population_display", -1, window_city_draw_all);
     });
 
     ui["funds"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_money_display_window", -1, window_city_draw_all);
     });
 
     events::subscribe([this] (event_population_changed ev) { states.population = ev.value; });
@@ -562,7 +562,7 @@ void top_menu_widget_t::help_handle(menu_item &item) {
     if (item.id == "help") { 
         widget_top_menu_clear_state();
         window_go_back();
-        window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+        window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
     }
     else if (item.id == "mouse") { 
         g_settings.toggle_tooltips();
@@ -575,7 +575,7 @@ void top_menu_widget_t::help_handle(menu_item &item) {
     else if (item.id == "about") { 
         widget_top_menu_clear_state();
         window_go_back();
-        window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
+        window_message_dialog_show("message_dialog_about", -1, window_city_draw_all);
     }
 }
 

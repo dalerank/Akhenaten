@@ -248,7 +248,7 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
     if (reason == 0xffff) {
         reason = PHRASE_trade_city_siege_no_reason_A;
     }
-    city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
+    city_message_post_full(true, "message_template_general", &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
         PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, reason,
         event.event_id, cityid);
 }
@@ -331,7 +331,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_PRICE_INCREASE:
     case EVENT_TYPE_PRICE_DECREASE:
     case EVENT_TYPE_REPUTATION_INCREASE:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
                                id, 0);
         break;
@@ -339,7 +339,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING: {
             const int annoucement = event.reasons[0];
             const int reason = event.reasons[1];
-            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
+            city_message_post_full(true, "message_template_general", &event, caller_event_id,
                 PHRASE_foreign_army_attacks_you_title, annoucement, reason,
                 id, 0);
         }
@@ -362,25 +362,25 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             break;
 
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
-            city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, &event, caller_event_id,
+            city_message_post_full(true, "message_template_city_saved", &event, caller_event_id,
                                    PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, &event, caller_event_id,
+            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
                                    PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, &event, caller_event_id,
+            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
-            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
+            city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                    PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement, PHRASE_acknowledgement_no_reason_A,
                                    id, 0);
             break;
@@ -397,7 +397,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, &event, caller_event_id,
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
             PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
             id, 0);
         break;

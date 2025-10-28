@@ -57,7 +57,7 @@ struct message_dialog_data_t {
     } history[200];
     int num_history;
 
-    int text_id;
+    uint16_t text_id;
     int message_id;
     bool is_eventmsg;
     pcstr title_text;
@@ -182,7 +182,7 @@ static void set_city_message(int year, int month, int param1, int param2, int me
     g_player_message_data.use_popup = use_popup;
 }
 
-static void init(int text_id, int message_id, void (*background_callback)()) {
+static void init(xstring text_id, int message_id, void (*background_callback)()) {
     auto &data = g_message_dialog_data;
     scroll_drag_end();
     for (auto &item : data.history) {
@@ -218,11 +218,11 @@ static void init(int text_id, int message_id, void (*background_callback)()) {
         data.is_eventmsg = false;
     }
 
-    data.text_id = text_id;
+    const lang_message& msg = lang_get_message(text_id);
+    data.text_id = msg.id;
     data.background_callback = background_callback;
     data.show_video = false;
     data.background = false;
-    const lang_message& msg = lang_get_message(text_id);
 
     if (!g_player_message_data.use_popup) {
         return;
@@ -800,7 +800,7 @@ static void button_close(int param1, int param2) {
 static void button_help(int param1, int param2) {
     auto &data = g_message_dialog_data;
     button_close(0, 0);
-    window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, data.background_callback);
+    window_message_dialog_show("message_dialog_help", -1, data.background_callback);
 }
 
 static void button_advisor(int advisor, int param2) {
@@ -835,7 +835,7 @@ static void button_go_to_problem(int param1, int param2) {
 //    }
 //}
 
-void window_message_dialog_show(int text_id, int message_id, void (*background_callback)(void)) {
+void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
     static window_type window = {
         WINDOW_MESSAGE_DIALOG,
         draw_background,
@@ -848,7 +848,7 @@ void window_message_dialog_show(int text_id, int message_id, void (*background_c
     window_show(&window);
 }
 
-void window_message_dialog_show_city_message(int text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
+void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
     window_message_dialog_show(text_id, message_id, window_city_draw_all);
 }

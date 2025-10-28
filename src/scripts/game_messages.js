@@ -6,6 +6,7 @@ game_messages {
         pos [0, 24]
         size [30, 28]
         title { text: "Potter" }
+        advisor: ADVISOR_TRADE
         content {
             text: "Potters need a supply of clay to function. Some cities can produce their own clay by constructing @92Clay&Pits. Other cities may need to import clay from a trade partner (click @47here for more on trade). @PCartpushers bring supplies of clay to Potters from Clay Pits, if the city has them, or from @4Storage&Yards. The Potter stores some extra clay in its yard to keep him working for awhile if clay deliveries are interrupted for some reason. @PPotters also need road access and a nearby source of labor. Potters are at their most productive if they are fully staffed, but will still operate (although at reduced efficiency) when understaffed. If the Potter is turning out pottery, you will see him hard at work. Cartpushers employed by the Potter take finished pottery to a Storage Yard or to a @473Lamp&Maker (who needs a supply of pottery and oil to produce lamps). @PPottery is an important commodity in the city. @56Houses need a supply of pottery to evolve to higher levels, and pottery must be constantly replenished to prevent houses from devolving to lower levels. Demand for pottery never ceases: households are always replacing broken or worn-out pieces. See @2Bazaars for more on how to get finished goods to the citizens. @PPottery is also integral to the construction of @478Royal&Burial&Tombs. When a Lamp Maker fills pottery with oil, it becomes a powerful lamp that lights the way for tomb workers.  @PPottery can also be imported or exported. See @47trade for information on how to open trade routes. If your city is trading pottery, be sure to keep citizens' needs in mind. Let your @24Overseer&of&Commerce know how much pottery should be stored in Storage Yards for citizens' use, or let your Overseer determine an amount.  @PPeople don't want to live too near a noisy, dusty Potter, so it has a negative effect on the desirability of neighboring land. @L@LTo learn more about pottery making in ancient Egypt, click @198here."
         }
@@ -1504,6 +1505,10 @@ game_messages {
         title { text: "Enemies at the door" }
         video { text: "@10" }
         content { text: "xxxx see eventmsg.txt" }
+    }
+
+    message_template_request {
+        id: 130
     }
 
     message_wrath_of_bast_3 {
@@ -3610,7 +3615,7 @@ game_messages {
         video { text: "smk\\spy_army.smk" }
         content { text: " Enemies of Rome are at the outskirts of your city. Expect them to drop in for an urn or two of wine - and whatever else strikes their fancy!" }
     }
-    message_compliance_now_possible_2 {
+    message_storage_yards_ready_to_fulfill_request {
         id: 314,
         type: 2,
         message_type: 2,
