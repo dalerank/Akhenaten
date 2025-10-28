@@ -545,38 +545,38 @@ void city_message_set_scroll_position(int scroll_position) {
 io_buffer* iob_messages = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_message_data;
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        city_message* msg = &data.messages[i];
+        city_message& msg = data.messages[i];
        
-        iob->bind(BIND_SIGNATURE_INT32, &msg->param1);
-        iob->bind(BIND_SIGNATURE_INT32, &msg->param2);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->year);
+        iob->bind(BIND_SIGNATURE_INT32, &msg.param1);
+        iob->bind(BIND_SIGNATURE_INT32, &msg.param2);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.year);
         
-        iob->bind(BIND_SIGNATURE_INT16, &msg->MM_text_id);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->sequence);
-        iob->bind(BIND_SIGNATURE_UINT8, &msg->is_read);
-        iob->bind(BIND_SIGNATURE_UINT8, &msg->month);
+        iob->bind_u16(msg.MM_text_id);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.sequence);
+        iob->bind(BIND_SIGNATURE_UINT8, &msg.is_read);
+        iob->bind(BIND_SIGNATURE_UINT8, &msg.month);
 
-        iob->bind_i16(msg->eventmsg_body_id);  // FF FF
-        iob->bind_i16(msg->eventmsg_title_id); // FF FF
-        iob->bind(BIND_SIGNATURE_INT16, &msg->sender_faction);            // FF FF
+        iob->bind_i16(msg.eventmsg_body_id);  // FF FF
+        iob->bind_i16(msg.eventmsg_title_id); // FF FF
+        iob->bind_i16(msg.sender_faction);            // FF FF
 
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_city);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_months_left);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_07);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_city);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_amount);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_resource);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_months_left);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.unk_07);
 
-        iob->bind(BIND_SIGNATURE_INT16, &msg->eventmsg_phrase_id);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_city_past); // enum?
-        iob->bind(BIND_SIGNATURE_INT16, &msg->unk_09);        // 00 00
-        iob->bind(BIND_SIGNATURE_UINT8, &msg->unk_10);        // 00 00
-        iob->bind(BIND_SIGNATURE_UINT8, &msg->hide_img);        // 00 00
+        iob->bind(BIND_SIGNATURE_INT16, &msg.eventmsg_phrase_id);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_city_past); // enum?
+        iob->bind(BIND_SIGNATURE_INT16, &msg.unk_09);        // 00 00
+        iob->bind(BIND_SIGNATURE_UINT8, &msg.unk_10);        // 00 00
+        iob->bind(BIND_SIGNATURE_UINT8, &msg.hide_img);        // 00 00
 
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_amount_past);
-        iob->bind(BIND_SIGNATURE_INT16, &msg->req_resource_past);
-        iob->bind(BIND_SIGNATURE_INT8, &msg->unk_11a_i8); // FF
-        iob->bind(BIND_SIGNATURE_UINT8, &msg->god); // FF
-        iob->bind(BIND_SIGNATURE_UINT16, &msg->background_img);    // 00 00
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_amount_past);
+        iob->bind(BIND_SIGNATURE_INT16, &msg.req_resource_past);
+        iob->bind(BIND_SIGNATURE_INT8 , &msg.unk_11a_i8); // FF
+        iob->bind(BIND_SIGNATURE_UINT8, &msg.god); // FF
+        iob->bind(BIND_SIGNATURE_UINT16,&msg.background_img);    // 00 00
     }
 });
 
