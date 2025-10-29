@@ -34,8 +34,8 @@ function header(config) { return __extend({type:"label", font : FONT_LARGE_BLACK
 function multiline(config) { return __extend({type:"label", multiline:true, font : FONT_NORMAL_WHITE_ON_DARK}, config) }
 function image(config) { return __extend({type:"image"}, config) }
 function image_button(config) { return __extend({type:"image_button"}, config) }
-function ok_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
-function cancel_button(config) { return __extend({type:"image_button", size:[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
+function ok_button(config) { return __extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
+function cancel_button(config) { return __extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function link(config) { return __extend({type:"generic_button", hbody:false, border:false, font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
@@ -44,7 +44,7 @@ function background(config) { return __extend({type:"background", down:true}, co
 function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
 function large_button(config) { return __extend({ type : "large_button"}, config) }
 
-function help_button(config) { var i = image_button({margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 }); return __extend(i, config) }
-function close_button(config) { var i = image_button({margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }); return __extend(i, config) }
-function next_button(config) { var i = image_button({size:[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
-function advisor_button(config) { var i = image_button({pack:PACK_GENERAL, id:106, offset:12, tooltip:[68, 41]}); return __extend(i, config) }
+function help_button(config) { var i = image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134 }); return __extend(i, config) }
+function close_button(config) { var i = image_button({margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4, onclick: window_go_back }); return __extend(i, config) }
+function next_button(config) { var i = image_button({size[27, 27], pack:PACK_GENERAL, id:90 }); return __extend(i, config) }
+function advisor_button(config) { var i = image_button({pack:PACK_GENERAL, id:106, offset:12, tooltip[68, 41]}); return __extend(i, config) }
