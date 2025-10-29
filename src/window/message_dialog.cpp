@@ -505,13 +505,15 @@ static void draw_background_image() {
     int image_id = 0;
     if (data.god != GOD_UNKNOWN) {
         image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + data.god;
-    } else if (data.background_img) {
+    } else if (data.background_img > 0) {
         image_id = data.background_img;
     }
 
     const image_t *img = image_get(image_id);
-    int current_x = (500 - img->width) / 2;
-    ImageDraw::img_generic(ctx, image_id, current_x, 96);
+    if (img) {
+        int current_x = (500 - img->width) / 2;
+        ImageDraw::img_generic(ctx, image_id, current_x, 96);
+    }
 
     draw_foreground_image();
 }
