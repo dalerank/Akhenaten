@@ -23,5 +23,6 @@ mkdir ../Frameworks Data 2>/dev/null
 cp -R "$HOME"/Library/Frameworks/SDL2.framework ../Frameworks/
 cp -R "$HOME"/Library/Frameworks/SDL2_mixer.framework ../Frameworks/
 cp ../../../../data/* Data/
+cp ../../../../res/macos/launch.sh .
 
 install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
