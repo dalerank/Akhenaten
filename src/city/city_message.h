@@ -31,7 +31,6 @@ enum e_message_advisor {
 };
 
 enum e_message_type {
-    MESSAGE_TEMPLATE_GENERAL = 131,
     MESSAGE_TEMPLATE_GIFT = 132,
     MESSAGE_TEMPLATE_ATTACK_ALERT = 133,
     MESSAGE_TEMPLATE_MONUMENT_CONGRATZ = 146,
@@ -197,7 +196,6 @@ void city_message_process_queue(void);
 void city_message_sort_and_compact(void);
 
 int city_message_get_text_id(int message_id);
-int city_message_get_advisor(int message_type);
 
 void city_message_reset_category_count(e_mesage_category category);
 void city_message_increase_category_count(e_mesage_category category);
