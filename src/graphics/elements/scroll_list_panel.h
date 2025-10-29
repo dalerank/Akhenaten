@@ -40,32 +40,13 @@ enum scroll_list_file_param {
 };
 
 class scroll_list_panel {
-private:
-    generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
-    int num_total_entries = 0;
-    int num_buttons;
-    int focus_button_id = 0;     // first valid --> 1
-    int selected_entry_idx = -1; // first valid --> 0
-    void (*left_click_callback)(int param1, int param2) = nullptr;
-    void (*right_click_callback)(int param1, int param2) = nullptr;
-    void (*double_click_callback)(int param1, int param2) = nullptr;
-    void (*focus_change_callback)(int param1, int param2) = nullptr;
-
-    scrollbar_t scrollbar;
-
-    const dir_listing* file_finder = nullptr;
-    bstring256 files_dir;
-    bstring256 files_ext;
-    bool using_file_finder;
-
-    bstring256 manual_entry_list[MAX_MANUAL_ENTRIES];
-
-    void (*custom_text_render)(int button_index, const uint8_t* text, int x, int y, e_font font) = nullptr;
-    bool using_custom_text_render = false;
-
-    bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
-
 public:
+    struct entry_data {
+        xstring text;
+        void *user_data;
+    };
+
+    using custom_text_render_func = void(int idx, int flags, const entry_data &entry, vec2i pos, e_font font);
     scrollable_list_ui_params ui_params;
 
     void select(const char* button_text);
@@ -78,16 +59,17 @@ public:
     int get_focused_entry_idx();
     int get_selected_entry_idx();
     int get_total_entries();
-    const char* get_entry_text_by_idx(int index, int filename_syntax);
-    const char* get_selected_entry_text(int filename_syntax);
-    int get_entry_idx(const char* button_text);
+    const xstring get_entry_text_by_idx(int index, int filename_syntax);
+    const xstring get_selected_entry_text(int filename_syntax);
+    int get_entry_idx(pcstr button_text);
     bool has_entry(const char* button_text);
+    void set_custom_render_func(std::function<custom_text_render_func> f) {
+        custom_text_render = f;
+    }
 
     void set_file_finder_usage(bool use);
     void clear_entry_list();
-    void add_entry(const char* entry_text);
-    //    void remove_entry(const char *entry_text); // TODO: nope.
-    //    void remove_entry(int index); // TODO: nope.
+    void add_entry(xstring entry_text, void* user_data = nullptr);
     void change_file_path(const char* dir, const char* ext = nullptr);
     void append_files_with_extension(const char* dir, const char* ext);
     void refresh_file_finder();
@@ -104,7 +86,32 @@ public:
                       void (*fcc)(int param1, int param2),
                       scrollable_list_ui_params params,
                       bool use_file_finder,
-                      const char* dir = ".",
-                      const char* ext = "");
+                      pcstr dir = ".",
+                      pcstr ext = "");
+
     ~scroll_list_panel();
+
+private:
+    generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
+    int num_total_entries = 0;
+    int num_buttons;
+    int focus_button_id = 0;     // first valid --> 1
+    int selected_entry_idx = -1; // first valid --> 0
+    void (*left_click_callback)(int param1, int param2) = nullptr;
+    void (*right_click_callback)(int param1, int param2) = nullptr;
+    void (*double_click_callback)(int param1, int param2) = nullptr;
+    void (*focus_change_callback)(int param1, int param2) = nullptr;
+
+    scrollbar_t scrollbar;
+
+    const dir_listing *file_finder = nullptr;
+    bstring256 files_dir;
+    bstring256 files_ext;
+    bool using_file_finder;
+
+    svector<entry_data, MAX_MANUAL_ENTRIES> manual_entry_list;
+
+    std::function<custom_text_render_func> custom_text_render;
+
+    bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
 };

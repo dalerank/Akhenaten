@@ -23,8 +23,6 @@ namespace ui {
         static void show(close_callback close_cb);
 
     private:
-        int focus_button_id;
-
         close_callback *_close_cb;
         vec2i original_resolution;
         vec2i selected_resolution;

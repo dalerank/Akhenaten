@@ -41,13 +41,12 @@ void ui::display_options_window::init(close_callback close_cb) {
                                       ui_params, false, "", "");
     }
 
-    focus_button_id = 0;
     _close_cb = close_cb;
 
     panel->clear_entry_list();
     video_modes = get_video_modes();
     for (const auto& mode : video_modes) {
-        panel->add_entry(mode.str);
+        panel->add_entry(mode.str.c_str());
     }
 
     auto wsize = g_settings.display_size;

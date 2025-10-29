@@ -9,7 +9,7 @@
 struct scrollbar_t {
     vec2i pos;
     int height;
-    void (*on_scroll_callback)(void);
+    void (*on_scroll_callback)(void) = nullptr;
     int dot_padding;
     bool always_visible;
     int max_scroll_position;

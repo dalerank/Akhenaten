@@ -53,7 +53,7 @@ void ui::mods_window::init() {
             str.append(bstring32("D:", record->difficulty));
         }
 
-        panel->add_entry(str);
+        panel->add_entry(str.c_str(), (void*)record);
     }
 
     // Clear and populate panel
@@ -114,7 +114,6 @@ int ui::mods_window::ui_handle_mouse(const mouse *m) {
 
         if (panel->input_handle(&m_dialog)) {
         }
-
         ui.end_widget();
     }
 

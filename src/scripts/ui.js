@@ -51,6 +51,7 @@ trade_prices_window = {
 
 display_options_window {
     pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
+    num_files_in_view : 13
     ui {
         background  : outer_panel({size[24, 21] })
         title       : header({pos[10, 10], size[px(24), 20], text[42, 0], align:"center"})

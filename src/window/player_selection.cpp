@@ -83,7 +83,7 @@ static void clear_selectd_name() {
 
 static bool is_selected_name(int index) {
     auto& data = *g_window_player_selection;
-    return data.selected_player_utf8 == data.panel->get_selected_entry_text(FILE_NO_EXT);
+    return data.selected_player_utf8 == data.panel->get_selected_entry_text(FILE_NO_EXT).c_str();
 }
 static bool is_valid_selected_player() {
     auto& data = *g_window_player_selection;
@@ -107,7 +107,7 @@ void window_player_selection_init() {
     data.panel->select(data.selected_player_utf8);
     if (data.panel->get_total_entries() == 1) {
         data.panel->select_entry(0);
-        window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
+        window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT).c_str());
         g_settings.set_player_name(data.selected_player);
     }
 }
@@ -152,7 +152,7 @@ static void button_select_file(int index, int param2) {
         return clear_selectd_name();
     }
 
-    window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT));
+    window_player_set_name(data.panel->get_selected_entry_text(FILE_NO_EXT).c_str());
     g_settings.set_player_name(data.selected_player);
 }
 

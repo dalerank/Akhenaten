@@ -347,7 +347,7 @@ static void draw_side_panel_info() {
 
         // scenario name
         uint8_t scenario_name[MAX_FILE_NAME];
-        encoding_from_utf8(data.panel->get_selected_entry_text(FILE_NO_EXT), scenario_name, MAX_FILE_NAME);
+        encoding_from_utf8(data.panel->get_selected_entry_text(FILE_NO_EXT).c_str(), scenario_name, MAX_FILE_NAME);
         text_ellipsize(scenario_name, FONT_LARGE_BLACK_ON_DARK, INFO_W);
         text_draw_centered(scenario_name, INFO_X, HEADER_Y, INFO_W, FONT_LARGE_BLACK_ON_DARK, 0);
 
@@ -465,8 +465,10 @@ static void button_select_item(int index, int param2) {
     if (index >= data.panel->get_total_entries())
         return;
     switch (data.dialog) {
-    case MAP_SELECTION_CUSTOM:
-        GamestateIO::load_map(data.panel->get_selected_entry_text(FILE_WITH_EXT), false);
+    case MAP_SELECTION_CUSTOM: {
+            xstring mapname = data.panel->get_selected_entry_text(FILE_WITH_EXT);
+            GamestateIO::load_map(mapname.c_str(), false);
+        }
         break;
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
         GamestateIO::load_mission(get_first_mission_in_campaign(data.campaign_sub_dialog) + data.panel->get_selected_entry_idx(), false);

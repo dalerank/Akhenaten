@@ -622,7 +622,7 @@ void ui::element::update_pos(const margini &r) {
     if (margin.right > margini::nomargin) { pos.x = r.right + margin.right; }
     if (margin.top > margini::nomargin) { pos.y = r.top + margin.top; }
     if (margin.centerx > margini::nomargin) { pos.x = (r.right - r.left) / 2 + margin.centerx; }
-    if (margin.centery > margini::nomargin) { pos.y = (r.top - r.bottom) / 2 + margin.centery; }
+    if (margin.centery > margini::nomargin) { pos.y = (r.bottom - r.top) / 2 + margin.centery; }
 }
 
 vec2i ui::element::screen_pos() const {
