@@ -116,12 +116,20 @@ enum js_AstType
 };
 
 typedef struct js_JumpList js_JumpList;
+typedef struct js_AstModifier js_AstModifier;
 
 struct js_JumpList
 {
 	enum js_AstType type;
 	int inst;
 	js_JumpList *next;
+};
+
+struct js_AstModifier
+{
+	const char *key;
+	const char *value;
+	js_AstModifier *next;
 };
 
 struct js_Ast
@@ -133,6 +141,7 @@ struct js_Ast
 	const char *string;
 	js_JumpList *jumps; /* list of break/continue jumps to patch */
 	int casejump; /* for switch case clauses */
+	js_AstModifier *modifiers; /* function modifiers/attributes */
 	js_Ast *gcnext; /* next in alloc list */
 };
 

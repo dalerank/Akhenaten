@@ -16,3 +16,8 @@ city_population_rules {
         { pop:25000, message: "message_population_milestone_25000"}
     ]
 }
+
+[event=event_population_changed]
+function on_population_changed(ev) {
+    log_info("Population changed! New value: " + ev.value)
+}

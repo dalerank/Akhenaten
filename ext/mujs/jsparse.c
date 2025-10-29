@@ -64,6 +64,7 @@ static js_Ast *jsP_newnode(js_State *J, enum js_AstType type, js_Ast *a, js_Ast 
 	node->string = NULL;
 	node->jumps = NULL;
 	node->casejump = 0;
+	node->modifiers = NULL;
 
 	node->parent = NULL;
 	if (a) a->parent = node;
@@ -876,10 +877,96 @@ static js_Ast *statement(js_State *J)
 
 /* Program */
 
+/* Parse function modifiers: [key=value, key2=value2, ...] */
+static js_AstModifier *parsemodifiers(js_State *J)
+{
+	js_AstModifier *head = NULL, *tail = NULL;
+	
+	if (!jsP_accept(J, '['))
+		return NULL;
+	
+	/* Parse first modifier */
+	if (J->lookahead != TK_IDENTIFIER)
+		jsP_error(J, "expected identifier in function modifier");
+	
+	const char *key = J->text;
+	jsP_next(J);
+	
+	jsP_expect(J, '=');
+	
+	if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
+		jsP_error(J, "expected value in function modifier");
+	
+	const char *value;
+	if (J->lookahead == TK_NUMBER) {
+		char buf[32];
+		snprintf(buf, sizeof(buf), "%g", J->number);
+		value = js_intern(J, buf);
+	} else {
+		value = J->text;
+	}
+	jsP_next(J);
+	
+	head = tail = js_malloc(J, sizeof(js_AstModifier));
+	head->key = js_intern(J, key);
+	head->value = js_intern(J, value);
+	head->next = NULL;
+	
+	/* Parse additional modifiers */
+	while (jsP_accept(J, ',')) {
+		if (J->lookahead != TK_IDENTIFIER)
+			jsP_error(J, "expected identifier in function modifier");
+		
+		key = J->text;
+		jsP_next(J);
+		
+		jsP_expect(J, '=');
+		
+		if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
+			jsP_error(J, "expected value in function modifier");
+		
+		if (J->lookahead == TK_NUMBER) {
+			char buf[32];
+			snprintf(buf, sizeof(buf), "%g", J->number);
+			value = js_intern(J, buf);
+		} else {
+			value = J->text;
+		}
+		jsP_next(J);
+		
+		js_AstModifier *mod = js_malloc(J, sizeof(js_AstModifier));
+		mod->key = js_intern(J, key);
+		mod->value = js_intern(J, value);
+		mod->next = NULL;
+		
+		tail->next = mod;
+		tail = mod;
+	}
+	
+	jsP_expect(J, ']');
+	return head;
+}
+
 static js_Ast *scriptelement(js_State *J)
 {
-	if (jsP_accept(J, TK_FUNCTION))
-		return fundec(J);
+	js_AstModifier *modifiers = NULL;
+	
+	/* Check for function modifiers */
+	if (J->lookahead == '[') {
+		modifiers = parsemodifiers(J);
+	}
+	
+	if (jsP_accept(J, TK_FUNCTION)) {
+		js_Ast *fun = fundec(J);
+		fun->modifiers = modifiers;
+		return fun;
+	}
+	
+	/* If modifiers were found but no function follows, error */
+	if (modifiers) {
+		jsP_error(J, "function modifiers can only be applied to function declarations");
+	}
+	
 	return statement(J);
 }
 
