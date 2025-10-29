@@ -19,6 +19,6 @@ message_list_window {
         empty_text    : text({margin{left:32, centery:-20}, size[16 * 26 - 48, -1], text[63, 1], enabled:false, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:16 * 26 - 48})
         
         btnhelp       : help_button({})
-        btnclose      : close_button({})
+        btnclose      : close_button({tooltip:"#exit_this_panel"})
     }
 }

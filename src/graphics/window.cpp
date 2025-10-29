@@ -5,6 +5,7 @@
 #include "input/cursor.h"
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
+#include "js/js_game.h"
 
 windows_manager_t g_window_manager;
 
@@ -69,6 +70,7 @@ void window_go_back() {
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
 }
+ANK_FUNCTION(window_go_back);
 
 void windows_manager_t::update_input_after() {
     auto& data = g_window_manager;
