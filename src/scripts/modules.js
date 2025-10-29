@@ -8,6 +8,7 @@ import ui_common
 import ui_main_menu
 import rating_points
 import game_messages
+import animal_herds
 import gods
 import common
 import images

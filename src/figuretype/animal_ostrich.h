@@ -29,10 +29,10 @@ enum e_ostrich_action {
  * 
  * Ostriches can be hunted by ostrich hunters for resource RESOURCE_GAMEMEAT.
  */
-class figure_ostrich : public figure_impl {
+class figure_ostrich : public figure_animal {
 public:
     FIGURE_METAINFO(FIGURE_OSTRICH, figure_ostrich)
-    figure_ostrich(figure *f) : figure_impl(f) {}
+    figure_ostrich(figure *f) : figure_animal(f) {}
     virtual figure_ostrich *dcast_ostrich() override { return this; }
 
     struct runtime_data_t {
@@ -45,6 +45,9 @@ public:
     virtual void before_poof() override;
     virtual bool play_die_sound() override;
     virtual void apply_damage(int hit_dmg) override;
+
+    virtual void herd_moved() override;
+    virtual void moveto(tile2i tile) override;
 
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
 };
