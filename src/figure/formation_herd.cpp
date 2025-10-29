@@ -18,11 +18,14 @@
 #include "sound/effect.h"
 #include "dev/debug.h"
 #include "game/game_config.h"
+#include "js/js_game.h"
 
 #include <vector>
 #include <time.h>
 
 declare_console_var_bool(allow_span_ostrich, true)
+
+animal_herds_t ANK_VARIABLE_N(g_animal_herds, "animal_herds");
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
@@ -137,13 +140,22 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
             int target_id = figure_combat_get_target_for_hyena(f->tile, 6);
             if (target_id) {
                 f->destination_tile.set(0, 0);
-                //                    while (f->destination_x == 0 || f->destination_y == 0)
-                f->herd_roost(4, 8, 22, terrain_mask);
+                figure_herd_roost(f, 4, 8, 22, terrain_mask);
                 if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0) {
-                    f->advance_action(16);
+                    auto fanimal = f->dcast_animal();
+                    if (fanimal) {
+                        fanimal->moveto(f->destination_tile);
+                    } else {
+                        f->advance_action(16);
+                    }
                 }
             } else {
-                f->advance_action(14);
+                auto fanimal = f->dcast_animal();
+                if (fanimal) {
+                    fanimal->herd_moved();
+                } else {
+                    f->advance_action(14);
+                }
                 f->destination_tile.set(0, 0);
             }
         } else {
@@ -202,7 +214,7 @@ static void set_figures_to_initial(const formation* m) {
     }
 }
 
-static void update_herd_formation(formation* m) {
+void animal_herds_t::update_herd_formation(formation* m) {
     if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_WOLF)) {
@@ -306,7 +318,7 @@ static void update_herd_formation(formation* m) {
     }
 }
 
-void formation_herd_update() {
+void animal_herds_t::update() {
     const bool has_animals = scenario_map_has_animals() || !!game_features::gameplay_change_hasanimals;
     if (!has_animals) {
         return;

@@ -33,7 +33,7 @@ void figure_birds::figure_action() {
     case ACTION_8_RECALCULATE:
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
+            if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_10_GOING);
             } else {

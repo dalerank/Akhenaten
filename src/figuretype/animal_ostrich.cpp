@@ -26,7 +26,7 @@ void figure_ostrich::figure_action() {
         return;
     }
 
-    switch (base.action_state) {
+    switch (action_state()) {
     case ACTION_24_OSTRICH_SPAWNED:     // spawning
     case ACTION_15_OSTRICH_TERRIFIED:   // terrified
     case ACTION_18_OSTRICH_ROOSTING:           // roosting
@@ -41,7 +41,7 @@ void figure_ostrich::figure_action() {
     case ACTION_8_OSTRICH_RECALCULATE:
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
+            if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_10_OSTRICH_GOING);
             } else {
@@ -52,7 +52,7 @@ void figure_ostrich::figure_action() {
 
     case ACTION_16_OSTRICH_FLEEING: // fleeing
         // When fleeing, search for a more distant place
-        if (base.herd_roost(/*step*/8, /*bias*/16, /*max_dist*/64, TERRAIN_IMPASSABLE_OSTRICH)) {
+        if (figure_herd_roost( &base, /*step*/8, /*bias*/16, /*max_dist*/64, TERRAIN_IMPASSABLE_OSTRICH)) {
             base.wait_ticks = 0;
             advance_action(ACTION_10_OSTRICH_GOING);
         } else {
@@ -69,6 +69,10 @@ void figure_ostrich::figure_action() {
                 base.wait_ticks = 50;
             }
         }
+        break;
+
+    default:
+        advance_action(ACTION_8_OSTRICH_RECALCULATE);
         break;
     }
 }
@@ -126,4 +130,12 @@ void figure_ostrich::apply_damage(int hit_dmg) {
 
     auto& d = runtime_data();
     d.applied_damage += hit_dmg;
+}
+
+void figure_ostrich::herd_moved() {
+    advance_action(ACTION_8_OSTRICH_RECALCULATE);
+}
+
+void figure_ostrich::moveto(tile2i tile) {
+    advance_action(ACTION_10_OSTRICH_GOING, tile);
 }

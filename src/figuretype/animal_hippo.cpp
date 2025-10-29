@@ -41,7 +41,7 @@ void figure_hippo::figure_action() {
     case ACTION_8_RECALCULATE:
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
+            if (figure_herd_roost(&base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
                 base.wait_ticks = 0;
                 advance_action(FIGURE_ACTION_10_HIPPO_MOVING);
                 do_goto(base.destination_tile, TERRAIN_USAGE_ANY, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);

@@ -50,6 +50,7 @@ class figure_emigrant;
 class figure_homeless;
 class figure_festival_guy;
 class figure_ostrich;
+class figure_animal;
 
 struct animation_t;
 struct figure_static_params;
@@ -233,6 +234,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(festival_guy)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
+    ALLOW_SMART_CAST_FIGURE(animal)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -392,7 +394,6 @@ public:
     void hippodrome_horse_action();
 
     nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
-    bool herd_roost(int step, int bias, int max_dist, int terrain_mask);
 
     inline void set_resource(e_resource resource) { resource_id = resource; }
     e_resource get_resource() const { return resource_id; }
@@ -569,6 +570,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
+    ALLOW_SMART_CAST_FIGURE_I(animal)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -651,6 +653,7 @@ GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)
 GENERATE_SMART_CAST_FIGURE(ostrich)
+GENERATE_SMART_CAST_FIGURE(animal)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

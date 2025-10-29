@@ -48,21 +48,24 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
 
 enum E_HORSE { HORSE_CREATED = 0, HORSE_RACING = 1, HORSE_FINISHED = 2 };
 
-bool figure::herd_roost(int step, int bias, int max_dist, int terrain_mask) {
+bool figure_herd_roost(figure* f, int step, int bias, int max_dist, int terrain_mask) {
     OZZY_PROFILER_SECTION("Figure/Herd Rooost");
-    if (!formation_id) {
+    if (!f->formation_id) {
         return false;
     }
 
-    const formation* m = formation_get(formation_id);
-    tile2i dest = random_around_point(m->home, tile, step, bias, max_dist);
+    formation* m = formation_get(f->formation_id);
+    if (m->home.x() <= 0 || m->home.y() <= 0) {
+        m->home = f->tile;
+    }
+    tile2i dest = random_around_point(m->home, f->tile, step, bias, max_dist);
 
     if (!map_terrain_is(dest.grid_offset(), terrain_mask)) { // todo: fix gardens
-        destination_tile = dest;
+        f->destination_tile = dest;
         return true;
 
     } else {
-        destination_tile.set(0, 0);
+        f->destination_tile.set(0, 0);
         return false;
     }
 }
@@ -264,4 +267,12 @@ void figure_hippodrome_horse_reroute(void) {
             set_horse_destination(HORSE_CREATED);
         }
     }
+}
+
+void figure_animal::herd_moved() {
+    base.advance_action(14);
+}
+
+void figure_animal::moveto(tile2i tile) {
+    base.advance_action(16);
 }

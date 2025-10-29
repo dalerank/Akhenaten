@@ -535,7 +535,7 @@ void formation_update_all(bool second_time) {
     set_legion_max_figures();
     formation_batalion_update();
     formation_enemy_update();
-    formation_herd_update();
+    g_animal_herds.update();
 }
 
 io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {

@@ -155,7 +155,7 @@ void figure_crocodile::figure_action() {
         }
 
         if (base.wait_ticks <= 0) {
-            if (base.herd_roost(/*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
+            if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_HIPPO)) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_10_CROCODILE_MOVING);
                 do_goto(base.destination_tile, TERRAIN_USAGE_AMPHIBIA, 18 + (random_byte() & 0x1), ACTION_8_RECALCULATE);
