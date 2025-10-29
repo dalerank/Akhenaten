@@ -253,6 +253,7 @@ void window_advisors_show_checked() {
         events::emit(event_city_warning{ text });
     }
 }
+ANK_FUNCTION(window_advisors_show_checked)
 
 int window_advisors_show_advisor(e_advisor advisor) {
     e_availability avail = g_city.is_advisor_available(advisor);

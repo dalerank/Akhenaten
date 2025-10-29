@@ -751,3 +751,4 @@ void window_empire_show_checked() {
         events::emit(event_city_warning{ text });
     }
 }
+ANK_FUNCTION(window_empire_show_checked)
