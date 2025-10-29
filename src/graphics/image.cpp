@@ -132,7 +132,7 @@ const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index
     return pak->get_image(end, true);
 }
 
-const image_t *image_get(int pak, int id) {
+const image_t *image_get(int pak, int id, int offset) {
     auto& data = *g_image_data;
     if (pak >= data.pak_list.size()) {
         return nullptr;
@@ -147,7 +147,8 @@ const image_t *image_get(int pak, int id) {
     }
 
     if (pakref.handle != nullptr) {
-        return pakref.handle->get_image(id);
+        int img_id = pakref.handle->get_global_image_index(id) + offset;
+        return pakref.handle->get_image(img_id, true);
     }
 
     return nullptr;
