@@ -71,7 +71,7 @@ void message_manager_t::init() {
     });
 
     events::subscribe([this] (event_message_population ev) {
-        post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, -1);
+        post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, messages::IMAGE_FROM_SCHEME);
     });
 }
 
@@ -416,6 +416,7 @@ bool city_message_mark_population_shown(int population) {
     auto& data = g_message_data;
     bool lastv = false;
     switch (population) {
+    case 100: lastv = data.population_shown.pop500; data.population_shown.pop100 = true; return lastv;
     case 500: lastv = data.population_shown.pop500; data.population_shown.pop500 = true; return lastv;
     case 1000: lastv = data.population_shown.pop1000; data.population_shown.pop1000 = true; return lastv;
     case 2000: lastv = data.population_shown.pop2000; data.population_shown.pop2000 = true; return lastv;
