@@ -110,9 +110,6 @@ void ui::sidebar_window_expanded_t::init_ui() {
         }
     });
 
-    ui["show_advisors"].onclick([] { window_advisors_show_checked(); });
-    ui["show_empire"].onclick([] { window_empire_show_checked(); });
-
     for (const auto &btn : button_ids) {
         ui[btn.id].onclick([this, type = btn.type] {
             this->opened_menu = type;
