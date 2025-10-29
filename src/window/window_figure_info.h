@@ -7,6 +7,8 @@
 struct figure_info_window : public common_info_window {
     figure_info_window();
 
+    svector<e_figure_type, 8> related_figures;
+
     using widget::archive_load;
     virtual void archive_load(archive arch) override;
 

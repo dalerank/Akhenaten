@@ -7,34 +7,34 @@
 #include "empire/empire.h"
 #include "game/game_config.h"
 
-static auto &city_data = g_city;
-void city_trade_update() {
+void city_t::trade_update() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Trade Update");
 
-    city_data.trade.num_sea_routes = 0;
-    city_data.trade.num_land_routes = 0;
+    trade.num_sea_routes = 0;
+    trade.num_land_routes = 0;
     // Wine types
-    city_data.resource.beer_types_available = g_city.buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
-    if (city_data.resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT || !!game_features::gameplay_change_beer_open_trade_route_counts) {
-        city_data.resource.beer_types_available += g_empire.count_beer_sources();
+    resource.beer_types_available = buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
+    if (resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT || !!game_features::gameplay_change_beer_open_trade_route_counts) {
+        resource.beer_types_available += g_empire.count_beer_sources();
     }
 
     // Update trade problems
-    if (city_data.trade.land_trade_problem_duration > 0) {
-        city_data.trade.land_trade_problem_duration--;
+    if (trade.land_trade_problem_duration > 0) {
+        trade.land_trade_problem_duration--;
     } else {
-        city_data.trade.land_trade_problem_duration = 0;
+        trade.land_trade_problem_duration = 0;
     }
 
-    if (city_data.trade.sea_trade_problem_duration > 0) {
-        city_data.trade.sea_trade_problem_duration--;
+    if (trade.sea_trade_problem_duration > 0) {
+        trade.sea_trade_problem_duration--;
     } else {
-        city_data.trade.sea_trade_problem_duration = 0;
+        trade.sea_trade_problem_duration = 0;
     }
 
     g_empire.generate_traders();
 }
 
+static auto &city_data = g_city;
 bool city_resource_trade_surplus_papyrus() {
     int papyrus_amount_in_city = city_resource_ready_for_using(RESOURCE_PAPYRUS);
     const uint32_t scribal_school_count = g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL);

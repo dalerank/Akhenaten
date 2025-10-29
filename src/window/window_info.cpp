@@ -52,7 +52,7 @@
 #include <utility>
 #include <mutex>
 
-object_info g_object_info;
+object_info ANK_VARIABLE(def_object_info)
 std::vector<common_info_window *> *g_window_building_handlers = nullptr;
 std::vector<common_info_window *> *g_window_figure_handlers = nullptr;
 
@@ -64,7 +64,7 @@ struct empty_info_window : public common_info_window {
 };
 
 terrain_info_window g_terrain_info_window;
-figure_info_window g_figure_info_window;
+figure_info_window figure_common_window;
 building_info_window g_building_common_window;
 empty_info_window g_empty_info_window;
 ruin_info_window g_ruin_info_window;
@@ -74,8 +74,8 @@ void window_info_show(const tile2i& point, bool avoid_mouse);
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window) {
     g_building_common_window.load("building_info_window");
     g_empty_info_window.load("empty_info_window");
+    figure_common_window.load("figure_info_window");
     g_terrain_info_window.load("terrain_info_window");
-    g_figure_info_window.load("figure_info_window");
     g_ruin_info_window.load("ruin_info_window");
 
     auto load_configs = [] (auto &handlers) {
@@ -90,8 +90,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_info_window) {
     load_configs(g_window_building_handlers);
     load_configs(g_window_figure_handlers);
 
-    if (g_object_info.ui) {
-        window_info_show(tile2i(g_object_info.grid_offset), true);
+    if (def_object_info.ui) {
+        window_info_show(tile2i(def_object_info.grid_offset), true);
     }
 }
 
@@ -113,39 +113,6 @@ void object_info::reset(tile2i tile) {
     nfigure.draw_debug_path = 0;
 }
 
-void object_info::fill_figures_info(tile2i tile) {
-    nfigure.selected_index = 0;
-    nfigure.ids.clear();
-
-    int figure_id = map_figure_id_get(tile);
-    while (figure_id > 0 && !nfigure.ids.full()) {
-        figure *f = ::figure_get(figure_id);
-        if (f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
-            switch (f->type) {
-            case FIGURE_NONE:
-            case FIGURE_EXPLOSION:
-            case FIGURE_MAP_FLAG:
-            case FIGURE_ARROW:
-            case FIGURE_JAVELIN:
-            case FIGURE_BOLT:
-            case FIGURE_BALLISTA:
-            case FIGURE_CREATURE:
-            case FIGURE_FISHING_POINT:
-            case FIGURE_FISHING_SPOT:
-            case FIGURE_SPEAR:
-            case FIGURE_CHARIOR_RACER:
-                break;
-
-            default:
-                nfigure.ids.push_back(figure_id);
-                //                        f->igure_phrase_determine();
-                break;
-            }
-        }
-        figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-    }
-}
-
 figure *object_info::figure_get() {
     int figure_id = nfigure.ids[nfigure.selected_index];
     return ::figure_get(figure_id);
@@ -156,7 +123,7 @@ building *object_info::building_get() {
 }
 
 void window_info_init(tile2i tile, bool avoid_mouse) {
-    auto &context = g_object_info;
+    auto &context = def_object_info;
     context.reset(tile);
     context.fill_figures_info(tile);
 
@@ -179,7 +146,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     if (!context.nfigure.ids.empty()) {
         find_handler(*g_window_figure_handlers, context);
         if (!context.ui) {
-            context.ui = &g_figure_info_window;
+            context.ui = &figure_common_window;
         }
     }
     find_handler(*g_window_building_handlers, context);
@@ -214,15 +181,11 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
     }
 
     // dialog placement
-    int s_width = screen_width();
-    int s_height = screen_height();
-    context.offset.x = center_in_city(16 * context.bgsize.x);
-    context.offset = *mouse_get();
-    context.offset = window_building_set_possible_position(context.offset, context.bgsize);
+    context.offset = window_building_set_possible_position(mouse::get().pos(), context.bgsize);
 }
 
 static void window_info_draw_background(int) {
-    auto &context = g_object_info;
+    auto &context = def_object_info;
 
     game.animation = false;
     window_city_draw_panels();
@@ -232,21 +195,21 @@ static void window_info_draw_background(int) {
 }
 
 static void window_info_draw_foreground(int) {
-    auto &ui = *g_object_info.ui;
+    auto &ui = *def_object_info.ui;
 
-    ui.begin_widget(g_object_info.offset);
-    ui.window_info_foreground(g_object_info);
+    ui.begin_widget(def_object_info.offset);
+    ui.window_info_foreground(def_object_info);
     ui.end_widget();
 }
 
 static void window_info_handle_input(const mouse* m, const hotkeys* h) {
-    auto &context = g_object_info;
-    auto &ui = *g_object_info.ui;
+    auto &context = def_object_info;
+    auto &ui = *def_object_info.ui;
   
     bool button_id = context.ui->window_info_handle_mouse(m, context);
 
     if (!button_id) {
-        ui.begin_widget(g_object_info.offset);
+        ui.begin_widget(def_object_info.offset);
         button_id = ui::handle_mouse(m);
         ui.end_widget();
     }
@@ -263,7 +226,7 @@ static void window_info_handle_input(const mouse* m, const hotkeys* h) {
 
 void window_info_show(const tile2i& point, bool avoid_mouse) {
     auto get_tooltip = [] (tooltip_context* c) {
-        auto &context = g_object_info;
+        auto &context = def_object_info;
         if (!context.ui) {
             return;
         }
@@ -272,7 +235,7 @@ void window_info_show(const tile2i& point, bool avoid_mouse) {
     };
 
     auto draw_refresh = [] () {
-        auto &context = g_object_info;
+        auto &context = def_object_info;
         if (!context.ui) {
             return;
         }
@@ -294,12 +257,12 @@ void window_info_show(const tile2i& point, bool avoid_mouse) {
 }
 
 int window_building_info_get_type() {
-    auto &context = g_object_info;
+    auto &context = def_object_info;
     return building_get(context.bid)->type;
 }
 
 void window_building_info_show_storage_orders() {
-    auto &context = g_object_info;
+    auto &context = def_object_info;
     context.storage_show_special_orders = 1;
 }
 
@@ -345,9 +308,10 @@ void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();
     ui["button_help"].onclick([&c] {
         if (c.help_id > 0) {
-            window_message_dialog_show(c.help_id, -1, window_city_draw_all);
+            const xstring help_id = lang_get_message_id(c.help_id);
+            window_message_dialog_show(help_id, -1, window_city_draw_all);
         } else {
-            window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+            window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
         }
     });
 
@@ -406,8 +370,8 @@ void common_info_window::update_buttons(object_info &c) {
 void common_info_window::archive_load(archive arch) {
     widget::archive_load(arch);
 
-    if (check(g_object_info)) {
-        init(g_object_info);
+    if (check(def_object_info)) {
+        init(def_object_info);
     }
 
     arch.r_array_str("open_sounds", open_sounds);
@@ -417,9 +381,9 @@ void common_info_window::init(object_info &c) {
 }
 
 void common_info_window::draw_tooltip(tooltip_context *c) {
-    textid tx = get_tooltip(g_object_info);
+    textid tx = get_tooltip(def_object_info);
     pcstr tooltip = (pcstr)lang_get_string(tx);
-    int button_id = ui::button_hover(mouse_get());
+    int button_id = ui::button_hover(&mouse::get());
     if (button_id > 0 && !(tooltip && *tooltip)) {
         tooltip = ui::button_tooltip(button_id - 1);
     }

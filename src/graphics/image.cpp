@@ -164,7 +164,8 @@ const image_t* image_get(int id) {
     }
 
     const image_t* img = nullptr;
-    for (auto &pak: data.pak_list) {
+    for (int i = 1; i < data.pak_list.size(); ++i) {
+        auto &pak = data.pak_list[i];
         if (pak.index < 0) {
             break;
         }

@@ -411,7 +411,7 @@ pcstr ui::button_tooltip(uint32_t id) {
 
 image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_button_offsets offsets, UiFlags flags) {
     const vec2i state_offset = g_state.offset();
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
 
     g_state.buttons.push_back(image_button{pos.x, pos.y, size.x + 4, size.y + 4, IB_NORMAL, (uint32_t)desc.pack, (uint32_t)desc.id, offsets.data[0], button_none, button_none, 0, 0, true});
     auto &ibutton = g_state.buttons.back().i_button;
@@ -420,13 +420,13 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
     const bool darkened = !!(flags & UiFlags_Darkened);
     const bool force_pressed = !!(flags & UiFlags_Selected);
     ibutton.hovered = !(darkened || grayscaled) && is_button_hover(ibutton, state_offset);
-    ibutton.pressed = (ibutton.hovered && m->left.is_down);
+    ibutton.pressed = (ibutton.hovered && m.left.is_down);
     ibutton.enabled = !(flags & UiFlags_Readonly);
 
     time_millis current_time = time_get_millis();
     if (ibutton.pressed) {
         if (current_time - ibutton.pressed_since > 100) {
-            if (ibutton.button_type != IB_BUILD && ibutton.button_type != IB_OVERSEER && !mouse_get()->left.is_down)
+            if (ibutton.button_type != IB_BUILD && ibutton.button_type != IB_OVERSEER && !mouse::get().left.is_down)
                 ibutton.pressed = false;
         }
     }
@@ -472,7 +472,7 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
         text_draw_centered((uint8_t*)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
         return box_width;
     } else if (!!(flags & UiFlags_LabelMultiline)) {
-        return text_draw_multiline((uint8_t *)label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
+        return text_draw_multiline(label, offset.x + pos.x, offset.y + pos.y, box_width, font, 0);
     } else if (!!(flags & UiFlags_Rich)) {
         rich_text_set_fonts(font, FONT_NORMAL_YELLOW);
         return rich_text_draw((uint8_t *)label, offset, box_width, 10, false);
@@ -561,14 +561,14 @@ void ui::icon(vec2i pos, e_advisor adv) {
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const vec2i offset = g_state.offset();
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
 
     int size = tiny ? 17 : 24;
     g_state.buttons.push_back(arrow_button{pos.x, pos.y, -1, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
     const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
-    abutton.pressed = hovered && m->left.is_down;
+    abutton.pressed = hovered && m.left.is_down;
     abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
     abutton.state |= (down ? 0x10 : 0);
 
@@ -899,12 +899,17 @@ void ui::eimage_button::load(archive arch, element *parent, items &elems) {
     offsets.data[2] = arch.r_int("offset_pressed", 2);
     offsets.data[3] = arch.r_int("offset_disabled", 3);
     _tooltip = arch.r_string("tooltip");
+    _js_onclick_ref = arch.r_function("onclick");
 
     pcstr name_icon_texture = arch.r_string("icon_texture");
     if (name_icon_texture && *name_icon_texture) {
         vec2i tmp_size;
         icon_texture = load_icon_texture(name_icon_texture, tmp_size);
     }
+}
+
+ui::eimage_button::~eimage_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::eimage_button::draw(UiFlags gflags) {
@@ -966,7 +971,15 @@ void ui::eimage_button::draw(UiFlags gflags) {
         return;
     }
 
-    btn->onclick(_func);
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (!_js_onclick_ref.empty()) {
+        btn->onclick([this](int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    } else {
+        btn->onclick(_func);
+    }
+    
     btn->tooltip(_tooltip);
     btn->parameter1 = param1;
     btn->parameter2 = param2;
@@ -1014,7 +1027,7 @@ void ui::etext::draw(UiFlags flags) {
         }
         text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + additionaly, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
-        text_draw_multiline((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
+        text_draw_multiline(_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         int symbolh = get_letter_height((uint8_t *)"H", _font);
         if (_shadow_color) {
@@ -1111,11 +1124,28 @@ void ui::earrow_button::load(archive arch, element *parent, items &elems) {
 
     tiny = arch.r_bool("tiny");
     down = arch.r_bool("down");
+    _js_onclick_ref = arch.r_function("onclick");
+}
+
+ui::earrow_button::~earrow_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::earrow_button::draw(UiFlags flags) {
-    ui::arw_button(pos, down, tiny)
-        .onclick(_func);
+    auto &btn = ui::arw_button(pos, down, tiny);
+    
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (!_js_onclick_ref.empty()) {
+        btn.onclick([this](int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    } else if (_func) {
+        btn.onclick(_func);
+    }
+}
+
+ui::egeneric_button::~egeneric_button() {
+    js_unref_function(_js_onclick_ref);
 }
 
 void ui::egeneric_button::draw(UiFlags gflags) {
@@ -1139,7 +1169,14 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     }
 
     const bool clickable = !darkened && !readonly;
-    if (clickable && _func) btn->onclick(_func);
+    
+    // Set up click handler - prefer JS callback if available, otherwise use C++ callback
+    if (clickable && !_js_onclick_ref.empty()) {
+        btn->onclick([this] (int, int) {
+            js_call_function(_js_onclick_ref);
+        });
+    }
+    if (clickable && _func && _js_onclick_ref.empty()) btn->onclick(_func);
     if (clickable && _rfunc) btn->onrclick(_rfunc);
 
     const vec2i offset = g_state.offset();
@@ -1159,4 +1196,5 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _border = arch.r_int("border", 1);
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
+    _js_onclick_ref = arch.r_function("onclick");
 }

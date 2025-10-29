@@ -3,6 +3,7 @@
 #include "core/tokenum.h"
 
 enum e_pack {
+    PACK_NONE = 0,
     PACK_UNLOADED,
     PACK_GENERAL,
     PACK_SPR_MAIN,
@@ -92,7 +93,7 @@ enum e_pack {
     PACK_MAX,
 };
 
-using e_pack_tokens_t = token_holder<e_pack, PACK_UNLOADED, PACK_MAX>;
+using e_pack_tokens_t = token_holder<e_pack, PACK_NONE, PACK_MAX>;
 extern const e_pack_tokens_t e_pack_type_tokens;
 
 ////////////////// TERRAIN

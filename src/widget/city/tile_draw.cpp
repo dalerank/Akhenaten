@@ -223,16 +223,16 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     if (grid_offset < 0) {
         // Outside map: draw black tile
         //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
-
-    } else if (overlay->draw_custom_footprint(pixel, point, ctx)) {
-        //get_city_overlay()->draw_custom_footprint(pixel, point, ctx);
-
     } else if (map_property_is_draw_tile(grid_offset)) {
         bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
         if (tall_flat_tile) {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
-            command.image_id = map_image_at(grid_offset);
-            command.pixel = pixel;
+
+            int image_id = map_image_at(grid_offset);
+            const image_t *img = image_get(image_id);
+            int offset_y = 15 * (img->width / 58) - 1;
+            command.image_id = image_id;
+            command.pixel = pixel - vec2i(0, offset_y);
         }
 
         //int terrain = map_terrain_get(grid_offset);

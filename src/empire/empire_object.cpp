@@ -19,11 +19,11 @@
 
 full_empire_object g_empire_objects[MAX_OBJECTS];
 
-void empire_object_foreach(std::function<void(const empire_object*)> callback) {
+void empire_object_foreach(std::function<void(const empire_object&)> callback) {
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use)
-            callback(&objects[i].obj);
+            callback(objects[i].obj);
     }
 }
 
@@ -107,7 +107,7 @@ void empire_object_init_cities() {
             continue;
 
         full_empire_object* obj = &objects[i];
-        obj->obj.trade_route_id = std::clamp(obj->obj.trade_route_id, 0, MAX_ROUTES - 1);
+        obj->obj.trade_route_id = std::clamp<uint8_t>(obj->obj.trade_route_id, 0, MAX_ROUTES - 1);
         empire_city* city = g_empire.city(obj->city_name_id);
         city->in_use = 1;
         city->type = obj->city_type;
@@ -332,9 +332,11 @@ static int get_animation_offset(int image_id, int current_index) {
     }
     return current_index;
 }
-int empire_object_update_animation(const empire_object* obj, int image_id) {
+
+int empire_object_update_animation(const empire_object &obj, int image_id) {
     auto& objects = g_empire_objects;
-    return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
+    objects[obj.id].obj.animation_index = get_animation_offset(image_id, obj.animation_index);
+    return objects[obj.id].obj.animation_index;
 }
 
 std::array<map_route_object, 50> g_empire_route_objects;
@@ -370,7 +372,7 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
         iob->bind(BIND_SIGNATURE_INT16, &obj->expanded.pos.y);
         iob->bind(BIND_SIGNATURE_UINT8, &full->city_type);
         iob->bind(BIND_SIGNATURE_UINT8, &full->city_name_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &obj->trade_route_id);
+        iob->bind_u8(obj->trade_route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &full->trade_route_open);
         iob->bind(BIND_SIGNATURE_INT16, &full->trade_route_cost);
 

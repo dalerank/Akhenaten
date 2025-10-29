@@ -31,14 +31,41 @@ public:
     int count_beer_sources();
     void expand();
     int get_city_vulnerable();
+    void end_siege(int city_id);
+    void end_all_sieges();
 
     void load_mission_metadata(const mission_id_t &missionid);
+    void update_month();
 
     empire_city *city(int city_id);
     empire_city *city(pcstr name);
 
     custom_span<empire_city> get_cities() { return make_span(cities); }
     custom_span<trade_route> get_routes() { return make_span(trade_routes.routes); }
+
+    template<typename T, typename F>
+    void select_cities(T& arr, F func) {
+        for (auto &city : get_cities()) {
+            if (!city.in_use) {
+                continue;
+            }
+
+            if (func(&city)) {
+                arr.push_back(&city);
+            }   
+        }
+    }
+
+    int random_city() {
+        svector<empire_city*, 32> valid_cities;
+        select_cities(valid_cities, [] (empire_city *c) { return c->in_use; });
+
+        if (valid_cities.empty()) {
+            return -1;
+        }
+
+        return valid_cities[rand() % valid_cities.size()]->name_id;
+    }
 
     inline trade_route &get_route(int route_id) {
         route_id = std::max(route_id, 0);

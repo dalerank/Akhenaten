@@ -41,10 +41,10 @@ namespace ImageDraw
         if (!img_top) {
             return nullptr;
         }
-        pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
+        pos.y += HALF_TILE_HEIGHT_PIXELS * (img_top->isometric_size() + 1) - img_top->height;
 
         g_render.draw_image(ctx, img_top, pos, color_mask, 1.f, flags);
-        return img;
+        return img_top;
     }
 
     const image_t* img_sprite(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags)
@@ -174,7 +174,11 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
 
     case render_command_t::ert_drawtile_full: {
             ImageDraw::isometric_from_drawtile(ctx, command.image_id, command.pixel, command.mask, command.flags);
-            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, command.pixel, command.mask, command.flags);
+
+            const image_t *img = image_get(command.image_id);
+            int offset_y = 15 * (img->width / 58);
+            const vec2i pixel = command.pixel - vec2i{ 0, offset_y };
+            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, pixel, command.mask, command.flags);
         }
         break;
 
@@ -234,7 +238,7 @@ void ImageDraw::apply_render_commands(painter& ctx) {
     std::sort(g_render_commands.begin(), g_render_commands.end(),
         [] (const auto& lhs, const auto& rhs) {
             if (lhs.pixel.y == rhs.pixel.y) {
-                return (lhs.pixel.x + lhs.virtual_xorder) > (rhs.pixel.x + rhs.virtual_xorder);
+                return lhs.pixel.x > rhs.pixel.x;
             }
 
             return lhs.pixel.y < rhs.pixel.y;

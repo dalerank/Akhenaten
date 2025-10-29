@@ -28,6 +28,7 @@
 #include "window/new_career.h"
 #include "game/game.h"
 #include "game/settings.h"
+#include "js/js_game.h"
 #include "graphics/elements/scroll_list_panel.h"
 
 #include <string.h>
@@ -211,7 +212,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 }
 
-void window_player_selection_show(void) {
+void window_player_selection_show() {
     if (!g_window_player_selection) {
         g_window_player_selection = new window_player_selection_t();
     }
@@ -225,3 +226,5 @@ void window_player_selection_show(void) {
     window_player_selection_init();
     window_show(&window);
 }
+
+ANK_FUNCTION(window_player_selection_show)

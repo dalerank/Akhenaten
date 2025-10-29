@@ -6,6 +6,9 @@
 #include "graphics/text.h"
 
 #include "graphics/graphics.h"
+#include "widget/debug_console.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 
 #include "building/monuments.h"
 #include "building/building_entertainment.h"
@@ -58,9 +61,9 @@ game_debug_t g_debug;
 bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
+const token_holder<e_debug_option, e_debug_show_floods, e_debug_opt_size> ANK_CONFIG_ENUM(e_debug_option_tokens);
 
 declare_console_var_int(debugrender, 0);
-declare_console_var_int(debugtile, 0);
 declare_console_var_int(debugbuildingid, 0);
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
@@ -93,32 +96,26 @@ void debug_font_test() {
     debug_font_line(&y, FONT_SMALL_SHADED);
 }
 
-void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color, e_font font) {
-    text_draw(ctx, string_from_ascii(text), x, y, font, color);
-    string_from_int(str, value, 0);
-    text_draw(ctx, str, x + indent, y, font, color);
+void debug_text(painter &ctx, pstr str, int x, int y, int indent, pcstr text, int value, color color, e_font font) {
+    text_draw(ctx, (const uint8_t *)string_from_ascii(text), x, y, font, color);
+    text_draw(ctx, (uint8_t*)bstring32(value).c_str(), x + indent, y, font, color);
 }
 
-void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color, e_font font) {
-    text_draw(ctx, string_from_ascii(text), x, y, font, color);
+void debug_text_a(painter &ctx, pstr str, int x, int y, int indent, pcstr text, color color, e_font font) {
+    text_draw(ctx, (const uint8_t *)string_from_ascii(text), x, y, font, color);
 }
 
-void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color) {
+void debug_text_float(int x, int y, int indent, pcstr text, float value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, (int)value, 0);
-    int l = string_length(str);
-    auto p = &str[l];
-    string_copy(string_from_ascii("."), p, 2);
-    string_from_int(&str[l + 1], (double)(value - (double)(int)value) * 100.0f, 0);
-    text_draw(str, x + indent, y, FONT_SMALL_OUTLINED, color);
+    bstring64 buffer;
+    buffer.printf("0.2f", value);
+    text_draw(buffer.data(), x + indent, y, FONT_SMALL_OUTLINED, color);
 }
 
-void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color) {
+void debug_text_dual_left(int x, int y, int indent, int indent2, pcstr text, int value1, int value2, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, value1, 0);
-    text_draw_left(str, x + indent, y, FONT_SMALL_OUTLINED, color);
-    string_from_int(str, value2, 0);
-    text_draw_left(str, x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
+    text_draw_left(bstring32(value1).c_str(), x + indent, y, FONT_SMALL_OUTLINED, color);
+    text_draw_left(bstring32(value2).c_str(), x + indent + indent2, y, FONT_SMALL_OUTLINED, color);
 }
 
 void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color col) {
@@ -228,7 +225,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     // globals
     int d = 0;
-    uint8_t str[64];
+    char str[64];
     int b_id = map_building_at(grid_offset);
     building* b = building_get(b_id);
 
@@ -439,8 +436,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         d = map_sprite_animation_at(grid_offset);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 10, FONT_SMALL_OUTLINED, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 10, FONT_SMALL_OUTLINED, COLOR_WHITE);
         }
 
         // STATUES & MONUMENTS
@@ -480,11 +476,11 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         if (!(point.x() % 5) && !(point.y() % 5)) {
             snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
-            debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+            debug_text_a(ctx, str, x, y + 10, 0, str, COLOR_WHITE, FONT_SMALL_PLAIN);
 
             vec2i voff = point.to_view();
             snprintf((char *)str, 48, "(%d,%d) (%d,%d)", pixel.x, pixel.y, voff.x, voff.y);
-            debug_text_a(ctx, str, x, y + 20, 0, (const char*)str, COLOR_BLUE, FONT_SMALL_PLAIN);
+            debug_text_a(ctx, str, x, y + 20, 0, str, COLOR_BLUE, FONT_SMALL_PLAIN);
         }
         break;
 
@@ -492,15 +488,14 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         int image_id = map_image_at(grid_offset);
         const image_t *img = image_get(image_id);
         snprintf((char*)str, 30, "%d", img->isometric_top_height());
-        debug_text_a(ctx, str, x, y + 10, 0, (const char*)str, COLOR_WHITE, FONT_SMALL_PLAIN);
+        debug_text_a(ctx, str, x, y + 10, 0, str, COLOR_WHITE, FONT_SMALL_PLAIN);
         }
         break;
 
     case e_debug_render_floodplain_shore:
         d = map_get_floodplain_edge(point);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         }
         break;
@@ -531,7 +526,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_damage:
         if (b_id && b) {
             snprintf((char *)str, 30, "f:%d/d:%d", b->fire_risk, b->damage_risk);
-            text_draw(ctx, str, x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
+            text_draw(ctx, (uint8_t*)str, x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
         }
         break;
 
@@ -595,8 +590,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_river_shore:
         d = map_terrain_is(grid_offset, TERRAIN_SHORE);
         if (d) {
-            string_from_int(str, d, 0);
-            text_draw(ctx, str, x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
+            text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
             ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
         }
         break;
@@ -629,10 +623,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
 }
 
-void draw_debug_figures() {
-
-}
-
 void figure::draw_debug() {
     if (draw_mode == 0) {
         return;
@@ -641,7 +631,7 @@ void figure::draw_debug() {
     building *b = home();
     building *bdest = destination();
 
-    uint8_t str[10];
+    char str[10];
     vec2i pixel = lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
     pixel.x -= 10;
@@ -733,8 +723,7 @@ void figure::draw_debug() {
         debug_text(ctx, str, pixel.x + 10, pixel.y + 40, 5, ":", roam_turn_direction, roam_turn_direction ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
 
         pixel.y += 50;
-        string_from_int(str, progress_on_tile, 0);
-        text_draw(ctx, str, pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
+        text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
     }
 
     if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
@@ -853,163 +842,23 @@ bstring256 get_terrain_type(pcstr def, int type) {
     return buffer;
 }
 
+ANK_REGISTER_PROPS_ITERATOR(config_show_debug_properties);
+void config_show_debug_properties(bool header) {
+    if (header) {
+        return;
+    }
+
+    ImGui::BeginTable("Debug", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+
+    game_debug_show_property("Render Mode", e_debug_render_tokens.name((e_debug_render)debugrender()) );
+
+    ImGui::EndTable();
+}
+
 void draw_debug_ui(int x, int y) {
-    uint8_t str[300];
+    char str[300];
 
     painter ctx = game.painter();
-    /////// DEBUG PAGES NAME
-    if (g_debug_show_opts[e_debug_show_pages]) {
-        y += 13;
-        int DB1 = abs(debugtile()) % 7;
-        int DB2 = abs(debugrender()) % 20;
-
-        color col = COLOR_GREEN;
-
-        string_from_int(str, DB1);
-        text_draw(str, x, y, FONT_SMALL_OUTLINED, col);
-        text_draw((uint8_t*)string_from_ascii(":"), x + 14, y, FONT_SMALL_OUTLINED, col);
-        x += 20;
-        switch (DB1) {
-        case 1:
-            text_draw((uint8_t*)string_from_ascii("ACTION / STATE IDS"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 2:
-            text_draw((uint8_t*)string_from_ascii("ROUTING"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 3:
-            text_draw((uint8_t*)string_from_ascii("RESOURCES / CARRYING"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 4:
-            text_draw((uint8_t*)string_from_ascii("HOME IDS"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 5:
-            text_draw((uint8_t*)string_from_ascii("FESTIVAL"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        case 6:
-            text_draw((uint8_t*)string_from_ascii("CROSS-COUNTRY"), x, y, FONT_SMALL_OUTLINED, col);
-            break;
-        }
-        y += 3;
-        x -= 20;
-        string_from_int(str, DB2);
-        text_draw(str, x, y + 10, FONT_SMALL_OUTLINED, col);
-        text_draw((uint8_t*)string_from_ascii(":"), x + 14, y + 10, FONT_SMALL_OUTLINED, col);
-        x += 20;
-        switch (DB2) {
-        default:
-            break;
-        case e_debug_render_building:
-            text_draw((uint8_t*)string_from_ascii("BUILDING IDS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 2:
-            text_draw((uint8_t*)string_from_ascii("DRAW-TILES AND SIZES"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 3:
-            text_draw((uint8_t*)string_from_ascii("ROADS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 4:
-            text_draw((uint8_t*)string_from_ascii("ROUTING DISTANCE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 5:
-            text_draw((uint8_t*)string_from_ascii("CITIZEN ROUTING GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 6:
-            text_draw((uint8_t*)string_from_ascii("MOISTURE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 7:
-            text_draw((uint8_t*)string_from_ascii("PROPER GRASS LEVEL"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 8:
-            text_draw((uint8_t*)string_from_ascii("FERTILITY / SOIL DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 9:
-            text_draw((uint8_t*)string_from_ascii("FLOODPLAIN SHORE ORDER"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 10:
-            text_draw((uint8_t*)string_from_ascii("FLOODPLAIN TERRAIN FLAGS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 11:
-            text_draw((uint8_t*)string_from_ascii("LABOR"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 12:
-            text_draw((uint8_t*)string_from_ascii("SPRITE FRAMES / STATUES AND MONUMENTS"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 13:
-            text_draw((uint8_t*)string_from_ascii("TERRAIN BIT FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 14:
-            text_draw((uint8_t*)string_from_ascii("IMAGE FIELD"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 15:
-            text_draw((uint8_t*)string_from_ascii("MARSHLAND DEPLETION"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 16:
-            text_draw((uint8_t*)string_from_ascii("MARSHLAND"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 17:
-            text_draw((uint8_t*)string_from_ascii("TERRAIN TYPE"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 18:
-            text_draw((uint8_t*)string_from_ascii("UNKNOWN SOIL GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        case 19:
-            text_draw((uint8_t*)string_from_ascii("UNKNOWN 32BIT GRID"), x, y + 10, FONT_SMALL_OUTLINED, col);
-            break;
-        }
-        y += 10;
-        x -= 20;
-    }
-
-    /////// TIME
-    if (g_debug_show_opts[e_debug_show_game_time]) {
-        debug_text(ctx, str, x, y + 15, 50, "tick:", game.simtime.tick);
-        debug_text(ctx, str, x + 80, y + 15, 50, "iscycle:", g_floods.is_start_cycle());
-        debug_text(ctx, str, x, y + 25, 50, "cycle:", g_floods.current_cycle());
-        debug_text(ctx, str, x + 90, y + 25, 60, "frame:", g_floods.current_subcycle());
-
-        debug_text(ctx, str, x, y + 35, 50, "day:", game.simtime.day);
-        debug_text(ctx, str, x, y + 45, 50, "month:", game.simtime.month);
-        debug_text(ctx, str, x, y + 55, 50, "year:", game.simtime.year);
-        debug_text(ctx, str, x, y + 65, 60, "abs. tick:", game.simtime.absolute_tick(true)); // absolute tick of the year
-        debug_text(ctx, str, x, y + 75, 60, "year tick:", game.simtime.absolute_tick(false)); // absolute tick of the year
-        debug_text(ctx, str, x, y + 85, 60, "abs. day:", game.simtime.absolute_day(true));   // absolute day of the year
-        debug_text(ctx, str, x, y + 95, 60, "year day:", game.simtime.absolute_day(false));   // absolute day of the year
-        y += 80;
-    }
-
-    /////// BUILD PLANNER
-    if (g_debug_show_opts[e_debug_show_build_planner]) {
-        int cl = 90;
-        debug_text(ctx, str, x, y + 15, cl, "type:", g_city_planner.build_type);
-        debug_text(ctx, str, x, y + 25, cl, "in progress:", g_city_planner.in_progress);
-        debug_text(ctx, str, x, y + 35, cl, "draw as con.:", g_city_planner.draw_as_constructing);
-        debug_text(ctx, str, x, y + 45, cl, "orientation:", g_city_planner.absolute_orientation);
-        debug_text(ctx, str, x + 40, y + 45, cl, "", g_city_planner.relative_orientation);
-        debug_text(ctx, str, x, y + 55, cl, "variant:", g_city_planner.building_variant);
-        debug_text(ctx, str, x, y + 65, cl, "start:", g_city_planner.start.x());
-        debug_text(ctx, str, x + 40, y + 65, cl, "", g_city_planner.start.y());
-        debug_text(ctx, str, x, y + 75, cl, "end:", g_city_planner.end.x());
-        debug_text(ctx, str, x + 40, y + 75, cl, "", g_city_planner.end.y());
-
-        vec2i screen_start = tile_to_screen(g_city_planner.start);
-        vec2i screen_end = tile_to_screen(g_city_planner.end);
-        debug_text(ctx, str, x + 170, y + 65, 60, "screen:", screen_start.x);
-        debug_text(ctx, str, x + 170 + 40, y + 65, 60, "", screen_start.y);
-        debug_text(ctx, str, x + 170, y + 75, 60, "screen:", screen_end.x);
-        debug_text(ctx, str, x + 170 + 40, y + 75, 60, "", screen_end.y);
-
-        //        screen_tile screen_start2 = attempt_mappoint_to_screen(Planner.start);
-        //        screen_tile screen_end2 = attempt_mappoint_to_screen(Planner.end);
-        //        color col = (screen_start != screen_start2) ? COLOR_LIGHT_RED : COLOR_LIGHT_GREEN;
-        //        draw_debug_line(str, x + 300, y + 65, 60, "direct:", screen_start2.x, col); draw_debug_line(str, x +
-        //        300 + 40, y + 65, 60, "", screen_start2.y, col); col = (screen_end != screen_end2) ? COLOR_LIGHT_RED :
-        //        COLOR_LIGHT_GREEN; draw_debug_line(str, x + 300, y + 75, 60, "direct:", screen_end2.x, col);
-        //        draw_debug_line(str, x + 300 + 40, y + 75, 60, "", screen_end2.y, col);
-
-        debug_text(ctx, str, x, y + 85, cl, "cost:", g_city_planner.total_cost);
-        y += 90;
-    }
-
     /////// RANDOM
     if (false) {
         auto randm = random_data_struct();
@@ -1026,145 +875,6 @@ void draw_debug_ui(int x, int y) {
 
         debug_text(ctx, str, x, y + 105, cl, "scum:", anti_scum_random_15bit(false));
         y += 100;
-    }
-
-    /////// RELIGION
-    if (g_debug_show_opts[e_debug_show_religion]) {
-        int cl = 0; 
-        text_draw((uint8_t*)string_from_ascii("                    mood/target  wrath/ankhs            buildings  coverage  festival"), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
-        y += 15;
-        int c0 = 60;
-        int c1 = 40;
-        int c2 = 140;
-        int c3 = 220;
-        int c4 = 240;
-        int c5 = 260;
-        int c6 = 290;
-        int c7 = 15;
-        int c8 = 360;
-
-        if (g_city.religion.is_god_known(GOD_OSIRIS) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 15, c0, c1, "Osiris:", g_city.religion.gods[0].mood, g_city.religion.gods[0].target_mood);
-            debug_text_dual_left(str, x + c2, y + 15, 0, c1, "", g_city.religion.gods[0].wrath_bolts, g_city.religion.gods[0].happy_ankhs);
-            debug_text(ctx, str, x + c3, y + 15, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_OSIRIS));
-            debug_text(ctx, str, x + c4, y + 15, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_OSIRIS));
-            debug_text(ctx, str, x + c5, y + 15, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_OSIRIS));
-            debug_text(ctx, str, x + c6, y + 15, c7, "%", g_city.religion.coverage_avg(GOD_OSIRIS));
-            debug_text(ctx, str, x + c8, y + 15, cl, "", g_city.religion.gods[0].months_since_festival);
-        }
-
-        if (g_city.religion.is_god_known(GOD_RA) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 25, c0, c1, "Ra:", g_city.religion.gods[1].mood, g_city.religion.gods[1].target_mood);
-            debug_text_dual_left(str, x + c2, y + 25, 0, c1, "", g_city.religion.gods[1].wrath_bolts, g_city.religion.gods[1].happy_ankhs);
-            debug_text(ctx, str, x + c3, y + 25, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_RA));
-            debug_text(ctx, str, x + c4, y + 25, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_RA));
-            debug_text(ctx, str, x + c5, y + 25, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_RA));
-            debug_text(ctx, str, x + c6, y + 25, c7, "%", g_city.religion.coverage_avg(GOD_RA));
-            debug_text(ctx, str, x + c8, y + 25, cl, "", g_city.religion.gods[1].months_since_festival);
-        }
-
-        if (g_city.religion.is_god_known(GOD_PTAH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 35, c0, c1, "Ptah:", g_city.religion.gods[2].mood, g_city.religion.gods[2].target_mood);
-            debug_text_dual_left(str, x + c2, y + 35, 0, c1, "", g_city.religion.gods[2].wrath_bolts, g_city.religion.gods[2].happy_ankhs);
-            debug_text(ctx, str, x + c3, y + 35, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_PTAH));
-            debug_text(ctx, str, x + c4, y + 35, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_PTAH));
-            debug_text(ctx, str, x + c5, y + 35, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_PTAH));
-            debug_text(ctx, str, x + c6, y + 35, c7, "%", g_city.religion.coverage_avg(GOD_PTAH));
-            debug_text(ctx, str, x + c8, y + 35, cl, "", g_city.religion.gods[2].months_since_festival);
-        }
-
-        if (g_city.religion.is_god_known(GOD_SETH) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 45, c0, c1, "Seth:", g_city.religion.gods[3].mood, g_city.religion.gods[3].target_mood);
-            debug_text_dual_left(str, x + c2, y + 45, 0, c1, "", g_city.religion.gods[3].wrath_bolts, g_city.religion.gods[3].happy_ankhs);
-            debug_text(ctx, str, x + c3, y + 45, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_SETH));
-            debug_text(ctx, str, x + c4, y + 45, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_SETH));
-            debug_text(ctx, str, x + c5, y + 45, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_SETH));
-            debug_text(ctx, str, x + c6, y + 45, c7, "%", g_city.religion.coverage_avg(GOD_SETH));
-            debug_text(ctx, str, x + c8, y + 45, cl, "", g_city.religion.gods[3].months_since_festival);
-        }
-
-        if (g_city.religion.is_god_known(GOD_BAST) != GOD_STATUS_UNKNOWN) {
-            debug_text_dual_left(str, x, y + 55, c0, c1, "Bast:", g_city.religion.gods[4].mood, g_city.religion.gods[4].target_mood);
-            debug_text_dual_left(str, x + c2, y + 55, 0, c1, "", g_city.religion.gods[4].wrath_bolts, g_city.religion.gods[4].happy_ankhs);
-            debug_text(ctx, str, x + c3, y + 55, cl, "", g_city.buildings.count_total(BUILDING_SHRINE_BAST));
-            debug_text(ctx, str, x + c4, y + 55, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_BAST));
-            debug_text(ctx, str, x + c5, y + 55, cl, "", g_city.buildings.count_active(BUILDING_TEMPLE_COMPLEX_BAST));
-            debug_text(ctx, str, x + c6, y + 55, c7, "%", g_city.religion.coverage_avg(GOD_BAST));
-            debug_text(ctx, str, x + c8, y + 55, cl, "", g_city.religion.gods[4].months_since_festival);
-        }
-
-        cl = 180;
-        debug_text(ctx, str, x, y + 75, cl, "150% export profits:", g_city.religion.ra_150_export_profits_months_left);
-        debug_text(ctx, str, x, y + 85, cl, "No traders:", g_city.religion.ra_no_traders_months_left);
-        debug_text(ctx, str, x, y + 95, cl, "Slightly increased trades:", g_city.religion.ra_slightly_increased_trading_months_left);
-        debug_text(ctx, str, x, y + 105, cl, "Slightly reduced trades:", g_city.religion.ra_slightly_reduced_trading_months_left);
-        debug_text(ctx, str, x, y + 115, cl, "Harshly reduced trades:", g_city.religion.ra_harshly_reduced_trading_months_left);
-
-        debug_text(ctx, str, x, y + 125, cl, "Enemy troops kill:", g_city.religion.seth_crush_enemy_troops);
-        debug_text(ctx, str, x, y + 135, cl, "Player troops protection:", g_city.religion.seth_protect_player_troops);
-
-        debug_text(ctx, str, x, y + 145, cl, "Double farm yields days:", g_city.religion.osiris_double_farm_yield_days);
-        debug_text(ctx, str, x, y + 155, cl, "Floods will destroy farms:", g_city.religion.osiris_flood_will_destroy_active);
-        y += 170;
-    }
-
-    if (g_debug_show_opts[e_debug_show_sound_channels]) {
-        const auto &channels = g_sound.channels();
-        int cl = 180;
-        for (const auto &ch: channels) {
-            if (!ch.playing) {
-                continue;
-            }
-            debug_text(ctx, str, x, y + 1, cl, bstring256().printf("%03u: L%03u: R:%03u: %s", &ch - channels.begin(), ch.left_pan, ch.right_pan, ch.filename.c_str()).c_str(), 0);
-            y += 12;
-        }
-    }
-
-    if (g_debug_show_opts[e_debug_show_migration]) {
-        int cl = 180;
-        debug_text_a(ctx, str, x, y + 1, cl, "====================== migration ======================");
-        y += 12;
-        debug_text(ctx, str, x, y + 1, cl, "invading_cap:", g_city.migration.invading_cap);
-        debug_text(ctx, str, x, y + 13, cl, "migration_cap:", g_city.migration.migration_cap);
-        debug_text(ctx, str, x, y + 25, cl, "percentage_by_sentiment:", g_city.migration.percentage_by_sentiment);
-        debug_text(ctx, str, x, y + 37, cl, "emigration_message_shown:", g_city.migration.emigration_message_shown);
-        debug_text(ctx, str, x, y + 49, cl, "newcomers:", g_city.migration.newcomers);
-        debug_text(ctx, str, x, y + 61, cl, "percentage:", g_city.migration.percentage);
-        debug_text(ctx, str, x, y + 73, cl, "no_immigration_cause:", g_city.migration.no_immigration_cause);
-        debug_text(ctx, str, x, y + 85, cl, "refused_immigrants_today:", g_city.migration.refused_immigrants_today);
-        debug_text(ctx, str, x, y + 97, cl, "emigrated_today:", g_city.migration.emigrated_today);
-        debug_text(ctx, str, x, y + 109, cl, "immigrated_today:", g_city.migration.immigrated_today);
-        debug_text(ctx, str, x, y + 121, cl, "emigration_queue_size:", g_city.migration.emigration_queue_size);
-        debug_text(ctx, str, x, y + 133, cl, "immigration_queue_size:", g_city.migration.immigration_queue_size);
-        debug_text(ctx, str, x, y + 145, cl, "immigration_duration:", g_city.migration.immigration_duration);
-        debug_text(ctx, str, x, y + 157, cl, "emigration_amount_per_batch:", g_city.migration.emigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 169, cl, "emigration_duration:", g_city.migration.emigration_duration);
-        debug_text(ctx, str, x, y + 181, cl, "immigration_amount_per_batch:", g_city.migration.immigration_amount_per_batch);
-        debug_text(ctx, str, x, y + 193, cl, "nobles_leave_city_this_year:", g_city.migration.nobles_leave_city_this_year);
-        y += 212;
-    }
-
-    if (g_debug_show_opts[e_debug_show_sentiment]) {
-        int cl = 180;
-        debug_text(ctx, str, x, y + 1, cl, "value:", g_city.sentiment.value);
-        debug_text(ctx, str, x, y + 13, cl, "previous_value:", g_city.sentiment.previous_value);
-        debug_text(ctx, str, x, y + 25, cl, "message_delay:", g_city.sentiment.message_delay);
-        debug_text(ctx, str, x, y + 37, cl, "include_tents:", g_city.sentiment.include_huts);
-        debug_text(ctx, str, x, y + 49, cl, "unemployment_pct:", g_city.sentiment.unemployment_pct);
-        debug_text(ctx, str, x, y + 61, cl, "wages:", g_city.sentiment.wages);
-        debug_text(ctx, str, x, y + 73, cl, "low_mood_cause:", g_city.sentiment.low_mood_cause);
-        debug_text(ctx, str, x, y + 85, cl, "protesters:", g_city.sentiment.protesters);
-        debug_text(ctx, str, x, y + 97, cl, "criminals:", g_city.sentiment.criminals);
-        debug_text(ctx, str, x, y + 109, cl, "can_create_mugger:", g_city.sentiment.can_create_mugger);
-        debug_text(ctx, str, x, y + 121, cl, "can_create_protestor:", g_city.sentiment.can_create_protestor);
-        debug_text(ctx, str, x, y + 133, cl, "last_mugger_message:", g_city.sentiment.last_mugger_message);
-        debug_text(ctx, str, x, y + 145, cl, "contribution_taxes:", g_city.sentiment.contribution_taxes);
-        debug_text(ctx, str, x, y + 157, cl, "contribution_wages:", g_city.sentiment.contribution_wages);
-        debug_text(ctx, str, x, y + 169, cl, "contribution_employment:", g_city.sentiment.contribution_employment);
-        debug_text(ctx, str, x, y + 181, cl, "penalty_huts:", g_city.sentiment.contribution_penalty_huts);
-        debug_text(ctx, str, x, y + 193, cl, "monuments:", g_city.sentiment.contribution_monuments);
-        debug_text(ctx, str, x, y + 205, cl, "religion_coverage:", g_city.sentiment.contribution_religion_coverage);
-        y += 210;
     }
 
     /////// FLOODS
@@ -1212,7 +922,7 @@ void draw_debug_ui(int x, int y) {
         // cursor
         text_draw(dot, x + rc_curr, y + 15, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
         text_draw(string_from_ascii("\'"), x + rc_curr, y + 25, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
-        debug_text_float(str, x + rc_curr + 5, y + 25, 0, "", _c_curr);  // current cycle
+        debug_text_float(x + rc_curr + 5, y + 25, 0, "", _c_curr);  // current cycle
         debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_floods.state); // current cycle
 
         debug_text(ctx, str, x, y + 35, 60, "debug:", g_floods.debug_period());
@@ -1262,196 +972,6 @@ void draw_debug_ui(int x, int y) {
         debug_text(ctx, str, x, y + 275, cl, "target_progress:", g_floods.flood_progress_target);
         y += 350;
     }
-
-    /////// CAMERA
-    if (g_debug_show_opts[e_debug_show_camera]) {
-        tile2i camera_tile = city_view_get_camera_mappoint();
-        vec2i camera_pixels = camera_get_pixel_offset_internal(ctx);
-
-        auto mm_view = g_city_view.get_scrollable_pixel_limits();
-
-        int real_max_x;
-        int real_max_y;
-        city_view_get_camera_max_tile(&real_max_x, &real_max_y);
-
-        int max_x_pixel_offset;
-        int max_y_pixel_offset;
-        city_view_get_camera_max_pixel_offset(&max_x_pixel_offset, &max_y_pixel_offset);
-
-        y += 30;
-        debug_text_dual_left(str, x, y - 15, 90, 40, "---min:", mm_view.min.x, mm_view.min.y);
-        debug_text_dual_left(str, x, y - 5, 90, 40, "camera:", g_city_view.camera.position.x, g_city_view.camera.position.y);
-        debug_text_dual_left(str, x, y + 5, 90, 40, "---max:", mm_view.max.x, mm_view.max.y);
-
-        debug_text_dual_left(str, x, y + 25, 90, 40, "---min:", SCROLL_MIN_SCREENTILE_X, SCROLL_MIN_SCREENTILE_Y);
-        debug_text_dual_left(str, x, y + 35, 90, 40, "tile:", camera_tile.x(), camera_tile.y());
-        debug_text_dual_left(str, x, y + 45, 90, 40, "---max:", real_max_x, real_max_y);
-
-        debug_text_dual_left(str, x, y + 65, 90, 40, "---min:", 0, 0);
-        debug_text_dual_left(str, x, y + 75, 90, 40, "pixel:", camera_pixels.x, camera_pixels.y);
-        debug_text_dual_left(str, x, y + 85, 90, 40, "---max:", max_x_pixel_offset, max_y_pixel_offset);
-
-        debug_text_dual_left(str, x, y + 105, 90, 40, "v.tiles:", g_city_view.viewport.size_pixels.x / 60, g_city_view.viewport.size_pixels.y / 30);
-        debug_text_dual_left(str, x, y + 115, 90, 40, "v.pixels:", g_city_view.viewport.size_pixels.x, g_city_view.viewport.size_pixels.y);
-
-        debug_text(ctx, str, x, y + 125, 50, "zoom:", g_zoom.get_percentage());
-        debug_text_float(str, x, y + 125, 50 + 40, "", g_zoom.get_scale());
-
-        debug_text_float(str, x, y + 135, 50, "target:", g_zoom.ftarget());
-        debug_text_float(str, x + 100, y + 135, 50, "delta:", g_zoom.fdelta());
-
-        vec2i pixel = {mouse_get()->x, mouse_get()->y};
-        debug_text(ctx, str, x, y + 145, 50, "mouse:", pixel.x);
-        debug_text(ctx, str, x + 40, y + 145, 50, "", pixel.y);
-
-        vec2i viewp = pixel_to_viewport(pixel);
-        debug_text(ctx, str, x, y + 155, 50, "viewp:", viewp.x);
-        debug_text(ctx, str, x + 40, y + 155, 50, "", viewp.y);
-
-        vec2i coord = pixel_to_camera_coord(pixel, false);
-        debug_text(ctx, str, x, y + 165, 50, "coord:", coord.x);
-        debug_text(ctx, str, x + 40, y + 165, 50, "", coord.y);
-
-        screen_tile screen = pixel_to_screentile(pixel);
-        debug_text(ctx, str, x, y + 175, 50, "tile:", screen.x);
-        debug_text(ctx, str, x + 40, y + 175, 50, "", screen.y);
-
-        vec2i offset = {coord.x % TILE_WIDTH_PIXELS, coord.y % TILE_HEIGHT_PIXELS};
-        debug_text(ctx, str, x, y + 185, 50, "offset:", offset.x);
-        debug_text(ctx, str, x + 40, y + 185, 50, "", offset.y);
-
-        tile2i point = screen_to_tile(screen);
-        debug_text(ctx, str, x, y + 195, 50, "point:", point.x());
-        debug_text(ctx, str, x + 40, y + 195, 50, "", point.y());
-        debug_text(ctx, str, x + 80, y + 195, 50, "", point.grid_offset());
-
-        debug_text_a(ctx, str, x + 180, y + 195, 50, get_terrain_type("type: ", point));
-        pixel = lookup_tile_to_pixel(point);
-        debug_text(ctx, str, x, y + 205, 50, "pixel:", pixel.x);
-        debug_text(ctx, str, x + 40, y + 205, 50, "", pixel.y);
-
-        //        if (point.grid_offset() != -1)
-        //            debug_draw_tile_box(pixel.x, pixel.y);
-
-        //        pixel = tile_to_pixel(screentile_to_mappoint(city_view_data_unsafe()->camera.tile_internal));
-        //        debug_draw_tile_box(pixel.x, pixel.y);
-
-        y += 200;
-    }
-
-    /////// CLOUDS
-    if (g_debug_show_opts[e_debug_show_clouds]) {
-        y += 30;
-
-        // TODO: label drawn clouds
-        // auto& viewdata = city_view_data_unsafe();
-        // vec2i min_pos, max_pos;
-        // city_view_get_camera_scrollable_pixel_limits(viewdata, min_pos, max_pos);
-        // const int x_offset = viewdata.camera.position.x - min_pos.x;
-        // const int y_offset = viewdata.camera.position.y - min_pos.y;
-        // float scale = g_zoom.get_scale();
-
-        for (int i = 0; i < NUM_CLOUDS; i++) {
-            const cloud_type *cloud = &g_cloud_data.clouds[i];
-            e_cloud_status status = cloud->status;
-            char status_text[32] = {};
-            switch (status) {
-                case e_cloud_status_inactive: snprintf(status_text, 32, "%s", "status: INACTIVE"); break;
-                case e_cloud_status_created: snprintf(status_text, 32, "%s", "status: CREATED"); break;
-                case e_cloud_status_moving: snprintf(status_text, 32, "%s", "status: MOVING"); break;
-            }
-
-            // debug_text(ctx, str, (cloud->render_x - x_offset) * scale, (cloud->render_y - y_offset) * scale, 50, "Cloud", i);
-            debug_text(ctx, str, x, y - 20, 70, "---cloud ", i);
-            debug_text_a(ctx, str, x, y - 10, 70, status_text);
-            debug_text_dual_left(str, x, y, 120, 40, "speed x,y:", cloud->speed.x.current_speed,
-                                 cloud->speed.y.current_speed);
-            debug_text_dual_left(str, x, y + 10, 120, 40, "pos x,y: ", cloud->x, cloud->y);
-            debug_text_dual_left(str, x, y + 20, 120, 40, "render pos x,y: ", cloud->render_x, cloud->render_y);
-            y += 40;
-        }
-
-        y += 200;
-    }
-
-    /////// TUTORIAL
-    if (g_debug_show_opts[e_debug_show_tutorial]) {
-        const auto &flags = g_tutorials_flags;
-        struct tutopt { const char *optname; bool value; };
-        for (int i = 0; i < 41; i++) {
-            tutopt f{"", flags.pharaoh.flags[i]};
-            switch (i) {
-            case 0:
-                f = { "1:fire", flags.tutorial_1.building_burned };
-                break;
-            case 1:
-                f = { "1:granary_opened", flags.tutorial_1.granary_opened };
-                break;
-            case 2:
-                f = { "1:meat_400", flags.tutorial_1.gamemeat_stored };
-                break;
-            case 3:
-                f = { "1:collapse", flags.tutorial_1.building_collapsed };
-                break;
-            case 4:
-                f = { "2:gold_mined", flags.tutorial_2.gold_mined };
-                break;
-            case 5:
-                f = { "2:temples_done", flags.tutorial_2.temples_built };
-                break;
-            case 6:
-                f = { "2:crime", flags.tutorial_2.crime };
-                break;
-            case 7:
-                f = { "3:figs", flags.tutorial_3.figs_stored };
-                break;
-            case 8:
-                f = { "3:pottery_100", flags.tutorial_3.pottery_made_1 };
-                break;
-            case 9:
-                f = { "3:pottery_100", flags.tutorial_3.pottery_made_2 };
-                break;
-            case 10:
-                f = { "3:disease", flags.tutorial_3.disease };
-                break;
-            case 11:
-                f = { "4:beer_300", flags.tutorial_4.beer_made };
-                break;
-            case 12:
-                f = { "5:apartment", flags.tutorial_5.spacious_apartment };
-                break;
-            case 15:
-                f = { "tut1 start", flags.tutorial_1.started };
-                break;
-            case 16:
-                f = { "tut2 start", flags.tutorial_2.started };
-                break;
-            case 17:
-                f = { "tut3 start", flags.tutorial_3.started };
-                break;
-            case 18:
-                f = { "tut4 start", flags.tutorial_4.started };
-                break;
-            case 19:
-                f = { "tut5 start", flags.tutorial_5.started };
-                break;
-            case 20:
-                f = { "tut6 start", flags.tutorial_6.started };
-                break;
-            case 21:
-                f = { "tut7 start", flags.pharaoh.tut7_start };
-                break;
-            case 22:
-                f = { "tut8 start" , flags.pharaoh.tut8_start };
-                break;
-            }
-
-            int color = f.value ? COLOR_GREEN : COLOR_WHITE;
-            text_draw((uint8_t*)string_from_ascii(f.optname), x + 3, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
-            text_draw((uint8_t*)string_from_ascii(":"), x + 3 + 20, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
-            text_draw((uint8_t*)string_from_ascii(f.value ? "yes" : "no"), x + 3 + 45, y + 115 + i * 10, FONT_SMALL_OUTLINED, color);
-        }
-    }
 }
 
 console_command::console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f) {
@@ -1486,11 +1006,7 @@ console_ref_bool::console_ref_bool(pcstr name, bool &v) : value(&v) {
     bind_debug_console_var_bool(name, v);
 }
 
-void game_debug_t::init() {
-    events::subscribe([] (event_debug_tile_change ev) {
-        debugtile.value += ev.value;
-    });    
-    
+void game_debug_t::init() {    
     events::subscribe([] (event_debug_render_change ev) {
         debugrender.value += ev.value;
     });

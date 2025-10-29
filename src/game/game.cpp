@@ -75,7 +75,7 @@ uint16_t &game_speed() { return game.game_speed; }
 
 const std::vector<lang_pack> &get_def_lang_packs() {
     static std::vector<lang_pack> lang_packs = {
-        {"", "eng", "Pharaoh_Text", "Pharaoh_MM"},
+        {"", "eng", "Pharaoh_Text"},
     };
 
     return lang_packs;
@@ -171,6 +171,7 @@ void game_t::advance_month() {
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this
+    g_empire.update_month();
     g_scenario.events.process_random_events();
     g_scenario.events.process_events();
 
@@ -303,7 +304,7 @@ static bool reload_language(int is_editor, int reload_images) {
     if (lang_dir.empty()) {
         lang_packs = get_def_lang_packs();
     } else {
-        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text", "Pharaoh_MM");
+        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text");
     }
 
     if (!lang_load(is_editor, lang_packs)) {
@@ -396,16 +397,6 @@ bool game_init(game_opts opts) {
 
     if (!model_load()) {
         logs::error("unable to load model data");
-        return false;
-    }
-
-    if (!g_scenario.events.msg_load()) {
-        logs::error("unable to load eventmsg.txt");
-        return false;
-    }
-
-    if (!g_scenario.events.msg_auto_phrases_load()) {
-        logs::error("unable to load event auto reason phrases");
         return false;
     }
 
@@ -532,11 +523,11 @@ void game_t::before_start_simulation() {
 
 void game_t::handle_input_frame() {
     OZZY_PROFILER_SECTION("Input/Frame/Current");
-    const mouse *m = mouse_get();
+    const mouse& m = mouse::get();
     const hotkeys *h = hotkey_state();
 
-    g_window_manager.handle_input(m ,h);
-    g_window_manager.handle_tooltip(m);
+    g_window_manager.handle_input(&m ,h);
+    g_window_manager.handle_tooltip(&m);
 
     g_window_manager.update_input_after();
 }

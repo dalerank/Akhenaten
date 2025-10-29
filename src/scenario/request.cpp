@@ -58,7 +58,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     int pharaoh_alt_shift = (event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0);
     switch (event.event_state) {
     case e_event_state_finished:
-        messages::popup(MESSAGE_REQUEST_RECEIVED, event.event_id, 0);
+        messages::popup("message_request_received", event.event_id, 0);
         if (!event.is_overdue) {
             g_city.kingdome.increase_success_request(3);
         }
@@ -68,7 +68,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
 
     case e_event_state_finished_late:
         assert(!event.is_overdue);
-        messages::popup(MESSAGE_REQUEST_RECEIVED_LATE, event.event_id, 0);
+        messages::popup("message_request_received_late", event.event_id, 0);
         g_city.kingdome.increase_success_request(1);
         event.event_state = e_event_state_received;
         event.is_active = false;
@@ -81,14 +81,14 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
     case e_event_state_in_progress:
         if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.amount) {
             event.can_comply_dialog_shown = true;
-            city_message &message = g_message_manager.post_common(true, MESSAGE_REQUEST_CAN_COMPLY, event.event_id, 0, GOD_UNKNOWN, 0);
+            city_message &message = g_message_manager.post_common(true, "message_storage_yards_ready_to_fulfill_request", event.event_id, 0, GOD_UNKNOWN, 0);
             message.req_amount = request.resource_amount();
             message.req_resource = request.resource;
             message.req_months_left = request.months_to_comply;
         } else if (!event.appear_dialgow_shown) {
             // initial quest message
             event.appear_dialgow_shown = true;
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, "message_template_request", &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
@@ -98,7 +98,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
         
         if (event.quest_months_left == 6) {
             // reminder of 6 months left
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, "message_template_request", &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_reminder_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
@@ -111,7 +111,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
             event.quest_months_left = 24; // hardcoded
 
             // reprimand message
-            city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, event.event_id, caller_event_id,
+            city_message_post_full(true, "message_template_request", &event, caller_event_id,
                                    PHRASE_general_request_title_P + pharaoh_alt_shift,
                                    PHRASE_general_request_overdue_P + pharaoh_alt_shift,
                                    PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,

@@ -22,8 +22,6 @@ public:
         uint16_t visitors_today;
         uint16_t visitors_month;
         uint16_t visitors_annual;
-        animation_context musician_ctx;
-        animation_context juggler_ctx;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;

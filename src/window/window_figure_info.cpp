@@ -110,6 +110,7 @@ void figure_info_window::window_info_foreground(object_info &c) {
 void figure_info_window::archive_load(archive arch) {
     common_info_window::archive_load(arch);
     assert(elements.size() > 0);
+    arch.r("related_figures", related_figures);
 }
 
 void figure_info_window::window_info_background(object_info &c) {
@@ -199,7 +200,7 @@ void figure_info_window::init(object_info &c) {
 }
 
 bool figure_info_window::check(object_info &c) {
-    return false;
+    return figure_type_any_of(c.figure_get(), related_figures);
 }
 
 figure *figure_info_window::figure_get(object_info &c) {

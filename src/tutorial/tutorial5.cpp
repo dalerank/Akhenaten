@@ -45,7 +45,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
 
     g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    messages::popup(MESSAGE_TUTORIAL_EDUCATION, 0, 0);
+    messages::popup("message_tutorial_education", 0, 0);
 }
 
 void tutorial5_handle_papyrus(event_warehouse_filled ev) {
@@ -66,7 +66,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
     g_city.set_advisor_available(ADVISOR_TRADE, AVAILABLE);
     
-    messages::popup(MESSAGE_TUTORIAL_TRADE_WITH_OTHER_CITIES, 0, 0);
+    messages::popup("message_tutorial_trade_with_other_cities", 0, 0);
 }
 
 void tutorial5_handle_bricks(event_warehouse_filled ev) {
@@ -84,7 +84,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
     events::unsubscribe(&tutorial5_handle_bricks);
     events::emit(event_building_menu_update{ "tutorial_monuments" });
     g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    messages::popup(MESSAGE_TUTORIAL_MONUMENTS, 0, 0);
+    messages::popup("message_tutorial_monuments", 0, 0);
 }
 
 bool tutorial5_is_success() {

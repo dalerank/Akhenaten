@@ -1,7 +1,7 @@
 #pragma once
 
 #include "figuretype/figure_trader.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 class figure_native_trader : public figure_trader {
 public:

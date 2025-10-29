@@ -11,7 +11,7 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_DefaultOpen, "Event %d", e.event_id);
+    bool common_open = ImGui::TreeNodeEx("Event", ImGuiTreeNodeFlags_None, "Event %d", e.event_id);
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
@@ -21,7 +21,7 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
         game_debug_show_property("Execute", [&] { 
             auto date = game.simtime.date();
             e.time.year = date.year;
-            e.month = date.month;
+            e.time.month = date.month;
             e.event_trigger_type = EVENT_TRIGGER_ONCE;
             g_scenario.events.process_events();
         });
@@ -29,11 +29,11 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
         type_name.printf("%s [%d]", token::find_name(e_event_type_tokens, e.type), e.type);
         game_debug_show_property("tag_id", e.tag_id);
         game_debug_show_property("<type>", type_name);
-        game_debug_show_property("month", e.month);
         game_debug_show_property("time", e.time.year);
-        bstring32 time_str; time_str.printf("%s %d %s", ui::str(25, e.month), e.time.year + scenario_property_start_year(), lang_text_from_key("#AD"));
+        game_debug_show_property("month", e.time.month);
+        bstring32 time_str; time_str.printf("%s %d %s", ui::str(25, e.time.month), e.time.year + scenario_property_start_year(), lang_text_from_key("#AD"));
         game_debug_show_property("date", time_str.c_str());
-        game_debug_show_property("time.f_fixed", e.time.unk01);
+        //game_debug_show_property("time.f_fixed", e.time.unk01);
         game_debug_show_property("months_initial", e.months_initial);
         game_debug_show_property("quest_months_left", e.quest_months_left);
 
@@ -67,19 +67,20 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_event_properties);
 void config_load_event_properties(bool header) {
-    static bool _debug_events_open = false;
-
     if (header) {
-        ImGui::Checkbox("Events", &_debug_events_open);
         return;
     } 
 
-    if (_debug_events_open && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
+    bool common_open = ImGui::TreeNodeEx("Events", ImGuiTreeNodeFlags_None, "Events");
+    if (common_open) {
+        ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
         for (int i = 0; i < g_scenario.events.events_count(); ++i) {
             event_ph_t *evt = g_scenario.events.at(i);
             assert(evt);
             game_debug_show_properties_object("Events", *evt);
         }
         ImGui::EndTable();
+
+        ImGui::TreePop();
     }
 }

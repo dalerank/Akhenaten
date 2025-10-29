@@ -32,7 +32,7 @@ declare_console_command_p(runstage) {
 declare_console_command_p(startmessage) {
     std::string args;
     is >> args;
-    int messageid = args.empty() ? g_scenario.meta.start_message : std::stoi(args);
+    xstring messageid = args.empty() ? g_scenario.meta.start_message : lang_get_message_id(std::stoi(args));
     messages::popup(messageid, 0, 0);
 }
 
@@ -148,7 +148,7 @@ void tutorial_update_step(xstring s) {
 
 void tutorial_flags_t::update_starting_message() {
     if (!g_scenario.meta.start_message_shown) {
-        if (g_scenario.meta.start_message) {
+        if (!g_scenario.meta.start_message.empty()) {
             messages::popup(g_scenario.meta.start_message, 0, 0);
         }
         g_scenario.meta.start_message_shown = true;
@@ -164,11 +164,11 @@ void tutorial_flags_t::update_starting_message() {
         g_tutorials_flags.tutorial_3.started = 1;
     }
     if (g_scenario.is_scenario_id(4) && !g_tutorials_flags.tutorial_4.started) {
-        messages::popup(MESSAGE_TUTORIAL_DEVELOPING_CULTURE, 0, 0);
+        messages::popup("message_developing_culture", 0, 0);
         g_tutorials_flags.tutorial_4.started = 1;
     }
     if (g_scenario.is_scenario_id(5) && !g_tutorials_flags.tutorial_5.started) {
-        messages::popup(MESSAGE_TUTORIAL_GETTING_STARTED, 0, 0);
+        messages::popup("message_getting_started", 0, 0);
         g_tutorials_flags.tutorial_5.started = 1;
     }
     if (g_scenario.is_scenario_id(6) && !g_tutorials_flags.tutorial_6.started) {
@@ -177,14 +177,14 @@ void tutorial_flags_t::update_starting_message() {
 
     if (g_scenario.is_scenario_id(7) && !g_tutorials_flags.pharaoh.tut7_start) {
         if (scenario_campaign_scenario_id() == 6)
-            messages::popup(MESSAGE_TUTORIAL_AT_WATERS_EDGE, 0, 0);
+            messages::popup("message_trade_on_the_water", 0, 0);
         else
-            messages::popup(MESSAGE_TUTORIAL_AT_WATERS_EDGE_2, 0, 0);
+            messages::popup("message_at_the_waters_edge", 0, 0);
         g_tutorials_flags.pharaoh.tut7_start = 1;
     }
 
     if (g_scenario.is_scenario_id(8) && !g_tutorials_flags.pharaoh.tut8_start) {
-        messages::popup(MESSAGE_TUTORIAL_THE_FINER_THINGS, 0, 0);
+        messages::popup("message_the_finer_things", 0, 0);
         g_tutorials_flags.pharaoh.tut8_start = 1;
     }
 }

@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "content/vfs.h"
 #include "io/io.h"
+#include "js/js_game.h"
 
 #include <cstring>
 
@@ -12,13 +13,11 @@
 #define MIN_TEXT_SIZE (28 + MAX_TEXT_ENTRIES * 8)
 #define MAX_TEXT_SIZE (MIN_TEXT_SIZE + MAX_TEXT_DATA)
 
-#define MAX_MESSAGE_ENTRIES 500
 // #define MAX_MESSAGE_DATA 460000
 #define MIN_MESSAGE_SIZE 32024
 // #define MAX_MESSAGE_SIZE (MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA)
 
 #define BUFFER_SIZE 800000
-static const int MESSAGE_DATA_SIZE = 510103;
 
 struct lang_data_t {
     struct {
@@ -26,77 +25,20 @@ struct lang_data_t {
         int32_t in_use;
     } text_entries[MAX_TEXT_ENTRIES];
     uint8_t text_data[MAX_TEXT_DATA];
-
-    lang_message message_entries[MAX_MESSAGE_ENTRIES];
-    uint8_t message_data[MESSAGE_DATA_SIZE];
 };
-
-lang_data_t g_lang_data;
+lang_data_t g_lang;
+    
+using game_message_t = std::unordered_map<xstring, lang_message>;
+game_message_t ANK_VARIABLE(game_messages);
 
 bool lang_dir_is_valid(lang_pack lpack) {
-    if (vfs::file_exists(lpack.langfile) && vfs::file_exists(lpack.mmfile))
+    if (vfs::file_exists(lpack.langfile))
         return true;
 
     return false;
 }
 
-static uint8_t* get_message_text(int32_t offset) {
-    if (!offset)
-        return 0;
-
-    return &g_lang_data.message_data[offset];
-}
-
-static void parse_MM_file(buffer* buf) {
-    buf->skip(24); // header
-    for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
-        lang_message* m = &g_lang_data.message_entries[i];
-        m->type = (e_message_arhtype)buf->read_i16();
-        m->message_type = buf->read_i16();
-        buf->skip(2);
-        m->x = buf->read_i16();
-        m->y = buf->read_i16();
-        m->width_blocks = buf->read_i16();
-        m->height_blocks = buf->read_i16();
-        m->image.id = buf->read_i16();
-        m->image.x = buf->read_i16();
-        m->image.y = buf->read_i16();
-        buf->skip(6); // unused image2 id, x, y
-        m->title.x = buf->read_i16();
-        m->title.y = buf->read_i16();
-        m->subtitle.x = buf->read_i16();
-        m->subtitle.y = buf->read_i16();
-        buf->skip(4);
-        m->video.x = buf->read_i16();
-        m->video.y = buf->read_i16();
-        buf->skip(14);
-        m->urgent = buf->read_i32();
-
-        m->video.text = get_message_text(buf->read_i32());
-        buf->skip(4);
-        m->title.text = get_message_text(buf->read_i32());
-        m->subtitle.text = get_message_text(buf->read_i32());
-        m->content.text = get_message_text(buf->read_i32());
-    }
-
-    buf->set_offset(80024);
-    buf->read_raw(&g_lang_data.message_data, MESSAGE_DATA_SIZE);
-
-    /* uncomment this code that display text data*/
-    //for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-    //    //if (g_lang_data.message_entries[i].title) {
-    //        const char* title = (const char*)g_lang_data.message_entries[i + 1].title.text;
-    //        const char* content = (const char*)g_lang_data.message_entries[i + 1].content.text;
-    //        if (!title || !*title) {
-    //            continue;
-    //        }
-    //        logs::info("%u: title: %s", i, title);
-    //        logs::info("%u: content: %s", i, content);
-    //    //}
-    //}
-}
-
-static bool load_files(vfs::path text_filename, vfs::path message_filename, int localizable) {
+static bool load_files(vfs::path text_filename, int localizable) {
     // load text into buffer
     buffer buf = buffer(BUFFER_SIZE);
     int filesize = io_read_file_into_buffer(text_filename, localizable, &buf, BUFFER_SIZE);
@@ -106,10 +48,10 @@ static bool load_files(vfs::path text_filename, vfs::path message_filename, int 
     // parse text
     buf.skip(28); // header
     for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
-        g_lang_data.text_entries[i].offset = buf.read_i32();
-        g_lang_data.text_entries[i].in_use = buf.read_i32();
+        g_lang.text_entries[i].offset = buf.read_i32();
+        g_lang.text_entries[i].in_use = buf.read_i32();
     }
-    buf.read_raw(g_lang_data.text_data, filesize - 8028); // MAX_TEXT_DATA
+    buf.read_raw(g_lang.text_data, filesize - 8028); // MAX_TEXT_DATA
 
     /* uncomment this code that display text data*/
     /*for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
@@ -124,30 +66,23 @@ static bool load_files(vfs::path text_filename, vfs::path message_filename, int 
         }
     }*/
 
-    // load message
-    buf.clear();
-    filesize = io_read_file_into_buffer(message_filename, localizable, &buf, BUFFER_SIZE);
-    if (filesize < MIN_MESSAGE_SIZE) // || filesize > MIN_MESSAGE_SIZE + MAX_MESSAGE_DATA
-        return false;
-    parse_MM_file(&buf);
-
     return true;
 }
 
 bool lang_load(bool is_editor, const std::vector<lang_pack>& lang_packs) {
     if (is_editor) {
         const auto &pack = lang_packs.front();
-        return load_files(pack.langfile, pack.mmfile, MAY_BE_LOCALIZED);
+        return load_files(pack.langfile, MAY_BE_LOCALIZED);
     }
 
     // Prefer language files from localized dir, fall back to main dir
     for (const auto &pack: lang_packs) {
         if (lang_dir_is_valid(pack)) {
-            if (load_files(pack.langfile, pack.mmfile, MUST_BE_LOCALIZED)) {
+            if (load_files(pack.langfile, MUST_BE_LOCALIZED)) {
                 return true;
             }
 
-            if (load_files(pack.langfile, pack.mmfile, NOT_LOCALIZED)) {
+            if (load_files(pack.langfile, NOT_LOCALIZED)) {
                 return true;
             }
         }
@@ -170,8 +105,8 @@ const uint8_t* lang_get_string(int group, int index) {
         return nullptr;
     }
 
-    int32_t string_offset = g_lang_data.text_entries[group].offset;
-    const uint8_t* str = &g_lang_data.text_data[string_offset];
+    int32_t string_offset = g_lang.text_entries[group].offset;
+    const uint8_t* str = &g_lang.text_data[string_offset];
     uint8_t prev = 0;
     while (index > 0) {
         if (!*str && (prev >= ' ' || prev == 0))
@@ -185,7 +120,41 @@ const uint8_t* lang_get_string(int group, int index) {
     return str;
 }
 
-const lang_message* lang_get_message(int id) {
-    lang_message *message = &g_lang_data.message_entries[id];
-    return message;
+uint16_t lang_get_message_uid(xstring msg) {
+    auto it = game_messages.find(msg);
+    if (it != game_messages.end()) {
+        return it->second.id;
+    }
+
+    return 0;
+}
+
+xstring lang_get_message_id(int id) {
+    for (const auto &it : game_messages) {
+        if (it.second.id == id) {
+            return it.first;
+        }
+    }
+
+    return "unknow_message";
+}
+
+const lang_message &lang_get_message(xstring msg) {
+    auto it = game_messages.find(msg);
+    if (it != game_messages.end()) {
+        return it->second;
+    }
+
+    static lang_message dummy{};
+    return dummy;
+}
+
+const lang_message& lang_get_message(int id) {
+    for (const auto &it : game_messages) {
+        if (it.second.id == id) {
+            return it.second;
+        }
+    }
+    static lang_message dummy{};
+    return dummy;
 }

@@ -223,13 +223,13 @@ static void menu_options_speed(int param) {
 static void menu_help_help(int param) {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_HELP, -1, window_editor_map_draw_all);
+    window_message_dialog_show("message_dialog_editor_help", -1, window_editor_map_draw_all);
 }
 
 static void menu_help_about(int param) {
     clear_state();
     window_go_back();
-    window_message_dialog_show(MESSAGE_DIALOG_EDITOR_ABOUT, -1, window_editor_map_draw_all);
+    window_message_dialog_show("message_dialog_editor_about", -1, window_editor_map_draw_all);
 }
 
 static void menu_resets_herds(int param) {

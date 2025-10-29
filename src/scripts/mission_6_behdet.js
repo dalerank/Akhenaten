@@ -37,15 +37,15 @@ mission6 = { // Behdet
 	enable_scenario_events : false,
 	events : [
 		{
-			year : 2684,
+			time { year : 2684, month : 1 }
 			resource : "pottery",
-			amount : 1400,
+			amount { value : 1400 },
 			deadline : 9,
 		},
 		{
-			year : 2683,
+			time { year : 2683, month : 1 }
 			resource : "beer",
-			amount : 1100,
+			amount { value : 1100 },
 			deadline : 12,
 		},
 	],
@@ -54,16 +54,22 @@ mission6 = { // Behdet
 		{
 			name : "Byblos",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		},
 
 		{
 			name: "Perwadjyt",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		},
 
 		{
 			name: "Men-nefer",
 			is_sea_trade : true,
+			max_traders : 1
+			trade_limits : default_trade_limits
 		}
 	],
 

@@ -89,8 +89,8 @@ int ui::display_options_window::ui_handle_mouse(const mouse* m) {
     ui.begin_widget(pos);
     vec2i scrpos = ui["background"].screen_pos();
     mouse m_dialog = *m;
-    m_dialog.x -= (scrpos.x + 15);
-    m_dialog.y -= (scrpos.y + 70);
+    m_dialog.x -= (scrpos.x + ui["background"].pos.x);
+    m_dialog.y -= (scrpos.y + ui["background"].pos.y);
     if (panel->input_handle(&m_dialog)) {
         auto it = video_modes.begin();
         std::advance(it, panel->get_selected_entry_idx());

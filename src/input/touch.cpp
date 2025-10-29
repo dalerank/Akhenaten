@@ -219,25 +219,27 @@ static bool any_touch_went_up(void) {
 
 static bool handle_emulated_mouse_clicks(void) {
     auto &data = g_touch_data;
-    mouse_reset_scroll();
+    auto &m = mouse::ref();
+    m.reset_scroll();
     switch (data.touchpad_mode_click_type) {
     case EMULATED_MOUSE_CLICK_LEFT:
-        mouse_set_left_down(0);
+        m.set_left_down(0);
         break;
     case EMULATED_MOUSE_CLICK_RIGHT:
-        mouse_set_right_down(0);
+        m.set_right_down(0);
         break;
     default:
-        mouse_reset_button_state();
+        m.reset_button_state();
         return false;
     }
-    mouse_determine_button_state();
+    m.determine_button_state();
     data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_NONE;
     return true;
 }
 
 static void handle_mouse_touchpad(void) {
     auto &data = g_touch_data;
+    auto &m = mouse::ref();
     if (handle_emulated_mouse_clicks())
         return;
 
@@ -248,12 +250,12 @@ static void handle_mouse_touchpad(void) {
 
     if (any_touch_went_up()) {
         if (num_fingers == 1 && touch_was_click(get_earliest_touch())) {
-            mouse_set_left_down(1);
-            mouse_determine_button_state();
+            m.set_left_down(1);
+            m.determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_LEFT;
         } else if (num_fingers == 2 && (touch_was_click(get_earliest_touch()) || touch_was_click(get_latest_touch()))) {
-            mouse_set_right_down(1);
-            mouse_determine_button_state();
+            m.set_right_down(1);
+            m.determine_button_state();
             data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_RIGHT;
         }
     } else {
@@ -265,23 +267,26 @@ static void handle_mouse_touchpad(void) {
 }
 
 static void handle_mouse_direct(void) {
-    mouse_reset_scroll();
-    mouse_reset_button_state();
+    auto &m = mouse::ref();
+    m.reset_scroll();
+    m.reset_button_state();
 
     const touch_t * first = get_earliest_touch();
     int x = first->current_point.x;
     int y = first->current_point.y;
     system_set_mouse_position(&x, &y);
-    mouse_set_position(x, y);
+    mouse::ref().set_position({ x, y });
 }
 
 int touch_to_mouse(void) {
     auto &data = g_touch_data;
     const touch_t * first = get_earliest_touch();
+    auto &m = mouse::ref();
+
     if (!first->in_use) {
-        if (mouse_get()->is_touch) {
-            mouse_reset_scroll();
-            mouse_reset_button_state();
+        if (m.is_touch) {
+            m.reset_scroll();
+            m.reset_button_state();
             return 1;
         } else if (data.touchpad_mode_click_type != EMULATED_MOUSE_CLICK_NONE)
             return handle_emulated_mouse_clicks();
@@ -296,7 +301,7 @@ int touch_to_mouse(void) {
         handle_mouse_direct();
         break;
     default:
-        mouse_set_from_touch(first, get_latest_touch());
+        m.set_from_touch(first, get_latest_touch());
         break;
     }
     return 1;

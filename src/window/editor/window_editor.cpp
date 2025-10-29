@@ -29,7 +29,7 @@ static void draw_background(int) {
 
 static void draw_cancel_construction() {
     painter ctx = game.painter();
-    if (!mouse_get()->is_touch || !editor_tool_is_active()) {
+    if (!mouse::get().is_touch || !editor_tool_is_active()) {
         return;
     }
     vec2i view_pos, view_size;

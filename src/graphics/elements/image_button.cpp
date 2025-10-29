@@ -13,13 +13,16 @@
 
 static void fade_pressed_effect(image_button* buttons, int num_buttons) {
     time_millis current_time = time_get_millis();
+    const bool left_is_down = mouse::get().left.is_down;
     for (int i = 0; i < num_buttons; i++) {
-        image_button* btn = &buttons[i];
-        if (btn->pressed) {
-            if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
-                if (btn->button_type != IB_BUILD && btn->button_type != IB_OVERSEER && !mouse_get()->left.is_down)
-                    btn->pressed = 0;
-            }
+        image_button& btn = buttons[i];
+        if (!btn.pressed) {
+            continue;
+        }
+
+        if (current_time - btn.pressed_since > PRESSED_EFFECT_MILLIS) {
+            if (btn.button_type != IB_BUILD && btn.button_type != IB_OVERSEER && !left_is_down)
+                btn.pressed = 0;
         }
     }
 }

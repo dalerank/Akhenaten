@@ -13,14 +13,14 @@ public:
         short progress_max;
         bool spawned_worker_this_month;
         uint8_t max_gatheres;
-        int unk_b[10];
+        uint8_t unk_b[10];
         uint8_t unk_c[13];
         uint8_t produce_multiplier;
         bool has_raw_materials;
-        int unk_6[5];
+        uint8_t unk_6[5];
         short reserved_id_13;
-        int unk_40[40];
-        int unk_12[10];
+        uint8_t unk_40[40];
+        uint8_t unk_12[10];
         e_figure_type processed_figure;
     } BUILDING_RUNTIME_DATA_T;
 

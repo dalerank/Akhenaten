@@ -33,7 +33,7 @@ declare_console_command_p(start_invasion) {
 declare_console_command_p(start_invasion_fast) {
     tile2i tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (tile.valid()) {
-        events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, g_invasions.last_internal_invasion_id, tile.grid_offset() });
+        events::emit(event_message{ true, "message_barbarians_attack", g_invasions.last_internal_invasion_id, tile.grid_offset() });
     }
 }
 
@@ -72,20 +72,21 @@ static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6,
 invasion_warning_t g_invasion_warning;
 invasion_data_t ANK_VARIABLE_N(g_invasions, "invasions");
 
-void scenario_invasion_clear(void) {
-    auto &data = g_invasions;
-    memset(data.warnings.data(), 0, data.warnings.size() * sizeof(invasion_warning_t));
+void invasion_data_t::clear(void) {
+    memset(warnings.data(), 0, warnings.size() * sizeof(invasion_warning_t));
 }
 
-void scenario_invasion_init() {
-    auto &data = g_invasions;
-    scenario_invasion_clear();
+void invasion_data_t::init() {
+    clear();
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
-    if (path_max == 0)
+
+    if (path_max == 0) {
         return;
-    invasion_warning_t* warning = &data.warnings[1];
+    }
+
     for (int i = 0; i < MAX_INVASIONS; i++) {
+        invasion_warning_t& warning = warnings[1];
         random_generate_next();
         if (!g_scenario.invasions[i].type) {
             continue;
@@ -96,28 +97,31 @@ void scenario_invasion_init() {
             || g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE) {
             continue;
         }
+
         for (int year = 1; year < 8; year++) {
             const empire_object* obj = empire_object_get_battle_icon(path_current, year);
-            if (!obj)
+            if (!obj) {
                 continue;
+            }
 
-            warning->in_use = 1;
-            warning->invasion_path_id = obj->invasion_path_id;
-            warning->warning_years = obj->invasion_years;
-            warning->pos = obj->pos;
-            warning->image_id = obj->image_id;
-            warning->invasion_id = i;
-            warning->empire_object_id = obj->id;
-            warning->month_notified = 0;
-            warning->year_notified = 0;
-            warning->months_to_go = 12 * g_scenario.invasions[i].year;
-            warning->months_to_go += g_scenario.invasions[i].month;
-            warning->months_to_go -= 12 * year;
-            ++warning;
+            warning.in_use = 1;
+            warning.invasion_path_id = obj->invasion_path_id;
+            warning.warning_years = obj->invasion_years;
+            warning.pos = obj->pos;
+            warning.image_id = obj->image_id;
+            warning.invasion_id = i;
+            warning.empire_object_id = obj->id;
+            warning.month_notified = 0;
+            warning.year_notified = 0;
+            warning.months_to_go = 12 * g_scenario.invasions[i].year;
+            warning.months_to_go += g_scenario.invasions[i].month;
+            warning.months_to_go -= 12 * year;
         }
+
         path_current++;
-        if (path_current > path_max)
+        if (path_current > path_max) {
             path_current = 1;
+        }
     }
 }
 
@@ -297,11 +301,11 @@ void scenario_invasion_process() {
                 warning.year_notified = game.simtime.year;
                 warning.month_notified = game.simtime.month;
                 if (warning.warning_years > 2)
-                    events::emit(event_message{ false, MESSAGE_DISTANT_BATTLE, 0, 0 });
+                    events::emit(event_message{ false, "message_distant_battle", 0, 0 });
                 else if (warning.warning_years > 1)
-                    events::emit(event_message{ false, MESSAGE_ENEMIES_CLOSING, 0, 0 });
+                    events::emit(event_message{ false, "message_enemies_closing", 0, 0 });
                 else {
-                    events::emit(event_message{ false, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0 });
+                    events::emit(event_message{ false, "message_enemies_at_the_door", 0, 0 });
                 }
             }
         }
@@ -322,7 +326,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[warning.invasion_id].attack_type,
                                                  warning.invasion_id);
                 if (invasion_tile.valid()) {
-                    events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
+                    events::emit(event_message{ true, "message_barbarians_attack", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
             }
             if (g_scenario.invasions[warning.invasion_id].type == INVASION_TYPE_KNGDOME) {
@@ -332,7 +336,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[warning.invasion_id].attack_type,
                                                  warning.invasion_id);
                 if (invasion_tile.valid()) {
-                    events::emit(event_message{ true, MESSAGE_KINGDOME_ARMY_ATTACK, g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
+                    events::emit(event_message{ true, "message_legion_attacks", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
             }
         }
@@ -348,7 +352,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[i].attack_type,
                                                  i);
                 if (invasion_tile.valid()) {
-                    events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING, g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
+                    events::emit(event_message{ true, "message_local_uprising", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
             }
         }
@@ -383,7 +387,7 @@ int scenario_invasion_start_from_seth() {
 
     tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (invasion_tile.grid_offset()) {
-        events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING_SETH, data.last_internal_invasion_id, invasion_tile.grid_offset() });
+        events::emit(event_message{ true, "message_local_wrath_of_seth", data.last_internal_invasion_id, invasion_tile.grid_offset() });
     }
 
     return 1;
@@ -393,7 +397,7 @@ bool scenario_invasion_start_from_kingdome(int size) {
     auto &data = g_invasions;
     tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_3_EGYPTIAN, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
     if (invasion_tile.valid()) {
-        events::emit(event_message{ true, MESSAGE_KINGDOME_ARMY_ATTACK, data.last_internal_invasion_id, invasion_tile.grid_offset()});
+        events::emit(event_message{ true, "message_kingdome_army_attack", data.last_internal_invasion_id, invasion_tile.grid_offset() });
         return true;
     }
     return false;
@@ -405,7 +409,7 @@ void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_ty
     case ATTACK_TYPE_ENEMIES: {
         tile2i invasion_tile = scenario_start_invasion_impl(enemy_type, size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
         if (invasion_tile.valid()) {
-            events::emit(event_message{ true, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, invasion_tile.grid_offset() });
+            events::emit(event_message{ true, "message_barbarians_attack", data.last_internal_invasion_id, invasion_tile.grid_offset() });
         }
         break;
     }
@@ -416,7 +420,7 @@ void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_ty
     case ATTACK_TYPE_NATIVES: {
         tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
         if (invasion_tile.valid())
-            events::emit(event_message{ true, MESSAGE_LOCAL_UPRISING_SETH, data.last_internal_invasion_id, invasion_tile.grid_offset()});
+            events::emit(event_message{ true, "message_local_wrath_of_seth", data.last_internal_invasion_id, invasion_tile.grid_offset()});
 
         break;
     }
@@ -447,3 +451,7 @@ io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t versi
 
     // TODO
 });
+
+const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
+    return *g_enemy_properties[type];
+}

@@ -2,9 +2,9 @@
 
 #include "figure_trader.h"
 #include "empire/empire_city.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
-struct event_trade_caravan_arrival { int cid; int max_traders; pcstr location; };
+struct event_trade_caravan_arrival { int cid; uint8_t tid; pcstr location; };
 
 enum e_trade_carava_action {
     ACTION_100_TRADE_CARAVAN_CREATED = 100,
@@ -18,7 +18,6 @@ class figure_trade_caravan : public figure_trader {
 public:
     FIGURE_METAINFO(FIGURE_TRADE_CARAVAN, figure_trade_caravan);
     figure_trade_caravan(figure *f) : figure_trader(f) {}
-
     virtual figure_trade_caravan *dcast_trade_caravan() override { return this; }
 
     struct runtime_data_t {

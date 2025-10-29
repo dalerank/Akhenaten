@@ -56,7 +56,7 @@ bool model_load_file(const char* filepath,
     int guard = NUM_BUILDINGS + NUM_HOUSES;
     int brace_index;
     const uint8_t* haystack = buf.get_data();
-    const uint8_t* ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
+    const uint8_t* ptr = &haystack[index_of_string((pcstr)haystack, (pcstr)ALL_BUILDINGS, filesize)];
     do {
         guard--;
         brace_index = index_of(ptr, '{', filesize);
@@ -71,7 +71,7 @@ bool model_load_file(const char* filepath,
     }
 
     // parse buildings data
-    ptr = &haystack[index_of_string(haystack, ALL_BUILDINGS, filesize)];
+    ptr = &haystack[index_of_string((pcstr)haystack, (pcstr)ALL_BUILDINGS, filesize)];
     const uint8_t* end_ptr = &haystack[filesize];
     for (int i = 0; i < NUM_BUILDINGS; i++) {
         ptr += index_of(ptr, '{', filesize);
@@ -88,7 +88,7 @@ bool model_load_file(const char* filepath,
     }
 
     // parse houses data
-    ptr = &haystack[index_of_string(haystack, ALL_HOUSES, filesize)];
+    ptr = &haystack[index_of_string((pcstr)haystack, (pcstr)ALL_HOUSES, filesize)];
     for (int i = 0; i < NUM_HOUSES; i++) {
         ptr += index_of(ptr, '{', filesize);
 

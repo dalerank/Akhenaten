@@ -10,7 +10,8 @@ mouse g_mouse;
 static mouse dialog;
 static time_millis last_click;
 
-const mouse* mouse_get() { return &g_mouse; }
+const mouse& mouse::get() { return g_mouse; }
+mouse& mouse::ref() { return g_mouse; }
 
 static void clear_mouse_button(mouse_button* button) {
     button->is_down = 0;
@@ -20,75 +21,66 @@ static void clear_mouse_button(mouse_button* button) {
     button->system_change = SYSTEM_NONE;
 }
 
-void mouse_set_from_touch(const touch_t* first, const touch_t* last) {
-    auto &data = g_mouse;
+void mouse::set_from_touch(const touch_t* first, const touch_t* last) {
+    x = first->current_point.x;
+    y = first->current_point.y;
+    scrolled = touch_get_scroll();
+    is_inside_window = !first->has_ended;
+    is_touch = 1;
 
-    data.x = first->current_point.x;
-    data.y = first->current_point.y;
-    data.scrolled = touch_get_scroll();
-    data.is_inside_window = !first->has_ended;
-    data.is_touch = 1;
-
-    data.left.system_change = SYSTEM_NONE;
-    data.right.system_change = SYSTEM_NONE;
+    left.system_change = SYSTEM_NONE;
+    right.system_change = SYSTEM_NONE;
 
     if (touch_is_scroll()) {
-        mouse_reset_button_state();
+        reset_button_state();
         return;
     }
 
-    data.left.is_down = (!first->has_ended && first->in_use);
-    data.left.went_down = first->has_started;
-    data.left.went_up = first->has_ended;
-    data.left.double_click = touch_was_double_click(first);
+    left.is_down = (!first->has_ended && first->in_use);
+    left.went_down = first->has_started;
+    left.went_up = first->has_ended;
+    left.double_click = touch_was_double_click(first);
 
-    data.right.is_down = (!last->has_ended && last->in_use);
-    data.right.went_down = last->has_started;
-    data.right.went_up = last->has_ended;
+    right.is_down = (!last->has_ended && last->in_use);
+    right.went_down = last->has_started;
+    right.went_up = last->has_ended;
 
-    clear_mouse_button(&data.middle);
+    clear_mouse_button(&middle);
 }
 
-void mouse_set_position(int x, int y) {
-    auto &data = g_mouse;
-
-    if (x != data.x || y != data.y)
+void mouse::set_position(vec2i p) {
+    if (p.x != this->x || p.y != this->y) {
         last_click = 0;
+    }
 
-    data.x = x;
-    data.y = y;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+    this->x = p.x;
+    this->y = p.y;
+    is_touch = 0;
+    is_inside_window = 1;
 }
 
-void mouse_set_left_down(int down) {
-    auto &data = g_mouse;
-
-    data.left.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+void mouse::set_left_down(int down) {
+    left.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
+    is_touch = 0;
+    is_inside_window = 1;
     if (!down) {
         time_millis now = time_get_millis();
-        data.left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
+        left.system_change |= ((last_click < now) && ((now - last_click) <= DOUBLE_CLICK_TIME)) ? SYSTEM_DOUBLE_CLICK : SYSTEM_NONE;
         last_click = now;
     }
 }
 
-void mouse_set_middle_down(int down) {
-    auto &data = g_mouse;
-
-    data.middle.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+void mouse::set_middle_down(int down) {
+    middle.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
+    is_touch = 0;
+    is_inside_window = 1;
     last_click = 0;
 }
 
-void mouse_set_right_down(int down) {
-    auto &data = g_mouse;
-
-    data.right.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+void mouse::set_right_down(int down) {
+    right.system_change |= down ? SYSTEM_DOWN : SYSTEM_UP;
+    is_touch = 0;
+    is_inside_window = 1;
     last_click = 0;
 }
 
@@ -109,43 +101,33 @@ static void update_button_state(mouse_button* button) {
     button->is_down = (button->is_down || button->went_down) && !button->went_up;
 }
 
-void mouse_determine_button_state() {
-    auto &data = g_mouse;
-
-    update_button_state(&data.left);
-    update_button_state(&data.middle);
-    update_button_state(&data.right);
+void mouse::determine_button_state() {
+    update_button_state(&left);
+    update_button_state(&middle);
+    update_button_state(&right);
 }
 
-void mouse_set_scroll(int state) {
-    auto &data = g_mouse;
-
-    data.scrolled = state;
-    data.is_touch = 0;
-    data.is_inside_window = 1;
+void mouse::set_scroll(int state) {
+    scrolled = state;
+    is_touch = 0;
+    is_inside_window = 1;
 }
 
-void mouse_reset_scroll() {
-    auto &data = g_mouse;
-
-    data.scrolled = SCROLL_NONE;
+void mouse::reset_scroll() {
+    scrolled = SCROLL_NONE;
 }
 
-void mouse_reset_up_state() {
-    auto &data = g_mouse;
-
-    data.left.went_up = 0;
-    data.middle.went_up = 0;
-    data.right.went_up = 0;
+void mouse::reset_up_state() {
+    left.went_up = 0;
+    middle.went_up = 0;
+    right.went_up = 0;
 }
 
-void mouse_reset_button_state(void) {
-    auto &data = g_mouse;
-
+void mouse::reset_button_state(void) {
     last_click = 0;
-    clear_mouse_button(&data.left);
-    clear_mouse_button(&data.middle);
-    clear_mouse_button(&data.right);
+    clear_mouse_button(&left);
+    clear_mouse_button(&middle);
+    clear_mouse_button(&right);
 }
 
 const mouse* mouse_in_dialog(const mouse* m) {

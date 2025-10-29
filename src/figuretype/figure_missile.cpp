@@ -137,9 +137,8 @@ void figure_missile::missile_hit_figure(figure_id target_id, int legionary_type)
     }
 
     int target_damage = damage_inflicted + target->damage;
-    if (target_damage <= target_max_damage) {
-        target->damage = target_damage;
-    } else { // poof target
+    target->apply_damage(damage_inflicted);
+    if (target->damage > target_max_damage) {
         target->damage = target_max_damage + 1;
         target->kill();
         target->wait_ticks = 0;

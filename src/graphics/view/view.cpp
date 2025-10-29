@@ -100,21 +100,25 @@ void camera_calc_scroll_limits() {
     SCROLL_MAX_SCREENTILE_Y = (2 * GRID_LENGTH) - SCROLL_MIN_SCREENTILE_Y;
 }
 
-void city_view_get_camera_max_tile(int* x, int* y) {
+vec2i city_view_get_camera_max_tile() {
     auto& data = g_city_view;
 
     int tx = (int)(data.viewport.size_pixels.x / (TILE_WIDTH_PIXELS * g_zoom.get_scale()));
     int ty = (int)(2 * data.viewport.size_pixels.y / (TILE_HEIGHT_PIXELS * g_zoom.get_scale()));
 
-    *x = SCROLL_MAX_SCREENTILE_X - tx;
-    *y = (SCROLL_MAX_SCREENTILE_Y - ty) & ~1;
+    return {
+        SCROLL_MAX_SCREENTILE_X - tx,
+        (SCROLL_MAX_SCREENTILE_Y - ty) & ~1
+    };
 }
 
-void city_view_get_camera_max_pixel_offset(int* x, int* y) {
+vec2i city_view_get_camera_max_pixel_offset() {
     auto& data = g_city_view;
 
-    *x = TILE_WIDTH_PIXELS - (data.viewport.size_pixels.x % TILE_WIDTH_PIXELS);
-    *y = TILE_HEIGHT_PIXELS - (data.viewport.size_pixels.y % TILE_HEIGHT_PIXELS);
+    return {
+        TILE_WIDTH_PIXELS - (data.viewport.size_pixels.x % TILE_WIDTH_PIXELS),
+        TILE_HEIGHT_PIXELS - (data.viewport.size_pixels.y % TILE_HEIGHT_PIXELS)
+    };
 }
 
 vec2i city_view_get_camera_in_pixels() {

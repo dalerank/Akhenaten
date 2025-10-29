@@ -132,7 +132,7 @@ void ui::sidebar_window_expanded_t::init_ui() {
 
     ui["show_overlays"]
         .onclick([] { window_overlay_menu_show(); })
-        .onrclick([] { window_message_dialog_show(MESSAGE_DIALOG_OVERLAYS, -1, window_city_draw_all);; });
+        .onrclick([] { window_message_dialog_show("message_overlay_selector", -1, window_city_draw_all);; });
 
     ui["collapse"].onclick([this] { collapse(); });
 }

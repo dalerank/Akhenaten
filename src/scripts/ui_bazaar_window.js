@@ -1,4 +1,3 @@
-log_info("akhenaten: ui trader info window started")
 log_info("akhenaten: ui bazaar window started")
 
 bazaar_info_window = {

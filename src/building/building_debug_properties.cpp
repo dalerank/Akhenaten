@@ -107,13 +107,19 @@ void config_load_building_properties(bool header) {
     static bool _debug_buildng_open = true;
 
     if (header) {
-        ImGui::Checkbox("Building", &_debug_buildng_open);
         return;
     } 
 
-    if (_debug_buildng_open && get_debug_building_id() > 0 && ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable)) {
-        building *b = building_get(get_debug_building_id());
-        game_debug_show_properties_object("Building", b);
-        ImGui::EndTable();
+    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_None, "Building");
+
+    if (common_open) {
+        if (get_debug_building_id() > 0) {
+            ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+            building *b = building_get(get_debug_building_id());
+            game_debug_show_properties_object("Building", b);
+            ImGui::EndTable();
+        }
+
+        ImGui::TreePop();
     }
 }

@@ -6,8 +6,10 @@
 #include "building/building_type.h"
 #include "core/svector.h"
 #include "core/tokenum.h"
+#include "core/archive.h"
 
-extern const token_holder<e_god, GOD_OSIRIS, MAX_GODS> e_god_tokens;
+using e_god_tokens_t = const token_holder<e_god, GOD_OSIRIS, MAX_GODS>;
+extern e_god_tokens_t e_god_tokens;
 
 enum e_god_status : uint8_t {
     GOD_STATUS_UNKNOWN = 0,
@@ -18,7 +20,15 @@ enum e_god_status : uint8_t {
 struct event_religion_update {};
 struct event_religion_god_status_update { e_god god; e_god_status status; };
 
+
 struct god_state {
+    struct static_params_t {
+        e_god type;
+        e_building_type shrine_type;
+        e_building_type temple_type;
+        e_building_type complex_type;
+    };
+
     e_god type;
     uint8_t mood;
     uint8_t target_mood;
@@ -31,8 +41,23 @@ struct god_state {
     int8_t unused2;
     int8_t unused3;
     e_god_status is_known;
+
+    const static_params_t &static_params() const;
 };
 
+template<>
+struct stable_array_max_elements<god_state::static_params_t> {
+    enum { max_elements = MAX_GODS };
+};
+
+template<>
+struct std::hash<god_state::static_params_t> {
+    [[nodiscard]] size_t operator()(const god_state::static_params_t &g) const noexcept {
+        return g.type;
+    }
+};
+
+ANK_CONFIG_STRUCT(god_state::static_params_t, type, shrine_type, temple_type, complex_type)
 
 enum e_god_mood {
     GOD_MOOD_WRATHFUL = -3,

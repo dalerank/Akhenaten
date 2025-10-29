@@ -325,6 +325,19 @@ bool archive::r_desc(pcstr name, image_desc &desc) {
     return ok;
 }
 
+xstring archive::r_function(pcstr name) {
+    js_State *J = (js_State *)state;
+    xstring funcref;
+    js_getproperty(J, -1, name);
+    if (js_iscallable(J, -1)) {
+        funcref = js_ref(J);
+    } else {
+        js_pop(J, 1);
+    }
+
+    return funcref;
+}
+
 bool archive::r_desc_impl(image_desc &desc) {
     auto vm = (js_State *)state;
     if (js_isundefined(vm, -1)) {

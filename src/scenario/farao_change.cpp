@@ -35,7 +35,7 @@ void scenario_kingdome_change_process() {
                 g_city.kingdome.reset();
             }
 
-            messages::popup(MESSAGE_EMPEROR_CHANGE, 0, 0);
+            messages::popup("message_kingdome_change", 0, 0);
         }
     }
 }

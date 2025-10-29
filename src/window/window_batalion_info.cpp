@@ -105,7 +105,6 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
 
 void batalion_info_window::window_info_foreground(object_info &c) {
     building_info_window::window_info_foreground(c);
-    //c.help_id = 87;
 }
 
 void batalion_info_window::init(object_info &c) {

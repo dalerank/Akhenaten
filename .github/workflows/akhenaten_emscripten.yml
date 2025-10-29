@@ -20,11 +20,14 @@ jobs:
         git config --global --add safe.directory "*"
         mkdir -p akhenaten-emscripten-module
         mkdir -p build
+        mkdir -p build/data
         cd build
         emcmake cmake ../ -DCMAKE_BUILD_PLATFORM=win_emscripten -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-sMODULARIZE -sEXPORTED_RUNTIME_METHODS=callMain -sEXPORT_ALL -sEXPORT_NAME=akhenatem" -DCMAKE_CXX_FLAGS="" && emmake make
         cd ..
         cp build/akhenaten.js akhenaten-emscripten-module/
         cp build/akhenaten.wasm akhenaten-emscripten-module/
+        cp ./data/pharaoh_fonts_pack.sgx ./build/data/pharaoh_fonts_pack.sgx
+        cp ./data/pharaoh_custom_pack.sgx ./build/data/pharaoh_custom_pack.sgx
     - uses: actions/upload-artifact@v4
       with:
         name: emscripten_build

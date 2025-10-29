@@ -231,18 +231,9 @@ void figure_entertainer::figure_action() {
 void figure_entertainer::update_animation() {
     int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
 
-    //if (type() == FIGURE_CHARIOR_RACER) {
-    //    base.cart_image_id = 0;
-    //    if (action_state == FIGURE_ACTION_150_ATTACK || action_state == FIGURE_ACTION_149_CORPSE) {
-    //        sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir;
-    //    } else
-    //        sprite_image_id = image_id_from_group(GROUP_FIGURE_CHARIOTEER) + dir + 8 * anim_frame;
-    //    return;
-    //}
-
     int image_id;
-    if (figure_type_any_of(base, FIGURE_JUGGLER, FIGURE_MUSICIAN, FIGURE_DANCER)) {
-        image_id = anim("walk").first_img();
+    if (figure_type_any_of(base, make_array(FIGURE_JUGGLER, FIGURE_MUSICIAN, FIGURE_DANCER))) {
+        image_id = anim(animkeys().walk).first_img();
     } else {
         return;
     }

@@ -34,7 +34,6 @@
 #endif
 
 static void game_cheat_show_tooltip(pcstr);
-static void game_cheat_pop_milestone(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_clear_progress(pcstr);
 static void game_cheat_add_clay(pcstr);
@@ -48,7 +47,6 @@ struct cheat_command_handle {
 
 static cheat_command_handle g_cheat_commands[] = {{"addclay", game_cheat_add_clay},
                                                   {"showtooltip", game_cheat_show_tooltip},
-                                                  {"popmilestone", game_cheat_pop_milestone},
                                                   {"spawnnobles", game_cheat_spawn_nobles},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
@@ -115,10 +113,6 @@ static void game_cheat_add_clay(pcstr args) {
     city_resource_add_items(RESOURCE_CLAY, clay);
 
     events::emit(event_city_warning{ "Added clay" });
-}
-
-static void game_cheat_pop_milestone(pcstr args) {
-    g_city.population.reached_milestone(true);
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {

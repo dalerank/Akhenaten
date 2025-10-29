@@ -2,7 +2,7 @@
 
 #include "figure/figure.h"
 #include "figure/image.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figure_shipwreck.h"
 #include "building/building_dock.h"
 #include "game/game.h"
@@ -29,7 +29,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     auto& emp_city = *g_empire.city(ev.cid);
 
     // Find first available trader slot
-    const int free_slot = emp_city.get_free_slot(ev.max_traders);
+    const int free_slot = emp_city.get_free_slot(emp_city.max_traders);
     if (free_slot == -1) {
         return;
     }
@@ -40,6 +40,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     ship->advance_action(FIGURE_ACTION_110_TRADE_SHIP_CREATED);
     ship->base.allow_move_type = EMOVE_DEEPWATER;
     ship->base.wait_ticks = 10;
+    ship->runtime_data().trader = empire_trader_handle{ ev.tid };
 
     emp_city.trader_figure_ids[free_slot] = ship->id();
 }
@@ -47,7 +48,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
 declare_console_command_p(sink_all_ships) {
     figure_valid_do([] (figure &f) {
         f.dcast()->kill();
-    }, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT);
+    }, make_array(FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT));
 }
 
 int figure_trade_ship::is_trading() const {
@@ -109,7 +110,6 @@ bool figure_trade_ship::done_trading() {
 
 void figure_trade_ship::on_create() {
     figure_carrier::on_create();
-    runtime_data().trader = empire_create_trader();
 }
 
 void figure_trade_ship::on_destroy() {
@@ -161,7 +161,7 @@ void figure_trade_ship::figure_action() {
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-                events::emit(event_message{ true, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0 });
+                events::emit(event_message{ true, "message_navigation_impossible", 0, 0 });
                 city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }
@@ -243,10 +243,12 @@ void figure_trade_ship::figure_action() {
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
+            runtime_data().trader.back_to_city();
             poof();
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            runtime_data().trader.back_to_city();
             poof();
         }
 

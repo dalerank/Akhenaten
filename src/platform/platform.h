@@ -85,7 +85,6 @@ struct platform_t {
 
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
 	void open_url(pcstr url, pcstr prefix);
-	void run_cmd(pcstr url);
 
 	int get_key_from_scancode(int scancode);
 };

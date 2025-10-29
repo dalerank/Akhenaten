@@ -151,7 +151,7 @@ void figure_fishing_boat::figure_action() {
         if (direction() == DIR_FIGURE_NONE) {
             grid_area area = map_grid_get_area(tile(), 1, 1);
             tile2i another_boat_tile = area.find_if([this] (const tile2i &tt) {
-                bool has_figure = map_has_figure_types_at(tt, FIGURE_FISHING_BOAT);
+                bool has_figure = map_has_figure_types_at(tt, make_array(FIGURE_FISHING_BOAT));
                 return (has_figure && map_figure_id_get(tt) != id());
             });
 
@@ -196,7 +196,7 @@ void figure_fishing_boat::figure_action() {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             // cannot reach grounds
-            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
+            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, "message_fishing_boat_blocked", 12);
             poof();
         }
         break;

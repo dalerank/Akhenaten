@@ -19,7 +19,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
@@ -30,22 +30,21 @@
 #include "game/game.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
-#include "figure/trader.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);
 
 void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     tile2i entry = g_city.map.entry_point;
-    auto& emp_city = *g_empire.city(ev.cid);
+    auto &emp_city = *g_empire.city(ev.cid);
 
     // Find first available trader slot
-    const int free_slot = emp_city.get_free_slot(ev.max_traders);
+    const int free_slot = emp_city.get_free_slot(emp_city.max_traders);
     if (free_slot == -1) {
         return;
     }
 
-    figure* f = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
+    figure *f = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
 
     auto caravan = f->dcast<figure_trade_caravan>();
     assert(caravan != nullptr);
@@ -53,6 +52,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     caravan->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
     caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
     caravan->base.wait_ticks = caravan->current_params().wait_ticks_after_create;
+    caravan->runtime_data().trader = empire_trader_handle{ ev.tid };
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
     donkey1->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
@@ -93,14 +93,6 @@ void figure_trade_caravan::debug_show_properties() {
 
 void figure_trade_caravan::on_create() {
     figure_trader::on_create();
-    auto trader = empire_create_trader();
-
-    if (!trader.valid()) {
-        poof();
-        return;
-    }
-
-    runtime_data().trader = trader;
 }
 
 void figure_trade_caravan::on_destroy() {
@@ -187,6 +179,7 @@ void figure_trade_caravan::figure_action() {
 
     case ACTION_103_TRADE_CARAVAN_LEAVING:
         if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_104_TRADE_CARAVAN_RECALC_LEAVING)) {
+            runtime_data().trader.back_to_city();
             poof();
         }
         break;

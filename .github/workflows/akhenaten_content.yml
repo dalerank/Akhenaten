@@ -20,6 +20,7 @@ jobs:
       run: |
         git clone https://github.com/jeremy-rifkin/cpptrace.git etc/cpptrace
         mkdir build
+        mkdir build/data
         mkdir artifacts
         cd build
         cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..

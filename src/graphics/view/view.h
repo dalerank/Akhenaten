@@ -62,8 +62,8 @@ screen_tile city_view_get_camera_screentile();
 tile2i city_view_get_camera_mappoint();
 vec2i camera_get_position();
 vec2i camera_get_pixel_offset_internal(painter &ctx);
-void city_view_get_camera_max_tile(int* x, int* y);
-void city_view_get_camera_max_pixel_offset(int* x, int* y);
+vec2i city_view_get_camera_max_tile();
+vec2i city_view_get_camera_max_pixel_offset();
 vec2i city_view_get_camera_in_pixels();
 
 

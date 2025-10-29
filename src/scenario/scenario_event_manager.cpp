@@ -5,6 +5,7 @@
 #include "core/log.h"
 #include "event_phrases.h"
 #include "io/gamefiles/lang.h"
+#include "empire/empire.h"
 #include "io/io.h"
 #include "io/io_buffer.h"
 #include "core/random.h"
@@ -13,24 +14,40 @@
 #include "request.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
+#include "graphics/elements/lang_text.h"
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
-constexpr int NUM_PHRASES = 601;
-constexpr int MAX_EVENTMSG_TEXT_DATA = NUM_PHRASES * 200;
 
 const e_event_type_tokens_t ANK_CONFIG_ENUM(e_event_type_tokens);
 const e_event_state_tokens_t e_event_state_tokens;
 const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 
+struct auto_phrase {
+    uint8_t id;
+    xstring text;
+    svector<uint8_t, 36> phrase_ids;
+};
+ANK_CONFIG_STRUCT(auto_phrase, id, text, phrase_ids)
+
 struct events_data_t {
     svector<event_ph_t, MAX_EVENTS> event_list;
-    int auto_phrases[NUM_AUTO_PHRASE_VARIANTS][36];
-
-    uint8_t eventmsg_phrases_data[MAX_EVENTMSG_TEXT_DATA];
-    int eventmsg_line_offsets[NUM_PHRASES];
-    int eventmsg_group_offsets[NUM_PHRASES];
 };
+
+template <>
+struct stable_array_max_elements<auto_phrase>{
+    enum { max_elements = NUM_AUTO_PHRASE_VARIANTS };
+};
+
+template<>
+struct std::hash<auto_phrase> {
+    [[nodiscard]] size_t operator()(const auto_phrase &p) const noexcept {
+        return p.id;
+    }
+};
+
+using auto_phrases_t = stable_array<auto_phrase>;
+auto_phrases_t ANK_VARIABLE(eventmsg_auto_phrases);
 
 events_data_t g_scenario_events;
 
@@ -51,24 +68,23 @@ declare_console_command_p(run_scenario_event) {
     auto date = game.simtime.date();
     it->event_trigger_type = EVENT_TRIGGER_ONCE;
     it->time.year = date.year;
-    it->month = date.month;
+    it->time.month = date.month;
     g_scenario.events.process_events();
 }
 
-void event_manager_t::load_mission_event(archive arch, event_ph_t &ev) {
-    ev.type = arch.r_type<e_event_type>("type");
-    ev.time.year = arch.r_int("year");
-    ev.amount.value = arch.r_int("amount");
-    ev.month = arch.r_int("month");
-    ev.tag_id = arch.r_int("tag_id");
-    ev.months_initial = arch.r_int("months_initial");
-    
-    switch (ev.type) {
+uint16_t event_ph_t::rand_reason() const {
+    svector<uint16_t, 4> active_reasons;
+    std::copy_if(reasons.begin(), reasons.end(), std::back_inserter(active_reasons), [] (auto &p) { return p != -1; });
+    return active_reasons.size() > 0 ? active_reasons[rand() % active_reasons.size()] : 0xffff;
+}
+
+void event_ph_t::archive_load(archive arch) {
+    switch (type) {
     case EVENT_TYPE_REQUEST:
-        ev.item.value = arch.r_type<e_resource>("resource");
+        item.value = arch.r_type<e_resource>("resource");
         break;
     case EVENT_TYPE_INVASION:
-        ev.item.value = arch.r_int("item");
+        item.value = arch.r_int("item");
         break;
     }
 }
@@ -77,19 +93,18 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
     auto &ev_mgr = *this;
     auto &sc_events = g_scenario_events;
 
+    sc_events.event_list.clear();
+    sc_events.event_list.push_back({}); // empty events to compatibilty old engine
     g_config_arch.r_section(missionid, [&] (archive arch) {
         const bool enable_scenario_events = arch.r_bool("enable_scenario_events");
         if (!enable_scenario_events) {
             return;
         }
 
-        sc_events.event_list.clear();
-
-        arch.r_array("events", [&] (archive arch) {
-            sc_events.event_list.push_back({});
-            auto &item = sc_events.event_list.back();
-            ev_mgr.load_mission_event(arch, item);
-        });
+        arch.r("events", sc_events.event_list);
+        for (int i = 0; i < sc_events.event_list.size(); ++i) {
+            sc_events.event_list[i].event_id = i;
+        }
 
         // first element should contain number of all elements
         sc_events.event_list.front().num_total_header = sc_events.event_list.size();
@@ -105,7 +120,7 @@ static void update_randomized_values(event_ph_t &event) {
     randomize_event_fields((int16_t*)&event.item, &seed);
     randomize_event_fields((int16_t*)&event.amount, &seed);
     randomize_event_fields((int16_t*)&event.time, &seed);
-    randomize_event_fields(event.location_fields, &seed);
+    randomize_event_fields(event.location_fields.data(), &seed);
     randomize_event_fields(event.route_fields, &seed);
 
     // some other unknown stuff also happens here.........
@@ -144,20 +159,22 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     update_randomized_values(*child);
 
     // calculate date of activation
-    int month_abs_parent = parent->time.year * 12 + parent->month; // field is YEARS in parent
+    int month_abs_parent = parent->time.year * 12 + parent->time.month; // field is YEARS in parent
     int month_abs_child = month_abs_parent + child->time.year;     // field is MONTHS in child
     child->time.year = month_abs_child / 12;            // relinquish previous field (the child needs this for storing the YEAR)
-    child->month = month_abs_child % 12; // update proper month value relative to the year
+    child->time.month = month_abs_child % 12; // update proper month value relative to the year
     child->quest_months_left = month_abs_child - month_abs_parent;
 
     return true;
 }
 
 const event_ph_t* event_manager_t::at(int id) const {
+    assert(id >= 0 && id < g_scenario_events.event_list.size());
     return &g_scenario_events.event_list[id];
 }
 
 event_ph_t* event_manager_t::at(int id) {
+    assert(id >= 0 && id < g_scenario_events.event_list.size());
     return &g_scenario_events.event_list[id];
 }
 
@@ -169,13 +186,12 @@ bool event_manager_t::is_valid_event_index(int id) {
 }
 
 int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
-    return g_scenario_events.auto_phrases[param_1][param_2];
+    return eventmsg_auto_phrases[param_1].phrase_ids[param_2];
 }
 
-uint8_t* event_manager_t::msg_text(int group_id, int index) {
+pcstr event_manager_t::msg_text(int group_id, int index) {
     auto& data = g_scenario_events;
-    int eventmsg_id = data.eventmsg_group_offsets[group_id] + index;
-    return &data.eventmsg_phrases_data[data.eventmsg_line_offsets[eventmsg_id]];
+    return lang_text_from_message(group_id + index);
 }
 
 void event_manager_t::process_active_request(int id) {
@@ -199,6 +215,42 @@ void event_manager_t::process_active_request(int id) {
 
     e_event_action chain_action_next = EVENT_ACTION_COMPLETED;
     scenario_request_handle(event, -1, chain_action_next);
+}
+
+void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
+    int8_t cityid = event.location_fields[0];
+    if (cityid == -1) {
+        svector<empire_city *, 16> trade_cities;
+        g_empire.select_cities(trade_cities, [&] (empire_city *city) {
+            int route_id = g_empire.trade_route_for_city(city->name_id);
+            return g_empire.is_trade_route_open(route_id);
+        });
+        if (trade_cities.size() > 0) {
+            cityid = trade_cities[rand() % trade_cities.size()]->name_id;
+        }
+    }
+
+    if (cityid == -1) {
+        cityid = g_empire.random_city();
+    }
+
+    if (cityid == -1) {
+        logs::debug("EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: no valid trade city found");
+        return;
+    }
+
+    empire_city_handle city{ static_cast<uint8_t>(cityid) };
+    city.set_under_siege(event.months_initial);
+
+    event_ph_t copy_event = event;
+    copy_event.location_fields[0] = (cityid + 1);
+    uint16_t reason = copy_event.rand_reason();
+    if (reason == 0xffff) {
+        reason = PHRASE_trade_city_siege_no_reason_A;
+    }
+    city_message_post_full(true, "message_template_general", &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
+        PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, reason,
+        event.event_id, cityid);
 }
 
 void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
@@ -279,9 +331,23 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_PRICE_INCREASE:
     case EVENT_TYPE_PRICE_DECREASE:
     case EVENT_TYPE_REPUTATION_INCREASE:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
                                id, 0);
+        break;
+
+    case EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING: {
+            const int annoucement = event.reasons[0];
+            const int reason = event.reasons[1];
+            city_message_post_full(true, "message_template_general", &event, caller_event_id,
+                PHRASE_foreign_army_attacks_you_title, annoucement, reason,
+                id, 0);
+        }
+        break;
+
+    case EVENT_TYPE_TRADE_CITY_UNDER_SIEGE: {
+            process_event_city_under_siege(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
+        }
         break;
 
     case EVENT_TYPE_REPUTATION_DECREASE:
@@ -291,26 +357,30 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_MESSAGE: {
         int phrase_id = -1; // TODO
         switch (event.subtype) {
+        case EVENT_SUBTYPE_CITY_UNDER_SIEGE:
+            process_event_city_under_siege(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
+            break;
+
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
-            city_message_post_full(true, MESSAGE_TEMPLATE_CITY_SAVED, id, caller_event_id,
+            city_message_post_full(true, "message_template_city_saved", &event, caller_event_id,
                                    PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
                                    PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, MESSAGE_TEMPLATE_DISTANT_BATTLE_WON, id, caller_event_id,
+            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
                                    id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
-            city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+            city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                    PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement, PHRASE_acknowledgement_no_reason_A,
                                    id, 0);
             break;
@@ -327,7 +397,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
-        city_message_post_full(true, MESSAGE_TEMPLATE_GENERAL, id, caller_event_id,
+        city_message_post_full(true, "message_template_general", &event, caller_event_id,
             PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
             id, 0);
         break;
@@ -403,7 +473,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk01);
         iob->bind(BIND_SIGNATURE_INT16, &event.event_id);
         iob->bind(BIND_SIGNATURE_INT8, &event.type);
-        iob->bind(BIND_SIGNATURE_INT8, &event.month);
+        iob->bind(BIND_SIGNATURE_INT8, &event.time.month);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.value);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_fixed);
         iob->bind(BIND_SIGNATURE_INT16, &event.item.f_min);
@@ -413,7 +483,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_min);
         iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_max);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.year);
-        iob->bind(BIND_SIGNATURE_INT16, &event.time.unk01);
+        iob->bind____skip(2); // (BIND_SIGNATURE_INT16, &event.time.unk01);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.unk02);
         iob->bind(BIND_SIGNATURE_INT16, &event.time.unk03);
         iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
@@ -460,11 +530,8 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8, &event.on_refusal_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_defeat_msgAlt);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20a);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20b);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk20c);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk21);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk22);
+        iob->bind(BIND_SIGNATURE_INT16, &event.reserved_1);
+        iob->bind(BIND_SIGNATURE_RAW, event.reasons.data(), sizeof(event.reasons));
     }
 });
 
@@ -496,12 +563,12 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
 }
 
 static int next_skipping_lines_counter = 0;
-static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
+static bool is_line_standalone_group(pcstr start_of_line, int size) {
     if (next_skipping_lines_counter > 0) {
         next_skipping_lines_counter--;
         return false;
     }
-    if (index_of_string(start_of_line, (const uint8_t*)"_A", size)) {
+    if (index_of_string(start_of_line, "_A", size)) {
         next_skipping_lines_counter = 2;
         return true;
     }
@@ -534,122 +601,4 @@ static bool is_line_standalone_group(const uint8_t* start_of_line, int size) {
     //        return false;
     //
     //    return true;
-}
-
-bool event_manager_t::msg_load() {
-    auto& data = g_scenario_events;
-    buffer buf(TMP_BUFFER_SIZE);
-
-    int filesize = io_read_file_into_buffer("eventmsg.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
-    if (filesize == 0) {
-        logs::error("Eventmsg.txt not found");
-        return false;
-    }
-
-    // go through the file to assert number of lines
-    int num_lines = 0;
-    int guard = NUM_PHRASES;
-    int line_start_index;
-    const uint8_t* haystack = buf.get_data();
-    const uint8_t* ptr = haystack;
-    do {
-        guard--;
-        line_start_index = index_of_string(ptr, PHRASE, filesize);
-        if (line_start_index) {
-            ptr += line_start_index;
-            num_lines++;
-        }
-    } while (line_start_index && guard > 0);
-    if (num_lines != NUM_PHRASES) {
-        logs::error("Eventmsg.txt has incorrect no of lines %u", num_lines + 1);
-        return false;
-    }
-
-    // parse phrase data
-    buffer buf2(TMP_BUFFER_SIZE);
-    int offset = 0;
-    int group_offset = 0;
-    int group_offset_extra = 0;
-    ptr = haystack;
-    const uint8_t* ptr2 = haystack;
-    const uint8_t* end_ptr = &haystack[filesize];
-    for (int i = 0; i < NUM_PHRASES; i++) {
-        ptr += index_of_string(ptr, PHRASE, filesize);
-        const uint8_t* start_of_line = ptr - 1;
-
-        ptr += index_of(ptr, '"', filesize);
-        ptr2 = ptr + index_of(ptr, '"', filesize);
-        int size = ptr2 - ptr;
-
-        buf2.write_raw(ptr, size - 1);
-        buf2.write_u8(0);
-
-        data.eventmsg_line_offsets[i] = offset;
-        offset += size;
-        if (offset >= MAX_EVENTMSG_TEXT_DATA - 300) {
-            logs::error("Eventmsg data size too big to fit container. %u", offset);
-            return false;
-        }
-
-        // check if line is part of a new "group"
-        if (is_line_standalone_group(start_of_line, ptr - start_of_line)) {
-            if (group_offset < 298)
-                data.eventmsg_group_offsets[group_offset] = i;
-            else // Pyramid & extra messages
-                data.eventmsg_group_offsets[i] = i;
-            //                data.eventmsg_group_offsets[group_offset + 252] = i;
-            group_offset++;
-        } else {
-            data.eventmsg_group_offsets[group_offset_extra + 298] = i;
-            group_offset_extra++;
-        }
-    }
-    buf2.reset_offset();
-    buf2.read_raw(&data.eventmsg_phrases_data, offset);
-
-    logs::info("Event phrases loaded -- Data size: %u", offset);
-    return true;
-}
-
-bool event_manager_t::msg_auto_phrases_load() {
-    auto& data = g_scenario_events;
-    buffer buf(TMP_BUFFER_SIZE);
-
-    int filesize = io_read_file_into_buffer("auto reason phrases.txt", NOT_LOCALIZED, &buf, TMP_BUFFER_SIZE);
-    if (filesize == 0) {
-        logs::error("Event auto phrases file not found");
-        return false;
-    }
-
-    // go through the file to assert number of lines
-    int num_lines = 0;
-    int guard = NUM_AUTO_PHRASE_VARIANTS;
-    int brace_index;
-    const uint8_t* haystack = buf.get_data();
-    const uint8_t* ptr = haystack;
-    do {
-        guard--;
-        brace_index = index_of(ptr, '{', filesize);
-        if (brace_index) {
-            ptr += brace_index;
-            num_lines++;
-        }
-    } while (brace_index && guard > 0);
-    if (num_lines != NUM_AUTO_PHRASE_VARIANTS) {
-        logs::error("Event auto phrases file has incorrect no of lines %u", num_lines + 1);
-        return false;
-    }
-
-    // parse phrase data
-    ptr = haystack;
-    const uint8_t* end_ptr = &haystack[filesize];
-    for (int i = 0; i < NUM_AUTO_PHRASE_VARIANTS; i++) {
-        ptr += index_of(ptr, '{', filesize);
-
-        for (int a = 0; a < 36; a++)
-            ptr = get_value(ptr, end_ptr, &data.auto_phrases[i][a]);
-    }
-
-    logs::info("Event auto phrases loaded");
-    return true;
 }

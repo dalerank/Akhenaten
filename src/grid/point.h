@@ -39,7 +39,7 @@ public:
     int abs_y();
 
     inline float dist(self o) { return ::sqrtf(dist_sq(o)); }
-    inline float dist_sq(self o) { return ::powf(x() - o.x(), 2) + ::powf(y() - o.y(), 2); }
+    inline float dist_sq(self o) { int xx = x() - o.x(); int yy = y() - o.y(); return (xx * xx) + (yy * yy); }
 
     // MODIFIERS
     void shift(int _x, int _y);

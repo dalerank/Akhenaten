@@ -136,15 +136,15 @@ void top_menu_widget_t::on_mission_start() {
 
 void top_menu_widget_t::init() {
     ui["date"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_DATE, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_date_display", -1, window_city_draw_all);
     });
 
     ui["population"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_POPULATION, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_population_display", -1, window_city_draw_all);
     });
 
     ui["funds"].onrclick([] {
-        window_message_dialog_show(MESSAGE_DIALOG_TOP_FUNDS, -1, window_city_draw_all);
+        window_message_dialog_show("message_game_control_money_display_window", -1, window_city_draw_all);
     });
 
     events::subscribe([this] (event_population_changed ev) { states.population = ev.value; });
@@ -190,24 +190,13 @@ void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
 
 void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
-    static option debug_text_opt[] = {
-        {"Pages ON", "Pages OFF"},
-        {"Game Time ON", "Game Time OFF"},
-        {"Build Planner ON", "Build Planner OFF"},
-        {"Religion ON", "Religion OFF"},
-        {"Tutorial ON", "Tutorial OFF"},
+    static option debug_text_opt[e_debug_opt_size] = {
         {"Floods ON", "Floods OFF"},
-        {"Camera ON", "Camera OFF"},
-        {"Tile Cache ON", "Tile Cache OFF"},
-        {"Migration ON", "Migration OFF"},
-        {"Sentiment ON", "Sentiment OFF"},
-        {"Sound Channels ON", "Sound Channels OFF"},
         {"Properties ON", "Properties OFF"},
         {"Show console", "Show console"},
         {"Screenshot", "Screenshot"},
         {"Full Screenshot", "Full Screenshot"},
         {"Write Video ON", "Write Video OFF"},
-        {"Clouds ON", "Clouds OFF"},
     };
     const auto &current = debug_text_opt[opt];
     menu_item_update("debug", opt, v ? current.on : current.off);
@@ -573,7 +562,7 @@ void top_menu_widget_t::help_handle(menu_item &item) {
     if (item.id == "help") { 
         widget_top_menu_clear_state();
         window_go_back();
-        window_message_dialog_show(MESSAGE_DIALOG_HELP, -1, window_city_draw_all);
+        window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
     }
     else if (item.id == "mouse") { 
         g_settings.toggle_tooltips();
@@ -586,7 +575,7 @@ void top_menu_widget_t::help_handle(menu_item &item) {
     else if (item.id == "about") { 
         widget_top_menu_clear_state();
         window_go_back();
-        window_message_dialog_show(MESSAGE_DIALOG_ABOUT, -1, window_city_draw_all);
+        window_message_dialog_show("message_dialog_about", -1, window_city_draw_all);
     }
 }
 

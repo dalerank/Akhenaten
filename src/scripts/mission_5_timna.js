@@ -34,15 +34,15 @@ mission5 { // Timna
 	enable_scenario_events : false,
 	events [
 		{
-			year : 2850
+			time { year : 2850, month : 1 }
 			resource : "copper"
-			amount : 500
+			amount { value : 500 }
 			deadline : 12
 		}
 		{
-			year : 2849
+			time { year : 2849, month : 1 }
 			resource : "gems"
-			amount : 1500
+			amount { value : 1500 }
 			deadline : 12
 		}
 		{

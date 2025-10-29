@@ -78,6 +78,7 @@ struct animations_t {
     std::unordered_map<xstring, animation_t> data;
     static animation_t dummy;
 
+    void initialize();
     const animation_t &operator[](const xstring &key) const {
         if (data.empty()) {
             return dummy;
@@ -87,4 +88,4 @@ struct animations_t {
     }
 };
 
-template<> inline void archive::r<animations_t>(pcstr name, animations_t &v) { r(name, v.data);  }
+template<> inline void archive::r<animations_t>(pcstr name, animations_t &v) { r(name, v.data); v.initialize(); }

@@ -401,7 +401,7 @@ void building_granary_storageyard_curse(int big) {
 
     if (big) {
         city_message_disable_sound_for_next_message();
-        messages::popup(MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
+        messages::popup("message_fire_in_the_city", max_building->type, max_building->tile.grid_offset());
         max_building->destroy_by_fire();
         map_routing_update_land();
     } else {
