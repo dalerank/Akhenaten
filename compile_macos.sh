@@ -18,9 +18,10 @@ cmake -B build -DCMAKE_OSX_ARCHITECTURES="$1" -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -
 cmake --build ./build -- -j"$CORES"
 
 cd build/akhenaten.app/Contents/MacOS
+mkdir ../Frameworks Data 2>/dev/null
 
-mkdir ../Frameworks
 cp -R "$HOME"/Library/Frameworks/SDL2.framework ../Frameworks/
 cp -R "$HOME"/Library/Frameworks/SDL2_mixer.framework ../Frameworks/
+cp ../../../../data/* Data/
 
 install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
