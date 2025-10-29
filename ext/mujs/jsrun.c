@@ -1723,3 +1723,42 @@ static void jsR_run(js_State *J, js_Function *F)
 		}
 	}
 }
+
+/* Function modifiers API */
+
+int js_hasmodifier(js_State *J, int idx, const char *key)
+{
+	js_Object *obj = js_toobject(J, idx);
+	if (!obj || obj->type != JS_CFUNCTION)
+		return 0;
+	
+	if (obj->u.f.function) {
+		js_Function *func = obj->u.f.function;
+		js_FunctionModifier *mod = func->modifiers;
+		while (mod) {
+			if (strcmp(mod->key, key) == 0)
+				return 1;
+			mod = mod->next;
+		}
+	}
+	return 0;
+}
+
+const char *js_getmodifier(js_State *J, int idx, const char *key)
+{
+	js_Object *obj = js_toobject(J, idx);
+	if (!obj || obj->type != JS_CFUNCTION) {
+		js_typeerror(J, "not a function");
+	}
+	
+	if (obj->u.f.function) {
+		js_Function *func = obj->u.f.function;
+		js_FunctionModifier *mod = func->modifiers;
+		while (mod) {
+			if (strcmp(mod->key, key) == 0)
+				return mod->value;
+			mod = mod->next;
+		}
+	}
+	return NULL;
+}

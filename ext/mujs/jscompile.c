@@ -31,7 +31,7 @@ void jsC_error(js_State *J, js_Ast *node, const char *fmt, ...)
 	js_throw(J);
 }
 
-static js_Function *newfun(js_State *J, js_Ast *name, js_Ast *params, js_Ast *body, int script)
+static js_Function *newfun(js_State *J, js_Ast *node, js_Ast *name, js_Ast *params, js_Ast *body, int script)
 {
 	js_Function *F = js_malloc(J, sizeof *F);
 	memset(F, 0, sizeof *F);
@@ -44,6 +44,24 @@ static js_Function *newfun(js_State *J, js_Ast *name, js_Ast *params, js_Ast *bo
 	F->line = name ? name->line : params ? params->line : body ? body->line : 1;
 	F->script = script;
 	F->name = name ? name->string : "";
+	
+	/* Copy modifiers from AST to function */
+	F->modifiers = NULL;
+	if (node && node->modifiers) {
+		js_AstModifier *astmod = node->modifiers;
+		js_FunctionModifier **tail = &F->modifiers;
+		
+		while (astmod) {
+			js_FunctionModifier *mod = js_malloc(J, sizeof(js_FunctionModifier));
+			mod->key = astmod->key;
+			mod->value = astmod->value;
+			mod->next = NULL;
+			
+			*tail = mod;
+			tail = &mod->next;
+			astmod = astmod->next;
+		}
+	}
 
 	cfunbody(J, F, name, params, body);
 
@@ -324,11 +342,11 @@ static void cobject(JF, js_Ast *list)
 			emit(J, F, OP_INITPROP);
 			break;
 		case EXP_PROP_GET:
-			emitfunction(J, F, newfun(J, NULL, kv->b, kv->c, 0));
+			emitfunction(J, F, newfun(J, kv, NULL, kv->b, kv->c, 0));
 			emit(J, F, OP_INITGETTER);
 			break;
 		case EXP_PROP_SET:
-			emitfunction(J, F, newfun(J, NULL, kv->b, kv->c, 0));
+			emitfunction(J, F, newfun(J, kv, NULL, kv->b, kv->c, 0));
 			emit(J, F, OP_INITSETTER);
 			break;
 		}
@@ -567,7 +585,7 @@ static void cexp(JF, js_Ast *exp)
 		break;
 
 	case EXP_FUN:
-		emitfunction(J, F, newfun(J, exp->a, exp->b, exp->c, 0));
+		emitfunction(J, F, newfun(J, exp, exp->a, exp->b, exp->c, 0));
 		break;
 
 	case EXP_IDENTIFIER:
@@ -1278,7 +1296,7 @@ static void cfundecs(JF, js_Ast *list)
 	while (list) {
 		js_Ast *stm = list->a;
 		if (stm->type == AST_FUNDEC) {
-			emitfunction(J, F, newfun(J, stm->a, stm->b, stm->c, 0));
+			emitfunction(J, F, newfun(J, stm, stm->a, stm->b, stm->c, 0));
 			emitstring(J, F, OP_INITVAR, stm->a->string);
 		}
 		list = list->b;
@@ -1327,10 +1345,10 @@ static void cfunbody(JF, js_Ast *name, js_Ast *params, js_Ast *body)
 
 js_Function *jsC_compilefunction(js_State *J, js_Ast *prog)
 {
-	return newfun(J, prog->a, prog->b, prog->c, 0);
+	return newfun(J, prog, prog->a, prog->b, prog->c, 0);
 }
 
 js_Function *jsC_compile(js_State *J, js_Ast *prog)
 {
-	return newfun(J, NULL, NULL, prog, 1);
+	return newfun(J, prog, NULL, NULL, prog, 1);
 }

@@ -213,3 +213,4 @@ protected:
 };
 
 using bvariant = variant_t<6>;
+using bvariant_map = std::unordered_map<xstring, bvariant>;

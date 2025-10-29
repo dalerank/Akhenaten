@@ -141,6 +141,10 @@ void js_delindex(js_State *J, int idx, int i);
 void js_currentfunction(js_State *J);
 void js_pushglobal(js_State *J);
 void js_pushundefined(js_State *J);
+
+/* Function modifiers API */
+int js_hasmodifier(js_State *J, int idx, const char *key);
+const char *js_getmodifier(js_State *J, int idx, const char *key);
 void js_pushnull(js_State *J);
 void js_pushboolean(js_State *J, int v);
 void js_pushnumber(js_State *J, double v);

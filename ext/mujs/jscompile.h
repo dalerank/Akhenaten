@@ -117,6 +117,17 @@ enum js_OpCode
 	OP_LINE,	/* -K- */
 };
 
+/* Forward declarations */
+typedef struct js_FunctionModifier js_FunctionModifier;
+
+/* Function modifiers (attributes) */
+struct js_FunctionModifier
+{
+	const char *key;
+	const char *value;
+	js_FunctionModifier *next;
+};
+
 struct js_Function
 {
 	const char *name;
@@ -142,6 +153,8 @@ struct js_Function
 
 	const char *filename;
 	int line, lastline;
+
+	js_FunctionModifier *modifiers; /* function modifiers/attributes */
 
 	js_Function *gcnext;
 	int gcmark;
