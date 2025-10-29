@@ -414,8 +414,13 @@ static void setup() {
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init
                                                                
-    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine
-    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine
+    pcstr base_path = vfs::platform_file_manager_get_base_path();
+    vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
+    js_vm_add_scripts_folder(scripts_base_path);    // setup script engine data scripts folder
+
+    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine user folder
+    js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
+
     js_vm_setup();
     js_vm_sync();
 
@@ -486,15 +491,18 @@ static void run_and_draw() {
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
-    if (!SDL_GetRelativeMouseMode())
-        mouse_set_position(event->x, event->y);
+    auto &m = mouse::ref();
+    if (!SDL_GetRelativeMouseMode()) {
+        m.set_position({ event->x, event->y });
+    }
 
-    if (event->button == SDL_BUTTON_LEFT)
-        mouse_set_left_down(is_down);
-    else if (event->button == SDL_BUTTON_MIDDLE)
-        mouse_set_middle_down(is_down);
-    else if (event->button == SDL_BUTTON_RIGHT)
-        mouse_set_right_down(is_down);
+    if (event->button == SDL_BUTTON_LEFT) {
+        m.set_left_down(is_down);
+    } else if (event->button == SDL_BUTTON_MIDDLE) {
+        m.set_middle_down(is_down);
+    } else if (event->button == SDL_BUTTON_RIGHT) {
+        m.set_right_down(is_down);
+    }
 }
 
 #ifndef __SWITCH__
@@ -545,9 +553,10 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
     case SDL_TEXTINPUT:
         platform_handle_text(&event->text);
         break;
-    case SDL_MOUSEMOTION:
-        if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode())
-            mouse_set_position(event->motion.x, event->motion.y);
+    case SDL_MOUSEMOTION: 
+        if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
+            mouse::ref().set_position({ event->motion.x, event->motion.y });
+        }
 
         break;
     case SDL_MOUSEBUTTONDOWN:
@@ -561,8 +570,9 @@ static void handle_event(SDL_Event* event, bool &active, bool &quit) {
 
         break;
     case SDL_MOUSEWHEEL:
-        if (event->wheel.which != SDL_TOUCH_MOUSEID)
-            mouse_set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+        if (event->wheel.which != SDL_TOUCH_MOUSEID) {
+            mouse::ref().set_scroll(event->wheel.y > 0 ? SCROLL_UP : event->wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
+        }
 
         break;
 

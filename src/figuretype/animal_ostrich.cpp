@@ -18,6 +18,14 @@ void figure_ostrich::figure_action() {
     const formation* m = formation_get(base.formation_id);
     g_city.figures.add_animal();
 
+    // Check if the ostrich has taken damage from arrows
+    auto &d = runtime_data();
+    if (d.applied_damage > 0) {
+        d.applied_damage = 0;
+        advance_action(ACTION_16_OSTRICH_FLEEING);
+        return;
+    }
+
     switch (base.action_state) {
     case ACTION_24_OSTRICH_SPAWNED:     // spawning
     case ACTION_15_OSTRICH_TERRIFIED:   // terrified
@@ -43,6 +51,15 @@ void figure_ostrich::figure_action() {
         break;
 
     case ACTION_16_OSTRICH_FLEEING: // fleeing
+        // When fleeing, search for a more distant place
+        if (base.herd_roost(/*step*/8, /*bias*/16, /*max_dist*/64, TERRAIN_IMPASSABLE_OSTRICH)) {
+            base.wait_ticks = 0;
+            advance_action(ACTION_10_OSTRICH_GOING);
+        } else {
+            base.wait_ticks = 2;
+        }
+        break;
+        
     case ACTION_10_OSTRICH_GOING:
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_18_OSTRICH_ROOSTING + (random_byte() & 0x1), ACTION_8_OSTRICH_RECALCULATE)) {
             if (map_has_figure_but(base.destination_tile, id())) {
@@ -59,21 +76,21 @@ void figure_ostrich::figure_action() {
 void figure_ostrich::update_animation() {
     switch (action_state()) {
     case ACTION_8_OSTRICH_RECALCULATE:
-    case ACTION_19_OSTRICH_IDLE: // idle
+    case ACTION_19_OSTRICH_IDLE: 
         image_set_animation(animkeys().idle);
         break;
 
-    case ACTION_18_OSTRICH_ROOSTING: // roosting
+    case ACTION_18_OSTRICH_ROOSTING:
         image_set_animation(animkeys().eating);
         break;
 
-    case ACTION_16_OSTRICH_FLEEING: // fleeing
-    case ACTION_10_OSTRICH_GOING:   // on the move
+    case ACTION_16_OSTRICH_FLEEING: 
+    case ACTION_10_OSTRICH_GOING: 
         image_set_animation(animkeys().walk);
         break;
 
-    case ACTION_15_OSTRICH_TERRIFIED: // terrified
-    case 14:                         // scared
+    case ACTION_15_OSTRICH_TERRIFIED: 
+    case 14:                      
         image_set_animation(animkeys().idle);
         base.animctx.frame = 0;
         break;
@@ -102,4 +119,11 @@ void figure_ostrich::before_poof() {
 bool figure_ostrich::play_die_sound() {
     g_sound.play_effect(SOUND_EFFECT_OSTRICH_DIE);
     return true;
+}
+
+void figure_ostrich::apply_damage(int hit_dmg) {
+    figure_impl::apply_damage(hit_dmg);
+
+    auto& d = runtime_data();
+    d.applied_damage += hit_dmg;
 }

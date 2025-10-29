@@ -20,7 +20,7 @@ struct empire_object {
         int image_id;
     } expanded;
     int distant_battle_travel_months;
-    int trade_route_id;
+    uint8_t trade_route_id;
     int invasion_path_id;
     int invasion_years;
 };
@@ -53,7 +53,7 @@ const full_empire_object* empire_get_full_object(int object_id);
 const empire_object* empire_object_get(int object_id);
 const empire_object* empire_object_get_our_city();
 
-void empire_object_foreach(std::function<void(const empire_object *)> callback);
+void empire_object_foreach(std::function<void(const empire_object &)> callback);
 
 const empire_object* empire_object_get_battle_icon(int path_id, int year);
 
@@ -66,7 +66,7 @@ void empire_object_set_expanded(int object_id, e_empire_city new_city_type);
 bool empire_object_city_buys_resource(int object_id, e_resource resource, bool from_raw_object = false);
 bool empire_object_city_sells_resource(int object_id, e_resource resource, bool from_raw_object = false);
 
-int empire_object_update_animation(const empire_object* obj, int image_id);
+int empire_object_update_animation(const empire_object &obj, int image_id);
 
 struct map_route_object {
     int unk_header[2]; // 05 00 00 00 00 00 00 00

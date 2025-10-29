@@ -25,5 +25,5 @@ void scenario_empire_process_expansion() {
     g_empire.expand();
 
     g_scenario.empire.is_expanded = 1;
-    messages::popup(MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
+    messages::popup("message_empire_has_expanded", 0, 0);
 }

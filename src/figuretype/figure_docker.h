@@ -2,7 +2,7 @@
 
 #include "figuretype/figure_cartpusher.h"
 #include "empire/empire_city.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 class figure_docker : public figure_carrier {
 public:

@@ -839,7 +839,7 @@ void js_dumpvalue(js_State *J, js_Value v)
 		case JS_CSCRIPT: LPRINTFMT("[Script %s]", v.u.object->u.f.function->filename); break;
 		case JS_CCFUNCTION: LPRINTFMT("[CFunction %p]", v.u.object->u.c.function); break;
 		case JS_CBOOLEAN: LPRINTFMT("[Boolean %d]", v.u.object->u.boolean); break;
-		case JS_CNUMBER: LPRINTFMT("[Number %g]", v.u.object->u.number); break;
+		case JS_CNUMBER: LPRINTFMT("%g", v.u.object->u.number); break;
 		case JS_CSTRING: LPRINTFMT("[String'%s']", v.u.object->u.s.string); break;
 		case JS_CERROR: LPRINTFMT("[Error %s]", v.u.object->u.s.string); break;
 		case JS_CITERATOR: LPRINTFMT("[Iterator %p]", v.u.object); break;

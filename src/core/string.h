@@ -23,14 +23,13 @@ struct textid {
 
 uint8_t* string_copy(const uint8_t* src, uint8_t* dst, int maxlength);
 int string_length(const uint8_t* str);
-const uint8_t* string_from_ascii(const char* str, bool extended = false);
+pcstr string_from_ascii(pcstr str, bool extended = false);
 int string_to_int(const uint8_t* str);
 int string_from_int(uint8_t* dst, int value, bool force_plus_sign = false);
 int string_compare_case_insensitive(const char* a, const char* b);
 bool string_equals(const uint8_t* a, const uint8_t* b, bool case_sentitive);
 
-bool string_needle_equals(const uint8_t* a, const uint8_t* b, int len);
-int index_of_string(const uint8_t* haystack, const uint8_t* needle, int haystack_length);
+int index_of_string(pcstr haystack, pcstr needle, int haystack_length);
 int index_of(const uint8_t* haystack, uint8_t needle, int haystack_length);
 
 // Also called: "why the fuck does the standard library not have this already?"

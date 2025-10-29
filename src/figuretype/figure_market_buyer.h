@@ -2,6 +2,13 @@
 
 #include "figure/figure.h"
 
+enum e_market_buyer_action { 
+    ACTION_144_MARKET_BUYER_CREATE = 144,
+    ACTION_145_MARKET_BUYER_GOING_TO_STORAGE = 145,
+    ACTION_146_MARKET_BUYER_RETURNING = 146,
+    ACTION_147_MARKET_BUYER_REROUTING = 147,
+};
+
 class figure_market_buyer : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_MARKET_BUYER, figure_market_buyer)

@@ -89,7 +89,8 @@ void city_coverage_t::load(buffer *buf) {
 
 void city_coverage_t::update() {
     OZZY_PROFILER_SECTION("Game/Update/Avg Coverage Update");
-    int pop = g_city.population.current;
+    auto &population = g_city.population;
+    const int pop = population.current;
 
     // entertainment
     const int active_booth = g_city.buildings.count_active(BUILDING_BOOTH);
@@ -100,11 +101,19 @@ void city_coverage_t::update() {
     senet_house = g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
 
     // education
-    city_population_calculate_educational_age();
+    population.calculate_educational_age();
 
-    school = std::min(calc_percentage(75 * g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL), g_city.population.school_age), 100);
-    library = std::min(calc_percentage(800 * g_city.buildings.count_active(BUILDING_LIBRARY), pop), 100);
-    academy = std::min(calc_percentage(100 * g_city.buildings.count_active(BUILDING_ACADEMY), g_city.population.academy_age), 100);
+    int active_schools = g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL);
+    const auto &school_config = building_static_params::get(BUILDING_SCRIBAL_SCHOOL);
+    school = std::min(calc_percentage(school_config.max_service * active_schools, g_city.population.school_age), 100);
+
+    int active_libraries = g_city.buildings.count_active(BUILDING_LIBRARY);
+    const auto &lib_config = building_static_params::get(BUILDING_LIBRARY);
+    library = std::min(calc_percentage(lib_config.max_service * active_libraries, pop), 100);
+
+    int active_academy = g_city.buildings.count_active(BUILDING_ACADEMY);
+    const auto &academy_config = building_static_params::get(BUILDING_ACADEMY);
+    academy = std::min(calc_percentage(academy_config.max_service * active_academy, g_city.population.academy_age), 100);
 }
 
 int city_average_coverage_t::calc_average_entertainment() {

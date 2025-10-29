@@ -39,6 +39,7 @@
 #include "window/message_dialog.h"
 #include "game/game_events.h"
 #include "game/game.h"
+#include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
@@ -180,7 +181,9 @@ void window_advisors::init() {
         });
 
         ui[btn.id].onrclick([advisor = btn.adv] {
-            window_message_dialog_show(ADVISOR_TO_MESSAGE_TEXT[advisor], -1, 0);
+            int text_id = ADVISOR_TO_MESSAGE_TEXT[advisor];
+            xstring mm_text = lang_get_message_id(text_id);
+            window_message_dialog_show(mm_text, -1, 0);
         });
     }
 

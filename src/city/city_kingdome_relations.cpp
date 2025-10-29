@@ -83,20 +83,20 @@ void kingdome_relation_t::update_debt_state() {
 
         debt_state = e_debt_one_time;
         months_in_debt = 0;
-        messages::popup(MESSAGE_CITY_IN_DEBT, 0, 0);
+        messages::popup("message_out_of_money", 0, 0);
         g_city.ratings.reduce_prosperity_after_bailout();
         break;
 
     case e_debt_one_time:
         debt_state = e_debt_twice;
         months_in_debt = 0;
-        messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+        messages::popup("message_debt_again", 0, 0);
         change(params().first_debt_penalty);
         break;
 
     case e_debt_twice:
         if (months_in_debt == -1) {
-            messages::popup(MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+            messages::popup("message_out_of_money_again", 0, 0);
             months_in_debt = 0;
         }
         if (game.simtime.day == 0) {
@@ -107,7 +107,7 @@ void kingdome_relation_t::update_debt_state() {
             debt_state = e_debt_latest;
             months_in_debt = 0;
             if (!g_city.figures.kingdome_soldiers) {
-                messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+                messages::popup("message_wrath_of_the_emperor", 0, 0);
                 change(params().second_debt_penalty);
             }
         }
@@ -115,7 +115,7 @@ void kingdome_relation_t::update_debt_state() {
 
     case e_debt_latest:
         if (months_in_debt == -1) {
-            messages::popup(MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+            messages::popup("message_wrath_of_the_emperor", 0, 0);
             months_in_debt = 0;
         }
 
@@ -149,10 +149,10 @@ void kingdome_relation_t::process_invasion() {
                 formation_kingdome_retreat();
                 if (!invasion.retreat_message_shown) {
                     invasion.retreat_message_shown = 1;
-                    messages::popup(MESSAGE_KINGDOME_ARMY_RETREAT, 0, 0);
+                    messages::popup("message_attack_called_off", 0, 0);
                 }
             } else if (invasion.duration_day_countdown == 0)
-                messages::popup(MESSAGE_KINGDOME_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
+                messages::popup("message_wrath_of_the_emperor", 0, 0); // a year has passed (11 months), siege goes on
         }
     } else if (invasion.soldiers_killed && invasion.soldiers_killed >= invasion.size) {
         // player defeated nomes army
@@ -161,11 +161,11 @@ void kingdome_relation_t::process_invasion() {
         if (rating < 35) {
             change(10);
             if (invasion.count < 2)
-                messages::popup(MESSAGE_CAESAR_RESPECT_1, 0, 0);
+                messages::popup("MESSAGE_CAESAR_RESPECT_1", 0, 0);
             else if (invasion.count < 3)
-                messages::popup(MESSAGE_CAESAR_RESPECT_2, 0, 0);
+                messages::popup("MESSAGE_CAESAR_RESPECT_2", 0, 0);
             else {
-                messages::popup(MESSAGE_CAESAR_RESPECT_3, 0, 0);
+                messages::popup("MESSAGE_CAESAR_RESPECT_3", 0, 0);
             }
         }
     } else if (invasion.days_until_invasion <= 0) {
@@ -174,7 +174,7 @@ void kingdome_relation_t::process_invasion() {
             invasion.warnings_given++;
             invasion.days_until_invasion = 192;
             if (invasion.warnings_given <= 1)
-                messages::popup(MESSAGE_KINGDOME_WRATH, 0, 0);
+                messages::popup("message_wrath_of_the_emperor", 0, 0);
         }
     } else {
         invasion.days_until_invasion--;

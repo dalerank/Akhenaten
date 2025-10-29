@@ -40,7 +40,7 @@ enum bind_signature_e {
     return;
 
 class io_buffer;
-using io_buffer_bind = void(io_buffer* io, size_t version);
+using io_buffer_bind = void(io_buffer *io, size_t version);
 
 class io_buffer {
 private:
@@ -49,11 +49,11 @@ private:
     char name[100] = "";
 
     // internal buffer
-    buffer* p_buf = nullptr;
+    buffer *p_buf = nullptr;
     chunk_buffer_access_e access_type = CHUNK_ACCESS_REVOKED;
 
     // manually defined external binding schema
-    io_buffer_bind* bind_callback;
+    io_buffer_bind *bind_callback;
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
@@ -71,7 +71,7 @@ public:
     inline size_t get_offset() { return p_buf->get_offset(); }
 
     // this will HOOK the io_buffer the provided BUFFER
-    void hook(buffer* buf, int _size, bool _compressed, const char* _name);
+    void hook(buffer *buf, int _size, bool _compressed, const char *_name);
 
     // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
@@ -81,7 +81,7 @@ public:
     // and the selected access type -- must be implemented HERE
     // in the header file, since it's a TEMPLATE function.
     template <typename T>
-    void bind(bind_signature_e signature, T* ext) {
+    void bind(bind_signature_e signature, T *ext) {
         if (ext == nullptr)
             return;
 
@@ -108,9 +108,9 @@ public:
         }
     }
     template <typename T>
-    void bind(bind_signature_e signature, T* ext, size_t size) {
+    void bind(bind_signature_e signature, T *ext, size_t size) {
         if (ext != nullptr && signature == BIND_SIGNATURE_RAW && size > 0) {
-            IO_BRANCH(p_buf->read_raw((uint8_t*)ext, size), p_buf->write_raw((uint8_t*)ext, size))
+            IO_BRANCH(p_buf->read_raw((uint8_t *)ext, size), p_buf->write_raw((uint8_t *)ext, size))
         }
     }
 
@@ -119,12 +119,18 @@ public:
     void bind_i8(int8_t &v) { bind(BIND_SIGNATURE_INT8, &v); }
     void bind_u8(uint8_t &v) { bind(BIND_SIGNATURE_UINT8, &v); }
     void bind_u16(uint16_t &v) { bind(BIND_SIGNATURE_UINT16, &v); }
+    void bind_i16(int16_t &v) { bind(BIND_SIGNATURE_INT16, &v); }
     void bind_bool(bool &v) { bind(BIND_SIGNATURE_UINT8, &v); }
+    void bind_tile(tile2i &v) { bind(BIND_SIGNATURE_TILE2I, v); }
+    void bind_vec2i_compat(vec2i &v) {
+        bind(BIND_SIGNATURE_INT16, &v.x);
+        bind(BIND_SIGNATURE_INT16, &v.y);
+    }
 
     void bind(bind_signature_e signature, tile2i &tile) {
         tile.invalidate_offset();
-        bind(BIND_SIGNATURE_UINT16, tile.private_access(_X));        // 44
-        bind(BIND_SIGNATURE_UINT16, tile.private_access(_Y));        // 58
+        bind(BIND_SIGNATURE_INT16, tile.private_access(_X));
+        bind(BIND_SIGNATURE_INT16, tile.private_access(_Y));
     }
 
     void bind(bind_signature_e signature, grid_xx *ext) {
@@ -155,5 +161,5 @@ public:
     ~io_buffer();
 };
 
-void default_bind(io_buffer* iob, size_t version);
-extern io_buffer* iob_none;
+void default_bind(io_buffer *iob, size_t version);
+extern io_buffer *iob_none;

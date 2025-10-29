@@ -63,7 +63,6 @@ struct render_command_t {
     uint32_t mask = COLOR_MASK_NONE;
     float scale = 1.f;
     uint32_t flags = 0;
-    int16_t virtual_xorder = 0;
     uint32_t id = 0;
     uint32_t tag = 0;
     std::vector<render_command_t> commands;

@@ -543,10 +543,10 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         formation* f = &g_formations[i];
         f->id = i;                                   // 10
         iob->bind_bool(f->in_use); // 1
-        iob->bind(BIND_SIGNATURE_UINT8, &f->faction_id);
+        iob->bind_u8(f->faction_id);
         iob->bind_u8(f->batalion_id);
         iob->bind_bool(f->is_at_fort);
-        iob->bind(BIND_SIGNATURE_INT16, &f->figure_type); // 69
+        iob->bind_u16((uint16_t&)f->figure_type); // 69
         iob->bind(BIND_SIGNATURE_INT16, &f->building_id);
 
         for (int fig = 0; fig < formation::max_figures_count; fig++) {
@@ -566,7 +566,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
         iob->bind_u8(f->batalion_id);
-        iob->bind____skip(1);
+        iob->bind_bool(f->own_batalion);
         iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_recruit_type);

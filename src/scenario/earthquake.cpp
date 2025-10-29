@@ -107,7 +107,7 @@ void scenario_earthquake_process() {
             data.duration = 0;
             data.delay = 0;
             advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
-            messages::popup(MESSAGE_EARTHQUAKE, 0, MAP_OFFSET(data.expand[0].x, data.expand[0].y));
+            messages::popup("message_earthquake", 0, MAP_OFFSET(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == e_event_state_in_progress) {
         data.delay++;

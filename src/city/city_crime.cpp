@@ -57,7 +57,7 @@ static void generate_rioter(building* b) {
     g_city.change_happiness(20);
     g_tutorials_flags.on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, MESSAGE_RIOT, b->type, road_tile.grid_offset());
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, false, "message_riot", b->type, road_tile.grid_offset());
 }
 
 static void generate_protestor(building* b) {

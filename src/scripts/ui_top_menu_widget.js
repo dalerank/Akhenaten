@@ -61,25 +61,14 @@ top_menu_widget = {
 	    advisor_chief    :  menu_item({text:{group: 4, id: ADVISOR_CHIEF}, parameter: ADVISOR_CHIEF}),
 	},
 
-	debug : {
-		pages 			: menu_item({text: "", parameter: 0}),
-		game_time 		: menu_item({text: "", parameter: 1}),
-		build_planner   : menu_item({text: "", parameter: 2}),
-		religion 		: menu_item({text: "", parameter: 3}),
-		tutorial 		: menu_item({text: "", parameter: 4}),
-		floods 			: menu_item({text: "", parameter: 5}),
-		camera 			: menu_item({text: "", parameter: 6}),
-		tile_cache 		: menu_item({text: "", parameter: 7}),
-		migration 		: menu_item({text: "", parameter: 8}),
- 		sentiment 		: menu_item({text: "", parameter: 9}),
- 		sound_channels  : menu_item({text: "", parameter: 10}),
- 		properties		: menu_item({text: "", parameter: 11}),
- 		show_console    : menu_item({text: "", parameter: 12}),
- 		make_screenshot : menu_item({text: "", parameter: 13}),
- 		make_full_screenshot : menu_item({text: "", parameter: 14}),
- 		write_video     : menu_item({text: "", parameter: 15}),
-		show_clouds     : menu_item({text: "", parameter: 16}),
-	},
+	debug {
+		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
+ 		properties		: menu_item({text: "", parameter: e_debug_show_properties})
+ 		show_console    : menu_item({text: "", parameter: e_debug_show_console})
+ 		make_screenshot : menu_item({text: "", parameter: e_debug_make_screenshot})
+ 		make_full_screenshot : menu_item({text: "", parameter: e_debug_make_full_screenshot})
+ 		write_video     : menu_item({text: "", parameter: e_debug_write_video})
+	}
 
 	debug_render : {
 	    buildings 		: menu_item({text:"xxx Buildings", parameter:e_debug_render_building})

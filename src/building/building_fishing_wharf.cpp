@@ -22,7 +22,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fishing_wharf);
 
 declare_console_command_p(killfishboats) {
-    figure_valid_do([] (figure &f) { f.poof(); }, FIGURE_FISHING_BOAT);
+    figure_valid_do([] (figure &f) { f.poof(); }, make_array(FIGURE_FISHING_BOAT));
 }
 
 int building_fishing_wharf::preview::construction_update(build_planner &planer, tile2i start, tile2i end) const {

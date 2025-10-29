@@ -1,6 +1,6 @@
 #include "figure_caravan_donkey.h"
 
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figuretype/figure_kingdome_trader.h"
 
 #include "building/building_storage_yard.h"

@@ -49,45 +49,47 @@ building_large_statue = {
   desirability : { value:[14], step:[2], step_size:[-2], range: [5] }
 }
 
-base_fort_ghost = {
-  main_view_offset : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]],
-  ground_view_offset : [[35, 65], [5, -70], [-200, -55], [-180, 46]],
-  ground_check_offset : [[3, -1], [4, -1], [4, 0], [3,  0],
-                         [-1,-4], [0, -4], [0,-3], [-1,-3],
-                         [-4, 0], [-3, 0], [-3,1], [-4, 1],
-                         [0,  3], [1,  3], [1, 4], [0,  4]], 
+base_fort_ghost {
+  main_view_offset [[-55, 20], [-55, -35], [-55, -35], [-60, -40]]
+  ground_view_offset [[35, 65], [5, -70], [-200, -55], [-180, 46]]
+  ground_check_offset [[3, -1], [4, -1], [4, 0], [3,  0]
+                       [-1,-4], [0, -4], [0,-3], [-1,-3]
+                       [-4, 0], [-3, 0], [-3,1], [-4, 1]
+                       [0,  3], [1,  3], [1, 4], [0,  4]] 
 }
 
-building_fort_charioteers = {
-  animations : {
-    base: {pack: PACK_GENERAL, id: 66},
-    ground: {pack: PACK_GENERAL, id: 66, offset:1},
-    picture: {pack: PACK_GENERAL, id: 66, offset:3, pos:[93, -21]},
+building_fort_charioteers {
+  animations {
+    _pack {pack: PACK_GENERAL}
+    base {id: 66}
+    ground {id: 66, offset:1}
+    picture {id: 66, offset:3, pos[93, -21]}
   }
   ghost : base_fort_ghost
   labor_category : LABOR_CATEGORY_MILITARY
   building_size : 3
   fire_proof : 1
   damage_proof : 1
-  meta : { help_id:87, text_id:89 }
-  cost : [ 500, 700, 900, 1300, 2000 ]
-  desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
+  meta { help_id:87, text_id:89 }
+  cost [ 500, 700, 900, 1300, 2000 ]
+  desirability { value[-20], step[2], step_size[2], range[6] }
 }
 
-building_fort_infantry = {
-  animations : {
-    base: {pack: PACK_GENERAL, id: 66},
-    ground: {pack: PACK_GENERAL, id: 66, offset:1},
-    picture: {pack: PACK_GENERAL, id: 66, offset:4, pos:[93, -21]},
+building_fort_infantry {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    base { id: 66}
+    ground { id: 66, offset:1}
+    picture { id: 66, offset:4, pos:[93, -21]}
   }
   ghost : base_fort_ghost
   labor_category : LABOR_CATEGORY_MILITARY
   building_size : 3
   fire_proof : 1
   damage_proof : 1
-  meta : { help_id:87, text_id:89 }
-  cost : [ 200, 300, 500, 800, 1200 ]
-  desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
+  meta { help_id:87, text_id:89 }
+  cost [ 200, 300, 500, 800, 1200 ]
+  desirability { value[-20], step[2], step_size[2], range [6] }
 }
 
 building_fort_archers = {
@@ -736,6 +738,7 @@ building_library = {
   cost : [ 90, 140, 200, 300, 400 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[30], fire_risk:[6], damage_risk: [1]
+  max_service: 800
 }
 
 building_military_academy = {
@@ -778,17 +781,19 @@ building_juggler_school = {
   laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
-building_dancer_school = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:52, },
-    work : { pos : [104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2 },
+building_dancer_school {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    preview { id:52, }
+    base { id:52, }
+    work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
+
   building_size : 4
-  meta : { help_id:75, text_id:76 }
-  cost : [ 30, 50, 100, 150, 200 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-   laborers:[10], fire_risk:[4], damage_risk: [2]
+  meta { help_id:75, text_id:76 }
+  cost [ 30, 50, 100, 150, 200 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers[10], fire_risk[4], damage_risk[2]
 }
 
 building_storage_yard = {
@@ -1110,25 +1115,28 @@ building_recruiter = {
   laborers:[10], fire_risk:[4], damage_risk: [1]
 }
 
-building_bandstand = {
-  animations : {
-    booth : {pack:PACK_GENERAL, id:114},
-    square : {pack:PACK_GENERAL, id:58},
-    juggler : { pos : [35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true },   
-    stand_sn_s : { pack:PACK_GENERAL, id:92, offset:0},
-    stand_sn_n : { pack:PACK_GENERAL, id:92, offset:1},
-    stand_we_w: { pack:PACK_GENERAL, id:92, offset:2},
-    stand_we_e: {pack:PACK_GENERAL, id:92, offset:3},
-    musician_sn : { pos : [-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 },
-    musician_we : { pos : [48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 },
+building_bandstand {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    booth { id:114 }
+    square { id:58}
+    stand_sn_s { id:92, offset:0 }
+    stand_sn_n { id:92, offset:1 }
+    stand_we_w { id:92, offset:2 }
+    stand_we_e { id:92, offset:3 }
+
+    juggler { pos[35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
+    musician_sn { pos[-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
+    musician_we { pos[48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
   }
+
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   fire_proof: true
-  meta : { help_id:72, text_id:71 }
+  meta { help_id:72, text_id:71 }
   building_size : 3
-  cost : [ 30, 50, 100, 150, 200 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [3]
+  cost [ 30, 50, 100, 150, 200 ]
+  desirability { value[4], step[1], step_size[-1], range[4] }
+  laborers[12], fire_risk[4], damage_risk[3]
 }
 
 building_pavilion = {
@@ -2093,6 +2101,7 @@ building_academy = {
   cost: [ 200, 250, 300, 400, 500 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
   laborers:[20], fire_risk:[4], damage_risk: [1]
+  max_service: 100
 }
 
 building_physician = {
@@ -2165,17 +2174,20 @@ building_police_station = {
   laborers:[6], fire_risk:[2], damage_risk: [2]
 }
 
-building_architect_post = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:81 },
-    base : { pack:PACK_GENERAL, id:81 },
-    work : { pos : [20, -35], pack:PACK_GENERAL, id:81, offset:1, max_frames:11 },
+building_architect_post {
+  animations {
+    _pack {pack:PACK_GENERAL}
+    preview { id:81 },
+    base { id:81 },
+    work { pos[20, -35], id:81, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  overlay: OVERLAY_DAMAGE
+  min_houses_coverage : 50
   building_size : 1
-  meta : { help_id: 81, text_id: 104 }
-  cost: [ 6, 12, 25, 40, 60 ]
-  laborers:[5], fire_risk:[2], damage_risk: [0]
+  meta { help_id: 81, text_id: 104 }
+  cost [ 6, 12, 25, 40, 60 ]
+  laborers[5], fire_risk[2], damage_risk[0]
 }
 
 building_conservatory {
@@ -2229,6 +2241,7 @@ building_scribal_school = {
   cost : [ 30, 50, 70, 100, 150 ]
   desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
   laborers:[10], fire_risk:[6], damage_risk: [2]
+  max_service: 75
 }
 
 building_temple_complex_osiris = {

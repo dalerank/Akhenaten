@@ -2,10 +2,11 @@ log_info("akhenaten: figures info started")
 
 figure_fireman {
 	animations {
-		walk { pos : [0, 0], pack:PACK_SPR_MAIN, id:6, max_frames:12 }
-		death { pos : [0, 0], pack:PACK_SPR_MAIN, id:7, max_frames:8, loop:false }
-    fight_fire { pos : [0, 0], pack:PACK_SPR_MAIN, id:8, max_frames:36 }
-    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
+		_pack { pack:PACK_SPR_MAIN }
+	  walk { id:6, max_frames:12 }
+	  death { id:7, max_frames:8, loop:false }
+   	fight_fire { id:8, max_frames:36 }
+   	big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FIREMAN }
   }
 
   sounds {
@@ -33,8 +34,8 @@ figure_fireman {
 
 figure_water_carrier = {
 	animations {
-		walk { pos : [0, 0], pack:PACK_SPR_MAIN, id:59, max_frames:12 }
-		death { pos : [0, 0], pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false }
+		walk {  pack:PACK_SPR_MAIN, id:59, max_frames:12 }
+		death {  pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false }
   }
 
   sounds {
@@ -248,7 +249,7 @@ figure_ostrich {
 		walk { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
 		death { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
 		eating { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
-		idle { pack:PACK_SPR_MAIN, id:160, max_frames:8 }
+		idle { pack:PACK_SPR_MAIN, id:160, max_frames:7 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
 	}
 
@@ -654,8 +655,8 @@ figure_worker = {
 
 figure_physician = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:71, max_frames:12 }
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
+		walk : {  pack:PACK_SPR_MAIN, id:71, max_frames:12 }
+		death : {  pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHYSICIAN }
 	}
 
@@ -810,8 +811,8 @@ figure_cartpusher = {
 
 figure_docker = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:43, max_frames:12 }
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
+		walk : {  pack:PACK_SPR_MAIN, id:43, max_frames:12 }
+		death : {  pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DOCKER }
 	}
 
@@ -1317,8 +1318,8 @@ figure_senet_player = {
 
 figure_market_trader = {
 	animations : {
-		walk : { pos : [0, 0], pack:PACK_SPR_MAIN, id:18, max_frames:12 }
-		death : { pos : [0, 0], pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
+		walk : {  pack:PACK_SPR_MAIN, id:18, max_frames:12 }
+		death : {  pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_TRADER }
 	}
 

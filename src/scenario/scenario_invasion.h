@@ -34,22 +34,25 @@ struct enemy_properties_t {
     int percentage_type2;
     int percentage_type3;
     std::array<e_figure_type, 3> figure_types;
+    xstring army_title;
     e_formation_layout layout;
 };
-ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, layout)
+ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, army_title, layout)
 
 struct invasion_data_t {
     int last_internal_invasion_id;
     int min_invasion_amount;
     int max_invasion_amount;
     std::array<invasion_warning_t, 101> warnings;
+
+    void clear();
+    void init();
+
+    const enemy_properties_t &get_prop(e_enemy_type type);
 };
 ANK_CONFIG_STRUCT(invasion_data_t, min_invasion_amount, max_invasion_amount)
 extern invasion_data_t g_invasions;
 
-void scenario_invasion_clear();
-
-void scenario_invasion_init();
 
 bool scenario_invasion_exists_upcoming();
 

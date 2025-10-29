@@ -13,20 +13,24 @@ struct empire_city {
         check_open_route = 1
     };
 
-    int in_use; // this can be 2, so it's an int!
+    uint8_t in_use; // this can be 2, so it's an int!
     e_empire_city type;
+    uint8_t lookup_id;
     uint8_t name_id;
     int route_id;
     bool is_open;
     bool buys_resource[RESOURCES_MAX];
     bool sells_resource[RESOURCES_MAX];
-    int cost_to_open;
+    int16_t cost_to_open;
     int ph_unk01;
     int ph_unk02;
     int trader_entry_delay;
     int empire_object_id;
     bool is_sea_trade;
     int trader_figure_ids[3];
+    svector<uint16_t, 5> trade_limits;
+    uint8_t max_traders;
+    uint8_t months_under_siege;  // Track if city is under siege
 
     void remove_trader(int figure_id);
     bool can_trade() const;
@@ -42,8 +46,19 @@ struct empire_city {
     void set_foreign() {
         type = EMPIRE_CITY_EGYPTIAN;
     }
+    
+    void set_under_siege(uint8_t months) {
+        months_under_siege = months;
+        if (months_under_siege > 0) {
+            is_open = false;  // Close trade when under siege
+        }
+    }
+    
+    bool is_sieged() const {
+        return months_under_siege > 0;
+    }
 };
-ANK_CONFIG_STRUCT(empire_city, is_sea_trade)
+ANK_CONFIG_STRUCT(empire_city, is_sea_trade, max_traders, trade_limits)
 
 struct empire_city_handle {
     uint8_t handle = 0;
@@ -59,6 +74,7 @@ struct empire_city_handle {
     bool sells_resource(e_resource r) const;
 
     void remove_trader(figure_id fid);
+    void set_under_siege(uint8_t months);
     xstring name() const;
 
     [[nodiscard]]

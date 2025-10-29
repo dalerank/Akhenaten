@@ -18,23 +18,12 @@ extern int debug_range_3;
 extern int debug_range_4;
 
 enum e_debug_option {
-    e_debug_show_pages = 0,
-    e_debug_show_game_time,
-    e_debug_show_build_planner,
-    e_debug_show_religion,
-    e_debug_show_tutorial,
     e_debug_show_floods,
-    e_debug_show_camera,
-    e_debug_show_tile_cache,
-    e_debug_show_migration,
-    e_debug_show_sentiment,
-    e_debug_show_sound_channels,
     e_debug_show_properties,
     e_debug_show_console,
     e_debug_make_screenshot,
     e_debug_make_full_screenshot,
     e_debug_write_video,
-    e_debug_show_clouds,
 
     e_debug_opt_size,
 };
@@ -93,10 +82,10 @@ void set_debug_render_mode(e_debug_render mode);
 bstring256 get_terrain_type(pcstr def, tile2i tile);
 bstring256 get_terrain_type(pcstr def, int type);
 
-void debug_text(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, int value, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
-void debug_text_a(painter &ctx, uint8_t* str, int x, int y, int indent, const char* text, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
-void debug_text_float(uint8_t* str, int x, int y, int indent, const char* text, double value, color color = COLOR_WHITE);
-void debug_text_dual_left(uint8_t* str, int x, int y, int indent, int indent2, const char* text, int value1, int value2, color color = COLOR_WHITE);
+void debug_text(painter &ctx, pstr str, int x, int y, int indent, pcstr text, int value, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
+void debug_text_a(painter &ctx, pstr str, int x, int y, int indent, pcstr text, color color = COLOR_WHITE, e_font font = FONT_SMALL_OUTLINED);
+void debug_text_float(int x, int y, int indent, pcstr text, float value, color color = COLOR_WHITE);
+void debug_text_dual_left(int x, int y, int indent, int indent2, pcstr text, int value1, int value2, color color = COLOR_WHITE);
 
 void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color col);
 void debug_draw_rect_with_contour(int x, int y, int w, int h, color col);

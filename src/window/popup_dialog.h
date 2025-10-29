@@ -81,8 +81,8 @@ using window_popup_dialog_callback = std::function<void(bool)>;
 using window_yes_dialog_callback = std::function<void()>;
 
 struct popup_dialog : public ui::widget {
-    textid text;
-    textid custom_text;
+    xstring text;
+    xstring body;
     int ok_clicked;
     window_popup_dialog_callback close_func;
     e_popup_dialog_btns num_buttons;
@@ -90,10 +90,12 @@ struct popup_dialog : public ui::widget {
     void draw_background(int flags);
     void draw_foreground(int flags);
     void handle_input(const mouse *m, const hotkeys *h);
-    bool init(const xstring scheme, textid loc, textid custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
+    bool init(const xstring scheme, xstring loc, xstring custom_text, window_popup_dialog_callback close_func, e_popup_dialog_btns buttons);
 
     static void show(pcstr loc_id, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func);
     static void show(textid text, textid custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func);
+    static void show(textid text, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func);
+    static void show(xstring text, xstring custom, e_popup_dialog_btns buttons, window_popup_dialog_callback close_func);
 
     template<typename Text>
     static void show_yesno(Text text, window_popup_dialog_callback close_func) {
@@ -110,6 +112,12 @@ struct popup_dialog : public ui::widget {
     template<typename Text>
     static void show_ok(Text loc_id, window_yes_dialog_callback close_func = [] {}) {
         show(loc_id, e_popup_btns_ok, [=] (bool accepted) {
+            if (accepted) { close_func(); }
+        });
+    }
+
+    static void show_ok(xstring title, xstring custom, window_yes_dialog_callback close_func = [] {}) {
+        show(title, custom, e_popup_btns_ok, [=] (bool accepted) {
             if (accepted) { close_func(); }
         });
     }

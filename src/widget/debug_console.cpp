@@ -47,6 +47,10 @@ void game_debug_show_property_value(pcstr field, const float &v, bool disabled) 
     ImGui::InputFloat("##value", (float*)&v, 1.0f);
 }
 
+void game_debug_show_property_value(pcstr field, const double &v, bool disabled) {
+    ImGui::InputDouble("##value", (double *)&v, 1.0f);
+}
+
 void game_debug_show_property_value(pcstr field, const int &v, bool disabled) {
     ImGuiInputTextFlags_ flags = disabled ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_None;
     ImGui::InputInt("##value", (int*)&v, 1, 100, flags);
@@ -174,6 +178,7 @@ void game_debug_show_property_t(pcstr field, pcstr v) {
 void game_debug_show_property(pcstr field, const int &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const uint8_t &v, custom_span<pcstr> modes, bool disabled)  { game_debug_show_property_t(field, v, modes, disabled); }
 void game_debug_show_property(pcstr field, const float &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
+void game_debug_show_property(pcstr field, const double &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const e_move_type &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const int8_t &v, bool disabled)  { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const short &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
@@ -209,6 +214,7 @@ void game_debug_properties_draw() {
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
     for (debug::PropertiesIterator *s = debug::PropertiesIterator::tail; s; s = s->next) {
+        ImGui::NewLine();
         s->func(/*body*/false);
     }
     ImGui::PopStyleVar();

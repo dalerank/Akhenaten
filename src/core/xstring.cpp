@@ -56,7 +56,7 @@ xstring_value *xstring_container::dock(pcstr value) {
     // calc len
     const size_t s_len = strlen(value);
     const size_t s_len_with_zero = s_len + 1;
-    assert(sizeof(xstring_value) + s_len_with_zero < 4096);
+    assert(sizeof(xstring_value) + s_len_with_zero < (2 * 4096 + 1024));
 
     // setup find structure
     uint16_t length = static_cast<uint32_t>(s_len);

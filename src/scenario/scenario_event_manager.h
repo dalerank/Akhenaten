@@ -35,6 +35,9 @@ enum e_event_type {
     EVENT_TYPE_BLOOD_RIVER = 27,
     EVENT_TYPE_CRIME_WAVE = 28,
 
+    EVENT_TYPE_TRADE_CITY_UNDER_SIEGE = 29,
+    EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING = 30,
+
     EVENT_TYPE_MAX,
 };
 using e_event_type_tokens_t = token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX>;
@@ -131,24 +134,25 @@ struct event_ph_value {
     int16_t f_min;
     int16_t f_max;
 };
+ANK_CONFIG_STRUCT(event_ph_value, value)
 
 struct event_ph_date {
     int16_t year;
-    int16_t unk01;
+    int16_t month;
     int16_t unk02;
     int16_t unk03;
 };
+ANK_CONFIG_STRUCT(event_ph_date, year, month)
 
 struct event_ph_t {
     int16_t num_total_header;
     int16_t __unk01;
     int16_t event_id;
     e_event_type type;
-    int8_t month;
     event_ph_value item;
     event_ph_value amount;
     event_ph_date time;
-    int16_t location_fields[4];
+    std::array<int16_t, 4> location_fields;
     int16_t on_completed_action;
     int16_t on_refusal_action;
     e_event_trigger_type event_trigger_type;
@@ -182,14 +186,14 @@ struct event_ph_t {
     int8_t on_refusal_msgAlt;
     int8_t on_tooLate_msgAlt;
     int8_t on_defeat_msgAlt;
-    int16_t __unk20a;
-    int16_t __unk20b;
-    int16_t __unk20c;
-    int16_t __unk21;
-    int16_t __unk22;
+    int16_t reserved_1;
+    std::array<uint16_t, 4> reasons;
+    uint16_t rand_reason() const;
 
-    game_date_t date() { return {time.year, month}; }
+    game_date_t date() { return {time.year, time.month}; }
+    void archive_load(archive arch);
 };
+ANK_CONFIG_STRUCT(event_ph_t, type, time, amount, tag_id, months_initial, location_fields, reasons, sender_faction)
 
 struct mission_id_t;
 struct event_manager_t {
@@ -198,6 +202,7 @@ struct event_manager_t {
     event_ph_t* at(int id);
     void process_active_request(int id);
     void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
+    void process_event_city_under_siege(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_events();
     void process_random_events();
     event_ph_t *create(const event_ph_t *parent);
@@ -205,9 +210,6 @@ struct event_manager_t {
     bool is_valid_event_index(int id);
     int get_auto_reason_phrase_id(int param_1, int param_2);
 
-    uint8_t* msg_text(int group_id, int index);
-    bool msg_load();
-    bool msg_auto_phrases_load();
+    pcstr msg_text(int group_id, int index);
     void load_mission_metadata(const mission_id_t &missionid);
-    void load_mission_event(archive arch, event_ph_t &ev);
 };

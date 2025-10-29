@@ -221,13 +221,7 @@ struct token {
 
 template<typename enum_type, enum_type begin, enum_type end>
 struct token_holder {
-    constexpr static inline int count_values(enum_type type) {
-        return (type != end)
-            ? count_values((enum_type)(int(type)+1))
-            : (int(type)+1);
-    }
-
-    static constexpr uint32_t N = count_values(begin);
+    static constexpr uint32_t N = static_cast<uint32_t>(end) - static_cast<uint32_t>(begin);
     using tokens = std::array<token, N+1>; // because have {0, 0} in last element
 
     template<typename e_enum_type, e_enum_type enum_value>

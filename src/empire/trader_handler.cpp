@@ -1,6 +1,7 @@
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 
 #include "empire/empire.h"
+#include "empire/empire_traders.h"
 #include "empire/trade_prices.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -11,29 +12,6 @@
 #include "figure/figure.h"
 
 #include "city/trade.h"
-
-struct empire_trader
-{
-    int32_t bought_amount;
-    int32_t bought_value;
-    uint16_t bought_resources[RESOURCES_MAX];
-
-    int32_t sold_amount;
-    int32_t sold_value;
-    uint16_t sold_resources[RESOURCES_MAX];
-
-    bool is_active;
-};
-
-struct empire_traders_t {
-    std::array<empire_trader, 100> traders;
-};
-
-empire_traders_t g_empire_traders;
-
-void empire_traders_clear() {
-    memset(&g_empire_traders, 0, sizeof(empire_traders_t));
-}
 
 int empire_trader_handle::record_bought_resource(e_resource resource) {
     auto& traders = g_empire_traders.traders;
@@ -86,6 +64,11 @@ empire_trader_handle empire_create_trader() {
     memset(&trader, 0, sizeof(trader));
     trader.is_active = true;
     return empire_trader_handle{ (uint8_t)std::distance(traders.begin(), it) };
+}
+
+void empire_trader_handle::back_to_city() {
+    auto &traders = g_empire_traders.traders;
+    traders[handle].state = empire_trader::estate_returning_home;
 }
 
 e_resource empire_trader_handle::get_buy_resource(building* b, empire_city_handle city, int amount) {
@@ -171,32 +154,43 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     return RESOURCE_NONE;
 }
 
-io_buffer* iob_figure_traders = new io_buffer([](io_buffer* iob, size_t version) {
+io_buffer*iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_empire_traders;
-    const int MAX_TRADERS = 100;
-    for (int i = 0; i < MAX_TRADERS; i++) {
+    assert(data.traders.size() == 100);
+    for (int i = 0; i < data.traders.size(); i++) {
         empire_trader& t = data.traders[i];
-        iob->bind(BIND_SIGNATURE_INT32, &t.bought_amount);
-        iob->bind(BIND_SIGNATURE_INT32, &t.sold_amount);
+        t.id = i;
+        iob->bind_u16(t.bought_amount);
+        iob->bind_u8(t.trade_route_id);
+        iob->bind_u8(t.current_route_point);
+        iob->bind_u16(t.sold_amount);
+        iob->bind_bool(t.is_active);
+        iob->bind_bool(t.is_ship);
 
         for (int r = 0; r < RESOURCES_MAX; r++) {
             t.bought_resources[r] *= 0.01;
             t.sold_resources[r] *= 0.01;
         }
 
-        for (int r = 0; r < RESOURCES_MAX; r++)
-            iob->bind(BIND_SIGNATURE_UINT8, &t.bought_resources[r]);
+        iob->bind____skip(1);
+        for (int r = 1; r < RESOURCES_MAX; r++)
+            iob->bind_u8((uint8_t&)t.bought_resources[r]);
 
-        for (int r = 0; r < RESOURCES_MAX; r++)
-            iob->bind(BIND_SIGNATURE_UINT8, &t.sold_resources[r]);
+        iob->bind____skip(1);
+        for (int r = 1; r < RESOURCES_MAX; r++)
+            iob->bind_u8((uint8_t &)t.sold_resources[r]);
 
         for (int r = 0; r < RESOURCES_MAX; r++) {
             t.bought_resources[r] *= 100;
             t.sold_resources[r] *= 100;
         }
 
-        iob->bind(BIND_SIGNATURE_INT32, &t.bought_value);
-        iob->bind(BIND_SIGNATURE_INT32, &t.sold_value);
+        iob->bind_u16(t.bought_value);
+        iob->bind_u8(t.destination_city_id);
+        iob->bind_u8((uint8_t&)t.state);
+        iob->bind_u16(t.sold_value);
+        iob->bind_u8(t.movement_delay);
+        iob->bind____skip(1);
     }
 
     iob->bind____skip(4);

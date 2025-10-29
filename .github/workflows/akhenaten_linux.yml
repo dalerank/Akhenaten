@@ -22,11 +22,14 @@ jobs:
       run: |
         mkdir build
         mkdir linux_build
+        mkdir linux_build/data
         cd build
         cmake -DCMAKE_BUILD_TYPE=Release -DOPTION_SYSTEM_LIBPNG=ON ..
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./linux_build/akhenaten.linux
+        cp ./data/pharaoh_fonts_pack.sgx ./linux_build/data/pharaoh_fonts_pack.sgx
+        cp ./data/pharaoh_custom_pack.sgx ./linux_build/data/pharaoh_custom_pack.sgx
     - uses: actions/upload-artifact@v4
       with:
         name: linux_build

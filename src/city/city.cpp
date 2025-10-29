@@ -39,6 +39,8 @@
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "city/city_building_menu_ctrl.h"
+#include "empire/empire_traders.h"
+#include "graphics/clouds.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -253,7 +255,8 @@ void city_t::update_tick(int simtick) {
         buildings_generate_figure();
         break;
     case 32:
-        city_trade_update();
+        g_empire_traders.update();
+        trade_update();
         break;
     case 33:
         buildings.update_counters();
@@ -312,44 +315,33 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    int max_traders = 0;
-    int num_resources = 0;
     auto &trade_route = city.get_route();
+    int max_trade_limit = 0;
     for (const auto &r: resource_list::all) {
         if (city.buys_resource[r.type] || city.sells_resource[r.type]) {
-            ++num_resources;
-            int trade_limit = trade_route.limit(r.type);
-            if (trade_limit >= 1500 && trade_limit < 2500) {
-                max_traders += 1;
-            } else if (trade_limit >= 2500 && trade_limit < 4000) {
-                max_traders += 2;
-            } else if (trade_limit >= 4000) {
-                max_traders += 3;
-            }
+            const int trade_limit = trade_route.limit(r.type);
+            max_trade_limit = std::max(max_trade_limit, trade_limit);            
         }
     }
 
-    if (num_resources > 1) {
-        if (max_traders % num_resources)
-            max_traders = max_traders / num_resources + 1;
-        else
-            max_traders = max_traders / num_resources;
+    if (max_trade_limit == 0) {
+        return false;
     }
 
-    if (max_traders <= 0) {
+    auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
+    const int allow_traders = std::distance(city.trade_limits.begin(), it);
+
+    if (allow_traders <= 0) {
         return false;
     }
 
     // Find first available trader slot
-    bool can_create_trader = false;
-    for (int i = 0; i < max_traders; i++) {
-        if (!city.trader_figure_ids[i]) {
-            can_create_trader = true;
-            break;
-        }
+    int8_t trades_in_city = 0;
+    for (int i = 0; i < allow_traders; i++) {
+        trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    if (!can_create_trader) {
+    if (trades_in_city >= city.max_traders) {
         return false;
     }
 
@@ -366,14 +358,14 @@ bool city_t::generate_trader_from(empire_city &city) {
         const bool has_river_entry = scenario_map_has_river_entry();
         const bool can_sea_trade = !city_trade_has_sea_trade_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
-            events::emit(event_trade_ship_arrival{ city.name_id, max_traders, SOURCE_LOCATION });            
+            g_empire_traders.create_trader(city.route_id, -1);            
             return true;
         }
     } else {
         // generate caravan and donkeys
         if (!city_trade_has_land_trade_problems()) {
             // caravan head
-            events::emit(event_trade_caravan_arrival{ city.name_id, max_traders, SOURCE_LOCATION });
+            g_empire_traders.create_trader(city.route_id, -1);
             return true;
         }
     }
@@ -1317,12 +1309,18 @@ io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version
     auto &data = g_city;
     static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
     for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
-        iob->bind(BIND_SIGNATURE_TILE2I, data.bookmarks.points[i]);
+        iob->bind_tile(data.bookmarks.points[i]);
     }
 });
 
-io_buffer *iob_building_list_small = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(5000);
+io_buffer *iob_city_utilities_data = new io_buffer([] (io_buffer *iob, size_t version) {
+    for (int i = 0; i < 16; ++i) {
+        vec2i dummy;
+        const bool is_valid = (i < g_clouds.clouds.size());
+        vec2i &ref = is_valid ? g_clouds.clouds[i].pos : dummy;
+        iob->bind_vec2i_compat(ref); // 4bytes
+    } // 64 bytes at all
+    iob->bind____skip(4936);
 });
 
 io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {

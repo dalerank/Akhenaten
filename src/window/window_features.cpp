@@ -25,7 +25,7 @@
 #include "scenario/scenario.h"
 #include "window/select_list.h"
 #include "empire/empire_city.h"
-#include "js/js.h"
+#include "js/js_game.h"
 
 #include <string.h>
 #include <numeric>
@@ -357,3 +357,5 @@ void ui::window_features::show(std::function<void()> close_callback) {
     g_features_window.init(close_callback);
     window_show(&window);
 }
+
+ANK_FUNCTION_NAMED(window_features_show, [] { ui::window_features::show([] {}); })

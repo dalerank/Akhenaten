@@ -13,7 +13,7 @@
 #include "city/city_resource.h"
 #include "core/calc.h"
 #include "core/bstring.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figure/formation.h"
 #include "figure/figure.h"
 #include "sound/sound.h"

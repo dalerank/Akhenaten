@@ -82,3 +82,17 @@ void animation_context::update(bool refresh_only) {
     }
     tick_updated = true;
 }
+
+void animations_t::initialize() {
+    auto it = data.find("_pack");
+    if (it == data.end()) {
+        return;
+    }
+
+    const animation_t& defanim = it->second;
+    for (auto &anim : data) {
+        if (anim.second.pack == 0) {
+            anim.second.pack = defanim.pack;
+        }
+    }
+}

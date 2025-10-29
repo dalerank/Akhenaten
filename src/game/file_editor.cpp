@@ -14,7 +14,7 @@
 #include "figure/formation.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "figuretype/editor.h"
 #include "game/state.h"
 #include "graphics/image.h"
@@ -47,6 +47,7 @@
 #include "sound/sound_city.h"
 #include "sound/music.h"
 #include "game/game.h"
+#include "empire/empire_traders.h"
 
 void game_file_editor_clear_data(void) {
     g_city.victory_state.reset();
@@ -66,9 +67,9 @@ void game_file_editor_clear_data(void) {
     figure_name_init();
     formations_clear();
     figure_route_clear_all();
-    empire_traders_clear();
+    g_empire_traders.clear_all();
     game.simtime.init(2098);
-    scenario_invasion_clear();
+    g_invasions.clear();
 }
 
 static void clear_map_data(void) {

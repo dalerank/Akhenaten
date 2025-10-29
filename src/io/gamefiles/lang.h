@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/xstring.h"
 #include "content/dir.h"
+#include "core/archive.h"
 
-enum e_message_arhtype { 
+enum e_message_arhtype : int8_t { 
     TYPE_MANUAL = 0,
     TYPE_ABOUT = 1,
     TYPE_MESSAGE = 2,
@@ -21,55 +21,62 @@ enum e_message_category {
     MESSAGE_TYPE_INVASION = 7
 };
 
-/**
- * Image in a message
- */
-struct lang_message_image {
-    int id; /**< ID of the image */
-    int x;  /**< X offset */
-    int y;  /**< Y offset */
-};
-
-/**
- * Message string
- */
-struct lang_message_string {
-    uint8_t* text; /**< Text */
-    int x;         /**< X offset */
-    int y;         /**< Y offset */
-};
-
-/**
- * Message
- */
 struct lang_message {
+    struct ltext {
+        xstring text; /**< Text */
+        vec2i pos;
+    };
+
+    struct limage {
+        vec2i pos;
+        uint16_t id; /**< ID of the image */
+    };
+
+    ltext title;
+    ltext subtitle;
+    ltext video;
+    ltext content;
+    limage image;
+    uint8_t advisor;
+    vec2i size;
+    xstring key;
+    vec2i pos;
     e_message_arhtype type;
-    int message_type;
-    int x;
-    int y;
-    int width_blocks;
-    int height_blocks;
-    int urgent;
-    struct lang_message_image image;
-    struct lang_message_string title;
-    struct lang_message_string subtitle;
-    struct lang_message_string video;
-    struct lang_message_string content;
+    int8_t message_type;
+    uint16_t id;
+    bool urgent;
+    enum {
+        max_messages = 512
+    };
+};
+ANK_CONFIG_STRUCT(lang_message::limage, pos, id)
+ANK_CONFIG_STRUCT(lang_message::ltext, text, pos)
+ANK_CONFIG_STRUCT(lang_message, title, subtitle, video, content, image,
+    advisor, size, key, pos, type, message_type, id, urgent)
+
+template<>
+struct stable_array_max_elements<lang_message> {
+    enum { max_elements = lang_message::max_messages };
+};
+
+template<>
+struct std::hash<lang_message> {
+    [[nodiscard]] size_t operator()(const lang_message &g) const noexcept {
+        return g.id;
+    }
 };
 
 struct lang_pack {
     vfs::path dir;
     vfs::path langfile;
-    vfs::path mmfile;
     xstring ext;
 
-    lang_pack(pcstr dir, pcstr ext, pcstr lang = "Pharaoh_Text", pcstr mm = "Pharaoh_MM") {
+    lang_pack(pcstr dir, pcstr ext, pcstr lang = "Pharaoh_Text") {
         this->dir = dir;
         this->ext = ext;
         pcstr pdir = dir && *dir ? dir : "";
         pcstr plim = dir && *dir ? "/" : ""; 
         langfile.printf("%s%s%s.%s", pdir, plim, lang, ext);
-        mmfile.printf("%s%s%s.%s", pdir, plim, mm, ext);
     }
 };
 
@@ -102,7 +109,10 @@ const uint8_t* lang_get_string(textid text);
  * @param id ID of the message
  * @return Message
  */
-const lang_message* lang_get_message(int id);
+const lang_message& lang_get_message(int id);
+const lang_message& lang_get_message(xstring id);
+xstring lang_get_message_id(int id);
+uint16_t lang_get_message_uid(xstring msg);
 
 enum e_text_info {
     e_text_title = 0,

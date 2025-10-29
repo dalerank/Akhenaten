@@ -130,7 +130,7 @@ void update_tile_coords(vec2i pixel, tile2i tile, painter &ctx) {
 
 void screen_city_t::update_clouds(painter &ctx) {
     if (game.paused || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
-        clouds_pause();
+        g_clouds.pause();
     }
 
     auto mm_view = g_city_view.get_scrollable_pixel_limits();
@@ -144,7 +144,7 @@ void screen_city_t::update_clouds(painter &ctx) {
         GRID_LENGTH * TILE_HEIGHT_PIXELS,
     };
 
-    clouds_draw(ctx, mm_view.min, offset, limit);
+    g_clouds.draw(ctx, mm_view.min, offset, limit);
 }
 
 void screen_city_t::clear_current_tile() {
@@ -443,10 +443,11 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
             command.image_id = image_id;
-            command.pixel = pixel;
-            command.mask = color_mask;
             const image_t* img = image_get(image_id);
-            command.virtual_xorder = img->width;
+            int offset_y = 15 * (img->width / 58);
+            command.pixel = pixel - vec2i{ 0, offset_y };
+            command.mask = color_mask;
+            command.tag = (building_id == 261);
         }
 
         int image_alt_value = map_image_alt_at(grid_offset);
@@ -454,6 +455,8 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
         if (image_alt_id > 0 && image_alt_alpha > 0) {
             auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            const image_t *img = image_get(image_alt_id);
+            int offset_y = 15 * (img->width / 58);
             command.image_id = image_alt_id;
             command.pixel = pixel;
             command.mask = (0x00ffffff | (image_alt_alpha << 24));
@@ -496,23 +499,30 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     }
 
     map_render_add(tile.grid_offset(), RENDER_TALL_TILE_DRAWN);
-    int image_id = map_image_at(tile);
     {
+        int image_id = map_image_at(tile);
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
+        const image_t *img = image_get(image_id);
+        int offset_y = 15 * (img->width / 58) - 1;
         command.image_id = image_id;
-        command.pixel = pixel;
+        command.pixel = pixel - vec2i(0, offset_y );
         command.mask = color_mask;
+        //command.virtual_xorder = TILE_WIDTH_PIXELS;
     } 
 
-    int image_alt_value = map_image_alt_at(tile);
-    int image_alt_id = (image_alt_value & 0x00ffffff);
-    uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
-    if (image_alt_id > 0 && image_alt_alpha > 0) {
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
-        command.image_id = image_alt_id;
-        command.pixel = pixel;
-        command.mask = (0x00ffffff | (image_alt_alpha << 24));
-        command.flags = ImgFlag_Alpha;
+    {
+        int image_alt_value = map_image_alt_at(tile);
+        int image_alt_id = (image_alt_value & 0x00ffffff);
+        uint8_t image_alt_alpha = ((image_alt_value & 0xff000000) >> 24);
+        if (image_alt_id > 0 && image_alt_alpha > 0) {
+            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
+            command.image_id = image_alt_id;
+            const image_t *img = image_get(image_alt_id);
+            int offset_y = 15 * (img->width / 58) - 1;
+            command.pixel = pixel - vec2i(0, offset_y);
+            command.mask = (0x00ffffff | (image_alt_alpha << 24));
+            command.flags = ImgFlag_Alpha;
+        }
     }
 }
 

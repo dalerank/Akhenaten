@@ -21,6 +21,7 @@
 #include "sound/sound.h"
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
+#include "js/js_game.h"
 
 #ifdef GAME_PLATFORM_WIN
 #define CPPHTTPLIB_OPENSSL_SUPPORT
@@ -28,6 +29,31 @@
 #endif
 
 main_menu_screen g_main_menu;
+
+std::string main_menu_download_changelog() {
+#ifdef GAME_PLATFORM_WIN
+    try {
+        httplib::SSLClient client("raw.githubusercontent.com");
+        client.set_follow_location(true);
+        
+        auto res = client.Get("/dalerank/Akhenaten/master/changelog.txt");
+        
+        if (res && res->status == 200) {
+            logs::info("Changelog downloaded successfully (%zu bytes)", res->body.size());
+            return res->body;
+        } else {
+            logs::error("Failed to download changelog (status code: %d)", res ? res->status : 0);
+            return "Failed to download changelog from GitHub.";
+        }
+    } catch (const std::exception& e) {
+        logs::error("Exception while downloading changelog: %s", e.what());
+        return std::string("Error: ") + e.what();
+    }
+#else
+    return "Changelog download not supported on this platform.";
+#endif
+}
+
 
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
 #ifdef GAME_PLATFORM_WIN
@@ -67,6 +93,7 @@ void main_menu_download_latest_version() {
     });
 #endif // GAME_PLATFORM_WIN
 }
+ANK_FUNCTION(main_menu_download_latest_version)
 
 int main_menu_screen::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
@@ -81,6 +108,17 @@ void main_menu_screen::draw_foreground(UiFlags flags) {
 }
 
 void main_menu_screen::init() {
+    // Download changelog in background
+    game.mt.detach_task([&] () {
+        std::string changelog = main_menu_download_changelog();
+        if (ui.contains("changelog")) {
+            ui["changelog"] = changelog.c_str();
+            ui["changelog"].enabled = true;
+            logs::info("Changelog loaded and displayed");
+        }
+    });
+
+    // Check for updates
     game.mt.detach_task([&] () {
         int current_commit = main_menu_get_total_commits("dalerank", "Akhenaten");
 
@@ -98,6 +136,7 @@ void main_menu_screen::init() {
         ui["update_panel"].enabled = true;
         ui["new_version"].enabled = true;
         ui["update_game"].enabled = true;
+        ui["reload_changelog"].enabled = true;
         ui["new_version"] = bstring32(current_commit);
         game_features::gameopt_last_game_version.set(current_commit);
     });
@@ -111,45 +150,11 @@ void main_menu_screen::init() {
         }
     });
 
-    ui["select_player"].onclick([] {
-        window_player_selection_show();
-    });
-
-    ui["show_records"].onclick([] {
-        window_records_show();
-    });
-
-    ui["show_config"].onclick([] {
-        ui::window_features::show([] {});
-    });
-
     ui["quit_game"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_quit", [] {
             app_request_exit();
         });
     });
-
-    ui["discord"].onclick([] {
-        platform.open_url("https://discord.gg/HS4njmBvpb", "");
-    });
-
-    ui["patreon"].onclick([] {
-        platform.open_url("https://www.patreon.com/imspinner", "");
-    });
-
-    ui["update_game"].onclick([] {
-        main_menu_download_latest_version();
-    });
-}
-
-void main_menu_handle_input(const mouse* m, const hotkeys* h) {
-    ui::handle_mouse(m);
-
-    if (h->escape_pressed) {
-        popup_dialog::show_yesno("#popup_dialog_quit", [] {
-            app_request_exit();
-        });
-    }
 }
 
 void main_menu_screen::show(bool restart_music) {

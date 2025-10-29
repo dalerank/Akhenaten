@@ -10,7 +10,7 @@
 #include "empire/empire.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figure/trader.h"
+#include "empire/trader_handler.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -69,8 +69,8 @@ declare_console_command_p(create_figure) {
         return;
     }
 
-    const mouse *m = mouse_get();
-    tile2i current_tile = g_screen_city.update_city_view_coords(*m);;
+    const mouse& m = mouse::get();
+    tile2i current_tile = g_screen_city.update_city_view_coords(m);;
     figure_create((e_figure_type)f_type, current_tile, 1);
 }
 
@@ -347,6 +347,10 @@ void figure::add_roam_history(int goffset) {
     }
 #endif // _MSC_VER
     roam_history.push_tail(goffset);
+}
+
+void figure::apply_damage(int hit_dmg) {
+    dcast()->apply_damage(hit_dmg);
 }
 
 bool figure::is_dead() {
@@ -712,7 +716,7 @@ const fproperty fproperties[] = {
     },
 
     { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
-    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(clname.c_str()); }},
+    { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(lang_text_from_key(clname)); }},
     { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
     { tags().figure, tags().home, [] (figure &f, const xstring &) { return bvariant(ui::str(41, f.home()->type)); }},
@@ -998,9 +1002,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(2);         // 200
     iob->bind____skip(115);
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_mode);     // 6
-    static_assert(sizeof(figure::runtime_data) == 32, "runtime_data more then 32 bytes");
-    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 6 + 26
-    iob->bind____skip(18);
+    static_assert(sizeof(figure::runtime_data) == 40, "runtime_data more then 40 bytes");
+    iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 40
+    iob->bind____skip(10);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
     iob->bind____skip(27);
 

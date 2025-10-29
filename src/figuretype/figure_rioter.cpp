@@ -99,7 +99,7 @@ int figure_rioter::collapse_building() {
         }
 
         city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
-        messages::popup(MESSAGE_DESTROYED_BUILDING, b->type, grid_offset);
+        messages::popup("message_collapsed_building", b->type, grid_offset);
         city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
 
         auto bmain = b->main();

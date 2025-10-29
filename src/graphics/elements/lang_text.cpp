@@ -30,7 +30,25 @@ struct std::hash<loc_textid> {
     }
 };
 
+struct loc_message {
+    uint16_t key;
+    xstring text;
+
+    bool operator==(const loc_message &other) const noexcept { return key == other.key; }
+    bool operator!=(const loc_message &other) const noexcept { return key != other.key; }
+    bool operator<(const loc_message &other) const noexcept { return key < other.key; }
+};
+ANK_CONFIG_STRUCT(loc_message, key, text)
+
+template<>
+struct std::hash<loc_message> {
+    std::size_t operator()(const loc_message &k) const noexcept {
+        return (size_t)k.key;
+    }
+};
+
 std::unordered_set<loc_textid> g_localization;
+std::unordered_set<loc_message> g_messages;
 game_languages_vec ANK_VARIABLE(game_languages);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
@@ -54,17 +72,26 @@ bool lang_reload_localized_files() {
 bool lang_reload_localized_tables() {
     const auto current_lang = lang_get_current_language();
     const xstring localization_table = current_lang.table;
+    const xstring message_table = current_lang.message_table;
     if (localization_table.empty()) {
         return false;
     }
 
     g_localization.clear();
+    g_messages.clear();
     g_config_arch.r(localization_table.c_str(), g_localization);
+    g_config_arch.r(message_table.c_str(), g_messages);
 
     // restore the default localization (english), for values without translates
     g_config_arch.update("localization_en", g_localization);
+    g_config_arch.update("eventmsg_en", g_messages);
 
     return true;
+}
+
+pcstr lang_text_from_message(int id) {
+    auto it = g_messages.find({ (uint16_t)id });
+    return (pcstr)((it != g_messages.end()) ? it->text.c_str() : "#unknown_message");
 }
 
 textid loc_text_from_key(pcstr key) {
@@ -206,5 +233,5 @@ int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width,
     if (!str) {
         return 0;
     }
-    return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
+    return text_draw_multiline((pcstr)str, offset.x, offset.y, box_width, font, 0);
 }

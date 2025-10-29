@@ -10,7 +10,7 @@
 struct figure_carrier_info_window : public figure_info_window_t<figure_carrier_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.figure_get_id() && ::smart_cast<figure_cartpusher>(figure_get(c));
+        return !!c.figure_get<figure_cartpusher>();
     }
 };
 
