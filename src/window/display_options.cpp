@@ -18,18 +18,22 @@
 #include "io/gamefiles/lang.h"
 #include "platform/renderer.h"
 
-constexpr uint32_t NUM_FILES_IN_VIEW = 13;
-
 ui::display_options_window g_display_options_window;
+
+void ui::display_options_window::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
+
+    num_files_in_view = arch.r_int("num_files_in_view", 13);
+}
 
 void ui::display_options_window::init(close_callback close_cb) {
     if (!panel) {
         scrollable_list_ui_params ui_params;
         ui_params.blocks_x = 20;
-        ui_params.blocks_y = NUM_FILES_IN_VIEW + 1;
+        ui_params.blocks_y = num_files_in_view + 1;
         ui_params.draw_scrollbar_always = true;
 
-        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, 
+        panel = new scroll_list_panel(num_files_in_view,
                                       button_none, 
                                       button_none, 
                                       button_none, 
@@ -87,10 +91,9 @@ int ui::display_options_window::ui_handle_mouse(const mouse* m) {
     int result = autoconfig_window::ui_handle_mouse(m);
 
     ui.begin_widget(pos);
-    vec2i scrpos = ui["background"].screen_pos();
+    vec2i scrpos = ui["resolutions"].screen_pos();
     mouse m_dialog = *m;
-    m_dialog.x -= (scrpos.x + ui["background"].pos.x);
-    m_dialog.y -= (scrpos.y + ui["background"].pos.y);
+    m_dialog -= scrpos;
     if (panel->input_handle(&m_dialog)) {
         auto it = video_modes.begin();
         std::advance(it, panel->get_selected_entry_idx());
