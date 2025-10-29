@@ -145,7 +145,7 @@ And after reboot:
 
   ```
   $ ./update-workspace-mac.sh
-  $ ./build_macos.sh
+  $ ./build_macos.sh arm64 | x86_64
   ```
 
 ### Android
@@ -223,6 +223,7 @@ cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
 ```
 
 ![Alt](https://repobeats.axiom.co/api/embed/99a27c096522f0ed847ec37c6495d79552aeb13e.svg "Repobeats analytics image")
+
 
 
 
