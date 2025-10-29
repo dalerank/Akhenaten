@@ -502,17 +502,23 @@ static void draw_background_image() {
         }
     }
 
-    int image_id = 0;
+    const image_t *img = nullptr;
     if (data.god != GOD_UNKNOWN) {
-        image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + data.god;
-    } else if (data.background_img > 0) {
-        image_id = data.background_img;
-    }
+        int image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + data.god;
+        img = image_get(image_id);
+    } else if (data.background) {
+        int image_id = data.background_img;
+        if (image_id == messages::IMAGE_FROM_SCHEME) {
+            int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
+            img = image_get({ img_pack, msg.image.id, msg.image.offset });
+        } else {
+            img = image_get(image_id);
+        }
+    } 
 
-    const image_t *img = image_get(image_id);
     if (img) {
         int current_x = (500 - img->width) / 2;
-        ImageDraw::img_generic(ctx, image_id, current_x, 96);
+        ImageDraw::img_generic(ctx, img, vec2i{ current_x, 96 });
     }
 
     draw_foreground_image();

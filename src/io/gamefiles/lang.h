@@ -23,13 +23,14 @@ enum e_message_category {
 
 struct lang_message {
     struct ltext {
-        xstring text; /**< Text */
+        xstring text;
         vec2i pos;
     };
 
     struct limage {
         vec2i pos;
-        uint16_t id; /**< ID of the image */
+        uint8_t pack, id;
+        uint16_t offset;
     };
 
     ltext title;
@@ -49,7 +50,7 @@ struct lang_message {
         max_messages = 512
     };
 };
-ANK_CONFIG_STRUCT(lang_message::limage, pos, id)
+ANK_CONFIG_STRUCT(lang_message::limage, pos, pack, id, offset)
 ANK_CONFIG_STRUCT(lang_message::ltext, text, pos)
 ANK_CONFIG_STRUCT(lang_message, title, subtitle, video, content, image,
     advisor, size, key, pos, type, message_type, id, urgent)
