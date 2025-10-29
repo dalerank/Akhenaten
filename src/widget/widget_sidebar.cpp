@@ -125,7 +125,7 @@ void ui::sidebar_window_expanded_t::init_ui() {
         game_undo_perform();
     });
 
-    ui["show_messages"].onclick([] { window_message_list_show(); });
+    ui["show_messages"].onclick([] { ui::message_list_window::show([] {}); });
 
     ui["show_briefing"].readonly = !(g_scenario.mode() == e_scenario_normal || g_scenario.mode() == e_scenario_selected);
     ui["show_briefing"].onclick([] { mission_briefing_window::mission_review(); });

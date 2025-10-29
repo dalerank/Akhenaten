@@ -42,7 +42,7 @@ int scroll_list_panel::get_selected_entry_idx() {
 int scroll_list_panel::get_total_entries() {
     return num_total_entries;
 }
-const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syntax) {
+const xstring scroll_list_panel::get_entry_text_by_idx(int index, int filename_syntax) {
     if (index < 0 || index > num_total_entries - 1) {
         return "";
     }
@@ -69,20 +69,24 @@ const char* scroll_list_panel::get_entry_text_by_idx(int index, int filename_syn
             return "";
         }
     } else {
-        return manual_entry_list[index];
+        return manual_entry_list[index].text;
     }
 }
-const char* scroll_list_panel::get_selected_entry_text(int filename_syntax) {
+
+const xstring scroll_list_panel::get_selected_entry_text(int filename_syntax) {
     return get_entry_text_by_idx(get_selected_entry_idx(), filename_syntax);
 }
-int scroll_list_panel::get_entry_idx(const char* button_text) {
+
+int scroll_list_panel::get_entry_idx(pcstr button_text) {
     for (int i = 0; i < num_total_entries; ++i) {
-        auto txt = get_entry_text_by_idx(i, FILE_NO_EXT);
-        if (strcmp(txt, button_text) == 0)
+        const xstring txt = get_entry_text_by_idx(i, FILE_NO_EXT);
+        if (txt == button_text) {
             return i;
+        }
     }
     return -1;
 }
+
 bool scroll_list_panel::has_entry(const char* button_text) {
     return (get_entry_idx(button_text) > -1);
 }
@@ -99,9 +103,11 @@ void scroll_list_panel::clear_entry_list() {
     unfocus();
     unselect();
     refresh_scrollbar();
+    manual_entry_list.clear();
 }
-void scroll_list_panel::add_entry(const char* entry_text) {
-    manual_entry_list[num_total_entries] = entry_text;
+
+void scroll_list_panel::add_entry(xstring entry_text, void* user_data) {
+    manual_entry_list.push_back({ entry_text, user_data });
     num_total_entries++;
     refresh_scrollbar();
 }
@@ -201,10 +207,13 @@ void scroll_list_panel::draw() {
     bstring256 text;
     for (int i = 0; i < num_buttons; ++i) {
         e_font font = ui_params.font_asleep;
-        if (selected_entry_idx == i + scrollbar.scroll_position)
+        const bool is_selected = (selected_entry_idx == i + scrollbar.scroll_position);
+        const bool is_focused = (focus_button_id == i + 1);
+        if (is_selected) {
             font = ui_params.font_selected;
-        else if (focus_button_id == i + 1)
+        } else if (is_focused) {
             font = ui_params.font_focus;
+        }
 
         int button_pos_x = ui_params.pos.x + ui_params.buttons_margin_x;
         int button_pos_y = ui_params.pos.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;
@@ -217,15 +226,15 @@ void scroll_list_panel::draw() {
             vfs::file_remove_extension(text);
         } else {
             if (i < num_total_entries) {
-                text_utf8 = manual_entry_list[i + scrollbar.scroll_position];
+                text_utf8 = manual_entry_list[i + scrollbar.scroll_position].text.c_str();
             } else {
                 text_utf8.clear();
             }
             encoding_from_utf8(text_utf8, text, text.capacity);
         }
 
-        if (using_custom_text_render) {
-            custom_text_render(i, text, text_pos_x, text_pos_y, font);
+        if (custom_text_render) {
+            custom_text_render(i, (is_selected ? 1 : 0) + (is_focused ? 2 : 0), manual_entry_list[i + scrollbar.scroll_position], { text_pos_x, text_pos_y }, font);
         } else {
             if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);

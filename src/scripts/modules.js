@@ -76,6 +76,7 @@ import ui_workshop_window
 import ui_sidebar_window
 import ui_batalion_window
 import ui_mods_window
+import ui_messages_window
 import eventmsg_phrase_auto
 import music
 import invasions

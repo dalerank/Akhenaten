@@ -91,7 +91,7 @@ static void clear_chosen_filename() {
 
 static bool is_chosen_filename(int index) {
     auto& data = g_file_dialog;
-    return strcmp(data.selected_file, data.panel->get_selected_entry_text(FILE_NO_EXT)) == 0;
+    return data.panel->get_selected_entry_text(FILE_NO_EXT) == data.selected_file;
 }
 
 static bool is_valid_chosen_filename() {
@@ -279,7 +279,8 @@ static void button_select_file(int index, int param2) {
         return clear_chosen_filename();
     }
 
-    set_chosen_filename(data.panel->get_selected_entry_text(FILE_NO_EXT));
+    xstring entry = data.panel->get_selected_entry_text(FILE_NO_EXT);
+    set_chosen_filename(entry.c_str());
     //    setting_set_player_name(data.selected_player);
     input_box_refresh_text(&file_name_input);
     data.message_not_exist_start_time = 0;

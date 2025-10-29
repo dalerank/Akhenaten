@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 0 nubt started")
 
-mission0 = { // Nubt
+mission0 { // Nubt
 	start_message : "message_housing_and_roads"
 	env {
 		has_animals : true		

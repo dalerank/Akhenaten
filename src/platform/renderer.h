@@ -51,9 +51,7 @@ struct video_mode : public vec2i {
     bstring64 str;
     inline video_mode() : vec2i(0, 0) {}
     inline video_mode(int _w, int _h) : vec2i(_w, _h) {
-        char buffer[64] = {0};
-        snprintf(buffer, 64, "%u x %u", x, y);
-        str = buffer;
+        str.printf("%u x %u", x, y);
     }
     inline bool operator<(const video_mode& o) const {
         return ((int64_t(x) << 32) + y) < ((int64_t(o.x) << 32) + o.y);
