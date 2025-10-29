@@ -122,6 +122,9 @@ struct city_message {
 #define MAX_MESSAGES_QUEUE 20
 
 struct messages {
+    enum {
+        IMAGE_FROM_SCHEME = 0xffff
+    };
     static void popup(xstring message_id, int param1, int param2);
     static void god(int god, xstring message_id);
 };
@@ -149,6 +152,7 @@ struct message_manager_t {
 
     union {
         uint16_t popmiles;
+        uint16_t pop100 : 1;
         uint16_t pop500 : 1;
         uint16_t pop1000 : 1;
         uint16_t pop2000 : 1;
