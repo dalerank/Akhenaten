@@ -418,7 +418,7 @@ game_messages {
         }
     }
     
-    message_tutorial_messages {
+    message_game_control_messages {
         id: 34,
         pos [0, 24]
         size [30, 28]
