@@ -19,9 +19,6 @@ This is a fork of the **Julius/Augustus** project with the aim of making it work
 The work is still in progress, so any help or support is appreciated. Allows you to load original save games 
 from Pharaoh and play the initial campaign missions without major issues.
 
-If you're looking for _Caesar 3_'s vanilla experience with modern machine compatibility, check out [Julius](https://github.com/bvschaik/julius).<br>
-If you want additional features and visual/UI improvements, and don't care about strict
-compatibility with the original save files, check out [Augustus](https://github.com/Keriew/augustus).<br>
 For the original game, check out the page on [Steam](https://store.steampowered.com/app/564530/Pharaoh__Cleopatra/)
 or [GOG](https://www.gog.com/en/game/pharaoh_cleopatra).<br>
 For the official 2023 remaster (unrelated to Akhenaten) called _Pharaoh: A New Era_, check out the Steam page [here](https://store.steampowered.com/app/1351080/Pharaoh_A_New_Era/).
