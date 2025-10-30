@@ -74,6 +74,7 @@
 #include "city/city_floods.h"
 #include "io/io.h"
 #include "io/manager.h"
+#include "js/js_game.h"
 
 #include <cassert>
 #include <filesystem>
@@ -175,6 +176,7 @@ static void post_load() {
     mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid);
     g_empire.load_mission_metadata(missionid);
+    js_register_game_handlers(missionid.value());
 
     // camera
     //    city_view_camera_position_refresh();

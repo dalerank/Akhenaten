@@ -14,6 +14,7 @@ struct mission_id_t {
     }
 
     inline operator const char *() const { return _data.c_str(); }
+    inline const xstring &value() const { return _data; }
 };
 
 // TODO: clean up the various engine constants into a single global namespace

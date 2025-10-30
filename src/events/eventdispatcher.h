@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include "callbacklist.h"
 #include "core/core_utility.h"
 
@@ -192,6 +193,16 @@ public:
 		return removeListener(typeid(ArgType), pcb);
 	}
 
+	template<typename EventType>
+	bool unsubscribe(void (*callback)(EventType)) {
+		return removeListener(typeid(EventType), callback);
+	}
+
+	struct FunctionAccess {
+		void *vtable;
+		void *storage;
+	};
+
 	bool removeListener(const Event &event, const Callback & pcb) {
 		CallbackList_ *callableList = doFindCallableList(event);
 		bool result = false;
@@ -199,9 +210,28 @@ public:
 			callableList->forEach([&result, callableList, &pcb] (const Handle &handle, const Callback &callback) {
 				const auto &ca = pcb.target_type();
 				const auto &cb = callback.target_type();
-				if (ca == cb) {
+				if (ca != cb) {
+					return;
+				}
+
+				auto pfa = pcb.template target<ReturnType(*)(Args...)>();
+				auto pfb = callback.template target<ReturnType(*)(Args...)>();
+				if (pfa && pfb) {
+					if (*pfa == *pfb) {
+						callableList->remove(handle);
+						result = true;
+						return;
+					}
+				}
+				// hack, but we just need to check address from raw functions
+				// so this should work (msvc works fine), hope it will work on gcc/clang also
+				auto tfa = reinterpret_cast<const FunctionAccess *>(&pcb);
+				auto tfb = reinterpret_cast<const FunctionAccess *>(&callback);
+
+				if (tfa->storage == tfb->storage) {
 					callableList->remove(handle);
-					result |= true;
+					result = true;
+					return;
 				}
 			});
 		}
