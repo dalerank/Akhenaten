@@ -26,7 +26,7 @@
 
 #define MAX_FILES_RELOAD 255
 
-using event_handlers = std::unordered_set<xstring>;
+
 struct {
     svector<vfs::path, 4> scripts_folders;
     vfs::path files2load[MAX_FILES_RELOAD];
@@ -34,7 +34,7 @@ struct {
     int have_error;
     bstring256 error_str;
     js_State *J;
-    std::unordered_map<xstring, event_handlers> event_type_handlers;
+    xstring missionid;
 } vm;
 
 void js_reset_vm_state();
@@ -67,6 +67,14 @@ int js_vm_trypcall(js_State *J, int params) {
 
     js_pop(vm.J, -1);
     return 1;
+}
+
+bool js_vm_have_error() {
+    return vm.have_error;
+}
+
+void js_vm_set_active_mission(xstring missionid) {
+    vm.missionid = missionid;
 }
 
 int js_vm_load_file_and_exec(pcstr path) {
@@ -110,117 +118,6 @@ int js_vm_load_file_and_exec(pcstr path) {
     return 1;
 }
 
-void js_call_event_handlers(const xstring& event_name, const bvariant_map& object) {
-    auto it = vm.event_type_handlers.find(event_name);
-    if (it == vm.event_type_handlers.end()) {
-        return;
-    }
-
-    if (vm.have_error || vm.J == nullptr) {
-        return;
-    }
-
-    const event_handlers &handlers = it->second;
-    for (const auto &handlerName : handlers) {
-        const char *funcname = handlerName.c_str();
-
-        int savetop = js_gettop(vm.J);
-        js_getglobal(vm.J, funcname);
-        js_pushnull(vm.J); // this
-
-        // Build 1st argument: a plain object with provided properties
-        js_newobject(vm.J);
-        for (const auto &kv : object) {
-            const xstring &key = kv.first;
-            const bvariant &val = kv.second;
-
-            switch (val.value_type()) {
-            case bvariant::etype_bool:
-                js_pushboolean(vm.J, val.as_bool());
-                break;
-            case bvariant::etype_int32:
-                js_pushnumber(vm.J, (double)val.as_int32());
-                break;
-            case bvariant::etype_uint32:
-                js_pushnumber(vm.J, (double)val.as_uint32());
-                break;
-            case bvariant::etype_u16:
-                js_pushnumber(vm.J, (double)val.as_u16());
-                break;
-            case bvariant::etype_float:
-                js_pushnumber(vm.J, (double)val.as_float());
-                break;
-            case bvariant::etype_str:
-                js_pushstring(vm.J, val.as_str().c_str());
-                break;
-            case bvariant::etype_ptr:
-                // No direct pointer transport to JS; pass null
-                js_pushnull(vm.J);
-                break;
-            case bvariant::etype_none:
-            default:
-                js_pushundefined(vm.J);
-                break;
-            }
-
-            js_setproperty(vm.J, -2, key.c_str());
-        }
-
-        // Call with 1 argument (the object)
-        int ok = js_vm_trypcall(vm.J, 1);
-        if (!ok) {
-            logs::info("Fatal error on call function %s", funcname);
-        }
-
-        // Clean up stack: function result and 'this' and function
-        js_pop(vm.J, 2);
-        if (savetop - js_gettop(vm.J) != 0) {
-            logs::info("STACK grow for %s [%d]", funcname, js_gettop(vm.J));
-        }
-    }
-}
-
-void js_register_modified_functions(js_State *J) {
-    js_Object *global = J->G;
-    if (!global) {
-        logs::info("JS: Global object is null");
-        return;
-    }
-
-    logs::info("JS: Scanning for functions with modifiers...");
-
-    js_Property *prop = global->head;
-    int function_count = 0;
-
-    while (prop) {
-        if (prop->value.type == JS_TOBJECT && prop->value.u.object) {
-            js_Object *obj = prop->value.u.object;
-            if (obj->type == JS_CFUNCTION || obj->type == JS_CSCRIPT) {
-                js_Function *func = obj->u.f.function;
-
-                if (func && func->modifiers && prop->name) {
-                    logs::info("JS: Function '%s' has modifiers:", prop->name);
-                    function_count++;
-
-                    js_FunctionModifier *mod = func->modifiers;
-                    while (mod) {
-                        logs::info("  - %s: %s", mod->key ? mod->key : "<no-key>", mod->value ? mod->value : "<no-value>");
-                        if (mod->key && strcmp(mod->key, "event") == 0) {
-                            auto r = vm.event_type_handlers.insert(std::make_pair(xstring(mod->value), event_handlers{}));
-                            auto &handlers = r.first->second;
-                            handlers.insert(prop->name);
-                        }
-                        mod = mod->next;
-                    }
-                }
-            }
-        }
-        prop = prop->next;
-    }
-
-    logs::info("JS: Found %d functions with modifiers", function_count);
-}
-
 js_State *js_vm_state() {
     return vm.J;
 }
@@ -246,7 +143,7 @@ bool js_vm_sync() {
     }
 
     config::refresh(vm.J);
-    js_register_modified_functions(vm.J);
+    js_register_game_handlers(vm.missionid);
 
     vm.files2load_num = 0;
     vm.have_error = 0;
@@ -365,7 +262,7 @@ void js_reset_vm_state() {
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);
     js_register_city_advisors(vm.J);
-    js_register_modified_functions(vm.J);
+    js_register_game_handlers({});
     js_register_menu(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");

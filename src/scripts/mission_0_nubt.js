@@ -38,5 +38,22 @@ mission0 { // Nubt
 		population_cap_firstfire : 0
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
+
+		tutorial_fire_handled : false
+		last_action_time : 0
 	}
+}
+
+[event=event_fire_damage, mission=mission0]
+function tutorial1_handle_fire(ev) {
+	//if (mission.tutorial_fire_handled) {
+	//	return
+	//}
+    //
+	//mission.last_action_time = game.absolute_day()
+	//mission.tutorial_fire_handled = true
+    //
+	//mission.use_building(BUILDING_FIREHOUSE, true)
+	//ui.show_message("message_fire_in_the_village")
+	log_info("tutorial1_handle_fire")
 }
