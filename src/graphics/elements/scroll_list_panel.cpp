@@ -51,7 +51,7 @@ const xstring scroll_list_panel::get_entry_text_by_idx(int index, int filename_s
         switch (filename_syntax) {
         case FILE_FULL_PATH:
             temp_filename_buffer = bstring256(files_dir, file_finder->files[index]);
-            return temp_filename_buffer;
+            return xstring(temp_filename_buffer.c_str());
 
         case FILE_WITH_EXT:
             return file_finder->files[index];
@@ -62,7 +62,7 @@ const xstring scroll_list_panel::get_entry_text_by_idx(int index, int filename_s
             }
             temp_filename_buffer = file_finder->files[index];
             temp_filename_buffer.data()[(int)(strchr(temp_filename_buffer, '.') - (char*)temp_filename_buffer)] = 0;
-            return temp_filename_buffer;
+            return xstring(temp_filename_buffer.c_str());
 
         default:
             assert(false);
