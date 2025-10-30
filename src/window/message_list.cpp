@@ -44,6 +44,7 @@ static void button_delete_handler(int id_to_delete, int param2) {
 }
 
 void ui::message_list_window::init() {
+    autoconfig_window::init();
     city_message_sort_and_compact();
 
     if (!panel) {
@@ -120,6 +121,10 @@ void ui::message_list_window::draw_message(int index, int flags, const scroll_li
     }
 }
 
+int ui::message_list_window::draw_background(UiFlags flags) {
+    return autoconfig_window::draw_background(flags);
+}
+
 void ui::message_list_window::ui_draw_foreground(UiFlags flags) {
     window_city_draw_all();
 
@@ -156,14 +161,14 @@ int ui::message_list_window::ui_handle_mouse(const mouse* m) {
 void ui::message_list_window::show(close_callback close_cb) {
     static window_type instance = {
         WINDOW_MESSAGE_LIST,
-        window_draw_underlying_window,
-        [] (int) { g_message_list_window.ui_draw_foreground(0); },
+        [] (int flags) { g_message_list_window.draw_background(flags); },
+        [] (int flags) { g_message_list_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_message_list_window.ui_handle_mouse(m); }
     };
 
     g_message_list_window._close_cb = close_cb;
-
     g_message_list_window.init();
+
     window_show(&instance);
 }
 

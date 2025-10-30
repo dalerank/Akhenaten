@@ -4,6 +4,7 @@ message_list_window {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(22))/2]
     read_icon : {pack:PACK_GENERAL, id:90, offset:14}
     num_messages_in_view : 12
+    help_id: "message_game_control_messages"
     ui {
         background    : outer_panel({size:[30, 22]})
         title         : header({pos[10, 10], size[px(30), 20], text[63, 0], align:"center"})

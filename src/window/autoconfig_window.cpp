@@ -2,6 +2,7 @@
 
 #include "core/log.h"
 #include "js/js_game.h"
+#include "window/message_dialog.h"
 #include <mutex>
 
 using autoconfig_windows = std::vector<autoconfig_window *>;
@@ -37,6 +38,7 @@ void autoconfig_window::archive_load(archive arch) {
 
     assert(elements.size() > 0);
     _is_inited = false;
+    help_id = arch.r_string("help_id");
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
@@ -68,5 +70,6 @@ void autoconfig_window::ui_draw_foreground(UiFlags flags) {
 }
 
 void autoconfig_window::init() {
+    window_message_setup_help_id(help_id);
     _is_inited = true;
 }

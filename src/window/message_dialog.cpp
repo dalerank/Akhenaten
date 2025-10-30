@@ -25,6 +25,7 @@
 #include "window/advisors.h"
 #include "window/window_city.h"
 #include "scenario/scenario_invasion.h"
+#include "js/js_game.h"
 #include "game/game.h"
 
 #define MAX_HISTORY 200
@@ -78,9 +79,10 @@ struct message_dialog_data_t {
     int text_height_blocks;
     int text_width_blocks;
     int focus_button_id;
+    xstring help_id;
 };
 
-message_dialog_data_t g_message_dialog_data;
+message_dialog_data_t g_message_dialog;
 
 struct player_message {
     int year;
@@ -133,7 +135,7 @@ void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution *tag_templates
 }
 
 static void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     const auto& msg = city_message_get(data.message_id);
 
     bstring32 amount;
@@ -183,7 +185,7 @@ static void set_city_message(int year, int month, int param1, int param2, int me
 }
 
 static void init(xstring text_id, int message_id, void (*background_callback)()) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     scroll_drag_end();
     for (auto &item : data.history) {
         item.text_id = 0;
@@ -248,7 +250,7 @@ static int is_problem_message(const lang_message& msg) {
 }
 
 static int get_message_image_id(const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (!msg.image.id) {
         return 0;
     } else if (data.text_id == 0) {
@@ -260,7 +262,7 @@ static int get_message_image_id(const lang_message& msg) {
 }
 
 static void draw_city_message_text(const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     xstring text = msg.content.text;
     painter ctx = game.painter();
  
@@ -343,7 +345,7 @@ static void draw_city_message_text(const lang_message& msg) {
 }
 
 static void draw_title(const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
 
     painter ctx = game.painter();
     xstring text = msg.title.text;
@@ -380,7 +382,7 @@ static void draw_title(const lang_message& msg) {
     }
 }
 static void draw_subtitle(const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (msg.subtitle.pos.x && !msg.subtitle.text.empty()) {
         int width = 16 * msg.size.x - 16 - msg.subtitle.pos.x;
         int height = text_draw_multiline(msg.subtitle.text, data.pos.x + msg.subtitle.pos.x, data.pos.y + msg.subtitle.pos.y, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
@@ -390,7 +392,7 @@ static void draw_subtitle(const lang_message& msg) {
     }
 }
 static void draw_content(const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     xstring text = msg.content.text;
     if (data.is_eventmsg) {
         text = data.body_text;
@@ -419,7 +421,7 @@ static void draw_content(const lang_message& msg) {
 }
 
 static void draw_background_normal() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     rich_text_set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     const lang_message& msg = lang_get_message(data.text_id);
     data.pos = msg.pos;
@@ -432,7 +434,7 @@ static void draw_background_normal() {
 }
 
 static void draw_background_image() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(data.text_id);
     data.pos = { 32, 28 };
@@ -525,7 +527,7 @@ static void draw_background_image() {
 }
 
 static void draw_background_video() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(data.text_id);
     data.pos = { 32, 28 };
@@ -597,7 +599,7 @@ static void draw_background_video() {
 }
 
 static void draw_background(int) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (data.background_callback) {
         data.background_callback();
     } else {
@@ -638,7 +640,7 @@ static image_button* get_advisor_button() {
 }
 
 static void draw_foreground_normal() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     const lang_message& msg = lang_get_message(data.text_id);
 
     if (msg.type == TYPE_MANUAL && data.num_history > 0) {
@@ -656,7 +658,7 @@ static void draw_foreground_normal() {
 }
 
 static void draw_foreground_image() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
 
     image_buttons_draw({data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1);
     image_buttons_draw({data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1);
@@ -667,7 +669,7 @@ static void draw_foreground_image() {
 }
 
 static void draw_foreground_video() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     video_draw(data.pos.x + 8, data.pos.y + 8);
     image_buttons_draw({data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1);
     image_buttons_draw({data.pos.x + 372, data.pos.y + 410}, &image_button_close, 1);
@@ -678,7 +680,7 @@ static void draw_foreground_video() {
 }
 
 static void draw_foreground(int) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     graphics_set_to_dialog();
     if (data.show_video) {
         draw_foreground_video();
@@ -692,7 +694,7 @@ static void draw_foreground(int) {
 }
 
 static bool handle_input_video(const mouse* m_dialog, const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
@@ -710,7 +712,7 @@ static bool handle_input_video(const mouse* m_dialog, const lang_message& msg) {
 }
 
 static bool handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 408}, get_advisor_button(), 1, 0)) {
         return true;
     }
@@ -728,7 +730,7 @@ static bool handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) 
 }
 
 static bool handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (msg.type == TYPE_MANUAL && image_buttons_handle_mouse(m_dialog, {data.pos.x + 16, data.pos.y + 16 * msg.size.y - 36}, &image_button_back, 1, 0)) {
         return true;
     }
@@ -764,7 +766,7 @@ static bool handle_input_normal(const mouse* m_dialog, const lang_message& msg) 
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     data.focus_button_id = 0;
     const mouse* m_dialog = mouse_in_dialog(m);
     const lang_message& msg = lang_get_message(data.text_id);
@@ -783,7 +785,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void cleanup() {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (data.show_video) {
         video_stop();
         data.show_video = false;
@@ -792,7 +794,7 @@ static void cleanup() {
 }
 
 static void button_back(int /* param1 */, int /* param2 */) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     if (data.num_history > 0) {
         data.num_history--;
         data.text_id = data.history[data.num_history].text_id;
@@ -806,7 +808,7 @@ static void button_close(int param1, int param2) {
 }
 
 static void button_help(int param1, int param2) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     button_close(0, 0);
     window_message_dialog_show("message_dialog_help", -1, data.background_callback);
 }
@@ -818,7 +820,7 @@ static void button_advisor(int advisor, int param2) {
 }
 
 static void button_go_to_problem(int param1, int param2) {
-    auto &data = g_message_dialog_data;
+    auto &data = g_message_dialog;
     cleanup();
     const lang_message& msg = lang_get_message(data.text_id);
     int grid_offset = g_player_message_data.param2;
@@ -835,13 +837,18 @@ static void button_go_to_problem(int param1, int param2) {
     window_city_show();
 }
 
-//static void get_tooltip(tooltip_context* c) {
-//    auto &data = g_message_dialog_data;
-//    if (data.focus_button_id) {
-//        c->type = TOOLTIP_BUTTON;
-//        c->text = { 12, 1 };
-//    }
-//}
+void window_message_setup_help_id(xstring helpid) {
+    g_message_dialog.help_id = helpid;
+}
+
+void window_show_help() {
+    auto &data = g_window_manager;
+    auto &current_window = data.window_queue[data.queue_index];
+    if (!g_message_dialog.help_id.empty()) {
+        window_message_dialog_show(g_message_dialog.help_id, -1, nullptr);
+    }
+}
+ANK_FUNCTION(window_show_help)
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
     static window_type window = {

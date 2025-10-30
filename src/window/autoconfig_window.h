@@ -16,11 +16,11 @@ struct autoconfig_window : public ui::widget {
     virtual pcstr get_section() const { return "non_exist_window"; };
     virtual void on_mission_start() {}
 
-    using ui::widget::archive_load;
     virtual void archive_load(archive arch) override;
     virtual int ui_handle_mouse(const mouse *m);
 
     bool _is_inited = false;
+    xstring help_id;
 
     static void before_mission_start();
 };
