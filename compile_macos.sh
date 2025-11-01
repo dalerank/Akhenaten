@@ -56,6 +56,7 @@ function compile_u2b()
 	install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
 	mv akhenaten /private/tmp/akhenaten_arm
 	lipo /private/tmp/akhenaten_arm /private/tmp/akhenaten_x86 -output akhenaten -create
+	rm /private/tmp/akhenaten_*
 }
 
 if [ "$1" = "arm64" ]; then
