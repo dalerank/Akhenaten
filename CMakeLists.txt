@@ -556,19 +556,24 @@ if(APPLE)
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
+    # Install the bundle first
+    install(TARGETS ${GAME}
+        BUNDLE DESTINATION .
+        RUNTIME DESTINATION bin)
+    
     # when installing, "fixup" automatically copies librairies inside the
     # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
-    " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\" \"${LIBS}\" \"${DIRS}\")
+    ")
 
     # perform ad-hoc codesigning
     set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
     set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
     install(CODE "
         execute_process(COMMAND
-            ${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
+            ${codesignCommandWithEntitlements} \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
         )
     ")
 endif()
