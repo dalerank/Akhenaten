@@ -417,9 +417,6 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT32, &g_scenario.current_pharaoh);
     iob->bind(BIND_SIGNATURE_UINT32, &g_scenario.player_incarnation);
 
-    // junk 8b
-    iob->bind____skip(4);
-
     ///
 
     g_scenario.is_saved = true;

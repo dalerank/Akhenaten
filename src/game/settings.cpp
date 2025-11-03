@@ -111,6 +111,7 @@ void game_settings::load() {
 
 void game_settings::save() {
     buffer* buf = inf_file;
+    buf->reset_offset();
 
     buf->skip(4);
     buf->write_i32(fullscreen);
