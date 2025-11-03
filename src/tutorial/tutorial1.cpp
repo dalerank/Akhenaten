@@ -36,13 +36,11 @@ void tutorial_handle_advance_day(event_advance_day ev) {
 void tutorial1_handle_fire(event_fire_damage) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
-    if (tut.building_burned) {
+    if (g_scenario.vars.get_bool("tutorial_fire_handled")) {
         return;
     }
 
     events::unsubscribe(&tutorial1_handle_fire);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
-    tut.building_burned = true;
     
     for (auto &item: g_scenario.extra_damage) {
         item.fire = 0;
@@ -56,7 +54,8 @@ void tutorial1_popultion_cap(city_migration_t& migration) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
     const int population_cap_firstfire = g_scenario.vars.get_int("population_cap_firstfire", 80);
-    const int max_pop = (!tut.building_burned || !tut.building_collapsed) ? population_cap_firstfire : 0;
+    const bool tutorial_fire_handled = g_scenario.vars.get_bool("tutorial_fire_handled");
+    const int max_pop = (!tutorial_fire_handled || !tut.building_collapsed) ? population_cap_firstfire : 0;
     migration.population_cap = max_pop;
 }
 
@@ -73,7 +72,7 @@ void tutorial1_handle_population_for_granary(event_population_changed ev) {
 
     events::unsubscribe(&tutorial1_handle_population_for_granary);
     events::emit(event_building_menu_update{ "tutorial_food" });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     tut.granary_opened = true;
     messages::popup("message_tutorial_food_or_famine", 0, 0);
 }
@@ -91,7 +90,7 @@ void tutorial1_handle_collapse(event_collase_damage) {
 
     events::unsubscribe(&tutorial1_handle_collapse);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_collapse });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     tut.building_collapsed = true;
     messages::popup("message_tutorial_collapsed_building", 0, 0);
 }
@@ -112,7 +111,7 @@ void tutorial1_on_filled_granary(event_granary_resource_added ev) {
 
     events::unsubscribe(&tutorial1_on_filled_granary);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_water });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     tut.gamemeat_stored = true;
     messages::popup("message_tutorial_clean_water", 0, 0);
 }
@@ -124,22 +123,17 @@ void tutorial1_handle_building_create(event_building_create ev) {
     }
 
     events::unsubscribe(&tutorial1_handle_building_create);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
 }
 
 bool tutorial1_is_success() {
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_scenario.vars.get_int("last_action")) > victory_last_action_delay;
     return some_days_after_last_action;
 }
 
 void tutorial_1::init() {
     auto &tut = g_tutorials_flags.tutorial_1;
-
-    const bool building_burned = tut.building_burned;
-    events::emit_if(building_burned, event_building_menu_update{ tutorial_stage.tutorial_fire });
-
-    events::subscribe_if(!building_burned, &tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
     events::emit_if(granary_opened, event_building_menu_update{ "tutorial_food" });
@@ -169,7 +163,6 @@ void tutorial_1::init() {
 void tutorial_1::reset() {
     auto &tut = g_tutorials_flags.tutorial_1;
 
-    tut.building_burned = 0;
     tut.granary_opened = 0;
     tut.gamemeat_stored = 0;
     tut.building_collapsed = 0;
@@ -191,10 +184,7 @@ xstring tutorial_1::goal_text() {
 void tutorial_1::update_step(xstring s) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
-    if (s == tutorial_stage.tutorial_fire) {
-        tut.building_burned = false;
-        tutorial1_handle_fire({ 0 });
-    } else if (s == tutorial_stage.tutorial_collapse) {
+    if (s == tutorial_stage.tutorial_collapse) {
         tut.building_collapsed = false;
         tutorial1_handle_collapse({ 0 });
     } else if (s == "tutorial_food") {

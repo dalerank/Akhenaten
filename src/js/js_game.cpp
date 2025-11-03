@@ -206,6 +206,10 @@ static void js_game_screen_h_getter(js_State *J) {
     js_pushnumber(J, screen_height());
 }
 
+static void js_game_absolute_day_getter(js_State *J) {
+    js_pushnumber(J, game.simtime.absolute_day(true));
+}
+
 void js_register_game_objects(js_State *J) {
     js_newobject(J);
     {
@@ -219,6 +223,9 @@ void js_register_game_objects(js_State *J) {
             js_newcfunction(J, js_game_screen_h_getter, "get_h", 0); js_pushundefined(J);
             js_defaccessor(J, -3, "h", JS_READONLY);
         js_setproperty(J, -2, "screen");
+        
+        js_newcfunction(J, js_game_absolute_day_getter, "get_absolute_day", 0); js_pushundefined(J);
+        js_defaccessor(J, -2, "absolute_day", JS_READONLY);
     }
     js_setglobal(J, "game");
 }

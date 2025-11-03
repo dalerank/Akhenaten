@@ -32,7 +32,7 @@ void tutorial_2_on_build_temple(event_building_create ev) {
 
     events::unsubscribe(&tutorial_2_on_build_temple);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_entertainment });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     tut.temples_built = true;
     events::emit(event_message{ true, "message_tutorial_entertainment", 0, 0 });
 }
@@ -50,7 +50,7 @@ void tutorial_2_on_update_day(event_advance_day ev) {
 
     events::unsubscribe(&tutorial_2_on_update_day);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_gods });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     tut.gold_mined = true;
     events::emit(event_message{ true, "message_tutorial_the_gods_of_egypt", 0, 0 });
 }
@@ -60,7 +60,7 @@ bool tutorial2_is_success() {
 
     const bool may_finish = (tut.gold_mined && tut.temples_built);
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_scenario.vars.get_int("last_action")) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 

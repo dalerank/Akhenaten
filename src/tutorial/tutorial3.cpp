@@ -41,7 +41,7 @@ void tutorial3_on_filled_granary(event_granary_resource_added ev) {
     events::unsubscribe(&tutorial3_on_filled_granary);
     events::emit(event_building_menu_update { tutorial_stage.tutorial_industry });
 
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     g_tutorials_flags.tutorial_3.figs_stored = true;
     
     messages::popup("message_tutorial_industry", 0, 0);
@@ -55,7 +55,7 @@ void tutorial3_on_disease(event_city_disease ev) {
     events::unsubscribe(&tutorial3_on_disease);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_health });
 
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     g_tutorials_flags.tutorial_3.disease = true;
     
     messages::popup("message_basic_healthcare", 0, 0);
@@ -94,7 +94,7 @@ void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
     }
 
     events::unsubscribe(&tutorial3_warehouse_pottery_1_check);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     g_tutorials_flags.tutorial_3.pottery_made_1 = true;
     g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
 
@@ -114,7 +114,7 @@ void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {
     events::unsubscribe(&tutorial3_warehouse_pottery_2_check);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_gardens });
 
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     g_tutorials_flags.tutorial_3.pottery_made_2 = true;
     
     messages::popup("message_tutorial_municipal_structures", 0, 0);
@@ -124,7 +124,7 @@ bool tutorial3_is_success() {
     auto &tut = g_tutorials_flags.tutorial_3;
     const bool may_finish = (tut.figs_stored && tut.pottery_made_1 && tut.pottery_made_2 && tut.disease);
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_scenario.vars.get_int("last_action")) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 

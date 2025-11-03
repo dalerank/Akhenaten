@@ -46,16 +46,15 @@ mission0 { // Nubt
 
 [event=event_fire_damage, mission=mission0]
 function tutorial1_handle_fire(ev) {
-	//if (mission.tutorial_fire_handled) {
-	//	return
-	//}
-    //
-	//mission.last_action_time = game.absolute_day()
-	//mission.tutorial_fire_handled = true
-    //
+	if (mission.tutorial_fire_handled) {
+		return
+	}
+    
+	mission.last_action_time = game.absolute_day
+	mission.tutorial_fire_handled = true
+    
 	//mission.use_building(BUILDING_FIREHOUSE, true)
 	//ui.show_message("message_fire_in_the_village")
-	log_info("granary_open_population:${mission.granary_open_population}")
-	var a = 100
-	log_info("tutorial1_handle_fire:${a}", {a: a})
+	log_info("granary_open_population:${mission.last_action_time}")
+	log_info("tutorial1_handle_fire:${mission.tutorial_fire_handled}")
 }
