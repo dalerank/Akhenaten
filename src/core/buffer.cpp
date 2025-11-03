@@ -241,6 +241,7 @@ void buffer::write_raw(const void* value, size_t s) {
 
 void buffer::skip(size_t s) {
     if (!is_valid(s)) {
+        assert(false);
         index = size();
     } else {
         index += s;

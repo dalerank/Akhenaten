@@ -1286,7 +1286,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
     iob->bind____skip(3);
-    iob->bind____skip(60);
+    iob->bind____skip(57);
     assert(iob->get_offset() == 37808);
 });
 
