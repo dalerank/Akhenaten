@@ -195,6 +195,7 @@ static void init(xstring text_id, int message_id, void (*background_callback)())
     rich_text_reset(0);
     data.message_id = message_id;
     data.god = GOD_UNKNOWN;
+    data.background_img = 0;
 
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(data.message_id);
@@ -233,7 +234,7 @@ static void init(xstring text_id, int message_id, void (*background_callback)())
     if (!msg.video.text.empty() && video_start(msg.video.text.c_str())) {
         data.show_video = true;
         video_init();
-    } else if ((data.god != GOD_UNKNOWN) || (data.background_img > 0)) {
+    } else if ((data.god != GOD_UNKNOWN) || data.background_img) {
         data.background = true;
     } 
 }

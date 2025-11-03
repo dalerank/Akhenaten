@@ -96,7 +96,7 @@ void ui::message_list_window::draw_message(int index, int flags, const scroll_li
     int x_text = pos.x + message_row.pos.x;
 
     const city_message& msg = *(const city_message*)entry.user_data;
-    int mm_id = city_message_get_text_id(msg.MM_text_id);
+    const int mm_id = city_message_get_text_id(index);
     const lang_message& lang_msg = lang_get_message(mm_id);
 
     int image_type_offset = 0;

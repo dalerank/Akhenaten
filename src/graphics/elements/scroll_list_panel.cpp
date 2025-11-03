@@ -207,7 +207,9 @@ void scroll_list_panel::draw() {
     bstring256 text;
     for (int i = 0; i < num_buttons; ++i) {
         e_font font = ui_params.font_asleep;
-        const bool is_selected = (selected_entry_idx == i + scrollbar.scroll_position);
+        const int current_index = i + scrollbar.scroll_position;
+
+        const bool is_selected = (selected_entry_idx == current_index);
         const bool is_focused = (focus_button_id == i + 1);
         if (is_selected) {
             font = ui_params.font_selected;
@@ -221,12 +223,12 @@ void scroll_list_panel::draw() {
         int text_pos_y = button_pos_y + ui_params.text_padding_y;
 
         if (using_file_finder) {
-            text_utf8 = file_finder->files[i + scrollbar.scroll_position];
+            text_utf8 = file_finder->files[current_index];
             encoding_from_utf8(text_utf8, text, text.capacity);
             vfs::file_remove_extension(text);
         } else {
             if (i < num_total_entries) {
-                text_utf8 = manual_entry_list[i + scrollbar.scroll_position].text.c_str();
+                text_utf8 = manual_entry_list[current_index].text.c_str();
             } else {
                 text_utf8.clear();
             }
@@ -234,7 +236,9 @@ void scroll_list_panel::draw() {
         }
 
         if (custom_text_render) {
-            custom_text_render(i, (is_selected ? 1 : 0) + (is_focused ? 2 : 0), manual_entry_list[i + scrollbar.scroll_position], { text_pos_x, text_pos_y }, font);
+            if (current_index < manual_entry_list.size()) {
+                custom_text_render(current_index, (is_selected ? 1 : 0) + (is_focused ? 2 : 0), manual_entry_list[current_index], { text_pos_x, text_pos_y }, font);
+            }
         } else {
             if (ui_params.text_max_width != -1) {
                 text_ellipsize(text, font, ui_params.text_max_width);
