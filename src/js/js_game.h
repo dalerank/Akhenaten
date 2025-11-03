@@ -13,6 +13,8 @@
 #include <string>
 #include <mutex>
 
+class settings_vars_t;
+
 // Helper functions to convert JS values to C++ types
 namespace js_helpers {
     template<typename T>
@@ -166,6 +168,7 @@ using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);
 void js_register_mission_objects(js_State *J);
+void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
 void js_register_game_handlers(xstring missionid);

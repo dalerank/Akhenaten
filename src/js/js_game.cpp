@@ -2,6 +2,7 @@
 
 #include "content/vfs.h"
 #include "core/log.h"
+#include "core/settings_vars.h"
 
 #include "sound/sound_mission.h"
 #include "sound/sound_building.h"
@@ -236,15 +237,6 @@ void js_register_game_objects(js_State *J) {
         js_setproperty(J, -2, "screen");
     }
     js_setglobal(J, "game");
-}
-
-void js_register_mission_objects(js_State *J) {
-    js_newobject(J);
-    {
-        js_pushstring(J, get_version().c_str());
-        js_setproperty(J, -2, "id");
-    }
-    js_setglobal(J, "mission");
 }
 
 void js_register_game_functions(js_State *J) {
