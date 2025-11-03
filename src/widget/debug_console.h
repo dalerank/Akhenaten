@@ -47,6 +47,7 @@ void game_debug_show_property(pcstr field, const vec2i &v, bool disabled = false
 void game_debug_show_property(pcstr field, const tile2i &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const std::function<void()> &f, bool disabled = false);
 void game_debug_show_property(pcstr field, const game_date_t &f, bool disabled = false);
+void game_debug_show_property(pcstr field, const setting_variant &d, bool disabled = false);
 
 #else 
 

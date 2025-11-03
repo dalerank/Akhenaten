@@ -238,6 +238,15 @@ void js_register_game_objects(js_State *J) {
     js_setglobal(J, "game");
 }
 
+void js_register_mission_objects(js_State *J) {
+    js_newobject(J);
+    {
+        js_pushstring(J, get_version().c_str());
+        js_setproperty(J, -2, "id");
+    }
+    js_setglobal(J, "mission");
+}
+
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
