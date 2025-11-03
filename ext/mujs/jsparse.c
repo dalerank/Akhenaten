@@ -794,8 +794,8 @@ static js_Ast *statement(js_State *J)
 	}
 
 	if (jsP_accept(J, TK_WITH)) {
-		if (J->strict)
-			jsP_error(J, "'with' statements are not allowed in strict mode");
+		//if (J->strict)
+		//	jsP_error(J, "'with' statements are not allowed in strict mode");
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');

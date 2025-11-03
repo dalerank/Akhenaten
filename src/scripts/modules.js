@@ -1,8 +1,9 @@
-log_info("akhenaten: load modules started")
+__log_info_native("akhenaten: load modules started")
 
 include(":akhenaten.conf")
 include(":hotkeys.conf")
 
+import common
 import math
 import ui_common
 import ui_main_menu
@@ -10,7 +11,6 @@ import rating_points
 import game_messages
 import animal_herds
 import gods
-import common
 import images
 import city_sounds
 import walker_sounds
