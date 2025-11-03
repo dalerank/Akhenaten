@@ -83,8 +83,8 @@ bool lang_reload_localized_tables() {
     g_config_arch.r(message_table.c_str(), g_messages);
 
     // restore the default localization (english), for values without translates
-    g_config_arch.update("localization_en", g_localization);
-    g_config_arch.update("eventmsg_en", g_messages);
+    g_config_arch.insert("localization_en", g_localization);
+    g_config_arch.insert("eventmsg_en", g_messages);
 
     return true;
 }

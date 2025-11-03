@@ -93,7 +93,10 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
         arch.r("win_criteria", win_criteria);
-        arch.r("vars", vars);
+
+        settings_vars_t newvars;
+        arch.r("vars", newvars);
+        vars.insert(newvars);
     });
 
     events.load_mission_metadata(missionid);

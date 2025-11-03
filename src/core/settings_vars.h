@@ -56,6 +56,8 @@ public:
 	xstring get_string(const xstring &name, const xstring &def = "");
 	void set_string(const xstring &name, const xstring &value);
 
+	void insert(const settings_vars_t &vars);
+
 	std::string save() const;
 	void load(const std::string& data);
 };
