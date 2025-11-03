@@ -163,6 +163,12 @@ void settings_vars_t::set_string(const xstring &name, const xstring &value) {
 	impl().set(name, value);
 }
 
+void settings_vars_t::insert(const settings_vars_t &vars) {
+	for (const auto &v : vars.impl()._variants) {
+		impl()._variants.insert({ v.first, v.second });
+	}
+}
+
 std::string settings_vars_t::save() const {
 	std::string result;
 	result.reserve(1024);
