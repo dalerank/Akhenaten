@@ -123,7 +123,7 @@ void ui::mission_briefing_window::mission_start(int scenario_id) {
 
 void ui::mission_briefing_window::mission_review() {
     auto &data = g_mission_briefing;
-    data.scenario_id = scenario_campaign_scenario_id();
+    data.scenario_id = g_scenario.campaign_scenario_id();
     data.is_review = true;
     data.campaign_mission_loaded = true;
     window_intermezzo_show(data.scenario_id, INTERMEZZO_MISSION_BRIEFING, window_mission_briefing_show_impl);

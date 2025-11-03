@@ -494,7 +494,7 @@ void top_menu_widget_t::file_handle(menu_item &item) {
                 GamestateIO::load_savegame("autosave_replay.sav");
                 window_city_show();
             } else {
-                int scenario_id = scenario_campaign_scenario_id();
+                int scenario_id = g_scenario.campaign_scenario_id();
                 widget_top_menu_clear_state();
                 GamestateIO::load_mission(scenario_id, true);
             }

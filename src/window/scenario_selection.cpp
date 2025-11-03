@@ -84,7 +84,7 @@ static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selecto
     data.dialog = dialog_type;
     data.campaign_sub_dialog = sub_dialog_selector;
     data.scores_or_goals = 0;
-    scenario_set_campaign_scenario(-1);
+    g_scenario.set_campaign_scenario(-1);
 
     if (!data.panel) {
         data.panel = new scroll_list_panel(MAX_SCENARIOS, button_select_item, button_none, button_none, button_none, ui_params, true, "Maps/", "map");
@@ -343,7 +343,7 @@ static void draw_side_panel_info() {
     }
     case MAP_SELECTION_CUSTOM: {
         // thumbnail
-        draw_scenario_thumbnail(scenario_image_id());
+        draw_scenario_thumbnail(g_scenario.image_id);
 
         // scenario name
         uint8_t scenario_name[MAX_FILE_NAME];
@@ -355,7 +355,7 @@ static void draw_side_panel_info() {
         text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
 
         // starting year
-        lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
 
         draw_scenario_info();
         break;
@@ -372,7 +372,7 @@ static void draw_side_panel_info() {
             return;
         }
 
-        int scenario_id = scenario_campaign_scenario_id();
+        int scenario_id = g_scenario.campaign_scenario_id();
 
         // scenario name
         bstring<300> name;
@@ -386,7 +386,7 @@ static void draw_side_panel_info() {
         text_draw_centered(scenario_subtitle(), INFO_X, SUBTITLE_Y, INFO_W, FONT_NORMAL_WHITE_ON_DARK, 0);
 
         // starting year
-        lang_text_draw_year(scenario_property_start_year(), INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
+        lang_text_draw_year(g_scenario.start_year, INFO_X, YEAR_Y, FONT_NORMAL_BLACK_ON_DARK);
 
         if (data.scores_or_goals == 0)
             draw_scores(scenario_id);
@@ -477,7 +477,7 @@ static void button_select_item(int index, int param2) {
 }
 
 static void button_start_scenario(int param1, int param2) {
-    if (scenario_campaign_scenario_id() == -1) {
+    if (g_scenario.campaign_scenario_id() == -1) {
         return;
     }
 

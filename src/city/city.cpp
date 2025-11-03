@@ -1438,7 +1438,7 @@ void city_t::figures_update_day() {
 }
 
 bool city_t::determine_granary_get_foods(resource_list &foods, int road_network) {
-    if (scenario_property_kingdom_supplies_grain()) {
+    if (g_scenario.kingdom_supplies_grain) {
         return false;
     }
 

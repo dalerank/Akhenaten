@@ -343,7 +343,7 @@ void kingdome_relation_t::advance_year() {
     kingdom_ignored_request_penalty = 0;
 
     const bool can_update_rating = !game_features::gameplay_save_year_kingdome_rating;
-    if (can_update_rating && scenario_is_before_mission(3)) {
+    if (can_update_rating && g_scenario.is_before_mission(3)) {
         rating -= 2;
     }
 

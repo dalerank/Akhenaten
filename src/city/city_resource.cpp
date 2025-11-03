@@ -445,7 +445,7 @@ void city_resources_t::calculate_available_food() {
         food_supply_months = granary_total_stored > 0 ? 1 : 0;
     }
 
-    if (scenario_property_kingdom_supplies_grain()) {
+    if (g_scenario.kingdom_supplies_grain) {
         food_supply_months = 12;
     }
 }
@@ -453,7 +453,7 @@ void city_resources_t::calculate_available_food() {
 void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Food Stocks Update");
     calculate_available_food();
-    if (!scenario_property_kingdom_supplies_grain()) {
+    if (!g_scenario.kingdom_supplies_grain) {
         return;
     }
 

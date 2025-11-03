@@ -56,7 +56,7 @@ static void draw_foreground(int) {
         scenario_editor_invasion_get(i, &invasion);
         if (invasion.type) {
             text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(scenario_property_start_year() + invasion.year,
+            lang_text_draw_year(g_scenario.start_year + invasion.year,
                                 x + 60,
                                 y + 6,
                                 FONT_NORMAL_BLACK_ON_LIGHT);

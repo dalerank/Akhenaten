@@ -98,7 +98,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // foodstocks
     {
         std::pair<int, int> foodstocks_status;
-        if (scenario_property_kingdom_supplies_grain()) {
+        if (g_scenario.kingdom_supplies_grain) {
             foodstocks_status = {26, FONT_NORMAL_BLACK_ON_DARK};
             ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
         } else if (city_resource_food_supply_months() > 0) {
@@ -115,7 +115,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // foodconsumption
     {
         std::pair<int, int> foodcomsuption_status;
-        if (scenario_property_kingdom_supplies_grain()) {
+        if (g_scenario.kingdom_supplies_grain) {
             foodcomsuption_status = {26, FONT_NORMAL_BLACK_ON_DARK};
         } else {
             int pct = g_city.resource.food_percentage_produced();

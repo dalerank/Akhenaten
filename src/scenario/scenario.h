@@ -307,6 +307,12 @@ struct scenario_data_t {
 
     void load_metadata(const mission_id_t &missionid);
     void bind_data(io_buffer *iob, size_t version, size_t size);
+    void init();
+    void init_mission();
+    void set_campaign_rank(int rank);
+    int campaign_scenario_id();
+    void set_campaign_scenario(int scenario_id);
+    int is_before_mission(int mission);
 
     template<typename ... Args>
     bool is_scenario_id(const Args ... args) {
@@ -320,24 +326,11 @@ ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosper
 
 extern scenario_data_t g_scenario;
 
-void scenario_settings_init();
-void scenario_settings_init_mission();
-
-void scenario_set_campaign_rank(int rank);
-
-int scenario_campaign_scenario_id();
-
-void scenario_set_campaign_scenario(int scenario_id);
-
 int scenario_additional_damage(e_building_type type, e_damage_type damage);
-
-int scenario_is_before_mission(int mission);
 
 int scenario_starting_kingdom();
 
 int scenario_starting_personal_savings();
-
-const uint8_t* scenario_name();
 
 void scenario_set_name(const uint8_t* name);
 
@@ -347,15 +340,9 @@ int scenario_open_play_id();
 
 int scenario_property_climate();
 
-int scenario_property_start_year();
-
-int scenario_property_kingdom_supplies_grain();
-
 int scenario_property_enemy();
 
 int scenario_property_player_rank();
-
-int scenario_image_id();
 
 const uint8_t* scenario_subtitle();
 

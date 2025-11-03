@@ -379,7 +379,7 @@ bool game_t::check_valid() {
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     game_hotkeys::load();    // hotkeys.conf
-    scenario_settings_init();
+    g_scenario.init();
     random_init();
 
     paused = false;
