@@ -104,6 +104,57 @@ void game_debug_show_property_value(pcstr field, const tile2i &v, bool disabled)
     ImGui::InputInt2(field, (int*)&v);
 }
 
+void game_debug_show_property_value(pcstr field, const setting_variant &v, bool disabled) {
+    ImGuiInputTextFlags_ flags = disabled ? ImGuiInputTextFlags_ReadOnly : ImGuiInputTextFlags_None;
+    
+    switch (v.index()) {
+    case setting_bool: {
+            bool val = std::get<bool>(v);
+            if (ImGui::Checkbox("##value", &val)) {
+                if (!disabled) {
+                    const_cast<setting_variant&>(v) = val;
+                }
+            }
+            break;
+        }
+    case setting_float: {
+            float val = std::get<float>(v);
+            if (ImGui::InputFloat("##value", &val, 1.0f, 0.0f, "%.3f", flags)) {
+                if (!disabled) {
+                    const_cast<setting_variant&>(v) = val;
+                }
+            }
+            break;
+        }
+    case setting_vec2i: {
+            vec2i val = std::get<vec2i>(v);
+            if (ImGui::InputInt2("##value", (int*)&val, flags)) {
+                if (!disabled) {
+                    const_cast<setting_variant&>(v) = val;
+                }
+            }
+            break;
+        }
+    case setting_string: {
+            const xstring& str = std::get<xstring>(v);
+            if (disabled) {
+                ImGui::Text("%s", str.c_str());
+            } else {
+                char buffer[256];
+                strncpy(buffer, str.c_str(), sizeof(buffer) - 1);
+                buffer[sizeof(buffer) - 1] = '\0';
+                if (ImGui::InputText("##value", buffer, sizeof(buffer), flags)) {
+                    const_cast<setting_variant&>(v) = xstring(buffer);
+                }
+            }
+            break;
+        }
+    default:
+        ImGui::Text("unknown type");
+        break;
+    }
+}
+
 void game_debug_show_property_value(pcstr field, const std::function<void()> &f, bool disabled) {
     if (ImGui::Button(field)) {
         f();
@@ -193,6 +244,7 @@ void game_debug_show_property(pcstr field, const vec2i &v, bool disabled) { game
 void game_debug_show_property(pcstr field, const tile2i &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const std::function<void()> &f, bool disabled)  { game_debug_show_property_t(field, f, disabled); }
 void game_debug_show_property(pcstr field, const game_date_t &d, bool disabled)  { game_debug_show_property_t(field, d, disabled); }
+void game_debug_show_property(pcstr field, const setting_variant &d, bool disabled)  { game_debug_show_property_t(field, d, disabled); }
 
 void game_debug_properties_draw() {
     if (!game.debug_properties) {

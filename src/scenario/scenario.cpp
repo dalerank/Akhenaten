@@ -11,6 +11,7 @@
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/mission.h"
+#include "dev/debug.h"
 
 #include "js/js_game.h"
 
