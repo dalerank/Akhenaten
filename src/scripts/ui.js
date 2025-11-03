@@ -54,7 +54,7 @@ display_options_window {
     num_files_in_view : 13
     ui {
         background  : outer_panel({size[24, 21] })
-        title       : header({pos[10, 10], size[px(24), 20], text[42, 0], align:"center"})
+        title       : header({pos[10, 10], size[px(24), 20], text:"${42.0}", align:"center"})
         
         btnfullscreen : button({pos[16, 46], size[224, 20] })
         videodriver : text({pos[px(24)/2 + 60, 50]})
@@ -67,18 +67,18 @@ display_options_window {
     } 
 }
 
-window_dinasty_menu = {
-    pos: [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
-    ui : {
+window_dinasty_menu {
+    pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
+    ui {
         background_image: background({pack:PACK_UNLOADED, id:31})
-        background      : outer_panel({size: [24, 19]})
+        background      : outer_panel({size[24, 19]})
 
-        title       : text_center({pos:[0, 20], size:[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
-        btnresume   : button({margin:{centerx: -135, top: 40 + 1 * 40}, size:[270, 25], text:[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnexplore  : button({margin:{centerx: -135, top: 40 + 2 * 40}, size:[270, 25], text:[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnload     : button({margin:{centerx: -135, top: 40 + 3 * 40}, size:[270, 25], text:[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btncustom   : button({margin:{centerx: -135, top: 40 + 4 * 40}, size:[270, 25], text:[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnback     : button({margin:{centerx: -135, top: 40 + 5 * 40}, size:[270, 25], text:[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        title       : text_center({pos[0, 20], size[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
+        btnresume   : button({margin{centerx: -135, top: 40 + 1 * 40}, size[270, 25], text[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 

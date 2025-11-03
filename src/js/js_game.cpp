@@ -213,6 +213,14 @@ void js_register_game_handlers(xstring missionid) {
     logs::info("JS: Found %d functions with modifiers", function_count);
 }
 
+static void js_game_screen_w_getter(js_State *J) {
+    js_pushnumber(J, screen_width());
+}
+
+static void js_game_screen_h_getter(js_State *J) {
+    js_pushnumber(J, screen_height());
+}
+
 void js_register_game_objects(js_State *J) {
     js_newobject(J);
     {
@@ -220,8 +228,11 @@ void js_register_game_objects(js_State *J) {
         js_setproperty(J, -2, "version");
 
         js_newobject(J);
-            js_pushnumber(J, screen_width()); js_setproperty(J, -2, "w");
-            js_pushnumber(J, screen_height()); js_setproperty(J, -2, "h");
+            js_newcfunction(J, js_game_screen_w_getter, "get_w", 0); js_pushundefined(J);
+            js_defaccessor(J, -3, "w", JS_READONLY);
+
+            js_newcfunction(J, js_game_screen_h_getter, "get_h", 0); js_pushundefined(J);
+            js_defaccessor(J, -3, "h", JS_READONLY);
         js_setproperty(J, -2, "screen");
     }
     js_setglobal(J, "game");
