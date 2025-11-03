@@ -32,39 +32,23 @@ g_archive g_config_arch{nullptr};
 using event_handlers = std::unordered_set<xstring>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
 
-void js_game_log_info(js_State *J) {
+void js_log_info_native(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("log() Try to print undefined object", 0, 0);
     } else {
         logs::info("%s", js_tostring(J, 1));
     }
-
     js_pushundefined(J);
 }
 
-void js_game_log_warn(js_State *J) {
+void js_log_warn_native(js_State *J) {
     if (js_isundefined(J, 1)) {
         logs::info("warning() Try to print undefined object", 0, 0);
     } else {
-        logs::info("WARN: ", js_tostring(J, 1), 0);
+        logs::info("WARN: %s", js_tostring(J, 1));
     }
-
     js_pushundefined(J);
 }
-
-//void js_game_set_image(js_State *J) {
-//    if (js_isobject(J, 1)) {
-//        archive arch{js_vm_state()};
-//        int img = arch.r_int("img");
-//        int pack = arch.r_int("pack");
-//        int id = arch.r_int("id");
-//        int offset = arch.r_int("offset");
-//        set_image_desc(img, pack, id, offset);
-//        js_pop(J, 1);
-//    }
-//
-//    js_pushundefined(J);
-//}
 
 void js_game_load_text(js_State *J) {
     const char *path = js_tostring(J, 1);
@@ -240,10 +224,10 @@ void js_register_game_objects(js_State *J) {
 }
 
 void js_register_game_functions(js_State *J) {
-    REGISTER_GLOBAL_FUNCTION(J, js_game_log_info, "log_info", 1);
-    REGISTER_GLOBAL_FUNCTION(J, js_game_log_warn, "log_warning", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
-
+    
     animation_t::global_hashtime = game.frame;
     for (config::FunctionIterator *s = config::FunctionIterator::tail; s; s = s->next) {
         s->func(J);
