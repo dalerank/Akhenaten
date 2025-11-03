@@ -178,8 +178,8 @@ void city_sentiment_t::update_day() {
 }
 
 void city_sentiment_t::init() {
-    can_create_mugger = (scenario_campaign_scenario_id() > 0);
-    can_create_protestor = (scenario_campaign_scenario_id() > 1);
+    can_create_mugger = (g_scenario.campaign_scenario_id() > 0);
+    can_create_protestor = (g_scenario.campaign_scenario_id() > 1);
 }
 
 void city_sentiment_t::update() {

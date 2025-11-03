@@ -59,7 +59,7 @@ static void draw_background(int) {
     vec2i offset = vec2i{screen_width() - 1024, screen_height() - 768} / 2;
 
     // draw background by mission
-    int mission = scenario_campaign_scenario_id();
+    int mission = g_scenario.campaign_scenario_id();
     int image_base = image_id_from_group(GROUP_INTERMEZZO_BACKGROUND);
     painter ctx = game.painter();
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);

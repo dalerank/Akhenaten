@@ -13,7 +13,7 @@ void simulation_time_t::init(int year) {
 }
 
 int16_t simulation_time_t::years_since_start() const {
-    return year - scenario_property_start_year();
+    return year - g_scenario.start_year;
 }
 
 int simulation_time_t::absolute_day(bool since_start) const {

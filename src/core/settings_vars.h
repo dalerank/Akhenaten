@@ -31,6 +31,7 @@ public:
 	settings_vars_t();
 
 	bool is_defined(const xstring &name);
+	void clear();
 
 	setting_variant_type type(const xstring &name);
 

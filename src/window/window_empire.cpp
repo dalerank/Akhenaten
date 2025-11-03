@@ -741,7 +741,7 @@ void window_empire_show() {
 }
 
 void window_empire_show_checked() {
-    e_availability avail = mission_empire_availability(scenario_campaign_scenario_id() + 1);
+    e_availability avail = mission_empire_availability(g_scenario.campaign_scenario_id() + 1);
     
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (avail == AVAILABLE || is_custom_map) {

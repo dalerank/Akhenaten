@@ -112,7 +112,7 @@ static void draw_foreground(int) {
     editor_request request;
     scenario_editor_request_get(0, &request);
     if (request.resource) {
-        lang_text_draw_year(scenario_property_start_year() + request.year, 222, 165, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_year(g_scenario.start_year + request.year, 222, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int width = text_draw_number(request.amount, '@', " ", 312, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
         ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
@@ -130,7 +130,7 @@ static void draw_foreground(int) {
     editor_invasion invasion;
     scenario_editor_invasion_get(0, &invasion);
     if (invasion.type) {
-        lang_text_draw_year(scenario_property_start_year() + invasion.year, 222, 245, FONT_NORMAL_BLACK_ON_LIGHT);
+        lang_text_draw_year(g_scenario.start_year + invasion.year, 222, 245, FONT_NORMAL_BLACK_ON_LIGHT);
         int width = text_draw_number(invasion.amount, '@', " ", 302, 245, FONT_NORMAL_BLACK_ON_LIGHT);
         lang_text_draw(34, invasion.type, 302 + width, 245, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
@@ -153,7 +153,7 @@ static void draw_foreground(int) {
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw({ 18, 278 }, { 184, 144 }, 0);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
+    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + g_scenario.image_id, 20, 280);
 
     arrow_buttons_draw({0, 0}, image_arrows, 2);
 

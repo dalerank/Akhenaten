@@ -89,6 +89,10 @@ bool settings_vars_t::is_defined(const xstring &name) {
 	return impl().is_defined(name);
 }
 
+void settings_vars_t::clear() {
+	impl()._variants.clear();
+}
+
 setting_variant_type settings_vars_t::type(const xstring &name) {
 	auto var = impl().get_variant(name);
 	return (var.has_value() ? (setting_variant_type)var.value().index() : setting_none);

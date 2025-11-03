@@ -48,7 +48,7 @@ void granary_info_window::init(object_info &c) {
     data.bid = c.bid;
 
     pcstr warning_text = !granary->has_road_access() ? "#granary_no_road_access"
-                            : scenario_property_kingdom_supplies_grain() ? "#granary_kingdom_supplies_grain"
+                            : g_scenario.kingdom_supplies_grain ? "#granary_kingdom_supplies_grain"
                             : nullptr;
 
     ui["warning_text"] = warning_text;
