@@ -190,9 +190,10 @@ void tutorial_flags_t::update_starting_message() {
 }
 
 io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
+    uint16_t tmp;
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     // tut 1
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_burned);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.granary_opened);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.gamemeat_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_collapsed);

@@ -41,7 +41,7 @@ struct tutorial_t {
 struct tutorial_flags_t {
     struct {
         bool started;
-        bool building_burned;
+        bool reserve_2;
         bool granary_opened;
         bool gamemeat_stored;
         bool building_collapsed;
@@ -93,7 +93,6 @@ struct tutorial_flags_t {
         bool crime;
         bool tut7_start;
         bool tut8_start;
-        uint16_t last_action;
     } pharaoh;
 
     void update_starting_message();

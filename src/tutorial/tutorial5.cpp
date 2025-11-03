@@ -44,7 +44,7 @@ void tutorial5_handle_spacious_apartment(event_advance_day) {
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_education });
 
     g_city.set_advisor_available(ADVISOR_EDUCATION, AVAILABLE);
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     messages::popup("message_tutorial_education", 0, 0);
 }
 
@@ -63,7 +63,7 @@ void tutorial5_handle_papyrus(event_warehouse_filled ev) {
     events::unsubscribe(&tutorial5_handle_papyrus);
     events::emit(event_building_menu_update{ tutorial_stage.tutorial_trading });
 
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     g_city.set_advisor_available(ADVISOR_TRADE, AVAILABLE);
     
     messages::popup("message_tutorial_trade_with_other_cities", 0, 0);
@@ -83,7 +83,7 @@ void tutorial5_handle_bricks(event_warehouse_filled ev) {
     tut.bricks_bought = true;
     events::unsubscribe(&tutorial5_handle_bricks);
     events::emit(event_building_menu_update{ "tutorial_monuments" });
-    g_tutorials_flags.pharaoh.last_action = game.simtime.absolute_day(true);
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
     messages::popup("message_tutorial_monuments", 0, 0);
 }
 
@@ -91,7 +91,7 @@ bool tutorial5_is_success() {
     auto &tut = g_tutorials_flags.tutorial_5;
     const bool may_finish = (tut.spacious_apartment && tut.papyrus_made && tut.bricks_bought);
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
-    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_tutorials_flags.pharaoh.last_action) > victory_last_action_delay;
+    const bool some_days_after_last_action = (game.simtime.absolute_day(true) - g_scenario.vars.get_int("last_action")) > victory_last_action_delay;
     return may_finish && some_days_after_last_action;
 }
 
