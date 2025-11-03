@@ -55,5 +55,6 @@ function tutorial1_handle_fire(ev) {
     //
 	//mission.use_building(BUILDING_FIREHOUSE, true)
 	//ui.show_message("message_fire_in_the_village")
+	log_info("granary_open_population:" + mission.granary_open_population)
 	log_info("tutorial1_handle_fire")
 }

@@ -21,6 +21,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
 
     g_scenario.load_metadata(missionid);
+    js_register_mission_vars(g_scenario.vars);
 }
 
 void scenario_data_t::init() {
