@@ -1,2 +1,2 @@
 * 10/27/2025 - support change log view in main menu
-* 10/30/2025 - restored messages list window logic
+@L* 10/30/2025 - restored messages list window logic
