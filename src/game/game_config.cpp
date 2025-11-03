@@ -14,7 +14,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
 
 namespace game_features {
     svector<game_feature*, 128> _features;
-    settings_vars_t _settings;
+    globals_settings_t _settings;
 
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", "#TR_CONFIG_FIX_IMMIGRATION_BUG", false };
     game_feature gameplay_fix_100y_ghosts{ "gameplay_fix_100y_ghosts", "#TR_CONFIG_FIX_100_YEAR_GHOSTS", true };

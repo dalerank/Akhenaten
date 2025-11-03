@@ -96,6 +96,20 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
     events.load_mission_metadata(missionid);
 }
 
+void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
+    assert(size == 900);
+    char data[900] = { 0 };
+    if (iob->is_read_access()) {
+        iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
+        vars.load(data);
+    } else {
+        std::string save_data = vars.save();
+        assert(save_data.size() < sizeof(data));
+        memcpy(data, save_data.data(), save_data.size() + 1);
+        iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
+    }
+}
+
 bool scenario_building_allowed(e_building_type building_type) {
     return g_scenario.allowed_buildings[building_type];
 }
