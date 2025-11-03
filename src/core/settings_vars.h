@@ -19,28 +19,23 @@ enum setting_variant_type {
 };;
 
 using setting_variant = std::variant<bool, float, vec2i, xstring>;
-class settings_vars_t final {
-	char _data[160];
+class settings_vars_t {
+	char _data[144];
 	settings_vars_impl_t *_impl = nullptr;
 
+protected:
 	inline settings_vars_impl_t &impl() { return *_impl; }
+	inline const settings_vars_impl_t &impl() const { return *_impl; }
 
 public:
 	settings_vars_t();
 
 	bool is_defined(const xstring &name);
 
-	void load_global(pcstr name);
-	void sync_global(pcstr filename, pcstr name);
-
 	setting_variant_type type(const xstring &name);
 
-	// call if you need certainly immediatly sync, better to make task in thread
 	void set_sync_task(std::function<void(xstring)> task);
-
-	// settup pause before saving data to file
-	using delay_t = std::chrono::duration<int64_t, std::milli>;
-	void set_autosync_delay(const delay_t delay);
+	void foreach_vars(std::function<void(xstring, const setting_variant&)> task);
 
 	bool get_bool(const xstring &name, bool def = false);
 	void set_bool(const xstring &name, bool value);
@@ -59,6 +54,22 @@ public:
 
 	xstring get_string(const xstring &name, const xstring &def = "");
 	void set_string(const xstring &name, const xstring &value);
+
+	std::string save() const;
+	void load(const std::string& data);
+};
+
+class globals_settings_t final : public settings_vars_t {
+	bool _variantsDirty = false;
+	bool _initialized = false;
+
+	void sync_with_js(const xstring &name, const setting_variant &value);
+
+public:
+	globals_settings_t();
+
+	void load_global(pcstr name);
+	void sync_global(pcstr filename, pcstr name);
 };
 
 namespace archive_helper {

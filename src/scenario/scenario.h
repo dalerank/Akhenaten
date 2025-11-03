@@ -136,6 +136,8 @@ enum e_scenario_mode {
     e_scenario_custom_map,
 };
 
+class io_buffer;
+
 struct scenario_data_t {
     uint8_t scenario_name[65];
     scenario_difficulty_t difficulty;
@@ -304,6 +306,7 @@ struct scenario_data_t {
     int house_tax_multiplier(int v) const;
 
     void load_metadata(const mission_id_t &missionid);
+    void bind_data(io_buffer *iob, size_t version, size_t size);
 
     template<typename ... Args>
     bool is_scenario_id(const Args ... args) {
