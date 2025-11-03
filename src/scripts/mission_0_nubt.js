@@ -27,10 +27,10 @@ mission0 { // Nubt
 	}
 
 	stages {
-		tutorial_fire [BUILDING_FIREHOUSE]
-		tutorial_food [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR]
-		tutorial_water [BUILDING_WATER_SUPPLY]
-		tutorial_collapse [BUILDING_ARCHITECT_POST]
+		tutorial_fire { buildings: [BUILDING_FIREHOUSE] }
+		tutorial_food { buildings: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR] }
+		tutorial_water { buildings: [BUILDING_WATER_SUPPLY] }
+		tutorial_collapse { buildings: [BUILDING_ARCHITECT_POST] }
 	}
 
 	vars {
