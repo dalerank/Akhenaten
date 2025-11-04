@@ -246,10 +246,11 @@ figure_priest = {
 
 figure_ostrich {
 	animations {
-		walk { pack:PACK_SPR_MAIN, id:156, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:157, max_frames:8, duration:3, loop:false }
-		eating { pack:PACK_SPR_MAIN, id:159, max_frames:7 }
-		idle { pack:PACK_SPR_MAIN, id:160, max_frames:7 }
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:156,max_frames:12 }
+		death { id:157, max_frames:8, duration:3, loop:false }
+		eating { id:159, max_frames:7 }
+		idle { id:160, max_frames:7 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
 	}
 
@@ -387,17 +388,18 @@ figure_ostrich_hunter {
 
 	sounds : {
 		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 }
-    back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 }
-    city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
+    	back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 }
+    	city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
 	}
 
 	category: figure_category_armed
 	max_damage: 30
 	attack_value: 4
 	missile_attack_value: 4
+	animal_attack_value: 50
 	missile_delay: 50
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
-  max_hunting_distance : 15
+  	max_hunting_distance : 15
 }
 
 figure_hunter_arrow = {
