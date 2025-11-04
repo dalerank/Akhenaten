@@ -27,8 +27,7 @@ mission0 { // Nubt
 	}
 
 	stages {
-		tutorial_water { buildings: [BUILDING_WATER_SUPPLY] }
-		tutorial_collapse { buildings: [BUILDING_ARCHITECT_POST] }
+		tutorial_gamemeat_stored { buildings: [BUILDING_ARCHITECT_POST] }
 	}
 
 	vars {
@@ -38,6 +37,7 @@ mission0 { // Nubt
 		victory_last_action_delay : 4
 
 		tutorial_fire_handled : false
+		tutorial_collapsed_handle : false
 		tutorial_granary_opened : false
 		last_action_time : 0
 	}
@@ -56,6 +56,10 @@ function tutorial1_on_start(ev) {
 
 	if (mission.tutorial_fire_handled) {
 		city.use_building(BUILDING_FIREHOUSE, true)
+	}
+
+	if (mission.tutorial_collapsed_handle) {
+		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
 }
 
@@ -96,4 +100,18 @@ function tutorial1_handle_population_for_granary(ev) {
 
 	log_info("granary_open_population:${mission.last_action_time}")
 	log_info("tutorial1_handle_population_for_granary:${mission.tutorial_granary_opened}")
+}
+
+[event=event_collase_damage, mission=mission0]
+function tutorial1_handle_collapse(ev) {
+    if (mission.tutorial_collapsed_handle) {
+        return;
+    }
+	
+	mission.last_action_time = game.absolute_day
+	mission.tutorial_collapsed_handle = true
+
+	city.use_building(BUILDING_ARCHITECT_POST, true)
+
+    ui.popup_message("message_tutorial_collapsed_building")
 }

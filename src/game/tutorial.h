@@ -10,7 +10,6 @@ struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
     _RR(tutorial_water)
-    _RR(tutorial_collapse)
     _RR(tutorial_gods)
     _RR(tutorial_entertainment)
     _RR(tutorial_industry)
@@ -43,7 +42,7 @@ struct tutorial_flags_t {
         bool reserve_2;
         bool reserve_3;
         bool gamemeat_stored;
-        bool building_collapsed;
+        bool reserve_4;
         bool architector_built;
         bool bazaar_built;
     } tutorial_1;
