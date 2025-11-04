@@ -3,6 +3,7 @@ log_info("akhenaten: city.js started")
 city {
     use_building: city_use_building
     set_goal_tooltip: scenario_set_goal_tooltip
+    set_victory_reason : city_set_victory_reason
 }
 
 city.get_granary = function(building_id) {
