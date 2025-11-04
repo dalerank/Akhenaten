@@ -8,18 +8,7 @@
 #include "core/log.h"
 #include "scenario/scenario.h"
 #include "city/city_building_menu_ctrl.h"
-
-static void js_mission_use_building(js_State *J) {
-    int building_type = js_tointeger(J, 1);
-    bool enabled = true;
-    if (js_isdefined(J, 2)) {
-        enabled = js_toboolean(J, 2);
-    }
-    
-    g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled);
-    
-    js_pushundefined(J);
-}
+#include "js/js_game.h"
 
 void js_register_mission_objects(js_State *J) {
     js_newobject(J);
@@ -142,9 +131,6 @@ void js_register_mission_vars(const settings_vars_t &vars) {
         js_defaccessor(J, -3, name.c_str(), 0);
         logs::info("Registered mission variable: %s", name.c_str());
     });
-    
-    js_newcfunction(J, js_mission_use_building, "use_building", 2);
-    js_setproperty(J, -2, "use_building");
 
     js_pop(J, 1);
 }

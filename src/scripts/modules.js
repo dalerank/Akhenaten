@@ -11,6 +11,7 @@ import rating_points
 import game_messages
 import animal_herds
 import gods
+import city
 import images
 import city_sounds
 import walker_sounds
