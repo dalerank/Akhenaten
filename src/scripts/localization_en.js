@@ -201,6 +201,9 @@ localization_en = [
   
   {key: "#mission0_goal_create_housing", text:"Create an area of housing, and watch immigrants arrive" }
   {key: "#mission0_goal_build_granary", text:"Build a Granary that hunters can fill with game" }
+  {key: "#mission1_goal_build_mines", text:"Mine some gold for the Palace's treasury" }
+  {key: "#mission1_goal_build_temples", text:"Build some Temples and Shrines to Bast" }
+  {key: "#mission1_goal_build_entertainment", text:"Build Booths and Juggler Schools to raise city Culture" }
   
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#popup_dialog_quit", group:5, id:0 }

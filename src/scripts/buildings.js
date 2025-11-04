@@ -1769,7 +1769,7 @@ building_limestone_quarry = {
     preview : { pack:PACK_GENERAL, id:170 },
     base : { pack:PACK_GENERAL, id:170 },
     work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
-  },
+  }
   output : {
     resource : RESOURCE_LIMESTONE
   }
@@ -1785,25 +1785,28 @@ building_limestone_quarry = {
   laborers:[12], fire_risk:[0], damage_risk: [2]
 }
 
-building_mine_gold = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:185 },
-    base : { pack:PACK_GENERAL, id:185 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 },
+building_mine_gold {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:185 }
+    base { id:185 }
+    work { pos [54, 15], id:48, max_frames: 16, duration:2 }
   }
-  output : {
+  output {
     resource : RESOURCE_GOLD
   }
   building_size : 2
-  meta : { help_id:93, text_id:162 }
+  meta { help_id:93, text_id:162 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
-  needs : {
+  needs {
     rock : true
     ore : true
   }
-  cost: [ 50, 100, 150, 250, 400 ]
-  desirability : { value:[-16], step:[2], step_size:[3], range: [6] }
-  laborers:[12], fire_risk:[0], damage_risk: [2]
+  cost [ 50, 100, 150, 250, 400 ]
+  desirability { value[-16], step[2], step_size[3], range[6] }
+  laborers [12]
+  fire_risk [0]
+  damage_risk [2]
 }
 
 building_clay_gatehouse = {
@@ -2047,117 +2050,136 @@ building_pottery {
   damage_risk[3]
 }
 
-building_lamp_workshop = {
-  animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
-    clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
-  },
-  input : {
+building_lamp_workshop {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:125 }
+    base { id:125 }
+    work { pos [36, -4], id:125, offset:1, max_frames:18 }
+    clay { pos[65, 3], id:207 }
+  }
+  input {
     resource : RESOURCE_OIL
     resource_second : RESOURCE_TIMBER
   }
-  output : {
+  output {
     resource : RESOURCE_LAMPS
   }
-  production_rate : 20,
+  production_rate : 20
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  building_size : 2,
-  cost: [ 20, 30, 50, 100, 150 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[4], damage_risk: [3]
+  building_size : 2
+  cost [ 20, 30, 50, 100, 150 ]
+  desirability { value[-4], step[1], step_size[1], range[4] }
+  laborers [12]
+  fire_risk [4]
+  damage_risk [3]
 }
 
-building_paint_workshop = {
-  animations : {
-    preview : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    base : { pos : [-1, -1], pack:PACK_GENERAL, id:125 },
-    work : { pos : [36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18 },
-    clay : { pos:[65, 3], pack:PACK_GENERAL, id:207 },
-  },
-  input : {
+building_paint_workshop {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:125 }
+    base { id:125 }
+    work { pos [36, -4], id:125, offset:1, max_frames:18 }
+    clay { pos [65, 3], id:207 }
+  }
+  input {
     resource : RESOURCE_OIL
   }
-  output : {
+  output {
     resource : RESOURCE_PAINT
   }
   production_rate : 20,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   building_size : 2,
-  cost: [ 20, 30, 50, 100, 150 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[3], damage_risk: [1]
+  cost [ 20, 30, 50, 100, 150 ]
+  desirability { value[-4], step[1], step_size[1], range[4] }
+  laborers [12]
+  fire_risk [3]
+  damage_risk [1]
 }
 
-building_academy = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:44 },
-    base : { pack:PACK_GENERAL, id:4 },
-    work : { pos : [36, -4], pack:PACK_GENERAL, id:4, offset:1, max_frames:18 },
-  },
+building_academy {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:44 }
+    base { id:4 }
+    work { pos [36, -4], id:4, offset:1, max_frames:18 }
+  }
   labor_category : LABOR_CATEGORY_EDUCATION,
   building_size : 2,
-  cost: [ 200, 250, 300, 400, 500 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[20], fire_risk:[4], damage_risk: [1]
+  cost [ 200, 250, 300, 400, 500 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers [20]
+  fire_risk [4]
+  damage_risk [1]
   max_service: 100
 }
 
-building_physician = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:70 },
-    base : { pack:PACK_GENERAL, id:70 },
-    work : { pos : [60, -60], pack:PACK_GENERAL, id:70, offset:1, max_frames:11 }
+building_physician {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:70 }
+    base { id:70 }
+    work { pos [60, -60], id:70, offset:1, max_frames:11 }
   }
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  meta : { help_id: 64, text_id: 83 }
+  meta { help_id: 64, text_id: 83 }
   building_size : 2
-  cost: [ 10, 15, 30, 50, 100 ]
-  desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[8], fire_risk:[3], damage_risk: [3]
+  cost [ 10, 15, 30, 50, 100 ]
+  desirability { value[2], step[1], step_size[-1], range[2] }
+  laborers [8]
+  fire_risk [3]
+  damage_risk [3]
 }
 
-building_water_lift = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
-    base : { pos : [0, 0], pack:PACK_TERRAIN, id:50 },
-    work_n : { pos : [35, 0], pack:PACK_SPR_AMBIENT, id:1, offset:0, duration:8, max_frames:12 },
-    work_e : { pos : [54, 14], pack:PACK_SPR_AMBIENT, id:1, offset:14, duration:8, max_frames:12 },
-    work_s : { pos : [45, 0], pack:PACK_SPR_AMBIENT, id:1, offset:27, duration:8, max_frames:12 },
-    work_w : { pos : [68, 20], pack:PACK_SPR_AMBIENT, id:1, offset:40, duration:8, max_frames:12 },
-    minimap : {pack:PACK_GENERAL, id:151}
+building_water_lift {
+  animations {
+    _pack { pack:PACK_TERRAIN }
+    preview {id:50 }
+    base {  id:50 }
+    work_n { pos [35, 0], id:1, offset:0, duration:8, max_frames:12 }
+    work_e { pos [54, 14], id:1, offset:14, duration:8, max_frames:12 }
+    work_s { pos [45, 0], id:1, offset:27, duration:8, max_frames:12 }
+    work_w { pos [68, 20], id:1, offset:40, duration:8, max_frames:12 }
+    minimap {pack:PACK_GENERAL, id:151}
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   fire_proof : 1
   building_size : 2
-  planner_update_rule : { 
+  planner_update_rule { 
     canals : true
     relative_orientation: true
   }
-  needs : {
+  needs {
     water_access : true
     shoreline : true
     floodplain_shoreline : true
   }
-  meta : { help_id: 59, text_id: 107 }
-  cost : [ 6, 12, 25, 50, 100 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[8], fire_risk:[0], damage_risk: [3]
+  meta { help_id: 59, text_id: 107 }
+  cost [ 6, 12, 25, 50, 100 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers [8]
+  fire_risk [0]
+  damage_risk [3]
 }
 
-building_firehouse = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:78 },
-    work : { pos : [25, -30], pack:PACK_GENERAL, id:78, offset:1, max_frames:11 }
-  },
+building_firehouse {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:78 }
+    base { id:78 }
+    work { pos [25, -30], id:78, offset:1, max_frames:11 }
+  }
+
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
-  meta : { help_id: 355, text_id: 164 }
+  meta { help_id: 355, text_id: 164 }
   building_size : 1
-  cost: [ 6, 12, 25, 40, 60 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[6], fire_risk:[0], damage_risk: [2]
+  cost [ 6, 12, 25, 40, 60 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers [6]
+  fire_risk [0]
+  damage_risk [2]
 }
 
 building_police_station = {

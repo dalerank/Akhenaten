@@ -80,7 +80,6 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
     }
 
     int scenario_id = g_scenario.campaign_scenario_id();
-    memset_if(1 < scenario_id, 1, g_tutorials_flags.tutorial_2);
     memset_if(2 < scenario_id, 1, g_tutorials_flags.tutorial_3);
     memset_if(3 < scenario_id, 1, g_tutorials_flags.tutorial_4);
     memset_if(4 < scenario_id, 1, g_tutorials_flags.tutorial_5);
@@ -157,9 +156,6 @@ void tutorial_flags_t::update_starting_message() {
         g_scenario.meta.start_message_shown = true;
     }
 
-    if (g_scenario.is_scenario_id(2) && !g_tutorials_flags.tutorial_2.started) {
-        g_tutorials_flags.tutorial_2.started = 1;
-    }
     if (g_scenario.is_scenario_id(3) && !g_tutorials_flags.tutorial_3.started) {
         g_tutorials_flags.tutorial_3.started = 1;
     }
@@ -199,9 +195,9 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     // tut 2
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.gold_mined);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.temples_built);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.crime); 
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
     // tut 3
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.figs_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_1);
@@ -217,7 +213,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.started);
