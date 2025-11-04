@@ -146,7 +146,6 @@ void game_t::update_tick(int simtick) {
     g_city.figures.update();
 
     g_scenario.update();
-    g_city.victory_check();
 }
 
 void game_t::advance_year() {
@@ -217,6 +216,7 @@ void game_t::advance_day() {
     }
 
     g_city.update_day();
+    g_city.victory_check();
 
     g_sound.music_update(false);
     widget_minimap_invalidate();
