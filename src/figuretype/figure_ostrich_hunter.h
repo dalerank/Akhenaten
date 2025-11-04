@@ -20,6 +20,7 @@ public:
 
     struct static_params : public figure_static_params {
         uint8_t max_hunting_distance;
+        uint8_t animal_attack_value;
         int8_t missile_delay;
 
         void archive_init();
@@ -34,4 +35,4 @@ public:
     virtual void update_animation() override;
 };
 ANK_CONFIG_STRUCT(figure_ostrich_hunter::static_params,
-    max_hunting_distance, missile_delay)
+    max_hunting_distance, missile_delay, animal_attack_value)
