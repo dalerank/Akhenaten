@@ -34,19 +34,11 @@ void tutorial_handle_advance_day(event_advance_day ev) {
 }
 
 void tutorial1_handle_fire(event_fire_damage) {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
     if (g_scenario.vars.get_bool("tutorial_fire_handled")) {
         return;
     }
+    g_scenario.vars.set_bool("tutorial_fire_handled", true);
 
-    events::unsubscribe(&tutorial1_handle_fire);
-    
-    for (auto &item: g_scenario.extra_damage) {
-        item.fire = 0;
-    }
-
-    events::emit(event_building_menu_update{ tutorial_stage.tutorial_fire });
     messages::popup("message_fire_in_the_village", 0, 0);
 }
 
@@ -134,6 +126,7 @@ bool tutorial1_is_success() {
 
 void tutorial_1::init() {
     auto &tut = g_tutorials_flags.tutorial_1;
+    events::subscribe(&tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
     events::emit_if(granary_opened, event_building_menu_update{ "tutorial_food" });

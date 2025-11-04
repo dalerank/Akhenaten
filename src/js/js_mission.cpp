@@ -5,7 +5,21 @@
 #include "mujs/jscompile.h"
 #include "mujs/mujs.h"
 
+#include "core/log.h"
 #include "scenario/scenario.h"
+#include "city/city_building_menu_ctrl.h"
+
+static void js_mission_use_building(js_State *J) {
+    int building_type = js_tointeger(J, 1);
+    bool enabled = true;
+    if (js_isdefined(J, 2)) {
+        enabled = js_toboolean(J, 2);
+    }
+    
+    g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled);
+    
+    js_pushundefined(J);
+}
 
 void js_register_mission_objects(js_State *J) {
     js_newobject(J);
@@ -97,8 +111,10 @@ void js_register_mission_vars(const settings_vars_t &vars) {
     svector<xstring, 64> properties_to_delete;
     js_pushiterator(J, -1, 1);
     const char *key;
+    const std::unordered_set<xstring> systemvars = { "id", "btype", "use_building" };
     while ((key = js_nextiterator(J, -1))) {
-        if (key[0] != '_' && strcmp(key, "id") != 0) {
+        bool is_internal = (key[0] == '_') || (systemvars.count(key) == 0);
+        if (!is_internal) {
             properties_to_delete.push_back(key);
         }
     }
@@ -108,7 +124,10 @@ void js_register_mission_vars(const settings_vars_t &vars) {
         js_delproperty(J, -1, prop.c_str());
     }
 
-    g_scenario.vars.foreach_vars([J] (xstring name, const setting_variant &value) {
+    g_scenario.vars.foreach_vars([&] (xstring name, const setting_variant &value) {
+        // Variable name '%s' conflicts with mission method! Skipping.
+        assert(systemvars.count(name) == 0);
+        
         bstring128 getter_name("get_", name.c_str());
         bstring128 setter_name("set_", name.c_str());
 
@@ -121,7 +140,11 @@ void js_register_mission_vars(const settings_vars_t &vars) {
         js_setproperty(J, -2, "__varname");
 
         js_defaccessor(J, -3, name.c_str(), 0);
+        logs::info("Registered mission variable: %s", name.c_str());
     });
+    
+    js_newcfunction(J, js_mission_use_building, "use_building", 2);
+    js_setproperty(J, -2, "use_building");
 
     js_pop(J, 1);
 }

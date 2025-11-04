@@ -27,7 +27,6 @@ mission0 { // Nubt
 	}
 
 	stages {
-		tutorial_fire { buildings: [BUILDING_FIREHOUSE] }
 		tutorial_food { buildings: [BUILDING_HUNTING_LODGE, BUILDING_GRANARY, BUILDING_BAZAAR] }
 		tutorial_water { buildings: [BUILDING_WATER_SUPPLY] }
 		tutorial_collapse { buildings: [BUILDING_ARCHITECT_POST] }
@@ -47,13 +46,17 @@ mission0 { // Nubt
 [event=event_fire_damage, mission=mission0]
 function tutorial1_handle_fire(ev) {
 	if (mission.tutorial_fire_handled) {
-		return
+		//return
 	}
     
 	mission.last_action_time = game.absolute_day
 	mission.tutorial_fire_handled = true
     
-	//mission.use_building(BUILDING_FIREHOUSE, true)
+	log_info("Before use_building call")
+	log_info("mission.use_building type: " + typeof mission.use_building)
+	log_info("BUILDING_FIREHOUSE value: " + BUILDING_FIREHOUSE)
+	
+	mission.use_building(BUILDING_FIREHOUSE, true)
 	//ui.show_message("message_fire_in_the_village")
 	log_info("granary_open_population:${mission.last_action_time}")
 	log_info("tutorial1_handle_fire:${mission.tutorial_fire_handled}")
