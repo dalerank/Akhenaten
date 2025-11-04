@@ -26,7 +26,7 @@ public:
     void set_image_direction(vec2i src, vec2i dst);
     figure* shooter() const;
 
-    static void create(figure_id building_id, tile2i tile, tile2i dst, e_figure_type type);
+    static figure_missile* create(figure_id building_id, tile2i tile, tile2i dst, e_figure_type type);
 };
 
 class figure_hunter_arrow : public figure_missile {
