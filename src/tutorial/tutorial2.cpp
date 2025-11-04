@@ -38,21 +38,6 @@ void tutorial_2_on_build_temple(event_building_create ev) {
 }
 
 void tutorial_2_on_update_day(event_advance_day ev) {
-    auto &tut = g_tutorials_flags.tutorial_2;
-
-    if (tut.gold_mined) {
-        return;
-    }
-
-    if (g_city.finance.this_year.income.gold_delivered < g_scenario.vars.get_int("gold_mined", 500)) {
-        return;
-    }
-
-    events::unsubscribe(&tutorial_2_on_update_day);
-    events::emit(event_building_menu_update{ tutorial_stage.tutorial_gods });
-    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
-    tut.gold_mined = true;
-    events::emit(event_message{ true, "message_tutorial_the_gods_of_egypt", 0, 0 });
 }
 
 bool tutorial2_is_success() {
@@ -75,10 +60,6 @@ void tutorial2_population_cap(city_migration_t& migration) {
 
 void tutorial_2::init() {
     auto &tut = g_tutorials_flags.tutorial_2;
-
-    const bool gold_mined_500 = tut.gold_mined;
-    events::emit_if(gold_mined_500, event_building_menu_update{ tutorial_stage.tutorial_gods });
-    events::subscribe_if(!gold_mined_500, &tutorial_2_on_update_day);
 
     const bool temples_built = tut.temples_built;
     events::emit_if(temples_built, event_building_menu_update{ tutorial_stage.tutorial_entertainment });
@@ -108,10 +89,7 @@ xstring tutorial_2::goal_text() {
 }
 
 void tutorial_2::update_step(xstring s) {
-    if (s == tutorial_stage.tutorial_gods) {
-        events::emit(event_building_menu_update{ s });
-        events::emit(event_message{ true, "message_tutorial_the_gods_of_egypt", 0, 0 });
-    } else if (s == tutorial_stage.tutorial_entertainment) {
+    if (s == tutorial_stage.tutorial_entertainment) {
         events::emit(event_building_menu_update{ s });
         events::emit(event_message{ true, "message_tutorial_entertainment", 0, 0 });
     }

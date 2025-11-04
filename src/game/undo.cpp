@@ -19,6 +19,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/sprite.h"
 #include "grid/terrain.h"
+#include "city/city.h"
 #include "scenario/earthquake.h"
 
 #include <string.h>
@@ -208,7 +209,7 @@ void game_undo_perform() {
     if (!game_can_undo())
         return;
     data.available = 0;
-    city_finance_process_construction(-data.building_cost);
+    g_city.finance.process_construction(-data.building_cost);
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {

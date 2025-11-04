@@ -26,6 +26,12 @@ struct event_finance_change_wages { int value; };
 struct event_finance_change_tax { int value; };
 struct event_finance_process_request { e_finance_request_type type; uint32_t deben; };
 
+enum e_finance_value {
+    e_finance_value_gold_delivered = 0,
+
+    e_finance_value_max
+};
+
 struct finance_overview {
     struct {
         int taxes;
@@ -116,19 +122,10 @@ struct city_finance_t {
     void change_wages(int amount);
     int raise_wages_kingdome();
     int lower_wages_kingdome();
+    void process_stolen(int stolen);
+    void process_construction(int cost);
+    void update_interest();
 
     void process_request(finance_request_t request);
     void calculate_totals();
 };
-
-class figure;
-
-void city_finance_process_cheat();
-void city_finance_process_console(int amount);
-void city_finance_process_stolen(int stolen);
-void city_finance_process_construction(int cost);
-
-void city_finance_update_interest();
-
-const finance_overview* city_finance_overview_last_year();
-const finance_overview* city_finance_overview_this_year();

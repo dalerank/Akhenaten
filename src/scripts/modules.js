@@ -31,7 +31,7 @@ import ui_overlay_menu
 import imagepaks
 import missions
 import mission_0_nubt
-import mission_1_
+import mission_1_thinis
 import mission_2_
 import mission_5_timna
 import mission_6_behdet
