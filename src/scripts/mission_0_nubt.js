@@ -10,6 +10,7 @@ mission0 { // Nubt
 	}
 	religion_enabled : false
 	hide_won_screen : true
+	hide_nilometer : true
 	player_rank : 0
 
 	initial_funds [7500, 5000, 3750, 2500, 2000]
@@ -26,8 +27,7 @@ mission0 { // Nubt
 		house2 { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
 	}
 
-	stages {
-		tutorial_gamemeat_stored { buildings: [BUILDING_ARCHITECT_POST] }
+	stages {	
 	}
 
 	vars {
@@ -39,6 +39,7 @@ mission0 { // Nubt
 		tutorial_fire_handled : false
 		tutorial_collapsed_handle : false
 		tutorial_granary_opened : false
+		tutorial_gamemeat_stored : false
 		last_action_time : 0
 	}
 }
@@ -61,6 +62,10 @@ function tutorial1_on_start(ev) {
 	if (mission.tutorial_collapsed_handle) {
 		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
+
+	if (mission.tutorial_gamemeat_stored) {
+		city.use_building(BUILDING_WATER_SUPPLY, true)
+	}
 }
 
 [event=event_fire_damage, mission=mission0]
@@ -81,7 +86,7 @@ function tutorial1_handle_fire(ev) {
 
 [event=event_population_changed, mission=mission0]
 function tutorial1_handle_population_for_granary(ev) {
-	if (mission.granary_opened) {
+	if (mission.tutorial_granary_opened) {
 		return;
 	}
 
@@ -114,4 +119,26 @@ function tutorial1_handle_collapse(ev) {
 	city.use_building(BUILDING_ARCHITECT_POST, true)
 
     ui.popup_message("message_tutorial_collapsed_building")
+}
+
+[event=event_granary_resource_added, mission=mission0]
+function tutorial1_on_filled_granary(ev) {
+	log_info("granary_open_population:${ev.bid}", {ev: ev})
+    if (mission.tutorial_gamemeat_stored) {
+        return;
+    }
+
+    var granary = city.get_granary(ev.bid)
+    var meat_stored = granary.amount(RESOURCE_GAMEMEAT);
+
+    if (meat_stored < mission.granary_meat_stored) {
+        return;
+    }
+
+	mission.tutorial_gamemeat_stored = true
+	mission.last_action_time = game.absolute_day
+
+	city.use_building(BUILDING_WATER_SUPPLY, true)
+
+	ui.popup_message("message_tutorial_clean_water")
 }
