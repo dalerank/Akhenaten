@@ -40,6 +40,10 @@ tutorial_t::tutorial_t() {
     list().push_back(this);
 }
 
+xstring tutorial_t::goal_text() {
+    return g_scenario.goal_tooltip; 
+}
+
 tutorial_t::tutorial_list &tutorial_t::list() {
     static tutorial_list list;
     return list;
@@ -154,9 +158,6 @@ void tutorial_flags_t::update_starting_message() {
         g_scenario.meta.start_message_shown = true;
     }
 
-    if (g_scenario.is_scenario_id(1) && !g_tutorials_flags.tutorial_1.started) {
-        g_tutorials_flags.tutorial_1.started = 1;
-    }
     if (g_scenario.is_scenario_id(2) && !g_tutorials_flags.tutorial_2.started) {
         g_tutorials_flags.tutorial_2.started = 1;
     }
@@ -216,7 +217,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.bricks_bought);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.started);

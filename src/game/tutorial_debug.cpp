@@ -18,7 +18,6 @@ void config_show_tutorial_properties(bool header) {
         ImGui::BeginTable("Tutotial", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
         const auto &flags = g_tutorials_flags;
-        game_debug_show_property("tut1 start", flags.tutorial_1.started);
         game_debug_show_property("tut2 start", flags.tutorial_2.started);
         game_debug_show_property("2:gold_mined", flags.tutorial_2.gold_mined);
         game_debug_show_property("2:temples_done", flags.tutorial_2.temples_built);
