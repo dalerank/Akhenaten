@@ -199,6 +199,9 @@ localization_en = [
   {key: "#message_population_20000", text:"Other governors and nomarchs are awed that your city houses twenty thousand people!"}
   {key: "#message_population_25000", text:"The few immigrants who founded your city so many years ago never imagined that it would swell to twenty five thousand people!"}
   
+  {key: "#mission0_goal_create_housing", text:"Create an area of housing, and watch immigrants arrive" }
+  {key: "#mission0_goal_build_granary", text:"Build a Granary that hunters can fill with game" }
+  
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#popup_dialog_quit", group:5, id:0 }
   {key: "#popup_dialog_open_trade", group:5, id:2 }

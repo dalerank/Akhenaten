@@ -765,6 +765,7 @@ void GamestateIO::start_loaded_file() {
     }
 
     autoconfig_window::before_mission_start();
+    events::emit(event_mission_start{ g_scenario.settings.campaign_scenario_id });
 
     g_city.before_start_simulation();
     game.before_start_simulation();

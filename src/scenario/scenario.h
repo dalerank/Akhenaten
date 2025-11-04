@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <unordered_map>
 
+struct event_mission_start { int id; };
+
 struct scenario_data_buffers {
     buffer* mission_index = nullptr;
     buffer* map_name = nullptr;
@@ -247,6 +249,7 @@ struct scenario_data_t {
     std::array<extra_damage_t, BUILDING_MAX> extra_damage;
     std::unordered_map<xstring, building_stage_t> stages;
     settings_vars_t vars;
+    xstring goal_tooltip;
 
     struct {
         int hut;
