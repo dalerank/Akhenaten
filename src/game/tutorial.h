@@ -9,7 +9,6 @@
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
-    _RR(tutorial_entertainment)
     _RR(tutorial_industry)
     _RR(tutorial_health)
     _RR(tutorial_gardens)
@@ -35,16 +34,6 @@ struct tutorial_t {
 };
 
 struct tutorial_flags_t {
-    struct {
-        bool started;
-        bool population_250_reached;
-        bool population_450_reached;
-        bool reserved_1;
-        bool gold_mined;
-        bool temples_built;
-        bool crime;
-    } tutorial_2;
-
     struct {
         bool started;
         bool figs_stored;
