@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "core/calc.h"
+#include "game/game_events.h"
 #include "js/js_game.h"
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
@@ -129,6 +130,8 @@ void city_migration_t::update() {
     update_conditions();
     update_status();
     create_migrants();
+
+    events::emit(event_migration_update{ g_city.population.current });
 }
 
 void city_migration_t::determine_reason() {
