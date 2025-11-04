@@ -7,10 +7,10 @@ mission0 { // Nubt
 	    gods_least_mood : 50
 	    marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
+		hide_nilometer : true
 	}
 	religion_enabled : false
 	hide_won_screen : true
-	hide_nilometer : true
 	player_rank : 0
 
 	initial_funds [7500, 5000, 3750, 2500, 2000]
@@ -25,9 +25,6 @@ mission0 { // Nubt
 		house0 { type:BUILDING_HOUSE_CRUDE_HUT, fire: +0, collapse: +0}
 		house1 { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}	
 		house2 { type:BUILDING_HOUSE_STURDY_HUT, fire: +0, collapse: +0}
-	}
-
-	stages {	
 	}
 
 	vars {
@@ -131,6 +128,7 @@ function tutorial1_on_filled_granary(ev) {
     var granary = city.get_granary(ev.bid)
     var meat_stored = granary.amount(RESOURCE_GAMEMEAT);
 
+	log_info("meat_stored:${meat_stored}", {meat_stored: meat_stored})
     if (meat_stored < mission.granary_meat_stored) {
         return;
     }

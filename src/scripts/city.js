@@ -7,8 +7,7 @@ city {
 
 city.get_granary = function(building_id) {
     return {
-        id: building_id
-        
+        id: building_id        
         amount: function(resource_type) { return granary_get_amount(building_id, resource_type) }    
         total_stored: function() { return granary_get_total_stored(building_id) }
     }

@@ -358,4 +358,5 @@ void ui::window_features::show(std::function<void()> close_callback) {
     window_show(&window);
 }
 
-ANK_FUNCTION_NAMED(window_features_show, [] { ui::window_features::show([] {}); })
+void window_features_show() { ui::window_features::show([] {}); }
+ANK_FUNCTION(window_features_show)
