@@ -27,7 +27,7 @@ struct tutorial_t {
     tutorial_t();
     
     virtual int missionid() const = 0;
-    virtual void init() = 0;
+    virtual void init() {}
     virtual void reset() {}
     virtual void update_step(xstring s) {}
     virtual xstring goal_text();
@@ -36,16 +36,6 @@ struct tutorial_t {
 };
 
 struct tutorial_flags_t {
-    struct {
-        bool reserve_1;
-        bool reserve_2;
-        bool reserve_3;
-        bool reserve_5;
-        bool reserve_4;
-        bool architector_built;
-        bool bazaar_built;
-    } tutorial_1;
-
     struct {
         bool started;
         bool population_250_reached;
