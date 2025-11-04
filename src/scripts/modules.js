@@ -4,6 +4,7 @@ include(":akhenaten.conf")
 include(":hotkeys.conf")
 
 import common
+import game
 import math
 import ui_common
 import ui_main_menu
