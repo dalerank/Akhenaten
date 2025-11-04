@@ -17,7 +17,7 @@ void city_use_building(int building_type, bool enabled) {
 ANK_FUNCTION_2(city_use_building)
 
 void ui_popup_message(xstring message) {
-    messages::popup("message_fire_in_the_village", 0, 0);
+    messages::popup(message, 0, 0);
 }
 ANK_FUNCTION_1(ui_popup_message)
 

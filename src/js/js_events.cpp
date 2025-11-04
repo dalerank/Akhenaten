@@ -9,3 +9,4 @@
 ANK_SCRIPT_EVENT(event_population_changed, value)
 ANK_SCRIPT_EVENT(event_fire_damage, bid) 
 ANK_SCRIPT_EVENT(event_mission_start, id)
+ANK_SCRIPT_EVENT(event_collase_damage, bid)
