@@ -42,24 +42,6 @@ void tutorial1_popultion_cap(city_migration_t& migration) {
     migration.population_cap = max_pop;
 }
 
-void tutorial1_handle_population_for_granary(event_population_changed ev) {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    if (tut.granary_opened) {
-        return;
-    }
-
-    if (ev.value < g_scenario.vars.get_int("granary_open_population", 150)) {
-        return;
-    }
-
-    events::unsubscribe(&tutorial1_handle_population_for_granary);
-    events::emit(event_building_menu_update{ "tutorial_food" });
-    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
-    tut.granary_opened = true;
-    messages::popup("message_tutorial_food_or_famine", 0, 0);
-}
-
 void tutorial1_handle_collapse(event_collase_damage) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
@@ -116,12 +98,7 @@ bool tutorial1_is_success() {
 }
 
 void tutorial_1::init() {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    const bool granary_opened = tut.granary_opened;
-    events::emit_if(granary_opened, event_building_menu_update{ "tutorial_food" });
-    
-    events::subscribe_if(!granary_opened, &tutorial1_handle_population_for_granary);
+    auto &tut = g_tutorials_flags.tutorial_1; 
 
     const bool architector_built = tut.architector_built;
     events::subscribe_if(!architector_built, &tutorial1_handle_building_create);
@@ -146,7 +123,6 @@ void tutorial_1::init() {
 void tutorial_1::reset() {
     auto &tut = g_tutorials_flags.tutorial_1;
 
-    tut.granary_opened = 0;
     tut.gamemeat_stored = 0;
     tut.building_collapsed = 0;
     tut.started = 0;
@@ -155,8 +131,9 @@ void tutorial_1::reset() {
 xstring tutorial_1::goal_text() {
     auto &tut = g_tutorials_flags.tutorial_1;
 
-    if (!tut.granary_opened)
-        return lang_get_xstring(62, 21);
+    if (!g_scenario.goal_tooltip.empty()) {
+        return g_scenario.goal_tooltip;
+    }
     
     if (!tut.gamemeat_stored)
         return lang_get_xstring(62, 19);
@@ -170,9 +147,6 @@ void tutorial_1::update_step(xstring s) {
     if (s == tutorial_stage.tutorial_collapse) {
         tut.building_collapsed = false;
         tutorial1_handle_collapse({ 0 });
-    } else if (s == "tutorial_food") {
-        tut.granary_opened = false;
-        tutorial1_handle_population_for_granary({ 0 });
     } else if (s == tutorial_stage.tutorial_water) {
         tut.gamemeat_stored = false;
         tutorial1_on_filled_granary({ 0 });

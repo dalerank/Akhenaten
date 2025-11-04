@@ -19,7 +19,6 @@ void config_show_tutorial_properties(bool header) {
 
         const auto &flags = g_tutorials_flags;
         game_debug_show_property("tut1 start", flags.tutorial_1.started);
-        game_debug_show_property("1:granary_opened", flags.tutorial_1.granary_opened);
         game_debug_show_property("1:meat_400", flags.tutorial_1.gamemeat_stored);
         game_debug_show_property("1:collapse", flags.tutorial_1.building_collapsed);
         game_debug_show_property("tut2 start", flags.tutorial_2.started);

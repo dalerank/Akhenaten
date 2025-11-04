@@ -41,7 +41,7 @@ struct tutorial_flags_t {
     struct {
         bool started;
         bool reserve_2;
-        bool granary_opened;
+        bool reserve_3;
         bool gamemeat_stored;
         bool building_collapsed;
         bool architector_built;
