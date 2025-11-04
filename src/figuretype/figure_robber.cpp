@@ -118,7 +118,7 @@ void figure_robber::create(building *b) {
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
 
             g_city.ratings.monument_record_criminal();
-            int taxes_this_year = city_finance_overview_this_year()->income.taxes;
+            int taxes_this_year = g_city.finance.this_year.income.taxes;
             if (taxes_this_year > 20) {
                 int money_stolen = taxes_this_year / 4;
                 if (money_stolen > 400) {
@@ -126,7 +126,7 @@ void figure_robber::create(building *b) {
                 }
 
                 city_show_message_criminal("message_tutorial_crime", money_stolen, f->tile.grid_offset());
-                city_finance_process_stolen(money_stolen);
+                g_city.finance.process_stolen(money_stolen);
             } else {
                 const int treasury = g_city.finance.treasury;
                 int money_stolen = 0;
@@ -136,7 +136,7 @@ void figure_robber::create(building *b) {
 
                 if (money_stolen > 0) {
                     city_show_message_criminal("message_tutorial_crime", money_stolen, f->tile.grid_offset());
-                    city_finance_process_stolen(money_stolen);
+                    g_city.finance.process_stolen(money_stolen);
                 }
             }
         }

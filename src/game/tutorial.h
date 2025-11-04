@@ -9,7 +9,6 @@
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
-    _RR(tutorial_gods)
     _RR(tutorial_entertainment)
     _RR(tutorial_industry)
     _RR(tutorial_health)

@@ -82,18 +82,6 @@ int game_cheat_tooltip_enabled(void) {
     return g_cheats_data.tooltip_enabled;
 }
 
-void game_cheat_money(void) {
-    if (g_cheats_data.is_cheating) {
-        city_finance_process_cheat();
-    }
-}
-
-void game_cheat_breakpoint() {
-    if (g_cheats_data.is_cheating) {
-        //
-    }
-}
-
 void game_cheat_console(bool force) {
     g_cheats_data.is_cheating |= force;
     if (g_cheats_data.is_cheating) {
@@ -157,7 +145,7 @@ declare_console_command_p(addmoney) {
     std::string args; is >> args;
     int money = 0;
     parse_integer(args.empty() ? (pcstr )"100" : args.c_str(), money);
-    city_finance_process_console(money);
+    g_city.finance.treasury += money;
     events::emit(event_city_warning{ "Added money" });
 }
 

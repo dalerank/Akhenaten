@@ -15,10 +15,21 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "building/building_mansion.h"
+#include "js/js_game.h"
 
 #include <map>
 
-static auto &city_data = g_city;
+using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
+const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
+
+int __city_finance_income(int type) {
+    switch (type) {
+    case e_finance_value_gold_delivered: return g_city.finance.this_year.income.gold_delivered;
+    }
+
+    return 0;
+}
+ANK_FUNCTION_1(__city_finance_income)
 
 void city_finance_t::init() {
     wages_kingdome = 30;
@@ -75,34 +86,21 @@ bool city_finance_t::is_out_of_money() const{
     return (treasury <= -5000);
 }
 
-void city_finance_process_cheat() {
-    if (city_data.finance.treasury < 5000) {
-        city_data.finance.treasury += 1000;
-        city_data.finance.cheated_money += 1000;
-    }
+void city_finance_t::process_stolen(int stolen) {
+    treasury -= stolen;
+    this_year.expenses.stolen += stolen;
 }
 
-void city_finance_process_console(int amount) {
-    city_data.finance.treasury += amount;
-    city_data.finance.cheated_money += amount;
+void city_finance_t::process_construction(int cost) {
+    treasury -= cost;
+    this_year.expenses.construction += cost;
 }
 
-void city_finance_process_stolen(int stolen) {
-    city_data.finance.treasury -= stolen;
-    city_data.finance.this_year.expenses.stolen += stolen;
-}
-
-void city_finance_process_construction(int cost) {
-    city_data.finance.treasury -= cost;
-    city_data.finance.this_year.expenses.construction += cost;
-}
-
-void city_finance_update_interest() {
-    city_data.finance.this_year.expenses.interest = city_data.finance.interest_so_far;
+void city_finance_t::update_interest() {
+    this_year.expenses.interest = interest_so_far;
 }
 
 void city_finance_t::calculate_totals() {
-    finance_overview& this_year = city_data.finance.this_year;
     this_year.income.total = this_year.income.donated + this_year.income.taxes + this_year.income.exports
                               + this_year.income.gold_delivered;
 
@@ -110,7 +108,6 @@ void city_finance_t::calculate_totals() {
                                 + this_year.expenses.construction + this_year.expenses.wages
                                 + this_year.expenses.imports + this_year.expenses.festivals + this_year.expenses.kingdome + this_year.expenses.disasters;
 
-    finance_overview& last_year = city_data.finance.last_year;
     last_year.income.total = last_year.income.donated + last_year.income.taxes + last_year.income.exports
                               + last_year.income.gold_delivered;
 
@@ -205,7 +202,7 @@ void city_finance_t::update_estimate_taxes() {
     int monthly_plebs = calc_adjust_with_percentage<int>(taxes.monthly.collected_citizens/ 2, tax_percentage);
     int estimated_rest_of_year = (12 - game.simtime.month) * (monthly_patricians + monthly_plebs);
 
-    this_year.income.taxes = taxes.yearly.collected_citizens + city_data.taxes.yearly.collected_nobles;
+    this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
     estimated_tax_income = this_year.income.taxes + estimated_rest_of_year;
 
     // TODO: fix this calculation
@@ -215,17 +212,18 @@ void city_finance_t::update_estimate_taxes() {
 }
 
 void city_finance_t::collect_monthly_taxes() {
-    city_data.taxes.taxed_citizens = 0;
-    city_data.taxes.taxed_nobles = 0;
-    city_data.taxes.untaxed_citizens = 0;
-    city_data.taxes.untaxed_nobles = 0;
-    city_data.taxes.monthly.uncollected_citizens = 0;
-    city_data.taxes.monthly.collected_citizens = 0;
-    city_data.taxes.monthly.uncollected_nobles = 0;
-    city_data.taxes.monthly.collected_nobles = 0;
+    auto &data = g_city;
+    data.taxes.taxed_citizens = 0;
+    data.taxes.taxed_nobles = 0;
+    data.taxes.untaxed_citizens = 0;
+    data.taxes.untaxed_nobles = 0;
+    data.taxes.monthly.uncollected_citizens = 0;
+    data.taxes.monthly.collected_citizens = 0;
+    data.taxes.monthly.uncollected_nobles = 0;
+    data.taxes.monthly.collected_nobles = 0;
 
     for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
-        city_data.population.at_level[i] = 0;
+        data.population.at_level[i] = 0;
     }
 
     std::map<int, uint32_t> tax_collectors; 
@@ -246,16 +244,16 @@ void city_finance_t::collect_monthly_taxes() {
         int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
         int population = housed.population;
         const int scenario_tax_multiplier = g_scenario.house_tax_multiplier(house->model().tax_multiplier);
-        city_data.population.at_level[house->house_level()] += population;
+        data.population.at_level[house->house_level()] += population;
 
         const int tax = population * scenario_tax_multiplier;
         if (housed.tax_coverage) {
             if (is_nobles) {
-                city_data.taxes.taxed_nobles += population;
-                city_data.taxes.monthly.collected_nobles += tax;
+                data.taxes.taxed_nobles += population;
+                data.taxes.monthly.collected_nobles += tax;
             } else {
-                city_data.taxes.taxed_citizens += population;
-                city_data.taxes.monthly.collected_citizens += tax;
+                data.taxes.taxed_citizens += population;
+                data.taxes.monthly.collected_citizens += tax;
             }
 
             if (!!game_features::gameplay_change_new_tax_collection_system) {
@@ -266,39 +264,39 @@ void city_finance_t::collect_monthly_taxes() {
             housed.tax_income_or_storage += tax;
         } else {
             if (is_nobles) {
-                city_data.taxes.untaxed_nobles += population;
-                city_data.taxes.monthly.uncollected_nobles += tax;
+                data.taxes.untaxed_nobles += population;
+                data.taxes.monthly.uncollected_nobles += tax;
             } else {
-                city_data.taxes.untaxed_citizens += population;
-                city_data.taxes.monthly.uncollected_citizens += tax;
+                data.taxes.untaxed_citizens += population;
+                data.taxes.monthly.uncollected_citizens += tax;
             }
         }
     });
 
     int tax_city_divider = 2;
-    int collected_nobles = calc_adjust_with_percentage<int>(city_data.taxes.monthly.collected_nobles / tax_city_divider, city_data.finance.tax_percentage);
-    int collected_citizens = calc_adjust_with_percentage<int>(city_data.taxes.monthly.collected_citizens / tax_city_divider, city_data.finance.tax_percentage);
+    int collected_nobles = calc_adjust_with_percentage<int>(data.taxes.monthly.collected_nobles / tax_city_divider, data.finance.tax_percentage);
+    int collected_citizens = calc_adjust_with_percentage<int>(data.taxes.monthly.collected_citizens / tax_city_divider, data.finance.tax_percentage);
     int collected_total = collected_nobles + collected_citizens;
 
-    city_data.taxes.yearly.collected_nobles += collected_nobles;
-    city_data.taxes.yearly.collected_citizens += collected_citizens;
-    city_data.taxes.yearly.uncollected_nobles += calc_adjust_with_percentage<int>(city_data.taxes.monthly.uncollected_nobles / tax_city_divider, city_data.finance.tax_percentage);
-    city_data.taxes.yearly.uncollected_citizens += calc_adjust_with_percentage<int>(city_data.taxes.monthly.uncollected_citizens / tax_city_divider, city_data.finance.tax_percentage);
+    data.taxes.yearly.collected_nobles += collected_nobles;
+    data.taxes.yearly.collected_citizens += collected_citizens;
+    data.taxes.yearly.uncollected_nobles += calc_adjust_with_percentage<int>(data.taxes.monthly.uncollected_nobles / tax_city_divider, data.finance.tax_percentage);
+    data.taxes.yearly.uncollected_citizens += calc_adjust_with_percentage<int>(data.taxes.monthly.uncollected_citizens / tax_city_divider, data.finance.tax_percentage);
 
     if (!!game_features::gameplay_change_new_tax_collection_system) {
         for (auto &it : tax_collectors) {
             building *b = building_get(it.first);
-            b->deben_storage += calc_adjust_with_percentage<uint32_t>(it.second / tax_city_divider, city_data.finance.tax_percentage);
+            b->deben_storage += calc_adjust_with_percentage<uint32_t>(it.second / tax_city_divider, data.finance.tax_percentage);
         }
     } else {
-        city_data.finance.treasury += collected_total;
+        data.finance.treasury += collected_total;
     }
 
-    int total_patricians = city_data.taxes.taxed_nobles + city_data.taxes.untaxed_nobles;
-    int total_plebs = city_data.taxes.taxed_citizens + city_data.taxes.untaxed_citizens;
-    city_data.taxes.percentage_taxed_nobles = calc_percentage(city_data.taxes.taxed_nobles, total_patricians);
-    city_data.taxes.percentage_taxed_citizens = calc_percentage(city_data.taxes.taxed_citizens, total_plebs);
-    city_data.taxes.percentage_taxed_people = calc_percentage(city_data.taxes.taxed_nobles + city_data.taxes.taxed_citizens, total_patricians + total_plebs);
+    int total_patricians = data.taxes.taxed_nobles + data.taxes.untaxed_nobles;
+    int total_plebs = data.taxes.taxed_citizens + data.taxes.untaxed_citizens;
+    data.taxes.percentage_taxed_nobles = calc_percentage(data.taxes.taxed_nobles, total_patricians);
+    data.taxes.percentage_taxed_citizens = calc_percentage(data.taxes.taxed_citizens, total_plebs);
+    data.taxes.percentage_taxed_people = calc_percentage(data.taxes.taxed_nobles + data.taxes.taxed_citizens, total_patricians + total_plebs);
 }
 
 void city_finance_t::pay_monthly_wages() {
@@ -329,11 +327,12 @@ void city_finance_t::pay_monthly_salary() {
 }
 
 static void reset_taxes() {
-    city_data.finance.last_year.income.taxes = city_data.taxes.yearly.collected_citizens + city_data.taxes.yearly.collected_nobles;
-    city_data.taxes.yearly.collected_citizens = 0;
-    city_data.taxes.yearly.collected_nobles = 0;
-    city_data.taxes.yearly.uncollected_citizens = 0;
-    city_data.taxes.yearly.uncollected_citizens = 0;
+    auto &data = g_city;
+    data.finance.last_year.income.taxes = data.taxes.yearly.collected_citizens + data.taxes.yearly.collected_nobles;
+    data.taxes.yearly.collected_citizens = 0;
+    data.taxes.yearly.collected_nobles = 0;
+    data.taxes.yearly.uncollected_citizens = 0;
+    data.taxes.yearly.uncollected_citizens = 0;
 
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -448,14 +447,6 @@ void city_finance_t::advance_year() {
     reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();
-}
-
-const finance_overview* city_finance_overview_last_year() {
-    return &city_data.finance.last_year;
-}
-
-const finance_overview* city_finance_overview_this_year() {
-    return &city_data.finance.this_year;
 }
 
 city_finance_t::treasury_t &city_finance_t::treasury_t::change(int v) {
