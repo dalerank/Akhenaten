@@ -22,7 +22,7 @@
 building_menu_ctrl_t g_building_menu_ctrl;
 static building_menu_item building_menu_item_dummy{-1, false};
 
-declare_console_command_p(menuupdate) {
+declare_console_command_p(update_menu) {
     std::string args;
     is >> args;
     g_building_menu_ctrl.update(args.c_str());

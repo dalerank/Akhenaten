@@ -118,6 +118,37 @@ using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 #define ANK_VARIABLE_N(a, name) a; \
     ANK_CONFIG_OBJECT_VARIABLE_N(a, name)
 
+template<typename Func>
+struct function_traits;
+
+template<typename R, typename... Args>
+struct function_traits<R(*)(Args...)> {
+    using return_type = R;
+    static constexpr size_t arity = sizeof...(Args);
+
+    template<size_t N>
+    struct arg {
+        using type = typename std::tuple_element<N, std::tuple<Args...>>::type;
+    };
+};
+
+template<typename R, typename... Args>
+struct function_traits<R(Args...)> : function_traits<R(*)(Args...)> {};
+
+template<typename C, typename R, typename... Args>
+struct function_traits<R(C:: *)(Args...)> {
+    using return_type = R;
+    static constexpr size_t arity = sizeof...(Args);
+
+    template<size_t N>
+    struct arg {
+        using type = typename std::tuple_element<N, std::tuple<Args...>>::type;
+    };
+};
+
+template<typename C, typename R, typename... Args>
+struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args...)> {};
+
 #define ANK_FUNCTION_NAMED(fname, func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }, J); } \
@@ -131,18 +162,24 @@ using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 1); }, J); } \
     void permanent_js2cpp_callback_##fname(js_State *J) { type param = js_helpers::js_to_value<type>(J, 1); func(param); js_pushundefined(J); }
 
-#define ANK_FUNCTION_1(func, type) \
-    ANK_FUNCTION_NAMED_1(func, func, type)
+#define ANK_FUNCTION_1(func) \
+    ANK_FUNCTION_NAMED_1(func, func, function_traits<decltype(&func)>::arg<0>::type)
 
 #define ANK_FUNCTION_NAMED_2(fname, func, type1, type2) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 2); }, J); } \
     void permanent_js2cpp_callback_##fname(js_State *J) { type1 param1 = js_helpers::js_to_value<type1>(J, 1); type2 param2 = js_helpers::js_to_value<type2>(J, 2); func(param1, param2); js_pushundefined(J); }
 
+#define ANK_FUNCTION_2(func, type1, type2) \
+     ANK_FUNCTION_NAMED_2(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type)
+
 #define ANK_FUNCTION_NAMED_3(fname, func, type1, type2, type3) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 3); }, J); } \
     void permanent_js2cpp_callback_##fname(js_State *J) { type1 param1 = js_helpers::js_to_value<type1>(J, 1); type2 param2 = js_helpers::js_to_value<type2>(J, 2); type3 param3 = js_helpers::js_to_value<type3>(J, 3); func(param1, param2, param3); js_pushundefined(J); }
+
+#define ANK_FUNCTION_AUTO_3(func) \
+    ANK_FUNCTION_NAMED_3(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type)
 
 #define ANK_PERMANENT_CALLBACK(event, a) \
     tmp_register_permanent_callback_ ##event(); \
