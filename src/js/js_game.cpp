@@ -198,36 +198,20 @@ void js_register_game_handlers(xstring missionid) {
     logs::info("JS: Found %d functions with modifiers", function_count);
 }
 
-static void js_game_screen_w_getter(js_State *J) {
-    js_pushnumber(J, screen_width());
-}
+int __game_screen_width() { return screen_width(); }
+ANK_FUNCTION(__game_screen_width);
 
-static void js_game_screen_h_getter(js_State *J) {
-    js_pushnumber(J, screen_height());
-}
+int __game_screen_height() { return screen_height(); }
+ANK_FUNCTION(__game_screen_height)
 
-static void js_game_absolute_day_getter(js_State *J) {
-    js_pushnumber(J, game.simtime.absolute_day(true));
-}
+int __game_absolute_day() { return game.simtime.absolute_day(true); }
+ANK_FUNCTION(__game_absolute_day)
+
+xstring __game_version() { return get_version().c_str(); }
+ANK_FUNCTION(__game_version)
 
 void js_register_game_objects(js_State *J) {
-    js_newobject(J);
-    {
-        js_pushstring(J, get_version().c_str()); 
-        js_setproperty(J, -2, "version");
-
-        js_newobject(J);
-            js_newcfunction(J, js_game_screen_w_getter, "get_w", 0); js_pushundefined(J);
-            js_defaccessor(J, -3, "w", JS_READONLY);
-
-            js_newcfunction(J, js_game_screen_h_getter, "get_h", 0); js_pushundefined(J);
-            js_defaccessor(J, -3, "h", JS_READONLY);
-        js_setproperty(J, -2, "screen");
-        
-        js_newcfunction(J, js_game_absolute_day_getter, "get_absolute_day", 0); js_pushundefined(J);
-        js_defaccessor(J, -2, "absolute_day", JS_READONLY);
-    }
-    js_setglobal(J, "game");
+    // do nothing
 }
 
 void js_register_game_functions(js_State *J) {
