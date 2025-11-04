@@ -2,6 +2,8 @@
 
 #include "core/xstring.h"
 
+struct event_update_victory_state { int population; };
+
 enum e_victory_state {
     e_victory_state_lost = -1,
     e_victory_state_none = 0,
