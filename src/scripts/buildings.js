@@ -1790,7 +1790,7 @@ building_mine_gold {
     _pack { pack:PACK_GENERAL }
     preview { id:185 }
     base { id:185 }
-    work { pos [54, 15], id:48, max_frames: 16, duration:2 }
+    work { pos [54, 15], pack:PACK_SPR_AMBIENT, internal_offset:true, id:48, max_frames: 16, duration:2 }
   }
   output {
     resource : RESOURCE_GOLD
@@ -2138,11 +2138,11 @@ building_water_lift {
     _pack { pack:PACK_TERRAIN }
     preview {id:50 }
     base {  id:50 }
-    work_n { pos [35, 0], id:1, offset:0, duration:8, max_frames:12 }
-    work_e { pos [54, 14], id:1, offset:14, duration:8, max_frames:12 }
-    work_s { pos [45, 0], id:1, offset:27, duration:8, max_frames:12 }
-    work_w { pos [68, 20], id:1, offset:40, duration:8, max_frames:12 }
-    minimap {pack:PACK_GENERAL, id:151}
+    work_n { pos [35, 0], pack:PACK_SPR_AMBIENT, id:1, offset:0, duration:8, max_frames:12 }
+    work_e { pos [54, 14], pack:PACK_SPR_AMBIENT, id:1, offset:14, duration:8, max_frames:12 }
+    work_s { pos [45, 0], pack:PACK_SPR_AMBIENT, id:1, offset:27, duration:8, max_frames:12 }
+    work_w { pos [68, 20], pack:PACK_SPR_AMBIENT, id:1, offset:40, duration:8, max_frames:12 }
+    minimap { pack:PACK_GENERAL, id:151 }
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   fire_proof : 1

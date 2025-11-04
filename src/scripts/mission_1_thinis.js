@@ -97,7 +97,7 @@ function tutorial_2_on_build_temple(ev) {
     }
 
     var is_temple = city.building_is_temple(ev.bid)
-    if (is_temple) {
+    if (!is_temple) {
         return
     }
 

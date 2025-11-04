@@ -175,6 +175,7 @@ static void post_load() {
 
     mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid);
+    js_register_mission_vars(g_scenario.vars);
     g_empire.load_mission_metadata(missionid);
     js_register_game_handlers(missionid.value());
 
