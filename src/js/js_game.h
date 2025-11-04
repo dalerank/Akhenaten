@@ -170,7 +170,7 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
     void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 2); }, J); } \
     void permanent_js2cpp_callback_##fname(js_State *J) { type1 param1 = js_helpers::js_to_value<type1>(J, 1); type2 param2 = js_helpers::js_to_value<type2>(J, 2); func(param1, param2); js_pushundefined(J); }
 
-#define ANK_FUNCTION_2(func, type1, type2) \
+#define ANK_FUNCTION_2(func) \
      ANK_FUNCTION_NAMED_2(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type)
 
 #define ANK_FUNCTION_NAMED_3(fname, func, type1, type2, type3) \
