@@ -22,25 +22,9 @@
 struct tutorial_1 : public tutorial_t {
     virtual int missionid() const override { return 1; }
     virtual void init() override;
-    virtual void reset() override;
-    virtual xstring goal_text() override;
 };
 
 tutorial_1 g_tutorial_1;
-
-void tutorial_handle_advance_day(event_advance_day ev) {
-    // nothing special happens here
-}
-
-void tutorial1_popultion_cap(city_migration_t& migration) {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    const int population_cap_firstfire = g_scenario.vars.get_int("population_cap_firstfire", 80);
-    const bool tutorial_fire_handled = g_scenario.vars.get_bool("tutorial_fire_handled");
-    const bool tutorial_collapsed_handle = g_scenario.vars.get_bool("tutorial_collapsed_handle");
-    const int max_pop = (!tutorial_fire_handled || !tutorial_collapsed_handle) ? population_cap_firstfire : 0;
-    migration.population_cap = max_pop;
-}
 
 bool tutorial1_is_success() {
     const int victory_last_action_delay = g_scenario.vars.get_int("victory_last_action_delay", 3);
@@ -52,23 +36,4 @@ void tutorial_1::init() {
     auto &tut = g_tutorials_flags.tutorial_1; 
 
     g_city.victory_state.add_condition(tutorial1_is_success);
-    g_city.migration.add_condition(tutorial1_popultion_cap);
-
-    events::subscribe(&tutorial_handle_advance_day);
-}
-
-void tutorial_1::reset() {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    tut.started = 0;
-}
-
-xstring tutorial_1::goal_text() {
-    auto &tut = g_tutorials_flags.tutorial_1;
-
-    if (!g_scenario.goal_tooltip.empty()) {
-        return g_scenario.goal_tooltip;
-    }
-
-    return lang_get_xstring(62, 20);
 }

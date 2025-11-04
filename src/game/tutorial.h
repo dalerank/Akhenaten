@@ -28,16 +28,16 @@ struct tutorial_t {
     
     virtual int missionid() const = 0;
     virtual void init() = 0;
-    virtual void reset() = 0;
+    virtual void reset() {}
     virtual void update_step(xstring s) {}
-    virtual xstring goal_text() = 0;
+    virtual xstring goal_text();
 
     static tutorial_list &list();
 };
 
 struct tutorial_flags_t {
     struct {
-        bool started;
+        bool reserve_1;
         bool reserve_2;
         bool reserve_3;
         bool reserve_5;

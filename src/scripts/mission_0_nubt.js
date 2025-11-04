@@ -32,6 +32,7 @@ mission0 { // Nubt
 		population_cap_firstfire : 0
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
+		population_cap : 250
 
 		tutorial_fire_handled : false
 		tutorial_collapsed_handle : false
@@ -63,6 +64,8 @@ function tutorial1_on_start(ev) {
 	if (mission.tutorial_gamemeat_stored) {
 		city.use_building(BUILDING_WATER_SUPPLY, true)
 	}
+
+	migration.population_cap = mission.population_cap;
 }
 
 [event=event_fire_damage, mission=mission0]
@@ -139,4 +142,9 @@ function tutorial1_on_filled_granary(ev) {
 	city.use_building(BUILDING_WATER_SUPPLY, true)
 
 	ui.popup_message("message_tutorial_clean_water")
+}
+
+[event=event_migration_update, mission=mission0]
+function tutorial1_handle_population_cap(ev) {
+	// do nothing
 }
