@@ -33,15 +33,6 @@ void tutorial_handle_advance_day(event_advance_day ev) {
     // nothing special happens here
 }
 
-void tutorial1_handle_fire(event_fire_damage) {
-    if (g_scenario.vars.get_bool("tutorial_fire_handled")) {
-        return;
-    }
-    g_scenario.vars.set_bool("tutorial_fire_handled", true);
-
-    messages::popup("message_fire_in_the_village", 0, 0);
-}
-
 void tutorial1_popultion_cap(city_migration_t& migration) {
     auto &tut = g_tutorials_flags.tutorial_1;
 
@@ -126,7 +117,6 @@ bool tutorial1_is_success() {
 
 void tutorial_1::init() {
     auto &tut = g_tutorials_flags.tutorial_1;
-    events::subscribe(&tutorial1_handle_fire);
 
     const bool granary_opened = tut.granary_opened;
     events::emit_if(granary_opened, event_building_menu_update{ "tutorial_food" });

@@ -1,6 +1,10 @@
 log_info("akhenaten: ui config started")
 
-uioptions = {
+ui {
+    popup_message: ui_popup_message
+}
+
+uioptions {
     resource_icons  : {pack:PACK_EXPANSION, id:3}
     advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0}
     arrow_button_tiny_down : {pack:PACK_GENERAL, id:212, offset:0}
