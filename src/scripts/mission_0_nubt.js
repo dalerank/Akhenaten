@@ -53,7 +53,8 @@ function tutorial1_handle_fire(ev) {
 	mission.tutorial_fire_handled = true
 	
 	city.use_building(BUILDING_FIREHOUSE, true)
-	//ui.show_message("message_fire_in_the_village")
+	ui.popup_message("message_fire_in_the_village")
+	
 	log_info("granary_open_population:${mission.last_action_time}")
 	log_info("tutorial1_handle_fire:${mission.tutorial_fire_handled}")
 }
