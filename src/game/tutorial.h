@@ -9,7 +9,6 @@
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
-    _RR(tutorial_water)
     _RR(tutorial_gods)
     _RR(tutorial_entertainment)
     _RR(tutorial_industry)
@@ -30,7 +29,7 @@ struct tutorial_t {
     virtual int missionid() const = 0;
     virtual void init() = 0;
     virtual void reset() = 0;
-    virtual void update_step(xstring s) = 0;
+    virtual void update_step(xstring s) {}
     virtual xstring goal_text() = 0;
 
     static tutorial_list &list();
@@ -41,7 +40,7 @@ struct tutorial_flags_t {
         bool started;
         bool reserve_2;
         bool reserve_3;
-        bool gamemeat_stored;
+        bool reserve_5;
         bool reserve_4;
         bool architector_built;
         bool bazaar_built;
