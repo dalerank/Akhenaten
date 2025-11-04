@@ -350,6 +350,7 @@ static void svarprintf(js_State *state, const char *v) {
 }
 
 void globals_settings_t::sync_with_js(const xstring &name, const setting_variant &value) {
+	_variantsDirty = true;
 	switch (value.index()) {
 	case setting_bool:
 		g_config_arch.w_property("game_settings", name.c_str(), std::get<bool>(value));
