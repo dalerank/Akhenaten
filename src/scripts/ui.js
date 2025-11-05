@@ -571,23 +571,26 @@ info_window_courthouse = {
     })
 }
 
-info_window_entertainment = {
-    ui : {
-        background    : outer_panel({pos: [0, 0], size: [29, 17]}),
-        title             : text({ pos: [0, 12], size: [px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text  : text({ pos: [32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        inner_panel   : inner_panel({ pos : [16, 116], size: [27, 5] }),
-        workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] }),
-        workers_text  : text({ pos: [70, 124], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        workers_desc  : text({ pos: [70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
-        first_advisor : image_button({ pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        second_advisor: image_button({ pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        third_advisor : image_button({ pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+info_window_entertainment {
+    related_buildings [BUILDING_JUGGLER_SCHOOL, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL]
+    ui {
+        background    : outer_panel({ size[29, 17]})
+        title         : text({ pos[0, 12], size[px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         
-        show_overlay  : button({ margin:{right:-64, bottom:-40}, size:[23, 23]}),
-        mothball      : button({ margin:{right:-90, bottom:-40}, size:[23, 23]}),
-        button_help   : help_button({}),
-        button_close  : close_button({}),
+        warning_text  : text({ pos[32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        inner_panel   : inner_panel({ pos[16, 116], size[27, 5] })
+        workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos[40, 126] })
+        workers_text  : text({ pos[70, 124], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+        workers_desc  : text({ pos[70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true })
+        first_advisor : image_button({ pos[42, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        second_advisor: image_button({ pos[64, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        third_advisor : image_button({ pos[96, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+
+        show_overlay  : button({ margin:{right:-64, bottom:-40}, size[23, 23]})
+        mothball      : button({ margin:{right:-90, bottom:-40}, size[23, 23]})
+
+        button_help   : help_button({})
+        button_close  : close_button({})
     }
 }
 
