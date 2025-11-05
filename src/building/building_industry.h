@@ -38,4 +38,6 @@ public:
     virtual void update_count() const override;
     virtual bool can_play_animation() const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+
+    virtual void debug_draw_properties() override;
 };

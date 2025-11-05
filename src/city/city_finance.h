@@ -14,17 +14,12 @@ enum e_finance_request_type {
     efinance_request_tax_collected,
 };
 
-struct finance_request_t {
-    e_finance_request_type type;
-    uint32_t deben;
-};
-
 struct event_finance_changed { int value; };
 struct event_finance_donation { int amount; };
 
 struct event_finance_change_wages { int value; };
 struct event_finance_change_tax { int value; };
-struct event_finance_process_request { e_finance_request_type type; uint32_t deben; };
+struct event_finance_request { e_finance_request_type type; uint32_t deben; };
 
 enum e_finance_value {
     e_finance_value_gold_delivered = 0,
@@ -126,6 +121,6 @@ struct city_finance_t {
     void process_construction(int cost);
     void update_interest();
 
-    void process_request(finance_request_t request);
+    void process_request(event_finance_request request);
     void calculate_totals();
 };
