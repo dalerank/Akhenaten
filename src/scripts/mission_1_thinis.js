@@ -65,7 +65,6 @@ function tutorial2_check_gold_mined(ev) {
 
     mission.last_action = game.absolute_day
     mission.gold_mined_handled = true
-	log_info("akhenaten: show the gods of egypt") 
 
 	city.use_building(BUILDING_TEMPLE_BAST, true)
 	city.use_building(BUILDING_SHRINE_BAST, true)

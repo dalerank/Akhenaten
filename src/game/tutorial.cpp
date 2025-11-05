@@ -121,12 +121,16 @@ void tutorial_map_update(int tut) {
     }
 }
 
-xstring tutorial_get_immediate_goal_text() {
+xstring tutorial_flags_t::get_immediate_goal_text() {
     for (auto tut : tutorial_t::list()) {
         const int missionid = tut->missionid();
         if (g_scenario.is_scenario_id(missionid)) {
             return tut->goal_text();
         }
+    }
+
+    if (!!g_scenario.goal_tooltip) {
+        return g_scenario.goal_tooltip;
     }
 
     return "#unknown_tutoral_goal";
