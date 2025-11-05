@@ -37,7 +37,7 @@ static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
                                    {30, 230, 250, 25, button_delete, button_none},
                                    {320, 230, 100, 25, button_save, button_none}};
 
-static const uint8_t UNKNOWN[4] = {'?', '?', '?', 0};
+static pcstr UNKNOWN = "???";
 static uint8_t route_display_names[MAX_ROUTES][NAME_LENGTH];
 
 static struct {
@@ -49,13 +49,13 @@ static struct {
     int num_routes;
 } data;
 
-static void create_display_name(int route_id, const uint8_t* city_name) {
-    uint8_t* dst = route_display_names[route_id];
-    int offset = string_from_int(dst, route_id, 0);
+static void create_display_name(int route_id, pcstr city_name) {
+    pstr dst = (pstr)route_display_names[route_id];
+    int offset = string_from_int((uint8_t*)dst, route_id, 0);
     dst[offset++] = ' ';
     dst[offset++] = '-';
     dst[offset++] = ' ';
-    string_copy(city_name, &dst[offset], NAME_LENGTH - offset);
+    strcpy(dst + offset, city_name);
 }
 
 static void init(int id) {

@@ -39,6 +39,7 @@ import mission_8_selima
 import mission_9_abu
 import figures
 import localization
+import localization_base_en
 import localization_en
 import eventmsg_en
 import building_menu
