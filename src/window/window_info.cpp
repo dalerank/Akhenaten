@@ -387,6 +387,4 @@ void common_info_window::draw_tooltip(tooltip_context *c) {
     if (button_id > 0 && !(tooltip && *tooltip)) {
         tooltip = ui::button_tooltip(button_id - 1);
     }
-
-    //ui::set_tooltip(tooltip);
 }

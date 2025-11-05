@@ -19,12 +19,8 @@
 #include "game/game.h"
 
 struct info_window_house : public building_info_window_t<info_window_house> {
-    int help_id;
-
-    using building_info_window::archive_load;
     virtual void archive_load(archive arch) override {
-        common_info_window::archive_load(arch);
-        help_id = arch.r_int("help_id");
+        building_info_window::archive_load(arch);
     }
 
     virtual void init(object_info& c) override;
@@ -70,7 +66,6 @@ void info_window_vacant_lot::init(object_info &c) {
 void info_window_house::init(object_info &c) {
     building_info_window::init(c);
 
-    c.help_id = help_id;
     auto house = c.building_get()->dcast_house();
 
     if (!house || !house->house_population()) {
@@ -141,7 +136,13 @@ void info_window_house::init(object_info &c) {
 
     int happiness = housed.house_happiness;
     int happiness_text_id;
-    if (happiness >= 50) { happiness_text_id = 26; } else if (happiness >= 40) { happiness_text_id = 27; } else if (happiness >= 30) { happiness_text_id = 28; } else if (happiness >= 20) { happiness_text_id = 29; } else if (happiness >= 10) { happiness_text_id = 30; } else if (happiness >= 1) { happiness_text_id = 31; } else { happiness_text_id = 32; }
+    if (happiness >= 50) { happiness_text_id = 26; } 
+    else if (happiness >= 40) { happiness_text_id = 27; } 
+    else if (happiness >= 30) { happiness_text_id = 28; } 
+    else if (happiness >= 20) { happiness_text_id = 29; } 
+    else if (happiness >= 10) { happiness_text_id = 30; } 
+    else if (happiness >= 1) { happiness_text_id = 31; } 
+    else { happiness_text_id = 32; }
 
     ui["happiness_info"] = ui::str(127, happiness_text_id);
 

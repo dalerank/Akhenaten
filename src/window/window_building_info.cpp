@@ -9,6 +9,7 @@
 #include "building/culture.h"
 #include "building/government.h"
 #include "window/building/common.h"
+#include "window/message_dialog.h"
 #include "sound/sound.h"
 #include "game/game.h"
 #include "game/state.h"
@@ -29,6 +30,7 @@ void building_info_window::archive_load(archive arch) {
     common_info_window::archive_load(arch);
     arch.r("first_advisor", first_advisor);
     arch.r("related_buildings", related_buildings);
+    arch.r("help_id", help_id);
 }
 
 static void draw_native(object_info* c, int group_id) {
@@ -121,6 +123,7 @@ void building_info_window::init(object_info &c) {
     common_info_window::init(c);
 
     set_debug_building_id(c.bid);
+    window_message_setup_help_id(help_id);
     building *b = building_get(c);
 
     c.go_to_advisor.first = ADVISOR_NONE;
