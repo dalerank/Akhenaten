@@ -129,7 +129,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
                     } else if (base.home()->dcast_tax_collector()) {
                         request_type = efinance_request_tax_collected;
                     }
-                    events::emit(finance_request_t{ request_type, (uint32_t)amount_single_turn });
+                    events::emit(event_finance_request{ request_type, (uint32_t)amount_single_turn });
                     dump_resource(amount_single_turn);
                 }
                 break;

@@ -101,6 +101,21 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         ImGui::TreePop();
     }
     ImGui::PopID();
+
+    ImGui::PushID(0x82000000 | b->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool runtime_open = ImGui::TreeNodeEx("Runtime", ImGuiTreeNodeFlags_DefaultOpen, "Runtime");
+    ImGui::TableSetColumnIndex(1);
+
+    if (runtime_open) {
+        b->dcast()->debug_draw_properties();
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
 }
 
 void config_load_building_properties(bool header) {

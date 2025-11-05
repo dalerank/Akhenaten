@@ -40,7 +40,7 @@ void city_finance_t::init() {
         this_year.income.donated += ev.amount;
     });
 
-    events::subscribe([this] (event_finance_process_request ev) {
+    events::subscribe([this] (event_finance_request ev) {
         process_request({ ev.type, ev.deben });
     });
 
@@ -129,7 +129,7 @@ void city_finance_t::estimate_wages() {
 }
 
 
-void city_finance_t::process_request(finance_request_t request) {
+void city_finance_t::process_request(event_finance_request request) {
     switch (request.type) {
     case efinance_request_festival:
         treasury -= request.deben;
