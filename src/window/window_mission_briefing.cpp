@@ -25,8 +25,6 @@
 ui::mission_briefing_window g_mission_briefing;
 
 void ui::mission_briefing_window::init() {
-    rich_text_reset(0);
-
     mission_has_choice = game_mission_has_choice(scenario_id);
 
     ui["back"].enabled = !is_review && mission_has_choice;

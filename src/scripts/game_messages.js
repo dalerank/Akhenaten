@@ -645,11 +645,11 @@ game_messages {
     }
 
     message_game_concept_war {
-        id: 52,
+        id: 52
         pos [0, 24]
         size [30, 28]
         title {
-            text: "War",
+            text: "War"
         }
         subtitle {
             text: "Game Concepts",
@@ -695,12 +695,10 @@ game_messages {
     }
 
     message_housing_and_desirability {
-        id: 56,
+        id: 56
         pos [0, 24]
-        size [30, 28]
-        title {
-            text: "Housing and Desirability",
-        }
+        size [35, 32]
+        title { text: "Housing and Desirability" }
         content {
             text: "The first step to building a neighborhood is to designate a housing area. Remember that all housing needs to be within two spaces of the road. Once you lay out an area, immigrants move in and set up simple huts. They forage the local countryside to find what they need to survive. As time passes, however, citizens begin to expect the city to provide for their needs. As you meet these expectations, citizens take it upon themselves to improve their housing conditions.  The quality of housing affects the city's @35ratings, keeps citizens from emigrating and attracts new citizens to your city. @PCitizens' most basic needs are access to clean @44water and @45food from @2Bazaars. Once you provide these two necessities, you will notice huts turning into more stable shanties and cottages. @PAfter food and water, citizens begin demanding a variety of goods and services. Citizens want supplies of @1pottery, @96beer and @60linen in their homes.  The wealthiest citizens will also demand a supply of different @99luxury&goods, such as jewelery.  As their tastes become more refined, they demand a second, imported luxury good. In addition to these commodities, residents expect access to all their favorite services, like @51religion, @49entertainment, @50education and @53health&care.  Providing all these goods and services inspires residents to improve their homes into large and stately structures. @PResidents also want to live in attractive neighborhoods. You can establish fine @79Gardens and build @79Statues, or cover paved roads with @79Plaza tiles. Citizens will appreciate the effort you put into beautifying their surroundings and will likely improve their housing to match. @PThe corollary to wanting to live in attractive surroundings is not wanting to live in unattractive surroundings. Citizens balk if their housing is too close to industry or to farms. They much prefer to live away from the loud noise and strong stench frequently emitted from these structures. Furthermore, most residents think that industrial structures are eyesores. If you must place housing near industries (and sometimes you must, to make sure that industries are staffed), try to compensate for the inconvenience with plenty of Gardens, Statues and Plazas and the easiest of access to desired goods and services. Ultimately, though, you probably must resign yourself to having some industrial slums blighting the city. @PThe advantages of high-quality housing are many. Highly evolved housing has a positive effect on the @35Prosperity&Rating. Evolved housing also holds more residents, which allows you to increase the city's population - and potentially the workforce - without designating new housing areas. Once your housing reaches the highest levels, residents become @41scribes, who pay taxes but leave the city's workforce. @PTo find out what a specific dwelling needs to evolve, right click on it. Its residents won't be shy about telling you what they want. @L@LThe ancient Egyptians lived in homes of varying sizes and quality.  Click @152 here to find out more."
         }

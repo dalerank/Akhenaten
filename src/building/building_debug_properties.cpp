@@ -12,7 +12,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_DefaultOpen, "Building");
+    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_None, "Building");
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
@@ -81,7 +81,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_DefaultOpen, "Anim");
+    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_None, "Anim");
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
@@ -107,7 +107,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool runtime_open = ImGui::TreeNodeEx("Runtime", ImGuiTreeNodeFlags_DefaultOpen, "Runtime");
+    bool runtime_open = ImGui::TreeNodeEx("Runtime", ImGuiTreeNodeFlags_None, "Runtime");
     ImGui::TableSetColumnIndex(1);
 
     if (runtime_open) {
