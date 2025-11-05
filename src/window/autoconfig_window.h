@@ -23,6 +23,7 @@ struct autoconfig_window : public ui::widget {
     xstring help_id;
 
     static void before_mission_start();
+    static void refresh_all();
 };
 
 template<typename T>

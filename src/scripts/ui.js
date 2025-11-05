@@ -844,40 +844,40 @@ window_popup_dialog_yesno = {
     }
 }
 
-window_popup_dialog_ok = {
-    pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
-    ui : {
-        background : outer_panel({size: [30, 10] }),
-        header     : text({pos:[0, 30], size:[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        text       : text({pos:[0, 60], size:[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-        btn_yes    : image_button({margin:{centerx:-20, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96 }),
-        label_tip  : text({margin:{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
+window_popup_dialog_ok {
+    pos [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
+    ui {
+        background : outer_panel({size[30, 10] }),
+        header     : text({pos[0, 30], size[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        text       : text({pos[0, 60], size[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
+        btn_yes    : image_button({margin{centerx:-20, bottom:-60}, size[39, 26], pack:PACK_GENERAL, id:96 }),
+        label_tip  : text({margin{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
     }
 }
 
-minimap_window = {
-  draw_size : [73, 111],
+minimap_window {
+    draw_size [73, 111]    
 
-    terrain_water : {pack:PACK_GENERAL, id:142},
-    terrain_shrub : {pack:PACK_GENERAL, id:143},
-    terrain_tree  : {pack:PACK_GENERAL, id:143},
-    terrain_marshland : {pack:PACK_GENERAL, id:144},
-    terrain_rock  : {pack:PACK_GENERAL, id:145},
-    terrain_elevation : {pack:PACK_GENERAL, id:145},
-    terrain_meadow : {pack:PACK_GENERAL, id:146},
-    terrain_flooplain : {pack:PACK_GENERAL, id:146},
-    terrain_road  : {pack:PACK_GENERAL, id:147},
-    terrain_wall  : {pack:PACK_GENERAL, id:150},
-    terrain_canal : {pack:PACK_GENERAL, id:151},
-    terrain_dune  : {pack:PACK_GENERAL, id:211},
-    terrain_teal  : {pack:PACK_GENERAL, id:149, offset:200},
-    terrain_bright_teal  : {pack:PACK_GENERAL, id:149, offset:170},
-    terrain_bright_blue  : {pack:PACK_GENERAL, id:149, offset:170},
-    terrain_dark_read  : {pack:PACK_GENERAL, id:149, offset:165},
-    terrain_purple: {pack:PACK_GENERAL, id:149, offset:175},
-    terrain_light_yellow: {pack:PACK_GENERAL, id:149, offset:180},
-    terrain_lilac : {pack:PACK_GENERAL, id:149, offset:195},
-    terrain_orange: {pack:PACK_GENERAL, id:149, offset:205},
+    terrain_water {pack:PACK_GENERAL, id:142},
+    terrain_shrub {pack:PACK_GENERAL, id:143},
+    terrain_tree  {pack:PACK_GENERAL, id:143},
+    terrain_marshland {pack:PACK_GENERAL, id:144},
+    terrain_rock  {pack:PACK_GENERAL, id:145},
+    terrain_elevation {pack:PACK_GENERAL, id:145},
+    terrain_meadow {pack:PACK_GENERAL, id:146},
+    terrain_flooplain {pack:PACK_GENERAL, id:146},
+    terrain_road  {pack:PACK_GENERAL, id:147},
+    terrain_wall  {pack:PACK_GENERAL, id:150},
+    terrain_canal {pack:PACK_GENERAL, id:151},
+    terrain_dune  {pack:PACK_GENERAL, id:211},
+    terrain_teal  {pack:PACK_GENERAL, id:149, offset:200},
+    terrain_bright_teal  {pack:PACK_GENERAL, id:149, offset:170},
+    terrain_bright_blue  {pack:PACK_GENERAL, id:149, offset:170},
+    terrain_dark_read  {pack:PACK_GENERAL, id:149, offset:165},
+    terrain_purple {pack:PACK_GENERAL, id:149, offset:175},
+    terrain_light_yellow {pack:PACK_GENERAL, id:149, offset:180},
+    terrain_lilac  {pack:PACK_GENERAL, id:149, offset:195},
+    terrain_orange {pack:PACK_GENERAL, id:149, offset:205},
 }
 
 window_warnings = {
