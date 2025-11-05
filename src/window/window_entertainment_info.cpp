@@ -6,10 +6,6 @@
 
 struct info_window_entertainment : public building_info_window_t<info_window_entertainment>{
     virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        building *b = c.building_get();
-        return building_type_any_of(b->type, make_array(BUILDING_JUGGLER_SCHOOL, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL));
-    }
 };
 
 struct info_window_bandstand : public building_info_window_t<info_window_bandstand>{

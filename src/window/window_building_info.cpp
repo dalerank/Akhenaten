@@ -122,9 +122,24 @@ textid building_info_window::get_tooltip(object_info &c) {
 void building_info_window::init(object_info &c) {
     common_info_window::init(c);
 
-    set_debug_building_id(c.bid);
-    window_message_setup_help_id(help_id);
     building *b = building_get(c);
+    set_debug_building_id(b->id);
+
+    xstring correct_help_id = help_id;
+    const auto &meta = b->params().meta;
+    if (!correct_help_id) {
+        correct_help_id = meta.help_link;
+    }
+
+    if (!correct_help_id && meta.help_id) {
+        correct_help_id = lang_get_message_id(meta.help_id);
+    }
+
+    if (!correct_help_id) {
+        correct_help_id = "message_table_of_contents";
+    }
+
+    window_message_setup_help_id(correct_help_id);
 
     c.go_to_advisor.first = ADVISOR_NONE;
     if (first_advisor != ADVISOR_NONE) {

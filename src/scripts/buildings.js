@@ -767,18 +767,23 @@ building_military_academy_adv = {
   laborers:[30], fire_risk:[4], damage_risk: [1]
 }
 
-building_juggler_school = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:46 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:46, offset:1, max_frames:14, duration:3 },
+building_juggler_school {
+  animations {
+    _pack { pack: PACK_GENERAL }
+    preview { id:46 }
+    base { id:46 }
+    work { pos : [33, -38], id:46, offset:1, max_frames:14, duration:3 }
   }
+
   spawn_interval : 10
-  meta : { help_id:75, text_id:77 }
+  meta { text_id:77, help_link:"message_building_booth" }
+
   building_size : 2
-  cost : [ 10, 20, 50, 100, 200 ]
-  desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
-  laborers:[5], fire_risk:[4], damage_risk: [2]
+  cost [ 10, 20, 50, 100, 200 ]
+  desirability { value[-3], step[1], step_size[1], range[3] }
+  laborers[5]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_dancer_school {
