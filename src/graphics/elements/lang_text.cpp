@@ -8,6 +8,7 @@
 #include "js/js.h"
 #include "core/log.h"
 #include "game/game_config.h"
+#include "game/game.h"
 
 #include <unordered_set>
 
@@ -87,7 +88,7 @@ bool lang_reload_localized_files() {
     {
         vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
         const bool lang_base_file_loaded = js_vm_load_file_and_exec(lang_base_file.c_str());
-        if (!lang_base_file_loaded) {
+        if (!lang_base_file_loaded && localization_base_table == "localization_base_en") {
             logs::error("Failed to load localization base file: %s", lang_base_file.c_str());
             return false;
         }
@@ -141,6 +142,8 @@ bool lang_reload_localized_tables() {
 
     g_config_arch.insert("localization_en", g_localization);
     g_config_arch.insert("eventmsg_en", g_event_messages);
+
+    game.system_language_changed = true;
 
     return true;
 }

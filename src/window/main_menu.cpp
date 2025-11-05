@@ -86,14 +86,14 @@ int main_menu_get_total_commits(pcstr owner, pcstr repo) {
 #endif // GAME_PLATFORM_WIN
 }
 
-void main_menu_download_latest_version() {
+void __game_download_latest_version() {
 #ifdef GAME_PLATFORM_WIN
     game.mt.detach_task([] () {
         ShellExecuteA(0, "Open", "update_binary_windows.cmd", 0, 0, SW_SHOW);
     });
 #endif // GAME_PLATFORM_WIN
 }
-ANK_FUNCTION(main_menu_download_latest_version)
+ANK_FUNCTION(__game_download_latest_version)
 
 int main_menu_screen::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);

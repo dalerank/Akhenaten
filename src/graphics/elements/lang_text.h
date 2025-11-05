@@ -33,6 +33,8 @@ inline int lang_text_draw(int group, int number, vec2i offset, e_font font, int 
 bool lang_reload_localized_files();
 bool lang_reload_localized_tables();
 
+bool system_lang_changed();
+
 game_language lang_get_current_language();
 int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width = 0);
 

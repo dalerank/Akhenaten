@@ -54,6 +54,7 @@ struct game_t {
     uint16_t last_frame_tick = 0;
     color *frame_pixels = nullptr;
     bool write_video = false;
+    bool system_language_changed = false;
 
     MovieWriter *mvwriter = nullptr;
     simulation_time_t simtime;

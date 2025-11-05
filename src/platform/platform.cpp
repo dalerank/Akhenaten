@@ -9,8 +9,8 @@
     #include <windows.h>
 #endif
 
-void platform_open_url(pcstr url) { platform.open_url(url, ""); }
-ANK_FUNCTION_1(platform_open_url)
+void __platform_open_url(pcstr url) { platform.open_url(url, ""); }
+ANK_FUNCTION_1(__platform_open_url)
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;

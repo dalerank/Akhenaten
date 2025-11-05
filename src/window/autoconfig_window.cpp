@@ -27,6 +27,11 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_autoconfig_windows) {
     }
 }
 
+
+void autoconfig_window::refresh_all() {
+    config_load_autoconfig_windows();
+}
+
 autoconfig_window::autoconfig_window(pcstr s) {
     assert(!strstr(s, "::"));
     logs::info("Registered window config:%s", s);
