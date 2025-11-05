@@ -25,8 +25,8 @@ void scenario_editor_create(int map_size) {
     g_scenario.map.border_size = GRID_LENGTH - g_scenario.map.width;
     g_scenario.map.start_offset = (GRID_LENGTH - g_scenario.map.height) / 2 * GRID_LENGTH + (GRID_LENGTH - g_scenario.map.width) / 2;
 
-    string_copy(lang_get_string(44, 37), g_scenario.subtitle, MAX_SUBTITLE);
-    string_copy(lang_get_string(44, 38), g_scenario.brief_description, MAX_BRIEF_DESCRIPTION);
+    g_scenario.subtitle = lang_get_string(44, 37);
+    g_scenario.brief_description = lang_get_string(44, 38);
 
     g_scenario.finance.initial_funds = 1000;
     g_scenario.finance.rescue_loan = 500;
