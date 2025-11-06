@@ -5,6 +5,7 @@
 #include "core/object_property.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
+#include "widget/debug_console.h"
 
 constexpr short MAX_PROGRESS_RAW = 200;
 constexpr short MAX_PROGRESS_WORKSHOP = 400;
@@ -187,4 +188,16 @@ bvariant building_industry::get_property(const xstring &domain, const xstring &n
     }
 
     return building_impl::get_property(domain, name);
+}
+
+void building_industry::debug_draw_properties() {
+    auto &d = runtime_data();
+    game_debug_show_property("ready_production", d.ready_production);
+    game_debug_show_property("progress", d.progress);
+    game_debug_show_property("progress_max", d.progress_max);
+    game_debug_show_property("spawned_worker_this_month", d.spawned_worker_this_month);
+    game_debug_show_property("max_gatheres", d.max_gatheres);
+    game_debug_show_property("produce_multiplier", d.produce_multiplier);
+    game_debug_show_property("has_raw_materials", d.has_raw_materials);
+    game_debug_show_property("processed_figure", d.processed_figure);
 }

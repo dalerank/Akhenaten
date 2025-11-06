@@ -82,28 +82,14 @@ struct lang_pack {
 };
 
 /**
- * Checks whether the directory contains language files
- * @param dir Directory to check
- * @return boolean true if it contains language files, false if not
- */
-bool lang_dir_is_valid(lang_pack lpack);
-
-/**
- * Loads the language files
- * @param is_editor Whether to load the editor language files or the regular ones
- * @return boolean true on success, false on failure
- */
-bool lang_load(bool is_editor, const std::vector<lang_pack>& lang_packs);
-
-/**
  * Gets a localized string
  * @param group Text group
  * @param index Index within the group
  * @return String
  */
-const uint8_t* lang_get_string(int group, int index);
+pcstr lang_get_string(int group, int index);
 xstring lang_get_xstring(int group, int index);
-const uint8_t* lang_get_string(textid text);
+pcstr lang_get_string(textid text);
 
 /**
  * Gets the message for the specified ID

@@ -392,7 +392,7 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
 }
 
 static bool determine_granary_accept_foods(resource_list &foods, int road_network) {
-    if (scenario_property_kingdom_supplies_grain()) {
+    if (g_scenario.kingdom_supplies_grain) {
         return false;
     }
 
@@ -694,8 +694,7 @@ storage_worker_task building_storageyard_deliver_food_to_accepting_granary(build
     }
 
     resource_list granary_resources;
-    if (determine_granary_accept_foods(granary_resources, warehouse->road_network())
-        && !scenario_property_kingdom_supplies_grain()) {
+    if (determine_granary_accept_foods(granary_resources, warehouse->road_network()) && !g_scenario.kingdom_supplies_grain) {
         auto space = warehouse->room();
         while (space) {
             if (contains_non_stockpiled_food(&space->base, granary_resources)) {

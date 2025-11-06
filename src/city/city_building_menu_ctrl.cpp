@@ -22,7 +22,7 @@
 building_menu_ctrl_t g_building_menu_ctrl;
 static building_menu_item building_menu_item_dummy{-1, false};
 
-declare_console_command_p(menuupdate) {
+declare_console_command_p(update_menu) {
     std::string args;
     is >> args;
     g_building_menu_ctrl.update(args.c_str());
@@ -332,7 +332,7 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
     } else {
         const auto stage_it = g_scenario.stages.find(stage_name);
         if (stage_it != g_scenario.stages.end()) {
-            for (const auto &b : stage_it->second.buildings) {
+            for (const auto &b : stage_it->second.buildings ) {
                 toggle_building(b);
             }
         }

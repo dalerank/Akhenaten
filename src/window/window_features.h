@@ -47,6 +47,7 @@ namespace ui {
         virtual void draw_foreground(UiFlags flags) override {}
         virtual void ui_draw_foreground(UiFlags flags) override;
         virtual int ui_handle_mouse(const mouse *m) override;
+        virtual void archive_load(archive arch) override;
         virtual void init() override {}
 
         void button_reset_defaults();

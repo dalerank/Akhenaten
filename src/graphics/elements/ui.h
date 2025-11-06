@@ -12,6 +12,7 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/arrow_button.h"
 #include "graphics/elements/scrollbar.h"
+#include "graphics/elements/rich_text.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/panel.h"
@@ -312,6 +313,9 @@ struct elabel : public element {
 };
 
 struct etext : public elabel {
+    // here need todo rich_text_pool
+    std::unique_ptr<rich_text_t> rich_text;
+
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
 };

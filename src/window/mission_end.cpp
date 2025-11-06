@@ -40,7 +40,7 @@ void ui::window_mission_lost::init() {
             GamestateIO::load_savegame("autosave_replay.sav");
             window_city_show();
         } else {
-            int scenario_id = scenario_campaign_scenario_id();
+            int scenario_id = g_scenario.campaign_scenario_id();
             widget_top_menu_clear_state();
             GamestateIO::load_mission(scenario_id, true);
         }
@@ -61,14 +61,14 @@ int ui::window_mission_won::ui_handle_mouse(const mouse *m) {
 
 void ui::window_mission_won::init() {
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    ui["subtitle"] = is_custom_map ? textid{ 147, 20 } : textid{ 147, (uint8_t)scenario_campaign_scenario_id() };
+    ui["subtitle"] = is_custom_map ? textid{ 147, 20 } : textid{ 147, (uint8_t)g_scenario.campaign_scenario_id() };
 }
 
 void ui::window_mission_won::advance_to_next_mission() {
     const int next_mission_rank = g_scenario.settings.campaign_mission_rank + 1;
 
     g_settings.set_personal_savings_for_mission(next_mission_rank, g_city.kingdome.personal_savings);
-    scenario_set_campaign_rank(next_mission_rank);
+    g_scenario.set_campaign_rank(next_mission_rank);
     city_save_campaign_player_name();
 
     g_city.victory_state.stop_governing();
@@ -81,13 +81,13 @@ void ui::window_mission_won::advance_to_next_mission() {
         main_menu_screen::show(/*restart_music*/true);
         if (!is_custom_map) {
             g_settings.clear_personal_savings();
-            scenario_settings_init();
-            scenario_set_campaign_rank(2);
+            g_scenario.init();
+            g_scenario.set_campaign_rank(2);
         }
     } else {
         int next_mission = g_scenario.win_criteria.next_mission;
         if (!next_mission) {
-            next_mission = scenario_campaign_scenario_id() + 1;
+            next_mission = g_scenario.campaign_scenario_id() + 1;
         }
         ui::mission_choice_window::show(next_mission);
     }
@@ -138,7 +138,7 @@ static void show_end_dialog(void) {
 }
 
 void window_mission_show_intermezzo() {
-    int scenario_id = scenario_campaign_scenario_id();
+    int scenario_id = g_scenario.campaign_scenario_id();
     window_intermezzo_show(scenario_id, INTERMEZZO_WON, show_end_dialog);
 }
 
@@ -166,6 +166,6 @@ void ui::window_mission_won::show() {
 }
 
 void window_mission_end_show_fired() {
-    int scenario_id = scenario_campaign_scenario_id();
+    int scenario_id = g_scenario.campaign_scenario_id();
     window_intermezzo_show(scenario_id, INTERMEZZO_FIRED, show_end_dialog);
 }

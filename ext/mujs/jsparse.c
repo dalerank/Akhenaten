@@ -242,10 +242,11 @@ static js_Ast *propname(js_State *J)
 }
 
 static js_Ast *objectliteral(js_State *J);
+static js_AstModifier *parsemodifiers(js_State *J);
 
-static js_Ast *propassign(js_State *J)
+static js_Ast *propassign(js_State *J, js_AstModifier *modifiers)
 {
-	js_Ast *name, *value, *arg, *body;
+	js_Ast *name, *value, *arg, *body, *prop;
 
 	name = propname(J);
 
@@ -255,7 +256,9 @@ static js_Ast *propassign(js_State *J)
 			jsP_expect(J, '(');
 			jsP_expect(J, ')');
 			body = funbody(J);
-			return EXP3(PROP_GET, name, NULL, body);
+			prop = EXP3(PROP_GET, name, NULL, body);
+			prop->modifiers = modifiers;
+			return prop;
 		}
 		if (!strcmp(name->string, "set")) {
 			name = propname(J);
@@ -263,39 +266,66 @@ static js_Ast *propassign(js_State *J)
 			arg = identifier(J);
 			jsP_expect(J, ')');
 			body = funbody(J);
-			return EXP3(PROP_SET, name, LIST(arg), body);
+			prop = EXP3(PROP_SET, name, LIST(arg), body);
+			prop->modifiers = modifiers;
+			return prop;
 		}
 
 		if (J->lookahead == '{') {
 			jsP_accept(J, '{');
 			value = EXP1(OBJECT, objectliteral(J));
 			jsP_expect(J, '}');
-			return EXP2(PROP_VAL, name, value);
+			prop = EXP2(PROP_VAL, name, value);
+			prop->modifiers = modifiers;
+			return prop;
 		}
 
 		if (J->lookahead == '[') {
 			jsP_accept(J, '[');
 			value = EXP1(ARRAY, arrayliteral(J));
 			jsP_expect(J, ']');
-			return EXP2(PROP_VAL, name, value);
+			prop = EXP2(PROP_VAL, name, value);
+			prop->modifiers = modifiers;
+			return prop;
 		}
 	}
 
 	jsP_expect(J, ':');
 	value = assignment(J, 0);
-	return EXP2(PROP_VAL, name, value);
+	prop = EXP2(PROP_VAL, name, value);
+	prop->modifiers = modifiers;
+	return prop;
 }
 
 static js_Ast *objectliteral(js_State *J) {
 	js_Ast *head, *tail;
+	js_AstModifier *modifiers = NULL;
+	
 	if (J->lookahead == '}')
 		return NULL;
-	head = tail = LIST(propassign(J));
+	
+	/* Check for modifiers before first property */
+	/* Modifiers start with [ followed by identifier (not string or number) */
+	if (J->lookahead == '[') {
+		/* Peek ahead to see if this looks like a modifier */
+		/* For now, we'll try to parse it - parsemodifiers will return NULL if invalid */
+		modifiers = parsemodifiers(J);
+	}
+	
+	head = tail = LIST(propassign(J, modifiers));
+	modifiers = NULL;
+	
 	while (jsP_accept(J, ',') || jsP_accept(J, ';') || J->newline) {
 		if (J->lookahead == '}')
 			break;
 
-		tail = tail->b = LIST(propassign(J));
+		/* Check for modifiers before each property */
+		if (J->lookahead == '[') {
+			modifiers = parsemodifiers(J);
+		}
+
+		tail = tail->b = LIST(propassign(J, modifiers));
+		modifiers = NULL;
 	}
 	return jsP_list(head);
 }
@@ -794,8 +824,8 @@ static js_Ast *statement(js_State *J)
 	}
 
 	if (jsP_accept(J, TK_WITH)) {
-		if (J->strict)
-			jsP_error(J, "'with' statements are not allowed in strict mode");
+		//if (J->strict)
+		//	jsP_error(J, "'with' statements are not allowed in strict mode");
 		jsP_expect(J, '(');
 		a = expression(J, 0);
 		jsP_expect(J, ')');
@@ -877,7 +907,7 @@ static js_Ast *statement(js_State *J)
 
 /* Program */
 
-/* Parse function modifiers: [key=value, key2=value2, ...] */
+/* Parse function modifiers: [key=value, key2=value2, ...] or [key, key2] */
 static js_AstModifier *parsemodifiers(js_State *J)
 {
 	js_AstModifier *head = NULL, *tail = NULL;
@@ -892,36 +922,9 @@ static js_AstModifier *parsemodifiers(js_State *J)
 	const char *key = J->text;
 	jsP_next(J);
 	
-	jsP_expect(J, '=');
-	
-	if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
-		jsP_error(J, "expected value in function modifier");
-	
+	/* Check if there's a value assignment or just a flag */
 	const char *value;
-	if (J->lookahead == TK_NUMBER) {
-		char buf[32];
-		snprintf(buf, sizeof(buf), "%g", J->number);
-		value = js_intern(J, buf);
-	} else {
-		value = J->text;
-	}
-	jsP_next(J);
-	
-	head = tail = js_malloc(J, sizeof(js_AstModifier));
-	head->key = js_intern(J, key);
-	head->value = js_intern(J, value);
-	head->next = NULL;
-	
-	/* Parse additional modifiers */
-	while (jsP_accept(J, ',')) {
-		if (J->lookahead != TK_IDENTIFIER)
-			jsP_error(J, "expected identifier in function modifier");
-		
-		key = J->text;
-		jsP_next(J);
-		
-		jsP_expect(J, '=');
-		
+	if (jsP_accept(J, '=')) {
 		if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
 			jsP_error(J, "expected value in function modifier");
 		
@@ -933,10 +936,45 @@ static js_AstModifier *parsemodifiers(js_State *J)
 			value = J->text;
 		}
 		jsP_next(J);
+	} else {
+		/* No value means it's a flag, set value to "true" */
+		value = js_intern(J, "true");
+	}
+	
+	head = tail = js_malloc(J, sizeof(js_AstModifier));
+	head->key = js_intern(J, key);
+	head->value = value;
+	head->next = NULL;
+	
+	/* Parse additional modifiers */
+	while (jsP_accept(J, ',')) {
+		if (J->lookahead != TK_IDENTIFIER)
+			jsP_error(J, "expected identifier in function modifier");
+		
+		key = J->text;
+		jsP_next(J);
+		
+		/* Check if there's a value assignment or just a flag */
+		if (jsP_accept(J, '=')) {
+			if (J->lookahead != TK_IDENTIFIER && J->lookahead != TK_STRING && J->lookahead != TK_NUMBER)
+				jsP_error(J, "expected value in function modifier");
+			
+			if (J->lookahead == TK_NUMBER) {
+				char buf[32];
+				snprintf(buf, sizeof(buf), "%g", J->number);
+				value = js_intern(J, buf);
+			} else {
+				value = J->text;
+			}
+			jsP_next(J);
+		} else {
+			/* No value means it's a flag, set value to "true" */
+			value = js_intern(J, "true");
+		}
 		
 		js_AstModifier *mod = js_malloc(J, sizeof(js_AstModifier));
 		mod->key = js_intern(J, key);
-		mod->value = js_intern(J, value);
+		mod->value = value;
 		mod->next = NULL;
 		
 		tail->next = mod;

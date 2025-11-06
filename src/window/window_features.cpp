@@ -141,6 +141,15 @@ int ui::window_features::ui_handle_mouse(const mouse* m) {
     return 0;
 }
 
+void ui::window_features::archive_load(archive arch) {
+    const bool need_reinit = _is_inited;
+    autoconfig_window::archive_load(arch);
+
+    if (need_reinit) {
+        init(close_callback);
+    }
+}
+
 //void ui::window_features::toggle_building(int id, int param2) {
 //    e_building_type type = (e_building_type)BUILDING_NONE;
 //
@@ -163,6 +172,8 @@ void ui::window_features::toggle_resource(e_resource resource) {
 }
 
 void ui::window_features::init(std::function<void()> cb) {
+    autoconfig_window::init();
+
     page = 0;
     close_callback = cb;
 
@@ -358,4 +369,5 @@ void ui::window_features::show(std::function<void()> close_callback) {
     window_show(&window);
 }
 
-ANK_FUNCTION_NAMED(window_features_show, [] { ui::window_features::show([] {}); })
+void window_features_show() { ui::window_features::show([] {}); }
+ANK_FUNCTION(window_features_show)

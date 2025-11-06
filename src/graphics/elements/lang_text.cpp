@@ -8,8 +8,31 @@
 #include "js/js.h"
 #include "core/log.h"
 #include "game/game_config.h"
+#include "game/game.h"
 
 #include <unordered_set>
+
+struct loc_base_textid {
+    size_t id;
+    xstring text;
+
+    loc_base_textid(int group, int tid) {
+        id = hash(group, tid);
+    }
+
+    static size_t hash(int group, int id) { return group * 1000 + id; }
+
+    bool operator==(const loc_base_textid &other) const noexcept { return id == other.id; }
+    bool operator!=(const loc_base_textid &other) const noexcept { return id != other.id; }
+    bool operator<(const loc_base_textid &other) const noexcept { return id < other.id; }
+};
+
+template<>
+struct std::hash<loc_base_textid> {
+    std::size_t operator()(const loc_base_textid &k) const noexcept {
+        return k.id;
+    }
+};
 
 struct loc_textid {
     xstring key;
@@ -47,8 +70,10 @@ struct std::hash<loc_message> {
     }
 };
 
+std::unordered_set<loc_base_textid> g_localization_base;
 std::unordered_set<loc_textid> g_localization;
-std::unordered_set<loc_message> g_messages;
+std::unordered_set<loc_message> g_event_messages;
+
 game_languages_vec ANK_VARIABLE(game_languages);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
@@ -58,12 +83,27 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
 
 bool lang_reload_localized_files() {
     const auto current_lang = lang_get_current_language();
-    const xstring localization_table = current_lang.table;
-    vfs::path lang_file(":", localization_table.c_str(), ".js");
-    const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
-    if (!lang_file_loaded) {
-        logs::error("Failed to load localization file: %s", lang_file.c_str());
-        return false;
+
+    const xstring localization_base_table = current_lang.base_table;
+    {
+        vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
+        const bool lang_base_file_loaded = js_vm_load_file_and_exec(lang_base_file.c_str());
+        if (!lang_base_file_loaded && localization_base_table == "localization_base_en") {
+            logs::error("Failed to load localization base file: %s", lang_base_file.c_str());
+            return false;
+        }
+    }
+
+    {
+        const xstring localization_table = current_lang.table;
+
+        vfs::path lang_file(":", localization_table.c_str(), ".js");
+
+        const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
+        if (!lang_file_loaded) {
+            logs::error("Failed to load localization file: %s", lang_file.c_str());
+            return false;
+        }
     }
 
     return true;
@@ -72,26 +112,60 @@ bool lang_reload_localized_files() {
 bool lang_reload_localized_tables() {
     const auto current_lang = lang_get_current_language();
     const xstring localization_table = current_lang.table;
+    const xstring localization_base_table = current_lang.base_table;
     const xstring message_table = current_lang.message_table;
+
     if (localization_table.empty()) {
         return false;
     }
 
+    g_localization_base.clear();
     g_localization.clear();
-    g_messages.clear();
+    g_event_messages.clear();
+
+    auto loc_base_item_read = [] (archive a) {
+        int group = a.r_int("group");
+        int id = a.r_int("id");
+        loc_base_textid item(group, id);
+        item.text = a.r_string("text");
+
+        g_localization_base.insert(item);
+    };
+
+    g_config_arch.r_array(localization_base_table.c_str(), loc_base_item_read);
+
     g_config_arch.r(localization_table.c_str(), g_localization);
-    g_config_arch.r(message_table.c_str(), g_messages);
+    g_config_arch.r(message_table.c_str(), g_event_messages);
 
     // restore the default localization (english), for values without translates
-    g_config_arch.update("localization_en", g_localization);
-    g_config_arch.update("eventmsg_en", g_messages);
+    g_config_arch.r_array("localization_base_en", loc_base_item_read);
+
+    g_config_arch.insert("localization_en", g_localization);
+    g_config_arch.insert("eventmsg_en", g_event_messages);
+
+    game.system_language_changed = true;
 
     return true;
 }
 
+pcstr lang_get_string(int group, int index) {
+    if (group < 0 || index < 0) {
+        return nullptr;
+    }
+
+    loc_base_textid key(group, index);
+    auto it = g_localization_base.find(key);
+
+    if (it != g_localization_base.end()) {
+        return it->text.c_str();
+    }
+
+    return "";
+}
+
 pcstr lang_text_from_message(int id) {
-    auto it = g_messages.find({ (uint16_t)id });
-    return (pcstr)((it != g_messages.end()) ? it->text.c_str() : "#unknown_message");
+    auto it = g_event_messages.find({ (uint16_t)id });
+    return (pcstr)((it != g_event_messages.end()) ? it->text.c_str() : "#unknown_message");
 }
 
 textid loc_text_from_key(pcstr key) {
@@ -122,7 +196,7 @@ pcstr lang_text_from_key(pcstr key) {
 }
 
 int lang_text_get_width(int group, int number, e_font font) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     return text_get_width(str, font) + font_definition_for(font)->space_width;
 }
 
@@ -131,7 +205,7 @@ int lang_text_get_width(const char* str, e_font font) {
 }
 
 int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font font, int box_width) {
-    pcstr str = (pcstr)lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     return lang_text_draw(str, vec2i{x_offset, y_offset}, font, box_width);
 }
 
@@ -160,7 +234,7 @@ int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width) {
 }
 
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, e_font font, color color) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
@@ -169,21 +243,21 @@ int lang_text_draw_colored(pcstr tx, int x_offset, int y_offset, e_font font, co
 }
 
 int lang_text_draw_left(int group, int number, int x_offset, int y_offset, e_font font) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, 0);
 }
 int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offset, e_font font, color color) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, color);
 }
 
 void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, e_font font) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
 void lang_text_draw_centered(textid text, int x_offset, int y_offset, int box_width, e_font font) {
-    const uint8_t *str = lang_get_string(text);
+    pcstr str = lang_get_string(text);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
@@ -192,7 +266,7 @@ void lang_text_draw_centered(pcstr text, int x_offset, int y_offset, int box_wid
 }
 
 void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, e_font font, color color) {
-    const uint8_t* str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
@@ -229,9 +303,9 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, e_font font) {
 }
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, e_font font) {
-    const uint8_t* str = lang_get_string(group, number);
+   pcstr str = lang_get_string(group, number);
     if (!str) {
         return 0;
     }
-    return text_draw_multiline((pcstr)str, offset.x, offset.y, box_width, font, 0);
+    return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
 }

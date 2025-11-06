@@ -22,7 +22,7 @@ mission3 {
 					BUILDING_BREWERY_WORKSHOP
 				]
 	stages {
-		tutorial_finance [BUILDING_TAX_COLLECTOR, BUILDING_PERSONAL_MANSION]
+		tutorial_finance { buildings: [BUILDING_TAX_COLLECTOR, BUILDING_PERSONAL_MANSION] }
 	}
 
 	vars {

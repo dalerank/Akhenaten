@@ -77,7 +77,7 @@ void archive::getglobal(pcstr name) {
     js_getglobal((js_State *)state, name);
 }
 
-const uint8_t *lang_get_string(int group, int index);
+pcstr lang_get_string(int group, int index);
 pcstr archive::r_string(pcstr name) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
@@ -94,11 +94,11 @@ pcstr archive::r_string(pcstr name) {
             js_getindex(vm, -1, 1); gx.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
         }
 
-        result = (pcstr)lang_get_string(gx.x, gx.y);
+        result = lang_get_string(gx.x, gx.y);
     } else if (js_isobject(vm, -1)) {
         js_getproperty(vm, -1, "group"); int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         js_getproperty(vm, -1, "id"); int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        result = (pcstr)lang_get_string(group, id);
+        result = lang_get_string(group, id);
     }
     js_pop(vm, 1);
     return result;

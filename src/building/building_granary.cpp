@@ -168,7 +168,7 @@ granary_task_status building_granary::determine_worker_task() {
 }
 
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst) {
-    if (scenario_property_kingdom_supplies_grain())
+    if (g_scenario.kingdom_supplies_grain)
         return 0;
 
     if (!resource_is_food(resource))
@@ -223,8 +223,9 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
 }
 
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst) {
-    if (scenario_property_kingdom_supplies_grain())
+    if (g_scenario.kingdom_supplies_grain) {
         return 0;
+    }
 
     if (!resource_is_food(resource))
         return 0;

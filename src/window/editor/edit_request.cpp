@@ -56,7 +56,7 @@ static void draw_foreground(int) {
 
     button_border_draw({ 30, 152 }, { 60, 25 }, data.focus_button_id == 1);
     text_draw_number_centered_prefix(data.request.year, '+', 30, 158, 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + data.request.year, 110, 158, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(g_scenario.start_year + data.request.year, 110, 158, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 72, 250, 158, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw({ 330, 152 }, { 80, 25 }, data.focus_button_id == 2);

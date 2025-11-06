@@ -5,6 +5,8 @@
 
 #include "core/archive.h"
 
+struct event_migration_update { int population; };
+
 struct sentiment_step_t {
     int s;
     int i;

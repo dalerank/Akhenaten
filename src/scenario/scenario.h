@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <unordered_map>
 
+struct event_mission_start { int id; };
+
 struct scenario_data_buffers {
     buffer* mission_index = nullptr;
     buffer* map_name = nullptr;
@@ -136,6 +138,8 @@ enum e_scenario_mode {
     e_scenario_custom_map,
 };
 
+class io_buffer;
+
 struct scenario_data_t {
     uint8_t scenario_name[65];
     scenario_difficulty_t difficulty;
@@ -149,8 +153,8 @@ struct scenario_data_t {
 
     int kingdom_supplies_grain;
     int image_id;
-    uint8_t subtitle[64];
-    uint8_t brief_description[522];
+    bstring64 subtitle;
+    bstring512 brief_description;
     e_enemy_type enemy_id;
     bool is_open_play;
     int open_play_scenario_id;
@@ -245,6 +249,7 @@ struct scenario_data_t {
     std::array<extra_damage_t, BUILDING_MAX> extra_damage;
     std::unordered_map<xstring, building_stage_t> stages;
     settings_vars_t vars;
+    xstring goal_tooltip;
 
     struct {
         int hut;
@@ -304,6 +309,13 @@ struct scenario_data_t {
     int house_tax_multiplier(int v) const;
 
     void load_metadata(const mission_id_t &missionid);
+    void bind_data(io_buffer *iob, size_t version, size_t size);
+    void init();
+    void init_mission();
+    void set_campaign_rank(int rank);
+    int campaign_scenario_id();
+    void set_campaign_scenario(int scenario_id);
+    int is_before_mission(int mission);
 
     template<typename ... Args>
     bool is_scenario_id(const Args ... args) {
@@ -317,24 +329,11 @@ ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosper
 
 extern scenario_data_t g_scenario;
 
-void scenario_settings_init();
-void scenario_settings_init_mission();
-
-void scenario_set_campaign_rank(int rank);
-
-int scenario_campaign_scenario_id();
-
-void scenario_set_campaign_scenario(int scenario_id);
-
 int scenario_additional_damage(e_building_type type, e_damage_type damage);
-
-int scenario_is_before_mission(int mission);
 
 int scenario_starting_kingdom();
 
 int scenario_starting_personal_savings();
-
-const uint8_t* scenario_name();
 
 void scenario_set_name(const uint8_t* name);
 
@@ -344,15 +343,9 @@ int scenario_open_play_id();
 
 int scenario_property_climate();
 
-int scenario_property_start_year();
-
-int scenario_property_kingdom_supplies_grain();
-
 int scenario_property_enemy();
 
 int scenario_property_player_rank();
-
-int scenario_image_id();
 
 const uint8_t* scenario_subtitle();
 

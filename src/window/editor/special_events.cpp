@@ -70,7 +70,7 @@ static void draw_foreground(int) {
 
     button_border_draw(326, 106, 150, 24, focus_button_id == 2);
     int width = text_draw_number(scenario_editor_earthquake_year(), '+', " ", 346, 112, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_earthquake_year(),
+    lang_text_draw_year(g_scenario.start_year + scenario_editor_earthquake_year(),
                         356 + width,
                         112,
                         FONT_NORMAL_BLACK_ON_LIGHT);
@@ -82,7 +82,7 @@ static void draw_foreground(int) {
 
     button_border_draw(326, 136, 150, 24, focus_button_id == 4);
     width = text_draw_number(scenario_editor_gladiator_revolt_year(), '+', " ", 346, 142, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_gladiator_revolt_year(),
+    lang_text_draw_year(g_scenario.start_year + scenario_editor_gladiator_revolt_year(),
                         356 + width,
                         142,
                         FONT_NORMAL_BLACK_ON_LIGHT);
@@ -94,7 +94,7 @@ static void draw_foreground(int) {
 
     button_border_draw(326, 166, 150, 24, focus_button_id == 6);
     width = text_draw_number(scenario_editor_emperor_change_year(), '+', " ", 346, 172, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_editor_emperor_change_year(),
+    lang_text_draw_year(g_scenario.start_year + scenario_editor_emperor_change_year(),
                         356 + width,
                         172,
                         FONT_NORMAL_BLACK_ON_LIGHT);

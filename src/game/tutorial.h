@@ -9,11 +9,6 @@
 struct tutorial_stage_t {
 #define _RR(a) const xstring a = #a;
     _RR(disable_all)
-    _RR(tutorial_fire)
-    _RR(tutorial_water)
-    _RR(tutorial_collapse)
-    _RR(tutorial_gods)
-    _RR(tutorial_entertainment)
     _RR(tutorial_industry)
     _RR(tutorial_health)
     _RR(tutorial_gardens)
@@ -30,35 +25,15 @@ struct tutorial_t {
     tutorial_t();
     
     virtual int missionid() const = 0;
-    virtual void init() = 0;
-    virtual void reset() = 0;
-    virtual void update_step(xstring s) = 0;
-    virtual xstring goal_text() = 0;
+    virtual void init() {}
+    virtual void reset() {}
+    virtual void update_step(xstring s) {}
+    virtual xstring goal_text();
 
     static tutorial_list &list();
 };
 
 struct tutorial_flags_t {
-    struct {
-        bool started;
-        bool building_burned;
-        bool granary_opened;
-        bool gamemeat_stored;
-        bool building_collapsed;
-        bool architector_built;
-        bool bazaar_built;
-    } tutorial_1;
-
-    struct {
-        bool started;
-        bool population_250_reached;
-        bool population_450_reached;
-        bool reserved_1;
-        bool gold_mined;
-        bool temples_built;
-        bool crime;
-    } tutorial_2;
-
     struct {
         bool started;
         bool figs_stored;
@@ -93,10 +68,10 @@ struct tutorial_flags_t {
         bool crime;
         bool tut7_start;
         bool tut8_start;
-        uint16_t last_action;
     } pharaoh;
 
     void update_starting_message();
+    xstring get_immediate_goal_text();
     void on_crime();
 };
 
@@ -109,6 +84,5 @@ e_availability mission_empire_availability(int mission);
 
 void tutorial_map_update(int tut);
 
-xstring tutorial_get_immediate_goal_text();
 
 void tutorial_update_step(xstring step);

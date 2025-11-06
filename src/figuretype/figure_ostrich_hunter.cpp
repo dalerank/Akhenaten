@@ -120,7 +120,9 @@ void figure_ostrich_hunter::figure_action() {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);
                 base.animctx.restart([this] {
                     figure *f = figure_get(base.target_figure_id);
-                    figure_missile::create(id(), tile(), f->tile, FIGURE_HUNTER_ARROW);
+                    auto missile = figure_missile::create(id(), tile(), f->tile, FIGURE_HUNTER_ARROW);
+                    assert(missile);
+                    missile->runtime_data().missile_attack_value = current_params().animal_attack_value;
                 });
             }
         }

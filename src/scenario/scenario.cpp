@@ -11,6 +11,7 @@
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/mission.h"
+#include "dev/debug.h"
 
 #include "js/js_game.h"
 
@@ -20,19 +21,27 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     mission_id_t missionid(g_scenario.settings.campaign_scenario_id);
 
     g_scenario.load_metadata(missionid);
+    js_register_mission_vars(g_scenario.vars);
 }
 
-void scenario_settings_init() {
-    g_scenario.settings.campaign_scenario_id = 0;
-    g_scenario.settings.campaign_mission_rank = 0;
-    g_scenario.settings.scmode = e_scenario_normal;
-    g_scenario.settings.starting_kingdom = difficulty_starting_kingdom();
-    g_scenario.settings.starting_personal_savings = 0;
+void scenario_set_goal_tooltip(xstring text) {
+    g_scenario.goal_tooltip = text;
+}
+ANK_FUNCTION_1(scenario_set_goal_tooltip)
+
+void scenario_data_t::init() {
+    settings.campaign_scenario_id = 0;
+    settings.campaign_mission_rank = 0;
+    settings.scmode = e_scenario_normal;
+    settings.starting_kingdom = difficulty_starting_kingdom();
+    settings.starting_personal_savings = 0;
 }
 
-void scenario_settings_init_mission() {
-    g_scenario.settings.starting_kingdom = difficulty_starting_kingdom();
-    g_scenario.settings.starting_personal_savings = g_settings.personal_savings_for_mission(g_scenario.settings.campaign_mission_rank);
+void scenario_data_t::init_mission() {
+    settings.starting_kingdom = difficulty_starting_kingdom();
+    settings.starting_personal_savings = g_settings.personal_savings_for_mission(settings.campaign_mission_rank);
+
+    vars.clear();
 }
 
 int scenario_data_t::startup_funds() const {
@@ -90,10 +99,27 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
         arch.r("win_criteria", win_criteria);
-        arch.r("vars", vars);
+
+        settings_vars_t newvars;
+        arch.r("vars", newvars);
+        vars.insert(newvars);
     });
 
     events.load_mission_metadata(missionid);
+}
+
+void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
+    assert(size == 900);
+    char data[900] = { 0 };
+    if (iob->is_read_access()) {
+        iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
+        vars.load(data);
+    } else {
+        std::string save_data = vars.save();
+        assert(save_data.size() < sizeof(data));
+        memcpy(data, save_data.data(), save_data.size() + 1);
+        iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
+    }
 }
 
 bool scenario_building_allowed(e_building_type building_type) {
@@ -126,14 +152,16 @@ e_scenario_mode scenario_data_t::mode() {
     return g_scenario.settings.scmode;
 }
 
-void scenario_set_campaign_rank(int rank) {
-    g_scenario.settings.campaign_mission_rank = rank;
+void scenario_data_t::set_campaign_rank(int rank) {
+    settings.campaign_mission_rank = rank;
 }
-int scenario_campaign_scenario_id() {
-    return g_scenario.settings.campaign_scenario_id;
+
+int scenario_data_t::campaign_scenario_id() {
+    return settings.campaign_scenario_id;
 }
-void scenario_set_campaign_scenario(int scenario_id) {
-    g_scenario.settings.campaign_scenario_id = scenario_id;
+
+void scenario_data_t::set_campaign_scenario(int scenario_id) {
+    settings.campaign_scenario_id = scenario_id;
 }
 
 bool scenario_data_t::is_scenario_id(custom_span<int> missions) {
@@ -157,9 +185,9 @@ int scenario_additional_damage(e_building_type type, e_damage_type damage) {
     return (it != dmg.end()) ? (damage == e_damage_collapse ? it->collapse : it->fire) : 0;
 }
 
-int scenario_is_before_mission(int mission) {
-    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-    return !is_custom_map && g_scenario.settings.campaign_mission_rank < mission;
+int scenario_data_t::is_before_mission(int mission) {
+    const bool is_custom_map = (mode() != e_scenario_normal);
+    return !is_custom_map && settings.campaign_mission_rank < mission;
 }
 
 int scenario_starting_kingdom() {
@@ -169,9 +197,6 @@ int scenario_starting_personal_savings() {
     return g_scenario.settings.starting_personal_savings;
 }
 
-const uint8_t* scenario_name() {
-    return g_scenario.scenario_name;
-}
 void scenario_set_name(const uint8_t* name) {
     string_copy(name, g_scenario.scenario_name, MAX_SCENARIO_NAME);
 }
@@ -187,20 +212,11 @@ int scenario_property_climate() {
     return g_scenario.climate;
 }
 
-int scenario_property_start_year() {
-    return g_scenario.start_year;
-}
-int scenario_property_kingdom_supplies_grain() {
-    return g_scenario.kingdom_supplies_grain;
-}
 int scenario_property_enemy() {
     return g_scenario.enemy_id;
 }
 int scenario_property_player_rank() {
     return g_scenario.player_rank;
-}
-int scenario_image_id() {
-    return g_scenario.image_id;
 }
 
 const uint8_t* scenario_subtitle() {
@@ -402,9 +418,6 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 
     iob->bind(BIND_SIGNATURE_UINT32, &g_scenario.current_pharaoh);
     iob->bind(BIND_SIGNATURE_UINT32, &g_scenario.player_incarnation);
-
-    // junk 8b
-    iob->bind____skip(4);
 
     ///
 

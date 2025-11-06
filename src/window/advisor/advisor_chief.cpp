@@ -98,7 +98,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // foodstocks
     {
         std::pair<int, int> foodstocks_status;
-        if (scenario_property_kingdom_supplies_grain()) {
+        if (g_scenario.kingdom_supplies_grain) {
             foodstocks_status = {26, FONT_NORMAL_BLACK_ON_DARK};
             ui["foodstocks_info"].text((pcstr)lang_get_string(61, foodstocks_status.first));
         } else if (city_resource_food_supply_months() > 0) {
@@ -115,7 +115,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // foodconsumption
     {
         std::pair<int, int> foodcomsuption_status;
-        if (scenario_property_kingdom_supplies_grain()) {
+        if (g_scenario.kingdom_supplies_grain) {
             foodcomsuption_status = {26, FONT_NORMAL_BLACK_ON_DARK};
         } else {
             int pct = g_city.resource.food_percentage_produced();
@@ -158,7 +158,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // finance
     {
         const int treasury = g_city.finance.treasury;
-        int balance_last_year = city_finance_overview_last_year()->balance;
+        int balance_last_year = g_city.finance.last_year.balance;
         if (treasury > balance_last_year) { // assets have rison by ...
             ui["finance_info"].text_var("%s %d", (pcstr)lang_get_string(61, 152), treasury - balance_last_year);
             ui["finance_info"].font(FONT_NORMAL_BLACK_ON_DARK);
@@ -180,19 +180,19 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         const int criminals = g_city.sentiment.criminals;
         if (criminals > 10) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 159),
-                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         g_city.finance.this_year.expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
         } else if (criminals > 7) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 160),
-                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         g_city.finance.this_year.expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
         } else if (criminals > 5) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 161),
-                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         g_city.finance.this_year.expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_YELLOW};
         } else if (criminals > 2) {
             crime_status = {bstring256().printf("%s %d %s", (pcstr)lang_get_string(61, 162),
-                                                         city_finance_overview_this_year()->expenses.stolen,
+                                                         g_city.finance.this_year.expenses.stolen,
                                                          (pcstr)lang_get_string(61, 164)), FONT_NORMAL_BLACK_ON_DARK};
         } else {
             crime_status = {bstring256().printf("%s", (pcstr)lang_get_string(61, 163)), FONT_NORMAL_BLACK_ON_DARK};

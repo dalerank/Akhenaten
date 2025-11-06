@@ -89,7 +89,9 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("main_cached_pos", f->main_cached_pos);
         game_debug_show_property("cart_cached_pos", f->cart_cached_pos);
 
-        f->dcast()->debug_show_properties();
+        if (f->dcast()) {
+            f->dcast()->debug_show_properties();
+        }
 
         if (f->type == FIGURE_HERBALIST) {
             //game_debug_show_property("see_low_health", f->data.herbalist.see_low_health);

@@ -363,13 +363,10 @@ void text_draw_number_centered_colored(int value, int x_offset, int y_offset, in
 }
 
 int text_draw_money(int value, int x_offset, int y_offset, e_font font) {
-    uint8_t str[NUMBER_BUFFER_LENGTH];
-    int money_len = number_to_string(str, value, '@', " ");
-    const uint8_t* postfix = lang_get_string(6, 0);
-    if (postfix)
-        string_copy(postfix, str + money_len, NUMBER_BUFFER_LENGTH - money_len - 1);
+    bstring128 str;
+    str.printf("%d %s", value, lang_get_string(6, 0));
 
-    return text_draw(str, x_offset, y_offset, font, 0);
+    return text_draw(str.c_str(), x_offset, y_offset, font, 0);
 }
 
 int text_draw_percentage(int value, int x_offset, int y_offset, e_font font) {

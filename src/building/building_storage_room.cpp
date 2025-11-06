@@ -50,7 +50,7 @@ void building_storage_room::add_import(e_resource resource) {
 
     uint32_t price = trade_price_buy(resource);
     events::emit(event_stats_append_resource{ resource, 100 });
-    events::emit(event_finance_process_request{ efinance_request_import, price });
+    events::emit(event_finance_request{ efinance_request_import, price });
 
     set_image(resource);
 }
@@ -63,7 +63,7 @@ void building_storage_room::remove_export(e_resource resource) {
 
     uint32_t price = trade_price_sell(resource);
     events::emit(event_stats_remove_resource{ resource, 100 });
-    events::emit(event_finance_process_request{ efinance_request_export, price });
+    events::emit(event_finance_request{ efinance_request_export, price });
 
     set_image(resource);
 }

@@ -136,7 +136,7 @@ void empire_window::init() {
     ui["button_open_trade"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_open_trade", [] {
             empire_city *city = g_empire.city(g_empire_window.selected_city);
-            city_finance_process_construction(city->cost_to_open);
+            g_city.finance.process_construction(city->cost_to_open);
             city->is_open = 1;
             window_trade_opened_show(g_empire_window.selected_city);
         });
@@ -741,7 +741,7 @@ void window_empire_show() {
 }
 
 void window_empire_show_checked() {
-    e_availability avail = mission_empire_availability(scenario_campaign_scenario_id() + 1);
+    e_availability avail = mission_empire_availability(g_scenario.campaign_scenario_id() + 1);
     
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (avail == AVAILABLE || is_custom_map) {

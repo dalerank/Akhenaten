@@ -125,8 +125,7 @@ static void show_message_popup(int index) {
     }
 
     xstring message_uid = lang_get_message_id(msg.MM_text_id);
-    const lang_message &lang_mes = lang_get_message(message_uid);
-    window_message_dialog_show_city_message(message_uid, index, msg.year, msg.month, msg.param1, msg.param2, lang_mes.advisor, true);
+    window_message_dialog_show_city_message(message_uid, index, msg.year, msg.month, msg.param1, msg.param2, message_template.advisor, true);
 }
 
 void city_message_disable_sound_for_next_message(void) {
