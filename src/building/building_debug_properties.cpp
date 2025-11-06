@@ -12,7 +12,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_DefaultOpen, "Building");
+    bool common_open = ImGui::TreeNodeEx("Building", ImGuiTreeNodeFlags_None, "Building");
     ImGui::TableSetColumnIndex(1); 
 
     if (common_open) {
@@ -81,7 +81,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
     ImGui::TableNextRow();
     ImGui::TableSetColumnIndex(0);
     ImGui::AlignTextToFramePadding();
-    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_DefaultOpen, "Anim");
+    bool anim_open = ImGui::TreeNodeEx("Anim", ImGuiTreeNodeFlags_None, "Anim");
     ImGui::TableSetColumnIndex(1);
 
     if (anim_open) {
@@ -97,6 +97,21 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("loop", b->anim.loop);
         game_debug_show_property("is_reverse", b->anim.is_reverse);
         game_debug_show_property("was_finished", b->anim.was_finished);
+
+        ImGui::TreePop();
+    }
+    ImGui::PopID();
+
+    ImGui::PushID(0x82000000 | b->id);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool runtime_open = ImGui::TreeNodeEx("Runtime", ImGuiTreeNodeFlags_None, "Runtime");
+    ImGui::TableSetColumnIndex(1);
+
+    if (runtime_open) {
+        b->dcast()->debug_draw_properties();
 
         ImGui::TreePop();
     }

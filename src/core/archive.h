@@ -113,6 +113,15 @@ struct archive {
         });
     }
 
+    template<typename N, typename T>
+    inline bool insert(pcstr name, std::unordered_map<N, T> &v) {
+        this->r_objects(name, [&] (pcstr key, archive arch) {
+            T itemv; arch.r(itemv);
+            v.insert({ key, itemv });
+        });
+        return true;
+    }
+
     template<typename T = int>
     inline std::vector<T> r_array_num(pcstr name) {
         getproperty(-1, name);
@@ -397,7 +406,7 @@ struct g_archive : public archive {
     }
 
     template<typename T>
-    inline bool update(pcstr name, std::unordered_set<T> &v) {
+    inline bool insert(pcstr name, std::unordered_set<T> &v) {
         this->r_array(name, [&] (archive arch) {
             T itemv; arch.r(itemv);
             v.insert(itemv);

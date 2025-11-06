@@ -253,7 +253,7 @@ resource_list building_house::consume_food() {
 
     d.num_foods = 0;
     resource_list food_types_eaten;
-    if (scenario_property_kingdom_supplies_grain()) {
+    if (g_scenario.kingdom_supplies_grain) {
         d.foods[0] = amount_per_type;
         food_types_eaten[RESOURCE_GRAIN] += amount_per_type;
         d.num_foods = 1;
@@ -1089,7 +1089,7 @@ void building_house::on_place_checks() {
 
     construction_warnings warnings;
     const int city_population = g_city.population.current;
-    const bool need_more_food = (city_population >= 200 && !scenario_property_kingdom_supplies_grain() && g_city.resource.food_percentage_produced() <= 95);
+    const bool need_more_food = (city_population >= 200 && !g_scenario.kingdom_supplies_grain && g_city.resource.food_percentage_produced() <= 95);
     warnings.add_if(need_more_food, "#people_eat_more_than_produce");
 }
 

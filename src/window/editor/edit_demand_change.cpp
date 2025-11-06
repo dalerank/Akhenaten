@@ -37,7 +37,7 @@ static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
                                    {30, 230, 250, 25, button_delete, button_none},
                                    {320, 230, 100, 25, button_save, button_none}};
 
-static const uint8_t UNKNOWN[4] = {'?', '?', '?', 0};
+static pcstr UNKNOWN = "???";
 static uint8_t route_display_names[MAX_ROUTES][NAME_LENGTH];
 
 static struct {
@@ -49,13 +49,13 @@ static struct {
     int num_routes;
 } data;
 
-static void create_display_name(int route_id, const uint8_t* city_name) {
-    uint8_t* dst = route_display_names[route_id];
-    int offset = string_from_int(dst, route_id, 0);
+static void create_display_name(int route_id, pcstr city_name) {
+    pstr dst = (pstr)route_display_names[route_id];
+    int offset = string_from_int((uint8_t*)dst, route_id, 0);
     dst[offset++] = ' ';
     dst[offset++] = '-';
     dst[offset++] = ' ';
-    string_copy(city_name, &dst[offset], NAME_LENGTH - offset);
+    strcpy(dst + offset, city_name);
 }
 
 static void init(int id) {
@@ -90,7 +90,7 @@ static void draw_foreground(int) {
 
     button_border_draw(30, 152, 60, 25, data.focus_button_id == 1);
     text_draw_number_centered_prefix(data.demand_change.year, '+', 30, 158, 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + data.demand_change.year, 100, 158, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(g_scenario.start_year + data.demand_change.year, 100, 158, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw(190, 152, 120, 25, data.focus_button_id == 2);
     lang_text_draw_centered(23, data.demand_change.resource, 190, 158, 120, FONT_NORMAL_BLACK_ON_LIGHT);

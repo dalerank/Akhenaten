@@ -53,8 +53,8 @@ void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw();
 
-    const finance_overview *last_year = city_finance_overview_last_year();
-    const finance_overview *this_year = city_finance_overview_this_year();
+    const finance_overview& last_year = g_city.finance.last_year;
+    const finance_overview& this_year = g_city.finance.this_year;
 
     // tax percentage and estimated income
     struct row {
@@ -79,33 +79,33 @@ void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
 
     ///////// INCOMES
     svector<row, 32> rows_incomes = {
-        {ui::str(60, 8) , last_year->income.taxes, this_year->income.taxes},
-        {ui::str(60, 9) ,  last_year->income.exports, this_year->income.exports},
-        {ui::str(60, 20) , last_year->income.donated, this_year->income.donated},
-        {ui::str(60, 24) , (int)last_year->income.gold_delivered, (int)this_year->income.gold_delivered},
+        {ui::str(60, 8) , last_year.income.taxes, this_year.income.taxes},
+        {ui::str(60, 9) ,  last_year.income.exports, this_year.income.exports},
+        {ui::str(60, 20) , last_year.income.donated, this_year.income.donated},
+        {ui::str(60, 24) , (int)last_year.income.gold_delivered, (int)this_year.income.gold_delivered},
         {"", 0, 0, true, vec2i{line_start_x, 0} }, // sum lines
-        {ui::str(60, 10) , (int)last_year->income.total, (int)this_year->income.total }
+        {ui::str(60, 10) , (int)last_year.income.total, (int)this_year.income.total }
     };
 
     draw_rows(rows_incomes);
 
     bstring128 interest;
     interest.printf("%s 10%%", ui::str(60, 14));
-    int last_year_others = last_year->expenses.festivals + last_year->expenses.kingdome + last_year->expenses.disasters;
-    int this_year_others = this_year->expenses.festivals + this_year->expenses.kingdome + this_year->expenses.disasters;
+    int last_year_others = last_year.expenses.festivals + last_year.expenses.kingdome + last_year.expenses.disasters;
+    int this_year_others = this_year.expenses.festivals + this_year.expenses.kingdome + this_year.expenses.disasters;
     svector<row, 32> rows_expenses = {
-        {rows.imports.c_str(), last_year->expenses.imports, this_year->expenses.imports},
-        {ui::str(60, 12), last_year->expenses.wages, this_year->expenses.wages},
-        {ui::str(60, 13), last_year->expenses.construction, this_year->expenses.construction},
-        {interest, last_year->expenses.interest, last_year->expenses.interest},
-        {ui::str(60, 15), last_year->expenses.mayour_salary, this_year->expenses.mayour_salary},
-        {ui::str(60, 16), last_year->expenses.stolen, this_year->expenses.stolen},
-        {ui::str(60, 21), last_year->expenses.tribute, this_year->expenses.tribute},
+        {rows.imports.c_str(), last_year.expenses.imports, this_year.expenses.imports},
+        {ui::str(60, 12), last_year.expenses.wages, this_year.expenses.wages},
+        {ui::str(60, 13), last_year.expenses.construction, this_year.expenses.construction},
+        {interest, last_year.expenses.interest, last_year.expenses.interest},
+        {ui::str(60, 15), last_year.expenses.mayour_salary, this_year.expenses.mayour_salary},
+        {ui::str(60, 16), last_year.expenses.stolen, this_year.expenses.stolen},
+        {ui::str(60, 21), last_year.expenses.tribute, this_year.expenses.tribute},
         {ui::str(60, 22), last_year_others, this_year_others},
         {"", 0, 0, true, vec2i{line_start_x, 0} }, // sum lines
-        {ui::str(60, 17), last_year->expenses.total, this_year->expenses.total},
-        {ui::str(60, 18), last_year->net_in_out, this_year->net_in_out},
-        {ui::str(60, 19), last_year->balance, this_year->balance}
+        {ui::str(60, 17), last_year.expenses.total, this_year.expenses.total},
+        {ui::str(60, 18), last_year.net_in_out, this_year.net_in_out},
+        {ui::str(60, 19), last_year.balance, this_year.balance}
     };
 
     line_y = ui["expenses_base"].pos.y;

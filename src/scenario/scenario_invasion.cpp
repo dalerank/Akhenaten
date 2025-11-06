@@ -377,7 +377,7 @@ int map_invasion_point(tile2i point) {
 
 int scenario_invasion_start_from_seth() {
     auto &data = g_invasions;
-    int mission = scenario_campaign_scenario_id();
+    int mission = g_scenario.campaign_scenario_id();
     if (mission < 0 || mission > 19)
         return 0;
 

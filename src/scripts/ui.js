@@ -1,6 +1,10 @@
 log_info("akhenaten: ui config started")
 
-uioptions = {
+ui {
+    popup_message: ui_popup_message
+}
+
+uioptions {
     resource_icons  : {pack:PACK_EXPANSION, id:3}
     advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0}
     arrow_button_tiny_down : {pack:PACK_GENERAL, id:212, offset:0}
@@ -54,7 +58,7 @@ display_options_window {
     num_files_in_view : 13
     ui {
         background  : outer_panel({size[24, 21] })
-        title       : header({pos[10, 10], size[px(24), 20], text[42, 0], align:"center"})
+        title       : header({pos[10, 10], size[px(24), 20], text:"${42.0}", align:"center"})
         
         btnfullscreen : button({pos[16, 46], size[224, 20] })
         videodriver : text({pos[px(24)/2 + 60, 50]})
@@ -67,18 +71,18 @@ display_options_window {
     } 
 }
 
-window_dinasty_menu = {
-    pos: [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
-    ui : {
+window_dinasty_menu {
+    pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
+    ui {
         background_image: background({pack:PACK_UNLOADED, id:31})
-        background      : outer_panel({size: [24, 19]})
+        background      : outer_panel({size[24, 19]})
 
-        title       : text_center({pos:[0, 20], size:[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
-        btnresume   : button({margin:{centerx: -135, top: 40 + 1 * 40}, size:[270, 25], text:[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnexplore  : button({margin:{centerx: -135, top: 40 + 2 * 40}, size:[270, 25], text:[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnload     : button({margin:{centerx: -135, top: 40 + 3 * 40}, size:[270, 25], text:[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btncustom   : button({margin:{centerx: -135, top: 40 + 4 * 40}, size:[270, 25], text:[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btnback     : button({margin:{centerx: -135, top: 40 + 5 * 40}, size:[270, 25], text:[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        title       : text_center({pos[0, 20], size[px(24), 20], font:FONT_LARGE_BLACK_ON_LIGHT})
+        btnresume   : button({margin{centerx: -135, top: 40 + 1 * 40}, size[270, 25], text[293, 5], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnexplore  : button({margin{centerx: -135, top: 40 + 2 * 40}, size[270, 25], text[293, 6], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnload     : button({margin{centerx: -135, top: 40 + 3 * 40}, size[270, 25], text[293, 2], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btncustom   : button({margin{centerx: -135, top: 40 + 4 * 40}, size[270, 25], text[293, 3], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btnback     : button({margin{centerx: -135, top: 40 + 5 * 40}, size[270, 25], text[293, 4], font:FONT_NORMAL_BLACK_ON_LIGHT })
     }
 }
 
@@ -191,41 +195,6 @@ info_window_water_lift = {
         background   : outer_panel({size: [29, 17] }), // pos/size setup from code
         title          : text({pos: [0, 16], text:"${building.name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         warning_text : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-
-        button_close : close_button({}),
-        button_help  : help_button({}),
-    }
-}
-
-info_window_house = {
-    help_id : 56,
-    ui : {
-        background : outer_panel({size: [29, 23] }), // pos/size setup from code
-        title        : text({pos: [0, 16], text:"${house.level_name}", size: [px(28), px(1)], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        evolve_reason : text({pos: [32, 40], font : FONT_NORMAL_BLACK_ON_LIGHT, rich:true, wrap:px(28), scroll:false }),
-        food0_icon : resource_icon({pos: [32, 95] }),
-        food0_text : text({pos: [64, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food1_icon : resource_icon({pos: [142, 95] }),
-        food1_text : text({pos: [174, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food2_icon : resource_icon({pos: [252, 95] }),
-        food2_text : text({pos: [284, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        food3_icon : resource_icon({pos: [362, 95] }),
-        food3_text : text({pos: [394, 100], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good0_icon : resource_icon({pos: [32, 120] }),
-        good0_text : text({pos: [64, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good1_icon : resource_icon({pos: [142, 120] }),
-        good1_text : text({pos: [174, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good2_icon : resource_icon({pos: [252, 120] }),
-        good2_text : text({pos: [284, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        good3_icon : resource_icon({pos: [362, 120] }),
-        good3_text : text({pos: [394, 124], font: FONT_NORMAL_BLACK_ON_LIGHT }),
-
-        tenants_panel: inner_panel({pos : [16, 148], size: [27, 10] }),
-        people_icon  : image({pos: [34, 154], pack:PACK_GENERAL, id:134, offset:13, }),
-        people_text  : text({pos: [64, 164], font: FONT_NORMAL_BLACK_ON_DARK, }),
-        tax_info     : text({pos: [36, 194], font: FONT_NORMAL_BLACK_ON_DARK, }),
-        happiness_info  : text({pos: [36, 214], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
-        additional_info : text({pos: [36, 234], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(27) }),
 
         button_close : close_button({}),
         button_help  : help_button({}),
@@ -602,23 +571,26 @@ info_window_courthouse = {
     })
 }
 
-info_window_entertainment = {
-    ui : {
-        background    : outer_panel({pos: [0, 0], size: [29, 17]}),
-        title             : text({ pos: [0, 12], size: [px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text  : text({ pos: [32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        inner_panel   : inner_panel({ pos : [16, 116], size: [27, 5] }),
-        workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos:[40, 126] }),
-        workers_text  : text({ pos: [70, 124], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
-        workers_desc  : text({ pos: [70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true }),
-        first_advisor : image_button({ pos:[42, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        second_advisor: image_button({ pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        third_advisor : image_button({ pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
+info_window_entertainment {
+    related_buildings [BUILDING_JUGGLER_SCHOOL, BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL]
+    ui {
+        background    : outer_panel({ size[29, 17]})
+        title         : text({ pos[0, 12], size[px(29), 25], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         
-        show_overlay  : button({ margin:{right:-64, bottom:-40}, size:[23, 23]}),
-        mothball      : button({ margin:{right:-90, bottom:-40}, size:[23, 23]}),
-        button_help   : help_button({}),
-        button_close  : close_button({}),
+        warning_text  : text({ pos[32, 46], wrap:px(26), text:"${text.1}", font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        inner_panel   : inner_panel({ pos[16, 116], size[27, 5] })
+        workers_img   : image({ pack:PACK_GENERAL, id:134, offset:14, pos[40, 126] })
+        workers_text  : text({ pos[70, 124], text:"${building.num_workers} ${8.12} (${model.laborers} ${69.0}", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(24) }),
+        workers_desc  : text({ pos[70, 124 + 20], font: FONT_NORMAL_BLACK_ON_DARK, wrap:px(24), multiline:true })
+        first_advisor : image_button({ pos[42, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        second_advisor: image_button({ pos[64, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        third_advisor : image_button({ pos[96, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+
+        show_overlay  : button({ margin:{right:-64, bottom:-40}, size[23, 23]})
+        mothball      : button({ margin:{right:-90, bottom:-40}, size[23, 23]})
+
+        button_help   : help_button({})
+        button_close  : close_button({})
     }
 }
 
@@ -872,40 +844,40 @@ window_popup_dialog_yesno = {
     }
 }
 
-window_popup_dialog_ok = {
-    pos: [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
-    ui : {
-        background : outer_panel({size: [30, 10] }),
-        header     : text({pos:[0, 30], size:[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        text       : text({pos:[0, 60], size:[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
-        btn_yes    : image_button({margin:{centerx:-20, bottom:-60}, size:[39, 26], pack:PACK_GENERAL, id:96 }),
-        label_tip  : text({margin:{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
+window_popup_dialog_ok {
+    pos [(sw(0) - px(30))/2, (sh(0) - px(10))/2],
+    ui {
+        background : outer_panel({size[30, 10] }),
+        header     : text({pos[0, 30], size[px(30), 20], font: FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        text       : text({pos[0, 60], size[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
+        btn_yes    : image_button({margin{centerx:-20, bottom:-60}, size[39, 26], pack:PACK_GENERAL, id:96 }),
+        label_tip  : text({margin{left:20, bottom:-40}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center"}),
     }
 }
 
-minimap_window = {
-  draw_size : [73, 111],
+minimap_window {
+    draw_size [73, 111]    
 
-    terrain_water : {pack:PACK_GENERAL, id:142},
-    terrain_shrub : {pack:PACK_GENERAL, id:143},
-    terrain_tree  : {pack:PACK_GENERAL, id:143},
-    terrain_marshland : {pack:PACK_GENERAL, id:144},
-    terrain_rock  : {pack:PACK_GENERAL, id:145},
-    terrain_elevation : {pack:PACK_GENERAL, id:145},
-    terrain_meadow : {pack:PACK_GENERAL, id:146},
-    terrain_flooplain : {pack:PACK_GENERAL, id:146},
-    terrain_road  : {pack:PACK_GENERAL, id:147},
-    terrain_wall  : {pack:PACK_GENERAL, id:150},
-    terrain_canal : {pack:PACK_GENERAL, id:151},
-    terrain_dune  : {pack:PACK_GENERAL, id:211},
-    terrain_teal  : {pack:PACK_GENERAL, id:149, offset:200},
-    terrain_bright_teal  : {pack:PACK_GENERAL, id:149, offset:170},
-    terrain_bright_blue  : {pack:PACK_GENERAL, id:149, offset:170},
-    terrain_dark_read  : {pack:PACK_GENERAL, id:149, offset:165},
-    terrain_purple: {pack:PACK_GENERAL, id:149, offset:175},
-    terrain_light_yellow: {pack:PACK_GENERAL, id:149, offset:180},
-    terrain_lilac : {pack:PACK_GENERAL, id:149, offset:195},
-    terrain_orange: {pack:PACK_GENERAL, id:149, offset:205},
+    terrain_water {pack:PACK_GENERAL, id:142},
+    terrain_shrub {pack:PACK_GENERAL, id:143},
+    terrain_tree  {pack:PACK_GENERAL, id:143},
+    terrain_marshland {pack:PACK_GENERAL, id:144},
+    terrain_rock  {pack:PACK_GENERAL, id:145},
+    terrain_elevation {pack:PACK_GENERAL, id:145},
+    terrain_meadow {pack:PACK_GENERAL, id:146},
+    terrain_flooplain {pack:PACK_GENERAL, id:146},
+    terrain_road  {pack:PACK_GENERAL, id:147},
+    terrain_wall  {pack:PACK_GENERAL, id:150},
+    terrain_canal {pack:PACK_GENERAL, id:151},
+    terrain_dune  {pack:PACK_GENERAL, id:211},
+    terrain_teal  {pack:PACK_GENERAL, id:149, offset:200},
+    terrain_bright_teal  {pack:PACK_GENERAL, id:149, offset:170},
+    terrain_bright_blue  {pack:PACK_GENERAL, id:149, offset:170},
+    terrain_dark_read  {pack:PACK_GENERAL, id:149, offset:165},
+    terrain_purple {pack:PACK_GENERAL, id:149, offset:175},
+    terrain_light_yellow {pack:PACK_GENERAL, id:149, offset:180},
+    terrain_lilac  {pack:PACK_GENERAL, id:149, offset:195},
+    terrain_orange {pack:PACK_GENERAL, id:149, offset:205},
 }
 
 window_warnings = {

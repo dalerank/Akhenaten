@@ -153,7 +153,7 @@ void window_advisors::init() {
 
     g_city.finance.update_estimate_taxes();
     g_city.finance.estimate_wages();
-    city_finance_update_interest();
+    g_city.finance.update_interest();
     g_city.finance.calculate_totals();
 
     g_city.migration.determine_reason();

@@ -73,14 +73,6 @@ declare_console_command_p(nextyear) {
 
 uint16_t &game_speed() { return game.game_speed; }
 
-const std::vector<lang_pack> &get_def_lang_packs() {
-    static std::vector<lang_pack> lang_packs = {
-        {"", "eng", "Pharaoh_Text"},
-    };
-
-    return lang_packs;
-}
-
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
     static time_millis last_update;
@@ -146,7 +138,6 @@ void game_t::update_tick(int simtick) {
     g_city.figures.update();
 
     g_scenario.update();
-    g_city.victory_check();
 }
 
 void game_t::advance_year() {
@@ -217,6 +208,7 @@ void game_t::advance_day() {
     }
 
     g_city.update_day();
+    g_city.victory_check();
 
     g_sound.music_update(false);
     widget_minimap_invalidate();
@@ -282,38 +274,26 @@ void game_t::reload_objects() {
     return ctx;
 }
 
-
-static int is_unpatched(void) {
-    const uint8_t* delete_game = lang_get_string(1, 6);
-    const uint8_t* option_menu = lang_get_string(2, 0);
-    const uint8_t* difficulty_option = lang_get_string(2, 6);
-    const uint8_t* help_menu = lang_get_string(3, 0);
-    // Without patch, the difficulty option string does not exist and
-    // getting it "falls through" to the next text group, or, for some
-    // languages (pt_BR): delete game falls through to option menu
-    return difficulty_option == help_menu || delete_game == option_menu;
-}
-
 static void update_encoding() {
     int language = locale_determine_language();
 }
 
 static bool reload_language(int is_editor, int reload_images) {
     const xstring lang_dir = game_features::gameopt_language.to_string();
-    std::vector<lang_pack> lang_packs;
-    if (lang_dir.empty()) {
-        lang_packs = get_def_lang_packs();
-    } else {
-        lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text");
-    }
+    //std::vector<lang_pack> lang_packs;
+    //if (lang_dir.empty()) {
+    //    lang_packs = get_def_lang_packs();
+    //} else {
+    //    lang_packs.emplace_back(lang_dir.c_str(), "loc", "Pharaoh_Text");
+    //}
 
-    if (!lang_load(is_editor, lang_packs)) {
-        if (is_editor)
-            logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
-        else
-            logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
-        return false;
-    }
+    //if (!lang_load(is_editor, lang_packs)) {
+    //    if (is_editor)
+    //        logs::error("'pharaoh_map.eng' or 'pharaoh_map_mm.eng' files not found or too large.");
+    //    else
+    //        logs::error("'pharaoh_text.eng' or 'pharaoh_mm.eng' files not found or too large.");
+    //    return false;
+    //}
 
     update_encoding();
     return true;
@@ -370,16 +350,12 @@ static int get_elapsed_ticks() {
 bool game_t::check_valid() {
     vfs::content_cache_paths();
 
-    if (!lang_load(false, get_def_lang_packs())) {
-        return false;
-    }
-
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     update_encoding();
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     game_hotkeys::load();    // hotkeys.conf
-    scenario_settings_init();
+    g_scenario.init();
     random_init();
 
     paused = false;
@@ -411,7 +387,7 @@ bool game_init(game_opts opts) {
     }
 
     game_state_init();
-    window_logo_show((is_unpatched() ? MESSAGE_MISSING_PATCH : MESSAGE_NONE));
+    window_logo_show(MESSAGE_NONE);
 
     return true;
 }

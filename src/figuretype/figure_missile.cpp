@@ -15,7 +15,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_spear);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_javelin);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bolt);
 
-void figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
+figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
     auto f = figure_create(type, src, DIR_0_TOP_RIGHT);
     auto missile = f->dcast<figure_missile>();
     if (missile) {
@@ -25,6 +25,8 @@ void figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type
         missile->base.set_cross_country_direction(missile->base.cc_coords.x, missile->base.cc_coords.y, 15 * dst.x(), 15 * dst.y(), 1);
         missile->runtime_data().shooter_id = fid;
     }
+
+    return missile;
 }
 
 void figure_missile::on_create() {

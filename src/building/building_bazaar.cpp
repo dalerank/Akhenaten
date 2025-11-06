@@ -120,7 +120,7 @@ building *building_bazaar::get_storage_destination() {
         }
 
         if (b.type == BUILDING_GRANARY) {
-            if (scenario_property_kingdom_supplies_grain()) {
+            if (g_scenario.kingdom_supplies_grain) {
                 return;
             }
 

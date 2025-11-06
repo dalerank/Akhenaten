@@ -19,16 +19,16 @@ declare_console_command_p(nofire) {
 declare_console_command_p(startfire) {
     std::string args;
     is >> args;
-    int count = atoi(!args.empty() ? args.c_str() : "10");
+    int count = atoi(!args.empty() ? args.c_str() : "1");
 
     svector<building *, 1000> buildings;
     buildings_valid_do([&] (building &b) {
         buildings.push_back(&b);
     });
 
-    int step = std::max<int>(1, (int)buildings.size() / count);
-    for (int i = 0; i < buildings.size(); i += step) {
-        buildings[i]->main()->destroy_by_fire();
+    for (int i = 0; i < count; i++) {
+        building *b = buildings.at(rand() % buildings.size());
+        b->main()->destroy_by_fire();
     }
 }
 

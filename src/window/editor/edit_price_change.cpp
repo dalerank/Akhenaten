@@ -53,7 +53,7 @@ static void draw_foreground(int) {
 
     button_border_draw(30, 152, 60, 25, data.focus_button_id == 1);
     text_draw_number_centered_prefix(data.price_change.year, '+', 30, 158, 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + data.price_change.year, 100, 158, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(g_scenario.start_year + data.price_change.year, 100, 158, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw(240, 152, 120, 25, data.focus_button_id == 2);
     lang_text_draw_centered(23, data.price_change.resource, 240, 158, 120, FONT_NORMAL_BLACK_ON_LIGHT);

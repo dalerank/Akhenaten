@@ -31,7 +31,7 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
         game_debug_show_property("<type>", type_name);
         game_debug_show_property("time", e.time.year);
         game_debug_show_property("month", e.time.month);
-        bstring32 time_str; time_str.printf("%s %d %s", ui::str(25, e.time.month), e.time.year + scenario_property_start_year(), lang_text_from_key("#AD"));
+        bstring32 time_str; time_str.printf("%s %d %s", ui::str(25, e.time.month), e.time.year + g_scenario.start_year, lang_text_from_key("#AD"));
         game_debug_show_property("date", time_str.c_str());
         //game_debug_show_property("time.f_fixed", e.time.unk01);
         game_debug_show_property("months_initial", e.months_initial);

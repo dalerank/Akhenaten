@@ -178,8 +178,9 @@ ANK_CONFIG_STRUCT(building_input, resource, resource_second)
 struct metainfo {
     uint16_t help_id;
     uint16_t text_id;
+    xstring help_link;
 };
-ANK_CONFIG_STRUCT(metainfo, help_id, text_id)
+ANK_CONFIG_STRUCT(metainfo, help_id, text_id, help_link)
 
 class building {
 public:
@@ -567,7 +568,8 @@ struct building_static_params {
 };
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
-    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, cost, desirability,
+    fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
+    cost, desirability,
     output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay, max_service,
     meta_id, meta, production_rate, min_houses_coverage)
 
@@ -616,6 +618,7 @@ public:
     virtual void on_config_reload() {}
     virtual void set_water_access_tiles(const water_access_tiles &tiles) {}
     virtual void start_production() {}
+    virtual void debug_draw_properties() {}
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}

@@ -74,6 +74,7 @@
 #include "city/city_floods.h"
 #include "io/io.h"
 #include "io/manager.h"
+#include "js/js_game.h"
 
 #include <cassert>
 #include <filesystem>
@@ -123,7 +124,7 @@ const int GamestateIO::read_file_version(const char* filename, int offset) {
 }
 
 static void pre_load() { // do we NEED this...?
-    scenario_set_campaign_scenario(-1);
+    g_scenario.set_campaign_scenario(-1);
 
     // clear data
     g_city.victory_state.reset();
@@ -166,15 +167,17 @@ static void pre_load() { // do we NEED this...?
 
 static void post_load() {
     // scenario settings
-    scenario_set_name(scenario_name());
+    scenario_set_name(g_scenario.scenario_name);
     city_set_player_name(g_settings.player_name);
-    int scenario_id = scenario_campaign_scenario_id();
+    int scenario_id = g_scenario.campaign_scenario_id();
     int mission_rank = get_scenario_mission_rank(scenario_id);
-    scenario_set_campaign_rank(mission_rank);
+    g_scenario.set_campaign_rank(mission_rank);
 
     mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid);
+    js_register_mission_vars(g_scenario.vars);
     g_empire.load_mission_metadata(missionid);
+    js_register_game_handlers(missionid.value());
 
     // camera
     //    city_view_camera_position_refresh();
@@ -623,7 +626,7 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 
     game.session.last_loaded = e_session_mission;
     game.session.last_loaded_mission = MISSION_PACK_FILE;
-    scenario_set_campaign_scenario(scenario_id);
+    g_scenario.set_campaign_scenario(scenario_id);
     post_load();
 
     widget_top_menu_clear_state();
@@ -712,7 +715,7 @@ void GamestateIO::start_loaded_file() {
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();
 
-        game.time_init(scenario_property_start_year());
+        game.time_init(g_scenario.start_year);
 
         // traders / empire
         g_empire_map.init_scenario();
@@ -755,7 +758,7 @@ void GamestateIO::start_loaded_file() {
     map_building_update_all_tiles();
 
     if (game.session.last_loaded == e_session_mission) {
-        int scenario_id = scenario_campaign_scenario_id();
+        int scenario_id = g_scenario.campaign_scenario_id();
         ui::mission_briefing_window::mission_start(scenario_id);
     } else {
         game.paused = false;
@@ -763,6 +766,7 @@ void GamestateIO::start_loaded_file() {
     }
 
     autoconfig_window::before_mission_start();
+    events::emit(event_mission_start{ g_scenario.settings.campaign_scenario_id });
 
     g_city.before_start_simulation();
     game.before_start_simulation();

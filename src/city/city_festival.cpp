@@ -64,7 +64,7 @@ void city_festival_t::schedule() {
         cost = grand_cost;
     }
 
-    events::emit(event_finance_process_request{ efinance_request_festival, cost });
+    events::emit(event_finance_request{ efinance_request_festival, cost });
     events::emit(event_festival_hold{ planned.god, planned.size });
 
     if (selected.size == FESTIVAL_GRAND) {

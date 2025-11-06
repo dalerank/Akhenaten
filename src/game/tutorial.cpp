@@ -40,6 +40,10 @@ tutorial_t::tutorial_t() {
     list().push_back(this);
 }
 
+xstring tutorial_t::goal_text() {
+    return g_scenario.goal_tooltip; 
+}
+
 tutorial_t::tutorial_list &tutorial_t::list() {
     static tutorial_list list;
     return list;
@@ -75,9 +79,7 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
         return false;
     }
 
-    int scenario_id = scenario_campaign_scenario_id();
-    memset_if(0 < scenario_id, 1, g_tutorials_flags.tutorial_1);
-    memset_if(1 < scenario_id, 1, g_tutorials_flags.tutorial_2);
+    int scenario_id = g_scenario.campaign_scenario_id();
     memset_if(2 < scenario_id, 1, g_tutorials_flags.tutorial_3);
     memset_if(3 < scenario_id, 1, g_tutorials_flags.tutorial_4);
     memset_if(4 < scenario_id, 1, g_tutorials_flags.tutorial_5);
@@ -119,12 +121,16 @@ void tutorial_map_update(int tut) {
     }
 }
 
-xstring tutorial_get_immediate_goal_text() {
+xstring tutorial_flags_t::get_immediate_goal_text() {
     for (auto tut : tutorial_t::list()) {
         const int missionid = tut->missionid();
         if (g_scenario.is_scenario_id(missionid)) {
             return tut->goal_text();
         }
+    }
+
+    if (!!g_scenario.goal_tooltip) {
+        return g_scenario.goal_tooltip;
     }
 
     return "#unknown_tutoral_goal";
@@ -154,12 +160,6 @@ void tutorial_flags_t::update_starting_message() {
         g_scenario.meta.start_message_shown = true;
     }
 
-    if (g_scenario.is_scenario_id(1) && !g_tutorials_flags.tutorial_1.started) {
-        g_tutorials_flags.tutorial_1.started = 1;
-    }
-    if (g_scenario.is_scenario_id(2) && !g_tutorials_flags.tutorial_2.started) {
-        g_tutorials_flags.tutorial_2.started = 1;
-    }
     if (g_scenario.is_scenario_id(3) && !g_tutorials_flags.tutorial_3.started) {
         g_tutorials_flags.tutorial_3.started = 1;
     }
@@ -176,7 +176,7 @@ void tutorial_flags_t::update_starting_message() {
     }
 
     if (g_scenario.is_scenario_id(7) && !g_tutorials_flags.pharaoh.tut7_start) {
-        if (scenario_campaign_scenario_id() == 6)
+        if (g_scenario.campaign_scenario_id() == 6)
             messages::popup("message_trade_on_the_water", 0, 0);
         else
             messages::popup("message_at_the_waters_edge", 0, 0);
@@ -190,17 +190,18 @@ void tutorial_flags_t::update_starting_message() {
 }
 
 io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT16, &g_tutorials_flags.pharaoh.last_action);
+    uint16_t tmp;
+    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     // tut 1
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_burned);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.granary_opened);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.gamemeat_stored);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.building_collapsed);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.architector_built);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     // tut 2
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.gold_mined);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.temples_built);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.crime); 
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp); 
     // tut 3
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.figs_stored);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.pottery_made_1);
@@ -215,8 +216,8 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.bricks_bought);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.flags[14]);
 
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_1.started);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_2.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_3.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.started);

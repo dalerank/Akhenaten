@@ -25,6 +25,7 @@
 #include "platform/version.hpp"
 #include "platform/platform.h"
 #include "widget/debug_console.h"
+#include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
 #include "renderer.h"
 
@@ -487,6 +488,11 @@ static void run_and_draw() {
     const bool need_reload = js_vm_sync();
     if (need_reload) {
         game.reload_objects();
+    }
+
+    if (game.system_language_changed) {
+        game.system_language_changed = false;
+        autoconfig_window::refresh_all();
     }
 }
 

@@ -81,7 +81,7 @@ void building_clay_pit::on_before_flooded() {
     building_industry::on_before_flooded();
 
     if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-        events::emit(event_finance_process_request{ efinance_request_disasters, 250 });
+        events::emit(event_finance_request{ efinance_request_disasters, 250 });
     }
 }
 
@@ -95,6 +95,6 @@ void building_mine_copper::on_before_collapse() {
     building_mine::on_before_collapse();
 
     if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
-        events::emit(event_finance_process_request{ efinance_request_disasters, 250 });
+        events::emit(event_finance_request{ efinance_request_disasters, 250 });
     }
 }

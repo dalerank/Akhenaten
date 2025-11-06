@@ -102,14 +102,14 @@ static void draw_foreground(int) {
     lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_time_limit_enabled(), 316, 301, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 292, 180, 30, focus_button_id == 10);
     int width = text_draw_number(scenario_criteria_time_limit_years(), '+', " ", 436, 301, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_time_limit_years(), 446 + width, 301, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(g_scenario.start_year + scenario_criteria_time_limit_years(), 446 + width, 301, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 55, 66, 341, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 332, 80, 30, focus_button_id == 11);
     lang_text_draw_centered(18, is_open_play ? 0 : scenario_criteria_survival_enabled(), 316, 341, 80, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(416, 332, 180, 30, focus_button_id == 12);
     width = text_draw_number(scenario_criteria_survival_years(), '+', " ", 436, 341, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(scenario_property_start_year() + scenario_criteria_survival_years(), 446 + width, 341, FONT_NORMAL_BLACK_ON_LIGHT);
+    lang_text_draw_year(g_scenario.start_year + scenario_criteria_survival_years(), 446 + width, 341, FONT_NORMAL_BLACK_ON_LIGHT);
 
     lang_text_draw(44, 56, 66, 381, FONT_NORMAL_BLACK_ON_LIGHT);
     button_border_draw(316, 372, 80, 30, focus_button_id == 13);

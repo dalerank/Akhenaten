@@ -37,7 +37,7 @@ static void draw_foreground(int) {
     lang_text_draw_centered(44, 13, 138, 56, 320, FONT_LARGE_BLACK_ON_LIGHT);
     lang_text_draw_centered(13, 3, 128, 178, 320, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    int start_year = scenario_property_start_year();
+    int start_year = g_scenario.start_year;
     button_border_draw(158, 100, 100, 30, focus_button_id == 1);
     lang_text_draw_centered(20, start_year >= 0 ? 1 : 0, 158, 110, 100, FONT_NORMAL_BLACK_ON_LIGHT);
 
@@ -55,11 +55,11 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_era(int param1, int param2) {
-    scenario_editor_set_start_year(-scenario_property_start_year());
+    scenario_editor_set_start_year(-g_scenario.start_year);
 }
 
 static void set_year(int value) {
-    if (scenario_property_start_year() < 0)
+    if (g_scenario.start_year < 0)
         value = -value;
 
     scenario_editor_set_start_year(value);

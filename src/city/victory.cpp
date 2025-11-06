@@ -12,6 +12,7 @@
 #include "sound/sound.h"
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
+#include "js/js_game.h"
 
 #include "dev/debug.h"
 #include <iostream>
@@ -25,15 +26,26 @@ declare_console_command_p(defeat) {
 }
 
 svector<victory_condition, 16> g_victory_conditions;
+std::unordered_map<xstring, bool> g_victory_reasons;
+
+void city_set_victory_reason(xstring reason, bool value) {
+    g_victory_reasons[reason] = value;
+}
+ANK_FUNCTION_2(city_set_victory_reason)
 
 void victory_state_t::reset() {
    state = e_victory_state_none;
    force_win = false;
    g_victory_conditions.clear();
+   g_victory_reasons.clear();
 }
 
 int winning_conditions() {
     return g_victory_conditions.size() > 0;
+}
+
+int winning_reasons() {
+    return g_victory_reasons.size() > 0;
 }
 
 e_victory_state city_t::determine_victory_state() {
@@ -90,8 +102,17 @@ e_victory_state city_t::determine_victory_state() {
     }
 
     if (winning_conditions()) {
-        for (const auto& condition : g_victory_conditions) {
+        for (const auto &condition : g_victory_conditions) {
             if (!condition()) {
+                state = e_victory_state_none;
+                break;
+            }
+        }
+    }
+
+    if (winning_reasons()) {
+        for (const auto &reason : g_victory_reasons) {
+            if (!reason.second) {
                 state = e_victory_state_none;
                 break;
             }
@@ -162,6 +183,7 @@ void city_t::victory_check() {
         return;
     }
 
+    events::emit(event_update_victory_state{ g_city.population.current });
     victory_state.state = determine_victory_state();
 
     if (mission.has_won) {

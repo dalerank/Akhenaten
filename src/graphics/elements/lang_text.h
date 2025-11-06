@@ -10,10 +10,11 @@ struct game_language {
     xstring key;
     xstring lang;
     xstring caption;
+    xstring base_table;
     xstring table;
     xstring message_table;
 };
-ANK_CONFIG_STRUCT(game_language, lang, caption, key, table, message_table)
+ANK_CONFIG_STRUCT(game_language, lang, caption, key, base_table, table, message_table)
 
 using game_languages_vec = svector<game_language, 12>;
 
@@ -31,6 +32,8 @@ inline int lang_text_draw(int group, int number, vec2i offset, e_font font, int 
 
 bool lang_reload_localized_files();
 bool lang_reload_localized_tables();
+
+bool system_lang_changed();
 
 game_language lang_get_current_language();
 int lang_text_draw(pcstr str, vec2i pos, e_font font, int box_width = 0);

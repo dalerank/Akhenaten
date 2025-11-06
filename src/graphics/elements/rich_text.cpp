@@ -5,94 +5,57 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/view/view.h"
-#include "graphics/elements/scrollbar.h"
 #include "graphics/elements/panel.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "game/game.h"
 
-#define MAX_LINKS 50
+int rich_text_t::init(pcstr text, vec2i ptext, int width_blocks, int height_blocks, bool adjust_width_on_no_scroll) {
+    x_text = ptext.x;
+    y_text = ptext.y;
+    if (!num_lines) {
+        clear_links();
 
-static void on_scroll(void);
+        text_height_blocks = height_blocks;
+        text_height_lines = height_blocks - 1;
+        text_width_blocks = width_blocks;
 
-static scrollbar_t g_richtext_scrollbar = {{0, 0}, 0, on_scroll};
-
-struct rich_text_link_t {
-    int message_id;
-    int x_min;
-    int y_min;
-    int x_max;
-    int y_max;
-};
-
-rich_text_link_t g_rich_text_links[MAX_LINKS];
-
-static int num_links;
-static const font_definition* normal_font_def;
-static const font_definition* link_font_def;
-
-struct rich_text_data_t {
-    int x_text;
-    int y_text;
-    int text_width_blocks;
-    int text_height_blocks;
-    int text_height_lines;
-    int num_lines;
-    int max_scroll_position;
-};
-
-rich_text_data_t g_rich_text_data;
-
-int rich_text_init(const uint8_t* text, vec2i ptext, int width_blocks, int height_blocks, bool adjust_width_on_no_scroll) {
-    auto &data = g_rich_text_data;
-    data.x_text = ptext.x;
-    data.y_text = ptext.y;
-    if (!data.num_lines) {
-        data.text_height_blocks = height_blocks;
-        data.text_height_lines = height_blocks - 1;
-        data.text_width_blocks = width_blocks;
-
-        data.num_lines = rich_text_draw(text, vec2i(data.x_text + 8, data.y_text + 6), 16 * data.text_width_blocks - 16, data.text_height_lines, /*meaure_only*/true);
-        g_richtext_scrollbar.pos.x = data.x_text + 16 * data.text_width_blocks - 1;
-        g_richtext_scrollbar.pos.y = data.y_text;
-        g_richtext_scrollbar.height = 16 * data.text_height_blocks;
-        g_richtext_scrollbar.init(g_richtext_scrollbar.scroll_position, data.num_lines - data.text_height_lines);
-        if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
-            data.text_width_blocks += 2;
+        num_lines = draw(text, vec2i(x_text + 8, y_text + 6), 16 * text_width_blocks - 16, text_height_lines, /*meaure_only*/true);
+        dscrollbar.pos.x = x_text + 16 * text_width_blocks - 1;
+        dscrollbar.pos.y = y_text;
+        dscrollbar.height = 16 * text_height_blocks;
+        dscrollbar.init(dscrollbar.scroll_position, num_lines - text_height_lines);
+        if (num_lines <= text_height_lines && adjust_width_on_no_scroll) {
+            text_width_blocks += 2;
         }
     }
-    return data.text_width_blocks;
+
+    dscrollbar.onscroll([this] {
+        clear_links();
+    });
+
+    return text_width_blocks;
 }
 
-void rich_text_set_fonts(e_font normal_font, e_font link_font) {
+void rich_text_t::set_fonts(e_font normal_font, e_font link_font) {
     normal_font_def = font_definition_for(normal_font);
     link_font_def = font_definition_for(link_font);
 }
 
-void rich_text_reset(int scroll_position) {
-    auto &data = g_rich_text_data;
-    scrollbar_reset(&g_richtext_scrollbar, scroll_position);
-    data.num_lines = 0;
-    rich_text_clear_links();
+void rich_text_t::reset(int scroll_position) {
+    scrollbar_reset(&dscrollbar, scroll_position);
+    num_lines = 0;
+    clear_links();
 }
 
-void rich_text_clear_links(void) {
-    auto &links = g_rich_text_links;
-    for (int i = 0; i < MAX_LINKS; i++) {
-        links[i].message_id = 0;
-        links[i].x_min = 0;
-        links[i].x_max = 0;
-        links[i].y_min = 0;
-        links[i].y_max = 0;
-    }
-    num_links = 0;
+void rich_text_t::clear_links(void) {
+    links.clear();
 }
 
-int rich_text_get_clicked_link(const mouse* m) {
-    auto &links = g_rich_text_links;
+int rich_text_t::get_clicked_link(const mouse* m) {
     if (m->left.went_up) {
-        for (int i = 0; i < num_links; i++) {
+        for (int i = 0; i < links.size(); i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max && m->y >= links[i].y_min && m->y <= links[i].y_max) {
                 return links[i].message_id;
             }
@@ -101,19 +64,19 @@ int rich_text_get_clicked_link(const mouse* m) {
     return -1;
 }
 
-static void add_link(int message_id, int x_start, int x_end, int y) {
-    auto &links = g_rich_text_links;
-    if (num_links < MAX_LINKS) {
-        links[num_links].message_id = message_id;
-        links[num_links].x_min = x_start - 2;
-        links[num_links].x_max = x_end + 2;
-        links[num_links].y_min = y - 1;
-        links[num_links].y_max = y + 13;
-        num_links++;
+void rich_text_t::add_link(int message_id, int x_start, int x_end, int y) {
+    if (!links.full()) {
+        links.push_back({});
+        auto &link = links.back();
+        link.message_id = message_id;
+        link.x_min = x_start - 2;
+        link.x_max = x_end + 2;
+        link.y_min = y - 1;
+        link.y_max = y + 13;
     }
 }
 
-static int get_lexem_width(const uint8_t *str, int in_link) {
+int rich_text_t::get_lexem_width(pcstr str, int in_link) {
     if (!str) {
         return 0;
     }
@@ -131,7 +94,7 @@ static int get_lexem_width(const uint8_t *str, int in_link) {
             width += 4;
         } else if (*str > ' ') {
             // normal char
-            const auto glyph = font_letter_id(normal_font_def, str, &num_bytes);
+            const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
                 width += normal_font_def->letter_spacing + image_letter(glyph.imagid)->width;
             }
@@ -142,7 +105,7 @@ static int get_lexem_width(const uint8_t *str, int in_link) {
     return width;
 }
 
-static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
+int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
     if (!str) {
         return 0;
     }
@@ -188,7 +151,7 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
             width += 4;
         } else if (*str > ' ') {
             // normal char
-            const auto glyph = font_letter_id(normal_font_def, str, &num_bytes);
+            const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
                 width += 1 + image_letter(glyph.imagid)->width;
             }
@@ -212,7 +175,7 @@ static int get_word_width(const uint8_t* str, int in_link, int* num_chars) {
     return width;
 }
 
-static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr, bool measure_only) {
+void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bool measure_only) {
     int start_link = 0;
     int num_link_chars = 0;
     color saved_color = clr;
@@ -227,7 +190,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
                 def = font_definition_for(FONT_NORMAL_YELLOW);
             } else if (*(str + 1) == 'I') {
                 str += 2; // skip @I
-                int small_image_id = string_to_int(str);
+                int small_image_id = atoi(str);
                 while (*str >= '0' && *str <= '9') {
                     str++;
                 }
@@ -238,7 +201,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
                 x += img->width;
                 continue;
             } else {
-                int message_id = string_to_int(++str);
+                int message_id = atoi(++str);
                 while (*str >= '0' && *str <= '9') {
                     str++;
                 }
@@ -262,7 +225,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
             }
 
             int num_bytes = 1;
-            const auto glyph = font_letter_id(def, str, &num_bytes);
+            const auto glyph = font_letter_id(def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid < 0) {
                 x += def->space_width;
             } else {
@@ -274,7 +237,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
 
                 const image_t* img = image_letter(glyph.imagid);
                 if (!measure_only) {
-                    int height = def->image_y_offset(str, img->height, def->line_height);
+                    int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
                     ImageDraw::img_letter(ctx, img, def->font, glyph.imagid, x, y - height, clr);
                 }
                 x += img->width + def->letter_spacing;
@@ -291,7 +254,7 @@ static void draw_line(painter &ctx, const uint8_t* str, int x, int y, color clr,
     }
 }
 
-static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color, bool measure_only, bool centered) {
+int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_lines, color color, bool measure_only, bool centered) {
     int image_height_lines = 0;
     int image_id = 0;
     int lines_before_image = 0;
@@ -343,7 +306,7 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
                             current_width = box_width;
                             break;
                         } else if (*text == 'I') {
-                            int small_image_id = string_to_int(text + 1);
+                            int small_image_id = atoi(text + 1);
                             int id_word_width = get_lexem_width(text - 2, 0);
 
                             const image_t *img = image_get(small_image_id);
@@ -365,7 +328,7 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
 
                             text++; // skip 'G'
                             current_width = box_width;
-                            image_id = string_to_int(text);
+                            image_id = atoi(text);
                             c = *text++;
                             while (c >= '0' && c <= '9') {
                                 c = *text++;
@@ -392,7 +355,7 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
 
         int outside_viewport = 0;
         if (!measure_only) {
-            if (line < g_richtext_scrollbar.scroll_position || line >= g_richtext_scrollbar.scroll_position + height_lines)
+            if (line < dscrollbar.scroll_position || line >= dscrollbar.scroll_position + height_lines)
                 outside_viewport = 1;
         }
 
@@ -412,11 +375,11 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
                     const image_t* img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
                     int image_offset_x = offset.x + (box_width - img->width) / 2 - 4;
-                    if (line < height_lines + g_richtext_scrollbar.scroll_position) {
-                        if (line >= g_richtext_scrollbar.scroll_position)
+                    if (line < height_lines + dscrollbar.scroll_position) {
+                        if (line >= dscrollbar.scroll_position)
                             ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8);
                         else {
-                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (g_richtext_scrollbar.scroll_position - line));
+                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (dscrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -432,33 +395,29 @@ static int rich_text_draw_impl(const uint8_t* text, vec2i offset, int box_width,
     return num_lines;
 }
 
-int rich_text_draw(const uint8_t* text, vec2i offset, int box_width, int height_lines, bool measure_only, bool centered) {
-    return rich_text_draw_impl(text, offset, box_width, height_lines, 0, measure_only, centered);
+int rich_text_t::draw(pcstr text, vec2i offset, int box_width, int height_lines, bool measure_only, bool centered) {
+    return draw_impl(text, offset, box_width, height_lines, 0, measure_only, centered);
 }
 
-int rich_text_draw_colored(const uint8_t* text, vec2i offset, int box_width, int height_lines, color color) {
-    return rich_text_draw_impl(text, offset, box_width, height_lines, color, 0, false);
+int rich_text_t::draw_colored(pcstr text, vec2i offset, int box_width, int height_lines, color color) {
+    return draw_impl(text, offset, box_width, height_lines, color, 0, false);
 }
 
-void rich_text_draw_scrollbar(vec2i pos) {
-    if (g_richtext_scrollbar.max_scroll_position > 0 || g_richtext_scrollbar.always_visible) {
-        inner_panel_draw(g_richtext_scrollbar.pos + pos + vec2i{ 3, 16 }, vec2i{ 2, (g_richtext_scrollbar.height - 2) / 16 });
+void rich_text_t::draw_scrollbar(vec2i pos) {
+    if (dscrollbar.max_scroll_position > 0 || dscrollbar.always_visible) {
+        inner_panel_draw(dscrollbar.pos + pos + vec2i{ 3, 16 }, vec2i{ 2, (dscrollbar.height - 2) / 16 });
     }
-    scrollbar_draw(pos, &g_richtext_scrollbar);
+    scrollbar_draw(pos, &dscrollbar);
 }
 
-int rich_text_handle_mouse(const mouse* m, vec2i pos) {
-    return scrollbar_handle_mouse(pos, &g_richtext_scrollbar, m);
+int rich_text_t::handle_mouse(const mouse* m, vec2i pos) {
+    return scrollbar_handle_mouse(pos, &dscrollbar, m);
 }
 
-static void on_scroll(void) {
-    rich_text_clear_links();
+int rich_text_t::scroll_position() {
+    return dscrollbar.scroll_position;
 }
 
-int rich_text_scroll_position() {
-    return g_richtext_scrollbar.scroll_position;
-}
-
-scrollbar_t *rich_text_scrollbar() {
-    return &g_richtext_scrollbar;
+scrollbar_t *rich_text_t::scrollbar() {
+    return &dscrollbar;
 }

@@ -73,7 +73,7 @@ month_year_range get_min_max_month_year(int max_months) {
         result.start.year = result.end.year - max_months / 12;
     } else {
         result.start.month = 0;
-        result.start.year = scenario_property_start_year();
+        result.start.year = g_scenario.start_year;
         result.end.month = (max_months + result.start.month) % 12;
         result.end.year = (max_months + result.start.month) / 12 + result.start.year;
     }
@@ -295,7 +295,7 @@ void ui::advisor_population_window::print_census_info() {
 
 void ui::advisor_population_window::print_history_info() {
     // food stores
-    if (scenario_property_kingdom_supplies_grain()) {
+    if (g_scenario.kingdom_supplies_grain) {
         ui["text1"] = ui::str(55, 11);
     } else {
         bstring256 text;

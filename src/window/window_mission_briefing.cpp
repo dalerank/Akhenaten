@@ -25,8 +25,6 @@
 ui::mission_briefing_window g_mission_briefing;
 
 void ui::mission_briefing_window::init() {
-    rich_text_reset(0);
-
     mission_has_choice = game_mission_has_choice(scenario_id);
 
     ui["back"].enabled = !is_review && mission_has_choice;
@@ -88,7 +86,7 @@ void ui::mission_briefing_window::init() {
     setup_goal(62, 14, winning_monuments() > 0, winning_monuments());
     setup_goal(62, 15, winning_kingdom() > 0, winning_kingdom());
 
-    xstring immediate_goal_text = tutorial_get_immediate_goal_text();
+    xstring immediate_goal_text = g_tutorials_flags.get_immediate_goal_text();
     ui["goal_immediate"].enabled = !!immediate_goal_text;
     ui["goal_immediate"] = immediate_goal_text;
 
@@ -123,7 +121,7 @@ void ui::mission_briefing_window::mission_start(int scenario_id) {
 
 void ui::mission_briefing_window::mission_review() {
     auto &data = g_mission_briefing;
-    data.scenario_id = scenario_campaign_scenario_id();
+    data.scenario_id = g_scenario.campaign_scenario_id();
     data.is_review = true;
     data.campaign_mission_loaded = true;
     window_intermezzo_show(data.scenario_id, INTERMEZZO_MISSION_BRIEFING, window_mission_briefing_show_impl);

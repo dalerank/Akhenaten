@@ -1,8 +1,10 @@
-log_info("akhenaten: load modules started")
+__log_info_native("akhenaten: load modules started")
 
 include(":akhenaten.conf")
 include(":hotkeys.conf")
 
+import common
+import game
 import math
 import ui_common
 import ui_main_menu
@@ -10,7 +12,7 @@ import rating_points
 import game_messages
 import animal_herds
 import gods
-import common
+import city
 import images
 import city_sounds
 import walker_sounds
@@ -29,7 +31,7 @@ import ui_overlay_menu
 import imagepaks
 import missions
 import mission_0_nubt
-import mission_1_
+import mission_1_thinis
 import mission_2_
 import mission_5_timna
 import mission_6_behdet
@@ -37,6 +39,7 @@ import mission_8_selima
 import mission_9_abu
 import figures
 import localization
+import localization_base_en
 import localization_en
 import eventmsg_en
 import building_menu
@@ -77,6 +80,7 @@ import ui_sidebar_window
 import ui_batalion_window
 import ui_mods_window
 import ui_messages_window
+import ui_house_window
 import eventmsg_phrase_auto
 import music
 import invasions

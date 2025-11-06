@@ -3,8 +3,8 @@
 #include "building/building.h"
 
 struct event_fire_damage { building_id bid; };
-struct event_collase_damage { building_id id; };
-struct event_flooded_damage { building_id id; };
+struct event_collase_damage { building_id bid; };
+struct event_flooded_damage { building_id bid; };
 
 struct city_maintenance_t {
     int fire_spread_direction = 0;
