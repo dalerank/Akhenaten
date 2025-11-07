@@ -15,6 +15,9 @@ if [ "$1" != "arm64" ] && [ "$1" != "x86_64" ] && [ "$1" != "u2b" ]; then
   exit 1
 fi
 
+rm -rf build 2>/dev/null
+mkdir build
+
 function assemble_package()
 {
 	cd build/akhenaten.app/Contents/MacOS
@@ -29,7 +32,6 @@ function assemble_package()
 
 function compile_arm64()
 {
-	rm -rf build/akhenaten.app 2>/dev/null
 	cmake --build ./build --target clean -- -j"$CORES"
 	cmake -B build -DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 	cmake --build ./build -- -j"$CORES"
@@ -38,7 +40,6 @@ function compile_arm64()
 
 function compile_x86_64()
 {
-	rm -rf build/akhenaten.app 2>/dev/null
 	cmake --build ./build --target clean -- -j"$CORES"
 	cmake -B build -DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 	cmake --build ./build -- -j"$CORES"
