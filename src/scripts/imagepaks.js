@@ -73,5 +73,5 @@ imagepaks = [
   {id: PACK_TOMB_RAMSES, name:"TombRam", index:59000, delayed:true, system:false}, // 59000 --> 59000 + 269 + 201 
   {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 59500 + 269 + 201 
   {id: PACK_CUSTOM, name:"pharaoh_custom_pack", index:60000, system:false, custom:true},  // 60000 -->
-  {id: PACK_CUSTOM_FONT, name:"pharaoh_fonts_pack", index:60100, system:false, custom:true},  // 60000 -->
+  {id: PACK_CUSTOM_FONT, name:"pharaoh_fonts_pack", index:60100, system:false, custom:true},  // 60100 -->
 ]

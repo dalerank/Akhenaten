@@ -151,15 +151,13 @@ enum E_MULTIBYTE {
     MULTIBYTE_KOREAN = 3,
 };
 
-using multibyte_map_t = std::unordered_map<uint32_t, font_glyph>; // Maps multibyte character to letter ID
-
 struct font_data_t {
     const int* font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
     const font_definition* font_definitions = DEFINITIONS_DEFAULT;
-    std::array<multibyte_map_t, FONT_TYPES_MAX> mbsymbols;
+    font_mbsybols_t mbsymbols;
 };
 
-static font_data_t g_font_data;
+font_data_t g_font_data;
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
@@ -360,6 +358,14 @@ int font_can_display(const uint8_t* character) {
     return glyph.imagid >= 0;
 }
 
+bool font_has_letter(const font_definition *def, const uint8_t *str) {
+    auto &data = g_font_data;
+    const auto &mbmap = data.mbsymbols[def->font];
+    const uint16_t code = *(uint16_t *)str;
+    auto it = mbmap.find(code);
+    return (it != mbmap.end());
+}
+
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
     if (*str >= 0x80) {
@@ -449,4 +455,8 @@ void font_reload_external_symbols() {
         int image_id = image_id_from_group(pack, id) + offset;
         font_set_letter_id(font, symdec, image_id, bearing);
     });
+}
+
+const font_mbsybols_t &font_get_symbols() {
+    return g_font_data.mbsymbols;
 }

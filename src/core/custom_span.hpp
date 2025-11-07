@@ -101,9 +101,14 @@ inline constexpr custom_span<T> make_span(T* arr, size_t N) {
     return custom_span<T>(arr, N);
 }
 
-template <typename T>
-inline constexpr custom_span<T> make_span(T &arr) {
-    return custom_span<T>(arr.data(), arr.size());
+template <typename T, typename V = typename T::value_type>
+inline constexpr custom_span<V> make_span(T &arr) {
+    return custom_span<V>(arr.data(), arr.size());
+}
+
+template <typename T, typename V = typename T::value_type>
+inline constexpr span_const<V> make_span(const T &arr) {
+    return span_const<V>((V*)arr.data(), arr.size());
 }
 
 template <typename T, std::size_t N>

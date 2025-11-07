@@ -30,18 +30,17 @@ private:
     std::array<bmp_name, PAK_GROUPS_MAX> bmp_names;
     uint16_t num_bmp_names;
     uint16_t group_image_ids[PAK_GROUPS_MAX];
-    std::vector<image_t> images_array;
 
     bool should_load_system_sprites;
     bool should_convert_fonts;
 
     bool load_pak(pcstr pak_name, int starting_index);
     bool load_zip_pak(pcstr folder, int starting_index);
-    void cleanup_and_destroy();
 
 public:
     xstring name;
     std::vector<atlas_data_t> atlas_pages;
+    std::vector<image_t> images_array;
 
     int global_image_index_offset = 0;
 
@@ -61,4 +60,5 @@ public:
     bool loaded_system_sprites() const { return should_load_system_sprites; }
 
     static int get_entries_num(xstring pak_name);
+    void cleanup_and_destroy();
 };

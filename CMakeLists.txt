@@ -246,6 +246,28 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG        VER-2-13-3
+)
+FetchContent_MakeAvailable(freetype)
+
+FetchContent_Declare(
+    harfbuzz
+    GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
+    GIT_TAG        7.3.0
+)
+set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(harfbuzz)
+
+FetchContent_Declare(
+    stb
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    GIT_TAG        5736b15f7ea0ffb08dd38af21067c314d6a3aae9
+)
+FetchContent_MakeAvailable(stb)
+
 if (PLATFORM_ANDROID)
     set(PROJECT_VERSION_MAJOR 0)
     set(PROJECT_VERSION_MINOR 2)
@@ -286,6 +308,7 @@ file(GLOB GRID_ROUTING_FILES ${PROJECT_SOURCE_DIR}/src/grid/routing/*.cpp)
 file(GLOB SCENARIO_FILES ${PROJECT_SOURCE_DIR}/src/scenario/*.cpp)
 file(GLOB GRAPHICS_ELEMENTS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/elements/*.cpp)
 file(GLOB GRAPHICS_VIEW_FILES ${PROJECT_SOURCE_DIR}/src/graphics/view/*.cpp)
+file(GLOB GRAPHICS_FONTGEN_FILES ${PROJECT_SOURCE_DIR}/src/graphics/fontgen/*.cpp)
 file(GLOB SOUND_FILES ${PROJECT_SOURCE_DIR}/src/sound/*.cpp)
 file(GLOB WIDGET_FILES ${PROJECT_SOURCE_DIR}/src/widget/*.cpp)
 file(GLOB WIDGET_CITY_FILES ${PROJECT_SOURCE_DIR}/src/widget/city/*.cpp)
@@ -403,6 +426,7 @@ if(MSVC)
     source_group("config" FILES ${CONFIG_FILES})
     source_group("resource" FILES ${RESOURCE_FILES} ${SCRIPTS_FILES})
     source_group("graphics" FILES ${GRAPHICS_FILES})
+    source_group("fontgen" FILE ${GRAPHICS_FONTGEN_FILES})
     source_group("js" FILES ${JS_FILES})
 endif()
 
@@ -435,6 +459,7 @@ set(SOURCE_FILES
     ${GRID_FILES}
     ${SCENARIO_FILES}
     ${GRAPHICS_FILES}
+    ${GRAPHICS_FONTGEN_FILES}
     ${SOUND_FILES}
     ${WIDGET_FILES}
     ${WINDOW_FILES}
@@ -597,6 +622,10 @@ include_directories(src)
 include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
 include_directories(ext/openssl/include)
+include_directories(${freetype_SOURCE_DIR}/include)
+include_directories(${freetype_SOURCE_DIR}/src)
+include_directories(${harfbuzz_SOURCE_DIR}/src)
+include_directories(ext/gpupixel/utils)
 
 if(MSVC)
     include_directories(ext/imgui/dirent)
@@ -643,7 +672,9 @@ endif()
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} akhenaten::rc)
+                        ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
+                        freetype harfbuzz
+                        akhenaten::rc)
 
 if(MSVC)
    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
