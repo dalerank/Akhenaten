@@ -11,7 +11,6 @@
 
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
-
 bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* collection) {
     if (pak_id >= collection->size()) {
         return false;
@@ -19,6 +18,22 @@ bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* c
 
     *pak = collection->at(pak_id);
     return true;
+}
+
+int image_copy_to_atlas(const image_t &img) {
+    int pixels_count = 0;
+    atlas_data_t *p_atlas = img.atlas.p_atlas;
+    color *pixels = (color *)((SDL_Surface *)img.temp.surface)->pixels;
+
+    for (int y = 0; y < img.height; y++) {
+        color *pixel = &p_atlas->temp.pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
+        for (int x = 0; x < img.width; x++) {
+            color color = image_to_argb(pixels[y * img.width + x]);
+            pixel[x] = color;
+            pixels_count++;
+        }
+    }
+    return pixels_count;
 }
 
 void image_data_touch(const imagepak_handle& h) {

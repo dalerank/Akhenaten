@@ -27,30 +27,6 @@
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 image_packer packer;
 
-static color to_32_bit(uint16_t c) {
-    return ALPHA_OPAQUE | ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) | ((c & 0x3e0) << 6) | ((c & 0x380) << 1) | ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
-}
-
-static color to_argb(uint32_t c) {
-    return (((c >> 24) & 0xff) << 24) | (((c & 0xff) << 16) | (((c >> 8) & 0xff) << 8) | ((c >> 16) & 0xff));
-}
-
-static int copy_to_atlas(const image_t& img) {
-    int pixels_count = 0;
-    atlas_data_t *p_atlas = img.atlas.p_atlas;
-    color *pixels = (color*)((SDL_Surface *)img.temp.surface)->pixels;
-
-    for (int y = 0; y < img.height; y++) {
-        color* pixel = &p_atlas->temp.pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
-        for (int x = 0; x < img.width; x++) {
-            color color = to_argb(pixels[y * img.width + x]);
-            pixel[x] = color;
-            pixels_count++;
-        }
-    }
-    return pixels_count;
-}
-
 static int convert_uncompressed(buffer* buf, const image_t &img) {
     int pixels_count = 0;
     atlas_data_t *p_atlas = img.atlas.p_atlas;
@@ -58,7 +34,7 @@ static int convert_uncompressed(buffer* buf, const image_t &img) {
     for (int y = 0; y < img.height; y++) {
         color* pixel = &p_atlas->temp.pixel_buffer[(img.atlas.offset.y + y) * p_atlas->width + img.atlas.offset.x];
         for (int x = 0; x < img.width; x++) {
-            color color = to_32_bit(buf->read_u16());
+            color color = image_to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
             pixels_count++;
         }
@@ -86,7 +62,7 @@ static int convert_compressed(buffer* buf, int data_length, const image_t &img) 
             // control = number of concrete pixels
             for (int i = 0; i < control; i++) {
                 int dst = atlas_dst + y * p_atlas->width + x;
-                p_atlas->temp.pixel_buffer[dst] = to_32_bit(buf->read_u16());
+                p_atlas->temp.pixel_buffer[dst] = image_to_32_bit(buf->read_u16());
                 x++;
                 if (x >= img.width) {
                     y++;
@@ -117,7 +93,7 @@ static int convert_footprint_tile(buffer* buf, const image_t &img, int x_offset,
             int dst_index = (y + y_offset + img.atlas.offset.y) * p_atlas->width + img.atlas.offset.x + x + x_offset;
             if (dst_index >= p_atlas->bmp_size)
                 continue;
-            p_atlas->temp.pixel_buffer[dst_index] = to_32_bit(buf->read_u16());
+            p_atlas->temp.pixel_buffer[dst_index] = image_to_32_bit(buf->read_u16());
         }
     }
     return pixels_count;
@@ -229,7 +205,7 @@ static int convert_font_glyph_to_bigger_space(buffer* buf, const image_t* img) {
     for (int y = 0; y < img->height - 2; y++) {
         color* pixel = &p_atlas->temp.pixel_buffer[(img->atlas.offset.y + y) * p_atlas->width + img->atlas.offset.x];
         for (int x = 0; x < img->width - 2; x++) {
-            color color = to_32_bit(buf->read_u16());
+            color color = image_to_32_bit(buf->read_u16());
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
             pixels_count++;
         }
@@ -419,6 +395,7 @@ void imagepak::cleanup_and_destroy() {
         }
         atlas_data.texture = nullptr;
     }
+    atlas_pages.clear();
 }
 
 bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
@@ -590,7 +567,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.atlas.offset = rect.output.pos;
 
         // load and convert image bitmap data
-        copy_to_atlas(img);
+        image_copy_to_atlas(img);
     }
 
     // create textures from atlas data

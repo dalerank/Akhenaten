@@ -117,6 +117,9 @@ struct image_t {
     struct {
         color* pixel_data;
         void* surface;
+        uint32_t symdeck;
+        int8_t bearing_x;
+        int8_t bearing_y;
     } temp;
 
     inline vec2i size() const { return {width, height}; }
@@ -142,3 +145,13 @@ const image_t *image_get(image_desc desc);
 const image_t* image_letter(int letter_id);
 const image_t* image_get_enemy(int type, int id);
 const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index);
+
+int image_copy_to_atlas(const image_t &img);
+
+inline color image_to_32_bit(uint16_t c) {
+    return ALPHA_OPAQUE | ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) | ((c & 0x3e0) << 6) | ((c & 0x380) << 1) | ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
+}
+
+inline color image_to_argb(uint32_t c) {
+    return (((c >> 24) & 0xff) << 24) | (((c & 0xff) << 16) | (((c >> 8) & 0xff) << 8) | ((c >> 16) & 0xff));
+}

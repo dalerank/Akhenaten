@@ -5,6 +5,7 @@
 #include "content/dir.h"
 
 #include <stdint.h>
+#include <unordered_map>
 #include <array>
 
 enum e_font {
@@ -32,6 +33,9 @@ struct font_glyph {
     int imagid; // texture
     vec2i bearing;
 };
+
+using multibyte_map_t = std::unordered_map<uint32_t, font_glyph>;
+using font_mbsybols_t = std::array<multibyte_map_t, FONT_TYPES_MAX>;
 
 struct font_definition {
     e_font font;
@@ -73,5 +77,8 @@ int font_can_display(const uint8_t* character);
  * @return Letter ID to feed into image_letter(), or -1 if c is no letter
  */
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
+bool font_has_letter(const font_definition *def, const uint8_t *str);
 void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
 void font_reload_external_symbols();
+
+const font_mbsybols_t &font_get_symbols();
