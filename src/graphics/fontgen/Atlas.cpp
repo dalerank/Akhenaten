@@ -355,7 +355,6 @@ namespace Trex {
         glyph.height = ftGlyph.Height();
         glyph.bearingX = (int)(ftGlyph.metrics.horiBearingX / 64);
         glyph.bearingY = (int)(ftGlyph.metrics.horiBearingY / 64);
-        glyph.advanceX = (int)(ftGlyph.metrics.horiAdvance / 64);
 
         m_Glyphs[ftGlyph.glyphIndex] = glyph;
     }

@@ -17,7 +17,6 @@ namespace Trex
 		int x, y; // Top left corner of the glyph in the atlas
 		unsigned int width, height;
 		int bearingX, bearingY;
-		int advanceX; // Horizontal advance to next glyph
 	};
 
 	struct Size {
