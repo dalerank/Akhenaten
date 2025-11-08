@@ -505,8 +505,8 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e
             (c >> 0) & 0xff,   // Blue
             (c >> 24) & 0xff   // Alpha
         };
-        // padding=0 to create bitmaps with exact glyph dimensions
-        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 0, true /*fit*/, colors);
+        // padding=0, fit=true to create bitmaps with exact glyph dimensions (no extra space)
+        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 0, true, colors);
 
         const auto &bitmap = atlas.GetBitmap();
 
