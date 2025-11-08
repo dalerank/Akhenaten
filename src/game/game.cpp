@@ -252,7 +252,7 @@ void game_t::write_frame() {
         frame_pixels = (color*)malloc(sizeof(color) * screen_width() * screen_height());
     }
 
-    if (!graphics_renderer()->save_screen_buffer(ctx, frame_pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+    if (!g_render.save_screen_buffer(ctx, frame_pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
         free(frame_pixels);
         return;
     }
@@ -268,8 +268,8 @@ void game_t::reload_objects() {
 ::painter game_t::painter() {
     ::painter ctx;
     ctx.view = &g_city_view;
-    ctx.renderer = graphics_renderer()->renderer();
-    ctx.global_render_scale = graphics_renderer()->scale();
+    ctx.renderer = g_render.renderer();
+    ctx.global_render_scale = g_render.scale();
 
     return ctx;
 }

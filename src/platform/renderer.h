@@ -33,7 +33,6 @@ int platform_renderer_create_render_texture(int width, int height);
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y);
-void platform_renderer_clear();
 void platform_renderer_render();
 void platform_renderer_pause();
 void platform_renderer_resume();
@@ -58,8 +57,7 @@ struct video_mode : public vec2i {
     }
 };
 
-class graphics_renderer_interface {
-public:
+struct graphics_renderer_interface {
     void clear_screen();
     void set_viewport(int x, int y, int width, int height);
     void reset_viewport();
@@ -109,7 +107,6 @@ public:
     SDL_Window *window();
 };
 
-graphics_renderer_interface* graphics_renderer();
 extern graphics_renderer_interface g_render;
 
 void set_render_scale(painter &ctx, float scale);

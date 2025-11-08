@@ -119,30 +119,30 @@ void debug_text_dual_left(int x, int y, int indent, int indent2, pcstr text, int
 }
 
 void debug_draw_line_with_contour(int x_start, int x_end, int y_start, int y_end, color col) {
-    graphics_renderer()->draw_line(vec2i{x_start - 1, x_end - 1}, vec2i{x_start, y_end}, COLOR_BLACK);
-    graphics_renderer()->draw_line(vec2i{x_start + 1, x_end + 1}, vec2i{x_start, y_end}, COLOR_BLACK);
-    graphics_renderer()->draw_line(vec2i{x_start, x_end}, vec2i{y_start - 1, y_end - 1}, COLOR_BLACK);
-    graphics_renderer()->draw_line(vec2i{x_start, x_end}, vec2i{y_start + 1, y_end + 1}, COLOR_BLACK);
-    graphics_renderer()->draw_line(vec2i{x_start, x_end}, vec2i{y_start, y_end}, col);
+    g_render.draw_line(vec2i{x_start - 1, x_end - 1}, vec2i{x_start, y_end}, COLOR_BLACK);
+    g_render.draw_line(vec2i{x_start + 1, x_end + 1}, vec2i{x_start, y_end}, COLOR_BLACK);
+    g_render.draw_line(vec2i{x_start, x_end}, vec2i{y_start - 1, y_end - 1}, COLOR_BLACK);
+    g_render.draw_line(vec2i{x_start, x_end}, vec2i{y_start + 1, y_end + 1}, COLOR_BLACK);
+    g_render.draw_line(vec2i{x_start, x_end}, vec2i{y_start, y_end}, col);
 }
 
 void debug_draw_rect_with_contour(int x, int y, int w, int h, color col) {
-    graphics_renderer()->draw_rect(vec2i{x - 1, y - 1}, vec2i{w, h}, COLOR_BLACK);
-    graphics_renderer()->draw_rect(vec2i{x + 1, y + 1}, vec2i{w, h}, COLOR_BLACK);
-    graphics_renderer()->draw_rect(vec2i{x, y}, vec2i{w - 1, h - 1}, COLOR_BLACK);
-    graphics_renderer()->draw_rect(vec2i{x, y}, vec2i{w + 1, h + 1}, COLOR_BLACK);
-    graphics_renderer()->draw_rect(vec2i{x, y}, vec2i{w, h}, col);
+    g_render.draw_rect(vec2i{x - 1, y - 1}, vec2i{w, h}, COLOR_BLACK);
+    g_render.draw_rect(vec2i{x + 1, y + 1}, vec2i{w, h}, COLOR_BLACK);
+    g_render.draw_rect(vec2i{x, y}, vec2i{w - 1, h - 1}, COLOR_BLACK);
+    g_render.draw_rect(vec2i{x, y}, vec2i{w + 1, h + 1}, COLOR_BLACK);
+    g_render.draw_rect(vec2i{x, y}, vec2i{w, h}, col);
 }
 
 void debug_draw_crosshair(int x, int y) {
-    graphics_renderer()->draw_line(vec2i{x, x + 10}, vec2i{y, y}, COLOR_GREEN);
-    graphics_renderer()->draw_line(vec2i{x, x}, vec2i{y, y + 10}, COLOR_RED);
+    g_render.draw_line(vec2i{x, x + 10}, vec2i{y, y}, COLOR_GREEN);
+    g_render.draw_line(vec2i{x, x}, vec2i{y, y + 10}, COLOR_RED);
 }
 
 void debug_draw_sprite_box(int x, int y, const image_t* img, float scale, color color_mask) {
     int x2 = x - img->animation.sprite_offset.x;
     int y2 = y - img->animation.sprite_offset.y;
-    graphics_renderer()->draw_rect(vec2i(x2 * scale, y2 * scale), vec2i(img->width * scale, img->height * scale), color_mask);
+    g_render.draw_rect(vec2i(x2 * scale, y2 * scale), vec2i(img->width * scale, img->height * scale), color_mask);
     debug_draw_crosshair((x2 + img->animation.sprite_offset.x) * scale, (y2 + img->animation.sprite_offset.y) * scale);
 }
 
@@ -162,14 +162,14 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x, in
     int bottom_y = left_y + (tile_size_x * HALF_TILE_HEIGHT_PIXELS);
 
     if (rect != COLOR_NULL) {
-        graphics_renderer()->draw_rect(vec2i(x * scale, y * scale), vec2i(TILE_WIDTH_PIXELS * scale, TILE_HEIGHT_PIXELS * scale), rect);
+        g_render.draw_rect(vec2i(x * scale, y * scale), vec2i(TILE_WIDTH_PIXELS * scale, TILE_HEIGHT_PIXELS * scale), rect);
     }
 
     if (bb != COLOR_NULL) {
-        graphics_renderer()->draw_line(vec2i(left_x * scale, top_x * scale), vec2i(left_y * scale, top_y * scale), bb);
-        graphics_renderer()->draw_line(vec2i(top_x * scale, right_x * scale), vec2i(top_y * scale, right_y * scale), bb);
-        graphics_renderer()->draw_line(vec2i(right_x * scale, bottom_x * scale), vec2i(right_y * scale, bottom_y * scale), bb);
-        graphics_renderer()->draw_line(vec2i(bottom_x * scale, left_x * scale), vec2i(bottom_y * scale, left_y * scale), bb);
+        g_render.draw_line(vec2i(left_x * scale, top_x * scale), vec2i(left_y * scale, top_y * scale), bb);
+        g_render.draw_line(vec2i(top_x * scale, right_x * scale), vec2i(top_y * scale, right_y * scale), bb);
+        g_render.draw_line(vec2i(right_x * scale, bottom_x * scale), vec2i(right_y * scale, bottom_y * scale), bb);
+        g_render.draw_line(vec2i(bottom_x * scale, left_x * scale), vec2i(bottom_y * scale, left_y * scale), bb);
     }
 }
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {
@@ -184,11 +184,11 @@ void debug_draw_tile_top_bb(int x, int y, int height, color color, int size) {
     int left_top = left_bottom - height;
     int right_top = right_bottom - height;
 
-    graphics_renderer()->draw_line(vec2i(left_x * scale, right_x * scale), vec2i(left_bottom * scale, right_bottom * scale), color);
-    graphics_renderer()->draw_line(vec2i(left_x * scale, right_x * scale), vec2i(left_top * scale, right_top * scale), color);
+    g_render.draw_line(vec2i(left_x * scale, right_x * scale), vec2i(left_bottom * scale, right_bottom * scale), color);
+    g_render.draw_line(vec2i(left_x * scale, right_x * scale), vec2i(left_top * scale, right_top * scale), color);
 
-    graphics_renderer()->draw_line(vec2i(left_x * scale, left_x * scale), vec2i(left_bottom * scale, left_top * scale), color);
-    graphics_renderer()->draw_line(vec2i(right_x * scale, right_x * scale), vec2i(right_bottom * scale, right_top * scale), color);
+    g_render.draw_line(vec2i(left_x * scale, left_x * scale), vec2i(left_bottom * scale, left_top * scale), color);
+    g_render.draw_line(vec2i(right_x * scale, right_x * scale), vec2i(right_bottom * scale, right_top * scale), color);
 }
 
 static int north_tile_grid_offset(int x, int y) {

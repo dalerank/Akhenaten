@@ -5,6 +5,7 @@
 #include "input/cursor.h"
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
+#include "platform/renderer.h"
 #include "js/js_game.h"
 
 windows_manager_t g_window_manager;
@@ -101,7 +102,7 @@ void window_draw(int force) {
 
     {
         OZZY_PROFILER_SECTION("Render/Frame/Refresh");
-        graphics_clear_screen();
+        g_render.clear_screen();
         tooltip_invalidate();
     }
         

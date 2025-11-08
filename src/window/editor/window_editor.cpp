@@ -18,11 +18,12 @@
 #include "window/editor/attributes.h"
 #include "window/file_dialog.h"
 #include "window/popup_dialog.h"
+#include "platform/renderer.h"
 
 static int city_view_dirty;
 
 static void draw_background(int) {
-    graphics_clear_screen();
+    g_render.clear_screen();
     widget_sidebar_editor_draw_background();
     widget_top_menu_editor_draw();
 }
@@ -41,8 +42,9 @@ static void draw_cancel_construction() {
 }
 
 static void clear_city_view() {
-    if (city_view_dirty)
-        graphics_clear_screen();
+    if (city_view_dirty) {
+        g_render.clear_screen();
+    }
 
     city_view_dirty = 0;
 }

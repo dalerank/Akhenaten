@@ -10,6 +10,7 @@
 #include "sound/music.h"
 #include "sound/sound.h"
 #include "sound/sound_mission.h"
+#include "platform/renderer.h"
 #include "game/game.h"
 
 #include <map>
@@ -54,7 +55,7 @@ static void init(int mission_id, intermezzo_type type, std::function<void()> cal
 }
 
 static void draw_background(int) {
-    graphics_clear_screen();
+    g_render.clear_screen();
     graphics_reset_dialog();
     vec2i offset = vec2i{screen_width() - 1024, screen_height() - 768} / 2;
 

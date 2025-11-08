@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
+#include "platform/renderer.h"
 #include "graphics/window.h"
 
 static struct {
@@ -24,7 +25,7 @@ static int init(const char* filename, int width, int height, void (*callback)(vo
 }
 
 static void draw_background(int) {
-    graphics_clear_screen();
+    g_render.clear_screen();
 }
 
 static void draw_foreground(int) {

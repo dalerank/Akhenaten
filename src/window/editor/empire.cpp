@@ -20,6 +20,7 @@
 #include "scenario/empire.h"
 #include "window/editor/window_editor.h"
 #include "game/game_events.h"
+#include "platform/renderer.h"
 #include "game/game.h"
 
 const static int EMPIRE_WIDTH = 1200 + 32;
@@ -124,7 +125,7 @@ static void draw_background(int) {
     data.p_max.y = s_height <= EMPIRE_HEIGHT ? s_height : data.p_min.y + EMPIRE_HEIGHT;
 
     if (data.p_min.x || data.p_min.y) {
-        graphics_clear_screen();
+        g_render.clear_screen();
     }
 
     draw_paneling();

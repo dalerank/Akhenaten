@@ -30,6 +30,7 @@
 #include "game/settings.h"
 #include "js/js_game.h"
 #include "graphics/elements/scroll_list_panel.h"
+#include "platform/renderer.h"
 
 #include <string.h>
 
@@ -114,7 +115,7 @@ void window_player_selection_init() {
 
 static void draw_background(int) {
     painter ctx = game.painter();
-    graphics_clear_screen();
+    g_render.clear_screen();
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_PLAYER_SELECTION));
 }
 static void draw_foreground(int) {

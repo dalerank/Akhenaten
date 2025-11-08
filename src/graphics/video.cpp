@@ -88,7 +88,7 @@ static int load_smk(const char* filename) {
 static void end_video(void) {
     g_sound.use_default_music_player();
     g_sound.music_update(true);
-    graphics_renderer()->release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
+    g_render.release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
 bool video_start(const char* filename) {
@@ -98,8 +98,8 @@ bool video_start(const char* filename) {
     if (load_smk(filename)) {
         g_sound.music_stop();
         g_sound.speech_stop();
-        graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
-        data.buffer.pixels = graphics_renderer()->get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
+        g_render.create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
+        data.buffer.pixels = g_render.get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = true;
         return true;
     } else
@@ -185,14 +185,14 @@ static void update_video_frame(void) {
             }
         }
     }
-    graphics_renderer()->update_custom_texture(CUSTOM_IMAGE_VIDEO);
+    g_render.update_custom_texture(CUSTOM_IMAGE_VIDEO);
 }
 
 void video_draw(int x_offset, int y_offset) {
     if (get_next_frame())
         update_video_frame();
 
-    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
+    g_render.draw_custom_texture(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
 }
 
 void video_draw_fullscreen(void) {
@@ -212,5 +212,5 @@ void video_draw_fullscreen(void) {
     if (scale == scale_w)
         y = (int)((s_height - data.video.height / scale) / 2 * scale);
 
-    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_VIDEO, x, y, scale);
+    g_render.draw_custom_texture(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

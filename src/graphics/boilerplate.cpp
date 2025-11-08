@@ -19,9 +19,9 @@ extern vita2d_texture* tex_buffer_city;
 
 static void set_translation(int x, int y) {
     if (x != 0 || y != 0) {
-        graphics_renderer()->set_viewport(x, y, screen_width() - x, screen_height() - y);
+        g_render.set_viewport(x, y, screen_width() - x, screen_height() - y);
     } else {
-        graphics_renderer()->reset_viewport();
+        g_render.reset_viewport();
     }
 }
 
@@ -36,54 +36,44 @@ void graphics_reset_dialog() {
 }
 
 void graphics_set_clip_rectangle(vec2i pos, vec2i size) {
-    graphics_renderer()->set_clip_rectangle(pos, size.x, size.y);
+    g_render.set_clip_rectangle(pos, size.x, size.y);
 }
 
 bool graphics_inside_clip_rectangle(vec2i pos) {
-    return graphics_renderer()->inside_clip_rectangle(pos);
+    return g_render.inside_clip_rectangle(pos);
 }
 
 rect graphics_clip_rectangle() {
-    return graphics_renderer()->clip_rectangle();
+    return g_render.clip_rectangle();
 }
 
 void graphics_reset_clip_rectangle() {
-    graphics_renderer()->reset_clip_rectangle();
+    g_render.reset_clip_rectangle();
 }
 
 void graphics_draw_inset_rect(vec2i start, vec2i size) {
     vec2i end = start + size - vec2i{1, 1};
-    graphics_renderer()->draw_line(start, vec2i{end.x, start.y}, COLOR_INSET_DARK);
-    graphics_renderer()->draw_line(vec2i{end.x, start.y}, end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(vec2i{start.x, end.y}, end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
+    g_render.draw_line(start, vec2i{end.x, start.y}, COLOR_INSET_DARK);
+    g_render.draw_line(vec2i{end.x, start.y}, end, COLOR_INSET_LIGHT);
+    g_render.draw_line(vec2i{start.x, end.y}, end, COLOR_INSET_LIGHT);
+    g_render.draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
 }
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size) {
-    return graphics_renderer()->save_texture_from_screen(image_id, pos, size.x, size.y);
+    return g_render.save_texture_from_screen(image_id, pos, size.x, size.y);
 }
 
 void graphics_delete_saved_texture(int image_id) {
-    graphics_renderer()->delete_saved_texture(image_id);
+    g_render.delete_saved_texture(image_id);
 }
 
 void graphics_clear_saved_texture(int image_id, color clr) {
-    graphics_renderer()->clear_saved_texture(image_id, clr);
+    g_render.clear_saved_texture(image_id, clr);
 }
 
 void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size) {
-    graphics_renderer()->draw_saved_texture_to_screen(image_id, pos.x, pos.y, size.x, size.y);
+    g_render.draw_saved_texture_to_screen(image_id, pos.x, pos.y, size.x, size.y);
 }
-
-// static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
-//         28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
-//         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
-// };
-//
-// static const int FOOTPRINT_OFFSET_PER_HEIGHT[] = {
-//         0, 2, 8, 18, 32, 50, 72, 98, 128, 162, 200, 242, 288, 338, 392, 450,
-//         508, 562, 612, 658, 700, 738, 772, 802, 828, 850, 868, 882, 892, 898
-// };
 
 static int get_visible_footprint_pixels_per_row(int tiles, int width, int height, int row) {
     int base_height = tiles * TILE_HEIGHT_PIXELS;
@@ -662,12 +652,12 @@ void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int
     x += base->animation.sprite_offset.x;
     y += base->animation.sprite_offset.y - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+    g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
 }
 
 void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y - img->height }, color_mask, scale);
+    g_render.draw_image(ctx, img, vec2i{ x, y - img->height }, color_mask, scale);
 }
 
 void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
@@ -676,8 +666,8 @@ void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int le
     }
 
     if (font == FONT_SMALL_SHADED) {
-        graphics_renderer()->draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+        g_render.draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
     }
 
-    graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+    g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
 }

@@ -691,7 +691,7 @@ void font_atlas_regenerate() {
     };
 
     // Initialize packer
-    vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
+    vec2i max_texture_sizes = g_render.get_max_image_size();
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
     int cp_index = 0;
@@ -739,7 +739,7 @@ void font_atlas_regenerate() {
     // Create textures from atlas data
     for (int i = 0; i < font_pack.handle->atlas_pages.size(); ++i) {
         atlas_data_t &atlas_data = font_pack.handle->atlas_pages.at(i);
-        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        atlas_data.texture = g_render.create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
         assert(atlas_data.texture != nullptr);
 
         // Delete temp data buffer in the atlas
