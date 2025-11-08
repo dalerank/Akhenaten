@@ -347,7 +347,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
                 const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
                     int height = def->image_y_offset(str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
+                    ctx.img_letter(img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
                     width = (img->width + def->letter_spacing) * scale;
                     last_letter_spacing = (def->letter_spacing * scale);
                     has_letters = 1;

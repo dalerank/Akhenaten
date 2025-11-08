@@ -54,6 +54,12 @@ static int image_y_offset_cyrillic_large_brown(const uint8_t *c, int image_heigh
 static int image_y_offset_cyrillic_small_black(const uint8_t *c, int image_height, int line_height);
 static int image_y_offset_korean(const uint8_t *c, int image_height, int line_height);
 
+uint32_t base_color_for_font(e_font font) {
+    if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_OUTLINED || font == FONT_SMALL_SHADED)
+        return COLOR_FONT_PLAIN;
+    return COLOR_MASK_NONE;
+}
+
 static const int CHAR_TO_FONT_IMAGE_DEFAULT[] = {
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01, 0x01, 0x01, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x40, 0x00, 0x00, 0x41,

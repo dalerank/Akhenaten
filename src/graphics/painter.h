@@ -48,6 +48,9 @@ struct painter {
     const image_t *img_sprite(int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
     const image_t *img_ornament(int image_id, int base_id, int x, int y, color color_mask, float scale);
 
+    const image_t *img_from_below(int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+    const image_t *img_letter(const image_t *img, e_font font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+
 protected:
     void draw_grayscale(
         SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size,

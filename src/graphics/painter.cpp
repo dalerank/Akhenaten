@@ -122,6 +122,25 @@ const image_t *painter::img_ornament(int image_id, int base_id, int x, int y, co
     return img;
 }
 
+const image_t *painter::img_from_below(int image_id, int x, int y, color color_mask, float scale) {
+    const image_t *img = image_get(image_id);
+    draw_image(img, vec2i{ x, y - img->height }, color_mask, scale);
+    return img;
+}
+
+const image_t *painter::img_letter(const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
+    if (!color_mask) {
+        color_mask = base_color_for_font(font);
+    }
+
+    if (font == FONT_SMALL_SHADED) {
+        draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+    }
+
+    draw_image(img, vec2i{ x, y }, color_mask, scale);
+    return img;
+}
+
 const image_t *painter::img_generic(const image_t *img, vec2i p, color color_mask, float scale, ImgFlags flags) {
     vec2i offset{ 0, 0 };
     if (!!(flags & ImgFlag_InternalOffset)) {
