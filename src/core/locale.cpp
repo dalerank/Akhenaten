@@ -52,7 +52,7 @@ pcstr locale_determine_language_short() {
     case LANGUAGE_SIMPLIFIED_CHINESE: desc = "sc"; break;
     case LANGUAGE_KOREAN: desc = "kr"; break;
     default:
-        desc = "mm";
+        desc = "en";
         break;
     }
     return desc;
