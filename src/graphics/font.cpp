@@ -22,7 +22,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
 struct font_config {
     e_font type;
     uint8_t size;
-    color color;
+    uint32_t color;
     bool bold;
 };
 ANK_CONFIG_STRUCT(font_config, type, size, bold, color)
