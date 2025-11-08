@@ -32,6 +32,11 @@ function assemble_package()
 
 function compile_arm64()
 {
+	export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH"
+	export LDFLAGS="-L/opt/homebrew/lib"
+	export CFLAGS="-I/opt/homebrew/include"
+	export CPPFLAGS="-I/opt/homebrew/include"
+
 	cmake --build ./build --target clean -- -j"$CORES"
 	cmake -B build -DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 	cmake --build ./build -- -j"$CORES"
@@ -40,6 +45,11 @@ function compile_arm64()
 
 function compile_x86_64()
 {
+	export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
+	export LDFLAGS="-L/usr/local/lib"
+	export CFLAGS="-I/usr/local/include"
+	export CPPFLAGS="-I/usr/local/include"
+
 	cmake --build ./build --target clean -- -j"$CORES"
 	cmake -B build -DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_C_FLAGS="-UTARGET_OS_MAC -U__MWERKS__ -Uapplec -UTHINK_C -U__SC__"
 	cmake --build ./build -- -j"$CORES"
