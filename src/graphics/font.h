@@ -32,6 +32,7 @@ struct font_glyph {
     uint32_t code; // code point
     int imagid; // texture
     vec2i bearing;
+    int advance; // horizontal advance to next character
 };
 
 using multibyte_map_t = std::unordered_map<uint32_t, font_glyph>;
@@ -78,7 +79,7 @@ int font_can_display(const uint8_t* character);
  */
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes);
 bool font_has_letter(const font_definition *def, const uint8_t *str);
-void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
+void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing, int advance = 0);
 
 void font_atlas_regenerate();
 
