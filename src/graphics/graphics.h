@@ -68,10 +68,7 @@ struct render_command_t {
 
 namespace ImageDraw {
 
-const image_t* img_sprite(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
-
 void fill_rect(vec2i p, vec2i size, color color);
-void img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_from_below(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 void img_background(painter &ctx, int image_id, float scale = 1.0f, vec2i offset = {0, 0});

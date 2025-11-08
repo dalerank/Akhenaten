@@ -404,7 +404,7 @@ void building_farm::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, col
     }
 
     vec2i pos = pixel + base.anim.pos;
-    ImageDraw::img_sprite(ctx, base.anim.start_frame() + base.anim.current_frame(), pos, mask);
+    ctx.img_sprite(base.anim.start_frame() + base.anim.current_frame(), pos, mask);
 }
 
 e_sound_channel_city building_farm::sound_channel() const {
