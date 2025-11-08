@@ -82,6 +82,7 @@ void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearin
 
 void font_atlas_regenerate();
 void font_add_missing_glyph(uint32_t codepoint);
+uint32_t base_color_for_font(e_font font);
 
 bool font_need_regeneration();
 

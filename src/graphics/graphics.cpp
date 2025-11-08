@@ -84,7 +84,7 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
         break;
 
     case render_command_t::ert_from_below: {
-            ImageDraw::img_from_below(ctx, command.image_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+            ctx.img_from_below(command.image_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
         }
         break;
     }

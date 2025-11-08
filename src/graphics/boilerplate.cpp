@@ -639,25 +639,3 @@ static void draw_footprint_size_any(int image_id, vec2i pos, int size, color col
         }
     }
 }
-static color base_color_for_font(e_font font) {
-    if (font == FONT_SMALL_PLAIN || font == FONT_SMALL_OUTLINED || font == FONT_SMALL_SHADED)
-        return COLOR_FONT_PLAIN;
-    return COLOR_MASK_NONE;
-}
-
-void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
-    const image_t* img = image_get(image_id);
-    ctx.draw_image(img, vec2i{ x, y - img->height }, color_mask, scale);
-}
-
-void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
-    if (!color_mask) {
-        color_mask = base_color_for_font(font);
-    }
-
-    if (font == FONT_SMALL_SHADED) {
-        ctx.draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
-    }
-
-    ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
-}
