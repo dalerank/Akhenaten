@@ -92,6 +92,36 @@ const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, flo
     return img;
 }
 
+const image_t *painter::img_sprite(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    const image_t *img = image_get(image_id);
+    bool mirrored = (img->offset_mirror != 0);
+
+    if (mirrored) {
+        img = img->mirrored_img;
+        p.x -= (img->width - img->animation.sprite_offset.x);
+    } else {
+        p.x -= img->animation.sprite_offset.x;
+    }
+
+    flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
+
+    p.y -= img->animation.sprite_offset.y;
+    draw_image(img, p, color_mask, scale, flags);
+
+    return img;
+}
+
+const image_t *painter::img_ornament(int image_id, int base_id, int x, int y, color color_mask, float scale) {
+    const image_t *img = image_get(image_id);
+    const image_t *base = image_get(base_id);
+    int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
+    x += base->animation.sprite_offset.x;
+    y += base->animation.sprite_offset.y - base->height + ydiff;
+    //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
+    draw_image(img, vec2i{ x, y }, color_mask, scale);
+    return img;
+}
+
 const image_t *painter::img_generic(const image_t *img, vec2i p, color color_mask, float scale, ImgFlags flags) {
     vec2i offset{ 0, 0 };
     if (!!(flags & ImgFlag_InternalOffset)) {

@@ -45,6 +45,8 @@ struct painter {
 
     const image_t *isometric_from_drawtile(int image_id, vec2i pos, color color_mask, ImgFlags flags = 0);
     const image_t *isometric_from_drawtile_top(int image_id, vec2i pos, color color_mask, ImgFlags flags = 0);
+    const image_t *img_sprite(int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
+    const image_t *img_ornament(int image_id, int base_id, int x, int y, color color_mask, float scale);
 
 protected:
     void draw_grayscale(

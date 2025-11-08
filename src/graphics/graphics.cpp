@@ -9,30 +9,6 @@
 
 std::vector<render_command_t> g_render_commands;
 
-namespace ImageDraw
-{
-    const image_t* img_sprite(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags)
-    {
-        const image_t* img = image_get(image_id);
-        bool mirrored = (img->offset_mirror != 0);
-
-        if (mirrored) {
-            img = img->mirrored_img;
-            p.x -= (img->width - img->animation.sprite_offset.x);
-        }
-        else {
-            p.x -= img->animation.sprite_offset.x;
-        }
-
-        flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
-
-        p.y -= img->animation.sprite_offset.y;
-        ctx.draw_image(img, p, color_mask, scale, flags);
-
-        return img;
-    }
-}
-
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
 }
@@ -98,12 +74,12 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
         break;
 
     case render_command_t::ert_ornament: {
-            ImageDraw::img_ornament(ctx, command.image_id, command.base_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+            ctx.img_ornament(command.image_id, command.base_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
         }
         break;
 
     case render_command_t::ert_sprite: {
-            ImageDraw::img_sprite(ctx, command.image_id, command.pixel, command.mask, command.scale, command.flags);
+            ctx.img_sprite(command.image_id, command.pixel, command.mask, command.scale, command.flags);
         }
         break;
 

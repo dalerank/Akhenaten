@@ -645,16 +645,6 @@ static color base_color_for_font(e_font font) {
     return COLOR_MASK_NONE;
 }
 
-void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int y, color color_mask, float scale) {
-    const image_t* img = image_get(image_id);
-    const image_t* base = image_get(base_id);
-    int ydiff = HALF_TILE_HEIGHT_PIXELS * (base->isometric_size() + 1);
-    x += base->animation.sprite_offset.x;
-    y += base->animation.sprite_offset.y - base->height + ydiff;
-    //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
-}
-
 void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
     ctx.draw_image(img, vec2i{ x, y - img->height }, color_mask, scale);
