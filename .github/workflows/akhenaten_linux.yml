@@ -30,6 +30,7 @@ jobs:
         cp ./build/akhenaten ./linux_build/akhenaten.linux
         cp ./data/pharaoh_fonts_pack.sgx ./linux_build/data/pharaoh_fonts_pack.sgx
         cp ./data/pharaoh_custom_pack.sgx ./linux_build/data/pharaoh_custom_pack.sgx
+        cp ./data/neucha.ttf ./linux_build/data/neucha.ttf
     - uses: actions/upload-artifact@v4
       with:
         name: linux_build

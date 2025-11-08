@@ -396,8 +396,8 @@ generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font
     int focused = is_button_hover(gbutton, offset);
 
     large_label_draw(offset.x + pos.x, offset.y + pos.y, size.x / 16, focused ? 1 : 0);
-    int letter_height = get_letter_height((uint8_t *)"A", font);
-    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 2 + (size.y - letter_height) / 2, size.x, font, 0);
+    int letter_height = get_letter_height((uint8_t *)label, font);
+    text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - letter_height) / 2, size.x, font, 0);
 
     return gbutton;
 }

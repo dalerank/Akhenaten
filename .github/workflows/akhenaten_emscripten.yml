@@ -28,6 +28,7 @@ jobs:
         cp build/akhenaten.wasm akhenaten-emscripten-module/
         cp ./data/pharaoh_fonts_pack.sgx ./build/data/pharaoh_fonts_pack.sgx
         cp ./data/pharaoh_custom_pack.sgx ./build/data/pharaoh_custom_pack.sgx
+        cp ./data/neucha.ttf ./build/data/neucha.ttf
     - uses: actions/upload-artifact@v4
       with:
         name: emscripten_build
