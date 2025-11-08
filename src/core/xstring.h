@@ -81,6 +81,9 @@ public:
     pcstr c_str() const { return _p ? _p->value.c_str() : nullptr; }
 
     [[nodiscard]]
+    pcstr data() const { return _p ? _p->value.c_str() : nullptr; }
+
+    [[nodiscard]]
     size_t size() const { return _p ? _p->length : 0; }
 
     [[nodiscard]]

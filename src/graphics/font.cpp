@@ -3,9 +3,18 @@
 #include "core/encoding/trad_chinese.h"
 #include "image.h"
 #include "js/js_game.h"
+#include "graphics/imagepak_holder.h"
+#include "platform/renderer.h"
+#include "content/atlas_packer.h"
+#include "graphics/fontgen/Atlas.hpp"
+#include "graphics/fontgen/Charset.hpp"
+#include "graphics/fontgen/Font.hpp"
+
+image_packer font_packer;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_reload_external_symbols();
+    font_atlas_regenerate();
 }
 
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
@@ -459,4 +468,240 @@ void font_reload_external_symbols() {
 
 const font_mbsybols_t &font_get_symbols() {
     return g_font_data.mbsymbols;
+}
+
+// Font size mapping for different font types
+static int get_font_size(e_font font) {
+    switch (font) {
+    case FONT_SMALL_PLAIN:
+    case FONT_SMALL_OUTLINED:
+    case FONT_SMALL_SHADED:
+        return 10;
+
+    case FONT_NORMAL_BLACK_ON_LIGHT:
+    case FONT_NORMAL_WHITE_ON_DARK:
+    case FONT_NORMAL_YELLOW:
+    case FONT_NORMAL_BLUE:
+    case FONT_NORMAL_BLACK_ON_DARK:
+        return 14;
+
+    case FONT_LARGE_BLACK_ON_LIGHT:
+    case FONT_LARGE_BLACK_ON_DARK:
+        return 18;
+
+    default:
+        return 14;
+    }
+}
+
+void font_atlas_regenerate() {
+    auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
+
+    if (!font_pack.handle) {
+        return;
+    }
+
+    vfs::path symbols_font;
+    svector<uint32_t, 1024> utf8_symbols;
+    xstring locale_short = locale_determine_language_short();
+
+    g_config_arch.r_array("game_languages", [&] (archive arch) {
+        xstring lang_current = arch.r_string("lang");
+        if (lang_current != locale_short) {
+            return;
+        }
+
+        pcstr symbols = arch.r_string("symbols");
+        if (!symbols || !*symbols) {
+            return;
+        }
+
+        symbols_font = arch.r_string("font");
+
+        svector<bstring32, 1024> data_str;
+        string_to_array_t(data_str, symbols, ',');
+        
+        svector<uint64_t, 1024> data; 
+        for (const auto& x: data_str) {
+            char sym[8] = { 0 };
+            memcpy(sym, (uint32_t *)x.c_str(), 4);
+            data.push_back( *(uint64_t*)sym );
+        }
+
+        for (const auto &sym : data) {
+            uint8_t symbol_len = strlen((pcstr)&sym);
+            uint32_t symdec = 0;
+            switch (symbol_len) {
+            case 1: // single byte
+                symdec = *(uint8_t *)&sym;
+                break;
+            case 2: // two bytes
+                symdec = *(uint16_t *)&sym;
+                break;
+            case 3: { // three bytes (most common for non-ASCII)
+                    // UTF-8 decoding for 3-byte sequences
+                    uint8_t* symdata = (uint8_t*)&sym;
+                    symdec = ((uint8_t)symdata[0] & 0x0F) << 12 |
+                        ((uint8_t)symdata[1] & 0x3F) << 6 |
+                        ((uint8_t)symdata[2] & 0x3F);
+                }
+                break;
+            case 4: // four bytes
+                symdec = *(uint32_t *)symbols;
+                break;
+            default:
+                return;
+            }
+            utf8_symbols.push_back(symdec);
+        }
+    });
+
+    if (utf8_symbols.empty()) {
+        return;
+    }
+
+    // Reset font pack
+    font_pack.handle->cleanup_and_destroy();
+    font_pack.handle->images_array.clear();
+
+    // Initialize packer
+    vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
+    font_packer.init(utf8_symbols.size(), max_texture_sizes);
+
+    // Generate atlas for each symbol
+    int cp_index = 0;
+    for (const auto &codepoint : utf8_symbols) {
+        Trex::Charset charset;
+        charset.AddCodepoint(codepoint);
+
+        int font_size = get_font_size(FONT_SMALL_PLAIN);
+        uint8_t colors[] = { 0, 0, 0, 255 };
+        Trex::Atlas atlas(symbols_font.c_str(), font_size, charset, Trex::RenderMode::COLOR, 1, false, colors);
+
+        const auto &bitmap = atlas.GetBitmap();
+
+        // Create image for this symbol
+        image_t img;
+        img.pak_name = font_pack.handle->name;
+        img.sgx_index = cp_index;
+        img.data_length = -1;
+        img.uncompressed_length = -1;
+        img.unk00 = -1;
+        img.start_index = font_pack.handle->global_image_index_offset;
+        img.offset_mirror = 0;
+
+        uint32_t Rmask = 0x000000FF;
+        uint32_t Gmask = 0x0000FF00;
+        uint32_t Bmask = 0x00FF0000;
+        uint32_t Amask = 0xFF000000;
+
+        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, bitmap.Width(), bitmap.Height(), 32, Rmask, Gmask, Bmask, Amask);
+        if (surface) {
+            size_t byteToCopy = bitmap.Width() * bitmap.Height() * 4;
+            memcpy(surface->pixels, bitmap.Data().data(), byteToCopy);
+        }
+
+        img.width = surface ? surface->w : 0;
+        img.height = surface ? surface->h : 0;
+        img.temp.surface = (void *)surface;
+        img.temp.bearing_x = atlas.GetGlyphs().GetGlyphByIndex(0).bearingX;
+        img.temp.bearing_y = atlas.GetGlyphs().GetGlyphByIndex(0).bearingY;
+        img.temp.symdeck = codepoint;
+
+        img.unk01 = -1;
+        img.unk02 = -1;
+        img.unk03 = -1;
+        img.animation.num_sprites = -1;
+        img.animation.unk04 = -1;
+        img.animation.sprite_offset = { -1, -1 };
+        img.animation.unk05 = -1;
+        img.animation.unk06 = -1;
+        img.animation.unk07 = -1;
+        img.animation.unk08 = -1;
+        img.animation.unk09 = -1;
+        img.animation.can_reverse = false;
+        img.animation.unk10 = -1;
+        img.type = -1;
+        img.is_fully_compressed = false;
+        img.is_external = false;
+        img.has_isometric_top = false;
+        img.unk11 = -1;
+        img.unk12 = -1;
+        img.bmp.group_id = 0;
+        img.bmp.name = "custom_font";
+        img.bmp.entry_index = 0;
+        img.unk13 = -1;
+        img.animation.speed_id = 1;
+        img.unk14 = -1;
+        img.unk15 = -1;
+        img.unk16 = -1;
+        img.unk17 = -1;
+        img.unk18 = -1;
+        img.unk19 = -1;
+        img.unk20 = -1;
+
+        image_packer_rect *rect = &font_packer.rects[cp_index];
+        rect->input.width = img.width;
+        rect->input.height = img.height;
+
+        font_pack.handle->images_array.push_back(img);
+        cp_index++;
+    }
+
+    // Pack images into atlas
+    font_packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
+    font_packer.options.reduce_image_size = 1;
+    font_packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
+
+    image_packer_pack(&font_packer);
+
+    // Create atlas pages
+    font_pack.handle->atlas_pages.reserve(font_packer.result.pages_needed);
+    for (uint32_t i = 0; i < font_packer.result.pages_needed; ++i) {
+        atlas_data_t atlas_data;
+        atlas_data.width = i == font_packer.result.pages_needed - 1 ? font_packer.result.last_image_width : max_texture_sizes.x;
+        atlas_data.height = i == font_packer.result.pages_needed - 1 ? font_packer.result.last_image_height : max_texture_sizes.y;
+        atlas_data.bmp_size = atlas_data.width * atlas_data.height;
+        atlas_data.temp.pixel_buffer = new color[atlas_data.bmp_size];
+        memset(atlas_data.temp.pixel_buffer, 0, atlas_data.bmp_size * sizeof(uint32_t));
+        atlas_data.texture = nullptr;
+        font_pack.handle->atlas_pages.push_back(atlas_data);
+    }
+
+    // Finish filling in image and atlas information
+    for (int i = 0; i < utf8_symbols.size(); i++) {
+        image_t &img = font_pack.handle->images_array.at(i);
+
+        image_packer_rect &rect = font_packer.rects[i];
+        img.atlas.index = rect.output.image_index;
+        atlas_data_t *p_data = &font_pack.handle->atlas_pages.at(img.atlas.index);
+        img.atlas.p_atlas = p_data;
+        img.atlas.offset = rect.output.pos;
+
+        // Load and convert image bitmap data
+        image_copy_to_atlas(img);
+
+        int image_id = font_pack.handle->global_image_index_offset + i;
+        font_set_letter_id(FONT_SMALL_PLAIN, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y });
+    }
+
+    // Create textures from atlas data
+    for (int i = 0; i < font_pack.handle->atlas_pages.size(); ++i) {
+        atlas_data_t &atlas_data = font_pack.handle->atlas_pages.at(i);
+        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        assert(atlas_data.texture != nullptr);
+
+        // Delete temp data buffer in the atlas
+        delete atlas_data.temp.pixel_buffer;
+        atlas_data.temp.pixel_buffer = nullptr;
+    }
+
+    // Remove pointers to raw data buffer in the images
+    for (int i = 0; i < font_pack.handle->images_array.size(); ++i) {
+        image_t &img = font_pack.handle->images_array.at(i);
+        SDL_FreeSurface((SDL_Surface *)img.temp.surface);
+        img.temp.surface = nullptr;
+    }
+
+    image_packer_reset(font_packer);
 }

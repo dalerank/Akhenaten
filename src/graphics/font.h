@@ -81,4 +81,6 @@ bool font_has_letter(const font_definition *def, const uint8_t *str);
 void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing);
 void font_reload_external_symbols();
 
+void font_atlas_regenerate();
+
 const font_mbsybols_t &font_get_symbols();
