@@ -218,7 +218,7 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
             str++;
         }
 
-        if (*str >= ' ') {
+        if ((unsigned char)*str >= ' ') {
            
             if (num_link_chars > 0) {
                 def = link_font_def;

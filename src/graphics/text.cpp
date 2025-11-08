@@ -11,7 +11,7 @@
 #define ELLIPSIS_LENGTH 4
 #define NUMBER_BUFFER_LENGTH 100
 
-static uint8_t tmp_line[200];
+static uint8_t tmp_line[1000];  // Increased for UTF-8 text (each cyrillic char = 2 bytes)
 
 struct input_cursor_t {
     int capture;
@@ -144,25 +144,28 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
                 break;
 
             width += def->space_width;
+            str += 1;
+            num_chars += 1;
         } else if (*str == '$') {
             if (word_char_seen)
                 break;
-
-        } else if (*str > ' ') {
-            // normal char
+            
+            str += 1;
+            num_chars += 1;
+        } else {
+            // Normal character (including UTF-8 multi-byte sequences)
             const auto glyph = font_letter_id(def, str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += image_letter(glyph.imagid)->width + def->letter_spacing;
+                const image_t* img = image_letter(glyph.imagid);
+                if (img != nullptr) {
+                    width += img->width + def->letter_spacing;
+                }
             }
             
             word_char_seen = 1;
-            if (num_bytes > 1) {
-                num_chars += num_bytes;
-                break;
-            }
+            str += num_bytes;
+            num_chars += num_bytes;
         }
-        str += num_bytes;
-        num_chars += num_bytes;
     }
     *out_num_chars = num_chars;
     return width;
@@ -267,7 +270,7 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
     while (length > 0) {
         int num_bytes = 1;
 
-        if (*str >= ' ') {
+        if ((unsigned char)*str >= ' ') {
             auto glyph = font_letter_id(def, str, &num_bytes);
             int width = 0;
 
@@ -401,33 +404,44 @@ int text_draw_multiline(pcstr str, int x_offset, int y_offset, int box_width, e_
             break;
 
         // clear line
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 1000; i++) {
             tmp_line[i] = 0;
         }
         int current_width = 0;
         int line_index = 0;
-        while (has_more_characters && current_width < box_width) {
+        while (has_more_characters) {
             int word_num_chars;
             int word_width = get_word_width((const uint8_t*)str, font, &word_num_chars);
+            
+            // If adding this word would exceed box width and we already have content, break to next line
+            if (line_index > 0 && current_width + word_width >= box_width) {
+                break;
+            }
+            
+            // Skip whitespace at start of line
+            while (line_index == 0 && *str && (unsigned char)*str <= ' ') {
+                str++;
+                word_num_chars--;
+            }
+            
+            // Copy word to line buffer
+            for (int i = 0; i < word_num_chars; i++) {
+                tmp_line[line_index++] = *str++;
+            }
+            
             current_width += word_width;
+            
+            if (!*str) {
+                has_more_characters = 0;
+                break;
+            } else if (*str == '\n') {
+                str++;
+                break;
+            }
+            
+            // Check if we've filled the line
             if (current_width >= box_width) {
-                if (current_width == 0)
-                    has_more_characters = 0;
-
-            } else {
-                for (int i = 0; i < word_num_chars; i++) {
-                    if (line_index == 0 && *str <= ' ')
-                        str++; // skip whitespace at start of line
-                    else {
-                        tmp_line[line_index++] = *str++;
-                    }
-                }
-                if (!*str)
-                    has_more_characters = 0;
-                else if (*str == '\n') {
-                    str++;
-                    break;
-                }
+                break;
             }
         }
         text_draw(tmp_line, x_offset, y, font, color);
@@ -444,22 +458,31 @@ int text_measure_multiline(const uint8_t* str, int box_width, e_font font) {
             break;
 
         int current_width = 0;
-        while (has_more_characters && current_width < box_width) {
+        int line_has_content = 0;
+        while (has_more_characters) {
             int word_num_chars;
             int word_width = get_word_width(str, font, &word_num_chars);
+            
+            // If adding this word would exceed box width and we already have content, break to next line
+            if (line_has_content && current_width + word_width >= box_width) {
+                break;
+            }
+            
+            str += word_num_chars;
             current_width += word_width;
+            line_has_content = 1;
+            
+            if (!*str) {
+                has_more_characters = 0;
+                break;
+            } else if (*str == '\n') {
+                str++;
+                break;
+            }
+            
+            // Check if we've filled the line
             if (current_width >= box_width) {
-                if (current_width == 0)
-                    has_more_characters = 0;
-
-            } else {
-                str += word_num_chars;
-                if (!*str)
-                    has_more_characters = 0;
-                else if (*str == '\n') {
-                    str++;
-                    break;
-                }
+                break;
             }
         }
         num_lines += 1;
