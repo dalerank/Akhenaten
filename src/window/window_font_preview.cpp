@@ -21,7 +21,7 @@ void config_load_font_preview_properties(bool header) {
         return;
     }
 
-    bool font_preview_open = ImGui::TreeNodeEx("Font Preview", ImGuiTreeNodeFlags_DefaultOpen, "Font Preview");
+    bool font_preview_open = ImGui::TreeNodeEx("Font Preview", ImGuiTreeNodeFlags_None, "Font Preview");
     if (!font_preview_open) {
         return;
     }

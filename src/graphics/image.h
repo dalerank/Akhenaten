@@ -118,6 +118,7 @@ struct image_t {
         color* pixel_data;
         void* surface;
         uint32_t symdeck;
+        int8_t font_type;
         int8_t bearing_x;
         int8_t bearing_y;
     } temp;

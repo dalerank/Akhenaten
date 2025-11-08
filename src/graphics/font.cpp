@@ -492,6 +492,88 @@ static int get_font_size(e_font font) {
     }
 }
 
+template<typename T>
+void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index) {
+    for (const auto &codepoint : utf8_symbols) {
+        Trex::Charset charset;
+        charset.AddCodepoint(codepoint);
+
+        int font_size = get_font_size(font);
+        uint8_t colors[] = { (((c >> 24) & 0xff) << 0), (((c >> 16) & 0xff) << 24), (((c >> 8) & 0xff) << 16), (((c >> 0) & 0xff) << 8) };
+        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 1, false, (uint8_t*)&c);
+
+        const auto &bitmap = atlas.GetBitmap();
+
+        // Create image for this symbol
+        image_t img;
+        img.pak_name = font_pack.handle->name;
+        img.sgx_index = cp_index;
+        img.data_length = -1;
+        img.uncompressed_length = -1;
+        img.unk00 = -1;
+        img.start_index = font_pack.handle->global_image_index_offset;
+        img.offset_mirror = 0;
+
+        uint32_t Rmask = 0x000000FF;
+        uint32_t Gmask = 0x0000FF00;
+        uint32_t Bmask = 0x00FF0000;
+        uint32_t Amask = 0xFF000000;
+
+        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, bitmap.Width(), bitmap.Height(), 32, Rmask, Gmask, Bmask, Amask);
+        if (surface) {
+            size_t byteToCopy = bitmap.Width() * bitmap.Height() * 4;
+            memcpy(surface->pixels, bitmap.Data().data(), byteToCopy);
+        }
+
+        img.width = surface ? surface->w : 0;
+        img.height = surface ? surface->h : 0;
+        img.temp.surface = (void *)surface;
+        img.temp.bearing_x = atlas.GetGlyphs().GetGlyphByIndex(0).bearingX;
+        img.temp.bearing_y = atlas.GetGlyphs().GetGlyphByIndex(0).bearingY;
+        img.temp.symdeck = codepoint;
+        img.temp.font_type = font;
+
+        img.unk01 = -1;
+        img.unk02 = -1;
+        img.unk03 = -1;
+        img.animation.num_sprites = -1;
+        img.animation.unk04 = -1;
+        img.animation.sprite_offset = { -1, -1 };
+        img.animation.unk05 = -1;
+        img.animation.unk06 = -1;
+        img.animation.unk07 = -1;
+        img.animation.unk08 = -1;
+        img.animation.unk09 = -1;
+        img.animation.can_reverse = false;
+        img.animation.unk10 = -1;
+        img.type = -1;
+        img.is_fully_compressed = false;
+        img.is_external = false;
+        img.has_isometric_top = false;
+        img.unk11 = -1;
+        img.unk12 = -1;
+        img.bmp.group_id = 0;
+        img.bmp.name = "custom_font";
+        img.bmp.entry_index = 0;
+        img.unk13 = -1;
+        img.animation.speed_id = 1;
+        img.unk14 = -1;
+        img.unk15 = -1;
+        img.unk16 = -1;
+        img.unk17 = -1;
+        img.unk18 = -1;
+        img.unk19 = -1;
+        img.unk20 = -1;
+
+        image_packer_rect *rect = &font_packer.rects[cp_index];
+        rect->input.width = img.width;
+        rect->input.height = img.height;
+
+        font_pack.handle->images_array.push_back(img);
+        cp_index++;
+    }
+}
+
 void font_atlas_regenerate() {
     auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
 
@@ -569,88 +651,31 @@ void font_atlas_regenerate() {
     font_pack.handle->cleanup_and_destroy();
     font_pack.handle->images_array.clear();
 
+    struct font_config {
+        e_font font_type;
+        color font_color;
+    };
+
     // Initialize packer
     vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
-    font_packer.init(utf8_symbols.size(), max_texture_sizes);
+    std::array< font_config, FONT_TYPES_MAX> font_configs = { {
+        { FONT_SMALL_PLAIN, COLOR_BLACK },
+        { FONT_NORMAL_BLACK_ON_LIGHT, COLOR_BLACK },
+        { FONT_NORMAL_WHITE_ON_DARK, COLOR_WHITE },
+        { FONT_NORMAL_YELLOW, COLOR_YELLOW },
+        { FONT_NORMAL_BLUE, COLOR_BLUE },
+        { FONT_LARGE_BLACK_ON_LIGHT, COLOR_BLACK },
+        { FONT_LARGE_BLACK_ON_DARK, COLOR_BLACK },
+        { FONT_SMALL_OUTLINED, COLOR_BLACK },
+        { FONT_NORMAL_BLACK_ON_DARK, COLOR_BLACK },
+        { FONT_SMALL_SHADED, COLOR_BLACK }
+    } };
 
-    // Generate atlas for each symbol
+    font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
+
     int cp_index = 0;
-    for (const auto &codepoint : utf8_symbols) {
-        Trex::Charset charset;
-        charset.AddCodepoint(codepoint);
-
-        int font_size = get_font_size(FONT_SMALL_PLAIN);
-        uint8_t colors[] = { 0, 0, 0, 255 };
-        Trex::Atlas atlas(symbols_font.c_str(), font_size, charset, Trex::RenderMode::COLOR, 1, false, colors);
-
-        const auto &bitmap = atlas.GetBitmap();
-
-        // Create image for this symbol
-        image_t img;
-        img.pak_name = font_pack.handle->name;
-        img.sgx_index = cp_index;
-        img.data_length = -1;
-        img.uncompressed_length = -1;
-        img.unk00 = -1;
-        img.start_index = font_pack.handle->global_image_index_offset;
-        img.offset_mirror = 0;
-
-        uint32_t Rmask = 0x000000FF;
-        uint32_t Gmask = 0x0000FF00;
-        uint32_t Bmask = 0x00FF0000;
-        uint32_t Amask = 0xFF000000;
-
-        SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE, bitmap.Width(), bitmap.Height(), 32, Rmask, Gmask, Bmask, Amask);
-        if (surface) {
-            size_t byteToCopy = bitmap.Width() * bitmap.Height() * 4;
-            memcpy(surface->pixels, bitmap.Data().data(), byteToCopy);
-        }
-
-        img.width = surface ? surface->w : 0;
-        img.height = surface ? surface->h : 0;
-        img.temp.surface = (void *)surface;
-        img.temp.bearing_x = atlas.GetGlyphs().GetGlyphByIndex(0).bearingX;
-        img.temp.bearing_y = atlas.GetGlyphs().GetGlyphByIndex(0).bearingY;
-        img.temp.symdeck = codepoint;
-
-        img.unk01 = -1;
-        img.unk02 = -1;
-        img.unk03 = -1;
-        img.animation.num_sprites = -1;
-        img.animation.unk04 = -1;
-        img.animation.sprite_offset = { -1, -1 };
-        img.animation.unk05 = -1;
-        img.animation.unk06 = -1;
-        img.animation.unk07 = -1;
-        img.animation.unk08 = -1;
-        img.animation.unk09 = -1;
-        img.animation.can_reverse = false;
-        img.animation.unk10 = -1;
-        img.type = -1;
-        img.is_fully_compressed = false;
-        img.is_external = false;
-        img.has_isometric_top = false;
-        img.unk11 = -1;
-        img.unk12 = -1;
-        img.bmp.group_id = 0;
-        img.bmp.name = "custom_font";
-        img.bmp.entry_index = 0;
-        img.unk13 = -1;
-        img.animation.speed_id = 1;
-        img.unk14 = -1;
-        img.unk15 = -1;
-        img.unk16 = -1;
-        img.unk17 = -1;
-        img.unk18 = -1;
-        img.unk19 = -1;
-        img.unk20 = -1;
-
-        image_packer_rect *rect = &font_packer.rects[cp_index];
-        rect->input.width = img.width;
-        rect->input.height = img.height;
-
-        font_pack.handle->images_array.push_back(img);
-        cp_index++;
+    for (const auto &fconfig : font_configs) {
+        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index);
     }
 
     // Pack images into atlas
@@ -674,7 +699,7 @@ void font_atlas_regenerate() {
     }
 
     // Finish filling in image and atlas information
-    for (int i = 0; i < utf8_symbols.size(); i++) {
+    for (int i = 0; i < font_pack.handle->images_array.size(); i++) {
         image_t &img = font_pack.handle->images_array.at(i);
 
         image_packer_rect &rect = font_packer.rects[i];
@@ -687,7 +712,7 @@ void font_atlas_regenerate() {
         image_copy_to_atlas(img);
 
         int image_id = font_pack.handle->global_image_index_offset + i;
-        font_set_letter_id(FONT_SMALL_PLAIN, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y });
+        font_set_letter_id((e_font)img.temp.font_type, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y });
     }
 
     // Create textures from atlas data
@@ -708,5 +733,7 @@ void font_atlas_regenerate() {
         img.temp.surface = nullptr;
     }
 
+    font_pack.handle->entries_num = font_pack.handle->images_array.size();
+    font_pack.entries_num = font_pack.handle->entries_num;
     image_packer_reset(font_packer);
 }
