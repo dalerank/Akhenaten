@@ -90,7 +90,7 @@ namespace Trex {
             case FT_PIXEL_MODE_BGRA:
                 return 4;
             default:
-                throw std::runtime_error("Unsupported pixel mode");
+                assert(false && "Unsupported pixel mode");
             }
         }
 
@@ -102,6 +102,7 @@ namespace Trex {
 
             return ByteAt(x * Channels() + offset, y);
         }
+
         uint8_t ColorGreen(int x, int y) const {
             int offset = 0;
             switch (glyph->bitmap.pixel_mode) {
@@ -110,6 +111,7 @@ namespace Trex {
             }
             return ByteAt(x * Channels() + offset, y);
         }
+        
         uint8_t ColorBlue(int x, int y) const {
             int offset = 0;
             switch (glyph->bitmap.pixel_mode) {
@@ -118,6 +120,7 @@ namespace Trex {
 
             return ByteAt(x * Channels() + offset, y);
         }
+        
         uint8_t ColorAlpha(int x, int y) const {
             if (glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA) {
                 return ByteAt(x * Channels() + 3, y);
