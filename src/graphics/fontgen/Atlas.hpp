@@ -7,7 +7,7 @@
 #include "Charset.hpp"
 #include "content/dir.h"
 
-namespace Trex {
+namespace DynamicFont {
     struct Glyph {
         unsigned int codepoint; // Unicode codepoint
         unsigned int glyphIndex; // Index of the glyph in the font

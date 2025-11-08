@@ -1,4 +1,5 @@
-#include "Font.hpp"
+#include "font.hpp"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_LCD_FILTER_H
@@ -6,7 +7,7 @@
 #include <iostream>
 #include <cassert>
 
-namespace Trex {
+namespace DynamicFont {
     FT_Library GetFTLibrary() {
         static FT_Library library;
 

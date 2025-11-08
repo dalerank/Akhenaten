@@ -1,9 +1,9 @@
-#include "Charset.hpp"
-#include <stdexcept>
+#include "charset.hpp"
 
+#include <stdexcept>
 #include <cassert>
 
-namespace Trex {
+namespace DynamicFont {
     Charset::Charset(uint32_t first, uint32_t last)
         : Charset(span_const<Range>({ {first,last} })) {
     }

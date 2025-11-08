@@ -1,11 +1,12 @@
 #pragma once
+
 #include <utility>
 #include <set>
 #include <vector>
 #include <cstdint>
 #include "core/custom_span.hpp"
 
-namespace Trex {
+namespace DynamicFont {
     class Charset {
     public:
         using Range = std::pair<uint32_t, uint32_t>;

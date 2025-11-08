@@ -1,45 +1,44 @@
 #pragma once
+
 #include <cstdint>
 #include <vector>
 #include <variant>
+
 #include "core/custom_span.hpp"
 
 struct FT_FaceRec_;
 
-namespace Trex
-{
-	struct Pixels { int value; };
-	struct Points { int value; };
-	using FontSize = std::variant<Pixels, Points>;
+namespace DynamicFont {
+    struct Pixels { int value; };
+    struct Points { int value; };
+    using FontSize = std::variant<Pixels, Points>;
 
-	struct FontMetrics
-	{
-		int ascender;  // Distance from baseline to top of glyph (positive value)
-		int descender; // Distance from baseline to bottom of glyph (negative value)
-		int height;    // Distance from baseline to the next line's baseline (ascender - descender + linegap)
-	};
+    struct FontMetrics {
+        int ascender;  // Distance from baseline to top of glyph (positive value)
+        int descender; // Distance from baseline to bottom of glyph (negative value)
+        int height;    // Distance from baseline to the next line's baseline (ascender - descender + linegap)
+    };
 
-	class Font
-	{
-	public:
-		explicit Font(const char* path);
-		explicit Font(span_const<uint8_t> data);
-		Font(Font&&) noexcept;
-		~Font();
+    class Font {
+    public:
+        explicit Font(const char *path);
+        explicit Font(span_const<uint8_t> data);
+        Font(Font &&) noexcept;
+        ~Font();
 
-		void SetSize(const FontSize& size);
-		uint32_t GetGlyphIndex(uint32_t codepoint) const;
+        void SetSize(const FontSize &size);
+        uint32_t GetGlyphIndex(uint32_t codepoint) const;
 
-		FontMetrics GetMetrics() const;
+        FontMetrics GetMetrics() const;
 
-		FT_FaceRec_* face = nullptr;
+        FT_FaceRec_ *face = nullptr;
 
-	private:
-		void SetSizeInPixels(Pixels size);
-		void SetSizeInPoints(Points size);
+    private:
+        void SetSizeInPixels(Pixels size);
+        void SetSizeInPoints(Points size);
 
 
-		std::vector<uint8_t> fontData = {};
-	};
+        std::vector<uint8_t> fontData = {};
+    };
 }
 

@@ -512,7 +512,7 @@ const font_mbsybols_t &font_get_symbols() {
 template<typename T>
 void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, font_config fconfig, const T &utf8_symbols, int& cp_index) {
     for (const auto &codepoint : utf8_symbols) {
-        Trex::Charset charset;
+        DynamicFont::Charset charset;
         charset.AddCodepoint(codepoint);
 
         uint8_t colors[4] = { 
@@ -522,7 +522,7 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
             (fconfig.color >> 24) & 0xff   // Alpha
         };
         // padding=0, fit=true to create bitmaps with exact glyph dimensions (no extra space)
-        Trex::Atlas atlas(symbols_font, fconfig.size, charset, Trex::RenderMode::COLOR, 0, true, colors, fconfig.bold);
+        DynamicFont::Atlas atlas(symbols_font, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold);
 
         const auto &bitmap = atlas.GetBitmap();
 
