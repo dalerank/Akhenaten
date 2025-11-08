@@ -39,7 +39,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         DOWNSCALED_CITY = true;
     }
 
-    graphics_renderer()->set_texture_scale_mode(texture, overall_scale_factor, force_linear);
+    g_render.set_texture_scale_mode(texture, overall_scale_factor, force_linear);
 
     SDL_SetTextureColorMod(texture,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
@@ -48,7 +48,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
     SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
 
     const bool alpha = !!(flags & ImgFlag_Alpha);
-    SDL_SetTextureBlendMode(texture, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)graphics_renderer()->premult_alpha());
+    SDL_SetTextureBlendMode(texture, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha());
 
     // uncomment here if you want save something from atlases
     int k = 0;
@@ -56,7 +56,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         char filename[32] = {0};
         static int index = 0;
         sprintf(filename, "%u_img.bmp", index);
-        graphics_renderer()->save_texture_to_file(filename, texture);
+        g_render.save_texture_to_file(filename, texture);
     }
 
     float texture_coord_correction = 0;

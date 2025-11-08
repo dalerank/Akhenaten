@@ -21,8 +21,8 @@ void screen_set_resolution(int width, int height) {
     g_screen_data.dialog_offset.x = (width - 640) / 2;
     g_screen_data.dialog_offset.y = (height - 480) / 2;
 
-    graphics_clear_screen();
-    graphics_renderer()->set_clip_rectangle({ 0, 0 }, width, height);
+    g_render.clear_screen();
+    g_render.set_clip_rectangle({ 0, 0 }, width, height);
 
     city_view_set_viewport(width, height);
     g_warning_manager.clear_all();

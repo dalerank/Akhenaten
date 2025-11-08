@@ -37,6 +37,7 @@
 #include "window/autoconfig_window.h"
 #include "game/game_config.h"
 #include "window/trade_opened.h"
+#include "platform/renderer.h"
 #include "game/game.h"
 
 #include "js/js_game.h"
@@ -676,7 +677,7 @@ int empire_window::draw_background(UiFlags flags) {
     data.max_pos.y = s_height <= EMPIRE_SIZE.y ? s_height : data.min_pos.y + EMPIRE_SIZE.y;
 
     if (data.min_pos.x || data.min_pos.y) {
-        graphics_clear_screen();
+        g_render.clear_screen();
     }
 
     return 0;

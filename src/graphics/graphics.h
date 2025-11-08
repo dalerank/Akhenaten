@@ -9,8 +9,6 @@ struct painter;
 struct image_t;
 struct image_desc;
 
-void graphics_clear_screen();
-
 void graphics_set_to_dialog();
 void graphics_in_dialog_with_size(int width, int height);
 void graphics_reset_dialog();

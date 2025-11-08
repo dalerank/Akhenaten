@@ -62,12 +62,12 @@ SDL_Texture *load_icon_texture(pcstr name, vec2i &size) {
     if (name && *name == '!') {
         auto it = std::find_if(std::begin(inres_icons), std::end(inres_icons), [name] (auto &it) { return strcmp(name, it.name) == 0; });
         if (it != std::end(inres_icons)) {
-            return graphics_renderer()->create_texture_from_png_buffer(it->data, it->length, size);
+            return g_render.create_texture_from_png_buffer(it->data, it->length, size);
         }
     }
     
     auto data = internal_read_data(name);
-    auto texture = graphics_renderer()->create_texture_from_png_buffer((void*)data.first, data.second, size);
+    auto texture = g_render.create_texture_from_png_buffer((void*)data.first, data.second, size);
 
     return texture;
 }

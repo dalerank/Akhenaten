@@ -98,7 +98,7 @@ ANK_FUNCTION(__game_download_latest_version)
 int main_menu_screen::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    graphics_clear_screen();
+    g_render.clear_screen();
     return 0;
 }
 

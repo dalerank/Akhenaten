@@ -191,7 +191,7 @@ static int image_write_rows(const color *canvas, int canvas_width) {
 static int image_write_canvas(painter &ctx) {
     color *pixels = 0;
     pixels = (color *)malloc(sizeof(color) * screenshot.width * screenshot.height);
-    if (!graphics_renderer()->save_screen_buffer(ctx, pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+    if (!g_render.save_screen_buffer(ctx, pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
         free(pixels);
         return 0;
     }
@@ -324,11 +324,11 @@ static void create_full_city_screenshot() {
                 painter local_context;
                 local_context.view = &local_view_data;
                 local_context.global_render_scale = 1.f;
-                local_context.renderer = graphics_renderer()->renderer();
+                local_context.renderer = g_render.renderer();
 
                 camera_go_to_pixel(local_context, vec2i{mm_view.min.x + width, current_height}, false);
                 g_screen_city.draw_without_overlay(local_context, 0);
-                graphics_renderer()->save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
+                g_render.save_screen_buffer(local_context, &canvas[width], x_offset, TOP_MENU_HEIGHT + y_offset, image_section_width, canvas_height - y_offset, city_canvas_pixels.x);
                 //SDL_Rect rect2 = {x_offset, y_offset, canvas_width, canvas_height};
                 //bool ok = SDL_RenderReadPixels(local_context.renderer, &rect2, SDL_PIXELFORMAT_ARGB8888, &canvas[width], city_canvas_pixels.x * sizeof(color)) == 0;
                //SDL_DestroyRenderer(renderer);
@@ -394,9 +394,9 @@ static void create_minimap_screenshot() {
 
     memset(canvas, 0, sizeof(color) * width_pixels * height_pixels);
     widget_minimap_draw({0, 0}, 1);
-    graphics_clear_screen();
-    graphics_renderer()->draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
-    graphics_renderer()->save_screen_buffer(ctx, canvas, 0, 0, width_pixels, height_pixels, width_pixels);
+    g_render.clear_screen();
+    g_render.draw_custom_texture(CUSTOM_IMAGE_MINIMAP, 0, 0, 1 / MINIMAP_SCALE);
+    g_render.save_screen_buffer(ctx, canvas, 0, 0, width_pixels, height_pixels, width_pixels);
     if (image_write_rows(canvas, width_pixels)) {
         image_finish();
         logs::info("Saved city map screenshot:", filename, 0);

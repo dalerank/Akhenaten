@@ -14,6 +14,7 @@
 #include "graphics/view/view.h"
 #include "config/hotkeys.h"
 #include "window/hotkey_editor.h"
+#include "platform/renderer.h"
 #include "game/game.h"
 
 #define HOTKEY_HEADER -1
@@ -185,7 +186,7 @@ static void init(void (*close_callback)(void)) {
 static void draw_background(int) {
     painter ctx = game.painter();
     auto& data = g_hotkeys_window_data;
-    graphics_clear_screen();
+    g_render.clear_screen();
 
     ImageDraw::img_background(ctx, image_id_from_group(PACK_UNLOADED, 8));
     graphics_set_to_dialog();

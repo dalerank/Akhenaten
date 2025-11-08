@@ -35,9 +35,8 @@ dev::imgui_qconsole &debug_console() {
 
 static int game_debug_cli_guid = 0;
 void game_debug_cli_draw() {
-    auto renderer = graphics_renderer();
     SDL_Point platform_window_size;
-    SDL_GetWindowSize(renderer->window(), &platform_window_size.x, &platform_window_size.y);
+    SDL_GetWindowSize(g_render.window(), &platform_window_size.x, &platform_window_size.y);
 
     debug_console().render("##console", game.debug_console, platform_window_size.x, platform_window_size.y * 0.33f);
     game_debug_cli_guid = 0;
@@ -284,10 +283,8 @@ void game_imgui_overlay_init() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    // Setup Platform/Renderer backends
-    auto renderer = graphics_renderer();
-    ImGui_ImplSDL2_InitForSDLRenderer(renderer->window(), renderer->renderer());
-    ImGui_ImplSDLRenderer2_Init(renderer->renderer());
+    ImGui_ImplSDL2_InitForSDLRenderer(g_render.window(), g_render.renderer());
+    ImGui_ImplSDLRenderer2_Init(g_render.renderer());
 
     debug_console().con.bind_command("close", [] (auto &, auto &) { game.debug_console = false; });
 }
@@ -312,10 +309,8 @@ void game_imgui_overlay_draw() {
     if (!game.debug_console) {
     //    return;
     }
-    auto renderer = graphics_renderer();
-
     ImGui::Render();
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), renderer->renderer());
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), g_render.renderer());
 }
 
 bool game_imgui_overlay_handle_event(void *e) {

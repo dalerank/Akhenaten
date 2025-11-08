@@ -9,11 +9,6 @@
 
 std::vector<render_command_t> g_render_commands;
 
-void graphics_clear_screen() {
-    OZZY_PROFILER_SECTION("Render/Frame/Clear Screen");
-    graphics_renderer()->clear_screen();
-}
-
 namespace ImageDraw
 {
     const image_t* isometric_from_drawtile(painter& ctx, int image_id, vec2i pos, color color_mask, ImgFlags flags = 0)
@@ -63,7 +58,7 @@ namespace ImageDraw
         flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
 
         p.y -= img->animation.sprite_offset.y;
-        graphics_renderer()->draw_image(ctx, img, p, color_mask, scale, flags);
+        g_render.draw_image(ctx, img, p, color_mask, scale, flags);
 
         return img;
     }
@@ -71,21 +66,21 @@ namespace ImageDraw
     const image_t* img_generic(painter& ctx, int image_id, int x, int y, color color_mask, float scale)
     {
         const image_t* img = image_get(image_id);
-        graphics_renderer()->draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+        g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
         return img;
     }
 
     const image_t* img_generic(painter& ctx, int pak, int image_id, vec2i p, color color_mask, float scale)
     {
         const image_t* img = image_get(pak, image_id);
-        graphics_renderer()->draw_image(ctx, img, p, color_mask, scale);
+        g_render.draw_image(ctx, img, p, color_mask, scale);
         return img;
     }
 
     const image_t* img_generic(painter& ctx, const image_desc& imgd, vec2i p, color color_mask, float scale)
     {
         const image_t* img = image_get(imgd);
-        graphics_renderer()->draw_image(ctx, img, p, color_mask, scale);
+        g_render.draw_image(ctx, img, p, color_mask, scale);
         return img;
     }
 
@@ -97,7 +92,7 @@ namespace ImageDraw
             offset = img->animation.sprite_offset;
         }
 
-        graphics_renderer()->draw_image(ctx, img, p - offset, color_mask, scale, flags);
+        g_render.draw_image(ctx, img, p - offset, color_mask, scale, flags);
         return img;
     }
 
@@ -108,34 +103,34 @@ namespace ImageDraw
             offset = img->animation.sprite_offset;
         }
 
-        graphics_renderer()->draw_image(ctx, img, p - offset, color_mask, scale, flags);
+        g_render.draw_image(ctx, img, p - offset, color_mask, scale, flags);
         return img;
     }
 }
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
-    graphics_renderer()->draw_line(start, end, color);
+    g_render.draw_line(start, end, color);
 }
 void graphics_draw_vertical_line(vec2i start, int ny, color color) {
-    graphics_renderer()->draw_line(start, vec2i{start.x, start.y + ny}, color);
+    g_render.draw_line(start, vec2i{start.x, start.y + ny}, color);
 }
 void graphics_draw_horizontal_line(vec2i start, int nx, color color) {
-    graphics_renderer()->draw_line(start, vec2i{start.x + nx, start.y}, color);
+    g_render.draw_line(start, vec2i{start.x + nx, start.y}, color);
 }
 void graphics_draw_pixel(vec2i pixel, color color) {
-    graphics_renderer()->draw_pixel(pixel, color);
+    g_render.draw_pixel(pixel, color);
 }
 void graphics_draw_rect(vec2i start, vec2i size, color color) {
-    graphics_renderer()->draw_rect(start, size, color);
+    g_render.draw_rect(start, size, color);
 }
 
 void ImageDraw::fill_rect(vec2i start, vec2i size, color color) {
-    graphics_renderer()->fill_rect(start, size, color);
+    g_render.fill_rect(start, size, color);
 }
 
 void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     color alpha = (darkness << COLOR_BITSHIFT_ALPHA);
-    graphics_renderer()->fill_rect(start, size, alpha);
+    g_render.fill_rect(start, size, alpha);
 }
 
 const image_t* ImageDraw::img_isometric(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {

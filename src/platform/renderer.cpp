@@ -253,10 +253,6 @@ std::vector<video_mode> get_video_modes() {
     return modes;
 }
 
-graphics_renderer_interface* graphics_renderer() {
-    return &g_render;
-}
-
 static const SDL_BlendMode premult_alpha = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE,
                                                                       SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
                                                                       SDL_BLENDOPERATION_ADD,
@@ -1144,10 +1140,6 @@ static void draw_software_mouse_cursor(void) {
     }
 }
 #endif
-
-void platform_renderer_clear() {
-    graphics_renderer()->clear_screen();
-}
 
 void platform_render_apply_filter() {
     auto &data = g_renderer_data;

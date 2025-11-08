@@ -12,6 +12,7 @@
 #include "window/autoconfig_window.h"
 #include "game/game.h"
 #include "core/core.h"
+#include "platform/renderer.h"
 
 #include <cmath>
 
@@ -28,7 +29,7 @@ struct logo_screen : autoconfig_window_t<logo_screen> {
 logo_screen g_logo_screen;
 
 void logo_screen::draw_foreground(UiFlags) {
-    graphics_clear_screen();
+    g_render.clear_screen();
     painter ctx = game.painter();
 
     ImageDraw::img_background(ctx, image_id_from_group(GROUP_LOGO));

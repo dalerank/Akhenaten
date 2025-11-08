@@ -4,6 +4,7 @@
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
+#include "platform/renderer.h"
 #include "sound/sound.h"
 
 static struct {
@@ -32,9 +33,11 @@ static int init(void) {
     data.current_video = 0;
     return start_next_video();
 }
+
 static void draw_background(int) {
-    graphics_clear_screen();
+    g_render.clear_screen();
 }
+
 static void draw_foreground(int) {
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }

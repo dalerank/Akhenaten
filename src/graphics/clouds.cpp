@@ -116,7 +116,7 @@ void clouds_t::init_cloud_images() {
     clouds.resize(config.num_clouds());
     atlas_pages.resize(config.num_clouds());
 
-    graphics_renderer()->create_custom_texture(CUSTOM_IMAGE_CLOUDS, config.cloud_texture_width(), config.cloud_texture_height());
+    g_render.create_custom_texture(CUSTOM_IMAGE_CLOUDS, config.cloud_texture_width(), config.cloud_texture_height());
     for (int i = 0; i < clouds.size(); i++) {
         cloud_t &cloud = clouds[i];
         atlas_data_t& atlas_data = atlas_pages[i];
@@ -153,10 +153,8 @@ void clouds_t::generate_cloud(cloud_t &cloud) {
 
     const image_t *img = &cloud.img;
 
-    graphics_renderer()->update_custom_texture_from(CUSTOM_IMAGE_CLOUDS, pixels.data(),
-        img->atlas.offset.x, img->atlas.offset.y, img->width, img->height);
-
-    img->atlas.p_atlas->texture = graphics_renderer()->get_custom_texture(CUSTOM_IMAGE_CLOUDS);
+    g_render.update_custom_texture_from(CUSTOM_IMAGE_CLOUDS, pixels.data(), img->atlas.offset.x, img->atlas.offset.y, img->width, img->height);
+    img->atlas.p_atlas->texture = g_render.get_custom_texture(CUSTOM_IMAGE_CLOUDS);
 
     cloud.pos = { 0, 0 };
     cloud.scale_x = 1 / static_cast<float>((1.5 - random_fractional()) / config.cloud_scale);
@@ -225,7 +223,7 @@ void clouds_t::draw(painter &ctx, const vec2i min_pos, const vec2i offset, const
        return;
    }
 
-    if (!graphics_renderer()->has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
+    if (!g_render.has_custom_texture(CUSTOM_IMAGE_CLOUDS)) {
         init_cloud_images();
     }
 

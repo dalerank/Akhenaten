@@ -510,7 +510,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     };
 
     // prepare atlas packer & renderer
-    vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
+    vec2i max_texture_sizes = g_render.get_max_image_size();
     int init_result = packer.init(entries_num, max_texture_sizes);
     if (init_result != IMAGE_PACKER_OK) {
         return false;
@@ -573,7 +573,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t& atlas_data = atlas_pages.at(i);
-        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        atlas_data.texture = g_render.create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
         if (atlas_data.texture == nullptr) {
             return false;
         }
@@ -596,7 +596,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
                name.c_str(), entries_num, groups_num, atlas_pages.at(atlas_pages.size() - 1).width, atlas_pages.at(atlas_pages.size() - 1).height, atlas_pages.size());
 
     int y_offset = screen_height() - 24;
-    platform_renderer_clear();
+    g_render.clear_screen();
     if (image_data_fonts_ready()) {
         text_draw(bstring512("loading folder pak (", pak, ")").c_str(), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
@@ -696,7 +696,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes
 
     // prepare atlas packer & renderer
-    vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
+    vec2i max_texture_sizes = g_render.get_max_image_size();
     int result = packer.init(entries_num * 2, max_texture_sizes);
     if (result != IMAGE_PACKER_OK) {
         return false;
@@ -857,7 +857,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     // create textures from atlas data
     for (int i = 0; i < atlas_pages.size(); ++i) {
         atlas_data_t& atlas_data = atlas_pages.at(i);
-        atlas_data.texture = graphics_renderer()->create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
+        atlas_data.texture = g_render.create_texture_from_buffer(atlas_data.temp.pixel_buffer, atlas_data.width, atlas_data.height);
         if (atlas_data.texture == nullptr)
             return false;
 
@@ -870,7 +870,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         if (game.save_debug_texture) {
             vfs::path fs_fpath;
             fs_fpath.printf("DEV_TESTING/tex/%s_%i.bmp", name.c_str(), i);
-            graphics_renderer()->save_texture_to_file(fs_fpath.c_str(), atlas_data.texture);
+            g_render.save_texture_to_file(fs_fpath.c_str(), atlas_data.texture);
         }
 #endif
         // ******************************
@@ -891,7 +891,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
     int y_offset = screen_height() - 24;
 
-    platform_renderer_clear();
+    g_render.clear_screen();
     if (image_data_fonts_ready() && image_data_render_on_new_loadpacks()) {
         bstring512 loadpack_text("loading pak (", pak_name, ")");
         text_draw(loadpack_text.c_str(), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
