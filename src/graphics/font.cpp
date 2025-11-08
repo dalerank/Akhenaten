@@ -9,11 +9,11 @@
 #include "graphics/fontgen/Atlas.hpp"
 #include "graphics/fontgen/Charset.hpp"
 #include "graphics/fontgen/Font.hpp"
+#include "game/game_config.h"
 
 image_packer font_packer;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
-    font_reload_external_symbols();
     font_atlas_regenerate();
 }
 
@@ -355,6 +355,36 @@ static int image_y_offset_korean(const uint8_t *c, int image_height, int line_he
     return image_height - line_height;
 }
 
+// Helper function to decode UTF-8 sequence to Unicode codepoint
+static uint32_t utf8_decode(const uint8_t* str, int* out_bytes) {
+    if (str[0] < 0x80) {
+        // 1-byte sequence (ASCII)
+        *out_bytes = 1;
+        return str[0];
+    } else if ((str[0] & 0xE0) == 0xC0) {
+        // 2-byte sequence
+        *out_bytes = 2;
+        return ((str[0] & 0x1F) << 6) | (str[1] & 0x3F);
+    } else if ((str[0] & 0xF0) == 0xE0) {
+        // 3-byte sequence
+        *out_bytes = 3;
+        return ((str[0] & 0x0F) << 12) |
+               ((str[1] & 0x3F) << 6) |
+               (str[2] & 0x3F);
+    } else if ((str[0] & 0xF8) == 0xF0) {
+        // 4-byte sequence
+        *out_bytes = 4;
+        return ((str[0] & 0x07) << 18) |
+               ((str[1] & 0x3F) << 12) |
+               ((str[2] & 0x3F) << 6) |
+               (str[3] & 0x3F);
+    }
+    
+    // Invalid UTF-8 sequence
+    *out_bytes = 1;
+    return 0xFFFD; // Unicode replacement character
+}
+
 const font_definition* font_definition_for(e_font font) {
     auto& data = g_font_data;
     return &data.font_definitions[font];
@@ -370,7 +400,8 @@ int font_can_display(const uint8_t* character) {
 bool font_has_letter(const font_definition *def, const uint8_t *str) {
     auto &data = g_font_data;
     const auto &mbmap = data.mbsymbols[def->font];
-    const uint16_t code = *(uint16_t *)str;
+    int num_bytes = 0;
+    const uint32_t code = utf8_decode(str, &num_bytes);
     auto it = mbmap.find(code);
     return (it != mbmap.end());
 }
@@ -378,9 +409,8 @@ bool font_has_letter(const font_definition *def, const uint8_t *str) {
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
     if (*str >= 0x80) {
-        *num_bytes = 2;
         const auto &mbmap = data.mbsymbols[def->font];
-        const uint16_t code = *(uint16_t *)str;
+        const uint32_t code = utf8_decode(str, num_bytes);
         auto it = mbmap.find(code);
         if (it != mbmap.end()) {
             return it->second;
@@ -434,38 +464,6 @@ void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearin
     mbmap[character] = { character, imgid, bearing };
 }
 
-void font_reload_external_symbols() {
-    g_config_arch.r_array("external_font_symbols", [] (archive arch) {
-        pcstr symbol = arch.r_string("symbol");
-        int pack = arch.r_int("pack");
-        int id = arch.r_int("id");
-        int offset = arch.r_int("offset");
-        vec2i bearing = arch.r_vec2i("bearing");
-        if (!symbol || !*symbol) {
-            return;
-        }
-
-        e_font font = arch.r_type<e_font>("font");
-        const size_t symbol_len = strlen(symbol);
-        uint32_t symdec = 0;
-        switch (symbol_len) {
-        case 1: // single byte
-            symdec = *(uint8_t *)symbol; // skip first byte
-            break;
-        case 2: // two bytes
-            symdec = *(uint16_t *)symbol; // skip first two bytes
-            break;
-        case 4:
-            symdec = *(uint32_t *)symbol;
-        default:
-            break;
-        }
-
-        int image_id = image_id_from_group(pack, id) + offset;
-        font_set_letter_id(font, symdec, image_id, bearing);
-    });
-}
-
 const font_mbsybols_t &font_get_symbols() {
     return g_font_data.mbsymbols;
 }
@@ -503,7 +501,7 @@ void font_atlas_regenerate() {
 
     vfs::path symbols_font;
     svector<uint32_t, 1024> utf8_symbols;
-    xstring locale_short = locale_determine_language_short();
+    xstring locale_short = game_features::gameopt_language.to_string();
 
     g_config_arch.r_array("game_languages", [&] (archive arch) {
         xstring lang_current = arch.r_string("lang");
@@ -535,19 +533,26 @@ void font_atlas_regenerate() {
             case 1: // single byte
                 symdec = *(uint8_t *)&sym;
                 break;
-            case 2: // two bytes
-                symdec = *(uint16_t *)&sym;
+            case 2: { // two bytes - UTF-8 decoding for 2-byte sequences
+                    uint8_t* symdata = (uint8_t*)&sym;
+                    symdec = ((symdata[0] & 0x1F) << 6) | (symdata[1] & 0x3F);
+                }
                 break;
             case 3: { // three bytes (most common for non-ASCII)
                     // UTF-8 decoding for 3-byte sequences
                     uint8_t* symdata = (uint8_t*)&sym;
-                    symdec = ((uint8_t)symdata[0] & 0x0F) << 12 |
-                        ((uint8_t)symdata[1] & 0x3F) << 6 |
-                        ((uint8_t)symdata[2] & 0x3F);
+                    symdec = ((symdata[0] & 0x0F) << 12) |
+                             ((symdata[1] & 0x3F) << 6) |
+                             (symdata[2] & 0x3F);
                 }
                 break;
-            case 4: // four bytes
-                symdec = *(uint32_t *)symbols;
+            case 4: { // four bytes - UTF-8 decoding for 4-byte sequences
+                    uint8_t* symdata = (uint8_t*)&sym;
+                    symdec = ((symdata[0] & 0x07) << 18) |
+                             ((symdata[1] & 0x3F) << 12) |
+                             ((symdata[2] & 0x3F) << 6) |
+                             (symdata[3] & 0x3F);
+                }
                 break;
             default:
                 return;
