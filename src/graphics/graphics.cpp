@@ -11,37 +11,6 @@ std::vector<render_command_t> g_render_commands;
 
 namespace ImageDraw
 {
-    const image_t* isometric_from_drawtile(painter& ctx, int image_id, vec2i pos, color color_mask, ImgFlags flags = 0)
-    {
-        const image_t* img = image_get(image_id);
-        if (!img) {
-            return nullptr;
-        }
-        //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
-        //        assets_load_unpacked_asset(image_id);
-        //    }
-        pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
-
-        ctx.draw_image(img, pos, color_mask, 1.f, flags);
-        return img;
-    }
-
-    const image_t* isometric_from_drawtile_top(painter& ctx, int image_id, vec2i pos, color color_mask, ImgFlags flags = 0)
-    {
-        const image_t* img = image_get(image_id);
-        if (!img) {
-            return nullptr;
-        }
-        const image_t* img_top = img->isometric_top;
-        if (!img_top) {
-            return nullptr;
-        }
-        pos.y += HALF_TILE_HEIGHT_PIXELS * (img_top->isometric_size() + 1) - img_top->height;
-
-        ctx.draw_image(img_top, pos, color_mask, 1.f, flags);
-        return img_top;
-    }
-
     const image_t* img_sprite(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags)
     {
         const image_t* img = image_get(image_id);
@@ -60,17 +29,6 @@ namespace ImageDraw
         p.y -= img->animation.sprite_offset.y;
         ctx.draw_image(img, p, color_mask, scale, flags);
 
-        return img;
-    }
-
-    const image_t* img_generic(painter& ctx, const image_t* img, vec2i p, color color_mask, float scale, ImgFlags flags)
-    {
-        vec2i offset{ 0, 0 };
-        if (!!(flags & ImgFlag_InternalOffset)) {
-            offset = img->animation.sprite_offset;
-        }
-
-        ctx.draw_image(img, p - offset, color_mask, scale, flags);
         return img;
     }
 }
@@ -100,12 +58,6 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     g_render.fill_rect(start, size, alpha);
 }
 
-const image_t* ImageDraw::img_isometric(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
-    isometric_from_drawtile(ctx, image_id, p, color_mask, flags);
-    const image_t* img = isometric_from_drawtile_top(ctx, image_id, p, color_mask, flags);
-    return img;
-}
-
 void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i offset)
 {
     const image_t* img = image_get(image_id);
@@ -117,30 +69,26 @@ void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i of
     }
 }
 
-void ImageDraw::isometric(painter& ctx, int image_id, vec2i pixel, color color_mask, float scale)
-{
-    ctx.img_generic(image_id, pixel, color_mask, scale);
-}
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {
     switch (command.rtype) {
     case render_command_t::ert_drawtile: {
-            ImageDraw::isometric_from_drawtile(ctx, command.image_id, command.pixel, command.mask, command.flags);
+            ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_top: {
-            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, command.pixel, command.mask, command.flags);
+            ctx.isometric_from_drawtile_top(command.image_id, command.pixel, command.mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_full: {
-            ImageDraw::isometric_from_drawtile(ctx, command.image_id, command.pixel, command.mask, command.flags);
+            ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
 
             const image_t *img = image_get(command.image_id);
             int offset_y = 15 * (img->width / 58);
             const vec2i pixel = command.pixel - vec2i{ 0, offset_y };
-            ImageDraw::isometric_from_drawtile_top(ctx, command.image_id, pixel, command.mask, command.flags);
+            ctx.isometric_from_drawtile_top(command.image_id, pixel, command.mask, command.flags);
         }
         break;
 

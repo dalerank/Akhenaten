@@ -60,7 +60,7 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
     } else { // can place (theoretically)
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            ImageDraw::isometric(ctx, square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, COLOR_MASK_GREEN);
+            ctx.img_isometric(square_id + i, pixel + vec2i{ ((i % params.building_size) - (i / params.building_size)) * 30, ((i % params.building_size) + (i / params.building_size)) * 15 }, COLOR_MASK_GREEN);
         }
         int stand_sn_n = params.first_img(animkeys().stand_sn_n);
         int stand_sn_s = params.first_img(animkeys().stand_sn_s);

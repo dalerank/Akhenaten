@@ -3,7 +3,6 @@
 #include "Atlas.hpp"
 #include "core/custom_span.hpp"
 #include <vector>
-#include <span>
 
 struct hb_glyph_info_t;
 struct hb_glyph_position_t;

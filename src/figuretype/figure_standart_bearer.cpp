@@ -62,7 +62,7 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     const int morale = (pole.max_frames * (21.f - m->morale / 5) / 21.f);
     const image_t *img = image_get(pole.first_img() + morale);
     const vec2i pole_offset = vec2i(0, -img->height);
-    ImageDraw::img_generic(ctx, img, pixel + pole_offset);
+    ctx.img_generic(img, pixel + pole_offset);
 
     // flag
     const image_t *flag = image_get(base.animctx.start_frame());

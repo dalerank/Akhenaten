@@ -724,7 +724,7 @@ void ui::eimg::draw(UiFlags flags) {
     if (isometric) {
         const vec2i offset = g_state.offset();
         painter ctx = game.painter();
-        ImageDraw::img_isometric(ctx, image_group(img_desc), offset + pos, COLOR_MASK_NONE);
+        ctx.img_isometric(image_group(img_desc), offset + pos, COLOR_MASK_NONE);
     } else {
         ui::eimage(img_desc, pos);
     }

@@ -39,7 +39,7 @@ static void draw_partially_blocked_editor(int x, int y, int num_tiles, int* bloc
 
 static void draw_building_image(int image_id, int x, int y) {
     painter ctx = game.painter();
-    ImageDraw::isometric(ctx, image_id, vec2i{x, y}, COLOR_MASK_GREEN);
+    ctx.img_isometric(image_id, vec2i{x, y}, COLOR_MASK_GREEN);
     //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
 }
 
@@ -58,7 +58,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ImageDraw::isometric(ctx, image_id, vec2i{x_offset, y_offset});
+            ctx.img_isometric(image_id, vec2i{x_offset, y_offset});
         }
     } else {
         int image_id;

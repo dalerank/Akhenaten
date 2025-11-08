@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include <span>
 #include <vector>
 #include <variant>
 #include "core/custom_span.hpp"
