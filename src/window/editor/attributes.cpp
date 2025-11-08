@@ -95,7 +95,7 @@ static void draw_background(int) {
 static void draw_foreground(int) {
     painter ctx = game.painter();
     graphics_set_to_dialog();
-    outer_panel_draw(vec2i{0, 28}, 30, 28);
+    outer_panel_draw(vec2i{ 0, 28 }, 30, 28);
 
     input_box_draw(&scenario_description_input);
 
@@ -115,7 +115,7 @@ static void draw_foreground(int) {
         lang_text_draw_year(g_scenario.start_year + request.year, 222, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int width = text_draw_number(request.amount, '@', " ", 312, 165, FONT_NORMAL_BLACK_ON_LIGHT);
         int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160);
+        ctx.img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, { 322 + width, 160 });
     } else {
         lang_text_draw_centered(44, 19, 212, 165, 250, FONT_NORMAL_BLACK_ON_LIGHT);
     }
@@ -153,7 +153,7 @@ static void draw_foreground(int) {
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK_ON_LIGHT);
 
     button_border_draw({ 18, 278 }, { 184, 144 }, 0);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + g_scenario.image_id, 20, 280);
+    ctx.img_generic(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + g_scenario.image_id, { 20, 280 });
 
     arrow_buttons_draw({0, 0}, image_arrows, 2);
 

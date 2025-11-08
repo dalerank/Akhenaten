@@ -65,13 +65,11 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
 
 static void draw_hippodrome_ornaments(vec2i pixel, tile2i point, painter &ctx) {
     int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
     int image_id = map_image_at(grid_offset);
     const image_t* img = image_get(image_id);
     building* b = building_at(grid_offset);
     if (img->animation.num_sprites && map_property_is_draw_tile(grid_offset) && b->type == BUILDING_SENET_HOUSE) {
-        ImageDraw::img_generic(ctx, image_id + 1, x + img->animation.sprite_offset.x, y + img->animation.sprite_offset.y - img->height + 90, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
+        ImageDraw::img_generic(ctx, image_id + 1, pixel + img->animation.sprite_offset + vec2i{ 0, -img->height + 90 }, drawing_building_as_deleted(b) ? COLOR_MASK_RED : 0);
     }
 }
 

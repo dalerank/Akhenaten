@@ -51,7 +51,7 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
             image_id += (buttons[i].state & 0xf);
         }
 
-        ImageDraw::img_generic(ctx, image_id, pos.x + buttons[i].x, pos.y + buttons[i].y);
+        ctx.img_generic(image_id, pos + vec2i{ buttons[i].x, buttons[i].y });
     }
 }
 

@@ -432,7 +432,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
         }
         if (grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, x - 15, y, COLOR_MASK_RED);
+            ctx.img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, { x - 15, y }, COLOR_MASK_RED);
         }
         d = map_sprite_animation_at(grid_offset);
         if (d) {
@@ -473,7 +473,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         break;
 
     case e_debug_render_tile_pos:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+        ctx.img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel, 0x80000000);
         if (!(point.x() % 5) && !(point.y() % 5)) {
             snprintf((char*)str, 30, "(%d,%d)", point.x(), point.y());
             debug_text_a(ctx, str, x, y + 10, 0, str, COLOR_WHITE, FONT_SMALL_PLAIN);
@@ -496,7 +496,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         d = map_get_floodplain_edge(point);
         if (d) {
             text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_OUTLINED, COLOR_WHITE);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+            ctx.img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel, 0x80000000);
         }
         break;
 
@@ -591,14 +591,14 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         d = map_terrain_is(grid_offset, TERRAIN_SHORE);
         if (d) {
             text_draw(bstring32(d).c_str(), x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel.x, pixel.y, 0x80000000);
+            ctx.img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, pixel, 0x80000000);
         }
         break;
 
     case e_debug_render_invasion_point:
         d = map_invasion_point(tile2i(grid_offset));
         if (d) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
+            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, 0x80000000);
             text_draw((d == 1) ? "L" : "S", x, y + 15, FONT_SMALL_PLAIN, (d == 1) ? COLOR_RED : COLOR_RED);
         }
         break;
@@ -606,7 +606,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_soldier_strength:
         d = map_soldier_strength_get(grid_offset);
         if (d) {
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel.x, pixel.y, 0x80000000);
+            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, 0x80000000);
             snprintf((char *)str, 30, "%d", d);
             text_draw(str, x, y + 15, FONT_SMALL_PLAIN, COLOR_RED);
         }
@@ -669,7 +669,7 @@ void figure::draw_debug() {
             int tx = tile.x();
             int ty = tile.y();
             coords = lookup_tile_to_pixel(tile);
-            ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords.x, coords.y);
+            ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
                 starting_tile_index--;
@@ -689,7 +689,7 @@ void figure::draw_debug() {
                 case 7: tx--; ty--; break;
                 }
                 coords = lookup_tile_to_pixel(tile2i(tx, ty));
-                ImageDraw::img_generic(ctx, image_id_from_group(PACK_CUSTOM, 1) + img_index, coords.x, coords.y);
+                ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + img_index, coords);
             }
         }
 

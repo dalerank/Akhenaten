@@ -661,20 +661,20 @@ void top_menu_widget_t::draw_background_impl() {
     assert(block_width > 0);
 
     for (int x = -(screen_width() - widget_sidebar_city_offset_x()); x < screen_width(); x += (block_width - sidebar_offset)) {
-       ImageDraw::img_generic(ctx, img_id, x, 0);
+        ctx.img_generic(img_id, { x, 0 });
     }
 
-    ImageDraw::img_generic(ctx, img_id, widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0);
+    ctx.img_generic(img_id, { widget_sidebar_city_offset_x() - block_width + sidebar_offset, 0 });
 }
 
 void top_menu_widget_t::draw_rotate_buttons() {
     // Orientation icon
     painter ctx = game.painter();
     if (orientation_button_pressed) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, offset_rotate, 0);
+        ctx.img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state + 3, { offset_rotate, 0 });
         orientation_button_pressed--;
     } else {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, offset_rotate, 0);
+        ctx.img_generic(image_id_from_group(GROUP_SIDEBAR_BUTTONS) + 72 + orientation_button_state, { offset_rotate, 0 });
     }
 }
 

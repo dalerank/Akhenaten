@@ -63,13 +63,6 @@ namespace ImageDraw
         return img;
     }
 
-    const image_t* img_generic(painter& ctx, int image_id, int x, int y, color color_mask, float scale)
-    {
-        const image_t* img = image_get(image_id);
-        ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
-        return img;
-    }
-
     const image_t* img_generic(painter& ctx, int pak, int image_id, vec2i p, color color_mask, float scale)
     {
         const image_t* img = image_get(pak, image_id);

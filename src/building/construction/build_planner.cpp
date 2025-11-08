@@ -1223,7 +1223,7 @@ void build_planner::update(tile2i cursor_tile) {
 }
 
 void build_planner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos.x, pos.y, color_mask);
+    ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, color_mask);
 }
 
 void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx) {
@@ -1315,7 +1315,7 @@ int build_planner::tile_grid_offset(int orientation, int y) {
 }
 
 void build_planner::draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel.x, pixel.y, color_mask);
+    ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, color_mask);
 }
 
 void build_planner::draw(painter &ctx) {

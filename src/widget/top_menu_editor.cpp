@@ -115,7 +115,7 @@ void widget_top_menu_editor_draw(void) {
     int s_width = screen_width();
     painter ctx = game.painter();
     for (int i = 0; i * block_width < s_width; i++) {
-        ImageDraw::img_generic(ctx, image_base + i % 8, i * block_width, 0);
+        ctx.img_generic(image_base + i % 8, { i * block_width, 0 });
     }
     //    menu_bar_draw(menu, 5);
 }

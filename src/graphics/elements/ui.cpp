@@ -549,7 +549,7 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
 void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     const vec2i offset = g_state.offset();
     painter ctx = game.painter();
-    const image_t *img = ImageDraw::img_generic(ctx, image_id_resource_icon(res), offset.x + pos.x, offset.y + pos.y);
+    const image_t *img = ctx.img_generic(image_id_resource_icon(res), offset + pos);
     if (!!(flags & UiFlags_Outline)) {
         graphics_draw_inset_rect(pos - vec2i{1, 1}, vec2i{ img->width, img->height } + vec2i{2, 2});
     }
@@ -558,7 +558,7 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
 void ui::icon(vec2i pos, e_advisor adv) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ImageDraw::img_generic(ctx, image_group(advisor_icons) + (adv - 1), offset.x + pos.x, offset.y + pos.y);
+    ctx.img_generic(image_group(advisor_icons) + (adv - 1), offset + pos);
 }
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {

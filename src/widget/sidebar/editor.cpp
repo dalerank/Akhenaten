@@ -136,7 +136,7 @@ void widget_sidebar_editor_draw_background() {
     image_desc side_panel{ PACK_GENERAL, 121 };
     int image_base = image_group(side_panel);
     int x_offset = sidebar_common_get_x_offset_expanded();
-    ImageDraw::img_generic(ctx, image_base, x_offset, TOP_MENU_HEIGHT);
+    ctx.img_generic(image_base, { x_offset, TOP_MENU_HEIGHT });
     draw_buttons();
     widget_minimap_draw({x_offset + 8, MINIMAP_Y_OFFSET}, 1);
     draw_status();

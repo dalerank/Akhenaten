@@ -28,7 +28,7 @@ ui::advisor_chief_window g_advisor_chief_window;
 
 static void draw_title(int y, int text_id) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 158), 26, y + 1);
+    ctx.img_generic(image_id_from_group(PACK_GENERAL, 158), { 26, y + 1 });
     lang_text_draw(61, text_id, 44, y, FONT_NORMAL_WHITE_ON_DARK);
 }
 
