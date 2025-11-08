@@ -11,6 +11,8 @@
 #include "graphics/fontgen/Font.hpp"
 #include "game/game_config.h"
 
+#include <set>
+
 image_packer font_packer;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
@@ -164,6 +166,8 @@ struct font_data_t {
     const int* font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
     const font_definition* font_definitions = DEFINITIONS_DEFAULT;
     font_mbsybols_t mbsymbols;
+    std::set<uint32_t> missing_glyphs;
+    bool needs_regeneration = false;
 };
 
 font_data_t g_font_data;
@@ -415,6 +419,10 @@ font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* n
         if (it != mbmap.end()) {
             return it->second;
         }
+        
+        // Add missing glyph for later regeneration
+        font_add_missing_glyph(code);
+
         //if (data.multibyte == MULTIBYTE_TRADITIONAL_CHINESE) {
         //    int char_id = (str[0] & 0x7f) | ((str[1] & 0x7f) << 7);
         //    if (char_id >= IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS) {
@@ -650,6 +658,11 @@ void font_atlas_regenerate() {
         }
     });
 
+    // Add missing glyphs to the list
+    for (uint32_t missing_codepoint : g_font_data.missing_glyphs) {
+        utf8_symbols.push_back(missing_codepoint);
+    }
+
     if (utf8_symbols.empty()) {
         return;
     }
@@ -743,4 +756,30 @@ void font_atlas_regenerate() {
     font_pack.handle->entries_num = font_pack.handle->images_array.size();
     font_pack.entries_num = font_pack.handle->entries_num;
     image_packer_reset(font_packer);
+    
+    g_font_data.needs_regeneration = false;
+}
+
+void font_add_missing_glyph(uint32_t codepoint) {
+    auto& data = g_font_data;
+    
+    // Don't add if it's a control character or already exists
+    if (codepoint < 32 || codepoint == 0xFFFD) {
+        return;
+    }
+    
+    // Check if already in any font
+    auto it = std::find(data.missing_glyphs.begin(), data.missing_glyphs.end(), codepoint);
+    if (it != data.missing_glyphs.end()) {
+        return;
+    }
+    
+    // Add to missing glyphs set
+    if (data.missing_glyphs.insert(codepoint).second) {
+        data.needs_regeneration = true;
+    }
+}
+
+bool font_need_regeneration() {
+    return g_font_data.needs_regeneration;
 }
