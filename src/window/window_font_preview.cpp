@@ -10,8 +10,6 @@
 #include <vector>
 #include <unordered_map>
 
-static int g_current_codepoint_start = 0x0410; // Cyrillic А
-static int g_current_codepoint_end = 0x044F;   // Cyrillic я
 static char g_preview_text[256] = "AbcdefABCDEF";
 static bool g_show_atlas = false;
 
@@ -29,14 +27,7 @@ void config_load_font_preview_properties(bool header) {
     ImGui::Text("Font Generator - Runtime Preview");
     ImGui::Separator();
     
-    ImGui::InputInt("Start Codepoint (hex)", &g_current_codepoint_start, 1, 16, ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputInt("End Codepoint (hex)", &g_current_codepoint_end, 1, 16, ImGuiInputTextFlags_CharsHexadecimal);
-    
-    g_current_codepoint_start = std::max(0, std::min(0xFFFF, g_current_codepoint_start));
-    g_current_codepoint_end = std::max(g_current_codepoint_start, std::min(0xFFFF, g_current_codepoint_end));
-    
-    ImGui::Checkbox("Show Atlas Texture", &g_show_atlas);                     
-        
+    ImGui::Checkbox("Show Atlas Texture", &g_show_atlas);                             
     if (g_show_atlas) {
         painter ctx = game.painter();
         const auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];

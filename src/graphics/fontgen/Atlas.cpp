@@ -1,6 +1,6 @@
-#include "Atlas.hpp"
+#include "atlas.hpp"
 
-#include "Font.hpp"
+#include "font.hpp"
 #include <ft2build.h>
 #include <freetype/ftoutln.h>
 #include <sdf/ftsdfrend.h>
@@ -18,7 +18,7 @@
 #define	STB_IMAGE_WRITE_STATIC
 #include <stb_image_write.h>
 
-namespace Trex {
+namespace DynamicFont {
     // RAII wrapper for FreeType glyph
     class Atlas::FreeTypeGlyph {
     public:
@@ -507,7 +507,7 @@ namespace Trex {
         InitializeAtlas(charset, mode, padding, fit, bold);
     }
 
-    void Atlas::InitializeAtlas(const Trex::Charset &charset, Trex::RenderMode mode, int padding, bool fit, bool bold) {
+    void Atlas::InitializeAtlas(const Charset &charset, RenderMode mode, int padding, bool fit, bool bold) {
         const Charset filledCharset = charset.IsFull() ? GetFullCharsetFilled(*m_Font) : charset;
 
         auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode, bold);

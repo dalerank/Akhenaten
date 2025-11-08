@@ -1,10 +1,12 @@
-#include "TextShaper.hpp"
+#include "text_shaper.hpp"
+
 #include "hb.h"
 #include "hb-ft.h"
 #include <limits>
 
-namespace Trex {
-    TextShaper::TextShaper(const Trex::Atlas &atlas)
+namespace DynamicFont {
+
+    TextShaper::TextShaper(const Atlas &atlas)
         : m_Glyphs(atlas.GetGlyphs()),
         m_AtlasFont(atlas.GetFont()),
         m_Buffer(hb_buffer_create()),
@@ -44,7 +46,7 @@ namespace Trex {
         return m_AtlasFont->GetMetrics();
     }
 
-    TextMeasurement TextShaper::Measure(const Trex::ShapedGlyphs &glyphs) {
+    TextMeasurement TextShaper::Measure(const ShapedGlyphs &glyphs) {
         if (glyphs.empty())
             return TextMeasurement{}; // Filled with zeros
 

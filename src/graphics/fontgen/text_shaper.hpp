@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Atlas.hpp"
+#include "atlas.hpp"
 #include "core/custom_span.hpp"
+
 #include <vector>
 
 struct hb_glyph_info_t;
@@ -9,7 +10,7 @@ struct hb_glyph_position_t;
 struct hb_buffer_t;
 struct hb_font_t;
 
-namespace Trex {
+namespace DynamicFont {
     struct ShapedGlyph {
         float xOffset;
         float yOffset;

@@ -1,6 +1,7 @@
-#include "BitmapHelpers.hpp"
+#include "bitmap_helpers.hpp"
 
-namespace Trex {
+namespace DynamicFont {
+
     std::vector<uint8_t> ConvertBitmapToGrayAlpha(span_const<uint8_t> input) {
         std::vector<uint8_t> output(input.size() * 2);
         for (size_t i = 0; i < input.size(); i++) {
