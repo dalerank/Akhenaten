@@ -34,7 +34,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/harfbuzz/harfbuzz/releases/download/7.3.0/harfbuzz-7.3.0.tar.xz",
-                    "sha256" : "3a74ee40c0582ae79839baa6677dc8eeb6cf0dcc5c5f8ba3339ad7f55dc26939",
+                    "sha256" : "20770789749ac9ba846df33983dbda22db836c70d9f5d050cb9aa5347094a8fb",
                     "dest" : "_deps/harfbuzz-src",
                     "strip-components" : 1
                 },
