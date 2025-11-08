@@ -205,7 +205,7 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
         const auto &route_point = obj.points[i];
 
         // first corner in pair
-        ImageDraw::img_generic(ctx, image_id, draw_offset + route_point.p);
+        ctx.img_generic(image_id, draw_offset + route_point.p);
 
         // draw lines connecting the turns
         if (i < obj.num_points - 1) {
@@ -219,7 +219,7 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
             float progress = 1.0;
             while (progress < len) {
                 vec2i disp = draw_offset + route_point.p + vec2i{(int)(scaled_x * progress), (int)(scaled_y * progress)};
-                ImageDraw::img_generic(ctx, image_id, disp);
+                ctx.img_generic(image_id, disp);
                 progress += 1.0f;
             }
 
@@ -635,32 +635,32 @@ void empire_window::draw_paneling() {
     graphics_set_clip_rectangle(min_pos, max_pos - min_pos);
 
     for (int x = min_pos.x; x < max_pos.x; x += 70) {
-        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 140});
-        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 100});
-        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 60});
-        ImageDraw::img_generic(ctx, bottom_image, vec2i{x, max_pos.y - 20});
+        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 140});
+        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 100});
+        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 60});
+        ctx.img_generic(bottom_image, vec2i{x, max_pos.y - 20});
     }
 
     // horizontal bar borders
     for (int x = min_pos.x; x < max_pos.x; x += 86) {
-        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, min_pos.y});
-        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, max_pos.y - 140});
-        ImageDraw::img_generic(ctx, horizontal_bar, vec2i{x, max_pos.y - 16});
+        ctx.img_generic(horizontal_bar, vec2i{x, min_pos.y});
+        ctx.img_generic(horizontal_bar, vec2i{x, max_pos.y - 140});
+        ctx.img_generic(horizontal_bar, vec2i{x, max_pos.y - 16});
     }
 
     // vertical bar borders
     for (int y = min_pos.y + 16; y < max_pos.y; y += 86) {
-        ImageDraw::img_generic(ctx, vertical_bar, vec2i{min_pos.x, y});
-        ImageDraw::img_generic(ctx, vertical_bar, vec2i{max_pos.x - 16, y});
+        ctx.img_generic(vertical_bar, vec2i{min_pos.x, y});
+        ctx.img_generic(vertical_bar, vec2i{max_pos.x - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, min_pos.y});
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, max_pos.y - 140});
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{min_pos.x, max_pos.y - 16});
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, min_pos.y});
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, max_pos.y - 140});
-    ImageDraw::img_generic(ctx, cross_bar, vec2i{max_pos.x - 16, max_pos.y - 16});
+    ctx.img_generic(cross_bar, vec2i{min_pos.x, min_pos.y});
+    ctx.img_generic(cross_bar, vec2i{min_pos.x, max_pos.y - 140});
+    ctx.img_generic(cross_bar, vec2i{min_pos.x, max_pos.y - 16});
+    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, min_pos.y});
+    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, max_pos.y - 140});
+    ctx.img_generic(cross_bar, vec2i{max_pos.x - 16, max_pos.y - 16});
 
     graphics_reset_clip_rectangle();
 }

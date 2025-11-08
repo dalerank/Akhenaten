@@ -444,7 +444,7 @@ image_button &ui::img_button(image_desc desc, vec2i pos, vec2i size, const img_b
 
         painter ctx = game.painter();
         ImgFlags imgflags = grayscaled ? ImgFlag_Grayscale : ImgFlag_None;
-        ImageDraw::img_generic(ctx, image_id, state_offset + pos, COLOR_WHITE, 1.0f, imgflags);
+        ctx.img_generic(image_id, state_offset + pos, COLOR_WHITE, 1.0f, imgflags);
     }
 
     return ibutton;
@@ -514,13 +514,13 @@ int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_wid
 const image_t *ui::eimage(int imgid, vec2i pos) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    return ImageDraw::img_generic(ctx, imgid, pos + offset);
+    return ctx.img_generic(imgid, pos + offset);
 }
 
 const image_t *ui::eimage(image_desc imgd, vec2i pos) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    return ImageDraw::img_generic(ctx, image_group(imgd), pos + offset);
+    return ctx.img_generic(image_group(imgd), pos + offset);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {

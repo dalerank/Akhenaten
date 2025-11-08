@@ -85,31 +85,31 @@ static void draw_paneling() {
     // bottom panel background
     graphics_set_clip_rectangle(data.p_min, map_viewport_psize());
     for (int x = data.p_min.x; x < data.p_max.x; x += 70) {
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 120});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 80});
-        ImageDraw::img_generic(ctx, image_base + 3, vec2i{x, data.p_max.y - 40});
+        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 120});
+        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 80});
+        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 40});
     }
 
     // horizontal bar borders
     for (int x = data.p_min.x; x < data.p_max.x; x += 86) {
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_min.y});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_max.y - 120});
-        ImageDraw::img_generic(ctx, image_base + 1, vec2i{x, data.p_max.y - 16});
+        ctx.img_generic(image_base + 1, vec2i{x, data.p_min.y});
+        ctx.img_generic(image_base + 1, vec2i{x, data.p_max.y - 120});
+        ctx.img_generic(image_base + 1, vec2i{x, data.p_max.y - 16});
     }
 
     // vertical bar borders
     for (int y = data.p_min.y + 16; y < data.p_max.y; y += 86) {
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.p_min.x, y});
-        ImageDraw::img_generic(ctx, image_base, vec2i{data.p_max.x - 16, y});
+        ctx.img_generic(image_base, vec2i{data.p_min.x, y});
+        ctx.img_generic(image_base, vec2i{data.p_max.x - 16, y});
     }
 
     // crossbars
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_min.x});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_max.x - 120});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_min.x, data.p_max.x - 16});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_min.y});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 120});
-    ImageDraw::img_generic(ctx, image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 16});
+    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_min.x});
+    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 120});
+    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 16});
+    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_min.y});
+    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 120});
+    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 16});
 
     graphics_reset_clip_rectangle();
 }
@@ -160,11 +160,11 @@ static void draw_empire_object(const empire_object &obj) {
     } else if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY || obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
         draw_shadowed_number(obj.distant_battle_travel_months, data.draw_offset.x + pos.x + 7, data.draw_offset.y + pos.y - 9, obj.type == EMPIRE_OBJECT_KINGDOME_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    ImageDraw::img_generic(ctx, image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
+    ctx.img_generic(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
-        ImageDraw::img_generic(ctx, image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
+        ctx.img_generic(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
 
@@ -180,7 +180,7 @@ static void window_editor_draw_map() {
     data.draw_offset.x = data.p_min.x + 16;
     data.draw_offset.y = data.p_min.y + 16;
     data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
+    ctx.img_generic(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
 
     empire_object_foreach(draw_empire_object);
 
@@ -192,16 +192,16 @@ static void draw_resource(int resource, int trade_max, int x_offset, int y_offse
     graphics_draw_inset_rect(vec2i{x_offset, y_offset}, vec2i{26, 26});
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    ImageDraw::img_generic(ctx, image_id + resource_offset, vec2i{x_offset + 1, y_offset + 1});
+    ctx.img_generic(image_id + resource_offset, vec2i{x_offset + 1, y_offset + 1});
     switch (trade_max) {
     case 15:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
+        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
         break;
     case 25:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
+        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
         break;
     case 40:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
+        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
         break;
     }
 }

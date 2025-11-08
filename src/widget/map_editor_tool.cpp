@@ -19,9 +19,9 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};
 static void draw_flat_tile_editor(vec2i pos, color color_mask) {
     painter ctx = game.painter();
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT)
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
+        ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
     else {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, color_mask);
+        ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, color_mask);
     }
 }
 

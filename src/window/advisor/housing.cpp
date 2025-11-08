@@ -69,7 +69,7 @@ static void draw_housing_table() {
 
     painter ctx = game.painter();
     for (int i = 0; i <= 3; i++) {
-        ImageDraw::img_generic(ctx, image_id_resource_icon(goods_icons[i]), vec2i{54, y_offset + 260 + (23 * i)});
+        ctx.img_generic(image_id_resource_icon(goods_icons[i]), vec2i{54, y_offset + 260 + (23 * i)});
         text_draw(goods_demand_strings[i], 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK_ON_LIGHT);
     }
@@ -85,8 +85,8 @@ int ui::advisor_housing_window::draw_background(UiFlags flags) {
 
     outer_panel_draw(vec2i{0, 0}, 40, ADVISOR_HEIGHT);
     inner_panel_draw({ 24, 60 }, { 32, 16 });
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{10, 10});
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{555, 265});
+    ctx.img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{10, 10});
+    ctx.img_generic(image_id_from_group(GROUP_ADVISOR_ICONS) + 5, vec2i{555, 265});
 
     const int city_population = g_city.population.current;
     width = text_draw_number(city_population, '@', " ", 450, 25, FONT_NORMAL_BLACK_ON_LIGHT);

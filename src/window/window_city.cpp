@@ -86,7 +86,7 @@ static void draw_cancel_construction() {
     view_size.x -= 4 * 16;
     inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
+    ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
     //    city_view_dirty = 1;
 }
 

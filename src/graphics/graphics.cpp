@@ -63,32 +63,6 @@ namespace ImageDraw
         return img;
     }
 
-    const image_t* img_generic(painter& ctx, int pak, int image_id, vec2i p, color color_mask, float scale)
-    {
-        const image_t* img = image_get(pak, image_id);
-        ctx.draw_image(img, p, color_mask, scale);
-        return img;
-    }
-
-    const image_t* img_generic(painter& ctx, const image_desc& imgd, vec2i p, color color_mask, float scale)
-    {
-        const image_t* img = image_get(imgd);
-        ctx.draw_image(img, p, color_mask, scale);
-        return img;
-    }
-
-    const image_t* img_generic(painter& ctx, int image_id, vec2i p, color color_mask, float scale, ImgFlags flags)
-    {
-        const image_t* img = image_get(image_id);
-        vec2i offset{ 0, 0 };
-        if (!!(flags & ImgFlag_InternalOffset)) {
-            offset = img->animation.sprite_offset;
-        }
-
-        ctx.draw_image(img, p - offset, color_mask, scale, flags);
-        return img;
-    }
-
     const image_t* img_generic(painter& ctx, const image_t* img, vec2i p, color color_mask, float scale, ImgFlags flags)
     {
         vec2i offset{ 0, 0 };
@@ -145,7 +119,7 @@ void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i of
 
 void ImageDraw::isometric(painter& ctx, int image_id, vec2i pixel, color color_mask, float scale)
 {
-    ImageDraw::img_generic(ctx, image_id, pixel, color_mask, scale);
+    ctx.img_generic(image_id, pixel, color_mask, scale);
 }
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {
@@ -171,7 +145,7 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
         break;
 
     case render_command_t::ert_generic: {
-            ImageDraw::img_generic(ctx, command.image_id, command.pixel, command.mask, command.scale, command.flags);
+            ctx.img_generic(command.image_id, command.pixel, command.mask, command.scale, command.flags);
         }
         break;
 

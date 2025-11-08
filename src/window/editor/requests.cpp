@@ -68,7 +68,7 @@ static void draw_foreground(int) {
             lang_text_draw_year(g_scenario.start_year + request.year, x + 80, + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int width = text_draw_number(request.amount, '@', " ", x + 180, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 190 + width, y + 3});
+            ctx.img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 190 + width, y + 3});
         } else {
             lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
         }

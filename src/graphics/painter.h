@@ -36,6 +36,9 @@ struct painter {
     void draw_image_grayscale(const image_t *img, vec2i pos, float scale = 1.f, ImgFlags flags = ImgFlag_None);
 
     const image_t *img_generic(int image_id, vec2i pos, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+    const image_t *img_generic(int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+    const image_t *img_generic(const image_desc &img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+    const image_t *img_generic(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags);
 
 protected:
     void draw_grayscale(

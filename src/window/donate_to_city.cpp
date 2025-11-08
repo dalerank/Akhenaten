@@ -47,7 +47,7 @@ static void draw_background(int) {
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{64, 160}, 32, 10);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{80, 176});
+    ctx.img_generic(image_id_resource_icon(RESOURCE_DEBEN), vec2i{80, 176});
     lang_text_draw_centered(52, 16, 112, 176, 448, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw({ 112, 208 }, { 26, 4 });

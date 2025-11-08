@@ -65,13 +65,13 @@ static void draw_background(int) {
     painter ctx = game.painter();
     const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
     if (g_intermezzo_data.type == INTERMEZZO_MISSION_BRIEFING) {
-        ImageDraw::img_generic(ctx, is_custom_map ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
+        ctx.img_generic(is_custom_map ? image_base + 1 : image_base + 1 + (mission >= 20), offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_FIRED) {
-        ImageDraw::img_generic(ctx, image_base, offset);
+        ctx.img_generic(image_base, offset);
 
     } else if (g_intermezzo_data.type == INTERMEZZO_WON) {
-        ImageDraw::img_generic(ctx, is_custom_map ? image_base + 2 : image_base, offset);
+        ctx.img_generic(is_custom_map ? image_base + 2 : image_base, offset);
     }
 }
 
