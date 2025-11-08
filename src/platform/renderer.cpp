@@ -1131,7 +1131,7 @@ static void draw_software_mouse_cursor(void) {
 }
 #endif
 
-void platform_render_apply_filter() {
+void graphics_renderer_interface::apply_filter() {
     auto &data = g_renderer_data;
 
     if (!platform_render_support_filters()) {
@@ -1174,7 +1174,7 @@ void platform_renderer_render() {
     OZZY_PROFILER_SECTION("Game/Run/Renderer/Render");
     auto &data = g_renderer_data;
 
-    platform_render_apply_filter();
+    g_render.apply_filter();
 
     SDL_SetRenderTarget(data.renderer, NULL);
 

@@ -43,7 +43,6 @@ void platform_renderer_destroy();
 void platform_render_setup_options(pcstr driver);
 void platform_render_init_filters();
 bool platform_render_support_filters();
-void platform_render_apply_filter();
 bool platform_render_any_filter_active();
 void platform_render_create_context();
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, SDL_Texture *filter_texture, SDL_Texture *source_texture);
@@ -68,6 +67,7 @@ struct graphics_renderer_interface {
     bool inside_clip_rectangle(vec2i pos);
     rect clip_rectangle();
     void reset_clip_rectangle();
+    void apply_filter();
 
     void draw_line(vec2i start, vec2i end, color color);
     void draw_pixel(vec2i pixel, color color);
