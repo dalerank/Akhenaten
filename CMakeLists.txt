@@ -246,6 +246,26 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
+# Check if sources are already available (e.g., in Flatpak build)
+# Try both source and binary directory locations
+if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_SOURCE_DIR}/_deps/freetype-src")
+elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_BINARY_DIR}/_deps/freetype-src")
+endif()
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src")
+elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src")
+endif()
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/stb-src/stb_image.h")
+    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_SOURCE_DIR}/_deps/stb-src")
+elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/stb-src/stb_image.h")
+    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-src")
+endif()
+
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
