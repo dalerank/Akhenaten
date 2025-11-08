@@ -2,9 +2,11 @@
 
 #include "Font.hpp"
 #include <ft2build.h>
+#include <freetype/ftoutln.h>
 #include <sdf/ftsdfrend.h>
 
 #include FT_FREETYPE_H
+#include FT_SYNTHESIS_H
 #include <cstdint>
 #include <vector>
 #include <string_view>
@@ -20,20 +22,16 @@ namespace Trex {
     // RAII wrapper for FreeType glyph
     class Atlas::FreeTypeGlyph {
     public:
-        FreeTypeGlyph(uint32_t codepoint, FT_GlyphSlot glyphSlot)
-            : codepoint{ codepoint } {
-            if (glyphSlot == nullptr)
-                assert(false && "Glyph slot is null");
-            if (glyphSlot->format != FT_GLYPH_FORMAT_BITMAP)
-                assert(false && "Glyph format must be a bitmap");
+        FreeTypeGlyph(uint32_t codepoint, FT_GlyphSlot glyphSlot) : codepoint{ codepoint } {
+            assert((glyphSlot != nullptr) && "Glyph slot is null");
+            assert((glyphSlot->format == FT_GLYPH_FORMAT_BITMAP) && "Glyph format must be a bitmap");
 
             metrics = glyphSlot->metrics;
             glyphIndex = glyphSlot->glyph_index;
 
             FT_Glyph genericGlyph;
             FT_Error error = FT_Get_Glyph(glyphSlot, &genericGlyph);
-            if (error)
-               assert(false && "Failed to get a glyph");
+            assert(!error && "Failed to get a glyph");
 
             glyph = (FT_BitmapGlyph)genericGlyph;
         }
@@ -44,8 +42,8 @@ namespace Trex {
 
         FreeTypeGlyph(const FreeTypeGlyph &) = delete;
         FreeTypeGlyph &operator=(const FreeTypeGlyph &) = delete;
-        FreeTypeGlyph(FreeTypeGlyph &&other) noexcept
-            : codepoint{ other.codepoint },
+
+        FreeTypeGlyph(FreeTypeGlyph &&other) noexcept : codepoint{ other.codepoint },
             glyph{ std::exchange(other.glyph, nullptr) },
             metrics{ other.metrics },
             glyphIndex{ other.glyphIndex } {
@@ -153,8 +151,15 @@ namespace Trex {
             return fontFace->glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithGrayscaleRender(FT_Face fontFace, uint32_t codepoint) {
+        FT_GlyphSlot LoadGlyphWithGrayscaleRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
             auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, false);
+
+            // Apply bold effect before rendering if requested
+            if (bold && glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
+                // Embolden by approximately 1/16th of em size (adjustable strength)
+                FT_Pos strength = fontFace->size->metrics.x_ppem * 64 / 16;
+                FT_Outline_Embolden(&glyph->outline, strength);
+            }
 
             FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);            
             assert(!error && "Error: could not load and render char");
@@ -162,19 +167,25 @@ namespace Trex {
             return glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithColorRender(FT_Face fontFace, uint32_t codepoint) {
+        FT_GlyphSlot LoadGlyphWithColorRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
             auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, true);
+
+            // Apply bold effect before rendering if requested
+            if (bold && glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
+                FT_Pos strength = fontFace->size->metrics.x_ppem * 64 / 16;
+                FT_Outline_Embolden(&glyph->outline, strength);
+            }
 
             FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);
             assert(!error && "Error: could not load and render char");
             return glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithSdfRender(FT_Face fontFace, uint32_t codepoint) {
+        FT_GlyphSlot LoadGlyphWithSdfRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
             // Use bsdf renderer instead of sdf renderer.
             // See: https://freetype.org/freetype2/docs/reference/ft2-base_interface.html#ft_render_mode
             // First I need to render the glyph with normal mode, then render it with sdf mode.
-            auto glyph = LoadGlyphWithGrayscaleRender(fontFace, codepoint);
+            auto glyph = LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold);
 
             // But the bsdf renderer cannot handle the glyph with zero width or height (e.g. space).
             // It is a result of a bug in FreeType. It is already fixed on master branch. (86d0ca24)
@@ -183,9 +194,7 @@ namespace Trex {
             bool isGlyphEmpty = glyph->bitmap.width == 0 || glyph->bitmap.rows == 0;
             if (!isGlyphEmpty)
                 error = FT_Render_Glyph(glyph, FT_RENDER_MODE_SDF);
-            if (error) {
-                throw std::runtime_error("Error: could not load and render char");
-            }
+            assert(!error && "Error: could not load and render char");
             return glyph;
         }
 
@@ -201,27 +210,27 @@ namespace Trex {
             return fontFace->glyph;
         }
 
-        Atlas::FreeTypeGlyph LoadGlyph(FT_Face fontFace, uint32_t codepoint, RenderMode mode) {
+        Atlas::FreeTypeGlyph LoadGlyph(FT_Face fontFace, uint32_t codepoint, RenderMode mode, bool bold) {
             switch (mode) {
             case RenderMode::DEFAULT:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold) };
             case RenderMode::COLOR:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithColorRender(fontFace, codepoint) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithColorRender(fontFace, codepoint, bold) };
             case RenderMode::SDF:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSdfRender(fontFace, codepoint) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSdfRender(fontFace, codepoint, bold) };
             case RenderMode::LCD:
                 return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSubpixelRender(fontFace, codepoint) };
             default:
                 assert(false && "Unsupported render mode");
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold) };
             }
         }
 
-        std::vector<Atlas::FreeTypeGlyph> LoadAllGlyphs(FT_Face fontFace, const Charset &charset, RenderMode mode) {
+        std::vector<Atlas::FreeTypeGlyph> LoadAllGlyphs(FT_Face fontFace, const Charset &charset, RenderMode mode, bool bold) {
             std::vector<Atlas::FreeTypeGlyph> allGlyphs;
             allGlyphs.reserve(charset.Size());
             for (uint32_t codepoint : charset.Codepoints()) {
-                allGlyphs.push_back(LoadGlyph(fontFace, codepoint, mode));
+                allGlyphs.push_back(LoadGlyph(fontFace, codepoint, mode, bold));
             }
 
             return allGlyphs;
@@ -474,13 +483,13 @@ namespace Trex {
                     DrawRGBA(m_Data, glyph, atlasBitmapIndex, glyphX, glyphY, colors);
                     break;
                 default:
-                    throw std::runtime_error("Unsupported number of channels");
+                    assert(false && "Unsupported number of channels");
                 }
             }
         }
     }
 
-    Atlas::Atlas(const std::string &fontPath, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors)
+    Atlas::Atlas(const std::string &fontPath, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold)
         : m_Font(std::make_shared<Font>(fontPath.c_str())), m_Glyphs(m_Font) {
         m_Font->SetSize(Pixels{ fontSize });
         if (colors) {
@@ -489,19 +498,19 @@ namespace Trex {
             m_Color[2] = colors[2];
             m_Color[3] = colors[3];
         }
-        InitializeAtlas(charset, mode, padding, fit);
+        InitializeAtlas(charset, mode, padding, fit, bold);
     }
 
-    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit)
+    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, bool bold)
         : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font) {
         m_Font->SetSize(Pixels{ fontSize });
-        InitializeAtlas(charset, mode, padding, fit);
+        InitializeAtlas(charset, mode, padding, fit, bold);
     }
 
-    void Atlas::InitializeAtlas(const Trex::Charset &charset, Trex::RenderMode mode, int padding, bool fit) {
+    void Atlas::InitializeAtlas(const Trex::Charset &charset, Trex::RenderMode mode, int padding, bool fit, bool bold) {
         const Charset filledCharset = charset.IsFull() ? GetFullCharsetFilled(*m_Font) : charset;
 
-        auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode);
+        auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode, bold);
         auto atlasSize = GetAtlasSize(ftGlyphs, padding, fit);
 
         auto bitmap = BuildAtlasBitmap(m_Glyphs, ftGlyphs, atlasSize, padding, GetChannels(mode), m_Color[3] ? m_Color : nullptr);

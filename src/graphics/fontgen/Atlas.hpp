@@ -29,8 +29,8 @@ namespace Trex
 	class Atlas
 	{
 	public:
-		Atlas(const std::string& fontPath, int fontSize, const Charset&, RenderMode, int padding, bool fit, uint8_t *colors = nullptr);
-		Atlas(span_const<uint8_t> fontData, int fontSize, const Charset&, RenderMode, int padding, bool fit);
+		Atlas(const std::string& fontPath, int fontSize, const Charset&, RenderMode, int padding, bool fit, uint8_t *colors, bool bold);
+		Atlas(span_const<uint8_t> fontData, int fontSize, const Charset&, RenderMode, int padding, bool fit, bool bold);
 
 		class FreeTypeGlyph;
 		class Bitmap;
@@ -83,7 +83,7 @@ namespace Trex
 		};
 
 	private:
-		void InitializeAtlas(const Charset&, RenderMode, int padding, bool fit);
+		void InitializeAtlas(const Charset&, RenderMode, int padding, bool fit, bool bold);
 		void InitializeDefaultGlyphIndex();
 
 		std::shared_ptr<Font> m_Font;

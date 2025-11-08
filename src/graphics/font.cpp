@@ -19,13 +19,27 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_atlas_regenerate();
 }
 
-struct font_sizes {
-    uint8_t tiny;
-    uint8_t small;
-    uint8_t normal;
-    uint8_t large;
+struct font_config {
+    e_font type;
+    uint8_t size;
+    color color;
+    bool bold;
 };
-ANK_CONFIG_STRUCT(font_sizes, tiny, small, normal, large)
+ANK_CONFIG_STRUCT(font_config, type, size, bold, color)
+
+template<>
+struct stable_array_max_elements<font_config> {
+    enum { max_elements = FONT_TYPES_MAX };
+};
+
+template<>
+struct std::hash<font_config> {
+    [[nodiscard]] size_t operator()(const font_config &f) const noexcept {
+        return f.type;
+    }
+};
+
+using font_configs_t = stable_array<font_config>;
 
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
@@ -489,45 +503,20 @@ const font_mbsybols_t &font_get_symbols() {
     return g_font_data.mbsymbols;
 }
 
-// Font size mapping for different font types
-static int get_font_size(e_font font, font_sizes fsizes) {
-    switch (font) {
-    case FONT_SMALL_PLAIN:
-    case FONT_SMALL_OUTLINED:
-    case FONT_SMALL_SHADED:
-        return fsizes.small;
-
-    case FONT_NORMAL_BLACK_ON_LIGHT:
-    case FONT_NORMAL_WHITE_ON_DARK:
-    case FONT_NORMAL_YELLOW:
-    case FONT_NORMAL_BLUE:
-    case FONT_NORMAL_BLACK_ON_DARK:
-        return fsizes.normal;
-
-    case FONT_LARGE_BLACK_ON_LIGHT:
-    case FONT_LARGE_BLACK_ON_DARK:
-        return fsizes.large;
-
-    default:
-        return fsizes.normal;
-    }
-}
-
 template<typename T>
-void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index, font_sizes fsizes) {
+void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, font_config fconfig, const T &utf8_symbols, int& cp_index) {
     for (const auto &codepoint : utf8_symbols) {
         Trex::Charset charset;
         charset.AddCodepoint(codepoint);
 
-        int font_size = get_font_size(font, fsizes);
         uint8_t colors[4] = { 
-            (c >> 16) & 0xff,  // Red
-            (c >> 8) & 0xff,   // Green
-            (c >> 0) & 0xff,   // Blue
-            (c >> 24) & 0xff   // Alpha
+            (fconfig.color >> 16) & 0xff,  // Red
+            (fconfig.color >> 8) & 0xff,   // Green
+            (fconfig.color >> 0) & 0xff,   // Blue
+            (fconfig.color >> 24) & 0xff   // Alpha
         };
         // padding=0, fit=true to create bitmaps with exact glyph dimensions (no extra space)
-        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 0, true, colors);
+        Trex::Atlas atlas(symbols_font, fconfig.size, charset, Trex::RenderMode::COLOR, 0, true, colors, fconfig.bold);
 
         const auto &bitmap = atlas.GetBitmap();
 
@@ -559,7 +548,7 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e
         img.temp.bearing_x = glyph.bearingX;
         img.temp.bearing_y = glyph.bearingY;
         img.temp.symdeck = codepoint;
-        img.temp.font_type = font;
+        img.temp.font_type = fconfig.type;
 
         img.unk01 = -1;
         img.unk02 = -1;
@@ -612,7 +601,8 @@ void font_atlas_regenerate() {
     vfs::path symbols_font;
     svector<uint32_t, 1024> utf8_symbols;
     xstring locale_short = game_features::gameopt_language.to_string();
-    font_sizes fsizes;
+    font_configs_t font_configs;
+    bool font_bold = false;
 
     g_config_arch.r_array("game_languages", [&] (archive arch) {
         xstring lang_current = arch.r_string("lang");
@@ -625,7 +615,7 @@ void font_atlas_regenerate() {
             return;
         }
 
-        arch.r("font_size", fsizes);
+        arch.r("font_configs", font_configs);
 
         symbols_font = arch.r_string("font");
 
@@ -702,24 +692,11 @@ void font_atlas_regenerate() {
 
     // Initialize packer
     vec2i max_texture_sizes = graphics_renderer()->get_max_image_size();
-    std::array< font_config, FONT_TYPES_MAX> font_configs = { {
-        { FONT_SMALL_PLAIN, COLOR_BLACK },
-        { FONT_NORMAL_BLACK_ON_LIGHT, COLOR_BLACK },
-        { FONT_NORMAL_WHITE_ON_DARK, COLOR_WHITE },
-        { FONT_NORMAL_YELLOW, COLOR_YELLOW },
-        { FONT_NORMAL_BLUE, COLOR_BLUE },
-        { FONT_LARGE_BLACK_ON_LIGHT, COLOR_BLACK },
-        { FONT_LARGE_BLACK_ON_DARK, COLOR_BLACK },
-        { FONT_SMALL_OUTLINED, COLOR_BLACK },
-        { FONT_NORMAL_BLACK_ON_DARK, COLOR_BLACK },
-        { FONT_SMALL_SHADED, COLOR_BLACK }
-    } };
-
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
     int cp_index = 0;
     for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index, fsizes);
+        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig, utf8_symbols, cp_index);
     }
 
     // Pack images into atlas
