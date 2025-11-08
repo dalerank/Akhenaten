@@ -490,7 +490,7 @@ static void run_and_draw() {
         game.reload_objects();
     }
 
-    if (game.system_language_changed) {
+    if (game.system_language_changed || font_need_regeneration()) {
         game.system_language_changed = false;
         font_atlas_regenerate();
         autoconfig_window::refresh_all();
