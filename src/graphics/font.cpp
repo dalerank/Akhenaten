@@ -167,6 +167,7 @@ struct font_data_t {
     const font_definition* font_definitions = DEFINITIONS_DEFAULT;
     font_mbsybols_t mbsymbols;
     std::set<uint32_t> missing_glyphs;
+    bool use_utf_font = false;
     bool needs_regeneration = false;
 };
 
@@ -174,8 +175,9 @@ font_data_t g_font_data;
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
-    if (offset < 0 || *c < 0x80)
+    if ((offset < 0 || *c < 0x80) && !g_font_data.use_utf_font) {
         offset = 0;
+    }
 
     return offset;
 }
@@ -185,11 +187,11 @@ static int image_y_offset_default(const uint8_t *c, int image_height, int line_h
     if (offset < 0)
         offset = 0;
 
-    if (*c < 0x80 || *c == 0xE7) {
+    if ((*c < 0x80 || *c == 0xE7) && !g_font_data.use_utf_font) {
         offset = 0;
     }
 
-    if (*c > 0x80) {
+    if ((*c > 0x80) || g_font_data.use_utf_font) {
         offset = -line_height;
     }
 
@@ -198,11 +200,13 @@ static int image_y_offset_default(const uint8_t *c, int image_height, int line_h
 
 static int image_y_offset_eastern(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
-    if (offset < 0)
+    if (offset < 0) {
         offset = 0;
+    }
 
-    if (*c < 0x80 || *c == 0xEA || *c == 0xB9 || *c == 0xA5 || *c == 0xCA)
+    if ((*c < 0x80 || *c == 0xEA || *c == 0xB9 || *c == 0xA5 || *c == 0xCA) && !g_font_data.use_utf_font) {
         offset = 0;
+    }
 
     return offset;
 }
@@ -347,8 +351,9 @@ static int image_y_offset_cyrillic_small_black(const uint8_t *c, int image_heigh
 }
 
 static int image_y_offset_korean(const uint8_t *c, int image_height, int line_height) {
-    if (*c < 0x80)
+    if ((*c < 0x80) && !g_font_data.use_utf_font) {
         return 0;
+    }
 
     if (line_height == 11) {
         if (image_height == 12)
@@ -412,7 +417,7 @@ bool font_has_letter(const font_definition *def, const uint8_t *str) {
 
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
-    if (*str >= 0x80) {
+    if (*str >= 0x80 || data.use_utf_font) {
         const auto &mbmap = data.mbsymbols[def->font];
         const uint32_t code = utf8_decode(str, num_bytes);
         auto it = mbmap.find(code);
@@ -657,6 +662,14 @@ void font_atlas_regenerate() {
             utf8_symbols.push_back(symdec);
         }
     });
+
+    g_font_data.use_utf_font = (locale_short != "en");
+
+    // Add basic latin characters (ASCII 32-126) to ensure they are always generated from the TTF font
+    // This ensures visual consistency between latin and UTF-8 characters
+    for (uint32_t codepoint = 0; codepoint <= 126; ++codepoint) {
+        utf8_symbols.push_back(codepoint);
+    }
 
     // Add missing glyphs to the list
     for (uint32_t missing_codepoint : g_font_data.missing_glyphs) {
