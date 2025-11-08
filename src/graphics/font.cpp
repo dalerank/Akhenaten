@@ -19,6 +19,14 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_atlas_regenerate();
 }
 
+struct font_sizes {
+    uint8_t tiny;
+    uint8_t small;
+    uint8_t normal;
+    uint8_t large;
+};
+ANK_CONFIG_STRUCT(font_sizes, tiny, small, normal, large)
+
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
@@ -482,36 +490,36 @@ const font_mbsybols_t &font_get_symbols() {
 }
 
 // Font size mapping for different font types
-static int get_font_size(e_font font) {
+static int get_font_size(e_font font, font_sizes fsizes) {
     switch (font) {
     case FONT_SMALL_PLAIN:
     case FONT_SMALL_OUTLINED:
     case FONT_SMALL_SHADED:
-        return 10;
+        return fsizes.small;
 
     case FONT_NORMAL_BLACK_ON_LIGHT:
     case FONT_NORMAL_WHITE_ON_DARK:
     case FONT_NORMAL_YELLOW:
     case FONT_NORMAL_BLUE:
     case FONT_NORMAL_BLACK_ON_DARK:
-        return 14;
+        return fsizes.normal;
 
     case FONT_LARGE_BLACK_ON_LIGHT:
     case FONT_LARGE_BLACK_ON_DARK:
-        return 18;
+        return fsizes.large;
 
     default:
-        return 14;
+        return fsizes.normal;
     }
 }
 
 template<typename T>
-void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index) {
+void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index, font_sizes fsizes) {
     for (const auto &codepoint : utf8_symbols) {
         Trex::Charset charset;
         charset.AddCodepoint(codepoint);
 
-        int font_size = get_font_size(font);
+        int font_size = get_font_size(font, fsizes);
         uint8_t colors[4] = { 
             (c >> 16) & 0xff,  // Red
             (c >> 8) & 0xff,   // Green
@@ -604,6 +612,7 @@ void font_atlas_regenerate() {
     vfs::path symbols_font;
     svector<uint32_t, 1024> utf8_symbols;
     xstring locale_short = game_features::gameopt_language.to_string();
+    font_sizes fsizes;
 
     g_config_arch.r_array("game_languages", [&] (archive arch) {
         xstring lang_current = arch.r_string("lang");
@@ -615,6 +624,8 @@ void font_atlas_regenerate() {
         if (!symbols || !*symbols) {
             return;
         }
+
+        arch.r("font_size", fsizes);
 
         symbols_font = arch.r_string("font");
 
@@ -708,7 +719,7 @@ void font_atlas_regenerate() {
 
     int cp_index = 0;
     for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index);
+        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index, fsizes);
     }
 
     // Pack images into atlas

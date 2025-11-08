@@ -93,7 +93,7 @@ int rich_text_t::get_lexem_width(pcstr str, int in_link) {
                 break;
             }
 
-            width += 4;
+            width += normal_font_def->space_width;
             last_letter_spacing = 0;
             num_bytes = 1;
         } else if ((unsigned char)*str > ' ') {
@@ -158,26 +158,25 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
         }
         int num_bytes = 1;
         if (*str == ' ') {
-            if (word_char_seen)
+            if (word_char_seen) {
                 break;
+            }
 
-            width += 4;
+            width += normal_font_def->space_width;
             last_letter_spacing = 0;
         } else if ((unsigned char)*str > ' ') {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += image_letter(glyph.imagid)->width + 1;
-                last_letter_spacing = 1;
+                width += image_letter(glyph.imagid)->width + normal_font_def->letter_spacing;
+                last_letter_spacing = normal_font_def->letter_spacing;
             }
 
             word_char_seen = 1;
-            if (num_bytes > 1) {
-                if (start_link) {
-                    // add space before links in multibyte charsets
-                    width += 4;
-                    start_link = 0;
-                }
+            if (num_bytes > 1 && start_link) {
+                // add space before links in multibyte charsets
+                width += normal_font_def->space_width;
+                start_link = 0;
             }
         }
         str += num_bytes;
@@ -242,22 +241,27 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
             }
 
             int num_bytes = 1;
-            const auto glyph = font_letter_id(def, (const uint8_t*)str, &num_bytes);
-            if (glyph.imagid < 0) {
+            
+            // Handle spaces separately, just like text_draw does
+            if (*str == ' ') {
                 x += def->space_width;
+                num_bytes = 1;
             } else {
-                if (num_bytes > 1 && start_link) {
-                    // add space before links in multibyte charsets
-                    x += def->space_width;
-                    start_link = 0;
-                }
+                const auto glyph = font_letter_id(def, (const uint8_t*)str, &num_bytes);
+                if (glyph.imagid >= 0) {
+                    if (num_bytes > 1 && start_link) {
+                        // add space before links in multibyte charsets
+                        x += def->space_width;
+                        start_link = 0;
+                    }
 
-                const image_t* img = image_letter(glyph.imagid);
-                if (!measure_only) {
-                    int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
-                    ImageDraw::img_letter(ctx, img, def->font, glyph.imagid, x, y - height, clr);
+                    const image_t* img = image_letter(glyph.imagid);
+                    if (!measure_only) {
+                        int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
+                        ImageDraw::img_letter(ctx, img, def->font, glyph.imagid, x, y - height - glyph.bearing.y, clr);
+                    }
+                    x += img->width + def->letter_spacing;
                 }
-                x += img->width + def->letter_spacing;
             }
 
             if (num_link_chars > 0) {

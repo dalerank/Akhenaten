@@ -166,9 +166,7 @@ namespace Trex {
             auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, true);
 
             FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);
-            if (error) {
-                throw std::runtime_error("Error: could not load and render char");
-            }
+            assert(!error && "Error: could not load and render char");
             return glyph;
         }
 
