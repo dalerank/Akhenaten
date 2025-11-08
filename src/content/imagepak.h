@@ -22,7 +22,6 @@ public:
     };
 
 private:
-    int entries_num;
     bool userpack;
     int useridx;
     int version;
@@ -40,6 +39,8 @@ private:
 public:
     xstring name;
     std::vector<atlas_data_t> atlas_pages;
+
+    int entries_num;
     std::vector<image_t> images_array;
 
     int global_image_index_offset = 0;
