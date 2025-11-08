@@ -17,7 +17,6 @@
 #include <stb_image_write.h>
 
 namespace Trex {
-
     // RAII wrapper for FreeType glyph
     class Atlas::FreeTypeGlyph {
     public:
@@ -356,6 +355,7 @@ namespace Trex {
         glyph.height = ftGlyph.Height();
         glyph.bearingX = (int)(ftGlyph.metrics.horiBearingX / 64);
         glyph.bearingY = (int)(ftGlyph.metrics.horiBearingY / 64);
+        glyph.advanceX = (int)(ftGlyph.metrics.horiAdvance / 64);
 
         m_Glyphs[ftGlyph.glyphIndex] = glyph;
     }
@@ -401,14 +401,38 @@ namespace Trex {
         uint8_t a = glyph.ColorAlpha(glyphX, glyphY);
 
         if (glyph.Channels() == 1) {
-            r = 255 - r;
-            g = 255 - g;
-            b = 255 - b;
+            // For grayscale glyphs, the alpha is the coverage
+            // If color is specified, apply it with the alpha from the glyph
+            if (color && color[3] > 0) {
+                // To avoid color halo around text, interpolate RGB from black to target color
+                // based on alpha. This works with standard SDL_BLENDMODE_BLEND.
+                // For low alpha (anti-aliased edges), RGB gradually transitions from black to color
+                float alpha_normalized = a / 255.0f;
+                // Apply a power curve to make the transition more aggressive
+                float color_factor = alpha_normalized * alpha_normalized;
+                r = static_cast<uint8_t>(color[0] * color_factor);
+                g = static_cast<uint8_t>(color[1] * color_factor);
+                b = static_cast<uint8_t>(color[2] * color_factor);
+            } else {
+                // No color specified, invert to get white text
+                r = 255 - r;
+                g = 255 - g;
+                b = 255 - b;
+            }
+        } else {
+            // For color glyphs (e.g., emoji), use as-is or apply color override
+            if (color && color[3] > 0) {
+                float alpha_normalized = a / 255.0f;
+                float color_factor = alpha_normalized * alpha_normalized;
+                r = static_cast<uint8_t>(color[0] * color_factor);
+                g = static_cast<uint8_t>(color[1] * color_factor);
+                b = static_cast<uint8_t>(color[2] * color_factor);
+            }
         }
 
-        data[atlasIdx + 0] = color ? color[0] : r;
-        data[atlasIdx + 1] = color ? color[1] : g;
-        data[atlasIdx + 2] = color ? color[2] : b;
+        data[atlasIdx + 0] = r;
+        data[atlasIdx + 1] = g;
+        data[atlasIdx + 2] = b;
         data[atlasIdx + 3] = a;
     }
 

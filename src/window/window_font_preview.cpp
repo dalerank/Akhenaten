@@ -42,7 +42,7 @@ void config_load_font_preview_properties(bool header) {
         const auto &font_pack = g_image_data->pak_list[PACK_CUSTOM_FONT];
         const auto &atlas = font_pack.handle->atlas_pages.front();
         
-        ImageDraw::fill_rect({ 0, 0 }, { atlas.width, atlas.height }, COLOR_YELLOW);
+        ImageDraw::fill_rect({ 0, 0 }, { atlas.width, atlas.height }, 0xc8c8c8ff);
         ctx.draw(atlas.texture, { 0, 0 }, {0, 0}, {atlas.width, atlas.height}, COLOR_MASK_NONE, 1.f, 1.f, 0, 0);
     }
     

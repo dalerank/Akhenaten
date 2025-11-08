@@ -282,7 +282,9 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
                 if (img != nullptr) {
                     int height = def->image_y_offset(str, img->height, def->line_height);
                     ImageDraw::img_letter(ctx, img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
-                    width = (def->letter_spacing + img->width) * scale;
+                    // Use glyph advance for proper spacing, with img->width as fallback
+                    int advance_width = (glyph.advance > 0) ? glyph.advance : img->width;
+                    width = (def->letter_spacing + advance_width) * scale;
                 }
             }
 
