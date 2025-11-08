@@ -23,9 +23,9 @@ namespace Trex {
         FreeTypeGlyph(uint32_t codepoint, FT_GlyphSlot glyphSlot)
             : codepoint{ codepoint } {
             if (glyphSlot == nullptr)
-                throw std::runtime_error("Glyph slot is null");
+                assert(false && "Glyph slot is null");
             if (glyphSlot->format != FT_GLYPH_FORMAT_BITMAP)
-                throw std::runtime_error("Glyph format must be a bitmap");
+                assert(false && "Glyph format must be a bitmap");
 
             metrics = glyphSlot->metrics;
             glyphIndex = glyphSlot->glyph_index;
@@ -33,7 +33,7 @@ namespace Trex {
             FT_Glyph genericGlyph;
             FT_Error error = FT_Get_Glyph(glyphSlot, &genericGlyph);
             if (error)
-                throw std::runtime_error("Failed to get a glyph");
+               assert(false && "Failed to get a glyph");
 
             glyph = (FT_BitmapGlyph)genericGlyph;
         }
@@ -213,7 +213,7 @@ namespace Trex {
             case RenderMode::LCD:
                 return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSubpixelRender(fontFace, codepoint) };
             default:
-                throw std::runtime_error("Unsupported render mode");
+                assert(false && "Unsupported render mode");
             }
         }
 
@@ -339,7 +339,7 @@ namespace Trex {
             case RenderMode::COLOR: return 4;
             case RenderMode::SDF: return 1;
             case RenderMode::LCD: return 3;
-            default: throw std::runtime_error("Unknown render mode");
+            default: assert(false && "Unknown render mode");
             }
         }
     } // namespace
