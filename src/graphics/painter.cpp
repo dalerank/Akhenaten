@@ -21,6 +21,16 @@ void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, co
     }
 }
 
+void painter::draw_image_part(const image_t *img, int offset, vec2i pos, color color, float scale, ImgFlags flags) {
+    if (img == nullptr) {
+        return;
+    }
+
+    vec2i atlas_offset = img->atlas.offset;
+    vec2i size = { img->width, (img->height - offset) / 2 + offset };
+    draw(img->atlas.p_atlas->texture, pos, atlas_offset, size, color, scale, scale, 0, flags);
+}
+
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (texture == nullptr) {
