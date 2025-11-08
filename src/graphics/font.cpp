@@ -458,10 +458,10 @@ font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* n
     return { 0xffffffff, -1 };
 }
 
-void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing, int advance) {
+void font_set_letter_id(e_font font, uint32_t character, int imgid, vec2i bearing) {
     auto &data = g_font_data;
     auto &mbmap = data.mbsymbols[font];
-    mbmap[character] = { character, imgid, bearing, advance };
+    mbmap[character] = { character, imgid, bearing };
 }
 
 const font_mbsybols_t &font_get_symbols() {
@@ -493,7 +493,7 @@ static int get_font_size(e_font font) {
 }
 
 template<typename T>
-void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index, svector<int, 2048> &advances) {
+void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e_font font, color c, const T &utf8_symbols, int& cp_index) {
     for (const auto &codepoint : utf8_symbols) {
         Trex::Charset charset;
         charset.AddCodepoint(codepoint);
@@ -506,7 +506,7 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e
             (c >> 24) & 0xff   // Alpha
         };
         // padding=0 to create bitmaps with exact glyph dimensions
-        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 0, false, colors);
+        Trex::Atlas atlas(symbols_font, font_size, charset, Trex::RenderMode::COLOR, 0, true /*fit*/, colors);
 
         const auto &bitmap = atlas.GetBitmap();
 
@@ -577,7 +577,6 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, e
         rect->input.height = img.height;
 
         font_pack.handle->images_array.push_back(img);
-        advances.push_back(glyph.advanceX);
         cp_index++;
     }
 }
@@ -681,12 +680,9 @@ void font_atlas_regenerate() {
 
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
-    // Store advance metrics temporarily during atlas generation
-    svector<int, 2048> glyph_advances;
-    
     int cp_index = 0;
     for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index, glyph_advances);
+        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig.font_type, fconfig.font_color, utf8_symbols, cp_index);
     }
 
     // Pack images into atlas
@@ -723,7 +719,7 @@ void font_atlas_regenerate() {
         image_copy_to_atlas(img);
 
         int image_id = font_pack.handle->global_image_index_offset + i;
-        font_set_letter_id((e_font)img.temp.font_type, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y }, glyph_advances[i]);
+        font_set_letter_id((e_font)img.temp.font_type, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y });
     }
 
     // Create textures from atlas data
