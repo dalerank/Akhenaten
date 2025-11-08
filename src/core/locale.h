@@ -1,4 +1,6 @@
 #pragma once
+
+#include "core/string.h"
 /**
  * Language type
  */
@@ -24,7 +26,8 @@ enum {
  * Determines language based on the language file
  * @return Guessed language
  */
-int locale_determine_language(void);
+int locale_determine_language();
+pcstr locale_determine_language_short();
 
 /**
  * Check whether to write the year before the 'AD' part or the other way around
