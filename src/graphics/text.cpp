@@ -99,6 +99,9 @@ int text_get_width(const uint8_t* str, e_font font) {
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;
+    int last_letter_spacing = 0;
+    int has_chars = 0;
+    
     while (*str && maxlen > 0) {
         int num_bytes = 1;
         if (*str == ' ')
@@ -107,13 +110,23 @@ int text_get_width(const uint8_t* str, e_font font) {
             const auto glyph = font_letter_id(def, str, &num_bytes);
             if (glyph.imagid >= 0) {
                 const image_t* img = image_letter(glyph.imagid);
-                if (img != nullptr)
-                    width += def->letter_spacing + img->width;
+                if (img != nullptr) {
+                    width += img->width;
+                    last_letter_spacing = def->letter_spacing;
+                    width += last_letter_spacing;
+                    has_chars = 1;
+                }
             }
         }
         str += num_bytes;
         maxlen -= num_bytes;
     }
+    
+    // Remove letter_spacing after the last character
+    if (has_chars && last_letter_spacing > 0) {
+        width -= last_letter_spacing;
+    }
+    
     return width;
 }
 
@@ -125,7 +138,7 @@ int get_letter_width(const uint8_t* str, const font_definition* def, int* num_by
 
     const auto glyph = font_letter_id(def, str, num_bytes);
     if (glyph.imagid >= 0) {
-        return def->letter_spacing + image_letter(glyph.imagid)->width;
+        return image_letter(glyph.imagid)->width + def->letter_spacing;
     } else {
         return 0;
     }
@@ -137,6 +150,8 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
     int guard = 0;
     int word_char_seen = 0;
     int num_chars = 0;
+    int last_letter_spacing = 0;
+    
     while (*str && ++guard < 200) {
         int num_bytes = 1;
         if (*str == ' ' || *str == '\n') {
@@ -158,7 +173,9 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
             if (glyph.imagid >= 0) {
                 const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
-                    width += img->width + def->letter_spacing;
+                    width += img->width;
+                    last_letter_spacing = def->letter_spacing;
+                    width += last_letter_spacing;
                 }
             }
             
@@ -167,6 +184,12 @@ static int get_word_width(const uint8_t* str, e_font font, int* out_num_chars) {
             num_chars += num_bytes;
         }
     }
+    
+    // Remove letter_spacing after the last character
+    if (word_char_seen && last_letter_spacing > 0) {
+        width -= last_letter_spacing;
+    }
+    
     *out_num_chars = num_chars;
     return width;
 }
@@ -179,12 +202,24 @@ uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font fo
     if (invert) {
         unsigned int maxlen = length;
         unsigned int width = 0;
+        int last_letter_spacing = 0;
         const uint8_t* s = str;
         while (maxlen) {
             int num_bytes;
-            width += get_letter_width(s, def, &num_bytes);
+            int letter_width = get_letter_width(s, def, &num_bytes);
+            width += letter_width;
+            if (*s != ' ') {
+                last_letter_spacing = def->letter_spacing;
+            } else {
+                last_letter_spacing = 0;
+            }
             s += num_bytes;
             maxlen -= num_bytes;
+        }
+        
+        // Remove spacing after last letter
+        if (last_letter_spacing > 0) {
+            width -= last_letter_spacing;
         }
 
         maxlen = length;
@@ -198,14 +233,32 @@ uint32_t text_get_max_length_for_width(const uint8_t* str, int length, e_font fo
     } else {
         unsigned int maxlen = length;
         unsigned int width = 0;
+        int last_letter_spacing = 0;
+        int char_count = 0;
+        
         while (maxlen) {
             int num_bytes;
-            width += get_letter_width(str, def, &num_bytes);
-            if (width > requested_width)
+            int letter_width = get_letter_width(str, def, &num_bytes);
+            
+            // Check width without the trailing spacing
+            int check_width = width + letter_width;
+            if (*str != ' ' && char_count > 0) {
+                check_width -= def->letter_spacing;
+            }
+            
+            if (check_width > requested_width)
                 break;
-
+            
+            width += letter_width;
+            if (*str != ' ') {
+                last_letter_spacing = def->letter_spacing;
+            } else {
+                last_letter_spacing = 0;
+            }
+            
             str += num_bytes;
             maxlen -= num_bytes;
+            char_count++;
         }
         return length - maxlen;
     }
@@ -218,6 +271,9 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
     int maxlen = 10000;
     int width = 0;
     int length_with_ellipsis = 0;
+    int last_letter_spacing = 0;
+    int has_chars = 0;
+    
     while (*str && maxlen > 0) {
         int num_bytes = 1;
         if (*str == ' ')
@@ -225,13 +281,16 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
         else {
             const auto glyph = font_letter_id(def, str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += def->letter_spacing + image_letter(glyph.imagid)->width;
+                width += image_letter(glyph.imagid)->width;
+                last_letter_spacing = def->letter_spacing;
+                width += last_letter_spacing;
+                has_chars = 1;
             }
         }
-        if (ellipsis_width + width <= requested_width)
+        if (ellipsis_width + width - (has_chars ? last_letter_spacing : 0) <= requested_width)
             length_with_ellipsis += num_bytes;
 
-        if (width > requested_width)
+        if (width - (has_chars ? last_letter_spacing : 0) > requested_width)
             break;
 
         str += num_bytes;
@@ -267,6 +326,9 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
     }
 
     int current_x = x;
+    int last_letter_spacing = 0;
+    int has_letters = 0;
+    
     while (length > 0) {
         int num_bytes = 1;
 
@@ -280,12 +342,15 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
 
             if (*str == ' ' || *str == '_') {
                 width = (def->space_width * scale);
+                last_letter_spacing = 0;
             } else {
                 const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
                     int height = def->image_y_offset(str, img->height, def->line_height);
                     ImageDraw::img_letter(ctx, img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
-                    width = (def->letter_spacing + img->width) * scale;
+                    width = (img->width + def->letter_spacing) * scale;
+                    last_letter_spacing = (def->letter_spacing * scale);
+                    has_letters = 1;
                 }
             }
 
@@ -308,6 +373,11 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
         input_cursor.width = 4;
         input_cursor.x_offset = current_x - x;
         input_cursor.seen = 1;
+    }
+
+    // Remove letter_spacing after the last letter
+    if (has_letters && last_letter_spacing > 0) {
+        current_x -= last_letter_spacing;
     }
 
     current_x += def->space_width;
