@@ -282,22 +282,6 @@ unsigned int graphics_renderer_interface::premult_alpha() {
     return ::premult_alpha;
 }
 
-void graphics_renderer_interface::draw_image_grayscale(painter &ctx, const image_t *img, vec2i pos, float scale, ImgFlags flags) {
-    if (!img) {
-        return;
-    }
-
-    if (!img->atlas.p_atlas) {
-        return;
-    }
-
-    vec2i offset = img->atlas.offset;
-    vec2i size = { img->width, img->height };
-    if (offset.x >= 0 && offset.y >= 0) {
-        ctx.draw(img->atlas.p_atlas->texture, pos, offset, size, scale, scale, 0, flags);
-    }
-}
-
 void graphics_renderer_interface::create_custom_texture(int type, int width, int height) {
     auto &data = g_renderer_data;
     if (data.custom_textures[type].texture) {

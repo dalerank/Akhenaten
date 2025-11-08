@@ -32,8 +32,8 @@ struct painter {
                float scale_x = 1.f, float scale_y = 1.f, double angle = 0, ImgFlags flags = ImgFlag_None, bool force_linear = false );
 
     void draw_image_part(const image_t *img, int offset, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
-
     void draw_image(const image_t *img, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
+    void draw_image_grayscale(const image_t *img, vec2i pos, float scale = 1.f, ImgFlags flags = ImgFlag_None);
 
 protected:
     void draw_grayscale(

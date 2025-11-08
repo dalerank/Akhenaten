@@ -47,6 +47,22 @@ void painter::draw_image(const image_t *img, vec2i pos, color color, float scale
     }
 }
 
+void painter::draw_image_grayscale(const image_t *img, vec2i pos, float scale, ImgFlags flags) {
+    if (!img) {
+        return;
+    }
+
+    if (!img->atlas.p_atlas) {
+        return;
+    }
+
+    vec2i offset = img->atlas.offset;
+    vec2i size = { img->width, img->height };
+    if (offset.x >= 0 && offset.y >= 0) {
+        draw(img->atlas.p_atlas->texture, pos, offset, size, scale, scale, 0, flags);
+    }
+}
+
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (texture == nullptr) {
