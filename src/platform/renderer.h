@@ -26,7 +26,10 @@ enum e_custome_image_type {
     CUSTOM_IMAGE_MAX = 8
 };
 
-enum { IMAGE_FILTER_NEAREST = 0, IMAGE_FILTER_LINEAR = 1 };
+enum e_image_filter_mode { 
+    IMAGE_FILTER_NEAREST = 0, 
+    IMAGE_FILTER_LINEAR = 1 
+};
 
 int platform_renderer_init(SDL_Window* window, std::string renderer);
 int platform_renderer_create_render_texture(int width, int height);
@@ -71,7 +74,6 @@ struct graphics_renderer_interface {
     void draw_rect(vec2i start, vec2i size, color color);
     void fill_rect(vec2i start, vec2i size, color color);
 
-    void draw_image_part(painter &ctx, const image_t *img, int offset, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
     void draw_image(painter &ctx, const image_t* img, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
     void draw_image_grayscale(painter &ctx, const image_t* img, vec2i pos, float scale = 1.f, ImgFlags flags = ImgFlag_None);
     bool save_screen_buffer(painter &ctx, color *pixels, int x, int y, int width, int height, int row_width);
@@ -101,7 +103,7 @@ struct graphics_renderer_interface {
 
     bool has_texture_scale_mode();
 
-    bool save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
+    bool save_texture_to_file(pcstr filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
     float scale();
     SDL_Renderer *renderer();
     SDL_Window *window();
