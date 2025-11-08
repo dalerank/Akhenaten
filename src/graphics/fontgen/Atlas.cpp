@@ -91,6 +91,7 @@ namespace Trex {
                 return 4;
             default:
                 assert(false && "Unsupported pixel mode");
+                return 1;
             }
         }
 
@@ -147,9 +148,7 @@ namespace Trex {
         FT_GlyphSlot LoadGlyphWithoutRender(FT_Face fontFace, uint32_t codepoint, bool color = false) {
             FT_Int32 flags = color ? FT_LOAD_COLOR : FT_LOAD_DEFAULT;
             FT_Error error = FT_Load_Char(fontFace, codepoint, flags);
-            if (error) {
-                throw std::runtime_error("Error: could not load and render char");
-            }
+            assert(!error && "Error: could not load and render char");
 
             return fontFace->glyph;
         }
@@ -157,10 +156,9 @@ namespace Trex {
         FT_GlyphSlot LoadGlyphWithGrayscaleRender(FT_Face fontFace, uint32_t codepoint) {
             auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, false);
 
-            FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);
-            if (error) {
-                throw std::runtime_error("Error: could not load and render char");
-            }
+            FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);            
+            assert(!error && "Error: could not load and render char");
+
             return glyph;
         }
 
@@ -217,6 +215,7 @@ namespace Trex {
                 return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSubpixelRender(fontFace, codepoint) };
             default:
                 assert(false && "Unsupported render mode");
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint) };
             }
         }
 
@@ -342,7 +341,9 @@ namespace Trex {
             case RenderMode::COLOR: return 4;
             case RenderMode::SDF: return 1;
             case RenderMode::LCD: return 3;
-            default: assert(false && "Unknown render mode");
+            default: 
+                assert(false && "Unknown render mode");
+                return 1;
             }
         }
     } // namespace
