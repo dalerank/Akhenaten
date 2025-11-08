@@ -33,6 +33,8 @@ struct painter {
 
     void draw_image_part(const image_t *img, int offset, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
 
+    void draw_image(const image_t *img, vec2i pos, color color = COLOR_WHITE, float scale = 1.f, ImgFlags flags = ImgFlag_None);
+
 protected:
     void draw_grayscale(
         SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size,

@@ -635,7 +635,7 @@ static void draw_footprint_size_any(int image_id, vec2i pos, int size, color col
             int y_offset = k * 15;
 
             //            draw_footprint_tile(tile_data(data, index++), x + x_offset, y + y_offset, color_mask);
-            g_render.draw_image(ctx, img, pos, color_mask, scale);
+            ctx.draw_image(img, pos, color_mask, scale);
         }
     }
 }
@@ -652,12 +652,12 @@ void ImageDraw::img_ornament(painter &ctx, int image_id, int base_id, int x, int
     x += base->animation.sprite_offset.x;
     y += base->animation.sprite_offset.y - base->height + ydiff;
     //    y += base->animation.sprite_y_offset - img->isometric_ydiff();
-    g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+    ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
 }
 
 void ImageDraw::img_from_below(painter &ctx, int image_id, int x, int y, color color_mask, float scale) {
     const image_t* img = image_get(image_id);
-    g_render.draw_image(ctx, img, vec2i{ x, y - img->height }, color_mask, scale);
+    ctx.draw_image(img, vec2i{ x, y - img->height }, color_mask, scale);
 }
 
 void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
@@ -666,8 +666,8 @@ void ImageDraw::img_letter(painter &ctx, const image_t *img, e_font font, int le
     }
 
     if (font == FONT_SMALL_SHADED) {
-        g_render.draw_image(ctx, img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+        ctx.draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
     }
 
-    g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+    ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
 }

@@ -22,7 +22,7 @@ namespace ImageDraw
         //    }
         pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
 
-        g_render.draw_image(ctx, img, pos, color_mask, 1.f, flags);
+        ctx.draw_image(img, pos, color_mask, 1.f, flags);
         return img;
     }
 
@@ -38,7 +38,7 @@ namespace ImageDraw
         }
         pos.y += HALF_TILE_HEIGHT_PIXELS * (img_top->isometric_size() + 1) - img_top->height;
 
-        g_render.draw_image(ctx, img_top, pos, color_mask, 1.f, flags);
+        ctx.draw_image(img_top, pos, color_mask, 1.f, flags);
         return img_top;
     }
 
@@ -58,7 +58,7 @@ namespace ImageDraw
         flags |= (mirrored ? ImgFlag_Mirrored : ImgFlag_None);
 
         p.y -= img->animation.sprite_offset.y;
-        g_render.draw_image(ctx, img, p, color_mask, scale, flags);
+        ctx.draw_image(img, p, color_mask, scale, flags);
 
         return img;
     }
@@ -66,21 +66,21 @@ namespace ImageDraw
     const image_t* img_generic(painter& ctx, int image_id, int x, int y, color color_mask, float scale)
     {
         const image_t* img = image_get(image_id);
-        g_render.draw_image(ctx, img, vec2i{ x, y }, color_mask, scale);
+        ctx.draw_image(img, vec2i{ x, y }, color_mask, scale);
         return img;
     }
 
     const image_t* img_generic(painter& ctx, int pak, int image_id, vec2i p, color color_mask, float scale)
     {
         const image_t* img = image_get(pak, image_id);
-        g_render.draw_image(ctx, img, p, color_mask, scale);
+        ctx.draw_image(img, p, color_mask, scale);
         return img;
     }
 
     const image_t* img_generic(painter& ctx, const image_desc& imgd, vec2i p, color color_mask, float scale)
     {
         const image_t* img = image_get(imgd);
-        g_render.draw_image(ctx, img, p, color_mask, scale);
+        ctx.draw_image(img, p, color_mask, scale);
         return img;
     }
 
@@ -92,7 +92,7 @@ namespace ImageDraw
             offset = img->animation.sprite_offset;
         }
 
-        g_render.draw_image(ctx, img, p - offset, color_mask, scale, flags);
+        ctx.draw_image(img, p - offset, color_mask, scale, flags);
         return img;
     }
 
@@ -103,7 +103,7 @@ namespace ImageDraw
             offset = img->animation.sprite_offset;
         }
 
-        g_render.draw_image(ctx, img, p - offset, color_mask, scale, flags);
+        ctx.draw_image(img, p - offset, color_mask, scale, flags);
         return img;
     }
 }
@@ -146,7 +146,7 @@ void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i of
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     }
     else {
-        g_render.draw_image(ctx, img, vec2i{ (screen_width() - img->width) / 2, (screen_height() - img->height) / 2 } + offset, COLOR_MASK_NONE, scale);
+        ctx.draw_image(img, vec2i{ (screen_width() - img->width) / 2, (screen_height() - img->height) / 2 } + offset, COLOR_MASK_NONE, scale);
     }
 }
 
