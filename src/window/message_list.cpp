@@ -106,7 +106,7 @@ void ui::message_list_window::draw_message(int index, int flags, const scroll_li
     if (lang_msg.message_type == MESSAGE_TYPE_TUTORIAL)
         image_type_offset = 4;
 
-    ImageDraw::img_generic(ctx, image_id_from_group(PACK_GENERAL, 90) + (msg.is_read ? 15 : 14) + image_type_offset, x_text + message_read_icon.pos.x, y_text + message_read_icon.pos.y);
+    ctx.img_generic(image_id_from_group(PACK_GENERAL, 90) + (msg.is_read ? 15 : 14) + image_type_offset, vec2i{ x_text, y_text } + message_read_icon.pos);
 
     font = (flags) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
 

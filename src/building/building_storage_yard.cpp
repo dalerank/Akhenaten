@@ -69,7 +69,7 @@ void building_storage_yard::preview::ghost_preview(build_planner &planer, painte
     for (int i = 0; i < 9; i++) {
         if (i == corner) {
             planer.draw_building_ghost(ctx, image_id_hut, pixel + VIEW_OFFSETS[i]);
-            ImageDraw::img_generic(ctx, image_id_hut + 17, pixel.x + VIEW_OFFSETS[i].x + corner_offset.x, pixel.y + VIEW_OFFSETS[i].y + corner_offset.y, COLOR_MASK_GREEN);
+            ctx.img_generic(image_id_hut + 17, pixel + VIEW_OFFSETS[i] + corner_offset, COLOR_MASK_GREEN);
         } else {
             planer.draw_building_ghost(ctx, image_id_space, pixel + VIEW_OFFSETS[i] + place_offset);
         }

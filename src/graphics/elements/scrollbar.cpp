@@ -65,9 +65,7 @@ void scrollbar_draw(vec2i offset, scrollbar_t* scrollbar) {
             drag_offset = scrollbar->scroll_position_drag;
         }
 
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_BUTTON) + 39,
-                               offset.x + scrollbar->pos.x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
-                               offset.y + scrollbar->pos.y + drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
+        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_PANEL_BUTTON) + 39, offset + scrollbar->pos + vec2i{ (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2, drag_offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding });
     }
 }
 

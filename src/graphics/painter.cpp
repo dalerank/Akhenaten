@@ -63,6 +63,13 @@ void painter::draw_image_grayscale(const image_t *img, vec2i pos, float scale, I
     }
 }
 
+const image_t *painter::img_generic(int image_id, vec2i pos, color color_mask, float scale) {
+    const image_t *img = image_get(image_id);
+    draw_image(img, pos, color_mask, scale);
+    return img;
+}
+
+
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (texture == nullptr) {

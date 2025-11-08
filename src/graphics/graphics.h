@@ -67,7 +67,6 @@ struct render_command_t {
 };
 
 namespace ImageDraw {
-const image_t* img_generic(painter &ctx, int image_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, const image_desc &img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 const image_t* img_generic(painter &ctx, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);

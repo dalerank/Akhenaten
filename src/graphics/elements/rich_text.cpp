@@ -213,7 +213,7 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
 
                 const image_t* letter = image_letter('@');
                 x -= letter->width;
-                const image_t *img = ImageDraw::img_generic(ctx, small_image_id, x, y);
+                const image_t *img = ctx.img_generic(small_image_id, { x, y });
                 x += img->width;
                 continue;
             } else {
@@ -404,9 +404,9 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                     int image_offset_x = offset.x + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + dscrollbar.scroll_position) {
                         if (line >= dscrollbar.scroll_position)
-                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8);
+                            ctx.img_generic(image_id, { image_offset_x, y + 8 });
                         else {
-                            ImageDraw::img_generic(ctx, image_id, image_offset_x, y + 8 - 16 * (dscrollbar.scroll_position - line));
+                            ctx.img_generic(image_id, { image_offset_x, y + 8 - 16 * (dscrollbar.scroll_position - line) });
                         }
                     }
                     image_id = 0;

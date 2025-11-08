@@ -216,10 +216,8 @@ bool minimap_window::draw_figure(vec2i screen, tile2i point) {
 void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
     painter ctx = game.painter();
     int grid_offset = point.grid_offset();
-    int screen_x = screen.x;
-    int screen_y = screen.y;
     if (grid_offset < 0) {
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_MINIMAP_BLACK), screen_x, screen_y);
+        ctx.img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), screen);
         return;
     }
 
@@ -282,13 +280,13 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
             case 3:
             case 4:
             case 5:
-                ImageDraw::img_generic(ctx, image_id + (multi_tile_size - 1), screen_x, screen_y - (multi_tile_size - 1));
+                ctx.img_generic(image_id + (multi_tile_size - 1), screen + vec2i{ 0,  -(multi_tile_size - 1) });
                 break;
             case 6: // TODO: make a generalized formula?
-                ImageDraw::img_generic(ctx, image_id + 2, screen_x, screen_y - 2);
-                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y - 5);
-                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 6, screen_y - 2);
-                ImageDraw::img_generic(ctx, image_id + 2, screen_x + 3, screen_y + 1);
+                ctx.img_generic(image_id + 2, screen + vec2i{ 0,  -2 });
+                ctx.img_generic(image_id + 2, screen + vec2i{ +3, -5 });
+                ctx.img_generic(image_id + 2, screen + vec2i{ +6, -2 });
+                ctx.img_generic(image_id + 2, screen + vec2i{ +3, +1 });
                 break;
             }
         }
@@ -324,7 +322,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        ImageDraw::img_generic(ctx, image_id, screen_x, screen_y);
+        ctx.img_generic(image_id, screen);
     }
 }
 

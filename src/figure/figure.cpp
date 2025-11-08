@@ -752,9 +752,9 @@ figure_impl *figures::create(e_figure_type e, figure &f) {
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
     painter ctx = game.painter();
     // base
-    ImageDraw::img_generic(ctx, main_image_id, pixel.x, pixel.y);
+    ctx.img_generic(main_image_id, pixel);
     // flag
-    ImageDraw::img_generic(ctx, cart_image_id, pixel.x, pixel.y - image_get(cart_image_id)->height);
+    ctx.img_generic(cart_image_id, pixel + vec2i{ 0, -image_get(cart_image_id)->height });
     // flag number
     int number = 0;
     int id = resource_id;

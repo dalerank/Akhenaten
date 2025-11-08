@@ -314,13 +314,13 @@ static void draw_city_message_text(const lang_message& msg) {
             break;
 
         case MESSAGE_TYPE_TRADE_CHANGE:
-            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.pos.x + 64, data.y_text + 40);
+            ctx.img_generic(resource_image(g_player_message_data.param2), { data.pos.x + 64, data.y_text + 40 });
             lang_text_draw(21, g_empire.city(g_player_message_data.param1)->name_id, data.pos.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             data.rich_text.draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
 
         case MESSAGE_TYPE_PRICE_CHANGE:
-            ImageDraw::img_generic(ctx, resource_image(g_player_message_data.param2), data.pos.x + 64, data.y_text + 40);
+            ctx.img_generic(resource_image(g_player_message_data.param2), { data.pos.x + 64, data.y_text + 40 });
             text_draw_money(g_player_message_data.param1, data.pos.x + 100, data.y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
             data.rich_text.draw(text, vec2i(data.x_text + 8, data.y_text + 86), 16 * data.text_width_blocks - 16, data.text_height_blocks - 1, 0);
             break;
@@ -589,7 +589,7 @@ static void draw_background_video() {
 
         scenario_request request = scenario_request_get_visible(g_player_message_data.param1);
         text_draw_number(request.amount, '@', " ", data.pos.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), data.pos.x + 70, y_text - 5);
+        ctx.img_generic(image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), { data.pos.x + 70, y_text - 5 });
         lang_text_draw(23, request.resource, data.pos.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
         if (request.state <= e_event_state_overdue) {
             width = lang_text_draw_amount(8, 4, request.months_to_comply, data.pos.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);

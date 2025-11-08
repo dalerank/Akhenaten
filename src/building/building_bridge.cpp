@@ -27,47 +27,47 @@ void city_draw_bridge_tile(painter &ctx, int x, int y, int bridge_sprite_id, col
     int image_id = image_id_from_group(GROUP_BUILDING_BRIDGE);
     switch (bridge_sprite_id) {
     case 1:
-        ImageDraw::img_generic(ctx, image_id + 5, x, y - 20, color_mask);
+        ctx.img_generic(image_id + 5, { x, y - 20 }, color_mask);
         break;
     case 2:
-        ImageDraw::img_generic(ctx, image_id, x - 1, y - 8, color_mask);
+        ctx.img_generic(image_id, { x - 1, y - 8 }, color_mask);
         break;
     case 3:
-        ImageDraw::img_generic(ctx, image_id + 3, x, y - 8, color_mask);
+        ctx.img_generic(image_id + 3, { x, y - 8 }, color_mask);
         break;
     case 4:
-        ImageDraw::img_generic(ctx, image_id + 2, x + 7, y - 20, color_mask);
+        ctx.img_generic(image_id + 2, { x + 7, y - 20 }, color_mask);
         break;
     case 5:
-        ImageDraw::img_generic(ctx, image_id + 4, x, y - 21, color_mask);
+        ctx.img_generic(image_id + 4, { x, y - 21 }, color_mask);
         break;
     case 6:
-        ImageDraw::img_generic(ctx, image_id + 1, x + 5, y - 21, color_mask);
+        ctx.img_generic(image_id + 1, { x + 5, y - 21 }, color_mask);
         break;
     case 7:
-        ImageDraw::img_generic(ctx, image_id + 11, x - 3, y - 50, color_mask);
+        ctx.img_generic(image_id + 11, { x - 3, y - 50 }, color_mask);
         break;
     case 8:
-        ImageDraw::img_generic(ctx, image_id + 6, x - 1, y - 12, color_mask);
+        ctx.img_generic(image_id + 6, { x - 1, y - 12 }, color_mask);
         break;
     case 9:
-        ImageDraw::img_generic(ctx, image_id + 9, x - 30, y - 12, color_mask);
+        ctx.img_generic(image_id + 9, { x - 30, y - 12 }, color_mask);
         break;
     case 10:
-        ImageDraw::img_generic(ctx, image_id + 8, x - 23, y - 53, color_mask);
+        ctx.img_generic(image_id + 8, { x - 23, y - 53 }, color_mask);
         break;
     case 11:
-        ImageDraw::img_generic(ctx, image_id + 10, x, y - 37, color_mask);
+        ctx.img_generic(image_id + 10, { x, y - 37 }, color_mask);
         break;
     case 12:
-        ImageDraw::img_generic(ctx, image_id + 7, x + 7, y - 38, color_mask);
+        ctx.img_generic(image_id + 7, { x + 7, y - 38 }, color_mask);
         break;
         // Note: no nr 13
     case 14:
-        ImageDraw::img_generic(ctx, image_id + 13, x, y - 38, color_mask);
+        ctx.img_generic(image_id + 13, { x, y - 38 }, color_mask);
         break;
     case 15:
-        ImageDraw::img_generic(ctx, image_id + 12, x + 7, y - 38, color_mask);
+        ctx.img_generic(image_id + 12, { x + 7, y - 38 }, color_mask);
         break;
     }
 }
