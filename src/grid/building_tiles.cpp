@@ -56,7 +56,7 @@ static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, i
     //    map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
     //    map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
     //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
-    ImageDraw::isometric(ctx, crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)});
+    ctx.img_isometric(crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)});
 }
 
 void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {

@@ -39,6 +39,12 @@ struct painter {
     const image_t *img_generic(int pak, int image_id, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
     const image_t *img_generic(const image_desc &img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
     const image_t *img_generic(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags);
+    const image_t *img_generic(const image_t *img, vec2i p, color color_mask = COLOR_MASK_NONE, float scale = 1.0f, ImgFlags flags = ImgFlag_None);
+    const image_t *img_isometric(int image_id, vec2i pixel, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
+    const image_t *img_isometric(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags);
+
+    const image_t *isometric_from_drawtile(int image_id, vec2i pos, color color_mask, ImgFlags flags = 0);
+    const image_t *isometric_from_drawtile_top(int image_id, vec2i pos, color color_mask, ImgFlags flags = 0);
 
 protected:
     void draw_grayscale(

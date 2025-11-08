@@ -92,6 +92,54 @@ const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, flo
     return img;
 }
 
+const image_t *painter::img_generic(const image_t *img, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    vec2i offset{ 0, 0 };
+    if (!!(flags & ImgFlag_InternalOffset)) {
+        offset = img->animation.sprite_offset;
+    }
+
+    draw_image(img, p - offset, color_mask, scale, flags);
+    return img;
+}
+
+const image_t* painter::img_isometric(int image_id, vec2i pixel, color color_mask, float scale) {
+    return img_generic(image_id, pixel, color_mask, scale);
+}
+
+const image_t *painter::isometric_from_drawtile(int image_id, vec2i pos, color color_mask, ImgFlags flags) {
+    const image_t *img = image_get(image_id);
+    if (!img) {
+        return nullptr;
+    }
+    //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
+    //        assets_load_unpacked_asset(image_id);
+    //    }
+    pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
+
+    draw_image(img, pos, color_mask, 1.f, flags);
+    return img;
+}
+
+const image_t *painter::isometric_from_drawtile_top(int image_id, vec2i pos, color color_mask, ImgFlags flags) {
+    const image_t *img = image_get(image_id);
+    if (!img) {
+        return nullptr;
+    }
+    const image_t *img_top = img->isometric_top;
+    if (!img_top) {
+        return nullptr;
+    }
+    pos.y += HALF_TILE_HEIGHT_PIXELS * (img_top->isometric_size() + 1) - img_top->height;
+
+    draw_image(img_top, pos, color_mask, 1.f, flags);
+    return img_top;
+}
+
+const image_t *painter::img_isometric(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    isometric_from_drawtile(image_id, p, color_mask, flags);
+    return isometric_from_drawtile_top(image_id, p, color_mask, flags);
+}
+
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
     if (texture == nullptr) {

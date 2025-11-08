@@ -266,13 +266,6 @@ elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/stb-src/stb_image.h")
     set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-src")
 endif()
 
-# Disable optional FreeType dependencies to avoid architecture conflicts
-set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
-set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
-set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
-set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
-set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
-
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
@@ -287,10 +280,6 @@ FetchContent_Declare(
 )
 # Disable HarfBuzz optional features
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
-set(HB_HAVE_FREETYPE ON CACHE BOOL "" FORCE)
-set(HB_HAVE_GRAPHITE2 OFF CACHE BOOL "" FORCE)
-set(HB_HAVE_GLIB OFF CACHE BOOL "" FORCE)
-set(HB_HAVE_ICU OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(harfbuzz)
 
 FetchContent_Declare(

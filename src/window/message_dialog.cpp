@@ -522,7 +522,7 @@ static void draw_background_image() {
 
     if (img) {
         int current_x = (500 - img->width) / 2;
-        ImageDraw::img_generic(ctx, img, vec2i{ current_x, 96 });
+        ctx.img_generic(img, vec2i{ current_x, 96 });
     }
 
     draw_foreground_image();
@@ -536,8 +536,9 @@ static void draw_background_video() {
 
     int small_font = 0;
     int lines_available = 4;
-    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL)
+    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_IMPERIAL) {
         lines_available = 3;
+    }
 
     data.rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     data.rich_text.clear_links();
