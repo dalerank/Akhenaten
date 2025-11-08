@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16...3.26)
 include(CMakeDependentOption)
+include(FetchContent)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
@@ -57,7 +58,6 @@ else()
         add_definitions(-DCPPTRACE_ENABLED=ON)
         add_definitions(-DCPPTRACE_STATIC_DEFINE)
 
-        include(FetchContent)
         FetchContent_Declare(
                 cpptrace
                 GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
@@ -640,7 +640,6 @@ endif()
 
 if (OPTION_SYSTEM_LIBPNG)
     if (OPTION_BUILD_LIBPNG)
-        include(FetchContent)
         FetchContent_Declare(
                 zlib
                 GIT_REPOSITORY https://github.com/madler/zlib
