@@ -76,7 +76,7 @@ static void draw_foreground(int) {
             text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             lang_text_draw_year(g_scenario.start_year + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
-            ImageDraw::img_generic(ctx, image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 140, y + 3});
+            ctx.img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 140, y + 3});
             int width
               = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
             text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);

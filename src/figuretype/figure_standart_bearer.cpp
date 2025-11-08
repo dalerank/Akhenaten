@@ -69,13 +69,13 @@ void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlig
     const vec2i flag_offset = vec2i(0, -flag->height);
     //if (m->is_halted) 
     {
-        ImageDraw::img_generic(ctx, base.main_image_id, pixel + pole_offset + flag_offset);
+        ctx.img_generic(base.main_image_id, pixel + pole_offset + flag_offset);
     }
 
     // top icon
     int icon_image_id = anim("sign").first_img() + formation_get(base.formation_id)->batalion_id;
     const vec2i icon_offset = vec2i(0, -image_get(icon_image_id)->height);
-    ImageDraw::img_generic(ctx, icon_image_id, pixel + flag_offset + pole_offset + icon_offset);
+    ctx.img_generic(icon_image_id, pixel + flag_offset + pole_offset + icon_offset);
 }
 
 void figure_standard_bearer::before_poof() {

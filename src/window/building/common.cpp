@@ -82,7 +82,7 @@ textid get_employment_info_text_id(object_info* c, building* b, int consider_hou
 void draw_employment_details(object_info* c, building* b, int y_offset, int text_id) {
     painter ctx = game.painter();
     y_offset += c->offset.y;
-    ImageDraw::img_generic(ctx, image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
+    ctx.img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 14, vec2i{c->offset.x + 40, y_offset + 6});
     if (text_id) {
         int width = lang_text_draw_amount(8, 12, b->num_workers, c->offset.x + 60, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);
         width += text_draw_number(b->max_workers, '(', "", c->offset.x + 70 + width, y_offset + 10, FONT_NORMAL_BLACK_ON_DARK);

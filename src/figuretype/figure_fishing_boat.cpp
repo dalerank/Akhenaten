@@ -262,7 +262,7 @@ void figure_fishing_boat::kill() {
 
 bool figure_fishing_boat::window_info_background(object_info &c) {
     painter ctx = game.painter();
-    ImageDraw::img_generic(ctx, anim(animkeys().big_image).first_img(), c.offset + vec2i{28, 112});
+    ctx.img_generic(anim(animkeys().big_image).first_img(), c.offset + vec2i{28, 112});
     lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
     return true;
 }

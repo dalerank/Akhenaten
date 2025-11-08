@@ -288,7 +288,7 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     figure *f = c.figure_get();
 
     const uint16_t big_image = f->anim(animkeys().big_image).first_img();
-    ImageDraw::img_generic(ctx, big_image, c.offset + vec2i{28, 112});
+    ctx.img_generic(big_image, c.offset + vec2i{28, 112});
 
     lang_text_draw(254, base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
     int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
@@ -296,11 +296,11 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(base.collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
     } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
         int resource = inventory_to_resource_id(base.collecting_item_id);
-        ImageDraw::img_generic(ctx, image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
     }
 
     if (c.nfigure.phrase.valid()) {

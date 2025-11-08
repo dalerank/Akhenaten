@@ -69,6 +69,28 @@ const image_t *painter::img_generic(int image_id, vec2i pos, color color_mask, f
     return img;
 }
 
+const image_t *painter::img_generic(int pak, int image_id, vec2i p, color color_mask, float scale) {
+    const image_t *img = image_get(pak, image_id);
+    draw_image(img, p, color_mask, scale);
+    return img;
+}
+
+const image_t *painter::img_generic(const image_desc &imgd, vec2i p, color color_mask, float scale) {
+    const image_t *img = image_get(imgd);
+    draw_image(img, p, color_mask, scale);
+    return img;
+}
+
+const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
+    const image_t *img = image_get(image_id);
+    vec2i offset{ 0, 0 };
+    if (!!(flags & ImgFlag_InternalOffset)) {
+        offset = img->animation.sprite_offset;
+    }
+
+    draw_image(img, p - offset, color_mask, scale, flags);
+    return img;
+}
 
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {

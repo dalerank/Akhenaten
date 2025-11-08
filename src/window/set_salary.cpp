@@ -59,7 +59,7 @@ static void draw_foreground(int) {
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(vec2i{dialog_x, 32}, dialog_width / 16, 25);
-    ImageDraw::img_generic(ctx, image_id_resource_icon(RESOURCE_DEBEN), vec2i{dialog_x + 16, 48});
+    ctx.img_generic(image_id_resource_icon(RESOURCE_DEBEN), vec2i{dialog_x + 16, 48});
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK_ON_LIGHT);
 
     inner_panel_draw({ 144, 80 }, { 22, 15 });

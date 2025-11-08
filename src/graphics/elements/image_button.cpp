@@ -55,7 +55,7 @@ void image_buttons_draw(vec2i pos, image_button* buttons, int num_buttons, int s
             image_id += 3;
         }
 
-        ImageDraw::img_generic(ctx, image_id, pos + vec2i{btn->x, btn->y});
+        ctx.img_generic(image_id, pos + vec2i{btn->x, btn->y});
     }
 }
 

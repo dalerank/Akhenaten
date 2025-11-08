@@ -333,7 +333,7 @@ static void draw_city_message_text(const lang_message& msg) {
                 //                const scenario_request *request = scenario_request_get(player_message.param1);
                 const auto& city_msg = city_message_get(data.message_id);
                 int y_offset = data.y_text + 86 + lines * 16;
-                ImageDraw::img_generic(ctx, resource_image(city_msg.req_resource), vec2i{data.x_text + 8, y_offset - 4});
+                ctx.img_generic(resource_image(city_msg.req_resource), vec2i{data.x_text + 8, y_offset - 4});
                 int width = text_draw_number(stack_proper_quantity(city_msg.req_amount, city_msg.req_resource), '@', " ", data.x_text + 28, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 lang_text_draw(23, city_msg.req_resource, data.x_text + 26 + width, y_offset, FONT_NORMAL_WHITE_ON_DARK);
                 //                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
@@ -377,7 +377,7 @@ static void draw_title(const lang_message& msg) {
     if (img && !city_msg.hide_img) {
         int image_x = msg.image.pos.x;
         int image_y = msg.image.pos.y;
-        ImageDraw::img_generic(ctx, image_id, vec2i{data.pos.x + image_x, data.pos.y + image_y});
+        ctx.img_generic(image_id, vec2i{data.pos.x + image_x, data.pos.y + image_y});
 
         if (data.pos.y + image_y + img->height + 8 > data.y_text)
             data.y_text = data.pos.y + image_y + img->height + 8;
@@ -497,7 +497,7 @@ static void draw_background_image() {
         scenario_request request = scenario_request_get_visible(g_player_message_data.param1);
         if (request.is_valid()) {
             text_draw_number(request.amount, '@', " ", data.pos.x + 8, y_text, FONT_NORMAL_WHITE_ON_DARK);
-            ImageDraw::img_generic(ctx, image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), vec2i{data.pos.x + 70, y_text - 5});
+            ctx.img_generic(image_id_resource_icon(request.resource) + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON), vec2i{data.pos.x + 70, y_text - 5});
             lang_text_draw(23, request.resource, data.pos.x + 100, y_text, FONT_NORMAL_WHITE_ON_DARK);
             if (request.state <= e_event_state_overdue) {
                 width = lang_text_draw_amount(8, 4, request.months_to_comply, data.pos.x + 200, y_text, FONT_NORMAL_WHITE_ON_DARK);

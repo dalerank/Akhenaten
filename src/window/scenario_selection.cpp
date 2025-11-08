@@ -213,14 +213,14 @@ static void draw_scenario_thumbnail(int image_id) {
     switch (data.dialog) {
     case MAP_SELECTION_CCK_LEGACY:
     case MAP_SELECTION_CUSTOM:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 36});
+        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 36});
         break;
     case MAP_SELECTION_CAMPAIGN:
     case MAP_SELECTION_CAMPAIGN_SINGLE_LIST:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 56});
+        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 56});
         break;
     case MAP_SELECTION_CAMPAIGN_UNUSED_BACKGROUND:
-        ImageDraw::img_generic(ctx, image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 60});
+        ctx.img_generic(image_id_from_group(GROUP_SCENARIO_IMAGE) + image_id, vec2i{78, 60});
         break;
     }
 }
