@@ -4,6 +4,7 @@
 #include FT_LCD_FILTER_H
 
 #include <iostream>
+#include <cassert>
 
 namespace Trex
 {
@@ -15,7 +16,7 @@ namespace Trex
 		{
 			if(FT_Init_FreeType(&library))
 			{
-				throw std::runtime_error("Error: could not initialize FreeType library");
+				assert(false && "Error: could not initialize FreeType library");
 			}
 		}
 		return library;
@@ -28,7 +29,7 @@ namespace Trex
 
 		if(FT_New_Face(library, path, faceIndex, &face))
 		{
-			throw std::runtime_error("Error: could not load font");
+			assert(false && "Error: could not load font");
 		}
 
 		SetSize(Points{ 12 }); // Default size
@@ -75,7 +76,7 @@ namespace Trex
 		}
 		else
 		{
-			throw std::runtime_error("Error: invalid font size type");
+			assert(false && "Error: invalid font size type");
 		}
 	}
 
@@ -90,7 +91,7 @@ namespace Trex
 		FT_Error error = FT_Set_Pixel_Sizes(face, 0, size.value);
 		if (error)
 		{
-			throw std::runtime_error("Error: could not set font size");
+			assert(false && "Error: could not set font size");
 		}
 	}
 
@@ -105,7 +106,7 @@ namespace Trex
 		FT_Error error = FT_Set_Char_Size(face, 0, size.value * 64, 0, 0); // 72 dpi used as default
 		if (error)
 		{
-			throw std::runtime_error("Error: could not set font size");
+			assert(false && "Error: could not set font size");
 		}
 	}
 

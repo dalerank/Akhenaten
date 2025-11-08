@@ -85,6 +85,8 @@ int rich_text_t::get_lexem_width(pcstr str, int in_link) {
     int guard = 0;
     int word_char_seen = 0;
     int num_bytes = 1;
+    int last_letter_spacing = 0;
+    
     while (*str && ++guard < 2000) {
         if (*str == ' ') {
             if (word_char_seen) {
@@ -92,14 +94,23 @@ int rich_text_t::get_lexem_width(pcstr str, int in_link) {
             }
 
             width += 4;
-        } else if (*str > ' ') {
+            last_letter_spacing = 0;
+            num_bytes = 1;
+        } else if ((unsigned char)*str > ' ') {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += normal_font_def->letter_spacing + image_letter(glyph.imagid)->width;
+                width += image_letter(glyph.imagid)->width + normal_font_def->letter_spacing;
+                last_letter_spacing = normal_font_def->letter_spacing;
+                word_char_seen = 1;
             }
         }
-        str++;
+        str += num_bytes;
+    }
+    
+    // Remove letter_spacing after the last character
+    if (word_char_seen && last_letter_spacing > 0) {
+        width -= last_letter_spacing;
     }
 
     return width;
@@ -114,7 +125,9 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
     int guard = 0;
     int word_char_seen = 0;
     int start_link = 0;
+    int last_letter_spacing = 0;
     *num_chars = 0;
+    
     while (*str && ++guard < 2000) {
         if (*str == '@') {
             str++;
@@ -149,11 +162,13 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
                 break;
 
             width += 4;
-        } else if (*str > ' ') {
+            last_letter_spacing = 0;
+        } else if ((unsigned char)*str > ' ') {
             // normal char
             const auto glyph = font_letter_id(normal_font_def, (const uint8_t*)str, &num_bytes);
             if (glyph.imagid >= 0) {
-                width += 1 + image_letter(glyph.imagid)->width;
+                width += image_letter(glyph.imagid)->width + 1;
+                last_letter_spacing = 1;
             }
 
             word_char_seen = 1;
@@ -163,15 +178,17 @@ int rich_text_t::get_word_width(pcstr str, int in_link, int* num_chars) {
                     width += 4;
                     start_link = 0;
                 }
-                if (!in_link) {
-                    *num_chars += num_bytes;
-                    break;
-                }
             }
         }
         str += num_bytes;
         *num_chars += num_bytes;
     }
+    
+    // Remove letter_spacing after the last character
+    if (word_char_seen && last_letter_spacing > 0) {
+        width -= last_letter_spacing;
+    }
+    
     return width;
 }
 
@@ -280,6 +297,8 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
         int current_width, x_line_offset;
         current_width = x_line_offset = paragraph ? 50 : 0;
         paragraph = 0;
+        int line_has_content = (current_width > 0) ? 1 : 0;
+        
         while ((has_more_characters || image_height_lines) && current_width < box_width) {
             if (image_height_lines) {
                 image_height_lines--;
@@ -287,13 +306,15 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
             }
             int word_num_chars;
             int last_word_width = get_word_width(text, 0, &word_num_chars);
+            
+            // If adding this word would exceed box width and we already have content, break to next line
+            if (line_has_content && current_width + last_word_width >= box_width) {
+                break;
+            }
+            
             current_width += last_word_width;
-            if (current_width >= box_width) {
-                if (current_width == 0)
-                    has_more_characters = 0;
-
-            } else {
-                for (int i = 0; i < word_num_chars; i++) {
+            
+            for (int i = 0; i < word_num_chars; i++) {
                     char c = *text++;
                     if (c == '@') {
                         if (*text == 'P') {
@@ -347,10 +368,12 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                         tmp_line.append(c);
                     }
                 }
+                
+                line_has_content = 1;
+                
                 if (!text || !*text) {
                     has_more_characters = 0;
                 }
-            }
         }
 
         int outside_viewport = 0;
