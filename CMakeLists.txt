@@ -659,31 +659,33 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-if (OPTION_SYSTEM_LIBPNG)
-    if (OPTION_BUILD_LIBPNG)
-        FetchContent_Declare(
-                zlib
-                GIT_REPOSITORY https://github.com/madler/zlib
-                GIT_TAG v1.3.1
-        )
-        FetchContent_MakeAvailable(zlib)
-        include_directories(${ZLIB_INCLUDE_DIR})
-        target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+if (OPTION_BUILD_LIBPNG)
+    # Build libpng from source using FetchContent
+    FetchContent_Declare(
+            zlib
+            GIT_REPOSITORY https://github.com/madler/zlib
+            GIT_TAG v1.3.1
+    )
+    FetchContent_MakeAvailable(zlib)
+    include_directories(${ZLIB_INCLUDE_DIR})
+    target_link_libraries(${GAME} ${ZLIB_LIBRARY})
 
-        FetchContent_Declare(
-                libpng
-                GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-                GIT_TAG v1.6.50
-        )
-        FetchContent_MakeAvailable(libpng)
-        set(PNG_LIBRARIES png_static)
-    else()
-        find_package(PNG)
-    endif()
-
+    FetchContent_Declare(
+            libpng
+            GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+            GIT_TAG v1.6.50
+    )
+    FetchContent_MakeAvailable(libpng)
+    set(PNG_LIBRARIES png_static)
+    include_directories(${PNG_INCLUDE_DIRS})
+    target_link_libraries(${GAME} ${PNG_LIBRARIES})
+elseif (OPTION_SYSTEM_LIBPNG)
+    # Use system libpng
+    find_package(PNG REQUIRED)
     include_directories(${PNG_INCLUDE_DIRS})
     target_link_libraries(${GAME} ${PNG_LIBRARIES})
 else()
+    # Use bundled ext/png
     add_subdirectory(ext/png)
     include_directories(${EXTPNG_INCLUDE_DIR})
     target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
