@@ -74,7 +74,7 @@ struct graphics_renderer_interface {
     void draw_rect(vec2i start, vec2i size, color color);
     void fill_rect(vec2i start, vec2i size, color color);
 
-    void draw_image_grayscale(painter &ctx, const image_t* img, vec2i pos, float scale = 1.f, ImgFlags flags = ImgFlag_None);
+
     bool save_screen_buffer(painter &ctx, color *pixels, int x, int y, int width, int height, int row_width);
 
     void create_custom_texture(int type, int width, int height);
