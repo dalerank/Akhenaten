@@ -1,6 +1,6 @@
-#include "atlas.hpp"
+#include "dynamic_atlas.h"
 
-#include "font.hpp"
+#include "dynamic_font.h"
 #include <ft2build.h>
 #include <freetype/ftoutln.h>
 #include <sdf/ftsdfrend.h>
