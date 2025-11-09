@@ -15,9 +15,6 @@ if [ "$1" != "arm64" ] && [ "$1" != "x86_64" ] && [ "$1" != "u2b" ]; then
   exit 1
 fi
 
-rm -rf build 2>/dev/null
-mkdir build
-
 function assemble_package()
 {
 	cd build/akhenaten.app/Contents/MacOS
@@ -32,7 +29,10 @@ function assemble_package()
 
 function compile_arm64()
 {
-	export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH"
+	rm -rf build 2>/dev/null
+  mkdir build
+
+	export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
 	export LDFLAGS="-L/opt/homebrew/lib"
 	export CFLAGS="-I/opt/homebrew/include"
 	export CPPFLAGS="-I/opt/homebrew/include"
@@ -45,6 +45,9 @@ function compile_arm64()
 
 function compile_x86_64()
 {
+  rm -rf build 2>/dev/null
+  mkdir build
+  
 	export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 	export LDFLAGS="-L/usr/local/lib"
 	export CFLAGS="-I/usr/local/include"
@@ -59,13 +62,13 @@ function compile_x86_64()
 function compile_u2b()
 {
 	rm -f /private/tmp/akhenaten_* 2>/dev/null
-	compile_x86_64
-	install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
-	mv akhenaten /private/tmp/akhenaten_x86
-	cd "$MAIN_DIR"
 	compile_arm64
 	install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
 	mv akhenaten /private/tmp/akhenaten_arm
+	cd "$MAIN_DIR"	
+	compile_x86_64
+	install_name_tool -add_rpath "@executable_path/../Frameworks" akhenaten
+	mv akhenaten /private/tmp/akhenaten_x86
 	lipo /private/tmp/akhenaten_arm /private/tmp/akhenaten_x86 -output akhenaten -create
 	rm /private/tmp/akhenaten_*
 }
