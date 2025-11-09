@@ -273,22 +273,23 @@ figure_hyena = {
 	category: figure_category_animal
 	max_damage: 100
 	attack_value: 6
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
-figure_antelope = {
-	animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:30, max_frames:12 }
-		death : { pack:PACK_SPR_AMBIENT, id:31, max_frames:8, duration:3, loop:false }
-		eating : { pack:PACK_SPR_AMBIENT, id:32, max_frames:7 }
-		idle : { pack:PACK_SPR_AMBIENT, id:33, max_frames:8 }
-		run : { pack:PACK_SPR_AMBIENT, id:34, max_frames:8 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ANTELOPE }
+figure_antelope {
+	animations {
+		_pack { pack:PACK_SPR_AMBIENT }
+		walk { id:30, max_frames: 12 }
+		death { id:31, max_frames:8, duration:3, loop:false }
+		eating { id:33, max_frames:7 }
+		idle { id:33, max_frames:8 }
+		run { id:34, max_frames:8 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ANTELOPE }
 	}
 
 	category: figure_category_animal
 	max_damage: 100
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
 figure_horses = {
