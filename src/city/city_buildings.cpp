@@ -359,12 +359,11 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
             b->health_proof = 0;
         }
 
-        auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[ std::min<int>(diff, arr.size()-1) ]; };
         const auto &params = building_static_params::get(b->type);
         b->des_influence = params.desirability.to_influence();
-        b->fire_risk_increase = approach_diff(params.fire_risk);
-        b->damage_risk_increase = approach_diff(params.damage_risk);
-        b->max_workers = approach_diff(params.laborers);
+        b->fire_risk_increase = params.fire_risk;
+        b->damage_risk_increase = params.damage_risk;
+        b->max_workers = params.laborers;
     }
     //building_extra_data.created_sequence = 0;
 });

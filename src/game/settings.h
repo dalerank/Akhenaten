@@ -28,6 +28,7 @@ enum e_difficulty {
     DIFFICULTY_HARD = 3,
     DIFFICULTY_VERY_HARD = 4
 };
+uint8_t game_difficulty();
 
 enum e_sound_type {
     SOUND_MUSIC = 1,

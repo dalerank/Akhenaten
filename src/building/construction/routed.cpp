@@ -1,6 +1,5 @@
 #include "routed.h"
 
-#include "building/model.h"
 #include "building/building_wall.h"
 #include "building/building_road.h"
 #include "core/calc.h"

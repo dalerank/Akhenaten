@@ -1,7 +1,6 @@
 #include "city_population.h"
 
 #include "building/building_house.h"
-#include "building/model.h"
 #include "city/city.h"
 #include "game/game_events.h"
 #include "city/city_message.h"
@@ -529,7 +528,7 @@ int* calculate_houses_demanding_goods(int* housing_type_counts) {
     }
 
     for (int i = 0; i <= 19; i++) {
-        const auto &model = model_get_house(i);
+        const auto &model = building_house::get_model(i);
         if (model.pottery)
             houses_demanding_goods[0] += housing_type_counts[i];
 

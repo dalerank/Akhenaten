@@ -1,7 +1,6 @@
 #include "window_info.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "building/building_storage.h"
 #include "city/city.h"
 #include "city/city_resource.h"

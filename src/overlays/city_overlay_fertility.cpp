@@ -1,7 +1,6 @@
 #include "city_overlay_fertility.h"
 
 #include "grid/floodplain.h"
-#include "building/model.h"
 #include "building/building.h"
 #include "figure/figure.h"
 #include "grid/property.h"

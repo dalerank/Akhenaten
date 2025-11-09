@@ -1,6 +1,5 @@
 #include "city_overlay_criminal.h"
 
-#include "building/model.h"
 #include "building/building_house.h"
 #include "figure/figure.h"
 #include "grid/property.h"

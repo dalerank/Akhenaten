@@ -19,8 +19,8 @@
 #include "grid/point.h"
 #include "grid/desirability.h"
 #include "sound/sound_city.h"
+#include "game/difficulty.h"
 #include "core/variant.h"
-#include "model.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -540,15 +540,15 @@ struct building_static_params {
     uint16_t production_rate;
     xstring info_title_id;
     int num_types;
-    std::array<uint16_t, 5> cost;
+    uint16_dcy cost;
     building_desirability_t desirability;
     uint16_t progress_max;
     e_overlay overlay;
     uint16_t max_service;
 
-    svector<uint8_t, 5> laborers;
-    svector<int8_t, 5> fire_risk;
-    svector<int8_t, 5> damage_risk;
+    uint8_dcy laborers;
+    int8_dcy fire_risk;
+    int8_dcy damage_risk;
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;

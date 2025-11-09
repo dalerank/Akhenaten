@@ -81,11 +81,9 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
     des_influence = props.desirability.to_influence();
 
-    e_difficulty diff = g_settings.difficulty();
-    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
-    max_workers = approach_diff(props.laborers);
-    fire_risk_increase = approach_diff(props.fire_risk);
-    damage_risk_increase = approach_diff(props.damage_risk);
+    max_workers = props.laborers;
+    fire_risk_increase = props.fire_risk;
+    damage_risk_increase = props.damage_risk;
 
     // unique data
     input = params().input;
@@ -1235,7 +1233,6 @@ void building_impl::on_tick(bool refresh_only) {
 }
 
 void building_static_params::archive_unload() {
-    cost.fill(0);
 }
 
 void building_static_params::initialize() {
@@ -1414,7 +1411,7 @@ const building_planer_renderer &building_planer_renderer::get(e_building_type e)
 }
 
 uint16_t building_static_params::get_cost() const {
-    const uint16_t mcost = this->cost[g_settings.difficulty()];
+    const uint16_t mcost = this->cost.get();
     return mcost;
 }
 

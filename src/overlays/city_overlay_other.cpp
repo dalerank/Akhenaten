@@ -1,7 +1,6 @@
 #include "city_overlay_other.h"
 
 #include "building/building_house.h"
-#include "building/model.h"
 #include "city/constants.h"
 
 #include "core/calc.h"
@@ -29,7 +28,7 @@ int city_overlay_food_stocks::get_column_height(const building *b) const {
     }
 
     auto &housed = house->runtime_data();
-    if (model_get_house(house->house_level()).food_types) {
+    if (house->model().food_types) {
         int pop = housed.population;
         int stocks = 0;
         
@@ -63,7 +62,7 @@ xstring city_overlay_food_stocks::get_tooltip_for_building(tooltip_context *c, c
         return {};
     }
 
-    if (!model_get_house(house->house_level()).food_types) {
+    if (!house->model().food_types) {
         return ui::str(66, 104);
     } else {
         int stocks_present = 0;

@@ -1,7 +1,6 @@
 #include "city_overlay_bazaar_access.h"
 
 #include "grid/floodplain.h"
-#include "building/model.h"
 #include "building/building_house.h"
 #include "figure/figure.h"
 #include "grid/property.h"

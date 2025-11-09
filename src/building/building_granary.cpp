@@ -1,7 +1,6 @@
 #include "building_granary.h"
 
 #include "building/destruction.h"
-#include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "city/city.h"
 #include "city/city_message.h"

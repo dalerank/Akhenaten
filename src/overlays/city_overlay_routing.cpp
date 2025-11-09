@@ -1,6 +1,5 @@
 #include "city_overlay_routing.h"
 
-#include "building/model.h"
 #include "building/building.h"
 #include "figure/figure.h"
 #include "grid/property.h"

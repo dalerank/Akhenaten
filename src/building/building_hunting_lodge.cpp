@@ -1,6 +1,5 @@
 #include "building_hunting_lodge.h"
 
-#include "building/model.h"
 #include "core/direction.h"
 #include "city/object_info.h"
 #include "city/city.h"
