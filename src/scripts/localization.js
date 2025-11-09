@@ -27,9 +27,9 @@ game_languages = [
     font_configs [
       { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
       { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, shadow_offset:1 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, shadow_offset:1 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, shadow_offset:1 },
       { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
       { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
       { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },

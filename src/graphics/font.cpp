@@ -24,8 +24,9 @@ struct font_config {
     uint8_t size;
     uint32_t color;
     bool bold;
+    int shadow_offset;
 };
-ANK_CONFIG_STRUCT(font_config, type, size, bold, color)
+ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset)
 
 template<>
 struct stable_array_max_elements<font_config> {
@@ -522,7 +523,7 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
             (fconfig.color >> 24) & 0xff   // Alpha
         };
         // padding=0, fit=true to create bitmaps with exact glyph dimensions (no extra space)
-        DynamicFont::Atlas atlas(symbols_font, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold);
+        DynamicFont::Atlas atlas(symbols_font, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold, fconfig.shadow_offset);
 
         const auto &bitmap = atlas.GetBitmap();
 
@@ -690,11 +691,6 @@ void font_atlas_regenerate() {
     // Reset font pack
     font_pack.handle->cleanup_and_destroy();
     font_pack.handle->images_array.clear();
-
-    struct font_config {
-        e_font font_type;
-        color font_color;
-    };
 
     // Initialize packer
     vec2i max_texture_sizes = g_render.get_max_image_size();
