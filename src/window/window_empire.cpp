@@ -546,7 +546,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         }
 
         int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
-        int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
+        const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
         vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height)/2};
 
         tooltip_text = ui::str(text_group, city->name_id);
