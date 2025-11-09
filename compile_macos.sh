@@ -17,7 +17,7 @@ fi
 
 function assemble_package()
 {
-	cd build/akhenaten.app/Contents/MacOS
+	cd "$MAIN_DIR"/build/akhenaten.app/Contents/MacOS
 	mkdir ../Frameworks Data 2>/dev/null
 	
 	cp -R "$HOME"/Library/Frameworks/SDL2.framework ../Frameworks/
