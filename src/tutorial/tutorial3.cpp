@@ -30,29 +30,6 @@ void tutorial_3::update_step(xstring s) {
         events::emit(event_building_menu_update{ s });
         messages::popup("message_tutorial_municipal_structures", 0, 0);
     }
-
-    const auto advisors = { ADVISOR_LABOR, ADVISOR_ENTERTAINMENT, ADVISOR_RELIGION };
-    for (auto a : advisors) {
-        g_city.set_advisor_available(a, AVAILABLE);
-    }
-}
-
-void tutorial3_warehouse_pottery_1_check(event_warehouse_filled ev) {
-    if (g_tutorials_flags.tutorial_3.pottery_made_1) {
-        return;
-    } 
-    
-    const int amount = g_scenario.vars.get_int("pottery_step1_stored", 100);
-    if (g_city.resource.yards_stored(RESOURCE_POTTERY) < amount) {
-        return;
-    }
-
-    events::unsubscribe(&tutorial3_warehouse_pottery_1_check);
-    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
-    g_tutorials_flags.tutorial_3.pottery_made_1 = true;
-    g_tutorials_flags.tutorial_3.pottery_made_year = game.simtime.year;
-
-    messages::popup("message_tutorial_food_and_farming", 0, 0);
 }
 
 void tutorial3_warehouse_pottery_2_check(event_warehouse_filled ev) {

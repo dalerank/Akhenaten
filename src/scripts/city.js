@@ -13,6 +13,10 @@ city {
         }
     }
 
+    yards_stored : function(resource_type) {
+        return __city_yards_stored(resource_type)
+    }
+
     building_is_temple : function(building_id) {
         return __city_building_is_temple(building_id)
     }
