@@ -19,7 +19,6 @@ mission2 {
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
 	stages {
-		tutorial_health { buildings [BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN] }
 		tutorial_gardens { buildings [BUILDING_ROADBLOCK, BUILDING_FERRY, BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA] },
 	}
 
@@ -31,13 +30,25 @@ mission2 {
 		victory_last_action_delay : 3
 
 		figs_stored_handled : false
+		disease_handled : false
+	}
+}
+
+[event=event_mission_start, mission=mission2]
+function tutorial2_on_start(ev) {
+	city.set_goal_tooltip("#mission2_store_figs")
+
+	if (mission.figs_stored_handled) {
+		city.use_building(BUILDING_CLAY_PIT, true)
+		city.use_building(BUILDING_POTTERY_WORKSHOP, true)
+		city.use_building(BUILDING_STORAGE_YARD, true)
 	}
 }
 
 [event=event_granary_resource_added, mission=mission2]
 function tutorial2_on_filled_granary(ev) {
     if (mission.figs_stored_handled) {
-        return;
+        return
     }
 
     var granary = city.get_granary(ev.bid)
@@ -48,11 +59,27 @@ function tutorial2_on_filled_granary(ev) {
     }
 
 	mission.figs_stored_handled = true
-    events::unsubscribe(&tutorial3_on_filled_granary);
-    events::emit(event_building_menu_update { tutorial_stage.tutorial_industry });
+	mission.last_action_time = game.absolute_day
 
-    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
-    g_tutorials_flags.tutorial_3.figs_stored = true;
-    
-    messages::popup("message_tutorial_industry", 0, 0);
+	city.use_building(BUILDING_CLAY_PIT, true)
+	city.use_building(BUILDING_POTTERY_WORKSHOP, true)
+	city.use_building(BUILDING_STORAGE_YARD, true)
+
+	ui.popup_message("message_tutorial_industry")
+}
+
+[event=event_city_disease, mission=mission2]
+function tutorial3_on_disease(ev) {
+    if (mission.disease_handled) {
+        return
+    }
+
+    mission.last_action_time = game.absolute_day
+    mission.disease_handled = true
+
+	city.use_building(BUILDING_WATER_SUPPLY, true)
+	city.use_building(BUILDING_APOTHECARY, true)
+	city.use_building(BUILDING_PHYSICIAN, true)
+
+	ui.popup_message("message_basic_healthcare")
 }
