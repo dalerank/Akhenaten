@@ -1,6 +1,6 @@
 #pragma once
 
-#include "atlas.hpp"
+#include "dynamic_atlas.h"
 #include "core/custom_span.hpp"
 
 #include <vector>
