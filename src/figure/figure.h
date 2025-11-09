@@ -51,6 +51,7 @@ class figure_homeless;
 class figure_festival_guy;
 class figure_ostrich;
 class figure_antelope;
+class figure_hippo;
 class figure_animal;
 
 struct animation_t;
@@ -235,6 +236,8 @@ public:
     ALLOW_SMART_CAST_FIGURE(festival_guy)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
+    ALLOW_SMART_CAST_FIGURE(hippo)
+    ALLOW_SMART_CAST_FIGURE(antelope)
     ALLOW_SMART_CAST_FIGURE(animal)
 
     figure(int _id) {
@@ -248,7 +251,7 @@ public:
     bool in_roam_history(int goffset);
     void add_roam_history(int goffset);
 
-    void apply_damage(int hit_dmg);
+    void apply_damage(int hit_dmg, figure_id attaker_id);
 
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
@@ -539,7 +542,7 @@ public:
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
     virtual void formation_reset_to_initial(const formation *m) {}
-    virtual void apply_damage(int hit_dmg) { base.damage += hit_dmg; }
+    virtual void apply_damage(int hit_dmg, figure_id attaker_id) { base.damage += hit_dmg; }
 
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
@@ -572,6 +575,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
     ALLOW_SMART_CAST_FIGURE_I(antelope)
+    ALLOW_SMART_CAST_FIGURE_I(hippo)
     ALLOW_SMART_CAST_FIGURE_I(animal)
 
     inline building *home() { return base.home(); }
@@ -656,6 +660,7 @@ GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)
 GENERATE_SMART_CAST_FIGURE(ostrich)
 GENERATE_SMART_CAST_FIGURE(antelope)
+GENERATE_SMART_CAST_FIGURE(hippo)
 GENERATE_SMART_CAST_FIGURE(animal)
 
 template <typename dest_type>
