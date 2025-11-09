@@ -31,6 +31,7 @@ mission2 {
 
 		figs_stored_handled : false
 		disease_handled : false
+		pottery_step1_stored_handled : false
 	}
 }
 
@@ -43,6 +44,10 @@ function tutorial2_on_start(ev) {
 		city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 		city.use_building(BUILDING_STORAGE_YARD, true)
 	}
+
+	city.set_advisor_available(ADVISOR_LABOR, 1)
+	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
+	city.set_advisor_available(ADVISOR_RELIGION, 1)
 }
 
 [event=event_granary_resource_added, mission=mission2]
@@ -64,6 +69,23 @@ function tutorial2_on_filled_granary(ev) {
 	city.use_building(BUILDING_CLAY_PIT, true)
 	city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 	city.use_building(BUILDING_STORAGE_YARD, true)
+
+	ui.popup_message("message_tutorial_food_and_farming")
+}
+
+[event=event_warehouse_filled, mission=mission2]
+function tutorial3_warehouse_pottery_1_check(ev) {
+    if (mission.pottery_step1_stored_handled) {
+        return
+    } 
+    	
+    var amount = city.yards_stored(RESOURCE_POTTERY)
+    if (amount < mission.pottery_step1_stored) {
+        return
+    }
+
+	mission.pottery_step1_stored_handled = true
+	mission.last_action_time = game.absolute_day
 
 	ui.popup_message("message_tutorial_industry")
 }
