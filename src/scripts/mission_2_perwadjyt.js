@@ -19,7 +19,6 @@ mission2 {
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
 	stages {
-		tutorial_industry { buildings [BUILDING_CLAY_PIT, BUILDING_POTTERY_WORKSHOP, BUILDING_STORAGE_YARD] }
 		tutorial_health { buildings [BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN] }
 		tutorial_gardens { buildings [BUILDING_ROADBLOCK, BUILDING_FERRY, BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA] },
 	}
@@ -30,5 +29,30 @@ mission2 {
 		pottery_step1_population_cap : 500
 		pottery_step2_stored : 200
 		victory_last_action_delay : 3
+
+		figs_stored_handled : false
 	}
+}
+
+[event=event_granary_resource_added, mission=mission2]
+function tutorial2_on_filled_granary(ev) {
+    if (mission.figs_stored_handled) {
+        return;
+    }
+
+    var granary = city.get_granary(ev.bid)
+    var figs_stored = granary ? granary.amount(RESOURCE_FIGS) : 0
+
+    if (figs_stored < mission.figs_stored) {
+        return
+    }
+
+	mission.figs_stored_handled = true
+    events::unsubscribe(&tutorial3_on_filled_granary);
+    events::emit(event_building_menu_update { tutorial_stage.tutorial_industry });
+
+    g_scenario.vars.set_int("last_action", game.simtime.absolute_day(true));
+    g_tutorials_flags.tutorial_3.figs_stored = true;
+    
+    messages::popup("message_tutorial_industry", 0, 0);
 }

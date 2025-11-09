@@ -186,6 +186,7 @@ localization_en = [
   {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"residents total"}
 
   {key: "#main_menu_mods", text:"Mods"}
+  {key: "#mission2_store_figs", text:"Build a Granary and fill it with figs"}
 
   {key: "#message_population_title", text:"Population Milestone"}
   {key: "#message_population_100", text:"100 people have moved into your village"}
