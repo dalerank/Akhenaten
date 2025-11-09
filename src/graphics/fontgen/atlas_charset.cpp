@@ -1,4 +1,4 @@
-#include "charset.hpp"
+#include "atlas_charset.h"
 
 #include <stdexcept>
 #include <cassert>

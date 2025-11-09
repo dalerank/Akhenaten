@@ -6,9 +6,9 @@
 #include "graphics/imagepak_holder.h"
 #include "platform/renderer.h"
 #include "content/atlas_packer.h"
-#include "graphics/fontgen/atlas.hpp"
-#include "graphics/fontgen/charset.hpp"
-#include "graphics/fontgen/font.hpp"
+#include "graphics/fontgen/dynamic_atlas.h"
+#include "graphics/fontgen/atlas_charset.h"
+#include "graphics/fontgen/dynamic_font.h"
 #include "game/game_config.h"
 
 #include <set>

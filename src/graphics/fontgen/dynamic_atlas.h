@@ -3,8 +3,8 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Font.hpp"
-#include "Charset.hpp"
+#include "dynamic_font.h"
+#include "atlas_charset.h"
 #include "content/dir.h"
 
 namespace DynamicFont {
