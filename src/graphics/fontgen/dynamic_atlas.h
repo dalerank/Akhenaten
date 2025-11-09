@@ -25,8 +25,8 @@ namespace DynamicFont {
 
     class Atlas {
     public:
-        Atlas(const std::string &fontPath, int fontSize, const Charset &, RenderMode, int padding, bool fit, uint8_t *colors, bool bold);
-        Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &, RenderMode, int padding, bool fit, bool bold);
+        Atlas(const std::string &fontPath, int fontSize, const Charset &, RenderMode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset = 0);
+        Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &, RenderMode, int padding, bool fit, bool bold, int shadowOffset = 0);
 
         class FreeTypeGlyph;
         class Bitmap;
@@ -69,7 +69,7 @@ namespace DynamicFont {
             unsigned int Height() const { return m_Height; }
             unsigned int Channels() const { return m_Channels; }
 
-            void Draw(int x, int y, const FreeTypeGlyph &, uint8_t *colors);
+            void Draw(int x, int y, const FreeTypeGlyph &, uint8_t *colors, int shadowOffset = 0);
         private:
             std::vector<uint8_t> m_Data{};
             unsigned int m_Width{};
@@ -78,13 +78,14 @@ namespace DynamicFont {
         };
 
     private:
-        void InitializeAtlas(const Charset &, RenderMode, int padding, bool fit, bool bold);
+        void InitializeAtlas(const Charset &, RenderMode, int padding, bool fit, bool bold, int shadowOffset);
         void InitializeDefaultGlyphIndex();
 
         std::shared_ptr<Font> m_Font;
         Bitmap m_Bitmap;
         Glyphs m_Glyphs;
         uint8_t m_Color[4] = { 0, 0, 0, 0 };
+        int m_ShadowOffset = 0;
     };
 }
 

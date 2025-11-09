@@ -293,7 +293,7 @@ namespace DynamicFont {
         }
 
         Atlas::Bitmap BuildAtlasBitmap(
-            Atlas::Glyphs &glyphs, const std::vector<Atlas::FreeTypeGlyph> &ftGlyphs, Size atlasSize, int padding, int channels, uint8_t *colors) {
+            Atlas::Glyphs &glyphs, const std::vector<Atlas::FreeTypeGlyph> &ftGlyphs, Size atlasSize, int padding, int channels, uint8_t *colors, int shadowOffset) {
             Atlas::Bitmap bitmap(atlasSize.width, atlasSize.height, channels);
 
             int atlasX = 0;
@@ -303,8 +303,8 @@ namespace DynamicFont {
                 unsigned int glyphWidth = glyph.Width();
                 unsigned int glyphHeight = glyph.Height();
 
-                int glyphWidthPadding = static_cast<int>(glyphWidth) + padding * 2;
-                int glyphHeightPadding = static_cast<int>(glyphHeight) + padding * 2;
+                int glyphWidthPadding = static_cast<int>(glyphWidth) + padding * 2 + shadowOffset;
+                int glyphHeightPadding = static_cast<int>(glyphHeight) + padding * 2 + shadowOffset;
 
                 maxHeight = std::max(maxHeight, glyphHeightPadding);
                 // If we are out of atlas bounds, go to the next line
@@ -318,7 +318,7 @@ namespace DynamicFont {
                 int glyphXPosInBitmap = atlasX / channels + padding; // in pixels
                 int glyphYPosInBitmap = atlasY + padding;
 
-                bitmap.Draw(glyphXPosInBitmap, glyphYPosInBitmap, glyph, colors);
+                bitmap.Draw(glyphXPosInBitmap, glyphYPosInBitmap, glyph, colors, shadowOffset);
                 glyphs.Add(glyphXPosInBitmap, glyphYPosInBitmap, glyph);
 
                 atlasX += glyphWidthPadding * channels;
@@ -459,7 +459,7 @@ namespace DynamicFont {
         data[atlasIdx + 2] = glyph.ColorBlue(glyphX, glyphY);
     }
 
-    void Atlas::Bitmap::Draw(int x, int y, const Atlas::FreeTypeGlyph &glyph, uint8_t *colors) {
+    void Atlas::Bitmap::Draw(int x, int y, const Atlas::FreeTypeGlyph &glyph, uint8_t *colors, int shadowOffset) {
         int bitmapWidth = Width();
         int bitmapChannels = Channels();
 
@@ -467,7 +467,27 @@ namespace DynamicFont {
         unsigned int glyphWidth = glyph.Width();
         int glyphChannels = glyph.Channels();
 
-        // Copy glyph bitmap to atlas bitmap
+        // Draw shadow first (if shadowOffset > 0)
+        if (shadowOffset > 0 && bitmapChannels == 4) {
+            uint8_t shadowColor[4] = { 0, 0, 0, 128 }; // Semi-transparent black shadow
+            for (unsigned int glyphY = 0; glyphY < glyphHeight; ++glyphY) {
+                unsigned int atlasBitmapRow = (y + glyphY + shadowOffset) * bitmapWidth * bitmapChannels;
+                for (unsigned int glyphX = 0; glyphX < glyphWidth; ++glyphX) {
+                    unsigned int atlasBitmapIndex = atlasBitmapRow + (x + shadowOffset) * bitmapChannels + glyphX * bitmapChannels;
+                    // Draw shadow with reduced alpha
+                    uint8_t glyphAlpha = glyph.ByteAt(glyphX, glyphY);
+                    if (glyphAlpha > 0) {
+                        uint8_t shadowAlpha = (glyphAlpha * shadowColor[3]) / 255;
+                        m_Data[atlasBitmapIndex + 0] = shadowColor[0];
+                        m_Data[atlasBitmapIndex + 1] = shadowColor[1];
+                        m_Data[atlasBitmapIndex + 2] = shadowColor[2];
+                        m_Data[atlasBitmapIndex + 3] = std::max(m_Data[atlasBitmapIndex + 3], shadowAlpha);
+                    }
+                }
+            }
+        }
+
+        // Copy glyph bitmap to atlas bitmap (main glyph on top of shadow)
         for (unsigned int glyphY = 0; glyphY < glyphHeight; ++glyphY) {
             unsigned int atlasBitmapRow = (y + glyphY) * bitmapWidth * bitmapChannels;
             for (unsigned int glyphX = 0; glyphX < glyphWidth; ++glyphX) {
@@ -489,8 +509,8 @@ namespace DynamicFont {
         }
     }
 
-    Atlas::Atlas(const std::string &fontPath, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold)
-        : m_Font(std::make_shared<Font>(fontPath.c_str())), m_Glyphs(m_Font) {
+    Atlas::Atlas(const std::string &fontPath, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset)
+        : m_Font(std::make_shared<Font>(fontPath.c_str())), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset) {
         m_Font->SetSize(Pixels{ fontSize });
         if (colors) {
             m_Color[0] = colors[0];
@@ -498,22 +518,22 @@ namespace DynamicFont {
             m_Color[2] = colors[2];
             m_Color[3] = colors[3];
         }
-        InitializeAtlas(charset, mode, padding, fit, bold);
+        InitializeAtlas(charset, mode, padding, fit, bold, shadowOffset);
     }
 
-    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, bool bold)
-        : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font) {
+    Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, bool bold, int shadowOffset)
+        : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset) {
         m_Font->SetSize(Pixels{ fontSize });
-        InitializeAtlas(charset, mode, padding, fit, bold);
+        InitializeAtlas(charset, mode, padding, fit, bold, shadowOffset);
     }
 
-    void Atlas::InitializeAtlas(const Charset &charset, RenderMode mode, int padding, bool fit, bool bold) {
+    void Atlas::InitializeAtlas(const Charset &charset, RenderMode mode, int padding, bool fit, bool bold, int shadowOffset) {
         const Charset filledCharset = charset.IsFull() ? GetFullCharsetFilled(*m_Font) : charset;
 
         auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode, bold);
-        auto atlasSize = GetAtlasSize(ftGlyphs, padding, fit);
+        auto atlasSize = GetAtlasSize(ftGlyphs, padding + shadowOffset, fit);
 
-        auto bitmap = BuildAtlasBitmap(m_Glyphs, ftGlyphs, atlasSize, padding, GetChannels(mode), m_Color[3] ? m_Color : nullptr);
+        auto bitmap = BuildAtlasBitmap(m_Glyphs, ftGlyphs, atlasSize, padding, GetChannels(mode), m_Color[3] ? m_Color : nullptr, shadowOffset);
         this->m_Bitmap = std::move(bitmap);
 
         InitializeDefaultGlyphIndex();
