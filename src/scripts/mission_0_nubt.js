@@ -131,7 +131,7 @@ function tutorial1_on_filled_granary(ev) {
     }
 
     var granary = city.get_granary(ev.bid)
-    var meat_stored = granary.amount(RESOURCE_GAMEMEAT);
+    var meat_stored = granary.amount(RESOURCE_GAMEMEAT)
 
 	log_info("meat_stored:${meat_stored}", {meat_stored: meat_stored})
     if (meat_stored < mission.granary_meat_stored) {

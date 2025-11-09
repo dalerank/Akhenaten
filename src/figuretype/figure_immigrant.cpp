@@ -27,6 +27,13 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     tile2i entry = g_city.map.entry_point;
     auto f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     auto imm = f->dcast_immigrant();
+    assert(imm);
+
+    if (!imm) {
+        f->poof();
+        return;
+    }
+
     imm->advance_action(ACTION_1_IMMIGRANT_CREATED);
     house->base.set_figure(BUILDING_SLOT_IMMIGRANT, imm->id());
 

@@ -19,7 +19,6 @@ void config_show_tutorial_properties(bool header) {
 
         const auto &flags = g_tutorials_flags;
         game_debug_show_property("tut3 start", flags.tutorial_3.started);
-        game_debug_show_property("3:figs", flags.tutorial_3.figs_stored);
         game_debug_show_property("3:pottery_100", flags.tutorial_3.pottery_made_1);
         game_debug_show_property("3:pottery_100", flags.tutorial_3.pottery_made_2);
         game_debug_show_property("tut4 start", flags.tutorial_4.started);

@@ -12,15 +12,20 @@ enum e_house_progress {
 
 #define HOUSE_METAINFO(type, clsid) BUILDING_METAINFO(type, clsid, building_house);
 
+// Base class that encapsulates shared behaviour for every housing tier.
+// Derived classes only override evolution thresholds or provide different art/models.
 class building_house : public building_impl {
 public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
+    // Static configuration that is populated from configs for each specific house tier.
     struct house_params_t {
         model_house model;
     };
 
+    // Persistent state for a single house instance.
+    // Counts and timers here drive evolution logic.
     struct runtime_data_t : no_copy_assignment {
         //e_house_level level;
         uint16_t foods[8];
@@ -125,6 +130,7 @@ public:
     static const model_house &get_model(int level);
 };
 
+// --- Individual housing tiers -------------------------------------------------
 class building_house_crude_hut : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut);
@@ -350,6 +356,9 @@ public:
 };
 ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model)
 
+// ----------------------------------------------------------------------
+// Helpers that iterate over all valid houses. They are used by various
+// gameplay systems (overlays, advisors, economy calculations).
 template<typename T>
 void buildings_house_do(T func) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {

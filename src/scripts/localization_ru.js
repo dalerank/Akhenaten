@@ -114,4 +114,6 @@ localization_ru = [
     { key:"#TR_BUILDING_ROADBLOCK", text:"Дорожный блок"},
     { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Блокирует проход бесцельно бродящим ходокам"},
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"},
+
+    {key: "#mission2_store_figs", text:"Постройте зернохранилище и заполните его инжиром"}
 ]

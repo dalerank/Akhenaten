@@ -32,7 +32,7 @@ import imagepaks
 import missions
 import mission_0_nubt
 import mission_1_thinis
-import mission_2_
+import mission_2_perwadjyt
 import mission_5_timna
 import mission_6_behdet
 import mission_8_selima
