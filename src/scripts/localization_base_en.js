@@ -2722,7 +2722,6 @@ localization_base_en = [
     { group:62, id:25, text: "Build Apothecaries and Physicians to improve health" }
     { group:62, id:26, text: "Beautify your city, then review the Mission Briefing" }
     { group:62, id:27, text: "Fill a Storage Yard with pottery" }
-    { group:62, id:28, text: "Build a Granary and fill it with figs" }
     { group:62, id:29, text: "Import some bricks so that you can build a mastaba" }
     { group:62, id:30, text: "Make some papyrus and build a Scribal School" }
     { group:62, id:31, text: "Make a house evolve into a 'spacious apartment'" }
@@ -3878,7 +3877,6 @@ localization_base_en = [
     { group:127, id:38, text: "Housing FREE" }
     { group:127, id:39, text: "Housing FREE" }
     { group:127, id:40, text: "This house will devolve soon. The falling desirability of living in this locality is dragging it down" }
-    { group:127, id:41, text: "This house will devolve soon, as it lacks access to even the most primitive water source." }
     { group:127, id:42, text: "This house will devolve soon, as it is not visited by a water carrier" }
     { group:127, id:43, text: "This house will devolve soon, as there is no entertainment to be found in the location" }
     { group:127, id:44, text: "This house will devolve soon, as there is hardly any entertainment in the location" }

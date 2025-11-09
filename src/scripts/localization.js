@@ -7,16 +7,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -25,16 +25,16 @@ game_languages = [
     symbols:"А,Б,В,Г,Д,Е,Ж,З,И,Й,К,Л,М,Н,О,П,Р,С,Т,У,Ф,Х,Ц,Ч,Ш,Щ,Ъ,Ы,Ь,Э,Ю,Я,а,б,в,г,д,е,ж,з,и,й,к,л,м,н,о,п,р,с,т,у,ф,х,ц,ч,ш,щ,ъ,ы,ь,э,ю,я"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, shadow_offset:1 },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, shadow_offset:1 },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, shadow_offset:1 },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:true, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -43,16 +43,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,Ä,ä,Ö,ö,Ü,ü,É,é,À,à,È,è,ù"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -61,16 +61,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:true },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -79,16 +79,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -97,16 +97,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -115,16 +115,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -133,16 +133,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -151,16 +151,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"  
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -169,16 +169,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"  
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
   { 
@@ -187,16 +187,16 @@ game_languages = [
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
     font:"data/neucha.ttf"  
     font_configs [
-      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true },
-      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true },
-      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true },
-      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false },
-      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false },
-      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false },
-      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false },
-      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:false }
+      { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_LIGHT, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_NORMAL_WHITE_ON_DARK, size:14, color:0xffffffff, bold:true, line_height:14 },
+      { type: FONT_NORMAL_YELLOW, size:14, color:0xffffff18, bold:true, line_height:14 },
+      { type: FONT_NORMAL_BLUE, size:14, color:0xff0055ff, bold:true, line_height:14 },
+      { type: FONT_LARGE_BLACK_ON_LIGHT, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_LARGE_BLACK_ON_DARK, size:18, color:0xff000000, bold:false, line_height:18 },
+      { type: FONT_SMALL_OUTLINED, size:12, color:0xff000000, bold:false, line_height:12 },
+      { type: FONT_NORMAL_BLACK_ON_DARK, size:14, color:0xff000000, bold:false, line_height:14 },
+      { type: FONT_SMALL_SHADED, size:12, color:0xff000000, bold:true, line_height:12 }
     ]
   }
 ]

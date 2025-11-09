@@ -341,7 +341,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         font = fonts[0];
     }
 
-    int symbolh = get_letter_height((uint8_t *)"H", font);
+    const int symbolh = font_definition_for(font)->line_height;
     if (splittext) {
         svector<bstring128, 4> labels;
         string_to_array_t(labels, label, '\n');
@@ -374,7 +374,7 @@ generic_button &ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
         } else if (alingxcenter) {
             text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + 4, size.x, font, 0);
         } else {
-            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2 + 4, size.x, font, 0);
+            text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2, size.x, font, 0);
         }
     }    
 
@@ -396,7 +396,7 @@ generic_button &ui::large_button(pcstr label, vec2i pos, vec2i size, e_font font
     int focused = is_button_hover(gbutton, offset);
 
     large_label_draw(offset.x + pos.x, offset.y + pos.y, size.x / 16, focused ? 1 : 0);
-    int letter_height = get_letter_height((uint8_t *)label, font);
+    const int letter_height = font_definition_for(font)->line_height;
     text_draw_centered((uint8_t *)label, offset.x + pos.x + 1, offset.y + pos.y + (size.y - letter_height) / 2, size.x, font, 0);
 
     return gbutton;
@@ -1018,9 +1018,9 @@ void ui::etext::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
-        if (pxsize().y > 0) {
-            int symbolh = get_letter_height((uint8_t *)"H", _font);
-            additionaly = (size.y - symbolh) / 2;
+        if (pxsize().y > 0) {            
+            const int symbolh = font_definition_for(_font)->line_height;
+            additionaly = ((size.y - symbolh) * 0.5f);
         }
         if (_shadow_color) {
             text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + additionaly, size.x, _font, _shadow_color);
@@ -1029,7 +1029,7 @@ void ui::etext::draw(UiFlags flags) {
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         text_draw_multiline(_text.c_str(), offset.x + pos.x, offset.y + pos.y, _wrap, _font, _color);
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
-        int symbolh = get_letter_height((uint8_t *)"H", _font);
+        const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
             text_draw((uint8_t *)_text.c_str(), offset.x + pos.x + 1, offset.y + pos.y + (size.y - symbolh) / 2, _font, _shadow_color);
         }
@@ -1039,7 +1039,7 @@ void ui::etext::draw(UiFlags flags) {
             graphics_set_clip_rectangle(offset + pos, pxsize());
         }
 
-        int symbolh = get_letter_height((uint8_t *)"H", _font);
+        const int symbolh = font_definition_for(_font)->line_height;
         int maxlines = pxsize().y > 0 
                         ? std::max(1, pxsize().y / symbolh)
                         : 0xff;

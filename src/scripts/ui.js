@@ -312,29 +312,32 @@ temple_complex_info_window = {
         button_close : image_button({ margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 }),
         show_overlay : button({ margin:{right:-64, bottom:-40}, size:[23, 23]}),
         god_image    : image({ pos: [190, 134] }),
+
         mothball     : button({ margin:{right:-90, bottom:-40}, size:[23, 23]}),
     }
 }
 
-building_info_window = {
-    ui : {
-        background     : outer_panel({size: [29, 17]}),
-        title          : { type : "text", pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"},
-        warning_text   : { type : "text", pos: [20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
-        inner_panel    : inner_panel({pos : [16, 100], size: [27, 5],
-                                                ui : {
-                                                    workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos:[20, 10] }),
-                                                    workers_text : text({pos: [50, 16], text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers}  ${loc.building_employee_needed} )", font: FONT_NORMAL_BLACK_ON_DARK}),
-                                                    workers_desc : text({pos: [50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) }),
-                                                }
-                                          }),
-        first_advisor  : { type : "image_button", pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-        second_advisor : { type : "image_button", pos:[64, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-        third_advisor  : { type : "image_button", pos:[96, -1], size:[28, 28], pack:PACK_GENERAL, id:106 },
-        button_help    : { type : "image_button", margin:{left:14, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134 },
-        button_close   : { type : "image_button", margin:{right:-40, bottom:-40}, size:[27, 27], pack:PACK_GENERAL, id:134, offset:4 },
-        show_overlay   : { type:"generic_button", margin:{right:-64, bottom:-40}, size:[23, 23]},
-        mothball       : { type:"generic_button", margin:{right:-90, bottom:-40}, size:[23, 23]},
+building_info_window {
+    ui {
+        background     : outer_panel({size: [29, 17]})
+        title          : text({ pos[0, 16], text:"${building.name}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        warning_text   : text({ pos[20, 46], wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        inner_panel    : inner_panel({pos[16, 100], size[27, 5]
+                                        ui {
+                                            workers_img : image({pack:PACK_GENERAL, id:134, offset:14, pos[20, 10] })
+                                            workers_text : text({pos[50, 16], text:"${building.num_workers} ${loc.building_employee} ( ${model.laborers}  ${loc.building_employee_needed} )", font: FONT_NORMAL_BLACK_ON_DARK})
+                                            workers_desc : text({pos[50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) })
+                                        }
+                                    })
+        first_advisor  : image_button({ pos[40, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        second_advisor : image_button({ pos[64, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+        third_advisor  : image_button({ pos[96, -1], size[28, 28], pack:PACK_GENERAL, id:106 })
+
+        show_overlay   : button({ margin{right:-64, bottom:-40}, size[23, 23]})
+        mothball       : button({ margin{right:-90, bottom:-40}, size[23, 23]})
+
+        button_help    : help_button({})
+        button_close   : close_button({})
     }
 }
 
@@ -465,7 +468,7 @@ info_window_farm = {
         background    : outer_panel({size: [29, 18]}),
         resource      : resource_icon({ pos:[10, 10], prop:"${building.output_resource}" }),
         workers_desc  : text({ pos: [70, 116], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(23) }),
-        farm_desc     : text({ pos: [32, 38], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+        farm_desc     : text({ pos: [32, 40], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(26), multiline:true }),
         farm_state    : text({ pos: [32, 186], font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
         flood_info    : text({ pos: [32, 206], font: FONT_NORMAL_BLACK_ON_LIGHT }),
         progress_desc : text({ pos: [32, 226], text:"${text.2} ${farm.progress}% ${text.3} ${text.12} ${farm.fertility}% ${text.13}", font: FONT_NORMAL_BLACK_ON_LIGHT }),
