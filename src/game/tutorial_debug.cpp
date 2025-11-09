@@ -22,7 +22,6 @@ void config_show_tutorial_properties(bool header) {
         game_debug_show_property("3:pottery_100", flags.tutorial_3.pottery_made_1);
         game_debug_show_property("3:pottery_100", flags.tutorial_3.pottery_made_2);
         game_debug_show_property("tut4 start", flags.tutorial_4.started);
-        game_debug_show_property("3:disease", flags.tutorial_3.disease);
         game_debug_show_property("4:beer_300", flags.tutorial_4.beer_made);
         game_debug_show_property("tut5 start", flags.tutorial_5.started);
         game_debug_show_property("5:apartment", flags.tutorial_5.spacious_apartment);
