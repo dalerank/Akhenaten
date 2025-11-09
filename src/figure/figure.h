@@ -50,6 +50,7 @@ class figure_emigrant;
 class figure_homeless;
 class figure_festival_guy;
 class figure_ostrich;
+class figure_antelope;
 class figure_animal;
 
 struct animation_t;
@@ -570,6 +571,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
+    ALLOW_SMART_CAST_FIGURE_I(antelope)
     ALLOW_SMART_CAST_FIGURE_I(animal)
 
     inline building *home() { return base.home(); }
@@ -653,6 +655,7 @@ GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)
 GENERATE_SMART_CAST_FIGURE(ostrich)
+GENERATE_SMART_CAST_FIGURE(antelope)
 GENERATE_SMART_CAST_FIGURE(animal)
 
 template <typename dest_type>
