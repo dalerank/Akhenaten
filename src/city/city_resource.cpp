@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "city/city_industry.h"
-#include "building/model.h"
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"

@@ -7,7 +7,6 @@
 #include "building/building_senet_house.h"
 #include "city/city_industry.h"
 #include "building/rotation.h"
-#include "building/model.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/city_finance.h"

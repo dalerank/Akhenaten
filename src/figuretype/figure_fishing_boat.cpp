@@ -10,7 +10,6 @@
 #include "city/city_message.h"
 #include "game/game.h"
 #include "core/calc.h"
-#include "building/model.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"

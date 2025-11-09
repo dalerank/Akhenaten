@@ -168,7 +168,7 @@ void distribute_market_resources(building* b, building* market) {
             food_types_stored_max++;
     }
 
-    const model_house& model = model_get_house(level);
+    const model_house& model = building_house::get_model(level);
     if (model.food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             if (housed.foods[i] >= max_food_stocks) {

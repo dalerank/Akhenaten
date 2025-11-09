@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/building_farm.h"
-#include "building/model.h"
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_population.h"

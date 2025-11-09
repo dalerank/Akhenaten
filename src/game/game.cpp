@@ -1,7 +1,6 @@
 #include "game.h"
 
 #include "building/construction/build_planner.h"
-#include "building/model.h"
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/building_burning_ruin.h"
@@ -368,11 +367,6 @@ bool game_t::check_valid() {
 bool game_init(game_opts opts) {
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
-        return false;
-    }
-
-    if (!model_load()) {
-        logs::error("unable to load model data");
         return false;
     }
 

@@ -1,6 +1,5 @@
 #include "building_barracks.h"
 
-#include "building/model.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"

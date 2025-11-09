@@ -51,26 +51,26 @@ declare_console_command_p(housedown) {
 
 declare_console_var_int(house_up_delay, 1000)
 
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_crude_hut);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_sturdy_hut);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_meager_shanty);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_shanty);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_rough_cottage);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_ordinary_cottage);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_homestead);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_homestead);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_apartment);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_apartment);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_fancy_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_stately_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_estate);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_palatial_estate);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_crude_hut)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_sturdy_hut)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_meager_shanty)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_shanty)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_rough_cottage)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_ordinary_cottage)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_homestead)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_homestead)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_apartment)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_apartment)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_fancy_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_stately_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_estate)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_palatial_estate)
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
@@ -231,6 +231,23 @@ void building_house::spawn_figure() {
     }
 }
 
+template<typename T>
+const building_house::house_params_t &house_static_params(const building_static_params &params) {
+    using static_params = typename T::static_params;
+    const auto &bparams = (const static_params &)params;
+    return (const building_house::house_params_t &)bparams;
+}
+
+const building_house::house_params_t &get_house_params(e_building_type type) {
+    const auto &params = building_static_params::get(type);
+    return house_static_params<building_house_crude_hut>(params);
+};
+
+const model_house &building_house::get_model(int level) {
+    const auto &params = get_house_params(e_building_type(BUILDING_HOUSE_CRUDE_HUT + level));
+    return params.model;
+}
+
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
     
@@ -282,7 +299,7 @@ resource_list building_house::consume_resources() {
     
     resource_list good_types_consumed;
     auto &d = runtime_data();
-    const model_house& model = model_get_house(house_level());
+    const model_house& model = get_model(house_level());
 
     auto consume_resource = [&] (int inventory, uint16_t amount) {
         if (amount <= 0) {
@@ -314,7 +331,7 @@ static int house_image_group(int level) {
 
 void building_house::add_population(int num_people) {
     const int mul = is_merged() ? 4 : 1;
-    const int max_people = model_get_house(house_level()).max_people * mul;
+    const int max_people = get_model(house_level()).max_people * mul;
 
     int room = std::max(max_people - house_population(), 0);
     if (room < num_people) {
@@ -364,7 +381,7 @@ void building_house::change_to(building &b, e_building_type new_type) {
 
 int16_t building_house::population_room() const {
     const int mul = is_merged() ? 4 : 1;
-    const int max_people = model_get_house(house_level()).max_people * mul;
+    const int max_people = model().max_people * mul;
 
     const int room = std::max(max_people - house_population(), 0);
     const int house_pop = house_population();
@@ -502,7 +519,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++level;
     }
 
-    const model_house& model = model_get_house(level);
+    const model_house& model = get_model(level);
     // water
     int water = model.water;
     if (!base.has_water_access) {
@@ -785,14 +802,13 @@ bool building_house::can_expand(int num_tiles) {
 
 e_house_progress building_house::check_evolve_desirability() {
     const int level = house_level();
-    const model_house& model = model_get_house(level);
-    const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model.evolve_desirability;
+    const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model() .evolve_desirability;
 
     const int current_des = base.current_desirability;
     e_house_progress status;
 
     auto &d = runtime_data();
-    if (current_des <= model.devolve_desirability) {
+    if (current_des <= model().devolve_desirability) {
         status = e_house_decay;
         d.evolve_text = "#cannot_evolve_cause_low_desirability"; 
     } else if (current_des >= evolve_des) {
@@ -930,7 +946,7 @@ void building_house::split(int num_tiles) {
 }
 
 const model_house &building_house::model() const {
-    return model_get_house(house_level());
+    return get_model(house_level());
 }
 
 void building_house_common_manor::devolve_to_fancy_residence() {

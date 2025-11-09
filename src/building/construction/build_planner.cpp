@@ -9,7 +9,6 @@
 #include "building/building_dock.h"
 #include "building/building_road.h"
 #include "building/building_wall.h"
-#include "building/model.h"
 #include "building/monuments.h"
 #include "building/monument_mastaba.h"
 #include "building/building_plaza.h"

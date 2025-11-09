@@ -134,7 +134,7 @@ int figure_tax_collector::provide_service() {
         }
 
         if (house->house_population() > 0) {
-            int tax_multiplier = model_get_house(house->house_level()).tax_multiplier;
+            int tax_multiplier = house->model().tax_multiplier;
             if (tax_multiplier > max_tax_rate) {
                 max_tax_rate = tax_multiplier;
             }

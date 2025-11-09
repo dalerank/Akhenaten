@@ -1,6 +1,6 @@
 #include "building/building_house.h"
 
-#include "building/model.h"
+#include "building/building_house_model.h"
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "core/calc.h"
@@ -19,7 +19,7 @@ void building_house::determine_evolve_text() {
 
     // this house will devolve soon because...
 
-    const model_house& model = model_get_house(level);
+    const model_house& model = get_model(level);
     housed.evolve_text = "";
     // desirability
     if (base.current_desirability <= model.devolve_desirability) {
@@ -171,7 +171,7 @@ void building_house::determine_evolve_text() {
         return;
     }
 
-    const auto& next_model = model_get_house(++level);
+    const auto& next_model = get_model(++level);
     // water
     water = next_model.water;
     if (water == 1 && !base.has_water_access && !base.has_well_access) {
