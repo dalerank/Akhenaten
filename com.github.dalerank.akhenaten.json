@@ -41,7 +41,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/nothings/stb/archive/5736b15f7ea0ffb08dd38af21067c314d6a3aae9.tar.gz",
-                    "sha256" : "cf0d66e95e23cd258e46d52df9ba4e8aa132e84db3962d8cfd4e30a87c0c5096",
+                    "sha256" : "d00921d49b06af62aa6bfb97c1b136bec661dd11dd4eecbcb0da1f6da7cedb4c",
                     "dest" : "_deps/stb-src",
                     "strip-components" : 1
                 }
