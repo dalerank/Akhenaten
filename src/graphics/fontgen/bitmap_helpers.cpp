@@ -1,4 +1,4 @@
-#include "bitmap_helpers.hpp"
+#include "bitmap_helpers.h"
 
 namespace DynamicFont {
 
