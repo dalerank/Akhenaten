@@ -44,7 +44,7 @@ public:
     virtual void update_animation() override;
     virtual void before_poof() override;
     virtual bool play_die_sound() override;
-    virtual void apply_damage(int hit_dmg) override;
+    virtual void apply_damage(int hit_dmg, figure_id attacker_id) override;
 
     virtual void herd_moved() override;
     virtual void moveto(tile2i tile) override;

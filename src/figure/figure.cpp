@@ -349,8 +349,8 @@ void figure::add_roam_history(int goffset) {
     roam_history.push_tail(goffset);
 }
 
-void figure::apply_damage(int hit_dmg) {
-    dcast()->apply_damage(hit_dmg);
+void figure::apply_damage(int hit_dmg, figure_id attaker_id) {
+    dcast()->apply_damage(hit_dmg, attaker_id);
 }
 
 bool figure::is_dead() {

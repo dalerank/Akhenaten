@@ -124,8 +124,8 @@ bool figure_antelope::play_die_sound() {
     return true;
 }
 
-void figure_antelope::apply_damage(int hit_dmg) {
-    figure_impl::apply_damage(hit_dmg);
+void figure_antelope::apply_damage(int hit_dmg, figure_id attacker_id) {
+    figure_impl::apply_damage(hit_dmg, attacker_id);
 
     auto& d = runtime_data();
     d.applied_damage += hit_dmg;
