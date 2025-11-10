@@ -192,10 +192,7 @@ public:
     uint8_t current_height;
     uint8_t target_height;
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-    uint8_t phrase_sequence_exact;
-    textid phrase;
     xstring phrase_key;
-    uint8_t phrase_sequence_city;
     figure_id target_figure_id;
     short targeted_by_figure_id;
     //unsigned short created_sequence;
@@ -431,7 +428,7 @@ public:
 
     // phrase.c
     void figure_phrase_determine();
-    int figure_phrase_play();
+    int figure_play_phrase_file();
 
     // service.c
     int figure_service_provide_coverage();
@@ -522,6 +519,7 @@ public:
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
+    virtual sound_key default_phrase_key() const;
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
     virtual void update_animation();

@@ -6,10 +6,10 @@ struct figure_sound_t {
     xstring key;
     xstring sound;
     int group;
-    int text;
-    xstring phrase_key;
+    int id;
+    xstring text;
 };
-ANK_CONFIG_STRUCT(figure_sound_t, key, sound)
+ANK_CONFIG_STRUCT(figure_sound_t, key, sound, group, id, text)
 
 using figure_sounds_map = std::unordered_map<xstring, figure_sound_t>;
 struct figure_sounds_t {

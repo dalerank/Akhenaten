@@ -2,6 +2,7 @@
 
 #include "graphics/text.h"
 #include "io/gamefiles/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
@@ -303,9 +304,9 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, e_font font) {
 }
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, e_font font) {
-   pcstr str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     if (!str) {
         return 0;
     }
-    return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
+    return text_draw_multiline(str, offset, box_width, font, 0);
 }
