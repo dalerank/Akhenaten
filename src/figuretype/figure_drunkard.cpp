@@ -94,6 +94,19 @@ void figure_drunkard::figure_action() {
     }
 }
 
+sound_key figure_drunkard::phrase_key() const {
+    switch (action_state()) {
+    case ACTION_12_DRUNKARD_CREATED_SOBER: return "drunkard_need_drink";
+    case ACTION_9_DRUNKARD_GOTO_SENET_HOUSE: return "drunkard_going_to_tavern";
+    case ACTION_13_DRUNKARD_ENTER_SENET_HOUSE: return "drunkard_time_for_beer";
+    case ACTION_14_DRUNKARD_CREATED: return "drunkard_feeling_dizzy";
+    case ACTION_10_DRUNKARD_WOMIT: return "drunkard_oh_my_stomach";
+    case ACTION_11_DRUNKARD_RETURN_HOME: return "drunkard_going_home";
+    }
+
+    return "drunkard_feeling_dizzy";
+}
+
 void figure_drunkard::update_animation() {
     xstring animkey;
     switch (action_state()) {

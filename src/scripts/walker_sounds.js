@@ -106,10 +106,6 @@ walker_sounds = {
   fireman_low_entertainment : {sound:"fireman_g08.wav"},
   fireman_city_is_ok : {sound:"fireman_g09.wav"},
   fireman_city_is_the_best : {sound:"fireman_g10.wav"},
-  // fishing
-  fishing_sound1 : {sound:"fishing_e01.wav"},
-  fishing_sound2 : {sound:"fishing_e02.wav"},
-  fishing_sound3 : {sound:"fishing_e03.wav"},
   // governor
   governor_city_left_much_nobles : {sound:"governor_e01.WAV"},
   governor_festival_was_near : {sound:"governor_e02.wav"},
@@ -184,19 +180,6 @@ walker_sounds = {
   marketboy_these_baskets_are_too_heavy : {sound: "marketboy_e01.wav"},
   marketboy_bossy_lady_makes_me_carry_goods : {sound: "marketboy_e02.wav"},
   marketboy_one_day_ill_run_the_bazaar : {sound: "marketboy_e03.wav"},
-  // mkt_buyer
-  mkt_buyer_going_to_get_goods : {sound: "mkt_buyer_e01.wav"},
-  mkt_buyer_taking_goods_to_bazaar : {sound: "mkt_buyer_e02.wav"},
-  mkt_buyer_danger_of_plague : {sound: "mkt_buyer_g01.wav"},
-  mkt_buyer_no_food_in_city : {sound: "mkt_buyer_g02.wav"},
-  mkt_buyer_defenses_are_weak : {sound: "mkt_buyer_g03.wav"},
-  mkt_buyer_need_more_workers : {sound: "mkt_buyer_g04.wav"},
-  mkt_buyer_gods_are_angry : {sound: "mkt_buyer_g05.wav"},
-  mkt_buyer_reputation_is_low : {sound: "mkt_buyer_g06.wav"},
-  mkt_buyer_high_unemployment : {sound: "mkt_buyer_g07.wav"},
-  mkt_buyer_low_entertainment : {sound: "mkt_buyer_g08.wav"},
-  mkt_buyer_city_is_ok : {sound: "mkt_buyer_g09.wav"},
-  mkt_buyer_city_is_amazing : {sound: "mkt_buyer_g10.wav"},
   // mkt_seller
   goods_are_finished : {sound: "mkt_seller_e01.wav"},
   we_are_selling_goods : {sound: "mkt_seller_e02.wav"},
@@ -211,9 +194,9 @@ walker_sounds = {
   musician_low_entertainment : {sound: "musician_g08.wav"},
   musician_city_is_ok : {sound: "musician_g09.wav"},
   musician_city_is_amazing : {sound: "musician_g10.wav"},
- // pharaoh
+  // pharaoh
   pharaoh_how_impertinent : {sound: "pharaoh_e01.wav"},
- // policeman
+  // policeman
   policeman_low_crime_level : {sound: "police_e01.WAV"},
   policeman_usual_crime_level : {sound: "police_e02.WAV"},
   policeman_very_low_crime_level : {sound: "police_e03.WAV"},

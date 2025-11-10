@@ -28,7 +28,7 @@ public:
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_REED_GATHERER, "reed"}; }
+    virtual sound_key phrase_key() const override;
     virtual void update_animation() override;
 };
 ANK_CONFIG_STRUCT(figure_drunkard::static_params, womit_delay, walk_delay)
