@@ -6,7 +6,7 @@
 
 struct event_trade_caravan_arrival { int cid; uint8_t tid; pcstr location; };
 
-enum e_trade_carava_action {
+enum e_trade_caravan_action {
     ACTION_100_TRADE_CARAVAN_CREATED = 100,
     ACTION_101_TRADE_CARAVAN_ARRIVING = 101,
     ACTION_102_TRADE_CARAVAN_TRADING = 102,
@@ -35,7 +35,6 @@ public:
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual void before_poof() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_CARAVAN, "caravan"}; }
     virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual void update_animation() override;

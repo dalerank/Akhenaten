@@ -4,22 +4,12 @@ walker_sounds = {
   // artisan
   artisan_work_my_tools_need_for_monument : { sound:"artisan_e01.wav"},
   artisan_work_i_write_history_of_egypt : { sound:"artisan_e02.wav"},
-  // barge
-  barge_have_no_place_for_dock : { sound:"barge_e01.wav"},
-  barge_docked_wait_for_dockpushers : { sound:"barge_e02.wav"},
-  barge_city_not_trades : { sound:"barge_e03.wav"},
-  barge_i_like_to_trage : { sound:"barge_e04.wav"},
-  barge_amazing_trades : { sound:"barge_e05.wav"},
    // brick
   brick_bricklaying_time_at_monument : { sound:"brick_e01.wav"},
   brick_monument_will_be_strong : { sound:"brick_e02.wav"},
   // carpenter
   carpenter_work_my_tools_need_for_monument : { sound:"carpenter_e01.wav"},
   carpenter_this_monument_will_be_short : { sound:"carpenter_e02.wav"},
-  // cartpusher
-  cartpusher_no_one_available_to_unload : { sound:"cartpusher_e01.wav"},
-  cartpusher_no_one_can_accept_these_goods : { sound:"cartpusher_e02.wav"},
-  cartpusher_have_to_go_clear_across_city : { sound:"cartpusher_e03.wav"},
   // dancer
   dancer_festival_crowds : { sound:"dancer_e01.wav"},
   dancer_many_people_taken_ill : { sound:"dancer_g01.wav"},
@@ -136,20 +126,8 @@ walker_sounds = {
   juggler_low_entertainment : {sound:"juggler_g08.wav"},
   juggler_city_is_ok : {sound:"juggler_g09.wav"},
   juggler_city_is_amazing : {sound:"juggler_g010.wav"},
-  // Labor
-  Labor_lot_of_people_need_jobs : { sound:"Labor_e01.wav"},
-  Labor_cant_find_any_workers : { sound:"Labor_e02.wav"},
-  Labor_people_are_sick : { sound:"Labor_g01.wav"},
-  Labor_no_food_in_city : { sound:"Labor_g02.wav"},
-  Labor_defenses_are_weak : { sound:"Labor_g03.wav"},
-  Labor_without_workers_job_impossible : { sound:"Labor_g04.wav"},
-  Labor_gods_are_angry : { sound:"Labor_g05.wav"},
-  Labor_reputation_is_low : { sound:"Labor_g06.wav"},
-  Labor_high_unemployment : { sound:"Labor_g07.wav"},
-  Labor_low_entertainment : { sound:"Labor_g08.wav"},
-  Labor_city_is_ok : { sound:"Labor_g09.wav"},
-  Labor_city_is_amazing : { sound:"Labor_g10.wav"},
- // library
+  
+  // library
   library_read_about_festivals : { sound: "library_e01.wav"},
   library_people_are_sick : { sound: "library_g01.wav"},
   library_no_food_in_city : { sound: "library_g02.wav"},

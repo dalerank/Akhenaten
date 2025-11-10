@@ -511,23 +511,23 @@ bool figure_cartpusher::can_move_by_water() const {
 
 sound_key figure_cartpusher::phrase_key() const {
     if (action_state(ACTION_8_RECALCULATE)) {
-        return "try_found_destination";
+        return "cartpusher_ry_found_destination";
     }
          
     if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
-        return "i_have_no_destination";
+        return "cartpusher_i_have_no_destination";
     }
 
     if (action_state(ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
-        return "back_to_home";
+        return "cartpusher_back_to_home";
     }
 
     if (action_state(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
                      ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
                      ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
                      ACTION_11_CARTPUSHER_DELIVERING_GOLD)) {
-        return "delivering_items";
+        return "cartpusher_delivering_items";
     }
 
-    return {};
+    return "cartpusher_default";
 }

@@ -32,7 +32,6 @@ public:
     virtual void on_destroy() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     //virtual bool is_common_roaming() override { return false; }
     virtual sound_key phrase_key() const override;
 };
