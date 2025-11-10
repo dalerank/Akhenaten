@@ -115,16 +115,16 @@ figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
 
 sound_key figure_emigrant::phrase_key() const {
     switch (g_city.sentiment.low_mood_cause) {
-    case LOW_MOOD_NO_JOBS: return "no_job_in_city";
-    case LOW_MOOD_NO_FOOD: return "no_food_in_city";
-    case LOW_MOOD_HIGH_TAXES: return "tax_too_high";
-    case LOW_MOOD_LOW_WAGES: return "salary_too_low";
+    case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
+    case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
+    case LOW_MOOD_HIGH_TAXES: return "emigrant_tax_too_high";
+    case LOW_MOOD_LOW_WAGES: return "emigrant_salary_too_low";
     }
 
     building *b = destination();
     if (!b || !b->id) {
-        return "no_house_for_me";
+        return "emigrant_no_house_for_me";
     }
 
-    return  "all_good_in_city";
+    return  "emigrant_all_good_in_city";
 }

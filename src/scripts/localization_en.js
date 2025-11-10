@@ -789,6 +789,16 @@ localization_en = [
 
   { key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
 
+  { key: "#immigrant_im_new_here", text: "I'm new here.  I wonder what the city will offer to a person like me." }
+  { key: "#immigrant_heard_there_is_a_job_here", text: "I heard there is a job here for anyone who wants one." }
+  { key: "#immigrant_city_has_plenty_of_food", text: "People say that this city has plenty of food to go around." }
+
+  { key: "#emigrant_no_job_in_city", text: "I can't find a job here. I will look elsewhere." }
+  { key: "#emigrant_no_food_in_city", text: "There's not enough food for me to eat. I'm moving out of this desert!" }
+  { key: "#emigrant_tax_too_high", text: "Taxes are too high here. I'm surprised I wasn't taxed for leaving." }
+  { key: "#emigrant_salary_too_low", text: "I can't live on what they pay me here." }
+  { key: "#emigrant_no_house_for_me", text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
+
   { key: "#recruiter_sick_people", text: "I see sick people everywhere. A plague could break out!" }
   { key: "#recruiter_starving", text: "I'm starving. I'd rather be looking for food than for workers. " }
   { key: "#recruiter_city_defenses_weak", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }

@@ -5229,15 +5229,7 @@ localization_base_en = [
     { group:201, id:6, text: "Generic7" }
     { group:201, id:7, text: "Generic8" }
     { group:201, id:8, text: "Generic9" }
-    { group:201, id:9, text: "Generic10" }
-    { group:202, id:0, text: "I'm new here.  I wonder what the city will offer to a person like me. // immigrant" }
-    { group:202, id:1, text: "I heard there is a job here for anyone who wants one." }
-    { group:202, id:2, text: "People say that this city has plenty of food to go around." }
-    { group:203, id:0, text: "I can't find a job here. I will look elsewhere. 					  // emigrant" }
-    { group:203, id:1, text: "There's not enough food for me to eat. I'm moving out of this desert!" }
-    { group:203, id:2, text: "Taxes are too high here. I'm surprised I wasn't taxed for leaving." }
-    { group:203, id:3, text: "I can't live on what they pay me here." }
-    { group:203, id:4, text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
+    { group:201, id:9, text: "Generic10" }        
     { group:204, id:0, text: "I've been kicked out of my home, and through no fault of my own.      // homeless" }
     { group:204, id:1, text: "I can't find a place to live!" }
     { group:205, id:0, text: "Maybe stealing from his treasury will get that false beard's attention! // cart_pusher" }

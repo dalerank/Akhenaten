@@ -173,7 +173,7 @@ figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_immigrant::phrase_key() const {
-    svector<sound_key, 10> keys = {"im_new_here", "heard_there_is_a_job_here", "city_has_plenty_of_food"};
+    svector<sound_key, 10> keys = {"immigrant_im_new_here", "immigrant_heard_there_is_a_job_here", "immigrant_city_has_plenty_of_food"};
     return keys[rand() % keys.size()];
 }
 
