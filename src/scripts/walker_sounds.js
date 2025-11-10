@@ -16,18 +16,6 @@ walker_sounds = {
   dockpusher_need_more_help : {sound:"dockpusher_e01.wav"},
   dockpusher_wait_until_space_opens_up : {sound:"dockpusher_e02.wav"},
   dockpusher_cant_haul_goods_much_farther : {sound:"dockpusher_e03.wav"},
-  // doctor
-  doctor_plague_could_strike_us_dead : {sound:"doctor_e01.WAV"},
-  doctor_concerned_about_plague : {sound:"doctor_g01.WAV"},
-  doctor_no_food_in_city : {sound:"doctor_g02.WAV"},
-  doctor_defenses_weak : {sound:"doctor_g03.WAV"},
-  doctor_need_more_workers : {sound:"doctor_g04.WAV"},
-  doctor_gods_are_angry : {sound:"doctor_g05.WAV"},
-  doctor_reputation_is_low : {sound:"doctor_g06.WAV"},
-  doctor_unemployment_is_high : {sound:"doctor_g07.WAV"},
-  doctor_low_entertainment : {sound:"doctor_g08.WAV"},
-  doctor_city_is_ok : {sound:"doctor_g09.WAV"},
-  doctor_city_is_the_best : {sound:"doctor_g10.WAV"},
   // embalmer
   embalmer_health_worsening : {sound:"embalmer_e01.WAV"},
   embalmer_concerned_about_plague : {sound:"embalmer_g01.WAV"},

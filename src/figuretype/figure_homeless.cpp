@@ -197,3 +197,47 @@ void figure_homeless::figure_before_action() {
         break;
     }
 }
+
+sound_key figure_homeless::phrase_key() const {
+    switch (g_city.sentiment.low_mood_cause) {
+    case LOW_MOOD_NO_JOBS: return "homeless_no_job_in_city";
+    case LOW_MOOD_NO_FOOD: return "homeless_no_food_in_city";
+    case LOW_MOOD_HIGH_TAXES: return "homeless_tax_too_high";
+    case LOW_MOOD_LOW_WAGES: return "homeless_salary_too_low";
+    }
+
+    svector<sound_key, 10> keys;
+    
+    if (action_state() == ACTION_8_HOMELESS_GOING_TO_HOUSE) {
+        keys.push_back("homeless_found_new_house");
+    }
+    
+    if (action_state() == ACTION_6_HOMELESS_LEAVING) {
+        keys.push_back("homeless_no_house_for_me");
+    }
+
+    if (g_city.labor.workers_needed >= 10) {
+        keys.push_back("homeless_need_workers");
+    }
+
+    if (g_city.kingdome.rating < 30) {
+        keys.push_back("homeless_city_is_bad");
+    }
+
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) {
+        keys.push_back("homeless_gods_are_angry");
+    }
+
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment < 30) {
+        keys.push_back("homeless_city_bad_reputation");
+    } else if (sentiment > 50) {
+        keys.push_back("homeless_city_is_good");
+    }
+
+    keys.push_back("homeless_i_was_kicked_out_of_my_home");
+    keys.push_back("homeless_i_cant_find_a_place_to_live");
+
+    int index = rand() % keys.size();
+    return keys[index];
+}

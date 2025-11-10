@@ -829,4 +829,7 @@ localization_en = [
   { key: "#dancer_salary_too_low", text: "This city is just about as good as any other city, I guess." }
   { key: "#dancer_city_is_good", text: "This city is fantastic!" }
   { key: "#dancer_city_is_amazing", text: "These festival crowds are so enthusiastic, they make me want to leap higher." }
+
+  { key: "#homeless_i_was_kicked_out_of_my_home", text: "I've been kicked out of my home, and through no fault of my own." }
+  { key: "#homeless_i_cant_find_a_place_to_live", text: "I can't find a place to live!" }
 ]

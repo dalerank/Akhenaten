@@ -678,17 +678,17 @@ figure_physician = {
 	}
 
 	sounds : {
-		desease_can_start_at_any_moment : {sound:"doctor_e01.wav", group: 239, text:1}
-    city_has_low_health : {sound:"doctor_g01.wav", group: 239, text:1}
-    no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2}
-    city_have_no_army : {sound:"doctor_g03.wav", group: 239, text:3}
-    need_workers : {sound:"doctor_g04.wav", group: 239, text:4}
-    gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5}
-    gods_are_pleasures : {sound:"doctor_g06.wav", group: 239, text:6}
-    no_job_in_city : {sound:"doctor_g07.wav", group: 239, text:7}
-    low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8}
-    all_good_in_city : {sound:"doctor_g09.wav", group: 239, text:9}
-    city_very_healthy : {sound:"doctor_g10.wav", group: 239, text:10}
+		doctor_plague_could_strike_us_dead : {sound:"doctor_e01.wav", group: 239, text:1}
+		doctor_concerned_about_plague : {sound:"doctor_g01.wav", group: 239, text:1}
+		doctor_no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2}
+		doctor_defenses_weak : {sound:"doctor_g03.wav", group: 239, text:3}
+		doctor_need_more_workers : {sound:"doctor_g04.wav", group: 239, text:4}
+		doctor_gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5}
+		doctor_reputation_is_low : {sound:"doctor_g06.wav", group: 239, text:6}
+		doctor_unemployment_is_high : {sound:"doctor_g07.wav", group: 239, text:7}
+		doctor_low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8}
+		doctor_city_is_ok : {sound:"doctor_g09.wav", group: 239, text:9}
+		doctor_city_is_the_best : {sound:"doctor_g10.wav", group: 239, text:10}
 	}
 
   category: figure_category_citizen
