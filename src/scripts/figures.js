@@ -604,11 +604,24 @@ figure_scriber = {
 	max_roam_length : 384
 }
 
-figure_dentist = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:182, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DENTIST }
+figure_dentist {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:182, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:183, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DENTIST }
+	}
+
+	sounds {
+		dentist_concerned_about_plague {sound:"dentist_g01.wav"}
+		dentist_no_food_in_city {sound:"dentist_g02.wav"}
+		dentist_defenses_weak {sound:"dentist_g03.wav"}
+		dentist_need_more_workers {sound:"dentist_g04.wav"}
+		dentist_gods_are_angry {sound:"dentist_g05.wav"}
+		dentist_reputation_is_low {sound:"dentist_g06.wav"}
+		dentist_unemployment_is_high {sound:"dentist_g07.wav"}
+		dentist_low_entertainment {sound:"dentist_g08.wav"}
+		dentist_city_is_ok {sound:"dentist_g09.wav"}
+		dentist_city_is_the_best {sound:"dentist_g10.wav"}
 	}
 
 	category: figure_category_citizen
@@ -1106,17 +1119,17 @@ figure_dancer {
 	}
 
 	sounds {
-		i_like_festivals {sound:"dancer_e01.wav", group:228, text:0}
-		desease_can_start_at_any_moment {sound:"dancer_g01.wav", group:228, text:1}
-		no_food_in_city {sound:"dancer_g02.wav", group:228, text:2}
-		city_not_safety_workers_leaving {sound:"dancer_g03.wav", group:228, text:3}
-		need_workers {sound:"dancer_g04.wav", group:228, text:4}
-		gods_are_angry {sound:"dancer_g05.wav", group:228, text:5}
-		city_is_bad {sound:"dancer_g06.wav", group:228, text:6}
-		much_unemployments {sound:"dancer_g07.wav", group:228, text:7}
-		salary_too_low {sound:"dancer_g08.wav", group:228, text:8}
-		city_is_good {sound:"dancer_g09.wav", group:228, text:9}
-		city_is_amazing {sound:"dancer_g10.wav", group:228, text:10}
+		dancer_i_like_festivals {sound:"dancer_e01.wav", group:228, text:0}
+		dancer_desease_can_start_at_any_moment {sound:"dancer_g01.wav", group:228, text:1}
+		dancer_no_food_in_city {sound:"dancer_g02.wav", group:228, text:2}
+		dancer_city_not_safety_workers_leaving {sound:"dancer_g03.wav", group:228, text:3}
+		dancer_need_workers {sound:"dancer_g04.wav", group:228, text:4}
+		dancer_gods_are_angry {sound:"dancer_g05.wav", group:228, text:5}
+		dancer_city_is_bad {sound:"dancer_g06.wav", group:228, text:6}
+		dancer_much_unemployments {sound:"dancer_g07.wav", group:228, text:7}
+		dancer_salary_too_low {sound:"dancer_g08.wav", group:228, text:8}
+		dancer_city_is_good {sound:"dancer_g09.wav", group:228, text:9}
+		dancer_city_is_amazing {sound:"dancer_g10.wav", group:228, text:10}
 	}
 
     category: figure_category_citizen

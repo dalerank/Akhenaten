@@ -106,3 +106,7 @@ bool figure_birds::play_die_sound() {
     g_sound.play_effect(SOUND_EFFECT_OSTRICH_DIE);
     return true;
 }
+
+sound_key figure_birds::phrase_key() const {
+    return "no_phrase";
+}

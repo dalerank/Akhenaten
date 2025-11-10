@@ -304,6 +304,10 @@ void figure_soldier::figure_action() {
     update_image(m, dir);
 }
 
+sound_key figure_soldier_infantry::phrase_key() const {
+    return "unknow_phrase_key";
+}
+
 void figure_soldier_infantry::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 

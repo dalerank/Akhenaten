@@ -5332,18 +5332,7 @@ localization_base_en = [
     { group:227, id:7, text: "Even an entertainer likes to be entertained! There's not enough to do here." }
     { group:227, id:8, text: "This city could be a lot worse, I suppose." }
     { group:227, id:9, text: "I hope we continue to make beautiful music in this city for a long time." }
-    { group:227, id:10, text: "These festivals are great! Everyone sings along." }
-    { group:228, id:0, text: "Many people have taken ill in the city. I hope I don't catch anything!" }
-    { group:228, id:1, text: "I can't prance and leap very well without enough food!" }
-    { group:228, id:2, text: "Invaders would have little trouble taking over our city. Nothing defends it." }
-    { group:228, id:3, text: "Another dance partner lost to the worker shortage! I hate dancing alone." }
-    { group:228, id:4, text: "We should do more to appease the gods - and quickly!" }
-    { group:228, id:5, text: "This city's reputation is worse than a juggler's! I hope we aren't attacked." }
-    { group:228, id:6, text: "If I weren't so light on my feet, I would trip over all these jobless people!" }
-    { group:228, id:7, text: "(Yawn) I need to be entertained!" }
-    { group:228, id:8, text: "This city is just about as good as any other city, I guess." }
-    { group:228, id:9, text: "This city is fantastic!" }
-    { group:228, id:10, text: "These festival crowds are so enthusiastic, they make me want to leap higher." }
+    { group:227, id:10, text: "These festivals are great! Everyone sings along." }    
     { group:229, id:0, text: "People's health is in jeopardy. The risk of plague is great." }
     { group:229, id:1, text: "I'm as hungry as a hippo, but there's little food to be found." }
     { group:229, id:2, text: "I ought to learn the war craft. With our defenses so weak, we're at risk." }

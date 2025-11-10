@@ -23,6 +23,10 @@ void figure_dentist::figure_action() {
     }
 }
 
+sound_key figure_dentist::phrase_key() const {
+    return sound_key();
+}
+
 void figure_dentist::figure_before_action() {
     auto b = home();
     if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
