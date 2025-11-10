@@ -68,7 +68,7 @@ void figure_market_buyer::figure_action() {
 sound_key figure_market_buyer::phrase_key() const {
     svector<sound_key, 10> keys;
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        keys.push_back("goto_store");
+        keys.push_back("buyer_goto_store");
     } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
         keys.push_back("buyer_back_to_market");
     } 

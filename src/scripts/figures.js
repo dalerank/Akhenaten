@@ -777,17 +777,26 @@ figure_carpenter = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_stonemason = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false }
-		work_ground : { pack:PACK_SPR_MAIN, id:152, max_frames:7 }
-		work_wall : { pack:PACK_SPR_MAIN, id:153, max_frames:7 }
-		climbing : { pack:PACK_SPR_MAIN, id:154, max_frames:3 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STONEMASON }
+figure_stonemason {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false }
+		work_ground { pack:PACK_SPR_MAIN, id:152, max_frames:7 }
+		work_wall { pack:PACK_SPR_MAIN, id:153, max_frames:7 }
+		climbing { pack:PACK_SPR_MAIN, id:154, max_frames:3 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_STONEMASON }
 	}
 
-  category: figure_category_citizen
+	sounds {
+		stonemason_ready {sound:"stone_e01.wav"}
+		stonemason_going_to_work {sound:"stone_e01.wav"}
+		stonemason_working_ground {sound:"stone_e02.wav"}
+		stonemason_working_wall {sound:"stone_e02.wav"}
+		stonemason_work_complete {sound:"stone_e02.wav"}
+		stonemason_looking_for_work {sound:"stone_e01.wav"}
+	}
+
+    category: figure_category_citizen
 	max_damage: 10
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
