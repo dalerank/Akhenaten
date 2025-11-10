@@ -951,14 +951,22 @@ figure_sled_puller = {
 	terrain_usage: TERRAIN_USAGE_ANY,
 }
 
-figure_trade_caravan = {
-	animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
-		death : { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN }
+figure_trade_caravan {
+	animations {
+		walk { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
+		death { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN }
 	}
 
-	category: figure_category_citizen
+	sounds {
+		trader_city_not_trades { sound:"caravan_e01.wav" }
+		trader_buy_for_less_sell_for_more { sound:"caravan_e02.wav" }
+		trader_its_my_life { sound:"caravan_e03.wav" }
+		trader_i_ll_be_a_hero { sound:"caravan_e04.wav" }
+		trader_you_talk_a_fine_bargain { sound:"caravan_e05.wav" }
+	}
+
+	category : figure_category_citizen
 	max_damage : 20
 	wait_ticks_after_create : 10
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
@@ -1049,47 +1057,47 @@ figure_constable = {
 	max_roam_length : 640,
 }
 
-figure_herbalist = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:180, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HERBALIST }
+figure_herbalist {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:180, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:181, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HERBALIST }
 	}
 
-	sounds : {
-		no_threat_malaria_here : {sound:"apothecary_e02.wav", group: 241, text:1}
-    have_malaria_risk_here : {sound:"apothecary_e03.wav", group: 241, text:2}
+	sounds {
+		malaria_not_a_problem {sound:"apothecary_e02.wav", group: 241, text:1}
+        malaria_outbreak_could_strike {sound:"apothecary_e03.wav", group: 241, text:2}
 	}
 
-  category: figure_category_citizen
+    category: figure_category_citizen
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_medicine
 }
 
-figure_dancer = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
-		death : { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DANCER }
+figure_dancer {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
+		death { pospack:PACK_SPR_MAIN, id:129, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DANCER }
 	}
 
-	sounds : {
-		i_like_festivals : {sound:"dancer_e01.wav", group:228, text:0}
-    desease_can_start_at_any_moment : {sound:"dancer_g01.wav", group:228, text:1}
-    no_food_in_city : {sound:"dancer_g02.wav", group:228, text:2}
-    city_not_safety_workers_leaving : {sound:"dancer_g03.wav", group:228, text:3}
-    need_workers : {sound:"dancer_g04.wav", group:228, text:4}
-    gods_are_angry : {sound:"dancer_g05.wav", group:228, text:5}
-    city_is_bad : {sound:"dancer_g06.wav", group:228, text:6}
-    much_unemployments : {sound:"dancer_g07.wav", group:228, text:7}
-    salary_too_low : {sound:"dancer_g08.wav", group:228, text:8}
-    city_is_good : {sound:"dancer_g09.wav", group:228, text:9}
-    city_is_amazing : {sound:"dancer_g10.wav", group:228, text:10}
+	sounds {
+		i_like_festivals {sound:"dancer_e01.wav", group:228, text:0}
+		desease_can_start_at_any_moment {sound:"dancer_g01.wav", group:228, text:1}
+		no_food_in_city {sound:"dancer_g02.wav", group:228, text:2}
+		city_not_safety_workers_leaving {sound:"dancer_g03.wav", group:228, text:3}
+		need_workers {sound:"dancer_g04.wav", group:228, text:4}
+		gods_are_angry {sound:"dancer_g05.wav", group:228, text:5}
+		city_is_bad {sound:"dancer_g06.wav", group:228, text:6}
+		much_unemployments {sound:"dancer_g07.wav", group:228, text:7}
+		salary_too_low {sound:"dancer_g08.wav", group:228, text:8}
+		city_is_good {sound:"dancer_g09.wav", group:228, text:9}
+		city_is_amazing {sound:"dancer_g10.wav", group:228, text:10}
 	}
 
-  category: figure_category_citizen
+    category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 512

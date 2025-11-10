@@ -774,6 +774,12 @@ localization_en = [
   {key: "#AD", text:"AD"}
   {key: "#BC", text:"BC"}
 
+  { key: "#trader_city_not_trades", text: "Our long and dangerous trek here was for nothing! This city won't trade." }
+  { key: "#trader_buy_for_less_sell_for_more", text: "Buy low, sell high.  That's my motto!" }
+  { key: "#trader_its_my_life", text: "It's the trader's life for me!" }
+  { key: "#trader_i_ll_be_a_hero", text: "I'll be a hero when I bring these goods back to my home land." }
+  { key: "#trader_you_talk_a_fine_bargain", text: "You talk a fine bargain, my friend.  I'll barely make back my costs." }
+
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}

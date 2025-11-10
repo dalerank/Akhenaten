@@ -177,7 +177,7 @@ void figure_info_window::init(object_info &c) {
         phrase_text = lang_get_string(sound_reaction.group, sound_reaction.id);
     }
     if (!phrase_text) {
-        phrase_text = "#unknown_reaction";
+        phrase_text.printf("#", sound_reaction.key.c_str());
     }
     ui["phrase"] = phrase_text;
 

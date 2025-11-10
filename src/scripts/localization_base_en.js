@@ -5328,11 +5328,6 @@ localization_base_en = [
     { group:224, id:2, text: "I don't know why we came. This city never trades, and the shore leave is boring." }
     { group:224, id:3, text: "I love the art of the deal! I can't wait to trade my supplies." }
     { group:224, id:4, text: "What a bountiful journey!" }
-    { group:225, id:0, text: "Our long and dangerous trek here was for nothing! This city won't trade." }
-    { group:225, id:1, text: "Buy low, sell high.  That's my motto!" }
-    { group:225, id:2, text: "It's the trader's life for me!" }
-    { group:225, id:3, text: "I'll be a hero when I bring these goods back to my home land." }
-    { group:225, id:4, text: "You talk a fine bargain, my friend.  I'll barely make back my costs." }
     { group:226, id:0, text: "I've never seen so many sick people. I hope a plague doesn't break out." }
     { group:226, id:1, text: "It's hard to catch these clubs when you're doubled over with hunger pangs." }
     { group:226, id:2, text: "Maybe I can throw these clubs at the enemy should they attack. Little else is defending this city." }
