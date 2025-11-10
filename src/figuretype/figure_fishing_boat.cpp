@@ -266,6 +266,23 @@ bool figure_fishing_boat::window_info_background(object_info &c) {
     return true;
 }
 
+sound_key figure_fishing_boat::phrase_key() const {
+    switch (action_state()) {
+    case FIGURE_ACTION_190_FISHING_BOAT_CREATED: return "fishing_boat_ready";
+    case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: return "fishing_boat_going_to_fish";
+    case FIGURE_ACTION_192_FISHING_BOAT_FISHING: return "fishing_boat_fishing";
+    case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: return "fishing_boat_going_to_wharf";
+    case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: return "fishing_boat_at_wharf";
+    case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: return "fishing_boat_returning_with_fish";
+    case FIGURE_ACTION_196_FISHING_BOAT_RANDOM_FPOINT:
+    case FIGURE_ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN:
+    case FIGURE_ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF:
+        return "fishing_boat_looking_for_spot";
+    }
+
+    return "fishing_boat_ready";
+}
+
 void figure_fishing_boat::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {

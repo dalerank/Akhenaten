@@ -717,25 +717,26 @@ figure_architector = {
 	permission : epermission_maintenance
 }
 
-figure_market_buyer = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:16, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:17, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_BUYER }
+figure_market_buyer {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:16, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:17, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_BUYER }
 	}
-	sounds : {
-		goto_store : {sound:"mkt_buyer_e01.wav", group:244, text:0 }
-    back_to_market : {sound:"mkt_buyer_e02.wav", group:244, text:0 }
-    city_has_low_health : {sound:"mkt_buyer_g01.wav", group:244, text:0 }
-    no_food_in_city : {sound:"mkt_buyer_g02.wav", group:244, text:0 }
-    city_have_no_army : {sound:"mkt_buyer_g03.wav", group:244, text:0 }
-    much_unemployments : {sound:"mkt_buyer_g04.wav", group:244, text:0 }
-    gods_are_angry : {sound:"mkt_buyer_g05.wav", group:244, text:0 }
-    city_is_bad_reputation : {sound:"mkt_buyer_g06.wav", group:244, text:0 }
-    too_much_unemployments : {sound:"mkt_buyer_g07.wav", group:244, text:0 }
-    low_entertainment : {sound:"mkt_buyer_g08.wav", group:244, text:0 }
-    city_is_good : {sound:"mkt_buyer_g09.wav", group:244, text:0 }
-    city_is_amazing : {sound:"mkt_buyer_g10.wav", group:244, text:0 }
+
+	sounds {
+		buyer_goto_store {sound:"mkt_buyer_e01.wav", group:244, text:0 }
+		buyer_back_to_market {sound:"mkt_buyer_e02.wav", group:244, text:0 }
+		buyer_city_has_low_health {sound:"mkt_buyer_g01.wav", group:244, text:0 }
+		buyer_no_food_in_city {sound:"mkt_buyer_g02.wav", group:244, text:0 }
+		buyer_city_have_no_army {sound:"mkt_buyer_g03.wav", group:244, text:0 }
+		buyer_much_unemployments {sound:"mkt_buyer_g04.wav", group:244, text:0 }
+		buyer_gods_are_angry {sound:"mkt_buyer_g05.wav", group:244, text:0 }
+		buyer_city_is_bad_reputation {sound:"mkt_buyer_g06.wav", group:244, text:0 }
+		buyer_too_much_unemployments {sound:"mkt_buyer_g07.wav", group:244, text:0 }
+		buyer_low_entertainment {sound:"mkt_buyer_g08.wav", group:244, text:0 }
+		buyer_city_is_good {sound:"mkt_buyer_g09.wav", group:244, text:0 }
+		buyer_city_is_amazing {sound:"mkt_buyer_g10.wav", group:244, text:0 }
 	}
 
 	category: figure_category_citizen
@@ -996,19 +997,29 @@ figure_homeless = {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
 }
 
-figure_drunkard = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
-		back : { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
-		womit : { pack:PACK_SPR_MAIN, id:204, max_frames:12, duration:4 }
-		death : { pack:PACK_SPR_MAIN, id:205, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DRUNKARD }
+figure_drunkard {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:203, max_frames:12 }
+		back { id:203, max_frames:12 }
+		womit { id:204, max_frames:12, duration:4 }
+		death { id:205, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DRUNKARD }
+	}
+
+	sounds {
+		drunkard_need_drink {sound:"drunkard_e01.wav"}
+		drunkard_going_to_tavern {sound:"drunkard_e02.wav"}
+		drunkard_time_for_beer {sound:"drunkard_e03.wav"}
+		drunkard_feeling_dizzy {sound:"drunkard_e04.wav"}
+		drunkard_oh_my_stomach {sound:"drunkard_e05.wav"}
+		drunkard_going_home {sound:"drunkard_e06.wav"}
 	}
 
 	category: figure_category_citizen
 	max_damage: 10
 	walk_delay : 50
-  womit_delay : 50
+    womit_delay : 50
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 }
@@ -1177,6 +1188,16 @@ figure_fishing_boat = {
 		work : {pack:PACK_SPR_MAIN, id:135, max_frames:6, duration:5 }
 		idle : {pack:PACK_SPR_MAIN, id:136, offset:3, max_frames:1 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_BOAT }
+	}
+
+	sounds : {
+		fishing_boat_ready : {sound:"fishing_e01.wav"}
+		fishing_boat_going_to_fish : {sound:"fishing_e02.wav"}
+		fishing_boat_fishing : {sound:"fishing_e03.wav"}
+		fishing_boat_going_to_wharf : {sound:"fishing_e01.wav"}
+		fishing_boat_at_wharf : {sound:"fishing_e01.wav"}
+		fishing_boat_returning_with_fish : {sound:"fishing_e02.wav"}
+		fishing_boat_looking_for_spot : {sound:"fishing_e02.wav"}
 	}
 
 	category: figure_category_citizen
