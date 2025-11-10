@@ -191,22 +191,32 @@ void figure_trade_caravan::before_poof() {
 }
 
 sound_key figure_trade_caravan::phrase_key() const {
-    //    if (++f->phrase_sequence_exact >= 2)
-    //        f->phrase_sequence_exact = 0;
-    //
-    //    if (f->action_state == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
-    //        if (!trader_has_traded(f->trader_id))
-    //            return 7; // no trade
-    //
-    //    } else if (f->action_state == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
-    //        if (figure_trade_caravan_can_buy(f, f->destination_building_id, f->empire_city_id))
-    //            return 11; // buying goods
-    //        else if (figure_trade_caravan_can_sell(f, f->destination_building_id, f->empire_city_id))
-    //            return 10; // selling goods
-    //
-    //    }
-    //    return 8 + f->phrase_sequence_exact;
-    return {};
+    auto& d = runtime_data();
+    
+    if (action_state() == ACTION_103_TRADE_CARAVAN_LEAVING) {
+        if (!empire_trader().has_traded()) {
+            return "trader_city_not_trades";
+        } else {
+            return "trader_you_talk_a_fine_bargain";
+        }
+    }
+
+    if (action_state() == ACTION_102_TRADE_CARAVAN_TRADING) {
+        if (can_buy(destination(), d.empire_city)) {
+            return "trader_buy_for_less_sell_for_more"; 
+        } else if (can_sell(destination(), d.empire_city)) {
+            return "trader_you_talk_a_fine_bargain"; 
+        } else {
+            return "trader_its_my_life";
+        }
+    }
+
+    if (action_state() == ACTION_101_TRADE_CARAVAN_ARRIVING) {
+        return "trader_i_ll_be_a_hero";
+    }
+    
+    // Default for other states (created, etc)
+    return "trader_its_my_life";
 }
 
 void figure_trade_caravan::update_animation() {

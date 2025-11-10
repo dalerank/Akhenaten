@@ -1,9 +1,6 @@
 log_info("akhenaten: walker sounds started")
 
 walker_sounds = {
-  // apothecary
-  apothecary_malaria_not_a_problem : {sound:"apothecary_e02.wav"},
-  apothecary_malaria_outbreak_could_strike : {sound:"apothecary_e03.wav"},
   // artisan
   artisan_work_my_tools_need_for_monument : { sound:"artisan_e01.wav"},
   artisan_work_i_write_history_of_egypt : { sound:"artisan_e02.wav"},
@@ -16,12 +13,6 @@ walker_sounds = {
    // brick
   brick_bricklaying_time_at_monument : { sound:"brick_e01.wav"},
   brick_monument_will_be_strong : { sound:"brick_e02.wav"},
-  // caravan
-  caravan_city_not_trades : { sound:"caravan_e01.wav"},
-  caravan_buy_for_less_sell_for_more : { sound:"caravan_e02.wav"},
-  caravan_its_my_life : { sound:"caravan_e03.wav"},
-  caravan_amazing_trades : { sound:"caravan_e04.wav"},
-  caravan_bad_trades : { sound:"caravan_e05.wav"},
   // carpenter
   carpenter_work_my_tools_need_for_monument : { sound:"carpenter_e01.wav"},
   carpenter_this_monument_will_be_short : { sound:"carpenter_e02.wav"},
