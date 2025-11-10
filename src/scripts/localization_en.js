@@ -801,4 +801,10 @@ localization_en = [
   { key: "#recruiter_best_city", text: "This city is the best!" }
   { key: "#recruiter_most_popular", text: "I'm the most popular person in the city. A lot of people need jobs." }
   { key: "#recruiter_list_of_job_openings", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+
+  { key: "#barge_have_no_place_for_dock", text: "I wonder if this city has any sights I could see while they unload my ship." }
+  { key: "#barge_docked_wait_for_dockpushers", text: "We're waiting for some cargo to be delivered to our ship." }
+  { key: "#barge_city_not_trades", text: "I don't know why we came. This city never trades, and the shore leave is boring." }
+  { key: "#barge_i_like_to_trage", text: "I love the art of the deal! I can't wait to trade my supplies." }
+  { key: "#barge_amazing_trades", text: "What a bountiful journey!" }
 ]

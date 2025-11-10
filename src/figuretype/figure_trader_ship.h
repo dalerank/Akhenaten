@@ -38,7 +38,6 @@ public:
     virtual void kill() override;
     virtual void update_animation() override;
     virtual void poof() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_TRADE_SHIP, "barge"}; }
     virtual void update_day() override;
     virtual xstring action_tip() const override;
     virtual void debug_show_properties() override;

@@ -890,11 +890,11 @@ figure_trade_ship = {
 	}
 
 	sounds : {
-		looking_for_unload : {sound:"barge_e01.wav", group: 224, text:0}
-		waiting_for_cargo : {sound:"barge_e02.wav", group: 224, text:1}
-		no_trade : {sound:"barge_e03.wav", group: 224, text:2}
-		good_trade : {sound:"barge_e04.wav", group: 224, text:3}
-		beatiful_journey : {sound:"barge_e05.wav", group: 224, text:4}
+		barge_have_no_place_for_dock : {sound:"barge_e01.wav", group: 224, text:0}
+		barge_docked_wait_for_dockpushers : {sound:"barge_e02.wav", group: 224, text:1}
+		barge_city_not_trades : {sound:"barge_e03.wav", group: 224, text:2}
+		barge_i_like_to_trage : {sound:"barge_e04.wav", group: 224, text:3}
+		barge_amazing_trades : {sound:"barge_e05.wav", group: 224, text:4}
 	}
 
 	category: figure_category_citizen

@@ -5310,12 +5310,7 @@ localization_base_en = [
     { group:222, id:2, text: "I have to go clear across the city with these goods. It'll take all day!" }
     { group:223, id:0, text: "We're doing more than our share of work.  We need more help." }
     { group:223, id:1, text: "I'll wait here until some space for this stuff opens up." }
-    { group:223, id:2, text: "Am I there yet?  I can't haul these goods much further." }
-    { group:224, id:0, text: "I wonder if this city has any sights I could see while they unload my ship." }
-    { group:224, id:1, text: "We're waiting for some cargo to be delivered to our ship." }
-    { group:224, id:2, text: "I don't know why we came. This city never trades, and the shore leave is boring." }
-    { group:224, id:3, text: "I love the art of the deal! I can't wait to trade my supplies." }
-    { group:224, id:4, text: "What a bountiful journey!" }
+    { group:223, id:2, text: "Am I there yet?  I can't haul these goods much further." }   
     { group:226, id:0, text: "I've never seen so many sick people. I hope a plague doesn't break out." }
     { group:226, id:1, text: "It's hard to catch these clubs when you're doubled over with hunger pangs." }
     { group:226, id:2, text: "Maybe I can throw these clubs at the enemy should they attack. Little else is defending this city." }
