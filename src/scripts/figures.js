@@ -365,9 +365,9 @@ figure_immigrant {
 	}
 
 	sounds {
-		im_new_here {sound:"immigrant_e01.wav", group: 202, text:0}
-		heard_there_is_a_job_here {sound:"immigrant_e02.wav", group: 202, text:1}
-		city_has_plenty_of_food {sound:"immigrant_e03.wav", group: 202, text:2}
+		immigrant_im_new_here { sound:"immigrant_e01.wav"}
+		immigrant_heard_there_is_a_job_here { sound:"immigrant_e02.wav"}
+		immigrant_city_has_plenty_of_food { sound:"immigrant_e03.wav"}
 	}
 
 	category: figure_category_citizen
@@ -927,20 +927,20 @@ figure_shipwreck = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_emigrant = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:2, max_frames:12 }
-		death : { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false }
-		cart : { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMIGRANT }
+figure_emigrant {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:2, max_frames:12 }
+		death { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false }
+		cart { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMIGRANT }
 	}
 
-	sounds : {
-		no_job_in_city : {sound:"emigrant_e01.wav", group: 203, text:0}
-    no_food_in_city : {sound:"emigrant_e02.wav", group: 203, text:1}
-    tax_too_high : {sound:"emigrant_e03.wav", group: 203, text:2}
-    salary_too_low : {sound:"emigrant_e04.wav", group: 203, text:3}
-    no_house_for_me : {sound:"emigrant_e05.wav", group: 203, text:4}
+	sounds {
+		emigrant_no_job_in_city  {sound:"emigrant_e01.wav", group: 203, text:0}
+		emigrant_no_food_in_city {sound:"emigrant_e02.wav", group: 203, text:1}
+		emigrant_tax_too_high {sound:"emigrant_e03.wav", group: 203, text:2}
+		emigrant_salary_too_low {sound:"emigrant_e04.wav", group: 203, text:3}
+		emigrant_no_house_for_me {sound:"emigrant_e05.wav", group: 203, text:4}
 	}
 
 	category: figure_category_citizen
