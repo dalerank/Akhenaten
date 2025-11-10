@@ -623,6 +623,58 @@ figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
     return {key, fname, 0, 0};
 }
 
+sound_key figure_impl::default_phrase_key() const {
+    e_god_mood god_mood = g_city.religion.least_mood();
+
+    if (city_resource_food_supply_months() <= 0) {
+        return "def_no_food_in_city";
+    }
+
+    const int unemployment_pct = g_city.labor.unemployment_percentage;
+    if (unemployment_pct >= 17) {
+        return "def_too_much_unemployments";
+    }
+
+    if (g_city.labor.workers_needed >= 10) {
+        return "def_need_more_workers";
+    }
+
+    if (g_city.avg_coverage.average_entertainment == 0) {
+        return "def_low_entertainment";
+    }
+
+    if (god_mood == GOD_MOOD_VERY_ANGRY) {
+        return "def_gods_very_angry";
+    }
+
+    if (g_city.avg_coverage.average_entertainment <= 10) {
+        return "def_little_entertainment";
+    }
+    
+    if (god_mood == GOD_MOOD_ANGRY) {
+        return "def_gods_angry";
+    }
+    
+    if (g_city.avg_coverage.average_entertainment <= 20) {
+        return "def_need_entertainment";
+    }
+    
+    if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 &&
+        g_city.avg_coverage.average_health > 0 && g_city.avg_coverage.average_education > 0) {
+        if (g_city.population.current < 500) {
+            return "def_city_not_bad";
+        }
+        
+        return "def_city_may_be_better";
+    } 
+    
+    if (unemployment_pct >= 10) {
+        return "def_city_need_some_workers";
+    }
+
+    return "def_city_is_good";
+}
+
 bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
 }
@@ -974,9 +1026,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->target_height);
     iob->bind(BIND_SIGNATURE_UINT8, &f->collecting_item_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trade_ship_failed_dock_attempts);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
@@ -993,7 +1045,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT16, &f->collecting_item_max);       
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
-    iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
     iob->bind____skip(4);
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...

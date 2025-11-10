@@ -50,8 +50,5 @@ void figure_carrier_info_window::init(object_info &c) {
         break;
     }
 
-    if (c.nfigure.phrase.valid()) {
-        pcstr phrase = ui::str(c.nfigure.phrase);
-        ui["phrase"] = phrase;
-    }
+    ui["phrase"] = f->phrase_key();
 }

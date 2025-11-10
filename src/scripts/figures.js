@@ -354,24 +354,25 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
-figure_immigrant = {
-	animations : {
-		walk : { pack: PACK_SPR_MAIN, id: 14, max_frames:12 }
-		death : { pack: PACK_SPR_MAIN, id: 15, max_frames:8, loop:false }
-		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 }
-   	cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
-   	big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_IMMIGRANT }
+figure_immigrant {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id: 14, max_frames:12 }
+		death { id: 15, max_frames:8, loop:false }
+		swim { id:138, max_frames:4, duration:4 }
+   	    cart { id:52, max_frames:1 }
+   	    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_IMMIGRANT }
 	}
 
-	sounds : {
-		i_need_here: {sound:"immigrant_e01.wav", group: 202, text:0}
- 		work_for_all : {sound:"immigrant_e02.wav", group: 202, text:1}
- 		cheap_food : {sound:"immigrant_e03.wav", group: 202, text:2}
+	sounds {
+		im_new_here {sound:"immigrant_e01.wav", group: 202, text:0}
+		heard_there_is_a_job_here {sound:"immigrant_e02.wav", group: 202, text:1}
+		city_has_plenty_of_food {sound:"immigrant_e03.wav", group: 202, text:2}
 	}
 
 	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ANIMAL
+	max_damage: 20
+	terrain_usage: TERRAIN_USAGE_ANIMAL
 }
 
 figure_ostrich_hunter {

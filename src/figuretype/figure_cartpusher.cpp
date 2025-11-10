@@ -505,15 +505,15 @@ void figure_cartpusher::figure_action() {
     }
 }
 
-figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
 bool figure_cartpusher::can_move_by_water() const {
     return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
 }
 
 sound_key figure_cartpusher::phrase_key() const {
+    if (action_state(ACTION_8_RECALCULATE)) {
+        return "try_found_destination";
+    }
+         
     if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
         return "i_have_no_destination";
     }

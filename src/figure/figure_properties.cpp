@@ -81,11 +81,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("current_height", f->current_height);
         game_debug_show_property("target_height", f->target_height);
         game_debug_show_property("collecting_item_id", f->collecting_item_id);
-        game_debug_show_property("phrase_sequence_exact", f->phrase_sequence_exact);
-        game_debug_show_property("phrase_group", f->phrase.group);
-        game_debug_show_property("phrase_id", f->phrase.id);
         game_debug_show_property("phrase_key", f->phrase_key);
-        game_debug_show_property("phrase_sequence_city", f->phrase_sequence_city);
         game_debug_show_property("main_cached_pos", f->main_cached_pos);
         game_debug_show_property("cart_cached_pos", f->cart_cached_pos);
 

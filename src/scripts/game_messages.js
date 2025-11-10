@@ -3164,13 +3164,13 @@ game_messages {
         content { text: "Your city suffers from health problems, as is to be expected with a growing population. Malaria and disease are the most common health crises that will afflict your city's households, though widespread plague can strike if healthcare is exceptionally inadequate.  @PIf a house does become infected with malaria or disease, all its occupants will die, and the house cannot be reoccupied for a certain period of time. @G64 @LMalaria @L@PMalaria is most prevalent close to water and marshland. The 'Risks: Malaria' overlay shows which houses are more likely to succumb to this illness.   @PAccess to clean water from a Water Supply and insect repellent provided by a local Apothecary both greatly reduce the risk of malaria for any given household. Like most buildings, the Apothecary only functions when it has road access and labor. @G63 @LDisease @L@PPhysicians help to reduce the risk of disease by administering medicines to the houses they serve. A steady supply of food is also essential to disease prevention. The 'Risks: Disease' overlay shows which houses are in danger of succumbing to disease." }
     }
     message_requests_from_other_cities {
-        id: 251,
-        type: 2,
-        message_type: 4,
+        id: 251
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
-            text: "Requests from other cities",
-            pos [0, 15]
+            text: "Requests from other cities"
+            pos [0, 20]
         }
         content {
             text: "One of your fellow cities is in need, and has made a request of you. If you want to remain on good terms with the rest of the growing Kingdom, it is usually best to respond to requests like this willingly and promptly. @G65   @POnce your Storage Yards hold enough of the desired item, consult your Political Overseer to dispatch a delivery to the city in question."

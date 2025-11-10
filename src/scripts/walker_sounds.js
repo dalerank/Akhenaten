@@ -136,10 +136,7 @@ walker_sounds = {
   // hunt_ostrich
   hunt_ostrich_heads_in_the_sand : {sound:"hunt_ostrich_e01.wav"},
   hunt_ostrich_those_are_big_drumsticks : {sound:"hunt_ostrich_e02.wav"},
-  // immigrant
-  immigrant_im_new_here : { sound:"immigrant_e01.wav"},
-  immigrant_heard_there_is_a_job_here : { sound:"immigrant_e02.wav"},
-  immigrant_city_has_plenty_of_food : { sound:"immigrant_e03.wav"},
+
   // juggler
   juggler_love_working_festival : {sound:"juggler_e01.wav"},
   juggler_never_seen_so_many_sick : {sound:"juggler_g01.wav"},

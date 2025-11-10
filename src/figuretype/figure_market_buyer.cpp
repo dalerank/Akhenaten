@@ -279,10 +279,6 @@ int figure_market_buyer::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_market_buyer::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
 bool figure_market_buyer::window_info_background(object_info &c) {
     painter ctx = game.painter();
     figure *f = c.figure_get();
@@ -303,8 +299,8 @@ bool figure_market_buyer::window_info_background(object_info &c) {
         ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
     }
 
-    if (c.nfigure.phrase.valid()) {
-        lang_text_draw_multiline(c.nfigure.phrase.group, c.nfigure.phrase.id, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
+    if (!!f->phrase_key) {
+        text_draw_multiline(f->phrase_key, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK, COLOR_BLACK);
     }
 
     return true;

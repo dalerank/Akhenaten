@@ -156,7 +156,6 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
-    f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
     f->map_figure_add();
 

@@ -109,7 +109,6 @@ void object_info::reset(tile2i tile) {
     bid = map_building_at(tile);
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
-    nfigure.draw_debug_path = 0;
 }
 
 figure *object_info::figure_get() {
