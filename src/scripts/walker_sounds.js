@@ -10,29 +10,6 @@ walker_sounds = {
   // carpenter
   carpenter_work_my_tools_need_for_monument : { sound:"carpenter_e01.wav"},
   carpenter_this_monument_will_be_short : { sound:"carpenter_e02.wav"},
-  // dancer
-  dancer_festival_crowds : { sound:"dancer_e01.wav"},
-  dancer_many_people_taken_ill : { sound:"dancer_g01.wav"},
-  dancer_not_enough_food : { sound:"dancer_g02.wav"},
-  dancer_nothing_defends_city : { sound:"dancer_g03.wav"},
-  dancer_need_more_workers : { sound:"dancer_g04.wav"},
-  dancer_gods_are_angry : { sound:"dancer_g05.wav"},
-  dancer_reputation_is_low : { sound:"dancer_g06.wav"},
-  dancer_unemployment_is_high : { sound:"dancer_g07.wav"},
-  dancer_low_entertainment : { sound:"dancer_g08.wav"},
-  dancer_city_is_ok : { sound:"dancer_g09.wav"},
-  dancer_city_is_fantastic : { sound:"dancer_g10.wav"},
-  // dentist
-  dentist_concerned_about_plague : {sound:"dentist_g01.wav"},
-  dentist_no_food_in_city : {sound:"dentist_g02.wav"},
-  dentist_defenses_weak : {sound:"dentist_g03.wav"},
-  dentist_need_more_workers : {sound:"dentist_g04.wav"},
-  dentist_gods_are_angry : {sound:"dentist_g05.wav"},
-  dentist_reputation_is_low : {sound:"dentist_g06.wav"},
-  dentist_unemployment_is_high : {sound:"dentist_g07.wav"},
-  dentist_low_entertainment : {sound:"dentist_g08.wav"},
-  dentist_city_is_ok : {sound:"dentist_g09.wav"},
-  dentist_city_is_the_best : {sound:"dentist_g10.wav"},
   // disease
   disease_oh_my_stomach_oh_my_head : {sound:"disease_e01.wav"},
   // dockpusher

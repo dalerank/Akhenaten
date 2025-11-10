@@ -807,4 +807,16 @@ localization_en = [
   { key: "#barge_city_not_trades", text: "I don't know why we came. This city never trades, and the shore leave is boring." }
   { key: "#barge_i_like_to_trage", text: "I love the art of the deal! I can't wait to trade my supplies." }
   { key: "#barge_amazing_trades", text: "What a bountiful journey!" }
+
+  { key: "#dancer_i_like_festivals", text: "Many people have taken ill in the city. I hope I don't catch anything!" }
+  { key: "#dancer_desease_can_start_at_any_moment", text: "I can't prance and leap very well without enough food!" }
+  { key: "#dancer_no_food_in_city", text: "Invaders would have little trouble taking over our city. Nothing defends it." }
+  { key: "#dancer_city_not_safety_workers_leaving", text: "Another dance partner lost to the worker shortage! I hate dancing alone." }
+  { key: "#dancer_need_workers", text: "We should do more to appease the gods - and quickly!" }
+  { key: "#dancer_gods_are_angry", text: "This city's reputation is worse than a juggler's! I hope we aren't attacked." }
+  { key: "#dancer_city_is_bad", text: "If I weren't so light on my feet, I would trip over all these jobless people!" }
+  { key: "#dancer_much_unemployments", text: "(Yawn) I need to be entertained!" }
+  { key: "#dancer_salary_too_low", text: "This city is just about as good as any other city, I guess." }
+  { key: "#dancer_city_is_good", text: "This city is fantastic!" }
+  { key: "#dancer_city_is_amazing", text: "These festival crowds are so enthusiastic, they make me want to leap higher." }
 ]

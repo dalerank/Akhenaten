@@ -1,7 +1,13 @@
 #include "figure/figure.h"
 
-class figure_festival_guy : public figure_impl
-{
+enum e_festival_guy_action {
+    ACTION_10_FESTIVAL_GUY_CREATED = 10,
+    ACTION_11_FESTIVAL_GUY_GOTO_SQUARE = 11,
+    ACTION_12_FESTIVAL_GUY_DANCE = 12,
+    ACTION_13_FESTIVAL_GUY_GOTO_HOME = 13,
+};
+
+class figure_festival_guy : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_FESTIVAL_GUY, figure_festival_guy)
     figure_festival_guy(figure* f) : figure_impl(f) {}
@@ -15,6 +21,7 @@ public:
     virtual void figure_action() override;
     virtual void before_poof() override;
     virtual void update_animation() override;
-    virtual figure_phrase_t phrase() const override { return { FIGURE_FESTIVAL_GUY, "festival_guy" }; }
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION; }
+
+    virtual sound_key phrase_key() const override;
 };
