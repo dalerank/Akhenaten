@@ -5277,19 +5277,7 @@ localization_base_en = [
     { group:212, id:9, text: "I hope I live here forever!" }
     { group:212, id:10, text: "(not used)" }
     { group:212, id:11, text: "I'm ready to work!" }
-    { group:212, id:12, text: "With the fields under water, I work now for glory everlasting." }
-    { group:213, id:0, text: "I see sick people everywhere. A plague could break out!" }
-    { group:213, id:1, text: "I'm starving. I'd rather be looking for food than for workers. " }
-    { group:213, id:2, text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
-    { group:213, id:3, text: "Without workers available, my job is impossible." }
-    { group:213, id:4, text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
-    { group:213, id:5, text: "Enemies could attack at any time. Our reputation is low, and no one respects us." }
-    { group:213, id:6, text: "With so many able people out of work, my job ought to be easy." }
-    { group:213, id:7, text: "It's boring here. I wish I could hire more entertainers." }
-    { group:213, id:8, text: "I don't mind living here. Things could certainly be worse." }
-    { group:213, id:9, text: "This city is the best!" }
-    { group:213, id:10, text: "I'm the most popular person in the city. A lot of people need jobs." }
-    { group:213, id:11, text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+    { group:212, id:12, text: "With the fields under water, I work now for glory everlasting." }    
     { group:214, id:0, text: "I am off for a hard day's logging." }
     { group:214, id:1, text: "This timber will be put to good use, I am sure." }
     { group:215, id:0, text: "To the marsh I march for the reeds we need." }

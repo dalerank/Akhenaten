@@ -787,5 +787,18 @@ localization_en = [
   {key: "#house_upgrade_nospace", group:127, id:104}
   {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Game language"}
 
-  {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
+  { key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
+
+  { key: "#recruiter_sick_people", text: "I see sick people everywhere. A plague could break out!" }
+  { key: "#recruiter_starving", text: "I'm starving. I'd rather be looking for food than for workers. " }
+  { key: "#recruiter_city_defenses_weak", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
+  { key: "#recruiter_without_workers", text: "Without workers available, my job is impossible." }
+  { key: "#recruiter_gods_unleash_fury", text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
+  { key: "#recruiter_enemies_attack", text: "Enemies could attack at any time. Our reputation is low, and no one respects us." }
+  { key: "#recruiter_able_people_out_of_work", text: "With so many able people out of work, my job ought to be easy." }
+  { key: "#recruiter_boring", text: "It's boring here. I wish I could hire more entertainers." }
+  { key: "#recruiter_living_here", text: "I don't mind living here. Things could certainly be worse." }
+  { key: "#recruiter_best_city", text: "This city is the best!" }
+  { key: "#recruiter_most_popular", text: "I'm the most popular person in the city. A lot of people need jobs." }
+  { key: "#recruiter_list_of_job_openings", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
 ]

@@ -801,20 +801,22 @@ figure_stonemason {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_cartpusher = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:43, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
-		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 }
+figure_cartpusher {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:43, max_frames:12 }
+		death { id:44, max_frames:8, loop:false }
+		swim { id:138, max_frames:4, duration:4 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CART_PUSHER }
 	}
-	sounds  : {
-	  have_no_place_for_goods : { sound:"cartpusher_e01.wav", group:222, text:0}
-    i_have_time_for_rest : { sound:"cartpusher_e02.wav", group:222, text:1}
-    road_too_long : { sound:"cartpusher_e03.wav", group:222, text:2}
-    i_have_no_destination : { sound:"cartpusher_e01.wav", group:223, text:0}
-    back_to_home : { sound:"cartpusher_e02.wav", group:223, text:1}
-    delivering_items : { sound:"cartpusher_e03.wav", group:223, text:2}
-    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CART_PUSHER }
+
+	sounds {
+	  	cartpusher_have_no_place_for_goods { sound:"cartpusher_e01.wav", group:222, text:0}
+		cartpusher_i_have_time_for_rest { sound:"cartpusher_e02.wav", group:222, text:1}
+		cartpusher_road_too_long { sound:"cartpusher_e03.wav", group:222, text:2}
+		cartpusher_i_have_no_destination { sound:"cartpusher_e01.wav", group:223, text:0}
+		cartpusher_back_to_home { sound:"cartpusher_e02.wav", group:223, text:1}
+		cartpusher_delivering_items { sound:"cartpusher_e03.wav", group:223, text:2}
 	}
 
 	wait_on_calculate_destination : 30
@@ -1377,25 +1379,26 @@ figure_market_trader = {
 	permission : epermission_market
 }
 
-figure_labor_seeker = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:206, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LABOR_SEEKER }
+figure_labor_seeker {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:206, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LABOR_SEEKER }
 	}
-	sounds : {
-		no_jobs : { sound:"Labor_e01.wav", group:213, text:0}
-    need_workers : { sound:"Labor_e02.WAV", group:213, text:1}
-    disease_in_city : { sound:"Labor_g01.WAV", group:213, text:2}
-    i_looking_for_the_workers : { sound:"Labor_g02.WAV", group:213, text:3}
-    city_not_safety_workers_leaving : { sound:"Labor_g03.WAV", group:213, text:4}
-    need_more_workers : { sound:"Labor_g04.WAV", group:213, text:5}
-    gods_are_angry : { sound:"Labor_g05.WAV", group:213, text:6}
-    no_food_in_city : { sound:"Labor_g06.WAV", group:213, text:7}
-    much_unemployments : { sound:"Labor_g07.WAV", group:213, text:8}
-    no_some_workers : { sound:"Labor_g08.WAV", group:213, text:9}
-    i_want_to_leave_city : { sound:"Labor_g09.WAV", group:213, text:10}
-    city_is_amazing : { sound:"Labor_g10.WAV", group:213, text:11}
+
+	sounds {
+		recruiter_sick_people { sound:"Labor_e01.wav" }
+		recruiter_starving { sound:"Labor_e02.WAV" }
+		recruiter_city_defenses_weak { sound:"Labor_g01.WAV" }
+		recruiter_without_workers { sound:"Labor_g02.WAV" }
+		recruiter_gods_unleash_fury { sound:"Labor_g03.WAV" }
+		recruiter_enemies_attack { sound:"Labor_g04.WAV" }
+		recruiter_able_people_out_of_work { sound:"Labor_g05.WAV" }
+		recruiter_boring { sound:"Labor_g06.WAV" }
+		recruiter_living_here { sound:"Labor_g07.WAV" }
+		recruiter_best_city { sound:"Labor_g08.WAV" }
+		recruiter_most_popular { sound:"Labor_g09.WAV" }
+		recruiter_list_of_job_openings { sound:"Labor_g10.WAV" }
 	}
 
 	category: figure_category_citizen
