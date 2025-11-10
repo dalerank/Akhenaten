@@ -165,4 +165,7 @@ localization_ru = [
     { key: "#dancer_salary_too_low", text: "Этот город примерно так же хорош, как любой другой город, полагаю." }
     { key: "#dancer_city_is_good", text: "Этот город фантастический!" }
     { key: "#dancer_city_is_amazing", text: "Эти фестивальные толпы такие восторженные, что заставляют меня прыгать выше." }
+
+    { key: "#homeless_i_was_kicked_out_of_my_home", text: "Меня выгнали из моего дома, и это не моя вина." }
+    { key: "#homeless_i_cant_find_a_place_to_live", text: "Я не могу найти место для жизни!" }
 ]

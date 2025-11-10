@@ -27,12 +27,13 @@ public:
     virtual void figure_action() override;
     virtual void figure_before_action() override;
     virtual void figure_roaming_action() override { /*nothing*/ }
-    virtual figure_phrase_t phrase() const override { return {FIGURE_HOMELESS, "homeless"}; }
     virtual void debug_draw() override;
     virtual bool is_home(const building *b) const override { 
         return (base.home_building_id > 0) && 
             (base.home_building_id == b->id || runtime_data().adv_home_building_id == b->id); 
     }
+
+    virtual sound_key phrase_key() const override;
 
     int find_closest_house_with_room(tile2i tile);
 };

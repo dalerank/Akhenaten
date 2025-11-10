@@ -5230,8 +5230,6 @@ localization_base_en = [
     { group:201, id:7, text: "Generic8" }
     { group:201, id:8, text: "Generic9" }
     { group:201, id:9, text: "Generic10" }        
-    { group:204, id:0, text: "I've been kicked out of my home, and through no fault of my own.      // homeless" }
-    { group:204, id:1, text: "I can't find a place to live!" }
     { group:205, id:0, text: "Maybe stealing from his treasury will get that false beard's attention! // cart_pusher" }
     { group:205, id:1, text: "I take what I want! Don't try to stop me!" }
     { group:205, id:2, text: "Thievery is a lot more profitable than other jobs in this city!" }
