@@ -8,6 +8,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "figuretype/figure_worker.h"
 #include "building/building_farm.h"
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
@@ -68,7 +69,7 @@ void building_work_camp::spawn_figure() {
         return;
     }
 
-    figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, FIGURE_ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
+    figure *f = base.create_figure_with_destination(FIGURE_LABORER, dest, (e_figure_action)ACTION_10_WORKER_CREATED, BUILDING_SLOT_SERVICE);
     base.spawned_worker_this_month = true;
 
     dest->dcast()->add_workers(f->id);
