@@ -863,4 +863,8 @@ localization_en = [
   { key: "#fireman_fighting_fire", text: "I can't talk now.  I'm busy dousing this fire." }
   { key: "#fireman_going_to_fire", text: "This fire could burn the whole city down if I don't act fast!" }
   { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }    
+
+  { key: "#malaria_problem", text: "(Not used)" }
+  { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
+  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." }  
 ]

@@ -199,4 +199,8 @@ localization_ru = [
     { key: "#fireman_fighting_fire", text: "Я не могу говорить сейчас. Я занят тушением этого пожара." }
     { key: "#fireman_going_to_fire", text: "Этот пожар может сжечь весь город дотла, если я не буду действовать быстро!" }
     { key: "#fireman_fighting_fire_also", text: "Ух, это горячо!" }   
+
+    { key: "#malaria_problem", text: "(Не используется)" }
+    { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
+    { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }    
 ]
