@@ -126,5 +126,5 @@ sound_key figure_emigrant::phrase_key() const {
         return "emigrant_no_house_for_me";
     }
 
-    return  "emigrant_all_good_in_city";
+    return "emigrant_all_good_in_city";
 }

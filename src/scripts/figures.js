@@ -958,11 +958,11 @@ figure_emigrant {
 	}
 
 	sounds {
-		emigrant_no_job_in_city  {sound:"emigrant_e01.wav", group: 203, text:0}
-		emigrant_no_food_in_city {sound:"emigrant_e02.wav", group: 203, text:1}
-		emigrant_tax_too_high {sound:"emigrant_e03.wav", group: 203, text:2}
-		emigrant_salary_too_low {sound:"emigrant_e04.wav", group: 203, text:3}
-		emigrant_no_house_for_me {sound:"emigrant_e05.wav", group: 203, text:4}
+		emigrant_no_job_in_city  {sound:"emigrant_e01.wav"}
+		emigrant_no_food_in_city {sound:"emigrant_e02.wav"}
+		emigrant_tax_too_high {sound:"emigrant_e03.wav"}
+		emigrant_salary_too_low {sound:"emigrant_e04.wav"}
+		emigrant_no_house_for_me {sound:"emigrant_e05.wav"}
 	}
 
 	category: figure_category_citizen
