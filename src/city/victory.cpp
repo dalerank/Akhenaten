@@ -248,3 +248,7 @@ bool victory_state_t::has_won() {
 void victory_state_t::add_condition(victory_condition cond) {
     g_victory_conditions.push_back(cond);
 }
+
+const std::unordered_map<xstring, bool> &get_victory_reasons() {
+    return g_victory_reasons;
+}
