@@ -892,11 +892,17 @@ figure_cartpusher {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_docker = {
-	animations : {
-		walk : {  pack:PACK_SPR_MAIN, id:43, max_frames:12 }
-		death : {  pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DOCKER }
+figure_docker {
+	animations {
+		walk {  pack:PACK_SPR_MAIN, id:43, max_frames:12 }
+		death {  pack:PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DOCKER }
+	}
+
+	sounds {
+		docker_need_more_help {sound:"dockpusher_e01.wav"}
+		docker_wait_until_space_opens_up {sound:"dockpusher_e02.wav"}
+		docker_cant_haul_goods_much_farther {sound:"dockpusher_e03.wav"}
 	}
 
 	category: figure_category_citizen
