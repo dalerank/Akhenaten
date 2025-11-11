@@ -1384,12 +1384,20 @@ figure_warship = {
 }
 
 figure_transport_ship = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 }
-		swim : {pack:PACK_SPR_MAIN, id:34, max_frames:4, duration:10 }
-		death : {pack:PACK_SPR_MAIN, id:35, max_frames:8, loop:false }
-		idle : {pack:PACK_SPR_MAIN, id:35, offset:8, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRANSPORT_SHIP }
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:34, max_frames:4, duration:10 }
+		swim { id:34, max_frames:4, duration:10 }
+		death { id:35, max_frames:8, loop:false }
+		idle { id:35, offset:8, max_frames:1 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRANSPORT_SHIP }
+	}
+
+	sounds {
+		transport_must_protect_our_ship { sound: "transport_e01.wav" }
+		transport_enemy_is_here { sound: "transport_e02.wav" }
+		transport_were_prepared { sound: "transport_e03.wav" }
+		transport_ready_if_need_arises { sound: "transport_e04.wav" }
 	}
 
 	category: figure_category_citizen

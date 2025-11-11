@@ -103,11 +103,6 @@ walker_sounds = {
   thief_i_take_what_i_want : { sound: "thief_e02.wav"},
   thief_more_profitable_than_other_jobs : { sound: "thief_e03.wav"},
   thief_take_take_take : { sound: "thief_e04.wav"},
-  // transport
-  transport_must_protect_our_ship : { sound: "transport_e01.wav"},
-  transport_enemy_is_here : { sound: "transport_e02.wav"},
-  transport_were_prepared : { sound: "transport_e03.wav"},
-  transport_ready_if_need_arises : { sound: "transport_e04.wav"},
   // vagrant
   vagrant_kicked_out_of_my_home : { sound: "vagrant_e01.wav"},
   vagrant_cant_find_a_place_to_live : { sound: "vagrant_e02.wav"},
