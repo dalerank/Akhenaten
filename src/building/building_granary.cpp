@@ -484,7 +484,7 @@ void building_granary::spawn_figure() {
     figure* f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
     auto cart = smart_cast<figure_storageyard_cart>(f);
 
-    cart->advance_action(FIGURE_ACTION_50_WAREHOUSEMAN_CREATED);
+    cart->advance_action(ACTION_50_WAREHOUSECART_CREATED);
     base.set_figure(0, cart->id());
     cart->set_home(id());
     if (task.status == GRANARY_TASK_GETTING) {

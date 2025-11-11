@@ -912,7 +912,7 @@ void building_storage_yard::spawn_figure() {
             return;
         }
 
-        cart->advance_action(FIGURE_ACTION_50_WAREHOUSEMAN_CREATED);
+        cart->advance_action(ACTION_50_WAREHOUSECART_CREATED);
 
         switch (task.result) {
         case STORAGEYARD_TASK_GETTING:
@@ -937,7 +937,7 @@ void building_storage_yard::spawn_figure() {
     } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGEYARD_CART)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         auto cart = smart_cast<figure_storageyard_cart>(f);
-        cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        cart->base.action_state = ACTION_50_WAREHOUSECART_CREATED;
         cart->load_resource(RESOURCE_NONE, 0);
         cart->base.collecting_item_id = task.resource;
 

@@ -331,7 +331,7 @@ void figure_trade_ship::update_day() {
     if (dock) {
         for (const int docker_id : dock->runtime_data().docker_ids) {
             figure *docker = figure_get(docker_id);
-            if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
+            if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != ACTION_132_DOCKER_IDLING) {
                 return;
             }
         }

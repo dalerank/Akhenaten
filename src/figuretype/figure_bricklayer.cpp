@@ -38,7 +38,7 @@ void figure_bricklayer::figure_action() {
         break;
 
     case ACTION_11_BRICKLAYER_GOING:
-        if (do_goto(base.destination_tile, terrain_usage, -1,ACTION_20_BRIRKLAYER_DESTROY)) {
+        if (do_goto(base.destination_tile, terrain_usage, -1, ACTION_20_BRICKLAYER_DESTROY)) {
             advance_action(ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
         break;

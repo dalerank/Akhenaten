@@ -20,7 +20,7 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
-declare_console_command(addbricks, game_cheat_add_resource<RESOURCE_BRICKS>);
+declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
 void building_bricklayers_guild::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
@@ -91,7 +91,7 @@ void building_bricklayers_guild::spawn_figure() {
         return;
     }
 
-    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, ACTION_10_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
+    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_10_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
     monument->dcast()->add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
 }
