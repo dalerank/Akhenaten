@@ -56,13 +56,13 @@ void figure_warship::figure_action() {
     building* b = home();
 
     int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
-    if (action_state() != FIGURE_ACTION_205_WARSHIP_CREATED && wharf_boat_id != id()) {
+    if (action_state() != ACTION_205_WARSHIP_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_warship(base);
         b = building_get(result.bid);
         if (b->id) {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
-            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
@@ -91,30 +91,68 @@ void figure_warship::kill() {
     figure_impl::kill();
 }
 
+sound_key figure_warship::phrase_key() const {
+    svector<sound_key, 5> keys;
+
+    // When there are too many enemies - overwhelmed
+    if (g_city.figures.enemies > 20) {
+        keys.push_back("warship_enemy_is_too_much_for_us");
+    }
+    
+    // When attacking - fight to the death
+    if (action_state() == ACTION_204_WARSHIP_ATTACK) {
+        keys.push_back("warship_well_fight_to_the_death");
+    }
+    
+    // Check if there are enemies in the city
+    if (g_city.figures.enemies > 0 && g_city.figures.enemies <= 20) {
+        keys.push_back("warship_enemies_coming_this_way");
+    }
+    
+    // When on patrol or going to patrol - ready to attack
+    if (action_state() == ACTION_206_WARSHIP_GOING_TO_PATROL ||
+        action_state() == ACTION_209_WARSHIP_ON_PATROL) {
+        keys.push_back("warship_ready_to_attack_invaders");
+    }
+    
+    // When moored at wharf - ready if foes come
+    if (action_state() == ACTION_203_WARSHIP_MOORED) {
+        keys.push_back("warship_ready_if_foes_come");
+    }
+    
+    // Default fallback - ready if foes come
+    if (keys.empty()) {
+        keys.push_back("warship_ready_if_foes_come");
+    }
+    
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {
-    case FIGURE_ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
-    case FIGURE_ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
-    case FIGURE_ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
+    case ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
+    case ACTION_209_WARSHIP_ON_PATROL: anim_key = "idle"; break;
+    case ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);
 }
 
 void figure_warship::figure_action_goto_wharf() {
-    if (action_state() == FIGURE_ACTION_204_WARSHIP_ATTACK) {
+    if (action_state() == ACTION_204_WARSHIP_ATTACK) {
         base.wait_ticks++;
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
-            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
             base.destination_tile = base.source_tile;
             route_remove();
         }
         return;
     }
 
-    if (action_state() == FIGURE_ACTION_203_WARSHIP_MOORED) {
+    if (action_state() == ACTION_203_WARSHIP_MOORED) {
         return;
     }
 
@@ -123,17 +161,17 @@ void figure_warship::figure_action_goto_wharf() {
         return;
     }
 
-    advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+    advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
     base.destination_tile.set(wharf->runtime_data().dock_tiles[0]);
     base.move_ticks(1);
     base.height_adjusted_ticks = 0;
     if (direction() == DIR_FIGURE_NONE) {
-        advance_action(FIGURE_ACTION_203_WARSHIP_MOORED);
+        advance_action(ACTION_203_WARSHIP_MOORED);
         base.wait_ticks = 0;
     } else if (direction() == DIR_FIGURE_REROUTE) {
         route_remove();
     } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(FIGURE_ACTION_205_WARSHIP_CREATED);
+        advance_action(ACTION_205_WARSHIP_CREATED);
     }
 }
 
@@ -141,7 +179,7 @@ void figure_warship::figure_action_common() {
     building *b = home();
 
     switch (action_state()) {
-    case FIGURE_ACTION_205_WARSHIP_CREATED:
+    case ACTION_205_WARSHIP_CREATED:
         base.wait_ticks++;
         if (base.wait_ticks >= 50) {
             base.wait_ticks = 0;
@@ -149,7 +187,7 @@ void figure_warship::figure_action_common() {
             if (result.bid && result.found) {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
-                advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+                advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 route_remove();
@@ -157,65 +195,65 @@ void figure_warship::figure_action_common() {
         }
         break;
 
-    case FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL:
+    case ACTION_206_WARSHIP_GOING_TO_PATROL:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
+            advance_action(ACTION_209_WARSHIP_ON_PATROL);
             base.destination_tile = base.source_tile;
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_209_WARSHIP_ON_PATROL);
+            advance_action(ACTION_209_WARSHIP_ON_PATROL);
             base.destination_tile = base.source_tile;
             base.wait_ticks = 0;
         }
         break;
 
-    case FIGURE_ACTION_209_WARSHIP_ON_PATROL:
+    case ACTION_209_WARSHIP_ON_PATROL:
         base.wait_ticks++;
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
-            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
             base.destination_tile = base.source_tile;
             route_remove();
         }
         break;
 
-    case FIGURE_ACTION_204_WARSHIP_ATTACK:
+    case ACTION_204_WARSHIP_ATTACK:
         base.wait_ticks++;
         if (base.wait_ticks >= 200) {
             base.wait_ticks = 0;
-            advance_action(FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF);
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
             base.destination_tile = base.source_tile;
             route_remove();
         }
         break;
 
-    case FIGURE_ACTION_207_WARSHIP_GOING_TO_WHARF:
+    case ACTION_207_WARSHIP_GOING_TO_WHARF:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_203_WARSHIP_MOORED);
+            advance_action(ACTION_203_WARSHIP_MOORED);
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_205_WARSHIP_CREATED);
+            advance_action(ACTION_205_WARSHIP_CREATED);
         }
         break;
 
-    case FIGURE_ACTION_208_WARSHIP_GOING_TO_RANDOM:
+    case ACTION_208_WARSHIP_GOING_TO_RANDOM:
     {
         base.wait_ticks = 0;
         tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
         if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-            advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
+            advance_action(ACTION_206_WARSHIP_GOING_TO_PATROL);
             base.destination_tile = fish_tile;
             route_remove();
         }
     } break;
 
-    case FIGURE_ACTION_203_WARSHIP_MOORED:
+    case ACTION_203_WARSHIP_MOORED:
     {
         int pct_workers = calc_percentage<int>(b->num_workers, b->max_workers);
         int max_wait_ticks = 5 * (102 - pct_workers);
@@ -226,7 +264,7 @@ void figure_warship::figure_action_common() {
                 base.wait_ticks = 0;
                 tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                 if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                    advance_action(FIGURE_ACTION_206_WARSHIP_GOING_TO_PATROL);
+                    advance_action(ACTION_206_WARSHIP_GOING_TO_PATROL);
                     base.destination_tile = fish_tile;
                     route_remove();
                 }
