@@ -5267,8 +5267,6 @@ localization_base_en = [
     { group:212, id:10, text: "(not used)" }
     { group:212, id:11, text: "I'm ready to work!" }
     { group:212, id:12, text: "With the fields under water, I work now for glory everlasting." }    
-    { group:214, id:0, text: "I am off for a hard day's logging." }
-    { group:214, id:1, text: "This timber will be put to good use, I am sure." }
     { group:215, id:0, text: "To the marsh I march for the reeds we need." }
     { group:215, id:1, text: "These reeds will make some fine papyrus." }
     { group:216, id:0, text: "My services are needed at the monument!" }
