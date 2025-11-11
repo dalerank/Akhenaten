@@ -108,8 +108,8 @@ struct archive {
         v.clear();
         this->r_objects(name, [&] (pcstr key, archive arch) {
             auto &itemv = v[key];
-            itemv.key = key;
             arch.r(itemv);
+            itemv.key = key;
         });
     }
 

@@ -101,7 +101,7 @@ sound_key figure_magistrate::phrase_key() const {
     keys.push_back("i_hope_we_are_ready");
 
     int index = rand() % keys.size();
-    return xstring().printf("magistate_", keys[index].c_str());
+    return xstring().printf("magistrate_%s", keys[index].c_str());
 }
 
 int figure_magistrate::provide_service() {

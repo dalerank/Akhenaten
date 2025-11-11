@@ -77,8 +77,10 @@ figure_robber = {
 	}
 
 	sounds {
-		robber_gold_should_be_for_living { sound: "robber_e01.wav" }
-		robber_just_think_of_the_fortune { sound: "robber_e02.wav" }
+		thief_maybe_stealing_will_get_attention { sound: "thief_e01.wav" }
+		thief_i_take_what_i_want { sound: "thief_e02.wav" }
+		thief_more_profitable_than_other_jobs { sound: "thief_e03.wav" }
+		thief_take_take_take { sound: "thief_e04.wav" }
 	}
 
 	category : figure_category_criminal
@@ -123,17 +125,17 @@ figure_rioter {
 	max_amount : 25,
 }
 
-figure_festival_guy = {
-	animations : {
-		juggler_walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
-		musician_walk : { pack:PACK_SPR_MAIN, id:191, max_frames:12 }
-		dancer_walk : {pack:PACK_SPR_MAIN, id:128, max_frames:12}
-		priest_ra_walk: { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
-		priest_osiris_walk : {pack:PACK_SPR_MAIN, id:197, max_frames:12}
-		priest_ptah_walk: {pack:PACK_SPR_MAIN, id:187, max_frames:12}
-		priest_seth_walk: {pack:PACK_SPR_MAIN, id:193, max_frames:12}
-		priest_bast_walk: {pack:PACK_SPR_MAIN, id:208, max_frames:12}
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_GUY }
+figure_festival_guy {
+	animations {
+		juggler_walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
+		musician_walk { pack:PACK_SPR_MAIN, id:191, max_frames:12 }
+		dancer_walk {pack:PACK_SPR_MAIN, id:128, max_frames:12}
+		priest_ra_walk { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
+		priest_osiris_walk {pack:PACK_SPR_MAIN, id:197, max_frames:12}
+		priest_ptah_walk {pack:PACK_SPR_MAIN, id:187, max_frames:12}
+		priest_seth_walk {pack:PACK_SPR_MAIN, id:193, max_frames:12}
+		priest_bast_walk {pack:PACK_SPR_MAIN, id:208, max_frames:12}
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_GUY }
 	}
 
 	category: figure_category_citizen
@@ -143,13 +145,20 @@ figure_festival_guy = {
 	permission : epermission_entertainer
 }
 
-figure_tower_sentry = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:54, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false }
-		fire : { pack:PACK_SPR_MAIN, id:56, max_frames:12 }
-		attack : { pack:PACK_SPR_MAIN, id:197, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOWER_SENTRY }
+figure_tower_sentry {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:54, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false }
+		fire { pack:PACK_SPR_MAIN, id:56, max_frames:12 }
+		attack { pack:PACK_SPR_MAIN, id:197, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOWER_SENTRY }
+	}
+
+	sounds {
+		tower_sentry_no_enemies_sighted { sound:"guard_e01.wav" }
+		tower_sentry_ready_approaching_enemy { sound:"guard_e02.wav" }
+		tower_sentry_no_trouble_defeating_army { sound:"guard_e03.wav" }
+		tower_sentry_enemy_is_fierce { sound:"guard_e04.wav" }
 	}
 
 	category: figure_category_armed
@@ -350,6 +359,16 @@ figure_crocodile = {
 	chase_speed_mult : 2
 }
 
+figure_birds_hunter {
+	animations {
+	}
+
+	sounds {
+		hunt_bird_birds_are_wily { sound:"hunt_bird_e01.wav" }
+		hunt_bird_birds_ready_for_roasting { sound:"hunt_bird_e02.wav" }
+	}
+}
+
 figure_hippo = {
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 }
@@ -433,22 +452,24 @@ figure_hunter_arrow = {
   terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_antelope_hunter = {
-	animations : {
-		walk : { pack:PACK_SPR_AMBIENT, id:36, max_frames:12 },
-		death : { pack:PACK_SPR_AMBIENT, id:37, max_frames:8, loop:false },
-		hunt : { pack:PACK_SPR_AMBIENT, id:38, max_frames:12 },
-		figth : { pack:PACK_SPR_AMBIENT, id:39, max_frames:12 },
-		figth_apcked : { pack:PACK_SPR_AMBIENT, id:40, max_frames:12 },
-		pack : { pack:PACK_SPR_AMBIENT, id:41, max_frames:18, loop:false },
-		move_pack : { pack:PACK_SPR_AMBIENT, id:42, max_frames:12 },
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
-	},
-	sounds : {
-		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 },
-    back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 },
-    city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
-	},
+figure_antelope_hunter {
+	animations {
+		walk { pack:PACK_SPR_AMBIENT, id:36, max_frames:12 }
+		death { pack:PACK_SPR_AMBIENT, id:37, max_frames:8, loop:false }
+		hunt { pack:PACK_SPR_AMBIENT, id:38, max_frames:12 }
+		figth { pack:PACK_SPR_AMBIENT, id:39, max_frames:12 }
+		figth_apcked { pack:PACK_SPR_AMBIENT, id:40, max_frames:12 }
+		pack { pack:PACK_SPR_AMBIENT, id:41, max_frames:18, loop:false }
+		move_pack { pack:PACK_SPR_AMBIENT, id:42, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
+	}
+
+	sounds {
+		antelope_hunter_hunting  { sound:"hunt_ostrich_e01.wav" }
+   		antelope_hunter_back  { sound:"hunt_ostrich_e02.wav" }
+        antelope_hunter_city_is_good  { sound: "hunt_ostrich_e10.wav" }
+	}
+
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 	max_hunting_distance : 30,
 }
@@ -890,6 +911,27 @@ figure_cartpusher {
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS,
+}
+
+figure_zookeeper {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:155, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:156, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ZOOKEEPER }
+	}
+		
+	sounds {
+		zookeeper_danger_of_plague : { sound: "zookeeper_e01.wav"},
+		zookeeper_no_food_in_city : { sound: "zookeeper_e02.wav"},
+		zookeeper_defenses_are_weak : { sound: "zookeeper_e03.wav"},
+		zookeeper_need_more_workers : { sound: "zookeeper_e04.wav"},
+		zookeeper_gods_are_angry : { sound: "zookeeper_e05.wav"},
+		zookeeper_reputation_is_low : { sound: "zookeeper_e06.wav"},
+		zookeeper_high_unemployment : { sound: "zookeeper_e07.wav"},
+		zookeeper_low_entertainment : { sound: "zookeeper_e08.wav"},
+		zookeeper_city_is_ok : { sound: "zookeeper_e09.wav"},
+		zookeeper_city_is_amazing : { sound: "zookeeper_e10.wav"}
+	}
 }
 
 figure_docker {

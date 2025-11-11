@@ -24,7 +24,3 @@ struct figure_sounds_t {
 };
 
 template<> inline void archive::r<figure_sounds_t>(pcstr name, figure_sounds_t &v) { r(name, v.data); }
-
-namespace snd {
-    xstring get_walker_reaction(xstring reaction);
-}

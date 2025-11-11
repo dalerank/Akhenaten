@@ -82,7 +82,7 @@ sound_key figure_physician::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return xstring().printf("doctor_", keys[index].c_str());
+    return xstring().printf("doctor_%s", keys[index].c_str());
 }
 
 int figure_physician::provide_service() {

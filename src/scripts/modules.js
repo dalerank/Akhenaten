@@ -15,7 +15,6 @@ import gods
 import city
 import images
 import city_sounds
-import walker_sounds
 import ui_window_features
 import buildings
 import overlays
@@ -65,7 +64,6 @@ import ui_advisor_health
 import ui_granary_info
 import ui_records_window
 import houses
-import fonts
 import routing
 import ui_bazaar_window
 import ui_advisor_chief

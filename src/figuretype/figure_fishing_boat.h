@@ -32,7 +32,6 @@ public:
     virtual void kill() override;
     //virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual sound_key phrase_key() const override;
-    virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual bool window_info_background(object_info &ctx) override;
     virtual void update_animation() override;
 };

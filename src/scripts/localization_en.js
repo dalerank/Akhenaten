@@ -955,4 +955,75 @@ localization_en = [
   { key: "#water_low_entertainment", text: "Carrying water is not entertainment. I wish we had some real diversions here." }
   { key: "#water_city_is_good", text: "I like living here, but if I were running the town I'd do some things differently." }
   { key: "#water_city_is_amazing", text: "There is no better place upon this earth." }
+
+  { key: "#osiris_city_low_health", text: "The city is flooded with sick people. I hope a plague doesn't break out." }
+  { key: "#osiris_no_food_in_city", text: "No priest of Osiris should have to suffer from hunger!" }
+  { key: "#osiris_city_not_safety", text: "Our city is almost defenseless. I hope no one attacks." }
+  { key: "#osiris_need_workers", text: "Without workers, we may not be able to pay Osiris the respect he deserves." }
+  { key: "#osiris_gods_are_angry", text: "Osiris is not the only god made angry by neglect." }
+  { key: "#osiris_low_sentiment", text: "Our city is the laughingstock of Egypt. We are ripe for attack." }
+  { key: "#osiris_much_unemployments", text: "Unemployment is a serious problem in this city. I hope more jobs open up soon." }
+  { key: "#osiris_low_entertainment", text: "Even a priest needs more than prayers to be entertained." }
+  { key: "#osiris_city_is_good", text: "This city is adequate." }
+  { key: "#osiris_city_is_amazing", text: "Osiris is proud to be worshiped in such a fine city." }
+  { key: "#osiris_god_love_festival", text: "Festivals warm Osiris' heart." }
+  { key: "#osiris_city_low_mood", text: "Osiris could punish the city for its neglect with a low flood." }
+
+  { key: "#ra_city_low_health", text: "The people coming to the Temple don't look healthy. I hope the illness doesn't escalate." }
+  { key: "#ra_no_food_in_city", text: "I don't have enough food to feed Ra or myself!" }
+  { key: "#ra_city_not_safety", text: "I wish it were up to Ra to defend our city. I don't think this city does a good job of it." }
+  { key: "#ra_need_workers", text: "I hope this city finds more workers soon. Services could soon suffer." }
+  { key: "#ra_gods_are_angry", text: "This city would do well to pay more respect to the gods." }
+  { key: "#ra_low_sentiment", text: "Reputation is important. Without it, the city is prone to hostile take over." }
+  { key: "#ra_much_unemployments", text: "I've never heard more people ask Ra whether they'll finally land a job." }
+  { key: "#ra_low_entertainment", text: "I need more entertainment. Pleasing Ra all day isn't easy, and I need to relax." }
+  { key: "#ra_city_is_good", text: "I have no major complaints about this city." }
+  { key: "#ra_city_is_amazing", text: "The only place better than this city is the Field of Reeds." }
+  { key: "#ra_god_love_festival", text: "Ra loves to see his people during the festival." }
+  { key: "#ra_city_low_mood", text: "Our city is an embarrassment to the rest of the Kingdom." }
+
+  { key: "#ptah_city_low_health", text: "Poor health could result in plague if nothing is done about conditions in the city." }
+  { key: "#ptah_no_food_in_city", text: "The rumbling of my empty stomach distracts me from my duties to Ptah." }
+  { key: "#ptah_city_not_safety", text: "Our holey defenses will be useless if anyone chooses to attack us." }
+  { key: "#ptah_need_workers", text: "It saddens Ptah to see industries idle because of the worker shortage." }
+  { key: "#ptah_gods_are_angry", text: "The gods my inflict a just retribution if the city continues to ignore them." }
+  { key: "#seth_low_sentiment", text: "Our ill repute could encourage invaders." }
+  { key: "#ptah_much_unemployments", text: "Ptah wishes that all the unemployed in the city could find productive work." }
+  { key: "#ptah_low_entertainment", text: "I like to have a good time, just like anyone else. I wish there were more entertainers in this city." }
+  { key: "#ptah_city_is_good", text: "This city has its problems, but its a good place to live." }
+  { key: "#ptah_city_is_amazing", text: "This is the best crafted city in all of Egypt!" }
+  { key: "#ptah_god_love_festival", text: "Ptah knows that holidays make workers happier." }
+  { key: "#ptah_city_low_mood", text: "Ptah's guiding hand can do only so much. The industries in this city need more workers!" }
+
+  { key: "#seth_city_low_health", text: "A plague may wreak havoc on the city if health does not improve." }
+  { key: "#seth_no_food_in_city", text: "All day, I battle my hunger. I need more food." }
+  { key: "#seth_city_not_safety", text: "We'll have to rely on Seth to protect us in battle. The city isn't prepared to defend itself." }
+  { key: "#seth_need_workers", text: "Services are suffering because no workers can be found!" }
+  { key: "#seth_gods_are_angry", text: "This city should stop provoking the gods' anger with its inaction." }
+  { key: "#seth_low_sentiment", text: "We may soon find out how little others think of our city when they sweep in and destroy it." }
+  { key: "#seth_much_unemployments", text: "The legions of the unemployed clog the streets." }
+  { key: "#seth_low_entertainment", text: "It's hard to believe how dull it is here!" }
+  { key: "#seth_city_is_good", text: "This city is suitable enough for me." }
+  { key: "#seth_city_is_amazing", text: "This city is unrivaled in all Egypt!" }
+  { key: "#seth_god_love_festival", text: "Even Seth's warriors need the occasional festival." }
+  { key: "#seth_city_low_mood", text: "Glory is on the horizon! Enemies are fast approaching the city." }
+
+  { key: "#bast_city_low_health", text: "Bast cries to see so many sickly people. I hope the plague doesn't strike." }
+  { key: "#bast_no_food_in_city", text: "It's hard to get enough food in this city. Hunger strikes everyone." }
+  { key: "#bast_city_not_safety", text: "Our city's woeful defenses invite our foes to attack us." }
+  { key: "#bast_need_workers", text: "Our city cannot possible run well with so many job openings." }
+  { key: "#bast_gods_are_angry", text: "The gods are turning their backs on this city. We should pay them more respect." }
+  { key: "#seth_low_sentiment", text: "The city's reputation is terrible. An invasion could come at any time." }
+  { key: "#seth_much_unemployments", text: "Not even Bast can lighten the hearts of so many jobless people." }
+  { key: "#seth_low_entertainment", text: "Bast is horrified by the lack of entertainment in this city." }
+  { key: "#seth_city_is_good", text: "This city isn't a bad place to live." }
+  { key: "#seth_city_is_amazing", text: "This city is the greatest!" }
+  { key: "#seth_god_love_festival", text: "Bast loves a good festival." }
+  { key: "#seth_low_sentiment_2", text: "People in the city are deeply unhappy. They could soon turn to crime." }
+  { key: "#seth_low_entertainment_2", text: "What's a priestess to do? There is so little diversion here." }
+  { key: "#seth_city_low_mood_2", text: "Bast grants me power to heal the sick before they spread their disease." }
+
+  { key: "#antelope_hunter_hunting", text: "Antelopes are no match for us!" }
+  { key: "#antelope_hunter_back", text: "There will be steaks for everyone tonight." }
+  { key: "#antelope_hunter_city_is_good", text: "This city is good!" }
 ]
