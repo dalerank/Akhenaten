@@ -1,6 +1,7 @@
 #include "window/window_figure_info.h"
 
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_storageyard_cart.h"
 #include "figuretype/figure_docker.h"
 #include "window/building/figures.h"
 #include "graphics/image.h"
@@ -41,9 +42,9 @@ void figure_carrier_info_window::init(object_info &c) {
     switch (f->action_state()) {
     case ACTION_11_RETURNING_EMPTY:
     case ACTION_27_CARTPUSHER_RETURNING:
-    case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
-    case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
-    case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
+    case ACTION_53_WAREHOUSECART_RETURNING_EMPTY:
+    case ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD:
+    case ACTION_59_WAREHOUSECART_RETURNING_WITH_RESOURCE:
     case ACTION_134_DOCKER_EXPORT_QUEUE:
     case ACTION_137_DOCKER_EXPORT_RETURNING:
     case ACTION_138_DOCKER_IMPORT_RETURNING:

@@ -14,6 +14,7 @@
 #include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/routing/routing_terrain.h"
+#include "figuretype/figure_tower_sentry.h"
 #include "grid/terrain.h"
 #include "game/game_config.h"
 #include "sound/sound.h"
@@ -116,7 +117,7 @@ void figure_tower_sentry_reroute(void) {
             f->cc_coords.y = 15 * y_tile;
 
             f->map_figure_add();
-            f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
+            f->action_state = ACTION_173_TOWER_SENTRY_RETURNING;
             f->destination_tile = f->source_tile;
         } else {
             // Teleport back to tower
@@ -124,7 +125,7 @@ void figure_tower_sentry_reroute(void) {
             building* b = f->home();
             f->source_tile = f->tile = tile2i(b->tile.x(), b->tile.y());
             f->map_figure_add();
-            f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+            f->action_state = ACTION_170_TOWER_SENTRY_AT_REST;
             f->route_remove();
         }
     }

@@ -19,11 +19,11 @@ void figure_rioter::figure_action() {
     //    cart_image_id = 0;
     //    is_ghost = false;
     switch (action_state()) {
-    case FIGURE_ACTION_120_RIOTER_CREATED:
+    case ACTION_120_RIOTER_CREATED:
         //            figure_image_increase_offset(32);
         base.wait_ticks++;
         if (base.wait_ticks >= 160) {
-            advance_action(FIGURE_ACTION_121_RIOTER_MOVING);
+            advance_action(ACTION_121_RIOTER_MOVING);
             int x_tile, y_tile;
             int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
             if (building_id) {
@@ -35,7 +35,7 @@ void figure_rioter::figure_action() {
             }
         }
         break;
-    case FIGURE_ACTION_121_RIOTER_MOVING:
+    case ACTION_121_RIOTER_MOVING:
         //            figure_image_increase_offset(12);
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE) {
@@ -49,7 +49,7 @@ void figure_rioter::figure_action() {
                 poof();
             }
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action( FIGURE_ACTION_120_RIOTER_CREATED );
+            advance_action( ACTION_120_RIOTER_CREATED );
             route_remove();
         } else if (direction() == DIR_FIGURE_ATTACK) {
             if (base.animctx.frame > 12) {
@@ -115,7 +115,7 @@ int figure_rioter::collapse_building() {
         auto bmain = b->main();
         bmain->destroy_by_fire();
         
-        advance_action( FIGURE_ACTION_120_RIOTER_CREATED );
+        advance_action( ACTION_120_RIOTER_CREATED );
         base.wait_ticks = 0;
         base.direction = dir;
         return 1;

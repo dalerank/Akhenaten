@@ -7,6 +7,7 @@
 #include "grid/building_tiles.h"
 #include "city/city.h"
 #include "construction/build_planner.h"
+#include "figuretype/figure_war_ship.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_warship_wharf);
@@ -36,7 +37,7 @@ bool building_warship_wharf::ship_moored() const {
         return false;
     }
 
-    const bool moored = (f->action_state == FIGURE_ACTION_203_WARSHIP_MOORED);
+    const bool moored = (f->action_state == ACTION_203_WARSHIP_MOORED);
     return moored;
 }
 
