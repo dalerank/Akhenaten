@@ -24,8 +24,6 @@ mission1 {
 		gold_mined : 500
 		victory_last_action_delay : 4
 		nogranary_population_cap : 150
-		victory_reason : "some_days_after_last_action"
-		buildings_reason : "gold_ok_and_temples_built"
 
 		gold_mined_handled : false
 		temples_built : false
@@ -82,11 +80,11 @@ function tutorial2_population_cap(ev) {
 
 [event=event_update_victory_state, mission=mission1]
 function tutorial2_handle_victory_state(ev) {
-    var may_finish = (mission.gold_mined_handled && mission.temples_built)
-	city.set_victory_reason(mission.buildings_reason, may_finish)
+	city.set_victory_reason("gold_mined_handled", mission.gold_mined_handled)
+	city.set_victory_reason("temples_built", mission.temples_built)
 
     var some_days_after_last_action = (game.absolute_day - mission.last_action) > mission.victory_last_action_delay;
-	city.set_victory_reason(mission.victory_reason, some_days_after_last_action)
+	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_building_create, mission=mission1]

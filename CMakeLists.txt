@@ -11,7 +11,7 @@ message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
-    set(WIN_EMSCRIPTEN TRUE)
+    set(WIN_EMSCRIPTEN TRUE) 
 else()
     set(WIN_EMSCRIPTEN FALSE)
 endif()

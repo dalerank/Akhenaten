@@ -18,9 +18,6 @@ mission2 {
 				BUILDING_FIGS_FARM, BUILDING_WORK_CAMP, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BAZAAR, BUILDING_GRANARY,
 				BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_FESTIVAL_SQUARE
 			  ]
-	stages {
-		tutorial_gardens { buildings [BUILDING_ROADBLOCK, BUILDING_FERRY, BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA] },
-	}
 
 	vars {
 		figs_stored : 800
@@ -32,11 +29,18 @@ mission2 {
 		figs_stored_handled : false
 		disease_handled : false
 		pottery_step1_stored_handled : false
+		pottery_step2_stored_handled : false
 	}
 }
 
+[event=event_migration_update, mission=mission1]
+function tutorial3_population_cap(ev) {
+    var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
+    migration.population_cap = max_pop
+}
+
 [event=event_mission_start, mission=mission2]
-function tutorial2_on_start(ev) {
+function tutorial3_on_start(ev) {
 	city.set_goal_tooltip("#mission2_store_figs")
 
 	if (mission.figs_stored_handled) {
@@ -45,13 +49,27 @@ function tutorial2_on_start(ev) {
 		city.use_building(BUILDING_STORAGE_YARD, true)
 	}
 
+	if (mission.pottery_step1_stored_handled) {
+		city.set_goal_tooltip("#mission2_pottery_step1")
+	}
+
+	if (mission.pottery_step2_stored_handled) {
+		city.use_building(BUILDING_ROADBLOCK, true)
+		city.use_building(BUILDING_SMALL_STATUE, true)
+		city.use_building(BUILDING_MEDIUM_STATUE, true)
+		city.use_building(BUILDING_LARGE_STATUE, true)
+		city.use_building(BUILDING_GARDENS, true)
+		city.use_building(BUILDING_PLAZA, true)
+		city.set_goal_tooltip("#mission2_pottery_step2")
+	}
+
 	city.set_advisor_available(ADVISOR_LABOR, 1)
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
 }
 
 [event=event_granary_resource_added, mission=mission2]
-function tutorial2_on_filled_granary(ev) {
+function tutorial3_on_filled_granary(ev) {
     if (mission.figs_stored_handled) {
         return
     }
@@ -70,6 +88,7 @@ function tutorial2_on_filled_granary(ev) {
 	city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 	city.use_building(BUILDING_STORAGE_YARD, true)
 
+	city.set_goal_tooltip("#mission2_pottery_step1")
 	ui.popup_message("message_tutorial_food_and_farming")
 }
 
@@ -87,7 +106,36 @@ function tutorial3_warehouse_pottery_1_check(ev) {
 	mission.pottery_step1_stored_handled = true
 	mission.last_action_time = game.absolute_day
 
+	city.set_goal_tooltip("#mission2_pottery_step2")
 	ui.popup_message("message_tutorial_industry")
+}
+
+[event=event_warehouse_filled, mission=mission2]
+function tutorial3_warehouse_pottery_2_check(ev) {
+	if (!mission.pottery_step1_stored_handled) {
+        return
+    } 
+
+	if (mission.pottery_step2_stored_handled) {
+        return
+    }
+    
+	var amount = city.yards_stored(RESOURCE_POTTERY)
+    if (amount < mission.pottery_step2_stored) {
+        return
+    }
+
+	mission.pottery_step2_stored_handled = true
+	mission.last_action_time = game.absolute_day
+
+	city.use_building(BUILDING_ROADBLOCK, true)
+	city.use_building(BUILDING_SMALL_STATUE, true)
+	city.use_building(BUILDING_MEDIUM_STATUE, true)
+	city.use_building(BUILDING_LARGE_STATUE, true)
+	city.use_building(BUILDING_GARDENS, true)
+	city.use_building(BUILDING_PLAZA, true)
+
+	ui.popup_message("message_tutorial_municipal_structures")
 }
 
 [event=event_city_disease, mission=mission2]
@@ -104,4 +152,15 @@ function tutorial3_on_disease(ev) {
 	city.use_building(BUILDING_PHYSICIAN, true)
 
 	ui.popup_message("message_basic_healthcare")
+}
+
+[event=event_update_victory_state, mission=mission2]
+function tutorial3_handle_victory_state(ev) {
+	city.set_victory_reason("figs_stored_handled", mission.figs_stored_handled)
+	city.set_victory_reason("disease_handled", mission.disease_handled)
+	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
+	city.set_victory_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
+
+	var some_days_after_last_action = (game.absolute_day - mission.last_action) > mission.victory_last_action_delay;
+	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }

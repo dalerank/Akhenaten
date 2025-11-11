@@ -2720,8 +2720,6 @@ localization_base_en = [
     { group:62, id:23, text: "Build some Temples and Shrines to Bast" }
     { group:62, id:24, text: "Mine some gold for the Palace's treasury" }
     { group:62, id:25, text: "Build Apothecaries and Physicians to improve health" }
-    { group:62, id:26, text: "Beautify your city, then review the Mission Briefing" }
-    { group:62, id:27, text: "Fill a Storage Yard with pottery" }
     { group:62, id:29, text: "Import some bricks so that you can build a mastaba" }
     { group:62, id:30, text: "Make some papyrus and build a Scribal School" }
     { group:62, id:31, text: "Make a house evolve into a 'spacious apartment'" }

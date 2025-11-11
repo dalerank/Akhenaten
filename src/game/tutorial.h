@@ -34,13 +34,6 @@ struct tutorial_t {
 struct tutorial_flags_t {
     struct {
         bool started;
-        bool pottery_made_1;
-        bool pottery_made_2;
-        int pottery_made_year;
-    } tutorial_3;
-
-    struct {
-        bool started;
         bool beer_made;
         bool tax_collector_built;
     } tutorial_4;
