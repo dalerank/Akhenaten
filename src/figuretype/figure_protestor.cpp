@@ -19,6 +19,10 @@ void figure_protestor::figure_action() {
     }
 }
 
+sound_key figure_protestor::phrase_key() const {
+    return sound_key();
+}
+
 void figure_protestor::update_animation() {
     xstring animkey = animkeys().walk;
 
