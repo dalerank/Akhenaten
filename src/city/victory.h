@@ -24,3 +24,5 @@ struct victory_state_t {
 
     void add_condition(victory_condition);
 };
+
+const std::unordered_map<xstring, bool> &get_victory_reasons();
