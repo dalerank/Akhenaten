@@ -5387,17 +5387,7 @@ localization_base_en = [
     { group:236, id:6, text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
     { group:236, id:7, text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
     { group:236, id:8, text: "This city is comparable to others I've read about." }
-    { group:236, id:9, text: "This city is the best that history has ever known!" }
-    { group:237, id:0, text: "I'm afraid to go into some neighborhoods. People are sick, and I don't want to catch anything." }
-    { group:237, id:1, text: "I'm weak from hunger. I'm nearly collapsing under the weight of all this water." }
-    { group:237, id:2, text: "It seems that it will be up to the citizens to defend this city if it comes under attack." }
-    { group:237, id:3, text: "Jobs, jobs everywhere, and not a worker to fill them." }
-    { group:237, id:4, text: "If I were a god, I wouldn't be pleased with this city's lack of attention to me." }
-    { group:237, id:5, text: "I hear that other cities are laughing at us and are planning to invade." }
-    { group:237, id:6, text: "I see plenty of people out of work as I make my deliveries." }
-    { group:237, id:7, text: "Carrying water is not entertainment. I wish we had some real diversions here." }
-    { group:237, id:8, text: "I like living here, but if I were running the town I'd do some things differently." }
-    { group:237, id:9, text: "There is no better place upon this earth." }
+    { group:236, id:9, text: "This city is the best that history has ever known!" }    
     { group:238, id:0, text: "People are so concerned about catching the plague that they're neglecting their teeth." }
     { group:238, id:1, text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
     { group:238, id:2, text: "The city's defenses are full of gaps. Our enemies could have their way with us." }

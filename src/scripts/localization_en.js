@@ -944,4 +944,15 @@ localization_en = [
   { key: "#doctor_city_is_ok", text: "This city is good enough, I guess." }
   { key: "#doctor_city_is_the_best", text: "I cannot imagine a healthier place to live." }
   { key: "#doctor_plague_could_strike_us_dead", text: "Plague could strike us dead at any moment!" }
+
+  { key: "#water_desease_can_start_at_any_moment", text: "I'm afraid to go into some neighborhoods. People are sick, and I don't want to catch anything." }
+  { key: "#water_no_food_in_city", text: "I'm weak from hunger. I'm nearly collapsing under the weight of all this water." }
+  { key: "#water_city_have_no_army", text: "It seems that it will be up to the citizens to defend this city if it comes under attack." }
+  { key: "#water_need_workers", text: "Jobs, jobs everywhere, and not a worker to fill them." }
+  { key: "#water_gods_are_angry", text: "If I were a god, I wouldn't be pleased with this city's lack of attention to me." }
+  { key: "#water_city_is_bad", text: "I hear that other cities are laughing at us and are planning to invade." }
+  { key: "#water_much_unemployments", text: "I see plenty of people out of work as I make my deliveries." }
+  { key: "#water_low_entertainment", text: "Carrying water is not entertainment. I wish we had some real diversions here." }
+  { key: "#water_city_is_good", text: "I like living here, but if I were running the town I'd do some things differently." }
+  { key: "#water_city_is_amazing", text: "There is no better place upon this earth." }
 ]
