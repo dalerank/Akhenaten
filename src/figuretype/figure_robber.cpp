@@ -88,6 +88,16 @@ void figure_robber::figure_action() {
     }
 }
 
+sound_key figure_robber::phrase_key() const {
+    svector<sound_key, 2> keys = {
+        "robber_gold_should_be_for_living",
+        "robber_just_think_of_the_fortune"
+    };
+    
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 void figure_robber::update_animation() {
     xstring animkey = animkeys().walk;
 
