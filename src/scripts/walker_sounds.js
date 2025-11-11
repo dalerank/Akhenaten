@@ -103,18 +103,6 @@ walker_sounds = {
   thief_i_take_what_i_want : { sound: "thief_e02.wav"},
   thief_more_profitable_than_other_jobs : { sound: "thief_e03.wav"},
   thief_take_take_take : { sound: "thief_e04.wav"},
-  // water
-  water_danger_of_plague : { sound: "water_g01.wav"},
-  water_no_food_in_city : { sound: "water_g02.wav"},
-  water_defenses_are_weak : { sound: "water_g03.wav"},
-  water_need_more_workers : { sound: "water_g04.wav"},
-  water_gods_are_angry : { sound: "water_g05.wav"},
-  water_reputation_is_low : { sound: "water_g06.wav"},
-  water_high_unemployment : { sound: "water_g07.wav"},
-  water_low_entertainment : { sound: "water_g08.wav"},
-  water_city_is_ok : { sound: "water_g09.wav"},
-  water_city_is_amazing : { sound: "water_g10.wav"},
-
   // zookeeper
   zookeeper_danger_of_plague : { sound: "zookeeper_e01.wav"},
   zookeeper_no_food_in_city : { sound: "zookeeper_e02.wav"},

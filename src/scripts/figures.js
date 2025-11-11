@@ -32,28 +32,28 @@ figure_fireman {
 	permission : epermission_maintenance
 }
 
-figure_water_carrier = {
+figure_water_carrier {
 	animations {
 		walk {  pack:PACK_SPR_MAIN, id:59, max_frames:12 }
 		death {  pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false }
-  }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
+  	}
 
-  sounds {
-  	desease_can_start_at_any_moment {sound: "water_g01.wav", group:237, text:0}
-    no_food_in_city {sound: "water_g02.wav", group:237, text:1}
-    city_have_no_army {sound: "water_g03.wav", group:237, text:2}
-    need_workers {sound: "water_g04.wav", group:237, text:3}
-    gods_are_angry {sound: "water_g05.wav", group:237, text:4}
-    city_is_bad {sound: "water_g06.wav", group:237, text:5}
-    much_unemployments {sound: "water_g07.wav", group:237, text:6}
-    low_entertainment {sound: "water_g08.wav", group:237, text:7}
-    city_is_good {sound: "water_g09.wav", group:237, text:8}
-    city_is_amazing {sound: "water_g10.wav", group:237, text:9}
-    big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
-  }
+	sounds {
+		water_desease_can_start_at_any_moment { sound: "water_g01.wav" }
+		water_no_food_in_city { sound: "water_g02.wav" }
+		water_city_have_no_army { sound: "water_g03.wav" }
+		water_need_workers { sound: "water_g04.wav" }
+		water_gods_are_angry { sound: "water_g05.wav" }
+		water_city_is_bad { sound: "water_g06.wav" }
+		water_much_unemployments { sound: "water_g07.wav" }
+		water_low_entertainment { sound: "water_g08.wav" }
+		water_city_is_good { sound: "water_g09.wav" }
+		water_city_is_amazing { sound: "water_g10.wav" }
+	}
 
-  terrain_usage : TERRAIN_USAGE_ROADS,
-  max_roam_length : 640,
+  terrain_usage : TERRAIN_USAGE_ROADS
+  max_roam_length : 640
 }
 
 figure_protestor = {
@@ -1373,11 +1373,11 @@ figure_warship {
 	}
 
 	sounds {
-		warship_well_fight_to_the_death { sound: "warship_e01.wav"},
-		warship_enemy_is_too_much_for_us { sound: "warship_e02.wav"},
-		warship_enemies_coming_this_way { sound: "warship_e03.wav"},
-		warship_ready_to_attack_invaders { sound: "warship_e04.wav"},
-		warship_ready_if_foes_come { sound: "warship_e05.wav"},
+		warship_well_fight_to_the_death { sound: "warship_e01.wav" }
+		warship_enemy_is_too_much_for_us { sound: "warship_e02.wav" }
+		warship_enemies_coming_this_way { sound: "warship_e03.wav" }
+		warship_ready_to_attack_invaders { sound: "warship_e04.wav" }
+		warship_ready_if_foes_come { sound: "warship_e05.wav" }
 	}
 
 	category: figure_category_armed

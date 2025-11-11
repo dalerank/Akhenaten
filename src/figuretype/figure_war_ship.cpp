@@ -94,33 +94,23 @@ void figure_warship::kill() {
 sound_key figure_warship::phrase_key() const {
     svector<sound_key, 5> keys;
 
-    // When there are too many enemies - overwhelmed
-    if (g_city.figures.enemies > 20) {
-        keys.push_back("warship_enemy_is_too_much_for_us");
-    }
-    
-    // When attacking - fight to the death
     if (action_state() == ACTION_204_WARSHIP_ATTACK) {
         keys.push_back("warship_well_fight_to_the_death");
     }
     
-    // Check if there are enemies in the city
-    if (g_city.figures.enemies > 0 && g_city.figures.enemies <= 20) {
+    if (g_city.figures.enemies > 0) {
         keys.push_back("warship_enemies_coming_this_way");
     }
     
-    // When on patrol or going to patrol - ready to attack
     if (action_state() == ACTION_206_WARSHIP_GOING_TO_PATROL ||
         action_state() == ACTION_209_WARSHIP_ON_PATROL) {
         keys.push_back("warship_ready_to_attack_invaders");
     }
     
-    // When moored at wharf - ready if foes come
     if (action_state() == ACTION_203_WARSHIP_MOORED) {
         keys.push_back("warship_ready_if_foes_come");
     }
     
-    // Default fallback - ready if foes come
     if (keys.empty()) {
         keys.push_back("warship_ready_if_foes_come");
     }
