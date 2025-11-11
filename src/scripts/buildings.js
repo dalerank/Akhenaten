@@ -1483,7 +1483,7 @@ building_mortuary {
   animations {
     preview { pack:PACK_GENERAL, id:175 },
     base { pack:PACK_GENERAL, id:175 },
-    work { pos:[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
+    work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
   }
 
   max_serve_clients : 1000

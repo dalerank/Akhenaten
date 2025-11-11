@@ -74,8 +74,9 @@ function tutorial2_check_gold_mined(ev) {
 [event=event_migration_update, mission=mission1]
 function tutorial2_population_cap(ev) {
     var granary_built = city.count_active_buildings(BUILDING_GRANARY)
-    var max_pops = (granary_built > 0) ? 0 : mission.nogranary_population_cap
-    migration.population_cap = max_pops
+    var max_pop = (granary_built > 0) ? 0 : mission.nogranary_population_cap
+
+    migration.set_population_cap("no_granary_population_cap", max_pop)
 }
 
 [event=event_update_victory_state, mission=mission1]

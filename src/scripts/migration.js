@@ -18,6 +18,5 @@ migration_sentiment_influence = [
 ]
 
 migration {
-    [property]
-    population_cap { set: function(cap) { set_population_cap(cap) } }
+    set_population_cap: __migration_set_population_cap
 }

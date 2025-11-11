@@ -65,7 +65,7 @@ function tutorial1_on_start(ev) {
 		city.use_building(BUILDING_WATER_SUPPLY, true)
 	}
 
-	migration.population_cap = mission.population_cap;
+	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
 	city.set_victory_reason(mission.victory_reason, false)
 }
 
