@@ -76,17 +76,27 @@ figure_robber = {
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ROBBER }
 	}
 
+	sounds {
+		robber_gold_should_be_for_living { sound: "robber_e01.wav" }
+		robber_just_think_of_the_fortune { sound: "robber_e02.wav" }
+	}
+
 	category : figure_category_criminal
 	max_damage : 12
 	terrain_usage : TERRAIN_USAGE_ANY
 	max_amount : 25
 }
 
-figure_tomb_robber = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ROBER }
+figure_tomb_robber {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ROBER }
+	}
+
+	sounds {
+		tomb_robber_gold_should_be_for_living { sound: "robber_e01.wav" }
+		tomb_robber_just_think_of_the_fortune { sound: "robber_e02.wav" }
 	}
 
 	category : figure_category_criminal
@@ -1384,10 +1394,10 @@ figure_soldier_charioteer {
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FCHARIOTEER }
 	}
 
-  is_soldier : true
+    is_soldier : true
 	category: figure_category_armed
-  max_damage : 120
-  attack_value : 8
+    max_damage : 120
+    attack_value : 8
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 

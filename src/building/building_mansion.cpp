@@ -6,6 +6,7 @@
 #include "graphics/text.h"
 #include "graphics/elements/button.h"
 #include "graphics/elements/generic_button.h"
+#include "figuretype/figure_governor.h"
 #include "city/city.h"
 #include "city/victory.h"
 #include "city/buildings.h"
@@ -46,7 +47,7 @@ void building_mansion::spawn_figure() {
     tile2i road_tile = map_closest_road_within_radius(tile(), size(), 2);
     if (road_tile.valid()) {
         figure *f = figure_create(FIGURE_GOVERNOR, road_tile, DIR_4_BOTTOM_LEFT);
-        f->advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
+        f->advance_action(ACTION_120_GOVERNOR_CREATED);
         f->set_home(&base);
         f->wait_ticks = 10 + (base.map_random_7bit & 0xf);
         base.set_figure(BUILDING_SLOT_GOVERNOR, f);
