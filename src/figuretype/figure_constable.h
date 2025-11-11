@@ -2,6 +2,16 @@
 
 #include "figure/figure.h"
 
+enum e_constable_action {
+    ACTION_70_CONSTABLE_CREATED = 70,
+    ACTION_71_CONSTABLE_ENTERING_EXITING = 71,
+    ACTION_72_CONSTABLE_ROAMING = 72,
+    ACTION_73_CONSTABLE_RETURNING = 73,
+    ACTION_76_CONSTABLE_GOING_TO_ENEMY = 76,
+    ACTION_77_CONSTABLE_AT_ENEMY = 77,
+    ACTION_150_CONSTABLE_ATTACK = 150,
+};
+
 class figure_constable : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_CONSTABLE, figure_constable)

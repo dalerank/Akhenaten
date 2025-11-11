@@ -1,6 +1,7 @@
 #include "window_building_info.h"
 
 #include "building/building_warship_wharf.h"
+#include "figuretype/figure_war_ship.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "input/input.h"
@@ -38,8 +39,8 @@ void warshipwharf_info_window::init(object_info &c) {
     } else {
         figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
         switch (boat->action_state) {
-        case FIGURE_ACTION_203_WARSHIP_MOORED: reason.second = 2; break;
-        case FIGURE_ACTION_204_WARSHIP_ATTACK: reason.second = 3; break;
+        case ACTION_203_WARSHIP_MOORED: reason.second = 2; break;
+        case ACTION_204_WARSHIP_ATTACK: reason.second = 3; break;
         default: reason.second = 8; break;
         }
     }
