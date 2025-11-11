@@ -5458,20 +5458,7 @@ localization_base_en = [
     { group:240, id:10, text: "Health seems to be worsening throughout the city." }
     { group:241, id:0, text: "(Not used)" }
     { group:241, id:1, text: "Malaria doesn't seem to be a problem here." }
-    { group:241, id:2, text: "An outbreak of malaria could strike if something isn't done." }
-    { group:242, id:0, text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
-    { group:242, id:1, text: "Even when fires are burning, all I can think about is how hungry I am." }
-    { group:242, id:2, text: "If our enemies invade, the whole city could go up in flames." }
-    { group:242, id:3, text: "I fear that some of these half-empty buildings could catch fire. I wish there were more workers." }
-    { group:242, id:4, text: "The gods' fiery wrath will come down on us if we don't pay more respect." }
-    { group:242, id:5, text: "I wouldn't dream of letting my reputation sink so low. Our city's bad reputation is inviting attack." }
-    { group:242, id:6, text: "I've had more people volunteer for the fire department. These people need jobs." }
-    { group:242, id:7, text: "Firefighting is hard work, and I'd love to cool off with a good show.  There's not enough of that here." }
-    { group:242, id:8, text: "I'm satisfied with this city." }
-    { group:242, id:9, text: "This city is cool." }
-    { group:242, id:10, text: "I can't talk now.  I'm busy dousing this fire." }
-    { group:242, id:11, text: "This fire could burn the whole city down if I don't act fast!" }
-    { group:242, id:12, text: "Ooh, that's hot!" }    
+    { group:241, id:2, text: "An outbreak of malaria could strike if something isn't done." }    
     { group:244, id:0, text: "With so many people so weak and sickly, I fear for the future." }
     { group:244, id:1, text: "I haven't eaten in so long, even I'm considering stealing food!" }
     { group:244, id:2, text: "If invaders do come, it looks like it will be up to me to defend the city." }

@@ -10,19 +10,19 @@ figure_fireman {
   }
 
   sounds {
-  	fighting_fire {sound:"fireman_e01.wav", group: 242, text:0}
- 		going_to_fire {sound:"fireman_e02.wav", group: 242, text:1}
- 		fighting_fire_also {sound:"fireman_e03.WAV", group: 242, text:2}
- 		desease_can_start_at_any_moment {sound:"fireman_g01.WAV", group: 242, text:3}
- 		no_food_in_city {sound:"fireman_g02.WAV", group: 242, text:4}
- 		city_not_safety_workers_leaving {sound:"fireman_g03.WAV", group: 242, text:5}
- 		need_workers {sound:"fireman_g04.WAV", group: 242, text:6}
- 		hight_fire_level {sound:"fireman_g05.WAV", group: 242, text:7}
- 		gods_are_angry {sound:"fireman_g06.WAV", group: 242, text:8}
- 		need_more_workers {sound:"fireman_g07.WAV", group: 242, text:9}
- 		low_entertainment {sound:"fireman_g08.WAV", group: 242, text:10}
- 		gods_are_pleasures {sound:"fireman_g09.WAV", group: 242, text:11}
- 		city_is_amazing {sound:"fireman_g10.wav", group: 242, text:12}
+  	fireman_fighting_fire {sound:"fireman_e01.wav", group: 242, text:0}
+	fireman_going_to_fire {sound:"fireman_e02.wav", group: 242, text:1}
+	fireman_fighting_fire_also {sound:"fireman_e03.WAV", group: 242, text:2}
+	fireman_desease_can_start_at_any_moment {sound:"fireman_g01.WAV", group: 242, text:3}
+	fireman_no_food_in_city {sound:"fireman_g02.WAV", group: 242, text:4}
+	fireman_city_not_safety_workers_leaving {sound:"fireman_g03.WAV", group: 242, text:5}
+	fireman_need_workers {sound:"fireman_g04.WAV", group: 242, text:6}
+	fireman_hight_fire_level {sound:"fireman_g05.WAV", group: 242, text:7}
+	fireman_gods_are_angry {sound:"fireman_g06.WAV", group: 242, text:8}
+	fireman_need_more_workers {sound:"fireman_g07.WAV", group: 242, text:9}
+	fireman_low_entertainment {sound:"fireman_g08.WAV", group: 242, text:10}
+	fireman_gods_are_pleasures {sound:"fireman_g09.WAV", group: 242, text:11}
+	fireman_city_is_amazing {sound:"fireman_g10.wav", group: 242, text:12}
   }
 
   category : figure_category_citizen

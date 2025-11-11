@@ -849,4 +849,18 @@ localization_en = [
   { key: "#engineer_city_is_good", text: "This city has everything an architect's heart could desire!" }
   { key: "#engineer_so_many_places_in_poor_condition", text: "There are so many places in poor condition, I can barely keep up." }
   { key: "#engineer_city_is_amazing", text: "I hope I'm credited for the great condition of this city." }
+
+  { key: "#fireman_desease_can_start_at_any_moment", text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
+  { key: "#fireman_no_food_in_city", text: "Even when fires are burning, all I can think about is how hungry I am." }
+  { key: "#fireman_city_not_safety_workers_leaving", text: "If our enemies invade, the whole city could go up in flames." }
+  { key: "#fireman_need_workers", text: "I fear that some of these half-empty buildings could catch fire. I wish there were more workers." }
+  { key: "#fireman_gods_are_angry", text: "The gods' fiery wrath will come down on us if we don't pay more respect." }
+  { key: "#fireman_hight_fire_level", text: "I wouldn't dream of letting my reputation sink so low. Our city's bad reputation is inviting attack." }
+  { key: "#fireman_need_more_workers", text: "I've had more people volunteer for the fire department. These people need jobs." }
+  { key: "#fireman_low_entertainment", text: "Firefighting is hard work, and I'd love to cool off with a good show.  There's not enough of that here." }
+  { key: "#fireman_gods_are_pleasures", text: "I'm satisfied with this city." }
+  { key: "#fireman_city_is_amazing", text: "This city is cool." }
+  { key: "#fireman_fighting_fire", text: "I can't talk now.  I'm busy dousing this fire." }
+  { key: "#fireman_going_to_fire", text: "This fire could burn the whole city down if I don't act fast!" }
+  { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }    
 ]
