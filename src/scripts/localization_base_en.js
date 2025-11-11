@@ -5455,25 +5455,7 @@ localization_base_en = [
     { group:240, id:7, text: "This city is as dead as the bodies I work with all day. I wish the city were alive with entertainment." }
     { group:240, id:8, text: "I might as will live here. It's about as good as anywhere else." }
     { group:240, id:9, text: "I feel truly sorry for my clients. They aren't around to enjoy this incredible city!" }
-    { group:240, id:10, text: "Health seems to be worsening throughout the city." }  
-    { group:244, id:0, text: "With so many people so weak and sickly, I fear for the future." }
-    { group:244, id:1, text: "I haven't eaten in so long, even I'm considering stealing food!" }
-    { group:244, id:2, text: "If invaders do come, it looks like it will be up to me to defend the city." }
-    { group:244, id:3, text: "If I didn't enjoy the danger of police work, I'd quickly take one of the many available jobs." }
-    { group:244, id:4, text: "If I were running things, I'd pay more attention to the gods." }
-    { group:244, id:5, text: "I've heard our city is an easy mark for invaders. We have a bad reputation." }
-    { group:244, id:6, text: "I don't like to see this many jobless loiterers. I can't walk my beat without tripping over them!" }
-    { group:244, id:7, text: "This city is dull. I can't find any good shows to see." }
-    { group:244, id:8, text: "This city isn't perfect, but then what city is?" }
-    { group:244, id:9, text: "If only the Bazaar carried donuts, this city would be perfect." }
-    { group:244, id:10, text: "Everybody's friendly here. No one is reporting any crimes." }
-    { group:244, id:11, text: "A few crimes here, a few crimes there, but nothing out of the ordinary." }
-    { group:244, id:12, text: "Even I don't like to walk in this part of town!" }
-    { group:244, id:13, text: "I'm really too busy to talk right now - ask me again later." }
-    { group:244, id:14, text: "I'll do my part to make sure this city is safe!" }
-    { group:244, id:15, text: "Fighting invaders wasn't in my job description!" }
-    { group:244, id:16, text: "These rascals aren't taking over the city on my watch!" }
-    { group:244, id:17, text: "The enemy could soon win if I don't get some help! " }
+    { group:240, id:10, text: "Health seems to be worsening throughout the city." }      
     { group:245, id:0, text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
     { group:245, id:1, text: "I wish people could pay their taxes in food. I'm so hungry!" }
     { group:245, id:2, text: "Our city doesn't seem capable of defending itself!" }
