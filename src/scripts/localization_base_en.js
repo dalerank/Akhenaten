@@ -5306,16 +5306,6 @@ localization_base_en = [
     { group:226, id:8, text: "This city isn't too bad.  " }
     { group:226, id:9, text: "There's no place I'd rather juggle." }
     { group:226, id:10, text: "I love working these festival crowds. Everyone's so happy!" }
-    { group:227, id:0, text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
-    { group:227, id:1, text: "I'd sing for my supper, but this city doesn't have enough food." }
-    { group:227, id:2, text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
-    { group:227, id:3, text: "All my performances are solos.  This city doesn't have enough workers." }
-    { group:227, id:4, text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
-    { group:227, id:5, text: "Our terrible reputation could provoke an attack!" }
-    { group:227, id:6, text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
-    { group:227, id:7, text: "Even an entertainer likes to be entertained! There's not enough to do here." }
-    { group:227, id:8, text: "This city could be a lot worse, I suppose." }
-    { group:227, id:9, text: "I hope we continue to make beautiful music in this city for a long time." }
     { group:227, id:10, text: "These festivals are great! Everyone sings along." }    
     { group:229, id:0, text: "People's health is in jeopardy. The risk of plague is great." }
     { group:229, id:1, text: "I'm as hungry as a hippo, but there's little food to be found." }
@@ -5452,20 +5442,7 @@ localization_base_en = [
     { group:240, id:7, text: "This city is as dead as the bodies I work with all day. I wish the city were alive with entertainment." }
     { group:240, id:8, text: "I might as will live here. It's about as good as anywhere else." }
     { group:240, id:9, text: "I feel truly sorry for my clients. They aren't around to enjoy this incredible city!" }
-    { group:240, id:10, text: "Health seems to be worsening throughout the city." }      
-    { group:245, id:0, text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
-    { group:245, id:1, text: "I wish people could pay their taxes in food. I'm so hungry!" }
-    { group:245, id:2, text: "Our city doesn't seem capable of defending itself!" }
-    { group:245, id:3, text: "No amount of tax money is going to make this city run smoothly. We need more workers!" }
-    { group:245, id:4, text: "We owe the gods a great debt, and I don't want to be here when they come to collect!" }
-    { group:245, id:5, text: "I've heard that invasion is imminent given our standing in Egypt." }
-    { group:245, id:6, text: "Many of these houses have unemployed workers! How can they be expected to pay tax?" }
-    { group:245, id:7, text: "As much as I like collecting taxes, I'd still like to see some professional entertainment." }
-    { group:245, id:8, text: "Life isn't too bad here." }
-    { group:245, id:9, text: "I'd rather live here than anywhere else!" }
-    { group:245, id:10, text: "This city could bring in so much more revenue if they'd just hire some more tax collectors." }
-    { group:245, id:11, text: "Seems like the nicer their houses, the more people grumble about paying their share." }
-    { group:245, id:12, text: "I hate collecting taxes from these run-down houses. It's hardly worth my time." }
+    { group:240, id:10, text: "Health seems to be worsening throughout the city." }             
     { group:246, id:0, text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
     { group:246, id:1, text: "I'm so hungry, a good meal will buy you any verdict you want." }
     { group:246, id:2, text: "What woeful defenses! Our enemies could walk right into the city and take over." }

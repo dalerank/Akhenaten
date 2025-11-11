@@ -894,14 +894,28 @@ localization_en = [
   { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
   { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
 
-  { key: "", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
-  { key: "", text: "I'd sing for my supper, but this city doesn't have enough food." }
-  { key: "", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
-  { key: "", text: "All my performances are solos.  This city doesn't have enough workers." }
-  { key: "", text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
-  { key: "", text: "Our terrible reputation could provoke an attack!" }
-  { key: "", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
-  { key: "", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
-  { key: "", text: "This city could be a lot worse, I suppose." }
-  { key: "", text: "I hope we continue to make beautiful music in this city for a long time." }
+  { key: "#musician_city_heath_too_low", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
+  { key: "#musician_no_food_in_city", text: "I'd sing for my supper, but this city doesn't have enough food." }
+  { key: "#musician_city_not_safety_workers_leaving", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
+  { key: "#musician_need_workers", text: "All my performances are solos.  This city doesn't have enough workers." }
+  { key: "#musician_gods_are_angry", text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
+  { key: "#musician_city_is_bad_reputation", text: "Our terrible reputation could provoke an attack!" }
+  { key: "#musician_much_unemployments", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
+  { key: "#musician_no_entertainment", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
+  { key: "#musician_city_not_bad", text: "This city could be a lot worse, I suppose." }
+  { key: "#musician_city_is_good", text: "I hope we continue to make beautiful music in this city for a long time." }
+
+  { key: "#taxman_desease_can_start_at_any_moment", text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
+  { key: "#taxman_no_food_in_city", text: "I wish people could pay their taxes in food. I'm so hungry!" }
+  { key: "#taxman_city_have_no_army", text: "Our city doesn't seem capable of defending itself!" }
+  { key: "#taxman_need_more_tax_collectors", text: "No amount of tax money is going to make this city run smoothly. We need more workers!" }
+  { key: "#taxman_gods_are_angry", text: "We owe the gods a great debt, and I don't want to be here when they come to collect!" }
+  { key: "#taxman_city_is_bad", text: "I've heard that invasion is imminent given our standing in Egypt." }
+  { key: "#taxman_much_unemployments", text: "Many of these houses have unemployed workers! How can they be expected to pay tax?" }
+  { key: "#taxman_low_entertainment", text: "As much as I like collecting taxes, I'd still like to see some professional entertainment." }
+  { key: "#taxman_city_is_good", text: "Life isn't too bad here." }
+  { key: "#taxman_city_is_amazing", text: "I'd rather live here than anywhere else!" }
+  { key: "#taxman_need_workers", text: "This city could bring in so much more revenue if they'd just hire some more tax collectors." }
+  { key: "#taxman_high_taxes", text: "Seems like the nicer their houses, the more people grumble about paying their share." }
+  { key: "#taxman_much_pooh_houses", text: "I hate collecting taxes from these run-down houses. It's hardly worth my time." }
 ]
