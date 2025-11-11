@@ -1083,20 +1083,42 @@ figure_librarian = {
 	permission : epermission_education
 }
 
-figure_constable = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:20, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false }
-		attack : { pack:PACK_SPR_MAIN, id:21, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CONSTABLE }
+figure_constable {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:20, max_frames:12 }
+		death { id:21, max_frames:8, loop:false }
+		attack { id:21, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CONSTABLE }
+	}
+
+	sounds {
+		policeman_low_crime_level {sound: "police_e01.WAV"}
+		policeman_usual_crime_level {sound: "police_e02.WAV"}
+		policeman_very_low_crime_level {sound: "police_e03.WAV"}
+		policeman_iam_too_busy_that_talk {sound: "police_e04.WAV"}
+		policeman_i_hope_my_work_is_need {sound: "police_e05.WAV"}
+		policeman_city_not_safety {sound: "police_e06.WAV"}
+		policeman_need_workers {sound: "police_e07.WAV"}
+		policeman_enemies_are_coming {sound: "police_e08.WAV"}
+		policeman_desease_can_start_at_any_moment {sound: "police_g01.WAV"}
+		policeman_no_food_in_city {sound: "police_g02.WAV"}
+		policeman_no_army {sound: "police_g03.WAV"}
+		policeman_need_more_workers {sound: "police_g04.WAV"}
+		policeman_gods_are_angry {sound: "police_g05.WAV"}
+		policeman_no_army_2 {sound: "police_g06.wav"}
+		policeman_much_unemployments {sound: "police_g07.WAV"}
+		policeman_low_entertainment {sound: "police_g08.WAV"}
+		policeman_city_is_good {sound: "police_g09.WAV"}
+		policeman_city_is_amazing {sound: "police_g10.WAV"}
 	}
 
 	category: figure_category_citizen
 	max_damage: 100
 	attack_value: 5
 	defense_value: 3
-	terrain_usage : TERRAIN_USAGE_ROADS,
-	max_roam_length : 640,
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length : 640
 }
 
 figure_herbalist {
