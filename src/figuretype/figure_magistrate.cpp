@@ -24,7 +24,7 @@ void figure_magistrate::figure_action() {
         break;
 
     case ACTION_73_MAGISTRATE_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_71_MAGISTRATE_ENTERING_EXITING);
         break;
     }
 }

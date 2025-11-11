@@ -2,6 +2,13 @@
 
 #include "figure/figure.h"
 
+enum e_herbalist_action {
+    ACTION_60_HERBALIST_CREATED = 60,
+    ACTION_61_HERBALIST_ENTERING_EXITING = 61,
+    ACTION_62_HERBALIST_ROAMING = 62,
+    ACTION_63_HERBALIST_RETURNING = 63,
+};
+
 class figure_herbalist : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_HERBALIST, figure_herbalist)

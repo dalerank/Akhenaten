@@ -5,6 +5,7 @@
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
+#include "figuretype/figure_herbalist.h"
 #include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
@@ -47,7 +48,7 @@ declare_console_command_p(plague_no) {
 }
 
 void building_apothecary::spawn_figure() {
-    common_spawn_roamer(FIGURE_HERBALIST, 50, FIGURE_ACTION_62_HERBALIST_ROAMING);
+    common_spawn_roamer(FIGURE_HERBALIST, current_params().min_houses_coverage, (e_figure_action)ACTION_62_HERBALIST_ROAMING);
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_DOCTOR))
     //        return;

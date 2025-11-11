@@ -24,6 +24,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
+#include "figuretype/figure_architector.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 #include <iostream>
@@ -62,7 +63,7 @@ declare_console_command_p(collapse) {
 }
 
 void building_architect_post::spawn_figure() {
-    common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, (e_figure_action)ACTION_60_ENGINEER_CREATED);
 }
 
 void building_architect_post::update_graphic() {

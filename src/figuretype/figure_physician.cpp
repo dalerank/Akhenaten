@@ -29,7 +29,7 @@ void figure_physician::figure_action() {
 
     case ACTION_11_RETURNING_FROM_PATROL:
     case ACTION_63_PHYSICIAN_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_61_PHYSICIAN_ENTERING_EXITING);
         break;
     }
 }
