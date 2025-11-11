@@ -26,17 +26,6 @@ walker_sounds = {
   // mkt_seller
   goods_are_finished : {sound: "mkt_seller_e01.wav"},
   we_are_selling_goods : {sound: "mkt_seller_e02.wav"},
-  // musician
-  musician_danger_of_plague : {sound: "musician_g01.wav"},
-  musician_no_food_in_city : {sound: "musician_g02.wav"},
-  musician_defenses_are_weak : {sound: "musician_g03.wav"},
-  musician_need_more_workers : {sound: "musician_g04.wav"},
-  musician_gods_are_angry : {sound: "musician_g05.wav"},
-  musician_reputation_is_low : {sound: "musician_g06.wav"},
-  musician_high_unemployment : {sound: "musician_g07.wav"},
-  musician_low_entertainment : {sound: "musician_g08.wav"},
-  musician_city_is_ok : {sound: "musician_g09.wav"},
-  musician_city_is_amazing : {sound: "musician_g10.wav"},
   // pharaoh
   pharaoh_how_impertinent : {sound: "pharaoh_e01.wav"},
   // priest_bast
