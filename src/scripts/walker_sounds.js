@@ -10,9 +10,7 @@ walker_sounds = {
   dockpusher_need_more_help : {sound:"dockpusher_e01.wav"},
   dockpusher_wait_until_space_opens_up : {sound:"dockpusher_e02.wav"},
   dockpusher_cant_haul_goods_much_farther : {sound:"dockpusher_e03.wav"},
-  // governor
-  governor_city_left_much_nobles : {sound:"governor_e01.WAV"},
-  governor_festival_was_near : {sound:"governor_e02.wav"},
+
   // guard
   guard_no_enemies_sighted : {sound:"guard_e01.wav"},
   guard_ready_approaching_enemy : {sound:"guard_e02.wav"},
