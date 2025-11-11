@@ -22,23 +22,6 @@
 
 #include <string.h>
 
-static figure_phrase_t g_figure_sounds[] = {
-    {FIGURE_NONE, "artisan"},
-    {FIGURE_NONE, "carpenter"},
-    {FIGURE_NONE, "desease"},
-    {FIGURE_EMBALMER, "embalmer"},
-    {FIGURE_NONE, "governor"},
-    {FIGURE_NONE, "guard"},
-    {FIGURE_NONE, "pharaoh"},
-    {FIGURE_ROBBER, "robber"},
-    {FIGURE_NONE, "senet"},
-    {FIGURE_NONE, "thief"},
-    {FIGURE_NONE, "transport"},
-    {FIGURE_NONE, "vagrant"},
-    {FIGURE_NONE, "warship"},
-    {FIGURE_NONE, "zookeeper"}
-};
-
 static int citizen_phrase() {
     //    if (++f->phrase_sequence_exact >= 3)
     //        f->phrase_sequence_exact = 0;
@@ -105,27 +88,15 @@ int figure::figure_play_phrase_file() {
         return -1;
     }
 
-    auto type_it = std::find_if(std::begin(g_figure_sounds), std::end(g_figure_sounds), [this] (auto &t) { return t.type == type; });
-
-    figure_phrase_t phrase = (type_it == std::end(g_figure_sounds))
-                                ? figure_phrase_t{FIGURE_NONE, ""}
-                                : *type_it;
-
-    if (phrase.type == FIGURE_NONE) {
-        phrase = dcast()->phrase();
-    }
-
-    if (phrase.type == FIGURE_NONE) {
-        return -1;
-    }
-
     xstring path;
     if (phrase_key.empty()) {
-        path.printf("Voice/Walker/%s_random_%02u.wav", type_it->prefix.c_str(), phrase_key.c_str(), rand() % 10);
+        bstring32 prefix = params().name;
+        prefix.replace_str("figure_", "");
+        path.printf("Voice/Walker/%s_random_%02u.wav", prefix.c_str(), phrase_key.c_str(), rand() % 10);
 
         if (!g_sound.speech_file_exist(path)) {
             // fallback to standart phrase
-            path.printf("Voice/Walker/%s_random_01.wav", type_it->prefix.c_str(), phrase_key.c_str());
+            path.printf("Voice/Walker/%s_random_01.wav", prefix.c_str(), phrase_key.c_str());
         }
     } else {
         auto reaction = dcast()->get_sound_reaction(phrase_key);

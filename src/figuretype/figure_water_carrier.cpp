@@ -26,13 +26,13 @@ void figure_water_carrier::figure_action() {
 
     building* b = home();
     switch (action_state()) {
-    case ACTION_10_GOING:
-    case FIGURE_ACTION_72_FIREMAN_ROAMING:
+    case ACTION_10_WATER_CARRIER_GOING:
+    case ACTION_72_WATER_CARRIER_ROAMING:
         do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_FROM_PATROL:
-    case FIGURE_ACTION_73_FIREMAN_RETURNING:
+    case ACTION_11_WATER_CARRIER_RETURNING_FROM_PATROL:
+    case ACTION_73_WATER_CARRIER_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
         break;
     //        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
