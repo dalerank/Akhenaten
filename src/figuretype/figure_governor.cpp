@@ -11,7 +11,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_governor);
 
 void figure_governor::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_120_GOVERNOR_CREATED:
+    case ACTION_120_GOVERNOR_CREATED:
     {
         // if city has palace, all mugger will go there
         base.wait_ticks = 0;
@@ -21,7 +21,7 @@ void figure_governor::figure_action() {
         if (road_tile.valid()) {
             base.destination_tile = road_tile;
             set_destination(senate_id);
-            advance_action(FIGURE_ACTION_121_GOVERNOR_MOVING);
+            advance_action(ACTION_121_GOVERNOR_MOVING);
             route_remove();
         } else {
             poof();
@@ -29,13 +29,13 @@ void figure_governor::figure_action() {
     }
     break;
 
-    case FIGURE_ACTION_121_GOVERNOR_MOVING:
+    case ACTION_121_GOVERNOR_MOVING:
         base.move_ticks(1);
         base.wait_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             poof();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_120_GOVERNOR_CREATED);
+            advance_action(ACTION_120_GOVERNOR_CREATED);
             route_remove();
         }
     break;

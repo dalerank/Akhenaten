@@ -904,11 +904,16 @@ figure_storageyard_cart = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_governor = {
-	animations : {
-		walk : { pack: PACK_SPR_MAIN, id:189, max_frames:12 }
-		death : { pack: PACK_SPR_MAIN, id:190, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_GOVERNOR }
+figure_governor {
+	animations  {
+		walk { pack: PACK_SPR_MAIN, id:189, max_frames:12 }
+		death  { pack: PACK_SPR_MAIN, id:190, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_GOVERNOR }
+	}
+
+	sounds {
+		governor_city_left_much_nobles {sound:"governor_e01.WAV"}
+		governor_festival_was_near {sound:"governor_e02.wav"}
 	}
 
 	category: figure_category_citizen
