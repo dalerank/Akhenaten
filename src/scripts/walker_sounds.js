@@ -27,19 +27,7 @@ walker_sounds = {
   // hunt_ostrich
   hunt_ostrich_heads_in_the_sand : {sound:"hunt_ostrich_e01.wav"},
   hunt_ostrich_those_are_big_drumsticks : {sound:"hunt_ostrich_e02.wav"},
-  
-  // library
-  library_read_about_festivals : { sound: "library_e01.wav"},
-  library_people_are_sick : { sound: "library_g01.wav"},
-  library_no_food_in_city : { sound: "library_g02.wav"},
-  library_defenses_are_weak : { sound: "library_g03.wav"},
-  library_need_more_workers : { sound: "library_g04.wav"},
-  library_gods_are_angry : { sound: "library_g05.wav"},
-  library_reputation_is_low : { sound: "library_g06.wav"},
-  library_high_unemployment : { sound: "library_g07.wav"},
-  library_low_entertainment : { sound: "library_g08.wav"},
-  library_city_is_ok : { sound: "library_g09.wav"},
-  library_city_is_amazing : { sound: "library_g10.wav"},
+
   // magistrate
   magistrate_hope_ill_earn_funeral : {sound: "magistrate_e02.wav"},
   magistrate_no_crime_here : {sound: "magistrate_e03.wav"},
