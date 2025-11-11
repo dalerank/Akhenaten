@@ -33,7 +33,6 @@ mission0 { // Nubt
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
 		population_cap : 250
-		victory_reason : "some_days_after_last_action"
 
 		tutorial_fire_handled : false
 		tutorial_collapsed_handle : false
@@ -149,7 +148,7 @@ function tutorial1_on_filled_granary(ev) {
 [event=event_update_victory_state, mission=mission0]
 function tutorial1_handle_victory_state(ev) {
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
-	city.set_victory_reason(mission.victory_reason, some_days_after_last_action)
+	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_migration_update, mission=mission0]
