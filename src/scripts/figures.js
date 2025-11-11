@@ -561,17 +561,19 @@ figure_magistrate = {
 	max_roam_length : 800
 }
 
-figure_lumberjack = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:73, max_frames:12 }
-		death: { pack:PACK_SPR_MAIN, id:74, max_frames:8, loop:false  }
-		work : { pack:PACK_SPR_MAIN, id:75, max_frames:12 }
-		back : { pack:PACK_SPR_MAIN, id:76, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LUMBERJACK }
+figure_lumberjack {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk  { id:73, max_frames:12 }
+		death { id:74, max_frames:8, loop:false  }
+		work  { id:75, max_frames:12 }
+		back  { id:76, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LUMBERJACK }
 	}
-	sounds : {
-		hunting : {sound:"woodcutter_e01.wav", group:209, text:0 }
-    back : {sound:"woodcutter_e02.wav", group:209, text:1 }
+
+	sounds {
+		lumberjack_hunting {sound:"woodcutter_e01.wav" }
+    	lumberjack_back {sound:"woodcutter_e02.wav" }
 	}
 
 	category: figure_category_armed

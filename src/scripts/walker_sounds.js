@@ -209,9 +209,6 @@ walker_sounds = {
   water_low_entertainment : { sound: "water_g08.wav"},
   water_city_is_ok : { sound: "water_g09.wav"},
   water_city_is_amazing : { sound: "water_g10.wav"},
-  // woodcutter
-  woodcutter_hard_days_logging : { sound: "woodcutter_e01.wav"},
-  woodcutter_timber_put_to_good_use : { sound: "woodcutter_e02.wav"},
   // worker
   worker_im_ready_to_work : { sound: "worker_e02.wav"},
   worker_fields_under_water : { sound: "worker_e03.wav"},
