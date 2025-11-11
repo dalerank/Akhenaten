@@ -1354,22 +1354,30 @@ figure_ferry_boat = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_warship = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
-		swim : {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
-		death : {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false }
-		attack : {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 }
-		idle : {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_WARSHIP }
+figure_warship {
+	animations {
+		walk {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
+		swim {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
+		death {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false }
+		attack {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 }
+		idle {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WARSHIP }
 	}
 
-	orders : {
-		goto_wharf : { id: 1, text: 9 }
-		engage_nearby : { id: 2, text: 11 }
-		hold_position : { id: 3, text: 13 }
-		seek_and_destroy : { id: 4, text: 15 }
-		repair : { id: 5, text: 17 }
+	orders {
+		goto_wharf { id: 1, text: 9 }
+		engage_nearby { id: 2, text: 11 }
+		hold_position { id: 3, text: 13 }
+		seek_and_destroy { id: 4, text: 15 }
+		repair { id: 5, text: 17 }
+	}
+
+	sounds {
+		warship_well_fight_to_the_death { sound: "warship_e01.wav"},
+		warship_enemy_is_too_much_for_us { sound: "warship_e02.wav"},
+		warship_enemies_coming_this_way { sound: "warship_e03.wav"},
+		warship_ready_to_attack_invaders { sound: "warship_e04.wav"},
+		warship_ready_if_foes_come { sound: "warship_e05.wav"},
 	}
 
 	category: figure_category_armed

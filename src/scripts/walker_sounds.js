@@ -103,15 +103,6 @@ walker_sounds = {
   thief_i_take_what_i_want : { sound: "thief_e02.wav"},
   thief_more_profitable_than_other_jobs : { sound: "thief_e03.wav"},
   thief_take_take_take : { sound: "thief_e04.wav"},
-  // vagrant
-  vagrant_kicked_out_of_my_home : { sound: "vagrant_e01.wav"},
-  vagrant_cant_find_a_place_to_live : { sound: "vagrant_e02.wav"},
-  // warship
-  warship_well_fight_to_the_death : { sound: "warship_e01.wav"},
-  warship_enemy_is_too_much_for_us : { sound: "warship_e02.wav"},
-  warship_enemies_coming_this_way : { sound: "warship_e03.wav"},
-  warship_ready_to_attack_invaders : { sound: "warship_e04.wav"},
-  warship_ready_if_foes_come : { sound: "warship_e05.wav"},
   // water
   water_danger_of_plague : { sound: "water_g01.wav"},
   water_no_food_in_city : { sound: "water_g02.wav"},
@@ -123,19 +114,7 @@ walker_sounds = {
   water_low_entertainment : { sound: "water_g08.wav"},
   water_city_is_ok : { sound: "water_g09.wav"},
   water_city_is_amazing : { sound: "water_g10.wav"},
-  // worker
-  worker_im_ready_to_work : { sound: "worker_e02.wav"},
-  worker_fields_under_water : { sound: "worker_e03.wav"},
-  worker_danger_of_plague : { sound: "worker_g01.wav"},
-  worker_no_food_in_city : { sound: "worker_g02.wav"},
-  worker_defenses_are_weak : { sound: "worker_g03.wav"},
-  worker_need_more_workers : { sound: "worker_g04.wav"},
-  worker_gods_are_angry : { sound: "worker_g05.wav"},
-  worker_reputation_is_low : { sound: "worker_g06.wav"},
-  worker_high_unemployment : { sound: "worker_g07.wav"},
-  worker_low_entertainment : { sound: "worker_g08.wav"},
-  worker_city_is_ok : { sound: "worker_g09.wav"},
-  worker_city_is_amazing : { sound: "worker_g10.wav"},
+
   // zookeeper
   zookeeper_danger_of_plague : { sound: "zookeeper_e01.wav"},
   zookeeper_no_food_in_city : { sound: "zookeeper_e02.wav"},
