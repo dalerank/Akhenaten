@@ -226,4 +226,7 @@ localization_ru = [
     { key: "#hunter_ostrich_hunting", text: "Страусы почти невидимы, когда прячут голову в песок. // охотник на страусов" }
     { key: "#hunter_ostrich_back", text: "Ну и ну, это БОЛЬШИЕ ножки!" }
     { key: "#hunter_ostrich_city_is_good", text: "Этот город классный." }
+
+    { key: "#lumberjack_hunting", text: "Я отправляюсь на тяжёлый день лесозаготовок." }
+    { key: "#lumberjack_back", text: "Эта древесина будет хорошо использована, я уверен." }
 ]

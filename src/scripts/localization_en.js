@@ -890,4 +890,7 @@ localization_en = [
   { key: "#hunter_ostrich_hunting", text: "Ostriches are nearly invisible when they put their heads in the sand.   // hunter ostrich" }
   { key: "#hunter_ostrich_back", text: "Now, those are some BIG drumsticks!" }
   { key: "#hunter_ostrich_city_is_good", text: "This city is fantastic!" }
+
+  { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
+  { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
 ]

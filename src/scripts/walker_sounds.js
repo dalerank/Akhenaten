@@ -23,21 +23,6 @@ walker_sounds = {
   hunt_bird_birds_are_wily : {sound:"hunt_bird_e01.wav"},
   hunt_bird_birds_ready_for_roasting : {sound:"hunt_bird_e02.wav"},
 
-  // magistrate
-  magistrate_hope_ill_earn_funeral : {sound: "magistrate_e02.wav"},
-  magistrate_no_crime_here : {sound: "magistrate_e03.wav"},
-  magistrate_only_petty_cases : {sound: "magistrate_e04.wav"},
-  magistrate_streets_are_unsafe : {sound: "magistrate_e05.wav"},
-  magistrate_danger_of_plague : {sound: "magistrate_g01.wav"},
-  magistrate_no_food_in_city : {sound: "magistrate_g02.wav"},
-  magistrate_defenses_are_weak : {sound: "magistrate_g03.wav"},
-  magistrate_need_more_workers : {sound: "magistrate_g04.wav"},
-  magistrate_gods_are_angry : {sound: "magistrate_g05.wav"},
-  magistrate_reputation_is_low : {sound: "magistrate_g06.wav"},
-  magistrate_high_unemployment : {sound: "magistrate_g07.wav"},
-  magistrate_low_entertainment : {sound: "magistrate_g08.wav"},
-  magistrate_city_is_ok : {sound: "magistrate_g09.wav"},
-  magistrate_city_is_amazing : {sound: "magistrate_g10.wav"},
   // mkt_seller
   goods_are_finished : {sound: "mkt_seller_e01.wav"},
   we_are_selling_goods : {sound: "mkt_seller_e02.wav"},
