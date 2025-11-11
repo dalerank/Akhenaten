@@ -876,6 +876,7 @@ building_apothecary = {
     work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_WATER_HEALTH
+  min_houses_coverage : 50
   max_serve_clients : 100
   meta : { help_id:63, text_id:81 }
   building_size : 1
@@ -1478,18 +1479,22 @@ building_dentist = {
   laborers:[2], fire_risk:[4], damage_risk: [2]
 }
 
-building_mortuary = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:175 },
-    base : { pack:PACK_GENERAL, id:175 },
-    work : { pos:[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
+building_mortuary {
+  animations {
+    preview { pack:PACK_GENERAL, id:175 },
+    base { pack:PACK_GENERAL, id:175 },
+    work { pos:[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
   }
+
   max_serve_clients : 1000
+  min_houses_coverage : 50
   building_size : 2
-  meta : { help_id:66, text_id:82 }
-  cost : [ 20, 30, 50, 100, 200 ]
-  desirability : { value:[-3], step:[2], step_size:[1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [2]
+  meta { help_id:66, text_id:82 }
+  cost [ 20, 30, 50, 100, 200 ]
+  desirability { value[-3], step[2], step_size[1], range[2] }
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_plaza = {

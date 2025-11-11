@@ -9,9 +9,9 @@ mission2 {
 	    tree_grow : default_tree_grow
 	}
 	player_rank : 0,
-	initial_funds [7500, 5000, 3750, 2500, 2000],
-	rescue_loans [7500, 5000, 3750, 2500, 2000],
-	house_tax_multipliers [300, 200, 150, 100, 75],
+	initial_funds [7500, 5000, 3750, 2500, 2000]
+	rescue_loans [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	buildings [
 				BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_VILLAGE_PALACE, BUILDING_WATER_SUPPLY,
