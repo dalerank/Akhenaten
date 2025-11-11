@@ -6,11 +6,6 @@ walker_sounds = {
   artisan_work_i_write_history_of_egypt : { sound:"artisan_e02.wav"},
   // disease
   disease_oh_my_stomach_oh_my_head : {sound:"disease_e01.wav"},
-  // dockpusher
-  dockpusher_need_more_help : {sound:"dockpusher_e01.wav"},
-  dockpusher_wait_until_space_opens_up : {sound:"dockpusher_e02.wav"},
-  dockpusher_cant_haul_goods_much_farther : {sound:"dockpusher_e03.wav"},
-
   // guard
   guard_no_enemies_sighted : {sound:"guard_e01.wav"},
   guard_ready_approaching_enemy : {sound:"guard_e02.wav"},

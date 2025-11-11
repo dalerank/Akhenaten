@@ -496,15 +496,38 @@ void figure_docker::figure_action() {
 }
 
 sound_key figure_docker::phrase_key() const {
-    const bool in_action = action_state(ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE, ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE);
-    if (in_action) {
-        int dist = calc_maximum_distance(base.destination_tile, base.source_tile);
-        if (dist >= 25) {
-            return "too_far"; // too far
+    svector<sound_key, 3> keys;
+    
+    auto dock = ((building*)home())->dcast_dock();
+    if (dock) {
+        // When waiting in queue - space is limited
+        if (action_state() == ACTION_133_DOCKER_IMPORT_QUEUE || 
+            action_state() == ACTION_134_DOCKER_EXPORT_QUEUE) {
+            keys.push_back("docker_wait_until_space_opens_up");
+        }
+        
+        // When there are multiple ships or high activity - need more help
+        if (dock->runtime_data().num_ships > 60) {
+            keys.push_back("docker_need_more_help");
         }
     }
-
-    return {};
+    
+    // When going to warehouse - check distance
+    if (action_state() == ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE || 
+        action_state() == ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
+        int dist = calc_maximum_distance(base.destination_tile, base.source_tile);
+        if (dist >= 25) {
+            keys.push_back("docker_cant_haul_goods_much_farther");
+        }
+    }
+    
+    // Default fallback
+    if (keys.empty()) {
+        keys.push_back("docker_need_more_help");
+    }
+    
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 void figure_docker::update_animation() {
@@ -541,3 +564,4 @@ void figure_docker::on_destroy() {
         }
     }
 }
+

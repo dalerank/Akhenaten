@@ -1,6 +1,7 @@
 #include "window/window_figure_info.h"
 
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_docker.h"
 #include "window/building/figures.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -21,7 +22,7 @@ void figure_carrier_info_window::init(object_info &c) {
 
     figure_cartpusher *f = c.figure_get<figure_cartpusher>();
     
-    if (f->action_state() != FIGURE_ACTION_132_DOCKER_IDLING && f->base.resource_id) {
+    if (f->action_state() != ACTION_132_DOCKER_IDLING && f->base.resource_id) {
         int resource_img = image_id_resource_icon(f->base.resource_id);
         ui["items"].text_var("@I%u& %u %s %s", resource_img, f->base.resource_amount_full, ui::str(129, 20), ui::str(23, f->base.resource_id));
     }
@@ -43,9 +44,9 @@ void figure_carrier_info_window::init(object_info &c) {
     case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
     case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
     case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
-    case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
-    case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
-    case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
+    case ACTION_134_DOCKER_EXPORT_QUEUE:
+    case ACTION_137_DOCKER_EXPORT_RETURNING:
+    case ACTION_138_DOCKER_IMPORT_RETURNING:
         is_returning = true;
         break;
     }

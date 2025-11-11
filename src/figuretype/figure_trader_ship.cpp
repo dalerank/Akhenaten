@@ -17,6 +17,7 @@
 #include "game/game_events.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
+#include "figuretype/figure_docker.h"
 #include "js/js_game.h"
 
 #include <iostream>
@@ -64,16 +65,16 @@ int figure_trade_ship::is_trading() const {
             continue;
 
         switch (f->action_state) {
-        case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
-        case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
-        case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
-        case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
+        case ACTION_133_DOCKER_IMPORT_QUEUE:
+        case ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
+        case ACTION_138_DOCKER_IMPORT_RETURNING:
+        case ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
             return TRADE_SHIP_BUYING;
 
-        case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
-        case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
-        case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
-        case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
+        case ACTION_134_DOCKER_EXPORT_QUEUE:
+        case ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
+        case ACTION_137_DOCKER_EXPORT_RETURNING:
+        case ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
             return TRADE_SHIP_SELLING;
         }
     }
@@ -266,7 +267,7 @@ void figure_trade_ship::debug_show_properties() {
 
 sound_key figure_trade_ship::phrase_key() const {
     if (action_state() == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
-        if (!empire_trader().has_traded()) {
+        if (!empire_trader().has_traded())
             return "barge_no_trade";
  
         return "barge_good_trade";
