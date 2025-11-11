@@ -94,18 +94,6 @@ walker_sounds = {
   priest_seth_low_entertainment : {sound: "priest_seth_g08.wav"},
   priest_seth_city_is_ok : {sound: "priest_seth_g09.wav"},
   priest_seth_city_is_amazing : {sound: "priest_seth_g10.wav"},
-  // scribe
-  scribe_these_festivals : { sound: "scribe_e01.wav"},
-  scribe_plague_could_break_out : { sound: "scribe_g01.wav"},
-  scribe_no_food_in_city : { sound: "scribe_g02.wav"},
-  scribe_defenses_are_weak : { sound: "scribe_g03.wav"},
-  scribe_need_more_workers : { sound: "scribe_g04.wav"},
-  scribe_gods_are_angry : { sound: "scribe_g05.wav"},
-  scribe_reputation_is_low : { sound: "scribe_g06.wav"},
-  scribe_high_unemployment : { sound: "scribe_g07.wav"},
-  scribe_low_entertainment : { sound: "scribe_g08.wav"},
-  scribe_city_is_ok : { sound: "scribe_g09.wav"},
-  scribe_city_is_amazing : { sound: "scribe_g10.wav"},
   // senet
   senet_get_your_beer_here : { sound: "senet_e01.wav"},
   senet_risk_of_plague : { sound: "senet_g01.wav"},

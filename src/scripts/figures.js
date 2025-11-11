@@ -609,14 +609,28 @@ figure_flotsam = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-figure_scriber = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
+figure_scriber {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
 	}
 
-	category: figure_category_citizen
+	sounds {
+		scribe_these_festivals { sound: "scribe_e01.wav" } 
+		scribe_plague_could_break_out { sound: "scribe_g01.wav" } 
+		scribe_no_food_in_city { sound: "scribe_g02.wav" } 
+		scribe_defenses_are_weak { sound: "scribe_g03.wav" } 
+		scribe_need_more_workers { sound: "scribe_g04.wav" } 
+		scribe_gods_are_angry { sound: "scribe_g05.wav" } 
+		scribe_reputation_is_low { sound: "scribe_g06.wav" } 
+		scribe_high_unemployment { sound: "scribe_g07.wav" } 
+		scribe_low_entertainment { sound: "scribe_g08.wav" } 
+		scribe_city_is_ok { sound: "scribe_g09.wav" } 
+		scribe_city_is_amazing { sound: "scribe_g10.wav" } 
+	}
+
+	category : figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
