@@ -189,14 +189,14 @@ void figure_ostrich_hunter::figure_action() {
 
 sound_key figure_ostrich_hunter::phrase_key() const {
     if (action_state(ACTION_16_OSTRICH_HUNTER_INVESTIGATE, ACTION_9_OSTRICH_HUNTER_CHASE_PREY, ACTION_15_OSTRICH_HUNTER_HUNT)) {
-        return "hunting";
+        return "hunter_hunting";
     } else if (action_state() == ACTION_8_RECALCULATE ) {
         if (g_city.sentiment.value > 40) {
-            return "city_is_good";
+            return "hunter_city_is_good";
         }
     } 
     
-    return "back";
+    return "hunter_back";
 }
 
 figure_sound_t figure_ostrich_hunter::get_sound_reaction(pcstr key) const {

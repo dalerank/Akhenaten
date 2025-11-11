@@ -22,9 +22,6 @@ walker_sounds = {
   // hunt_bird
   hunt_bird_birds_are_wily : {sound:"hunt_bird_e01.wav"},
   hunt_bird_birds_ready_for_roasting : {sound:"hunt_bird_e02.wav"},
-  // hunt_ostrich
-  hunt_ostrich_heads_in_the_sand : {sound:"hunt_ostrich_e01.wav"},
-  hunt_ostrich_those_are_big_drumsticks : {sound:"hunt_ostrich_e02.wav"},
 
   // magistrate
   magistrate_hope_ill_earn_funeral : {sound: "magistrate_e02.wav"},

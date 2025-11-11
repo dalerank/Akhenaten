@@ -886,4 +886,8 @@ localization_en = [
   { key: "#policeman_no_army_2", text: "Fighting invaders wasn't in my job description!" }
   { key: "#policeman_enemies_are_coming_2", text: "These rascals aren't taking over the city on my watch!" }
   { key: "#policeman_enemies_are_coming", text: "The enemy could soon win if I don't get some help! " }
+
+  { key: "#hunter_ostrich_hunting", text: "Ostriches are nearly invisible when they put their heads in the sand.   // hunter ostrich" }
+  { key: "#hunter_ostrich_back", text: "Now, those are some BIG drumsticks!" }
+  { key: "#hunter_ostrich_city_is_good", text: "This city is fantastic!" }
 ]

@@ -47,7 +47,7 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     //virtual void poof() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_OSTRICH_HUNTER, "oshunter"}; }
+
     virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
     virtual void update_animation() override;

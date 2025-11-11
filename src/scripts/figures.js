@@ -377,21 +377,22 @@ figure_immigrant {
 
 figure_ostrich_hunter {
 	animations {
-		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:46, max_frames:8, loop:false }
-		hunt : { pack:PACK_SPR_MAIN, id:47, max_frames:12, loop:false }
-		figth : { pack:PACK_SPR_MAIN, id:48, max_frames:12 }
-		//work_in_field : { pack:PACK_SPR_MAIN, id:49, max_frames:12, loop:false }
-		pack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false }
-		unpack : { pack:PACK_SPR_MAIN, id:50, max_frames:12, loop:false, start_frame:11, reverse:true }
-		move_pack : { pack:PACK_SPR_MAIN, id:51, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:45, max_frames:12 }
+		death { id:46, max_frames:8, loop:false }
+		hunt { id:47, max_frames:12, loop:false }
+		figth { id:48, max_frames:12 }
+		//work_in_field : {  id:49, max_frames:12, loop:false }
+		pack { id:50, max_frames:12, loop:false }
+		unpack { id:50, max_frames:12, loop:false, start_frame:11, reverse:true }
+		move_pack { id:51, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH_HUNTER }
 	}
 
-	sounds : {
-		hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 }
-    	back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 }
-    	city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
+	sounds {
+		hunter_hunting : {sound:"hunt_ostrich_e01.wav", group:209, text:0 }
+    	hunter_back : {sound:"hunt_ostrich_e02.wav", group:209, text:1 }
+    	hunter_city_is_good : {sound: "hunt_ostrich_e10.wav", phrase: "#hunter_ostrich_good_city"}
 	}
 
 	category: figure_category_armed
