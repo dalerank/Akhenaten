@@ -5471,19 +5471,7 @@ localization_base_en = [
     { group:242, id:9, text: "This city is cool." }
     { group:242, id:10, text: "I can't talk now.  I'm busy dousing this fire." }
     { group:242, id:11, text: "This fire could burn the whole city down if I don't act fast!" }
-    { group:242, id:12, text: "Ooh, that's hot!" }
-    { group:243, id:0, text: "A lot of people are in much worse condition than the buildings. I hope things don't get worse." }
-    { group:243, id:1, text: "Starvation might not affect the strength of these buildings, but it sure affects mine!" }
-    { group:243, id:2, text: "How are we to defend ourselves? The city's defenses are laughable." }
-    { group:243, id:3, text: "Why does it matter if these buildings collapse? No workers are in them anyway." }
-    { group:243, id:4, text: "If the gods are angry, not even the best architect can fix the damage they cause." }
-    { group:243, id:5, text: "Our city's reputation is so low, I fear our enemies will attack." }
-    { group:243, id:6, text: "By my estimation, a lot of people are out of work." }
-    { group:243, id:7, text: "Ho hum. Even architects like a little fun every now and then." }
-    { group:243, id:8, text: "Life here could be a lot worse." }
-    { group:243, id:9, text: "This city has everything an architect's heart could desire!" }
-    { group:243, id:10, text: "There are so many places in poor condition, I can barely keep up." }
-    { group:243, id:11, text: "I hope I'm credited for the great condition of this city." }
+    { group:242, id:12, text: "Ooh, that's hot!" }    
     { group:244, id:0, text: "With so many people so weak and sickly, I fear for the future." }
     { group:244, id:1, text: "I haven't eaten in so long, even I'm considering stealing food!" }
     { group:244, id:2, text: "If invaders do come, it looks like it will be up to me to defend the city." }

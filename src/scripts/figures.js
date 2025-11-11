@@ -698,31 +698,32 @@ figure_physician = {
 	permission : epermission_medicine
 }
 
-figure_architector = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:4, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:5, max_frames:8, loop:false }
-    work_ground : { pack:PACK_SPR_AMBIENT, id:49, max_frames:6 }
-    work_stand : { pack:PACK_SPR_AMBIENT, id:50, max_frames:6 }
-    big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHITECT }
+figure_architector {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:4, max_frames:12 }
+		death { id:5, max_frames:8, loop:false }
+    	work_ground { id:49, max_frames:6 }
+    	work_stand { id:50, max_frames:6 }
+    	big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHITECT }
 	}
 
-	sounds : {
-		extreme_damage_level: {sound:"engineer_e01.wav", group: 243, text:0}
-    i_am_works: {sound:"engineer_e02.wav", group: 243, text:1}
-    high_damage_level: {sound:"engineer_g01.wav", group: 243, text:2}
-    no_food_in_city: {sound:"engineer_g02.wav", group: 243, text:3}
-    city_not_safety: {sound:"engineer_g03.wav", group: 243, text:4}
-    need_more_workers: {sound:"engineer_g04.wav", group: 243, text:5}
-    gods_are_angry: {sound:"engineer_g05.wav", group: 243, text:6}
-    city_has_bad_reputation: {sound:"engineer_g06.wav", group: 243, text:7}
-    city_is_good: {sound:"engineer_g07.wav", group: 243, text:7}
-    low_entertainment: {sound:"engineer_g08.wav", group: 243, text:8}
-    city_is_bad: {sound:"engineer_g09.wav", group: 243, text:9}
-    city_is_amazing: {sound:"engineer_g10.wav", group: 243, text:10}
+	sounds {
+		engineer_extreme_damage_level {sound:"engineer_e01.wav"}
+		engineer_i_am_works {sound:"engineer_e02.wav"}
+		engineer_high_damage_level {sound:"engineer_g01.wav"}
+		engineer_no_food_in_city {sound:"engineer_g02.wav"}
+		engineer_city_not_safety {sound:"engineer_g03.wav"}
+		engineer_need_more_workers {sound:"engineer_g04.wav"}
+		engineer_gods_are_angry {sound:"engineer_g05.wav"}
+		engineer_city_has_bad_reputation {sound:"engineer_g06.wav"}
+		engineer_city_is_good {sound:"engineer_g07.wav"}
+		engineer_low_entertainment {sound:"engineer_g08.wav"}
+		engineer_city_is_bad {sound:"engineer_g09.wav"}
+		engineer_city_is_amazing {sound:"engineer_g10.wav"}
 	}
 
-  category: figure_category_citizen
+    category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_service_buildings : 100
