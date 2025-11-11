@@ -15,8 +15,7 @@ public:
     virtual void figure_before_action() override {}
     virtual void figure_action() override;
     virtual void kill() override;
-    virtual figure_phrase_t phrase() const override { return { FIGURE_TRANSPORT_SHIP, "transport" }; }
-    virtual sound_key phrase_key() const override { return {}; }
+    virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual void update_animation() override;
 };
