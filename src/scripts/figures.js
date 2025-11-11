@@ -1149,17 +1149,17 @@ figure_dancer {
 	}
 
 	sounds {
-		dancer_i_like_festivals {sound:"dancer_e01.wav", group:228, text:0}
-		dancer_desease_can_start_at_any_moment {sound:"dancer_g01.wav", group:228, text:1}
-		dancer_no_food_in_city {sound:"dancer_g02.wav", group:228, text:2}
-		dancer_city_not_safety_workers_leaving {sound:"dancer_g03.wav", group:228, text:3}
-		dancer_need_workers {sound:"dancer_g04.wav", group:228, text:4}
-		dancer_gods_are_angry {sound:"dancer_g05.wav", group:228, text:5}
-		dancer_city_is_bad {sound:"dancer_g06.wav", group:228, text:6}
-		dancer_much_unemployments {sound:"dancer_g07.wav", group:228, text:7}
-		dancer_salary_too_low {sound:"dancer_g08.wav", group:228, text:8}
-		dancer_city_is_good {sound:"dancer_g09.wav", group:228, text:9}
-		dancer_city_is_amazing {sound:"dancer_g10.wav", group:228, text:10}
+		dancer_i_like_festivals {sound:"dancer_e01.wav"}
+		dancer_desease_can_start_at_any_moment {sound:"dancer_g01.wav"}
+		dancer_no_food_in_city {sound:"dancer_g02.wav"}
+		dancer_city_not_safety_workers_leaving {sound:"dancer_g03.wav"}
+		dancer_need_workers {sound:"dancer_g04.wav"}
+		dancer_gods_are_angry {sound:"dancer_g05.wav"}
+		dancer_city_is_bad {sound:"dancer_g06.wav"}
+		dancer_much_unemployments {sound:"dancer_g07.wav"}
+		dancer_salary_too_low {sound:"dancer_g08.wav"}
+		dancer_city_is_good {sound:"dancer_g09.wav"}
+		dancer_city_is_amazing {sound:"dancer_g10.wav"}
 	}
 
     category: figure_category_citizen
