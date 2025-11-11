@@ -1108,14 +1108,28 @@ figure_drunkard {
 	max_roam_length : 384
 }
 
-figure_teacher = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:201, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TEACHER }
+figure_teacher {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:201, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TEACHER }
 	}
 
-  category: figure_category_citizen
+	sounds {
+		teacher_festival_info { sound: "teacher_e01.wav" } 
+		teacher_desease_can_start_at_any_moment { sound: "teacher_g01.wav" } 
+		teacher_no_food_in_city { sound: "teacher_g02.wav" } 
+		teacher_city_not_safety { sound: "teacher_g03.wav" } 
+		teacher_need_workers { sound: "teacher_g04.wav" } 
+		teacher_gods_are_angry { sound: "teacher_g05.wav" } 
+		teacher_low_rating { sound: "teacher_g06.wav" } 
+		teacher_much_unemployments { sound: "teacher_g07.wav" } 
+		teacher_city_is_good { sound: "teacher_g08.wav" } 
+		teacher_city_much_better { sound: "teacher_g09.wav" } 
+		teacher_city_is_amazing { sound: "teacher_g10.wav" } 
+	}
+
+    category : figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
