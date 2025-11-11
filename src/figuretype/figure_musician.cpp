@@ -72,7 +72,7 @@ sound_key figure_musician::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("musician_", keys[index].c_str());
 }
 
 int figure_musician::provide_service() {

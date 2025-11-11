@@ -893,4 +893,15 @@ localization_en = [
 
   { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
   { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
+
+  { key: "", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
+  { key: "", text: "I'd sing for my supper, but this city doesn't have enough food." }
+  { key: "", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
+  { key: "", text: "All my performances are solos.  This city doesn't have enough workers." }
+  { key: "", text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
+  { key: "", text: "Our terrible reputation could provoke an attack!" }
+  { key: "", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
+  { key: "", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
+  { key: "", text: "This city could be a lot worse, I suppose." }
+  { key: "", text: "I hope we continue to make beautiful music in this city for a long time." }
 ]
