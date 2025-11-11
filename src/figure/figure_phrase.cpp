@@ -104,4 +104,5 @@ int figure::figure_play_phrase_file() {
     }
 
     g_sound.speech_play_file(path, 255);
+    return 1;
 }
