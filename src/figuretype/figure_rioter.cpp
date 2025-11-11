@@ -70,6 +70,16 @@ void figure_rioter::figure_action() {
     dir = base.figure_image_normalize_direction(dir);
 }
 
+sound_key figure_rioter::phrase_key() const {
+    svector<sound_key, 2> keys = {
+        "robber_gold_should_be_for_living",
+        "robber_just_think_of_the_fortune"
+    };
+    
+    int index = rand() % keys.size();
+    return keys[index];
+}
+
 int figure_rioter::collapse_building() {
     for (int dir = 0; dir < 8; dir += 2) {
         int grid_offset = tile().grid_offset() + map_grid_direction_delta(dir);

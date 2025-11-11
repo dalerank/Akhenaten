@@ -102,6 +102,11 @@ figure_rioter = {
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_ROBBER }
 	}
 
+	sounds {
+		robber_gold_should_be_for_living : { sound: "robber_e01.wav"}
+		robber_just_think_of_the_fortune : { sound: "robber_e02.wav"}
+	}
+
 	category : figure_category_criminal
 	max_damage : 12
 	terrain_usage : TERRAIN_USAGE_ANY
