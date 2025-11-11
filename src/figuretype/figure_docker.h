@@ -4,13 +4,24 @@
 #include "empire/empire_city.h"
 #include "empire/trader_handler.h"
 
+enum e_docker_action {
+    ACTION_132_DOCKER_IDLING = 132,
+    ACTION_133_DOCKER_IMPORT_QUEUE = 133,
+    ACTION_134_DOCKER_EXPORT_QUEUE = 134,
+    ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE = 135,
+    ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE = 136,
+    ACTION_137_DOCKER_EXPORT_RETURNING = 137,
+    ACTION_138_DOCKER_IMPORT_RETURNING = 138,
+    ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE = 139,
+    ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE = 140,
+};
+
 class figure_docker : public figure_carrier {
 public:
     FIGURE_METAINFO(FIGURE_DOCKER, figure_docker)
     figure_docker(figure *f) : figure_carrier(f) {}
 
     virtual void on_create() override {}
-    virtual figure_phrase_t phrase() const override { return {FIGURE_DOCKER, "dock_pusher"}; }
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual sound_key phrase_key() const override;

@@ -3,6 +3,7 @@
 #include "building/building_bazaar.h"
 #include "building/building.h"
 #include "building/building_type.h"
+#include "figuretype/docker.h"
 #include "grid/water.h"
 #include "city/buildings.h"
 #include "city/city_resource.h"
@@ -131,7 +132,7 @@ void building_dock::spawn_figure() {
     
     if (existing_dockers < max_dockers) {
         figure *f = figure_create(FIGURE_DOCKER, base.road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
+        f->action_state = ACTION_132_DOCKER_IDLING;
         f->set_home(&base);
         for (int i = 0; i < 3; i++) {
             if (!d.docker_ids[i]) {
@@ -209,8 +210,8 @@ int building_dock::count_idle_dockers() const {
     for (int i = 0; i < 3; i++) {
         if (d.docker_ids[i]) {
             figure* f = figure_get(d.docker_ids[i]);
-            if (f->action_state == FIGURE_ACTION_132_DOCKER_IDLING
-                || f->action_state == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE) {
+            if (f->action_state == ACTION_132_DOCKER_IDLING
+                || f->action_state == ACTION_133_DOCKER_IMPORT_QUEUE) {
                 num_idle++;
             }
         }
