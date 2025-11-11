@@ -836,4 +836,17 @@ localization_en = [
   { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
   { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
   { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
+
+  { key: "#engineer_extreme_damage_level", text: "A lot of people are in much worse condition than the buildings. I hope things don't get worse." }
+  { key: "#engineer_no_food_in_city", text: "Starvation might not affect the strength of these buildings, but it sure affects mine!" }
+  { key: "#engineer_city_not_safety", text: "How are we to defend ourselves? The city's defenses are laughable." }
+  { key: "#engineer_high_damage_level", text: "Why does it matter if these buildings collapse? No workers are in them anyway." }
+  { key: "#engineer_gods_are_angry", text: "If the gods are angry, not even the best architect can fix the damage they cause." }
+  { key: "#engineer_city_has_bad_reputation", text: "Our city's reputation is so low, I fear our enemies will attack." }
+  { key: "#engineer_need_more_workers", text: "By my estimation, a lot of people are out of work." }
+  { key: "#engineer_low_entertainment", text: "Ho hum. Even architects like a little fun every now and then." }
+  { key: "#engineer_life_here_could_be_worse", text: "Life here could be a lot worse." }
+  { key: "#engineer_city_is_good", text: "This city has everything an architect's heart could desire!" }
+  { key: "#engineer_so_many_places_in_poor_condition", text: "There are so many places in poor condition, I can barely keep up." }
+  { key: "#engineer_city_is_amazing", text: "I hope I'm credited for the great condition of this city." }
 ]

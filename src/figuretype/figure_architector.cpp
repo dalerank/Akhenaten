@@ -74,7 +74,7 @@ sound_key figure_architector::phrase_key() const {
     std::erase_if(keys, [] (auto &it) { return !it.valid; });
 
     int index = rand() % keys.size();
-    return xstring().printf("architector_", keys[index].prefix);
+    return xstring().printf("engineer_", keys[index].prefix);
 }
 
 void figure_architector::on_action_changed(int saved_action) {
