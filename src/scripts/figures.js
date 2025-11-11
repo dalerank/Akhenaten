@@ -850,18 +850,19 @@ figure_docker = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_bricklayer = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:109, max_frames:12 }
-		death : {pack:PACK_SPR_MAIN, id:110, max_frames:8, loop:false }
-		work : {pack:PACK_SPR_MAIN, id:111, max_frames:12, duration:4 }
-		idle : {pack:PACK_SPR_MAIN, id:112, max_frames:8, duration:2 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BRICKLAYER }
+figure_bricklayer {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:109, max_frames:12 }
+		death { id:110, max_frames:8, loop:false }
+		work { id:111, max_frames:12, duration:4 }
+		idle { id:112, max_frames:8, duration:2 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_BRICKLAYER }
 	}
 
-	sounds : {
-		time_to_put_bricks : {sound:"brick_e01.wav", group:222, text: 0}
- 		with_my_bricks_monuments_will_be_fine : {sound:"brick_e02.wav", group:222, text: 1}
+	sounds {
+		brick_bricklaying_time_at_monument {sound:"brick_e01.wav" }
+		brick_monument_will_be_strong : {sound:"brick_e02.wav" }
 	}
 
 	category: figure_category_citizen
