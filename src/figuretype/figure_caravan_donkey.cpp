@@ -31,6 +31,10 @@ empire_city_handle figure_caravan_donkey::empire_city() const {
     return head->dcast<figure_trade_caravan>()->empire_city();
 }
 
+sound_key figure_caravan_donkey::phrase_key() const {
+    return sound_key();
+}
+
 void figure_caravan_donkey::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/CaravanDonkey");
     figure* leader = figure_get(base.leading_figure_id);

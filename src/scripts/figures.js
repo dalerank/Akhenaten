@@ -775,14 +775,20 @@ figure_delivery_boy = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_carpenter = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:145, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:146, max_frames:8, loop:false }
-		work_ground : { pack:PACK_SPR_MAIN, id:147, max_frames:7 }
-		work_wall : { pack:PACK_SPR_MAIN, id:148, max_frames:7 }
-		climbing : { pack:PACK_SPR_MAIN, id:149, max_frames:3 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CARPENTER }
+figure_carpenter {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:145, max_frames:12 }
+		death { id:146, max_frames:8, loop:false }
+		work_ground { id:147, max_frames:7 }
+		work_wall { id:148, max_frames:7 }
+		climbing { id:149, max_frames:3 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CARPENTER }
+	}
+
+	sounds {
+		carpenter_work_my_tools_need_for_monument { sound:"carpenter_e01.wav"}
+		carpenter_this_monument_will_be_short { sound:"carpenter_e02.wav"}
 	}
 
 	category: figure_category_citizen
