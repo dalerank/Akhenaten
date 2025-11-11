@@ -5291,10 +5291,7 @@ localization_base_en = [
     { group:219, id:10, text: "The bazaar needs some items, and I'm going to get them." }
     { group:219, id:11, text: "These goods will make welcome additions to the bazaar." }
     { group:220, id:0, text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
-    { group:220, id:1, text: "I do my best to give the people what they want." }
-    { group:221, id:0, text: "These baskets are too heavy for a little kid like me!" }
-    { group:221, id:1, text: "That bossy lady makes me carry goods all day!" }
-    { group:221, id:2, text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
+    { group:220, id:1, text: "I do my best to give the people what they want." }    
     { group:222, id:0, text: "I'm not taking these supplies any further until someone's available to unload them." }
     { group:222, id:1, text: "No one can accept these goods! That's okay, I can use the rest." }
     { group:222, id:2, text: "I have to go clear across the city with these goods. It'll take all day!" }

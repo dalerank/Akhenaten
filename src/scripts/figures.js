@@ -757,17 +757,17 @@ figure_market_buyer {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_delivery_boy = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:9, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:10, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_DELIVERY_BOY }
+figure_delivery_boy {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:9, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:10, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_DELIVERY_BOY }
 	}
 
-	sounds : {
-		those_baskets_too_heavy : {sound: "marketboy_e01.wav", group:221, text: 0}
-    i_works_all_day : {sound: "marketboy_e02.wav", group:221, text: 1}
-    upon_ill_be_market_owner : {sound: "marketboy_e03.wav", group:221, text: 2}
+	sounds {
+		marketboy_these_baskets_are_too_heavy {sound: "marketboy_e01.wav"}
+		marketboy_bossy_lady_makes_me_carry_goods {sound: "marketboy_e02.wav"}
+		marketboy_one_day_ill_run_the_bazaar {sound: "marketboy_e03.wav"}
 	}
 
 	category: figure_category_citizen
