@@ -932,4 +932,16 @@ localization_en = [
   { key: "#worker_unused", text: "(not used)" }
   { key: "#worker_going_to_workplace", text: "I'm ready to work!" }
   { key: "#worker_farm_is_flooded", text: "With the fields under water, I work now for glory everlasting." }    
+
+  { key: "#doctor_concerned_about_plague", text: "With city health so dismal, I'm a busy man. Still, plague threatens." }
+  { key: "#doctor_no_food_in_city", text: "Being hungry all the time isn't good for me." }
+  { key: "#doctor_defenses_are_weak", text: "I'd advise this city to bolster its defenses so our enemies do not do us damage." }
+  { key: "#doctor_need_more_workers", text: "I've seen many workers pushed to their limits. This city could use more employees." }
+  { key: "#doctor_gods_are_angry", text: "I don't think we're paying the gods enough respect. This is terribly risky behavior." }
+  { key: "#doctor_reputation_is_low", text: "Our base reputation invites others to attack." }
+  { key: "#doctor_unemployment_is_high", text: "Sitting idly by waiting for jobs is bad for our people's health!" }
+  { key: "#doctor_low_entertainment", text: "I've had people come in for checkups just because they've got nothing better to do!" }
+  { key: "#doctor_city_is_ok", text: "This city is good enough, I guess." }
+  { key: "#doctor_city_is_the_best", text: "I cannot imagine a healthier place to live." }
+  { key: "#doctor_plague_could_strike_us_dead", text: "Plague could strike us dead at any moment!" }
 ]

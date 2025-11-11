@@ -13,22 +13,22 @@ void figure_physician::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Physician");
     //    building *b = building_get(building_id);
     switch (action_state()) {
-    case FIGURE_ACTION_60_PHYSICIAN_CREATED:
+    case ACTION_60_PHYSICIAN_CREATED:
         advance_action(ACTION_10_GOING);
         break;
 
-    case FIGURE_ACTION_61_PHYSICIAN_ENTERING_EXITING:
+    case ACTION_61_PHYSICIAN_ENTERING_EXITING:
     case 9:
         do_enterbuilding(true, home());
         break;
 
     case ACTION_10_GOING:
-    case FIGURE_ACTION_62_PHYSICIAN_ROAMING:
+    case ACTION_62_PHYSICIAN_ROAMING:
         do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
         break;
 
     case ACTION_11_RETURNING_FROM_PATROL:
-    case FIGURE_ACTION_63_PHYSICIAN_RETURNING:
+    case ACTION_63_PHYSICIAN_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
         break;
     }
@@ -82,7 +82,7 @@ sound_key figure_physician::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("doctor_", keys[index].c_str());
 }
 
 int figure_physician::provide_service() {

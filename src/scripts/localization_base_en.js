@@ -5407,18 +5407,7 @@ localization_base_en = [
     { group:238, id:6, text: "I've never seen so many people out of work before!" }
     { group:238, id:7, text: "I'm bored! I guess I'll brush my teeth again." }
     { group:238, id:8, text: "This city is okay. Only a few cavities!" }
-    { group:238, id:9, text: "This city has the brightest smile in all of Egypt." }
-    { group:239, id:0, text: "With city health so dismal, I'm a busy man. Still, plague threatens." }
-    { group:239, id:1, text: "Being hungry all the time isn't good for me." }
-    { group:239, id:2, text: "I'd advise this city to bolster its defenses so our enemies do not do us damage." }
-    { group:239, id:3, text: "I've seen many workers pushed to their limits. This city could use more employees." }
-    { group:239, id:4, text: "I don't think we're paying the gods enough respect. This is terribly risky behavior." }
-    { group:239, id:5, text: "Our base reputation invites others to attack." }
-    { group:239, id:6, text: "Sitting idly by waiting for jobs is bad for our people's health!" }
-    { group:239, id:7, text: "I've had people come in for checkups just because they've got nothing better to do!" }
-    { group:239, id:8, text: "This city is good enough, I guess." }
-    { group:239, id:9, text: "I cannot imagine a healthier place to live." }
-    { group:239, id:10, text: "Plague could strike us dead at any moment!" }
+    { group:238, id:9, text: "This city has the brightest smile in all of Egypt." }    
     { group:240, id:0, text: "Judging by the number of sick people in this city, I could soon have my hands full!" }
     { group:240, id:1, text: "I'm famished. Before long, I'll be skinnier than a mummy!" }
     { group:240, id:2, text: "The city is not securely wrapped in defenses. An enemy could easily defeat us." }
