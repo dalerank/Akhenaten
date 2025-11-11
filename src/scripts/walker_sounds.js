@@ -113,10 +113,6 @@ walker_sounds = {
   magistrate_low_entertainment : {sound: "magistrate_g08.wav"},
   magistrate_city_is_ok : {sound: "magistrate_g09.wav"},
   magistrate_city_is_amazing : {sound: "magistrate_g10.wav"},
-  // marketboy
-  marketboy_these_baskets_are_too_heavy : {sound: "marketboy_e01.wav"},
-  marketboy_bossy_lady_makes_me_carry_goods : {sound: "marketboy_e02.wav"},
-  marketboy_one_day_ill_run_the_bazaar : {sound: "marketboy_e03.wav"},
   // mkt_seller
   goods_are_finished : {sound: "mkt_seller_e01.wav"},
   we_are_selling_goods : {sound: "mkt_seller_e02.wav"},
