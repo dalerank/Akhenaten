@@ -173,4 +173,19 @@ void config_show_tutorial_properties(bool header) {
             ImGui::TreePop();
         }
     }
+
+    // Migration Caps (population limits)
+    if (!g_city.migration.get_migration_caps().empty()) {
+        bool caps_open = ImGui::TreeNodeEx("Migration Caps", ImGuiTreeNodeFlags_None, "Migration Caps");
+        if (caps_open) {
+            ImGui::BeginTable("MigrationCaps", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+
+            for (const auto& [reason, cap] : g_city.migration.get_migration_caps()) {
+                game_debug_show_property(reason.c_str(), cap);
+            }
+
+            ImGui::EndTable();
+            ImGui::TreePop();
+        }
+    }
 }

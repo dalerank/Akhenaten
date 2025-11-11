@@ -9,6 +9,7 @@
 svector<city_migration_t::condition, 16> g_migration_conditions;
 city_migration_defaults_t ANK_VARIABLE(migration_defaults);
 svector<sentiment_step_t, 16> ANK_VARIABLE(migration_sentiment_influence);
+std::unordered_map<xstring, int> g_migration_cap_reasons;
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
@@ -28,7 +29,18 @@ void city_migration_t::update_status() {
     immigration_amount_per_batch = 0;
     emigration_amount_per_batch = 0;
 
-    if (population_cap > 0 && g_city.population.current >= population_cap) {
+    int cur_population_cap = 999999;
+    for (const auto &it: g_migration_cap_reasons) {
+        if (it.second > 0) {
+            cur_population_cap = std::min(cur_population_cap, it.second);
+        }
+    }
+
+    if (population_cap > 0) {
+        cur_population_cap = std::min(cur_population_cap, population_cap);
+    }
+
+    if (cur_population_cap > 0 && g_city.population.current >= population_cap) {
         percentage = 0;
         migration_cap = true;
         return;
@@ -67,6 +79,19 @@ void city_migration_t::create_immigrants(int num_people) {
     if (immigrated == 0) {
         refused_immigrants_today += num_people;
     }
+}
+
+void city_migration_t::set_migration_cap(xstring reason, int cap) {
+    if (cap == 0) {
+        g_migration_cap_reasons.erase(reason);
+        return;
+    }
+
+    g_migration_cap_reasons[reason] = cap;
+}
+
+const std::unordered_map<xstring, int> &city_migration_t::get_migration_caps() {
+    return g_migration_cap_reasons;
 }
 
 city_migration_defaults_t& city_migration_t::current_params() {

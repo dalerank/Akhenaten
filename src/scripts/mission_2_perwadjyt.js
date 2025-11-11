@@ -33,10 +33,10 @@ mission2 {
 	}
 }
 
-[event=event_migration_update, mission=mission1]
+[event=event_migration_update, mission=mission2]
 function tutorial3_population_cap(ev) {
     var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
-    migration.population_cap = max_pop
+    migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
 [event=event_mission_start, mission=mission2]

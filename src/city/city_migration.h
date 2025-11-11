@@ -54,6 +54,9 @@ struct city_migration_t {
     void create_migrants();
     void create_emigrants(int num_people);
     void create_immigrants(int num_people);
+    void set_migration_cap(xstring reason, int cap);
+    const std::unordered_map<xstring, int> &get_migration_caps();
+
     city_migration_defaults_t& current_params();
     
     void determine_reason();

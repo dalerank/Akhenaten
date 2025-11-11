@@ -2,7 +2,7 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-void set_population_cap(int cap) {
-    g_city.migration.population_cap = cap;
+void __migration_set_population_cap(xstring reason, int cap) {
+    g_city.migration.set_migration_cap(reason, cap);
 }
-ANK_FUNCTION_1(set_population_cap)
+ANK_FUNCTION_2(__migration_set_population_cap)
