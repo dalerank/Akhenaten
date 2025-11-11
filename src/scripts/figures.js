@@ -1084,11 +1084,25 @@ figure_teacher = {
 	permission : epermission_education
 }
 
-figure_librarian = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_LIBRARIAN }
+figure_librarian {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:58, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LIBRARIAN }
+	}
+
+	sounds {
+		library_read_about_festivals { sound: "library_e01.wav"}
+		library_people_are_sick { sound: "library_g01.wav"}
+		library_no_food_in_city { sound: "library_g02.wav"}
+		library_defenses_are_weak { sound: "library_g03.wav"}
+		library_need_more_workers { sound: "library_g04.wav"}
+		library_gods_are_angry { sound: "library_g05.wav"}
+		library_reputation_is_low { sound: "library_g06.wav"}
+		library_high_unemployment { sound: "library_g07.wav"}
+		library_low_entertainment { sound: "library_g08.wav"}
+		library_city_is_ok { sound: "library_g09.wav"}
+		library_city_is_amazing { sound: "library_g10.wav"}
 	}
 
 	category: figure_category_citizen
