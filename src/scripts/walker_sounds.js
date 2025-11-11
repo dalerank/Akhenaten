@@ -4,9 +4,7 @@ walker_sounds = {
   // artisan
   artisan_work_my_tools_need_for_monument : { sound:"artisan_e01.wav"},
   artisan_work_i_write_history_of_egypt : { sound:"artisan_e02.wav"},
-   // brick
-  brick_bricklaying_time_at_monument : { sound:"brick_e01.wav"},
-  brick_monument_will_be_strong : { sound:"brick_e02.wav"},
+
   // carpenter
   carpenter_work_my_tools_need_for_monument : { sound:"carpenter_e01.wav"},
   carpenter_this_monument_will_be_short : { sound:"carpenter_e02.wav"},

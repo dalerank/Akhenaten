@@ -28,22 +28,22 @@ void figure_bricklayer::figure_action() {
     case 9:
         break;
 
-    case FIGURE_ACTION_20_BRIRKLAYER_DESTROY:
+    case ACTION_20_BRICKLAYER_DESTROY:
         poof();
         break;
 
-    case FIGURE_ACTION_10_BRIRKLAYER_CREATED:
+    case ACTION_10_BRICKLAYER_CREATED:
         base.destination_tile = destination()->access_tile();
-        advance_action(FIGURE_ACTION_11_BRIRKLAYER_GOING);
+        advance_action(ACTION_11_BRICKLAYER_GOING);
         break;
 
-    case FIGURE_ACTION_11_BRIRKLAYER_GOING:
-        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_BRIRKLAYER_DESTROY)) {
-            advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+    case ACTION_11_BRICKLAYER_GOING:
+        if (do_goto(base.destination_tile, terrain_usage, -1,ACTION_20_BRIRKLAYER_DESTROY)) {
+            advance_action(ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
         break;
 
-    case FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
+    case ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
         if (smart_cast<building_mastaba>(b_dest)) {
             tile2i wait_tile = building_small_mastaba_bricks_waiting_tile(b_dest);
             if (!wait_tile.valid()) {
@@ -58,11 +58,11 @@ void figure_bricklayer::figure_action() {
             });
 
             base.destination_tile = wait_tile;
-            advance_action(FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE);
+            advance_action(ACTION_12_BRICKLAYER_GOING_TO_PLACE);
         }
         break;
 
-    case FIGURE_ACTION_12_BRICKLAYER_GOING_TO_PLACE:
+    case ACTION_12_BRICKLAYER_GOING_TO_PLACE:
         base.roam_wander_freely = false;
         if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
             base.wait_ticks = 0;
@@ -70,11 +70,11 @@ void figure_bricklayer::figure_action() {
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { 
                 map_monuments_set_progress(t, 1); 
             });
-            advance_action(FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES);
+            advance_action(ACTION_13_BRICKLAYER_WAITING_RESOURCES);
         }
         break;
 
-    case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
+    case ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         base.wait_ticks++;
         if (base.wait_ticks > 30) {
             auto &d = runtime_data();
@@ -83,37 +83,37 @@ void figure_bricklayer::figure_action() {
             bool area_ready = true;
             map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) { area_ready &= (map_monuments_get_progress(t) == 2); });
             if (area_ready) {
-                advance_action(FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS);
+                advance_action(ACTION_14_BRICKLAYER_LAY_BRICKS);
             } else if (d.idle_wait_count > 20) {
                 base.destination_tile = building_monument_access_point(destination());
                 base.destination_tile.shift(1, 1);
-                advance_action(FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
+                advance_action(ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT);
             }
         }
         break;
 
-    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS: {
+    case ACTION_14_BRICKLAYER_LAY_BRICKS: {
             int progress = map_monuments_get_progress(tile());
             if (progress < 200) {
                 map_grid_area_foreach(tile().shifted(-1, -1), tile(), [&] (tile2i t) {
                     map_monuments_set_progress(t, progress + 1);
                 });
             } else {
-                advance_action(FIGURE_ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
+                advance_action(ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
             }
         }
         break;
 
-    case FIGURE_ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
+    case ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
         base.roam_wander_freely = false;
         if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
             base.wait_ticks = 0;
-            advance_action(FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME);
+            advance_action(ACTION_16_BRICKLAYER_RETURN_HOME);
         }
         break;
 
-    case FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME:
-        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_18_BRICKLAYER_RANDOM_TILE)) {
+    case ACTION_16_BRICKLAYER_RETURN_HOME:
+        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_18_BRICKLAYER_RANDOM_TILE)) {
             poof();
         }
         break;
@@ -124,16 +124,40 @@ void figure_bricklayer::update_animation() {
     figure_impl::update_animation();
 
     switch (action_state()) {
-    case FIGURE_ACTION_13_BRICKLAYER_WAITING_RESOURCES:
+    case ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         image_set_animation(animkeys().idle);
         break;
 
-    case FIGURE_ACTION_14_BRICKLAYER_LAY_BRICKS:
+    case ACTION_14_BRICKLAYER_LAY_BRICKS:
         image_set_animation(animkeys().work);
         break;
 
-    case FIGURE_ACTION_16_BRICKLAYER_RETURN_HOME:
+    caseACTION_16_BRICKLAYER_RETURN_HOME:
         image_set_animation(animkeys().walk);
         break;
     }
+}
+
+sound_key figure_bricklayer::phrase_key() const {
+    switch (action_state()) {
+    case ACTION_10_BRICKLAYER_CREATED:
+        return "brick_bricklaying_time_at_monument";
+        
+    case ACTION_11_BRICKLAYER_GOING:
+    case ACTION_12_BRICKLAYER_GOING_TO_PLACE:
+        return "brick_bricklaying_time_at_monument";
+        
+    case ACTION_13_BRICKLAYER_WAITING_RESOURCES:
+        return "brick_bricklaying_time_at_monument";
+        
+    case ACTION_14_BRICKLAYER_LAY_BRICKS:
+    case ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
+        return "brick_monument_will_be_strong";
+        
+    case ACTION_16_BRICKLAYER_RETURN_HOME:
+    case ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT:
+        return "brick_monument_will_be_strong";
+    }
+
+    return "brick_bricklaying_time_at_monument";
 }
