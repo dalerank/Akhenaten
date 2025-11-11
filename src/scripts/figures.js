@@ -631,11 +631,25 @@ figure_dentist {
 	permission : epermission_medicine
 }
 
-figure_embalmer = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:184, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:185, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMBALMER }
+figure_embalmer {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:184, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:185, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMBALMER }
+	}
+
+	sounds {
+		embalmer_health_worsening : {sound:"embalmer_e01.WAV"}
+		embalmer_concerned_about_plague : {sound:"embalmer_g01.WAV"}
+		embalmer_no_food_in_city : {sound:"embalmer_g02.WAV"}
+		embalmer_defenses_weak : {sound:"embalmer_g03.WAV"}
+		embalmer_need_more_workers : {sound:"embalmer_g04.WAV"}
+		embalmer_gods_are_angry : {sound:"embalmer_g05.WAV"}
+		embalmer_reputation_is_low : {sound:"embalmer_g06.WAV"}
+		embalmer_unemployment_is_high : {sound:"embalmer_g07.WAV"}
+		embalmer_low_entertainment : {sound:"embalmer_g08.WAV"}
+		embalmer_city_is_ok : {sound:"embalmer_g09.WAV"}
+		embalmer_city_is_the_best : {sound:"embalmer_g10.WAV"}
 	}
 	
 	category: figure_category_citizen

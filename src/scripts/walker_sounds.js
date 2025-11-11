@@ -10,18 +10,6 @@ walker_sounds = {
   dockpusher_need_more_help : {sound:"dockpusher_e01.wav"},
   dockpusher_wait_until_space_opens_up : {sound:"dockpusher_e02.wav"},
   dockpusher_cant_haul_goods_much_farther : {sound:"dockpusher_e03.wav"},
-  // embalmer
-  embalmer_health_worsening : {sound:"embalmer_e01.WAV"},
-  embalmer_concerned_about_plague : {sound:"embalmer_g01.WAV"},
-  embalmer_no_food_in_city : {sound:"embalmer_g02.WAV"},
-  embalmer_defenses_weak : {sound:"embalmer_g03.WAV"},
-  embalmer_need_more_workers : {sound:"embalmer_g04.WAV"},
-  embalmer_gods_are_angry : {sound:"embalmer_g05.WAV"},
-  embalmer_reputation_is_low : {sound:"embalmer_g06.WAV"},
-  embalmer_unemployment_is_high : {sound:"embalmer_g07.WAV"},
-  embalmer_low_entertainment : {sound:"embalmer_g08.WAV"},
-  embalmer_city_is_ok : {sound:"embalmer_g09.WAV"},
-  embalmer_city_is_the_best : {sound:"embalmer_g10.WAV"},
   // emigrant
   emigrant_cant_find_a_job_here : {sound:"emigrant_e01.wav"},
   emigrant_not_enough_food : {sound:"emigrant_e02.wav"},
