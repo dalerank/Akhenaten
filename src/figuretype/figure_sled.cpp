@@ -86,34 +86,34 @@ void figure_sled_puller::figure_action() {
 
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_50_SLED_PULLER_CREATED:
+    case ACTION_50_SLED_PULLER_CREATED:
         --base.wait_ticks;
         if (base.wait_ticks > 0) {
             return;
         }
-        advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
+        advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
         base.destination_tile = building_monument_center_point(destination());
         break;
 
-    case FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
-        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+    case ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
+        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, ACTION_53_SLED_PULLER_DESTROY);
         break;
 
-    case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
+    case ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
         //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
         base.wait_ticks = 25;
-        advance_action(FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
+        advance_action(ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
         break;
 
-    case FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
+    case ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
         --base.wait_ticks;
         if (base.wait_ticks > 0) {
             return;
         }
-        advance_action(FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        advance_action(ACTION_53_SLED_PULLER_DESTROY);
         break;
 
-    case FIGURE_ACTION_53_SLED_PULLER_DESTROY:
+    case ACTION_53_SLED_PULLER_DESTROY:
         poof();
         break;
     }
