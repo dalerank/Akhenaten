@@ -703,28 +703,28 @@ figure_worker {
 	max_damage : 10
 }
 
-figure_physician = {
-	animations : {
-		walk : {  pack:PACK_SPR_MAIN, id:71, max_frames:12 }
-		death : {  pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHYSICIAN }
+figure_physician {
+	animations {
+		walk {  pack:PACK_SPR_MAIN, id:71, max_frames:12 }
+		death {  pack:PACK_SPR_MAIN, id:72, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_PHYSICIAN }
 	}
 
-	sounds : {
-		doctor_plague_could_strike_us_dead : {sound:"doctor_e01.wav", group: 239, text:1}
-		doctor_concerned_about_plague : {sound:"doctor_g01.wav", group: 239, text:1}
-		doctor_no_food_in_city : {sound:"doctor_g02.wav", group: 239, text:2}
-		doctor_defenses_weak : {sound:"doctor_g03.wav", group: 239, text:3}
-		doctor_need_more_workers : {sound:"doctor_g04.wav", group: 239, text:4}
-		doctor_gods_are_angry : {sound:"doctor_g05.wav", group: 239, text:5}
-		doctor_reputation_is_low : {sound:"doctor_g06.wav", group: 239, text:6}
-		doctor_unemployment_is_high : {sound:"doctor_g07.wav", group: 239, text:7}
-		doctor_low_entertainment : {sound:"doctor_g08.wav", group: 239, text:8}
-		doctor_city_is_ok : {sound:"doctor_g09.wav", group: 239, text:9}
-		doctor_city_is_the_best : {sound:"doctor_g10.wav", group: 239, text:10}
+	sounds {
+		doctor_plague_could_strike_us_dead {sound:"doctor_e01.wav" }
+		doctor_concerned_about_plague {sound:"doctor_g01.wav" }
+		doctor_no_food_in_city {sound:"doctor_g02.wav" }
+		doctor_defenses_weak {sound:"doctor_g03.wav" }
+		doctor_need_more_workers {sound:"doctor_g04.wav" }
+		doctor_gods_are_angry {sound:"doctor_g05.wav" }
+		doctor_reputation_is_low {sound:"doctor_g06.wav" }
+		doctor_unemployment_is_high {sound:"doctor_g07.wav" }
+		doctor_low_entertainment {sound:"doctor_g08.wav" }
+		doctor_city_is_ok {sound:"doctor_g09.wav" }
+		doctor_city_is_the_best {sound:"doctor_g10.wav" }
 	}
 
-  category: figure_category_citizen
+    category: figure_category_citizen
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
@@ -1502,13 +1502,18 @@ figure_labor_seeker {
 	max_roam_length : 384,
 }
 
-figure_reed_gatherer = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:37, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false }
-		work : { pack:PACK_SPR_MAIN, id:39, max_frames:15 }
-		back : { pack:PACK_SPR_MAIN, id:40, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_REED_GATHERER }
+figure_reed_gatherer {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:37, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:38, max_frames:8, loop:false }
+		work { pack:PACK_SPR_MAIN, id:39, max_frames:15 }
+		back { pack:PACK_SPR_MAIN, id:40, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_REED_GATHERER }
+	}
+
+	sounds {
+		reed_to_the_marsh_i_march : { sound: "REED_E01.WAV"}
+		reed_will_make_some_fine_papyrus : { sound: "REED_E02.WAV"}
 	}
 
 	category: figure_category_citizen

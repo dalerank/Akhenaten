@@ -94,10 +94,6 @@ walker_sounds = {
   priest_seth_low_entertainment : {sound: "priest_seth_g08.wav"},
   priest_seth_city_is_ok : {sound: "priest_seth_g09.wav"},
   priest_seth_city_is_amazing : {sound: "priest_seth_g10.wav"},
- // reed
-  reed_to_the_marsh_i_march : { sound: "REED_E01.WAV"},
-  reed_will_make_some_fine_papyrus : { sound: "REED_E02.WAV"},
-
   // scribe
   scribe_these_festivals : { sound: "scribe_e01.wav"},
   scribe_plague_could_break_out : { sound: "scribe_g01.wav"},
