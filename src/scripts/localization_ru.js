@@ -222,4 +222,8 @@ localization_ru = [
     { key: "#policeman_no_army_2", text: "Борьба с захватчиками не входила в мои должностные обязанности!" }
     { key: "#policeman_enemies_are_coming_2", text: "Эти негодяи не захватят город на моей смене!" }
     { key: "#policeman_enemies_are_coming", text: "Враг может вскоре победить, если я не получу помощи! " }
+
+    { key: "#hunter_ostrich_hunting", text: "Страусы почти невидимы, когда прячут голову в песок. // охотник на страусов" }
+    { key: "#hunter_ostrich_back", text: "Ну и ну, это БОЛЬШИЕ ножки!" }
+    { key: "#hunter_ostrich_city_is_good", text: "Этот город классный." }
 ]

@@ -5248,8 +5248,7 @@ localization_base_en = [
     { group:207, id:10, text: "These festivals would be so much better if they were by invitation only." }
     { group:208, id:0, text: "Antelopes are no match for us!   										// hunter antelope" }
     { group:208, id:1, text: "There will be steaks for everyone tonight." }
-    { group:209, id:0, text: "Ostriches are nearly invisible when they put their heads in the sand.   // hunter ostrich" }
-    { group:209, id:1, text: "Now, those are some BIG drumsticks!" }
+    
     { group:210, id:0, text: "Birds are wily. They'll fly away if you don't approach them just right." }
     { group:210, id:1, text: "Look at those beautiful birds, ready for roasting!" }
     { group:211, id:0, text: "Another perfect day for fishing.  I hope the catch is as plentiful as usual." }
