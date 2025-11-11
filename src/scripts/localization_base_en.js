@@ -5253,20 +5253,7 @@ localization_base_en = [
     { group:210, id:1, text: "Look at those beautiful birds, ready for roasting!" }
     { group:211, id:0, text: "Another perfect day for fishing.  I hope the catch is as plentiful as usual." }
     { group:211, id:1, text: "Our hold is overflowing, but you should have seen the one that got away!" }
-    { group:211, id:2, text: "Move faster! We can't get back to work until you unload us." }
-    { group:212, id:0, text: "So many people are sick. I hope things don't get worse." }
-    { group:212, id:1, text: "I'm famished. It's hard to work on an empty stomach." }
-    { group:212, id:2, text: "I hope our enemies don't know how easy it would be to invade us." }
-    { group:212, id:3, text: "Job openings are everywhere! Maybe I can get a job as a fire marshal!" }
-    { group:212, id:4, text: "I hope the gods don't unleash their wrath.  " }
-    { group:212, id:5, text: "I hear that our city doesn't have a good reputation. We could come under attack!" }
-    { group:212, id:6, text: "I'll hold on to this job as tightly as I can. I know many people who are out of work." }
-    { group:212, id:7, text: "All I ever do is work. There's nothing else to do in this city." }
-    { group:212, id:8, text: "I like it here, but there is always room for improvement." }
-    { group:212, id:9, text: "I hope I live here forever!" }
-    { group:212, id:10, text: "(not used)" }
-    { group:212, id:11, text: "I'm ready to work!" }
-    { group:212, id:12, text: "With the fields under water, I work now for glory everlasting." }    
+    { group:211, id:2, text: "Move faster! We can't get back to work until you unload us." }    
     { group:215, id:0, text: "To the marsh I march for the reeds we need." }
     { group:215, id:1, text: "These reeds will make some fine papyrus." }
     { group:216, id:0, text: "My services are needed at the monument!" }

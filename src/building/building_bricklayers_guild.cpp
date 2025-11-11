@@ -10,6 +10,7 @@
 #include "core/random.h"
 #include "game/game_config.h"
 #include "window/building/figures.h"
+#include "figuretype/figure_bricklayer.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "game/game.h"
@@ -90,7 +91,7 @@ void building_bricklayers_guild::spawn_figure() {
         return;
     }
 
-    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, FIGURE_ACTION_10_BRIRKLAYER_CREATED, BUILDING_SLOT_SERVICE);
+    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, ACTION_10_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
     monument->dcast()->add_workers(f->id);
     f->wait_ticks = random_short() % 30; // ok
 }

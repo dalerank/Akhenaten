@@ -918,4 +918,18 @@ localization_en = [
   { key: "#taxman_need_workers", text: "This city could bring in so much more revenue if they'd just hire some more tax collectors." }
   { key: "#taxman_high_taxes", text: "Seems like the nicer their houses, the more people grumble about paying their share." }
   { key: "#taxman_much_pooh_houses", text: "I hate collecting taxes from these run-down houses. It's hardly worth my time." }
+
+  { key: "#worker_desease_can_start_at_any_moment", text: "So many people are sick. I hope things don't get worse." }
+  { key: "#worker_no_food_in_city", text: "I'm famished. It's hard to work on an empty stomach." }
+  { key: "#worker_enemies_in_city", text: "I hope our enemies don't know how easy it would be to invade us." }
+  { key: "#worker_need_workers", text: "Job openings are everywhere! Maybe I can get a job as a fire marshal!" }
+  { key: "#worker_gods_are_angry", text: "I hope the gods don't unleash their wrath.  " }
+  { key: "#worker_city_is_bad", text: "I hear that our city doesn't have a good reputation. We could come under attack!" }
+  { key: "#worker_much_unemployments", text: "I'll hold on to this job as tightly as I can. I know many people who are out of work." }
+  { key: "#worker_low_entertainment", text: "All I ever do is work. There's nothing else to do in this city." }
+  { key: "#worker_city_is_good", text: "I like it here, but there is always room for improvement." }
+  { key: "#worker_city_is_amazing", text: "I hope I live here forever!" }
+  { key: "#worker_unused", text: "(not used)" }
+  { key: "#worker_going_to_workplace", text: "I'm ready to work!" }
+  { key: "#worker_farm_is_flooded", text: "With the fields under water, I work now for glory everlasting." }    
 ]
