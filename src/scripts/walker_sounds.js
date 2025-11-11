@@ -10,12 +10,6 @@ walker_sounds = {
   dockpusher_need_more_help : {sound:"dockpusher_e01.wav"},
   dockpusher_wait_until_space_opens_up : {sound:"dockpusher_e02.wav"},
   dockpusher_cant_haul_goods_much_farther : {sound:"dockpusher_e03.wav"},
-  // emigrant
-  emigrant_cant_find_a_job_here : {sound:"emigrant_e01.wav"},
-  emigrant_not_enough_food : {sound:"emigrant_e02.wav"},
-  emigrant_taxes_are_too_high : {sound:"emigrant_e03.wav"},
-  emigrant_cant_live_on_what_pay_here : {sound:"emigrant_e04.wav"},
-  emigrant_not_enough_housing : {sound:"emigrant_e05.wav"},
   // fireman
   fireman_busy_dousing_fire : {sound:"fireman_e01.wav"},
   fireman_whole_city_could_burn_down : {sound:"fireman_e02.wav"},
