@@ -53,8 +53,6 @@ class figure_egyptian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_SPEAR, figure_egyptian_spearman)
     figure_egyptian_spearman(figure *f) : figure_enemy_spearman(f) {}
-
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_EGYPTIAN_SPEAR, "egpt_spr" }; }
 };
 
 
@@ -62,30 +60,22 @@ class figure_hittite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_HITTITE_SPEARMAN, figure_hittite_spearman)
     figure_hittite_spearman(figure *f) : figure_enemy_spearman(f) {}
-
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_SPEARMAN, "hitt_spr" }; }
 };
 
 class figure_kushite_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_KUSHITE_SPEARMAN, figure_kushite_spearman)
     figure_kushite_spearman(figure *f) : figure_enemy_spearman(f) {}
-
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_SPEARMAN, "kush_spr" }; }
 };
 
 class figure_persian_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PERSIAN_SPEARMAN, figure_persian_spearman)
     figure_persian_spearman(figure *f) : figure_enemy_spearman(f) {}
-
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_SPEARMAN, "pers_spr" }; }
 };
 
 class figure_phoenician_spearman : public figure_enemy_spearman {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_PHOENICIAN_SPEARMAN, figure_phoenician_spearman)
     figure_phoenician_spearman(figure *f) : figure_enemy_spearman(f) {}
-
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SPEARMAN, "phoe_spr" }; }
 };

@@ -185,4 +185,18 @@ localization_ru = [
     { key: "#engineer_this_city_has_everything", text: "В этом городе есть всё, чего может желать сердце архитектора!" }
     { key: "#engineer_there_are_so_many_places_in_poor_condition", text: "Здесь так много мест в плохом состоянии, что я едва успеваю." }
     { key: "#engineer_i_hope_i_m_credited_for_great_condition", text: "Надеюсь, меня отметят за отличное состояние этого города." }
+
+    { key: "#fireman_desease_can_start_at_any_moment", text: "Надеюсь, чума не вспыхнет. Чума может распространяться как лесной пожар." }
+    { key: "#fireman_no_food_in_city", text: "Даже когда пожары горят, всё, о чём я могу думать, это насколько я голоден." }
+    { key: "#fireman_city_not_safety_workers_leaving", text: "Если наши враги вторгнутся, весь город может сгореть дотла." }
+    { key: "#fireman_need_workers", text: "Боюсь, что некоторые из этих полупустых зданий могут загореться. Хотел бы я, чтобы было больше работников." }
+    { key: "#fireman_hight_fire_level", text: "Огненный гнев богов обрушится на нас, если мы не проявим больше уважения." }
+    { key: "#fireman_gods_are_angry", text: "Я и не мечтал бы позволить своей репутации упасть так низко. Плохая репутация нашего города приглашает к нападению." }
+    { key: "#fireman_need_more_workers", text: "У меня было больше людей-добровольцев в пожарную службу. Этим людям нужна работа." }
+    { key: "#fireman_low_entertainment", text: "Пожаротушение - тяжёлая работа, и я бы с удовольствием остыл с хорошим шоу. Здесь этого недостаточно." }
+    { key: "#fireman_gods_are_pleasures", text: "Я доволен этим городом." }
+    { key: "#fireman_city_is_amazing", text: "Этот город классный." }
+    { key: "#fireman_fighting_fire", text: "Я не могу говорить сейчас. Я занят тушением этого пожара." }
+    { key: "#fireman_going_to_fire", text: "Этот пожар может сжечь весь город дотла, если я не буду действовать быстро!" }
+    { key: "#fireman_fighting_fire_also", text: "Ух, это горячо!" }   
 ]
