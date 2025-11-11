@@ -127,21 +127,7 @@ walker_sounds = {
   // stone
   stone_going_to_monument : { sound: "stone_e01.wav"},
   stone_my_work_will_endure : { sound: "stone_e02.wav"},
-  // taxman
-  taxman_need_more_tax_collectors : { sound: "taxman_e01.wav"},
-  taxman_the_nicer_the_houses : { sound: "taxman_e02.wav"},
-  taxman_hate_rundown_houses : { sound: "taxman_e03.wav"},
-  taxman_danger_of_plague : { sound: "taxman_g01.wav"},
-  taxman_no_food_in_city : { sound: "taxman_g02.wav"},
-  taxman_defenses_are_weak : { sound: "taxman_g03.wav"},
-  taxman_need_more_workers : { sound: "taxman_g04.wav"},
-  taxman_gods_are_angry : { sound: "taxman_g05.wav"},
-  taxman_reputation_is_low : { sound: "taxman_g06.wav"},
-  taxman_high_unemployment : { sound: "taxman_g07.wav"},
-  taxman_low_entertainment : { sound: "taxman_g08.wav"},
-  taxman_city_is_ok : { sound: "taxman_g09.wav"},
-  taxman_city_is_amazing : { sound: "taxman_g10.wav"},
- // teacher
+  // teacher
   teacher_festival_info : { sound: "teacher_e01.wav"},
   teacher_desease_can_start_at_any_moment : { sound: "teacher_g01.wav"},
   teacher_no_food_in_city : { sound: "teacher_g02.wav"},

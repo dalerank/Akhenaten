@@ -3,7 +3,7 @@
 #include "building/building_bazaar.h"
 #include "building/building.h"
 #include "building/building_type.h"
-#include "figuretype/docker.h"
+#include "figuretype/figure_docker.h"
 #include "grid/water.h"
 #include "city/buildings.h"
 #include "city/city_resource.h"
