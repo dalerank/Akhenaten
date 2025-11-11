@@ -97,9 +97,7 @@ walker_sounds = {
  // reed
   reed_to_the_marsh_i_march : { sound: "REED_E01.WAV"},
   reed_will_make_some_fine_papyrus : { sound: "REED_E02.WAV"},
-  // robber
-  robber_gold_should_be_for_living : { sound: "robber_e01.wav"},
-  robber_just_think_of_the_fortune : { sound: "robber_e02.wav"},
+
   // scribe
   scribe_these_festivals : { sound: "scribe_e01.wav"},
   scribe_plague_could_break_out : { sound: "scribe_g01.wav"},
