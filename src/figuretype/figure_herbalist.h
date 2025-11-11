@@ -14,7 +14,6 @@ public:
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_HERBALIST, "apothecary"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;

@@ -55,7 +55,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_ARCHER, "barb_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_barbarian_archer::static_params,
@@ -69,7 +68,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_ARCHER, "assr_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_assyrian_archer::static_params,
@@ -83,7 +81,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "cana_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_canaanite_archer::static_params,
@@ -97,7 +94,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_ARCHER, "egpt_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_egyptian_archer::static_params,
@@ -111,7 +107,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HITTITE_ARCHER, "hitt_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hittite_archer::static_params,
@@ -125,7 +120,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_ARCHER, "hyks_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hyksos_archer::static_params,
@@ -139,7 +133,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_LIBIAN_ARCHER, "libn_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_libian_archer::static_params,
@@ -153,7 +146,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_ARCHER, "nubn_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_nubian_archer::static_params,
@@ -167,7 +159,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PERSIAN_ARCHER, "pers_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_persian_archer::static_params,
@@ -181,7 +172,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_ARCHER, "roma_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_roman_archer::static_params,
@@ -195,7 +185,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_ARCHER, "seap_arch" }; }
     const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_seapeople_archer::static_params,

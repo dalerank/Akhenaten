@@ -5455,10 +5455,7 @@ localization_base_en = [
     { group:240, id:7, text: "This city is as dead as the bodies I work with all day. I wish the city were alive with entertainment." }
     { group:240, id:8, text: "I might as will live here. It's about as good as anywhere else." }
     { group:240, id:9, text: "I feel truly sorry for my clients. They aren't around to enjoy this incredible city!" }
-    { group:240, id:10, text: "Health seems to be worsening throughout the city." }
-    { group:241, id:0, text: "(Not used)" }
-    { group:241, id:1, text: "Malaria doesn't seem to be a problem here." }
-    { group:241, id:2, text: "An outbreak of malaria could strike if something isn't done." }    
+    { group:240, id:10, text: "Health seems to be worsening throughout the city." }  
     { group:244, id:0, text: "With so many people so weak and sickly, I fear for the future." }
     { group:244, id:1, text: "I haven't eaten in so long, even I'm considering stealing food!" }
     { group:244, id:2, text: "If invaders do come, it looks like it will be up to me to defend the city." }
