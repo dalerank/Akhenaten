@@ -5245,10 +5245,7 @@ localization_base_en = [
     { group:207, id:7, text: "How can I lead a posh lifestyle if I'm not properly entertained?" }
     { group:207, id:8, text: "This city passes muster, I suppose." }
     { group:207, id:9, text: "This city couldn't be better!" }
-    { group:207, id:10, text: "These festivals would be so much better if they were by invitation only." }
-    { group:208, id:0, text: "Antelopes are no match for us!   										// hunter antelope" }
-    { group:208, id:1, text: "There will be steaks for everyone tonight." }
-    
+    { group:207, id:10, text: "These festivals would be so much better if they were by invitation only." }    
     { group:210, id:0, text: "Birds are wily. They'll fly away if you don't approach them just right." }
     { group:210, id:1, text: "Look at those beautiful birds, ready for roasting!" }
     { group:211, id:0, text: "Another perfect day for fishing.  I hope the catch is as plentiful as usual." }
@@ -5304,69 +5301,7 @@ localization_base_en = [
     { group:229, id:7, text: "This city should clue in to the lack of entertainment!" }
     { group:229, id:8, text: "I'm not sorry to live here." }
     { group:229, id:9, text: "This city has a monopoly on my heart. I love it here!" }
-    { group:229, id:10, text: "Get your beer here! Warm, flat, refreshing beer! Low in sediment!" }
-    { group:230, id:0, text: "The city is flooded with sick people. I hope a plague doesn't break out." }
-    { group:230, id:1, text: "No priest of Osiris should have to suffer from hunger!" }
-    { group:230, id:2, text: "Our city is almost defenseless. I hope no one attacks." }
-    { group:230, id:3, text: "Without workers, we may not be able to pay Osiris the respect he deserves." }
-    { group:230, id:4, text: "Osiris is not the only god made angry by neglect." }
-    { group:230, id:5, text: "Our city is the laughingstock of Egypt. We are ripe for attack." }
-    { group:230, id:6, text: "Unemployment is a serious problem in this city. I hope more jobs open up soon." }
-    { group:230, id:7, text: "Even a priest needs more than prayers to be entertained." }
-    { group:230, id:8, text: "This city is adequate." }
-    { group:230, id:9, text: "Osiris is proud to be worshiped in such a fine city." }
-    { group:230, id:10, text: "Festivals warm Osiris' heart." }
-    { group:230, id:11, text: "Osiris could punish the city for its neglect with a low flood." }
-    { group:231, id:0, text: "The people coming to the Temple don't look healthy. I hope the illness doesn't escalate." }
-    { group:231, id:1, text: "I don't have enough food to feed Ra or myself!" }
-    { group:231, id:2, text: "I wish it were up to Ra to defend our city. I don't think this city does a good job of it." }
-    { group:231, id:3, text: "I hope this city finds more workers soon. Services could soon suffer." }
-    { group:231, id:4, text: "This city would do well to pay more respect to the gods." }
-    { group:231, id:5, text: "Reputation is important. Without it, the city is prone to hostile take over." }
-    { group:231, id:6, text: "I've never heard more people ask Ra whether they'll finally land a job." }
-    { group:231, id:7, text: "I need more entertainment. Pleasing Ra all day isn't easy, and I need to relax." }
-    { group:231, id:8, text: "I have no major complaints about this city." }
-    { group:231, id:9, text: "The only place better than this city is the Field of Reeds." }
-    { group:231, id:10, text: "Ra loves to see his people during the festival." }
-    { group:231, id:11, text: "Our city is an embarrassment to the rest of the Kingdom." }
-    { group:232, id:0, text: "Poor health could result in plague if nothing is done about conditions in the city." }
-    { group:232, id:1, text: "The rumbling of my empty stomach distracts me from my duties to Ptah." }
-    { group:232, id:2, text: "Our holey defenses will be useless if anyone chooses to attack us." }
-    { group:232, id:3, text: "It saddens Ptah to see industries idle because of the worker shortage." }
-    { group:232, id:4, text: "The gods my inflict a just retribution if the city continues to ignore them." }
-    { group:232, id:5, text: "Our ill repute could encourage invaders." }
-    { group:232, id:6, text: "Ptah wishes that all the unemployed in the city could find productive work." }
-    { group:232, id:7, text: "I like to have a good time, just like anyone else. I wish there were more entertainers in this city." }
-    { group:232, id:8, text: "This city has its problems, but its a good place to live." }
-    { group:232, id:9, text: "This is the best crafted city in all of Egypt!" }
-    { group:232, id:10, text: "Ptah knows that holidays make workers happier." }
-    { group:232, id:11, text: "Ptah's guiding hand can do only so much. The industries in this city need more workers!" }
-    { group:233, id:0, text: "A plague may wreak havoc on the city if health does not improve." }
-    { group:233, id:1, text: "All day, I battle my hunger. I need more food." }
-    { group:233, id:2, text: "We'll have to rely on Seth to protect us in battle. The city isn't prepared to defend itself." }
-    { group:233, id:3, text: "Services are suffering because no workers can be found!" }
-    { group:233, id:4, text: "This city should stop provoking the gods' anger with its inaction." }
-    { group:233, id:5, text: "We may soon find out how little others think of our city when they sweep in and destroy it." }
-    { group:233, id:6, text: "The legions of the unemployed clog the streets." }
-    { group:233, id:7, text: "It's hard to believe how dull it is here!" }
-    { group:233, id:8, text: "This city is suitable enough for me." }
-    { group:233, id:9, text: "This city is unrivaled in all Egypt!" }
-    { group:233, id:10, text: "Even Seth's warriors need the occasional festival." }
-    { group:233, id:11, text: "Glory is on the horizon! Enemies are fast approaching the city." }
-    { group:234, id:0, text: "Bast cries to see so many sickly people. I hope the plague doesn't strike." }
-    { group:234, id:1, text: "It's hard to get enough food in this city. Hunger strikes everyone." }
-    { group:234, id:2, text: "Our city's woeful defenses invite our foes to attack us." }
-    { group:234, id:3, text: "Our city cannot possible run well with so many job openings." }
-    { group:234, id:4, text: "The gods are turning their backs on this city. We should pay them more respect." }
-    { group:234, id:5, text: "The city's reputation is terrible. An invasion could come at any time." }
-    { group:234, id:6, text: "Not even Bast can lighten the hearts of so many jobless people." }
-    { group:234, id:7, text: "Bast is horrified by the lack of entertainment in this city." }
-    { group:234, id:8, text: "This city isn't a bad place to live." }
-    { group:234, id:9, text: "This city is the greatest!" }
-    { group:234, id:10, text: "Bast loves a good festival." }
-    { group:234, id:11, text: "People in the city are deeply unhappy. They could soon turn to crime." }
-    { group:234, id:12, text: "What's a priestess to do? There is so little diversion here." }
-    { group:234, id:13, text: "Bast grants me power to heal the sick before they spread their disease." }
+    { group:229, id:10, text: "Get your beer here! Warm, flat, refreshing beer! Low in sediment!" }    
     { group:235, id:0, text: "The city may soon learn that bad health can lead to a horrible plague." }
     { group:235, id:1, text: "My mind is fed with learning, but my body hungers for food." }
     { group:235, id:2, text: "Invaders would have no trouble penetrating our scanty defenses!" }

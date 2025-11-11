@@ -89,7 +89,7 @@ sound_key figure_labor_seeker::phrase_key() const {
 
     keys.push_back("i_looking_for_the_workers");
     int index = rand() % keys.size();
-    return xstring().printf("recruiter_", keys[index].c_str());
+    return xstring().printf("recruiter_%s", keys[index].c_str());
 }
 
 int figure_labor_seeker::provide_service() {

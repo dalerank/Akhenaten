@@ -215,7 +215,7 @@ static void image_finish(void) {
 
 static void show_saved_notice(const char *filename) {
     xstring notice_text;
-    notice_text.printf("Screenshot saved to ", filename);
+    notice_text.printf("Screenshot saved to %s", filename);
 
     events::emit(event_city_warning{ notice_text });
 }

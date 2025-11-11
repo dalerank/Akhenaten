@@ -87,7 +87,7 @@ sound_key figure_fireman::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return xstring().printf("fireman", keys[index].c_str());
+    return xstring().printf("fireman_%s", keys[index].c_str());
 }
 
 void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!!
