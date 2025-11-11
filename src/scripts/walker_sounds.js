@@ -27,19 +27,6 @@ walker_sounds = {
   // hunt_ostrich
   hunt_ostrich_heads_in_the_sand : {sound:"hunt_ostrich_e01.wav"},
   hunt_ostrich_those_are_big_drumsticks : {sound:"hunt_ostrich_e02.wav"},
-
-  // juggler
-  juggler_love_working_festival : {sound:"juggler_e01.wav"},
-  juggler_never_seen_so_many_sick : {sound:"juggler_g01.wav"},
-  juggler_no_food_in_city : {sound:"juggler_g02.wav"},
-  juggler_little_is_defending_city : {sound:"juggler_g03.wav"},
-  juggler_job_vacancies_everywhere : {sound:"juggler_g04.wav"},
-  juggler_gods_think_weve_forgotten_them : {sound:"juggler_g05.wav"},
-  juggler_reputation_is_low : {sound:"juggler_g06.wav"},
-  juggler_high_unemployment : {sound:"juggler_g07.wav"},
-  juggler_low_entertainment : {sound:"juggler_g08.wav"},
-  juggler_city_is_ok : {sound:"juggler_g09.wav"},
-  juggler_city_is_amazing : {sound:"juggler_g010.wav"},
   
   // library
   library_read_about_festivals : { sound: "library_e01.wav"},

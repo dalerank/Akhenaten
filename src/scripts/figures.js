@@ -1363,28 +1363,28 @@ figure_soldier_charioteer {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_juggler = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
-		death : { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_JUGGLER }
+figure_juggler {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
+		death { pack:PACK_SPR_MAIN, id:131, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_JUGGLER }
 	}
 
-	sounds : {
-		i_like_festivals : {sound:"juggler_e01.wav", group: 230, text:0 }
-    disease_in_city : {sound:"juggler_g01.wav", group: 230, text:0 }
-    city_low_sentiment : {sound:"juggler_g02.wav", group: 230, text:0 }
-    city_not_safety_workers_leaving : {sound:"juggler_g03.wav", group: 230, text:0 }
-    salary_too_low : {sound:"juggler_g04.wav", group: 230, text:0 }
-    gods_are_angry : {sound:"juggler_g05.wav", group: 230, text:0 }
-    city_verylow_sentiment : {sound:"juggler_g06.wav", group: 230, text:0 }
-    much_unemployments : {sound:"juggler_g07.wav", group: 230, text:0 }
-    low_entertainment : {sound:"juggler_g08.wav", group: 230, text:0 }
-    city_is_good : {sound:"juggler_g09.wav", group: 230, text:0 }
-    city_is_amazing : {sound:"juggler_g10.wav", group: 230, text:0 }
+	sounds {
+		juggler_i_like_festivals {sound:"juggler_e01.wav" }
+		juggler_disease_in_city {sound:"juggler_g01.wav" }
+		juggler_city_low_sentiment {sound:"juggler_g02.wav" }
+		juggler_city_not_safety_workers_leaving {sound:"juggler_g03.wav" }
+		juggler_salary_too_low {sound:"juggler_g04.wav" }
+		juggler_gods_are_angry {sound:"juggler_g05.wav" }
+		juggler_city_verylow_sentiment {sound:"juggler_g06.wav" }
+		juggler_much_unemployments {sound:"juggler_g07.wav" }
+		juggler_low_entertainment {sound:"juggler_g08.wav" }
+		juggler_city_is_good {sound:"juggler_g09.wav" }
+		juggler_city_is_amazing {sound:"juggler_g10.wav" }
 	}
 
-  category: figure_category_citizen
+    category: figure_category_citizen
 	max_damage : 20
 	max_roam_length: 640
 	permission : epermission_entertainer  // roadblock option

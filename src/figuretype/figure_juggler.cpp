@@ -78,7 +78,7 @@ sound_key figure_juggler::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("juggler_", keys[index].c_str());
 }
 
 int figure_juggler::provide_service() {
