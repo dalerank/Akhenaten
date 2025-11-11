@@ -1432,18 +1432,18 @@ figure_senet_player = {
 }
 
 figure_market_trader = {
-	animations : {
-		walk : {  pack:PACK_SPR_MAIN, id:18, max_frames:12 }
-		death : {  pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_TRADER }
+	animations {
+		walk {  pack:PACK_SPR_MAIN, id:18, max_frames:12 }
+		death {  pack:PACK_SPR_MAIN, id:19, max_frames:8, loop:false }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MARKET_TRADER }
 	}
 
-	sounds : {
+	sounds {
 		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0}
- 	  we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0}
+ 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0}
 	}
 
-  category: figure_category_citizen
+ 	 category: figure_category_citizen
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384

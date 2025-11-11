@@ -866,5 +866,24 @@ localization_en = [
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
-  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." }  
+  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
+
+  { key: "#policeman_desease_can_start_at_any_moment", text: "With so many people so weak and sickly, I fear for the future." }
+  { key: "#policeman_no_food_in_city", text: "I haven't eaten in so long, even I'm considering stealing food!" }
+  { key: "#policeman_city_not_safety", text: "If invaders do come, it looks like it will be up to me to defend the city." }
+  { key: "#policeman_need_workers", text: "If I didn't enjoy the danger of police work, I'd quickly take one of the many available jobs." }
+  { key: "#policeman_gods_are_angry", text: "If I were running things, I'd pay more attention to the gods." }
+  { key: "#policeman_no_army", text: "I've heard our city is an easy mark for invaders. We have a bad reputation." }
+  { key: "#policeman_much_unemployments", text: "I don't like to see this many jobless loiterers. I can't walk my beat without tripping over them!" }
+  { key: "#policeman_low_entertainment", text: "This city is dull. I can't find any good shows to see." }
+  { key: "#policeman_city_is_good", text: "This city isn't perfect, but then what city is?" }
+  { key: "#policeman_very_low_crime_level", text: "If only the Bazaar carried donuts, this city would be perfect." }
+  { key: "#policeman_low_crime_level", text: "Everybody's friendly here. No one is reporting any crimes." }
+  { key: "#policeman_usual_crime_level", text: "A few crimes here, a few crimes there, but nothing out of the ordinary." }
+  { key: "#policeman_need_more_workers", text: "Even I don't like to walk in this part of town!" }
+  { key: "#policeman_iam_too_busy_that_talk", text: "I'm really too busy to talk right now - ask me again later." }
+  { key: "#policeman_i_hope_my_work_is_need", text: "I'll do my part to make sure this city is safe!" }
+  { key: "#policeman_no_army_2", text: "Fighting invaders wasn't in my job description!" }
+  { key: "#policeman_enemies_are_coming_2", text: "These rascals aren't taking over the city on my watch!" }
+  { key: "#policeman_enemies_are_coming", text: "The enemy could soon win if I don't get some help! " }
 ]

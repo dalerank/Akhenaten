@@ -203,4 +203,23 @@ localization_ru = [
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }    
+
+    { key: "#policeman_desease_can_start_at_any_moment", text: "С таким количеством слабых и больных людей я боюсь за будущее." }
+    { key: "#policeman_no_food_in_city", text: "Я так долго не ел, что даже я подумываю о краже еды!" }
+    { key: "#policeman_city_not_safety", text: "Если захватчики придут, похоже, мне придётся защищать город." }
+    { key: "#policeman_need_workers", text: "Если бы я не наслаждался опасностью полицейской работы, я бы быстро взял одну из многих доступных работ." }
+    { key: "#policeman_gods_are_angry", text: "Если бы я управлял делами, я бы уделял больше внимания богам." }
+    { key: "#policeman_no_army", text: "Я слышал, наш город - лёгкая цель для захватчиков. У нас плохая репутация." }
+    { key: "#policeman_much_unemployments", text: "Мне не нравится видеть столько безработных бездельников. Я не могу ходить по своему участку, не споткнувшись о них!" }
+    { key: "#policeman_low_entertainment", text: "Этот город скучен. Я не могу найти хороших шоу для просмотра." }
+    { key: "#policeman_city_is_good", text: "Этот город не идеален, но какой город идеален?" }
+    { key: "#policeman_very_low_crime_level", text: "Если бы только базар торговал пончиками, этот город был бы идеальным." }
+    { key: "#policeman_low_crime_level", text: "Здесь все дружелюбны. Никто не сообщает о преступлениях." }
+    { key: "#policeman_usual_crime_level", text: "Несколько преступлений здесь, несколько преступлений там, но ничего необычного." }
+    { key: "#policeman_need_more_workers", text: "Даже я не люблю ходить в этой части города!" }
+    { key: "#policeman_iam_too_busy_that_talk", text: "Я действительно слишком занят, чтобы говорить сейчас - спросите меня позже." }
+    { key: "#policeman_i_hope_my_work_is_need", text: "Я сделаю свою часть, чтобы убедиться, что этот город безопасен!" }
+    { key: "#policeman_no_army_2", text: "Борьба с захватчиками не входила в мои должностные обязанности!" }
+    { key: "#policeman_enemies_are_coming_2", text: "Эти негодяи не захватят город на моей смене!" }
+    { key: "#policeman_enemies_are_coming", text: "Враг может вскоре победить, если я не получу помощи! " }
 ]
