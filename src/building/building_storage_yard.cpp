@@ -887,10 +887,10 @@ void building_storage_yard::spawn_figure() {
     }
 
     if (!base.has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
-        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
         leader->set_direction_to(task.dest);
         for (int i = 0; i < 5; ++i) {
-            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
             follower->set_direction_to(task.dest);
             follower->wait_ticks = i * 4;
         }
