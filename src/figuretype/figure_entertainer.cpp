@@ -187,10 +187,10 @@ void figure_entertainer::figure_action() {
                     base.destination_tile = road_tile;
                     base.roam_length = 0;
                 } else {
-                    advance_action(ACTION_11_RETURNING_EMPTY);
+                    advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
                 }
             } else {
-                advance_action(ACTION_11_RETURNING_EMPTY);
+                advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
             }
         }
         break;
@@ -208,18 +208,16 @@ void figure_entertainer::figure_action() {
             if (b_dst && b_dst->num_workers > labores / 2) {
                 update_shows();
             } else {
-                advance_action(ACTION_11_RETURNING_EMPTY);
+                advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
             }
         }
         break;
 
     case ACTION_94_ENTERTAINER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_EMPTY);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_13_ENTERTAINER_RETURNING_EMPTY);
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case ACTION_13_RETURNING_TO_VENUE:
-        //        case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
+    case ACTION_13_ENTERTAINER_RETURNING_EMPTY:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
     }

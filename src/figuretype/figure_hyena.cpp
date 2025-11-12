@@ -66,18 +66,18 @@ void figure_hyena::figure_action() {
     g_city.figures.add_animal();
 
     switch (action_state()) {
-    case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
+    case ACTION_196_HYENA_AT_REST:
         base.wait_ticks++;
         if (base.wait_ticks > 400) {
             base.wait_ticks = id() & 0x1f;
-            base.action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
+            base.action_state = ACTION_197_HYENA_MOVING;
             tile2i formation_t = formation_layout_position(FORMATION_HERD, base.index_in_formation);
             base.destination_tile = m->destination.shifted(formation_t);
             base.roam_length = 0;
         }
         break;
 
-    case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
+    case ACTION_197_HYENA_MOVING:
         base.move_ticks(2);
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = base.previous_tile_direction;
@@ -88,7 +88,7 @@ void figure_hyena::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_199_WOLF_ATTACKING:
+    case ACTION_199_HYENA_ATTACKING:
         base.move_ticks(2);
         if (direction() == DIR_FIGURE_NONE) {
             int target_id = figure_combat_get_target_for_hyena(tile(), 6);

@@ -75,7 +75,7 @@ void figure_ostrich_hunter::figure_action() {
         }
         break;
 
-    case ACTION_13_WAIT_FOR_ACTION: // pitpat
+    case ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION: // pitpat
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }
@@ -115,7 +115,7 @@ void figure_ostrich_hunter::figure_action() {
                 scared_animals_in_area(prey->tile, /*dist*/16);
             } else if (dist >= 2) {
                 base.wait_ticks = 12;
-                advance_action(ACTION_13_WAIT_FOR_ACTION);
+                advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
             } else {
                 base.direction = calc_missile_shooter_direction(tile(), prey->tile);
                 base.animctx.restart([this] {
@@ -213,7 +213,7 @@ void figure_ostrich_hunter::update_animation() {
         break;
 
     case ACTION_8_RECALCULATE:
-    case ACTION_13_WAIT_FOR_ACTION:
+    case ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION:
         animkey = animkeys().fight;
         break;
 

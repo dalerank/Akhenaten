@@ -2,6 +2,12 @@
 
 #include "figure_animal.h"
 
+enum e_hyena_action {
+    ACTION_196_HYENA_AT_REST = 196,
+    ACTION_197_HYENA_MOVING = 197,
+    ACTION_199_HYENA_ATTACKING = 199,
+};
+
 class figure_hyena : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_HYENA, figure_hyena)
