@@ -507,7 +507,6 @@ building_courthouse {
     work { pos[80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
   }
 
-  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   min_houses_coverage : 50
   building_size : 3

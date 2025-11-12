@@ -326,6 +326,18 @@ figure_horses = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
+figure_ballista {
+	animations {
+		flying { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
+		eating { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BIRDS }
+	}
+
+	category: figure_category_inactive
+	max_damage: 100
+	terrain_usage : TERRAIN_USAGE_ANIMAL
+}
+
 figure_birds = {
 	animations : {
 		flying : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
