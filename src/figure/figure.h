@@ -53,6 +53,7 @@ class figure_ostrich;
 class figure_antelope;
 class figure_hippo;
 class figure_animal;
+class figure_ballista;
 
 struct animation_t;
 struct figure_static_params;
@@ -236,6 +237,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(hippo)
     ALLOW_SMART_CAST_FIGURE(antelope)
     ALLOW_SMART_CAST_FIGURE(animal)
+    ALLOW_SMART_CAST_FIGURE(ballista)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -391,7 +393,6 @@ public:
     void enemy53_axe_action();
     void enemy_gladiator_action();
     void enemy_kingdome_soldier_action();
-    void ballista_action();
     void hippodrome_horse_action();
 
     nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
@@ -574,6 +575,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(antelope)
     ALLOW_SMART_CAST_FIGURE_I(hippo)
     ALLOW_SMART_CAST_FIGURE_I(animal)
+    ALLOW_SMART_CAST_FIGURE_I(ballista)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -659,6 +661,7 @@ GENERATE_SMART_CAST_FIGURE(ostrich)
 GENERATE_SMART_CAST_FIGURE(antelope)
 GENERATE_SMART_CAST_FIGURE(hippo)
 GENERATE_SMART_CAST_FIGURE(animal)
+GENERATE_SMART_CAST_FIGURE(ballista)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {
