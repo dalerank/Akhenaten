@@ -3,8 +3,6 @@
 #include "figure/figure.h"
 
 enum e_water_carrier_action {
-    ACTION_10_WATER_CARRIER_GOING = 10,
-    ACTION_11_WATER_CARRIER_RETURNING_FROM_PATROL = 11,
     ACTION_72_WATER_CARRIER_ROAMING = 72,
     ACTION_73_WATER_CARRIER_RETURNING = 73,
 };

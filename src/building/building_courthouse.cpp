@@ -5,6 +5,7 @@
 #include "graphics/elements/ui.h"
 #include "figure/figure.h"
 #include "window/window_building_info.h"
+#include "figuretype/figure_magistrate.h"
 #include "js/js_game.h"
 #include "graphics/animation.h"
 #include "city/city_labor.h"
@@ -45,7 +46,7 @@ void info_window_courthouse::init(object_info &c) {
 }
 
 void building_courthouse::spawn_figure() {
-    common_spawn_roamer(FIGURE_MAGISTRATE, 50, FIGURE_ACTION_125_ROAMING);
+    common_spawn_roamer(FIGURE_MAGISTRATE, current_params().min_houses_coverage, (e_figure_action)ACTION_125_MAGISTRATE_ROAMING);
 }
 
 void building_courthouse::update_graphic() {

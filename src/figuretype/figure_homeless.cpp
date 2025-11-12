@@ -186,13 +186,11 @@ void figure_homeless::figure_before_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case FIGURE_ACTION_125_ROAMING:
-    case ACTION_1_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         // do nothing
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
-    case ACTION_2_ROAMERS_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         // do nothing
         break;
     }

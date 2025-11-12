@@ -655,7 +655,7 @@ int building::get_figures_number(e_figure_type ftype) {
 
 bool building::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) {
     if (common_spawn_figure_trigger(min_houses)) {
-        create_roaming_figure(type, created_action);
+        create_roaming_figure(type, created_action, BUILDING_SLOT_SERVICE);
         return true;
     }
     return false;
@@ -704,7 +704,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
         return;
     }
 
-    create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
+    create_roaming_figure(FIGURE_LABOR_SEEKER, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
 }
 
 void building::check_labor_problem() {

@@ -29,7 +29,7 @@ void building_water_supply::spawn_figure() {
         base.show_on_problem_overlay = 2;
     }
 
-    common_spawn_roamer(FIGURE_WATER_CARRIER, 50, FIGURE_ACTION_125_ROAMING);
+    common_spawn_roamer(FIGURE_WATER_CARRIER, current_params().min_houses_coverage, ACTION_125_ROAMER_ROAMING);
 
     //    check_labor_problem();
     //    if (has_figure_of_type(FIGURE_WATER_CARRIER))

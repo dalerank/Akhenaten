@@ -583,13 +583,11 @@ void figure_impl::figure_roaming_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case FIGURE_ACTION_125_ROAMING:
-    case ACTION_1_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         base.do_roam();
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
-    case ACTION_2_ROAMERS_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         base.do_returnhome();
         break;
     }

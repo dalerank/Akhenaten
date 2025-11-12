@@ -5,7 +5,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_library)
 
 void building_library::spawn_figure() {
-    common_spawn_roamer(FIGURE_LIBRARIAN, 50, FIGURE_ACTION_125_ROAMING);
+    common_spawn_roamer(FIGURE_LIBRARIAN, current_params().min_houses_coverage, ACTION_125_ROAMER_ROAMING);
     check_labor_problem();
     //    if (has_figure_of_type(FIGURE_LIBRARIAN))
     //        return;

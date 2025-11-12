@@ -226,8 +226,8 @@ void building_house::spawn_figure() {
         return;
     }
 
-    if (type() >= BUILDING_HOUSE_COMMON_MANOR) {
-        common_spawn_roamer(FIGURE_NOBLES, 50, FIGURE_ACTION_125_ROAMING);
+    if (is_nobles() && house_population() > 20) {
+        common_spawn_roamer(FIGURE_NOBLES, 0, (e_figure_action)125);
     }
 }
 

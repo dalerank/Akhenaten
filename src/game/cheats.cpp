@@ -119,7 +119,7 @@ static void game_cheat_spawn_nobles(pcstr args) {
         if (!buildings[i]->has_road_access) {
             continue;
         }
-        buildings[i]->create_roaming_figure(FIGURE_NOBLES, FIGURE_ACTION_125_ROAMING);
+        buildings[i]->create_roaming_figure(FIGURE_NOBLES, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
     }
 }
 
