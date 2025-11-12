@@ -2,7 +2,7 @@
 
 #include "figuretype/figure_enemy.h"
 
-enum e_action_enemy_archer {
+enum e_action_enemy_spearman {
     ACTION_151_ENEMY_SPEARMAN_INITIAL = 151,
     ACTION_152_ENEMY_SPEARMAN_WAITING = 152,
     ACTION_153_ENEMY_SPEARMAN_MARCHING = 153,
