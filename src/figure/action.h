@@ -3,7 +3,7 @@
 #include <cstdint>
 
 enum e_figure_action {
-    FIGURE_ACTION_149_CORPSE = 149,
+
     FIGURE_ACTION_150_ATTACK = 150,
     FIGURE_ACTION_151_ENEMY_INITIAL = 151,
     FIGURE_ACTION_152_ENEMY_WAITING = 152,
@@ -49,12 +49,11 @@ enum e_figure_action {
     ACTION_16_FLEEING = 16,
     ACTION_18_ROOSTING = 18,
     FIGURE_ACTION_19_ANIMAL_IDLE = 19,
-    ACTION_24_ANIMAL_SPAWNED = 24,
     FIGURE_ACTION_MAX
 };
 
 enum e_common_action {
-
+    FIGURE_ACTION_149_CORPSE = 149,
 };
 
 enum e_roamer_action {
