@@ -102,6 +102,7 @@ enum e_figure_flag {
     e_figure_flag_enemy = 1 << 0,
     e_figure_flag_friendly = 1 << 1,
     e_figure_flag_soldier = 1 << 2,
+    e_figure_flag_criminal = 1 << 3,
 };
 
 class figure {
@@ -254,10 +255,10 @@ public:
 
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
+    inline bool is_criminal() const { return !!(flags & e_figure_flag_criminal); }
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
     inline bool is_soldier() const { return !!(flags & e_figure_flag_soldier); }
     bool is_herd();
-    bool is_attacking_native(); 
     bool is_citizen();          
     bool is_non_citizen();
     bool is_fighting_friendly(); 
@@ -383,7 +384,6 @@ public:
 
     void editor_flag_action();
     void noble_action();
-    void indigenous_native_action();
     void enemy_camel_action();
     void enemy_elephant_action();
     void enemy_chariot_action();
@@ -391,7 +391,6 @@ public:
     void enemy50_sword_action();
     void enemy52_mounted_archer_action();
     void enemy53_axe_action();
-    void enemy_gladiator_action();
     void enemy_kingdome_soldier_action();
     void hippodrome_horse_action();
 

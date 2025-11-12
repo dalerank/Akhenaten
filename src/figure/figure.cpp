@@ -141,7 +141,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
         int dist;
         if (f->type == FIGURE_PROTESTER || f->type == FIGURE_RIOTER)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
-        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->is_enemy())
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
         else if (f->is_enemy())
             dist = 3 * calc_maximum_distance(tile2i(x, y), f->tile);
@@ -189,7 +189,7 @@ nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::f
             break;
 
         case NEARBY_HOSTILE: // hostile
-            if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
+            if (f->is_enemy() || f->is_criminal())
                 category_check = true;
             break;
         }
@@ -203,8 +203,7 @@ nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::f
                 if (rule == NEARBY_HOSTILE) {
                     if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_RIOTER)
                         dist = calc_maximum_distance(tile, f->tile);
-                    else if (f->type == FIGURE_INDIGENOUS_NATIVE
-                        && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+                    else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->is_enemy())
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->is_enemy())
                         dist = 3 * calc_maximum_distance(tile, f->tile);
@@ -475,7 +474,7 @@ bool figure::is_non_citizen() {
         return id;
     }
 
-    if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+    if (type == FIGURE_INDIGENOUS_NATIVE && is_enemy())
         return id;
 
     if (/*type == FIGURE_WOLF*/ type == FIGURE_OSTRICH || type == FIGURE_BIRDS || type == FIGURE_ANTELOPE)
@@ -510,10 +509,6 @@ void figure::noble_action() {
 
 e_minimap_figure_color figure::get_figure_color() {
     if (is_enemy()) {
-        return FIGURE_COLOR_ENEMY;
-    }
-
-    if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
 
