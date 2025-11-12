@@ -21,6 +21,7 @@
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/building_ghost.h"
+#include "figuretype/figure_entertainer.h"
 #include "sound/sound_building.h"
 #include "figure/figure.h"
 
@@ -188,16 +189,16 @@ void building_bandstand::spawn_figure() {
     }
 
     auto &d = runtime_data();
-    if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         if (d.juggler_visited > 0) {
-            create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+            create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
             return;
         }
     }
 
-    if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_MUSICIAN)) {
         if (d.musician_visited > 0) {
-            create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
+            create_roaming_figure(FIGURE_MUSICIAN, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
             return;
         }
     }

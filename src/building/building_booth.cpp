@@ -23,6 +23,7 @@
 #include "widget/city/building_ghost.h"
 #include "sound/sound_building.h"
 #include "construction/build_planner.h"
+#include "figuretype/figure_entertainer.h"
 #include "city/city_labor.h"
 #include "figure/figure.h"
 #include "js/js_game.h"
@@ -126,7 +127,7 @@ void building_booth::spawn_figure() {
 
     auto &d = runtime_data();
     if (d.juggler_visited > 0) {
-        create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
     }
 }
 

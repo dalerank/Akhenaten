@@ -16,9 +16,9 @@ void building_conservatory::spawn_figure() {
     int dest_id = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_MUSICIAN, {BUILDING_PAVILLION, BUILDING_BANDSTAND});
     building* dest = building_get(dest_id);
     if (dest->id > 0) {
-        create_figure_with_destination(FIGURE_MUSICIAN, dest, FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        create_figure_with_destination(FIGURE_MUSICIAN, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE);
     } else {
-        common_spawn_roamer(FIGURE_MUSICIAN, 50, FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        common_spawn_roamer(FIGURE_MUSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 

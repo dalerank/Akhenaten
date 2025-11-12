@@ -779,6 +779,7 @@ building_juggler_school {
   meta { text_id:77, help_link:"message_building_booth" }
 
   building_size : 2
+  min_houses_coverage : 50
   cost [ 10, 20, 50, 100, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
   laborers[5]
@@ -794,6 +795,7 @@ building_dancer_school {
     work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
 
+  min_houses_coverage : 50
   building_size : 4
   meta { help_id:75, text_id:76 }
   cost [ 30, 50, 100, 150, 200 ]
@@ -1137,6 +1139,7 @@ building_bandstand {
   }
 
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  min_houses_coverage : 100
   fire_proof: true
   meta { help_id:72, text_id:71 }
   building_size : 3
@@ -1237,12 +1240,16 @@ building_pavilion = {
     {type: BUILDING_BANDSTAND, offset:[1, 3], main:false},
     {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
     {type: BUILDING_BOOTH, offset:[2, 0], main:false}
-  ],
-  meta : { help_id: 73, text_id: 74 }
-  building_size : 4,
-  cost : [ 100, 200, 300, 500, 800 ]
-  desirability : { value:[6], step:[1], step_size:[-1], range: [6] }
-  laborers:[20], fire_risk:[4], damage_risk: [4]
+  ]
+
+  min_houses_coverage : 100
+  meta { help_id: 73, text_id: 74 }
+  building_size : 4
+  cost [ 100, 200, 300, 500, 800 ]
+  desirability { value[6], step[1], step_size[-1], range[6] }
+  laborers [20]
+  fire_risk [4]
+  damage_risk [4]
 }
 
 building_festival_square = {
@@ -2234,6 +2241,7 @@ building_conservatory {
     work { pos[52, -18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 }
   }
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  min_houses_coverage : 50
   meta { help_id:75, text_id:75 }
   building_size : 3
   cost [ 20, 50, 90, 150, 200 ]
