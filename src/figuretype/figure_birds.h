@@ -2,6 +2,12 @@
 
 #include "figure_animal.h"
 
+enum e_birds_action {
+    ACTION_8_BIRDS_RECALCULATE = 8,
+    ACTION_16_BIRD_FLEEING = 16,
+    ACTION_24_BIRDS_SPAWNED = 24,
+};
+
 class figure_birds : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_BIRDS, figure_birds)
