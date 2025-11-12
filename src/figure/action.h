@@ -35,18 +35,9 @@ enum e_figure_action {
     FIGURE_ACTION_201_HIPPODROME_HORSE_RACING = 201,
     FIGURE_ACTION_202_HIPPODROME_HORSE_DONE = 202,
 
-    FIGURE_ACTION_10_HIPPO_MOVING = 10,
-    FIGURE_ACTION_19_HIPPO_IDLE = 19,
-    FIGURE_ACTION_24_HIPPO_CREATED = 24,
-
     // pharaoh
     ACTION_1_ROAMING = 1,
     ACTION_2_ROAMERS_RETURNING = 2,
-    //    ACTION_3,
-    //    ACTION_4,
-    //    ACTION_5,
-    //    ACTION_6,
-    //    ACTION_7,
     ACTION_8_RECALCULATE = 8,
     ACTION_10_GOING = 10,
     ACTION_10_PICKUP_ANIMAL = 10,
@@ -66,22 +57,8 @@ enum e_figure_action {
     ACTION_16_EMIGRANT_RANDOM = 16,
     ACTION_16_HOMELESS_RANDOM = 16,
     ACTION_16_FLEEING = 16,
-    //    ACTION_17,
     ACTION_18_ROOSTING = 18,
     FIGURE_ACTION_19_ANIMAL_IDLE = 19,
-    //    ACTION_20,
-    //    ACTION_21,
-    //    ACTION_22,
-    //    ACTION_23,
-    //    ACTION_24_SPAWNING = 24,
     ACTION_24_ANIMAL_SPAWNED = 24,
-    //    ACTION_25,
-    //    ACTION_26,
-    //    ACTION_27,
-    //    ACTION_28,
-    //    ACTION_29,
-    //    ACTION_30,
-
-    //    ACTION_NONE = -1,
     FIGURE_ACTION_MAX
 };

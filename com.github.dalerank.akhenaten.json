@@ -27,9 +27,10 @@
                 {
                     "type" : "shell",
                     "commands" : [
-                        "rm -rf _deps/freetype-src/CMakeCache.txt _deps/freetype-src/CMakeFiles || true",
-                        "rm -rf _deps/harfbuzz-src/CMakeCache.txt _deps/harfbuzz-src/CMakeFiles || true",
-                        "rm -rf _deps/stb-src/CMakeCache.txt _deps/stb-src/CMakeFiles || true"
+                        "rm -rf _deps/freetype-src || true",
+                        "rm -rf _deps/harfbuzz-src || true",
+                        "rm -rf _deps/stb-src || true",
+                        "mkdir -p _deps"
                     ]
                 },
                 {
