@@ -29,6 +29,7 @@
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
+#include "figuretype/figure_flotsam.h"
 #include "city_warnings.h"
 #include "game/game_events.h"
 #include "empire/empire_object.h"
@@ -1424,7 +1425,7 @@ void city_t::environment_t::river_update_flotsam() {
     tile2i river_entry = scenario_map_river_entry();
     for (int i = 0; i < 1; i++) {
         figure* f = figure_create(FIGURE_FLOTSAM, river_entry, DIR_0_TOP_RIGHT);
-        f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
+        f->action_state = (e_figure_action)ACTION_128_FLOTSAM_CREATED;
         f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
         f->allow_move_type = EMOVE_DEEPWATER;
