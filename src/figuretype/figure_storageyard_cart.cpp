@@ -11,7 +11,7 @@
 #include "js/js_game.h"
 #include "game/game_config.h"
 
-figures::model_t<figure_storageyard_cart> storageyard_cart_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_storageyard_cart);
 
 void figure_storageyard_cart::figure_before_action() {
     if (has_destination()) {
@@ -104,17 +104,14 @@ void figure_storageyard_cart::figure_action() {
         calculate_destination(true);
         break;
 
-    case ACTION_9_WAREHOUSECART_DELIVERING_GOODS:
     case ACTION_51_WAREHOUSECART_DELIVERING_RESOURCE:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_52_WAREHOUSECART_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_12_DELIVERING_UNLOADING_GOODS:
     case ACTION_52_WAREHOUSECART_AT_DELIVERY_BUILDING:
-        do_deliver(true, ACTION_11_RETURNING_EMPTY, ACTION_11_RETURNING_EMPTY);
+        do_deliver(true, ACTION_53_WAREHOUSECART_RETURNING_EMPTY, ACTION_53_WAREHOUSECART_RETURNING_EMPTY);
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case ACTION_53_WAREHOUSECART_RETURNING_EMPTY:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
@@ -127,7 +124,6 @@ void figure_storageyard_cart::figure_action() {
         do_retrieve(ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD);
         break;
 
-    case ACTION_14_RETURNING_WITH_FOOD:
     case ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD:
     case ACTION_59_WAREHOUSECART_RETURNING_WITH_RESOURCE:
         if (do_returnhome(TERRAIN_USAGE_ROADS)) {
@@ -141,7 +137,7 @@ void figure_storageyard_cart::figure_action() {
         break;
 
     case ACTION_57_WAREHOUSECART_GETTING_RESOURCE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS,ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS: // used exclusively for getting resources
