@@ -567,13 +567,23 @@ figure_standard_bearer {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
+figure_native = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
+		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+	}
+
+	category: figure_category_native
+	max_damage: 10
+}
+
 figure_native_trader = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
 		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
 	}
 
-	category: figure_category_citizen
+	category: figure_category_native
 	max_damage: 10
 }
 

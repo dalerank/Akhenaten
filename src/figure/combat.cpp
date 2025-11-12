@@ -38,7 +38,7 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
             continue;
         }
 
-        if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native()) {
+        if (f->is_enemy() || f->is_criminal()) {
             int distance = calc_maximum_distance(tile, f->tile);
             if (distance <= max_distance) {
                 if (f->targeted_by_figure_id) {
@@ -64,8 +64,9 @@ int figure_combat_get_target_for_soldier(tile2i tile, int max_distance) {
             continue;
         }
 
-        if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
+        if (f->is_enemy() || f->is_criminal()) {
             return f->id;
+        }
     }
     return 0;
 }
@@ -113,7 +114,7 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
             continue;
         }
 
-        if (f->is_enemy() || f->is_herd() || f->is_attacking_native()) {
+        if (f->is_enemy() || f->is_herd()) {
             int distance = calc_maximum_distance(shooter->tile, f->tile);
             if (distance < min_distance && figure_movement_can_launch_cross_country_missile(shooter->tile, f->tile)) {
                 min_distance = distance;
@@ -186,10 +187,6 @@ target_figure figure_combat_get_missile_target_for_enemy(figure* enemy, int max_
     }
 
     return { 0, tile2i::invalid };
-}
-
-bool figure::is_attacking_native() {
-    return type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING;
 }
 
 void figure::figure_combat_handle_corpse() {
@@ -332,7 +329,7 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         else if (opponent->action_state == FIGURE_ACTION_149_CORPSE)
             attack = 0;
         else if (my_category == figure_category_armed && opponent_category == figure_category_native) {
-            if (opponent->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+            if (opponent->is_enemy()) {
                 attack = 1;
             }
 

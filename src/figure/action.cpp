@@ -276,7 +276,6 @@ void figure::action_perform() {
         switch (type) {
         case 36: editor_flag_action(); break;
         case FIGURE_NOBLES: noble_action(); break; 
-        case 41: indigenous_native_action(); break;
         case 46: enemy_camel_action(); break;
         case 47: enemy_elephant_action(); break;
         case 48: enemy_chariot_action(); break;
@@ -284,7 +283,6 @@ void figure::action_perform() {
         case 50: enemy50_sword_action(); break; // 50
         case 52: enemy52_mounted_archer_action(); break;
         case 53: enemy53_axe_action(); break;
-        case 54: enemy_gladiator_action(); break;
         case 57: enemy_kingdome_soldier_action(); break;
         case FIGURE_CHARIOR_RACER: hippodrome_horse_action(); break;
 

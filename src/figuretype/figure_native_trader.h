@@ -3,6 +3,13 @@
 #include "figuretype/figure_trader.h"
 #include "empire/trader_handler.h"
 
+enum e_native_trader_action {
+    ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE = 160,
+    ACTION_161_NATIVE_TRADER_RETURNING = 161,
+    ACTION_162_NATIVE_TRADER_CREATED = 162,
+    ACTION_163_NATIVE_TRADER_AT_WAREHOUSE = 163,
+};
+
 class figure_native_trader : public figure_trader {
 public:
     FIGURE_METAINFO(FIGURE_NATIVE_TRADER, figure_native_trader)

@@ -21,10 +21,10 @@ void figure_native_trader::figure_action() {
     base.use_cart = true;
 
     switch (action_state()) {
-    case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
+    case ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE)
-            advance_action(FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE);
+            advance_action(ACTION_163_NATIVE_TRADER_AT_WAREHOUSE);
         else if (direction() == DIR_FIGURE_REROUTE)
             route_remove();
         else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -35,8 +35,7 @@ void figure_native_trader::figure_action() {
             poof();
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
+    case ACTION_161_NATIVE_TRADER_RETURNING:
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_CAN_NOT_REACH)
             poof();
@@ -44,7 +43,7 @@ void figure_native_trader::figure_action() {
             route_remove();
         break;
 
-    case FIGURE_ACTION_162_NATIVE_TRADER_CREATED:
+    case ACTION_162_NATIVE_TRADER_CREATED:
         //            is_ghost = true;
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
@@ -52,7 +51,7 @@ void figure_native_trader::figure_action() {
             tile2i tile;
             int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
             if (building_id) {
-                advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
+                advance_action(ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                 set_destination(building_id);
                 base.destination_tile = tile;
             } else {
@@ -62,7 +61,7 @@ void figure_native_trader::figure_action() {
         base.animctx.frame = 0;
         break;
 
-    case FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE:
+    case ACTION_163_NATIVE_TRADER_AT_WAREHOUSE:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
@@ -74,11 +73,11 @@ void figure_native_trader::figure_action() {
                 tile2i tile;
                 int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
                 if (building_id) {
-                    advance_action(FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
+                    advance_action(ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                     set_destination(building_id);
                     base.destination_tile = tile;
                 } else {
-                    advance_action(FIGURE_ACTION_161_NATIVE_TRADER_RETURNING);
+                    advance_action(ACTION_161_NATIVE_TRADER_RETURNING);
                     base.destination_tile = base.source_tile;
                 }
             }
