@@ -1,6 +1,7 @@
 #include "city_animals.h"
 
 #include "core/random.h"
+#include "figuretype/figure_animal.h"
 #include "dev/debug.h"
 
 void city_animals_t::create_herd(tile2i tile) {
@@ -32,9 +33,14 @@ void city_animals_t::create_herd(tile2i tile) {
             random_generate_next();
 
             figure *f = figure_create(herd_type, tile, DIR_0_TOP_RIGHT);
-            f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             f->formation_id = formation_id;
             f->wait_ticks = f->id & 0x1f;
+
+            auto fanimal = f->dcast_animal();
+
+            if (fanimal) {
+                fanimal->herd_rest();
+            }
         }
     }
 }

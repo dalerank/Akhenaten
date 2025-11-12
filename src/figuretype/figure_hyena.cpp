@@ -81,7 +81,7 @@ void figure_hyena::figure_action() {
         base.move_ticks(2);
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = base.previous_tile_direction;
-            base.action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            base.action_state = ACTION_196_HYENA_AT_REST;
             base.wait_ticks = id() & 0x1f;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
@@ -103,7 +103,7 @@ void figure_hyena::figure_action() {
                 route_remove();
             } else {
                 base.direction = base.previous_tile_direction;
-                base.action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+                base.action_state = ACTION_196_HYENA_AT_REST;
                 base.wait_ticks = id() & 0x1f;
             }
 
@@ -112,7 +112,7 @@ void figure_hyena::figure_action() {
 
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = base.previous_tile_direction;
-            base.action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            base.action_state = ACTION_196_HYENA_AT_REST;
             base.wait_ticks = id() & 0x1f;
         }
         break;
@@ -128,7 +128,7 @@ void figure_hyena::update_animation() {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_DEATH) + base.figure_image_corpse_offset();
     } else if (action_state() == FIGURE_ACTION_150_ATTACK) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_ATTACK) + 104 + dir + 8 * (base.attack_image_offset / 4);
-    } else if (action_state() == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
+    } else if (action_state() == ACTION_196_HYENA_AT_REST) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     } else {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * base.animctx.frame;

@@ -46,6 +46,7 @@ public:
     virtual void apply_damage(int hit_dmg, figure_id attacker_id) override;
 
     virtual void herd_moved() override;
+    virtual void herd_rest() override;
     virtual void moveto(tile2i tile) override;
 
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
