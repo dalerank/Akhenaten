@@ -2182,7 +2182,8 @@ building_firehouse {
     work { pos [25, -30], id:78, offset:1, max_frames:11 }
   }
 
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  min_houses_coverage : 50
   meta { help_id: 355, text_id: 164 }
   building_size : 1
   cost [ 6, 12, 25, 40, 60 ]
@@ -2193,17 +2194,21 @@ building_firehouse {
 }
 
 building_police_station = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
+  animations {
+    preview { pack:PACK_GENERAL, id:64 },
+    base { pack:PACK_GENERAL, id:64 },
+    work { pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
   }
+
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  min_houses_coverage : 50
   meta : { help_id: 86, text_id: 88 }
   building_size : 1
-  cost: [ 6, 12, 25, 40, 60 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[6], fire_risk:[2], damage_risk: [2]
+  cost [ 6, 12, 25, 40, 60 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers [6]
+  fire_risk [2]
+  damage_risk [2]
 }
 
 building_architect_post {
