@@ -272,7 +272,7 @@ bool figure_docker::deliver_import_resource(building* b) {
     }
 
     auto ship  = figure_get<figure_trade_ship>(ship_id);
-    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->base.get_carrying_amount() <= 0) {
+    if (ship->action_state() != ACTION_112_TRADE_SHIP_MOORED || ship->base.get_carrying_amount() <= 0) {
         return false;
     }
 
@@ -302,7 +302,7 @@ bool figure_docker::fetch_export_resource(building* b) {
     }
 
     auto ship = figure_get<figure_trade_ship>(ship_id);
-    if (ship->action_state() != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->total_bought() >= ship->max_capacity()) {
+    if (ship->action_state() != ACTION_112_TRADE_SHIP_MOORED || ship->total_bought() >= ship->max_capacity()) {
         return false;
     }
 
@@ -346,7 +346,7 @@ void figure_docker::figure_action() {
             dock.trade_ship = 0;
         } else if (ship->empire_trader().has_traded_max()) {
             dock.trade_ship = 0;
-        } else if (ship->action_state() == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
+        } else if (ship->action_state() == ACTION_115_TRADE_SHIP_LEAVING) {
             dock.trade_ship = 0;
         }
     }

@@ -11,6 +11,15 @@ enum e_trade_ship_rule {
     TRADE_SHIP_SELLING = 2,
 };
 
+enum e_trade_ship_action {
+    ACTION_110_TRADE_SHIP_CREATED = 110,
+    ACTION_111_TRADE_SHIP_GOING_TO_DOCK = 111,
+    ACTION_112_TRADE_SHIP_MOORED = 112,
+    ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE = 113,
+    ACTION_114_TRADE_SHIP_ANCHORED = 114,
+    ACTION_115_TRADE_SHIP_LEAVING = 115,
+};
+
 struct empire_city;
 struct event_trade_ship_arrival { int cid; uint8_t tid; pcstr location; };
 
