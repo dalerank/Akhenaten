@@ -139,13 +139,8 @@ void figure_info_window::init(object_info &c) {
         c.can_play_sound = false;
     }
 
-    int image_id = f->type;
-    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        image_id = 18;
-    }
-
     ui.check_errors = false;
-    ui["bigimage"].image(image_id);
+    ui["bigimage"].image(f->type);
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
         xstring btn_id; btn_id.printf("button_figure%d", i);
