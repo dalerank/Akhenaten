@@ -3,10 +3,8 @@
 #include <cstdint>
 
 enum e_figure_action {
-    FIGURE_ACTION_148_FLEEING = 148,
     FIGURE_ACTION_149_CORPSE = 149,
     FIGURE_ACTION_150_ATTACK = 150,
-    FIGURE_ACTION_150_OSTRICH_EATING = 150,
     FIGURE_ACTION_151_ENEMY_INITIAL = 151,
     FIGURE_ACTION_152_ENEMY_WAITING = 152,
     FIGURE_ACTION_153_ENEMY_MARCHING = 153,
@@ -48,7 +46,6 @@ enum e_figure_action {
     ACTION_15_ANIMAL_TERRIFIED = 15,
     ACTION_15_GETTING_GOODS = 15,
     ACTION_16_EMIGRANT_RANDOM = 16,
-    ACTION_16_HOMELESS_RANDOM = 16,
     ACTION_16_FLEEING = 16,
     ACTION_18_ROOSTING = 18,
     FIGURE_ACTION_19_ANIMAL_IDLE = 19,
@@ -56,5 +53,13 @@ enum e_figure_action {
     FIGURE_ACTION_MAX
 };
 
-const e_figure_action ACTION_125_ROAMER_ROAMING = e_figure_action(125);
-const e_figure_action ACTION_126_ROAMER_RETURNING = e_figure_action(126);
+enum e_common_action {
+
+};
+
+enum e_roamer_action {
+    ACTION_125_ROAMER_ROAMING = 125,
+    ACTION_126_ROAMER_RETURNING = 126
+};
+
+const e_figure_action FIGURE_ACTION_148_FLEEING = e_figure_action(148);

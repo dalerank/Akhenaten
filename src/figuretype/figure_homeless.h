@@ -10,6 +10,7 @@ enum e_homeless_action {
     ACTION_8_HOMELESS_GOING_TO_HOUSE = 8,
     ACTION_9_HOMELESS_ENTERING_HOUSE = 9,
     ACTION_10_HOMELESS_ENTERING_HOUSE = 10,
+    ACTION_16_HOMELESS_RANDOM = 16,
 };
 
 class figure_homeless : public figure_impl {
