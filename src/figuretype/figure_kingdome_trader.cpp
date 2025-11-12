@@ -75,14 +75,12 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     int warehouse_id = get_closest_storageyard(src_tile, d.empire_city, distance_to_entry, dst);
     if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
-        base.action_state = ACTION_101_TRADE_CARAVAN_ARRIVING;
-        base.destination_tile = dst;
+        advance_action(ACTION_101_TRADE_CARAVAN_ARRIVING, dst);
     } else {
         base.state = FIGURE_STATE_ALIVE;
         base.destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
-        advance_action(ACTION_16_EMIGRANT_RANDOM);
-        base.action_state = ACTION_103_TRADE_CARAVAN_LEAVING;
+        advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
     }
 }
 

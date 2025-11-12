@@ -37,7 +37,7 @@ void figure_birds::figure_action() {
         break;
 
     case ACTION_16_BIRD_FLEEING: // fleeing
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_18_ROOSTING + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_18_BIRDS_ROOSTING + (random_byte() & 0x1), ACTION_8_RECALCULATE)) {
             if (map_has_figure_but(base.destination_tile, id())) {
                 base.wait_ticks = 1;
                 advance_action(ACTION_8_RECALCULATE);
@@ -55,7 +55,7 @@ void figure_birds::update_animation() {
         image_set_animation(animkeys().idle);
         break;
 
-    case ACTION_18_ROOSTING: // roosting
+    case ACTION_18_BIRDS_ROOSTING: // roosting
         image_set_animation(animkeys().eating);
         break;
 
