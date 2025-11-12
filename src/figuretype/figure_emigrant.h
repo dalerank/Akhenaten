@@ -13,6 +13,7 @@ enum e_emigrant_action : uint16_t {
     FIGURE_ACTION_4_EMIGRANT_CREATED = 4,
     FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE = 5,
     FIGURE_ACTION_6_EMIGRANT_LEAVING = 6,
+    ACTION_16_EMIGRANT_RANDOM = 16,
 };
 
 class figure_emigrant : public figure_impl {
