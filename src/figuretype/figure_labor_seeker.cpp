@@ -18,11 +18,11 @@ void figure_labor_seeker::figure_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case FIGURE_ACTION_125_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_126_ROAMER_RETURNING);
+    case ACTION_125_ROAMER_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
     }

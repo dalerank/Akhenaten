@@ -19,31 +19,19 @@ void figure_water_carrier::figure_before_action() {
 }
 
 void figure_water_carrier::figure_action() {
-    // TODO
-    //    if (config_get(CONFIG_GP_CH_WATER_CARRIER_FIREFIGHT))
-    //        if (fight_fire())
-    //            image_set_animation(GROUP_FIGURE_PREFECT);
-
     building* b = home();
     switch (action_state()) {
-    case ACTION_10_WATER_CARRIER_GOING:
     case ACTION_72_WATER_CARRIER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
         break;
 
-    case ACTION_11_WATER_CARRIER_RETURNING_FROM_PATROL:
     case ACTION_73_WATER_CARRIER_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
         break;
-    //        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-    //            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
-    //                wait_ticks = 50;
-    //            break;
-    //        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-    //            extinguish_fire();
-    //            direction = attack_direction;
-    //            image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
-    //            break;
+
+    default:
+        advance_action(ACTION_72_WATER_CARRIER_ROAMING);
+        break;
     }
 }
 

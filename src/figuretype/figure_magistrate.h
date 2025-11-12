@@ -9,6 +9,7 @@ enum e_magistrate_action {
     ACTION_73_MAGISTRATE_RETURNING = 73,
     ACTION_76_MAGISTRATE_GOING_TO_ENEMY = 76,
     ACTION_77_MAGISTRATE_AT_ENEMY = 77,
+    ACTION_125_MAGISTRATE_ROAMING = 125,
 };
 
 class figure_magistrate : public figure_impl {

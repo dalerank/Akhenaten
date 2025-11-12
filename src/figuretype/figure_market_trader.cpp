@@ -9,7 +9,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_trader);
 
 void figure_market_trader::figure_action() {
-    if (action_state() != FIGURE_ACTION_125_ROAMING) {
+    if (action_state() != ACTION_125_ROAMER_ROAMING) {
         return;
     }
 
@@ -30,7 +30,7 @@ figure_sound_t figure_market_trader::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_market_trader::phrase_key() const {
-    if (base.action_state == FIGURE_ACTION_126_ROAMER_RETURNING) {
+    if (base.action_state == ACTION_126_ROAMER_RETURNING) {
         return "goods_are_finished";
     } else {
         return "we_are_selling_goods";

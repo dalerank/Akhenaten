@@ -214,7 +214,7 @@ void figure_entertainer::figure_action() {
         break;
 
     case ACTION_94_ENTERTAINER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_EMPTY);
         break;
 
     case ACTION_11_RETURNING_EMPTY:

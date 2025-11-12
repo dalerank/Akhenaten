@@ -57,7 +57,7 @@ e_sound_channel_city building_temple::sound_channel() const {
 
 void building_temple::spawn_figure() {
     if (is_main()) {
-        common_spawn_roamer(FIGURE_PRIEST, 50, FIGURE_ACTION_125_ROAMING);
+        common_spawn_roamer(FIGURE_PRIEST, current_params().min_houses_coverage, ACTION_125_ROAMER_ROAMING);
     }
 }
 

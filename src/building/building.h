@@ -321,7 +321,7 @@ public:
     int mothball_toggle();
     
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
-    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
+    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot);
     figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE);
     figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot);
 
@@ -330,7 +330,7 @@ public:
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action);
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 

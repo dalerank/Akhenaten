@@ -3,8 +3,6 @@
 #include <cstdint>
 
 enum e_figure_action {
-    FIGURE_ACTION_125_ROAMING = 125,
-    FIGURE_ACTION_126_ROAMER_RETURNING = 126,
     FIGURE_ACTION_130_FLOTSAM_OFF_MAP = 130,
     FIGURE_ACTION_148_FLEEING = 148,
     FIGURE_ACTION_149_CORPSE = 149,
@@ -34,8 +32,6 @@ enum e_figure_action {
     FIGURE_ACTION_202_HIPPODROME_HORSE_DONE = 202,
 
     // pharaoh
-    ACTION_1_ROAMING = 1,
-    ACTION_2_ROAMERS_RETURNING = 2,
     ACTION_8_RECALCULATE = 8,
     ACTION_10_GOING = 10,
     ACTION_10_PICKUP_ANIMAL = 10,
@@ -60,3 +56,6 @@ enum e_figure_action {
     ACTION_24_ANIMAL_SPAWNED = 24,
     FIGURE_ACTION_MAX
 };
+
+const e_figure_action ACTION_125_ROAMER_ROAMING = e_figure_action(125);
+const e_figure_action ACTION_126_ROAMER_RETURNING = e_figure_action(126);

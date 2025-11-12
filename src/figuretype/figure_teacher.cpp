@@ -5,20 +5,21 @@
 #include "city/ratings.h"
 #include "building/building_house.h"
 #include "figure/service.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_teacher> teacher_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_teacher)
 
 void figure_teacher::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_125_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
-            advance_action(FIGURE_ACTION_126_ROAMER_RETURNING);
+            advance_action(ACTION_126_ROAMER_RETURNING);
         }
 
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         ; // nothing here
         break;
 

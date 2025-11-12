@@ -9,15 +9,15 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_embalmer);
 
 void figure_embalmer::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_125_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
-            advance_action(FIGURE_ACTION_126_ROAMER_RETURNING);
+            advance_action(ACTION_126_ROAMER_RETURNING);
         }
 
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         ; // nothing here
         break;
 
