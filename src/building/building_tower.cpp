@@ -12,6 +12,7 @@
 #include "building/building_barracks.h"
 #include "city/city_warnings.h"
 #include "building/building_wall.h"
+#include "figuretype/figure_ballista.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_tower);
@@ -45,8 +46,8 @@ void building_tower::spawn_figure() {
         return;
     }
 
-    if (base.has_figure(0) && !base.has_figure(3)) { // has sentry but no ballista -> create
-        create_figure_generic(FIGURE_BALLISTA, FIGURE_ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
+    if (base.has_figure(0) && !base.has_figure(BUILDING_SLOT_BALLISTA)) { // has sentry but no ballista -> create
+        create_figure_generic(FIGURE_BALLISTA, (e_figure_action)ACTION_180_BALLISTA_CREATED, BUILDING_SLOT_BALLISTA, DIR_0_TOP_RIGHT);
     }
 
     if (!base.has_figure(0)) {
