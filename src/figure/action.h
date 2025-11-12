@@ -3,7 +3,6 @@
 #include <cstdint>
 
 enum e_figure_action {
-    FIGURE_ACTION_130_FLOTSAM_OFF_MAP = 130,
     FIGURE_ACTION_148_FLEEING = 148,
     FIGURE_ACTION_149_CORPSE = 149,
     FIGURE_ACTION_150_ATTACK = 150,

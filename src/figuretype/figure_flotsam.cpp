@@ -52,12 +52,12 @@ void figure_flotsam::figure_action() {
             base.height_adjusted_ticks = 0;
             if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE
                 || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-                base.action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
+                base.action_state = ACTION_130_FLOTSAM_OFF_MAP;
             }
         }
         break;
 
-    case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
+    case ACTION_130_FLOTSAM_OFF_MAP:
         base.min_max_seen = 0;
         base.action_state =ACTION_128_FLOTSAM_CREATED;
         if (base.wait_ticks >= 400) {
