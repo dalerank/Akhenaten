@@ -8,6 +8,7 @@ public:
     virtual figure_animal *dcast_animal() override { return this; }
 
     virtual void herd_moved();
+    virtual void herd_rest();
     virtual void moveto(tile2i tile);
 };
 

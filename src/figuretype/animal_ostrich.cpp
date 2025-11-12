@@ -136,6 +136,10 @@ void figure_ostrich::herd_moved() {
     advance_action(ACTION_8_OSTRICH_RECALCULATE);
 }
 
+void figure_ostrich::herd_rest() {
+    advance_action(ACTION_196_OSTRICH_AT_REST);
+}
+
 void figure_ostrich::moveto(tile2i tile) {
     advance_action(ACTION_10_OSTRICH_GOING, tile);
 }

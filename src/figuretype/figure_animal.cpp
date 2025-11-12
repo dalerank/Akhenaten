@@ -273,6 +273,10 @@ void figure_animal::herd_moved() {
     base.advance_action(14);
 }
 
+void figure_animal::herd_rest() {
+    base.advance_action(196);
+}
+
 void figure_animal::moveto(tile2i tile) {
     base.advance_action(16);
 }
