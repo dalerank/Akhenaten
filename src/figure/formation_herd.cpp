@@ -198,8 +198,7 @@ static void set_figures_to_initial(const formation* m) {
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
-            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK
-                && f->action_state != ACTION_16_FLEEING) {
+            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != ACTION_16_FLEEING) {
                 f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 0;
 
