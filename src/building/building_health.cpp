@@ -80,7 +80,7 @@ bool building_apothecary::draw_ornaments_and_animations_height(painter &ctx, vec
 }
 
 void building_mortuary::spawn_figure() {
-    common_spawn_roamer(FIGURE_EMBALMER, current_params().min_houses_coverage, ACTION_125_ROAMER_ROAMING);
+    common_spawn_roamer(FIGURE_EMBALMER, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
 }
 
 void building_mortuary::update_graphic() {

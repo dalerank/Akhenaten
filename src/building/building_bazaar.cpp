@@ -281,7 +281,7 @@ void building_bazaar::spawn_figure() {
             base.figure_spawn_delay++;
             if (base.figure_spawn_delay > spawn_delay) {
                 base.figure_spawn_delay = 0;
-                base.create_roaming_figure(FIGURE_MARKET_TRADER, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
+                base.create_roaming_figure(FIGURE_MARKET_TRADER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
                 return;
             }
         }

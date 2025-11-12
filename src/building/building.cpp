@@ -704,7 +704,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
         return;
     }
 
-    create_roaming_figure(FIGURE_LABOR_SEEKER, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
+    create_roaming_figure(FIGURE_LABOR_SEEKER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
 }
 
 void building::check_labor_problem() {

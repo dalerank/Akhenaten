@@ -24,5 +24,5 @@ bool building_dentist::draw_ornaments_and_animations_height(painter &ctx, vec2i 
 }
 
 void building_dentist::spawn_figure() {
-    common_spawn_roamer(FIGURE_DENTIST, current_params().min_houses_coverage, ACTION_125_ROAMER_ROAMING);
+    common_spawn_roamer(FIGURE_DENTIST, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
 }
