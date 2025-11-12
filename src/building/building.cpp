@@ -677,7 +677,7 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
-        figure* f = create_cartpusher(output.resource, amounts_to_carry);
+        figure* f = create_cartpusher(output.resource, amounts_to_carry, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         stored_amount_first -= amounts_to_carry;
         return f;
     }

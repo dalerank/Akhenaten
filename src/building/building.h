@@ -323,7 +323,7 @@ public:
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
     figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
     figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE);
-    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER);
+    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot);
 
     int worker_percentage() const;
     int figure_spawn_timer();
@@ -711,7 +711,7 @@ public:
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) { return base.create_figure_generic(_type, created_action, slot, created_dir); }
-    inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
+    inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
     inline figure *get_figure(int slot) { return base.get_figure(slot); }
     inline const figure *get_figure(int slot) const { return base.get_figure(slot); }
     
