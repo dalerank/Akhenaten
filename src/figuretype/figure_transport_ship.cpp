@@ -48,13 +48,13 @@ void figure_transport_ship::figure_action() {
     building *b = home();
 
     int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
-    if (action_state() != FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED && wharf_boat_id != id()) {
+    if (action_state() != ACTION_211_TRANSPORT_SHIP_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_transport_ship(base);
         b = building_get(result.bid);
         if (b->id) {
             set_home(b->id);
             b->set_figure(BUILDING_SLOT_BOAT, &base);
-            advance_action(FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
+            advance_action(ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
             base.destination_tile = result.tile;
             base.source_tile = result.tile;
             route_remove();
@@ -66,7 +66,7 @@ void figure_transport_ship::figure_action() {
     assert(base.allow_move_type == EMOVE_WATER);
 
     switch (action_state()) {
-    case FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED:
+    case ACTION_211_TRANSPORT_SHIP_CREATED:
         base.wait_ticks++;
         if (base.wait_ticks >= 50) {
             base.wait_ticks = 0;
@@ -74,7 +74,7 @@ void figure_transport_ship::figure_action() {
             if (result.bid && result.found) {
                 b->remove_figure_by_id(id()); // remove from original building
                 set_home(result.bid);
-                advance_action(FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
+                advance_action(ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
                 base.destination_tile = result.tile;
                 base.source_tile = result.tile;
                 route_remove();
@@ -82,25 +82,25 @@ void figure_transport_ship::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF:
+    case ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF:
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED);
+            advance_action(ACTION_213_TRANSPORT_SHIP_MOORED);
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED);
+            advance_action(ACTION_211_TRANSPORT_SHIP_CREATED);
         }
         break;
 
-    case FIGURE_ACTION_215_TRANSPORT_SHIP_LEAVING:
-    case FIGURE_ACTION_214_TRANSPORT_SHIP_ANCHORED:
+    case ACTION_215_TRANSPORT_SHIP_LEAVING:
+    case ACTION_214_TRANSPORT_SHIP_ANCHORED:
         assert(false && "not implemented yet");
         break;
 
-    case FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED:
+    case ACTION_213_TRANSPORT_SHIP_MOORED:
     {
         int pct_workers = calc_percentage<int>(b->num_workers, b->max_workers);
         int max_wait_ticks = 5 * (102 - pct_workers);
@@ -111,7 +111,7 @@ void figure_transport_ship::figure_action() {
                 base.wait_ticks = 0;
                 tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                 if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
-                    advance_action(FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED);
+                    advance_action(ACTION_213_TRANSPORT_SHIP_MOORED);
                     base.destination_tile = fish_tile;
                     route_remove();
                 }
@@ -138,14 +138,14 @@ sound_key figure_transport_ship::phrase_key() const {
     }
     
     // When moored at wharf - prepared
-    if (action_state() == FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED) {
+    if (action_state() == ACTION_213_TRANSPORT_SHIP_MOORED) {
         keys.push_back("transport_were_prepared");
     }
     
     // When moving or created - need protection
-    if (action_state() == FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF ||
-        action_state() == FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED ||
-        action_state() == FIGURE_ACTION_215_TRANSPORT_SHIP_LEAVING) {
+    if (action_state() == ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF ||
+        action_state() == ACTION_211_TRANSPORT_SHIP_CREATED ||
+        action_state() == ACTION_215_TRANSPORT_SHIP_LEAVING) {
         keys.push_back("transport_must_protect_our_ship");
     }
     
@@ -159,10 +159,10 @@ sound_key figure_transport_ship::phrase_key() const {
 void figure_transport_ship::update_animation() {
     pcstr anim_key = "swim";
     switch (action_state()) {
-    case FIGURE_ACTION_215_TRANSPORT_SHIP_LEAVING: anim_key = "swim"; break;
-    case FIGURE_ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF: anim_key = "swim"; break;
-    case FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED: anim_key = "idle"; break;
-    case FIGURE_ACTION_213_TRANSPORT_SHIP_MOORED: anim_key = "idle"; break;
+    case ACTION_215_TRANSPORT_SHIP_LEAVING: anim_key = "swim"; break;
+    case ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF: anim_key = "swim"; break;
+    case ACTION_211_TRANSPORT_SHIP_CREATED: anim_key = "idle"; break;
+    case ACTION_213_TRANSPORT_SHIP_MOORED: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);

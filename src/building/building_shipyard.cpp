@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "figuretype/figure_war_ship.h"
+#include "figuretype/figure_transport_ship.h"
 #include "city/object_info.h"
 #include "city/buildings.h"
 #include "city/city.h"
@@ -74,7 +75,7 @@ void building_shipyard::spawn_figure() {
     case FIGURE_TRANSPORT_SHIP:
         if ((params.transport_progress_cost > 0) && d.progress >= params.transport_progress_cost) {
             figure *f = figure_create(FIGURE_TRANSPORT_SHIP, boat_tile, DIR_0_TOP_RIGHT);
-            f->action_state = FIGURE_ACTION_211_TRANSPORT_SHIP_CREATED;
+            f->action_state = ACTION_211_TRANSPORT_SHIP_CREATED;
             f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
