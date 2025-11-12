@@ -535,7 +535,7 @@ void building_farm::spawn_figure_harvests() {
             {
                 const int expected_produce = this->expected_produce();
                 events::emit(event_produced_resources{ base.output.resource, expected_produce });
-                figure *f = create_cartpusher(base.output.resource, expected_produce);
+                figure *f = create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
                 building_farm *farm = dcast_farm();
                 farm->deplete_soil();
 
@@ -555,7 +555,7 @@ void building_farm::spawn_figure_harvests() {
                 const int expected_produce = this->expected_produce();
                 const int second_produce_expected = expected_produce / rate;
                 events::emit(event_produced_resources{ base.output.resource_second, second_produce_expected });
-                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
                 f->sender_building_id = id();
             }
         }
@@ -567,7 +567,7 @@ void building_farm::spawn_figure_harvests() {
 
             const int amount = expected_produce();
             events::emit(event_produced_resources{ base.output.resource, amount });
-            create_cartpusher(base.output.resource, amount);
+            create_cartpusher(base.output.resource, amount, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
             start_production();
         }
     }

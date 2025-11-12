@@ -3,6 +3,7 @@
 #include "io/io_buffer.h"
 #include "city/city.h"
 #include "core/object_property.h"
+#include "figuretype/figure_cartpusher.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "widget/debug_console.h"
@@ -164,7 +165,7 @@ void building_industry::spawn_figure() {
     if (has_produced_resource) {
         start_production();
         const int expected_produce = ready_production();
-        create_cartpusher(base.output.resource, expected_produce);
+        create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         events::emit(event_produced_resources{ base.output.resource, expected_produce });
     }
 }

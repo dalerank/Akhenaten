@@ -790,8 +790,8 @@ building_juggler_school {
 building_dancer_school {
   animations {
     _pack { pack: PACK_GENERAL }
-    preview { id:52, }
-    base { id:52, }
+    preview { id:52 }
+    base { id:52 }
     work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
 
