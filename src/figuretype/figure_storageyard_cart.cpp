@@ -140,7 +140,6 @@ void figure_storageyard_cart::figure_action() {
         do_deliver(true, /*action_done*/-1, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_15_GETTING_GOODS:
     case ACTION_57_WAREHOUSECART_GETTING_RESOURCE:
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS,ACTION_8_RECALCULATE);
         break;
