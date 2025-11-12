@@ -15,7 +15,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_shipwreck);
 void figure_shipwreck::figure_action() {
     base.height_adjusted_ticks = 0;
     base.allow_move_type = EMOVE_DEEPWATER;
-    //    figure_image_increase_offset(128);
+
     if (base.wait_ticks < 1000) {
         base.map_figure_remove();
         water_dest result = map_water_find_shipwreck_tile(base);
@@ -27,6 +27,7 @@ void figure_shipwreck::figure_action() {
         base.map_figure_add();
         base.wait_ticks = 1000;
     }
+
     base.wait_ticks++;
     if (base.wait_ticks > 2000) {
         poof();
@@ -50,7 +51,7 @@ figure *figure_shipwreck::create(tile2i tile) {
     figure* f = figure_create(FIGURE_SHIPWRECK, tile, DIR_0_TOP_RIGHT);
     f->animctx.frame = random_byte() & 0x1f;
     f->progress_on_tile = random_byte() & 7;
-    f->advance_action(FIGURE_ACTION_15_RETURNING2);
+    f->advance_action(ACTION_15_SHIPWRECK_RETURNING);
     f->set_cross_country_direction(f->cc_coords.x, f->cc_coords.y, 15 * f->destination_tile.x(), 15 * f->destination_tile.y(), 0);
     f->image_set_animation(animkeys().walk);
     return f;

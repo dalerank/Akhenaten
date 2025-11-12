@@ -185,7 +185,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {
-        return advance_action(FIGURE_ACTION_15_RETURNING2);
+        return advance_action(ACTION_27_CARTPUSHER_RETURNING);
     }
 
     // first: gold deliverers
@@ -467,7 +467,7 @@ void figure_cartpusher::figure_action() {
         break;
 
     case ACTION_11_CARTPUSHER_DELIVERING_GOLD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_CARTPUSHER_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
@@ -482,16 +482,13 @@ void figure_cartpusher::figure_action() {
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
 
-    case 12: // storage yard
-    case 13: // granary
-    case 14: // palace
+    case ACTION_14_CARTPUSHER_UNLOADING_GOLD:
     case ACTION_24_CARTPUSHER_AT_WAREHOUSE:
     case ACTION_25_CARTPUSHER_AT_GRANARY:
     case ACTION_26_CARTPUSHER_AT_WORKSHOP:
-        do_deliver(false, FIGURE_ACTION_15_RETURNING2, ACTION_8_RECALCULATE);
+        do_deliver(false, ACTION_27_CARTPUSHER_RETURNING, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_15_RETURNING2:
     case ACTION_27_CARTPUSHER_RETURNING:
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
@@ -518,7 +515,7 @@ sound_key figure_cartpusher::phrase_key() const {
         return "cartpusher_i_have_no_destination";
     }
 
-    if (action_state(ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
+    if (action_state(ACTION_27_CARTPUSHER_RETURNING)) {
         return "cartpusher_back_to_home";
     }
 
