@@ -383,15 +383,6 @@ public:
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
     void editor_flag_action();
-    void noble_action();
-    void enemy_camel_action();
-    void enemy_elephant_action();
-    void enemy_chariot_action();
-    void enemy49_fast_sword_action();
-    void enemy50_sword_action();
-    void enemy52_mounted_archer_action();
-    void enemy53_axe_action();
-    void enemy_kingdome_soldier_action();
     void hippodrome_horse_action();
 
     nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
@@ -404,10 +395,6 @@ public:
     int trader_total_sold();
 
     int target_is_alive();
-
-    void enemy_marching(formation* m);
-    void enemy_fighting(formation* m);
-    void enemy_action(formation* m);
     int get_direction();
     int get_missile_direction(const formation* m);
 

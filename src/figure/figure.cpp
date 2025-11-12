@@ -503,9 +503,30 @@ xstring figure::action_tip() {
     return dcast()->action_tip();
 }
 
-void figure::noble_action() {
-
+int figure::get_direction() {
+    int dir;
+    if (action_state == FIGURE_ACTION_150_ATTACK)
+        dir = attack_direction;
+    else if (direction < 8)
+        dir = direction;
+    else {
+        dir = previous_tile_direction;
+    }
+    return figure_image_normalize_direction(dir);
 }
+
+int figure::get_missile_direction(const formation *m) {
+    int dir;
+    if (action_state == FIGURE_ACTION_150_ATTACK)
+        dir = attack_direction;
+    else if (m->missile_fired || direction < 8)
+        dir = direction;
+    else {
+        dir = previous_tile_direction;
+    }
+    return figure_image_normalize_direction(dir);
+}
+
 
 e_minimap_figure_color figure::get_figure_color() {
     if (is_enemy()) {
