@@ -539,7 +539,6 @@ struct building_static_params {
     uint8_t min_houses_coverage;
     uint16_t production_rate;
     xstring info_title_id;
-    int num_types;
     uint16_dcy cost;
     building_desirability_t desirability;
     uint16_t progress_max;
@@ -570,7 +569,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
     cost, desirability,
-    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay, max_service,
+    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {

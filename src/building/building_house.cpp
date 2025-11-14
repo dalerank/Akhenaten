@@ -28,24 +28,20 @@
 
 #define MAX_DIR 4
 
-declare_console_command_p(houseup) {
-    std::string args; is >> args;
-
+declare_console_command_p(house_up) {
     buildings_house_do([] (building_house *house) {
         e_building_type next_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() + 1);
-        house->change_to(house->base, next_level);
+        house->change_to(house->base, next_level, true);
     });
 };
 
-declare_console_command_p(housedown) {
-    std::string args; is >> args;
-
+declare_console_command_p(house_down) {
     buildings_house_do([] (building_house *house) {
         e_building_type prev_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() - 1);
         if (prev_level < BUILDING_HOUSE_VACANT_LOT) {
             prev_level = BUILDING_HOUSE_VACANT_LOT;
         }
-        house->change_to(house->base, prev_level);
+        house->change_to(house->base, prev_level, true);
     });
 };
 
@@ -142,56 +138,56 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind_u16(d.image_id);
 
     for (int i = 0; i < 4; ++i) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.inventory[i + 4]);
     }
 
-    iob->bind(BIND_SIGNATURE_UINT8, &d.booth_juggler);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bandstand_juggler);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bandstand_musician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.senet_player);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.magistrate);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bullfighter);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.school);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.library);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.academy);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.apothecary);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.dentist);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.mortuary);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.physician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_osiris);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_ra);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_ptah);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_seth);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_bast);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.no_space_to_expand);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.num_foods);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.entertainment);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.education);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.health);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.num_gods);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.devolve_delay);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.fancy_bazaar_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.shrine_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bazaar_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.water_supply);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_dancer);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_musician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.house_happiness);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.is_merged);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.criminal_active);
-    iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
-    iob->bind(BIND_SIGNATURE_INT16, &d.population);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.tax_collector_id);
-    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.days_without_food);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.unreachable_ticks);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.last_update_day);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.drunkard_active);
+    iob->bind_u8(d.booth_juggler);
+    iob->bind_u8(d.bandstand_juggler);
+    iob->bind_u8(d.bandstand_musician);
+    iob->bind_u8(d.senet_player);
+    iob->bind_u8(d.magistrate);
+    iob->bind_u8(d.bullfighter);
+    iob->bind_u8(d.school);
+    iob->bind_u8(d.library);
+    iob->bind_u8(d.academy);
+    iob->bind_u8(d.apothecary);
+    iob->bind_u8(d.dentist);
+    iob->bind_u8(d.mortuary);
+    iob->bind_u8(d.physician);
+    iob->bind_u8(d.temple_osiris);
+    iob->bind_u8(d.temple_ra);
+    iob->bind_u8(d.temple_ptah);
+    iob->bind_u8(d.temple_seth);
+    iob->bind_u8(d.temple_bast);
+    iob->bind_u8(d.no_space_to_expand);
+    iob->bind_u8(d.num_foods);
+    iob->bind_u8(d.entertainment);
+    iob->bind_u8(d.education);
+    iob->bind_u8(d.health);
+    iob->bind_u8(d.num_gods);
+    iob->bind_u8(d.devolve_delay);
+    iob->bind_u8(d.fancy_bazaar_access);
+    iob->bind_u8(d.shrine_access);
+    iob->bind_u8(d.bazaar_access);
+    iob->bind_u8(d.water_supply);
+    iob->bind_u8(d.pavillion_dancer);
+    iob->bind_u8(d.pavillion_musician);
+    iob->bind_u8(d.house_happiness);
+    iob->bind_u8(d.is_merged);
+    iob->bind_u8(d.criminal_active);
+    iob->bind_u16(d.highest_population);
+    iob->bind_u16(d.population);
+    iob->bind_u8(d.tax_coverage);
+    iob->bind_u16((uint16_t&)d.tax_collector_id);
+    iob->bind_i16((int16_t &)d.tax_income_or_storage);
+    iob->bind_u8(d.days_without_food);
+    iob->bind_u8(d.hsize);
+    iob->bind_u16(d.unreachable_ticks);
+    iob->bind_u16(d.last_update_day);
+    iob->bind_u8(d.drunkard_active);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -262,10 +258,10 @@ resource_list building_house::consume_food() {
 
     auto &d = runtime_data();
 
-    int num_types = model().food_types;
+    int food_types = model().food_types;
     uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, 35);
-    if (num_types > 1) {
-        amount_per_type /= num_types;
+    if (food_types > 1) {
+        amount_per_type /= food_types;
     }
 
     d.num_foods = 0;
@@ -277,11 +273,11 @@ resource_list building_house::consume_food() {
         return food_types_eaten;
     }
 
-    if (num_types <= 0) {
+    if (food_types <= 0) {
         return {};
     }
 
-    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && d.num_foods < num_types; t++) {
+    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && d.num_foods < food_types; t++) {
         const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
         d.foods[t] -= exist_amount;
         d.num_foods += (exist_amount > 0) ? 1 : 0;
@@ -348,13 +344,13 @@ void building_house::add_population(int num_people) {
     base.remove_figure(2);
 }
 
-void building_house::change_to(building &b, e_building_type new_type) {
+void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
 
     const int house_update_delay = std::min(house_up_delay(), 7);
     const int absolute_day = game.simtime.absolute_day(true);
     const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
-    if (house_update_delay > 0 && (new_type > b.type) && can_update) {
+    if (!force && (house_update_delay > 0 && (new_type > b.type) && can_update)) {
         return;
     }
 
@@ -364,19 +360,24 @@ void building_house::change_to(building &b, e_building_type new_type) {
     auto house = b.dcast_house();
     int image_id = house_image_group<false>(house->house_level());
 
-    const int img_offset = house->anim(animkeys().house).offset;
+    const auto &house_params = get_house_params(new_type);
     if (house->is_merged()) {
-        image_id += 4;
-        if (img_offset) {
-            image_id += 1;
-        }
+        const size_t max_anims = house_params.variants_merged.data.size();
+        const size_t rand_anim = rand() % max_anims;        
+        auto anim_it = house_params.variants_merged.data.begin();
+        std::advance(anim_it, rand_anim);
+        image_id = anim_it->second.first_img();
     } else {
-        image_id += img_offset;
-        image_id += map_random_get(b.tile) & (house->current_params().num_types - 1);
+        const size_t max_anims = house_params.variants.data.size();
+        const size_t rand_anim = rand() % max_anims;
+        auto anim_it = house_params.variants.data.begin();
+        std::advance(anim_it, rand_anim);
+        image_id = anim_it->second.first_img();
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
     d.last_update_day = game.simtime.absolute_day(true);
+    d.image_id = image_id;
 }
 
 int16_t building_house::population_room() const {

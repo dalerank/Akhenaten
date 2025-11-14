@@ -89,6 +89,7 @@ enum e_pack {
     //
     PACK_CUSTOM,
     PACK_CUSTOM_FONT,
+    PACK_CUSTOM_HOUSE,
     // 
     PACK_MAX,
 };
