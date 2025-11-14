@@ -40,7 +40,7 @@ void city_migration_t::update_status() {
         cur_population_cap = std::min(cur_population_cap, population_cap);
     }
 
-    if (cur_population_cap > 0 && g_city.population.current >= population_cap) {
+    if (cur_population_cap > 0 && g_city.population.current >= cur_population_cap) {
         percentage = 0;
         migration_cap = true;
         return;
