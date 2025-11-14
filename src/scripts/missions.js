@@ -21,3 +21,12 @@ default_tree_grow {
 	random_max : 2
 	random_min : 1	
 }
+
+import mission_0_nubt
+import mission_1_thinis
+import mission_2_perwadjyt
+import mission_3_nekhen
+import mission_5_timna
+import mission_6_behdet
+import mission_8_selima
+import mission_9_abu

@@ -344,11 +344,32 @@ bool game_imgui_overlay_handle_event(void *e) {
 
     ImGui_ImplSDL2_ProcessEvent(event);
 
-    ImGuiContext &g = *GImGui;
-    ImGuiWindow *ref_window = g.HoveredWindow;
-    ImGuiWindow *cur_window = g.CurrentWindow;
+    if (game.debug_console) {
+        return true;
+    }
 
-    return ref_window || cur_window;
+    ImGuiIO &io = ImGui::GetIO();
+    bool wants_capture = false;
+
+    switch (event->type) {
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEWHEEL:
+        wants_capture = io.WantCaptureMouse;
+        break;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    case SDL_TEXTINPUT:
+    case SDL_TEXTEDITING:
+        wants_capture = io.WantCaptureKeyboard;
+        break;
+    default:
+        wants_capture = false;
+        break;
+    }
+
+    return wants_capture;
 }
 
 void game_toggle_debug_console() {

@@ -6,6 +6,7 @@ set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. 
 
 option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
 option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
+
 message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
 message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 
@@ -244,26 +245,6 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
         set(SDL2_MIXER_SRC_EXTRACT_PATH "${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION}")
         file(COPY ${SDL2_MIXER_SRC_EXTRACT_PATH}/include/SDL_mixer.h DESTINATION ${SDL2_EXTRACT_PATH}/SDL2_mixer-${SDL2_MIXER_VERSION}/include)
     endif()
-endif()
-
-# Check if sources are already available (e.g., in Flatpak build)
-# Try both source and binary directory locations
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_SOURCE_DIR}/_deps/freetype-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_BINARY_DIR}/_deps/freetype-src")
-endif()
-
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src")
-endif()
-
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/stb-src/stb_image.h")
-    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_SOURCE_DIR}/_deps/stb-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/stb-src/stb_image.h")
-    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-src")
 endif()
 
 FetchContent_Declare(
