@@ -175,7 +175,6 @@ void figure_tower_sentry::figure_action() {
         }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case ACTION_173_TOWER_SENTRY_RETURNING:
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE)

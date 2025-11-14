@@ -11,6 +11,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/figure_names.h"
+#include "figuretype/figure_enemy.h"
 #include "game/difficulty.h"
 #include "game/game.h"
 #include "grid/grid.h"
@@ -275,10 +276,10 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 figure* f = figure_create(figure_type, invasion_tile, orientation);
                 f->faction_id = 0;
-                f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+                f->action_state = ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
-                f->name = figure_name_get(figure_type, enemy_type);
+                f->name = figure_name_get(figure_type);
             }
             seq++;
         }

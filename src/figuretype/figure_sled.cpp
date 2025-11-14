@@ -4,9 +4,10 @@
 #include "building/monuments.h"
 #include "graphics/graphics.h"
 #include "city/city_figures.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_sled> sled_m;
-figures::model_t<figure_sled_puller> sled_puller_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);
 
 void figure_sled::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
@@ -17,7 +18,7 @@ void figure_sled::figure_action() {
         } else {
             grid_area area = building_monument_get_area(destination());
             if (map_tile_is_inside_area(tile(), area.tmin, area.tmax)) {
-                do_deliver(ACTION_11_RETURNING_EMPTY);
+                do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
             }
             poof();
             return;

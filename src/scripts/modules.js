@@ -80,6 +80,7 @@ import ui_mods_window
 import ui_messages_window
 import ui_house_window
 import eventmsg_phrase_auto
+import figure_names_en
 import music
 import invasions
 import enemies

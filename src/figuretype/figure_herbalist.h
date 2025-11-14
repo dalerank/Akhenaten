@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 
 enum e_herbalist_action {
+    ACTION_10_HERBALIST_GOING = 10,
     ACTION_60_HERBALIST_CREATED = 60,
     ACTION_61_HERBALIST_ENTERING_EXITING = 61,
     ACTION_62_HERBALIST_ROAMING = 62,

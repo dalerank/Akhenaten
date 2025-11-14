@@ -3,6 +3,7 @@
 #include "figuretype/figure_cartpusher.h"
 
 enum e_sled_action {
+    ACTION_11_SLED_RETURNING_EMPTY = 11,
     ACTION_50_SLED_CREATED = 50,
     ACTION_51_SLED_DELIVERING_RESOURCE = 51,
     ACTION_52_SLED_AT_DELIVERY_BUILDING = 52,

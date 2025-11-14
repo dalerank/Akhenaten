@@ -177,7 +177,6 @@ void figure_constable::figure_action() {
         do_roam(TERRAIN_USAGE_ROADS, ACTION_73_CONSTABLE_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case ACTION_73_CONSTABLE_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
 

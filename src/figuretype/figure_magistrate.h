@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 
 enum e_magistrate_action {
+    ACTION_10_MAGISTRATE_GOING = 10,
     ACTION_70_MAGISTRATE_CREATED = 70,
     ACTION_71_MAGISTRATE_ENTERING_EXITING = 71,
     ACTION_72_MAGISTRATE_ROAMING = 72,
