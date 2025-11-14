@@ -36,18 +36,18 @@ mission3 {
 function tutorial3_on_start(ev) {
     city.set_goal_tooltip("#reach_modest_houses_number")
 
-	if (mission.beer_stored_handled) {
-		city.use_building(BUILDING_TAX_COLLECTOR, true)
-		city.use_building(BUILDING_PERSONAL_MANSION, true)
-	} else {
-		city.set_goal_tooltip("#mission3_brew_beer")
-	}
-
 	if (mission.tax_collector_built) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
 		city.use_building(BUILDING_PERSONAL_MANSION, true)
 	} else {
 		city.set_goal_tooltip("#build_tax_collector")
+	}
+
+	if (mission.beer_stored_handled) {
+		city.use_building(BUILDING_TAX_COLLECTOR, true)
+		city.use_building(BUILDING_PERSONAL_MANSION, true)
+	} else {
+		city.set_goal_tooltip("#mission3_brew_beer")
 	}
 
 	city.set_advisor_available(ADVISOR_LABOR, 1)

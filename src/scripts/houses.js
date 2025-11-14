@@ -19,7 +19,6 @@ building_house_crude_hut {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 26, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 26, offset:5 }
   }
   
   planner_update_rule {
@@ -72,8 +71,7 @@ building_house_sturdy_hut {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 26, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 26, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 26, offset:5 }
   }
 
   desirability { value[-2], step[1], step_size[1], range[3] }
@@ -122,7 +120,6 @@ building_house_meager_shanty {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 27, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 27, offset:5 }
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
@@ -171,8 +168,7 @@ building_house_common_shanty {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 27, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 27, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 27, offset:5 }
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
@@ -222,7 +218,6 @@ building_house_rough_cottage {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 28, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 28, offset:5 }
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
@@ -270,8 +265,7 @@ building_house_ordinary_cottage {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 28, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 28, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 28, offset:5 }
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
@@ -323,7 +317,6 @@ building_house_modest_homestead {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 29, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 29, offset:5 }
   }
 
   desirability { value[-1], step[1], step_size[1], range[1] }
@@ -371,8 +364,7 @@ building_house_spacious_homestead {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 29, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 29, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 29, offset:5 }
   }
 
   desirability { value[-1], step[1], step_size[1], range[1] }
@@ -421,7 +413,6 @@ building_house_modest_apartment {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 30, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 30, offset:5 }
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
@@ -469,8 +460,7 @@ building_house_spacious_apartment {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 30, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 30, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 30, offset:5}
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
@@ -518,7 +508,6 @@ building_house_common_residence {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 31, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 31, offset:5 }
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
@@ -566,8 +555,7 @@ building_house_spacious_residence {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 31, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 31, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 31, offset:5 }
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
@@ -616,7 +604,6 @@ building_house_elegant_residence {
 
   variants_merged {
     _1 { pack: PACK_GENERAL, id: 32, offset:4 }
-    _2 { pack: PACK_GENERAL, id: 32, offset:5 }
   }
 
   desirability { value[1], step[2], step_size[-1], range[2] }
@@ -664,8 +651,7 @@ building_house_fancy_residence {
   }
 
   variants_merged {
-    _1 { pack: PACK_GENERAL, id: 32, offset:6 }
-    _2 { pack: PACK_GENERAL, id: 32, offset:7 }
+    _1 { pack: PACK_GENERAL, id: 32, offset:5 }
   }
 
   desirability { value[2], step[1], step_size[-1], range[2] }
