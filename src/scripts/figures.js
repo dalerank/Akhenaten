@@ -1616,18 +1616,18 @@ figure_labor_seeker {
 	}
 
 	sounds {
-		recruiter_sick_people { sound:"Labor_e01.wav" }
-		recruiter_starving { sound:"Labor_e02.WAV" }
-		recruiter_city_defenses_weak { sound:"Labor_g01.WAV" }
-		recruiter_without_workers { sound:"Labor_g02.WAV" }
-		recruiter_gods_unleash_fury { sound:"Labor_g03.WAV" }
+		recruiter_disease_in_city { sound:"Labor_e01.wav" }
+		recruiter_no_food_in_city { sound:"Labor_e02.WAV" }
+		recruiter_city_not_safety { sound:"Labor_g01.WAV" }
+		recruiter_need_workers { sound:"Labor_g02.WAV" }
+		recruiter_gods_are_angry { sound:"Labor_g03.WAV" }
 		recruiter_enemies_attack { sound:"Labor_g04.WAV" }
-		recruiter_able_people_out_of_work { sound:"Labor_g05.WAV" }
+		recruiter_i_looking_for_the_workers { sound:"Labor_g05.WAV" }
 		recruiter_boring { sound:"Labor_g06.WAV" }
 		recruiter_living_here { sound:"Labor_g07.WAV" }
-		recruiter_best_city { sound:"Labor_g08.WAV" }
-		recruiter_most_popular { sound:"Labor_g09.WAV" }
-		recruiter_list_of_job_openings { sound:"Labor_g10.WAV" }
+		recruiter_city_is_amazing { sound:"Labor_g08.WAV" }
+		recruiter_i_want_to_leave_city { sound:"Labor_g09.WAV" }
+		recruiter_much_unemployments { sound:"Labor_g10.WAV" }
 	}
 
 	category: figure_category_citizen
