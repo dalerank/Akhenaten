@@ -80,7 +80,6 @@ bool tutorial_init(bool clear_all_flags, bool custom) {
     }
 
     int scenario_id = g_scenario.campaign_scenario_id();
-    memset_if(3 < scenario_id, 1, g_tutorials_flags.tutorial_4);
     memset_if(4 < scenario_id, 1, g_tutorials_flags.tutorial_5);
     memset_if(5 < scenario_id, 1, g_tutorials_flags.tutorial_6);
 
@@ -159,10 +158,6 @@ void tutorial_flags_t::update_starting_message() {
         g_scenario.meta.start_message_shown = true;
     }
 
-    if (g_scenario.is_scenario_id(4) && !g_tutorials_flags.tutorial_4.started) {
-        messages::popup("message_developing_culture", 0, 0);
-        g_tutorials_flags.tutorial_4.started = 1;
-    }
     if (g_scenario.is_scenario_id(5) && !g_tutorials_flags.tutorial_5.started) {
         messages::popup("message_getting_started", 0, 0);
         g_tutorials_flags.tutorial_5.started = 1;
@@ -204,8 +199,8 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     // tut 4
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.beer_made);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.tax_collector_built);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     // tut 5
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.spacious_apartment);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.papyrus_made);
@@ -215,7 +210,7 @@ io_buffer* iob_tutorial_flags = new io_buffer([](io_buffer* iob, size_t version)
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_4.started);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_5.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.tutorial_6.started);
     iob->bind(BIND_SIGNATURE_UINT8, &g_tutorials_flags.pharaoh.tut7_start);

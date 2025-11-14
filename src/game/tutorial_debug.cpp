@@ -22,12 +22,7 @@ void config_show_tutorial_properties(bool header) {
         ImGui::BeginTable("Tutorial", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
         const auto &flags = g_tutorials_flags;
-        
-        // Tutorial 4 flags
-        game_debug_show_property("tut4 started", flags.tutorial_4.started);
-        game_debug_show_property("tut4:beer_made", flags.tutorial_4.beer_made);
-        game_debug_show_property("tut4:tax_collector_built", flags.tutorial_4.tax_collector_built);
-        
+                
         // Tutorial 5 flags
         game_debug_show_property("tut5 started", flags.tutorial_5.started);
         game_debug_show_property("tut5:spacious_apartment", flags.tutorial_5.spacious_apartment);

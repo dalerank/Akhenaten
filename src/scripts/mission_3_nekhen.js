@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 3 started")
 
 mission3 {
-	start_message : "message_farming_along_the_nile"
+	start_message : "message_developing_culture"
 	env {
 		has_animals : true		
 		marshland_grow : default_marshland_grow
@@ -21,12 +21,81 @@ mission3 {
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
 					BUILDING_BREWERY_WORKSHOP
 				]
-	stages {
-		tutorial_finance { buildings: [BUILDING_TAX_COLLECTOR, BUILDING_PERSONAL_MANSION] }
-	}
 
 	vars {
 		beer_stored : 300
 		victory_last_action_delay : 3
+
+		beer_stored_handled : false
+		tax_collector_built : false
+		last_action_time : 0
 	}
+}
+
+[event=event_mission_start, mission=mission3]
+function tutorial3_on_start(ev) {
+    city.set_goal_tooltip("#reach_modest_houses_number")
+
+	if (mission.beer_stored_handled) {
+		city.use_building(BUILDING_TAX_COLLECTOR, true)
+		city.use_building(BUILDING_PERSONAL_MANSION, true)
+	} else {
+		city.set_goal_tooltip("#mission3_brew_beer")
+	}
+
+	if (mission.tax_collector_built) {
+		city.use_building(BUILDING_TAX_COLLECTOR, true)
+		city.use_building(BUILDING_PERSONAL_MANSION, true)
+	} else {
+		city.set_goal_tooltip("#build_tax_collector")
+	}
+
+	city.set_advisor_available(ADVISOR_LABOR, 1)
+	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
+	city.set_advisor_available(ADVISOR_RELIGION, 1)
+	city.set_advisor_available(ADVISOR_FINANCIAL, 1)
+}
+
+[event=event_warehouse_filled, mission=mission3]
+function tutorial4_warehouse_beer_check(ev) {
+    if (mission.beer_stored_handled) {
+        return
+    }
+
+    var beer_amount = city.yards_stored(RESOURCE_BEER)
+    if (beer_amount < mission.beer_stored) {
+        return
+    }
+
+    mission.beer_stored_handled = true
+	mission.last_action_time = game.absolute_day
+
+	city.use_building(BUILDING_TAX_COLLECTOR, true)
+	city.use_building(BUILDING_PERSONAL_MANSION, true)
+
+	ui.popup_message("message_tutorial_finances")
+}
+
+[event=event_building_create, mission=mission3]
+function tutorial_4_on_build_tax_collector(ev) {
+    if (mission.tax_collector_built) {
+        return
+    }
+
+	var is_tax_collector = city.building_is_tax_collector(ev.bid)
+    if (!is_tax_collector) {
+        return
+    }
+
+	mission.last_action_time = game.absolute_day
+    mission.tax_collector_built = true
+}
+
+[event=event_update_victory_state, mission=mission3]
+function tutorial3_handle_victory_state(ev) {
+	city.set_victory_reason("beer_stored_handled", mission.beer_stored_handled)
+	city.set_victory_reason("tax_collector_built", mission.tax_collector_built)
+
+	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay
+	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
