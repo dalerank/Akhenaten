@@ -10,10 +10,22 @@ building_house_crude_hut {
   }
 
   building_size : 1
-  num_types : 2
+  can_merge : true
+
+  variants {
+    _1 { pack: PACK_GENERAL, id: 26, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 26, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 26, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 26, offset:5 }
+  }
+  
   planner_update_rule {
     is_draggable : true
   }
+
   desirability { value[-2], step[1], step_size[1], range[3] }
   
   fire_risk[3]
@@ -48,11 +60,22 @@ building_house_crude_hut {
 building_house_sturdy_hut {
   animations {
     _pack { pack: PACK_GENERAL }
-    house{id: 26, offset:2}
+    house {id: 26, offset:2 }
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+
+  variants {
+    _1 { pack: PACK_GENERAL, id: 26, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 26, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 26, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 26, offset:7 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[3] }
   
   fire_risk[3]
@@ -87,11 +110,21 @@ building_house_sturdy_hut {
 building_house_meager_shanty {
   animations {
     _pack { pack: PACK_GENERAL }
-    house{id: 27}
+    house{ id: 27 }
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 27, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 27, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 27, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 27, offset:5 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[2] }
   
   fire_risk[20]
@@ -127,10 +160,21 @@ building_house_common_shanty {
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 27, offset:2}
+
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 27, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 27, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 27, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 27, offset:7 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[2] }
   
   fire_risk[4]
@@ -169,7 +213,18 @@ building_house_rough_cottage {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+
+  variants {
+    _1 { pack: PACK_GENERAL, id: 28, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 28, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 28, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 28, offset:5 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[2] }
   
   fire_risk[5]
@@ -204,11 +259,21 @@ building_house_rough_cottage {
 building_house_ordinary_cottage {
   animations {
     _pack { pack: PACK_GENERAL }
-    house{id: 28, offset:2}
-    minimap{id:148}
+    house {id: 28, offset:2}
+    minimap {id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 28, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 28, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 28, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 28, offset:7 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[2] }
   
   fire_risk[4]
@@ -243,11 +308,24 @@ building_house_ordinary_cottage {
 building_house_modest_homestead {
   animations {
     _pack { pack: PACK_GENERAL }
-    house{id: 29, offset:0}
-    minimap{id:148}
+    house { id: 29, offset:0 }
+    minimap { id:148 }
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _0 { pack: PACK_GENERAL, id: 29, offset:0 }
+    _1 { pack: PACK_GENERAL, id: 29, offset:1 }
+    _2 { pack: PACK_CUSTOM_HOUSE, id: 0, offset:0 }
+    _3 { pack: PACK_CUSTOM_HOUSE, id: 1, offset:1 }
+    _4 { pack: PACK_CUSTOM_HOUSE, id: 2, offset:2 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 29, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 29, offset:5 }
+  }
+
   desirability { value[-1], step[1], step_size[1], range[1] }
   
   fire_risk[4]
@@ -286,7 +364,17 @@ building_house_spacious_homestead {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 29, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 29, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 29, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 29, offset:7 }
+  }
+
   desirability { value[-1], step[1], step_size[1], range[1] }
   
   fire_risk[4]
@@ -325,7 +413,17 @@ building_house_modest_apartment {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 30, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 30, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 30, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 30, offset:5 }
+  }
+
   desirability { value[0], step[0], step_size[0], range[0] }
   
   fire_risk[4]
@@ -364,7 +462,17 @@ building_house_spacious_apartment {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 30, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 30, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 30, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 30, offset:7 }
+  }
+
   desirability { value[0], step[0], step_size[0], range[0] }
   fire_risk[4]
   damage_risk[5]
@@ -402,7 +510,17 @@ building_house_common_residence {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 31, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 31, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 31, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 31, offset:5 }
+  }
+
   desirability { value[0], step[0], step_size[0], range[0] }
   
   fire_risk[4]
@@ -441,7 +559,17 @@ building_house_spacious_residence {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 31, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 31, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 31, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 31, offset:7 }
+  }
+
   desirability { value[0], step[0], step_size[0], range[0] }
   
   fire_risk[4]
@@ -480,7 +608,17 @@ building_house_elegant_residence {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 32, offset:0 }
+    _2 { pack: PACK_GENERAL, id: 32, offset:1 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 32, offset:4 }
+    _2 { pack: PACK_GENERAL, id: 32, offset:5 }
+  }
+
   desirability { value[1], step[2], step_size[-1], range[2] }
   
   fire_risk[3]
@@ -515,11 +653,21 @@ building_house_elegant_residence {
 building_house_fancy_residence {
   animations {
     _pack { pack: PACK_GENERAL }
-    house{id: 32, offset:2}
-    minimap{id:148}
+    house {id: 32, offset:2}
+    minimap {id:148}
   }
   building_size : 1
-  num_types : 2
+  can_merge : true
+  variants {
+    _1 { pack: PACK_GENERAL, id: 32, offset:2 }
+    _2 { pack: PACK_GENERAL, id: 32, offset:3 }
+  }
+
+  variants_merged {
+    _1 { pack: PACK_GENERAL, id: 32, offset:6 }
+    _2 { pack: PACK_GENERAL, id: 32, offset:7 }
+  }
+
   desirability { value[2], step[1], step_size[-1], range[2] }
   
   fire_risk[3]
@@ -558,7 +706,10 @@ building_house_common_manor {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 33, offset:0 }
+  }
   desirability { value[3], step[1], step_size[-1], range[3] }
   
   fire_risk[2]
@@ -597,7 +748,10 @@ building_house_spacious_manor {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 33, offset:1 }
+  }
   desirability { value[3], step[1], step_size[-1], range[3] }
   
   fire_risk[2]
@@ -636,7 +790,11 @@ building_house_elegant_manor {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 34, offset:0 }
+  }
+
   desirability { value[4], step[2], step_size[-1], range[6] }
   
   fire_risk[2]
@@ -675,7 +833,11 @@ building_house_stately_manor {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 34, offset:1 }
+  }
+
   desirability { value[4], step[2], step_size[-1], range[6] }
   
   fire_risk[2]
@@ -714,7 +876,11 @@ building_house_modest_estate {
     minimap{id:148}
   }
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 35, offset:0 }
+  }
+
   desirability { value[5], step[2], step_size[-1], range[6] }
   
   fire_risk[2]
@@ -754,7 +920,11 @@ building_house_palatial_estate {
   }
 
   building_size : 1
-  num_types : 1
+  can_merge : false
+  variants {
+    _1 { pack: PACK_GENERAL, id: 35, offset:1 }
+  }
+
   desirability { value[5], step[2], step_size[-1], range[6] }
   
   fire_risk[1]

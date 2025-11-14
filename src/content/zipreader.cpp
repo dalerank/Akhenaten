@@ -5,6 +5,7 @@
 #include "lzma/LzmaDec.h"
 #include "bzip/bzlib.h"
 #include "aes/fileenc.h"
+#include "core/log.h"
 
 namespace vfs {
 
@@ -271,6 +272,11 @@ namespace vfs {
         const auto it = std::find_if(_entries.begin(), _entries.end(), [&filename] (const xstring &entry) {
             return !entry.empty() && entry == filename;
         });
+
+        if (it == _entries.end()) {
+            logs::warn("File %s not found in archive %s", filename.c_str(), _filepath.c_str());
+            return {};
+        }
 
         const int index = std::distance(_entries.begin(), it);
         if (index != -1) {

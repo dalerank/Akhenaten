@@ -63,6 +63,12 @@ function tutorial3_on_start(ev) {
 		city.set_goal_tooltip("#mission2_pottery_step2")
 	}
 
+	if (mission.disease_handled) {
+       city.use_building(BUILDING_WATER_SUPPLY, true)
+	   city.use_building(BUILDING_APOTHECARY, true)
+	   city.use_building(BUILDING_PHYSICIAN, true)
+	}
+
 	city.set_advisor_available(ADVISOR_LABOR, 1)
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
