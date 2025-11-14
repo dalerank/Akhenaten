@@ -371,7 +371,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     }
 
     // handle hotkeys
-    if (game.debug_console || game.debug_properties) {
+    if (game.debug_console) {
         return;
     }
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
@@ -395,7 +395,7 @@ void platform_handle_key_up(SDL_KeyboardEvent* event) {
         return;
     }
 #endif
-    if (game.debug_console || game.debug_properties) {
+    if (game.debug_console) {
         return;
     }
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
