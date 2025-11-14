@@ -386,10 +386,8 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
-    if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
-        draw_crops(ctx, type(), progress(), tile(), point, mask);
-        draw_workers(ctx, &base, t, point);
-    }
+    draw_crops(ctx, type(), progress(), tile(), point, mask);
+    draw_workers(ctx, &base, t, point);
 
     return true;
 }
