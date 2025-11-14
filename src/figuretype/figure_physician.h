@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 
 enum e_physician_action {
+    ACTION_10_PHYSICIAN_GOING = 10,
     ACTION_60_PHYSICIAN_CREATED = 60,
     ACTION_61_PHYSICIAN_ENTERING_EXITING = 61,
     ACTION_62_PHYSICIAN_ROAMING = 62,

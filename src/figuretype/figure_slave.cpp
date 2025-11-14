@@ -1,5 +1,9 @@
 #include "figure_slave.h"
 
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_slave);
+
 void figure_slave::figure_action() {
     //    terrain_usage = TERRAIN_USAGE_ANY;
     //    use_cross_country = false;

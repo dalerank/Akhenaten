@@ -111,7 +111,7 @@ void figure_ostrich_hunter::figure_action() {
 
             base.wait_ticks = current_params().missile_delay;
             if (prey->state == FIGURE_STATE_DYING) {
-                advance_action(ACTION_11_OSTRICH_HUNTER_WALK);
+                advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
                 scared_animals_in_area(prey->tile, /*dist*/16);
             } else if (dist >= 2) {
                 base.wait_ticks = 12;
@@ -128,17 +128,17 @@ void figure_ostrich_hunter::figure_action() {
         }
         break;
 
-    case ACTION_11_GOING_TO_PICKUP_POINT: // going to pick up prey
+    case ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT: // going to pick up prey
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }
 
-        if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_PICKUP_ANIMAL, ACTION_11_GOING_TO_PICKUP_POINT)) {
+        if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL, ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT)) {
             animation().offset = 0;
         }
         break;
 
-    case ACTION_10_PICKUP_ANIMAL: // picking up prey
+    case ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL: // picking up prey
         if (base.target_figure_id) {
             prey->poof();
         }
@@ -207,7 +207,7 @@ void figure_ostrich_hunter::update_animation() {
     xstring animkey;
     switch (action_state()) {
     case ACTION_9_OSTRICH_HUNTER_CHASE_PREY:
-    case ACTION_11_OSTRICH_HUNTER_WALK:
+    case ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT:
     case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
         animkey = animkeys().walk;
         break;
@@ -221,7 +221,7 @@ void figure_ostrich_hunter::update_animation() {
         animkey = animkeys().hunt;
         break;
 
-    case ACTION_10_PICKUP_ANIMAL:
+    case ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL:
         animkey = animkeys().pack;
         break;
 

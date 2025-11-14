@@ -14,7 +14,7 @@ void figure_physician::figure_action() {
     //    building *b = building_get(building_id);
     switch (action_state()) {
     case ACTION_60_PHYSICIAN_CREATED:
-        advance_action(ACTION_10_GOING);
+        advance_action(ACTION_10_PHYSICIAN_GOING);
         break;
 
     case ACTION_61_PHYSICIAN_ENTERING_EXITING:
@@ -22,12 +22,10 @@ void figure_physician::figure_action() {
         do_enterbuilding(true, home());
         break;
 
-    case ACTION_10_GOING:
     case ACTION_62_PHYSICIAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_63_PHYSICIAN_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_FROM_PATROL:
     case ACTION_63_PHYSICIAN_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS, ACTION_61_PHYSICIAN_ENTERING_EXITING);
         break;

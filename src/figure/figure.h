@@ -187,7 +187,7 @@ public:
     uint8_t wait_ticks_missile;
     vec2i cart_offset;
 
-    uint16_t name;
+    bstring32 name;
     uint8_t terrain_usage;
     e_move_type allow_move_type;
     uint8_t height_adjusted_ticks;

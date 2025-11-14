@@ -9,8 +9,9 @@
 #include "graphics/image.h"
 #include "sound/sound.h"
 #include "graphics/animation.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_birds> birds_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_birds);
 
 void figure_birds::figure_action() {
     const formation* m = formation_get(base.formation_id);
@@ -29,7 +30,7 @@ void figure_birds::figure_action() {
         if (base.wait_ticks <= 0) {
             if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
                 base.wait_ticks = 0;
-                advance_action(ACTION_10_GOING);
+                advance_action(ACTION_10_BIRDS_GOING);
             } else {
                 base.wait_ticks = 5;
             }

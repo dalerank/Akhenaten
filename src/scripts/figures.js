@@ -561,10 +561,30 @@ figure_standard_bearer {
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_STANDARD_BEARER }
 	}
 
-  is_soldier : true
+    is_soldier : true
 	category: figure_category_armed
-  max_damage : 80
+    max_damage : 80
 	terrain_usage : TERRAIN_USAGE_ANY
+}
+
+figure_noble = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
+		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+	}
+
+	category: figure_category_native
+	max_damage: 10
+}
+
+figure_slave = {
+	animations : {
+		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
+		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+	}
+
+	category: figure_category_native
+	max_damage: 10
 }
 
 figure_native = {

@@ -12,7 +12,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_magistrate);
 void figure_magistrate::figure_action() {
     switch (action_state()) {
     case ACTION_70_MAGISTRATE_CREATED:
-        advance_action(ACTION_10_GOING);
+        advance_action(ACTION_10_MAGISTRATE_GOING);
         break;
 
     case ACTION_71_MAGISTRATE_ENTERING_EXITING:
@@ -20,7 +20,7 @@ void figure_magistrate::figure_action() {
         break;
 
     case ACTION_72_MAGISTRATE_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_MAGISTRATE_RETURNING);
         break;
 
     case ACTION_73_MAGISTRATE_RETURNING:

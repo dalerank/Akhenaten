@@ -555,6 +555,10 @@ void figure_impl::on_create() {
 
 void figure_impl::on_post_load() {
     on_change_terrain(0, base.terrain_type);
+
+    if (base.name.len() < 4) {
+        base.name = figure_name_get(base.type);
+    }
 }
 
 void figure_impl::on_attacked(figure *attacker) {
@@ -780,7 +784,7 @@ const fproperty fproperties[] = {
         }
     },
 
-    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
+    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(f.name); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(lang_text_from_key(clname)); }},
     { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
@@ -1030,7 +1034,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
-    iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
     iob->bind(BIND_SIGNATURE_UINT8, &f->allow_move_type);
     iob->bind(BIND_SIGNATURE_UINT16, &f->resource_amount_full); // 4772 >>>> 112 (resource amount! 2-bytes)
@@ -1069,9 +1073,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_mode);     // 6
     static_assert(sizeof(figure::runtime_data) == 40, "runtime_data more then 40 bytes");
     iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 40
-    iob->bind____skip(10);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
-    iob->bind____skip(27);
+    iob->bind____skip(6);
+    iob->bind(BIND_SIGNATURE_RAW, f->name.data(), 32);
 
     f->cart_image_id -= 18;
     iob->bind(BIND_SIGNATURE_UINT16, &f->cart_image_id);

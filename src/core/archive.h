@@ -707,7 +707,8 @@ template<> inline void archive::r<vec2i>(pcstr name, vec2i &v) { v = r_vec2i(nam
 template<> inline void archive::r<xstring>(pcstr name, xstring &v) { v = r_string(name); }
 template<> inline void archive::r<tile2i>(pcstr name, tile2i &v) { v = r_tile2i(name); }
 template<> inline void archive::r<image_desc>(pcstr name, image_desc &v) { r_desc(name, v); }
-template<> inline void archive::r<bstring<256>>(pcstr name, bstring<256> &v) { v = r_string(name); }
+template<> inline void archive::r<bstring256>(pcstr name, bstring256 &v) { v = r_string(name); }
+template<> inline void archive::r<bstring32>(pcstr name, bstring32 &v) { v = r_string(name); }
 
 template<typename T>
 inline void archive::r(T &s) { archive_helper::reader(*this, s); }

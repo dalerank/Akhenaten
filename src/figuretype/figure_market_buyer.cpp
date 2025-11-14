@@ -55,7 +55,6 @@ void figure_market_buyer::figure_action() {
         }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case ACTION_146_MARKET_BUYER_RETURNING:
         if (base.do_returnhome()) {
             home()->figure_spawn_delay = -3;
@@ -286,7 +285,7 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     const uint16_t big_image = f->anim(animkeys().big_image).first_img();
     ctx.img_generic(big_image, c.offset + vec2i{28, 112});
 
-    lang_text_draw(254, base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
+    text_draw(base.name.c_str(), c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK, COLOR_MASK_NONE);
     int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
 
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
@@ -300,7 +299,7 @@ bool figure_market_buyer::window_info_background(object_info &c) {
     }
 
     if (!!f->phrase_key) {
-        text_draw_multiline(f->phrase_key, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK, COLOR_BLACK);
+        text_draw_multiline(f->phrase_key, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK, COLOR_MASK_NONE);
     }
 
     return true;

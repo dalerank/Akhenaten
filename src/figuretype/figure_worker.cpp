@@ -178,7 +178,7 @@ sound_key figure_worker::phrase_key() const {
     }
 
     svector<sound_key, 10> keys;
-    if (base.action_state == ACTION_10_GOING) {
+    if (base.action_state == ACTION_10_WORKER_GOING) {
         keys.push_back("going_to_workplace");
     }
 
