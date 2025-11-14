@@ -21,32 +21,6 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_apothecary);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
-declare_console_command_p(plague_start) {
-    std::string args; is >> args;
-    int plague_people = atoi(args.empty() ? "100" : args.c_str());
-
-    int total_population = 0;
-    buildings_house_do([&] (building_house *house) {
-        if (house->house_population() <= 0) {
-            return;
-        }
-        total_population += house->house_population();
-    });
-    g_city.health.start_disease(total_population, true, plague_people);
-}
-
-declare_console_command_p(plague_no) {
-    buildings_house_do([&] (building_house* house) {
-        if (house->house_population() <= 0) {
-            return;
-        }
-
-        house->base.disease_days = 0;
-        house->base.has_plague = false;
-        house->base.common_health = 100;
-    });
-}
-
 void building_apothecary::spawn_figure() {
     common_spawn_roamer(FIGURE_HERBALIST, current_params().min_houses_coverage, (e_figure_action)ACTION_62_HERBALIST_ROAMING);
     //    check_labor_problem();

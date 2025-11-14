@@ -54,6 +54,10 @@ void city_figures_t::reload_objects() {
     }
 }
 
+int city_figures_t::total_invading_enemies() const {
+    return kingdome_soldiers + enemies;
+}
+
 void city_figures_t::on_post_load() {
     for (auto &figure: map_figures()) {
         if (figure->type == FIGURE_NONE) {
@@ -100,14 +104,6 @@ void city_t::figures_add_rioter(int is_attacking) {
 
 void city_t::figures_add_soldier() {
     figures.soldiers++;
-}
-
-//void city_figures_set_gladiator_revolt(void) {
-//    figure.attacking_natives = 10;
-//}
-
-int city_t::figures_total_invading_enemies() {
-    return figures.kingdome_soldiers + figures.enemies;
 }
 
 bool city_t::figures_has_security_breach() {

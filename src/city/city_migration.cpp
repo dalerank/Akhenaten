@@ -47,7 +47,7 @@ void city_migration_t::update_status() {
     }
 
     // war scares immigrants away
-    if (g_city.figures_total_invading_enemies() > 3 && percentage > 0) {
+    if (g_city.figures.total_invading_enemies() > 3 && percentage > 0) {
         percentage = 0;
         invading_cap = true;
         return;

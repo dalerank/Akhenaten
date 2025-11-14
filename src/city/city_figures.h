@@ -20,6 +20,8 @@ struct city_figures_t {
     void add_animal();
     void init_figures();
     void reload_objects();
+
+    int total_invading_enemies() const;
 };
 
 void figure_clear_all();

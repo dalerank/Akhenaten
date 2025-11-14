@@ -118,27 +118,27 @@ void config_show_tutorial_properties(bool header) {
             bstring64 label;
             label.printf("prosperity: %d / %d", g_city.ratings.prosperity, winning_prosperity());
             bool met = g_city.ratings.prosperity >= winning_prosperity();
-            game_debug_show_property(label.c_str(), met);
+            game_debug_show_property(label.c_str(), met, true);
         }
 
         if (winning_monuments() > 0) {
             bstring64 label;
             label.printf("monuments: %d / %d", g_city.ratings.monument, winning_monuments());
             bool met = g_city.ratings.monument >= winning_monuments();
-            game_debug_show_property(label.c_str(), met);
+            game_debug_show_property(label.c_str(), met, true);
         }
 
         if (winning_kingdom() > 0) {
             bstring64 label;
             label.printf("kingdom: %d / %d", g_city.kingdome.rating, winning_kingdom());
             bool met = g_city.kingdome.rating >= winning_kingdom();
-            game_debug_show_property(label.c_str(), met);
+            game_debug_show_property(label.c_str(), met, true);
         }
 
         if (winning_housing() > 0) {
             bstring64 label;
-            label.printf("housing[lvl %d]: ? / %d", winning_houselevel(), winning_housing());
-            game_debug_show_property(label.c_str(), false);
+            label.printf("housing[lvl %d]: %d / %d", winning_houselevel(), g_city.victory_state.houses_of_required_level(), winning_housing());
+            game_debug_show_property(label.c_str(), g_city.victory_state.is_housing_condition_met(), true);
         }
 
         if (scenario_criteria_time_limit_enabled()) {
