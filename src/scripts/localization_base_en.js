@@ -2723,8 +2723,7 @@ localization_base_en = [
     { group:62, id:29, text: "Import some bricks so that you can build a mastaba" }
     { group:62, id:30, text: "Make some papyrus and build a Scribal School" }
     { group:62, id:31, text: "Make a house evolve into a 'spacious apartment'" }
-    { group:62, id:32, text: "Build a mastaba, then review the Mission Briefing goals" }
-    { group:62, id:33, text: "Brew some beer for Bazaars to distribute" }
+    { group:62, id:32, text: "Build a mastaba, then review the Mission Briefing goals" }   
     { group:62, id:34, text: "Click the ankh symbol to review your mission goals" }
     { group:62, id:35, text: "Your place in history is assured. The Egyptian people declare you to be a god." }
     { group:62, id:36, text: "Accept deity status!" }

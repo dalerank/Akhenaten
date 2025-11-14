@@ -1029,4 +1029,6 @@ localization_en = [
 
   { key: "#mission2_pottery_step1", text: "Fill a Storage Yard with pottery" }
   { key: "#mission2_pottery_step2", text: "Beautify your city, then review the Mission Briefing" }
+
+  { key: "#mission3_brew_beer", text: "Brew some beer for Bazaars to distribute" }
 ]
