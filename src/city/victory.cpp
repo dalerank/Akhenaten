@@ -65,7 +65,7 @@ void victory_state_t::determine_state() {
     const auto& population = g_city.population;
     const auto& figures = g_city.figures;
 
-    e_victory_state state = e_victory_state_won;
+    state = e_victory_state_won;
     int has_criteria = 0;
 
     if (winning_culture()) {
