@@ -386,6 +386,9 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
+    if (is_currently_flooded()) {
+        return true;
+    }
     draw_crops(ctx, type(), progress(), tile(), point, mask);
     draw_workers(ctx, &base, t, point);
 
@@ -582,18 +585,23 @@ void building_farm::remove_worker(figure_id fid) {
     }
 }
 
-void building_farm::update_tiles_image() {
-    bool is_flooded = false;
-    if (building_is_floodplain_farm(base)) {
-        for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
-            for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
-                if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
-                    is_flooded = true;
-            }
+bool building_farm::is_currently_flooded() const {
+    if (!building_is_floodplain_farm(base)) {
+        return false;
+    }
+
+    for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
+        for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
+            if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
+                return true;
         }
     }
 
-    if (!is_flooded) {
+    return false;
+}
+
+void building_farm::update_tiles_image() {
+    if (!is_currently_flooded()) {
         int img_id = anim(animkeys().farmland).first_img();
         map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output.resource - 1), progress());
     }

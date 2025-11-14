@@ -55,6 +55,7 @@ public:
 
     void deplete_soil();
     void update_tiles_image();
+    bool is_currently_flooded() const;
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
 
