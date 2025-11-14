@@ -15,11 +15,9 @@ using figure_sounds_map = std::unordered_map<xstring, figure_sound_t>;
 struct figure_sounds_t {
     figure_sounds_map data;
 
-    const figure_sound_t &operator[](const xstring& key) const {
-        static figure_sound_t dummy{ "", "", 0, 0, "#undefined_phrase" };
-
+    figure_sound_t operator[](const xstring& key) const {
         auto it = data.find( key );
-        return (it == data.end()) ? dummy : it->second;
+        return (it == data.end()) ? figure_sound_t{ "", "", 0, 0, key } : it->second;
     }
 };
 

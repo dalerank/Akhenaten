@@ -66,7 +66,7 @@ sound_key figure_labor_seeker::phrase_key() const {
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("city_not_safety_workers_leaving");
+        keys.push_back("city_not_safety");
     }
 
     if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath

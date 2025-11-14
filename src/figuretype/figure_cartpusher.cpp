@@ -510,7 +510,7 @@ bool figure_cartpusher::can_move_by_water() const {
 
 sound_key figure_cartpusher::phrase_key() const {
     if (action_state(ACTION_8_RECALCULATE)) {
-        return "cartpusher_ry_found_destination";
+        return "cartpusher_no_found_destination";
     }
          
     if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
