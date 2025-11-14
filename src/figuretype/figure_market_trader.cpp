@@ -8,11 +8,31 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_trader);
 
-void figure_market_trader::figure_action() {
-    if (action_state() != ACTION_125_ROAMER_ROAMING) {
-        return;
-    }
+void figure_market_trader::figure_roaming_action() {
+    switch (action_state()) {
+    case FIGURE_ACTION_150_ATTACK:
+        base.figure_combat_handle_attack();
+        break;
 
+    case FIGURE_ACTION_149_CORPSE:
+        base.figure_combat_handle_corpse();
+        break;
+
+    case ACTION_125_MARKET_TRADER_ROAMING:
+        base.do_roam();
+        break;
+
+    case ACTION_126_MARKET_TRADER_RETURNING:
+        base.do_returnhome();
+        break;
+
+    default:
+        advance_action(ACTION_126_ROAMER_RETURNING);
+        break;
+    }
+}
+
+void figure_market_trader::figure_action() {
     building_bazaar* bazaar = home()->dcast_bazaar();
     if (!bazaar) {
         return;

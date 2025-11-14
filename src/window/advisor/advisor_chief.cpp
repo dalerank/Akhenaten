@@ -49,7 +49,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
     // migration
     {
         std::pair<int, int> migration_status;
-        if (g_city.figures_total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
+        if (g_city.figures.total_invading_enemies() > 3) { migration_status = {43, FONT_NORMAL_BLACK_ON_DARK}; } 
         else if (g_city.migration.newcomers >= 5) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; }
         else if (g_city.migration.no_room_for_immigrants()) { migration_status = {45, FONT_NORMAL_YELLOW}; }
         else if (g_city.migration.percentage >= 80) { migration_status = {44, FONT_NORMAL_BLACK_ON_DARK}; } 

@@ -4,6 +4,7 @@
 #include "building/building_type.h"
 #include "building/building_storage_yard.h"
 #include "figuretype/figure_market_buyer.h"
+#include "figuretype/figure_market_trader.h"
 #include "graphics/elements/ui.h"
 #include "city/city.h"
 #include "city/city_labor.h"
@@ -281,7 +282,7 @@ void building_bazaar::spawn_figure() {
             base.figure_spawn_delay++;
             if (base.figure_spawn_delay > spawn_delay) {
                 base.figure_spawn_delay = 0;
-                base.create_roaming_figure(FIGURE_MARKET_TRADER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
+                base.create_roaming_figure(FIGURE_MARKET_TRADER, ACTION_125_MARKET_TRADER_ROAMING, BUILDING_SLOT_SERVICE);
                 return;
             }
         }

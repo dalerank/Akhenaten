@@ -161,6 +161,6 @@ function tutorial3_handle_victory_state(ev) {
 	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)
 	city.set_victory_reason("pottery_step2_stored_handled", mission.pottery_step2_stored_handled)
 
-	var some_days_after_last_action = (game.absolute_day - mission.last_action) > mission.victory_last_action_delay;
+	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
 	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }

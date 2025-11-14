@@ -210,7 +210,6 @@ struct city_t {
     void figures_add_rioter(int is_attacking);
     void figures_add_soldier();
     void figures_update_day();
-    int figures_total_invading_enemies();
     bool figures_has_security_breach();
     void figures_generate_criminals();
 
@@ -224,7 +223,6 @@ struct city_t {
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
     empire_city& ourcity();
-    e_victory_state determine_victory_state();
     void victory_check();
     void buildings_update_open_water_access();
 
