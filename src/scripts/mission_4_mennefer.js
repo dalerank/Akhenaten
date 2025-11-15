@@ -48,7 +48,7 @@ mission4 {
 		bricks_stored_needed : 100
 		victory_last_action_delay : 3
 
-		spacious_apartment_built_handled : false
+		spacious_apartment_built : false
 		papyrus_made_handled : false
 		bricks_bought_handled : false
 		last_action_time : 0
@@ -57,7 +57,7 @@ mission4 {
 
 [event=event_update_mission_goal, mission=mission4]
 function mission4_update_goal(ev) {
-	if (!mission.spacious_apartment_built_handled) {
+	if (!mission.spacious_apartment_built) {
 		city.set_goal_tooltip("#tutorial_goal_education")
 		return
 	}
@@ -80,7 +80,7 @@ function mission4_on_start(ev) {
 		city.use_building(BUILDING_DOCK, true)
 	}
 
-	if (mission.spacious_apartment_built_handled) {
+	if (mission.spacious_apartment_built) {
 		city.use_building(BUILDING_REED_GATHERER, true)
 		city.use_building(BUILDING_PAPYRUS_WORKSHOP, true)
 		city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
@@ -115,7 +115,7 @@ function mission4_handle_spacious_apartment() {
         return
     }
 
-    mission.spacious_apartment_built_handled = true
+    mission.spacious_apartment_built = true
     mission.last_action_time = game.absolute_day
 	
     city.set_advisor_available(ADVISOR_EDUCATION, 1)
@@ -130,7 +130,7 @@ function mission4_handle_spacious_apartment() {
 
 [event=event_update_victory_state, mission=mission4]
 function mission4_handle_victory_state(ev) {
-	city.set_victory_reason("spacious_apartment_built", mission.spacious_apartment_built_handled)
+	city.set_victory_reason("spacious_apartment_built", mission.spacious_apartment_built)
 	city.set_victory_reason("papyrus_made", mission.papyrus_made_handled)
 	city.set_victory_reason("bricks_bought", mission.bricks_bought_handled)
 
