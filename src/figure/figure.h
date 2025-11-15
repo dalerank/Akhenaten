@@ -54,6 +54,7 @@ class figure_antelope;
 class figure_hippo;
 class figure_animal;
 class figure_ballista;
+class figure_market_buyer;
 
 struct animation_t;
 struct figure_static_params;
@@ -239,6 +240,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(antelope)
     ALLOW_SMART_CAST_FIGURE(animal)
     ALLOW_SMART_CAST_FIGURE(ballista)
+    ALLOW_SMART_CAST_FIGURE(market_buyer)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -562,6 +564,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(hippo)
     ALLOW_SMART_CAST_FIGURE_I(animal)
     ALLOW_SMART_CAST_FIGURE_I(ballista)
+    ALLOW_SMART_CAST_FIGURE_I(market_buyer)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -648,6 +651,7 @@ GENERATE_SMART_CAST_FIGURE(antelope)
 GENERATE_SMART_CAST_FIGURE(hippo)
 GENERATE_SMART_CAST_FIGURE(animal)
 GENERATE_SMART_CAST_FIGURE(ballista)
+GENERATE_SMART_CAST_FIGURE(market_buyer)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {
