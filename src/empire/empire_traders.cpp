@@ -55,8 +55,8 @@ void empire_trader::update() {
 
     current_route_point++;
     const auto& point = (state == estate_returning_home)
-                            ? route.points[current_route_point]
-                            : route.points[route.num_points - current_route_point];
+                            ? route.points[route.num_points - current_route_point]
+                            : route.points[current_route_point];
     current_position = point.p;
 
     if (is_at_destination()) {
@@ -147,7 +147,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->is_ship = (route.route_type == 2);
 
     if (route.in_use && route.num_points > 0) {
-        const auto &point = route.points[route.num_points - 1];
+        const auto &point = route.points[trader->current_route_point];
         trader->current_position = point.p;
     }
 }

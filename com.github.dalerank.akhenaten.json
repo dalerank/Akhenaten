@@ -28,8 +28,11 @@
                     "type" : "shell",
                     "commands" : [
                         "rm -rf _deps/freetype-src || true",
+                        "rm -rf _deps/freetype-build || true",
                         "rm -rf _deps/harfbuzz-src || true",
+                        "rm -rf _deps/harfbuzz-build || true",
                         "rm -rf _deps/stb-src || true",
+                        "rm -rf _deps/stb-build || true",
                         "mkdir -p _deps"
                     ]
                 },

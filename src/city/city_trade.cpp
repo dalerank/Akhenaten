@@ -1,4 +1,4 @@
-#include "trade.h"
+#include "city_trade.h"
 
 #include "building/building_storage_yard.h"
 #include "city/constants.h"

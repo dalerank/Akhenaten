@@ -8,7 +8,6 @@
 #include "game/game_events.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
-#include "city/trade.h"
 #include "core/random.h"
 #include "game/game_config.h"
 

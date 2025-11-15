@@ -9,7 +9,6 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_resource.h"
-#include "city/trade.h"
 #include "core/calc.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"

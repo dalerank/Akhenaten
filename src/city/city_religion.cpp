@@ -9,7 +9,6 @@
 #include "game/game_events.h"
 #include "city/city_health.h"
 #include "city/city_message.h"
-#include "city/trade.h"
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "core/random.h"

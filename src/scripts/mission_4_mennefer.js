@@ -29,7 +29,7 @@ mission4 {
 	cities [
 		{
 			name : "Nekhen"
-			is_sea_trade : false
+			is_sea_trade : true
 			max_traders : 1
 			trade_limits : default_trade_limits
 		}

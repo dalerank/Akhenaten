@@ -11,8 +11,6 @@
 #include "empire/empire_map.h"
 #include "figure/figure.h"
 
-#include "city/trade.h"
-
 int empire_trader_handle::record_bought_resource(e_resource resource) {
     auto& traders = g_empire_traders.traders;
     constexpr int amount = 100;
