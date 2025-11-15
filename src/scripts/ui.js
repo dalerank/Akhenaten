@@ -36,6 +36,7 @@ import ui_advisor_ratings
 import ui_labor_priority_window
 import ui_window_features
 import ui_overlay_menu
+import ui_market_buyer_window
 import ui_widgets
 
 

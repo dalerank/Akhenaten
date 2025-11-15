@@ -150,10 +150,9 @@ void figure_info_window::init(object_info &c) {
 
         ui[btn_id].select(i == c.nfigure.selected_index);
         ui[btn_id].onclick([index = i, &c] {
-            auto &data = g_figures_data;
-            data.context_for_callback = &c;
-            data.context_for_callback->nfigure.selected_index = index;
-            data.context_for_callback->can_play_sound = true;
+            c.nfigure.selected_index = index;
+            c.can_play_sound = true;
+            events::emit(event_update_tile_info { true });
         });
 
         auto screen_opt = ui[btn_id].dcast_image_button();
