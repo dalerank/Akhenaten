@@ -1,7 +1,7 @@
 #include "figure_trader.h"
 
 #include "core/calc.h"
-#include "city/trade.h"
+#include "city/city_trade.h"
 #include "empire/empire_map.h"
 #include "empire/empire.h"
 #include "game/game.h"

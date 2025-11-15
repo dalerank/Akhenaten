@@ -6,7 +6,6 @@
 #include "building/building_dock.h"
 #include "city/buildings.h"
 #include "city/city_buildings.h"
-#include "city/trade.h"
 #include "core/calc.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
