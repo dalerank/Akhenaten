@@ -22,6 +22,7 @@
 #include "grid/building.h"
 #include "city/ratings.h"
 #include "city/city.h"
+#include "core/object_property.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_buyer);
@@ -278,31 +279,22 @@ int figure_market_buyer::provide_service() {
     return houses_serviced;
 }
 
-bool figure_market_buyer::window_info_background(object_info &c) {
-    painter ctx = game.painter();
-    figure *f = c.figure_get();
+bvariant figure_market_buyer::get_property(const xstring &domain, const xstring &name) const {
+    if (domain == tags().figure && name == tags().resource) {
+        return bvariant(base.collecting_item_id);
+    }
 
-    const uint16_t big_image = f->anim(animkeys().big_image).first_img();
-    ctx.img_generic(big_image, c.offset + vec2i{28, 112});
+    return figure_impl::get_property(domain, name);
+}
 
-    text_draw(base.name.c_str(), c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK, COLOR_MASK_NONE);
-    int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-
+xstring figure_market_buyer::action_tip() const {
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        width += lang_text_draw(129, 17, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(base.collecting_item_id);
-        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        return "#market_buyer_collecting";
     } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
-        width += lang_text_draw(129, 18, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(base.collecting_item_id);
-        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        return "#market_buyer_returning_to";
     }
 
-    if (!!f->phrase_key) {
-        text_draw_multiline(f->phrase_key, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK, COLOR_MASK_NONE);
-    }
-
-    return true;
+    return "#market_buyer_idle";
 }
 
 int figure_market_buyer::take_food_from_storage(building* market, building* b) {

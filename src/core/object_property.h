@@ -24,6 +24,8 @@ struct id_property_t {
     static const xstring progress;
     static const xstring tax_income_or_storage;
     static const xstring num_workers;
+    static const xstring resource;
+    static const xstring resource_amount;
     static const xstring output_resource;
     static const xstring second_output_resource;
     static const xstring first_material;
