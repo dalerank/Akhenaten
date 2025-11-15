@@ -166,7 +166,7 @@ pcstr lang_get_string(int group, int index) {
 
 pcstr lang_text_from_message(int id) {
     auto it = g_event_messages.find({ (uint16_t)id });
-    return (pcstr)((it != g_event_messages.end()) ? it->text.c_str() : "#unknown_message");
+    return (pcstr)((it != g_event_messages.end()) ? it->text.c_str() : "#message_table_of_contents");
 }
 
 textid loc_text_from_key(pcstr key) {
