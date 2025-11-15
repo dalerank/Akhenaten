@@ -89,6 +89,8 @@ function tutorial_4_on_build_tax_collector(ev) {
 
 	mission.last_action_time = game.absolute_day
     mission.tax_collector_built = true
+
+	city.set_goal_tooltip("#reach_modest_houses_number")
 }
 
 [event=event_update_victory_state, mission=mission3]
