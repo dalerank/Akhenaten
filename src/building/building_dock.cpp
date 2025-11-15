@@ -231,14 +231,19 @@ void building_dock::unaccept_all_goods() {
 
 empire_trader_handle building_dock::empire_trader() const {
     auto& d = runtime_data();
+    if (d.trade_ship == 0) {
+        return empire_trader_handle{};
+    }
+
     auto ship = figure_get<figure_trade_ship>(d.trade_ship);
     assert(ship != nullptr);
+
     return ship->empire_trader();
 }
 
 empire_city_handle building_dock::trader_city() {
     auto &d = runtime_data();
-    auto ship = d.trade_ship ? figure_get<figure_trade_ship>(d.trade_ship) : 0;
+    auto ship = d.trade_ship ? figure_get<figure_trade_ship>(d.trade_ship) : nullptr;
     return { ship ? ship->empire_city() : empire_city_handle{} };
 }
 

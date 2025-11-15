@@ -2,7 +2,6 @@
 
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/trade.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"

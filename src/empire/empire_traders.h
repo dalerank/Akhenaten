@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/vec2i.h"
+#include "figure/figure.h"
 #include "empire/empire_object.h"
 
 struct empire_trader {
@@ -8,6 +9,7 @@ struct empire_trader {
         estate_moving_to_destination,
         estate_trading,
         estate_returning_home,
+        estate_count
     };
 
     uint8_t id;

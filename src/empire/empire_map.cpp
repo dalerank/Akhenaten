@@ -2,7 +2,6 @@
 
 #include "city/constants.h"
 #include "city/city_resource.h"
-#include "city/trade.h"
 #include "core/calc.h"
 #include "core/log.h"
 #include "empire/empire.h"

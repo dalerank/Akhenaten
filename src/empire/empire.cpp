@@ -7,7 +7,6 @@
 #include "empire/empire_traders.h"
 #include "city/buildings.h"
 #include "city/city_message.h"
-#include "city/trade.h"
 #include "city/city.h"
 #include "city/city_population.h"
 #include "scenario/map.h"
@@ -262,8 +261,6 @@ void empire_t::generate_traders() {
         }
 
         if (g_city.generate_trader_from(city)) {
-            int lookup_id = std::distance(cities, &city);
-            g_empire_traders.create_trader(city.route_id, lookup_id);
             break;
         }
     }

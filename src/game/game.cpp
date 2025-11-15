@@ -41,7 +41,6 @@
 #include "graphics/screen.h"
 #include "widget/widget_minimap.h"
 #include "city/city.h"
-#include "city/trade.h"
 #include "city/city_floods.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
