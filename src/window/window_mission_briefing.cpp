@@ -1,7 +1,7 @@
 #include "window_mission_briefing.h"
 
 #include "game/mission.h"
-#include "game/tutorial.h"
+#include "game/game_events.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
@@ -86,16 +86,25 @@ void ui::mission_briefing_window::init() {
     setup_goal(62, 14, winning_monuments() > 0, winning_monuments());
     setup_goal(62, 15, winning_kingdom() > 0, winning_kingdom());
 
-    xstring immediate_goal_text = g_tutorials_flags.get_immediate_goal_text();
-    ui["goal_immediate"].enabled = !!immediate_goal_text;
-    ui["goal_immediate"] = immediate_goal_text;
+    update_goals_list(g_scenario.goal_tooltip);
 
     ui["description_text"] = msg.content.text;
+}
+
+void ui::mission_briefing_window::update_goals_list(const xstring& goal) {
+    if (last_goal != goal) {
+        last_goal = goal;
+        ui["goal_immediate"].enabled = !!last_goal;
+        ui["goal_immediate"] = last_goal;
+    }
 }
 
 int ui::mission_briefing_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
     window_draw_underlying_window(UiFlags_None);
+
+    update_goals_list(g_scenario.goal_tooltip);
+
     return 0;
 }
 
@@ -107,6 +116,7 @@ void window_mission_briefing_show_impl() {
         [] (const mouse *m, const hotkeys *h) { g_mission_briefing.ui_handle_mouse(m); }
     };
     
+    events::emit(event_update_mission_goal{ g_mission_briefing.scenario_id });
     g_mission_briefing.init();
     window_show(&window);
 }

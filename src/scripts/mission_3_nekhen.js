@@ -28,26 +28,39 @@ mission3 {
 
 		beer_stored_handled : false
 		tax_collector_built : false
+		modest_houses_reached : false
 		last_action_time : 0
 	}
 }
 
-[event=event_mission_start, mission=mission3]
-function tutorial3_on_start(ev) {
-    city.set_goal_tooltip("#reach_modest_houses_number")
+[event=event_update_mission_goal, mission=mission3]
+function mission3_update_goal(ev) {
+	if (!mission.modest_houses_reached) {
+		city.set_goal_tooltip("#reach_modest_houses_number")
+		return
+	}
 
+	if (!mission.beer_stored_handled) {
+		city.set_goal_tooltip("#mission3_brew_beer")
+		return
+	}
+
+	if (!mission.tax_collector_built) {
+		city.set_goal_tooltip("#build_tax_collector")
+		return
+	}
+}
+
+[event=event_mission_start, mission=mission3]
+function mission3_on_start(ev) {
 	if (mission.tax_collector_built) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
 		city.use_building(BUILDING_PERSONAL_MANSION, true)
-	} else {
-		city.set_goal_tooltip("#build_tax_collector")
 	}
 
 	if (mission.beer_stored_handled) {
 		city.use_building(BUILDING_TAX_COLLECTOR, true)
 		city.use_building(BUILDING_PERSONAL_MANSION, true)
-	} else {
-		city.set_goal_tooltip("#mission3_brew_beer")
 	}
 
 	city.set_advisor_available(ADVISOR_LABOR, 1)
@@ -57,7 +70,7 @@ function tutorial3_on_start(ev) {
 }
 
 [event=event_warehouse_filled, mission=mission3]
-function tutorial4_warehouse_beer_check(ev) {
+function mission3_warehouse_beer_check(ev) {
     if (mission.beer_stored_handled) {
         return
     }
@@ -77,7 +90,7 @@ function tutorial4_warehouse_beer_check(ev) {
 }
 
 [event=event_building_create, mission=mission3]
-function tutorial_4_on_build_tax_collector(ev) {
+function mission3_on_build_tax_collector(ev) {
     if (mission.tax_collector_built) {
         return
     }
@@ -89,12 +102,25 @@ function tutorial_4_on_build_tax_collector(ev) {
 
 	mission.last_action_time = game.absolute_day
     mission.tax_collector_built = true
+}
 
-	city.set_goal_tooltip("#reach_modest_houses_number")
+[event=event_advance_day, mission=mission3]
+function mission3_handle_spacious_apartment() {
+    if (mission.spacious_apartment_built) {
+        return
+    }
+
+    var modest_houses_count = city.count_total_buildings(BUILDING_HOUSE_MODEST_HOMESTEAD);
+    if (modest_houses_count < mission.modest_houses_needed) {
+        return
+    }
+
+    mission.modest_houses_reached = true
+    mission.last_action_time = game.absolute_day
 }
 
 [event=event_update_victory_state, mission=mission3]
-function tutorial3_handle_victory_state(ev) {
+function mission3_handle_victory_state(ev) {
 	city.set_victory_reason("beer_stored_handled", mission.beer_stored_handled)
 	city.set_victory_reason("tax_collector_built", mission.tax_collector_built)
 
