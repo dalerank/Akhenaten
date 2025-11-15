@@ -787,7 +787,7 @@ info_window_storageyard_orders = {
 }
 
 info_window_storageyard = {
-    first_advisor       : ADVISOR_TRADE,
+    first_advisor       : ADVISOR_TRADE
     ui : {
         background    : outer_panel({size: [29, 21] }),
         title         : text({pos: [0, 12], size: [px(27), 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),

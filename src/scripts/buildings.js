@@ -1166,7 +1166,7 @@ building_bandstand {
 
     juggler { pos[35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
     musician_sn { pos[-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
-    musician_we { pos[48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
+    musician_we { pos[30, 10], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3, internal_offset:true }
   }
 
   labor_category : LABOR_CATEGORY_ENTERTAINMENT

@@ -1036,6 +1036,60 @@ localization_en = [
   { key: "#market_buyer_collecting", text: "Collecting" }
 
   { key: "#tutorial_goal_education", text: "Make a house evolve into a 'spacious apartment'" }
-  { kye: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
-   
+  { key: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
+  { key: "#tutorial_goal_import_bricks", text: "Import some bricks so that you can build a mastaba" }
+
+  { key: "#none", text: "Nothing" }
+  { key: "#grain", text: "Grain" }
+  { key: "#meat", text: "Meat" }
+  { key: "#lettuce", text: "Lettuce" }
+  { key: "#chickpeas", text: "Chickpeas" }
+  { key: "#pomegranates", text: "Pomegranates" }
+  { key: "#figs", text: "Figs" }
+  { key: "#fish", text: "Fish" }
+  { key: "#gamemeat", text: "Game meat" }
+  { key: "#straw", text: "Straw" }
+  { key: "#weapons", text: "Weapons" }
+  { key: "#clay", text: "Clay" }
+  { key: "#bricks", text: "Bricks" }
+  { key: "#pottery", text: "Pottery" }
+  { key: "#barley", text: "Barley" }
+  { key: "#beer", text: "Beer" }
+  { key: "#flax", text: "Flax" }
+  { key: "#linen", text: "Linen" }
+  { key: "#gems", text: "Gems" }
+  { key: "#luxury_goods", text: "Luxury goods" }
+  { key: "#timber", text: "Wood" }
+  { key: "#gold", text: "Gold" }
+  { key: "#reeds", text: "Reeds" }
+  { key: "#papyrus", text: "Papyrus" }
+  { key: "#stone", text: "Plain stone" }
+  { key: "#limestone", text: "Limestone" }
+  { key: "#granite", text: "Granite" }
+  { key: "#chariots", text: "Chariot" }
+  { key: "#copper", text: "Copper" }
+  { key: "#sandstone", text: "Sandstone" }
+  { key: "#oil", text: "Oil" }
+  { key: "#henna", text: "Henna" }
+  { key: "#paint", text: "Paint" }
+  { key: "#lamps", text: "Lamps" }
+  { key: "#marble", text: "Marble" }
+  { key: "#deben", text: "Deben" }
+  { key: "#troops", text: "Troops" }
+  { key: "#jewelry_luxury", text: "Jewelry (luxury goods)" }
+  { key: "#jewelry", text: "Jewelry" }
+  { key: "#wine_luxury", text: "Wine (luxury goods)" }
+  { key: "#wine", text: "Wine" }
+  { key: "#ivory_luxury", text: "Ivory (luxury goods)" }
+  { key: "#ivory", text: "Ivory" }
+  { key: "#ebony_luxury", text: "Ebony (luxury goods)" }
+  { key: "#ebony", text: "Ebony" }
+  { key: "#incense_luxury", text: "Incense (luxury goods)" }
+  { key: "#incense", text: "Incense" }
+  { key: "#olive_oil_luxury", text: "Olive oil (luxury goods)" }
+  { key: "#olive_oil", text: "Olive oil" }
+  { key: "#leopard_skins_luxury", text: "Leopard skins (luxury goods)" }
+  { key: "#leopard_skins", text: "Leopard skins" }
+  { key: "#perfume_luxury", text: "Perfume (luxury goods)" }
+  { key: "#perfume", text: "Perfume" }
 ]
