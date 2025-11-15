@@ -21,6 +21,10 @@ city {
         return __city_building_is_temple(building_id)
     }
 
+    building_is_tax_collector : function(building_id) {
+        return __city_building_is_tax_collector(building_id)
+    }
+
     count_active_buildings : function(building_type) {
         return __city_count_active_buildings(building_type)
     }
