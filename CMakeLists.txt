@@ -247,6 +247,12 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+
+if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+endif()
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
@@ -254,6 +260,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(freetype)
 
+if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
+endif()
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
@@ -263,6 +273,10 @@ FetchContent_Declare(
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(harfbuzz)
 
+if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb.h")
+    set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
+endif()
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
