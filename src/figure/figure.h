@@ -513,7 +513,6 @@ public:
     virtual void update_animation();
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
-    virtual int y_correction(int y) const { return y; }
     virtual void cart_image_update() { base.cart_image_update(); }
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
