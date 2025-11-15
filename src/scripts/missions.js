@@ -26,6 +26,7 @@ import mission_0_nubt
 import mission_1_thinis
 import mission_2_perwadjyt
 import mission_3_nekhen
+import mission_4_mennefer
 import mission_5_timna
 import mission_6_behdet
 import mission_8_selima

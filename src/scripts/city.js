@@ -29,6 +29,10 @@ city {
         return __city_count_active_buildings(building_type)
     }
 
+    count_total_buildings : function(building_type) {
+        return __city_count_total_buildings(building_type)
+    }
+
     set_advisor_available : function(advisor, available) {
         return __city_set_advisor_available(advisor, available)
     }

@@ -1322,11 +1322,12 @@ io_buffer *iob_city_utilities_data = new io_buffer([] (io_buffer *iob, size_t ve
         iob->bind_vec2i_compat(ref); // 4bytes
     } // 64 bytes at all
     iob->bind____skip(36);
-    g_scenario.bind_data(iob, version, 900);
+    iob->bind____skip(900);
 });
 
 io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(8000);
+    iob->bind____skip(6000);
+    g_scenario.bind_data(iob, version, 2000);
 });
 
 const uint8_t* city_player_name() {
