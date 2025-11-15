@@ -18,8 +18,8 @@ struct city_labor_t {
     int32_t workers_employed;
     int32_t workers_unemployed;
     int32_t workers_needed;
-    int32_t unemployment_percentage;
-    int32_t unemployment_percentage_for_goverment;
+    int8_t unemployment_percentage_for_goverment;
+    int8_t unemployment_percentage;
     labor_category categories[10];
 
     int workers_allocated(int category) const;

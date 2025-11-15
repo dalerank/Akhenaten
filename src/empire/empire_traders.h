@@ -12,6 +12,7 @@ struct empire_trader {
 
     uint8_t id;
     uint8_t trade_route_id;
+    figure_id owner_figure_id;
     uint8_t destination_city_id;
     vec2i current_position;
     uint8_t current_route_point;

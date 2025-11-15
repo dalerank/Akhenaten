@@ -98,6 +98,8 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
             }
 
             city_arch.r(*city);
+
+            empire_object_set_trade_route_type(city->route_id, city->is_sea_trade);
         });
     });
 }

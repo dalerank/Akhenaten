@@ -41,3 +41,4 @@ import figure_names_en
 import music
 import invasions
 import enemies
+import sentiment

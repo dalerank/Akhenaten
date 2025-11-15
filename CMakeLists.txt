@@ -251,6 +251,7 @@ set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 
 if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+    set(FETCHCONTENT_BINARY_DIR_FREETYPE "${CMAKE_BINARY_DIR}/_deps/freetype-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
 endif()
 FetchContent_Declare(
@@ -262,6 +263,7 @@ FetchContent_MakeAvailable(freetype)
 
 if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
+    set(FETCHCONTENT_BINARY_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
 endif()
 FetchContent_Declare(
@@ -275,6 +277,7 @@ FetchContent_MakeAvailable(harfbuzz)
 
 if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb.h")
     set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
+    set(FETCHCONTENT_BINARY_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
 endif()
 FetchContent_Declare(

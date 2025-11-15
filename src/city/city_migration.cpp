@@ -9,6 +9,7 @@
 svector<city_migration_t::condition, 16> g_migration_conditions;
 city_migration_defaults_t ANK_VARIABLE(migration_defaults);
 svector<sentiment_step_t, 16> ANK_VARIABLE(migration_sentiment_influence);
+svector<unemployment_step_t, 16> ANK_VARIABLE(migration_unemployment_percentage);
 std::unordered_map<xstring, int> g_migration_cap_reasons;
 
 void city_migration_t::nobles_leave_city(int num_people) {
@@ -19,12 +20,18 @@ void city_migration_t::update_status() {
     auto& params = migration_defaults;
 
     const auto &sentiment = g_city.sentiment;
-    auto it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [&] (const auto& t) {
-        return sentiment.value > t.s; 
+    auto sent_it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [sentiment = sentiment.value] (const auto& t) {
+        return sentiment > t.s; 
     });
 
-    percentage_by_sentiment = (it != migration_sentiment_influence.end()) ? it->i : 0;
-    percentage = percentage_by_sentiment;
+    const int8_t unemployment_percentage = g_city.labor.unemployment_percentage;
+    auto unemployment_it = std::find_if(migration_unemployment_percentage.begin(), migration_unemployment_percentage.end(), [unemployment_percentage] (const auto &t) {
+        return unemployment_percentage > t.u;
+    });
+
+    percentage_by_unemployments = (unemployment_it != migration_unemployment_percentage.end()) ? unemployment_it->p : 0;
+    percentage_by_sentiment = (sent_it != migration_sentiment_influence.end()) ? sent_it->i : 0;
+    percentage = (percentage_by_sentiment + percentage_by_unemployments);
 
     immigration_amount_per_batch = 0;
     emigration_amount_per_batch = 0;

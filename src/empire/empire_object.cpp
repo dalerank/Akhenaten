@@ -60,16 +60,13 @@ static int get_trade_amount_code(int index, int resource) {
 }
 
 static bool is_sea_trade_route(int route_id) {
-    auto& objects = g_empire_objects;
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {
-            if (objects[i].obj.type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)
-                return true;
-            if (objects[i].obj.type == EMPIRE_OBJECT_LAND_TRADE_ROUTE)
-                return false;
-        }
-    }
-    return false;
+    const auto& route = empire_get_route_object(route_id);
+    return route.route_type == 2;
+}
+
+void empire_object_set_trade_route_type(int route_id, bool is_sea_route) {
+    auto &route = empire_ref_route_object(route_id);
+    route.route_type = is_sea_route ? 2 : 1;
 }
 
 static void fix_image_ids(void) {
@@ -342,6 +339,10 @@ int empire_object_update_animation(const empire_object &obj, int image_id) {
 std::array<map_route_object, 50> g_empire_route_objects;
 
 const map_route_object& empire_get_route_object(int id) {
+    return g_empire_route_objects[id];
+}
+
+map_route_object &empire_ref_route_object(int id) {
     return g_empire_route_objects[id];
 }
 

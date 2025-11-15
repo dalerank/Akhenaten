@@ -55,9 +55,11 @@ const empire_object* empire_object_get_our_city();
 
 void empire_object_foreach(std::function<void(const empire_object &)> callback);
 
+void empire_object_set_trade_route_type(int route_id, bool is_sea_route);
+
 const empire_object* empire_object_get_battle_icon(int path_id, int year);
 
-int empire_object_get_max_invasion_path(void);
+int empire_object_get_max_invasion_path();
 
 int empire_object_get_closest(vec2i pos);
 
@@ -88,3 +90,4 @@ struct map_route_object {
 };
 
 const map_route_object& empire_get_route_object(int id);
+map_route_object& empire_ref_route_object(int id);
