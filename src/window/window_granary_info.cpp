@@ -73,7 +73,7 @@ void granary_info_window::init(object_info &c) {
         }
 
         ui[food_icon(food_index)].image(r.type);
-        ui[food_text(food_index)].text_var("%u %s", stored, bstring32("#", resource_name(r.type)) );
+        ui[food_text(food_index)].text_var("%u %s", stored, bstring32("#", resource_name(r.type)).c_str() );
         food_index++;
     }
    
