@@ -480,13 +480,11 @@ void city_resources_t::consume_goods(const simulation_time_t& t) {
     }
 }
 
-void city_resources_t::consume_food(const simulation_time_t& t) {
+void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
     calculate_available_food();
-    g_city.unused.unknown_00c0 = 0;
     resource_list consumed_food;
     buildings_house_do([&] (building_house *house) {
-        resource_list consumed = house->consume_food();
-
+        resource_list consumed = house->consume_food_weekly();
         consumed_food.append(consumed);
     });
 

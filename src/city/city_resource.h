@@ -78,7 +78,7 @@ struct city_resources_t {
     int food_percentage_produced();
     void calculate_available_food();
     void calculate_food_stocks_and_supply_wheat();
-    void consume_food(const simulation_time_t& t);
+    void consume_food_weekly(const simulation_time_t& t);
     void consume_goods(const simulation_time_t& t);
     void toggle_mothballed(e_resource resource);
     bool is_mothballed(e_resource resource);

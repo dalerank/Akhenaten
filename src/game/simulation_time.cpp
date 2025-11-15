@@ -40,13 +40,16 @@ bool simulation_time_t::advance_tick() {
     return false;
 }
 
-bool simulation_time_t::advance_day() {
+day_result simulation_time_t::advance_day() {
     total_days++;
-    if (++day >= 16) {
+    bool is_week_advanced = false;
+    ++day;
+    is_week_advanced = (day > 0) && ((day % days_in_week) == 0);
+    if (day >= simulation_time_t::days_in_month) {
         day = 0;
-        return true;
+        return { is_week_advanced, true };
     }
-    return false;
+    return { is_week_advanced, false };
 }
 
 bool simulation_time_t::advance_month() {
