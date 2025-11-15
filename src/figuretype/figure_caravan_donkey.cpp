@@ -10,7 +10,6 @@
 #include "empire/empire_map.h"
 #include "empire/trade_prices.h"
 
-#include "city/trade.h"
 #include "city/city_resource.h"
 #include "city/city_finance.h"
 #include "figure/image.h"
