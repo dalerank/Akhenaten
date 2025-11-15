@@ -74,5 +74,5 @@ imagepaks = [
   {id: PACK_TOMB_RAMSES_FINAL, name:"TombRamFin", index:59500, delayed:true, system:false}, // 59500 --> 59500 + 269 + 201 
   {id: PACK_CUSTOM, name:"pharaoh_custom_pack", index:60000, system:false, custom:true},  // 60000 -->
   {id: PACK_CUSTOM_FONT, name:"pharaoh_fonts_pack", index:60100, system:false, custom:true},  // 60100 -->
-  {id: PACK_CUSTOM_HOUSE, name:"pharaoh_houses_pack", index:61000, system:false, custom:true},  // 61000 -->
+  {id: PACK_CUSTOM_HOUSE, name:"pharaoh_houses_pack", index:62000, system:false, custom:true},  // 62000 -->
 ]

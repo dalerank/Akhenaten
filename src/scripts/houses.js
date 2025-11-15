@@ -311,8 +311,8 @@ building_house_modest_homestead {
     _0 { pack: PACK_GENERAL, id: 29, offset:0 }
     _1 { pack: PACK_GENERAL, id: 29, offset:1 }
     _2 { pack: PACK_CUSTOM_HOUSE, id: 0, offset:0 }
-    _3 { pack: PACK_CUSTOM_HOUSE, id: 1, offset:1 }
-    _4 { pack: PACK_CUSTOM_HOUSE, id: 2, offset:2 }
+    _3 { pack: PACK_CUSTOM_HOUSE, id: 0, offset:1 }
+    _4 { pack: PACK_CUSTOM_HOUSE, id: 0, offset:2 }
   }
 
   variants_merged {
