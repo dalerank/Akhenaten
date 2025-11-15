@@ -909,15 +909,10 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
 }
 
 void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
-    int x_correction = 0;
-    int y_correction = 3;
-
-    y_correction = dcast()->y_correction(y_correction);
-
     const image_t *img = image_get(main_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = main_image_id;
-    command.pixel = pixel + vec2i{ x_correction, y_correction };
+    command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
 }
 
@@ -927,11 +922,6 @@ void figure::city_draw_figure(painter &ctx, int highlight) {
     // the raw sprite image id, it doesn't work if we haven't performed at least a
     // single frame of figure action after loading a file (i.e. if paused instantly)
     figure_image_update(true);
-
-    // if (coord_out != nullptr) {
-    //     highlight = 0;
-    //     *coord_out = cached_pos;
-    // }
 
     if (cart_image_id) {
         switch (type) {
