@@ -142,7 +142,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     if (num_mortuary_workers > 0) {
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_health_disease", btype, grid_offset);
     } else {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_health_plague", btype, grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_disease_strikes", btype, grid_offset);
     }
 }
 
