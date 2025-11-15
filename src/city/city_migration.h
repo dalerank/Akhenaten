@@ -7,11 +7,11 @@
 
 struct event_migration_update { int population; };
 
-struct sentiment_step_t {
-    int s;
-    int i;
-};
+struct sentiment_step_t { int s; int i; };
 ANK_CONFIG_STRUCT(sentiment_step_t, s, i)
+
+struct unemployment_step_t { int u; int p; };
+ANK_CONFIG_STRUCT(unemployment_step_t, u, p)
 
 struct city_migration_defaults_t {
     uint8_t max_immigration_amount_per_batch;
@@ -37,6 +37,7 @@ struct city_migration_t {
     uint8_t refused_immigrants_today;
     int8_t percentage;
     int8_t percentage_by_sentiment;
+    int8_t percentage_by_unemployments;
     int32_t population_cap;
     int8_t no_immigration_cause;
     int8_t emigration_message_shown;

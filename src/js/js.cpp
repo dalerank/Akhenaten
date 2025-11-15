@@ -262,7 +262,6 @@ void js_reset_vm_state() {
     //js_register_mouse_functions(vm.J);
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);
-    js_register_city_advisors(vm.J);
     js_register_game_handlers({});
     js_register_menu(vm.J);
 

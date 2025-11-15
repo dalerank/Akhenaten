@@ -18,7 +18,15 @@ enum e_advisor : uint8_t {
     ADVISOR_FINANCIAL = 11,
     ADVISOR_CHIEF = 12,
     ADVISOR_MONUMENTS = 13,
+    ADVISOR_WATER = 14,
+    ADVISOR_FOOD = 15,
+    ADVISOR_PRODUCTION = 16,
+    ADVISOR_ENVIRONMENT = 17,
+    ADVISOR_SECURITY = 18,
     ADVISOR_HOUSING = 19,
+    ADVISOR_TRANSPORT = 20,
+    ADVISOR_FOREIGN = 21,
+    ADVISOR_DIPLOMACY = 22,
     ADVISOR_MAX
 };
 
@@ -31,7 +39,7 @@ enum e_low_mood_reason : uint8_t {
     LOW_MOOD_MANY_TENTS = 5,
 };
 
-enum e_no_immigratoion_reason : uint8_t {
+enum e_no_immigration_reason : uint8_t {
     NO_IMMIGRATION_LOW_WAGES = 0,
     NO_IMMIGRATION_NO_JOBS = 1,
     NO_IMMIGRATION_NO_FOOD = 2,

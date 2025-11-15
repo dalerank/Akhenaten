@@ -58,8 +58,11 @@ declare_console_command_p(destroytype) {
     }, (e_building_type)type);
 };
 
-const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
-const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> ANK_CONFIG_ENUM(e_building_type_tokens);
+using e_building_state_tokens_t = token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT>;
+const e_building_state_tokens_t e_building_state_tokens;
+
+using e_building_type_tokens_t = token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX>;
+const e_building_type_tokens_t ANK_CONFIG_ENUM(e_building_type_tokens);
 
 static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;

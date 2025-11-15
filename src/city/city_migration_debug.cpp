@@ -18,6 +18,7 @@ void config_show_migration_properties(bool header) {
         game_debug_show_property("invading_cap", migration.invading_cap);
         game_debug_show_property("migration_cap", migration.migration_cap);
         game_debug_show_property("percentage_by_sentiment", migration.percentage_by_sentiment);
+        game_debug_show_property("percentage_by_unemployments", migration.percentage_by_unemployments);
         game_debug_show_property("emigration_message_shown", migration.emigration_message_shown);
         game_debug_show_property("newcomers", migration.newcomers);
         game_debug_show_property("percentage", migration.percentage);
