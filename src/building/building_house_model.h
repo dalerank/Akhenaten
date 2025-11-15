@@ -18,6 +18,7 @@ struct model_house {
     int8_dcy physician;            /**< physician required (boolean) */
     int8_dcy health;               /**< Health required: 1 = dentist or physician, 2 = dentist and physician, 3 = dentist, physician and mortuary */
     int8_dcy food_types;           /**< Number of food types required */
+    int8_dcy food_consumption_percentage; /**< Percentage of food consumption */
     int8_dcy pottery;              /**< Pottery required */
     int8_dcy linen;                /**< Linen required */
     int8_dcy jewelry;              /**< Jewelry required */
@@ -40,7 +41,8 @@ struct model_house {
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
-    education, food, dentist, physician, health, food_types,
+    education, food, dentist, physician, health, 
+    food_types, food_consumption_percentage,
     pottery, linen, jewelry, beer, crime_risk, crime_risk_base,
     prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
     fancy_bazaar)

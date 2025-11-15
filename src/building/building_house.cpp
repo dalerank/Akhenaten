@@ -251,7 +251,7 @@ void building_house::create_vacant_lot(tile2i tile, int image_id) {
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
-resource_list building_house::consume_food() {
+resource_list building_house::consume_food_weekly() {
     if (!hsize()) {
         return {};
     }
@@ -259,9 +259,14 @@ resource_list building_house::consume_food() {
     auto &d = runtime_data();
 
     int food_types = model().food_types;
-    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, 35);
+    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, model().food_consumption_percentage);
     if (food_types > 1) {
         amount_per_type /= food_types;
+    }
+
+    if (amount_per_type > 0) {
+        amount_per_type /= simulation_time_t::weeks_in_month;
+        amount_per_type = std::max(amount_per_type, uint16_t(1));
     }
 
     d.num_foods = 0;
@@ -277,12 +282,26 @@ resource_list building_house::consume_food() {
         return {};
     }
 
-    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && d.num_foods < food_types; t++) {
-        const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
-        d.foods[t] -= exist_amount;
-        d.num_foods += (exist_amount > 0) ? 1 : 0;
-        e_resource food_res = g_city.allowed_foods(t);
-        food_types_eaten.push_back({ food_res, amount_per_type });
+    int16_t want_consumed = amount_per_type * food_types;
+    auto consume_food_impl = [&] {
+        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD; t++) {
+            const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
+            if (exist_amount > 0) {
+                want_consumed -= exist_amount;
+                d.foods[t] -= exist_amount;
+                d.num_foods += (exist_amount > 0) ? 1 : 0;
+                e_resource food_res = g_city.allowed_foods(t);
+                food_types_eaten.push_back({ food_res, amount_per_type });
+            }
+        }
+    };
+
+    // normal consumption, guess we have enough food
+    consume_food_impl();
+
+    if (want_consumed > 0) {
+        // not enough food, try to consume more from available foods
+        consume_food_impl();
     }
 
     return food_types_eaten;

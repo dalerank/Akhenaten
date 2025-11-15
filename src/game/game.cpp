@@ -152,11 +152,14 @@ void game_t::advance_year() {
     //    city_gods_reset_yearly_blessings();
 }
 
+void game_t::advance_week() {
+    g_city.resource.consume_food_weekly(game.simtime);
+}
+
 void game_t::advance_month() {
     g_city.migration.reset_newcomers();
     g_city.health.update();
     g_city.finance.advance_month();
-    g_city.resource.consume_food(game.simtime);
     g_city.resource.advance_month();
     scenario_distant_battle_process();
 
@@ -202,8 +205,13 @@ void game_t::advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
-    if (simtime.advance_day()) {
+    day_result dr = simtime.advance_day();
+    if (dr.month_advanced) {
         advance_month();
+    }
+
+    if (dr.week_advanced) {
+        advance_week();
     }
 
     g_city.update_day();

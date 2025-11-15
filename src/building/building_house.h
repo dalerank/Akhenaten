@@ -118,7 +118,7 @@ public:
     void merge_impl();
     inline bool is_merged() const { return runtime_data().is_merged; }
     resource_list consume_resources();
-    resource_list consume_food();
+    resource_list consume_food_weekly();
     void split(int num_tiles);
     const model_house &model() const;
 
