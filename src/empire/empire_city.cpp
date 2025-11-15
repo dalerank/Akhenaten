@@ -38,11 +38,11 @@ const trade_route &empire_city::get_route() const {
 }
 
 const empire_object *empire_city::get_empire_object() const {
-    return empire_object_get(empire_object_id);
+    return g_empire.get_object(empire_object_id);
 }
 
 const full_empire_object *empire_city::get_full_empire_object() const {
-    return empire_get_full_object(empire_object_id);
+    return g_empire.get_full_object(empire_object_id);
 }
 
 int empire_city::get_free_slot(int max_traders) const {

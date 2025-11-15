@@ -175,7 +175,7 @@ inline void empire_window::archive_load(archive arch) {
 void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
     painter ctx = game.painter();
 
-    const map_route_object& obj = empire_get_route_object(route_id);
+    const map_route_object& obj = g_empire.get_route_object(route_id);
     if (!obj.in_use) {
         return;
     }
@@ -255,7 +255,7 @@ void empire_window::draw_trade_resource(UiFlags flags, e_resource resource, int 
 
 void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &trade_route = city->get_route();
@@ -263,7 +263,7 @@ void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
 
     int sell_index = 0;
     for (const auto &r : resource_list::all) {
-        if (!empire_object_city_sells_resource(object->id, r.type))
+        if (!g_empire.city_sells_resource(object->id, r.type, false))
             continue;
 
         int trade_max = trade_route.limit(r.type);
@@ -275,7 +275,7 @@ void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &trade_route = city->get_route();
@@ -283,7 +283,7 @@ void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
 
     int buy_index = 0;
     for (const auto &r : resource_list::all) {
-        if (!empire_object_city_buys_resource(object->id, r.type))
+        if (!g_empire.city_buys_resource(object->id, r.type, false))
             continue;
 
         int trade_max = trade_route.limit(r.type);
@@ -295,7 +295,7 @@ void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     int index = 0;
@@ -303,7 +303,7 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
     const auto &item_buy = ui["city_buy_item"];
     vec2i e_offset = e->pos;
     for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
-        if (!empire_object_city_buys_resource(object->id, resource))
+        if (!g_empire.city_buys_resource(object->id, resource, false))
             continue;
 
         const auto &trade_route = city->get_route();
@@ -325,14 +325,14 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &item_sell = ui["city_sell_item"];
     int index = 0;
     vec2i e_offset = e->pos;
     for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
-        if (!empire_object_city_sells_resource(object->id, resource)) {
+        if (!g_empire.city_sells_resource(object->id, resource, false)) {
             continue;
         }
 
@@ -430,7 +430,7 @@ void empire_window::draw_object_info() {
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         ui["info_tooltip"] = "";
-        const empire_object* object = empire_object_get(selected_object - 1);
+        const empire_object* object = g_empire.get_object(selected_object - 1);
         switch (object->type) {
         case EMPIRE_OBJECT_CITY: draw_city_info(object); break;
         case EMPIRE_OBJECT_KINGDOME_ARMY: draw_kingdome_army_info(object); break;
@@ -483,7 +483,7 @@ int empire_window::ui_handle_mouse(const mouse *m) {
 
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object *obj = empire_object_get(selected_object - 1);
+        const empire_object *obj = g_empire.get_object(selected_object - 1);
         if (obj->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(selected_object - 1);
         }
@@ -559,7 +559,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         }
 
     } else if (obj.type == EMPIRE_OBJECT_TEXT) {
-        const full_empire_object* full = empire_get_full_object(obj.id);
+        const full_empire_object* full = g_empire.get_full_object(obj.id);
         vec2i text_pos = draw_offset + pos;
 
         tooltip_text = ui::str(196, full->city_name_id);
@@ -592,7 +592,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     }
 
     if (img && img->animation.speed_id) {
-        int new_animation = empire_object_update_animation(obj, image_id);
+        int new_animation = g_empire.update_animation(obj, image_id);
         ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
     }
 }
@@ -608,7 +608,7 @@ void empire_window::draw_map() {
 
     ui::eimage(image, draw_offset);
 
-    empire_object_foreach([this] (const empire_object &obj) {
+    g_empire.foreach_object([this] (const empire_object &obj) {
         draw_empire_object(obj);
     });
 
@@ -689,7 +689,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     const empire_city* city = nullptr;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object *object = empire_object_get(selected_object - 1);
+        const empire_object *object = g_empire.get_object(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(object->id);
             city = g_empire.city(selected_city);

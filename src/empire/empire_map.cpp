@@ -59,9 +59,6 @@ void empire_map_t::init_scenario() {
     scroll_y = initial_scroll_y;
     viewport_width = EMPIRE_SIZE.x;
     viewport_height = EMPIRE_SIZE.y;
-
-    empire_object_init_cities();
-    g_empire_traders.init();
 }
 
 void empire_map_t::set_viewport(vec2i size) {
@@ -102,7 +99,7 @@ void empire_map_t::select_object(vec2i pos) {
     int map_x = pos.x + scroll_x;
     int map_y = pos.y + scroll_y;
 
-    selected_obj = empire_object_get_closest(vec2i(map_x, map_y));
+    selected_obj = g_empire.get_closest_object(vec2i(map_x, map_y));
 }
 
 io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {

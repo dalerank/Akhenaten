@@ -20,6 +20,7 @@
 #include "scenario/scenario.h"
 #include "dev/debug.h"
 #include "core/log.h"
+#include "empire/empire.h"
 #include "js/js_game.h"
 
 declare_console_command_p(start_invasion) {
@@ -80,7 +81,7 @@ void invasion_data_t::clear(void) {
 void invasion_data_t::init() {
     clear();
     int path_current = 1;
-    int path_max = empire_object_get_max_invasion_path();
+    int path_max = g_empire.get_max_invasion_path();
 
     if (path_max == 0) {
         return;
@@ -100,7 +101,7 @@ void invasion_data_t::init() {
         }
 
         for (int year = 1; year < 8; year++) {
-            const empire_object* obj = empire_object_get_battle_icon(path_current, year);
+            const empire_object* obj = g_empire.get_battle_icon(path_current, year);
             if (!obj) {
                 continue;
             }
