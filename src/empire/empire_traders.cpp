@@ -47,7 +47,7 @@ void empire_trader::update() {
         return;
     }
 
-    const map_route_object& route = empire_get_route_object(trade_route_id);
+    const map_route_object& route = g_empire.get_route_object(trade_route_id);
     if (!route.in_use || current_route_point >= route.num_points) {
         is_active = false;
         return;
@@ -137,7 +137,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
         destination_city_id = g_city.ourcity().name_id;
     }
 
-    const map_route_object& route = empire_get_route_object(trade_route_id);
+    const map_route_object& route = g_empire.get_route_object(trade_route_id);
     trader->trade_route_id = trade_route_id;
     trader->destination_city_id = destination_city_id;
     trader->current_route_point = 0;
@@ -178,7 +178,7 @@ empire_trader* empire_traders_manager::get_free_trader() {
 }
 
 vec2i empire_traders_manager::get_position_on_route(int route_id, int point_index) {
-    const map_route_object& route = empire_get_route_object(route_id);
+    const map_route_object& route = g_empire.get_route_object(route_id);
     if (route.in_use && point_index < route.num_points) {
         return route.points[point_index].p;
     }

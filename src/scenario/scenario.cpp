@@ -37,6 +37,10 @@ void scenario_data_t::init() {
     settings.starting_personal_savings = 0;
 }
 
+void scenario_data_t::distant_battle_set_enemy_travel_months(int value) {
+    empire.distant_battle_enemy_travel_months = value;
+}
+
 void scenario_data_t::init_mission() {
     settings.starting_kingdom = difficulty_starting_kingdom();
     settings.starting_personal_savings = g_settings.personal_savings_for_mission(settings.campaign_mission_rank);

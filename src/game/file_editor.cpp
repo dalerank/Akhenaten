@@ -15,6 +15,7 @@
 #include "figure/figure_names.h"
 #include "figure/route.h"
 #include "empire/trader_handler.h"
+#include "empire/empire.h"
 #include "figuretype/editor.h"
 #include "game/state.h"
 #include "graphics/image.h"
@@ -104,7 +105,7 @@ static void prepare_map_for_editing(void) {
     //    image_load_main_paks(scenario_property_climate(), 1, 0);
 
     //    empire_load_external_c3(1, scenario_empire_id());
-    empire_object_init_cities();
+    g_empire.init_cities();
 
     g_city.figures.init_figures();
     figure_create_editor_flags();
@@ -144,8 +145,12 @@ int game_file_editor_write_scenario(const char* scenario_file) {
     scenario_editor_set_native_images(image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE),
                                       image_id_from_group(GROUP_EDITOR_BUILDING_NATIVE) + 2,
                                       image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
-    scenario_distant_battle_set_kingdome_travel_months();
-    scenario_distant_battle_set_enemy_travel_months();
+
+    int karmy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_KINGDOME_ARMY);
+    g_scenario.distant_battle_set_kingdome_travel_months(karmy);
+
+    int kenemy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
+    g_scenario.distant_battle_set_enemy_travel_months(kenemy);
 
     //    return game_file_io_write_scenario(scenario_file); TODO
     return 0;

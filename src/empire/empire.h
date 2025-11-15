@@ -77,6 +77,29 @@ public:
         trade_route routes[MAX_ROUTES] = {};
     } trade_routes;
 
+    void init_cities();
+    void foreach_object(std::function<void(const empire_object &)> callback);
+
+    bool is_sea_trade_route(int route_id) const;
+    void set_trade_route_type(int route_id, bool is_sea_route);
+    int init_distant_battle_travel_months(int object_type);
+    const full_empire_object *get_full_object(int object_id) const;
+    const empire_object *get_object(int object_id) const;
+    const empire_object *get_our_city() const;
+
+    const empire_object *get_battle_icon(int path_id, int year);
+    int get_max_invasion_path();
+
+    int get_closest_object(vec2i pos) const;
+    void object_set_expanded(int object_id, e_empire_city new_city_type);
+    bool city_buys_resource(int object_id, e_resource resource, bool from_raw_object);
+    bool city_sells_resource(int object_id, e_resource resource, bool from_raw_object);
+
+    int update_animation(const empire_object &obj, int image_id);
+
+    const map_route_object &get_route_object(int id) const ;
+    map_route_object &ref_route_object(int id);
+
 private:
     empire_city cities[MAX_CITIES] = {};
 };

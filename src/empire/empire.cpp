@@ -43,7 +43,7 @@ declare_console_command_p(save_empire_routes) {
     sroutesdata.append("var empire_routes = [\n");
 
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
-        const map_route_object& obj = empire_get_route_object(id);
+        const map_route_object& obj = g_empire.get_route_object(id);
         if (!obj.in_use) {
             continue;
         }
@@ -98,7 +98,7 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
 
             city_arch.r(*city);
 
-            empire_object_set_trade_route_type(city->route_id, city->is_sea_trade);
+            g_empire.set_trade_route_type(city->route_id, city->is_sea_trade);
         });
     });
 }
@@ -181,7 +181,7 @@ void empire_t::expand() {
         } else {
             continue;
         }
-        empire_object_set_expanded(city.empire_object_id, city.type);
+        g_empire.object_set_expanded(city.empire_object_id, city.type);
     }
 }
 
