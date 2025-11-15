@@ -2,6 +2,7 @@
 
 #include "game/game_events.h"
 #include "city/city_maintenance.h"
+#include "game/mission.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
 #include "city/city_migration.h"
@@ -22,3 +23,4 @@ ANK_SCRIPT_EVENT(event_advance_day, year, month, mday, abdday)
 ANK_SCRIPT_EVENT(event_building_create, bid)
 ANK_SCRIPT_EVENT(event_city_disease, absday)
 ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
+ANK_SCRIPT_EVENT(event_update_mission_goal, mid)

@@ -34,23 +34,35 @@ mission2 {
 }
 
 [event=event_migration_update, mission=mission2]
-function tutorial3_population_cap(ev) {
+function mission2_handle_population_cap(ev) {
     var max_pop = (!mission.pottery_step1_stored_handled) ? mission.pottery_step1_population_cap : 0;
     migration.set_population_cap("pottery_not_produced_population_cap", max_pop)
 }
 
-[event=event_mission_start, mission=mission2]
-function tutorial3_on_start(ev) {
-	city.set_goal_tooltip("#mission2_store_figs")
+[event=event_update_mission_goal, mission=mission2]
+function mission2_update_goal(ev) {
+	if (!mission.figs_stored_handled) {
+		city.set_goal_tooltip("#mission2_store_figs")
+		return
+	}
 
+	if (!mission.pottery_step1_stored_handled) {
+		city.set_goal_tooltip("#mission2_pottery_step1")
+		return
+	}
+
+	if (!mission.pottery_step2_stored_handled) {
+		city.set_goal_tooltip("#mission2_pottery_step2")
+		return
+	}	
+}
+
+[event=event_mission_start, mission=mission2]
+function mission2_on_start(ev) {
 	if (mission.figs_stored_handled) {
 		city.use_building(BUILDING_CLAY_PIT, true)
 		city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 		city.use_building(BUILDING_STORAGE_YARD, true)
-	}
-
-	if (mission.pottery_step1_stored_handled) {
-		city.set_goal_tooltip("#mission2_pottery_step1")
 	}
 
 	if (mission.pottery_step2_stored_handled) {
@@ -60,7 +72,6 @@ function tutorial3_on_start(ev) {
 		city.use_building(BUILDING_LARGE_STATUE, true)
 		city.use_building(BUILDING_GARDENS, true)
 		city.use_building(BUILDING_PLAZA, true)
-		city.set_goal_tooltip("#mission2_pottery_step2")
 	}
 
 	if (mission.disease_handled) {
@@ -75,7 +86,7 @@ function tutorial3_on_start(ev) {
 }
 
 [event=event_granary_resource_added, mission=mission2]
-function tutorial3_on_filled_granary(ev) {
+function mission2_on_filled_granary(ev) {
     if (mission.figs_stored_handled) {
         return
     }
@@ -94,12 +105,11 @@ function tutorial3_on_filled_granary(ev) {
 	city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 	city.use_building(BUILDING_STORAGE_YARD, true)
 
-	city.set_goal_tooltip("#mission2_pottery_step1")
 	ui.popup_message("message_tutorial_food_and_farming")
 }
 
 [event=event_warehouse_filled, mission=mission2]
-function tutorial3_warehouse_pottery_1_check(ev) {
+function mission2_warehouse_pottery_1_check(ev) {
     if (mission.pottery_step1_stored_handled) {
         return
     } 
@@ -112,12 +122,11 @@ function tutorial3_warehouse_pottery_1_check(ev) {
 	mission.pottery_step1_stored_handled = true
 	mission.last_action_time = game.absolute_day
 
-	city.set_goal_tooltip("#mission2_pottery_step2")
 	ui.popup_message("message_tutorial_industry")
 }
 
 [event=event_warehouse_filled, mission=mission2]
-function tutorial3_warehouse_pottery_2_check(ev) {
+function mission2_warehouse_pottery_2_check(ev) {
 	if (!mission.pottery_step1_stored_handled) {
         return
     } 
@@ -145,7 +154,7 @@ function tutorial3_warehouse_pottery_2_check(ev) {
 }
 
 [event=event_city_disease, mission=mission2]
-function tutorial3_on_disease(ev) {
+function mission2_on_disease(ev) {
     if (mission.disease_handled) {
         return
     }
@@ -161,7 +170,7 @@ function tutorial3_on_disease(ev) {
 }
 
 [event=event_update_victory_state, mission=mission2]
-function tutorial3_handle_victory_state(ev) {
+function mission2_handle_victory_state(ev) {
 	city.set_victory_reason("figs_stored_handled", mission.figs_stored_handled)
 	city.set_victory_reason("disease_handled", mission.disease_handled)
 	city.set_victory_reason("pottery_step1_stored_handled", mission.pottery_step1_stored_handled)

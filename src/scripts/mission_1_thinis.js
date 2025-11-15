@@ -30,21 +30,32 @@ mission1 {
 	}
 }
 
-[event=event_mission_start, mission=mission1]
-function tutorial2_on_start(ev) {
-	city.set_goal_tooltip("#mission1_goal_build_mines")
+[event=event_update_mission_goal, mission=mission1]
+function mission1_update_goal(ev) {
+	if (!mission.gold_mined_handled) {
+		city.set_goal_tooltip("#mission1_goal_build_temples")
+		return
+	}
 
+	if (!mission.temples_built) {
+		city.set_goal_tooltip("#mission1_goal_build_entertainment")
+		return
+	}
+
+	city.set_goal_tooltip("#mission1_goal_build_mines")
+}
+
+[event=event_mission_start, mission=mission1]
+function mission1_on_start(ev) {
 	if (mission.gold_mined_handled) {
 		city.use_building(BUILDING_TEMPLE_BAST, true)
 		city.use_building(BUILDING_SHRINE_BAST, true)
-		city.use_building(BUILDING_FESTIVAL_SQUARE, true)
-		city.set_goal_tooltip("#mission1_goal_build_temples")
+		city.use_building(BUILDING_FESTIVAL_SQUARE, true)		
 	}
 
 	if (mission.temples_built) {
 		city.use_building(BUILDING_BOOTH, true)
 		city.use_building(BUILDING_JUGGLER_SCHOOL, true)
-		city.set_goal_tooltip("#mission1_goal_build_entertainment")
 	}
 
     city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
@@ -52,7 +63,7 @@ function tutorial2_on_start(ev) {
 }
 
 [event=event_advance_day, mission=mission1]
-function tutorial2_check_gold_mined(ev) {
+function mission1_check_gold_mined(ev) {
     if (mission.gold_mined_handled) {
         return
     } 
@@ -72,7 +83,7 @@ function tutorial2_check_gold_mined(ev) {
 }
 
 [event=event_migration_update, mission=mission1]
-function tutorial2_population_cap(ev) {
+function mission1_handle_population_cap(ev) {
     var granary_built = city.count_active_buildings(BUILDING_GRANARY)
     var max_pop = (granary_built > 0) ? 0 : mission.nogranary_population_cap
 
@@ -80,7 +91,7 @@ function tutorial2_population_cap(ev) {
 }
 
 [event=event_update_victory_state, mission=mission1]
-function tutorial2_handle_victory_state(ev) {
+function mission1_handle_victory_state(ev) {
 	city.set_victory_reason("gold_mined_handled", mission.gold_mined_handled)
 	city.set_victory_reason("temples_built", mission.temples_built)
 
@@ -89,7 +100,7 @@ function tutorial2_handle_victory_state(ev) {
 }
 
 [event=event_building_create, mission=mission1]
-function tutorial_2_on_build_temple(ev) {
+function mission1_on_build_temple(ev) {
     if (mission.temples_built) {
         return
     }

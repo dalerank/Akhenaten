@@ -55,17 +55,29 @@ mission4 {
 	}
 }
 
-[event=event_mission_start, mission=mission4]
-function tutorial5_on_start(ev) {
-	if (!mission.bricks_bought_handled) {
-		city.set_goal_tooltip("#tutorial_goal_import_bricks")
+[event=event_update_mission_goal, mission=mission4]
+function mission4_update_goal(ev) {
+	if (!mission.spacious_apartment_built_handled) {
+		city.set_goal_tooltip("#tutorial_goal_education")
+		return
 	}
 
+	if (!mission.papyrus_made_handled) {
+		city.set_goal_tooltip("#tutorial_goal_scribal_school")
+		return
+	}
+
+	if (!mission.bricks_bought_handled) {
+		city.set_goal_tooltip("#tutorial_goal_import_bricks")
+		return
+	}
+}
+
+[event=event_mission_start, mission=mission4]
+function mission4_on_start(ev) {
 	if (mission.papyrus_made_handled) {
 		city.set_advisor_available(ADVISOR_TRADE, 1)
 		city.use_building(BUILDING_DOCK, true)
-	} else {
-		city.set_goal_tooltip("#tutorial_goal_scribal_school")
 	}
 
 	if (mission.spacious_apartment_built_handled) {
@@ -73,16 +85,12 @@ function tutorial5_on_start(ev) {
 		city.use_building(BUILDING_PAPYRUS_WORKSHOP, true)
 		city.use_building(BUILDING_SCRIBAL_SCHOOL, true)
 		city.set_advisor_available(ADVISOR_EDUCATION, 1)
-	} else {
-		city.set_goal_tooltip("#tutorial_goal_education")
 	}
 
 	if (mission.bricks_bought_handled) {
 		city.use_building(BUILDING_BRICKLAYERS_GUILD, true)
 		city.use_building(BUILDING_SMALL_MASTABA, true)
 		city.set_advisor_available(ADVISOR_MONUMENTS, 1)
-	} else {
-		city.set_goal_tooltip("#tutorial_goal_import_bricks")
 	}
 
 	city.set_advisor_available(ADVISOR_LABOR, 1)
@@ -97,7 +105,7 @@ function tutorial5_on_start(ev) {
 }
 
 [event=event_advance_day, mission=mission4]
-function tutorial5_handle_spacious_apartment() {
+function mission4_handle_spacious_apartment() {
     if (mission.spacious_apartment_built) {
         return
     }
@@ -121,7 +129,7 @@ function tutorial5_handle_spacious_apartment() {
 }
 
 [event=event_update_victory_state, mission=mission4]
-function tutorial5_handle_victory_state(ev) {
+function mission4_handle_victory_state(ev) {
 	city.set_victory_reason("spacious_apartment_built", mission.spacious_apartment_built_handled)
 	city.set_victory_reason("papyrus_made", mission.papyrus_made_handled)
 	city.set_victory_reason("bricks_bought", mission.bricks_bought_handled)
@@ -131,7 +139,7 @@ function tutorial5_handle_victory_state(ev) {
 }
 
 [event=event_warehouse_filled, mission=mission4]
-function tutorial5_handle_papyrus(ev) {
+function mission4_handle_papyrus(ev) {
     if (mission.papyrus_made_handled) {
         return
     }
@@ -151,7 +159,7 @@ function tutorial5_handle_papyrus(ev) {
 }
 
 [event=event_warehouse_filled, mission=mission4]
-function tutorial5_handle_bricks(ev) {
+function mission4_handle_bricks(ev) {
     if (mission.bricks_bought_handled) {
         return
     }
