@@ -9,6 +9,7 @@
 #include "graphics/fontgen/dynamic_atlas.h"
 #include "graphics/fontgen/atlas_charset.h"
 #include "graphics/fontgen/dynamic_font.h"
+#include "window/popup_dialog.h"
 #include "game/game_config.h"
 
 #include <set>
@@ -437,6 +438,13 @@ void font_atlas_regenerate() {
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
     int cp_index = 0;
+    if (!vfs::file_exists(symbols_font)) {
+        bstring512 message_text;
+        message_text.printf("The specified font symbols file does not exist:%s", symbols_font.c_str());
+        popup_dialog::show_ok("Data issue", message_text.c_str());
+        return;
+    }
+
     for (const auto &fconfig : font_configs) {
         add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig, utf8_symbols, cp_index);
         font_definition_ref(fconfig.type)->line_height = fconfig.line_height;

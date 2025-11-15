@@ -12,11 +12,12 @@
 popup_dialog g_popup_dialog;
 
 bool popup_dialog::init(const xstring scheme, xstring header, xstring cbody, window_popup_dialog_callback close_cb, e_popup_dialog_btns buttons) {
-    load(scheme.c_str());
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return false;
     }
+
+    load(scheme.c_str());
 
     text = header;
     this->body = cbody;
