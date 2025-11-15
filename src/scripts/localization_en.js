@@ -1034,4 +1034,8 @@ localization_en = [
 
   { key: "#market_buyer_returning_to", text: "Returning to" }
   { key: "#market_buyer_collecting", text: "Collecting" }
+
+  { key: "#tutorial_goal_education", text: "Make a house evolve into a 'spacious apartment'" }
+  { kye: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
+   
 ]

@@ -109,8 +109,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
 }
 
 void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
-    assert(size == 900);
-    char data[900] = { 0 };
+    assert(size == 2000);
+    char data[2000] = { 0 };
     if (iob->is_read_access()) {
         iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
         vars.load(data);

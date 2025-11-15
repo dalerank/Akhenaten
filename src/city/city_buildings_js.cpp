@@ -6,6 +6,11 @@ int __city_count_active_buildings(int btype) {
 }
 ANK_FUNCTION_1(__city_count_active_buildings);
 
+int __city_count_total_buildings(int btype) {
+    return g_city.buildings.count_total((e_building_type)btype);
+}
+ANK_FUNCTION_1(__city_count_total_buildings);
+
 bool __city_building_is_temple(int bid) {
     building *b = building_get(bid);
     return !!b->dcast_temple();

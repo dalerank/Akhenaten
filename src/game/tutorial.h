@@ -32,14 +32,6 @@ struct tutorial_t {
 struct tutorial_flags_t {
     struct {
         bool started;
-        bool spacious_apartment;
-        bool papyrus_made;
-        bool bricks_bought;
-        bool can_trade_finally;
-    } tutorial_5;
-
-    struct {
-        bool started;
 
     } tutorial_6;
 

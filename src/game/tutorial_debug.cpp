@@ -21,14 +21,7 @@ void config_show_tutorial_properties(bool header) {
     if (tutorial_open) {
         ImGui::BeginTable("Tutorial", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        const auto &flags = g_tutorials_flags;
-                
-        // Tutorial 5 flags
-        game_debug_show_property("tut5 started", flags.tutorial_5.started);
-        game_debug_show_property("tut5:spacious_apartment", flags.tutorial_5.spacious_apartment);
-        game_debug_show_property("tut5:papyrus_made", flags.tutorial_5.papyrus_made);
-        game_debug_show_property("tut5:bricks_bought", flags.tutorial_5.bricks_bought);
-        game_debug_show_property("tut5:can_trade_finally", flags.tutorial_5.can_trade_finally);
+        const auto &flags = g_tutorials_flags;               
         
         // Tutorial 6 flags
         game_debug_show_property("tut6 started", flags.tutorial_6.started);
