@@ -32,7 +32,8 @@ mission5 { // Timna
 		tutorial_irrigation { buildings: [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ] }
 		tutorial_guilds { buildings: [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL] }
 	}
-	enable_scenario_events : false,
+
+	enable_scenario_events : false
 	events [
 		{
 			time { year : 2848, month : 1 }
