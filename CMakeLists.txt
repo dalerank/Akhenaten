@@ -295,6 +295,12 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb.h")
     set(FETCHCONTENT_BINARY_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
 endif()
+# Fallback check: some stb distributions don't have a single 'stb.h' umbrella header.
+if (NOT DEFINED FETCHCONTENT_SOURCE_DIR_STB AND EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb_truetype.h")
+    set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
+    set(FETCHCONTENT_BINARY_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-build")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
+endif()
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
