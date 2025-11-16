@@ -1704,7 +1704,7 @@ building_mine_copper = {
   animations : {
     preview : { pack:PACK_GENERAL, id:196 },
     base : { pack:PACK_GENERAL, id:196 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
   },
   output : {
     resource : RESOURCE_COPPER
