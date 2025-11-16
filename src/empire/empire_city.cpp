@@ -57,6 +57,18 @@ int empire_city::get_free_slot(int max_traders) const {
     return -1;
 }
 
+int empire_city::get_free_slot() const {
+    return get_free_slot(max_traders);
+}
+
+void empire_city::archive_load(archive arch) {
+    check_attributes();
+}
+
+void empire_city::check_attributes() {
+    max_traders = std::max<uint8_t>(1u, max_traders);
+}
+
 bstring32 empire_city::get_display_name(int nid) {
     int text_group = !!game_features::gameui_empire_city_old_names 
                             ? empire_city_options.text_group_old_names 
