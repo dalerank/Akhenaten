@@ -40,21 +40,21 @@ void ui::window_features::cancel_values() {
     }
 }
 
-int ui::window_features::config_change_basic(feature_t &alias, const xstring fname) {
+bool ui::window_features::config_change_basic(feature_t &alias, const xstring fname) {
     if (!alias.is_changed()) {
-        return 1;
+        return true;
     }
 
     auto feature = game_features::find(fname);
     assert(feature);
     if (feature) {
-        feature->set(alias.new_value ? 1 : 0);
+        feature->set(alias.new_value ? true : false);
     }
     alias.original_value = alias.new_value;
-    return 1;
+    return true;
 }
 
-int ui::window_features::config_change_string_language(const game_language &lang) {
+bool ui::window_features::config_change_string_language(const game_language &lang) {
     game_features::gameopt_language = lang.lang;
 
     bool ok = lang_reload_localized_files()
@@ -64,10 +64,10 @@ int ui::window_features::config_change_string_language(const game_language &lang
         // Notify user that language dir is invalid and revert to previously selected
         game_features::gameopt_language = "";
         window_plain_message_dialog_show("#TR_INVALID_LANGUAGE_TITLE", "#TR_INVALID_LANGUAGE_MESSAGE", SOURCE_LOCATION);
-        return 0;
+        return false;
     }
 
-    return 1;
+    return true;
 }
 
 bool ui::window_features::apply_changed_configs() {
@@ -203,8 +203,8 @@ void ui::window_features::init(std::function<void()> cb) {
         const bool value = alias.get_value();
         alias.original_value = value;
         alias.new_value = value;
-        alias.change_action = [&,name = feature->name] () -> int { return config_change_basic(alias, name); };
-        alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+        alias.change_action = [&,name = feature->name] () -> bool { return config_change_basic(alias, name); };
+        alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
         alias.text = feature->text;
 
         page_index++;
@@ -215,17 +215,17 @@ void ui::window_features::init(std::function<void()> cb) {
         pages.back().title = "#TR_CONFIG_HEADER_SCENARIO_CHANGES";
         {
             auto &alias = pageref.features.emplace_back();
-            alias.get_value = [] () -> int { return g_scenario.env.has_animals; };
-            alias.change_action = [&] () -> int { return g_scenario.env.has_animals = alias.new_value; };
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+            alias.get_value = [] () -> bool { return g_scenario.env.has_animals; };
+            alias.change_action = [&] () -> bool { return g_scenario.env.has_animals = alias.new_value; };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
             alias.text = "#TR_CONFIG_ANIMALS";
         }
 
         {
             auto &alias = pageref.features.emplace_back();
-            alias.get_value = [] () -> int { return g_scenario.env.flotsam_enabled; };
-            alias.change_action = [&] () -> int { return g_scenario.env.flotsam_enabled = alias.new_value; };
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+            alias.get_value = [] () -> bool { return g_scenario.env.flotsam_enabled; };
+            alias.change_action = [&] () -> bool { return g_scenario.env.flotsam_enabled = alias.new_value; };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
             alias.text = "#TR_CONFIG_FLOTSAM";
         }
     }
@@ -239,16 +239,16 @@ void ui::window_features::init(std::function<void()> cb) {
             alias.get_value = [i] () -> int { return g_city.religion.is_god_known((e_god)i); };
             alias.original_value = g_city.religion.is_god_known((e_god)i);
             alias.new_value = g_city.religion.is_god_known((e_god)i);
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? 0 : 1;  };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
 
             bstring64 text; text.printf("God disabled %s", e_god_tokens.name((e_god)i));
             alias.text = text;
-            alias.change_action = [alias, god = e_god(i)] () -> int {
+            alias.change_action = [alias, god = e_god(i)] () -> bool {
                 bool known = !alias.new_value;
                 const auto new_status = known ? GOD_STATUS_KNOWN : GOD_STATUS_UNKNOWN;
                 events::emit(event_religion_god_status_update{ god, new_status });
                 g_city.religion.set_god_known(god, new_status);
-                return 1;
+                return true;
             };
         }
     }
@@ -269,13 +269,13 @@ void ui::window_features::init(std::function<void()> cb) {
             const resource_value r = resource_list::all.at(i);
             const bool allow = city_resources[r.type] > 0;
 
-            feature.get_value = [r] () -> int { return  g_city.resource.available()[r.type] > 0; };
+            feature.get_value = [r] () -> bool { return  g_city.resource.available()[r.type] > 0; };
             const bool value = feature.get_value();
             feature.original_value = value;
             feature.new_value = value;
-            feature.change_action = [this, r] () -> int { this->toggle_resource(r.type); return 1; };
+            feature.change_action = [this, r] () -> bool { this->toggle_resource(r.type); return true; };
             feature.toggle_action = [&feature] (int p1, int p2) { 
-                feature.new_value = (feature.new_value > 0) ? 0 : 1;
+                feature.new_value = (feature.new_value > 0) ? false : true;
             };
 
             bstring64 text; text.printf("City allow %s", ui::resource_name(r.type));
@@ -298,7 +298,7 @@ void ui::window_features::init(std::function<void()> cb) {
             auto &pageref = pages.back();
             auto &feature = pageref.features.emplace_back();
 
-            feature.get_value = [lang = config, this] () -> int { 
+            feature.get_value = [lang = config, this] () -> bool { 
                 const xstring curlang = game_features::gameopt_language.to_string();
                 return (curlang == lang.lang || (curlang.empty() && lang.lang == "en"));
             };
@@ -306,7 +306,7 @@ void ui::window_features::init(std::function<void()> cb) {
             feature.original_value = value;
             feature.new_value = value;
             feature.volatile_value = true;
-            feature.change_action = [] () -> int { return 0; };
+            feature.change_action = [] () -> bool { return false; };
             feature.toggle_action = [lpack = config, this, &feature] (int p1, int p2) {
                 this->config_change_string_language(lpack);
             };

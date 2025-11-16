@@ -349,6 +349,10 @@ void font_atlas_regenerate() {
     vfs::path symbols_font;
     svector<uint32_t, 1024> utf8_symbols;
     xstring locale_short = game_features::gameopt_language.to_string();
+    if (!locale_short) {
+        locale_short = "en";
+    }
+
     font_configs_t font_configs;
     bool font_bold = false;
 
