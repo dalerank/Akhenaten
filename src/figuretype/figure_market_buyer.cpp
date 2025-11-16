@@ -156,12 +156,13 @@ void distribute_market_resources(building* b, building* market) {
 
     auto &marketd = bazaar->runtime_data();
     auto &housed = house->runtime_data();
+    const auto &house_model = house->model();
     int level = house->house_level();
     if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
     }
 
-    int max_food_stocks = 4 * housed.highest_population;
+    int max_food_stocks = house_model.food_storage_multiplier * housed.highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         if (housed.foods[i] >= max_food_stocks)
@@ -186,27 +187,31 @@ void distribute_market_resources(building* b, building* market) {
             }
         }
     }
-    if (model.pottery) {
-        marketd.pottery_demand = 10;
-        distribute_good(b, market, 8 * model.pottery, INVENTORY_GOOD1);
+
+    int goods_no = 8;
+    if (!!game_features::gameplay_houses_stockpile_more) {
+        goods_no = 16;
     }
 
-    int goods_no = 4;
-    if (!!game_features::gameplay_houses_stockpile_more) {
-        goods_no = 8;
+    int aproximated_level = housed.highest_population / 10;
+    if (model.pottery) {
+        marketd.pottery_demand = 10;
+        distribute_good(b, market, goods_no * aproximated_level * model.pottery, INVENTORY_GOOD1);
     }
 
     if (model.jewelry) {
         marketd.luxurygoods_demand = 10;
-        distribute_good(b, market, goods_no * model.jewelry, INVENTORY_GOOD2);
+        distribute_good(b, market, goods_no * aproximated_level * model.jewelry, INVENTORY_GOOD2);
     }
+
     if (model.linen) {
         marketd.linen_demand = 10;
-        distribute_good(b, market, goods_no * model.linen, INVENTORY_GOOD3);
+        distribute_good(b, market, goods_no * aproximated_level * model.linen, INVENTORY_GOOD3);
     }
+
     if (model.beer) {
         marketd.beer_demand = 10;
-        distribute_good(b, market, goods_no * model.beer, INVENTORY_GOOD4);
+        distribute_good(b, market, goods_no * aproximated_level * model.beer, INVENTORY_GOOD4);
     }
 }
 

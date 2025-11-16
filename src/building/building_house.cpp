@@ -307,7 +307,7 @@ resource_list building_house::consume_food_weekly() {
     return food_types_eaten;
 }
 
-resource_list building_house::consume_resources() {
+resource_list building_house::consume_goods_weekly() {
     if (!hsize()) {
         return {};
     }

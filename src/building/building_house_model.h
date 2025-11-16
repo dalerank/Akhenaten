@@ -23,6 +23,7 @@ struct model_house {
     int8_dcy linen;                /**< Linen required */
     int8_dcy jewelry;              /**< Jewelry required */
     int8_dcy beer;                 /**< Beer types required: 1 = any wine, 2 = two types of wine */
+    int8_dcy food_storage_multiplier;      /**< Multiplier for stored goods */
 
     // pharaoh
     int8_dcy crime_risk;
@@ -43,6 +44,7 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
     education, food, dentist, physician, health, 
     food_types, food_consumption_percentage,
-    pottery, linen, jewelry, beer, crime_risk, crime_risk_base,
+    pottery, linen, jewelry, beer, food_storage_multiplier,
+    crime_risk, crime_risk_base,
     prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
     fancy_bazaar)
