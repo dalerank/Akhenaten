@@ -173,6 +173,11 @@ static void post_load() {
     int mission_rank = get_scenario_mission_rank(scenario_id);
     g_scenario.set_campaign_rank(mission_rank);
 
+    // Clear mission variables when starting a new mission (not when loading from save)
+    if (game.session.last_loaded == e_session_mission) {
+        g_scenario.vars.clear();
+    }
+
     mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid);
     js_register_mission_vars(g_scenario.vars);
