@@ -24,7 +24,7 @@ mission5 { // Timna
 					BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
 					BUILDING_RECRUITER, BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS, BUILDING_WEAPONSMITH,
 					BUILDING_SCRIBAL_SCHOOL, BUILDING_CLAY_PIT, BUILDING_GEMSTONE_MINE, BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_POTTERY_WORKSHOP,
-					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH,
+					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH, BUILDING_FESTIVAL_SQUARE,
 
 					BUILDING_MORTUARY, BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD
 				]
@@ -35,19 +35,19 @@ mission5 { // Timna
 	enable_scenario_events : false,
 	events [
 		{
-			time { year : 2850, month : 1 }
+			time { year : 2848, month : 1 }
 			resource : "copper"
 			amount { value : 500 }
 			deadline : 12
 		}
 		{
-			time { year : 2849, month : 1 }
+			time { year : 2847, month : 1 }
 			resource : "gems"
 			amount { value : 1500 }
 			deadline : 12
 		}
 		{
-			year : 2848
+			year : 2846
 			resource : "deben"
 			amount : [800, 1000]
 			deadline : 12
