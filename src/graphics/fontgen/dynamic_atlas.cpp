@@ -3,7 +3,10 @@
 #include "dynamic_font.h"
 #include <ft2build.h>
 #include <freetype/ftoutln.h>
-#include <sdf/ftsdfrend.h>
+#if __has_include(<freetype/ftsdfrend.h>)
+#define AKHN_HAVE_FT_SDF 1
+#include <freetype/ftsdfrend.h>
+#endif
 
 #include FT_FREETYPE_H
 #include FT_SYNTHESIS_H
@@ -182,6 +185,7 @@ namespace DynamicFont {
         }
 
         FT_GlyphSlot LoadGlyphWithSdfRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
+#ifdef AKHN_HAVE_FT_SDF
             // Use bsdf renderer instead of sdf renderer.
             // See: https://freetype.org/freetype2/docs/reference/ft2-base_interface.html#ft_render_mode
             // First I need to render the glyph with normal mode, then render it with sdf mode.
@@ -196,6 +200,10 @@ namespace DynamicFont {
                 error = FT_Render_Glyph(glyph, FT_RENDER_MODE_SDF);
             assert(!error && "Error: could not load and render char");
             return glyph;
+#else
+            // Fallback to grayscale render when SDF renderer is unavailable
+            return LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold);
+#endif
         }
 
         FT_GlyphSlot LoadGlyphWithSubpixelRender(FT_Face fontFace, uint32_t codepoint) {
