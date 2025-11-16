@@ -249,11 +249,13 @@ endif()
 
 set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 
+set(_freetype_binary_dir "${CMAKE_BINARY_DIR}/_deps/freetype-build")
 if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
-    set(FETCHCONTENT_BINARY_DIR_FREETYPE "${CMAKE_BINARY_DIR}/_deps/freetype-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
 endif()
+set(FETCHCONTENT_BINARY_DIR_FREETYPE "${_freetype_binary_dir}")
+set(freetype_BINARY_DIR "${_freetype_binary_dir}")
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
