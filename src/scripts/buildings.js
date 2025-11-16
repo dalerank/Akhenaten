@@ -2142,15 +2142,17 @@ building_paint_workshop {
     work { pos [36, -4], id:125, offset:1, max_frames:18 }
     clay { pos [65, 3], id:207 }
   }
+
   input {
     resource : RESOURCE_OIL
   }
   output {
     resource : RESOURCE_PAINT
   }
-  production_rate : 20,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  building_size : 2,
+
+  production_rate : 20
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  building_size : 2
   cost [ 20, 30, 50, 100, 150 ]
   desirability { value[-4], step[1], step_size[1], range[4] }
   laborers [12]
@@ -2165,8 +2167,10 @@ building_academy {
     base { id:4 }
     work { pos [36, -4], id:4, offset:1, max_frames:18 }
   }
-  labor_category : LABOR_CATEGORY_EDUCATION,
-  building_size : 2,
+
+  overlay : OVERLAY_EDUCATION
+  labor_category : LABOR_CATEGORY_EDUCATION
+  building_size : 2
   cost [ 200, 250, 300, 400, 500 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
   laborers [20]
