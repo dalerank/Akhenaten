@@ -31,7 +31,7 @@ struct resource_data {
     int min_distance;
     int num_buildings;
 
-    void update_food(int resource, building &b, int distance) {
+    void update_food(int resource, building &b, int distance, int minimal_amount) {
         if (!resource) {
             return;
         }
@@ -41,7 +41,7 @@ struct resource_data {
             return;
         }
 
-        if (granary->runtime_data().resource_stored[resource] < 100) {
+        if (granary->runtime_data().resource_stored[resource] < minimal_amount) {
             return;
         }
 
@@ -126,10 +126,11 @@ building *building_bazaar::get_storage_destination() {
             }
 
             // foods
-            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance);
-            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance);
-            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance);
-            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance);
+            const int minimal_amount = this->current_params().minimal_pick_food_amount;
+            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
 
         } else if (b.type == BUILDING_STORAGE_YARD) {
             // foods
@@ -189,7 +190,6 @@ building *building_bazaar::get_storage_destination() {
         if (!d.inventory[foodi] && resources[foodi].num_buildings && is_good_accepted(foodi)) {
             d.fetch_inventory_id = foodi;
             return building_get(resources[foodi].building_id);
-
         }
     }
     
@@ -198,15 +198,27 @@ building *building_bazaar::get_storage_destination() {
         if (!d.inventory[goodi] && resources[goodi].num_buildings && is_good_accepted(goodi)) {
             d.fetch_inventory_id = goodi;
             return building_get(resources[goodi].building_id);
-
         }
     }
     
     // then prefer smallest stock below 50
-    int min_stock = 50;
     int fetch_inventory = -1;
+    int min_stock = 999;
+    const auto &pick_good_below = current_params().pick_good_below;
     for (int goodi = INVENTORY_FOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
-        if (resources[goodi].num_buildings && d.inventory[goodi] < min_stock && is_good_accepted(goodi)) {
+        if (!resources[goodi].num_buildings) {
+            continue;
+        }
+
+        if (d.inventory[goodi] > pick_good_below[goodi]) {
+            continue;
+        }
+
+        if (!is_good_accepted(goodi)) {
+            continue;
+        }
+
+        if (d.inventory[goodi] < min_stock) {
             min_stock = d.inventory[goodi];
             fetch_inventory = goodi;
         }
@@ -214,16 +226,17 @@ building *building_bazaar::get_storage_destination() {
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1] < 600 && is_good_accepted(INVENTORY_FOOD1)) {
+        const auto &pick_food_below = current_params().pick_food_below;
+        if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1] < pick_food_below[INVENTORY_FOOD1]  && is_good_accepted(INVENTORY_FOOD1)) {
             fetch_inventory = INVENTORY_FOOD1;
         }
-        if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2] < 400 && is_good_accepted(INVENTORY_FOOD2)) {
+        if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2] < pick_food_below[INVENTORY_FOOD2] && is_good_accepted(INVENTORY_FOOD2)) {
             fetch_inventory = INVENTORY_FOOD2;
         }
-        if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3] < 400 && is_good_accepted(INVENTORY_FOOD3)) {
+        if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3] < pick_food_below[INVENTORY_FOOD3] && is_good_accepted(INVENTORY_FOOD3)) {
             fetch_inventory = INVENTORY_FOOD3;
         }
-        if (resources[INVENTORY_FOOD4].num_buildings && d.inventory[INVENTORY_FOOD4] < 400 && is_good_accepted(INVENTORY_FOOD4)) {
+        if (resources[INVENTORY_FOOD4].num_buildings && d.inventory[INVENTORY_FOOD4] < pick_food_below[INVENTORY_FOOD4] && is_good_accepted(INVENTORY_FOOD4)) {
             fetch_inventory = INVENTORY_FOOD4;
         }
     }
