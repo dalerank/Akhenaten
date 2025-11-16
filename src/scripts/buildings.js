@@ -897,18 +897,23 @@ building_work_camp = {
   laborers:[20], fire_risk:[4], damage_risk: [2]
 }
 
-building_booth = {
-  animations : {
-    booth : { pack:PACK_GENERAL, id:114 },
-    square : { pack:PACK_GENERAL, id:112 },
-    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
+building_booth {
+  animations {
+    booth { pack:PACK_GENERAL, id:114 },
+    square { pack:PACK_GENERAL, id:112 },
+    juggler { pos [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
   }
+
+  min_houses_coverage : 100
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  meta : { help_id:71, text_id:72 }
+  meta { help_id:71, text_id:72 }
   building_size : 2
-  cost : [ 10, 20, 40, 80, 150 ]
-  desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [2]
+  cost [ 10, 20, 40, 80, 150 ]
+  desirability { value[2], step[1], step_size[-1], range[2] }
+
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_apothecary = {
@@ -1699,26 +1704,31 @@ building_clay_pit = {
   laborers:[8], fire_risk:[0], damage_risk: [1]
 }
 
-building_brewery = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:116 },
-    base : { pack:PACK_GENERAL, id:116 },
-    work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
-    barley : { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
-  },
-  input : {
+building_brewery {
+  animations {
+    preview { pack:PACK_GENERAL, id:116 },
+    base { pack:PACK_GENERAL, id:116 },
+    work { pack:PACK_GENERAL, id:116, max_frames: 12 }
+    barley { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
+  }
+  input {
     resource : RESOURCE_BARLEY
   }
-  output : {
+  output {
     resource : RESOURCE_BEER
   }
+
+  overlay : OVERLAY_BREWERY
+  water_amount_for_production : 50
   progress_max : 400,
   production_rate : 50,
-  meta : { help_id:96, text_id:122 }
+  meta { help_id:96, text_id:122 }
   building_size : 2
-  cost: [ 15, 25, 50, 80, 120 ]
-  desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
-  laborers:[12], fire_risk:[4], damage_risk: [2]
+  cost [ 15, 25, 50, 80, 120 ]
+  desirability { value[-5], step[1], step_size[1], range[5] }
+  laborers[12]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_mine_copper = {

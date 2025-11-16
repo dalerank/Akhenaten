@@ -2,36 +2,37 @@ log_info("akhenaten: sidebar window started")
 
 sidebar_window_extra {
   ui {
-    background            : inner_panel({pos[0, 480], size[10, 19]}),
+    background        : inner_panel({pos[0, 480], size[10, 19]}),
 
-        speed_header      : text({pos[11, 485], text[45, 2], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        speed_current     : text({pos[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        dec_speed         : arrowdown({pos[11, 470 + 30], tiny:false}),
-        inc_speed         : arrowup({pos[35, 470 + 30], tiny:false}),
+    speed_header      : text({pos[11, 485], text[45, 2], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    speed_current     : text({pos[65, 480 + 28], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    dec_speed         : arrowdown({pos[11, 470 + 30], tiny:false}),
+    inc_speed         : arrowup({pos[35, 470 + 30], tiny:false}),
 
-        unemp_header      : text({pos[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        unemp_current     : text({pos[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    unemp_header      : text({pos[11, 480 + 50], text:[68, 135], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    unemp_current     : text({pos[11, 480 + 70], font:FONT_NORMAL_WHITE_ON_DARK}), 
 
-        population_header : text({pos[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        population_current: text({pos[11, 480 + 110]}), 
+    population_header : text({pos[11, 480 + 90], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    population_current: text({pos[11, 480 + 110]}), 
 
-        culture_header    : text({pos[11, 480 + 130], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        culture_current   : text({pos[11, 480 + 150]}),
+    culture_header    : text({pos[11, 480 + 130], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    culture_current   : text({pos[11, 480 + 150]}),
 
-        prosperity_header : text({pos[11, 480 + 170], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        prosperity_current: text({pos[11, 480 + 190]}), 
+    prosperity_header : text({pos[11, 480 + 170], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    prosperity_current: text({pos[11, 480 + 190]}), 
 
-        monument_header   : text({pos[11, 480 + 210], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        monument_current  : text({pos[11, 480 + 230]}), 
+    monument_header   : text({pos[11, 480 + 210], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    monument_current  : text({pos[11, 480 + 230]}), 
 
-        kingdom_header    : text({pos[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK}), 
-        kingdom_current   : text({pos[11, 480 + 270]}), 
+    kingdom_header    : text({pos[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK}), 
+    kingdom_current   : text({pos[11, 480 + 270]}), 
   }
 }
 
 sidebar_window_collapsed {
     extra_block {pack:PACK_GENERAL, id:121, offset:1}
     relief_block {pack:PACK_GENERAL, id:121, offset:5}
+
     expanded_offset_x  : 42
     extra_block_x      : 0 
 
@@ -66,10 +67,11 @@ sidebar_window_collapsed {
 
 sidebar_window_expanded {
     def_image {pack:PACK_GENERAL, id:117, offset:1 }
-    extra_block {pack:PACK_GENERAL, id:121, offset:2},
-    relief_block {pack:PACK_GENERAL, id:121, offset:4},
-    extra_block_x      : -24,
-    expanded_offset_x  : 186,
+    extra_block {pack:PACK_GENERAL, id:121, offset:2}
+    relief_block {pack:PACK_GENERAL, id:121, offset:4}
+
+    extra_block_x      : -24
+    expanded_offset_x  : 186
 
     slider {
         deceleration_offset_x : 125

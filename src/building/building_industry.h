@@ -13,7 +13,8 @@ public:
         short progress_max;
         bool spawned_worker_this_month;
         uint8_t max_gatheres;
-        uint8_t unk_b[10];
+        uint8_t water_stored;
+        uint8_t unk_b[9];
         uint8_t unk_c[13];
         uint8_t produce_multiplier;
         bool has_raw_materials;
@@ -25,7 +26,10 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     virtual int produce_uptick_per_day() const { return base.num_workers; }
+
+    virtual void update_preproduction() { /*do nothing*/ }
     virtual void update_production();
+    virtual void production_started() { /*do nothing*/ }
     
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;

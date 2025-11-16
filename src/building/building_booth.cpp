@@ -121,7 +121,7 @@ void building_booth::spawn_figure() {
         return;
     }
 
-    if (!common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
+    if (!common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         return;
     }
 

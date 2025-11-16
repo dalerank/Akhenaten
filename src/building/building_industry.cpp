@@ -14,13 +14,16 @@ constexpr short MAX_PROGRESS_WORKSHOP = 400;
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    iob->bind(BIND_SIGNATURE_INT16, &d.ready_production);
-    iob->bind(BIND_SIGNATURE_INT16, &d.progress);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.spawned_worker_this_month);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.max_gatheres);
-    for (int i = 0; i < 10; i++) {
+    iob->bind_i16(d.ready_production);
+    iob->bind_i16(d.progress);
+    iob->bind_bool(d.spawned_worker_this_month);
+    iob->bind_u8(d.max_gatheres);
+    iob->bind_u8(d.water_stored);
+
+    for (int i = 0; i < 9; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &d.unk_b[i]);
     }
+
     iob->bind____skip(1);
     for (int i = 0; i < 13; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &d.unk_c[i]);
@@ -144,6 +147,8 @@ void building_industry::start_production() {
         if (base.stored_amount_first >= 100) {
             base.stored_amount_first -= 100;
         }
+
+        production_started();
     }
 }
 
