@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/monuments.h"
+#include "building/building_statue.h"
 #include "city/object_info.h"
 #include "city/city.h"
 #include "city/city_labor.h"
@@ -34,6 +35,11 @@ void building_bricklayers_guild::on_create(int orientation) {
 }
 
 bool building_bricklayers_guild::can_spawn_bricklayer_man() {
+    bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
+    if (!has_free_man) {
+        return false;
+    }
+
     // Check if there are any unfinished monuments that need bricklayers
     building* monument = buildings_valid_first([&] (building &b) {
         if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
@@ -47,16 +53,25 @@ bool building_bricklayers_guild::can_spawn_bricklayer_man() {
         return building_monument_need_bricklayers(&b);
     });
 
-    if (!monument) {
-        return false;
-    }
-    
-    bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
-    if (!has_free_man) {
-        return false;
+    if (monument) {
+        return true;
     }
 
-    return true;
+    // If no monument is found, check for statues that need service
+    bool has_statue = false;
+    buildings_valid_do([&] (building &b) {
+        const auto statue = b.dcast_statue();
+        if (!statue) {
+            return;
+        }
+
+        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
+        if (!has_worker) {
+            has_statue = true;
+        }
+    });
+
+    return has_statue;
 }
 
 void building_bricklayers_guild::spawn_figure() {
@@ -98,13 +113,44 @@ void building_bricklayers_guild::spawn_figure() {
         return building_monument_need_bricklayers(&b);
     });
 
-    if (!monument) {
+    if (monument) {
+        auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_10_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
+        monument->dcast()->add_workers(f->id);
+        f->wait_ticks = random_short() % 30; // ok
         return;
     }
 
-    auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_10_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
-    monument->dcast()->add_workers(f->id);
-    f->wait_ticks = random_short() % 30; // ok
+    // If no monument is found, create a bricklayer figure with a statue destination
+    int min_service_value = 9999;
+    building_impl *min_service_statue = nullptr;
+    buildings_valid_do([&] (building &b) {
+        const auto statue = b.dcast_statue();
+        if (!statue) {
+            return;
+        }
+
+        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
+        if (has_worker) {
+            return; 
+        }
+
+        const int value = statue->service();
+        if (value < min_service_value) {
+            min_service_value = value;
+            min_service_statue = statue;
+        }
+    });
+
+    if (min_service_statue) {
+        auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, &min_service_statue->base, (e_figure_action)ACTION_30_BRICKLAYER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        min_service_statue->add_workers(f->id);
+        f->wait_ticks = random_short() % 30;
+        auto bricklayer = smart_cast<figure_bricklayer>(f);
+        if (bricklayer) {
+            bricklayer->runtime_data().destination_bid = min_service_statue->id();
+        }
+        return;
+    }
 }
 
 bool building_bricklayers_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

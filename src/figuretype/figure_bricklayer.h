@@ -13,6 +13,9 @@ enum e_bricklayer_action{
     ACTION_17_BRICKLAYER_EXIT_FROM_MONUMENT = 17,
     ACTION_18_BRICKLAYER_RANDOM_TILE = 18,
     ACTION_20_BRICKLAYER_DESTROY = 20,
+    ACTION_30_BRICKLAYER_CREATED_ROAMING = 30,
+    ACTION_31_BRICKLAYER_GOING_TO_STATUE = 31,
+    ACTION_14_BRICKLAYER_WORK_STATUE = 32,
 };
 
 class figure_bricklayer : public figure_impl {
@@ -27,6 +30,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
+    virtual void on_destroy() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
