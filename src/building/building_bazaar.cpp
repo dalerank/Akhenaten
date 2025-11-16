@@ -104,7 +104,7 @@ void building_bazaar::unaccept_all_goods() {
 building *building_bazaar::get_storage_destination() {
     resource_data resources[INVENTORY_MAX];
 
-    std::fill(std::begin(resources), std::end(resources), resource_data{0, 40, 0});
+    std::fill(std::begin(resources), std::end(resources), resource_data{0, current_params().max_search_distance, 0});
     buildings_valid_do([&] (building &b) {
         if (!b.has_road_access || b.distance_from_entry <= 0 || b.road_network_id != base.road_network_id) {
             return;
@@ -116,7 +116,7 @@ building *building_bazaar::get_storage_destination() {
         }
 
         int distance = calc_maximum_distance(base.tile, b.tile);
-        if (distance >= 40) {
+        if (distance >= this->current_params().max_search_distance) {
             return;
         }
 
@@ -206,7 +206,7 @@ building *building_bazaar::get_storage_destination() {
     int min_stock = 50;
     int fetch_inventory = -1;
     for (int goodi = INVENTORY_FOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
-        if (resources[0].num_buildings && d.inventory[0] < min_stock && is_good_accepted(0)) {
+        if (resources[goodi].num_buildings && d.inventory[goodi] < min_stock && is_good_accepted(goodi)) {
             min_stock = d.inventory[goodi];
             fetch_inventory = goodi;
         }
@@ -218,7 +218,7 @@ building *building_bazaar::get_storage_destination() {
             fetch_inventory = INVENTORY_FOOD1;
         }
         if (resources[INVENTORY_FOOD2].num_buildings && d.inventory[INVENTORY_FOOD2] < 400 && is_good_accepted(INVENTORY_FOOD2)) {
-            fetch_inventory = INVENTORY_FOOD1;
+            fetch_inventory = INVENTORY_FOOD2;
         }
         if (resources[INVENTORY_FOOD3].num_buildings && d.inventory[INVENTORY_FOOD3] < 400 && is_good_accepted(INVENTORY_FOOD3)) {
             fetch_inventory = INVENTORY_FOOD3;
@@ -241,7 +241,10 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    base.fancy_state = (g_desirability.get(base.tile) <= 30) ? efancy_normal : efancy_good;
+    base.fancy_state = (g_desirability.get(base.tile) <= current_params().fancy_treshold_desirability) 
+                            ? efancy_normal 
+                            : efancy_good;
+
     const xstring& animkey = (base.fancy_state == efancy_normal) ? animkeys().base : animkeys().fancy;
     map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
 
@@ -256,7 +259,7 @@ void building_bazaar::on_create(int orientation) {
 void building_bazaar::spawn_figure() {
     base.check_labor_problem();
 
-    if (!common_spawn_figure_trigger(50)) {
+    if (!common_spawn_figure_trigger(current_params().min_houses_coverage)) {
         return;
     }
 
@@ -287,30 +290,6 @@ void building_bazaar::spawn_figure() {
             }
         }
     }
-}
-
-int building_bazaar::handle_mouse_simple(const mouse* m, object_info &c) {
-    auto &data = g_window_building_distribution;
-    return generic_buttons_handle_mouse(m, {c.offset.x + 80, c.offset.y + 16 * c.bgsize.x - 34}, data.go_to_orders_button.data(), 1, &data.focus_button_id);
-}
-
-int building_bazaar::handle_mouse_orders(const mouse* m, object_info &c) {
-    auto &data = g_window_building_distribution;
-    int y_offset = window_building_get_vertical_offset(&c, 28 - 11);
-    data.resource_focus_button_id = 0;
-
-    // resources
-    const auto &resources = g_city.resource.available_market_goods();
-    data.bid = c.bid;
-    return generic_buttons_handle_mouse(m, {c.offset.x + 205, y_offset + 46}, data.orders_resource_buttons.data(), resources.size(), &data.resource_focus_button_id);
-}
-
-int building_bazaar::window_info_handle_mouse(const mouse *m, object_info &c) {
-    if (c.storage_show_special_orders) {
-        return handle_mouse_orders(m, c);
-    }
-
-    return handle_mouse_simple(m, c);
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
