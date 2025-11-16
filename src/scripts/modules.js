@@ -42,3 +42,4 @@ import music
 import invasions
 import enemies
 import sentiment
+import empire

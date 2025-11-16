@@ -71,7 +71,8 @@ void empire_t::set_trade_route_type(int route_id, bool is_sea_route) {
 
 void empire_t::init_cities() {
     auto& objects = g_empire_objects;
-    g_empire.clear_cities_data();
+
+    clear_cities_data();
     //    int route_index = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY)
@@ -83,6 +84,7 @@ void empire_t::init_cities() {
         city->in_use = 1;
         city->type = obj->city_type;
         city->name_id = obj->city_name_id;
+        city->name_str = empire_city::get_display_name(obj->city_name_id);
 
         city->route_id = obj->obj.trade_route_id;
         city->is_open = obj->trade_route_open;
@@ -92,13 +94,9 @@ void empire_t::init_cities() {
         for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
             city->sells_resource[resource] = false;
             city->buys_resource[resource] = false;
-            if (!is_trade_city(i))
+            if (!is_trade_city(i)) {
                 continue;
-            //            if (city->type == EMPIRE_CITY_PHARAOH
-            //                || city->type == EMPIRE_CITY_EGYPTIAN
-            //                || city->type == EMPIRE_CITY_FOREIGN) {
-            //                continue;
-            //            }
+            }
 
             city->sells_resource[resource] = g_empire.city_sells_resource(i, resource, true);
             city->buys_resource[resource] = g_empire.city_buys_resource(i, resource, true);
@@ -121,6 +119,7 @@ void empire_t::init_cities() {
 
             city->get_route().init(resource, amount);
         }
+
         city->trader_entry_delay = 4;
         city->trader_figure_ids[0] = 0;
         city->trader_figure_ids[1] = 0;

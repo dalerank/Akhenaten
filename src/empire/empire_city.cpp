@@ -3,8 +3,12 @@
 #include "empire_object.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
+#include "js/js_game.h"
 
-const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
+using e_empire_city_tokens_t = token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT>;
+const e_empire_city_tokens_t e_empire_city_tokens;
+
+empire_city_options_t ANK_VARIABLE(empire_city_options);
 
 void empire_city::remove_trader(int figure_id) {
     for (int i = 0; i < 3; i++) {
@@ -52,6 +56,14 @@ int empire_city::get_free_slot(int max_traders) const {
         }
     }
     return -1;
+}
+
+bstring32 empire_city::get_display_name(int nid) {
+    int text_group = !!game_features::gameui_empire_city_old_names 
+                            ? empire_city_options.text_group_old_names 
+                            : empire_city_options.text_group_new_names;
+
+    return lang_get_string(text_group, nid);
 }
 
 const trade_route& empire_city_handle::get_route() const {

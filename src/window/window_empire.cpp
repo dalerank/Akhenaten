@@ -80,8 +80,6 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int info_y_traded;
     int trade_button_offset_x;
     int info_y_city_desc;
-    int text_group_old_names;
-    int text_group_new_names;
     int trade_resource_size;
     const int sell_res_group = 47;
     int trade_button_offset_y;
@@ -154,8 +152,6 @@ inline void empire_window::archive_load(archive arch) {
     info_y_traded = arch.r_int("info_y_traded");
     trade_button_offset_x = arch.r_int("trade_button_offset_x");
     info_y_city_desc = arch.r_int("info_y_city_desc");
-    text_group_old_names = arch.r_int("text_group_old_names");
-    text_group_new_names = arch.r_int("text_group_new_names");
     trade_resource_size = arch.r_int("trade_resource_size");
     trade_button_offset_y = arch.r_int("trade_button_offset_y");
     start_pos = arch.r_vec2i("start_pos");
@@ -546,11 +542,10 @@ void empire_window::draw_empire_object(const empire_object &obj) {
             draw_trade_route(city->route_id, state);
         }
 
-        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
         const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
         vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height)/2};
 
-        tooltip_text = ui::str(text_group, city->name_id);
+        tooltip_text = city->name_str;
 
         switch (obj.text_align) {
         case 0: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
@@ -706,10 +701,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     ui["button_help"].enabled = !!city;
     ui["button_close"].enabled = !!city;
     ui["button_advisor"].enabled = !!city;
-    if (city) {
-        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
-        ui["city_name"] = ui::str(text_group, city->name_id);
-    }
+    ui["city_name"] = city ? city->name_str : "";
 
     const bool may_open_trade = city && !city->is_open && city->can_trade();
     ui["button_open_trade"].enabled = may_open_trade;
