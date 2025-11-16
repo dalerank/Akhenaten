@@ -2925,11 +2925,7 @@ localization_base_en = [
     { group:66, id:75, text: "This house has no access to a juggler" }
     { group:66, id:76, text: "This house was recently passed by a juggler. It will have juggler access for a long time" }
     { group:66, id:77, text: "This house has juggler access" }
-    { group:66, id:78, text: "This house has not been passed by a juggler for a while. It will soon lose juggler access" }
-    { group:66, id:79, text: "This house has no access to a musicians' stage" }
-    { group:66, id:80, text: "This house was recently passed by a musician. It will have musician access for a long time" }
-    { group:66, id:81, text: "This house has musician access" }
-    { group:66, id:82, text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
+    { group:66, id:78, text: "This house has not been passed by a juggler for a while. It will soon lose juggler access" }    
     { group:66, id:83, text: "This house has no access to a dance stage" }
     { group:66, id:84, text: "This house was recently passed by a dancer. It will have dance stage access for a long time" }
     { group:66, id:85, text: "This house has dance stage access" }

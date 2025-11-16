@@ -91,7 +91,7 @@ void city_overlay_desirability::draw_custom_top(vec2i pixel, tile2i point, paint
     ; // nothing
 }
 
-xstring city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_desirability::get_tooltip_for_building(tooltip_context *c, const building *b) {
     return {};
 }
 

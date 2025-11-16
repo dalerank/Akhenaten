@@ -178,6 +178,24 @@ const game_languages_vec & get_available_languages() {
     return game_languages;
 }
 
+xstring lang_xtext_from_key(const xstring& key) {
+    if (!key) {
+        return "";
+    }
+
+    auto it = g_localization.find({ key });
+    if (it != g_localization.end()) {
+        if (!it->text.empty()) {
+            return it->text;
+        }
+
+        xstring str = lang_get_string(it->group, it->id);
+        return str;
+    }
+
+    return key;
+}
+
 pcstr lang_text_from_key(pcstr key) {
     if (!key) {
         return "";
@@ -189,7 +207,7 @@ pcstr lang_text_from_key(pcstr key) {
             return it->text.c_str();
         }
 
-        pcstr str = (pcstr)lang_get_string(it->group, it->id);
+        pcstr str = lang_get_string(it->group, it->id);
         return str;
     }
 

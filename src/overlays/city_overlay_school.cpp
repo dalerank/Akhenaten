@@ -22,7 +22,7 @@ int city_overlay_schools::get_column_height(const building *b) const {
     return housed.school / 10;
 }
 
-xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_schools::get_tooltip_for_building(tooltip_context *c, const building *b) {
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {

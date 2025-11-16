@@ -95,6 +95,16 @@ xstring city_overlay::title() const {
     return caption;
 }
 
+const tooltips_t empty_tolltips{ "unknown_key", {} };
+const tooltips_t &city_overlay::get_tooltips(const xstring &level) const {
+    const auto it = tooltips.find(level);
+    if (it != tooltips.end()) {
+        return it->second;
+    }
+
+    return empty_tolltips;
+}
+
 void city_overlay::draw_overlay_column(e_column_color color, vec2i pixel, int height, int column_style, painter &ctx) const {
     if (color == COLUMN_COLOR_NONE) {
         switch (column_style) {

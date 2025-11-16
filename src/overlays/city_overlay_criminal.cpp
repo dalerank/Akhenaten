@@ -21,7 +21,7 @@ int city_overlay_crime::get_column_height(const building* b) const {
     return COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b) const {
+xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b) {
     auto house = ((building *)b)->dcast_house();
     if (!house || house->house_population() <= 0) {
         return ui::str(66, 63);

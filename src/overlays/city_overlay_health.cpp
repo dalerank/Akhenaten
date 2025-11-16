@@ -54,7 +54,7 @@ void city_overlay_health::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx
     }
 }
 
-xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_health::get_tooltip_for_building(tooltip_context *c, const building *b) {
     if (b->disease_days > 0) {
         return ui::str(66, 131);
     }

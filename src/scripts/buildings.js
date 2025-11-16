@@ -1176,6 +1176,7 @@ building_bandstand {
     musician_we { pos[30, 10], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3, internal_offset:true }
   }
 
+  overlay : OVERLAY_BANDSTAND
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   min_houses_coverage : 100
   fire_proof: true

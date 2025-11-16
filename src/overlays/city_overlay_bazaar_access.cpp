@@ -29,7 +29,6 @@ int city_overlay_bazaar_access::get_column_height(const building *b) const {
     return std::clamp<int>(housed.bazaar_access / 10, 0, 8);
 }
 
-xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b) const {
-   
+xstring city_overlay_bazaar_access::get_tooltip_for_building(tooltip_context *c, const building *b) {
     return ui::str(66, 58);
 }
