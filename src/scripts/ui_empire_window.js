@@ -7,8 +7,6 @@ empire_window = {
     trade_button_offset_x : 0,
     info_y_footer_1 : 78,
     info_y_city_desc : 28,
-    text_group_old_names : 195,
-    text_group_new_names : 21,
     trade_resource_size : 18,
     trade_resource_offset : 3,
     trade_button_offset_y : 10,

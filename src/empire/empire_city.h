@@ -8,6 +8,12 @@
 #include "core/tokenum.h"
 #include "core/archive.h"
 
+struct empire_city_options_t {
+    uint16_t text_group_old_names;
+    uint16_t text_group_new_names;
+};
+ANK_CONFIG_STRUCT(empire_city_options_t, text_group_old_names, text_group_new_names)
+
 struct empire_city {
     enum {
         check_open_route = 1
@@ -17,6 +23,7 @@ struct empire_city {
     e_empire_city type;
     uint8_t lookup_id;
     uint8_t name_id;
+    bstring32 name_str;
     int route_id;
     bool is_open;
     bool buys_resource[RESOURCES_MAX];
@@ -53,6 +60,8 @@ struct empire_city {
             is_open = false;  // Close trade when under siege
         }
     }
+
+    static bstring32 get_display_name(int id);
     
     bool is_sieged() const {
         return months_under_siege > 0;

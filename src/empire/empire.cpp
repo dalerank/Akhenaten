@@ -24,6 +24,7 @@
 #include <iostream>
 #include <algorithm>
 
+//empire_t ANK_VARIABLE_N(g_empire, "empire");
 empire_t g_empire;
 
 #ifndef _WIN32
