@@ -170,7 +170,7 @@ io_buffer* iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version)
             t.sold_resources[r] *= 0.01;
         }
 
-        iob->bind____skip(1);
+        iob->bind_u8(t.movement_delay_max);
         for (int r = 1; r < RESOURCES_MAX; r++)
             iob->bind_u8((uint8_t&)t.bought_resources[r]);
 

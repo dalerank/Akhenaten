@@ -90,4 +90,5 @@ struct empire_city_handle {
     bool operator!() const { return !valid(); }
 };
 
-extern const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
+using e_empire_city_tokens_t = token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT>;
+extern const e_empire_city_tokens_t e_empire_city_tokens;

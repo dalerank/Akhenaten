@@ -12,8 +12,9 @@
 #include "dev/debug.h"
 #include "city/city.h"
 #include "core/log.h"
+#include "js/js_game.h"
 
-empire_traders_manager g_empire_traders;
+empire_traders_manager ANK_VARIABLE_N(g_empire_traders, "empire_traders");
 
 declare_console_command_p(empire_traders_reset) {
     g_empire_traders.clear_all();
@@ -64,7 +65,7 @@ void empire_trader::update() {
         return;
     }
 
-    movement_delay = route.route_type == 1 ? 2 : 4;
+    movement_delay = movement_delay_max;
 }
 
 bool empire_trader::is_at_destination() const {
@@ -145,6 +146,9 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->is_active = true;
     trader->state = empire_trader::estate_moving_to_destination;
     trader->is_ship = (route.route_type == 2);
+
+    const vec2i movement_delay_range = trader->is_ship ? ship_movement_delay : land_movement_delay;
+    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % (movement_delay_range.y));
 
     if (route.in_use && route.num_points > 0) {
         const auto &point = route.points[trader->current_route_point];
