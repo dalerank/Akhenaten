@@ -18,6 +18,7 @@ struct info_window_storageyard_orders : building_info_window_t<info_window_stora
 
     void draw_background(object_info *c);
     void draw_foreground(object_info *c);
+    vec2i get_adjusted_offset(object_info *c);
 
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
 
