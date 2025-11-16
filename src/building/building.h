@@ -339,6 +339,8 @@ public:
     void destroy_by_flooded();
     void destroy_by_fire();
 
+    int animation_offset(int image_id, int grid_offset, int max_frames, int duration);
+
     void mark_plague(int days);
     bool is_ajacent_tile(tile2i t) const;
 

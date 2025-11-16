@@ -44,12 +44,12 @@ int generic_sprite_offset(int grid_offset, int max_frames, int anim_speed) {
     return new_sprite;
 }
 
-int building_animation_offset(building* b, int image_id, int grid_offset, int max_frames, int duration) {
-    if (building_is_workshop(b->type) && (!b->workshop_has_resources() || b->num_workers <= 0)) {
+int building::animation_offset(int image_id, int grid_offset, int max_frames, int duration) {
+    if (building_is_workshop(type) && (!workshop_has_resources() || num_workers <= 0)) {
         return 0;
     }
 
-    if (!b->dcast()->can_play_animation()) {
+    if (!dcast()->can_play_animation()) {
         return 0;
     }
 
@@ -58,7 +58,7 @@ int building_animation_offset(building* b, int image_id, int grid_offset, int ma
         max_frames = img->animation.num_sprites;
     }
 
-    int anim_speed = b->dcast()->animation_speed(img->animation.speed_id);
+    int anim_speed = dcast()->animation_speed(img->animation.speed_id);
 
     if (!game.animation_should_advance(anim_speed)) {
         return map_sprite_animation_at(grid_offset) & 0x7f;
