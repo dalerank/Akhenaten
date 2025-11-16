@@ -6,9 +6,13 @@ set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. 
 
 option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
 option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
+option(OPTION_SYSTEM_FREETYPE "Use system-provided freetype instead of FetchContent" OFF)
+option(OPTION_SYSTEM_HARFBUZZ "Use system-provided harfbuzz instead of FetchContent" OFF)
 
 message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
 message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
+message(STATUS "OPTION_SYSTEM_FREETYPE: ${OPTION_SYSTEM_FREETYPE}")
+message(STATUS "OPTION_SYSTEM_HARFBUZZ: ${OPTION_SYSTEM_HARFBUZZ}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
@@ -249,33 +253,42 @@ endif()
 
 set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 
-set(_freetype_binary_dir "${CMAKE_BINARY_DIR}/_deps/freetype-build")
-if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+if (OPTION_SYSTEM_FREETYPE)
+    find_package(Freetype REQUIRED)
+else()
+    set(_freetype_binary_dir "${CMAKE_BINARY_DIR}/_deps/freetype-build")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+    endif()
+    set(FETCHCONTENT_BINARY_DIR_FREETYPE "${_freetype_binary_dir}")
+    set(freetype_BINARY_DIR "${_freetype_binary_dir}")
+    FetchContent_Declare(
+        freetype
+        GIT_REPOSITORY https://github.com/freetype/freetype.git
+        GIT_TAG        VER-2-13-3
+    )
+    FetchContent_MakeAvailable(freetype)
 endif()
-set(FETCHCONTENT_BINARY_DIR_FREETYPE "${_freetype_binary_dir}")
-set(freetype_BINARY_DIR "${_freetype_binary_dir}")
-FetchContent_Declare(
-    freetype
-    GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG        VER-2-13-3
-)
-FetchContent_MakeAvailable(freetype)
 
-if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
-    set(FETCHCONTENT_BINARY_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-build")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
+if (OPTION_SYSTEM_HARFBUZZ)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(HARFBUZZ REQUIRED harfbuzz)
+else()
+    if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
+        set(FETCHCONTENT_BINARY_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-build")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
+    endif()
+    FetchContent_Declare(
+        harfbuzz
+        GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
+        GIT_TAG        7.3.0
+    )
+    # Disable HarfBuzz optional features
+    set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(harfbuzz)
 endif()
-FetchContent_Declare(
-    harfbuzz
-    GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG        7.3.0
-)
-# Disable HarfBuzz optional features
-set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(harfbuzz)
 
 if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb.h")
     set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
@@ -643,9 +656,17 @@ include_directories(src)
 include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
 include_directories(ext/openssl/include)
-include_directories(${freetype_SOURCE_DIR}/include)
-include_directories(${freetype_SOURCE_DIR}/src)
-include_directories(${harfbuzz_SOURCE_DIR}/src)
+if (OPTION_SYSTEM_FREETYPE)
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+else()
+    include_directories(${freetype_SOURCE_DIR}/include)
+    include_directories(${freetype_SOURCE_DIR}/src)
+endif()
+if (OPTION_SYSTEM_HARFBUZZ)
+    include_directories(${HARFBUZZ_INCLUDE_DIRS})
+else()
+    include_directories(${harfbuzz_SOURCE_DIR}/src)
+endif()
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
@@ -695,7 +716,8 @@ target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
-                        freetype harfbuzz
+                        $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
+                        $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
                         akhenaten::rc)
 
 if(MSVC)
