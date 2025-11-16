@@ -4,6 +4,7 @@ include(":akhenaten.conf")
 include(":hotkeys.conf")
 
 import common
+import camera
 import game
 import math
 import rating_points

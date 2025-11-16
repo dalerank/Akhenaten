@@ -37,3 +37,4 @@ namespace js_helper {                                                           
         ANK_SCRIPT_STRUCT_EXPAND(ANK_SCRIPT_STRUCT_PASTE(ANK_SCRIPT_STRUCT_FROM, __VA_ARGS__));   \
     }                                                                                             \
 } void ANK_PERMANENT_CALLBACK(Type, ev) { bvariant_map vmap; js_helper::writer(vmap, ev); js_call_event_handlers(#Type, vmap); }
+
