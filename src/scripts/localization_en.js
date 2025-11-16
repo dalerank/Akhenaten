@@ -29,6 +29,7 @@ localization_en = [
   {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
   {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
   {key:"#TR_CONFIG_SMOOTH_SCROLLING", text:"Enable smooth scrolling"}
+  {key:"#TR_CONFIG_SMOOTH_ZOOM", text:"Enable smooth zoom"}
   {key:"#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", text:"Improve visual feedback when clearing land"}
   {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Allow building each temple in succession"}
   {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Show range when building reservoirs, fountains and wells"}

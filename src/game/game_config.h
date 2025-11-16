@@ -45,6 +45,7 @@ namespace game_features {
     extern game_feature gameui_show_water_structure_range;
     extern game_feature gameui_show_construction_size;
     extern game_feature gameui_zoom;
+    extern game_feature gameui_smooth_zoom;
     extern game_feature gameui_complete_ratings_columns;
     extern game_feature gameui_highlight_legions;
     extern game_feature gameui_rotate_manually;
