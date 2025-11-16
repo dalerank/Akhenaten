@@ -146,7 +146,11 @@ void config_show_game_features_properties(bool header) {
             bstring256 label;
             label.printf("%s", feature->name.c_str());
             bool current_value = feature->to_bool();
+            bool save = current_value;
             game_debug_show_property(label.c_str(), current_value);
+            if (save != current_value) {
+                feature->set(current_value);
+            }
         }
 
         ImGui::EndTable();
@@ -213,7 +217,11 @@ void config_show_game_features_properties(bool header) {
                 switch (feature->type()) {
                     case setting_bool: {
                         bool current = feature->to_bool();
+                        bool save = current;
                         game_debug_show_property("current_value", current);
+                        if (save != current) {
+                            feature->set(current);
+                        }
                         break;
                     }
                     case setting_string: {
