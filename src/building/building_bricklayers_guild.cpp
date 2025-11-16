@@ -30,13 +30,24 @@ void building_bricklayers_guild::update_graphic() {
 }
 
 void building_bricklayers_guild::on_create(int orientation) {
-    runtime_data().max_workers = 1;
+    runtime_data().max_workers = current_params().max_workers;
 }
 
-bool building_bricklayers_guild::can_spawn_bricklayer_man(int max_gatherers_per_building) {
-    uint32_t total_sites = g_city.buildings.count_total(BUILDING_SMALL_MASTABA);
-    uint32_t active_sites = g_city.buildings.count_active(BUILDING_SMALL_MASTABA);
-    if (total_sites == active_sites) {
+bool building_bricklayers_guild::can_spawn_bricklayer_man() {
+    // Check if there are any unfinished monuments that need bricklayers
+    building* monument = buildings_valid_first([&] (building &b) {
+        if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
+            return false;
+        }
+
+        if (!b.is_main()) {
+            return false;
+        }
+
+        return building_monument_need_bricklayers(&b);
+    });
+
+    if (!monument) {
         return false;
     }
     
@@ -71,7 +82,7 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!can_spawn_bricklayer_man(runtime_data().max_workers)) {
+    if (!can_spawn_bricklayer_man()) {
         return;
     }
 

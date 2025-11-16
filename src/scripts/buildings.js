@@ -553,6 +553,7 @@ building_bricklayers_guild = {
   building_size : 2
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
+  max_workers : 1
 }
 
 building_carpenters_guild = {
