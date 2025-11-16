@@ -15,7 +15,7 @@ struct city_overlay_labor : public city_overlay_t<OVERLAY_LABOR> {
         return false;
     }
     virtual int get_column_height(const building *b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) override;
     virtual bool show_building(const building *b) const override;
 };
 
@@ -34,7 +34,7 @@ int city_overlay_labor::get_column_height(const building *b) const {
     return 10 - percentage / 10;
 }
 
-xstring city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_labor::get_tooltip_for_building(tooltip_context *c, const building *b) {
     int percentage = b->worker_percentage();
     if (percentage <= 0)
         return ui::str(66, 52);

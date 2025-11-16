@@ -10,12 +10,12 @@
 
 struct city_overlay_apothecary : public city_overlay_t<OVERLAY_APOTHECARY> {
     virtual int get_column_height(const building *b) const override;
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const override;
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) override;
 };
 
 city_overlay_apothecary g_city_overlay_apothecary;
 
-xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) const {
+xstring city_overlay_apothecary::get_tooltip_for_building(tooltip_context* c, const building* b) {
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {

@@ -3,7 +3,7 @@
 #include "graphics/color.h"
 #include "core/vec2i.h"
 #include "graphics/font.h"
-#include "core/string.h"
+#include "core/xstring.h"
 #include "ui.h"
 
 struct game_language {
@@ -21,6 +21,7 @@ using game_languages_vec = svector<game_language, 12>;
 const game_languages_vec & get_available_languages();
 
 pcstr lang_text_from_key(pcstr key);
+xstring lang_xtext_from_key(const xstring& key);
 textid loc_text_from_key(pcstr key);
 pcstr lang_text_from_message(int id);
 

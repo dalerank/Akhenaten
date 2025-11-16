@@ -22,7 +22,7 @@ int city_overlay_fire::get_column_height(const building *b) const {
     return b->fire_risk / 100;
 }
 
-xstring city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_fire::get_tooltip_for_building(tooltip_context *c, const building *b) {
     auto main = const_cast<building*>(b)->main();
     if (main->fire_risk <= 0)
         return ui::str(66, 46);

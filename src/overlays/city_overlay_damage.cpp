@@ -36,7 +36,7 @@ void city_overlay_damage::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx
     }
 }
 
-xstring city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) {
     if (b->damage_risk <= 0)
         return ui::str(66, 52);
     else if (b->damage_risk <= 40)

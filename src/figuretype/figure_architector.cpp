@@ -10,7 +10,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
 void figure_architector::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Architector");
-    //    building *b = building_get(building_id);
+
     switch (action_state()) {
     default:
         advance_action(ACTION_63_ENGINEER_RETURNING);

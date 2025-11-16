@@ -1092,4 +1092,9 @@ localization_en = [
   { key: "#leopard_skins", text: "Leopard skins" }
   { key: "#perfume_luxury", text: "Perfume (luxury goods)" }
   { key: "#perfume", text: "Perfume" }
+
+  { key: "#bandstand_none", text: "This house has no access to a musicians' stage" }
+  { key: "#bandstand_medium", text: "This house was recently passed by a musician. It will have musician access for a long time" }
+  { key: "#bandstand_high", text: "This house has musician access" }
+  { key: "#bandstand_low", text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
 ]
