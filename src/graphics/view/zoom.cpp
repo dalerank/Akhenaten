@@ -56,8 +56,18 @@ void zoom_t::handle_mouse(const mouse* m) {
     }
 
     if (m->scrolled != SCROLL_NONE) {
-        target += (m->scrolled == SCROLL_DOWN) ? zoom_speed : -zoom_speed;
-        target = std::clamp(target, zoom_min, zoom_max);
+        if (!game_features::gameui_smooth_zoom) {
+            // Fixed step zoom: round to nearest step
+            float step = zoom_speed;
+            float current = target;
+            float new_target = current + (m->scrolled == SCROLL_DOWN ? step : -step);
+            // Round to nearest step
+            new_target = std::round(new_target / step) * step;
+            target = std::clamp(new_target, zoom_min, zoom_max);
+        } else {
+            target += (m->scrolled == SCROLL_DOWN) ? zoom_speed : -zoom_speed;
+            target = std::clamp(target, zoom_min, zoom_max);
+        }
     }
 
     input_offset = {m->x, m->y};
@@ -80,7 +90,12 @@ bool zoom_t::update_value(vec2i* camera_position) {
     auto old_zoom = zoom;
     float change = 0.0f;
     if (!has_touch_input) {
-        change = diff * zoom_lerp_coeff;
+        if (!game_features::gameui_smooth_zoom) {
+            // Fixed step zoom: immediately set to target without interpolation
+            change = diff;
+        } else {
+            change = diff * zoom_lerp_coeff;
+        }
     } else {
         change = (float)(touch.current_zoom - zoom);
     }
@@ -89,6 +104,9 @@ bool zoom_t::update_value(vec2i* camera_position) {
 
     if (has_touch_input) {
         target = new_zoom;
+    } else if (!game_features::gameui_smooth_zoom) {
+        // Fixed step zoom: immediately snap to target
+        new_zoom = target;
     } else if (std::fabs(target - new_zoom) <= zoom_epsilon) {
         new_zoom = target;
     }
