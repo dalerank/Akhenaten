@@ -8,8 +8,22 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_conservatory);
 
+void building_conservatory::update_day() {
+    building_impl::update_day();
+
+    auto &d = runtime_data();
+    if (d.spawned_entertainer_days > 0) {
+        d.spawned_entertainer_days--;
+    }
+}
+
 void building_conservatory::spawn_figure() {
     if (!common_spawn_figure_trigger(50)) {
+        return;
+    }
+
+    auto &d = runtime_data();
+    if (d.spawned_entertainer_days > 0) {
         return;
     }
 
@@ -17,14 +31,15 @@ void building_conservatory::spawn_figure() {
     building* dest = building_get(dest_id);
     if (dest->id > 0) {
         create_figure_with_destination(FIGURE_MUSICIAN, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE);
+        d.spawned_entertainer_days = current_params().spawn_interval;
     } else {
         common_spawn_roamer(FIGURE_MUSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
     }
 }
 
 void building_conservatory::update_graphic() {
-    const bool can_teach_dancers = worker_percentage() > 50;
-    const xstring &animkey = (can_teach_dancers && can_play_animation())
+    const bool can_train_musicians = worker_percentage() > 50;
+    const xstring &animkey = (can_train_musicians && can_play_animation())
                                 ? animkeys().work
                                 : animkeys().none;
 
