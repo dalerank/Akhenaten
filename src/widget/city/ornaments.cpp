@@ -6,7 +6,6 @@
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
 #include "building/monuments.h"
-#include "building/building_animation.h"
 #include "building/monument_mastaba.h"
 #include "city/buildings.h"
 #include "city/city_floods.h"
