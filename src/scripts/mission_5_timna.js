@@ -1,12 +1,13 @@
 log_info("akhenaten: mission 5 timna started")
 
 mission5 { // Timna
-	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : "message_history_military"
 
 	env {
 		has_animals : true
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
+		hide_nilometer : true
 	}
 
 	player_rank : 1
