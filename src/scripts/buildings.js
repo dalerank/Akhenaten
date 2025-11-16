@@ -938,25 +938,32 @@ building_water_supply {
   damage_risk[0]
 }
 
-building_well = {
-  animations : {
-    preview : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    base : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    base_work : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    fancy : { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 },
-    fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 },
-    minimap: {pack:PACK_GENERAL, id:151},
-  },
-  fire_proof : true,
-  building_size : 1,
-  meta : { help_id:62, text_id:109 }
-  needs : {
+building_well {
+  animations {
+    preview { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base_work { pack: PACK_GENERAL, id:23, max_frames:1 }
+    fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
+    fancy_work { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    minimap {pack:PACK_GENERAL, id:151},
+  }
+
+  fire_proof : true
+  building_size : 1
+  meta { help_id:62, text_id:109 }
+  needs {
     groundwater : true
   }
+
   labor_category : LABOR_CATEGORY_WATER_HEALTH
-  cost: [ 1, 2, 5, 10, 20 ]
-  laborers:[0], fire_risk:[0], damage_risk: [0]
-  desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
+  cost [ 1, 2, 5, 10, 20 ]
+  desirability_range_check : 4
+  desirability_fancy : 30
+  unnecessary_range_check : 3
+  laborers[0]
+  fire_risk[0]
+  damage_risk[0]
+  desirability { value[1], step[1], step_size[-1], range[1] }
 }
 
 building_papyrus_maker = {
