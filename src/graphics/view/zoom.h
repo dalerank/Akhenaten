@@ -8,6 +8,7 @@ struct zoom_t {
     static constexpr float ZOOM_MIN = 25.0f;
     static constexpr float ZOOM_MAX = 250.0f;
     static constexpr float ZOOM_DEFAULT = 100.0f;
+    static constexpr float ZOOM_EPSILON = 0.05f;
 
     float zoom = ZOOM_DEFAULT;
     float target = ZOOM_DEFAULT;
@@ -35,6 +36,5 @@ struct zoom_t {
 };
 
 extern zoom_t g_zoom;
-
 
 

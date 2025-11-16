@@ -63,26 +63,37 @@ void zoom_t::handle_mouse(const mouse* m) {
 }
 
 bool zoom_t::update_value(vec2i* camera_position) {
-    if (zoom == target) {
-        return false;
-    }
-
     if (!game_features::gameui_zoom) {
         target = ZOOM_DEFAULT;
     }
 
-    auto old_zoom = zoom;
-    if (!touch.active) {
-        delta = calc_bound(target - zoom, -zoom_speed, zoom_speed);
-    } else {
-        delta = (float)(touch.current_zoom - zoom);
-    }
-    zoom = std::clamp(zoom + delta, ZOOM_MIN, ZOOM_MAX); // todo: bind camera to max window size... or find a way to mask the borders
-    
-    if (zoom == target) {
-        zoom = target;
+    const bool has_touch_input = touch.active;
+    const float diff = target - zoom;
+
+    if (!has_touch_input && std::fabs(diff) <= ZOOM_EPSILON) {
         delta = 0.0f;
+        zoom = target;
+        return false;
     }
+
+    auto old_zoom = zoom;
+    float change = 0.0f;
+    if (!has_touch_input) {
+        change = diff * ZOOM_LERP_COEFF;
+    } else {
+        change = (float)(touch.current_zoom - zoom);
+    }
+
+    float new_zoom = std::clamp(zoom + change, ZOOM_MIN, ZOOM_MAX); // todo: bind camera to max window size... or find a way to mask the borders
+
+    if (has_touch_input) {
+        target = new_zoom;
+    } else if (std::fabs(target - new_zoom) <= ZOOM_EPSILON) {
+        new_zoom = target;
+    }
+
+    zoom = new_zoom;
+    delta = zoom - old_zoom;
 
     // re-center camera around the input point
     vec2i old_offset, new_offset;
