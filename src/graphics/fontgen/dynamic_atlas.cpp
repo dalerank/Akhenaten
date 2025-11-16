@@ -91,10 +91,10 @@ namespace DynamicFont {
                 return 3;
             case FT_PIXEL_MODE_BGRA:
                 return 4;
-            default:
-                assert(false && "Unsupported pixel mode");
-                return 1;
             }
+
+            assert(false && "Unsupported pixel mode");
+            return 1;
         }
 
         uint8_t ColorRed(int x, int y) const {

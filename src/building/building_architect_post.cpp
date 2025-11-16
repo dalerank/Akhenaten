@@ -36,7 +36,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_architect_post);
 info_window_architect_post architect_post_infow;
 
 // Console command to remove damage risk from all buildings
-declare_console_command_p(nodamage) {
+declare_console_command_p(collapse_no) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
@@ -44,7 +44,7 @@ declare_console_command_p(nodamage) {
 
 // Console command to collapse a specified number of buildings (default 10)
 // Excludes farms from collapse
-declare_console_command_p(collapse) {
+declare_console_command_p(collapse_start) {
     std::string args;
     is >> args;
     int count = atoi(!args.empty() ? args.c_str() : "10");
