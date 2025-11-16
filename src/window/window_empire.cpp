@@ -23,6 +23,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/image.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "input/scroll.h"
@@ -524,9 +525,9 @@ void empire_window::draw_empire_object(const empire_object &obj) {
 
     image_id = image_id_remap(image_id);
     const vec2i draw_pos = draw_offset + pos;
-    const image_t *img = ui::eimage(image_id, draw_pos);
 
     if (obj.type == EMPIRE_OBJECT_CITY) {
+        const image_t *img = ui::eimage(image_id, draw_pos);
         int empire_city_id = g_empire.get_city_for_object(obj.id);
         const empire_city* city = g_empire.city(empire_city_id);
 
@@ -575,6 +576,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
         if (city_military_months_until_distant_battle() <= 0)
             return;
+
         if (city_military_distant_battle_enemy_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
@@ -582,18 +584,22 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
         if (!city_military_distant_battle_kingdome_army_is_traveling())
             return;
+
         if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
 
-    if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
-        && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {
-        hovered_object_tooltip = tooltip_text;
-    }
+    {
+        const image_t *img = ui::eimage(image_id, draw_pos);
+        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
+            && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {
+            hovered_object_tooltip = tooltip_text;
+        }
 
-    if (img && img->animation.speed_id) {
-        int new_animation = g_empire.update_animation(obj, image_id);
-        ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
+        if (img && img->animation.speed_id) {
+            int new_animation = g_empire.update_animation(obj, image_id);
+            ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
+        }
     }
 }
 
