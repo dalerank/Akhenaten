@@ -5,7 +5,6 @@
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 
-using e_empire_city_tokens_t = token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT>;
 const e_empire_city_tokens_t e_empire_city_tokens;
 
 empire_city_options_t ANK_VARIABLE(empire_city_options);

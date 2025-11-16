@@ -328,8 +328,11 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
-    const int allow_traders = std::distance(city.trade_limits.begin(), it);
+    int allow_traders = 1;
+    if (!city.trade_limits.empty()) {
+        auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
+        allow_traders = std::distance(city.trade_limits.begin(), it);
+    }
 
     if (allow_traders <= 0) {
         return false;
@@ -341,7 +344,8 @@ bool city_t::generate_trader_from(empire_city &city) {
         trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    if (trades_in_city >= city.max_traders) {
+    uint8_t city_max_traders = std::max<uint8_t>(1u, city.max_traders);
+    if (trades_in_city >= city_max_traders) {
         return false;
     }
 
