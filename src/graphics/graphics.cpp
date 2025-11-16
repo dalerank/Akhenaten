@@ -98,6 +98,8 @@ render_command_t& ImageDraw::create_command(render_command_t::e_render_type rt) 
     auto &command = g_render_commands.emplace_back();
     command.id = g_render_commands.size() - 1;
     command.rtype = rt;
+    command.use_sort_pixel = false;
+    command.sort_pixel = {};
     return command;
 }
 
@@ -113,6 +115,8 @@ render_command_t& ImageDraw::create_subcommand(render_command_t::e_render_type r
     auto& subcommand = commands.emplace_back();
     subcommand.id = commands.size() - 1;
     subcommand.rtype = rt;
+    subcommand.use_sort_pixel = false;
+    subcommand.sort_pixel = {};
     return subcommand;
 }
 
@@ -123,11 +127,13 @@ void ImageDraw::clear_render_commands() {
 void ImageDraw::apply_render_commands(painter& ctx) {
     std::sort(g_render_commands.begin(), g_render_commands.end(),
         [] (const auto& lhs, const auto& rhs) {
-            if (lhs.pixel.y == rhs.pixel.y) {
-                return lhs.pixel.x > rhs.pixel.x;
+            const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;
+            const vec2i rhs_sort = rhs.use_sort_pixel ? rhs.sort_pixel : rhs.pixel;
+            if (lhs_sort.y == rhs_sort.y) {
+                return lhs_sort.x > rhs_sort.x;
             }
 
-            return lhs.pixel.y < rhs.pixel.y;
+            return lhs_sort.y < rhs_sort.y;
         });
 
     for (const auto& command : g_render_commands) {
