@@ -3,6 +3,7 @@
 #include "dynamic_font.h"
 #include <ft2build.h>
 #include <freetype/ftoutln.h>
+#include <freetype/ftglyph.h>
 #if __has_include(<freetype/ftsdfrend.h>)
 #define AKHN_HAVE_FT_SDF 1
 #include <freetype/ftsdfrend.h>
