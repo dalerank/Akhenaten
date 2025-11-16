@@ -54,6 +54,7 @@ building_house_crude_hut {
     tax_multiplier[2,1,1,1,1]
     malaria_risk[-120,40,50,60,70]
     disease_risk[-120,30,40,60,70]
+    food_storage_multiplier[4,4,4,4,4]
   }
 }
 
@@ -104,6 +105,7 @@ building_house_sturdy_hut {
     tax_multiplier[2,1,1,1,1]
     malaria_risk[-120,30,40,50,70]
     disease_risk[-120,20,30,50,60]
+    food_storage_multiplier[4,4,4,4,4]
   }
 }
 
@@ -153,6 +155,7 @@ building_house_meager_shanty {
     tax_multiplier[3,2,1,1,1]
     malaria_risk[-120,20,40,50,60]
     disease_risk[-120,10,20,40,60]
+    food_storage_multiplier[4,4,4,4,4]
   }
 }
 
@@ -203,6 +206,7 @@ building_house_common_shanty {
     tax_multiplier[3,2,1,1,1]
     malaria_risk[-120,20,30,50,60]
     disease_risk[-120,8,10,30,50]
+    food_storage_multiplier[4,4,4,4,4]
   }
 }
 
@@ -253,6 +257,7 @@ building_house_rough_cottage {
     tax_multiplier[3,2,2,2,1]
     malaria_risk[-120,10,0,20,30]
     disease_risk[-120,5,5,20,40]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -302,6 +307,7 @@ building_house_ordinary_cottage {
     tax_multiplier[3,2,2,2,2]
     malaria_risk[-120,5,0,20,30]
     disease_risk[-120,3,0,10,30]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -354,6 +360,7 @@ building_house_modest_homestead {
     tax_multiplier[4,3,2,2,2]
     malaria_risk[-120,0,0,20,20]
     disease_risk[-120,0,0,10,20]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -403,6 +410,7 @@ building_house_spacious_homestead {
     tax_multiplier[4,3,2,2,2]
     malaria_risk[-120,-10,0,0,20]
     disease_risk[-120,-10,0,0,10]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -452,6 +460,7 @@ building_house_modest_apartment {
     tax_multiplier[4,3,3,3,2]
     malaria_risk[-120,-20,-10,0,10]
     disease_risk[-120,-20,-10,0,10]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -500,6 +509,7 @@ building_house_spacious_apartment {
     tax_multiplier[4,3,3,3,2]
     malaria_risk[-120,-30,-20,0,10]
     disease_risk[-120,-30,-20,0,0]
+    food_storage_multiplier[5,5,5,5,5]
   }
 }
 
@@ -549,6 +559,7 @@ building_house_common_residence {
     tax_multiplier[5,4,3,3,3]
     malaria_risk[-120,-40,-30,-10,0]
     disease_risk[-120,-40,-30,-10,0]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -598,6 +609,7 @@ building_house_spacious_residence {
     tax_multiplier[5,4,3,3,3]
     malaria_risk[-120,-50,-40,-20,0]
     disease_risk[-120,-50,-40,-20,0]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -647,6 +659,7 @@ building_house_elegant_residence {
     tax_multiplier[6,5,4,4,3]
     malaria_risk[-120,-60,-50,-30,-10]
     disease_risk[-120,-60,-50,-30,-10]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -696,6 +709,7 @@ building_house_fancy_residence {
     tax_multiplier[6,5,4,4,4]
     malaria_risk[-120,-70,-60,-40,-20]
     disease_risk[-120,-70,-60,-40,-20]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -739,6 +753,7 @@ building_house_common_manor {
     tax_multiplier[13,12,10,10,11]
     malaria_risk[-120,-80,-70,-50,-30]
     disease_risk[-120,-80,-70,-50,-30]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -782,6 +797,7 @@ building_house_spacious_manor {
     tax_multiplier[14,13,11,10,11]
     malaria_risk[-120,-90,-80,-60,-40]
     disease_risk[-120,-90,-80,-60,-40]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -826,6 +842,7 @@ building_house_elegant_manor {
     tax_multiplier[15,14,12,12,12]
     malaria_risk[-120,-100,-90,-70,-50]
     disease_risk[-120,-100,-90,-70,-50]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -870,6 +887,7 @@ building_house_stately_manor {
     tax_multiplier[16,15,13,12,12]
     malaria_risk[-120,-110,-100,-80,-60]
     disease_risk[-120,-110,-100,-80,-60]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -914,6 +932,7 @@ building_house_modest_estate {
     tax_multiplier[17,16,15,15,15]
     malaria_risk[-120,-120,-110,-90,-70]
     disease_risk[-120,-120,-110,-90,-70]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }
 
@@ -959,5 +978,6 @@ building_house_palatial_estate {
     tax_multiplier[18,17,16,16,15]
     malaria_risk[-120,-120,-120,-100,-80]
     disease_risk[-120,-120,-120,-100,-80]
+    food_storage_multiplier[6,6,6,6,6]
   }
 }

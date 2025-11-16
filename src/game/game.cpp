@@ -153,6 +153,7 @@ void game_t::advance_year() {
 
 void game_t::advance_week() {
     g_city.resource.consume_food_weekly(game.simtime);
+    g_city.resource.consume_goods_weekly(game.simtime);
 }
 
 void game_t::advance_month() {
