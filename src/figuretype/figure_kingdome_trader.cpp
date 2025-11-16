@@ -38,8 +38,8 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     auto &emp_city = *g_empire.city(ev.cid);
 
     // Find first available trader slot
-    const int free_slot = emp_city.get_free_slot(emp_city.max_traders);
-    if (free_slot == -1) {
+    const int empire_trader_index = emp_city.get_free_slot();
+    if (empire_trader_index == -1) {
         return;
     }
 
@@ -61,7 +61,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     donkey2->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
 
-    emp_city.trader_figure_ids[free_slot] = caravan->id();
+    emp_city.trader_figure_ids[empire_trader_index] = caravan->id();
 }
 
 int figure::trader_total_sold() {

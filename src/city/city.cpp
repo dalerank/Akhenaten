@@ -344,8 +344,8 @@ bool city_t::generate_trader_from(empire_city &city) {
         trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    uint8_t city_max_traders = std::max<uint8_t>(1u, city.max_traders);
-    if (trades_in_city >= city_max_traders) {
+    assert(city.max_traders > 0);
+    if (trades_in_city >= city.max_traders) {
         return false;
     }
 

@@ -438,8 +438,9 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;
         iob->bind_u8(city.in_use);
-        iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_UINT8, &city.type);
+        iob->bind_u8(city.max_traders);
+        iob->bind_u8((uint8_t&)city.type);
+
         iob->bind(BIND_SIGNATURE_UINT8, &city.name_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.is_open);
@@ -465,6 +466,10 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         }
         
         iob->bind____skip(10);
+
+        if (iob->is_read_access()) {
+            city.check_attributes();
+        }
     }
 });
 

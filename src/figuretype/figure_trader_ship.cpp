@@ -30,8 +30,8 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     auto& emp_city = *g_empire.city(ev.cid);
 
     // Find first available trader slot
-    const int free_slot = emp_city.get_free_slot(emp_city.max_traders);
-    if (free_slot == -1) {
+    const int empire_trader_index = emp_city.get_free_slot();
+    if (empire_trader_index == -1) {
         return;
     }
 
@@ -43,7 +43,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     ship->base.wait_ticks = 10;
     ship->runtime_data().trader = empire_trader_handle{ ev.tid };
 
-    emp_city.trader_figure_ids[free_slot] = ship->id();
+    emp_city.trader_figure_ids[empire_trader_index] = ship->id();
 }
 
 declare_console_command_p(sink_all_ships) {

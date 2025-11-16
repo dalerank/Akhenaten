@@ -46,6 +46,10 @@ struct empire_city {
     const empire_object *get_empire_object() const;
     const full_empire_object *get_full_empire_object() const;
     int get_free_slot(int max_traders) const;
+    int get_free_slot() const;
+
+    void archive_load(archive arch);
+    void check_attributes();
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
