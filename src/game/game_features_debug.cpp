@@ -198,10 +198,11 @@ void config_show_game_features_properties(bool header) {
                 continue;
             }
 
-            ImGui::PushID(reinterpret_cast<int>(feature));
-
             bstring256 feature_label;
             feature_label.printf("%s", feature->name.c_str());
+
+            ImGui::PushID(0x90000000 | ImHashStr(feature_label.c_str()));
+
             bool feature_open = ImGui::TreeNodeEx(feature_label.c_str(), ImGuiTreeNodeFlags_None, "%s", feature_label.c_str());
 
             if (feature_open) {
