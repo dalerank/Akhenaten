@@ -1,6 +1,7 @@
 #include "figure_bricklayer.h"
 
 #include "building/monument_mastaba.h"
+#include "building/building_statue.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
 #include "js/js_game.h"
@@ -32,13 +33,25 @@ void figure_bricklayer::figure_action() {
         poof();
         break;
 
+    case ACTION_30_BRICKLAYER_CREATED_ROAMING:
+        base.destination_tile = destination()->access_tile();
+        advance_action(ACTION_31_BRICKLAYER_GOING_TO_STATUE);
+        break;
+
     case ACTION_10_BRICKLAYER_CREATED:
         base.destination_tile = destination()->access_tile();
         advance_action(ACTION_11_BRICKLAYER_GOING);
         break;
 
+    case ACTION_31_BRICKLAYER_GOING_TO_STATUE:
+        if (do_goto(base.destination_tile, terrain_usage, ACTION_14_BRICKLAYER_WORK_STATUE, ACTION_16_BRICKLAYER_RETURN_HOME)) {
+            base.wait_ticks = 0;
+            advance_action(ACTION_14_BRICKLAYER_WORK_STATUE);
+        }
+        break;
+
     case ACTION_11_BRICKLAYER_GOING:
-        if (do_goto(base.destination_tile, terrain_usage, -1, ACTION_20_BRICKLAYER_DESTROY)) {
+        if (do_goto(base.destination_tile, terrain_usage, ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE, ACTION_16_BRICKLAYER_RETURN_HOME)) {
             advance_action(ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE);
         }
         break;
@@ -112,6 +125,17 @@ void figure_bricklayer::figure_action() {
         }
         break;
 
+    case ACTION_14_BRICKLAYER_WORK_STATUE:
+        base.wait_ticks++;
+        if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
+            auto statue = smart_cast<building_statue>(building_get(runtime_data().destination_bid));
+            if (statue) {
+                statue->set_service(100);
+            }
+            advance_action(ACTION_16_BRICKLAYER_RETURN_HOME);
+        }
+        break;
+
     case ACTION_16_BRICKLAYER_RETURN_HOME:
         if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_18_BRICKLAYER_RANDOM_TILE)) {
             poof();
@@ -129,10 +153,11 @@ void figure_bricklayer::update_animation() {
         break;
 
     case ACTION_14_BRICKLAYER_LAY_BRICKS:
+    case ACTION_14_BRICKLAYER_WORK_STATUE:
         image_set_animation(animkeys().work);
         break;
 
-    caseACTION_16_BRICKLAYER_RETURN_HOME:
+    case ACTION_16_BRICKLAYER_RETURN_HOME:
         image_set_animation(animkeys().walk);
         break;
     }
@@ -141,16 +166,19 @@ void figure_bricklayer::update_animation() {
 sound_key figure_bricklayer::phrase_key() const {
     switch (action_state()) {
     case ACTION_10_BRICKLAYER_CREATED:
+    case ACTION_30_BRICKLAYER_CREATED_ROAMING:
         return "brick_bricklaying_time_at_monument";
         
     case ACTION_11_BRICKLAYER_GOING:
     case ACTION_12_BRICKLAYER_GOING_TO_PLACE:
+    case ACTION_31_BRICKLAYER_GOING_TO_STATUE:
         return "brick_bricklaying_time_at_monument";
         
     case ACTION_13_BRICKLAYER_WAITING_RESOURCES:
         return "brick_bricklaying_time_at_monument";
         
     case ACTION_14_BRICKLAYER_LAY_BRICKS:
+    case ACTION_14_BRICKLAYER_WORK_STATUE:
     case ACTION_15_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
         return "brick_monument_will_be_strong";
         
@@ -160,4 +188,14 @@ sound_key figure_bricklayer::phrase_key() const {
     }
 
     return "brick_bricklaying_time_at_monument";
+}
+
+void figure_bricklayer::on_destroy() {
+    figure_impl::on_destroy();
+
+    // If the bricklayer is working on a monument/statue, we need to remove it from the workers list.
+    building *b_dest = building_get(runtime_data().destination_bid);
+    if (b_dest) {
+        b_dest->remove_figure_by_id(base.id);
+    }
 }
