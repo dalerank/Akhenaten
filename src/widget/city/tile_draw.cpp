@@ -233,6 +233,8 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
             int offset_y = 15 * (img->width / 58) - 1;
             command.image_id = image_id;
             command.pixel = pixel - vec2i(0, offset_y);
+            command.use_sort_pixel = true;
+            command.sort_pixel = pixel;
         }
 
         //int terrain = map_terrain_get(grid_offset);
