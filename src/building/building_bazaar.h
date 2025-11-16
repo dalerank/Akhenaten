@@ -11,6 +11,9 @@ public:
     struct static_params : public building_static_params {
         uint8_t max_search_distance;
         uint8_t fancy_treshold_desirability;
+        uint8_t minimal_pick_food_amount;
+        std::array<uint16_t, 4> pick_food_below;
+        std::array<uint16_t, 4> pick_good_below;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -39,5 +42,7 @@ public:
     inline int allow_food_types() const { return 4; }
     inline int allow_good_types() const { return 4; }
 };
-ANK_CONFIG_STRUCT(building_bazaar::static_params, max_search_distance, fancy_treshold_desirability)
+ANK_CONFIG_STRUCT(building_bazaar::static_params, 
+                    max_search_distance, fancy_treshold_desirability, minimal_pick_food_amount,
+                    pick_food_below, pick_good_below)
 

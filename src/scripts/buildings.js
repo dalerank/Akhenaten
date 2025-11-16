@@ -867,6 +867,10 @@ building_bazaar {
   fancy_treshold_desirability : 30
   min_houses_coverage : 50
   overlay : OVERLAY_BAZAAR_ACCESS
+  minimal_pick_food_amount : 100
+
+  pick_food_below [600, 400, 200, 100]
+  pick_good_below [150, 100, 50, 25]
 
   building_size : 2
   meta { help_id: 2, text_id: 97 }
