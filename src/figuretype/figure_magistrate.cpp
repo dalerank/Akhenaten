@@ -117,6 +117,9 @@ int figure_magistrate::provide_service() {
         }
 
         auto &housed = house->runtime_data();
+        housed.criminal_active -= 1;
+        housed.criminal_active = std::max<int>(0, housed.criminal_active);
+
         if (housed.criminal_active > max_criminal_active) {
             max_criminal_active = housed.criminal_active;
         }
