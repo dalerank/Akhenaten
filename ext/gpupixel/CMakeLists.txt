@@ -22,6 +22,13 @@ elseif()
 endif()
 
 add_library(${PROJECT_NAME} ${SOURCES_LIST})
+include_directories(${PROJECT_SOURCE_DIR}/core)
+
+if (WIN32 OR UNIX OR APPLE)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC GPUPIXEL_GL_SHADER)
+elseif (ANDROID OR IOS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC GPUPIXEL_GLES_SHADER)
+endif()
 
 set(GPUPIXEL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/core
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)

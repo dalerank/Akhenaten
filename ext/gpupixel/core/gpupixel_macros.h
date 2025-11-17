@@ -134,6 +134,8 @@ using TargetPtr = std::shared_ptr<Target>;
 
 class Framebuffer;
 using FramebufferPtr = std::shared_ptr<Framebuffer>;
+// Compatibility alias for newer version of gpupixel library
+using GPUPixelFramebuffer = Framebuffer;
 
 class Source;
 using SourcePtr = std::shared_ptr<Source>;

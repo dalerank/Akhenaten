@@ -42,8 +42,16 @@ void game_debug_cli_draw() {
     game_debug_cli_guid = 0;
 }
 
+static float property_opt_float = 0.0f;
+static bool property_opt_enabled = false;
+void game_debug_set_property_opt(float opt) {
+    property_opt_float = opt;
+    property_opt_enabled = true;
+}
+
 void game_debug_show_property_value(pcstr field, const float &v, bool disabled) {
-    ImGui::InputFloat("##value", (float*)&v, 1.0f);
+    ImGui::InputFloat("##value", (float*)&v, property_opt_enabled ? property_opt_float : 1.0f);
+    property_opt_enabled = false;
 }
 
 void game_debug_show_property_value(pcstr field, const double &v, bool disabled) {
