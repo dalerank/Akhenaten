@@ -2,6 +2,7 @@
 
 #include "building/building_health.h"
 #include "building/building_house.h"
+#include "city/city_buildings.h"
 #include "io/gamefiles/lang.h"
 #include "widget/city/ornaments.h"
 #include "js/js_game.h"

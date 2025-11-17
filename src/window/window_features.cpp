@@ -204,7 +204,7 @@ void ui::window_features::init(std::function<void()> cb) {
         alias.original_value = value;
         alias.new_value = value;
         alias.change_action = [&,name = feature->name] () -> bool { return config_change_basic(alias, name); };
-        alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
+        alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value) ? false : true;  };
         alias.text = feature->text;
 
         page_index++;
@@ -217,7 +217,7 @@ void ui::window_features::init(std::function<void()> cb) {
             auto &alias = pageref.features.emplace_back();
             alias.get_value = [] () -> bool { return g_scenario.env.has_animals; };
             alias.change_action = [&] () -> bool { return g_scenario.env.has_animals = alias.new_value; };
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value) ? false : true;  };
             alias.text = "#TR_CONFIG_ANIMALS";
         }
 
@@ -225,7 +225,7 @@ void ui::window_features::init(std::function<void()> cb) {
             auto &alias = pageref.features.emplace_back();
             alias.get_value = [] () -> bool { return g_scenario.env.flotsam_enabled; };
             alias.change_action = [&] () -> bool { return g_scenario.env.flotsam_enabled = alias.new_value; };
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value) ? false : true;  };
             alias.text = "#TR_CONFIG_FLOTSAM";
         }
     }
@@ -239,7 +239,7 @@ void ui::window_features::init(std::function<void()> cb) {
             alias.get_value = [i] () -> int { return g_city.religion.is_god_known((e_god)i); };
             alias.original_value = g_city.religion.is_god_known((e_god)i);
             alias.new_value = g_city.religion.is_god_known((e_god)i);
-            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value > 0) ? false : true;  };
+            alias.toggle_action = [&] (int p1, int p2) { alias.new_value = (alias.new_value) ? false : true;  };
 
             bstring64 text; text.printf("God disabled %s", e_god_tokens.name((e_god)i));
             alias.text = text;
@@ -275,7 +275,7 @@ void ui::window_features::init(std::function<void()> cb) {
             feature.new_value = value;
             feature.change_action = [this, r] () -> bool { this->toggle_resource(r.type); return true; };
             feature.toggle_action = [&feature] (int p1, int p2) { 
-                feature.new_value = (feature.new_value > 0) ? false : true;
+                feature.new_value = (feature.new_value) ? false : true;
             };
 
             bstring64 text; text.printf("City allow %s", ui::resource_name(r.type));
