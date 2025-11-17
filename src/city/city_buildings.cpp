@@ -13,6 +13,7 @@
 #include "grid/canals.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
+#include "grid/crime.h"
 #include "building/building_house.h"
 #include "building/building_wall.h"
 #include "io/io_buffer.h"
@@ -361,6 +362,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
 
         const auto &params = building_static_params::get(b->type);
         b->des_influence = params.desirability.to_influence();
+        b->crime_influence = params.crime.to_influence();
         b->fire_risk_increase = params.fire_risk;
         b->damage_risk_increase = params.damage_risk;
         b->max_workers = params.laborers;

@@ -5,6 +5,7 @@
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
+#include "grid/crime.h"
 #include "core/object_property.h"
 #include "grid/water.h"
 #include "grid/natives.h"
@@ -249,6 +250,7 @@ void city_t::update_tick(int simtick) {
         formation_update_all(true);
         break;
     case 30:
+        g_crime.update();
         break;
     case 31:
         building_barracks_decay_tower_sentry_request();
@@ -274,7 +276,7 @@ void city_t::update_tick(int simtick) {
         house_service_calculate_culture_aggregates();
         break;
     case 37:
-        g_desirability.update();
+        g_desirability.update();        
         break;
     case 38:
         building_update_desirability();

@@ -19,6 +19,7 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
+#include "grid/crime.h"
 #include "grid/elevation.h"
 #include "grid/grid.h"
 #include "grid/random.h"
@@ -83,6 +84,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     damage_proof = props.damage_proof;
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
     des_influence = props.desirability.to_influence();
+    crime_influence = props.crime.to_influence();
 
     max_workers = props.laborers;
     fire_risk_increase = props.fire_risk;
@@ -97,6 +99,20 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
 
 desirability_t::influence_t building_desirability_t::to_influence() const {
     desirability_t::influence_t inf;
+    e_difficulty diff = g_settings.difficulty();
+    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
+
+    inf.size = 0;
+    inf.value = approach_diff(value);
+    inf.step = approach_diff(step);
+    inf.step_size = approach_diff(step_size);
+    inf.range = approach_diff(range);
+
+    return inf;
+}
+
+crime_t::influence_t building_crime_t::to_influence() const {
+    crime_t::influence_t inf;
     e_difficulty diff = g_settings.difficulty();
     auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
 

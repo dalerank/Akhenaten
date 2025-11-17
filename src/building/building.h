@@ -18,6 +18,7 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "grid/desirability.h"
+#include "grid/crime.h"
 #include "sound/sound_city.h"
 #include "game/difficulty.h"
 #include "core/variant.h"
@@ -253,6 +254,7 @@ public:
 
     // runtime data, not saves to disk
     desirability_t::influence_t des_influence;
+    crime_t::influence_t crime_influence;
 
     animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
@@ -480,6 +482,16 @@ struct building_desirability_t {
 };
 ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
 
+struct building_crime_t {
+    svector<int8_t, 6> value;
+    svector<int8_t, 6> step;
+    svector<int8_t, 6> step_size;
+    svector<int8_t, 6> range;
+
+    crime_t::influence_t to_influence() const;
+};
+ANK_CONFIG_STRUCT(building_crime_t, value, step, step_size, range)
+
 struct building_planner_update_rule {
     bool canals;
     bool roads;
@@ -546,6 +558,7 @@ struct building_static_params {
     xstring info_title_id;
     uint16_dcy cost;
     building_desirability_t desirability;
+    building_crime_t crime;
     uint16_t progress_max;
     e_overlay overlay;
     uint16_t max_service;
@@ -573,7 +586,7 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
-    cost, desirability,
+    cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service,
     meta_id, meta, production_rate, min_houses_coverage)
 

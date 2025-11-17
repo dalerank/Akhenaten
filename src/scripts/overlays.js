@@ -317,4 +317,13 @@ overlays = [
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
   }
+
+  {
+    id:OVERLAY_CRIMINAL
+    caption: "Criminal"
+    walkers:[]
+    buildings:[BUILDING_ROADBLOCK]
+    column_type: COLUMN_TYPE_WATER_ACCESS
+    column_anim: {pack:PACK_GENERAL, id:103}
+  }
 ]
