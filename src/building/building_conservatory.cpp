@@ -1,10 +1,12 @@
 #include "building/building_conservatory.h"
 
 #include "building/building_dance_school.h"
+#include "building/building_festival_square.h"
 #include "figuretype/figure_entertainer.h"
 #include "widget/city/ornaments.h"
 #include "city/city_labor.h"
 #include "city/city_buildings.h"
+#include "city/city.h"
 #include "core/calc.h"
 #include "grid/road_access.h"
 #include "game/game_config.h"
@@ -21,11 +23,55 @@ void building_conservatory::update_day() {
     }
 }
 
+void building_conservatory::spend_musician_to_festival_square() {
+    auto &d = runtime_data();
+    if (d.months_until_square_send == 0) {
+        building_id square_id = find_square_in_city();
+        if (square_id == 0 || !has_road_access() || worker_percentage() == 0) {
+            d.months_until_square_send = 2;
+            return;
+        }
+    }
+
+    if (d.months_until_square_send > 0) {
+        d.months_until_square_send--;
+    }
+
+    // Check if we should send a musician to the square every 2 months
+    if (d.months_until_square_send == 0) {
+        building_id square_id = find_square_in_city();
+        if (square_id > 0) {
+            building *square = building_get(square_id);
+            if (square->is_valid() && map_has_road_access(square->tile, square->size)) {
+                // Check if we have road access and workers
+                if (has_road_access() && worker_percentage() > 0) {
+                    create_figure_with_destination(FIGURE_MUSICIAN, square, (e_figure_action)ACTION_96_ENTERTAINER_GOING_TO_SQUARE);
+                }
+            }
+        }
+        d.months_until_square_send = 2; // Reset counter to 2 months
+    }
+}
+
 void building_conservatory::update_month() {
     building_impl::update_month();
 
     auto &d = runtime_data();
     d.spawned_special_figure = false;
+
+    spend_musician_to_festival_square();
+}
+
+building_id building_conservatory::find_square_in_city() {
+    // First check for festival square
+    if (g_city.buildings.festival_square.grid_offset() > 0) {
+        building* square = building_at(g_city.buildings.festival_square);
+        if (square && square->is_valid() && square->type == BUILDING_FESTIVAL_SQUARE) {
+            return square->id;
+        }
+    }
+
+    return 0;
 }
 
 building_id building_conservatory::determine_dancer_school_destination() {

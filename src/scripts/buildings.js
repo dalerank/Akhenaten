@@ -508,6 +508,7 @@ building_courthouse {
   }
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  overlay : OVERLAY_COUTHOUSE
   min_houses_coverage : 50
   building_size : 3
   meta { help_id:75, text_id:176 }

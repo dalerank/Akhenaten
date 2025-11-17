@@ -217,6 +217,18 @@ void figure_entertainer::figure_action() {
         do_roam(TERRAIN_USAGE_ROADS, ACTION_13_ENTERTAINER_RETURNING_EMPTY);
         break;
 
+    case ACTION_96_ENTERTAINER_GOING_TO_SQUARE:
+        base.roam_length++;
+        if (base.roam_length >= 3200) {
+            poof();
+        }
+
+        if (do_gotobuilding(destination())) {
+            // Reached the square, now return home
+            advance_action(ACTION_13_ENTERTAINER_RETURNING_EMPTY);
+        }
+        break;
+
     case ACTION_13_ENTERTAINER_RETURNING_EMPTY:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;

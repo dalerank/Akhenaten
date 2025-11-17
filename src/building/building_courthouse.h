@@ -9,7 +9,6 @@ public:
     virtual building_courthouse *dcast_courthouse() override { return this; }
 
     //virtual void on_create() override;
-    virtual e_overlay get_overlay() const override { return OVERLAY_COUTHOUSE; }
     virtual bool is_administration() const override { return true; }
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
