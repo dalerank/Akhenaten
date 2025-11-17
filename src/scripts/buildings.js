@@ -823,12 +823,15 @@ building_dancer_school {
     work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
 
+  overlay : OVERLAY_ENTERTAINMENT
   min_houses_coverage : 50
   building_size : 4
   meta { help_id:75, text_id:76 }
   cost [ 30, 50, 100, 150, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
-  laborers[10], fire_risk[4], damage_risk[2]
+  laborers[10]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_storage_yard = {

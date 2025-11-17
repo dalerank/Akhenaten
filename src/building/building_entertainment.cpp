@@ -129,7 +129,7 @@ void building_entertainment::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_main_grid_offset);
     iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_add_grid_offset);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.ent_reserved_u8);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.conservatory_help);
     iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &d.consume_material_id);
     iob->bind(BIND_SIGNATURE_UINT8, &d.spawned_entertainer_days);
