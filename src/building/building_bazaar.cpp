@@ -205,12 +205,14 @@ building *building_bazaar::get_storage_destination() {
     int fetch_inventory = -1;
     int min_stock = 999;
     const auto &pick_good_below = current_params().pick_good_below;
+    const auto &pick_food_below = current_params().pick_food_below;
     for (int goodi = INVENTORY_FOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
         if (!resources[goodi].num_buildings) {
             continue;
         }
 
-        if (d.inventory[goodi] > pick_good_below[goodi]) {
+        int pickup_threshold = (goodi <= INVENTORY_FOOD4) ? pick_good_below[goodi] : pick_good_below[goodi - INVENTORY_GOOD1];
+        if (d.inventory[goodi] > pickup_threshold) {
             continue;
         }
 
@@ -226,7 +228,6 @@ building *building_bazaar::get_storage_destination() {
 
     if (fetch_inventory == -1) {
         // all items well stocked: pick food below threshold
-        const auto &pick_food_below = current_params().pick_food_below;
         if (resources[INVENTORY_FOOD1].num_buildings && d.inventory[INVENTORY_FOOD1] < pick_food_below[INVENTORY_FOOD1]  && is_good_accepted(INVENTORY_FOOD1)) {
             fetch_inventory = INVENTORY_FOOD1;
         }
