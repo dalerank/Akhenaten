@@ -44,3 +44,7 @@ finance {
         gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
     }
 }
+
+crime {
+    
+}

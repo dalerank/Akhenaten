@@ -513,6 +513,7 @@ building_courthouse {
   meta { help_id:75, text_id:176 }
   cost [ 30, 50, 100, 200, 400 ]
   desirability { value[8], step[2], step_size[-2], range[3] }
+  crime { value[-5], step[1], step_size[-1], range[4] }
   laborers[10]
   fire_risk[0]
   damage_risk[1]
@@ -2042,6 +2043,7 @@ building_senet_house = {
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   cost : [ 300, 400, 500, 700, 1000 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [3] }
+  crime : { value:[5], step:[1], step_size:[1], range: [3] }
   laborers:[25], fire_risk:[1], damage_risk: [1]
 }
 

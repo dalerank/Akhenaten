@@ -26,6 +26,7 @@ building_house_crude_hut {
   }
 
   desirability { value[-2], step[1], step_size[1], range[3] }
+  crime { value[5], step[1], step_size[-1], range[4] }
   
   fire_risk[3]
   damage_risk[0]
@@ -77,6 +78,7 @@ building_house_sturdy_hut {
   }
 
   desirability { value[-2], step[1], step_size[1], range[3] }
+  crime { value[4], step[1], step_size[-1], range[4] }
   
   fire_risk[3]
   damage_risk[0]
@@ -127,6 +129,7 @@ building_house_meager_shanty {
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
+  crime { value[3], step[1], step_size[-1], range[4] }
   
   fire_risk[20]
   damage_risk[0]
@@ -178,6 +181,7 @@ building_house_common_shanty {
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
+  crime { value[2], step[1], step_size[-1], range[4] }
   
   fire_risk[4]
   damage_risk[4]
@@ -229,6 +233,7 @@ building_house_rough_cottage {
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
+  crime { value[1], step[1], step_size[-1], range[4] }
   
   fire_risk[5]
   damage_risk[3]
@@ -279,6 +284,7 @@ building_house_ordinary_cottage {
   }
 
   desirability { value[-2], step[1], step_size[1], range[2] }
+  crime { value[0], step[1], step_size[-1], range[4] }
   
   fire_risk[4]
   damage_risk[0]
