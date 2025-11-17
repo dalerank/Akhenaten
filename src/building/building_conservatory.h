@@ -12,6 +12,10 @@ public:
         uint8_t spawn_interval;        
     } BUILDING_STATIC_DATA_T;
 
+    struct runtime_data_t : public building_entertainment::runtime_data_t {
+        uint8_t months_until_square_send;
+    } BUILDING_RUNTIME_DATA_T;
+
     virtual void spawn_figure() override;
     virtual void update_day() override;
     virtual void update_month() override;
@@ -20,5 +24,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 
     building_id determine_dancer_school_destination();
+    building_id find_square_in_city();
+    void spend_musician_to_festival_square();
 };
 ANK_CONFIG_STRUCT(building_conservatory::static_params, spawn_interval)

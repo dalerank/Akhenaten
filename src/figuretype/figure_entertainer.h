@@ -10,6 +10,7 @@ enum e_entertainer_action {
     ACTION_93_ENTERTAINER_GOING_TO_RANDOM_ROAD = 93,
     ACTION_94_ENTERTAINER_ROAMING = 94,
     ACTION_95_ENTERTAINER_RETURNING = 95,
+    ACTION_96_ENTERTAINER_GOING_TO_SQUARE = 96,
 };
 
 class figure_entertainer : public figure_impl {
