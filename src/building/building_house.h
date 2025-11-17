@@ -77,6 +77,8 @@ public:
         uint8_t days_without_food;
         uint8_t hsize;
         uint8_t drunkard_active;
+        uint8_t nobles_with_bad_teeth;
+        uint8_t toothache_probability;
         building_id worst_desirability_building_id;
         xstring evolve_text;
         uint16_t image_id;
@@ -108,6 +110,7 @@ public:
 
     void decay_services();
     void decay_tax_coverage();
+    void update_monthly_nobles_toothache();
 
     int16_t population_room() const;
     void change_to_vacant_lot();
@@ -299,6 +302,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void devolve_to_fancy_residence();
 };
 ANK_CONFIG_STRUCT(building_house_common_manor::static_params, model, can_merge, variants, variants_merged)
@@ -311,6 +315,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
 };
 ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params, model, can_merge, variants, variants_merged)
 
@@ -322,6 +327,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
 };
 ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params, model, can_merge, variants, variants_merged)
 
@@ -333,6 +339,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void expand_to_modest_estate();
 };
 ANK_CONFIG_STRUCT(building_house_stately_manor::static_params, model, can_merge, variants, variants_merged)
@@ -345,6 +352,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void devolve_to_statel_manor();
 };
 ANK_CONFIG_STRUCT(building_house_modest_estate::static_params, model, can_merge, variants, variants_merged)
@@ -357,6 +365,7 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
 };
 ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merge, variants, variants_merged)
 
