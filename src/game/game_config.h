@@ -111,6 +111,7 @@ namespace game_features {
     extern game_feature gameopt_last_game_version;
     extern game_feature gameplay_change_hasanimals;
     extern game_feature gameplay_brewery_requires_water;
+    extern game_feature gameplay_conservatory_helps_dance_school;
 
     custom_span<game_feature*> all();
     game_feature* find(const xstring& name);

@@ -90,6 +90,8 @@ class building_scribal_school;
 class building_tower;
 class building_senet_house;
 class building_gatehouse;
+class building_dancer_school;
+
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -422,6 +424,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(tower)
     ALLOW_SMART_CAST_BUILDING(senet_house)
     ALLOW_SMART_CAST_BUILDING(gatehouse)
+    ALLOW_SMART_CAST_BUILDING(dancer_school)
 
     int get_figures_number(e_figure_type ftype);
 
@@ -690,6 +693,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(tower)
     ALLOW_SMART_CAST_BUILDING_I(senet_house)
     ALLOW_SMART_CAST_BUILDING_I(gatehouse)
+    ALLOW_SMART_CAST_BUILDING_I(dancer_school)
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -892,6 +896,7 @@ GENERATE_SMART_CAST_BUILDING(tower)
 GENERATE_SMART_CAST_BUILDING(senet_house)
 GENERATE_SMART_CAST_BUILDING(gatehouse)
 GENERATE_SMART_CAST_BUILDING(work_camp)
+GENERATE_SMART_CAST_BUILDING(dancer_school)
 
 namespace buildings {
 
