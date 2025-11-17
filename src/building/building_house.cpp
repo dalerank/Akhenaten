@@ -188,6 +188,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u16(d.unreachable_ticks);
     iob->bind_u16(d.last_update_day);
     iob->bind_u8(d.drunkard_active);
+    iob->bind_u8(d.nobles_with_bad_teeth);
+    iob->bind_u8(d.toothache_probability);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -683,6 +685,21 @@ void building_house::decay_tax_coverage() {
     auto &housed = runtime_data();
     if (housed.tax_coverage) {
         housed.tax_coverage--;
+    }
+}
+
+void building_house::update_monthly_nobles_toothache() {
+    if (!is_nobles() || house_population() <= 0) {
+        return;
+    }
+
+    auto &housed = runtime_data();
+    housed.toothache_probability = std::min<uint8_t>(housed.toothache_probability + 10, 100);
+
+    int random_value = rand() % 100;
+    if (random_value < housed.toothache_probability) {
+        housed.toothache_probability = 0;
+        housed.nobles_with_bad_teeth = std::min<uint8_t>(housed.nobles_with_bad_teeth + 1, 255);
     }
 }
 
@@ -1468,6 +1485,11 @@ bool building_house_common_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_common_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_spacious_manor::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1487,6 +1509,11 @@ bool building_house_spacious_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_spacious_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_elegant_manor::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1504,6 +1531,11 @@ bool building_house_elegant_manor::evolve(house_demands* demands) {
     }
 
     return false;
+}
+
+void building_house_elegant_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
 }
 
 void building_house_stately_manor::expand_to_modest_estate() {
@@ -1547,6 +1579,11 @@ bool building_house_stately_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_stately_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_modest_estate::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1564,6 +1601,16 @@ bool building_house_modest_estate::evolve(house_demands* demands) {
     }
 
     return false;
+}
+
+void building_house_modest_estate::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
+void building_house_palatial_estate::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
 }
 
 bool building_house_palatial_estate::evolve(house_demands* demands) {

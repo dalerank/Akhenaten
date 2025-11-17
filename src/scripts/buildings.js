@@ -1543,6 +1543,7 @@ building_dentist {
     work { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 }
   }
 
+  overlay : OVERLAY_DENTIST
   min_houses_coverage : 50
   building_size : 1
   meta { help_id:65, text_id:84 }
