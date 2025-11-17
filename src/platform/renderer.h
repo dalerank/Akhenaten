@@ -45,7 +45,7 @@ void platform_render_init_filters();
 bool platform_render_support_filters();
 bool platform_render_any_filter_active();
 void platform_render_create_context();
-void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, SDL_Texture *filter_texture, SDL_Texture *source_texture);
+void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t> &pixels, std::vector<uint8_t> &output_pixels);
 void platform_render_init_filter_context();
 
 struct video_mode : public vec2i {

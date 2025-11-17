@@ -55,6 +55,9 @@ public:
     virtual void update(int64_t frameTime) override;
 
     virtual bool proceed(bool bUpdateTargets = true, int64_t frametime = 0) override;
+    
+    // Compatibility alias for newer version of gpupixel library
+    virtual bool DoRender(bool updateSinks = true) { return proceed(updateSinks, 0); }
 
     GLProgram *getProgram() const { return _filterProgram; };
 
