@@ -48,6 +48,9 @@ struct renderer_filter_t {
     gpupixel::FilterPtr boxBlur;
     bool boxBlur_active = false;
     
+    gpupixel::FilterPtr beautyFace;
+    bool beautyFace_active = false;
+    
     gpupixel::SourceImagePtr sourceImage;
     std::shared_ptr<gpupixel::TargetView> outputImage;
 
@@ -65,7 +68,7 @@ bool platform_render_any_filter_active() {
            data.saturation_active || data.exposure_active || 
            data.hue_active || data.colorInvert_active || 
            data.posterize_active || data.gaussianBlur_active || 
-           data.boxBlur_active;
+           data.boxBlur_active || data.beautyFace_active;
 }
 
 bool platform_render_support_filters() {
@@ -101,6 +104,7 @@ void platform_render_init_filters() {
         data.posterize = gpupixel::PosterizeFilter::Create();
         data.gaussianBlur = gpupixel::GaussianBlurFilter::Create();
         data.boxBlur = gpupixel::BoxBlurFilter::Create();
+        data.beautyFace = gpupixel::BeautyFaceFilter::Create();
     });
     
     data.outputImage = gpupixel::TargetView::create();
@@ -395,6 +399,34 @@ bool platform_render_boxBlur_options() {
     return (save_active != data.boxBlur_active);
 }
 
+bool platform_render_beautyFace_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.beautyFace_active;
+    ImGui::PushID(0x10000000 | 0xC);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Beauty Face", ImGuiTreeNodeFlags_None, "Beauty Face");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.beautyFace_active);
+        if (data.beautyFace->hasProperty("whiteness")) {
+            game_debug_show_filter_property_float(data.beautyFace, "whiteness", 0.05f);
+        }
+        if (data.beautyFace->hasProperty("skin_smoothing")) {
+            game_debug_show_filter_property_float(data.beautyFace, "skin_smoothing", 0.05f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.beautyFace_active);
+}
+
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, std::vector<uint8_t> &output_pixels) {
     auto &data = g_renderer_filter;
 
@@ -435,6 +467,7 @@ void config_load_filter_properties(bool header) {
         changed |= platform_render_posterize_options();
         changed |= platform_render_gaussianBlur_options();
         changed |= platform_render_boxBlur_options();
+        changed |= platform_render_beautyFace_options();
         
         filter_changed = changed;
 
@@ -481,6 +514,9 @@ void config_load_filter_properties(bool header) {
         }
         if (data.boxBlur_active) {
             last = last->addTarget(data.boxBlur);
+        }
+        if (data.beautyFace_active) {
+            last = last->addTarget(data.beautyFace);
         }
 
         last->addTarget(data.outputImage);
