@@ -51,6 +51,57 @@ struct renderer_filter_t {
     gpupixel::FilterPtr beautyFace;
     bool beautyFace_active = false;
     
+    gpupixel::FilterPtr blusher;
+    bool blusher_active = false;
+    
+    gpupixel::FilterPtr boxDifference;
+    bool boxDifference_active = false;
+    
+    gpupixel::FilterPtr boxMonoBlur;
+    bool boxMonoBlur_active = false;
+    
+    gpupixel::FilterPtr cannyEdgeDetection;
+    bool cannyEdgeDetection_active = false;
+    
+    gpupixel::FilterPtr crosshatch;
+    bool crosshatch_active = false;
+    
+    gpupixel::FilterPtr emboss;
+    bool emboss_active = false;
+    
+    gpupixel::FilterPtr faceReshape;
+    bool faceReshape_active = false;
+    
+    gpupixel::FilterPtr glassSphere;
+    bool glassSphere_active = false;
+    
+    gpupixel::FilterPtr halftone;
+    bool halftone_active = false;
+    
+    gpupixel::FilterPtr lipstick;
+    bool lipstick_active = false;
+    
+    gpupixel::FilterPtr nonMaximumSuppression;
+    bool nonMaximumSuppression_active = false;
+    
+    gpupixel::FilterPtr pixellation;
+    bool pixellation_active = false;
+    
+    gpupixel::FilterPtr rgb;
+    bool rgb_active = false;
+    
+    gpupixel::FilterPtr smoothToon;
+    bool smoothToon_active = false;
+    
+    gpupixel::FilterPtr toon;
+    bool toon_active = false;
+    
+    gpupixel::FilterPtr weakPixelInclusion;
+    bool weakPixelInclusion_active = false;
+    
+    gpupixel::FilterPtr whiteBalance;
+    bool whiteBalance_active = false;
+    
     gpupixel::SourceImagePtr sourceImage;
     std::shared_ptr<gpupixel::TargetView> outputImage;
 
@@ -68,7 +119,15 @@ bool platform_render_any_filter_active() {
            data.saturation_active || data.exposure_active || 
            data.hue_active || data.colorInvert_active || 
            data.posterize_active || data.gaussianBlur_active || 
-           data.boxBlur_active || data.beautyFace_active;
+           data.boxBlur_active || data.beautyFace_active || 
+           data.blusher_active || data.boxDifference_active || 
+           data.boxMonoBlur_active || data.cannyEdgeDetection_active || 
+           data.crosshatch_active || data.emboss_active || 
+           data.faceReshape_active || data.glassSphere_active || 
+           data.halftone_active || data.lipstick_active || 
+           data.nonMaximumSuppression_active || data.pixellation_active || 
+           data.rgb_active || data.smoothToon_active || data.toon_active || 
+           data.weakPixelInclusion_active || data.whiteBalance_active;
 }
 
 bool platform_render_support_filters() {
@@ -105,6 +164,23 @@ void platform_render_init_filters() {
         data.gaussianBlur = gpupixel::GaussianBlurFilter::Create();
         data.boxBlur = gpupixel::BoxBlurFilter::Create();
         data.beautyFace = gpupixel::BeautyFaceFilter::Create();
+        data.blusher = gpupixel::BlusherFilter::Create();
+        data.boxDifference = gpupixel::BoxDifferenceFilter::Create();
+        data.boxMonoBlur = gpupixel::BoxMonoBlurFilter::Create(gpupixel::GaussianBlurMonoFilter::HORIZONTAL);
+        data.cannyEdgeDetection = gpupixel::CannyEdgeDetectionFilter::Create();
+        data.crosshatch = gpupixel::CrosshatchFilter::Create();
+        data.emboss = gpupixel::EmbossFilter::Create();
+        data.faceReshape = gpupixel::FaceReshapeFilter::Create();
+        data.glassSphere = gpupixel::GlassSphereFilter::Create();
+        data.halftone = gpupixel::HalftoneFilter::Create();
+        data.lipstick = gpupixel::LipstickFilter::Create();
+        data.nonMaximumSuppression = gpupixel::NonMaximumSuppressionFilter::Create();
+        data.pixellation = gpupixel::PixellationFilter::Create();
+        data.rgb = gpupixel::RGBFilter::Create();
+        data.smoothToon = gpupixel::SmoothToonFilter::Create();
+        data.toon = gpupixel::ToonFilter::Create();
+        data.weakPixelInclusion = gpupixel::WeakPixelInclusionFilter::Create();
+        data.whiteBalance = gpupixel::WhiteBalanceFilter::Create();
     });
     
     data.outputImage = gpupixel::TargetView::create();
@@ -427,6 +503,462 @@ bool platform_render_beautyFace_options() {
     return (save_active != data.beautyFace_active);
 }
 
+bool platform_render_blusher_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.blusher_active;
+    ImGui::PushID(0x10000000 | 0xD);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Blusher", ImGuiTreeNodeFlags_None, "Blusher");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.blusher_active);
+        if (data.blusher->hasProperty("blend_level")) {
+            game_debug_show_filter_property_float(data.blusher, "blend_level", 0.05f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.blusher_active);
+}
+
+bool platform_render_boxDifference_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.boxDifference_active;
+    ImGui::PushID(0x10000000 | 0xE);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Box Difference", ImGuiTreeNodeFlags_None, "Box Difference");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.boxDifference_active);
+        // Note: BoxDifferenceFilter requires 2 input images, so it may not work correctly in current setup
+        ImGui::Text("Note: Requires 2 input images");
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.boxDifference_active);
+}
+
+bool platform_render_boxMonoBlur_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.boxMonoBlur_active;
+    ImGui::PushID(0x10000000 | 0xF);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Box Mono Blur", ImGuiTreeNodeFlags_None, "Box Mono Blur");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.boxMonoBlur_active);
+        ImGui::Text("Note: Horizontal direction only");
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.boxMonoBlur_active);
+}
+
+bool platform_render_cannyEdgeDetection_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.cannyEdgeDetection_active;
+    ImGui::PushID(0x10000000 | 0x10);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Canny Edge Detection", ImGuiTreeNodeFlags_None, "Canny Edge Detection");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.cannyEdgeDetection_active);
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.cannyEdgeDetection_active);
+}
+
+bool platform_render_crosshatch_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.crosshatch_active;
+    ImGui::PushID(0x10000000 | 0x11);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Crosshatch", ImGuiTreeNodeFlags_None, "Crosshatch");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.crosshatch_active);
+        if (data.crosshatch->hasProperty("crossHatchSpacing")) {
+            game_debug_show_filter_property_float(data.crosshatch, "crossHatchSpacing", 0.001f);
+        }
+        if (data.crosshatch->hasProperty("lineWidth")) {
+            game_debug_show_filter_property_float(data.crosshatch, "lineWidth", 0.0001f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.crosshatch_active);
+}
+
+bool platform_render_emboss_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.emboss_active;
+    ImGui::PushID(0x10000000 | 0x12);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Emboss", ImGuiTreeNodeFlags_None, "Emboss");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.emboss_active);
+        if (data.emboss->hasProperty("intensity")) {
+            game_debug_show_filter_property_float(data.emboss, "intensity", 0.1f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.emboss_active);
+}
+
+bool platform_render_faceReshape_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.faceReshape_active;
+    ImGui::PushID(0x10000000 | 0x13);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Face Reshape", ImGuiTreeNodeFlags_None, "Face Reshape");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.faceReshape_active);
+        if (data.faceReshape->hasProperty("thin_face")) {
+            game_debug_show_filter_property_float(data.faceReshape, "thin_face", 0.05f);
+        }
+        if (data.faceReshape->hasProperty("big_eye")) {
+            game_debug_show_filter_property_float(data.faceReshape, "big_eye", 0.05f);
+        }
+        ImGui::Text("Note: Requires face landmarks");
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.faceReshape_active);
+}
+
+bool platform_render_glassSphere_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.glassSphere_active;
+    ImGui::PushID(0x10000000 | 0x14);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Glass Sphere", ImGuiTreeNodeFlags_None, "Glass Sphere");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.glassSphere_active);
+        if (data.glassSphere->hasProperty("positionX")) {
+            game_debug_show_filter_property_float(data.glassSphere, "positionX", 0.01f);
+        }
+        if (data.glassSphere->hasProperty("positionY")) {
+            game_debug_show_filter_property_float(data.glassSphere, "positionY", 0.01f);
+        }
+        if (data.glassSphere->hasProperty("radius")) {
+            game_debug_show_filter_property_float(data.glassSphere, "radius", 0.01f);
+        }
+        if (data.glassSphere->hasProperty("refractiveIndex")) {
+            game_debug_show_filter_property_float(data.glassSphere, "refractiveIndex", 0.01f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.glassSphere_active);
+}
+
+bool platform_render_halftone_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.halftone_active;
+    ImGui::PushID(0x10000000 | 0x15);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Halftone", ImGuiTreeNodeFlags_None, "Halftone");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.halftone_active);
+        if (data.halftone->hasProperty("pixelSize")) {
+            game_debug_show_filter_property_float(data.halftone, "pixelSize", 0.001f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.halftone_active);
+}
+
+bool platform_render_lipstick_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.lipstick_active;
+    ImGui::PushID(0x10000000 | 0x16);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Lipstick", ImGuiTreeNodeFlags_None, "Lipstick");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.lipstick_active);
+        if (data.lipstick->hasProperty("blend_level")) {
+            game_debug_show_filter_property_float(data.lipstick, "blend_level", 0.05f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.lipstick_active);
+}
+
+bool platform_render_nonMaximumSuppression_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.nonMaximumSuppression_active;
+    ImGui::PushID(0x10000000 | 0x17);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Non Maximum Suppression", ImGuiTreeNodeFlags_None, "Non Maximum Suppression");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.nonMaximumSuppression_active);
+        if (data.nonMaximumSuppression->hasProperty("texelSizeMultiplier")) {
+            game_debug_show_filter_property_float(data.nonMaximumSuppression, "texelSizeMultiplier", 0.1f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.nonMaximumSuppression_active);
+}
+
+bool platform_render_pixellation_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.pixellation_active;
+    ImGui::PushID(0x10000000 | 0x18);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Pixellation", ImGuiTreeNodeFlags_None, "Pixellation");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.pixellation_active);
+        if (data.pixellation->hasProperty("pixelSize")) {
+            game_debug_show_filter_property_float(data.pixellation, "pixelSize", 0.01f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.pixellation_active);
+}
+
+bool platform_render_rgb_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.rgb_active;
+    ImGui::PushID(0x10000000 | 0x19);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("RGB", ImGuiTreeNodeFlags_None, "RGB");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.rgb_active);
+        if (data.rgb->hasProperty("redAdjustment")) {
+            game_debug_show_filter_property_float(data.rgb, "redAdjustment", 0.05f);
+        }
+        if (data.rgb->hasProperty("greenAdjustment")) {
+            game_debug_show_filter_property_float(data.rgb, "greenAdjustment", 0.05f);
+        }
+        if (data.rgb->hasProperty("blueAdjustment")) {
+            game_debug_show_filter_property_float(data.rgb, "blueAdjustment", 0.05f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.rgb_active);
+}
+
+bool platform_render_smoothToon_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.smoothToon_active;
+    ImGui::PushID(0x10000000 | 0x1A);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Smooth Toon", ImGuiTreeNodeFlags_None, "Smooth Toon");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.smoothToon_active);
+        if (data.smoothToon->hasProperty("blurRadius")) {
+            game_debug_show_filter_property_float(data.smoothToon, "blurRadius", 0.5f);
+        }
+        if (data.smoothToon->hasProperty("toonThreshold")) {
+            game_debug_show_filter_property_float(data.smoothToon, "toonThreshold", 0.01f);
+        }
+        if (data.smoothToon->hasProperty("toonQuantizationLevels")) {
+            game_debug_show_filter_property_float(data.smoothToon, "toonQuantizationLevels", 0.5f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.smoothToon_active);
+}
+
+bool platform_render_toon_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.toon_active;
+    ImGui::PushID(0x10000000 | 0x1B);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Toon", ImGuiTreeNodeFlags_None, "Toon");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.toon_active);
+        if (data.toon->hasProperty("threshold")) {
+            game_debug_show_filter_property_float(data.toon, "threshold", 0.01f);
+        }
+        if (data.toon->hasProperty("quantizationLevels")) {
+            game_debug_show_filter_property_float(data.toon, "quantizationLevels", 0.5f);
+        }
+        if (data.toon->hasProperty("texelSizeMultiplier")) {
+            game_debug_show_filter_property_float(data.toon, "texelSizeMultiplier", 0.1f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.toon_active);
+}
+
+bool platform_render_weakPixelInclusion_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.weakPixelInclusion_active;
+    ImGui::PushID(0x10000000 | 0x1C);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("Weak Pixel Inclusion", ImGuiTreeNodeFlags_None, "Weak Pixel Inclusion");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.weakPixelInclusion_active);
+        if (data.weakPixelInclusion->hasProperty("texelSizeMultiplier")) {
+            game_debug_show_filter_property_float(data.weakPixelInclusion, "texelSizeMultiplier", 0.1f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.weakPixelInclusion_active);
+}
+
+bool platform_render_whiteBalance_options() {
+    auto &data = g_renderer_filter;
+
+    bool save_active = data.whiteBalance_active;
+    ImGui::PushID(0x10000000 | 0x1D);
+
+    ImGui::TableNextRow();
+    ImGui::TableSetColumnIndex(0);
+    ImGui::AlignTextToFramePadding();
+    bool common_open = ImGui::TreeNodeEx("White Balance", ImGuiTreeNodeFlags_None, "White Balance");
+    ImGui::TableSetColumnIndex(1);
+
+    if (common_open) {
+        game_debug_show_property("Active", data.whiteBalance_active);
+        if (data.whiteBalance->hasProperty("temperature")) {
+            game_debug_show_filter_property_float(data.whiteBalance, "temperature", 100.0f);
+        }
+        if (data.whiteBalance->hasProperty("tint")) {
+            game_debug_show_filter_property_float(data.whiteBalance, "tint", 1.0f);
+        }
+        ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+
+    return (save_active != data.whiteBalance_active);
+}
+
 void platform_render_proceed_filter(int w, int h, int format, const std::vector<uint8_t>&pixels, std::vector<uint8_t> &output_pixels) {
     auto &data = g_renderer_filter;
 
@@ -468,6 +1000,23 @@ void config_load_filter_properties(bool header) {
         changed |= platform_render_gaussianBlur_options();
         changed |= platform_render_boxBlur_options();
         changed |= platform_render_beautyFace_options();
+        changed |= platform_render_blusher_options();
+        changed |= platform_render_boxDifference_options();
+        changed |= platform_render_boxMonoBlur_options();
+        changed |= platform_render_cannyEdgeDetection_options();
+        changed |= platform_render_crosshatch_options();
+        changed |= platform_render_emboss_options();
+        changed |= platform_render_faceReshape_options();
+        changed |= platform_render_glassSphere_options();
+        changed |= platform_render_halftone_options();
+        changed |= platform_render_lipstick_options();
+        changed |= platform_render_nonMaximumSuppression_options();
+        changed |= platform_render_pixellation_options();
+        changed |= platform_render_rgb_options();
+        changed |= platform_render_smoothToon_options();
+        changed |= platform_render_toon_options();
+        changed |= platform_render_weakPixelInclusion_options();
+        changed |= platform_render_whiteBalance_options();
         
         filter_changed = changed;
 
@@ -517,6 +1066,58 @@ void config_load_filter_properties(bool header) {
         }
         if (data.beautyFace_active) {
             last = last->addTarget(data.beautyFace);
+        }
+        if (data.blusher_active) {
+            last = last->addTarget(data.blusher);
+        }
+        if (data.boxDifference_active) {
+            // Note: BoxDifferenceFilter requires 2 inputs, may need special handling
+            last = last->addTarget(data.boxDifference);
+        }
+        if (data.boxMonoBlur_active) {
+            last = last->addTarget(data.boxMonoBlur);
+        }
+        if (data.cannyEdgeDetection_active) {
+            last = last->addTarget(data.cannyEdgeDetection);
+        }
+        if (data.crosshatch_active) {
+            last = last->addTarget(data.crosshatch);
+        }
+        if (data.emboss_active) {
+            last = last->addTarget(data.emboss);
+        }
+        if (data.faceReshape_active) {
+            last = last->addTarget(data.faceReshape);
+        }
+        if (data.glassSphere_active) {
+            last = last->addTarget(data.glassSphere);
+        }
+        if (data.halftone_active) {
+            last = last->addTarget(data.halftone);
+        }
+        if (data.lipstick_active) {
+            last = last->addTarget(data.lipstick);
+        }
+        if (data.nonMaximumSuppression_active) {
+            last = last->addTarget(data.nonMaximumSuppression);
+        }
+        if (data.pixellation_active) {
+            last = last->addTarget(data.pixellation);
+        }
+        if (data.rgb_active) {
+            last = last->addTarget(data.rgb);
+        }
+        if (data.smoothToon_active) {
+            last = last->addTarget(data.smoothToon);
+        }
+        if (data.toon_active) {
+            last = last->addTarget(data.toon);
+        }
+        if (data.weakPixelInclusion_active) {
+            last = last->addTarget(data.weakPixelInclusion);
+        }
+        if (data.whiteBalance_active) {
+            last = last->addTarget(data.whiteBalance);
         }
 
         last->addTarget(data.outputImage);
