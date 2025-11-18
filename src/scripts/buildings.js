@@ -562,7 +562,7 @@ building_carpenters_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:91 },
     base : { pack:PACK_GENERAL, id:91 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:91, offset:1, max_frames:12 },
+    work : { pos : [73, -12], pack:PACK_GENERAL, id:91, offset:1, max_frames:13, duration:4 },
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 2
@@ -2220,6 +2220,7 @@ building_physician {
   }
 
   min_houses_coverage : 50
+  overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   meta { help_id: 64, text_id: 83 }
   building_size : 2
