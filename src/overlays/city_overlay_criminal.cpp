@@ -15,6 +15,7 @@
 #include "game/game_config.h"
 #include "graphics/elements/ui.h"
 #include "city/city_buildings.h"
+#include "dev/debug.h"
 
 static int terrain_on_crime_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD
@@ -31,26 +32,26 @@ static int has_deleted_building(int grid_offset) {
 }
 
 static int get_crime_image_offset(int crime_level) {
-    if (crime_level < -10)
-        return 0;
-    else if (crime_level < -5)
-        return 1;
+    if (crime_level < -20)
+        return 9;
+    else if (crime_level < -10)
+        return 8;
     else if (crime_level < 0)
-        return 2;
-    else if (crime_level == 0)
-        return 3;
-    else if (crime_level < 5)
-        return 4;
+        return 7;
     else if (crime_level < 10)
-        return 5;
-    else if (crime_level < 15)
         return 6;
     else if (crime_level < 20)
-        return 7;
-    else if (crime_level < 25)
-        return 8;
+        return 5;
+    else if (crime_level < 40)
+        return 4;
+    else if (crime_level < 50)
+        return 3;
+    else if (crime_level < 70)
+        return 2;
+    else if (crime_level < 80)
+        return 1;
     else
-        return 9;
+        return 0;
 }
 
 city_overlay_crime g_city_overlay_crime;
@@ -64,7 +65,21 @@ int city_overlay_crime::get_column_height(const building* b) const {
 }
 
 void city_overlay_crime::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    ; // nothing
+    city_overlay::draw_custom_top(pixel, point, ctx);
+
+    if (debug_render_mode() == e_debug_render_overlay_add) {
+        building *b = building_at(point);
+        if (b->id) {
+            bstring32 text;
+            text.printf("%d", b->crime_influence.value);
+            debug_text_a(ctx, text, pixel.x + 15, pixel.y + 15, 0, text, COLOR_LIGHT_BLUE);
+        } else {
+            int crime = g_crime.get(point);
+            bstring32 text;
+            text.printf("%d", crime);
+            debug_text_a(ctx, text, pixel.x + 15, pixel.y + 15, 0, text, COLOR_LIGHT_BLUE);
+        }
+    }
 }
 
 xstring city_overlay_crime::get_tooltip_for_building(tooltip_context* c, const building* b) {
@@ -153,7 +168,7 @@ int city_overlay_criminal::get_column_height(const building* b) const {
 }
 
 void city_overlay_criminal::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
-    ; // nothing
+    city_overlay::draw_custom_top(pixel, point, ctx);
 }
 
 xstring city_overlay_criminal::get_tooltip_for_building(tooltip_context* c, const building* b) {
