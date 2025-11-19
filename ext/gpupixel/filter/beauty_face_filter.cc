@@ -9,7 +9,8 @@
 #include "beauty_face_unit_filter.h"
 #include "box_blur_filter.h"
 #include "box_high_pass_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 BeautyFaceFilter::BeautyFaceFilter() {}

@@ -6,8 +6,8 @@
  */
 
 #include "nearby_sampling3x3_filter.h"
-#include "core/gpupixel_context.h"
-#include "utils/util.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 const std::string kNearbySampling3x3SamplingVertexShaderString = R"(

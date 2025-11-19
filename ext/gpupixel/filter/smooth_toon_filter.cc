@@ -6,7 +6,8 @@
  */
 
 #include "smooth_toon_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 SmoothToonFilter::SmoothToonFilter()

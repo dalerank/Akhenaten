@@ -6,7 +6,8 @@
  */
 
 #include "canny_edge_detection_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 CannyEdgeDetectionFilter::CannyEdgeDetectionFilter()

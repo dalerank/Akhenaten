@@ -6,8 +6,8 @@
  */
 
 #include "box_difference_filter.h"
-#include "core/gpupixel_context.h"
-#include "utils/util.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 const std::string kBoxDifferenceVertexShaderString = R"(

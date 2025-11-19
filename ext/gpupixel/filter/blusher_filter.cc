@@ -6,9 +6,9 @@
  */
 
 #include "blusher_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
 #include "../source/source_image.h"
-#include "utils/util.h"
+
 NS_GPUPIXEL_BEGIN
 
 BlusherFilter::BlusherFilter() {}

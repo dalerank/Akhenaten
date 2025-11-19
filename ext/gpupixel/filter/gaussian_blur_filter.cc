@@ -7,8 +7,8 @@
 
 #include "gaussian_blur_filter.h"
 #include <cmath>
-#include "core/gpupixel_context.h"
-#include "utils/util.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 GaussianBlurFilter::GaussianBlurFilter()

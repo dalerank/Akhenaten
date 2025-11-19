@@ -6,10 +6,9 @@
  */
 
 #include "emboss_filter.h"
-#include "core/gpupixel_context.h"
-NS_GPUPIXEL_BEGIN
+#include "gpupixel_context.h"
 
-//
+NS_GPUPIXEL_BEGIN
 
 std::shared_ptr<EmbossFilter> EmbossFilter::Create() {
   auto ret = std::shared_ptr<EmbossFilter>(new EmbossFilter());
