@@ -134,7 +134,6 @@ set(OPENSSL_VERSION "3.0.17")
 
 set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
 set(OPENSSL_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl")
-set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
 
 #
 # Dependencies and libs
@@ -209,14 +208,26 @@ if (MSVC OR WIN_EMSCRIPTEN)
     endif()
 endif()
 
-set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
-if (EXISTS "${TRACY_CHECK_PATH}")
-    # Use Tracy's CMake integration instead of manually including source
-    option(TRACY_ENABLE "Enable profiling" ON)
-    add_subdirectory(${TRACY_EXT_PATH})
-    # Keep TRACY_FILES empty since we're using the library now
-    set(TRACY_FILES "")
+# Use Tracy from repository via FetchContent
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/tracy-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_TRACY "${LOCAL_DEPS_ROOT}/tracy-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_TRACY TRUE)
 endif()
+
+FetchContent_Declare(
+    tracy
+    GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+    GIT_TAG        master  # Use master branch for latest features, or specify a version tag like v0.9.2
+)
+
+# Configure Tracy options before FetchContent_MakeAvailable
+option(TRACY_ENABLE "Enable profiling" ON)
+
+FetchContent_MakeAvailable(tracy)
+
+# Keep TRACY_FILES empty since we're using the library now
+set(TRACY_FILES "")
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     set(SDL2_SRC_CHECK_PATH "${SDL2_EXTRACT_PATH}/SDL2-${SDL2_VERSION}/include/SDL.h")
