@@ -8,11 +8,13 @@ option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
 option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
 option(OPTION_SYSTEM_FREETYPE "Use system-provided freetype instead of FetchContent" OFF)
 option(OPTION_SYSTEM_HARFBUZZ "Use system-provided harfbuzz instead of FetchContent" OFF)
+option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
 
 message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
 message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 message(STATUS "OPTION_SYSTEM_FREETYPE: ${OPTION_SYSTEM_FREETYPE}")
 message(STATUS "OPTION_SYSTEM_HARFBUZZ: ${OPTION_SYSTEM_HARFBUZZ}")
+message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
@@ -208,26 +210,28 @@ if (MSVC OR WIN_EMSCRIPTEN)
     endif()
 endif()
 
-# Use Tracy from repository via FetchContent
-set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-if (EXISTS "${LOCAL_DEPS_ROOT}/tracy-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_TRACY "${LOCAL_DEPS_ROOT}/tracy-src")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_TRACY TRUE)
-endif()
-
-FetchContent_Declare(
-    tracy
-    GIT_REPOSITORY https://github.com/wolfpld/tracy.git
-    GIT_TAG        master  # Use master branch for latest features, or specify a version tag like v0.9.2
-)
-
-# Configure Tracy options before FetchContent_MakeAvailable
-option(TRACY_ENABLE "Enable profiling" ON)
-
-FetchContent_MakeAvailable(tracy)
-
-# Keep TRACY_FILES empty since we're using the library now
+# Use Tracy from repository via FetchContent (optional)
 set(TRACY_FILES "")
+if (OPTION_ENABLE_TRACY)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/tracy-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_TRACY "${LOCAL_DEPS_ROOT}/tracy-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_TRACY TRUE)
+    endif()
+
+    FetchContent_Declare(
+        tracy
+        GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+        GIT_TAG        master  # Use master branch for latest features, or specify a version tag like v0.9.2
+    )
+
+    # Configure Tracy options before FetchContent_MakeAvailable
+    # Build Tracy as static library
+    set(TRACY_STATIC ON CACHE BOOL "" FORCE)
+    option(TRACY_ENABLE "Enable profiling" ON)
+
+    FetchContent_MakeAvailable(tracy)
+endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     set(SDL2_SRC_CHECK_PATH "${SDL2_EXTRACT_PATH}/SDL2-${SDL2_VERSION}/include/SDL.h")
@@ -760,12 +764,6 @@ if(MSVC)
     add_custom_command(TARGET ${GAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:harfbuzz>
-        ${GAME_WORKING_DIRECTORY}
-    )
-
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Tracy::TracyClient>
         ${GAME_WORKING_DIRECTORY}
     )
     
