@@ -139,9 +139,12 @@ set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
 #
 # Dependencies and libs
 #
-if (MSVC)
-    # Build SDL2 from source using FetchContent
+if (MSVC OR WIN_EMSCRIPTEN)
+    # Build SDL2 and SDL2_mixer from source using FetchContent
+    # Unified configuration for MSVC and WIN_EMSCRIPTEN
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Setup SDL2 FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
@@ -153,16 +156,15 @@ if (MSVC)
         GIT_TAG        release-${SDL2_VERSION}
     )
     
-    # Configure SDL2 build options
-    set(SDL_SHARED ON CACHE BOOL "" FORCE)
-    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
-    set(SDL_STATIC_PIC OFF CACHE BOOL "" FORCE)
+    # Configure SDL2 build options - build as static library
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
     set(SDL_TEST OFF CACHE BOOL "" FORCE)
     
     FetchContent_MakeAvailable(SDL2)
     
     # Set SDL2 variables for linking
-    # FetchContent provides SDL2_SOURCE_DIR variable
     set(SDL2_LIBRARY SDL2::SDL2)
     get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
     if(SDL2_INCLUDE_DIR_TEMP)
@@ -175,7 +177,7 @@ if (MSVC)
     endif()
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
     
-    # Build SDL2_mixer from source (depends on SDL2)
+    # Setup SDL2_mixer FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
@@ -201,68 +203,6 @@ if (MSVC)
         list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
     else()
         # Fallback: construct from source dir if available
-        if(DEFINED SDL2_mixer_SOURCE_DIR)
-            set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
-        endif()
-    endif()
-elseif (WIN_EMSCRIPTEN)
-    # Build SDL2 from source using FetchContent for Emscripten
-    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG        release-${SDL2_VERSION}
-    )
-    
-    # Configure SDL2 build options for Emscripten
-    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-    set(SDL_STATIC ON CACHE BOOL "" FORCE)
-    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
-    set(SDL_TEST OFF CACHE BOOL "" FORCE)
-    
-    FetchContent_MakeAvailable(SDL2)
-    
-    # Set SDL2 variables for linking
-    set(SDL2_LIBRARY SDL2::SDL2)
-    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
-    if(SDL2_INCLUDE_DIR_TEMP)
-        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
-    else()
-        if(DEFINED SDL2_SOURCE_DIR)
-            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
-        endif()
-    endif()
-    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
-    
-    # Build SDL2_mixer from source (depends on SDL2)
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2_mixer
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-        GIT_TAG        release-${SDL2_MIXER_VERSION}
-    )
-    
-    # Configure SDL2_mixer build options for Emscripten
-    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
-    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
-    
-    FetchContent_MakeAvailable(SDL2_mixer)
-    
-    # Set SDL2_mixer variables for linking
-    set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
-    get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-    if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-        list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-    else()
         if(DEFINED SDL2_mixer_SOURCE_DIR)
             set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
         endif()
@@ -612,12 +552,9 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-elseif (MSVC)
+elseif (MSVC OR WIN_EMSCRIPTEN)
     # SDL2 and SDL2_mixer are built from source via FetchContent above
-    # Variables are already set in the MSVC section
-elseif (WIN_EMSCRIPTEN)
-    # SDL2 and SDL2_mixer are built from source via FetchContent above
-    # Variables are already set in the WIN_EMSCRIPTEN section
+    # Variables are already set in the unified MSVC/WIN_EMSCRIPTEN section
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -801,12 +738,8 @@ if(MSVC)
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
    
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:SDL2::SDL2>
-        ${GAME_WORKING_DIRECTORY}
-    )
-   
+    # SDL2 is now built as static library, no DLL to copy
+    # Only copy SDL2_mixer DLL if it's shared
     add_custom_command(TARGET ${GAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:SDL2_mixer::SDL2_mixer>
