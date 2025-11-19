@@ -6,8 +6,8 @@
  */
 
 #include "directional_non_maximum_suppression_filter.h"
-#include "core/gpupixel_context.h"
-#include "utils/util.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 #if defined(GPUPIXEL_GLES_SHADER)

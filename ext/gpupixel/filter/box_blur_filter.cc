@@ -6,7 +6,8 @@
  */
 
 #include "box_blur_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 BoxBlurFilter::BoxBlurFilter()

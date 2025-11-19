@@ -6,7 +6,8 @@
  */
 
 #include "weak_pixel_inclusion_filter.h"
-#include "core/gpupixel_context.h"
+#include "gpupixel_context.h"
+
 NS_GPUPIXEL_BEGIN
 
 #if defined(GPUPIXEL_GLES_SHADER)
