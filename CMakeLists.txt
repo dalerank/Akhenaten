@@ -90,7 +90,9 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    set(USE_FLAGS "--use-port=sdl2 --use-port=sdl2_mixer -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
+    # Note: SDL2 and SDL2_mixer are now built from source via FetchContent
+    # No need for --use-port flags
+    set(USE_FLAGS "-sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     ${USE_FLAGS} \
@@ -204,74 +206,67 @@ if (MSVC)
         endif()
     endif()
 elseif (WIN_EMSCRIPTEN)
+    # Build SDL2 from source using FetchContent for Emscripten
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-${SDL2_VERSION}
+    )
+    
+    # Configure SDL2 build options for Emscripten
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2)
+    
+    # Set SDL2 variables for linking
+    set(SDL2_LIBRARY SDL2::SDL2)
+    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
+    if(SDL2_INCLUDE_DIR_TEMP)
+        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
+    else()
+        if(DEFINED SDL2_SOURCE_DIR)
+            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
+        endif()
+    endif()
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
-    set(SDL2_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL.h")
-    if(NOT EXISTS "${SDL2_CHECK_PATH}")
-        set(SDL2_DEP_FILENAME "SDL2-devel-${SDL2_VERSION}-VC.zip")
-        set(SDL2_UNPACK_DIR "SDL2-${SDL2_VERSION}")
-        set(SDL2_DOWNLOAD_URL "http://libsdl.org/release/${SDL2_DEP_FILENAME}")
-        set(SDL2_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_DEP_FILENAME}")
-        message("Download SDL2 to ${SDL2_TMP_ZIP_PATH}")
-        
-        if (NOT EXISTS "${SDL2_TMP_ZIP_PATH}")
-            file(DOWNLOAD "${SDL2_DOWNLOAD_URL}" "${SDL2_TMP_ZIP_PATH}")
+    
+    # Build SDL2_mixer from source (depends on SDL2)
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG        release-${SDL2_MIXER_VERSION}
+    )
+    
+    # Configure SDL2_mixer build options for Emscripten
+    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # Set SDL2_mixer variables for linking
+    set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+    get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+    if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+        list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+    else()
+        if(DEFINED SDL2_mixer_SOURCE_DIR)
+            set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
         endif()
-        
-        message("Unpack SDL2 to ${SDL2_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
     endif()
-
-    set(SDL2_MIXER_DEP_FILENAME "SDL2_mixer-devel-${SDL2_MIXER_VERSION}-VC.zip")
-    set(SDL2_MIXER_DOWNLOAD_URL "https://libsdl.org/projects/SDL_mixer/release/${SDL2_MIXER_DEP_FILENAME}")
-    set(SDL2_MIXER_UNPACK_DIR "SDL2_mixer-${SDL2_MIXER_VERSION}")
-    set(SDL2_MIXER_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL_mixer.h")
-    set(SDL2_MIXER_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_DEP_FILENAME}")
-    if (NOT EXISTS "${SDL2_MIXER_CHECK_PATH}")
-        message("Download SDL2_mixer to ${SDL2_MIXER_TMP_ZIP_PATH}")
-
-        if (NOT EXISTS "${SDL2_MIXER_TMP_ZIP_PATH}")
-            file(DOWNLOAD "${SDL2_MIXER_DOWNLOAD_URL}" "${SDL2_MIXER_TMP_ZIP_PATH}")
-        endif()
-
-        message("Unpack SDL2_mixer to ${SDL2_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
-    endif()
-
-    set(OPENSSL_CHECK_PATH "${OPENSSL_EXTRACT_PATH}/include/openssl/ssl.h")
-    message("Check ssl.h exist at ${OPENSSL_CHECK_PATH}")
-    if(NOT EXISTS "${OPENSSL_CHECK_PATH}")
-        set(OPENSSL_DEP_FILENAME "openssl-${OPENSSL_VERSION}.zip")
-        set(OPENSSL_UNPACK_DIR "openssl-${OPENSSL_VERSION}")
-        set(OPENSSL_DOWNLOAD_URL "https://download.firedaemon.com/FireDaemon-OpenSSL/${OPENSSL_DEP_FILENAME}")
-        set(OPENSSL_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${OPENSSL_DEP_FILENAME}")
-        message("Download openssl to ${OPENSSL_TMP_ZIP_PATH}")
-        file(DOWNLOAD "${OPENSSL_DOWNLOAD_URL}" "${OPENSSL_TMP_ZIP_PATH}")
-        message("Unpack openssl to ${OPENSSL_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${OPENSSL_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
-
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/lib DESTINATION ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/bin DESTINATION ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/include DESTINATION ${OPENSSL_EXTRACT_PATH})
-    endif()
-
-    # DLLs are now copied via POST_BUILD commands above
-
-    file(GLOB OPENSSL_DLL_PUBLIC_DLL "${OPENSSL_EXTRACT_PATH}/bin/*.dll")
-    file(COPY ${OPENSSL_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-
-    set(SDL_FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ffmpeg)
-    file(GLOB FFMPEG_PUBLIC_DLL "${SDL_FFMPEG_DIR}/bin/*.dll")
-    file(COPY ${FFMPEG_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-    set(BUGTRAP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/bugtrap)
-    set(BUGTRAP_DLL "${BUGTRAP_DIR}/BugTrap-x64.dll")
-    file(COPY ${BUGTRAP_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/update_binary_windows.cmd DESTINATION ${GAME_WORKING_DIRECTORY})
 endif()
 
 set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
@@ -621,12 +616,8 @@ elseif (MSVC)
     # SDL2 and SDL2_mixer are built from source via FetchContent above
     # Variables are already set in the MSVC section
 elseif (WIN_EMSCRIPTEN)
-    set(SDL2_LIBRARY "SDL2")
-    set(SDL2_INCLUDE_DIR "${EMSDK}/emscripten/system/include/SDL")
-    # set(SDL2_MIXER_LIBRARIES "${SDL2_EXTRACT_PATH}/lib/x64/SDL2_mixer.lib")
-    set(SDL2_MIXER_LIBRARY "SDL2_mixer")
-    # set(SDL2_MIXER_INCLUDE_DIRS "${SDL2_EXTRACT_PATH}/include")
-    set(SDL2_MIXER_INCLUDE_DIR "${EMSDK}/emscripten/system/include/SDL")
+    # SDL2 and SDL2_mixer are built from source via FetchContent above
+    # Variables are already set in the WIN_EMSCRIPTEN section
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -789,7 +780,9 @@ else()
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} SDL2::SDL2main ${EXTMUJS_LIBRARY}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
+                        $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
+                        ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
                         $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
