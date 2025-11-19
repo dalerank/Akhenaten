@@ -124,7 +124,7 @@ protected:
 
     struct VectorProperty : Property {
         std::vector<float> value;
-        std::function<void(std::vector<float> &)> setCallback;
+        std::function<void(std::vector<float>)> setCallback;
     };
     std::map<std::string, VectorProperty> _vectorProperties;
 

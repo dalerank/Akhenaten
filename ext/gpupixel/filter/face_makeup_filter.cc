@@ -200,7 +200,7 @@ bool FaceMakeupFilter::Init() {
   std::vector<float> defaut;
   registerProperty("face_landmark", defaut,
                    "The face landmark of filter with range between -1 and 1.",
-                   [this](std::vector<float>& val) { SetFaceLandmarks(val); });
+                   [this](std::vector<float> val) { SetFaceLandmarks(val); });
   return true;
 }
 

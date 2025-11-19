@@ -137,7 +137,73 @@ set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
 #
 # Dependencies and libs
 #
-if (MSVC OR WIN_EMSCRIPTEN)
+if (MSVC)
+    # Build SDL2 from source using FetchContent
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-${SDL2_VERSION}
+    )
+    
+    # Configure SDL2 build options
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC_PIC OFF CACHE BOOL "" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2)
+    
+    # Set SDL2 variables for linking
+    # FetchContent provides SDL2_SOURCE_DIR variable
+    set(SDL2_LIBRARY SDL2::SDL2)
+    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
+    if(SDL2_INCLUDE_DIR_TEMP)
+        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
+    else()
+        # Fallback: construct from source dir if available
+        if(DEFINED SDL2_SOURCE_DIR)
+            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
+        endif()
+    endif()
+    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
+    
+    # Build SDL2_mixer from source (depends on SDL2)
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG        release-${SDL2_MIXER_VERSION}
+    )
+    
+    # Configure SDL2_mixer build options
+    # Use vendored dependencies to avoid requiring system libraries like OpusFile
+    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # Set SDL2_mixer variables for linking
+    set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+    get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+    if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+        list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+    else()
+        # Fallback: construct from source dir if available
+        if(DEFINED SDL2_mixer_SOURCE_DIR)
+            set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
+        endif()
+    endif()
+elseif (WIN_EMSCRIPTEN)
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
     set(SDL2_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL.h")
     if(NOT EXISTS "${SDL2_CHECK_PATH}")
@@ -194,8 +260,7 @@ if (MSVC OR WIN_EMSCRIPTEN)
         file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/include DESTINATION ${OPENSSL_EXTRACT_PATH})
     endif()
 
-    file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
-    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
+    # DLLs are now copied via POST_BUILD commands above
 
     file(GLOB OPENSSL_DLL_PUBLIC_DLL "${OPENSSL_EXTRACT_PATH}/bin/*.dll")
     file(COPY ${OPENSSL_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
@@ -211,9 +276,11 @@ endif()
 
 set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
 if (EXISTS "${TRACY_CHECK_PATH}")
-    add_definitions(-DTRACY_ENABLE=ON)
-    set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
-    include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
+    # Use Tracy's CMake integration instead of manually including source
+    option(TRACY_ENABLE "Enable profiling" ON)
+    add_subdirectory(${TRACY_EXT_PATH})
+    # Keep TRACY_FILES empty since we're using the library now
+    set(TRACY_FILES "")
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -550,6 +617,9 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+elseif (MSVC)
+    # SDL2 and SDL2_mixer are built from source via FetchContent above
+    # Variables are already set in the MSVC section
 elseif (WIN_EMSCRIPTEN)
     set(SDL2_LIBRARY "SDL2")
     set(SDL2_INCLUDE_DIR "${EMSDK}/emscripten/system/include/SDL")
@@ -565,7 +635,7 @@ endif()
 if (PLATFORM_ANDROID)
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
-    add_executable(${GAME} WIN32 ${SOURCE_FILES})
+    add_executable(${GAME} ${SOURCE_FILES})
 endif()
 
 if (MSVC)
@@ -719,23 +789,54 @@ else()
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
+                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} SDL2::SDL2main ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
                         ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
                         $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
                         $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
-                        akhenaten::rc)
+                        akhenaten::rc
+                        $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
 if(MSVC)
-   target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
-   set(FFMPEG_LIB ${CMAKE_SOURCE_DIR}/ext/ffmpeg/lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avcodec.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/swscale.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
+    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
+    set(FFMPEG_LIB ${CMAKE_SOURCE_DIR}/ext/ffmpeg/lib)
+    target_link_libraries(${GAME} ${FFMPEG_LIB}/avcodec.lib)
+    target_link_libraries(${GAME} ${FFMPEG_LIB}/swscale.lib)
+    target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
+    target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
+    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
+    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
+    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
+   
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:SDL2::SDL2>
+        ${GAME_WORKING_DIRECTORY}
+    )
+   
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:SDL2_mixer::SDL2_mixer>
+        ${GAME_WORKING_DIRECTORY}
+    )
+   
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:harfbuzz>
+        ${GAME_WORKING_DIRECTORY}
+    )
+
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:Tracy::TracyClient>
+        ${GAME_WORKING_DIRECTORY}
+    )
+    
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:freetype>
+        ${GAME_WORKING_DIRECTORY}
+    )
 endif()
 
 if (PLATFORM_ANDROID)
