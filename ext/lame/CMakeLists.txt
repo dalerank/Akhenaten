@@ -46,7 +46,7 @@ add_definitions(-DPACKAGE_NAME="Ozy")
 add_definitions(-DPACKAGE_VERSION="static")
 add_definitions(-DHAVE_MPGLIB=ON)
 
-add_library(${PROJECT_NAME} ${SOURCES_LIST})
+add_library(${PROJECT_NAME} STATIC ${SOURCES_LIST})
 
 set(EXTLAME_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)

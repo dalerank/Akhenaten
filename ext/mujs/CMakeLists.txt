@@ -3,7 +3,7 @@ project(mujs C)
 
 file(GLOB SOURCES_LIST "*.c")
 
-add_library(${PROJECT_NAME} ${SOURCES_LIST})
+add_library(${PROJECT_NAME} STATIC ${SOURCES_LIST})
 
 set(EXTMUJS_INCLUDE_DIR ${PROJECT_SOURCE_DIR}
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
