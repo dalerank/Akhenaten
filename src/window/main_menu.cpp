@@ -22,68 +22,139 @@
 #include "io/gamestate/boilerplate.h"
 #include "resource/icons.h"
 #include "js/js_game.h"
+#include <regex>
 
 #ifdef GAME_PLATFORM_WIN
-#define CPPHTTPLIB_OPENSSL_SUPPORT
-#include "core/httplib.h"
+#include <curl/curl.h>
 #endif
 
 main_menu_screen g_main_menu;
 
+#ifdef GAME_PLATFORM_WIN
+// Callback function for curl to write response data
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* data) {
+    size_t totalSize = size * nmemb;
+    data->append((char*)contents, totalSize);
+    return totalSize;
+}
+
+// Callback function for curl to write header data
+size_t HeaderCallback(char* buffer, size_t size, size_t nitems, std::string* headers) {
+    size_t totalSize = size * nitems;
+    headers->append(buffer, totalSize);
+    return totalSize;
+}
+#endif
+
 std::string main_menu_download_changelog() {
 #ifdef GAME_PLATFORM_WIN
-    try {
-        httplib::SSLClient client("raw.githubusercontent.com");
-        client.set_follow_location(true);
-        
-        auto res = client.Get("/dalerank/Akhenaten/master/changelog.txt");
-        
-        if (res && res->status == 200) {
-            logs::info("Changelog downloaded successfully (%zu bytes)", res->body.size());
-            return res->body;
-        } else {
-            logs::error("Failed to download changelog (status code: %d)", res ? res->status : 0);
-            return "Failed to download changelog from GitHub.";
-        }
-    } catch (const std::exception& e) {
-        logs::error("Exception while downloading changelog: %s", e.what());
-        return std::string("Error: ") + e.what();
+    CURL* curl;
+    CURLcode res;
+    std::string readBuffer;
+    std::string url = "https://raw.githubusercontent.com/dalerank/Akhenaten/master/changelog.txt";
+    
+    curl = curl_easy_init();
+    if (!curl) {
+        logs::error("curl_easy_init failed");
+        return "Failed to initialize HTTP client.";
+    }
+    
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+    
+    // Windows Schannel will automatically use system certificates
+    res = curl_easy_perform(curl);
+    
+    long httpCode = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+    
+    if (res != CURLE_OK) {
+        logs::error("curl_easy_perform failed: %s", curl_easy_strerror(res));
+        curl_easy_cleanup(curl);
+        return "Failed to download changelog from GitHub.";
+    }
+    
+    curl_easy_cleanup(curl);
+    
+    if (httpCode == 200 && !readBuffer.empty()) {
+        logs::info("Changelog downloaded successfully (%zu bytes)", readBuffer.size());
+        return readBuffer;
+    } else {
+        logs::error("Failed to download changelog (HTTP code: %ld)", httpCode);
+        return "Failed to download changelog from GitHub.";
     }
 #else
     return "Changelog download not supported on this platform.";
 #endif
 }
 
-
 int main_menu_get_total_commits(pcstr owner, pcstr repo) {
 #ifdef GAME_PLATFORM_WIN
-    bstring256 req;
-    req.printf("https://api.github.com/repos/%s/%s/commits?per_page=1", owner, repo);
-    httplib::Url url(req.c_str());
-    httplib::SSLClient sslClient(url.host);
-
-    auto res = sslClient.Get(req.c_str());
-
-    if (res && res->status == 200) {
-        std::smatch match;
-        std::regex link_regex(R"(<([^>]+)>; rel="last")");
-        std::string link_header = res->get_header_value("Link");
-
-        if (std::regex_search(link_header, match, link_regex)) {
-            std::string last_page_url = match[1].str();
-            std::regex page_regex(R"(&page=(\d+))");
-            if (std::regex_search(last_page_url, match, page_regex)) {
-                return std::stoi(match[1].str());
-            }
-        }
-        return 1; // If no pagination, assume one page exists
-    } else {
-        std::cerr << "Error: Unable to fetch commits (status code " << (res ? res->status : 0) << ")" << std::endl;
+    CURL* curl;
+    CURLcode res;
+    std::string readBuffer;
+    std::string headers;
+    std::string url;
+    url = "https://api.github.com/repos/";
+    url += owner;
+    url += "/";
+    url += repo;
+    url += "/commits?per_page=1";
+    
+    curl = curl_easy_init();
+    if (!curl) {
+        logs::error("curl_easy_init failed");
         return -1;
     }
+    
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, HeaderCallback);
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, &headers);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+    
+    // Windows Schannel will automatically use system certificates
+    res = curl_easy_perform(curl);
+    
+    long httpCode = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+    
+    curl_easy_cleanup(curl);
+    
+    if (res != CURLE_OK || httpCode != 200) {
+        logs::error("Unable to fetch commits (curl error: %s, HTTP code: %ld)", 
+                   res != CURLE_OK ? curl_easy_strerror(res) : "OK", httpCode);
+        return -1;
+    }
+    
+    // Parse Link header for pagination info
+    std::regex linkRegex(R"(<([^>]+)>; rel="last")");
+    std::smatch match;
+    
+    if (std::regex_search(headers, match, linkRegex)) {
+        std::string lastPageUrl = match[1].str();
+        std::regex pageRegex(R"(&page=(\d+))");
+        if (std::regex_search(lastPageUrl, match, pageRegex)) {
+            return std::stoi(match[1].str());
+        }
+    }
+    
+    // If no pagination info, assume 1 page
+    return 1;
 #else
     return -1;
-#endif // GAME_PLATFORM_WIN
+#endif
 }
 
 void __game_download_latest_version() {

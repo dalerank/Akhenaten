@@ -92,8 +92,6 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    # Note: SDL2 and SDL2_mixer are now built from source via FetchContent
-    # No need for --use-port flags
     set(USE_FLAGS "-sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
@@ -131,17 +129,12 @@ else()
 endif()
 
 set(SDL2_VERSION "2.32.10")
-set(SDL2_MIXER_VERSION "2.8.1")
-set(OPENSSL_VERSION "3.0.17")
-
-set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
-set(OPENSSL_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl")
+set(SDL2_MIXER_VERSION "2.8.0")
 
 #
 # Dependencies and libs
 #
 if (MSVC OR WIN_EMSCRIPTEN)
-    # Build SDL2 and SDL2_mixer from source using FetchContent
     # Unified configuration for MSVC and WIN_EMSCRIPTEN
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
@@ -178,7 +171,6 @@ if (MSVC OR WIN_EMSCRIPTEN)
     endif()
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
     
-    # Setup SDL2_mixer FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
@@ -190,23 +182,41 @@ if (MSVC OR WIN_EMSCRIPTEN)
         GIT_TAG        release-${SDL2_MIXER_VERSION}
     )
     
-    # Configure SDL2_mixer build options
-    # Use vendored dependencies to avoid requiring system libraries like OpusFile
+    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
     set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
     set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
     
     FetchContent_MakeAvailable(SDL2_mixer)
     
     # Set SDL2_mixer variables for linking
-    set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
-    get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-    if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-        list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-    else()
-        # Fallback: construct from source dir if available
-        if(DEFINED SDL2_mixer_SOURCE_DIR)
-            set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
+    # SDL2_mixer may create different target names depending on version
+    if(TARGET SDL2::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
         endif()
+    elseif(TARGET SDL2_mixer::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    elseif(TARGET SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    else()
+        # Fallback: assume SDL2::SDL2_mixer will be available at link time
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+    endif()
+    
+    # Fallback: use source directory for includes if target properties not available
+    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
     endif()
 endif()
 
@@ -231,6 +241,50 @@ if (OPTION_ENABLE_TRACY)
     option(TRACY_ENABLE "Enable profiling" ON)
 
     FetchContent_MakeAvailable(tracy)
+endif()
+
+if (MSVC)
+    # Download curl sources using FetchContent
+    # Check for local copy first (for disconnected updates)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        curl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG        curl-8_10_1
+    )
+    
+    # Configure curl build options before FetchContent_MakeAvailable
+    # These options will be used when curl is built via add_subdirectory
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
+    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)  # Explicitly disable OpenSSL
+    set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
+    set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+    
+    # Use FetchContent_MakeAvailable to download and build curl
+    # Curl will be built with the options set above
+    FetchContent_MakeAvailable(curl)
+    
+    # Curl target will be available as curl::libcurl after FetchContent_MakeAvailable
+    # No need to create imported target, it's created automatically
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -674,7 +728,6 @@ include_directories(ext)
 include_directories(src)
 include_directories(ext/imgui)
 include_directories(ext/imgui/backends)
-include_directories(ext/openssl/include)
 if (OPTION_SYSTEM_FREETYPE)
     include_directories(${FREETYPE_INCLUDE_DIRS})
 else()
@@ -732,7 +785,10 @@ else()
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
+                        ${SDL2_LIBRARY}
+                        $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
+                            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
+                                $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
@@ -750,17 +806,20 @@ if(MSVC)
     target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
     target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
-    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
-    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
-   
-    # SDL2 is now built as static library, no DLL to copy
-    # Only copy SDL2_mixer DLL if it's shared
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:SDL2_mixer::SDL2_mixer>
-        ${GAME_WORKING_DIRECTORY}
-    )
-   
+    
+    # Link libcurl with Windows Schannel SSL support
+    # Curl creates CURL::libcurl target via FetchContent_MakeAvailable
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        # Fallback: check if libcurl target exists (without namespace)
+        if(TARGET libcurl)
+            target_link_libraries(${GAME} libcurl)
+        else()
+            message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
+        endif()
+    endif()
+      
     add_custom_command(TARGET ${GAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:harfbuzz>
