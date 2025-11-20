@@ -480,7 +480,6 @@ endif()
 add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
-add_subdirectory(ext/lzma)
 add_subdirectory(ext/bzip)
 add_subdirectory(ext/aes)
 
@@ -534,6 +533,7 @@ file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
 file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
+file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
 
 if (PLATFORM_ANDROID)
     add_definitions(-DANDROID_BUILD=ON)
@@ -627,6 +627,7 @@ if(MSVC)
     source_group("graphics" FILES ${GRAPHICS_FILES})
     source_group("fontgen" FILE ${GRAPHICS_FONTGEN_FILES})
     source_group("js" FILES ${JS_FILES})
+    source_group("lzma" FILES ${LZMA_FILES})
 endif()
 
 set(MACOSX_FILES "")
@@ -682,6 +683,7 @@ set(SOURCE_FILES
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${SCRIPTS_FILES}
+    ${LZMA_FILES}
     ${MACOSX_FILES}
     ${CPPTRACE_FILES}
 )
@@ -895,7 +897,7 @@ target_link_libraries (${GAME}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${EXTMUJS_LIBRARY}
                         ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
+                        ${EXTLAME_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
                         $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
                         $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
                         akhenaten::rc
