@@ -338,7 +338,7 @@ png_read_buffer(png_structrp png_ptr, png_alloc_size_t new_size, int warn)
  * the owner but, in final release builds, just issues a warning if some other
  * chunk apparently owns the stream.  Prior to release it does a png_error.
  */
-static int
+int
 png_inflate_claim(png_structrp png_ptr, png_uint_32 owner)
 {
    if (png_ptr->zowner != 0)

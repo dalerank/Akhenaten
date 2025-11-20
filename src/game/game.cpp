@@ -230,7 +230,7 @@ void game_t::shutdown() {
 void game_t::set_write_video(bool v) {
     if (!write_video && v) {
         assert(!mvwriter);
-        mvwriter = new MovieWriter("test.mp4", screen_width(), screen_height(), 4);
+        mvwriter = new MovieWriter("test.webm", screen_width(), screen_height(), 4);
     } else if (write_video && !v) {
         assert(mvwriter);
         delete mvwriter;

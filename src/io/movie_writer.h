@@ -3,42 +3,39 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "core/vec2i.h"
 #include "platform/platform.h"
 
-struct AVFrame;
-
 #ifdef GAME_PLATFORM_WIN
 
-struct SwsContext;
-struct AVOutputFormat;
-struct AVStream;
-struct AVFormatContext;
-struct AVCodecContext;
-struct AVPacket;
+struct vpx_codec_ctx;
+struct vpx_image;
 
 class MovieWriter {
 	const uint16_t width, height;
-	uint16_t iframe;
+	uint32_t iframe;
 	uint16_t frameRate;
 
-	SwsContext* swsCtx = nullptr;
-	const AVOutputFormat* fmt = nullptr;
-	AVStream* stream = nullptr;
-	AVFormatContext* fc = nullptr;
-	AVCodecContext* ctx = nullptr;
-	AVPacket *pkt = nullptr;
+	vpx_codec_ctx* codec = nullptr;
+	vpx_image* yuv_image = nullptr;
+	
+	std::ofstream output_file;
+	std::string filename;
+	std::vector<uint8_t> encoded_frames; // Store encoded frames before writing WebM header
+	
+	// RGB to YUV conversion buffer
+	std::vector<uint8_t> yuv_buffer;
 
-	AVFrame *rgbpic = nullptr;
-	AVFrame *yuvpic = nullptr;
+	bool initialized = false;
 
-	std::vector<uint8_t> pixels;
+	// Simple RGB to YUV420 conversion
+	void convertRGBtoYUV420(const uint8_t* rgb, uint8_t* yuv);
 
 public:
 	MovieWriter(const std::string& filename, const unsigned int width, const unsigned int height, const int frameRate = 25);
 
-	void addFrame(const uint8_t* pixels, AVFrame** yuvout = nullptr);
-	void addFrame(AVFrame* yuvframe);
+	void addFrame(const uint8_t* pixels);
 	vec2i frameSize() const { return {width, height}; }
 	
 	~MovieWriter();
@@ -49,8 +46,7 @@ class MovieWriter {
 public:
 	MovieWriter(const std::string &, const unsigned int, const unsigned int, const int) {}
 
-	void addFrame(const uint8_t *pixels, AVFrame **yuvout = nullptr) {}
-	void addFrame(AVFrame *yuvframe) {}
+	void addFrame(const uint8_t *pixels) {}
 	vec2i frameSize() const { return {0, 0}; }
 
 	~MovieWriter() {};
