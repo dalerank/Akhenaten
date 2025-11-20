@@ -477,11 +477,9 @@ if (PLATFORM_ANDROID)
     set(VERSION_REVISION "")
 endif()
 
-add_subdirectory(ext/expat)
 add_subdirectory(ext/mujs)
 add_subdirectory(ext/lame)
 add_subdirectory(ext/bzip)
-add_subdirectory(ext/aes)
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
 else()
@@ -790,7 +788,6 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
-include_directories(${EXTEXPAT_INCLUDE_DIR})
 include_directories(${EXTMUJS_INCLUDE_DIR})
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${EXTLAME_INCLUDE_DIR})
@@ -895,9 +892,8 @@ target_link_libraries (${GAME}
                             $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
-                        ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
+                        ${EXTMUJS_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${EXTLAME_LIBRARY} ${BZIP_LIBRARY} ${GPUPIXEL_LIBRARY} 
                         $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
                         $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
                         akhenaten::rc
