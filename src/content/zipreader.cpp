@@ -4,7 +4,6 @@
 #include <zlib.h>
 #include "lzma/LzmaDec.h"
 #include "bzip/bzlib.h"
-#include "aes/fileenc.h"
 #include "core/log.h"
 
 namespace vfs {
@@ -154,38 +153,11 @@ namespace vfs {
             entry_name = tmp;
         }
 
-        // AES encryption
-        if ((entry.header.GeneralBitFlag & ZIP_FILE_ENCRYPTED) && (entry.header.CompressionMethod == 99)) {
-            short restSize = entry.header.ExtraFieldLength;
-            SZipFileExtraHeader extraHeader;
-            while (restSize) {
-                _data->r(&extraHeader, sizeof(extraHeader));
-
-                restSize -= sizeof(extraHeader);
-                if (extraHeader.ID == (short)0x9901) {
-                    SZipFileAESExtraData data;
-                    _data->r(&data, sizeof(data));
-
-                    restSize -= sizeof(data);
-                    if (data.Vendor[0] == 'A' && data.Vendor[1] == 'E') {
-                        // encode values into Sig
-                        // AE-Version | Strength | ActualMode
-                        entry.header.Sig =
-                            ((data.Version & 0xff) << 24) |
-                            (data.EncryptionStrength << 16) |
-                            (data.CompressionMode);
-                        _data->advance(restSize);
-                        break;
-                    }
-                }
-            }
+        // Skip extra field (AES encryption not supported)
+        if (entry.header.ExtraFieldLength) {
+            _data->advance(entry.header.ExtraFieldLength);
         }
-        // move forward length of extra field.
-        else {
-            if (entry.header.ExtraFieldLength) {
-                _data->advance(entry.header.ExtraFieldLength);
-            }
-        }
+
         // if bit 3 was set, use CentralDirectory for setup
         if (!ignoreGPBits && entry.header.GeneralBitFlag & ZIP_INFO_IN_DATA_DESCRIPTOR) {
             SZIPFileCentralDirEnd dirEnd;
@@ -319,101 +291,36 @@ namespace vfs {
         const SZipFileEntry &e = _files[index];
 
         short actualCompressionMethod = e.header.CompressionMethod;
-        reader decrypted;
-        std::vector<char> decryptedBuf;
-        unsigned int decryptedSize = e.header.DataDescriptor.CompressedSize;
 
+        // AES encryption not supported
         if ((e.header.GeneralBitFlag & ZIP_FILE_ENCRYPTED) && (e.header.CompressionMethod == 99)) {
-            unsigned char salt[16] = { 0 };
-            const unsigned short saltSize = (((e.header.Sig & 0x00ff0000) >> 16) + 1) * 4;
-            _data->seek(e.Offset);
-            _data->r(salt, saltSize);
-            char pwVerification[2];
-            char pwVerificationFile[2];
-
-            _data->r(pwVerification, 2);
-            std::string password;
-            fcrypt_ctx zctx; // the encryption context
-            int rc = fcrypt_init((e.header.Sig & 0x00ff0000) >> 16,
-                (const unsigned char *)password.c_str(), // the password
-                password.size(), // number of bytes in password
-                salt, // the salt
-                (unsigned char *)pwVerificationFile, // on return contains password verifier
-                &zctx); // encryption context
-            if (strncmp(pwVerificationFile, pwVerification, 2)) {
-                return {};
-            }
-            decryptedSize = e.header.DataDescriptor.CompressedSize - saltSize - 12;
-            decryptedBuf.resize(decryptedSize);
-            unsigned int c = 0;
-            while ((c + 32768) <= decryptedSize) {
-                _data->r(decryptedBuf.data() + c, 32768);
-                fcrypt_decrypt((unsigned char *)decryptedBuf.data() + c, // pointer to the data to decrypt
-                    32768,   // how many bytes to decrypt
-                    &zctx); // decryption context
-                c += 32768;
-            }
-
-            _data->r(decryptedBuf.data() + c, decryptedSize - c);
-            fcrypt_decrypt((unsigned char *)decryptedBuf.data() + c, // pointer to the data to decrypt
-                decryptedSize - c,   // how many bytes to decrypt
-                &zctx); // decryption context
-
-            char fileMAC[10];
-            char resMAC[10];
-            rc = fcrypt_end((unsigned char *)resMAC, // on return contains the authentication code
-                &zctx); // encryption context
-            if (rc != 10) {
-                //Logger::error( "Error on encryption closing" );
-                return {};
-            }
-
-            _data->r(fileMAC, 10);
-            if (strncmp(fileMAC, resMAC, 10)) {
-                //Logger::error( "Error on encryption check" );
-                return {};
-            }
-
-            const size_t memsize = decryptedBuf.size() + txr_limiter;
-            char *mem = (char*)malloc(memsize);
-            memcpy(mem, decryptedBuf.data(), decryptedBuf.size());
-            if (is_text_file) {
-                mem[decryptedBuf.size()] = 0; // null-terminate the string
-            }
-
-            decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
-            actualCompressionMethod = (e.header.Sig & 0xffff);
+            return {};
         }
 
         switch (actualCompressionMethod) {
         case 0: // no compression
         {
-            if (decrypted) {
-                return decrypted;
-            } else {
-                _data->seek(e.Offset);
-                const size_t memsize = decryptedSize + txr_limiter;
-                char *mem = (char*)malloc(memsize);
-                memcpy(mem, decryptedBuf.data(), decryptedBuf.size());
-                if (is_text_file) {
-                    mem[decryptedSize] = 0; // null-terminate the string
-                }
-
-                _data->r(mem, decryptedSize);
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
-                return decrypted;
+            _data->seek(e.Offset);
+            const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
+            const size_t memsize = uncompressedSize + txr_limiter;
+            char *mem = (char*)malloc(memsize);
+            _data->r(mem, uncompressedSize);
+            if (is_text_file) {
+                mem[uncompressedSize] = 0; // null-terminate the string
             }
+            return std::make_shared<data_reader>(_entries[index].c_str(), mem, (int)memsize);
         }
         break;
 
         case 8:
         {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
+            const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
-            pcData.resize(decryptedSize);
+            pcData.resize(compressedSize);
 
             if (pBuf.empty() || pcData.empty()) {
                 //Logger::warning( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
@@ -421,14 +328,14 @@ namespace vfs {
             }
 
             _data->seek(e.Offset);
-            _data->r(pcData.data(), decryptedSize);
+            _data->r(pcData.data(), compressedSize);
 
             // Setup the inflate stream.
             z_stream stream;
             int err;
 
             stream.next_in = (Bytef *)pcData.data();
-            stream.avail_in = (uInt)decryptedSize;
+            stream.avail_in = (uInt)compressedSize;
             stream.next_out = (Bytef *)pBuf.data();
             stream.avail_out = uncompressedSize;
             stream.zalloc = (alloc_func)0;
@@ -457,8 +364,8 @@ namespace vfs {
                     mem[pBuf.size()] = 0; // null-terminate the string
                 }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
-                return decrypted;
+                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
+                return r;
             }
         }
         break;
@@ -466,11 +373,12 @@ namespace vfs {
         case 12:
         {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
+            const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
-            pcData.resize(decryptedSize);
+            pcData.resize(compressedSize);
 
             if (pBuf.empty() || pcData.empty()) {
                 //Logger::error( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
@@ -478,7 +386,7 @@ namespace vfs {
             }
 
             _data->seek(e.Offset);
-            _data->r(pcData.data(), decryptedSize);
+            _data->r(pcData.data(), compressedSize);
 
             bz_stream bz_ctx = { 0 };
             /* use BZIP2's default memory allocation
@@ -493,7 +401,7 @@ namespace vfs {
             }
 
             bz_ctx.next_in = (char *)pcData.data();
-            bz_ctx.avail_in = decryptedSize;
+            bz_ctx.avail_in = compressedSize;
             /* pass all input to decompressor */
             bz_ctx.next_out = pBuf.data();
             bz_ctx.avail_out = uncompressedSize;
@@ -513,8 +421,8 @@ namespace vfs {
                     mem[pBuf.size()] = 0; // null-terminate the string
                 }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
-                return decrypted;
+                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
+                return r;
             }
         }
         break;
@@ -522,22 +430,23 @@ namespace vfs {
         case 14:
         {
             unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
+            const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
-            pcData.resize(decryptedSize);
+            pcData.resize(compressedSize);
             if (pBuf.empty() || pcData.empty()) {
                 //Logger::error( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
                 return {};
             }
 
             _data->seek(e.Offset);
-            _data->r(pcData.data(), decryptedSize);
+            _data->r(pcData.data(), compressedSize);
 
             ELzmaStatus status;
             SizeT tmpDstSize = uncompressedSize;
-            SizeT tmpSrcSize = decryptedSize;
+            SizeT tmpSrcSize = compressedSize;
 
             unsigned int propSize = (pcData[3] << 8) + pcData[2];
             int err = LzmaDecode((Byte *)pBuf.data(), &tmpDstSize,
@@ -556,8 +465,8 @@ namespace vfs {
                     mem[pBuf.size()] = 0; // null-terminate the string
                 }
 
-                decrypted = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
-                return decrypted;
+                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
+                return r;
             }
         }
         break;
