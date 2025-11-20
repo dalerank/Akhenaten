@@ -5,14 +5,10 @@ include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
-option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
 option(OPTION_SYSTEM_FREETYPE "Use system-provided freetype instead of FetchContent" OFF)
 option(OPTION_SYSTEM_HARFBUZZ "Use system-provided harfbuzz instead of FetchContent" OFF)
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
 
-message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
-message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
 message(STATUS "OPTION_SYSTEM_FREETYPE: ${OPTION_SYSTEM_FREETYPE}")
 message(STATUS "OPTION_SYSTEM_HARFBUZZ: ${OPTION_SYSTEM_HARFBUZZ}")
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
@@ -55,7 +51,7 @@ include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 #
 
 if(PLATFORM_ANDROID)
-    # no cpptrace for android, baa...
+    # no cpptrace for android
 else()
     if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
         if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
@@ -69,7 +65,7 @@ else()
         FetchContent_Declare(
                 cpptrace
                 GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-                GIT_TAG        v1.0.4 # <HASH or TAG>
+                GIT_TAG        v1.0.4
         )
         FetchContent_MakeAvailable(cpptrace)
 
@@ -233,7 +229,7 @@ if (OPTION_ENABLE_TRACY)
     FetchContent_Declare(
         tracy
         GIT_REPOSITORY https://github.com/wolfpld/tracy.git
-        GIT_TAG        master  # Use master branch for latest features, or specify a version tag like v0.9.2
+        GIT_TAG        master
     )
 
     # Configure Tracy options before FetchContent_MakeAvailable
@@ -245,8 +241,6 @@ if (OPTION_ENABLE_TRACY)
 endif()
 
 if (MSVC)
-    # Download curl sources using FetchContent
-    # Check for local copy first (for disconnected updates)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
@@ -259,8 +253,7 @@ if (MSVC)
         GIT_TAG        curl-8_10_1
     )
     
-    # Configure curl build options before FetchContent_MakeAvailable
-    # These options will be used when curl is built via add_subdirectory
+    # Configure curl build options
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
     set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
@@ -280,12 +273,21 @@ if (MSVC)
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
     
-    # Use FetchContent_MakeAvailable to download and build curl
-    # Curl will be built with the options set above
+    # Ensure zlib is available before curl tries to find it
+    # Set ZLIB variables for curl's find_package(ZLIB)
+    if(TARGET zlibstatic AND DEFINED zlib_SOURCE_DIR)
+        get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+        if(ZLIB_BINARY_DIR)
+            # Set ZLIB variables before curl's FetchContent_MakeAvailable
+            # This ensures curl can find zlib and zconf.h
+            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+        endif()
+    endif()
+    
     FetchContent_MakeAvailable(curl)
     
-    # Curl target will be available as curl::libcurl after FetchContent_MakeAvailable
-    # No need to create imported target, it's created automatically
+    # zlib is already built before curl (via add_subdirectory), so no explicit dependency needed
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -324,6 +326,94 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
 endif()
 
 set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+
+# Always use zlib from repository via FetchContent (static library only)
+# Must be built before freetype and curl which depend on it
+if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_ZLIB "${LOCAL_DEPS_ROOT}/zlib-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB TRUE)
+endif()
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    zlib
+    GIT_REPOSITORY https://github.com/madler/zlib
+    GIT_TAG v1.3.1
+)
+
+# Fetch zlib sources first, then build immediately
+FetchContent_GetProperties(zlib)
+if(NOT zlib_POPULATED)
+    FetchContent_Populate(zlib)
+    # FetchContent_Populate sets lowercase variable names: zlib_SOURCE_DIR
+endif()
+
+# Build zlib immediately using add_subdirectory
+# This ensures zlib is built before any other dependencies
+# Note: FetchContent_Populate sets zlib_SOURCE_DIR (lowercase) in current scope
+if(NOT TARGET zlibstatic AND DEFINED zlib_SOURCE_DIR)
+    add_subdirectory(${zlib_SOURCE_DIR} ${CMAKE_BINARY_DIR}/_deps/zlib-build EXCLUDE_FROM_ALL)
+endif()
+
+# Create alias target 'zlib' for 'zlibstatic' for compatibility with dependencies
+# that expect target name 'zlib'
+if(TARGET zlibstatic AND NOT TARGET zlib)
+    add_library(zlib ALIAS zlibstatic)
+endif()
+
+# Add zlib binary directory to include paths (where zconf.h is generated)
+if(TARGET zlibstatic)
+    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+    if(ZLIB_BINARY_DIR AND DEFINED zlib_SOURCE_DIR)
+        target_include_directories(zlibstatic INTERFACE ${ZLIB_BINARY_DIR})
+        include_directories(${ZLIB_BINARY_DIR})
+        
+        # Copy zconf.h from build directory to source directory after generation
+        # This allows other libraries to find zconf.h in the source directory
+        # zlib is built immediately via add_subdirectory, so this just ensures the file is copied
+        add_custom_target(copy_zconf_h
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${ZLIB_BINARY_DIR}/zconf.h"
+                "${zlib_SOURCE_DIR}/zconf.h"
+            COMMENT "Copying zconf.h to zlib source directory"
+            DEPENDS zlibstatic
+            BYPRODUCTS "${zlib_SOURCE_DIR}/zconf.h"
+        )
+        # Also ensure zconf.h is available in source dir during configuration
+        # by copying it immediately if it exists in binary dir
+        if(EXISTS "${ZLIB_BINARY_DIR}/zconf.h")
+            file(COPY "${ZLIB_BINARY_DIR}/zconf.h" DESTINATION "${zlib_SOURCE_DIR}")
+        endif()
+    endif()
+endif()
+
+# Configure variables for find_package(ZLIB) used by libpng
+if(DEFINED zlib_SOURCE_DIR AND ZLIB_BINARY_DIR)
+    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory")
+    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source")
+    
+    # Set ZLIB_LIBRARY for find_package (used by curl and libpng)
+    # For Visual Studio, library is in Debug/Release subdirectory even with multi-config generators
+    # In Debug, MSVC creates zlibstaticd.lib, in Release it's zlibstatic.lib
+    if(MSVC OR CMAKE_CONFIGURATION_TYPES)
+        # Visual Studio - use Debug path for find_package (target_link_libraries will use correct config)
+        set(ZLIB_LIBRARY "${ZLIB_BINARY_DIR}/Debug/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library")
+        # Also set per-config variables for multi-config generators
+        set(ZLIB_LIBRARY_DEBUG "${ZLIB_BINARY_DIR}/Debug/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library (Debug)")
+        set(ZLIB_LIBRARY_RELEASE "${ZLIB_BINARY_DIR}/Release/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library (Release)")
+        set(ZLIB_LIBRARY_RELWITHDEBINFO "${ZLIB_BINARY_DIR}/RelWithDebInfo/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library (RelWithDebInfo)")
+        set(ZLIB_LIBRARY_MINSIZEREL "${ZLIB_BINARY_DIR}/MinSizeRel/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library (MinSizeRel)")
+    else()
+        # Single-config generator
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            set(ZLIB_LIBRARY "${ZLIB_BINARY_DIR}/Debug/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstaticd${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library")
+        else()
+            set(ZLIB_LIBRARY "${ZLIB_BINARY_DIR}/Release/${CMAKE_STATIC_LIBRARY_PREFIX}zlibstatic${CMAKE_STATIC_LIBRARY_SUFFIX}" CACHE FILEPATH "Path to zlib library")
+        endif()
+    endif()
+endif()
 
 if (OPTION_SYSTEM_FREETYPE)
     find_package(Freetype REQUIRED)
@@ -367,7 +457,6 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb.h")
     set(FETCHCONTENT_BINARY_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-build")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
 endif()
-# Fallback check: some stb distributions don't have a single 'stb.h' umbrella header.
 if (NOT DEFINED FETCHCONTENT_SOURCE_DIR_STB AND EXISTS "${LOCAL_DEPS_ROOT}/stb-src/stb_truetype.h")
     set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
     set(FETCHCONTENT_BINARY_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-build")
@@ -396,7 +485,6 @@ add_subdirectory(ext/bzip)
 add_subdirectory(ext/aes)
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
-   # no filters on android
 else()
     add_subdirectory(ext/gpupixel)
 endif()
@@ -453,7 +541,6 @@ if (PLATFORM_ANDROID)
     set(PLATFORM_FILES ${PLATFORM_FILES} ${ANDROID_BACKEND_FILES})
 
     set(CMAKE_CXX_FLAGS "-Wno-format-security ${CMAKE_CXX_FLAGS}")
-    # set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
 endif()
 
 # Find revision ID and hash of the sourcetree
@@ -545,8 +632,6 @@ endif()
 set(MACOSX_FILES "")
 if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
-elseif(MSVC)
-    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.rc)
 endif()
 
 set(SOURCE_FILES
@@ -623,8 +708,7 @@ if (PLATFORM_ANDROID)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
 elseif (MSVC OR WIN_EMSCRIPTEN)
-    # SDL2 and SDL2_mixer are built from source via FetchContent above
-    # Variables are already set in the unified MSVC/WIN_EMSCRIPTEN section
+    # do nothing
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -636,16 +720,14 @@ else()
     add_executable(${GAME} ${SOURCE_FILES})
 endif()
 
+# zlib is already built before ${GAME} (via add_subdirectory), so no explicit dependency needed
+
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    # Suppress LNK4098 warning about defaultlib conflicts
-    # This happens when linking libraries compiled with different runtime settings
-    # We suppress the warning rather than excluding the library to avoid potential issues
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4098")
 endif()
 
 if(APPLE)
-    # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
         COMMAND mkdir -p akhenaten.iconset
         COMMAND sips -z 16 16    akhenaten_256.png --out akhenaten.iconset/icon_16x16.png
@@ -662,7 +744,6 @@ if(APPLE)
     set_source_files_properties(${PROJECT_SOURCE_DIR}/res/akhenaten.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
-    # setting variables that will populate Info.plist
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.akhenaten")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version" FORCE)
@@ -678,34 +759,24 @@ if(APPLE)
     set(DIRS "")
     set(LIBS "")
 
-    # if SDL2 library is a framework, we need to indicate to CMake
-    # the path to its dependencies. SDL2_LIBRARY contains two parts.
-    # Example: /Library/Frameworks/SDL2.framework;-framework Cocoa
-    # So strip out everything after the ';'
     string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
     if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
     endif()
 
-    # if SDL2_mixer library is a framework, we need to indicate to CMake
-    # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
-    # Install the bundle first
     install(TARGETS ${GAME}
         BUNDLE DESTINATION .
         RUNTIME DESTINATION bin)
     
-    # when installing, "fixup" automatically copies librairies inside the
-    # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\" \"${LIBS}\" \"${DIRS}\")
     ")
 
-    # perform ad-hoc codesigning
     set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
     set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
     install(CODE "
@@ -756,36 +827,64 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-if (OPTION_BUILD_LIBPNG)
-    # Build libpng from source using FetchContent
-    FetchContent_Declare(
-            zlib
-            GIT_REPOSITORY https://github.com/madler/zlib
-            GIT_TAG v1.3.1
-    )
-    FetchContent_MakeAvailable(zlib)
-    include_directories(${ZLIB_INCLUDE_DIR})
-    target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+# Link zlib static library
+# In MSVC Debug builds, zlib creates zlibstaticd.lib, in Release it's zlibstatic.lib
+if(MSVC AND TARGET zlibstatic)
+    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+    if(ZLIB_BINARY_DIR)
+        # Use generator expressions to select the correct library name based on configuration
+        # For Debug: zlibstaticd.lib, for Release/RelWithDebInfo: zlibstatic.lib
+        target_link_libraries(${GAME} 
+            $<$<CONFIG:Debug>:${ZLIB_BINARY_DIR}/Debug/zlibstaticd.lib>
+            $<$<CONFIG:Release>:${ZLIB_BINARY_DIR}/Release/zlibstatic.lib>
+            $<$<CONFIG:RelWithDebInfo>:${ZLIB_BINARY_DIR}/RelWithDebInfo/zlibstatic.lib>
+            $<$<CONFIG:MinSizeRel>:${ZLIB_BINARY_DIR}/MinSizeRel/zlibstatic.lib>
+        )
+        message(STATUS "zlib: Linked statically (MSVC: Debug=zlibstaticd.lib, Release=zlibstatic.lib)")
+    else()
+        # Fallback to target name if binary dir is not available
+        target_link_libraries(${GAME} zlibstatic)
+        message(STATUS "zlib: Linked statically with zlibstatic (fallback)")
+    endif()
+elseif(TARGET zlibstatic)
+    # For non-MSVC, use target name directly (CMake handles configs automatically)
+    target_link_libraries(${GAME} zlibstatic)
+    message(STATUS "zlib: Linked statically with zlibstatic")
+endif()
 
-    FetchContent_Declare(
-            libpng
-            GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-            GIT_TAG v1.6.50
-    )
-    FetchContent_MakeAvailable(libpng)
-    set(PNG_LIBRARIES png_static)
+# Build libpng from source using FetchContent (static library only)
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/libpng-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_LIBPNG "${LOCAL_DEPS_ROOT}/libpng-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_LIBPNG TRUE)
+endif()
+
+# Force static library build for libpng
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(PNG_SHARED OFF CACHE BOOL "" FORCE)
+set(PNG_STATIC ON CACHE BOOL "" FORCE)
+set(PNG_TESTS OFF CACHE BOOL "" FORCE)
+set(PNG_USE_FIND_PACKAGE_ZLIB OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    libpng
+    GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+    GIT_TAG v1.6.50
+)
+FetchContent_MakeAvailable(libpng)
+
+# Link our zlib to libpng
+# zlib is already built before libpng (via add_subdirectory), so no explicit dependency needed
+if(TARGET png_static AND TARGET zlibstatic)
+    target_link_libraries(png_static PRIVATE zlibstatic)
+endif()
+
+# Link libpng static library
+target_link_libraries(${GAME} png_static)
+message(STATUS "libpng: Linked statically with png_static")
+
+if(DEFINED PNG_INCLUDE_DIRS)
     include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${PNG_LIBRARIES})
-elseif (OPTION_SYSTEM_LIBPNG)
-    # Use system libpng
-    find_package(PNG REQUIRED)
-    include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${PNG_LIBRARIES})
-else()
-    # Use bundled ext/png
-    add_subdirectory(ext/png)
-    include_directories(${EXTPNG_INCLUDE_DIR})
-    target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
 endif()
 
 target_link_libraries (${GAME}
@@ -805,8 +904,6 @@ target_link_libraries (${GAME}
 if(MSVC)
     target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
     
-    # libvpx setup: VP8/VP9 video encoding
-    # Automatically download pre-built libraries for Windows
     set(LIBVPX_DEPS_ROOT "${CMAKE_BINARY_DIR}/_deps")
     set(LIBVPX_INSTALL_DIR "${LIBVPX_DEPS_ROOT}/libvpx")
     set(LIBVPX_LIB_DIR "${LIBVPX_INSTALL_DIR}/lib")
@@ -843,9 +940,6 @@ if(MSVC)
             message(STATUS "libvpx: Archive not found, starting download...")
             message(STATUS "libvpx: Target archive: ${LIBVPX_ZIP_FILE}")
             
-            # Try multiple download URLs - using vcpkg artifacts or other sources
-            # Note: Official libvpx doesn't provide pre-built Windows binaries
-            # We'll use a known source that provides pre-built libvpx for Windows
             set(DOWNLOAD_URLS
                 "https://github.com/ShiftMediaProject/libvpx/releases/download/v1.15.1/libvpx_v1.15.1_msvc17.zip"
             )
@@ -991,12 +1085,9 @@ if(MSVC)
     endif()
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
     
-    # Link libcurl with Windows Schannel SSL support
-    # Curl creates CURL::libcurl target via FetchContent_MakeAvailable
     if(TARGET CURL::libcurl)
         target_link_libraries(${GAME} CURL::libcurl)
     else()
-        # Fallback: check if libcurl target exists (without namespace)
         if(TARGET libcurl)
             target_link_libraries(${GAME} libcurl)
         else()

@@ -1,7 +1,7 @@
 // This file is part of CaesarIA.
 #include "zipreader.hpp"
 
-#include "zlib/zlib.h"
+#include <zlib.h>
 #include "lzma/LzmaDec.h"
 #include "bzip/bzlib.h"
 #include "aes/fileenc.h"
