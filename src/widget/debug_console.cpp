@@ -14,10 +14,10 @@
 #include "platform/keyboard_input.h"
 #include "platform/renderer.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/backends/imgui_impl_sdlrenderer2.h"
-#include "imgui/backends/imgui_impl_sdl2.h"
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_sdl2.h"
 #include "dev/debug.h"
 
 #include <iostream>
