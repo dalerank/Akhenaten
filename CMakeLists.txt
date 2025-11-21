@@ -5,10 +5,8 @@ include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_SYSTEM_HARFBUZZ "Use system-provided harfbuzz instead of FetchContent" OFF)
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
 
-message(STATUS "OPTION_SYSTEM_HARFBUZZ: ${OPTION_SYSTEM_HARFBUZZ}")
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
@@ -416,17 +414,24 @@ if(TARGET freetype AND DEFINED freetype_SOURCE_DIR)
     set(CMAKE_PREFIX_PATH "${freetype_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 endif()
 
-if (OPTION_SYSTEM_HARFBUZZ)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(HARFBUZZ REQUIRED harfbuzz)
-else()
-    FetchContent_Declare(
-        harfbuzz
-        GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-        GIT_TAG        ${HARFBUZZ_VERSION}
-    )
-    set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(harfbuzz)
+# Always use harfbuzz from repository via FetchContent (never use system library)
+# Prevent find_package from finding system libraries
+FetchContent_Declare(
+    harfbuzz
+    GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
+    GIT_TAG        ${HARFBUZZ_VERSION}
+)
+set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(harfbuzz)
+
+# Set HarfBuzz variables to force using our version from FetchContent
+# This prevents find_package from finding system libraries
+if(TARGET harfbuzz AND DEFINED harfbuzz_SOURCE_DIR)
+    set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
+    set(HARFBUZZ_INCLUDE_DIRS "${harfbuzz_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+    set(HARFBUZZ_ROOT "${harfbuzz_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${harfbuzz_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 endif()
 
 FetchContent_Declare(
@@ -457,8 +462,6 @@ if (PLATFORM_ANDROID)
     set(IS_RELEASE_VERSION FALSE)
     set(VERSION_REVISION "")
 endif()
-
-
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
 else()
@@ -800,18 +803,15 @@ endif()
 
 include_directories(ext)
 include_directories(src)
-# imgui is now from FetchContent, include directories directly
+
 include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-# Always use freetype from FetchContent
+
 include_directories(${freetype_SOURCE_DIR}/include)
 include_directories(${freetype_SOURCE_DIR}/src)
-if (OPTION_SYSTEM_HARFBUZZ)
-    include_directories(${HARFBUZZ_INCLUDE_DIRS})
-else()
-    include_directories(${harfbuzz_SOURCE_DIR}/src)
-endif()
+# Always use harfbuzz from FetchContent
+include_directories(${harfbuzz_SOURCE_DIR}/src)
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
@@ -882,7 +882,7 @@ target_link_libraries (${GAME}
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
                         freetype
-                        $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
+                        harfbuzz
                         akhenaten::rc
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
