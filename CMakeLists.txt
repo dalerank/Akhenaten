@@ -136,6 +136,7 @@ set(FREETYPE_VERSION "VER-2-13-3")
 set(HARFBUZZ_VERSION "7.3.0")
 set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
 set(LIBPNG_VERSION "v1.6.50")
+set(IMGUI_VERSION "v1.92.2")
 
 #
 # Dependencies and libs
@@ -399,6 +400,22 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stb)
 
+# Use imgui from repository via FetchContent
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI TRUE)
+endif()
+
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG        ${IMGUI_VERSION}
+)
+FetchContent_GetProperties(imgui)
+if(NOT imgui_POPULATED)
+    FetchContent_Populate(imgui)
+endif()
 
 if (PLATFORM_ANDROID)
     set(PROJECT_VERSION_MAJOR 0)
@@ -447,9 +464,16 @@ file(GLOB WINDOW_BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/window/building/*.cpp)
 file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
 file(GLOB EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/editor/*.cpp)
 file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
-file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
-file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
-file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
+# imgui files from FetchContent (directly in project, not as separate library)
+set(IMGUI_FILES
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp
+    ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+)
 file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
 file(GLOB IO_FILES ${PROJECT_SOURCE_DIR}/src/io/*.cpp)
 file(GLOB IO_CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/io/config/*.cpp)
@@ -484,8 +508,6 @@ execute_process(
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
-set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_CPP_FILES} ${IMGUI_BACKEND_FILES})
-
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
     file(GLOB IO_HEADERS ${PROJECT_SOURCE_DIR}/src/io/*.h)
@@ -514,8 +536,6 @@ if(MSVC)
     file(GLOB DEV_HEADERS ${PROJECT_SOURCE_DIR}/src/dev/*.h)
     file(GLOB EDITOR_HEADERS ${PROJECT_SOURCE_DIR}/src/editor/*.h)
     file(GLOB TRANSLATION_HEADERS ${PROJECT_SOURCE_DIR}/src/translation/*.h)
-    file(GLOB IMGUI_HEADERS ${PROJECT_SOURCE_DIR}/ext/imgui/*.h)
-    file(GLOB IMGUI_BACKEND_HEADERS ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.h)
 
     source_group("core" FILES ${CORE_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
@@ -547,7 +567,6 @@ if(MSVC)
     source_group("dev" FILES ${DEV_FILES})
     source_group("editor" FILES ${EDITOR_FILES})
     source_group("translation" FILES ${TRANSLATION_FILES})
-    source_group("imgui" FILES ${IMGUI_FILES})
     source_group("io" FILES ${IO_FILES} {IO_HEADERS})
     source_group("io/gamefiles" FILES ${IO_GAMEFILES_FILES})
     source_group("content" FILES ${CONTENT_FILES})
@@ -746,8 +765,10 @@ endif()
 
 include_directories(ext)
 include_directories(src)
-include_directories(ext/imgui)
-include_directories(ext/imgui/backends)
+# imgui is now from FetchContent, include directories directly
+include_directories(${imgui_SOURCE_DIR})
+include_directories(${imgui_SOURCE_DIR}/backends)
+include_directories(${imgui_SOURCE_DIR}/misc/cpp)
 if (OPTION_SYSTEM_FREETYPE)
     include_directories(${FREETYPE_INCLUDE_DIRS})
 else()
@@ -762,7 +783,6 @@ endif()
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
-    include_directories(ext/imgui/dirent)
     include_directories(ext/bugtrap)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
 endif()
