@@ -5,11 +5,9 @@ include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_SYSTEM_FREETYPE "Use system-provided freetype instead of FetchContent" OFF)
 option(OPTION_SYSTEM_HARFBUZZ "Use system-provided harfbuzz instead of FetchContent" OFF)
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
 
-message(STATUS "OPTION_SYSTEM_FREETYPE: ${OPTION_SYSTEM_FREETYPE}")
 message(STATUS "OPTION_SYSTEM_HARFBUZZ: ${OPTION_SYSTEM_HARFBUZZ}")
 message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
@@ -46,6 +44,10 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
+# Force using zlib from FetchContent, ignore system zlib
+# This prevents find_package(ZLIB) from finding system libraries
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+
 # Dependency versions
 set(SDL2_VERSION "2.32.10")
 set(SDL2_MIXER_VERSION "2.8.0")
@@ -58,6 +60,28 @@ set(HARFBUZZ_VERSION "7.3.0")
 set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
 set(LIBPNG_VERSION "v1.6.50")
 set(IMGUI_VERSION "v1.92.2")
+
+# Function to set ZLIB_LIBRARY based on build configuration
+# Note: We set ZLIB_LIBRARY as INTERNAL to prevent it from appearing in Visual Studio project files
+# The actual linking should use the zlibstatic target, not ZLIB_LIBRARY
+function(set_zlib_library zlib_binary_dir)
+    if(MSVC)
+        # Set library path based on build configuration for find_package
+        # Use INTERNAL to prevent it from appearing in VS project files
+        # For multi-config generators, we can't know the config at configure time,
+        # so we set a reasonable default (Debug for development, Release for production)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            # Default to Debug for development builds or when CMAKE_BUILD_TYPE is not set (multi-config)
+            set(ZLIB_LIBRARY "${zlib_binary_dir}/Debug/zlibstaticd.lib" CACHE INTERNAL "Path to zlib library" FORCE)
+        else()
+            set(ZLIB_LIBRARY "${zlib_binary_dir}/Release/zlibstatic.lib" CACHE INTERNAL "Path to zlib library" FORCE)
+        endif()
+    else()
+        # For other platforms, construct the expected library path
+        set(ZLIB_LIBRARY "${zlib_binary_dir}/libzlibstatic.a" CACHE INTERNAL "Path to zlib library" FORCE)
+    endif()
+    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+endfunction()
 
 #
 # CppTrace
@@ -345,12 +369,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/madler/zlib
     GIT_TAG ${ZLIB_VERSION}
 )
-
-FetchContent_GetProperties(zlib)
-if(NOT zlib_POPULATED)
-    FetchContent_Populate(zlib)
-    add_subdirectory(${zlib_SOURCE_DIR} ${CMAKE_BINARY_DIR}/_deps/zlib-build EXCLUDE_FROM_ALL)
-endif()
+FetchContent_MakeAvailable(zlib)
 
 if(TARGET zlibstatic AND NOT TARGET zlib)
     add_library(zlib ALIAS zlibstatic)
@@ -365,19 +384,36 @@ if(TARGET zlibstatic)
             file(COPY "${ZLIB_BINARY_DIR}/zconf.h" DESTINATION "${zlib_SOURCE_DIR}")
         endif()
     endif()
-    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory")
-    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source")
+    # Set ZLIB variables to force using our version from FetchContent
+    # This prevents find_package(ZLIB) from finding system libraries
+    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+    # Set ZLIB_LIBRARY for find_package(ZLIB) used by libpng
+    # The library file doesn't exist yet during configuration, but find_package needs the path
+    set_zlib_library(${ZLIB_BINARY_DIR})
+    # Mark zlib as found to prevent system search
+    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${zlib_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 endif()
 
-if (OPTION_SYSTEM_FREETYPE)
-    find_package(Freetype REQUIRED)
-else()
-    FetchContent_Declare(
-        freetype
-        GIT_REPOSITORY https://github.com/freetype/freetype.git
-        GIT_TAG        ${FREETYPE_VERSION}
-    )
-    FetchContent_MakeAvailable(freetype)
+# Always use freetype from repository via FetchContent (never use system library)
+# Prevent find_package from finding system libraries
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG        ${FREETYPE_VERSION}
+)
+FetchContent_MakeAvailable(freetype)
+
+# Set Freetype variables to force using our version from FetchContent
+# This prevents find_package(Freetype) from finding system libraries
+if(TARGET freetype AND DEFINED freetype_SOURCE_DIR)
+    set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+    set(FREETYPE_INCLUDE_DIRS "${freetype_SOURCE_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
+    set(FREETYPE_ROOT "${freetype_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${freetype_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 endif()
 
 if (OPTION_SYSTEM_HARFBUZZ)
@@ -412,10 +448,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
     GIT_TAG        ${IMGUI_VERSION}
 )
-FetchContent_GetProperties(imgui)
-if(NOT imgui_POPULATED)
-    FetchContent_Populate(imgui)
-endif()
+FetchContent_MakeAvailable(imgui)
 
 if (PLATFORM_ANDROID)
     set(PROJECT_VERSION_MAJOR 0)
@@ -771,12 +804,9 @@ include_directories(src)
 include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-if (OPTION_SYSTEM_FREETYPE)
-    include_directories(${FREETYPE_INCLUDE_DIRS})
-else()
-    include_directories(${freetype_SOURCE_DIR}/include)
-    include_directories(${freetype_SOURCE_DIR}/src)
-endif()
+# Always use freetype from FetchContent
+include_directories(${freetype_SOURCE_DIR}/include)
+include_directories(${freetype_SOURCE_DIR}/src)
 if (OPTION_SYSTEM_HARFBUZZ)
     include_directories(${HARFBUZZ_INCLUDE_DIRS})
 else()
@@ -794,28 +824,10 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
 endif()
 
 # Link zlib static library
-# In MSVC Debug builds, zlib creates zlibstaticd.lib, in Release it's zlibstatic.lib
-if(MSVC AND TARGET zlibstatic)
-    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-    if(ZLIB_BINARY_DIR)
-        # Use generator expressions to select the correct library name based on configuration
-        # For Debug: zlibstaticd.lib, for Release/RelWithDebInfo: zlibstatic.lib
-        target_link_libraries(${GAME} 
-            $<$<CONFIG:Debug>:${ZLIB_BINARY_DIR}/Debug/zlibstaticd.lib>
-            $<$<CONFIG:Release>:${ZLIB_BINARY_DIR}/Release/zlibstatic.lib>
-            $<$<CONFIG:RelWithDebInfo>:${ZLIB_BINARY_DIR}/RelWithDebInfo/zlibstatic.lib>
-            $<$<CONFIG:MinSizeRel>:${ZLIB_BINARY_DIR}/MinSizeRel/zlibstatic.lib>
-        )
-        message(STATUS "zlib: Linked statically (MSVC: Debug=zlibstaticd.lib, Release=zlibstatic.lib)")
-    else()
-        # Fallback to target name if binary dir is not available
-        target_link_libraries(${GAME} zlibstatic)
-        message(STATUS "zlib: Linked statically with zlibstatic (fallback)")
-    endif()
-elseif(TARGET zlibstatic)
-    # For non-MSVC, use target name directly (CMake handles configs automatically)
+# Use target directly - CMake will handle the correct library file for each configuration
+if(TARGET zlibstatic)
     target_link_libraries(${GAME} zlibstatic)
-    message(STATUS "zlib: Linked statically with zlibstatic")
+    message(STATUS "zlib: Linked statically with zlibstatic (CMake handles Debug/Release automatically)")
 endif()
 
 # Build libpng from source using FetchContent (static library only)
@@ -824,6 +836,21 @@ set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 set(PNG_STATIC ON CACHE BOOL "" FORCE)
 set(PNG_TESTS OFF CACHE BOOL "" FORCE)
 set(PNG_USE_FIND_PACKAGE_ZLIB OFF CACHE BOOL "" FORCE)
+
+# Ensure ZLIB variables are set for find_package(ZLIB) called by libpng
+# ZLIB_LIBRARY is already set after zlib configuration, just ensure other variables are set
+if(TARGET zlibstatic AND (NOT DEFINED ZLIB_INCLUDE_DIR OR NOT DEFINED ZLIB_ROOT))
+    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+    if(ZLIB_BINARY_DIR AND DEFINED zlib_SOURCE_DIR)
+        if(NOT DEFINED ZLIB_INCLUDE_DIR OR ZLIB_INCLUDE_DIR STREQUAL "")
+            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+        endif()
+        if(NOT DEFINED ZLIB_ROOT OR ZLIB_ROOT STREQUAL "")
+            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+        endif()
+        set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+    endif()
+endif()
 
 FetchContent_Declare(
     libpng
@@ -854,7 +881,7 @@ target_link_libraries (${GAME}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
-                        $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
+                        freetype
                         $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
                         akhenaten::rc
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)

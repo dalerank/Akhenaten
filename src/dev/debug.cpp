@@ -7,8 +7,8 @@
 
 #include "graphics/graphics.h"
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 #include "building/monuments.h"
 #include "building/building_entertainment.h"

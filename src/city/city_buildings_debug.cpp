@@ -1,8 +1,8 @@
 #include "city/city_buildings.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "building/building.h"
 #include "building/building_type.h"
 #include "core/bstring.h"

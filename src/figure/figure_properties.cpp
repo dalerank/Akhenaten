@@ -1,8 +1,8 @@
 #include "figure/figure.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "city/city_figures.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_figure_properties);

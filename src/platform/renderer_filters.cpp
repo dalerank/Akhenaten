@@ -1,8 +1,8 @@
 #include "renderer.h"
 
 #include "core/profiler.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "widget/debug_console.h"
 #include "platform/platform.h"
 

@@ -1,8 +1,8 @@
 #include "city_kingdome_relations.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "city/city.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_show_kingdome_properties);
