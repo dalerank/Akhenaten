@@ -425,7 +425,7 @@ if (PLATFORM_ANDROID)
     set(VERSION_REVISION "")
 endif()
 
-add_subdirectory(ext/mujs)
+
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
 else()
@@ -487,6 +487,7 @@ file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
 file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
 file(GLOB BZIP_FILES ${PROJECT_SOURCE_DIR}/src/bzip/*.c)
 file(GLOB LAME_FILES ${PROJECT_SOURCE_DIR}/src/lame/libmp3lame/*.c)
+file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.c)
 
 if (PLATFORM_ANDROID)
     add_definitions(-DANDROID_BUILD=ON)
@@ -636,6 +637,7 @@ set(SOURCE_FILES
     ${LZMA_FILES}
     ${BZIP_FILES}
     ${LAME_FILES}
+    ${MUJS_FILES}
     ${MACOSX_FILES}
     ${CPPTRACE_FILES}
 )
@@ -752,7 +754,7 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
-include_directories(${EXTMUJS_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/lame/include)
 
@@ -850,7 +852,7 @@ target_link_libraries (${GAME}
                             $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
-                        ${EXTMUJS_LIBRARY} ${CPPTRACE_LIBRARY}
+                        ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
                         $<IF:$<BOOL:${OPTION_SYSTEM_FREETYPE}>,${FREETYPE_LIBRARIES},freetype>
                         $<IF:$<BOOL:${OPTION_SYSTEM_HARFBUZZ}>,${HARFBUZZ_LIBRARIES},harfbuzz>
