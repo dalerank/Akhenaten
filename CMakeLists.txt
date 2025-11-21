@@ -46,6 +46,19 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
+# Dependency versions
+set(SDL2_VERSION "2.32.10")
+set(SDL2_MIXER_VERSION "2.8.0")
+set(CPPTRACE_VERSION "v1.0.4")
+set(TRACY_VERSION "v0.10")
+set(CURL_VERSION "curl-8_10_1")
+set(ZLIB_VERSION "v1.3.1")
+set(FREETYPE_VERSION "VER-2-13-3")
+set(HARFBUZZ_VERSION "7.3.0")
+set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
+set(LIBPNG_VERSION "v1.6.50")
+set(IMGUI_VERSION "v1.92.2")
+
 #
 # CppTrace
 #
@@ -124,19 +137,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 else()
     SET(GAME_BUILD_TYPE "Debug")
 endif()
-
-# Dependency versions
-set(SDL2_VERSION "2.32.10")
-set(SDL2_MIXER_VERSION "2.8.0")
-set(CPPTRACE_VERSION "v1.0.4")
-set(TRACY_VERSION "v0.10")
-set(CURL_VERSION "curl-8_10_1")
-set(ZLIB_VERSION "v1.3.1")
-set(FREETYPE_VERSION "VER-2-13-3")
-set(HARFBUZZ_VERSION "7.3.0")
-set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
-set(LIBPNG_VERSION "v1.6.50")
-set(IMGUI_VERSION "v1.92.2")
 
 #
 # Dependencies and libs
