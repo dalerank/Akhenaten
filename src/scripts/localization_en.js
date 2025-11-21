@@ -1099,4 +1099,7 @@ localization_en = [
   { key: "#bandstand_medium", text: "This house was recently passed by a musician. It will have musician access for a long time" }
   { key: "#bandstand_high", text: "This house has musician access" }
   { key: "#bandstand_low", text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
+
+  { key: "#goods_are_finished", text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
+  { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }    
 ]

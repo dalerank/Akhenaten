@@ -1624,8 +1624,8 @@ figure_market_trader = {
 	}
 
 	sounds {
-		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0}
- 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0}
+		goods_are_finished : {sound:"mkt_seller_e01.wav" }
+ 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav" }
 	}
 
  	 category: figure_category_citizen

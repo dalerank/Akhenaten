@@ -364,4 +364,7 @@ localization_ru = [
     { key: "#antelope_hunter_hunting", text: "Антилопы нам не соперники!" }
     { key: "#antelope_hunter_back", text: "Сегодня вечером будут стейки для всех." }    
     { key: "#antelope_hunter_city_is_good", text: "Этот город - хорошее место для жизни." }
+
+    { key:"#goods_are_finished", text: "Мои припасы продались как горячие пирожки! Я возвращаюсь на базар за ещё." }
+    { key:"#we_are_selling_goods", text: "Я стараюсь изо всех сил давать людям то, что они хотят." }   
 ]

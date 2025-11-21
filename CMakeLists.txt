@@ -803,14 +803,11 @@ endif()
 
 include_directories(ext)
 include_directories(src)
-
 include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-
 include_directories(${freetype_SOURCE_DIR}/include)
 include_directories(${freetype_SOURCE_DIR}/src)
-# Always use harfbuzz from FetchContent
 include_directories(${harfbuzz_SOURCE_DIR}/src)
 include_directories(ext/gpupixel/utils)
 
@@ -823,8 +820,6 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-# Link zlib static library
-# Use target directly - CMake will handle the correct library file for each configuration
 if(TARGET zlibstatic)
     target_link_libraries(${GAME} zlibstatic)
     message(STATUS "zlib: Linked statically with zlibstatic (CMake handles Debug/Release automatically)")
