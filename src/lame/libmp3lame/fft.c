@@ -44,7 +44,7 @@
 #include "util.h"
 #include "fft.h"
 
-#include "vector/lame_intrin.h"
+#include "lame_intrin.h"
 
 
 
