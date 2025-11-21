@@ -100,7 +100,7 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
         g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
-    window_city_military_show(b->formation_id);
+    //window_city_military_show(b->formation_id);
 }
 
 void batalion_info_window::window_info_foreground(object_info &c) {
