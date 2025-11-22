@@ -401,7 +401,7 @@ else()
     set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/libzlibstatic.a")
 endif()   
 
-set(ZLIB_INCLUDE_DIR "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+set(ZLIB_INCLUDE_DIR "${ZLIB_INSTALL_DIR}/include" CACHE PATH "Path to zlib include directory" FORCE)
 set(ZLIB_ROOT "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib installation" FORCE)
 set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
 
@@ -413,89 +413,44 @@ set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
 # harfbuzz section begin
 #
 
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
+endif()
+
+# Configure harfbuzz build options before FetchContent_MakeAvailable
+set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
     GIT_TAG        ${HARFBUZZ_VERSION}
 )
-set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
 
-FetchContent_GetProperties(harfbuzz)
-if(NOT harfbuzz_POPULATED)
-    FetchContent_Populate(harfbuzz)
-endif()
+FetchContent_MakeAvailable(harfbuzz)
 
+# Set harfbuzz variables for linking
 set(HARFBUZZ_SOURCE_DIR "${harfbuzz_SOURCE_DIR}")
-set(HARFBUZZ_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/harfbuzz-build")
-set(HARFBUZZ_INSTALL_DIR "${PREBUILT_LIBS_DIR}/harfbuzz")
-set(HARFBUZZ_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
-
-# Create build and install directories
-file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_DIR})
-file(MAKE_DIRECTORY ${HARFBUZZ_INSTALL_DIR})
-
-set(HARFBUZZ_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${HARFBUZZ_INSTALL_DIR}
-    -DBUILD_SHARED_LIBS=OFF
-    -DHB_BUILD_SUBSET=OFF
-    -DCMAKE_BUILD_TYPE=${HARFBUZZ_BUILD_CONFIG}
-)
-
-if(MSVC)
-    # Multi-config generator (Visual Studio)
-    add_custom_target(harfbuzz_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring harfbuzz..."
-        COMMAND ${CMAKE_COMMAND} ${HARFBUZZ_SOURCE_DIR} ${HARFBUZZ_CMAKE_ARGS} -B ${HARFBUZZ_BUILD_DIR} -S ${HARFBUZZ_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz for Debug..."
-        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz for Release..."
-        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR} --config Release
-        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR} --config Release
-        WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
-        COMMENT "Building harfbuzz static library"
-        BYPRODUCTS 
-            ${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib
-        VERBATIM
-    )
-else()
-    # Single-config generator
-    add_custom_target(harfbuzz_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring harfbuzz..."
-        COMMAND ${CMAKE_COMMAND} ${HARFBUZZ_SOURCE_DIR} ${HARFBUZZ_CMAKE_ARGS} -B ${HARFBUZZ_BUILD_DIR} -S ${HARFBUZZ_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz..."
-        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Installing harfbuzz..."
-        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR}
-        WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
-        COMMENT "Building harfbuzz static library"
-        BYPRODUCTS 
-            ${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib
-            ${HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a
-        VERBATIM
-    )
-endif()
-
-if(CMAKE_CONFIGURATION_TYPES)
-    set(HARFBUZZ_LIBRARY_DEBUG "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
-    set(HARFBUZZ_LIBRARY_RELEASE "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
-    set(HARFBUZZ_LIBRARY_RELWITHDEBINFO "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
-    set(HARFBUZZ_LIBRARY_MINSIZEREL "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
-    set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
-else()
-    # Single-config: путь зависит от CMAKE_BUILD_TYPE
-    if(MSVC)
-        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+if(TARGET harfbuzz::harfbuzz)
+    set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz)
+    get_target_property(HARFBUZZ_INCLUDE_DIR_TEMP harfbuzz::harfbuzz INTERFACE_INCLUDE_DIRECTORIES)
+    if(HARFBUZZ_INCLUDE_DIR_TEMP)
+        list(GET HARFBUZZ_INCLUDE_DIR_TEMP 0 HARFBUZZ_INCLUDE_DIR)
     else()
-        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a")
+        set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
     endif()
+else()
+    # Fallback
+    set(HARFBUZZ_LIBRARY harfbuzz)
+    set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
 endif()
 
-set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
-set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
-set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_INCLUDE_DIR}" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
 set(HARFBUZZ_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
 set(HarfBuzz_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source (alternative name)" FORCE)
+set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
 
 #
 # harfbuzz section end
@@ -538,8 +493,7 @@ set(FREETYPE_CMAKE_ARGS
     -DZLIB_ROOT=${ZLIB_ROOT}
     -DZLIB_LIBRARY=${ZLIB_LIBRARY}
     -DHarfBuzz_ROOT=${HARFBUZZ_SOURCE_DIR}
-    -DHarfBuzz_INCLUDE_DIRS=${HARFBUZZ_SOURCE_DIR}/src
-    -DHarfBuzz_LIBRARY=${HARFBUZZ_LIBRARY}
+    -DHarfBuzz_INCLUDE_DIRS=${HARFBUZZ_INCLUDE_DIRS}
 )
 
 if(MSVC)
@@ -555,7 +509,6 @@ if(MSVC)
         COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR} --config Release
         WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
         COMMENT "Building freetype static library"
-        DEPENDS harfbuzz_build
         BYPRODUCTS 
             ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
         VERBATIM
@@ -571,7 +524,6 @@ else()
         COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR}
         WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
         COMMENT "Building freetype static library"
-        DEPENDS harfbuzz_build
         BYPRODUCTS 
             ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
             ${FREETYPE_INSTALL_DIR}/lib/libfreetype.a
@@ -990,21 +942,12 @@ else()
     target_link_libraries(${GAME} ${ZLIB_LIBRARY})
 endif()
 target_include_directories(${GAME} PRIVATE ${ZLIB_INCLUDE_DIR})
-add_dependencies(${GAME} harfbuzz_build libpng_build freetype_build)
+add_dependencies(${GAME} libpng_build freetype_build)
 message(STATUS "zlib: Linked statically with prebuilt library from ${ZLIB_INSTALL_DIR}")
 
-if(CMAKE_CONFIGURATION_TYPES)
-    target_link_libraries(${GAME} 
-        "$<$<CONFIG:Debug>:${HARFBUZZ_LIBRARY_DEBUG}>"
-        "$<$<CONFIG:Release>:${HARFBUZZ_LIBRARY_RELEASE}>"
-        "$<$<CONFIG:RelWithDebInfo>:${HARFBUZZ_LIBRARY_RELWITHDEBINFO}>"
-        "$<$<CONFIG:MinSizeRel>:${HARFBUZZ_LIBRARY_MINSIZEREL}>"
-    )
-else()
-    target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
-endif()
+target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
-message(STATUS "harfbuzz: Linked statically with prebuilt library from ${HARFBUZZ_INSTALL_DIR}")
+message(STATUS "harfbuzz: Linked via FetchContent from ${HARFBUZZ_SOURCE_DIR}")
 
 #
 # libpng section begin
