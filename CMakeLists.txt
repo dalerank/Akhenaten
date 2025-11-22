@@ -28,7 +28,7 @@ endif()
 #
 
 set(GAME akhenaten)
-project(${GAME} CXX)
+project(${GAME} C CXX)
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
 set(GAME_ARCH_64 TRUE)
