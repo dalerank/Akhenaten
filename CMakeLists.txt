@@ -54,28 +54,6 @@ set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
 set(LIBPNG_VERSION "v1.6.50")
 set(IMGUI_VERSION "v1.92.2")
 
-# Function to set ZLIB_LIBRARY based on build configuration
-# Note: We set ZLIB_LIBRARY as INTERNAL to prevent it from appearing in Visual Studio project files
-# The actual linking should use the zlibstatic target, not ZLIB_LIBRARY
-function(set_zlib_library zlib_binary_dir)
-    if(MSVC)
-        # Set library path based on build configuration for find_package
-        # Use INTERNAL to prevent it from appearing in VS project files
-        # For multi-config generators, we can't know the config at configure time,
-        # so we set a reasonable default (Debug for development, Release for production)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
-            # Default to Debug for development builds or when CMAKE_BUILD_TYPE is not set (multi-config)
-            set(ZLIB_LIBRARY "${zlib_binary_dir}/Debug/zlibstaticd.lib" CACHE INTERNAL "Path to zlib library" FORCE)
-        else()
-            set(ZLIB_LIBRARY "${zlib_binary_dir}/Release/zlibstatic.lib" CACHE INTERNAL "Path to zlib library" FORCE)
-        endif()
-    else()
-        # For other platforms, construct the expected library path
-        set(ZLIB_LIBRARY "${zlib_binary_dir}/libzlibstatic.a" CACHE INTERNAL "Path to zlib library" FORCE)
-    endif()
-    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-endfunction()
-
 #
 # CppTrace
 #
@@ -391,22 +369,65 @@ execute_process(
     RESULT_VARIABLE ZLIB_BUILD_RESULT
 )
 
+# Set ZLIB library path - use absolute path to avoid issues with find_package
 if(MSVC)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
-        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/zlibstaticd.lib")
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/zlibstaticd.lib")
     else()
-        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/zlibstatic.lib")
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/zlibstatic.lib")
     endif()
 else()
-    set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/libzlibstatic.a")
+    set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/libzlibstatic.a")
 endif()   
+
+# Convert to absolute path to ensure correct linking
+get_filename_component(ZLIB_LIBRARY "${ZLIB_LIBRARY}" ABSOLUTE)
 
 set(ZLIB_INCLUDE_DIR "${ZLIB_INSTALL_DIR}/include" CACHE PATH "Path to zlib include directory" FORCE)
 set(ZLIB_ROOT "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib installation" FORCE)
 set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
 
+# Set ZLIB_LIBRARIES for compatibility with find_package(ZLIB)
+set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE)
+
 #
 # zlib section end
+#
+
+#
+# freetype section begin (must be before harfbuzz for harfbuzz to use freetype)
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+endif()
+
+# Configure freetype build options before FetchContent_MakeAvailable
+# First build freetype without harfbuzz
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(FT_DISABLE_ZLIB OFF CACHE BOOL "" FORCE)
+set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
+set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "" FORCE)  # Build freetype first without harfbuzz
+
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG        ${FREETYPE_VERSION}
+)
+
+FetchContent_MakeAvailable(freetype)
+set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
+set(FREETYPE_LIBRARY freetype)
+set(FREETYPE_INCLUDE_DIR "${FREETYPE_SOURCE_DIR}/include")
+set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIR}" CACHE INTERNAL "Path to freetype include directory" FORCE)
+
+set(FREETYPE_ROOT "${FREETYPE_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
+set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+
+#
+# freetype section end
 #
 
 #
@@ -422,6 +443,13 @@ endif()
 # Configure harfbuzz build options before FetchContent_MakeAvailable
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+# Set freetype variables for harfbuzz to find
+set(Freetype_ROOT ${FREETYPE_SOURCE_DIR} CACHE PATH "" FORCE)
+set(Freetype_INCLUDE_DIR ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
+set(Freetype_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
+set(Freetype_LIBRARY ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
+# Add freetype to CMAKE_PREFIX_PATH so harfbuzz can find it via find_package
+set(CMAKE_PREFIX_PATH "${FREETYPE_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
 
 FetchContent_Declare(
     harfbuzz
@@ -455,101 +483,6 @@ set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
 #
 # harfbuzz section end
 #
-
-set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
-endif()
-
-FetchContent_Declare(
-    freetype
-    GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG        ${FREETYPE_VERSION}
-)
-
-FetchContent_GetProperties(freetype)
-if(NOT freetype_POPULATED)
-    FetchContent_Populate(freetype)
-endif()
-
-set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
-set(FREETYPE_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/freetype-build")
-set(FREETYPE_INSTALL_DIR "${PREBUILT_LIBS_DIR}/freetype")
-set(FREETYPE_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
-
-# Create build and install directories
-file(MAKE_DIRECTORY ${FREETYPE_BUILD_DIR})
-file(MAKE_DIRECTORY ${FREETYPE_INSTALL_DIR})
-
-set(FREETYPE_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${FREETYPE_INSTALL_DIR}
-    -DBUILD_SHARED_LIBS=OFF
-    -DFT_DISABLE_ZLIB=OFF
-    -DFT_REQUIRE_ZLIB=ON
-    -DFT_REQUIRE_HARFBUZZ=ON
-    -DCMAKE_BUILD_TYPE=${FREETYPE_BUILD_CONFIG}
-    -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
-    -DZLIB_ROOT=${ZLIB_ROOT}
-    -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-    -DHarfBuzz_ROOT=${HARFBUZZ_SOURCE_DIR}
-    -DHarfBuzz_INCLUDE_DIRS=${HARFBUZZ_INCLUDE_DIRS}
-)
-
-if(MSVC)
-    # Multi-config generator (Visual Studio)
-    add_custom_target(freetype_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring freetype..."
-        COMMAND ${CMAKE_COMMAND} ${FREETYPE_SOURCE_DIR} ${FREETYPE_CMAKE_ARGS} -B ${FREETYPE_BUILD_DIR} -S ${FREETYPE_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype for Debug..."
-        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype for Release..."
-        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR} --config Release
-        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR} --config Release
-        WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
-        COMMENT "Building freetype static library"
-        BYPRODUCTS 
-            ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
-        VERBATIM
-    )
-else()
-    # Single-config generator
-    add_custom_target(freetype_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring freetype..."
-        COMMAND ${CMAKE_COMMAND} ${FREETYPE_SOURCE_DIR} ${FREETYPE_CMAKE_ARGS} -B ${FREETYPE_BUILD_DIR} -S ${FREETYPE_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype..."
-        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Installing freetype..."
-        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR}
-        WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
-        COMMENT "Building freetype static library"
-        BYPRODUCTS 
-            ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
-            ${FREETYPE_INSTALL_DIR}/lib/libfreetype.a
-        VERBATIM
-    )
-endif()
-
-if(CMAKE_CONFIGURATION_TYPES)
-    set(FREETYPE_LIBRARY_DEBUG "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-    set(FREETYPE_LIBRARY_RELEASE "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-    set(FREETYPE_LIBRARY_RELWITHDEBINFO "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-    set(FREETYPE_LIBRARY_MINSIZEREL "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-    set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-else()
-    # Single-config: путь зависит от CMAKE_BUILD_TYPE
-    if(MSVC)
-        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
-    else()
-        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/libfreetype.a")
-    endif()
-endif()
-
-set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
-set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INSTALL_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
-set(FREETYPE_ROOT "${FREETYPE_INSTALL_DIR}" CACHE INTERNAL "Path to freetype installation" FORCE)
-set(CMAKE_PREFIX_PATH "${FREETYPE_INSTALL_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 
 FetchContent_Declare(
     stb
@@ -931,23 +864,15 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-if(CMAKE_CONFIGURATION_TYPES)
-    target_link_libraries(${GAME} 
-        "$<$<CONFIG:Debug>:${ZLIB_LIBRARY_DEBUG}>"
-        "$<$<CONFIG:Release>:${ZLIB_LIBRARY_RELEASE}>"
-        "$<$<CONFIG:RelWithDebInfo>:${ZLIB_LIBRARY_RELWITHDEBINFO}>"
-        "$<$<CONFIG:MinSizeRel>:${ZLIB_LIBRARY_MINSIZEREL}>"
-    )
-else()
-    target_link_libraries(${GAME} ${ZLIB_LIBRARY})
-endif()
-target_include_directories(${GAME} PRIVATE ${ZLIB_INCLUDE_DIR})
-add_dependencies(${GAME} freetype_build)
 message(STATUS "zlib: Linked statically with prebuilt library from ${ZLIB_INSTALL_DIR}")
 
+# Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
 target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
 message(STATUS "harfbuzz: Linked via FetchContent from ${HARFBUZZ_SOURCE_DIR}")
+
+set(ZLIB_ROOT ${ZLIB_ROOT} CACHE PATH "" FORCE)
+set(CMAKE_PREFIX_PATH "${ZLIB_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
 
 #
 # libpng section begin
@@ -965,11 +890,6 @@ set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 set(PNG_STATIC ON CACHE BOOL "" FORCE)
 set(PNG_TESTS OFF CACHE BOOL "" FORCE)
 set(PNG_USE_FIND_PACKAGE_ZLIB ON CACHE BOOL "" FORCE)
-
-set(ZLIB_ROOT ${ZLIB_ROOT} CACHE PATH "" FORCE)
-set(ZLIB_INCLUDE_DIR ${ZLIB_INCLUDE_DIR} CACHE PATH "" FORCE)
-set(ZLIB_LIBRARY ${ZLIB_LIBRARY} CACHE FILEPATH "" FORCE)
-set(CMAKE_PREFIX_PATH "${ZLIB_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
 
 FetchContent_Declare(
     libpng
@@ -1014,18 +934,9 @@ target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
 message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
 
-if(CMAKE_CONFIGURATION_TYPES)
-    target_link_libraries(${GAME} 
-        "$<$<CONFIG:Debug>:${FREETYPE_LIBRARY_DEBUG}>"
-        "$<$<CONFIG:Release>:${FREETYPE_LIBRARY_RELEASE}>"
-        "$<$<CONFIG:RelWithDebInfo>:${FREETYPE_LIBRARY_RELWITHDEBINFO}>"
-        "$<$<CONFIG:MinSizeRel>:${FREETYPE_LIBRARY_MINSIZEREL}>"
-    )
-else()
-    target_link_libraries(${GAME} ${FREETYPE_LIBRARY})
-endif()
+target_link_libraries(${GAME} ${FREETYPE_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
-message(STATUS "freetype: Linked statically with prebuilt library from ${FREETYPE_INSTALL_DIR}")
+message(STATUS "freetype: Linked via FetchContent from ${FREETYPE_SOURCE_DIR}")
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY}
@@ -1035,6 +946,7 @@ target_link_libraries (${GAME}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
+                        ${ZLIB_LIBRARY}
                         akhenaten::rc
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 

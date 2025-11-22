@@ -5,6 +5,7 @@
 # Create build and install directories
 file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
 file(MAKE_DIRECTORY ${ZLIB_INSTALL_DIR})
+file(MAKE_DIRECTORY ${ZLIB_INSTALL_DIR}/include)
 
 set(ZLIB_CMAKE_ARGS
     -DCMAKE_INSTALL_PREFIX=${ZLIB_INSTALL_DIR}
@@ -27,7 +28,10 @@ if(ZLIB_IS_MSVC)
         COMMAND ${CMAKE_COMMAND} --install ${ZLIB_BUILD_DIR} --config Debug --prefix ${ZLIB_INSTALL_DIR}
         COMMAND ${CMAKE_COMMAND} --build ${ZLIB_BUILD_DIR} --config Release
         COMMAND ${CMAKE_COMMAND} --install ${ZLIB_BUILD_DIR} --config Release --prefix ${ZLIB_INSTALL_DIR}
-        COMMAND ${CMAKE_COMMAND} -E sleep 1
+        RESULT_VARIABLE BUILD_DEBUG_RESULT
+    )
+
+    execute_process(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/Release/zlibstatic.lib ${ZLIB_INSTALL_DIR}/zlibstatic.lib
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/Debug/zlibstaticd.lib ${ZLIB_INSTALL_DIR}/zlibstaticd.lib
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/zconf.h ${ZLIB_INSTALL_DIR}/include/zconf.h
@@ -36,19 +40,19 @@ if(ZLIB_IS_MSVC)
     )
                
     # Verify installation
-    message(STATUS "zlib: Verifying installation in ${ZLIB_INSTALL_DIR}/lib")
-    if(EXISTS "${ZLIB_INSTALL_DIR}/lib/zlibstatic.lib")
-        message(STATUS "zlib: Found Release library: ${ZLIB_INSTALL_DIR}/lib/zlibstatic.lib")
+    message(STATUS "zlib: Verifying installation in ${ZLIB_INSTALL_DIR}")
+    if(EXISTS "${ZLIB_INSTALL_DIR}/zlibstatic.lib")
+        message(STATUS "zlib: Found Release library: ${ZLIB_INSTALL_DIR}/zlibstatic.lib")
     endif()
     
-    if(EXISTS "${ZLIB_INSTALL_DIR}/lib/zlibstaticd.lib")
-        message(STATUS "zlib: Found Debug library: ${ZLIB_INSTALL_DIR}/lib/zlibstaticd.lib")
+    if(EXISTS "${ZLIB_INSTALL_DIR}/zlibstaticd.lib")
+        message(STATUS "zlib: Found Debug library: ${ZLIB_INSTALL_DIR}/zlibstaticd.lib")
     endif()
 
     if(EXISTS "${ZLIB_INSTALL_DIR}/zlibstatic.lib" OR EXISTS "${ZLIB_INSTALL_DIR}/zlibstaticd.lib")
         message(STATUS "zlib: Installation verified successfully")
     else()
-        message(WARNING "zlib: Library files not found in ${ZLIB_INSTALL_DIR}/lib")
+        message(WARNING "zlib: Library files not found in ${ZLIB_INSTALL_DIR}")
     endif()
 else()
     message(STATUS "Configuring zlib...")
@@ -62,7 +66,15 @@ else()
     execute_process(
         COMMAND ${CMAKE_COMMAND} --build ${ZLIB_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} --install ${ZLIB_BUILD_DIR} --prefix ${ZLIB_INSTALL_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/lib/zlibstatic.a ${ZLIB_INSTALL_DIR}/zlibstatic.a
+        COMMAND ${CMAKE_COMMAND} -E sleep 1
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/libzlibstatic.a ${ZLIB_INSTALL_DIR}/libzlibstatic.a
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/zconf.h ${ZLIB_INSTALL_DIR}/include/zconf.h
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_SOURCE_DIR}/zlib.h ${ZLIB_INSTALL_DIR}/include/zlib.h
+        RESULT_VARIABLE BUILD_RESULT
+    )
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/libzlibstatic.a ${ZLIB_INSTALL_DIR}/libzlibstatic.a
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/zconf.h ${ZLIB_INSTALL_DIR}/include/zconf.h
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_SOURCE_DIR}/zlib.h ${ZLIB_INSTALL_DIR}/include/zlib.h
         RESULT_VARIABLE BUILD_RESULT
