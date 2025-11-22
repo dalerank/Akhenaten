@@ -21,11 +21,13 @@ if(ZLIB_IS_MSVC)
         RESULT_VARIABLE CONFIGURE_RESULT
     )
        
-    message(STATUS "Building zlib for Debug...")
+    message(STATUS "Building zlib for Release/Debug...")
     execute_process(
         COMMAND ${CMAKE_COMMAND} --build ${ZLIB_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} --install ${ZLIB_BUILD_DIR} --config Debug --prefix ${ZLIB_INSTALL_DIR}
         COMMAND ${CMAKE_COMMAND} --build ${ZLIB_BUILD_DIR} --config Release
         COMMAND ${CMAKE_COMMAND} --install ${ZLIB_BUILD_DIR} --config Release --prefix ${ZLIB_INSTALL_DIR}
+        COMMAND ${CMAKE_COMMAND} -E sleep 1
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/Release/zlibstatic.lib ${ZLIB_INSTALL_DIR}/zlibstatic.lib
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/Debug/zlibstaticd.lib ${ZLIB_INSTALL_DIR}/zlibstaticd.lib
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ZLIB_BUILD_DIR}/zconf.h ${ZLIB_INSTALL_DIR}/include/zconf.h

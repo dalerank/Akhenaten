@@ -489,7 +489,7 @@ set(FREETYPE_CMAKE_ARGS
     -DFT_REQUIRE_ZLIB=ON
     -DFT_REQUIRE_HARFBUZZ=ON
     -DCMAKE_BUILD_TYPE=${FREETYPE_BUILD_CONFIG}
-    -DZLIB_INCLUDE_DIR=${ZLIB_SOURCE_DIR}
+    -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
     -DZLIB_ROOT=${ZLIB_ROOT}
     -DZLIB_LIBRARY=${ZLIB_LIBRARY}
     -DHarfBuzz_ROOT=${HARFBUZZ_SOURCE_DIR}
@@ -942,7 +942,7 @@ else()
     target_link_libraries(${GAME} ${ZLIB_LIBRARY})
 endif()
 target_include_directories(${GAME} PRIVATE ${ZLIB_INCLUDE_DIR})
-add_dependencies(${GAME} libpng_build freetype_build)
+add_dependencies(${GAME} freetype_build)
 message(STATUS "zlib: Linked statically with prebuilt library from ${ZLIB_INSTALL_DIR}")
 
 target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
@@ -959,114 +959,60 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/libpng-src/CMakeLists.txt")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_LIBPNG TRUE)
 endif()
 
+# Configure libpng build options before FetchContent_MakeAvailable
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(PNG_SHARED OFF CACHE BOOL "" FORCE)
+set(PNG_STATIC ON CACHE BOOL "" FORCE)
+set(PNG_TESTS OFF CACHE BOOL "" FORCE)
+set(PNG_USE_FIND_PACKAGE_ZLIB ON CACHE BOOL "" FORCE)
+
+set(ZLIB_ROOT ${ZLIB_ROOT} CACHE PATH "" FORCE)
+set(ZLIB_INCLUDE_DIR ${ZLIB_INCLUDE_DIR} CACHE PATH "" FORCE)
+set(ZLIB_LIBRARY ${ZLIB_LIBRARY} CACHE FILEPATH "" FORCE)
+set(CMAKE_PREFIX_PATH "${ZLIB_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
+
 FetchContent_Declare(
     libpng
     GIT_REPOSITORY https://github.com/pnggroup/libpng.git
     GIT_TAG ${LIBPNG_VERSION}
 )
 
-FetchContent_GetProperties(libpng)
-if(NOT libpng_POPULATED)
-    FetchContent_Populate(libpng)
-endif()
+FetchContent_MakeAvailable(libpng)
 
+# Set libpng variables for linking
 set(LIBPNG_SOURCE_DIR "${libpng_SOURCE_DIR}")
-set(LIBPNG_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/libpng-build")
-set(LIBPNG_INSTALL_DIR "${PREBUILT_LIBS_DIR}/libpng")
-set(LIBPNG_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
-
-# Create build and install directories
-file(MAKE_DIRECTORY ${LIBPNG_BUILD_DIR})
-file(MAKE_DIRECTORY ${LIBPNG_INSTALL_DIR})
-
-set(LIBPNG_CMAKE_ARGS
-    -DCMAKE_INSTALL_PREFIX=${LIBPNG_INSTALL_DIR}
-    -DBUILD_SHARED_LIBS=OFF
-    -DPNG_SHARED=OFF
-    -DPNG_STATIC=ON
-    -DPNG_TESTS=OFF
-    -DPNG_USE_FIND_PACKAGE_ZLIB=OFF
-    -DZLIB_INCLUDE_DIR=${ZLIB_SOURCE_DIR}
-    -DZLIB_ROOT=${ZLIB_ROOT}
-    -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-    -DCMAKE_BUILD_TYPE=${LIBPNG_BUILD_CONFIG}
-)
-
-if(MSVC)
-    # Multi-config generator (Visual Studio)
-    add_custom_target(libpng_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring libpng..."
-        COMMAND ${CMAKE_COMMAND} ${LIBPNG_SOURCE_DIR} ${LIBPNG_CMAKE_ARGS} -B ${LIBPNG_BUILD_DIR} -S ${LIBPNG_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng for Debug..."
-        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR} --config Debug
-        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng for Release..."
-        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR} --config Release
-        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR} --config Release
-        WORKING_DIRECTORY ${LIBPNG_BUILD_DIR}
-        COMMENT "Building libpng static library"
-        BYPRODUCTS 
-            ${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib
-            ${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib
-        VERBATIM
-    )
-else()
-    # Single-config generator
-    add_custom_target(libpng_build
-        COMMAND ${CMAKE_COMMAND} -E echo "Configuring libpng..."
-        COMMAND ${CMAKE_COMMAND} ${LIBPNG_SOURCE_DIR} ${LIBPNG_CMAKE_ARGS} -B ${LIBPNG_BUILD_DIR} -S ${LIBPNG_SOURCE_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng..."
-        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Installing libpng..."
-        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR}
-        WORKING_DIRECTORY ${LIBPNG_BUILD_DIR}
-        COMMENT "Building libpng static library"
-        BYPRODUCTS 
-            ${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib
-            ${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib
-            ${LIBPNG_INSTALL_DIR}/lib/libpng16.a
-        VERBATIM
-    )
-endif()
-
-if(CMAKE_CONFIGURATION_TYPES)
-    set(LIBPNG_LIBRARY_DEBUG "${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib")
-    set(LIBPNG_LIBRARY_RELEASE "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
-    set(LIBPNG_LIBRARY_RELWITHDEBINFO "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
-    set(LIBPNG_LIBRARY_MINSIZEREL "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
-    set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
-else()
-    if(MSVC)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
-            set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib")
-        else()
-            set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
-        endif()
+if(TARGET png_static)
+    set(LIBPNG_LIBRARY png_static)
+    get_target_property(LIBPNG_INCLUDE_DIR_TEMP png_static INTERFACE_INCLUDE_DIRECTORIES)
+    if(LIBPNG_INCLUDE_DIR_TEMP)
+        list(GET LIBPNG_INCLUDE_DIR_TEMP 0 LIBPNG_INCLUDE_DIR)
     else()
-        set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16.a")
+        set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
     endif()
+elseif(TARGET png)
+    set(LIBPNG_LIBRARY png)
+    get_target_property(LIBPNG_INCLUDE_DIR_TEMP png INTERFACE_INCLUDE_DIRECTORIES)
+    if(LIBPNG_INCLUDE_DIR_TEMP)
+        list(GET LIBPNG_INCLUDE_DIR_TEMP 0 LIBPNG_INCLUDE_DIR)
+    else()
+        set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
+    endif()
+else()
+    # Fallback
+    set(LIBPNG_LIBRARY png)
+    set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
 endif()
 
-set(LIBPNG_INCLUDE_DIR "${LIBPNG_INSTALL_DIR}/include" CACHE PATH "Path to libpng include directory" FORCE)
-set(PNG_INCLUDE_DIRS "${LIBPNG_INSTALL_DIR}/include" CACHE PATH "Path to libpng include directories" FORCE)
+set(PNG_INCLUDE_DIRS "${LIBPNG_INCLUDE_DIR}" CACHE PATH "Path to libpng include directories" FORCE)
 set(PNG_FOUND TRUE CACHE BOOL "Whether libpng was found" FORCE)
 
 #
 # libpng section end
 #
 
-if(CMAKE_CONFIGURATION_TYPES)
-    target_link_libraries(${GAME} 
-        "$<$<CONFIG:Debug>:${LIBPNG_LIBRARY_DEBUG}>"
-        "$<$<CONFIG:Release>:${LIBPNG_LIBRARY_RELEASE}>"
-        "$<$<CONFIG:RelWithDebInfo>:${LIBPNG_LIBRARY_RELWITHDEBINFO}>"
-        "$<$<CONFIG:MinSizeRel>:${LIBPNG_LIBRARY_MINSIZEREL}>"
-    )
-else()
-    target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
-endif()
+target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
-message(STATUS "libpng: Linked statically with prebuilt library from ${LIBPNG_INSTALL_DIR}")
+message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
 
 if(CMAKE_CONFIGURATION_TYPES)
     target_link_libraries(${GAME} 
