@@ -5260,26 +5260,8 @@ localization_base_en = [
     { group:235, id:8, text: "This city is thoroughly average." }
     { group:235, id:9, text: "This city earns top marks!" }
     { group:235, id:10, text: "One can learn much about human nature at a festival." }
-    { group:236, id:0, text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
-    { group:236, id:1, text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
-    { group:236, id:2, text: "Even the simplest enemy could manage to get through our defenses!" }
-    { group:236, id:3, text: "Unless more workers arrive soon, the city will surely suffer." }
-    { group:236, id:4, text: "The literature is replete with stories of angry gods and their vengeance." }
-    { group:236, id:5, text: "History shows that a city like ours will pay serious consequences for its poor reputation." }
-    { group:236, id:6, text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
-    { group:236, id:7, text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
-    { group:236, id:8, text: "This city is comparable to others I've read about." }
-    { group:236, id:9, text: "This city is the best that history has ever known!" }    
-    { group:238, id:0, text: "People are so concerned about catching the plague that they're neglecting their teeth." }
-    { group:238, id:1, text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
-    { group:238, id:2, text: "The city's defenses are full of gaps. Our enemies could have their way with us." }
-    { group:238, id:3, text: "This city's workforce is like an old man's mouth. So many holes to be filled!" }
-    { group:238, id:4, text: "I'm worried about this city's molars - I mean morals! We need to pay the gods more respect." }
-    { group:238, id:5, text: "Our reputation is rotten. We could be attacked." }
-    { group:238, id:6, text: "I've never seen so many people out of work before!" }
-    { group:238, id:7, text: "I'm bored! I guess I'll brush my teeth again." }
-    { group:238, id:8, text: "This city is okay. Only a few cavities!" }
-    { group:238, id:9, text: "This city has the brightest smile in all of Egypt." }    
+    
+    
     { group:240, id:0, text: "Judging by the number of sick people in this city, I could soon have my hands full!" }
     { group:240, id:1, text: "I'm famished. Before long, I'll be skinnier than a mummy!" }
     { group:240, id:2, text: "The city is not securely wrapped in defenses. An enemy could easily defeat us." }
@@ -5291,21 +5273,7 @@ localization_base_en = [
     { group:240, id:8, text: "I might as will live here. It's about as good as anywhere else." }
     { group:240, id:9, text: "I feel truly sorry for my clients. They aren't around to enjoy this incredible city!" }
     { group:240, id:10, text: "Health seems to be worsening throughout the city." }             
-    { group:246, id:0, text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
-    { group:246, id:1, text: "I'm so hungry, a good meal will buy you any verdict you want." }
-    { group:246, id:2, text: "What woeful defenses! Our enemies could walk right into the city and take over." }
-    { group:246, id:3, text: "I've never seen so many job openings before!" }
-    { group:246, id:4, text: "The gods will find us guilty of neglect if we don't start paying more attention to them." }
-    { group:246, id:5, text: "Our city is judged among the worst in the Kingdom. I dread the execution of our punishment." }
-    { group:246, id:6, text: "Unemployed people have too much time on their hands, and that's dangerous." }
-    { group:246, id:7, text: "This city is guilty of poor entertainment options!" }
-    { group:246, id:8, text: "This city is balanced: nothing too good, but nothing too bad." }
-    { group:246, id:9, text: "I judge this city to be the best." }
-    { group:246, id:10, text: "(not used)" }
-    { group:246, id:11, text: "I hope I will earn a funeral procession when the time comes." }
-    { group:246, id:12, text: "All is quiet in the court. There is no crime here." }
-    { group:246, id:13, text: "I've been trying only petty cases. Nothing too serious!" }
-    { group:246, id:14, text: "I can barely manage my caseload, yet the streets are still unsafe." }
+    
     { group:247, id:0, text: "My painting and plastering skills are needed at the monument!" }
     { group:247, id:1, text: "I capture the stories of Egypt on the walls of the royal tombs." }
     { group:248, id:0, text: "Gold should be for the living, not the dead!" }

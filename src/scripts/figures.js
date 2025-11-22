@@ -680,17 +680,17 @@ figure_academy_scriber {
 	}
 
 	sounds {
-		scribe_these_festivals { sound: "scribe_e01.wav" } 
-		scribe_plague_could_break_out { sound: "scribe_g01.wav" } 
-		scribe_no_food_in_city { sound: "scribe_g02.wav" } 
-		scribe_defenses_are_weak { sound: "scribe_g03.wav" } 
-		scribe_need_more_workers { sound: "scribe_g04.wav" } 
-		scribe_gods_are_angry { sound: "scribe_g05.wav" } 
-		scribe_reputation_is_low { sound: "scribe_g06.wav" } 
-		scribe_high_unemployment { sound: "scribe_g07.wav" } 
-		scribe_low_entertainment { sound: "scribe_g08.wav" } 
-		scribe_city_is_ok { sound: "scribe_g09.wav" } 
-		scribe_city_is_amazing { sound: "scribe_g10.wav" } 
+		scriber_dicease_can_start { sound: "scribe_e01.wav" } 
+		scriber_plague_could_break_out { sound: "scribe_g01.wav" } 
+		scriber_no_food_in_city { sound: "scribe_g02.wav" } 
+		scriber_defenses_are_weak { sound: "scribe_g03.wav" } 
+		scriber_need_more_workers { sound: "scribe_g04.wav" } 
+		scriber_gods_are_angry { sound: "scribe_g05.wav" } 
+		scriber_reputation_is_low { sound: "scribe_g06.wav" } 
+		scriber_high_unemployment { sound: "scribe_g07.wav" } 
+		scriber_low_entertainment { sound: "scribe_g08.wav" } 
+		scriber_city_is_ok { sound: "scribe_g09.wav" } 
+		scriber_city_is_amazing { sound: "scribe_g10.wav" } 
 	}
 
 	category : figure_category_citizen
