@@ -47,7 +47,7 @@ public:
     short progress() const { return runtime_data().progress; }
     short progress_max() const { return runtime_data().progress_max; }
 
-    void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress);
+    void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int progress);
     void add_tiles();
     static int get_crops_image(e_building_type type, int growth);
     static int get_farm_image(e_building_type type, tile2i tile);
