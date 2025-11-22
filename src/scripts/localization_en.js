@@ -1102,4 +1102,42 @@ localization_en = [
 
   { key: "#goods_are_finished", text: "My supplies sold like hot cakes! I'm going back to the Bazaar for more." }
   { key: "#we_are_selling_goods", text: "I do my best to give the people what they want." }    
+
+  { key: "#scriber_dicease_can_start", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
+  { key: "#scriber_no_food_in_city", text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
+  { key: "#scriber_defenses_are_weak", text: "Even the simplest enemy could manage to get through our defenses!" }
+  { key: "#scriber_need_more_workers", text: "Unless more workers arrive soon, the city will surely suffer." }
+  { key: "#scriber_gods_are_angry", text: "The literature is replete with stories of angry gods and their vengeance." }
+  { key: "#scriber_reputation_is_low", text: "History shows that a city like ours will pay serious consequences for its poor reputation." }
+  { key: "#scriber_much_unemployments", text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
+  { key: "#scriber_low_entertainment", text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
+  { key: "#scriber_city_is_ok", text: "This city is comparable to others I've read about." }
+  { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" } 
+  
+  { key: "#dentist_concerned_about_plague", text: "People are so concerned about catching the plague that they're neglecting their teeth." }
+  { key: "#dentist_no_food_in_city", text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
+  { key: "#dentist_defenses_are_weak", text: "The city's defenses are full of gaps. Our enemies could have their way with us." }
+  { key: "#dentist_need_more_workers", text: "This city's workforce is like an old man's mouth. So many holes to be filled!" }
+  { key: "#dentist_gods_are_angry", text: "I'm worried about this city's molars - I mean morals! We need to pay the gods more respect." }
+  { key: "#dentist_reputation_is_low", text: "Our reputation is rotten. We could be attacked." }
+  { key: "#dentist_much_unemployments", text: "I've never seen so many people out of work before!" }
+  { key: "#dentist_low_entertainment", text: "I'm bored! I guess I'll brush my teeth again." }
+  { key: "#dentist_city_is_ok", text: "This city is okay. Only a few cavities!" }
+  { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }    
+
+  { key: "#magistrate_i_hope_we_are_ready", text: "Health conditions in this city are criminal. Plague is the punishment that fits the crime." }
+  { key: "#magistrate_no_food_in_city", text: "I'm so hungry, a good meal will buy you any verdict you want." }
+  { key: "#magistrate_city_not_safety", text: "What woeful defenses! Our enemies could walk right into the city and take over." }
+  { key: "#magistrate_need_workers", text: "I've never seen so many job openings before!" }
+  { key: "#magistrate_gods_are_angry", text: "The gods will find us guilty of neglect if we don't start paying more attention to them." }
+  { key: "#magistrate_city_bad_reputation", text: "Our city is judged among the worst in the Kingdom. I dread the execution of our punishment." }
+  { key: "#magistrate_much_unemployments", text: "Unemployed people have too much time on their hands, and that's dangerous." }
+  { key: "#magistrate_no_entertainment_need", text: "This city is guilty of poor entertainment options!" }
+  { key: "#magistrate_city_not_bad", text: "This city is balanced: nothing too good, but nothing too bad." }
+  { key: "#magistrate_city_is_amazing", text: "I judge this city to be the best." }
+  { key: "#magistrate_not_used", text: "(not used)" }
+  { key: "#magistrate_need_embalmers", text: "I hope I will earn a funeral procession when the time comes." }
+  { key: "#magistrate_courthouse_in_peace", text: "All is quiet in the court. There is no crime here." }
+  { key: "#magistrate_i_have_only_minor_cases", text: "I've been trying only petty cases. Nothing too serious!" }
+  { key: "#magistrate_i_am_overwhelmed", text: "I can barely manage my caseload, yet the streets are still unsafe." }
 ]
