@@ -15,14 +15,17 @@ set(SOURCES_LIST
      ${UTILS_FILES}	 
 )
 
-if (MSVC)
-
-elseif()
-  add_compile_definitions("-Wno-absolute-value")
-endif()
-
 add_library(${PROJECT_NAME} STATIC ${SOURCES_LIST})
 include_directories(${PROJECT_SOURCE_DIR}/core)
+
+if (MSVC)
+    # Suppress warning C4005: macro redefinition
+    target_compile_options(${PROJECT_NAME} PRIVATE /wd4005)
+else()
+  add_compile_definitions("-Wno-absolute-value")
+  # Suppress warning about macro redefinition
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-macro-redefined)
+endif()
 
 if (WIN32 OR UNIX OR APPLE)
     target_compile_definitions(${PROJECT_NAME} PUBLIC GPUPIXEL_GL_SHADER)
