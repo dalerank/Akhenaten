@@ -25,12 +25,12 @@ namespace ui {
 
         struct feature_t {
             int original_value;
-            int new_value;
+            bool new_value;
             xstring text;
             bool volatile_value = false;
             std::function<void(int, int)> toggle_action;
-            std::function<int()> change_action;
-            std::function<int()> get_value;
+            std::function<bool()> change_action;
+            std::function<bool()> get_value;
 
             bool is_changed() const { return new_value != original_value; }
         };
@@ -56,8 +56,8 @@ namespace ui {
         bool apply_changed_configs();
         void cancel_values();
         void toggle_resource(e_resource resource);
-        int config_change_basic(feature_t &alias, const xstring feature);
-        int config_change_string_language(const game_language &lang);
+        bool config_change_basic(feature_t &alias, const xstring feature);
+        bool config_change_string_language(const game_language &lang);
         void init(std::function<void()> callback);
 
         static void show(std::function<void()> callback);

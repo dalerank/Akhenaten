@@ -37,19 +37,19 @@ void figure_fishing_point::figure_action() {
     }
 
     switch (action_state()) {
-    case FIGURE_ACTION_196_FISHPOINT_BUBLES:
+    case ACTION_196_FISHPOINT_BUBLES:
         if (animation_finished) {
             d.current_step++;
             if (d.current_step > d.max_step) {
                 d.current_step = 0;
-                advance_action(FIGURE_ACTION_197_FISHPOINT_JUMP);
+                advance_action(ACTION_197_FISHPOINT_JUMP);
             }
         }
         break;
 
-    case FIGURE_ACTION_197_FISHPOINT_JUMP:
+    case ACTION_197_FISHPOINT_JUMP:
         if (animation_finished) {
-            advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
+            advance_action(ACTION_196_FISHPOINT_BUBLES);
             d.max_step = 5 + rand() % 10;
         }
         break;
@@ -59,11 +59,11 @@ void figure_fishing_point::figure_action() {
 void figure_fishing_point::update_animation() {
     xstring animkey = animkeys().bubbles;
     switch (action_state()) {
-    case FIGURE_ACTION_196_FISHPOINT_BUBLES:
+    case ACTION_196_FISHPOINT_BUBLES:
         animkey = animkeys().bubbles;
         break;
 
-    case FIGURE_ACTION_197_FISHPOINT_JUMP:
+    case ACTION_197_FISHPOINT_JUMP:
         animkey = animkeys().point;
         break;
     }
@@ -84,7 +84,7 @@ figure *figure_fishing_point::create(tile2i tile) {
     figure* fish = figure_create(FIGURE_FISHING_POINT, tile, DIR_0_TOP_RIGHT);
     fish->animctx.frame = random_byte() & 0x1f;
     fish->progress_on_tile = random_byte() & 7;
-    fish->advance_action(FIGURE_ACTION_196_FISHPOINT_BUBLES);
+    fish->advance_action(ACTION_196_FISHPOINT_BUBLES);
     fish->set_cross_country_direction(fish->cc_coords.x, fish->cc_coords.y, 15 * fish->destination_tile.x(), 15 * fish->destination_tile.y(), 0);
     fish->image_set_animation("point");
     return fish;

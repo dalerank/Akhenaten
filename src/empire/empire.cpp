@@ -7,7 +7,6 @@
 #include "empire/empire_traders.h"
 #include "city/buildings.h"
 #include "city/city_message.h"
-#include "city/trade.h"
 #include "city/city.h"
 #include "city/city_population.h"
 #include "scenario/map.h"
@@ -25,6 +24,7 @@
 #include <iostream>
 #include <algorithm>
 
+//empire_t ANK_VARIABLE_N(g_empire, "empire");
 empire_t g_empire;
 
 #ifndef _WIN32
@@ -44,7 +44,7 @@ declare_console_command_p(save_empire_routes) {
     sroutesdata.append("var empire_routes = [\n");
 
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
-        const map_route_object& obj = empire_get_route_object(id);
+        const map_route_object& obj = g_empire.get_route_object(id);
         if (!obj.in_use) {
             continue;
         }
@@ -98,6 +98,8 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
             }
 
             city_arch.r(*city);
+
+            g_empire.set_trade_route_type(city->route_id, city->is_sea_trade);
         });
     });
 }
@@ -180,7 +182,7 @@ void empire_t::expand() {
         } else {
             continue;
         }
-        empire_object_set_expanded(city.empire_object_id, city.type);
+        g_empire.object_set_expanded(city.empire_object_id, city.type);
     }
 }
 
@@ -260,8 +262,6 @@ void empire_t::generate_traders() {
         }
 
         if (g_city.generate_trader_from(city)) {
-            int lookup_id = std::distance(cities, &city);
-            g_empire_traders.create_trader(city.route_id, lookup_id);
             break;
         }
     }
@@ -438,8 +438,9 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;
         iob->bind_u8(city.in_use);
-        iob->bind____skip(1);
-        iob->bind(BIND_SIGNATURE_UINT8, &city.type);
+        iob->bind_u8(city.max_traders);
+        iob->bind_u8((uint8_t&)city.type);
+
         iob->bind(BIND_SIGNATURE_UINT8, &city.name_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.route_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.is_open);
@@ -465,6 +466,10 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         }
         
         iob->bind____skip(10);
+
+        if (iob->is_read_access()) {
+            city.check_attributes();
+        }
     }
 });
 

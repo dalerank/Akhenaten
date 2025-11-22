@@ -19,29 +19,27 @@ void figure_herbalist::figure_action() {
     //    building *b = building_get(building_id);
     switch (action_state()) {
     default:
-        advance_action(ACTION_11_RETURNING_FROM_PATROL);
+        advance_action(ACTION_63_HERBALIST_RETURNING);
         break;
 
     case FIGURE_ACTION_149_CORPSE:
         break;
 
-    case FIGURE_ACTION_60_HERBALIST_CREATED:
-        advance_action(ACTION_10_GOING);
+    case ACTION_60_HERBALIST_CREATED:
+        advance_action(ACTION_10_HERBALIST_GOING);
         break;
 
-    case FIGURE_ACTION_61_HERBALIST_ENTERING_EXITING:
+    case ACTION_61_HERBALIST_ENTERING_EXITING:
     case 9:
         do_enterbuilding(true, home());
         break;
 
-    case ACTION_10_GOING:
-    case FIGURE_ACTION_62_HERBALIST_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+    case ACTION_62_HERBALIST_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_63_HERBALIST_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_FROM_PATROL:
-    case FIGURE_ACTION_63_HERBALIST_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_HERBALIST_ENTERING_EXITING);
+    case ACTION_63_HERBALIST_RETURNING:
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_61_HERBALIST_ENTERING_EXITING);
         break;
     }
 }

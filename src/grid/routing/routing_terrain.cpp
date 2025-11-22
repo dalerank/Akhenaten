@@ -230,7 +230,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
             return NONCITIZEN_4_GATEHOUSE;
         else if (terrain & TERRAIN_ROAD)
             return NONCITIZEN_0_PASSABLE;
-        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE))
+        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_MARSHLAND))
             return NONCITIZEN_2_CLEARABLE;
         else if (terrain & TERRAIN_BUILDING)
             return get_land_type_noncitizen(grid_offset);
@@ -246,7 +246,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
     case ROUTING_TYPE_AMPHIBIA:
         if (terrain & TERRAIN_GATEHOUSE)
             return AMPHIBIA_1_BUILDING;
-        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL))
+        else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_CANAL | TERRAIN_MARSHLAND))
             return AMPHIBIA_0_PASSABLE;
         else if (terrain & TERRAIN_ROAD)
             return AMPHIBIA_0_PASSABLE;

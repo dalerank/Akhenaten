@@ -1,8 +1,8 @@
 #include "city/sound.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "city/city.h"
 #include "game/game.h"
 #include "sound/sound.h"

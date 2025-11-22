@@ -15,4 +15,5 @@ struct batalion_info_window : public building_info_window_t<batalion_info_window
 
     void update_describe_layout(object_info &c);
     void change_layout(e_formation_layout new_layout);
+    void update_layout();
 };

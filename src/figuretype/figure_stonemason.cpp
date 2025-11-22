@@ -98,6 +98,35 @@ void figure_stonemason::on_destroy() {
     }
 }
 
+sound_key figure_stonemason::phrase_key() const {
+    switch (action_state()) {
+    case FIGURE_ACTION_10_MASON_CREATED:
+    case FIGURE_ACTION_30_MASON_CREATED_ROAMING:
+        return "stonemason_ready";
+        
+    case FIGURE_ACTION_11_MASON_GOING:
+    case FIGURE_ACTION_31_MASON_GOING_TO_STATUE:
+        return "stonemason_going_to_work";
+        
+    case FIGURE_ACTION_14_MASON_WORK_GROUND:
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_GROUND:
+        return "stonemason_working_ground";
+        
+    case FIGURE_ACTION_15_MASON_WORK_WALL:
+    case FIGURE_ACTION_14_MASON_WORK_STATUE_WALL:
+        return "stonemason_working_wall";
+        
+    case FIGURE_ACTION_16_MASON_RETURN_HOME:
+        return "stonemason_work_complete";
+        
+    case FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE:
+    case FIGURE_ACTION_18_MASON_RANDOM_TILE:
+        return "stonemason_looking_for_work";
+    }
+
+    return "stonemason_ready";
+}
+
 void figure_stonemason::update_animation() {
     figure_impl::update_animation();
 

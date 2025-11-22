@@ -1,13 +1,11 @@
 #include "ornaments.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "building/building_dock.h"
 #include "building/building_granary.h"
 #include "building/building_workshop.h"
 #include "building/building_farm.h"
 #include "building/monuments.h"
-#include "building/building_animation.h"
 #include "building/monument_mastaba.h"
 #include "city/buildings.h"
 #include "city/city_floods.h"
@@ -42,7 +40,7 @@ void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile
         base_id = map_image_at(grid_offset);
     }
 
-    int animation_offset = building_animation_offset(b, base_id, grid_offset, max_frames, duration);
+    int animation_offset = b->animation_offset(base_id, grid_offset, max_frames, duration);
     if (animation_offset == 0) {
         return;
     }

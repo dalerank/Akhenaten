@@ -31,7 +31,7 @@ void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
         g_city.migration.nobles_leave_city(ev.num_people);
     }
 
-    em->advance_action(FIGURE_ACTION_4_EMIGRANT_CREATED);
+    em->advance_action(ACTION_4_EMIGRANT_CREATED);
     em->base.wait_ticks = 0;
     em->runtime_data().migrant_num_people = ev.num_people;
 }
@@ -44,31 +44,30 @@ void figure_emigrant::debug_show_properties() {
 void figure_emigrant::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Emigrant");
     switch (action_state()) {
-    case FIGURE_ACTION_4_EMIGRANT_CREATED:
+    case ACTION_4_EMIGRANT_CREATED:
         base.animctx.frame = 0;
         base.wait_ticks++;
         if (base.wait_ticks >= 5) {
-            advance_action(FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE);
+            advance_action(ACTION_5_EMIGRANT_EXITING_HOUSE);
         }
         break;
 
-    case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
-        do_exitbuilding(false, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+    case ACTION_5_EMIGRANT_EXITING_HOUSE:
+        do_exitbuilding(false, ACTION_6_EMIGRANT_LEAVING);
         break;
 
     case ACTION_16_EMIGRANT_RANDOM:
         base.roam_wander_freely = false;
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_6_EMIGRANT_LEAVING, FIGURE_ACTION_6_EMIGRANT_LEAVING);
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_6_EMIGRANT_LEAVING, ACTION_6_EMIGRANT_LEAVING);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             base.state = FIGURE_STATE_ALIVE;
             base.destination_tile = random_around_point(tile(), tile(), /*step*/2, /*bias*/4, /*max_dist*/8);
             base.direction = DIR_0_TOP_RIGHT;
-            advance_action(FIGURE_ACTION_6_EMIGRANT_LEAVING);
+            advance_action(ACTION_6_EMIGRANT_LEAVING);
         }
         break;
 
-    case FIGURE_ACTION_6_EMIGRANT_LEAVING:
-    case 10:
+    case ACTION_6_EMIGRANT_LEAVING:
         base.wait_ticks--;
         if (base.wait_ticks > 0) {
             base.animctx.frame = 0;
@@ -101,8 +100,8 @@ void figure_emigrant::update_animation() {
 
     int dir = base.figure_image_direction();
     switch (action_state()) {
-    case FIGURE_ACTION_2_EMIGRANT_ARRIVING:
-    case FIGURE_ACTION_6_EMIGRANT_LEAVING:
+    case ACTION_2_EMIGRANT_ARRIVING:
+    case ACTION_6_EMIGRANT_LEAVING:
         base.cart_image_id = anim("cart").first_img() + dir;
         base.figure_image_set_cart_offset((dir + 4) % 8);
         break;
@@ -115,16 +114,16 @@ figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
 
 sound_key figure_emigrant::phrase_key() const {
     switch (g_city.sentiment.low_mood_cause) {
-    case LOW_MOOD_NO_JOBS: return "no_job_in_city";
-    case LOW_MOOD_NO_FOOD: return "no_food_in_city";
-    case LOW_MOOD_HIGH_TAXES: return "tax_too_high";
-    case LOW_MOOD_LOW_WAGES: return "salary_too_low";
+    case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
+    case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
+    case LOW_MOOD_HIGH_TAXES: return "emigrant_tax_too_high";
+    case LOW_MOOD_LOW_WAGES: return "emigrant_salary_too_low";
     }
 
     building *b = destination();
     if (!b || !b->id) {
-        return "no_house_for_me";
+        return "emigrant_no_house_for_me";
     }
 
-    return  "all_good_in_city";
+    return "emigrant_all_good_in_city";
 }

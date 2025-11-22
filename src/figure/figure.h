@@ -50,7 +50,12 @@ class figure_emigrant;
 class figure_homeless;
 class figure_festival_guy;
 class figure_ostrich;
+class figure_antelope;
+class figure_hippo;
 class figure_animal;
+class figure_ballista;
+class figure_market_buyer;
+class figure_bricklayer;
 
 struct animation_t;
 struct figure_static_params;
@@ -99,6 +104,7 @@ enum e_figure_flag {
     e_figure_flag_enemy = 1 << 0,
     e_figure_flag_friendly = 1 << 1,
     e_figure_flag_soldier = 1 << 2,
+    e_figure_flag_criminal = 1 << 3,
 };
 
 class figure {
@@ -183,17 +189,14 @@ public:
     uint8_t wait_ticks_missile;
     vec2i cart_offset;
 
-    uint16_t name;
+    bstring32 name;
     uint8_t terrain_usage;
     e_move_type allow_move_type;
     uint8_t height_adjusted_ticks;
     uint8_t current_height;
     uint8_t target_height;
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-    uint8_t phrase_sequence_exact;
-    textid phrase;
     xstring phrase_key;
-    uint8_t phrase_sequence_city;
     figure_id target_figure_id;
     short targeted_by_figure_id;
     //unsigned short created_sequence;
@@ -234,7 +237,12 @@ public:
     ALLOW_SMART_CAST_FIGURE(festival_guy)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
+    ALLOW_SMART_CAST_FIGURE(hippo)
+    ALLOW_SMART_CAST_FIGURE(antelope)
     ALLOW_SMART_CAST_FIGURE(animal)
+    ALLOW_SMART_CAST_FIGURE(ballista)
+    ALLOW_SMART_CAST_FIGURE(market_buyer)
+    ALLOW_SMART_CAST_FIGURE(bricklayer)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -247,14 +255,14 @@ public:
     bool in_roam_history(int goffset);
     void add_roam_history(int goffset);
 
-    void apply_damage(int hit_dmg);
+    void apply_damage(int hit_dmg, figure_id attaker_id);
 
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
+    inline bool is_criminal() const { return !!(flags & e_figure_flag_criminal); }
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
     inline bool is_soldier() const { return !!(flags & e_figure_flag_soldier); }
     bool is_herd();
-    bool is_attacking_native(); 
     bool is_citizen();          
     bool is_non_citizen();
     bool is_fighting_friendly(); 
@@ -371,7 +379,7 @@ public:
     // actions.c
     void action_perform();
     void advance_action(short next_action);
-    bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_2_ROAMERS_RETURNING);
+    bool do_roam(int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = ACTION_126_ROAMER_RETURNING);
     bool do_goto(tile2i dest, int terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_gotobuilding(building* dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
     bool do_returnhome(e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1);
@@ -379,18 +387,6 @@ public:
     bool do_enterbuilding(bool invisible, building* b, short NEXT_ACTION = -1, short FAIL_ACTION = -1);
 
     void editor_flag_action();
-    void noble_action();
-    void indigenous_native_action();
-    void enemy_camel_action();
-    void enemy_elephant_action();
-    void enemy_chariot_action();
-    void enemy49_fast_sword_action();
-    void enemy50_sword_action();
-    void enemy52_mounted_archer_action();
-    void enemy53_axe_action();
-    void enemy_gladiator_action();
-    void enemy_kingdome_soldier_action();
-    void ballista_action();
     void hippodrome_horse_action();
 
     nearby_result is_nearby(int category, int max_distance = 10000, bool gang_on = true, std::function<bool(figure *)> avoid = [] (auto f) { return false; });
@@ -403,10 +399,6 @@ public:
     int trader_total_sold();
 
     int target_is_alive();
-
-    void enemy_marching(formation* m);
-    void enemy_fighting(formation* m);
-    void enemy_action(formation* m);
     int get_direction();
     int get_missile_direction(const formation* m);
 
@@ -427,7 +419,7 @@ public:
 
     // phrase.c
     void figure_phrase_determine();
-    int figure_phrase_play();
+    int figure_play_phrase_file();
 
     // service.c
     int figure_service_provide_coverage();
@@ -514,16 +506,15 @@ public:
     virtual void figure_draw(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
-    virtual figure_phrase_t phrase() const { return { FIGURE_NONE, "" }; }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
+    virtual sound_key default_phrase_key() const;
     virtual int provide_service() { return 0; }
     virtual bool play_die_sound() { return false; }
     virtual void update_animation();
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
-    virtual int y_correction(int y) const { return y; }
     virtual void cart_image_update() { base.cart_image_update(); }
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
@@ -538,7 +529,7 @@ public:
     virtual bool is_home(const building *b) const { return base.home_building_id > 0 && base.home_building_id == b->id; }
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
     virtual void formation_reset_to_initial(const formation *m) {}
-    virtual void apply_damage(int hit_dmg) { base.damage += hit_dmg; }
+    virtual void apply_damage(int hit_dmg, figure_id attaker_id) { base.damage += hit_dmg; }
 
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
@@ -570,7 +561,12 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_guy)
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
+    ALLOW_SMART_CAST_FIGURE_I(antelope)
+    ALLOW_SMART_CAST_FIGURE_I(hippo)
     ALLOW_SMART_CAST_FIGURE_I(animal)
+    ALLOW_SMART_CAST_FIGURE_I(ballista)
+    ALLOW_SMART_CAST_FIGURE_I(market_buyer)
+    ALLOW_SMART_CAST_FIGURE_I(bricklayer)
 
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
@@ -653,7 +649,12 @@ GENERATE_SMART_CAST_FIGURE(missile)
 GENERATE_SMART_CAST_FIGURE(fireman)
 GENERATE_SMART_CAST_FIGURE(festival_guy)
 GENERATE_SMART_CAST_FIGURE(ostrich)
+GENERATE_SMART_CAST_FIGURE(antelope)
+GENERATE_SMART_CAST_FIGURE(hippo)
 GENERATE_SMART_CAST_FIGURE(animal)
+GENERATE_SMART_CAST_FIGURE(ballista)
+GENERATE_SMART_CAST_FIGURE(market_buyer)
+GENERATE_SMART_CAST_FIGURE(bricklayer)
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *b) {

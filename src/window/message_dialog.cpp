@@ -387,7 +387,7 @@ static void draw_subtitle(const lang_message& msg) {
     auto &data = g_message_dialog;
     if (msg.subtitle.pos.x && !msg.subtitle.text.empty()) {
         int width = 16 * msg.size.x - 16 - msg.subtitle.pos.x;
-        int height = text_draw_multiline(msg.subtitle.text, data.pos.x + msg.subtitle.pos.x, data.pos.y + msg.subtitle.pos.y, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+        int height = text_draw_multiline(msg.subtitle.text, data.pos + msg.subtitle.pos, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
         if (data.pos.y + msg.subtitle.pos.y + height > data.y_text)
             data.y_text = data.pos.y + msg.subtitle.pos.y + height;

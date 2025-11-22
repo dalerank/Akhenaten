@@ -81,6 +81,7 @@ struct game_t {
     void update_tick(int simtick);
 
     void advance_day();
+    void advance_week();
     void advance_month();
     void advance_year();
 

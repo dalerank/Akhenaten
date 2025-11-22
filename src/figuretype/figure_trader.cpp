@@ -1,7 +1,7 @@
 #include "figure_trader.h"
 
 #include "core/calc.h"
-#include "city/trade.h"
+#include "city/city_trade.h"
 #include "empire/empire_map.h"
 #include "empire/empire.h"
 #include "game/game.h"
@@ -14,7 +14,7 @@
 #include "graphics/elements/lang_text.h"
 #include "empire/trader_handler.h"
 
-bool figure_trader::can_buy(building* b, empire_city_handle city) {
+bool figure_trader::can_buy(building* b, empire_city_handle city) const {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
@@ -39,7 +39,7 @@ bool figure_trader::can_buy(building* b, empire_city_handle city) {
     return false;
 }
 
-bool figure_trader::can_sell(building* b, empire_city_handle city) {
+bool figure_trader::can_sell(building* b, empire_city_handle city) const {
     auto warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;

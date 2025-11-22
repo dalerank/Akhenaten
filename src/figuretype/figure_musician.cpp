@@ -6,6 +6,8 @@
 #include "city/city.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
+#include "building/building_dance_school.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_musician);
@@ -72,12 +74,23 @@ sound_key figure_musician::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("musician_%s", keys[index].c_str());
 }
 
 int figure_musician::provide_service() {
     int houses_serviced = 0;
     building *b = current_destination();
+    
+    // If musician visits dance school, increase conservatory help parameter to 100
+    if (!!game_features::gameplay_conservatory_helps_dance_school && b->type == BUILDING_DANCE_SCHOOL) {
+        building_dancer_school* dance_school = b->dcast_dancer_school();
+        if (dance_school) {
+            auto &d = dance_school->runtime_data();
+            d.conservatory_help = 100;
+        }
+        return 0; // No houses serviced, but help was provided
+    }
+    
     if (b->type == BUILDING_BANDSTAND) {
         houses_serviced = provide_entertainment(0, [] (building *b, int shows) {
             auto house = b->dcast_house();

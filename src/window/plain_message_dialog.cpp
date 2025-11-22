@@ -39,7 +39,7 @@ static void draw_background(int) {
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{80, 80}, 30, 12);
     text_draw_centered(plain_message_dialog.title.c_str(), 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT, 0);
-    text_draw_multiline(plain_message_dialog.message.c_str(), 100, 140, 450, FONT_NORMAL_BLACK_ON_LIGHT, 0);
+    text_draw_multiline(plain_message_dialog.message, { 100, 140 }, 450, FONT_NORMAL_BLACK_ON_LIGHT, 0);
     graphics_reset_dialog();
 }
 

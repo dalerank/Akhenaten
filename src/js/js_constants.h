@@ -5,7 +5,6 @@
 struct js_State;
 void js_register_game_constants(js_State *J);
 void js_register_menu(js_State *J);
-void js_register_city_advisors(js_State *J);
 
 void js_register_token(int id, pcstr name);
 

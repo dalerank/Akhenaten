@@ -6,6 +6,9 @@ enum e_cartpusher_action {
     ACTION_9_CARTPUSHER_DELIVERING_GOODS = 9,
     ACTION_10_CARTPUSHER_DELIVERING_FOOD = 10,
     ACTION_11_CARTPUSHER_DELIVERING_GOLD = 11,
+    ACTION_12_CARTPUSHER_DELIVERING_UNLOADING_GOODS = 12,
+    ACTION_13_CARTPUSHER_DELIVERING_UNLOADING_FOODS = 13,
+    ACTION_14_CARTPUSHER_UNLOADING_GOLD = 14,
     ACTION_20_CARTPUSHER_INITIAL = 20,
     ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE = 21,
     ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY = 22,
@@ -14,6 +17,11 @@ enum e_cartpusher_action {
     ACTION_25_CARTPUSHER_AT_GRANARY = 25,
     ACTION_26_CARTPUSHER_AT_WORKSHOP = 26,
     ACTION_27_CARTPUSHER_RETURNING = 27,
+    ACTION_51_CARTPUSHER_DELIVERING_RESOURCE = 51,
+    ACTION_56_CARTPUSHER_RETURNING_WITH_FOOD = 56,
+    ACTION_53_CARTPUSHER_RETURNING_EMPTY = 53,
+    ACTION_54_CARTPUSHER_GETTING_FOOD = 54,
+    ACTION_57_CARTPUSHER_GETTING_RESOURCE = 57,
 };
 
 class figure_carrier : public figure_impl {
@@ -39,9 +47,7 @@ public:
     virtual void figure_before_action() override;
     virtual void before_poof() override;
     virtual void figure_action() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_CART_PUSHER, "cartpusher"}; }
     virtual e_overlay get_overlay() const override { return OVERLAY_NONE; }
-    virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual sound_key phrase_key() const override;
     virtual bool can_move_by_water() const override;
 

@@ -9,7 +9,6 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "city/city_resource.h"
-#include "city/trade.h"
 #include "core/calc.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
@@ -39,8 +38,8 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     auto &emp_city = *g_empire.city(ev.cid);
 
     // Find first available trader slot
-    const int free_slot = emp_city.get_free_slot(emp_city.max_traders);
-    if (free_slot == -1) {
+    const int empire_trader_index = emp_city.get_free_slot();
+    if (empire_trader_index == -1) {
         return;
     }
 
@@ -62,7 +61,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     donkey2->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
 
-    emp_city.trader_figure_ids[free_slot] = caravan->id();
+    emp_city.trader_figure_ids[empire_trader_index] = caravan->id();
 }
 
 int figure::trader_total_sold() {
@@ -75,14 +74,12 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     int warehouse_id = get_closest_storageyard(src_tile, d.empire_city, distance_to_entry, dst);
     if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
-        base.action_state = ACTION_101_TRADE_CARAVAN_ARRIVING;
-        base.destination_tile = dst;
+        advance_action(ACTION_101_TRADE_CARAVAN_ARRIVING, dst);
     } else {
         base.state = FIGURE_STATE_ALIVE;
         base.destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
-        advance_action(ACTION_16_EMIGRANT_RANDOM);
-        base.action_state = ACTION_103_TRADE_CARAVAN_LEAVING;
+        advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
     }
 }
 
@@ -191,22 +188,32 @@ void figure_trade_caravan::before_poof() {
 }
 
 sound_key figure_trade_caravan::phrase_key() const {
-    //    if (++f->phrase_sequence_exact >= 2)
-    //        f->phrase_sequence_exact = 0;
-    //
-    //    if (f->action_state == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
-    //        if (!trader_has_traded(f->trader_id))
-    //            return 7; // no trade
-    //
-    //    } else if (f->action_state == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
-    //        if (figure_trade_caravan_can_buy(f, f->destination_building_id, f->empire_city_id))
-    //            return 11; // buying goods
-    //        else if (figure_trade_caravan_can_sell(f, f->destination_building_id, f->empire_city_id))
-    //            return 10; // selling goods
-    //
-    //    }
-    //    return 8 + f->phrase_sequence_exact;
-    return {};
+    auto& d = runtime_data();
+    
+    if (action_state() == ACTION_103_TRADE_CARAVAN_LEAVING) {
+        if (!empire_trader().has_traded()) {
+            return "trader_city_not_trades";
+        } else {
+            return "trader_you_talk_a_fine_bargain";
+        }
+    }
+
+    if (action_state() == ACTION_102_TRADE_CARAVAN_TRADING) {
+        if (can_buy(destination(), d.empire_city)) {
+            return "trader_buy_for_less_sell_for_more"; 
+        } else if (can_sell(destination(), d.empire_city)) {
+            return "trader_you_talk_a_fine_bargain"; 
+        } else {
+            return "trader_its_my_life";
+        }
+    }
+
+    if (action_state() == ACTION_101_TRADE_CARAVAN_ARRIVING) {
+        return "trader_i_ll_be_a_hero";
+    }
+    
+    // Default for other states (created, etc)
+    return "trader_its_my_life";
 }
 
 void figure_trade_caravan::update_animation() {

@@ -75,7 +75,7 @@ sound_key figure_senet_player::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf( "senet_%s", keys[index].c_str());
 }
 
 int figure_senet_player::provide_service() {

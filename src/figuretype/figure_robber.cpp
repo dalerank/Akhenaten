@@ -6,6 +6,7 @@
 #include "city/city_message.h"
 #include "game/game_events.h"
 #include "building/building_house.h"
+#include "figuretype/figure_rioter.h"
 #include "core/random.h"
 #include "grid/road_access.h"
 #include "js/js_game.h"
@@ -65,7 +66,7 @@ void figure_robber::figure_action() {
         if (direction() == DIR_FIGURE_NONE) {
             poof();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
+            advance_action(ACTION_120_RIOTER_CREATED);
             route_remove();
         } else if (direction() == DIR_FIGURE_ATTACK) {
             if (base.animctx.frame > 12) {
@@ -86,6 +87,16 @@ void figure_robber::figure_action() {
         poof();
         base.animctx.frame = 0;
     }
+}
+
+sound_key figure_robber::phrase_key() const {
+    svector<sound_key, 2> keys = {
+        "robber_gold_should_be_for_living",
+        "robber_just_think_of_the_fortune"
+    };
+    
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 void figure_robber::update_animation() {

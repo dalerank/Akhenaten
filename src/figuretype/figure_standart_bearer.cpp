@@ -1,6 +1,8 @@
 #include "figure_standart_bearer.h"
 
-figures::model_t<figure_standard_bearer> standard_bearer_m;
+#include "js/js_game.h"
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_standard_bearer);
 
 void figure_standard_bearer::on_create() {
     figure_impl::on_create();

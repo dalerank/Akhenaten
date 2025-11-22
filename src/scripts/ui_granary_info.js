@@ -2,6 +2,7 @@ log_info("akhenaten: ui granary window started")
 
 granary_info_window {
     resource_text_group : 23
+    resource_number : 4
     related_buildings [BUILDING_GRANARY, BUILDING_GRANARY_UP]
     ui {
         background   : outer_panel({size[29, 17]})

@@ -1,7 +1,6 @@
 #include "desirability.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "grid/grid.h"

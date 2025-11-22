@@ -1,7 +1,6 @@
 #include "common.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "city/city_labor.h"
 #include "city/city.h"
 #include "graphics/image.h"

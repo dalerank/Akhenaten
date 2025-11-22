@@ -24,6 +24,7 @@
 #include "city/victory.h"
 #include "city/ratings.h"
 #include "grid/point.h"
+#include "city/city_trade.h"
 #include "city/city_festival.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
@@ -96,17 +97,8 @@ struct city_t {
         int8_t die_citizen;
         int8_t die_soldier;
     } sound;
-    struct {
-        int16_t num_land_routes;
-        int16_t num_sea_routes;
-        int16_t land_trade_problem_duration;
-        int16_t sea_trade_problem_duration;
-        e_resource caravan_import_resource;
-        e_resource caravan_backup_import_resource;
-        e_resource docker_import_resource;
-        e_resource docker_export_resource;
-    } trade;
 
+    city_trade_t trade;
     city_map_t map;
     struct {
         int32_t has_won;
@@ -210,7 +202,6 @@ struct city_t {
     void figures_add_rioter(int is_attacking);
     void figures_add_soldier();
     void figures_update_day();
-    int figures_total_invading_enemies();
     bool figures_has_security_breach();
     void figures_generate_criminals();
 
@@ -224,7 +215,6 @@ struct city_t {
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
     empire_city& ourcity();
-    e_victory_state determine_victory_state();
     void victory_check();
     void buildings_update_open_water_access();
 

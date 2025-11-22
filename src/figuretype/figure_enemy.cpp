@@ -23,7 +23,7 @@ void figure_enemy::formation_reset_to_initial(const formation *m) {
         return;
     }
    
-    base.action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+    base.action_state = ACTION_151_ENEMY_INITIAL;
     base.wait_ticks = 0;
 }
 
@@ -44,7 +44,7 @@ void figure_enemy::enemy_initial(formation *m) {
         }
 
         if (m->recent_fight) {
-            advance_action(FIGURE_ACTION_154_ENEMY_FIGHTING);
+            advance_action(ACTION_154_ENEMY_FIGHTING);
         } else {
             tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
 
@@ -52,7 +52,7 @@ void figure_enemy::enemy_initial(formation *m) {
 
             int dir = calc_general_direction(tile(), base.destination_tile);
             if (dir < 8) {
-                advance_action(FIGURE_ACTION_153_ENEMY_MARCHING);
+                advance_action(ACTION_153_ENEMY_MARCHING);
             }
         }
     }
@@ -67,7 +67,7 @@ void figure_enemy::enemy_marching(formation *m) {
 
         base.destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            advance_action(ACTION_151_ENEMY_INITIAL);
             return;
         }
 
@@ -78,13 +78,13 @@ void figure_enemy::enemy_marching(formation *m) {
 
     base.move_ticks(base.speed_multiplier);
     if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_INITIAL);
     }
 }
 
 void figure_enemy::enemy_fighting(formation *m) {
     if (!m->recent_fight) {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_INITIAL);
     }
 
     if (type() != FIGURE_ENEMY_EGYPTIAN_CAMEL && type() != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {
@@ -126,11 +126,11 @@ void figure_enemy::enemy_fighting(formation *m) {
             //            destination_tile.y() = target->tile.y();
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+            advance_action(ACTION_151_ENEMY_INITIAL);
             base.target_figure_id = 0;
         }
     } else {
-        advance_action(FIGURE_ACTION_151_ENEMY_INITIAL);
+        advance_action(ACTION_151_ENEMY_INITIAL);
         base.wait_ticks = 50;
     }
 }

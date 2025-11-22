@@ -10,8 +10,10 @@
  */
 enum e_figure_ostrich_hunber : uint16_t {
     ACTION_9_OSTRICH_HUNTER_CHASE_PREY = 9,
-    ACTION_11_OSTRICH_HUNTER_WALK = 11,
+    ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL = 10,
+    ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT = 11,
     ACTION_12_OSTRICH_HUNTER_MOVE_PACKED = 12,
+    ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION = 13,
     ACTION_14_OSTRICH_HUNTER_UNLOADING = 14,
     ACTION_15_OSTRICH_HUNTER_HUNT = 15,
     ACTION_16_OSTRICH_HUNTER_INVESTIGATE = 16,
@@ -47,7 +49,7 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     //virtual void poof() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_OSTRICH_HUNTER, "oshunter"}; }
+
     virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(pcstr key) const;
     virtual void update_animation() override;

@@ -77,7 +77,7 @@ void building_tax_collector::update_month() {
 
     if (base.has_road_access && base.deben_storage > 100) {
         int may_send = std::min<int>((base.deben_storage / 100) * 100, 400);
-        figure *f = base.create_cartpusher(RESOURCE_GOLD, may_send, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER);
+        figure *f = base.create_cartpusher(RESOURCE_GOLD, may_send, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         base.deben_storage -= may_send;
         f->sender_building_id = base.id;
     }

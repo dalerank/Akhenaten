@@ -88,7 +88,7 @@ void figure_worker::figure_action() {
     case 9:
         break;
 
-    case FIGURE_ACTION_10_WORKER_GOING:
+    case ACTION_10_WORKER_GOING:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage)) {
             if (building_is_floodplain_farm(*b_dest)) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
@@ -107,32 +107,32 @@ void figure_worker::figure_action() {
                 }
                 map_monuments_set_progress(tile_need_leveling, 1);
                 base.destination_tile = tile_need_leveling;
-                advance_action(FIGURE_ACTION_11_WORKER_GOING_TO_PLACE);
+                advance_action(ACTION_11_WORKER_GOING_TO_PLACE);
             }
         }
         break;
 
-    case FIGURE_ACTION_11_WORKER_GOING_TO_PLACE:
+    case ACTION_11_WORKER_GOING_TO_PLACE:
         if (do_goto(base.destination_tile, false, TERRAIN_USAGE_ANY)) {
             base.wait_ticks = 0;
             base.direction = 0;
-            advance_action(FIGURE_ACTION_12_WORKER_LEVELING_GROUND);
+            advance_action(ACTION_12_WORKER_LEVELING_GROUND);
         }
         break;
 
-    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
+    case ACTION_12_WORKER_LEVELING_GROUND:
         progress = map_monuments_get_progress(tile());
         if (progress < 200) {
             map_monuments_set_progress(tile(), progress + 1);
         } else {
-            advance_action(FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS);
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
             if (home()) {
                 set_destination(home());
             }
         }
         break;
 
-    case FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS:
+    case ACTION_13_WORKER_BACK_FROM_WORKS:
         if (do_gotobuilding(destination(), stop_at_road, TERRAIN_USAGE_PREFER_ROADS)) {
             poof();
         }
@@ -151,11 +151,11 @@ void figure_worker::update_animation() {
     figure_impl::update_animation();
 
     switch (action_state()) {
-    case FIGURE_ACTION_12_WORKER_LEVELING_GROUND:
+    case ACTION_12_WORKER_LEVELING_GROUND:
         image_set_animation(animkeys().work);
         break;
 
-    case FIGURE_ACTION_13_WORKER_BACK_FROM_WORKS:
+    case ACTION_13_WORKER_BACK_FROM_WORKS:
         image_set_animation(animkeys().walk);
         break;
     }
@@ -178,7 +178,7 @@ sound_key figure_worker::phrase_key() const {
     }
 
     svector<sound_key, 10> keys;
-    if (base.action_state == ACTION_10_GOING) {
+    if (base.action_state == ACTION_10_WORKER_GOING) {
         keys.push_back("going_to_workplace");
     }
 
@@ -224,7 +224,7 @@ sound_key figure_worker::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf( "worker_%s", keys[index].c_str());
 }
 
 figure_sound_t figure_worker::get_sound_reaction(pcstr key) const {

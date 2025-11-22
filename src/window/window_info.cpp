@@ -1,7 +1,6 @@
 #include "window_info.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "building/building_storage.h"
 #include "city/city.h"
 #include "city/city_resource.h"
@@ -110,7 +109,6 @@ void object_info::reset(tile2i tile) {
     bid = map_building_at(tile);
     terrain_type = TERRAIN_INFO_EMPTY;
     nfigure.drawn = 0;
-    nfigure.draw_debug_path = 0;
 }
 
 figure *object_info::figure_get() {
@@ -122,12 +120,8 @@ building *object_info::building_get() {
     return ::building_get(bid);
 }
 
-void window_info_init(tile2i tile, bool avoid_mouse) {
+void window_info_update(bool avoid_mouse) {
     auto &context = def_object_info;
-    context.reset(tile);
-    context.fill_figures_info(tile);
-
-    city_resource_determine_available();
 
     context.ui = nullptr;
     auto find_handler = [] (auto &handlers, auto &context) {
@@ -156,7 +150,7 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
         context.ui = &g_building_common_window;
         context.bid = building_id;
     }
-      
+
     if (!context.ui && map_terrain_is(context.grid_offset, TERRAIN_RUBBLE)) {
         context.terrain_type = TERRAIN_INFO_RUBBLE;
         context.ui = &g_ruin_info_window;
@@ -182,6 +176,16 @@ void window_info_init(tile2i tile, bool avoid_mouse) {
 
     // dialog placement
     context.offset = window_building_set_possible_position(mouse::get().pos(), context.bgsize);
+}
+
+void window_info_init(tile2i tile, bool avoid_mouse) {
+    auto &context = def_object_info;
+    context.reset(tile);
+    context.fill_figures_info(tile);
+
+    city_resource_determine_available();
+
+    window_info_update(avoid_mouse);
 }
 
 static void window_info_draw_background(int) {
@@ -301,8 +305,11 @@ void common_info_window::register_handlers() {
     events::subscribe([] (event_show_tile_info ev) {
         window_info_show(ev.tile, ev.avoid_mouse);
     });
-}
 
+    events::subscribe([] (event_update_tile_info ev) {
+        window_info_update(true);
+    });
+}
 
 void common_info_window::update_buttons(object_info &c) {
     vec2i bgsize = ui["background"].pxsize();

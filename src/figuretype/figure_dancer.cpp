@@ -67,7 +67,7 @@ sound_key figure_dancer::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("dancer_%s", keys[index].c_str());
 }
 
 bool figure_dancer::play_die_sound() {

@@ -32,6 +32,7 @@ void bind_debug_console_var_bool(pcstr var, bool &ref);
 void game_debug_show_property(pcstr field, const int &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const uint8_t &v, custom_span<pcstr> modes, bool disabled = false);
 void game_debug_show_property(pcstr field, const float &v, bool disabled = false);
+void game_debug_set_property_opt(float opt);
 void game_debug_show_property(pcstr field, const double &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const e_move_type &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const int8_t &v, bool disabled = false);
@@ -40,6 +41,7 @@ void game_debug_show_property(pcstr field, const uint8_t &v, bool disabled = fal
 void game_debug_show_property(pcstr field, const uint16_t &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const bool &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const pcstr v);
+void game_debug_show_property(pcstr field, const bstring32 &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const bstring64 &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const bstring256 &v, bool disabled = false);
 void game_debug_show_property(pcstr field, const xstring &v, bool disabled = false);

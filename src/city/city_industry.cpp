@@ -104,6 +104,7 @@ void city_industry_t::update_production() {
             return;
         }
 
+        industry->update_preproduction();
         industry->update_production();
     });
 }

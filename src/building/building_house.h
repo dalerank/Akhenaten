@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building_house_demands.h"
+#include "building/building_house_model.h"
 #include "building/building.h"
 
 enum e_house_progress { 
@@ -9,15 +10,25 @@ enum e_house_progress {
     e_house_decay = -1
 };
 
-struct model_house;
-
 #define HOUSE_METAINFO(type, clsid) BUILDING_METAINFO(type, clsid, building_house);
 
+// Base class that encapsulates shared behaviour for every housing tier.
+// Derived classes only override evolution thresholds or provide different art/models.
 class building_house : public building_impl {
 public:
     building_house(building &b) : building_impl(b) {}
     virtual building_house *dcast_house() override { return this; }
 
+    // Static configuration that is populated from configs for each specific house tier.
+    struct house_params_t {
+        model_house model;
+        bool can_merge;
+        animations_t variants;
+        animations_t variants_merged;
+    };
+
+    // Persistent state for a single house instance.
+    // Counts and timers here drive evolution logic.
     struct runtime_data_t : no_copy_assignment {
         //e_house_level level;
         uint16_t foods[8];
@@ -66,8 +77,11 @@ public:
         uint8_t days_without_food;
         uint8_t hsize;
         uint8_t drunkard_active;
+        uint8_t nobles_with_bad_teeth;
+        uint8_t toothache_probability;
         building_id worst_desirability_building_id;
         xstring evolve_text;
+        uint16_t image_id;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -96,17 +110,18 @@ public:
 
     void decay_services();
     void decay_tax_coverage();
+    void update_monthly_nobles_toothache();
 
     int16_t population_room() const;
     void change_to_vacant_lot();
     bool is_vacant_lot() const;
     void add_population(int num_people);
-    static void change_to(building &b, e_building_type type);
+    static void change_to(building &b, e_building_type type, bool force = false);
     void merge();
     void merge_impl();
     inline bool is_merged() const { return runtime_data().is_merged; }
-    resource_list consume_resources();
-    resource_list consume_food();
+    resource_list consume_goods_weekly();
+    resource_list consume_food_weekly();
     void split(int num_tiles);
     const model_house &model() const;
 
@@ -119,153 +134,244 @@ public:
     e_house_progress check_requirements(house_demands *demands);
 
     static void create_vacant_lot(tile2i tile, int image_id);
+    static const model_house &get_model(int level);
 };
 
+// --- Individual housing tiers -------------------------------------------------
 class building_house_crude_hut : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_sturdy_hut : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_STURDY_HUT, building_house_sturdy_hut);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_meager_shanty : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MEAGER_SHANTY, building_house_meager_shanty);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_common_shanty : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_SHANTY, building_house_common_shanty);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_common_shanty::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_rough_cottage : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ROUGH_COTTAGE, building_house_rough_cottage);
+    
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
 
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_ordinary_cottage : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ORDINARY_COTTAGE, building_house_ordinary_cottage);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_modest_homestead : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_HOMESTEAD, building_house_modest_homestead);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_spacious_homestead : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_HOMESTEAD, building_house_spacious_homestead);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_modest_apartment : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_APARTMENT, building_house_modest_apartment);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_spacious_apartment : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_APARTMENT, building_house_spacious_apartment);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
     void expand_to_common_residence();
 };
+ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_common_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_RESIDENCE, building_house_common_residence);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_common_residence::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_spacious_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_RESIDENCE, building_house_spacious_residence);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_elegant_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ELEGANT_RESIDENCE, building_house_elegant_residence);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
 };
+ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_fancy_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_FANCY_RESIDENCE, building_house_fancy_residence);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
     void expand_to_common_manor();
 };
+ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_common_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_MANOR, building_house_common_manor);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void devolve_to_fancy_residence();
 };
+ANK_CONFIG_STRUCT(building_house_common_manor::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_spacious_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_MANOR, building_house_spacious_manor);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
 };
+ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_elegant_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ELEGANT_MANOR, building_house_elegant_manor);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
 };
+ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_stately_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_STATELY_MANOR, building_house_stately_manor);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void expand_to_modest_estate();
 };
+ANK_CONFIG_STRUCT(building_house_stately_manor::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_modest_estate : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_ESTATE, building_house_modest_estate);
 
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
     void devolve_to_statel_manor();
 };
+ANK_CONFIG_STRUCT(building_house_modest_estate::static_params, model, can_merge, variants, variants_merged)
 
 class building_house_palatial_estate : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_PALATIAL_ESTATE, building_house_palatial_estate);
 
-    virtual bool evolve(house_demands *demands) override;
-};
+    struct static_params : public house_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
 
+    virtual bool evolve(house_demands *demands) override;
+    virtual void update_month() override;
+};
+ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merge, variants, variants_merged)
+
+// ----------------------------------------------------------------------
+// Helpers that iterate over all valid houses. They are used by various
+// gameplay systems (overlays, advisors, economy calculations).
 template<typename T>
 void buildings_house_do(T func) {
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {

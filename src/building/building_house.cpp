@@ -28,49 +28,45 @@
 
 #define MAX_DIR 4
 
-declare_console_command_p(houseup) {
-    std::string args; is >> args;
-
+declare_console_command_p(house_up) {
     buildings_house_do([] (building_house *house) {
         e_building_type next_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() + 1);
-        house->change_to(house->base, next_level);
+        house->change_to(house->base, next_level, true);
     });
 };
 
-declare_console_command_p(housedown) {
-    std::string args; is >> args;
-
+declare_console_command_p(house_down) {
     buildings_house_do([] (building_house *house) {
         e_building_type prev_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() - 1);
         if (prev_level < BUILDING_HOUSE_VACANT_LOT) {
             prev_level = BUILDING_HOUSE_VACANT_LOT;
         }
-        house->change_to(house->base, prev_level);
+        house->change_to(house->base, prev_level, true);
     });
 };
 
 declare_console_var_int(house_up_delay, 1000)
 
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_crude_hut);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_sturdy_hut);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_meager_shanty);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_shanty);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_rough_cottage);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_ordinary_cottage);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_homestead);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_homestead);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_apartment);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_apartment);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_fancy_residence);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_stately_manor);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_estate);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_palatial_estate);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_crude_hut)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_sturdy_hut)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_meager_shanty)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_shanty)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_rough_cottage)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_ordinary_cottage)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_homestead)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_homestead)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_apartment)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_apartment)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_fancy_residence)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_common_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_spacious_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_elegant_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_stately_manor)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_modest_estate)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_house_palatial_estate)
 
 static const int HOUSE_TILE_OFFSETS_PH[] = {
   GRID_OFFSET(0, 0),
@@ -142,56 +138,58 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    iob->bind_u16(d.image_id);
 
     for (int i = 0; i < 4; ++i) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.inventory[i + 4]);
     }
 
-    iob->bind(BIND_SIGNATURE_UINT8, &d.booth_juggler);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bandstand_juggler);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bandstand_musician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.senet_player);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.magistrate);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bullfighter);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.school);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.library);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.academy);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.apothecary);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.dentist);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.mortuary);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.physician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_osiris);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_ra);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_ptah);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_seth);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.temple_bast);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.no_space_to_expand);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.num_foods);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.entertainment);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.education);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.health);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.num_gods);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.devolve_delay);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.fancy_bazaar_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.shrine_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.bazaar_access);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.water_supply);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_dancer);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.pavillion_musician);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.house_happiness);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.is_merged);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.criminal_active);
-    iob->bind(BIND_SIGNATURE_INT16, &d.highest_population);
-    iob->bind(BIND_SIGNATURE_INT16, &d.population);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.tax_coverage);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.tax_collector_id);
-    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.days_without_food);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.hsize);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.unreachable_ticks);
-    iob->bind(BIND_SIGNATURE_UINT16,&d.last_update_day);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.drunkard_active);
+    iob->bind_u8(d.booth_juggler);
+    iob->bind_u8(d.bandstand_juggler);
+    iob->bind_u8(d.bandstand_musician);
+    iob->bind_u8(d.senet_player);
+    iob->bind_u8(d.magistrate);
+    iob->bind_u8(d.bullfighter);
+    iob->bind_u8(d.school);
+    iob->bind_u8(d.library);
+    iob->bind_u8(d.academy);
+    iob->bind_u8(d.apothecary);
+    iob->bind_u8(d.dentist);
+    iob->bind_u8(d.mortuary);
+    iob->bind_u8(d.physician);
+    iob->bind_u8(d.temple_osiris);
+    iob->bind_u8(d.temple_ra);
+    iob->bind_u8(d.temple_ptah);
+    iob->bind_u8(d.temple_seth);
+    iob->bind_u8(d.temple_bast);
+    iob->bind_u8(d.no_space_to_expand);
+    iob->bind_u8(d.num_foods);
+    iob->bind_u8(d.entertainment);
+    iob->bind_u8(d.education);
+    iob->bind_u8(d.health);
+    iob->bind_u8(d.num_gods);
+    iob->bind_u8(d.devolve_delay);
+    iob->bind_u8(d.fancy_bazaar_access);
+    iob->bind_u8(d.shrine_access);
+    iob->bind_u8(d.bazaar_access);
+    iob->bind_u8(d.water_supply);
+    iob->bind_u8(d.pavillion_dancer);
+    iob->bind_u8(d.pavillion_musician);
+    iob->bind_u8(d.house_happiness);
+    iob->bind_u8(d.is_merged);
+    iob->bind_u8(d.criminal_active);
+    iob->bind_u16(d.highest_population);
+    iob->bind_u16(d.population);
+    iob->bind_u8(d.tax_coverage);
+    iob->bind_u16((uint16_t&)d.tax_collector_id);
+    iob->bind_i16((int16_t &)d.tax_income_or_storage);
+    iob->bind_u8(d.days_without_food);
+    iob->bind_u8(d.hsize);
+    iob->bind_u16(d.unreachable_ticks);
+    iob->bind_u16(d.last_update_day);
+    iob->bind_u8(d.drunkard_active);
+    iob->bind_u8(d.nobles_with_bad_teeth);
+    iob->bind_u8(d.toothache_probability);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -226,9 +224,26 @@ void building_house::spawn_figure() {
         return;
     }
 
-    if (type() >= BUILDING_HOUSE_COMMON_MANOR) {
-        common_spawn_roamer(FIGURE_NOBLES, 50, FIGURE_ACTION_125_ROAMING);
+    if (is_nobles() && house_population() > 20) {
+        common_spawn_roamer(FIGURE_NOBLES, 0, (e_figure_action)125);
     }
+}
+
+template<typename T>
+const building_house::house_params_t &house_static_params(const building_static_params &params) {
+    using static_params = typename T::static_params;
+    const auto &bparams = (const static_params &)params;
+    return (const building_house::house_params_t &)bparams;
+}
+
+const building_house::house_params_t &get_house_params(e_building_type type) {
+    const auto &params = building_static_params::get(type);
+    return house_static_params<building_house_crude_hut>(params);
+};
+
+const model_house &building_house::get_model(int level) {
+    const auto &params = get_house_params(e_building_type(BUILDING_HOUSE_CRUDE_HUT + level));
+    return params.model;
 }
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
@@ -238,17 +253,22 @@ void building_house::create_vacant_lot(tile2i tile, int image_id) {
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
-resource_list building_house::consume_food() {
+resource_list building_house::consume_food_weekly() {
     if (!hsize()) {
         return {};
     }
 
     auto &d = runtime_data();
 
-    int num_types = model().food_types;
-    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, 35);
-    if (num_types > 1) {
-        amount_per_type /= num_types;
+    int food_types = model().food_types;
+    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, model().food_consumption_percentage);
+    if (food_types > 1) {
+        amount_per_type /= food_types;
+    }
+
+    if (amount_per_type > 0) {
+        amount_per_type /= simulation_time_t::weeks_in_month;
+        amount_per_type = std::max(amount_per_type, uint16_t(1));
     }
 
     d.num_foods = 0;
@@ -260,29 +280,43 @@ resource_list building_house::consume_food() {
         return food_types_eaten;
     }
 
-    if (num_types <= 0) {
+    if (food_types <= 0) {
         return {};
     }
 
-    for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && d.num_foods < num_types; t++) {
-        const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
-        d.foods[t] -= exist_amount;
-        d.num_foods += (exist_amount > 0) ? 1 : 0;
-        e_resource food_res = g_city.allowed_foods(t);
-        food_types_eaten.push_back({ food_res, amount_per_type });
+    int16_t want_consumed = amount_per_type * food_types;
+    auto consume_food_impl = [&] {
+        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD; t++) {
+            const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
+            if (exist_amount > 0) {
+                want_consumed -= exist_amount;
+                d.foods[t] -= exist_amount;
+                d.num_foods += (exist_amount > 0) ? 1 : 0;
+                e_resource food_res = g_city.allowed_foods(t);
+                food_types_eaten.push_back({ food_res, amount_per_type });
+            }
+        }
+    };
+
+    // normal consumption, guess we have enough food
+    consume_food_impl();
+
+    if (want_consumed > 0) {
+        // not enough food, try to consume more from available foods
+        consume_food_impl();
     }
 
     return food_types_eaten;
 }
 
-resource_list building_house::consume_resources() {
+resource_list building_house::consume_goods_weekly() {
     if (!hsize()) {
         return {};
     }
     
     resource_list good_types_consumed;
     auto &d = runtime_data();
-    const model_house& model = model_get_house(house_level());
+    const model_house& model = get_model(house_level());
 
     auto consume_resource = [&] (int inventory, uint16_t amount) {
         if (amount <= 0) {
@@ -314,7 +348,7 @@ static int house_image_group(int level) {
 
 void building_house::add_population(int num_people) {
     const int mul = is_merged() ? 4 : 1;
-    const int max_people = model_get_house(house_level()).max_people * mul;
+    const int max_people = get_model(house_level()).max_people * mul;
 
     int room = std::max(max_people - house_population(), 0);
     if (room < num_people) {
@@ -331,13 +365,13 @@ void building_house::add_population(int num_people) {
     base.remove_figure(2);
 }
 
-void building_house::change_to(building &b, e_building_type new_type) {
+void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
 
     const int house_update_delay = std::min(house_up_delay(), 7);
     const int absolute_day = game.simtime.absolute_day(true);
     const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
-    if (house_update_delay > 0 && (new_type > b.type) && can_update) {
+    if (!force && (house_update_delay > 0 && (new_type > b.type) && can_update)) {
         return;
     }
 
@@ -347,24 +381,29 @@ void building_house::change_to(building &b, e_building_type new_type) {
     auto house = b.dcast_house();
     int image_id = house_image_group<false>(house->house_level());
 
-    const int img_offset = house->anim(animkeys().house).offset;
+    const auto &house_params = get_house_params(new_type);
     if (house->is_merged()) {
-        image_id += 4;
-        if (img_offset) {
-            image_id += 1;
-        }
+        const size_t max_anims = house_params.variants_merged.data.size();
+        const size_t rand_anim = rand() % max_anims;        
+        auto anim_it = house_params.variants_merged.data.begin();
+        std::advance(anim_it, rand_anim);
+        image_id = anim_it->second.first_img();
     } else {
-        image_id += img_offset;
-        image_id += map_random_get(b.tile) & (house->current_params().num_types - 1);
+        const size_t max_anims = house_params.variants.data.size();
+        const size_t rand_anim = rand() % max_anims;
+        auto anim_it = house_params.variants.data.begin();
+        std::advance(anim_it, rand_anim);
+        image_id = anim_it->second.first_img();
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
     d.last_update_day = game.simtime.absolute_day(true);
+    d.image_id = image_id;
 }
 
 int16_t building_house::population_room() const {
     const int mul = is_merged() ? 4 : 1;
-    const int max_people = model_get_house(house_level()).max_people * mul;
+    const int max_people = model().max_people * mul;
 
     const int room = std::max(max_people - house_population(), 0);
     const int house_pop = house_population();
@@ -502,7 +541,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++level;
     }
 
-    const model_house& model = model_get_house(level);
+    const model_house& model = get_model(level);
     // water
     int water = model.water;
     if (!base.has_water_access) {
@@ -649,6 +688,21 @@ void building_house::decay_tax_coverage() {
     }
 }
 
+void building_house::update_monthly_nobles_toothache() {
+    if (!is_nobles() || house_population() <= 0) {
+        return;
+    }
+
+    auto &housed = runtime_data();
+    housed.toothache_probability = std::min<uint8_t>(housed.toothache_probability + 10, 100);
+
+    int random_value = rand() % 100;
+    if (random_value < housed.toothache_probability) {
+        housed.toothache_probability = 0;
+        housed.nobles_with_bad_teeth = std::min<uint8_t>(housed.nobles_with_bad_teeth + 1, 255);
+    }
+}
+
 void building_house::decay_services() {
     if (!hsize()) {
         return;
@@ -785,14 +839,13 @@ bool building_house::can_expand(int num_tiles) {
 
 e_house_progress building_house::check_evolve_desirability() {
     const int level = house_level();
-    const model_house& model = model_get_house(level);
-    const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model.evolve_desirability;
+    const int evolve_des = (level >= HOUSE_PALATIAL_ESTATE) ? 1000 : model() .evolve_desirability;
 
     const int current_des = base.current_desirability;
     e_house_progress status;
 
     auto &d = runtime_data();
-    if (current_des <= model.devolve_desirability) {
+    if (current_des <= model().devolve_desirability) {
         status = e_house_decay;
         d.evolve_text = "#cannot_evolve_cause_low_desirability"; 
     } else if (current_des >= evolve_des) {
@@ -930,7 +983,7 @@ void building_house::split(int num_tiles) {
 }
 
 const model_house &building_house::model() const {
-    return model_get_house(house_level());
+    return get_model(house_level());
 }
 
 void building_house_common_manor::devolve_to_fancy_residence() {
@@ -1432,6 +1485,11 @@ bool building_house_common_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_common_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_spacious_manor::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1451,6 +1509,11 @@ bool building_house_spacious_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_spacious_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_elegant_manor::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1468,6 +1531,11 @@ bool building_house_elegant_manor::evolve(house_demands* demands) {
     }
 
     return false;
+}
+
+void building_house_elegant_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
 }
 
 void building_house_stately_manor::expand_to_modest_estate() {
@@ -1511,6 +1579,11 @@ bool building_house_stately_manor::evolve(house_demands* demands) {
     return false;
 }
 
+void building_house_stately_manor::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
 bool building_house_modest_estate::evolve(house_demands* demands) {
     if (house_population() <= 0) {
         return false;
@@ -1528,6 +1601,16 @@ bool building_house_modest_estate::evolve(house_demands* demands) {
     }
 
     return false;
+}
+
+void building_house_modest_estate::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
+}
+
+void building_house_palatial_estate::update_month() {
+    building_house::update_month();
+    update_monthly_nobles_toothache();
 }
 
 bool building_house_palatial_estate::evolve(house_demands* demands) {

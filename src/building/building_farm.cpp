@@ -1,7 +1,6 @@
 #include "building_farm.h"
 
 #include "core/object_property.h"
-#include "building/building_animation.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/city.h"
@@ -386,10 +385,11 @@ void building_farm::on_place_update_tiles(int orientation, int variant) {
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
-    if (map_terrain_is(t.grid_offset(), TERRAIN_BUILDING)) {
-        draw_crops(ctx, type(), progress(), tile(), point, mask);
-        draw_workers(ctx, &base, t, point);
+    if (is_currently_flooded()) {
+        return true;
     }
+    draw_crops(ctx, type(), progress(), tile(), point, mask);
+    draw_workers(ctx, &base, t, point);
 
     return true;
 }
@@ -535,7 +535,7 @@ void building_farm::spawn_figure_harvests() {
             {
                 const int expected_produce = this->expected_produce();
                 events::emit(event_produced_resources{ base.output.resource, expected_produce });
-                figure *f = create_cartpusher(base.output.resource, expected_produce);
+                figure *f = create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
                 building_farm *farm = dcast_farm();
                 farm->deplete_soil();
 
@@ -555,7 +555,7 @@ void building_farm::spawn_figure_harvests() {
                 const int expected_produce = this->expected_produce();
                 const int second_produce_expected = expected_produce / rate;
                 events::emit(event_produced_resources{ base.output.resource_second, second_produce_expected });
-                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, FIGURE_ACTION_20_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
                 f->sender_building_id = id();
             }
         }
@@ -567,7 +567,7 @@ void building_farm::spawn_figure_harvests() {
 
             const int amount = expected_produce();
             events::emit(event_produced_resources{ base.output.resource, amount });
-            create_cartpusher(base.output.resource, amount);
+            create_cartpusher(base.output.resource, amount, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
             start_production();
         }
     }
@@ -584,18 +584,23 @@ void building_farm::remove_worker(figure_id fid) {
     }
 }
 
-void building_farm::update_tiles_image() {
-    bool is_flooded = false;
-    if (building_is_floodplain_farm(base)) {
-        for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
-            for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
-                if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
-                    is_flooded = true;
-            }
+bool building_farm::is_currently_flooded() const {
+    if (!building_is_floodplain_farm(base)) {
+        return false;
+    }
+
+    for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
+        for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
+            if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
+                return true;
         }
     }
 
-    if (!is_flooded) {
+    return false;
+}
+
+void building_farm::update_tiles_image() {
+    if (!is_currently_flooded()) {
         int img_id = anim(animkeys().farmland).first_img();
         map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output.resource - 1), progress());
     }

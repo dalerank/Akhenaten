@@ -12,8 +12,9 @@
 #include "dev/debug.h"
 #include "city/city.h"
 #include "core/log.h"
+#include "js/js_game.h"
 
-empire_traders_manager g_empire_traders;
+empire_traders_manager ANK_VARIABLE_N(g_empire_traders, "empire_traders");
 
 declare_console_command_p(empire_traders_reset) {
     g_empire_traders.clear_all();
@@ -47,7 +48,7 @@ void empire_trader::update() {
         return;
     }
 
-    const map_route_object& route = empire_get_route_object(trade_route_id);
+    const map_route_object& route = g_empire.get_route_object(trade_route_id);
     if (!route.in_use || current_route_point >= route.num_points) {
         is_active = false;
         return;
@@ -55,8 +56,8 @@ void empire_trader::update() {
 
     current_route_point++;
     const auto& point = (state == estate_returning_home)
-                            ? route.points[current_route_point]
-                            : route.points[route.num_points - current_route_point];
+                            ? route.points[route.num_points - current_route_point]
+                            : route.points[current_route_point];
     current_position = point.p;
 
     if (is_at_destination()) {
@@ -64,7 +65,7 @@ void empire_trader::update() {
         return;
     }
 
-    movement_delay = route.route_type == 1 ? 2 : 4;
+    movement_delay = movement_delay_max;
 }
 
 bool empire_trader::is_at_destination() const {
@@ -137,7 +138,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
         destination_city_id = g_city.ourcity().name_id;
     }
 
-    const map_route_object& route = empire_get_route_object(trade_route_id);
+    const map_route_object& route = g_empire.get_route_object(trade_route_id);
     trader->trade_route_id = trade_route_id;
     trader->destination_city_id = destination_city_id;
     trader->current_route_point = 0;
@@ -146,8 +147,11 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->state = empire_trader::estate_moving_to_destination;
     trader->is_ship = (route.route_type == 2);
 
+    const vec2i movement_delay_range = trader->is_ship ? ship_movement_delay : land_movement_delay;
+    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % (movement_delay_range.y));
+
     if (route.in_use && route.num_points > 0) {
-        const auto &point = route.points[route.num_points - 1];
+        const auto &point = route.points[trader->current_route_point];
         trader->current_position = point.p;
     }
 }
@@ -178,7 +182,7 @@ empire_trader* empire_traders_manager::get_free_trader() {
 }
 
 vec2i empire_traders_manager::get_position_on_route(int route_id, int point_index) {
-    const map_route_object& route = empire_get_route_object(route_id);
+    const map_route_object& route = g_empire.get_route_object(route_id);
     if (route.in_use && point_index < route.num_points) {
         return route.points[point_index].p;
     }

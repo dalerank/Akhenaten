@@ -2,6 +2,13 @@
 
 #include "figure/figure.h"
 
+enum e_architector_action {
+    ACTION_60_ENGINEER_CREATED = 60,
+    ACTION_61_ENGINEER_ENTERING_EXITING = 61,
+    ACTION_62_ENGINEER_ROAMING = 62,
+    ACTION_63_ENGINEER_RETURNING = 63,
+};
+
 class figure_architector : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_ARCHITECT, figure_architector)
@@ -13,7 +20,6 @@ public:
 
     virtual void figure_action() override;
     virtual void figure_before_action() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_ARCHITECT, "engineer"}; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_DAMAGE; }

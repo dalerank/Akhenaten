@@ -6,7 +6,6 @@
 #include "graphics/animation.h"
 #include "building/building.h"
 #include "building/construction/build_planner.h"
-#include "building/model.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/generic_button.h"

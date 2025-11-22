@@ -20,12 +20,14 @@ void window_granary_orders_show(object_info &c);
 
 struct granary_info_window : public building_info_window_t<granary_info_window> {
     int resource_text_group;
+    int resource_number;
 
     using widget::archive_load;
     virtual void archive_load(archive arch) override {
         building_info_window::archive_load(arch);
 
         resource_text_group = arch.r_int("resource_text_group");
+        resource_number = arch.r_int("resource_number");
     }
 
     virtual void init(object_info &c) override;
@@ -58,7 +60,7 @@ void granary_info_window::init(object_info &c) {
     auto food_icon = [] (int i) { bstring32 id_icon; id_icon.printf("food%u_icon", i); return id_icon; };
     auto food_text = [] (int i) { bstring32 id_text; id_text.printf("food%u_text", i); return id_text; };
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < resource_number; ++i) {
         ui[food_icon(i)].image(RESOURCE_NONE);
         ui[food_text(i)] = "";
     }
@@ -71,7 +73,7 @@ void granary_info_window::init(object_info &c) {
         }
 
         ui[food_icon(food_index)].image(r.type);
-        ui[food_text(food_index)].text_var("%u %s", stored, (pcstr)lang_get_string(resource_text_group, r.type));
+        ui[food_text(food_index)].text_var("%u %s", stored, bstring32("#", resource_name(r.type)).c_str() );
         food_index++;
     }
    

@@ -4,9 +4,10 @@
 #include "building/monuments.h"
 #include "graphics/graphics.h"
 #include "city/city_figures.h"
+#include "js/js_game.h"
 
-figures::model_t<figure_sled> sled_m;
-figures::model_t<figure_sled_puller> sled_puller_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);
 
 void figure_sled::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/Sled");
@@ -17,7 +18,7 @@ void figure_sled::figure_action() {
         } else {
             grid_area area = building_monument_get_area(destination());
             if (map_tile_is_inside_area(tile(), area.tmin, area.tmax)) {
-                do_deliver(ACTION_11_RETURNING_EMPTY);
+                do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
             }
             poof();
             return;
@@ -86,34 +87,34 @@ void figure_sled_puller::figure_action() {
 
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_50_SLED_PULLER_CREATED:
+    case ACTION_50_SLED_PULLER_CREATED:
         --base.wait_ticks;
         if (base.wait_ticks > 0) {
             return;
         }
-        advance_action(FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
+        advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
         base.destination_tile = building_monument_center_point(destination());
         break;
 
-    case FIGURE_ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
-        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+    case ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
+        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, ACTION_53_SLED_PULLER_DESTROY);
         break;
 
-    case FIGURE_ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
+    case ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
         //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
         base.wait_ticks = 25;
-        advance_action(FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
+        advance_action(ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
         break;
 
-    case FIGURE_ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
+    case ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
         --base.wait_ticks;
         if (base.wait_ticks > 0) {
             return;
         }
-        advance_action(FIGURE_ACTION_53_SLED_PULLER_DESTROY);
+        advance_action(ACTION_53_SLED_PULLER_DESTROY);
         break;
 
-    case FIGURE_ACTION_53_SLED_PULLER_DESTROY:
+    case ACTION_53_SLED_PULLER_DESTROY:
         poof();
         break;
     }

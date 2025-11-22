@@ -1,12 +1,13 @@
 log_info("akhenaten: mission 5 timna started")
 
 mission5 { // Timna
-	start_message : 146, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : "message_history_military"
 
 	env {
 		has_animals : true
 		marshland_grow : default_marshland_grow
 	    tree_grow : default_tree_grow
+		hide_nilometer : true
 	}
 
 	player_rank : 1
@@ -23,7 +24,7 @@ mission5 { // Timna
 					BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
 					BUILDING_RECRUITER, BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS, BUILDING_WEAPONSMITH,
 					BUILDING_SCRIBAL_SCHOOL, BUILDING_CLAY_PIT, BUILDING_GEMSTONE_MINE, BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_POTTERY_WORKSHOP,
-					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH,
+					BUILDING_WEAVER_WORKSHOP, BUILDING_HUNTING_LODGE, BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH, BUILDING_FESTIVAL_SQUARE,
 
 					BUILDING_MORTUARY, BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD
 				]
@@ -31,22 +32,23 @@ mission5 { // Timna
 		tutorial_irrigation { buildings: [BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH, ] }
 		tutorial_guilds { buildings: [BUILDING_STORAGE_YARD, BUILDING_TAX_COLLECTOR, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL] }
 	}
-	enable_scenario_events : false,
+
+	enable_scenario_events : false
 	events [
 		{
-			time { year : 2850, month : 1 }
+			time { year : 2848, month : 1 }
 			resource : "copper"
 			amount { value : 500 }
 			deadline : 12
 		}
 		{
-			time { year : 2849, month : 1 }
+			time { year : 2847, month : 1 }
 			resource : "gems"
 			amount { value : 1500 }
 			deadline : 12
 		}
 		{
-			year : 2848
+			year : 2846
 			resource : "deben"
 			amount : [800, 1000]
 			deadline : 12

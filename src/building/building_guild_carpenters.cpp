@@ -73,7 +73,7 @@ void building_carpenters_guild::spawn_figure() {
     });
 
     if (monument) {
-        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)FIGURE_ACTION_10_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
+        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)ACTION_10_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
         monument->dcast()->add_workers(f->id);
         f->wait_ticks = random_short() % 30; // ok
         return;

@@ -274,11 +274,11 @@ int map_floodplain_rebuild_rows() {
         }
     }
 
-    // if past 29, fill in all the rest with the same order
+    // if past 29, clamp all the rest into the last processable row
     for (auto grid_offset: floodplain_tiles_cache) {
         if (map_get_floodplain_row(grid_offset) == -1) {
-            map_grid_set(g_terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS);
-            floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS].push_back(grid_offset);
+            map_grid_set(g_terrain_floodplain_row, grid_offset, MAX_FLOODPLAIN_ROWS - 1);
+            floodplain_tiles_caches_by_row[MAX_FLOODPLAIN_ROWS - 1].push_back(grid_offset);
         }
     }
 

@@ -250,6 +250,9 @@ enum e_figure_type : uint16_t {
     FIGURE_ENEMY_HYKSOS_WAR_SHIP = 174,
     FIGURE_ENEMY_HYKSOS_CHARIOT = 175,
 
+    FIGURE_SLAVE = 176,
+    FIGURE_ACADEMY_SCRIBER = 177,
+
     FIGURE_MAX,
 };
 

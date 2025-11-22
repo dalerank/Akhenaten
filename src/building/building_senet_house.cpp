@@ -7,6 +7,7 @@
 #include "window/building/common.h"
 #include "city/buildings.h"
 #include "figuretype/figure_drunkard.h"
+#include "figuretype/figure_entertainer.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "window/building/common.h"
@@ -52,7 +53,7 @@ bool building_senet_house::add_resource(e_resource resource, int amount) {
 void building_senet_house::spawn_figure() {
     const bool can_spawn_master = common_spawn_figure_trigger(100, BUILDING_SLOT_SERVICE);
     if (can_spawn_master) {
-        create_roaming_figure(FIGURE_SENET_PLAYER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
+        create_roaming_figure(FIGURE_SENET_PLAYER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE);
         return;
     }
 

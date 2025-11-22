@@ -185,7 +185,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {
-        return advance_action(FIGURE_ACTION_15_RETURNING2);
+        return advance_action(ACTION_27_CARTPUSHER_RETURNING);
     }
 
     // first: gold deliverers
@@ -277,7 +277,7 @@ void figure_cartpusher::determine_granaryman_destination() {
         granary_getting_result dest = granary->find_storage_for_getting();
         set_destination(dest.building_id);
         if (has_destination()) {
-            advance_action(FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD);
+            advance_action(ACTION_54_CARTPUSHER_GETTING_FOOD);
             if (!!game_features::gameplay_change_getting_granaries_go_offroad) {
                 base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }
@@ -294,7 +294,7 @@ void figure_cartpusher::determine_granaryman_destination() {
     set_destination(granary_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
 
     // priority 2: warehouse
@@ -302,7 +302,7 @@ void figure_cartpusher::determine_granaryman_destination() {
     set_destination(warehouse_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
 
     // priority 3: granary even though resource is on stockpile
@@ -310,10 +310,10 @@ void figure_cartpusher::determine_granaryman_destination() {
     set_destination(granary_second_id);
     if (has_destination()) {
         granary->remove_resource(base.resource_id, 100);
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
     // nowhere to go to: recalculate
-    advance_action(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
+    advance_action(ACTION_56_CARTPUSHER_RETURNING_WITH_FOOD);
 }
 
 void figure_cartpusher::determine_storageyard_cart_destination() {
@@ -328,10 +328,10 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
                             : 0;
         set_destination(building_id);
         if (has_destination()) {
-            advance_action(FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE);
+            advance_action(ACTION_57_CARTPUSHER_GETTING_RESOURCE);
             base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
         } else {
-            advance_action(FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY);
+            advance_action(ACTION_53_CARTPUSHER_RETURNING_EMPTY);
         }
         return;
     }
@@ -343,7 +343,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         auto result = building_get_asker_for_resource(tile(), BUILDING_RECRUITER, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -352,7 +352,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         auto result = building_get_asker_for_resource(tile(), BUILDING_SCRIBAL_SCHOOL, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -361,7 +361,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         auto result = building_get_asker_for_resource(tile(), BUILDING_SHIPWRIGHT, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -370,7 +370,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         auto result = building_get_asker_for_resource(tile(), BUILDING_SENET_HOUSE, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -380,7 +380,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         int building_id = building_get_workshop_for_raw_material_with_room(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, dest);
         set_destination(building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -390,7 +390,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         int building_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dest);
         set_destination(building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -400,7 +400,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         int building_id = building_getting_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &dest);
         set_destination(building_id);
         if (has_destination()) {
-            return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
         }
     }
 
@@ -409,7 +409,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, dest);
     set_destination(warehouse_id);
     if (has_destination()) {
-        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
+        return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
     //    int empty_warehouse = building_storage_get(home()->storage_id)->empty_all; // deliver to another warehouse
     //    because this one is being emptied if (has_destination() && empty_warehouse) {
@@ -459,15 +459,15 @@ void figure_cartpusher::figure_action() {
         break;
 
     case ACTION_9_CARTPUSHER_DELIVERING_GOODS:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_DELIVERING_UNLOADING_GOODS, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_CARTPUSHER_DELIVERING_UNLOADING_GOODS, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_10_CARTPUSHER_DELIVERING_FOOD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_DELIVERING_UNLOADING_FOODS, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_CARTPUSHER_DELIVERING_UNLOADING_FOODS, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_11_CARTPUSHER_DELIVERING_GOLD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_UNLOADING_GOLD, ACTION_8_RECALCULATE);
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_CARTPUSHER_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
 
     case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
@@ -482,16 +482,15 @@ void figure_cartpusher::figure_action() {
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
 
-    case 12: // storage yard
-    case 13: // granary
-    case 14: // palace
+    case ACTION_12_CARTPUSHER_DELIVERING_UNLOADING_GOODS:
+    case ACTION_13_CARTPUSHER_DELIVERING_UNLOADING_FOODS:
+    case ACTION_14_CARTPUSHER_UNLOADING_GOLD:
     case ACTION_24_CARTPUSHER_AT_WAREHOUSE:
     case ACTION_25_CARTPUSHER_AT_GRANARY:
     case ACTION_26_CARTPUSHER_AT_WORKSHOP:
-        do_deliver(false, FIGURE_ACTION_15_RETURNING2, ACTION_8_RECALCULATE);
+        do_deliver(false, ACTION_27_CARTPUSHER_RETURNING, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_15_RETURNING2:
     case ACTION_27_CARTPUSHER_RETURNING:
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
@@ -505,29 +504,29 @@ void figure_cartpusher::figure_action() {
     }
 }
 
-figure_sound_t figure_cartpusher::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
 bool figure_cartpusher::can_move_by_water() const {
     return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
 }
 
 sound_key figure_cartpusher::phrase_key() const {
+    if (action_state(ACTION_8_RECALCULATE)) {
+        return "cartpusher_no_found_destination";
+    }
+         
     if (action_state(ACTION_20_CARTPUSHER_INITIAL, ACTION_24_CARTPUSHER_AT_WAREHOUSE)) {
-        return "i_have_no_destination";
+        return "cartpusher_i_have_no_destination";
     }
 
-    if (action_state(ACTION_27_CARTPUSHER_RETURNING, FIGURE_ACTION_15_RETURNING2)) {
-        return "back_to_home";
+    if (action_state(ACTION_27_CARTPUSHER_RETURNING)) {
+        return "cartpusher_back_to_home";
     }
 
     if (action_state(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE,
                      ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY,
                      ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP,
                      ACTION_11_CARTPUSHER_DELIVERING_GOLD)) {
-        return "delivering_items";
+        return "cartpusher_delivering_items";
     }
 
-    return {};
+    return "cartpusher_default";
 }

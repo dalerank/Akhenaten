@@ -11,6 +11,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/figure_names.h"
+#include "figuretype/figure_enemy.h"
 #include "game/difficulty.h"
 #include "game/game.h"
 #include "grid/grid.h"
@@ -19,6 +20,7 @@
 #include "scenario/scenario.h"
 #include "dev/debug.h"
 #include "core/log.h"
+#include "empire/empire.h"
 #include "js/js_game.h"
 
 declare_console_command_p(start_invasion) {
@@ -79,7 +81,7 @@ void invasion_data_t::clear(void) {
 void invasion_data_t::init() {
     clear();
     int path_current = 1;
-    int path_max = empire_object_get_max_invasion_path();
+    int path_max = g_empire.get_max_invasion_path();
 
     if (path_max == 0) {
         return;
@@ -99,7 +101,7 @@ void invasion_data_t::init() {
         }
 
         for (int year = 1; year < 8; year++) {
-            const empire_object* obj = empire_object_get_battle_icon(path_current, year);
+            const empire_object* obj = g_empire.get_battle_icon(path_current, year);
             if (!obj) {
                 continue;
             }
@@ -275,10 +277,10 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 figure* f = figure_create(figure_type, invasion_tile, orientation);
                 f->faction_id = 0;
-                f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+                f->action_state = ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
-                f->name = figure_name_get(figure_type, enemy_type);
+                f->name = figure_name_get(figure_type);
             }
             seq++;
         }

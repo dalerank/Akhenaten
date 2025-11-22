@@ -76,7 +76,7 @@ void building_scribal_school::spawn_figure() {
         base.figure_spawn_delay = 0;
 
         figure* f = figure_create(FIGURE_TEACHER, road, DIR_0_TOP_RIGHT);
-        f->action_state = FIGURE_ACTION_125_ROAMING;
+        f->action_state = ACTION_125_ROAMER_ROAMING;
         f->set_home(id());
         base.set_figure(BUILDING_SLOT_SERVICE, f->id);
         f->init_roaming_from_building(0);

@@ -2,6 +2,7 @@
 
 #include "graphics/text.h"
 #include "io/gamefiles/lang.h"
+#include "io/gamefiles/lang.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
 #include "js/js_game.h"
@@ -165,7 +166,7 @@ pcstr lang_get_string(int group, int index) {
 
 pcstr lang_text_from_message(int id) {
     auto it = g_event_messages.find({ (uint16_t)id });
-    return (pcstr)((it != g_event_messages.end()) ? it->text.c_str() : "#unknown_message");
+    return (pcstr)((it != g_event_messages.end()) ? it->text.c_str() : "#message_table_of_contents");
 }
 
 textid loc_text_from_key(pcstr key) {
@@ -175,6 +176,24 @@ textid loc_text_from_key(pcstr key) {
 
 const game_languages_vec & get_available_languages() {
     return game_languages;
+}
+
+xstring lang_xtext_from_key(const xstring& key) {
+    if (!key) {
+        return "";
+    }
+
+    auto it = g_localization.find({ key });
+    if (it != g_localization.end()) {
+        if (!it->text.empty()) {
+            return it->text;
+        }
+
+        xstring str = lang_get_string(it->group, it->id);
+        return str;
+    }
+
+    return key;
 }
 
 pcstr lang_text_from_key(pcstr key) {
@@ -188,7 +207,7 @@ pcstr lang_text_from_key(pcstr key) {
             return it->text.c_str();
         }
 
-        pcstr str = (pcstr)lang_get_string(it->group, it->id);
+        pcstr str = lang_get_string(it->group, it->id);
         return str;
     }
 
@@ -303,9 +322,9 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, e_font font) {
 }
 
 int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, e_font font) {
-   pcstr str = lang_get_string(group, number);
+    pcstr str = lang_get_string(group, number);
     if (!str) {
         return 0;
     }
-    return text_draw_multiline(str, offset.x, offset.y, box_width, font, 0);
+    return text_draw_multiline(str, offset, box_width, font, 0);
 }

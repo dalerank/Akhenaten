@@ -8,6 +8,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figuretype/figure_hyena.h"
+#include "figuretype/figure_enemy.h"
 #include "figure/formation_enemy.h"
 #include "figure/route.h"
 #include "grid/desirability.h"
@@ -132,6 +133,12 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
             continue;
 
         figure* f = figure_get(m->figures[i]);
+        auto fanimal = f->dcast_animal();
+
+        if (!fanimal) {
+            continue;
+        }
+
         if (f->action_state == FIGURE_ACTION_149_CORPSE || f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
         }
@@ -150,16 +157,11 @@ static void move_animals(const formation* m, int attacking_animals, int terrain_
                     }
                 }
             } else {
-                auto fanimal = f->dcast_animal();
-                if (fanimal) {
-                    fanimal->herd_moved();
-                } else {
-                    f->advance_action(14);
-                }
-                f->destination_tile.set(0, 0);
+                fanimal->herd_moved();
+                fanimal->base.destination_tile = tile2i::invalid;
             }
         } else {
-            f->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
+            fanimal->herd_rest();
         }
     }
 }
@@ -198,9 +200,8 @@ static void set_figures_to_initial(const formation* m) {
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
-            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK
-                && f->action_state != ACTION_16_FLEEING) {
-                f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK /*&& f->action_state != ACTION_16_FLEEING*/) {
+                f->action_state = ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 0;
 
                 // ostriches!
@@ -219,10 +220,14 @@ void animal_herds_t::update_herd_formation(formation* m) {
         // spawn new wolf
         if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_WOLF)) {
             figure* wolf = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
-            wolf->action_state = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wolf->action_state = 24;
             wolf->formation_id = m->id;
             wolf->wait_ticks = wolf->id & 0x1f;
+
+            auto fanimal = wolf->dcast_animal();
+            if (fanimal) {
+                fanimal->herd_rest();
+            }
         }
     }
 
@@ -235,10 +240,14 @@ void animal_herds_t::update_herd_formation(formation* m) {
         bool valid_tile = m->tile.valid();
         if (is_passible && valid_tile) {
             figure* ostrich = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
-            ostrich->advance_action(FIGURE_ACTION_196_HERD_ANIMAL_AT_REST);
             ostrich->formation_id = m->id;
             ostrich->wait_ticks = ostrich->id & 0x1f;
             m->failed_creation_count = 0;
+
+            auto fanimal = ostrich->dcast_animal();
+            if (fanimal) {
+                fanimal->herd_rest();
+            }
         } else {
             m->tile = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
 

@@ -61,6 +61,7 @@ struct font_definition {
  * @return Font definition
  */
 const font_definition* font_definition_for(e_font font);
+font_definition* font_definition_ref(e_font font);
 
 /**
  * Checks whether the font has a glyph for the passed character

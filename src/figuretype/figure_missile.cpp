@@ -126,8 +126,9 @@ void figure_missile::missile_hit_figure(figure_id target_id, int legionary_type)
         break;
     }
 
+    auto &d = runtime_data();
     int target_max_damage = target->max_damage();
-    int damage_inflicted = runtime_data().missile_attack_value - target->missile_defense_value();
+    int damage_inflicted = d.missile_attack_value - target->missile_defense_value();
 
     formation *m = formation_get(target->formation_id);
     if (damage_inflicted < 0) {
@@ -139,7 +140,7 @@ void figure_missile::missile_hit_figure(figure_id target_id, int legionary_type)
     }
 
     int target_damage = damage_inflicted + target->damage;
-    target->apply_damage(damage_inflicted);
+    target->apply_damage(damage_inflicted, d.shooter_id);
     if (target->damage > target_max_damage) {
         target->damage = target_max_damage + 1;
         target->kill();

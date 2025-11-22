@@ -22,6 +22,7 @@
 #include "grid/building.h"
 #include "city/ratings.h"
 #include "city/city.h"
+#include "core/object_property.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_buyer);
@@ -55,7 +56,6 @@ void figure_market_buyer::figure_action() {
         }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
     case ACTION_146_MARKET_BUYER_RETURNING:
         if (base.do_returnhome()) {
             home()->figure_spawn_delay = -3;
@@ -68,7 +68,7 @@ void figure_market_buyer::figure_action() {
 sound_key figure_market_buyer::phrase_key() const {
     svector<sound_key, 10> keys;
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        keys.push_back("goto_store");
+        keys.push_back("buyer_goto_store");
     } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
         keys.push_back("buyer_back_to_market");
     } 
@@ -156,19 +156,20 @@ void distribute_market_resources(building* b, building* market) {
 
     auto &marketd = bazaar->runtime_data();
     auto &housed = house->runtime_data();
+    const auto &house_model = house->model();
     int level = house->house_level();
     if (level < HOUSE_PALATIAL_ESTATE) {
         level++;
     }
 
-    int max_food_stocks = 4 * housed.highest_population;
+    int max_food_stocks = house_model.food_storage_multiplier * housed.highest_population;
     int food_types_stored_max = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         if (housed.foods[i] >= max_food_stocks)
             food_types_stored_max++;
     }
 
-    const model_house& model = model_get_house(level);
+    const model_house& model = building_house::get_model(level);
     if (model.food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             if (housed.foods[i] >= max_food_stocks) {
@@ -186,27 +187,31 @@ void distribute_market_resources(building* b, building* market) {
             }
         }
     }
-    if (model.pottery) {
-        marketd.pottery_demand = 10;
-        distribute_good(b, market, 8 * model.pottery, INVENTORY_GOOD1);
+
+    int goods_no = 8;
+    if (!!game_features::gameplay_houses_stockpile_more) {
+        goods_no = 16;
     }
 
-    int goods_no = 4;
-    if (!!game_features::gameplay_houses_stockpile_more) {
-        goods_no = 8;
+    int aproximated_level = housed.highest_population / 10;
+    if (model.pottery) {
+        marketd.pottery_demand = 10;
+        distribute_good(b, market, goods_no * aproximated_level * model.pottery, INVENTORY_GOOD1);
     }
 
     if (model.jewelry) {
         marketd.luxurygoods_demand = 10;
-        distribute_good(b, market, goods_no * model.jewelry, INVENTORY_GOOD2);
+        distribute_good(b, market, goods_no * aproximated_level * model.jewelry, INVENTORY_GOOD2);
     }
+
     if (model.linen) {
         marketd.linen_demand = 10;
-        distribute_good(b, market, goods_no * model.linen, INVENTORY_GOOD3);
+        distribute_good(b, market, goods_no * aproximated_level * model.linen, INVENTORY_GOOD3);
     }
+
     if (model.beer) {
         marketd.beer_demand = 10;
-        distribute_good(b, market, goods_no * model.beer, INVENTORY_GOOD4);
+        distribute_good(b, market, goods_no * aproximated_level * model.beer, INVENTORY_GOOD4);
     }
 }
 
@@ -279,35 +284,22 @@ int figure_market_buyer::provide_service() {
     return houses_serviced;
 }
 
-figure_sound_t figure_market_buyer::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
+bvariant figure_market_buyer::get_property(const xstring &domain, const xstring &name) const {
+    if (domain == tags().figure && name == tags().resource) {
+        return bvariant(base.collecting_item_id);
+    }
+
+    return figure_impl::get_property(domain, name);
 }
 
-bool figure_market_buyer::window_info_background(object_info &c) {
-    painter ctx = game.painter();
-    figure *f = c.figure_get();
-
-    const uint16_t big_image = f->anim(animkeys().big_image).first_img();
-    ctx.img_generic(big_image, c.offset + vec2i{28, 112});
-
-    lang_text_draw(254, base.name, c.offset.x + 90, c.offset.y + 108, FONT_LARGE_BLACK_ON_DARK);
-    int width = lang_text_draw(64, type(), c.offset.x + 92, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-
+xstring figure_market_buyer::action_tip() const {
     if (action_state() == ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
-        width += lang_text_draw(129, 17, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(base.collecting_item_id);
-        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        return "#market_buyer_collecting";
     } else if (action_state() == ACTION_146_MARKET_BUYER_RETURNING) {
-        width += lang_text_draw(129, 18, c.offset.x + 90 + width, c.offset.y + 139, FONT_NORMAL_BLACK_ON_DARK);
-        int resource = inventory_to_resource_id(base.collecting_item_id);
-        ctx.img_generic(image_id_resource_icon(resource) + resource_image_offset(resource, RESOURCE_IMAGE_ICON), c.offset + vec2i{90 + width, 135});
+        return "#market_buyer_returning_to";
     }
 
-    if (c.nfigure.phrase.valid()) {
-        lang_text_draw_multiline(c.nfigure.phrase.group, c.nfigure.phrase.id, c.offset + vec2i{90, 160}, 16 * (c.bgsize.x - 8), FONT_NORMAL_BLACK_ON_DARK);
-    }
-
-    return true;
+    return "#market_buyer_idle";
 }
 
 int figure_market_buyer::take_food_from_storage(building* market, building* b) {

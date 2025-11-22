@@ -37,6 +37,10 @@ void scenario_data_t::init() {
     settings.starting_personal_savings = 0;
 }
 
+void scenario_data_t::distant_battle_set_enemy_travel_months(int value) {
+    empire.distant_battle_enemy_travel_months = value;
+}
+
 void scenario_data_t::init_mission() {
     settings.starting_kingdom = difficulty_starting_kingdom();
     settings.starting_personal_savings = g_settings.personal_savings_for_mission(settings.campaign_mission_rank);
@@ -109,8 +113,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
 }
 
 void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
-    assert(size == 900);
-    char data[900] = { 0 };
+    assert(size == 2000);
+    char data[2000] = { 0 };
     if (iob->is_read_access()) {
         iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
         vars.load(data);

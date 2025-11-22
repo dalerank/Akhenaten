@@ -78,17 +78,6 @@ namespace vfs {
         // zipfile comment (variable size)
     } PACK_STRUCT;
 
-    struct SZipFileExtraHeader {
-        short ID;
-        short Size;
-    } PACK_STRUCT;
-
-    struct SZipFileAESExtraData {
-        short Version;
-        unsigned char Vendor[2];
-        unsigned char EncryptionStrength;
-        short CompressionMode;
-    } PACK_STRUCT;
 
     enum E_GZIP_FLAGS {
         EGZF_TEXT_DAT = 1,

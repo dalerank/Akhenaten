@@ -63,8 +63,9 @@ const building_mastaba::base_params &get_mastaba_params(e_building_type type) {
     const auto &params = building_static_params::get(type);
 
     switch (params.type) {
-    case BUILDING_SMALL_STATUE: return mastaba_base_params<building_small_mastaba>(params);
-    case BUILDING_MEDIUM_STATUE: return mastaba_base_params<building_medium_mastaba>(params);
+    case BUILDING_SMALL_MASTABA: return mastaba_base_params<building_small_mastaba>(params);
+    case BUILDING_MEDIUM_MASTABA: return mastaba_base_params<building_medium_mastaba>(params);
+    //case BUILDING_LARGE_MASTABA: return mastaba_base_params<building_large_mastaba>(params);
     }
 
     static building_mastaba::base_params dummy;

@@ -29,6 +29,7 @@ localization_en = [
   {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
   {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
   {key:"#TR_CONFIG_SMOOTH_SCROLLING", text:"Enable smooth scrolling"}
+  {key:"#TR_CONFIG_SMOOTH_ZOOM", text:"Enable smooth zoom"}
   {key:"#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", text:"Improve visual feedback when clearing land"}
   {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Allow building each temple in succession"}
   {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Show range when building reservoirs, fountains and wells"}
@@ -96,6 +97,7 @@ localization_en = [
   {key:"#TR_CONFIG_HIGHLIGHT_TOP_MENU_HOVER", text:"Highlight Top Menu Items"}
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Show Old Names for city on empire map"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Draw cloud shadows (experimental)"}
+  {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"Conservatory helps dance school (reduces spawn delay)"}
   {key:"#TR_CONFIG_HEADER_SCENARIO_CHANGES", text:"Change scenarios"}
   {key:"#TR_CONFIG_HEADER_RESOURCES", text:"Change resources"}
   {key:"#TR_CONFIG_ANIMALS", text:"Change animals"}
@@ -186,6 +188,7 @@ localization_en = [
   {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"residents total"}
 
   {key: "#main_menu_mods", text:"Mods"}
+  {key: "#mission2_store_figs", text:"Build a Granary and fill it with figs"}
 
   {key: "#message_population_title", text:"Population Milestone"}
   {key: "#message_population_100", text:"100 people have moved into your village"}
@@ -773,6 +776,12 @@ localization_en = [
   {key: "#AD", text:"AD"}
   {key: "#BC", text:"BC"}
 
+  { key: "#trader_city_not_trades", text: "Our long and dangerous trek here was for nothing! This city won't trade." }
+  { key: "#trader_buy_for_less_sell_for_more", text: "Buy low, sell high.  That's my motto!" }
+  { key: "#trader_its_my_life", text: "It's the trader's life for me!" }
+  { key: "#trader_i_ll_be_a_hero", text: "I'll be a hero when I bring these goods back to my home land." }
+  { key: "#trader_you_talk_a_fine_bargain", text: "You talk a fine bargain, my friend.  I'll barely make back my costs." }
+
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}
@@ -780,5 +789,314 @@ localization_en = [
   {key: "#house_upgrade_nospace", group:127, id:104}
   {key: "#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Game language"}
 
-  {key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
+  { key: "#hunter_ostrich_good_city", lang:"en", text: "I like it here, but there is always room for improvement."}
+
+  { key: "#immigrant_im_new_here", text: "I'm new here.  I wonder what the city will offer to a person like me." }
+  { key: "#immigrant_heard_there_is_a_job_here", text: "I heard there is a job here for anyone who wants one." }
+  { key: "#immigrant_city_has_plenty_of_food", text: "People say that this city has plenty of food to go around." }
+
+  { key: "#emigrant_no_job_in_city", text: "I can't find a job here. I will look elsewhere." }
+  { key: "#emigrant_no_food_in_city", text: "There's not enough food for me to eat. I'm moving out of this desert!" }
+  { key: "#emigrant_tax_too_high", text: "Taxes are too high here. I'm surprised I wasn't taxed for leaving." }
+  { key: "#emigrant_salary_too_low", text: "I can't live on what they pay me here." }
+  { key: "#emigrant_no_house_for_me", text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
+
+  { key: "#recruiter_sick_people", text: "I see sick people everywhere. A plague could break out!" }
+  { key: "#recruiter_starving", text: "I'm starving. I'd rather be looking for food than for workers. " }
+  { key: "#recruiter_city_defenses_weak", text: "City defenses are so weak, I could soon be filling jobs with foreigners instead of Egyptians." }
+  { key: "#recruiter_without_workers", text: "Without workers available, my job is impossible." }
+  { key: "#recruiter_gods_unleash_fury", text: "I hope the gods don't unleash their fury. We need to pay more attention to them." }
+  { key: "#recruiter_enemies_attack", text: "Enemies could attack at any time. Our reputation is low, and no one respects us." }
+  { key: "#recruiter_able_people_out_of_work", text: "With so many able people out of work, my job ought to be easy." }
+  { key: "#recruiter_boring", text: "It's boring here. I wish I could hire more entertainers." }
+  { key: "#recruiter_living_here", text: "I don't mind living here. Things could certainly be worse." }
+  { key: "#recruiter_best_city", text: "This city is the best!" }
+  { key: "#recruiter_most_popular", text: "I'm the most popular person in the city. A lot of people need jobs." }
+  { key: "#recruiter_list_of_job_openings", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+
+  { key: "#barge_have_no_place_for_dock", text: "I wonder if this city has any sights I could see while they unload my ship." }
+  { key: "#barge_docked_wait_for_dockpushers", text: "We're waiting for some cargo to be delivered to our ship." }
+  { key: "#barge_city_not_trades", text: "I don't know why we came. This city never trades, and the shore leave is boring." }
+  { key: "#barge_i_like_to_trage", text: "I love the art of the deal! I can't wait to trade my supplies." }
+  { key: "#barge_amazing_trades", text: "What a bountiful journey!" }
+
+  { key: "#dancer_i_like_festivals", text: "Many people have taken ill in the city. I hope I don't catch anything!" }
+  { key: "#dancer_desease_can_start_at_any_moment", text: "I can't prance and leap very well without enough food!" }
+  { key: "#dancer_no_food_in_city", text: "Invaders would have little trouble taking over our city. Nothing defends it." }
+  { key: "#dancer_city_not_safety_workers_leaving", text: "Another dance partner lost to the worker shortage! I hate dancing alone." }
+  { key: "#dancer_need_workers", text: "We should do more to appease the gods - and quickly!" }
+  { key: "#dancer_gods_are_angry", text: "This city's reputation is worse than a juggler's! I hope we aren't attacked." }
+  { key: "#dancer_city_is_bad", text: "If I weren't so light on my feet, I would trip over all these jobless people!" }
+  { key: "#dancer_much_unemployments", text: "(Yawn) I need to be entertained!" }
+  { key: "#dancer_salary_too_low", text: "This city is just about as good as any other city, I guess." }
+  { key: "#dancer_city_is_good", text: "This city is fantastic!" }
+  { key: "#dancer_city_is_amazing", text: "These festival crowds are so enthusiastic, they make me want to leap higher." }
+
+  { key: "#homeless_i_was_kicked_out_of_my_home", text: "I've been kicked out of my home, and through no fault of my own." }
+  { key: "#homeless_i_cant_find_a_place_to_live", text: "I can't find a place to live!" }
+
+  { key: "#marketboy_these_baskets_are_too_heavy", text: "These baskets are too heavy for a little kid like me!" }
+  { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "That bossy lady makes me carry goods all day!" }
+  { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Maybe I just carry baskets now, but one day I'll run the Bazaar." }
+
+  { key: "#engineer_extreme_damage_level", text: "A lot of people are in much worse condition than the buildings. I hope things don't get worse." }
+  { key: "#engineer_no_food_in_city", text: "Starvation might not affect the strength of these buildings, but it sure affects mine!" }
+  { key: "#engineer_city_not_safety", text: "How are we to defend ourselves? The city's defenses are laughable." }
+  { key: "#engineer_high_damage_level", text: "Why does it matter if these buildings collapse? No workers are in them anyway." }
+  { key: "#engineer_gods_are_angry", text: "If the gods are angry, not even the best architect can fix the damage they cause." }
+  { key: "#engineer_city_has_bad_reputation", text: "Our city's reputation is so low, I fear our enemies will attack." }
+  { key: "#engineer_need_more_workers", text: "By my estimation, a lot of people are out of work." }
+  { key: "#engineer_low_entertainment", text: "Ho hum. Even architects like a little fun every now and then." }
+  { key: "#engineer_life_here_could_be_worse", text: "Life here could be a lot worse." }
+  { key: "#engineer_city_is_good", text: "This city has everything an architect's heart could desire!" }
+  { key: "#engineer_so_many_places_in_poor_condition", text: "There are so many places in poor condition, I can barely keep up." }
+  { key: "#engineer_city_is_amazing", text: "I hope I'm credited for the great condition of this city." }
+
+  { key: "#fireman_desease_can_start_at_any_moment", text: "I hope a plague doesn't break out. Plagues can spread like wildfire." }
+  { key: "#fireman_no_food_in_city", text: "Even when fires are burning, all I can think about is how hungry I am." }
+  { key: "#fireman_city_not_safety_workers_leaving", text: "If our enemies invade, the whole city could go up in flames." }
+  { key: "#fireman_need_workers", text: "I fear that some of these half-empty buildings could catch fire. I wish there were more workers." }
+  { key: "#fireman_gods_are_angry", text: "The gods' fiery wrath will come down on us if we don't pay more respect." }
+  { key: "#fireman_hight_fire_level", text: "I wouldn't dream of letting my reputation sink so low. Our city's bad reputation is inviting attack." }
+  { key: "#fireman_need_more_workers", text: "I've had more people volunteer for the fire department. These people need jobs." }
+  { key: "#fireman_low_entertainment", text: "Firefighting is hard work, and I'd love to cool off with a good show.  There's not enough of that here." }
+  { key: "#fireman_gods_are_pleasures", text: "I'm satisfied with this city." }
+  { key: "#fireman_city_is_amazing", text: "This city is cool." }
+  { key: "#fireman_fighting_fire", text: "I can't talk now.  I'm busy dousing this fire." }
+  { key: "#fireman_going_to_fire", text: "This fire could burn the whole city down if I don't act fast!" }
+  { key: "#fireman_fighting_fire_also", text: "Ooh, that's hot!" }    
+
+  { key: "#malaria_problem", text: "(Not used)" }
+  { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
+  { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
+
+  { key: "#policeman_desease_can_start_at_any_moment", text: "With so many people so weak and sickly, I fear for the future." }
+  { key: "#policeman_no_food_in_city", text: "I haven't eaten in so long, even I'm considering stealing food!" }
+  { key: "#policeman_city_not_safety", text: "If invaders do come, it looks like it will be up to me to defend the city." }
+  { key: "#policeman_need_workers", text: "If I didn't enjoy the danger of police work, I'd quickly take one of the many available jobs." }
+  { key: "#policeman_gods_are_angry", text: "If I were running things, I'd pay more attention to the gods." }
+  { key: "#policeman_no_army", text: "I've heard our city is an easy mark for invaders. We have a bad reputation." }
+  { key: "#policeman_much_unemployments", text: "I don't like to see this many jobless loiterers. I can't walk my beat without tripping over them!" }
+  { key: "#policeman_low_entertainment", text: "This city is dull. I can't find any good shows to see." }
+  { key: "#policeman_city_is_good", text: "This city isn't perfect, but then what city is?" }
+  { key: "#policeman_very_low_crime_level", text: "If only the Bazaar carried donuts, this city would be perfect." }
+  { key: "#policeman_low_crime_level", text: "Everybody's friendly here. No one is reporting any crimes." }
+  { key: "#policeman_usual_crime_level", text: "A few crimes here, a few crimes there, but nothing out of the ordinary." }
+  { key: "#policeman_need_more_workers", text: "Even I don't like to walk in this part of town!" }
+  { key: "#policeman_iam_too_busy_that_talk", text: "I'm really too busy to talk right now - ask me again later." }
+  { key: "#policeman_i_hope_my_work_is_need", text: "I'll do my part to make sure this city is safe!" }
+  { key: "#policeman_no_army_2", text: "Fighting invaders wasn't in my job description!" }
+  { key: "#policeman_enemies_are_coming_2", text: "These rascals aren't taking over the city on my watch!" }
+  { key: "#policeman_enemies_are_coming", text: "The enemy could soon win if I don't get some help! " }
+
+  { key: "#hunter_ostrich_hunting", text: "Ostriches are nearly invisible when they put their heads in the sand." }
+  { key: "#hunter_ostrich_back", text: "Now, those are some BIG drumsticks!" }
+  { key: "#hunter_ostrich_city_is_good", text: "This city is fantastic!" }
+
+  { key: "#lumberjack_hunting", text: "I am off for a hard day's logging." }
+  { key: "#lumberjack_back", text: "This timber will be put to good use, I am sure." }
+
+  { key: "#musician_city_heath_too_low", text: "If health doesn't improve in this city, I'll be playing only funeral dirges." }
+  { key: "#musician_no_food_in_city", text: "I'd sing for my supper, but this city doesn't have enough food." }
+  { key: "#musician_city_not_safety_workers_leaving", text: "Maybe I could beat invaders over the head with my sistrum.  The city is not defended well." }
+  { key: "#musician_need_workers", text: "All my performances are solos.  This city doesn't have enough workers." }
+  { key: "#musician_gods_are_angry", text: "I hope my music soothes the gods. Their anger could soon rain down on us." }
+  { key: "#musician_city_is_bad_reputation", text: "Our terrible reputation could provoke an attack!" }
+  { key: "#musician_much_unemployments", text: "For the last time, I am not hiring any more roadies! So many people are looking for work." }
+  { key: "#musician_no_entertainment", text: "Even an entertainer likes to be entertained! There's not enough to do here." }
+  { key: "#musician_city_not_bad", text: "This city could be a lot worse, I suppose." }
+  { key: "#musician_city_is_good", text: "I hope we continue to make beautiful music in this city for a long time." }
+
+  { key: "#taxman_desease_can_start_at_any_moment", text: "It seems an illness is taxing the people's health. I pray a plague doesn't strike." }
+  { key: "#taxman_no_food_in_city", text: "I wish people could pay their taxes in food. I'm so hungry!" }
+  { key: "#taxman_city_have_no_army", text: "Our city doesn't seem capable of defending itself!" }
+  { key: "#taxman_need_more_tax_collectors", text: "No amount of tax money is going to make this city run smoothly. We need more workers!" }
+  { key: "#taxman_gods_are_angry", text: "We owe the gods a great debt, and I don't want to be here when they come to collect!" }
+  { key: "#taxman_city_is_bad", text: "I've heard that invasion is imminent given our standing in Egypt." }
+  { key: "#taxman_much_unemployments", text: "Many of these houses have unemployed workers! How can they be expected to pay tax?" }
+  { key: "#taxman_low_entertainment", text: "As much as I like collecting taxes, I'd still like to see some professional entertainment." }
+  { key: "#taxman_city_is_good", text: "Life isn't too bad here." }
+  { key: "#taxman_city_is_amazing", text: "I'd rather live here than anywhere else!" }
+  { key: "#taxman_need_workers", text: "This city could bring in so much more revenue if they'd just hire some more tax collectors." }
+  { key: "#taxman_high_taxes", text: "Seems like the nicer their houses, the more people grumble about paying their share." }
+  { key: "#taxman_much_pooh_houses", text: "I hate collecting taxes from these run-down houses. It's hardly worth my time." }
+
+  { key: "#worker_desease_can_start_at_any_moment", text: "So many people are sick. I hope things don't get worse." }
+  { key: "#worker_no_food_in_city", text: "I'm famished. It's hard to work on an empty stomach." }
+  { key: "#worker_enemies_in_city", text: "I hope our enemies don't know how easy it would be to invade us." }
+  { key: "#worker_need_workers", text: "Job openings are everywhere! Maybe I can get a job as a fire marshal!" }
+  { key: "#worker_gods_are_angry", text: "I hope the gods don't unleash their wrath.  " }
+  { key: "#worker_city_is_bad", text: "I hear that our city doesn't have a good reputation. We could come under attack!" }
+  { key: "#worker_much_unemployments", text: "I'll hold on to this job as tightly as I can. I know many people who are out of work." }
+  { key: "#worker_low_entertainment", text: "All I ever do is work. There's nothing else to do in this city." }
+  { key: "#worker_city_is_good", text: "I like it here, but there is always room for improvement." }
+  { key: "#worker_city_is_amazing", text: "I hope I live here forever!" }
+  { key: "#worker_unused", text: "(not used)" }
+  { key: "#worker_going_to_workplace", text: "I'm ready to work!" }
+  { key: "#worker_farm_is_flooded", text: "With the fields under water, I work now for glory everlasting." }    
+
+  { key: "#doctor_concerned_about_plague", text: "With city health so dismal, I'm a busy man. Still, plague threatens." }
+  { key: "#doctor_no_food_in_city", text: "Being hungry all the time isn't good for me." }
+  { key: "#doctor_defenses_are_weak", text: "I'd advise this city to bolster its defenses so our enemies do not do us damage." }
+  { key: "#doctor_need_more_workers", text: "I've seen many workers pushed to their limits. This city could use more employees." }
+  { key: "#doctor_gods_are_angry", text: "I don't think we're paying the gods enough respect. This is terribly risky behavior." }
+  { key: "#doctor_reputation_is_low", text: "Our base reputation invites others to attack." }
+  { key: "#doctor_unemployment_is_high", text: "Sitting idly by waiting for jobs is bad for our people's health!" }
+  { key: "#doctor_low_entertainment", text: "I've had people come in for checkups just because they've got nothing better to do!" }
+  { key: "#doctor_city_is_ok", text: "This city is good enough, I guess." }
+  { key: "#doctor_city_is_the_best", text: "I cannot imagine a healthier place to live." }
+  { key: "#doctor_plague_could_strike_us_dead", text: "Plague could strike us dead at any moment!" }
+
+  { key: "#water_desease_can_start_at_any_moment", text: "I'm afraid to go into some neighborhoods. People are sick, and I don't want to catch anything." }
+  { key: "#water_no_food_in_city", text: "I'm weak from hunger. I'm nearly collapsing under the weight of all this water." }
+  { key: "#water_city_have_no_army", text: "It seems that it will be up to the citizens to defend this city if it comes under attack." }
+  { key: "#water_need_workers", text: "Jobs, jobs everywhere, and not a worker to fill them." }
+  { key: "#water_gods_are_angry", text: "If I were a god, I wouldn't be pleased with this city's lack of attention to me." }
+  { key: "#water_city_is_bad", text: "I hear that other cities are laughing at us and are planning to invade." }
+  { key: "#water_much_unemployments", text: "I see plenty of people out of work as I make my deliveries." }
+  { key: "#water_low_entertainment", text: "Carrying water is not entertainment. I wish we had some real diversions here." }
+  { key: "#water_city_is_good", text: "I like living here, but if I were running the town I'd do some things differently." }
+  { key: "#water_city_is_amazing", text: "There is no better place upon this earth." }
+
+  { key: "#osiris_city_low_health", text: "The city is flooded with sick people. I hope a plague doesn't break out." }
+  { key: "#osiris_no_food_in_city", text: "No priest of Osiris should have to suffer from hunger!" }
+  { key: "#osiris_city_not_safety", text: "Our city is almost defenseless. I hope no one attacks." }
+  { key: "#osiris_need_workers", text: "Without workers, we may not be able to pay Osiris the respect he deserves." }
+  { key: "#osiris_gods_are_angry", text: "Osiris is not the only god made angry by neglect." }
+  { key: "#osiris_low_sentiment", text: "Our city is the laughingstock of Egypt. We are ripe for attack." }
+  { key: "#osiris_much_unemployments", text: "Unemployment is a serious problem in this city. I hope more jobs open up soon." }
+  { key: "#osiris_low_entertainment", text: "Even a priest needs more than prayers to be entertained." }
+  { key: "#osiris_city_is_good", text: "This city is adequate." }
+  { key: "#osiris_city_is_amazing", text: "Osiris is proud to be worshiped in such a fine city." }
+  { key: "#osiris_god_love_festival", text: "Festivals warm Osiris' heart." }
+  { key: "#osiris_city_low_mood", text: "Osiris could punish the city for its neglect with a low flood." }
+
+  { key: "#ra_city_low_health", text: "The people coming to the Temple don't look healthy. I hope the illness doesn't escalate." }
+  { key: "#ra_no_food_in_city", text: "I don't have enough food to feed Ra or myself!" }
+  { key: "#ra_city_not_safety", text: "I wish it were up to Ra to defend our city. I don't think this city does a good job of it." }
+  { key: "#ra_need_workers", text: "I hope this city finds more workers soon. Services could soon suffer." }
+  { key: "#ra_gods_are_angry", text: "This city would do well to pay more respect to the gods." }
+  { key: "#ra_low_sentiment", text: "Reputation is important. Without it, the city is prone to hostile take over." }
+  { key: "#ra_much_unemployments", text: "I've never heard more people ask Ra whether they'll finally land a job." }
+  { key: "#ra_low_entertainment", text: "I need more entertainment. Pleasing Ra all day isn't easy, and I need to relax." }
+  { key: "#ra_city_is_good", text: "I have no major complaints about this city." }
+  { key: "#ra_city_is_amazing", text: "The only place better than this city is the Field of Reeds." }
+  { key: "#ra_god_love_festival", text: "Ra loves to see his people during the festival." }
+  { key: "#ra_city_low_mood", text: "Our city is an embarrassment to the rest of the Kingdom." }
+
+  { key: "#ptah_city_low_health", text: "Poor health could result in plague if nothing is done about conditions in the city." }
+  { key: "#ptah_no_food_in_city", text: "The rumbling of my empty stomach distracts me from my duties to Ptah." }
+  { key: "#ptah_city_not_safety", text: "Our holey defenses will be useless if anyone chooses to attack us." }
+  { key: "#ptah_need_workers", text: "It saddens Ptah to see industries idle because of the worker shortage." }
+  { key: "#ptah_gods_are_angry", text: "The gods my inflict a just retribution if the city continues to ignore them." }
+  { key: "#seth_low_sentiment", text: "Our ill repute could encourage invaders." }
+  { key: "#ptah_much_unemployments", text: "Ptah wishes that all the unemployed in the city could find productive work." }
+  { key: "#ptah_low_entertainment", text: "I like to have a good time, just like anyone else. I wish there were more entertainers in this city." }
+  { key: "#ptah_city_is_good", text: "This city has its problems, but its a good place to live." }
+  { key: "#ptah_city_is_amazing", text: "This is the best crafted city in all of Egypt!" }
+  { key: "#ptah_god_love_festival", text: "Ptah knows that holidays make workers happier." }
+  { key: "#ptah_city_low_mood", text: "Ptah's guiding hand can do only so much. The industries in this city need more workers!" }
+
+  { key: "#seth_city_low_health", text: "A plague may wreak havoc on the city if health does not improve." }
+  { key: "#seth_no_food_in_city", text: "All day, I battle my hunger. I need more food." }
+  { key: "#seth_city_not_safety", text: "We'll have to rely on Seth to protect us in battle. The city isn't prepared to defend itself." }
+  { key: "#seth_need_workers", text: "Services are suffering because no workers can be found!" }
+  { key: "#seth_gods_are_angry", text: "This city should stop provoking the gods' anger with its inaction." }
+  { key: "#seth_low_sentiment", text: "We may soon find out how little others think of our city when they sweep in and destroy it." }
+  { key: "#seth_much_unemployments", text: "The legions of the unemployed clog the streets." }
+  { key: "#seth_low_entertainment", text: "It's hard to believe how dull it is here!" }
+  { key: "#seth_city_is_good", text: "This city is suitable enough for me." }
+  { key: "#seth_city_is_amazing", text: "This city is unrivaled in all Egypt!" }
+  { key: "#seth_god_love_festival", text: "Even Seth's warriors need the occasional festival." }
+  { key: "#seth_city_low_mood", text: "Glory is on the horizon! Enemies are fast approaching the city." }
+
+  { key: "#bast_city_low_health", text: "Bast cries to see so many sickly people. I hope the plague doesn't strike." }
+  { key: "#bast_no_food_in_city", text: "It's hard to get enough food in this city. Hunger strikes everyone." }
+  { key: "#bast_city_not_safety", text: "Our city's woeful defenses invite our foes to attack us." }
+  { key: "#bast_need_workers", text: "Our city cannot possible run well with so many job openings." }
+  { key: "#bast_gods_are_angry", text: "The gods are turning their backs on this city. We should pay them more respect." }
+  { key: "#seth_low_sentiment", text: "The city's reputation is terrible. An invasion could come at any time." }
+  { key: "#seth_much_unemployments", text: "Not even Bast can lighten the hearts of so many jobless people." }
+  { key: "#seth_low_entertainment", text: "Bast is horrified by the lack of entertainment in this city." }
+  { key: "#seth_city_is_good", text: "This city isn't a bad place to live." }
+  { key: "#seth_city_is_amazing", text: "This city is the greatest!" }
+  { key: "#seth_god_love_festival", text: "Bast loves a good festival." }
+  { key: "#seth_low_sentiment_2", text: "People in the city are deeply unhappy. They could soon turn to crime." }
+  { key: "#seth_low_entertainment_2", text: "What's a priestess to do? There is so little diversion here." }
+  { key: "#seth_city_low_mood_2", text: "Bast grants me power to heal the sick before they spread their disease." }
+
+  { key: "#antelope_hunter_hunting", text: "Antelopes are no match for us!" }
+  { key: "#antelope_hunter_back", text: "There will be steaks for everyone tonight." }
+  { key: "#antelope_hunter_city_is_good", text: "This city is good!" }
+
+  { key: "#mission2_pottery_step1", text: "Fill a Storage Yard with pottery" }
+  { key: "#mission2_pottery_step2", text: "Beautify your city, then review the Mission Briefing" }
+
+  { key: "#mission3_brew_beer", text: "Brew some beer for Bazaars to distribute" }
+
+  { key: "#market_buyer_returning_to", text: "Returning to" }
+  { key: "#market_buyer_collecting", text: "Collecting" }
+
+  { key: "#tutorial_goal_education", text: "Make a house evolve into a 'spacious apartment'" }
+  { key: "#tutorial_goal_scribal_school", text: "Make some papyrus and build a Scribal School" }
+  { key: "#tutorial_goal_import_bricks", text: "Import some bricks so that you can build a mastaba" }
+
+  { key: "#none", text: "Nothing" }
+  { key: "#grain", text: "Grain" }
+  { key: "#meat", text: "Meat" }
+  { key: "#lettuce", text: "Lettuce" }
+  { key: "#chickpeas", text: "Chickpeas" }
+  { key: "#pomegranates", text: "Pomegranates" }
+  { key: "#figs", text: "Figs" }
+  { key: "#fish", text: "Fish" }
+  { key: "#gamemeat", text: "Game meat" }
+  { key: "#straw", text: "Straw" }
+  { key: "#weapons", text: "Weapons" }
+  { key: "#clay", text: "Clay" }
+  { key: "#bricks", text: "Bricks" }
+  { key: "#pottery", text: "Pottery" }
+  { key: "#barley", text: "Barley" }
+  { key: "#beer", text: "Beer" }
+  { key: "#flax", text: "Flax" }
+  { key: "#linen", text: "Linen" }
+  { key: "#gems", text: "Gems" }
+  { key: "#luxury_goods", text: "Luxury goods" }
+  { key: "#timber", text: "Wood" }
+  { key: "#gold", text: "Gold" }
+  { key: "#reeds", text: "Reeds" }
+  { key: "#papyrus", text: "Papyrus" }
+  { key: "#stone", text: "Plain stone" }
+  { key: "#limestone", text: "Limestone" }
+  { key: "#granite", text: "Granite" }
+  { key: "#chariots", text: "Chariot" }
+  { key: "#copper", text: "Copper" }
+  { key: "#sandstone", text: "Sandstone" }
+  { key: "#oil", text: "Oil" }
+  { key: "#henna", text: "Henna" }
+  { key: "#paint", text: "Paint" }
+  { key: "#lamps", text: "Lamps" }
+  { key: "#marble", text: "Marble" }
+  { key: "#deben", text: "Deben" }
+  { key: "#troops", text: "Troops" }
+  { key: "#jewelry_luxury", text: "Jewelry (luxury goods)" }
+  { key: "#jewelry", text: "Jewelry" }
+  { key: "#wine_luxury", text: "Wine (luxury goods)" }
+  { key: "#wine", text: "Wine" }
+  { key: "#ivory_luxury", text: "Ivory (luxury goods)" }
+  { key: "#ivory", text: "Ivory" }
+  { key: "#ebony_luxury", text: "Ebony (luxury goods)" }
+  { key: "#ebony", text: "Ebony" }
+  { key: "#incense_luxury", text: "Incense (luxury goods)" }
+  { key: "#incense", text: "Incense" }
+  { key: "#olive_oil_luxury", text: "Olive oil (luxury goods)" }
+  { key: "#olive_oil", text: "Olive oil" }
+  { key: "#leopard_skins_luxury", text: "Leopard skins (luxury goods)" }
+  { key: "#leopard_skins", text: "Leopard skins" }
+  { key: "#perfume_luxury", text: "Perfume (luxury goods)" }
+  { key: "#perfume", text: "Perfume" }
+
+  { key: "#bandstand_none", text: "This house has no access to a musicians' stage" }
+  { key: "#bandstand_medium", text: "This house was recently passed by a musician. It will have musician access for a long time" }
+  { key: "#bandstand_high", text: "This house has musician access" }
+  { key: "#bandstand_low", text: "This house has not been passed by a musician for a while. It will soon lose musician access" }
 ]

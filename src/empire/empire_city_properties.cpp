@@ -1,8 +1,8 @@
 #include "empire_city.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "empire/empire_map.h"
 #include "empire/empire.h"
 

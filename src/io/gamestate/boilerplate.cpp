@@ -173,6 +173,11 @@ static void post_load() {
     int mission_rank = get_scenario_mission_rank(scenario_id);
     g_scenario.set_campaign_rank(mission_rank);
 
+    // Clear mission variables when starting a new mission (not when loading from save)
+    if (game.session.last_loaded == e_session_mission) {
+        g_scenario.vars.clear();
+    }
+
     mission_id_t missionid(scenario_id);
     g_scenario.load_metadata(missionid);
     js_register_mission_vars(g_scenario.vars);
@@ -191,8 +196,12 @@ static void post_load() {
     // military
     // image_set_enemy_pak(scenario_property_enemy());
     city_military_determine_distant_battle_city();
-    scenario_distant_battle_set_kingdome_travel_months();
-    scenario_distant_battle_set_enemy_travel_months();
+
+    int karmy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_KINGDOME_ARMY);
+    g_scenario.distant_battle_set_kingdome_travel_months(karmy);
+
+    int kenemy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
+    g_scenario.distant_battle_set_enemy_travel_months(kenemy);
 
     //map
     map_image_fix_icorrect_tiles();
@@ -719,7 +728,8 @@ void GamestateIO::start_loaded_file() {
 
         // traders / empire
         g_empire_map.init_scenario();
-        g_empire_traders.clear_all();
+        g_empire.init_cities();
+        g_empire_traders.init();
 
         // set up events
         scenario_earthquake_init();

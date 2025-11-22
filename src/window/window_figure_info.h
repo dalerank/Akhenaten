@@ -21,7 +21,6 @@ struct figure_info_window : public common_info_window {
     figure *figure_get(object_info &c);
 
     void prepare_figures(object_info &c);
-    void play_figure_phrase(object_info &c);
 };
 
 template<typename T>

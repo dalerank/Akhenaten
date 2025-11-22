@@ -2,25 +2,82 @@
 
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "city/city.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_scriber);
 
 void figure_scriber::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_125_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
-            advance_action(FIGURE_ACTION_126_ROAMER_RETURNING);
+            advance_action(ACTION_126_ROAMER_RETURNING);
         }
 
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         ; // nothing here
         break;
 
     }
+}
+
+sound_key figure_scriber::phrase_key() const {
+    svector<sound_key, 10> keys;
+    
+    if (g_city.festival.months_since_festival > 6) {
+        keys.push_back("scribe_these_festivals");
+    }
+    
+    if (g_city.health.value < 40) {
+        keys.push_back(g_city.health.value < 20 
+                       ? "scribe_plague_could_break_out" 
+                       : "scribe_plague_could_break_out");
+    }
+    
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
+        keys.push_back("scribe_no_food_in_city");
+    }
+    
+    if (formation_get_num_forts() < 1) {
+        keys.push_back("scribe_defenses_are_weak");
+    }
+    
+    if (g_city.labor.workers_needed >= 10) {
+        keys.push_back("scribe_need_more_workers");
+    }
+    
+    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) {
+        keys.push_back("scribe_gods_are_angry");
+    }
+    
+    if (g_city.kingdome.rating < 30) {
+        keys.push_back("scribe_reputation_is_low");
+    }
+    
+    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
+        keys.push_back("scribe_high_unemployment");
+    }
+    
+    if (g_city.festival.months_since_festival > 6) {
+        keys.push_back("scribe_low_entertainment");
+    }
+    
+    const int sentiment = g_city.sentiment.value;
+    if (sentiment > 90) {
+        keys.push_back("scribe_city_is_amazing");
+    } else if (sentiment > 50) {
+        keys.push_back("scribe_city_is_ok");
+    }
+    
+    if (keys.empty()) {
+        keys.push_back("scribe_city_is_ok");
+    }
+    
+    int index = rand() % keys.size();
+    return keys[index];
 }
 
 int figure_scriber::provide_service() {

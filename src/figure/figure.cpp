@@ -141,7 +141,7 @@ static int get_nearest_enemy(int x, int y, int *distance) {
         int dist;
         if (f->type == FIGURE_PROTESTER || f->type == FIGURE_RIOTER)
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
-        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+        else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->is_enemy())
             dist = calc_maximum_distance(tile2i(x, y), f->tile);
         else if (f->is_enemy())
             dist = 3 * calc_maximum_distance(tile2i(x, y), f->tile);
@@ -189,7 +189,7 @@ nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::f
             break;
 
         case NEARBY_HOSTILE: // hostile
-            if (f->is_enemy() || f->type == FIGURE_TOMB_ROBER || f->is_attacking_native())
+            if (f->is_enemy() || f->is_criminal())
                 category_check = true;
             break;
         }
@@ -203,8 +203,7 @@ nearby_result figure::is_nearby(int rule, int max_distance, bool gang_on, std::f
                 if (rule == NEARBY_HOSTILE) {
                     if (f->type == FIGURE_TOMB_ROBER || f->type == FIGURE_RIOTER)
                         dist = calc_maximum_distance(tile, f->tile);
-                    else if (f->type == FIGURE_INDIGENOUS_NATIVE
-                        && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+                    else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->is_enemy())
                         dist = calc_maximum_distance(tile, f->tile);
                     else if (f->is_enemy())
                         dist = 3 * calc_maximum_distance(tile, f->tile);
@@ -349,8 +348,8 @@ void figure::add_roam_history(int goffset) {
     roam_history.push_tail(goffset);
 }
 
-void figure::apply_damage(int hit_dmg) {
-    dcast()->apply_damage(hit_dmg);
+void figure::apply_damage(int hit_dmg, figure_id attaker_id) {
+    dcast()->apply_damage(hit_dmg, attaker_id);
 }
 
 bool figure::is_dead() {
@@ -475,7 +474,7 @@ bool figure::is_non_citizen() {
         return id;
     }
 
-    if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING)
+    if (type == FIGURE_INDIGENOUS_NATIVE && is_enemy())
         return id;
 
     if (/*type == FIGURE_WOLF*/ type == FIGURE_OSTRICH || type == FIGURE_BIRDS || type == FIGURE_ANTELOPE)
@@ -504,16 +503,33 @@ xstring figure::action_tip() {
     return dcast()->action_tip();
 }
 
-void figure::noble_action() {
-
+int figure::get_direction() {
+    int dir;
+    if (action_state == FIGURE_ACTION_150_ATTACK)
+        dir = attack_direction;
+    else if (direction < 8)
+        dir = direction;
+    else {
+        dir = previous_tile_direction;
+    }
+    return figure_image_normalize_direction(dir);
 }
+
+int figure::get_missile_direction(const formation *m) {
+    int dir;
+    if (action_state == FIGURE_ACTION_150_ATTACK)
+        dir = attack_direction;
+    else if (m->missile_fired || direction < 8)
+        dir = direction;
+    else {
+        dir = previous_tile_direction;
+    }
+    return figure_image_normalize_direction(dir);
+}
+
 
 e_minimap_figure_color figure::get_figure_color() {
     if (is_enemy()) {
-        return FIGURE_COLOR_ENEMY;
-    }
-
-    if (type == FIGURE_INDIGENOUS_NATIVE && action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
 
@@ -539,6 +555,10 @@ void figure_impl::on_create() {
 
 void figure_impl::on_post_load() {
     on_change_terrain(0, base.terrain_type);
+
+    if (base.name.len() < 4) {
+        base.name = figure_name_get(base.type);
+    }
 }
 
 void figure_impl::on_attacked(figure *attacker) {
@@ -583,13 +603,11 @@ void figure_impl::figure_roaming_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case FIGURE_ACTION_125_ROAMING:
-    case ACTION_1_ROAMING:
+    case ACTION_125_ROAMER_ROAMING:
         base.do_roam();
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
-    case ACTION_2_ROAMERS_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         base.do_returnhome();
         break;
     }
@@ -619,8 +637,59 @@ void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
-    const xstring fname = snd::get_walker_reaction(key);
-    return {key, fname, 0, 0};
+    return params().sounds[key];
+}
+
+sound_key figure_impl::default_phrase_key() const {
+    e_god_mood god_mood = g_city.religion.least_mood();
+
+    if (city_resource_food_supply_months() <= 0) {
+        return "def_no_food_in_city";
+    }
+
+    const int unemployment_pct = g_city.labor.unemployment_percentage;
+    if (unemployment_pct >= 17) {
+        return "def_too_much_unemployments";
+    }
+
+    if (g_city.labor.workers_needed >= 10) {
+        return "def_need_more_workers";
+    }
+
+    if (g_city.avg_coverage.average_entertainment == 0) {
+        return "def_low_entertainment";
+    }
+
+    if (god_mood == GOD_MOOD_VERY_ANGRY) {
+        return "def_gods_very_angry";
+    }
+
+    if (g_city.avg_coverage.average_entertainment <= 10) {
+        return "def_little_entertainment";
+    }
+    
+    if (god_mood == GOD_MOOD_ANGRY) {
+        return "def_gods_angry";
+    }
+    
+    if (g_city.avg_coverage.average_entertainment <= 20) {
+        return "def_need_entertainment";
+    }
+    
+    if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 &&
+        g_city.avg_coverage.average_health > 0 && g_city.avg_coverage.average_education > 0) {
+        if (g_city.population.current < 500) {
+            return "def_city_not_bad";
+        }
+        
+        return "def_city_may_be_better";
+    } 
+    
+    if (unemployment_pct >= 10) {
+        return "def_city_need_some_workers";
+    }
+
+    return "def_city_is_good";
 }
 
 bool figure_impl::can_move_by_water() const {
@@ -715,7 +784,7 @@ const fproperty fproperties[] = {
         }
     },
 
-    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(ui::str(254, f.name)); }},
+    { tags().figure, tags().name, [] (figure &f, const xstring &) { return bvariant(f.name.c_str()); }},
     { tags().figure, tags().class_name, [] (figure &f, const xstring &) { bstring64 clname("#", f.params().name); return bvariant(lang_text_from_key(clname)); }},
     { tags().figure, tags().city_name, [] (figure &f, const xstring &) { return bvariant(f.dcast()->empire_city().name()); }},
     { tags().figure, tags().action_tip, [] (figure &f, const xstring &) { return bvariant(f.action_tip()); }},
@@ -840,15 +909,10 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
 }
 
 void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
-    int x_correction = 0;
-    int y_correction = 3;
-
-    y_correction = dcast()->y_correction(y_correction);
-
     const image_t *img = image_get(main_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = main_image_id;
-    command.pixel = pixel + vec2i{ x_correction, y_correction };
+    command.pixel = pixel;
     command.mask = COLOR_MASK_NONE;
 }
 
@@ -858,11 +922,6 @@ void figure::city_draw_figure(painter &ctx, int highlight) {
     // the raw sprite image id, it doesn't work if we haven't performed at least a
     // single frame of figure action after loading a file (i.e. if paused instantly)
     figure_image_update(true);
-
-    // if (coord_out != nullptr) {
-    //     highlight = 0;
-    //     *coord_out = cached_pos;
-    // }
 
     if (cart_image_id) {
         switch (type) {
@@ -965,7 +1024,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &f->cart_offset.y);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->empire_city_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_amount_bought);
-    iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->name); // 6
     iob->bind(BIND_SIGNATURE_UINT8, &f->terrain_usage);
     iob->bind(BIND_SIGNATURE_UINT8, &f->allow_move_type);
     iob->bind(BIND_SIGNATURE_UINT16, &f->resource_amount_full); // 4772 >>>> 112 (resource amount! 2-bytes)
@@ -974,9 +1033,9 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->target_height);
     iob->bind(BIND_SIGNATURE_UINT8, &f->collecting_item_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trade_ship_failed_dock_attempts);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
-    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
+    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->wait_ticks_next_target);
@@ -993,7 +1052,7 @@ void figure::bind(io_buffer* iob) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT16, &f->collecting_item_max);       
     iob->bind(BIND_SIGNATURE_UINT8, &f->routing_try_reroute_counter);                       // 269
-    iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_UINT16, &f->phrase.group);                       // 269
     iob->bind(BIND_SIGNATURE_UINT16, &f->sender_building_id);                        // 0
     iob->bind____skip(4);
     iob->bind____skip(12);                                                  // FF FF FF FF FF ...
@@ -1004,9 +1063,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->draw_mode);     // 6
     static_assert(sizeof(figure::runtime_data) == 40, "runtime_data more then 40 bytes");
     iob->bind(BIND_SIGNATURE_RAW, &f->runtime_data, sizeof(figure::runtime_data)); // 40
-    iob->bind____skip(10);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &f->festival_remaining_dances);
-    iob->bind____skip(27);
+    iob->bind____skip(6);
+    iob->bind(BIND_SIGNATURE_RAW, f->name.data(), 32);
 
     f->cart_image_id -= 18;
     iob->bind(BIND_SIGNATURE_UINT16, &f->cart_image_id);

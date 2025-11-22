@@ -1,7 +1,6 @@
 #include "game.h"
 
 #include "building/construction/build_planner.h"
-#include "building/model.h"
 #include "building/building_barracks.h"
 #include "building/building_granary.h"
 #include "building/building_burning_ruin.h"
@@ -42,7 +41,6 @@
 #include "graphics/screen.h"
 #include "widget/widget_minimap.h"
 #include "city/city.h"
-#include "city/trade.h"
 #include "city/city_floods.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
@@ -153,11 +151,15 @@ void game_t::advance_year() {
     //    city_gods_reset_yearly_blessings();
 }
 
+void game_t::advance_week() {
+    g_city.resource.consume_food_weekly(game.simtime);
+    g_city.resource.consume_goods_weekly(game.simtime);
+}
+
 void game_t::advance_month() {
     g_city.migration.reset_newcomers();
     g_city.health.update();
     g_city.finance.advance_month();
-    g_city.resource.consume_food(game.simtime);
     g_city.resource.advance_month();
     scenario_distant_battle_process();
 
@@ -203,8 +205,13 @@ void game_t::advance_day() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Advance Day");
     //    map_advance_floodplain_growth();
 
-    if (simtime.advance_day()) {
+    day_result dr = simtime.advance_day();
+    if (dr.month_advanced) {
         advance_month();
+    }
+
+    if (dr.week_advanced) {
+        advance_week();
     }
 
     g_city.update_day();
@@ -223,7 +230,7 @@ void game_t::shutdown() {
 void game_t::set_write_video(bool v) {
     if (!write_video && v) {
         assert(!mvwriter);
-        mvwriter = new MovieWriter("test.mp4", screen_width(), screen_height(), 4);
+        mvwriter = new MovieWriter("test.webm", screen_width(), screen_height(), 4);
     } else if (write_video && !v) {
         assert(mvwriter);
         delete mvwriter;
@@ -368,11 +375,6 @@ bool game_t::check_valid() {
 bool game_init(game_opts opts) {
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
-        return false;
-    }
-
-    if (!model_load()) {
-        logs::error("unable to load model data");
         return false;
     }
 

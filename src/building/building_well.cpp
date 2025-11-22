@@ -28,10 +28,12 @@ void building_well::preview::ghost_preview(build_planner &planer, painter &ctx, 
 }
 
 void building_well::update_month() {
-    int avg_desirability = g_desirability.get_avg(tile(), 4);
-    base.fancy_state = (avg_desirability > 30 ? efancy_good : efancy_normal);
-    pcstr ranim = (base.fancy_state == efancy_good) ? "fancy" : "base";
-    map_image_set(tile(), anim(ranim));
+    int avg_desirability = g_desirability.get_avg(tile(), current_params().desirability_range_check);
+
+    base.fancy_state = (avg_desirability > current_params().desirability_fancy ? efancy_good : efancy_normal);
+    const xstring animkey = (base.fancy_state == efancy_good) ? animkeys().fancy : animkeys().base;
+
+    map_image_set(tile(), anim(animkey));
 }
 
 void building_well::on_place_checks() {
@@ -41,15 +43,27 @@ void building_well::on_place_checks() {
     warnings.add_if(!has_water, "#needs_groundwater");
 }
 
-bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    pcstr ranim = (base.fancy_state == efancy_normal) ? "base_work" : "fancy_work";
-    building_draw_normal_anim(ctx, point, &base, tile, anim(ranim), color_mask);
+void building_well::update_graphic() {
+    if (!can_play_animation()) {
+        set_animation(animkeys().none);
+        return;
+    }
+
+    const xstring animkey = (base.fancy_state == efancy_normal) ? animkeys().base_work : animkeys().fancy_work;
+    set_animation(animkey);
+
+    building_impl::update_graphic();
+}
+
+bool building_well::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {   
+    draw_normal_anim(ctx, point, tile, color_mask);
 
     return true;
 }
 
 bool building_well::can_play_animation() const {
-    if (map_water_supply_is_well_unnecessary(id(), 3) != WELL_NECESSARY) {
+    const e_well_status status = map_water_supply_is_well_unnecessary(id(), current_params().unnecessary_range_check);
+    if (status != WELL_NECESSARY) {
         return false;
     }
 

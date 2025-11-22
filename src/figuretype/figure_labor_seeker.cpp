@@ -18,11 +18,11 @@ void figure_labor_seeker::figure_action() {
         base.figure_combat_handle_corpse();
         break;
 
-    case FIGURE_ACTION_125_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_126_ROAMER_RETURNING);
+    case ACTION_125_ROAMER_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
         break;
 
-    case FIGURE_ACTION_126_ROAMER_RETURNING:
+    case ACTION_126_ROAMER_RETURNING:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
     }
@@ -66,7 +66,7 @@ sound_key figure_labor_seeker::phrase_key() const {
     }
 
     if (formation_get_num_forts() < 1) {
-        keys.push_back("city_not_safety_workers_leaving");
+        keys.push_back("city_not_safety");
     }
 
     if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
@@ -89,7 +89,7 @@ sound_key figure_labor_seeker::phrase_key() const {
 
     keys.push_back("i_looking_for_the_workers");
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("recruiter_%s", keys[index].c_str());
 }
 
 int figure_labor_seeker::provide_service() {

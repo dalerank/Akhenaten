@@ -163,7 +163,7 @@ static void draw_empire_object(const empire_object &obj) {
     ctx.img_generic(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
-        int new_animation = empire_object_update_animation(obj, image_id);
+        int new_animation = g_empire.update_animation(obj, image_id);
         ctx.img_generic(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
@@ -182,7 +182,7 @@ static void window_editor_draw_map() {
     data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
     ctx.img_generic(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
 
-    empire_object_foreach(draw_empire_object);
+    g_empire.foreach_object(draw_empire_object);
 
     graphics_reset_clip_rectangle();
 }
@@ -229,7 +229,7 @@ static void draw_city_info(const empire_city* city) {
         width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (empire_object_city_sells_resource(city->empire_object_id, r)) {
+            if (g_empire.city_sells_resource(city->empire_object_id, r, false)) {
                 draw_resource(r, 0, resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;
             }
@@ -240,7 +240,7 @@ static void draw_city_info(const empire_city* city) {
         width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
         for (const auto &r: resource_list::all) {
-            if (empire_object_city_sells_resource(city->empire_object_id, r.type)) {
+            if (g_empire.city_sells_resource(city->empire_object_id, r.type, false)) {
                 int limit = city->get_route().limit(r.type);
                 draw_resource(r.type, limit, resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;
@@ -250,7 +250,7 @@ static void draw_city_info(const empire_city* city) {
         resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_BLACK_ON_DARK);
         resource_x_offset += 10;
         for (const auto &r: resource_list::all) {
-            if (empire_object_city_buys_resource(city->empire_object_id, r.type)) {
+            if (g_empire.city_buys_resource(city->empire_object_id, r.type, false)) {
                 int limit = city->get_route().limit(r.type);
                 draw_resource(r.type, limit, resource_x_offset, y_offset - 9);
                 resource_x_offset += 32;
@@ -283,7 +283,7 @@ static void draw_foreground(int) {
     const empire_city* city = 0;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object* object = empire_object_get(selected_object - 1);
+        const empire_object* object = g_empire.get_object(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
             data.selected_city = g_empire.get_city_for_object(object->id);
             city = g_empire.city(data.selected_city);
@@ -333,7 +333,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
             determine_selected_object(m);
             int selected_object = g_empire_map.selected_object();
             if (selected_object) {
-                if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY)
+                if (g_empire.get_object(selected_object - 1)->type == EMPIRE_OBJECT_CITY)
                     data.selected_city = g_empire.get_city_for_object(selected_object - 1);
 
             } else if (input_go_back_requested(m, h))

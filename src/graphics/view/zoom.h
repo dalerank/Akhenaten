@@ -2,15 +2,17 @@
 
 #include "input/mouse.h"
 #include "input/touch.h"
+#include "core/archive.h"
 
 struct zoom_t {
-    static constexpr float ZOOM_LERP_COEFF = 0.55f;
-    static constexpr float ZOOM_MIN = 25.0f;
-    static constexpr float ZOOM_MAX = 250.0f;
-    static constexpr float ZOOM_DEFAULT = 100.0f;
+    float zoom_default = 100.f;
+    float zoom_min = 25.f;
+    float zoom_max = 250.0f;
+    float zoom_epsilon = 0.05f;
+    float zoom_lerp_coeff = 0.55f;
 
-    float zoom = ZOOM_DEFAULT;
-    float target = ZOOM_DEFAULT;
+    float zoom = zoom_default;
+    float target = zoom_default;
     float delta;
     float zoom_speed = 25.0f;
     vec2i input_offset;
@@ -33,8 +35,8 @@ struct zoom_t {
     float get_percentage();
     void set_scale(float z);
 };
+ANK_CONFIG_STRUCT(zoom_t, zoom_default, zoom_min, zoom_max, zoom_epsilon, zoom_lerp_coeff, zoom_speed)
 
 extern zoom_t g_zoom;
-
 
 

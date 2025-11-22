@@ -29,12 +29,12 @@ void figure_fireman::figure_before_action() {
 }
 
 sound_key figure_fireman::phrase_key() const {
-    if (base.action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE) {
+    if (base.action_state == ACTION_74_FIREMAN_GOING_TO_FIRE) {
         return "going_to_fire";
     }
 
     svector<sound_key, 10> keys;
-    if (base.action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
+    if (base.action_state == ACTION_75_FIREMAN_AT_FIRE) {
         keys.push_back("fighting_fire_also");
         keys.push_back("fighting_fire");
 
@@ -87,7 +87,7 @@ sound_key figure_fireman::phrase_key() const {
     }
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("fireman_%s", keys[index].c_str());
 }
 
 void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!!
@@ -95,26 +95,24 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
 
     building* b = home();
     switch (base.action_state) {
-    case FIGURE_ACTION_70_FIREMAN_CREATED:
-        advance_action(FIGURE_ACTION_72_FIREMAN_ROAMING);
+    case ACTION_70_FIREMAN_CREATED:
+        advance_action(ACTION_72_FIREMAN_ROAMING);
         break;
 
-    case FIGURE_ACTION_73_FIREMAN_RETURNING:
+    case ACTION_73_FIREMAN_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
         break;
 
-    case 9:
-    case FIGURE_ACTION_71_FIREMAN_ENTERING_EXITING:
+    case ACTION_71_FIREMAN_ENTERING_EXITING:
         do_enterbuilding(true, home());
         break;
 
-    case FIGURE_ACTION_72_FIREMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_73_FIREMAN_RETURNING);
+    case ACTION_72_FIREMAN_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_FIREMAN_RETURNING);
         break;
 
-    case FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE:
-    case 12:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, FIGURE_ACTION_75_FIREMAN_AT_FIRE)) {
+    case ACTION_74_FIREMAN_GOING_TO_FIRE:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_75_FIREMAN_AT_FIRE)) {
             base.wait_ticks = 50;
         }
 
@@ -128,14 +126,14 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
             if (next_tile_b && next_tile_b->type == BUILDING_BURNING_RUIN) {
                 clear_ruin_destination();
                 base.set_destination(next_tile_b);
-                advance_action(FIGURE_ACTION_75_FIREMAN_AT_FIRE);
+                advance_action(ACTION_75_FIREMAN_AT_FIRE);
             }
             
             if (!next_b || next_b->state == BUILDING_STATE_UNUSED || next_b->type != BUILDING_BURNING_RUIN) {
                 clear_ruin_destination();
                 bool has_fire_around = fight_fire();
                 if (!has_fire_around) {
-                    advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
+                    advance_action(ACTION_73_FIREMAN_RETURNING);
                 }
             }
 
@@ -143,17 +141,16 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
                 base.movement_ticks_watchdog = 0;
                 clear_ruin_destination();
                 route_remove();
-                advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
+                advance_action(ACTION_73_FIREMAN_RETURNING);
             }
         }
         break;
 
-    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
-    case 13:
+    case ACTION_75_FIREMAN_AT_FIRE:
         extinguish_fire();
         break;
 
-    case FIGURE_ACTION_76_FIREMAN_GOING_TO_ENEMY:
+    case ACTION_76_FIREMAN_GOING_TO_ENEMY:
         //terrain_usage = TERRAIN_USAGE_ANY;
         //if (!target_is_alive()) {
         //    map_point road_tile;
@@ -175,7 +172,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
         //    poof();
         //}
         assert(false && "should not happens");
-        advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
+        advance_action(ACTION_73_FIREMAN_RETURNING);
         break;
     }
 }
@@ -197,7 +194,7 @@ void figure_fireman::extinguish_fire() {
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
         base.wait_ticks_missile = 20;
-        advance_action(FIGURE_ACTION_73_FIREMAN_RETURNING);
+        advance_action(ACTION_73_FIREMAN_RETURNING);
 
         if (!game_features::gameplay_change_fireman_returning) {
             if (!fight_fire()) {
@@ -217,10 +214,10 @@ bool figure_fireman::fight_fire() {
     switch (base.action_state) {
     case FIGURE_ACTION_150_ATTACK:
     case FIGURE_ACTION_149_CORPSE:
-    case FIGURE_ACTION_70_FIREMAN_CREATED:
-    case FIGURE_ACTION_71_FIREMAN_ENTERING_EXITING:
-    case FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE:
-    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
+    case ACTION_70_FIREMAN_CREATED:
+    case ACTION_71_FIREMAN_ENTERING_EXITING:
+    case ACTION_74_FIREMAN_GOING_TO_FIRE:
+    case ACTION_75_FIREMAN_AT_FIRE:
         return false;
     }
 
@@ -234,7 +231,7 @@ bool figure_fireman::fight_fire() {
     if (result.first > 0 && distance <= 25) {
         building* ruin = building_get(result.first);
         base.wait_ticks_missile = 0;
-        advance_action(FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE, result.second);
+        advance_action(ACTION_74_FIREMAN_GOING_TO_FIRE, result.second);
         base.set_destination(result.first);
         route_remove();
         ruin->set_figure(3, base.id);
@@ -267,15 +264,14 @@ void figure_fireman::update_animation() {
     figure_impl::update_animation();
 
     switch (action_state()) {  
-    case FIGURE_ACTION_75_FIREMAN_AT_FIRE:
-    case 13:
+    case ACTION_75_FIREMAN_AT_FIRE:
         base.direction = base.attack_direction;
         image_set_animation(animkeys().fight_fire);
         break;
 
-    case FIGURE_ACTION_73_FIREMAN_RETURNING:
-    case FIGURE_ACTION_72_FIREMAN_ROAMING:
-    case FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE:
+    case ACTION_73_FIREMAN_RETURNING:
+    case ACTION_72_FIREMAN_ROAMING:
+    case ACTION_74_FIREMAN_GOING_TO_FIRE:
         image_set_animation(animkeys().walk);
         break;
     }

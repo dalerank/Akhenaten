@@ -1,8 +1,8 @@
 #include "scenario/scenario.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_scenario_properties);
 void config_load_scenario_properties(bool header) {
