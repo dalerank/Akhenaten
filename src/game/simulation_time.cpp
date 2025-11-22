@@ -3,6 +3,9 @@
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
+#include "js/js_game.h"
+
+e_month_tokens_t ANK_CONFIG_ENUM(e_month_tokens);
 
 void simulation_time_t::init(int year) {
     tick = 0;

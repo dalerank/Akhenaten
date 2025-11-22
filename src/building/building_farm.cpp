@@ -245,40 +245,16 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     }
 }
 
-static bool farm_harvesting_month_for_produce(int resource_id, int month) {
-    switch (resource_id) {
-        // annual meadow farms
-    case RESOURCE_CHICKPEAS:
-    case RESOURCE_LETTUCE:
-        return (month == MONTH_APRIL);
-
-    case RESOURCE_FIGS:
-        return (month == MONTH_SEPTEMPTER);
-
-    case RESOURCE_FLAX:
-        return (month == MONTH_DECEMBER);
-
-    // biannual meadow farms
-    case RESOURCE_GRAIN:
-        return (month == MONTH_JANUARY || month == MONTH_MAY);
-
-    case RESOURCE_BARLEY:
-        return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
-
-    case RESOURCE_POMEGRANATES:
-        return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
-    }
-    return false;
-}
-
-bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
+bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
         float current_cycle = g_floods.current_cycle();
         float start_cycle = g_floods.start_cycle();
         float harvest_cycle = start_cycle - 28.0f;
         return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
-        const bool result = game.simtime.day < 2 && farm_harvesting_month_for_produce(resource_id, game.simtime.month);
+        const auto &months = farm_params().month_harvest;
+        const bool is_correct_month = std::count(months.begin(), months.end(), game.simtime.month) > 0;
+        const bool result = is_correct_month && game.simtime.day < 2;
         return result;
     }
 }
@@ -385,11 +361,11 @@ void building_farm::spawn_figure() {
     bool is_floodplain = building_is_floodplain_farm(base);
     if (!is_floodplain && has_road_access()) { // only for meadow farms
         common_spawn_labor_seeker(current_params().min_houses_coverage);
-        if (building_farm_time_to_deliver(false, base.output.resource)) { // UGH!!
+        if (time_to_deliver(false, base.output.resource)) { // UGH!!
             spawn_figure_harvests();
         }
     } else if (is_floodplain) {
-        if (building_farm_time_to_deliver(true)) {
+        if (time_to_deliver(true)) {
             spawn_figure_harvests();
         }
     }
