@@ -159,6 +159,7 @@ building_farm_grain {
   output_resource_second_rate : 10
 
   building_size : 3
+  month_harvest: [MONTH_JANUARY, MONTH_MAY]
   fire_proof : true
   damage_proof : true
   meta { help_id:90, text_id:112 }
@@ -194,9 +195,10 @@ building_farm_chickpeas {
     resource : RESOURCE_CHICKPEAS
   }
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  fire_proof : true
+  month_harvest: [MONTH_APRIL]
+  damage_proof : true
   meta { help_id:90, text_id:182 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -229,11 +231,12 @@ building_farm_lettuce {
     resource : RESOURCE_LETTUCE
   }
   
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  month_harvest: [MONTH_APRIL]
+  fire_proof : true
+  damage_proof : true
   meta { help_id:91, text_id:113 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
@@ -264,9 +267,10 @@ building_farm_pomegranates {
     resource : RESOURCE_POMEGRANATES
   }
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  month_harvest: [MONTH_JUNE, MONTH_NOVEMBER]
+  fire_proof : true
+  damage_proof : true
   meta { help_id:91, text_id:114 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -298,9 +302,10 @@ building_farm_barley {
     resource : RESOURCE_BARLEY
   }
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  fire_proof : true
+  month_harvest [MONTH_FEBRUARY, MONTH_AUGUST]
+  damage_proof : true
   meta { help_id:89, text_id:181 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
@@ -332,11 +337,12 @@ building_farm_flax {
     resource : RESOURCE_FLAX
   }
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  fire_proof : true
+  damage_proof : true
+  month_harvest: [MONTH_DECEMBER]
   meta { help_id: 90, text_id: 115 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
@@ -396,9 +402,10 @@ building_farm_figs {
     resource : RESOURCE_FIGS,
   }
 
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
+  building_size : 3
+  fire_proof : true
+  month_harvest: [MONTH_SEPTEMPTER]
+  damage_proof : true
   meta { help_id:90, text_id:183 }
   progress_max: 2000,
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,

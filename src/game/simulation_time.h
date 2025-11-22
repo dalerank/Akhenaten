@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "core/tokenum.h"
 
 enum e_month {
     MONTH_JANUARY = 0,
@@ -15,7 +16,10 @@ enum e_month {
     MONTH_OCTOBER = 9,
     MONTH_NOVEMBER = 10,
     MONTH_DECEMBER = 11,
+    MONTH_COUNT 
 };
+using e_month_tokens_t = token_holder<e_month, MONTH_JANUARY, MONTH_COUNT>;
+extern e_month_tokens_t e_month_tokens;
 
 /**
  * @file
