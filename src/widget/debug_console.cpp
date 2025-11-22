@@ -14,10 +14,10 @@
 #include "platform/keyboard_input.h"
 #include "platform/renderer.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/backends/imgui_impl_sdlrenderer2.h"
-#include "imgui/backends/imgui_impl_sdl2.h"
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_sdl2.h"
 #include "dev/debug.h"
 
 #include <iostream>
@@ -42,8 +42,16 @@ void game_debug_cli_draw() {
     game_debug_cli_guid = 0;
 }
 
+static float property_opt_float = 0.0f;
+static bool property_opt_enabled = false;
+void game_debug_set_property_opt(float opt) {
+    property_opt_float = opt;
+    property_opt_enabled = true;
+}
+
 void game_debug_show_property_value(pcstr field, const float &v, bool disabled) {
-    ImGui::InputFloat("##value", (float*)&v, 1.0f);
+    ImGui::InputFloat("##value", (float*)&v, property_opt_enabled ? property_opt_float : 1.0f);
+    property_opt_enabled = false;
 }
 
 void game_debug_show_property_value(pcstr field, const double &v, bool disabled) {
@@ -81,6 +89,10 @@ void game_debug_show_property_value(pcstr field, const bool &v, bool disabled) {
 
 void game_debug_show_property_value(pcstr field, const pcstr v, bool disabled) {
     ImGui::Text("%s", !!v ? v : "none");
+}
+
+void game_debug_show_property_value(pcstr field, const bstring32 &v, bool disabled) {
+    ImGui::Text("%s", !!v ? v.c_str() : "none");
 }
 
 void game_debug_show_property_value(pcstr field, const bstring64 &v, bool disabled) {
@@ -236,6 +248,7 @@ void game_debug_show_property(pcstr field, const uint8_t &v, bool disabled) { ga
 void game_debug_show_property(pcstr field, const uint16_t &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const bool &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, pcstr v) { game_debug_show_property_t(field, v, true); }
+void game_debug_show_property(pcstr field, const bstring32 &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const bstring64 &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const bstring256 &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
 void game_debug_show_property(pcstr field, const xstring &v, bool disabled) { game_debug_show_property_t(field, v, disabled); }
@@ -339,11 +352,32 @@ bool game_imgui_overlay_handle_event(void *e) {
 
     ImGui_ImplSDL2_ProcessEvent(event);
 
-    ImGuiContext &g = *GImGui;
-    ImGuiWindow *ref_window = g.HoveredWindow;
-    ImGuiWindow *cur_window = g.CurrentWindow;
+    if (game.debug_console) {
+        return true;
+    }
 
-    return ref_window || cur_window;
+    ImGuiIO &io = ImGui::GetIO();
+    bool wants_capture = false;
+
+    switch (event->type) {
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEWHEEL:
+        wants_capture = io.WantCaptureMouse;
+        break;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    case SDL_TEXTINPUT:
+    case SDL_TEXTEDITING:
+        wants_capture = io.WantCaptureKeyboard;
+        break;
+    default:
+        wants_capture = false;
+        break;
+    }
+
+    return wants_capture;
 }
 
 void game_toggle_debug_console() {

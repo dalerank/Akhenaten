@@ -18,6 +18,10 @@ game_settings::game_settings() {
     inf_file = new buffer(INF_SIZE);
 }
 
+uint8_t game_difficulty() {
+    return g_settings.difficulty();
+}
+
 void game_settings::load_default_settings() {
     fullscreen = true;
     cli_fullscreen = false;

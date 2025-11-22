@@ -92,7 +92,7 @@ void sound_manager_t::music_update(bool force) {
     }
 
     xstring track;
-    int total_enemies = g_city.figures_total_invading_enemies();
+    int total_enemies = g_city.figures.total_invading_enemies();
 
     if (total_enemies >= 32) {
         track = music.combat_long;

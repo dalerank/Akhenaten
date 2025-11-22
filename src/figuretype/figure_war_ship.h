@@ -2,6 +2,16 @@
 
 #include "figure/figure.h"
 
+enum e_warship_action {
+    ACTION_203_WARSHIP_MOORED = 203,
+    ACTION_204_WARSHIP_ATTACK = 204,
+    ACTION_205_WARSHIP_CREATED = 205,
+    ACTION_206_WARSHIP_GOING_TO_PATROL = 206,
+    ACTION_207_WARSHIP_GOING_TO_WHARF = 207,
+    ACTION_208_WARSHIP_GOING_TO_RANDOM = 208,
+    ACTION_209_WARSHIP_ON_PATROL = 209,
+};
+
 class figure_warship : public figure_impl {
 public:
     enum e_order {
@@ -38,8 +48,7 @@ public:
     virtual void figure_before_action() override {}
     virtual void figure_action() override;
     virtual void kill() override;
-    virtual figure_phrase_t phrase() const override { return { FIGURE_WARSHIP, "warship" }; }
-    virtual sound_key phrase_key() const override { return {}; }
+    virtual sound_key phrase_key() const override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override { return {}; }
     virtual void update_animation() override;
 

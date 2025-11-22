@@ -1,0 +1,98 @@
+/*
+ * GPUPixel
+ *
+ * Created by PixPark on 2021/6/24.
+ * Copyright © 2021 PixPark. All rights reserved.
+ */
+
+#include "color_matrix_filter.h"
+#include "gpupixel_context.h"
+
+NS_GPUPIXEL_BEGIN
+
+#if defined(GPUPIXEL_GLES_SHADER)
+const std::string kColorMatrixFragmentShaderString = R"(
+    uniform sampler2D inputImageTexture; uniform lowp mat4 colorMatrix;
+    uniform lowp float intensity;
+
+    varying highp vec2 textureCoordinate;
+
+    void main() {
+      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+      lowp vec4 outputColor = textureColor * colorMatrix;
+
+      gl_FragColor =
+          (intensity * outputColor) + ((1.0 - intensity) * textureColor);
+    })";
+#elif defined(GPUPIXEL_GL_SHADER)
+const std::string kColorMatrixFragmentShaderString = R"(
+    uniform sampler2D inputImageTexture; uniform mat4 colorMatrix;
+    uniform float intensity;
+
+    varying vec2 textureCoordinate;
+
+    void main() {
+      vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+      vec4 outputColor = textureColor * colorMatrix;
+
+      gl_FragColor =
+          (intensity * outputColor) + ((1.0 - intensity) * textureColor);
+    })";
+#else
+const std::string kColorMatrixFragmentShaderString = R"(
+    uniform sampler2D inputImageTexture; uniform mat4 colorMatrix;
+    uniform float intensity;
+
+    varying vec2 textureCoordinate;
+
+    void main() {
+      vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+      vec4 outputColor = textureColor * colorMatrix;
+
+      gl_FragColor =
+          (intensity * outputColor) + ((1.0 - intensity) * textureColor);
+    })";
+#endif
+
+ColorMatrixFilter::ColorMatrixFilter()
+    : intensity_factor_(1.0), color_matrix_(Matrix4::IDENTITY) {}
+
+std::shared_ptr<ColorMatrixFilter> ColorMatrixFilter::Create() {
+  auto ret = std::shared_ptr<ColorMatrixFilter>(new ColorMatrixFilter());
+  gpupixel::GPUPixelContext::getInstance()->runSync([&] {
+    if (ret && !ret->Init()) {
+      ret.reset();
+    }
+  });
+  return ret;
+}
+
+bool ColorMatrixFilter::Init() {
+  if (!Filter::initWithFragmentShaderString(kColorMatrixFragmentShaderString)) {
+    return false;
+  }
+
+  registerProperty("intensity", intensity_factor_,
+                   "The percentage of color applied by color matrix with range "
+                   "between 0 and 1.",
+                   [this](float& intensity) {
+                     if (intensity > 1.0) {
+                       intensity = 1.0;
+                     } else if (intensity < 0.0) {
+                       intensity = 0.0;
+                     }
+                     setIntensity(1.0);
+                   });
+
+  // todo register paoperty of color matrix
+
+  return true;
+}
+
+bool ColorMatrixFilter::proceed(bool updateSinks, int64_t frametime) {
+  _filterProgram->setUniformValue("intensity", intensity_factor_);
+  _filterProgram->setUniformValue("colorMatrix", color_matrix_);
+  return Filter::proceed(updateSinks, frametime);
+}
+
+NS_GPUPIXEL_END

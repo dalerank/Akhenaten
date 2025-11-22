@@ -69,7 +69,7 @@ military_data_t g_military_data;
 
 void batalion_info_window::change_layout(e_formation_layout new_layout) {
     auto& data = g_military_data;
-    building* b= data.context_for_callback->building_get();
+    building* b = data.context_for_callback->building_get();
 
     formation* m = formation_get(b->formation_id);
     if (m->in_distant_battle)
@@ -100,11 +100,48 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
         g_sound.speech_play_file("Wavs/cohort5.wav", 255);
         break;
     }
-    window_city_military_show(b->formation_id);
+    //window_city_military_show(b->formation_id);
+    update_layout();
 }
 
 void batalion_info_window::window_info_foreground(object_info &c) {
     building_info_window::window_info_foreground(c);
+}
+
+void batalion_info_window::update_layout() {
+    auto &data = g_military_data;
+    building *fort = data.context_for_callback->building_get();
+    const formation *m = formation_get(fort->formation_id);
+
+    struct mode_t { int img, mode; };
+    static const mode_t OFFSETS_LEGIONARY[2][5] = {
+        {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
+        {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
+    };
+    static const mode_t OFFSETS_OTHER[2][5] = {
+        {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
+        {{6, FORMATION_SINGLE_LINE_2}, {5, FORMATION_SINGLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
+    };
+
+    const int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
+    const mode_t *offsets;
+    if (m->figure_type == FIGURE_INFANTRY)
+        offsets = OFFSETS_LEGIONARY[index];
+    else {
+        offsets = OFFSETS_OTHER[index];
+    }
+
+    for (int i = 0; i < std::size(buttons); ++i) {
+        auto imgbtn = ui[buttons[i]].dcast_image_button();
+        imgbtn->param1 = offsets[i].mode;
+        imgbtn->image(offsets[i].img);
+        imgbtn->darkened = UiFlags_None;
+        imgbtn->select(m->layout == imgbtn->param1);
+        imgbtn->onclick([this] (int p1, int) {
+            this->change_layout((e_formation_layout)p1);
+            this->update_describe_layout(*g_military_data.context_for_callback);
+        });
+    }
 }
 
 void batalion_info_window::init(object_info &c) {
@@ -146,35 +183,7 @@ void batalion_info_window::init(object_info &c) {
     ui["morale_num"] = ui::str(138, morale_level);
 
     if (m->num_figures) {
-        struct mode_t { int img, mode; };
-        static const mode_t OFFSETS_LEGIONARY[2][5] = {
-            {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
-            {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
-        };
-        static const mode_t OFFSETS_OTHER[2][5] = {
-            {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_HERD}},
-            {{6, FORMATION_SINGLE_LINE_2}, {5, FORMATION_SINGLE_LINE_1}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1}, {4, FORMATION_HERD}},
-        };
-
-        const int index = (city_view_orientation() == DIR_6_TOP_LEFT || city_view_orientation() == DIR_2_BOTTOM_RIGHT) ? 1 : 0;
-        const mode_t *offsets;
-        if (m->figure_type == FIGURE_INFANTRY)
-            offsets = OFFSETS_LEGIONARY[index];
-        else {
-            offsets = OFFSETS_OTHER[index];
-        }
-
-        for (int i = 0; i < std::size(buttons); ++i) {
-            auto imgbtn = ui[buttons[i]].dcast_image_button();
-            imgbtn->param1 = offsets[i].mode;
-            imgbtn->image(offsets[i].img);
-            imgbtn->darkened = UiFlags_None;
-            imgbtn->select(m->layout == imgbtn->param1);
-            imgbtn->onclick([this] (int p1, int) {
-                this->change_layout((e_formation_layout)p1);
-                this->update_describe_layout(*g_military_data.context_for_callback);
-            });
-        }
+        update_layout();
     } else {
         // no soldiers
         int group_id;

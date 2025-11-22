@@ -45,7 +45,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_BARBARIAN_SWORD, "barb_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_barbarian_sword::static_params, interval_attack_delay)
@@ -58,7 +57,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ASSYRIAN_SWORD, "assr_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_assyrian_sword::static_params, interval_attack_delay)
@@ -71,7 +69,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_CANAANITE_SWORD, "cana_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_canaanite_sword::static_params, interval_attack_delay)
@@ -84,7 +81,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "hyks_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_hyksos_sword::static_params, interval_attack_delay)
@@ -97,7 +93,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_KUSHITE_AXEMAN, "kush_axe" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_kushite_axeman::static_params, interval_attack_delay)
@@ -110,7 +105,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_HYKSOS_SWORDMAN, "libn_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_libian_sword::static_params, interval_attack_delay)
@@ -123,7 +117,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_NUBIAN_AXEMAN, "nubn_axe" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_nubian_axeman::static_params, interval_attack_delay)
@@ -136,7 +129,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_PHOENICIAN_SWORDMAN, "phoe_swd" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_phoenician_swordman::static_params, interval_attack_delay)
@@ -149,7 +141,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_ROMAN_LEGIONER, "roma_leg" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_roman_legioner::static_params, interval_attack_delay)
@@ -162,7 +153,6 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    virtual figure_phrase_t phrase() const override { return { FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, "seap_axe" }; }
     virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
 };
 ANK_CONFIG_STRUCT(figure_seapeople_axeman::static_params, interval_attack_delay)

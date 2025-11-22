@@ -125,8 +125,8 @@ bool figure_ostrich::play_die_sound() {
     return true;
 }
 
-void figure_ostrich::apply_damage(int hit_dmg) {
-    figure_impl::apply_damage(hit_dmg);
+void figure_ostrich::apply_damage(int hit_dmg, figure_id attacker_id) {
+    figure_impl::apply_damage(hit_dmg, attacker_id);
 
     auto& d = runtime_data();
     d.applied_damage += hit_dmg;
@@ -134,6 +134,10 @@ void figure_ostrich::apply_damage(int hit_dmg) {
 
 void figure_ostrich::herd_moved() {
     advance_action(ACTION_8_OSTRICH_RECALCULATE);
+}
+
+void figure_ostrich::herd_rest() {
+    advance_action(ACTION_196_OSTRICH_AT_REST);
 }
 
 void figure_ostrich::moveto(tile2i tile) {

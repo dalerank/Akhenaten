@@ -500,19 +500,24 @@ building_weaponsmith = {
   laborers:[12], fire_risk:[4], damage_risk: [2]
 }
 
-building_courthouse = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:62, },
-    base : { pack:PACK_GENERAL, id:62, },
-    work : { pos : [80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 },
+building_courthouse {
+  animations {
+    preview { pack:PACK_GENERAL, id:62, }
+    base { pack:PACK_GENERAL, id:62, }
+    work { pos[80, -80], pack:PACK_GENERAL, id:62, offset:1, max_frames:11 }
   }
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  overlay : OVERLAY_COUTHOUSE
+  min_houses_coverage : 50
   building_size : 3
-  meta : { help_id:75, text_id:176 }
-  cost: [ 30, 50, 100, 200, 400 ]
-  desirability : { value:[8], step:[2], step_size:[-2], range: [3] }
-  laborers:[10], fire_risk:[0], damage_risk: [1]
+  meta { help_id:75, text_id:176 }
+  cost [ 30, 50, 100, 200, 400 ]
+  desirability { value[8], step[2], step_size[-2], range[3] }
+  crime { value[-5], step[1], step_size[-1], range[4] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[1]
 }
 
 building_stonemason_guild = {
@@ -550,13 +555,14 @@ building_bricklayers_guild = {
   building_size : 2
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
+  max_workers : 1
 }
 
 building_carpenters_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:91 },
     base : { pack:PACK_GENERAL, id:91 },
-    work : { pos : [-1, -1], pack:PACK_GENERAL, id:91, offset:1, max_frames:12 },
+    work : { pos : [73, -12], pack:PACK_GENERAL, id:91, offset:1, max_frames:13, duration:4 },
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 2
@@ -657,87 +663,111 @@ building_dynasty_mansion {
   laborers[0], fire_risk[4], damage_risk[1]
 }
 
-building_temple_osiris = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:25 },
-    base : { pack:PACK_GENERAL, id:25 },
-    work : { pos : [80, -125], pack:PACK_GENERAL, id:25, offset:1, max_frames:8 },
+building_temple_osiris {
+  animations {
+    preview { pack:PACK_GENERAL, id:25 }
+    base { pack:PACK_GENERAL, id:25 }
+    work { pos[80, -125], pack:PACK_GENERAL, id:25, offset:1, max_frames:8 }
   }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  meta : { help_id: 67, text_id: 92 }
-  cost: [ 30, 50, 80, 150, 300 ]
-  desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  meta { help_id: 67, text_id: 92 }
+  cost [ 30, 50, 80, 150, 300 ]
+  desirability { value[6], step[2], step_size[-2], range[6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_temple_ra = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:21 },
-    base : { pack:PACK_GENERAL, id:21 },
-    work : { pos : [80, -123], pack:PACK_GENERAL, id:21, offset:1, max_frames:11 },
+building_temple_ra {
+  animations {
+    preview { pack:PACK_GENERAL, id:21 }
+    base { pack:PACK_GENERAL, id:21 }
+    work { pos[80, -123], pack:PACK_GENERAL, id:21, offset:1, max_frames:11 }
   }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  meta : { help_id: 67, text_id: 93 }
-  cost: [ 30, 50, 80, 150, 300 ]
-  desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  meta  { help_id: 67, text_id: 93 }
+  cost [ 30, 50, 80, 150, 300 ]
+  desirability { value[6], step[2], step_size[-2], range[6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_temple_ptah = {
+building_temple_ptah {
   animations : {
     preview : { pack:PACK_GENERAL, id:20 },
     base : { pack:PACK_GENERAL, id:20 },
     work : { pos : [70, -103], pack:PACK_GENERAL, id:20, offset:1, max_frames:11 },
   }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  meta : { help_id: 67, text_id: 94 }
-  cost: [ 30, 50, 80, 150, 300 ]
-  desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  meta { help_id: 67, text_id: 94 }
+  cost [ 30, 50, 80, 150, 300 ]
+  desirability { value[6], step[2], step_size[-2], range[6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_temple_seth = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:19 },
-    base : { pack:PACK_GENERAL, id:19 },
-    work : { pos : [70, -133], pack:PACK_GENERAL, id:19, offset:1, max_frames:11 },
+building_temple_seth {
+  animations {
+    preview { pack:PACK_GENERAL, id:19 }
+    base { pack:PACK_GENERAL, id:19 }
+    work { pos[70, -133], pack:PACK_GENERAL, id:19, offset:1, max_frames:11 }
   }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  meta : { help_id: 67, text_id: 95 }
-  cost: [ 30, 50, 80, 150, 300 ]
-  desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  meta { help_id: 67, text_id: 95 }
+  cost [ 30, 50, 80, 150, 300 ]
+  desirability { value[6], step[2], step_size[-2], range[6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_temple_bast = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:76 },
-    base : { pack:PACK_GENERAL, id:76 },
-    work : { pos : [85, -115], pack:PACK_GENERAL, id:76, offset:1, max_frames:11 },
+building_temple_bast {
+  animations {
+    preview { pack:PACK_GENERAL, id:76 }
+    base { pack:PACK_GENERAL, id:76 }
+    work { pos[85, -115], pack:PACK_GENERAL, id:76, offset:1, max_frames:11 }
   }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_RELIGION
   building_size : 3
-  meta : { help_id: 67, text_id: 96 }
-  cost: [ 30, 50, 80, 150, 300 ]
-  desirability : { value:[6], step:[2], step_size:[-2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  meta { help_id: 67, text_id: 96 }
+  cost [ 30, 50, 80, 150, 300 ]
+  desirability { value[6], step[2], step_size[-2], range[6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_library = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:43 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:43 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 },
+building_library {
+  animations {
+    preview { pos[0, 0], pack:PACK_GENERAL, id:43 }
+    base { pos[0, 0], pack:PACK_GENERAL, id:43 }
+    work { pos[33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 }
   }
-  meta : { help_id: 70, text_id: 87 }
+
+  min_houses_coverage : 50
+  meta { help_id: 70, text_id: 87 }
   building_size : 3
-  cost : [ 90, 140, 200, 300, 400 ]
-  desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
-  laborers:[30], fire_risk:[6], damage_risk: [1]
+  cost [ 90, 140, 200, 300, 400 ]
+  desirability { value[8], step[2], step_size[-2], range[6] }
+  laborers[30]
+  fire_risk[6]
+  damage_risk[1]
   max_service: 800
 }
 
@@ -779,6 +809,7 @@ building_juggler_school {
   meta { text_id:77, help_link:"message_building_booth" }
 
   building_size : 2
+  min_houses_coverage : 50
   cost [ 10, 20, 50, 100, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
   laborers[5]
@@ -789,16 +820,20 @@ building_juggler_school {
 building_dancer_school {
   animations {
     _pack { pack: PACK_GENERAL }
-    preview { id:52, }
-    base { id:52, }
+    preview { id:52 }
+    base { id:52 }
     work { pos[104, 0], pack:PACK_SPR_AMBIENT, id:6, offset:0, max_frames:35, duration:2, internal_offset:true }
   }
 
+  overlay : OVERLAY_ENTERTAINMENT
+  min_houses_coverage : 50
   building_size : 4
   meta { help_id:75, text_id:76 }
   cost [ 30, 50, 100, 150, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
-  laborers[10], fire_risk[4], damage_risk[2]
+  laborers[10]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_storage_yard = {
@@ -824,20 +859,33 @@ building_storage_room = {
   fire_proof : true,
 }
 
-building_bazaar = {
-  animations : {
-    preview : {pack:PACK_GENERAL, id:22, },
-    base : {pack:PACK_GENERAL, id:22, },
-    base_work : { pack:PACK_GENERAL, id:22, offset:0 },
-    fancy : { pack:PACK_GENERAL, id:45 },
-    fancy_work : { pack:PACK_GENERAL, id:45, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
+building_bazaar {
+  animations {
+    preview {pack:PACK_GENERAL, id:22, }
+    base {pack:PACK_GENERAL, id:22, }
+    base_work { pack:PACK_GENERAL, id:22, offset:0 }
+    fancy { pack:PACK_GENERAL, id:45 }
+    fancy_work { pack:PACK_GENERAL, id:45, offset:0 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
   }
+
+  max_search_distance : 40
+  fancy_treshold_desirability : 30
+  min_houses_coverage : 50
+  overlay : OVERLAY_BAZAAR_ACCESS
+  minimal_pick_food_amount : 100
+
+  pick_food_below [600, 400, 200, 100]
+  pick_good_below [150, 100, 50, 25]
+
   building_size : 2
-  meta : { help_id: 2, text_id: 97 }
-  cost: [ 8, 15, 30, 50, 100 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [6] }
-  laborers:[5], fire_risk:[4], damage_risk: [2]
+  meta { help_id: 2, text_id: 97 }
+  cost [ 8, 15, 30, 50, 100 ]
+  desirability { value[-2], step[1], step_size[1], range[6] }
+  
+  laborers[5]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_work_camp = {
@@ -855,18 +903,23 @@ building_work_camp = {
   laborers:[20], fire_risk:[4], damage_risk: [2]
 }
 
-building_booth = {
-  animations : {
-    booth : { pack:PACK_GENERAL, id:114 },
-    square : { pack:PACK_GENERAL, id:112 },
-    juggler : { pos : [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
+building_booth {
+  animations {
+    booth { pack:PACK_GENERAL, id:114 },
+    square { pack:PACK_GENERAL, id:112 },
+    juggler { pos [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
   }
+
+  min_houses_coverage : 100
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  meta : { help_id:71, text_id:72 }
+  meta { help_id:71, text_id:72 }
   building_size : 2
-  cost : [ 10, 20, 40, 80, 150 ]
-  desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [2]
+  cost [ 10, 20, 40, 80, 150 ]
+  desirability { value[2], step[1], step_size[-1], range[2] }
+
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_apothecary = {
@@ -876,6 +929,7 @@ building_apothecary = {
     work : { pos : [25, -35], pack:PACK_GENERAL, id:68, offset:1, max_frames:11 },
   }
   labor_category : LABOR_CATEGORY_WATER_HEALTH
+  min_houses_coverage : 50
   max_serve_clients : 100
   meta : { help_id:63, text_id:81 }
   building_size : 1
@@ -884,45 +938,56 @@ building_apothecary = {
   laborers:[5], fire_risk:[4], damage_risk: [2]
 }
 
-building_water_supply = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:69 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:0 },
-    base_work : { pos : [42, 10], pack:PACK_GENERAL, id:69, offset:1, max_frames:1 },
-    fancy : { pos : [0, 0], pack:PACK_GENERAL, id:69, offset:2 },
-    fancy_work : { pos : [10, 0], pack:PACK_GENERAL, id:69, offset:3, max_frames:1 }
-  },
+building_water_supply {
+  animations {
+    preview { pack:PACK_GENERAL, id:69 }
+    base { pack:PACK_GENERAL, id:69, offset:0 }
+    base_work { pos[42, 10], pack:PACK_GENERAL, id:69, offset:1, max_frames:1 }
+    fancy { pack:PACK_GENERAL, id:69, offset:2 }
+    fancy_work { pos[10, 0], pack:PACK_GENERAL, id:69, offset:3, max_frames:1 }
+  }
+
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  fire_proof : true,
-  meta : { help_id:61, text_id:108 }
-  building_size : 2,
-  needs : { 
+  fire_proof : true
+  meta { help_id:61, text_id:108 }
+  building_size : 2
+  needs { 
     groundwater : true
   }
-  cost: [ 10, 20, 40, 80, 140 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range: [4] }
-  laborers:[5], fire_risk:[0], damage_risk: [0]
+  cost [ 10, 20, 40, 80, 140 ]
+  desirability { value[4], step[1], step_size[-1], range[4] }
+  laborers[5]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_well = {
-  animations : {
-    preview : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    base : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    base_work : { pack: PACK_GENERAL, id:23, max_frames:1 },
-    fancy : { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 },
-    fancy_work : { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 },
-    minimap: {pack:PACK_GENERAL, id:151},
-  },
-  fire_proof : true,
-  building_size : 1,
-  meta : { help_id:62, text_id:109 }
-  needs : {
+building_well {
+  animations {
+    preview { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base_work { pack: PACK_GENERAL, id:23, max_frames:1 }
+    fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
+    fancy_work { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    minimap {pack:PACK_GENERAL, id:151},
+  }
+
+  fire_proof : true
+  building_size : 1
+  meta { help_id:62, text_id:109 }
+  needs {
     groundwater : true
   }
+
   labor_category : LABOR_CATEGORY_WATER_HEALTH
-  cost: [ 1, 2, 5, 10, 20 ]
-  laborers:[0], fire_risk:[0], damage_risk: [0]
-  desirability : { value:[1], step:[1], step_size:[-1], range: [1] }
+  cost [ 1, 2, 5, 10, 20 ]
+  desirability_range_check : 4
+  desirability_fancy : 30
+  unnecessary_range_check : 3
+  laborers[0]
+  fire_risk[0]
+  damage_risk[0]
+  desirability { value[1], step[1], step_size[-1], range[1] }
 }
 
 building_papyrus_maker = {
@@ -1132,10 +1197,12 @@ building_bandstand {
 
     juggler { pos[35, 15], pack:PACK_SPR_AMBIENT, id:7, max_frames:26, duration:2, internal_offset:true }
     musician_sn { pos[-10, -36], pack:PACK_SPR_AMBIENT, id:10, max_frames : 11, duration:3 }
-    musician_we { pos[48, 4], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3 }
+    musician_we { pos[30, 10], pack:PACK_SPR_AMBIENT, id:9, max_frames : 11, duration:3, internal_offset:true }
   }
 
+  overlay : OVERLAY_BANDSTAND
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  min_houses_coverage : 100
   fire_proof: true
   meta { help_id:72, text_id:71 }
   building_size : 3
@@ -1236,12 +1303,16 @@ building_pavilion = {
     {type: BUILDING_BANDSTAND, offset:[1, 3], main:false},
     {type: BUILDING_BANDSTAND, offset:[2, 3], main:true},
     {type: BUILDING_BOOTH, offset:[2, 0], main:false}
-  ],
-  meta : { help_id: 73, text_id: 74 }
-  building_size : 4,
-  cost : [ 100, 200, 300, 500, 800 ]
-  desirability : { value:[6], step:[1], step_size:[-1], range: [6] }
-  laborers:[20], fire_risk:[4], damage_risk: [4]
+  ]
+
+  min_houses_coverage : 100
+  meta { help_id: 73, text_id: 74 }
+  building_size : 4
+  cost [ 100, 200, 300, 500, 800 ]
+  desirability { value[6], step[1], step_size[-1], range[6] }
+  laborers [20]
+  fire_risk [4]
+  damage_risk [4]
 }
 
 building_festival_square = {
@@ -1465,31 +1536,40 @@ building_shipyard = {
   laborers:[20], fire_risk:[4], damage_risk: [1]
 }
 
-building_dentist = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:67 },
-    base : { pack:PACK_GENERAL, id:67 },
-    work : { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 },
-  },
+building_dentist {
+  animations {
+    preview { pack:PACK_GENERAL, id:67 }
+    base { pack:PACK_GENERAL, id:67 }
+    work { pack:PACK_GENERAL, id:67, offset:1, max_frames:12 }
+  }
+
+  overlay : OVERLAY_DENTIST
+  min_houses_coverage : 50
   building_size : 1
-  meta : { help_id:65, text_id:84 }
-  cost : [ 10, 15, 30, 50, 80 ]
-  desirability : { value:[2], step:[1], step_size:[-1], range: [2] }
-  laborers:[2], fire_risk:[4], damage_risk: [2]
+  meta { help_id:65, text_id:84 }
+  cost [ 10, 15, 30, 50, 80 ]
+  desirability { value[2], step[1], step_size[-1], range[2] }
+  laborers[2]
+  fire_risk[4]
+  damage_risk[2]
 }
 
-building_mortuary = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:175 },
-    base : { pack:PACK_GENERAL, id:175 },
-    work : { pos:[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
+building_mortuary {
+  animations {
+    preview { pack:PACK_GENERAL, id:175 },
+    base { pack:PACK_GENERAL, id:175 },
+    work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
   }
+
   max_serve_clients : 1000
+  min_houses_coverage : 50
   building_size : 2
-  meta : { help_id:66, text_id:82 }
-  cost : [ 20, 30, 50, 100, 200 ]
-  desirability : { value:[-3], step:[2], step_size:[1], range: [2] }
-  laborers:[8], fire_risk:[4], damage_risk: [2]
+  meta { help_id:66, text_id:82 }
+  cost [ 20, 30, 50, 100, 200 ]
+  desirability { value[-3], step[2], step_size[1], range[2] }
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_plaza = {
@@ -1631,33 +1711,38 @@ building_clay_pit = {
   laborers:[8], fire_risk:[0], damage_risk: [1]
 }
 
-building_brewery = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:116 },
-    base : { pack:PACK_GENERAL, id:116 },
-    work : { pack:PACK_GENERAL, id:116, max_frames: 12 },
-    barley : { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
-  },
-  input : {
+building_brewery {
+  animations {
+    preview { pack:PACK_GENERAL, id:116 },
+    base { pack:PACK_GENERAL, id:116 },
+    work { pack:PACK_GENERAL, id:116, max_frames: 12 }
+    barley { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
+  }
+  input {
     resource : RESOURCE_BARLEY
   }
-  output : {
+  output {
     resource : RESOURCE_BEER
   }
+
+  overlay : OVERLAY_BREWERY
+  water_amount_for_production : 50
   progress_max : 400,
   production_rate : 50,
-  meta : { help_id:96, text_id:122 }
+  meta { help_id:96, text_id:122 }
   building_size : 2
-  cost: [ 15, 25, 50, 80, 120 ]
-  desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
-  laborers:[12], fire_risk:[4], damage_risk: [2]
+  cost [ 15, 25, 50, 80, 120 ]
+  desirability { value[-5], step[1], step_size[1], range[5] }
+  laborers[12]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_mine_copper = {
   animations : {
     preview : { pack:PACK_GENERAL, id:196 },
     base : { pack:PACK_GENERAL, id:196 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
   },
   output : {
     resource : RESOURCE_COPPER
@@ -1960,6 +2045,7 @@ building_senet_house = {
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
   cost : [ 300, 400, 500, 700, 1000 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [3] }
+  crime : { value:[5], step:[1], step_size:[1], range: [3] }
   laborers:[25], fire_risk:[1], damage_risk: [1]
 }
 
@@ -2088,15 +2174,17 @@ building_paint_workshop {
     work { pos [36, -4], id:125, offset:1, max_frames:18 }
     clay { pos [65, 3], id:207 }
   }
+
   input {
     resource : RESOURCE_OIL
   }
   output {
     resource : RESOURCE_PAINT
   }
-  production_rate : 20,
-  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  building_size : 2,
+
+  production_rate : 20
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
+  building_size : 2
   cost [ 20, 30, 50, 100, 150 ]
   desirability { value[-4], step[1], step_size[1], range[4] }
   laborers [12]
@@ -2111,8 +2199,10 @@ building_academy {
     base { id:4 }
     work { pos [36, -4], id:4, offset:1, max_frames:18 }
   }
-  labor_category : LABOR_CATEGORY_EDUCATION,
-  building_size : 2,
+
+  overlay : OVERLAY_EDUCATION
+  labor_category : LABOR_CATEGORY_EDUCATION
+  building_size : 2
   cost [ 200, 250, 300, 400, 500 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
   laborers [20]
@@ -2128,6 +2218,9 @@ building_physician {
     base { id:70 }
     work { pos [60, -60], id:70, offset:1, max_frames:11 }
   }
+
+  min_houses_coverage : 50
+  overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   meta { help_id: 64, text_id: 83 }
   building_size : 2
@@ -2177,7 +2270,8 @@ building_firehouse {
     work { pos [25, -30], id:78, offset:1, max_frames:11 }
   }
 
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE,
+  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  min_houses_coverage : 50
   meta { help_id: 355, text_id: 164 }
   building_size : 1
   cost [ 6, 12, 25, 40, 60 ]
@@ -2188,17 +2282,21 @@ building_firehouse {
 }
 
 building_police_station = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:64 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
+  animations {
+    preview { pack:PACK_GENERAL, id:64 },
+    base { pack:PACK_GENERAL, id:64 },
+    work { pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
   }
+
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  min_houses_coverage : 50
   meta : { help_id: 86, text_id: 88 }
   building_size : 1
-  cost: [ 6, 12, 25, 40, 60 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[6], fire_risk:[2], damage_risk: [2]
+  cost [ 6, 12, 25, 40, 60 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers [6]
+  fire_risk [2]
+  damage_risk [2]
 }
 
 building_architect_post {
@@ -2223,12 +2321,18 @@ building_conservatory {
     base { pack:PACK_GENERAL, id:51 }
     work { pos[52, -18], pack:PACK_SPR_AMBIENT, id:10, max_frames:11, duration:4 }
   }
+
+  spawn_interval : 10
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  overlay : OVERLAY_ENTERTAINMENT
+  min_houses_coverage : 50
   meta { help_id:75, text_id:75 }
   building_size : 3
   cost [ 20, 50, 90, 150, 200 ]
   desirability { value[-3], step[1], step_size[1], range[3] }
-  laborers[8], fire_risk[4], damage_risk[2]
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
 }
 
 building_hunting_lodge = {
@@ -2271,38 +2375,42 @@ building_scribal_school = {
   max_service: 75
 }
 
-building_temple_complex_osiris = {
+building_temple_complex_osiris {
   animations : {
-    preview : { pack:PACK_GENERAL, id:42},
-    main_n : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
-    main_w : { pack:PACK_TEMPLE_NILE, id:3, offset:0 },
-    main_e : { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
-    main_s : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    oracle_n : { pack:PACK_TEMPLE_NILE, id:2 },
-    oracle_w : { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
-    altar_n : { pack:PACK_TEMPLE_NILE, id:3 },
-    altar_w : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    tiles_0 : { pack:PACK_TEMPLE_NILE, id:4 },
-    tiles_1 : { pack:PACK_TEMPLE_NILE, id:4, offset:1 },
-    tiles_2 : { pack:PACK_TEMPLE_NILE, id:4, offset:2 },
-    tiles_3 : { pack:PACK_TEMPLE_NILE, id:4, offset:3 },
-    statue_1 : { pack:PACK_TEMPLE_NILE, id:5 },
-    statue_2n : { pack:PACK_TEMPLE_NILE, id:6 },
-    statue_2e : { pack:PACK_TEMPLE_NILE, id:6, offset:2 },
-    statue_2s : { pack:PACK_TEMPLE_NILE, id:6, offset:4 },
-    statue_2w : { pack:PACK_TEMPLE_NILE, id:6, offset:6 },
+    preview { pack:PACK_GENERAL, id:42},
+    main_n { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
+    main_w { pack:PACK_TEMPLE_NILE, id:3, offset:0 },
+    main_e { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
+    main_s { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
+    oracle_n { pack:PACK_TEMPLE_NILE, id:2 },
+    oracle_w { pack:PACK_TEMPLE_NILE, id:2, offset:3 },
+    altar_n { pack:PACK_TEMPLE_NILE, id:3 },
+    altar_w { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
+    tiles_0 { pack:PACK_TEMPLE_NILE, id:4 },
+    tiles_1 { pack:PACK_TEMPLE_NILE, id:4, offset:1 },
+    tiles_2 { pack:PACK_TEMPLE_NILE, id:4, offset:2 },
+    tiles_3 { pack:PACK_TEMPLE_NILE, id:4, offset:3 },
+    statue_1 { pack:PACK_TEMPLE_NILE, id:5 },
+    statue_2n { pack:PACK_TEMPLE_NILE, id:6 },
+    statue_2e { pack:PACK_TEMPLE_NILE, id:6, offset:2 },
+    statue_2s { pack:PACK_TEMPLE_NILE, id:6, offset:4 },
+    statue_2w { pack:PACK_TEMPLE_NILE, id:6, offset:6 },
   }
 
   building_size : 3
   planner_update_rule : {
     unique_building : true
   }
+
+  min_houses_coverage : 100
   damage_proof : true
   fire_proof : true
   labor_category : LABOR_CATEGORY_RELIGION
-  cost: [ 400, 800, 1200, 1500, 2000 ]
-  desirability : { value:[20], step:[2], step_size:[-4], range: [6] }
-  laborers:[50], fire_risk:[0], damage_risk: [2]
+  cost [ 400, 800, 1200, 1500, 2000 ]
+  desirability { value[20], step[2], step_size[-4], range[6] }
+  laborers[50]
+  fire_risk[0]
+  damage_risk[2]
 }
 
 building_temple_complex_ra = {
@@ -2329,6 +2437,8 @@ building_temple_complex_ra = {
   planner_update_rule : {
     unique_building : true,
   }
+
+  min_houses_coverage : 100
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION,
@@ -2361,6 +2471,8 @@ building_temple_complex_ptah = {
   planner_update_rule : {
     unique_building : true
   }
+
+  min_houses_coverage : 100
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION
@@ -2393,6 +2505,8 @@ building_temple_complex_seth = {
   planner_update_rule : {
     unique_building : true,
   }
+
+  min_houses_coverage : 100
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION
@@ -2427,6 +2541,8 @@ building_temple_complex_bast = {
   planner_update_rule : {
     unique_building : true
   }
+
+  min_houses_coverage : 100
   damage_proof : true,
   fire_proof : true,
   labor_category : LABOR_CATEGORY_RELIGION

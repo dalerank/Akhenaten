@@ -461,14 +461,15 @@ void text_draw_label_and_number_centered(const char* label, int value, const cha
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(pcstr str, int x_offset, int y_offset, int box_width, e_font font, uint32_t color) {
+int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font, uint32_t color) {
     int line_height = font_definition_for(font)->line_height;
     if (line_height < 11)
         line_height = 11;
 
     int has_more_characters = 1;
     int guard = 0;
-    int y = y_offset;
+    int y = offset.y;
+    pcstr str = strkey.c_str();
     while (has_more_characters) {
         if (++guard >= 100)
             break;
@@ -514,10 +515,11 @@ int text_draw_multiline(pcstr str, int x_offset, int y_offset, int box_width, e_
                 break;
             }
         }
-        text_draw(tmp_line, x_offset, y, font, color);
+        text_draw(tmp_line, offset.x, y, font, color);
         y += line_height + 5;
     }
-    return y - y_offset;
+
+    return y - offset.y;
 }
 int text_measure_multiline(const uint8_t* str, int box_width, e_font font) {
     int has_more_characters = 1;

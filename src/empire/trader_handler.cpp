@@ -11,8 +11,6 @@
 #include "empire/empire_map.h"
 #include "figure/figure.h"
 
-#include "city/trade.h"
-
 int empire_trader_handle::record_bought_resource(e_resource resource) {
     auto& traders = g_empire_traders.traders;
     constexpr int amount = 100;
@@ -154,7 +152,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     return RESOURCE_NONE;
 }
 
-io_buffer*iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) {
+io_buffer* iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_empire_traders;
     assert(data.traders.size() == 100);
     for (int i = 0; i < data.traders.size(); i++) {
@@ -172,7 +170,7 @@ io_buffer*iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) 
             t.sold_resources[r] *= 0.01;
         }
 
-        iob->bind____skip(1);
+        iob->bind_u8(t.movement_delay_max);
         for (int r = 1; r < RESOURCES_MAX; r++)
             iob->bind_u8((uint8_t&)t.bought_resources[r]);
 

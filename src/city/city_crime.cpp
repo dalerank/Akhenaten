@@ -7,6 +7,7 @@
 #include "grid/road_access.h"
 #include "figuretype/figure_robber.h"
 #include "building/building_house.h"
+#include "figuretype/figure_rioter.h"
 #include "core/random.h"
 #include "game/tutorial.h"
 #include "building/destruction.h"
@@ -39,7 +40,7 @@ static void generate_rioter(building* b) {
     for (int i = 0; i < people_in_mob; i++) {
         // TODO: to add correct rioter image
         figure* f = figure_create(FIGURE_RIOTER, road_tile, DIR_4_BOTTOM_LEFT);
-        f->advance_action(FIGURE_ACTION_120_RIOTER_CREATED);
+        f->advance_action(ACTION_120_RIOTER_CREATED);
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
         if (target_building_id) {

@@ -1,8 +1,9 @@
 #include "keyboard_input.h"
 
 #include "game/cheats.h"
-#include "input/mouse.h"
+#include "game/game.h"
 #include "game/system.h"
+#include "input/mouse.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 #include "input/keys.h"
@@ -370,6 +371,9 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     }
 
     // handle hotkeys
+    if (game.debug_console) {
+        return;
+    }
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     e_key_mode mod = get_modifier(event->keysym.mod);
     hotkey_key_pressed(key, mod, event->repeat);
@@ -391,6 +395,9 @@ void platform_handle_key_up(SDL_KeyboardEvent* event) {
         return;
     }
 #endif
+    if (game.debug_console) {
+        return;
+    }
     e_key key = (e_key)platform.get_key_from_scancode(event->keysym.scancode);
     int mod = get_modifier(event->keysym.mod);
     hotkey_key_released(key, mod);

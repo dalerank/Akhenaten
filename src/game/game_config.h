@@ -45,6 +45,7 @@ namespace game_features {
     extern game_feature gameui_show_water_structure_range;
     extern game_feature gameui_show_construction_size;
     extern game_feature gameui_zoom;
+    extern game_feature gameui_smooth_zoom;
     extern game_feature gameui_complete_ratings_columns;
     extern game_feature gameui_highlight_legions;
     extern game_feature gameui_rotate_manually;
@@ -109,6 +110,8 @@ namespace game_features {
     extern game_feature gameopt_last_save_filename;
     extern game_feature gameopt_last_game_version;
     extern game_feature gameplay_change_hasanimals;
+    extern game_feature gameplay_brewery_requires_water;
+    extern game_feature gameplay_conservatory_helps_dance_school;
 
     custom_span<game_feature*> all();
     game_feature* find(const xstring& name);

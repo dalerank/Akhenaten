@@ -3,8 +3,11 @@
 #include "empire_object.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
+#include "js/js_game.h"
 
-const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
+const e_empire_city_tokens_t e_empire_city_tokens;
+
+empire_city_options_t ANK_VARIABLE(empire_city_options);
 
 void empire_city::remove_trader(int figure_id) {
     for (int i = 0; i < 3; i++) {
@@ -38,11 +41,11 @@ const trade_route &empire_city::get_route() const {
 }
 
 const empire_object *empire_city::get_empire_object() const {
-    return empire_object_get(empire_object_id);
+    return g_empire.get_object(empire_object_id);
 }
 
 const full_empire_object *empire_city::get_full_empire_object() const {
-    return empire_get_full_object(empire_object_id);
+    return g_empire.get_full_object(empire_object_id);
 }
 
 int empire_city::get_free_slot(int max_traders) const {
@@ -52,6 +55,26 @@ int empire_city::get_free_slot(int max_traders) const {
         }
     }
     return -1;
+}
+
+int empire_city::get_free_slot() const {
+    return get_free_slot(max_traders);
+}
+
+void empire_city::archive_load(archive arch) {
+    check_attributes();
+}
+
+void empire_city::check_attributes() {
+    max_traders = std::max<uint8_t>(1u, max_traders);
+}
+
+bstring32 empire_city::get_display_name(int nid) {
+    int text_group = !!game_features::gameui_empire_city_old_names 
+                            ? empire_city_options.text_group_old_names 
+                            : empire_city_options.text_group_new_names;
+
+    return lang_get_string(text_group, nid);
 }
 
 const trade_route& empire_city_handle::get_route() const {

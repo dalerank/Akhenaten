@@ -29,10 +29,10 @@ void figure_flotsam::figure_action() {
     base.terrain_usage = TERRAIN_USAGE_ANY;
 
     switch (action_state()) {
-    case FIGURE_ACTION_128_FLOTSAM_CREATED:
+    case ACTION_128_FLOTSAM_CREATED:
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            base.action_state = FIGURE_ACTION_129_FLOTSAM_FLOATING;
+            base.action_state = ACTION_129_FLOTSAM_FLOATING;
             base.wait_ticks = 0;
             if (!base.resource_id && g_city.religion.osiris_create_shipwreck_flotsam()) {
                 base.min_max_seen = 1;
@@ -42,7 +42,7 @@ void figure_flotsam::figure_action() {
         }
         break;
 
-    case FIGURE_ACTION_129_FLOTSAM_FLOATING:
+    case ACTION_129_FLOTSAM_FLOATING:
         if (d.flotsam_visible) {
             d.flotsam_visible = false;
         } else {
@@ -52,14 +52,14 @@ void figure_flotsam::figure_action() {
             base.height_adjusted_ticks = 0;
             if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE
                 || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-                base.action_state = FIGURE_ACTION_130_FLOTSAM_OFF_MAP;
+                base.action_state = ACTION_130_FLOTSAM_OFF_MAP;
             }
         }
         break;
 
-    case FIGURE_ACTION_130_FLOTSAM_OFF_MAP:
+    case ACTION_130_FLOTSAM_OFF_MAP:
         base.min_max_seen = 0;
-        base.action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
+        base.action_state =ACTION_128_FLOTSAM_CREATED;
         if (base.wait_ticks >= 400) {
             base.wait_ticks = random_byte() & 7;
         } else if (base.wait_ticks >= 200) {

@@ -5,6 +5,8 @@
 #include "core/xstring.h"
 #include "core/svector.h"
 
+struct event_update_mission_goal { int mid; };
+
 struct mission_step_t;
 
 struct mission_id_t {

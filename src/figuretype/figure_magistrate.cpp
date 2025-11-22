@@ -11,20 +11,20 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_magistrate);
 
 void figure_magistrate::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_70_POLICEMAN_CREATED:
-        advance_action(ACTION_10_GOING);
+    case ACTION_70_MAGISTRATE_CREATED:
+        advance_action(ACTION_10_MAGISTRATE_GOING);
         break;
 
-    case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
+    case ACTION_71_MAGISTRATE_ENTERING_EXITING:
         do_enterbuilding(true, home());
         break;
 
-    case FIGURE_ACTION_72_POLICEMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_11_RETURNING_FROM_PATROL);
+    case ACTION_72_MAGISTRATE_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_MAGISTRATE_RETURNING);
         break;
 
-    case FIGURE_ACTION_73_POLICEMAN_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS, FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING);
+    case ACTION_73_MAGISTRATE_RETURNING:
+        do_returnhome(TERRAIN_USAGE_ROADS, ACTION_71_MAGISTRATE_ENTERING_EXITING);
         break;
     }
 }
@@ -101,7 +101,7 @@ sound_key figure_magistrate::phrase_key() const {
     keys.push_back("i_hope_we_are_ready");
 
     int index = rand() % keys.size();
-    return keys[index];
+    return xstring().printf("magistrate_%s", keys[index].c_str());
 }
 
 int figure_magistrate::provide_service() {
@@ -117,6 +117,9 @@ int figure_magistrate::provide_service() {
         }
 
         auto &housed = house->runtime_data();
+        housed.criminal_active -= 1;
+        housed.criminal_active = std::max<int>(0, housed.criminal_active);
+
         if (housed.criminal_active > max_criminal_active) {
             max_criminal_active = housed.criminal_active;
         }

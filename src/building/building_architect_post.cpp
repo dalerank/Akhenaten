@@ -24,6 +24,7 @@
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
+#include "figuretype/figure_architector.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 #include <iostream>
@@ -35,7 +36,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_architect_post);
 info_window_architect_post architect_post_infow;
 
 // Console command to remove damage risk from all buildings
-declare_console_command_p(nodamage) {
+declare_console_command_p(collapse_no) {
     buildings_valid_do([&] (building &b) {
         b.damage_risk = 0;
     });
@@ -43,7 +44,7 @@ declare_console_command_p(nodamage) {
 
 // Console command to collapse a specified number of buildings (default 10)
 // Excludes farms from collapse
-declare_console_command_p(collapse) {
+declare_console_command_p(collapse_start) {
     std::string args;
     is >> args;
     int count = atoi(!args.empty() ? args.c_str() : "10");
@@ -62,7 +63,7 @@ declare_console_command_p(collapse) {
 }
 
 void building_architect_post::spawn_figure() {
-    common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, FIGURE_ACTION_60_ENGINEER_CREATED);
+    common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, (e_figure_action)ACTION_60_ENGINEER_CREATED);
 }
 
 void building_architect_post::update_graphic() {

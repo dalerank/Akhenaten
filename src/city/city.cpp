@@ -2,10 +2,10 @@
 
 #include "city/constants.h"
 #include "city/city.h"
-#include "city/trade.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
+#include "grid/crime.h"
 #include "core/object_property.h"
 #include "grid/water.h"
 #include "grid/natives.h"
@@ -29,6 +29,7 @@
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
+#include "figuretype/figure_flotsam.h"
 #include "city_warnings.h"
 #include "game/game_events.h"
 #include "empire/empire_object.h"
@@ -249,6 +250,7 @@ void city_t::update_tick(int simtick) {
         formation_update_all(true);
         break;
     case 30:
+        g_crime.update();
         break;
     case 31:
         building_barracks_decay_tower_sentry_request();
@@ -274,7 +276,7 @@ void city_t::update_tick(int simtick) {
         house_service_calculate_culture_aggregates();
         break;
     case 37:
-        g_desirability.update();
+        g_desirability.update();        
         break;
     case 38:
         building_update_desirability();
@@ -328,8 +330,11 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
-    const int allow_traders = std::distance(city.trade_limits.begin(), it);
+    int allow_traders = 1;
+    if (!city.trade_limits.empty()) {
+        auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
+        allow_traders = std::distance(city.trade_limits.begin(), it);
+    }
 
     if (allow_traders <= 0) {
         return false;
@@ -341,6 +346,7 @@ bool city_t::generate_trader_from(empire_city &city) {
         trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
+    assert(city.max_traders > 0);
     if (trades_in_city >= city.max_traders) {
         return false;
     }
@@ -1321,11 +1327,12 @@ io_buffer *iob_city_utilities_data = new io_buffer([] (io_buffer *iob, size_t ve
         iob->bind_vec2i_compat(ref); // 4bytes
     } // 64 bytes at all
     iob->bind____skip(36);
-    g_scenario.bind_data(iob, version, 900);
+    iob->bind____skip(900);
 });
 
 io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind____skip(8000);
+    iob->bind____skip(6000);
+    g_scenario.bind_data(iob, version, 2000);
 });
 
 const uint8_t* city_player_name() {
@@ -1424,7 +1431,7 @@ void city_t::environment_t::river_update_flotsam() {
     tile2i river_entry = scenario_map_river_entry();
     for (int i = 0; i < 1; i++) {
         figure* f = figure_create(FIGURE_FLOTSAM, river_entry, DIR_0_TOP_RIGHT);
-        f->action_state = FIGURE_ACTION_128_FLOTSAM_CREATED;
+        f->action_state = (e_figure_action)ACTION_128_FLOTSAM_CREATED;
         f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
         f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
         f->allow_move_type = EMOVE_DEEPWATER;

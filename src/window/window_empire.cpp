@@ -23,6 +23,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
+#include "graphics/image.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "input/scroll.h"
@@ -79,8 +80,6 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     int info_y_traded;
     int trade_button_offset_x;
     int info_y_city_desc;
-    int text_group_old_names;
-    int text_group_new_names;
     int trade_resource_size;
     const int sell_res_group = 47;
     int trade_button_offset_y;
@@ -153,8 +152,6 @@ inline void empire_window::archive_load(archive arch) {
     info_y_traded = arch.r_int("info_y_traded");
     trade_button_offset_x = arch.r_int("trade_button_offset_x");
     info_y_city_desc = arch.r_int("info_y_city_desc");
-    text_group_old_names = arch.r_int("text_group_old_names");
-    text_group_new_names = arch.r_int("text_group_new_names");
     trade_resource_size = arch.r_int("trade_resource_size");
     trade_button_offset_y = arch.r_int("trade_button_offset_y");
     start_pos = arch.r_vec2i("start_pos");
@@ -175,7 +172,7 @@ inline void empire_window::archive_load(archive arch) {
 void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) {
     painter ctx = game.painter();
 
-    const map_route_object& obj = empire_get_route_object(route_id);
+    const map_route_object& obj = g_empire.get_route_object(route_id);
     if (!obj.in_use) {
         return;
     }
@@ -255,7 +252,7 @@ void empire_window::draw_trade_resource(UiFlags flags, e_resource resource, int 
 
 void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &trade_route = city->get_route();
@@ -263,7 +260,7 @@ void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
 
     int sell_index = 0;
     for (const auto &r : resource_list::all) {
-        if (!empire_object_city_sells_resource(object->id, r.type))
+        if (!g_empire.city_sells_resource(object->id, r.type, false))
             continue;
 
         int trade_max = trade_route.limit(r.type);
@@ -275,7 +272,7 @@ void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &trade_route = city->get_route();
@@ -283,7 +280,7 @@ void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
 
     int buy_index = 0;
     for (const auto &r : resource_list::all) {
-        if (!empire_object_city_buys_resource(object->id, r.type))
+        if (!g_empire.city_buys_resource(object->id, r.type, false))
             continue;
 
         int trade_max = trade_route.limit(r.type);
@@ -295,7 +292,7 @@ void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     int index = 0;
@@ -303,7 +300,7 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
     const auto &item_buy = ui["city_buy_item"];
     vec2i e_offset = e->pos;
     for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
-        if (!empire_object_city_buys_resource(object->id, resource))
+        if (!g_empire.city_buys_resource(object->id, resource, false))
             continue;
 
         const auto &trade_route = city->get_route();
@@ -325,14 +322,14 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
 
 void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
     int selected_object = g_empire_map.selected_object();
-    const empire_object *object = empire_object_get(selected_object - 1);
+    const empire_object *object = g_empire.get_object(selected_object - 1);
     const empire_city *city = g_empire.city(selected_city);
 
     const auto &item_sell = ui["city_sell_item"];
     int index = 0;
     vec2i e_offset = e->pos;
     for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_MAX; ++resource) {
-        if (!empire_object_city_sells_resource(object->id, resource)) {
+        if (!g_empire.city_sells_resource(object->id, resource, false)) {
             continue;
         }
 
@@ -430,7 +427,7 @@ void empire_window::draw_object_info() {
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
         ui["info_tooltip"] = "";
-        const empire_object* object = empire_object_get(selected_object - 1);
+        const empire_object* object = g_empire.get_object(selected_object - 1);
         switch (object->type) {
         case EMPIRE_OBJECT_CITY: draw_city_info(object); break;
         case EMPIRE_OBJECT_KINGDOME_ARMY: draw_kingdome_army_info(object); break;
@@ -483,7 +480,7 @@ int empire_window::ui_handle_mouse(const mouse *m) {
 
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object *obj = empire_object_get(selected_object - 1);
+        const empire_object *obj = g_empire.get_object(selected_object - 1);
         if (obj->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(selected_object - 1);
         }
@@ -524,9 +521,9 @@ void empire_window::draw_empire_object(const empire_object &obj) {
 
     image_id = image_id_remap(image_id);
     const vec2i draw_pos = draw_offset + pos;
-    const image_t *img = ui::eimage(image_id, draw_pos);
 
     if (obj.type == EMPIRE_OBJECT_CITY) {
+        const image_t *img = ui::eimage(image_id, draw_pos);
         int empire_city_id = g_empire.get_city_for_object(obj.id);
         const empire_city* city = g_empire.city(empire_city_id);
 
@@ -545,11 +542,10 @@ void empire_window::draw_empire_object(const empire_object &obj) {
             draw_trade_route(city->route_id, state);
         }
 
-        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
-        int letter_height = get_letter_height((const uint8_t*)"H", FONT_SMALL_PLAIN);
+        const int letter_height = font_definition_for(FONT_SMALL_PLAIN)->line_height;
         vec2i text_pos = draw_offset + pos + vec2i{img->width, (img->height - letter_height)/2};
 
-        tooltip_text = ui::str(text_group, city->name_id);
+        tooltip_text = city->name_str;
 
         switch (obj.text_align) {
         case 0: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
@@ -559,7 +555,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         }
 
     } else if (obj.type == EMPIRE_OBJECT_TEXT) {
-        const full_empire_object* full = empire_get_full_object(obj.id);
+        const full_empire_object* full = g_empire.get_full_object(obj.id);
         vec2i text_pos = draw_offset + pos;
 
         tooltip_text = ui::str(196, full->city_name_id);
@@ -575,6 +571,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
         if (city_military_months_until_distant_battle() <= 0)
             return;
+
         if (city_military_distant_battle_enemy_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
@@ -582,18 +579,22 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
         if (!city_military_distant_battle_kingdome_army_is_traveling())
             return;
+
         if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
 
-    if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
-        && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {
-        hovered_object_tooltip = tooltip_text;
-    }
+    {
+        const image_t *img = ui::eimage(image_id, draw_pos);
+        if (last_mouse_pos.x > draw_pos.x && last_mouse_pos.y > draw_pos.y
+            && last_mouse_pos.x < draw_pos.x + img->width && last_mouse_pos.y < draw_pos.y + img->height) {
+            hovered_object_tooltip = tooltip_text;
+        }
 
-    if (img && img->animation.speed_id) {
-        int new_animation = empire_object_update_animation(obj, image_id);
-        ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
+        if (img && img->animation.speed_id) {
+            int new_animation = g_empire.update_animation(obj, image_id);
+            ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
+        }
     }
 }
 
@@ -608,7 +609,7 @@ void empire_window::draw_map() {
 
     ui::eimage(image, draw_offset);
 
-    empire_object_foreach([this] (const empire_object &obj) {
+    g_empire.foreach_object([this] (const empire_object &obj) {
         draw_empire_object(obj);
     });
 
@@ -689,7 +690,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     const empire_city* city = nullptr;
     int selected_object = g_empire_map.selected_object();
     if (selected_object) {
-        const empire_object *object = empire_object_get(selected_object - 1);
+        const empire_object *object = g_empire.get_object(selected_object - 1);
         if (object->type == EMPIRE_OBJECT_CITY) {
             selected_city = g_empire.get_city_for_object(object->id);
             city = g_empire.city(selected_city);
@@ -700,10 +701,7 @@ void empire_window::ui_draw_foreground(UiFlags flags) {
     ui["button_help"].enabled = !!city;
     ui["button_close"].enabled = !!city;
     ui["button_advisor"].enabled = !!city;
-    if (city) {
-        int text_group = !!game_features::gameui_empire_city_old_names ? text_group_old_names : text_group_new_names;
-        ui["city_name"] = ui::str(text_group, city->name_id);
-    }
+    ui["city_name"] = city ? city->name_str : "";
 
     const bool may_open_trade = city && !city->is_open && city->can_trade();
     ui["button_open_trade"].enabled = may_open_trade;

@@ -18,10 +18,23 @@ struct painter;
 inline bool show_figure_none(const figure *f) { return false; }
 using overlay_list = std::array<struct city_overlay *, OVERLAY_SIZE>;
 
+struct tooltips_t {
+    using xstring_vec = svector<xstring, 8>;
+    xstring key;
+    xstring_vec values;
+};
+template<> inline void archive::r<tooltips_t::xstring_vec>(pcstr name, tooltips_t::xstring_vec &v) { r_array_str(name, v); }
+
+ANK_CONFIG_STRUCT(tooltips_t, key, values)
+
 struct city_overlay {
     e_overlay id;
+    building_id current_building_id;
+    xstring current_tooltip;
+
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
+    std::unordered_map<xstring, tooltips_t> tooltips;
     e_column_type column_type = COLUMN_TYPE_NONE;
     animation_t column_anim;
     xstring caption;
@@ -32,7 +45,7 @@ struct city_overlay {
     virtual int get_column_height(const building *b) const { return COLUMN_TYPE_NONE; }
     virtual e_column_color get_column_color(const building *b) const { return COLUMN_COLOR_NONE; }
     virtual xstring get_tooltip(tooltip_context *c, tile2i tile) const { return {}; }
-    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) const { return {}; }
+    virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) { return {}; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
     virtual bool show_building(const building *b) const;
@@ -41,6 +54,7 @@ struct city_overlay {
     virtual void draw_overlay_building_column(building *b, vec2i pixel, tile2i tile, painter &ctx) const;
 
     xstring title() const;
+    const tooltips_t& get_tooltips(const xstring &level) const;
     void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
     void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
@@ -52,7 +66,7 @@ struct city_overlay {
     static city_overlay *get(e_overlay e);
     static overlay_list &overlays();
 };
-ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption)
+ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption, tooltips)
 
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {

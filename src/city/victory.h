@@ -22,5 +22,12 @@ struct victory_state_t {
     void stop_governing();
     bool has_won();
 
+    bool is_housing_condition_met();
+
     void add_condition(victory_condition);
+
+    void determine_state();
+    int houses_of_required_level();
 };
+
+const std::unordered_map<xstring, bool> &get_victory_reasons();

@@ -7,7 +7,6 @@
 #include "building/building_senet_house.h"
 #include "city/city_industry.h"
 #include "building/rotation.h"
-#include "building/model.h"
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/city_finance.h"
@@ -888,10 +887,10 @@ void building_storage_yard::spawn_figure() {
     }
 
     if (!base.has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
-        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
         leader->set_direction_to(task.dest);
         for (int i = 0; i < 5; ++i) {
-            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, FIGURE_ACTION_50_SLED_PULLER_CREATED);
+            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
             follower->set_direction_to(task.dest);
             follower->wait_ticks = i * 4;
         }
@@ -913,7 +912,7 @@ void building_storage_yard::spawn_figure() {
             return;
         }
 
-        cart->advance_action(FIGURE_ACTION_50_WAREHOUSEMAN_CREATED);
+        cart->advance_action(ACTION_50_WAREHOUSECART_CREATED);
 
         switch (task.result) {
         case STORAGEYARD_TASK_GETTING:
@@ -938,7 +937,7 @@ void building_storage_yard::spawn_figure() {
     } else if (task.result == STORAGEYARD_TASK_GETTING_MOAR && !base.has_figure_of_type(1, FIGURE_STORAGEYARD_CART)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         auto cart = smart_cast<figure_storageyard_cart>(f);
-        cart->base.action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+        cart->base.action_state = ACTION_50_WAREHOUSECART_CREATED;
         cart->load_resource(RESOURCE_NONE, 0);
         cart->base.collecting_item_id = task.resource;
 

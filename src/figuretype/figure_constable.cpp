@@ -129,12 +129,12 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
     auto &d = runtime_data();
 
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK:
+    case ACTION_150_CONSTABLE_ATTACK:
     case FIGURE_ACTION_149_CORPSE:
-    case FIGURE_ACTION_70_POLICEMAN_CREATED:
-    case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
-    case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
-    case FIGURE_ACTION_77_POLICEMAN_AT_ENEMY:
+    case ACTION_70_CONSTABLE_CREATED:
+    case ACTION_71_CONSTABLE_ENTERING_EXITING:
+    case ACTION_76_CONSTABLE_GOING_TO_ENEMY:
+    case ACTION_77_CONSTABLE_AT_ENEMY:
         return false;
     }
     d.wait_ticks_next_target++;
@@ -146,7 +146,7 @@ bool figure_constable::fight_enemy(int category, int max_distance) {
     if (result.fid > 0 && result.distance <= max_distance) {
         figure* enemy = figure_get(result.fid);
         d.wait_ticks_next_target = 0;
-        advance_action(FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY);
+        advance_action(ACTION_76_CONSTABLE_GOING_TO_ENEMY);
         base.destination_tile = enemy->tile;
         base.target_figure_id = result.fid;
         enemy->targeted_by_figure_id = id();
@@ -163,30 +163,29 @@ void figure_constable::figure_action() {
 
     building* b = home();
     switch (action_state()) {
-    case FIGURE_ACTION_70_POLICEMAN_CREATED:
-        advance_action(FIGURE_ACTION_72_POLICEMAN_ROAMING);
+    case ACTION_70_CONSTABLE_CREATED:
+        advance_action(ACTION_72_CONSTABLE_ROAMING);
         break;
 
     case 9:
-    case FIGURE_ACTION_71_POLICEMAN_ENTERING_EXITING:
+    case ACTION_71_CONSTABLE_ENTERING_EXITING:
         do_enterbuilding(true, b);
         break;
 
     case 10:
-    case FIGURE_ACTION_72_POLICEMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, FIGURE_ACTION_73_POLICEMAN_RETURNING);
+    case ACTION_72_CONSTABLE_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_CONSTABLE_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_73_POLICEMAN_RETURNING:
+    case ACTION_73_CONSTABLE_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
 
-    case FIGURE_ACTION_76_POLICEMAN_GOING_TO_ENEMY:
+    case ACTION_76_CONSTABLE_GOING_TO_ENEMY:
         base.terrain_usage = TERRAIN_USAGE_ANY;
         if (!base.target_is_alive()) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                advance_action(FIGURE_ACTION_73_POLICEMAN_RETURNING);
+                advance_action(ACTION_73_CONSTABLE_RETURNING);
                 base.destination_tile = road_tile;
                 route_remove();
                 base.roam_length = 0;

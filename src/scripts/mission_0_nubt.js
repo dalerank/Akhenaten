@@ -33,7 +33,6 @@ mission0 { // Nubt
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
 		population_cap : 250
-		victory_reason : "some_days_after_last_action"
 
 		tutorial_fire_handled : false
 		tutorial_collapsed_handle : false
@@ -43,15 +42,22 @@ mission0 { // Nubt
 	}
 }
 
-[event=event_mission_start, mission=mission0]
-function tutorial1_on_start(ev) {
-	city.set_goal_tooltip("#mission0_goal_create_housing")
+[event=event_update_mission_goal, mission=mission0]
+function mission0_update_goal(ev) {
+	if (mission.tutorial_granary_opened) {
+		city.set_goal_tooltip("#mission0_goal_build_granary")
+		return
+	}
 
+	city.set_goal_tooltip("#mission0_goal_create_housing")
+}
+
+[event=event_mission_start, mission=mission0]
+function mission0_on_start(ev) {
 	if (mission.tutorial_granary_opened) {
 		city.use_building(BUILDING_HUNTING_LODGE, true)
 		city.use_building(BUILDING_GRANARY, true)
 		city.use_building(BUILDING_BAZAAR, true)
-		city.set_goal_tooltip("#mission0_goal_build_granary")
 	}
 
 	if (mission.tutorial_fire_handled) {
@@ -66,12 +72,12 @@ function tutorial1_on_start(ev) {
 		city.use_building(BUILDING_WATER_SUPPLY, true)
 	}
 
-	migration.population_cap = mission.population_cap;
+	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
 	city.set_victory_reason(mission.victory_reason, false)
 }
 
 [event=event_fire_damage, mission=mission0]
-function tutorial1_handle_fire(ev) {
+function mission0_handle_fire(ev) {
 	if (mission.tutorial_fire_handled) {
 		return
 	}
@@ -81,13 +87,10 @@ function tutorial1_handle_fire(ev) {
 	
 	city.use_building(BUILDING_FIREHOUSE, true)
 	ui.popup_message("message_fire_in_the_village")
-	
-	log_info("granary_open_population:${mission.last_action_time}")
-	log_info("tutorial1_handle_fire:${mission.tutorial_fire_handled}")
 }
 
 [event=event_population_changed, mission=mission0]
-function tutorial1_handle_population_for_granary(ev) {
+function mission0_handle_population_for_granary(ev) {
 	if (mission.tutorial_granary_opened) {
 		return;
 	}
@@ -104,13 +107,10 @@ function tutorial1_handle_population_for_granary(ev) {
 	mission.tutorial_granary_opened = true
 
 	ui.popup_message("message_tutorial_food_or_famine")
-
-	log_info("granary_open_population:${mission.last_action_time}")
-	log_info("tutorial1_handle_population_for_granary:${mission.tutorial_granary_opened}")
 }
 
 [event=event_collase_damage, mission=mission0]
-function tutorial1_handle_collapse(ev) {
+function mission0_handle_collapse(ev) {
     if (mission.tutorial_collapsed_handle) {
         return;
     }
@@ -119,21 +119,18 @@ function tutorial1_handle_collapse(ev) {
 	mission.tutorial_collapsed_handle = true
 
 	city.use_building(BUILDING_ARCHITECT_POST, true)
-
     ui.popup_message("message_tutorial_collapsed_building")
 }
 
 [event=event_granary_resource_added, mission=mission0]
-function tutorial1_on_filled_granary(ev) {
-	log_info("granary_open_population:${ev.bid}", {ev: ev})
+function mission0_on_filled_granary(ev) {
     if (mission.tutorial_gamemeat_stored) {
         return;
     }
 
     var granary = city.get_granary(ev.bid)
-    var meat_stored = granary.amount(RESOURCE_GAMEMEAT);
+    var meat_stored = granary.amount(RESOURCE_GAMEMEAT)
 
-	log_info("meat_stored:${meat_stored}", {meat_stored: meat_stored})
     if (meat_stored < mission.granary_meat_stored) {
         return;
     }
@@ -142,17 +139,19 @@ function tutorial1_on_filled_granary(ev) {
 	mission.last_action_time = game.absolute_day
 
 	city.use_building(BUILDING_WATER_SUPPLY, true)
-
 	ui.popup_message("message_tutorial_clean_water")
 }
 
 [event=event_update_victory_state, mission=mission0]
-function tutorial1_handle_victory_state(ev) {
+function mission0_handle_victory_state(ev) {
+	city.set_victory_reason("gamemeat_stored", mission.tutorial_gamemeat_stored)
+	city.set_victory_reason("tutorial_granary_opened", mission.tutorial_granary_opened)
+
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
-	city.set_victory_reason(mission.victory_reason, some_days_after_last_action)
+	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
 [event=event_migration_update, mission=mission0]
-function tutorial1_handle_population_cap(ev) {
+function mission0_handle_population_cap(ev) {
 	// do nothing
 }

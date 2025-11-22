@@ -88,6 +88,23 @@ void figure_lumberjack::update_animation() {
     image_set_animation(anim_key);
 }
 
+sound_key figure_lumberjack::phrase_key() const {
+    switch (action_state()) {
+    case ACTION_8_LUMBERJACK_RECALCULATE:
+    case ACTION_14_LUMBERJACK_CREATED:
+    case ACTION_9_LUMBERJACK_GOTO_RESOURCE:
+        return "lumberjack_hunting";
+        
+    case ACTION_10_LUMBERJACK_WORK:
+        return "lumberjack_hunting";
+        
+    case ACTION_11_LUMBERJACK_RETURN_HOME:
+        return "lumberjack_back";
+    }
+    
+    return "lumberjack_hunting";
+}
+
 void figure_lumberjack::figure_before_action() {
     building *b = home();
     if (b->state != BUILDING_STATE_VALID) {

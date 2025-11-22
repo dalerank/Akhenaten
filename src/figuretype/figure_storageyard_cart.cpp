@@ -11,7 +11,7 @@
 #include "js/js_game.h"
 #include "game/game_config.h"
 
-figures::model_t<figure_storageyard_cart> storageyard_cart_m;
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_storageyard_cart);
 
 void figure_storageyard_cart::figure_before_action() {
     if (has_destination()) {
@@ -100,53 +100,48 @@ void figure_storageyard_cart::figure_action() {
     base.use_cart = true;
     switch (action_state()) {
     case ACTION_8_RECALCULATE:
-    case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED:
+    case ACTION_50_WAREHOUSECART_CREATED:
         calculate_destination(true);
         break;
 
-    case ACTION_9_WAREHOUSE_CART_DELIVERING_GOODS:
-    case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
+    case ACTION_51_WAREHOUSECART_DELIVERING_RESOURCE:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_52_WAREHOUSECART_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_12_DELIVERING_UNLOADING_GOODS:
-    case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
-        do_deliver(true, ACTION_11_RETURNING_EMPTY, ACTION_11_RETURNING_EMPTY);
+    case ACTION_52_WAREHOUSECART_AT_DELIVERY_BUILDING:
+        do_deliver(true, ACTION_53_WAREHOUSECART_RETURNING_EMPTY, ACTION_53_WAREHOUSECART_RETURNING_EMPTY);
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
+    case ACTION_53_WAREHOUSECART_RETURNING_EMPTY:
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
 
-    case FIGURE_ACTION_54_WAREHOUSEMAN_GETTING_FOOD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY_GETTING, ACTION_8_RECALCULATE);
+    case ACTION_54_WAREHOUSECART_GETTING_FOOD:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_55_WAREHOUSECART_AT_GRANARY_GETTING, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY_GETTING:
-        do_retrieve(FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD);
+    case ACTION_55_WAREHOUSECART_AT_GRANARY_GETTING:
+        do_retrieve(ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD);
         break;
 
-    case ACTION_14_RETURNING_WITH_FOOD:
-    case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
-    case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
+    case ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD:
+    case ACTION_59_WAREHOUSECART_RETURNING_WITH_RESOURCE:
         if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             set_destination(home());
-            advance_action(FIGURE_ACTION_60_WAREHOUSEMAN_UNLOADING_AT_HOME);
+            advance_action(ACTION_60_WAREHOUSECART_UNLOADING_AT_HOME);
         }
         break;
 
-    case FIGURE_ACTION_60_WAREHOUSEMAN_UNLOADING_AT_HOME:
+    case ACTION_60_WAREHOUSECART_UNLOADING_AT_HOME:
         do_deliver(true, /*action_done*/-1, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_15_GETTING_GOODS:
-    case FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE_GETTING_GOODS,ACTION_8_RECALCULATE);
+    case ACTION_57_WAREHOUSECART_GETTING_RESOURCE:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS, ACTION_8_RECALCULATE);
         break;
 
-    case FIGURE_ACTION_58_WAREHOUSEMAN_AT_WAREHOUSE_GETTING_GOODS: // used exclusively for getting resources
-        do_retrieve(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
+    case ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS: // used exclusively for getting resources
+        do_retrieve(ACTION_59_WAREHOUSECART_RETURNING_WITH_RESOURCE);
         break;
     }
 }

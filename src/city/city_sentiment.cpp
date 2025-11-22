@@ -1,7 +1,6 @@
 #include "city_sentiment.h"
 
 #include "building/building_house.h"
-#include "building/model.h"
 #include "city/constants.h"
 #include "city/city.h"
 #include "game/game_events.h"

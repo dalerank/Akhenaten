@@ -11,7 +11,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_physician);
 
 void building_physician::spawn_figure() {
-    common_spawn_roamer(FIGURE_PHYSICIAN, 50, FIGURE_ACTION_125_ROAMING);
+    common_spawn_roamer(FIGURE_PHYSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
 }
 
 void building_physician::update_graphic() {

@@ -27,6 +27,13 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
     tile2i entry = g_city.map.entry_point;
     auto f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     auto imm = f->dcast_immigrant();
+    assert(imm);
+
+    if (!imm) {
+        f->poof();
+        return;
+    }
+
     imm->advance_action(ACTION_1_IMMIGRANT_CREATED);
     house->base.set_figure(BUILDING_SLOT_IMMIGRANT, imm->id());
 
@@ -166,7 +173,7 @@ figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_immigrant::phrase_key() const {
-    svector<sound_key, 10> keys = {"i_need_here", "work_for_all", "cheap_food"};
+    svector<sound_key, 10> keys = {"immigrant_im_new_here", "immigrant_heard_there_is_a_job_here", "immigrant_city_has_plenty_of_food"};
     return keys[rand() % keys.size()];
 }
 

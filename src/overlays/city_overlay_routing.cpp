@@ -1,6 +1,5 @@
 #include "city_overlay_routing.h"
 
-#include "building/model.h"
 #include "building/building.h"
 #include "figure/figure.h"
 #include "grid/property.h"
@@ -99,7 +98,7 @@ inline void city_overlay_routing::draw_custom_top(vec2i pixel, tile2i point, pai
     }
 }
 
-xstring city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_routing::get_tooltip_for_building(tooltip_context *c, const building *b) {
     if (building_is_farm(b->type)) {
         tile2i tile = b->tile;
         int fertility = 0;

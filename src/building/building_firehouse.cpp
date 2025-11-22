@@ -2,7 +2,7 @@
 
 #include "building/destruction.h"
 #include "city/city_buildings.h"
-
+#include "figuretype/figure_fireman.h"
 #include "dev/debug.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
@@ -10,13 +10,13 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
 
-declare_console_command_p(nofire) {
+declare_console_command_p(fire_no) {
     buildings_valid_do([&] (building &b) {
         b.fire_risk = 0;
     });
 }
 
-declare_console_command_p(startfire) {
+declare_console_command_p(fire_start) {
     std::string args;
     is >> args;
     int count = atoi(!args.empty() ? args.c_str() : "1");
@@ -33,7 +33,7 @@ declare_console_command_p(startfire) {
 }
 
 void building_firehouse::spawn_figure() {
-    base.common_spawn_roamer(FIGURE_FIREMAN, 50, FIGURE_ACTION_70_FIREMAN_CREATED);
+    base.common_spawn_roamer(FIGURE_FIREMAN, current_params().min_houses_coverage, (e_figure_action)ACTION_70_FIREMAN_CREATED);
 }
 
 void building_firehouse::update_graphic() {

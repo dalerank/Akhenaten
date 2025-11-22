@@ -2,6 +2,12 @@
 
 #include "figure/figure.h"
 
+enum e_enemy_action {
+    ACTION_151_ENEMY_INITIAL = 151,
+    ACTION_153_ENEMY_MARCHING = 153,
+    ACTION_154_ENEMY_FIGHTING = 154,
+};
+
 class figure_enemy : public figure_impl {
 public:
     figure_enemy(figure *f) : figure_impl(f) {}

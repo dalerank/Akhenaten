@@ -21,10 +21,22 @@ elseif()
   add_compile_definitions("-Wno-absolute-value")
 endif()
 
-add_library(${PROJECT_NAME} ${SOURCES_LIST})
+add_library(${PROJECT_NAME} STATIC ${SOURCES_LIST})
+include_directories(${PROJECT_SOURCE_DIR}/core)
+
+if (WIN32 OR UNIX OR APPLE)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC GPUPIXEL_GL_SHADER)
+elseif (ANDROID OR IOS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC GPUPIXEL_GLES_SHADER)
+endif()
 
 set(GPUPIXEL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/core
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
 set(GPUPIXEL_LIBRARY ${PROJECT_NAME}
     CACHE INTERNAL "${PROJECT_NAME}: Library Name" FORCE)
+
+# Link Tracy if it's available
+if(TARGET Tracy::TracyClient)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Tracy::TracyClient)
+endif()

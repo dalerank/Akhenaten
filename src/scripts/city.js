@@ -13,12 +13,24 @@ city {
         }
     }
 
+    yards_stored : function(resource_type) {
+        return __city_yards_stored(resource_type)
+    }
+
     building_is_temple : function(building_id) {
         return __city_building_is_temple(building_id)
     }
 
+    building_is_tax_collector : function(building_id) {
+        return __city_building_is_tax_collector(building_id)
+    }
+
     count_active_buildings : function(building_type) {
         return __city_count_active_buildings(building_type)
+    }
+
+    count_total_buildings : function(building_type) {
+        return __city_count_total_buildings(building_type)
     }
 
     set_advisor_available : function(advisor, available) {
@@ -31,4 +43,8 @@ finance {
         [property]
         gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
     }
+}
+
+crime {
+    
 }

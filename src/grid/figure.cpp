@@ -153,7 +153,7 @@ int map_figure_foreach_until(int grid_offset, int test) {
             case TEST_SEARCH_ENEMY: result = f->is_enemy(); break;
             case TEST_SEARCH_HERD: result = f->is_herd(); break;
             case TEST_SEARCH_FORMATION: result = f->is_soldier(); break;
-            case TEST_SEARCH_ATTACKING_NATIVE: result = f->is_attacking_native(); break;
+            case TEST_SEARCH_CRIMINAL: result = f->is_criminal(); break;
             case TEST_SEARCH_CITIZEN: result = f->is_citizen(); break;
             case TEST_SEARCH_NON_CITIZEN: result = f->is_non_citizen(); break;
             case TEST_SEARCH_FIGHTING_FRIENDLY: result = f->is_fighting_friendly(); break;

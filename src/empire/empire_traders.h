@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/vec2i.h"
+#include "figure/figure.h"
 #include "empire/empire_object.h"
 
 struct empire_trader {
@@ -8,14 +9,18 @@ struct empire_trader {
         estate_moving_to_destination,
         estate_trading,
         estate_returning_home,
+        estate_count
     };
 
     uint8_t id;
     uint8_t trade_route_id;
+    figure_id owner_figure_id;
     uint8_t destination_city_id;
     vec2i current_position;
     uint8_t current_route_point;
     uint8_t movement_delay;
+    uint8_t movement_delay_max;
+
     bool is_ship;
     bool is_active;
     e_state state;
@@ -42,10 +47,13 @@ public:
     void clear_all();
     
     std::array<empire_trader, 100> traders;
+    vec2i ship_movement_delay;
+    vec2i land_movement_delay;
 
 private:   
     empire_trader* get_free_trader();
     vec2i get_position_on_route(int route_id, int point_index);
 };
+ANK_CONFIG_STRUCT(empire_traders_manager, ship_movement_delay, land_movement_delay)
 
 extern empire_traders_manager g_empire_traders;

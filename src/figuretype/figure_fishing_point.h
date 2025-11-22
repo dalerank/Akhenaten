@@ -1,5 +1,10 @@
 #include "figure/figure.h"
 
+enum e_fishing_point_action {
+   ACTION_196_FISHPOINT_BUBLES = 196,
+   ACTION_197_FISHPOINT_JUMP = 197,
+};
+
 class figure_fishing_point : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_FISHING_POINT, figure_fishing_point)

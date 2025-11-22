@@ -57,7 +57,7 @@ void bazaar_info_window::init(object_info &c) {
         } else if (buyer->is_valid()) {
             ui["warning_text"] = ui::str(meta.text_id, 10);
         } else if (trader->is_valid()) {
-            int state = (trader->action_state == FIGURE_ACTION_126_ROAMER_RETURNING) ? 12 : 11;
+            int state = (trader->action_state == ACTION_126_ROAMER_RETURNING) ? 12 : 11;
             ui["warning_text"] = ui::str(meta.text_id, state);
         }
     } else {

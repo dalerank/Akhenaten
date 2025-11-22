@@ -12,6 +12,7 @@
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
+#include "figuretype/figure_entertainer.h"
 #include "grid/image.h"
 #include "grid/building.h"
 #include "grid/orientation.h"
@@ -159,21 +160,21 @@ void building_pavilion::spawn_figure() {
     auto &d = runtime_data();
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
         if (d.juggler_visited > 0) {
-            base.create_roaming_figure(FIGURE_JUGGLER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
+            base.create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
             return;
         }
     }
 
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
         if (d.musician_visited > 0) {
-            base.create_roaming_figure(FIGURE_MUSICIAN, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
+            base.create_roaming_figure(FIGURE_MUSICIAN, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
             return;
         }
     }
 
     if (common_spawn_figure_trigger(100, BUILDING_SLOT_DANCER)) {
         if (d.dancer_visited > 0) {
-            base.create_roaming_figure(FIGURE_DANCER, FIGURE_ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DANCER);
+            base.create_roaming_figure(FIGURE_DANCER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DANCER);
             return;
         }
     }

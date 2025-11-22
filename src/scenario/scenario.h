@@ -317,6 +317,11 @@ struct scenario_data_t {
     void set_campaign_scenario(int scenario_id);
     int is_before_mission(int mission);
 
+    void distant_battle_set_enemy_travel_months(int value);
+    void distant_battle_set_kingdome_travel_months(int value) {
+        empire.distant_battle_kingdome_travel_months = value;
+    }
+
     template<typename ... Args>
     bool is_scenario_id(const Args ... args) {
         int values[] = { args... };

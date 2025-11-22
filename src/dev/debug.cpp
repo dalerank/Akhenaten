@@ -7,8 +7,8 @@
 
 #include "graphics/graphics.h"
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 #include "building/monuments.h"
 #include "building/building_entertainment.h"
@@ -108,7 +108,7 @@ void debug_text_a(painter &ctx, pstr str, int x, int y, int indent, pcstr text, 
 void debug_text_float(int x, int y, int indent, pcstr text, float value, color color) {
     text_draw(string_from_ascii(text), x, y, FONT_SMALL_OUTLINED, color);
     bstring64 buffer;
-    buffer.printf("0.2f", value);
+    buffer.printf("%0.2f", value);
     text_draw(buffer.data(), x + indent, y, FONT_SMALL_OUTLINED, color);
 }
 

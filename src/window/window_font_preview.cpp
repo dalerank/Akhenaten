@@ -1,5 +1,5 @@
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
+#include "imgui.h"
 #include "js/js_game.h"
 #include "platform/renderer.h"
 #include "game/game.h"

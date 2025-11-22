@@ -4,9 +4,10 @@
 #include "graphics/elements/menu.h"
 #include "game/game_config.h"
 #include "lookup.h"
+#include "js/js_game.h"
 #include <cmath>
 
-zoom_t g_zoom;
+zoom_t ANK_VARIABLE_N(g_zoom, "camera_zoom");
 
 static void start_touch(const touch_t * first, const touch_t * last, int scale) {
     auto& data = g_zoom;
@@ -51,59 +52,103 @@ void zoom_t::handle_mouse(const mouse* m) {
     }
 
     if (m->middle.went_up && input_offset == vec2i{m->x, m->y}) {
-        target = ZOOM_DEFAULT;
+        target = zoom_default;
     }
 
     if (m->scrolled != SCROLL_NONE) {
-        target += (m->scrolled == SCROLL_DOWN) ? zoom_speed : -zoom_speed;
-        target = std::clamp(target, ZOOM_MIN, ZOOM_MAX);
+        if (!game_features::gameui_smooth_zoom) {
+            // Fixed step zoom: round to nearest step
+            float step = zoom_speed;
+            float current = target;
+            float new_target = current + (m->scrolled == SCROLL_DOWN ? step : -step);
+            // Round to nearest step
+            new_target = std::round(new_target / step) * step;
+            target = std::clamp(new_target, zoom_min, zoom_max);
+        } else {
+            target += (m->scrolled == SCROLL_DOWN) ? zoom_speed : -zoom_speed;
+            target = std::clamp(target, zoom_min, zoom_max);
+        }
     }
 
     input_offset = {m->x, m->y};
 }
 
 bool zoom_t::update_value(vec2i* camera_position) {
-    if (zoom == target) {
+    if (!game_features::gameui_zoom) {
+        target = zoom_default;
+    }
+
+    const bool has_touch_input = touch.active;
+    const float diff = target - zoom;
+
+    if (!has_touch_input && std::fabs(diff) <= zoom_epsilon) {
+        delta = 0.0f;
+        zoom = target;
         return false;
     }
 
-    if (!game_features::gameui_zoom) {
-        target = ZOOM_DEFAULT;
-    }
-
     auto old_zoom = zoom;
-    if (!touch.active) {
-        delta = calc_bound(target - zoom, -zoom_speed, zoom_speed);
+    float change = 0.0f;
+    if (!has_touch_input) {
+        if (!game_features::gameui_smooth_zoom) {
+            // Fixed step zoom: immediately set to target without interpolation
+            change = diff;
+        } else {
+            change = diff * zoom_lerp_coeff;
+        }
     } else {
-        delta = (float)(touch.current_zoom - zoom);
-    }
-    zoom = std::clamp(zoom + delta, ZOOM_MIN, ZOOM_MAX); // todo: bind camera to max window size... or find a way to mask the borders
-    
-    if (zoom == target) {
-        zoom = target;
-        delta = 0.0f;
+        change = (float)(touch.current_zoom - zoom);
     }
 
-    // re-center camera around the input point
-    vec2i old_offset, new_offset;
-    old_offset.x = calc_adjust_with_percentage<int>(input_offset.x, old_zoom);
-    old_offset.y = calc_adjust_with_percentage<int>(input_offset.y, old_zoom);
+    float new_zoom = std::clamp(zoom + change, zoom_min, zoom_max); // todo: bind camera to max window size... or find a way to mask the borders
 
-    new_offset.x = calc_adjust_with_percentage<int>(input_offset.x, zoom);
-    new_offset.y = calc_adjust_with_percentage<int>(input_offset.y, zoom);
+    if (has_touch_input) {
+        target = new_zoom;
+    } else if (!game_features::gameui_smooth_zoom) {
+        // Fixed step zoom: immediately snap to target
+        new_zoom = target;
+    } else if (std::fabs(target - new_zoom) <= zoom_epsilon) {
+        new_zoom = target;
+    }
 
-    camera_position->x -= new_offset.x - old_offset.x;
-    camera_position->y -= new_offset.y - old_offset.y;
+    zoom = new_zoom;
+    delta = zoom - old_zoom;
 
-    if (!game_features::gameui_smooth_scrolling && !touch.active) {
-        int remaining_x = camera_position->x & 60;
-        int remaining_y = camera_position->y & 15;
-        if (remaining_x >= 30)
-            remaining_x -= 60;
-        if (remaining_y >= 8)
-            remaining_y -= 15;
-        camera_position->x -= remaining_x;
-        camera_position->y -= remaining_y;
+    // re-center camera around the input point   
+    if (!game_features::gameui_smooth_zoom) {
+        vec2i old_offset, new_offset;
+        old_offset.x = calc_adjust_with_percentage<int>(input_offset.x, (int)old_zoom);
+        old_offset.y = calc_adjust_with_percentage<int>(input_offset.y, (int)old_zoom);
+
+        new_offset.x = calc_adjust_with_percentage<int>(input_offset.x, (int)zoom);
+        new_offset.y = calc_adjust_with_percentage<int>(input_offset.y, (int)zoom);
+
+        camera_position->x -= new_offset.x - old_offset.x;
+        camera_position->y -= new_offset.y - old_offset.y;
+
+        if (!game_features::gameui_smooth_scrolling && !touch.active) {
+            int remaining_x = camera_position->x & 60;
+            int remaining_y = camera_position->y & 15;
+            if (remaining_x >= 30)
+                remaining_x -= 60;
+            if (remaining_y >= 8)
+                remaining_y -= 15;
+            camera_position->x -= remaining_x;
+            camera_position->y -= remaining_y;
+        }
+    } else {
+        // Use float calculations to avoid precision loss and jitter
+        float old_offset_x = old_zoom * input_offset.x / 100.0f;
+        float old_offset_y = old_zoom * input_offset.y / 100.0f;
+        float new_offset_x = zoom * input_offset.x / 100.0f;
+        float new_offset_y = zoom * input_offset.y / 100.0f;
+
+        // Calculate smooth delta and apply to camera
+        float delta_x = new_offset_x - old_offset_x;
+        float delta_y = new_offset_y - old_offset_y;
+
+        camera_position->x -= (int)std::round(delta_x);
+        camera_position->y -= (int)std::round(delta_y);
     }
     return true;
 }
@@ -121,10 +166,10 @@ float zoom_t::get_percentage() {
 
 void zoom_t::set_scale(float z) {
     if (!game_features::gameui_zoom) {
-        z = ZOOM_DEFAULT;
+        z = zoom_default;
     }
 
-    z = calc_bound(z, ZOOM_MIN, ZOOM_MAX);
+    z = calc_bound(z, zoom_min, zoom_max);
     zoom = z;
     target = z;
     city_view_refresh_viewport();

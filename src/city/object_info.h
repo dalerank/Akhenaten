@@ -65,9 +65,6 @@ struct object_info {
 
     int storage_show_special_orders;
     struct nfigure_t {
-        int draw_debug_path;
-        textid phrase;
-        xstring phrase_key;
         uint8_t selected_index;
         bool drawn;
         svector<figure_id, 7> ids;
@@ -78,7 +75,7 @@ struct object_info {
     void fill_figures_info(tile2i tile);
     figure *figure_get();
     int figure_get_id() const { return nfigure.ids.empty() ? 0 : nfigure.ids[nfigure.selected_index]; }
-    bool figure_phrase_valid() const { return nfigure.phrase.valid(); }
+    //bool figure_phrase_valid() const { return nfigure.phrase.valid(); }
     building *building_get();
 
     template<typename T>

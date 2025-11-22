@@ -29,42 +29,42 @@ void figure_carpenter::figure_action() {
     case 9:
         break;
 
-    case FIGURE_ACTION_30_CARPENTER_CREATED_ROAMING:
+    case ACTION_30_CARPENTER_CREATED_ROAMING:
         base.destination_tile = destination()->access_tile();
-        advance_action(FIGURE_ACTION_31_CARPENTER_GOING_TO_GARDEN);
+        advance_action(ACTION_31_CARPENTER_GOING_TO_GARDEN);
         break;
 
-    case FIGURE_ACTION_10_CARPENTER_CREATED:
+    case ACTION_10_CARPENTER_CREATED:
         base.destination_tile = destination()->access_tile();
-        advance_action(FIGURE_ACTION_11_CARPENTER_GOING);
+        advance_action(ACTION_11_CARPENTER_GOING);
         break;
 
-    case FIGURE_ACTION_20_CARPENTER_DESTROY:
+    case ACTION_20_CARPENTER_DESTROY:
         poof();
         break;
 
-    case FIGURE_ACTION_31_CARPENTER_GOING_TO_GARDEN:
-        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_CARPENTER_DESTROY)) {
+    case ACTION_31_CARPENTER_GOING_TO_GARDEN:
+        if (do_goto(base.destination_tile, terrain_usage, -1, ACTION_20_CARPENTER_DESTROY)) {
             base.wait_ticks = 0;
-            advance_action(FIGURE_ACTION_14_CARPENTER_WORK_GROUND);
+            advance_action(ACTION_14_CARPENTER_WORK_GROUND);
         }
         break;
 
-    case FIGURE_ACTION_11_CARPENTER_GOING:
-        if (do_goto(base.destination_tile, terrain_usage, -1, FIGURE_ACTION_20_CARPENTER_DESTROY)) {
-            advance_action(FIGURE_ACTION_17_CARPENTER_LOOKING_FOR_WORK_TILE);
+    case ACTION_11_CARPENTER_GOING:
+        if (do_goto(base.destination_tile, terrain_usage, -1, ACTION_20_CARPENTER_DESTROY)) {
+            advance_action(ACTION_17_CARPENTER_LOOKING_FOR_WORK_TILE);
         }
         break;
 
-    case FIGURE_ACTION_14_CARPENTER_WORK_GROUND:
-    case FIGURE_ACTION_15_CARPENTER_WORK_VERT:
+    case ACTION_14_CARPENTER_WORK_GROUND:
+    case ACTION_15_CARPENTER_WORK_VERT:
         base.wait_ticks++;
         if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
             auto statue = smart_cast<building_statue>(building_get(runtime_data().destination_bid));
             if (statue) {
                 statue->set_service(100);
             }
-            advance_action(FIGURE_ACTION_16_CARPENTER_RETURN_HOME);
+            advance_action(ACTION_16_CARPENTER_RETURN_HOME);
         }
         break;
 
@@ -81,8 +81,8 @@ void figure_carpenter::figure_action() {
     //}
     //break;
 
-    case FIGURE_ACTION_16_CARPENTER_RETURN_HOME:
-        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, FIGURE_ACTION_18_CARPENTER_RANDOM_TILE)) {
+    case ACTION_16_CARPENTER_RETURN_HOME:
+        if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_18_CARPENTER_RANDOM_TILE)) {
             poof();
         }
         break;
@@ -103,16 +103,40 @@ void figure_carpenter::update_animation() {
     figure_impl::update_animation();
 
     switch (action_state()) {
-    case FIGURE_ACTION_14_CARPENTER_WORK_GROUND:
+    case ACTION_14_CARPENTER_WORK_GROUND:
         image_set_animation(animkeys().work_ground);
         break;
 
-    case FIGURE_ACTION_15_CARPENTER_WORK_VERT:
+    case ACTION_15_CARPENTER_WORK_VERT:
         image_set_animation(animkeys().work_wall);
         break;
 
-    case FIGURE_ACTION_16_CARPENTER_RETURN_HOME:
+    case ACTION_16_CARPENTER_RETURN_HOME:
         image_set_animation(animkeys().walk);
         break;
     }
+}
+
+sound_key figure_carpenter::phrase_key() const {
+    switch (action_state()) {
+    case ACTION_10_CARPENTER_CREATED:
+    case ACTION_30_CARPENTER_CREATED_ROAMING:
+        return "carpenter_work_my_tools_need_for_monument";
+        
+    case ACTION_11_CARPENTER_GOING:
+    case ACTION_31_CARPENTER_GOING_TO_GARDEN:
+        return "carpenter_work_my_tools_need_for_monument";
+        
+    case ACTION_17_CARPENTER_LOOKING_FOR_WORK_TILE:
+        return "carpenter_work_my_tools_need_for_monument";
+        
+    case ACTION_14_CARPENTER_WORK_GROUND:
+    case ACTION_15_CARPENTER_WORK_VERT:
+        return "carpenter_this_monument_will_be_short";
+        
+    case ACTION_16_CARPENTER_RETURN_HOME:
+        return "carpenter_this_monument_will_be_short";
+    }
+
+    return "carpenter_work_my_tools_need_for_monument";
 }

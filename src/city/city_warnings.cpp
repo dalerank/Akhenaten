@@ -1,7 +1,6 @@
 #include "city_warnings.h"
 
 #include "building/building.h"
-#include "building/model.h"
 #include "city/constants.h"
 #include "city/city.h"
 #include "game/game_events.h"

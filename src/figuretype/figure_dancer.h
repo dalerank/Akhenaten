@@ -11,7 +11,6 @@ public:
     virtual void update_shows() override;
     virtual figure_dancer *dcast_dancer() override { return this; }
     virtual svector<e_building_type, 4> allow_venue_types() const override { return {BUILDING_PAVILLION}; }
-    virtual figure_phrase_t phrase() const override { return {FIGURE_DANCER, "dancer"}; }
     virtual sound_key phrase_key() const override;
     virtual bool play_die_sound() override;
     virtual int provide_service() override;

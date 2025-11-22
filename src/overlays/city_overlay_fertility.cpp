@@ -1,7 +1,6 @@
 #include "city_overlay_fertility.h"
 
 #include "grid/floodplain.h"
-#include "building/model.h"
 #include "building/building.h"
 #include "figure/figure.h"
 #include "grid/property.h"
@@ -69,7 +68,7 @@ xstring city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i) const {
     return {};
 }
 
-xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) {
     if (building_is_farm(b->type)) {
         tile2i tile = b->tile;
         int fertility = map_get_fertility_for_farm(tile.grid_offset());

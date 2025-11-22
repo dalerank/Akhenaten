@@ -9,6 +9,7 @@
 #include "dev/debug.h"
 #include "window/message_dialog.h"
 #include "window/building/figures.h"
+#include "io/gamefiles/lang.h"
 #include "window/window_city.h"
 #include "game/game.h"
 #include "game/state.h"
@@ -77,18 +78,6 @@ void figure_info_window::prepare_figures(object_info &c) {
     g_screen_city.draw(ctx);
 }
 
-void figure_info_window::play_figure_phrase(object_info &c) {
-    if (!c.can_play_sound) {
-        return;
-    }
-
-    figure* f = c.figure_get();
-    f->figure_phrase_play();
-    c.nfigure.phrase = f->phrase;
-    c.nfigure.phrase_key = f->phrase_key;
-    c.can_play_sound = false;
-}
-
 figure_info_window::figure_info_window() {
     window_figure_register_handler(this);
 }
@@ -143,19 +132,15 @@ void figure_info_window::init(object_info &c) {
     figure *f = ::figure_get(figure_id);
 
     prepare_figures(c);
-    c.nfigure.draw_debug_path = 1;
 
     if (c.can_play_sound) {
-        play_figure_phrase(c);
-    }
-
-    int image_id = f->type;
-    if (f->action_state == FIGURE_ACTION_74_FIREMAN_GOING_TO_FIRE || f->action_state == FIGURE_ACTION_75_FIREMAN_AT_FIRE) {
-        image_id = 18;
+        f->figure_phrase_determine();
+        f->figure_play_phrase_file();
+        c.can_play_sound = false;
     }
 
     ui.check_errors = false;
-    ui["bigimage"].image(image_id);
+    ui["bigimage"].image(f->type);
 
     for (int i = 0; i < c.nfigure.ids.size(); i++) {
         xstring btn_id; btn_id.printf("button_figure%d", i);
@@ -165,10 +150,9 @@ void figure_info_window::init(object_info &c) {
 
         ui[btn_id].select(i == c.nfigure.selected_index);
         ui[btn_id].onclick([index = i, &c] {
-            auto &data = g_figures_data;
-            data.context_for_callback = &c;
-            data.context_for_callback->nfigure.selected_index = index;
-            data.context_for_callback->can_play_sound = true;
+            c.nfigure.selected_index = index;
+            c.can_play_sound = true;
+            events::emit(event_update_tile_info { true });
         });
 
         auto screen_opt = ui[btn_id].dcast_image_button();
@@ -181,9 +165,15 @@ void figure_info_window::init(object_info &c) {
     c.help_id = meta.help_id;
     c.group_id = meta.text_id;
 
-    ui["phrase"] = c.nfigure.phrase.valid()
-        ? c.nfigure.phrase.c_str_safe("")
-        : bstring256().printf("#undefined_phrase ( %s )", c.nfigure.phrase_key.c_str()).c_str();
+    auto sound_reaction = f->dcast()->get_sound_reaction(f->phrase_key);
+    xstring phrase_text = sound_reaction.text;
+    if (!phrase_text) {
+        phrase_text = lang_get_string(sound_reaction.group, sound_reaction.id);
+    }
+    if (!phrase_text) {
+        phrase_text.printf("#%s", sound_reaction.key.c_str());
+    }
+    ui["phrase"] = phrase_text;
 
     e_overlay foverlay = f->dcast()->get_overlay();
     ui["show_overlay"].onclick([foverlay] {

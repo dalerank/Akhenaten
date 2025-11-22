@@ -448,6 +448,8 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
             command.pixel = pixel - vec2i{ 0, offset_y };
             command.mask = color_mask;
             command.tag = (building_id == 261);
+            command.use_sort_pixel = true;
+            command.sort_pixel = pixel;
         }
 
         int image_alt_value = map_image_alt_at(grid_offset);
@@ -504,9 +506,11 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
         const image_t *img = image_get(image_id);
         int offset_y = 15 * (img->width / 58) - 1;
-        command.image_id = image_id;
-        command.pixel = pixel - vec2i(0, offset_y );
+            command.image_id = image_id;
+            command.pixel = pixel - vec2i(0, offset_y );
         command.mask = color_mask;
+            command.use_sort_pixel = true;
+            command.sort_pixel = pixel;
         //command.virtual_xorder = TILE_WIDTH_PIXELS;
     } 
 
@@ -1009,7 +1013,7 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
         return {};
     }
 
-    xstring tooltip = overlay->get_tooltip_for_building(c, b);
+    xstring tooltip = ((city_overlay*)overlay)->get_tooltip_for_building(c, b);
     if (!tooltip) {
         tooltip = overlay->get_tooltip(c, tile);
     }

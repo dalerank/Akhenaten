@@ -22,7 +22,7 @@ void figure_tower_sentry::tower_sentry_pick_target() {
     if (enemy_army_total_enemy_formations() <= 0)
         return;
 
-    if (action_state() == FIGURE_ACTION_150_ATTACK || action_state() == FIGURE_ACTION_149_CORPSE)
+    if (action_state() == ACTION_150_TOWER_SENTRY_ATTACK || action_state() == FIGURE_ACTION_149_CORPSE)
         return;
 
     if (base.in_building_wait_ticks) {
@@ -35,7 +35,7 @@ void figure_tower_sentry::tower_sentry_pick_target() {
         d.wait_ticks_next_target = 0;
         tile2i tile;
         if (figure_combat_get_missile_target_for_soldier(&base, 10, &tile)) {
-            base.action_state = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
+            base.action_state = ACTION_172_TOWER_SENTRY_FIRING;
             base.destination_tile = tile;
             //            destination_tile.x() = tile.x();
             //            destination_tile.y() = tile.y();
@@ -130,34 +130,34 @@ void figure_tower_sentry::figure_action() {
 
     tower_sentry_pick_target();
     switch (action_state()) {
-    case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
+    case ACTION_170_TOWER_SENTRY_AT_REST:
         base.animctx.frame = 0;
         wait_ticks++;
         if (wait_ticks > 40) {
             wait_ticks = 0;
             int x_tile, y_tile;
             if (tower_sentry_init_patrol(b, &x_tile, &y_tile)) {
-                advance_action(FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING);
+                advance_action(ACTION_171_TOWER_SENTRY_PATROLLING);
                 base.destination_tile.set(x_tile, y_tile);
                 route_remove();
             }
         }
         break;
 
-    case FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING:
+    case ACTION_171_TOWER_SENTRY_PATROLLING:
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(FIGURE_ACTION_173_TOWER_SENTRY_RETURNING);
+            advance_action(ACTION_173_TOWER_SENTRY_RETURNING);
             base.destination_tile = base.source_tile;
             //                destination_tile.x() = source_tile.x();
             //                destination_tile.y() = source_tile.y();
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH)
-            advance_action(FIGURE_ACTION_170_TOWER_SENTRY_AT_REST);
+            advance_action(ACTION_170_TOWER_SENTRY_AT_REST);
 
         break;
 
-    case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
+    case ACTION_172_TOWER_SENTRY_FIRING:
         move_ticks_tower_sentry(1);
         base.wait_ticks_missile++;
         if (base.wait_ticks_missile > current_params().missile_delay) {
@@ -168,24 +168,23 @@ void figure_tower_sentry::figure_action() {
                 figure *f = figure_get(base.target_figure_id);
                 figure_missile::create(base.home_building_id, tile, f->tile, FIGURE_JAVELIN);
             } else {
-                advance_action(FIGURE_ACTION_173_TOWER_SENTRY_RETURNING);
+                advance_action(ACTION_173_TOWER_SENTRY_RETURNING);
                 base.destination_tile = base.source_tile;
                 route_remove();
             }
         }
         break;
 
-    case ACTION_11_RETURNING_EMPTY:
-    case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
+    case ACTION_173_TOWER_SENTRY_RETURNING:
         base.move_ticks(1);
         if (direction() == DIR_FIGURE_NONE)
-            advance_action(FIGURE_ACTION_170_TOWER_SENTRY_AT_REST);
+            advance_action(ACTION_170_TOWER_SENTRY_AT_REST);
         else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH)
             poof();
 
         break;
 
-    case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
+    case ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
         base.terrain_usage = TERRAIN_USAGE_ROADS;
         if (!!game_features::gameplay_change_tower_sentries_go_offroad) {
             base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -199,7 +198,7 @@ void figure_tower_sentry::figure_action() {
             base.source_tile = b->tile;
             base.tile = b->tile;
             base.map_figure_add();
-            advance_action(FIGURE_ACTION_170_TOWER_SENTRY_AT_REST);
+            advance_action(ACTION_170_TOWER_SENTRY_AT_REST);
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
@@ -220,14 +219,18 @@ void figure_tower_sentry::figure_action() {
     }
 }
 
+sound_key figure_tower_sentry::phrase_key() const {
+    return sound_key();
+}
+
 void figure_tower_sentry::update_animation() {
     xstring animkey = animkeys().walk;
     //int dir = base.figure_image_direction();
     if (action_state(FIGURE_ACTION_149_CORPSE)) {
         animkey = animkeys().death;
-    } else if (action_state(FIGURE_ACTION_172_TOWER_SENTRY_FIRING)) {
+    } else if (action_state(ACTION_172_TOWER_SENTRY_FIRING)) {
         animkey = animkeys().fire;  // image_id_from_group(GROUP_FIGURE_TOWER_SENTRY) + dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[base.wait_ticks_missile / 2];
-    } else if (action_state(FIGURE_ACTION_150_ATTACK)) {
+    } else if (action_state(ACTION_150_TOWER_SENTRY_ATTACK)) {
         animkey = animkeys().attack;
         // if (base.attack_image_offset < 16)
         //     image_id = image_id + 96 + dir;

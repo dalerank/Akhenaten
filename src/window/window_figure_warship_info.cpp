@@ -33,7 +33,7 @@ void figure_warship_info_window::window_info_background(object_info &c) {
     const short order = f->runtime_data().active_order;
 
     ui["repair"].darkened = (f->base.damage == 0) ? UiFlags_Grayscale : UiFlags_None;
-    ui["return_to_wharf"].darkened = (f->base.action_state == FIGURE_ACTION_203_WARSHIP_MOORED) ? UiFlags_Grayscale : UiFlags_None;
+    ui["return_to_wharf"].darkened = (f->base.action_state == ACTION_203_WARSHIP_MOORED) ? UiFlags_Grayscale : UiFlags_None;
 
     for (const pcstr id : button_ids) {
         auto imgbtn = ui[id].dcast_image_button();

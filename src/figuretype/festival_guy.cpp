@@ -53,28 +53,32 @@ void figure_festival_guy::update_animation() {
     image_set_animation(animkey);
 }
 
+sound_key figure_festival_guy::phrase_key() const {
+    return sound_key();
+}
+
 void figure_festival_guy::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_10_FESTIVAL_GUY_CREATED:
+    case ACTION_10_FESTIVAL_GUY_CREATED:
         base.animctx.frame = 0;
         if (--base.wait_ticks <= 0) {
-            advance_action(FIGURE_ACTION_11_FESTIVAL_GUY_GOTO_SQUARE);
+            advance_action(ACTION_11_FESTIVAL_GUY_GOTO_SQUARE);
         }
         break;
 
-    case FIGURE_ACTION_11_FESTIVAL_GUY_GOTO_SQUARE:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, FIGURE_ACTION_12_FESTIVAL_GUY_DANCE)) {
+    case ACTION_11_FESTIVAL_GUY_GOTO_SQUARE:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_12_FESTIVAL_GUY_DANCE)) {
             base.wait_ticks = rand() % 20;
         }
         break;
 
-    case FIGURE_ACTION_12_FESTIVAL_GUY_DANCE:
+    case ACTION_12_FESTIVAL_GUY_DANCE:
         if (--base.wait_ticks <= 0) {
-            advance_action(FIGURE_ACTION_13_FESTIVAL_GUY_GOTO_HOME);
+            advance_action(ACTION_13_FESTIVAL_GUY_GOTO_HOME);
         }
         break;
 
-    case FIGURE_ACTION_13_FESTIVAL_GUY_GOTO_HOME:
+    case ACTION_13_FESTIVAL_GUY_GOTO_HOME:
         do_gotobuilding(home());
         break;
     }

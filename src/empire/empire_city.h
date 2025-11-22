@@ -8,6 +8,12 @@
 #include "core/tokenum.h"
 #include "core/archive.h"
 
+struct empire_city_options_t {
+    uint16_t text_group_old_names;
+    uint16_t text_group_new_names;
+};
+ANK_CONFIG_STRUCT(empire_city_options_t, text_group_old_names, text_group_new_names)
+
 struct empire_city {
     enum {
         check_open_route = 1
@@ -17,6 +23,7 @@ struct empire_city {
     e_empire_city type;
     uint8_t lookup_id;
     uint8_t name_id;
+    bstring32 name_str;
     int route_id;
     bool is_open;
     bool buys_resource[RESOURCES_MAX];
@@ -39,6 +46,10 @@ struct empire_city {
     const empire_object *get_empire_object() const;
     const full_empire_object *get_full_empire_object() const;
     int get_free_slot(int max_traders) const;
+    int get_free_slot() const;
+
+    void archive_load(archive arch);
+    void check_attributes();
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
@@ -53,6 +64,8 @@ struct empire_city {
             is_open = false;  // Close trade when under siege
         }
     }
+
+    static bstring32 get_display_name(int id);
     
     bool is_sieged() const {
         return months_under_siege > 0;
@@ -81,4 +94,5 @@ struct empire_city_handle {
     bool operator!() const { return !valid(); }
 };
 
-extern const token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT> e_empire_city_tokens;
+using e_empire_city_tokens_t = token_holder<e_empire_city, EMPIRE_CITY_OURS, EMPIRE_CITY_COUNT>;
+extern const e_empire_city_tokens_t e_empire_city_tokens;

@@ -7,6 +7,8 @@
 #include "grid/building.h"
 #include "graphics/animation.h"
 #include "building/building_house.h"
+#include "building/building_brewery.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_water_carrier);
@@ -19,31 +21,19 @@ void figure_water_carrier::figure_before_action() {
 }
 
 void figure_water_carrier::figure_action() {
-    // TODO
-    //    if (config_get(CONFIG_GP_CH_WATER_CARRIER_FIREFIGHT))
-    //        if (fight_fire())
-    //            image_set_animation(GROUP_FIGURE_PREFECT);
-
     building* b = home();
     switch (action_state()) {
-    case ACTION_10_GOING:
-    case FIGURE_ACTION_72_FIREMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_2_ROAMERS_RETURNING);
+    case ACTION_72_WATER_CARRIER_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
         break;
 
-    case ACTION_11_RETURNING_FROM_PATROL:
-    case FIGURE_ACTION_73_FIREMAN_RETURNING:
+    case ACTION_73_WATER_CARRIER_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
         break;
-    //        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-    //            if (do_goto(destination_x, destination_y, TERRAIN_USAGE_ENEMY, FIGURE_ACTION_75_PREFECT_AT_FIRE))
-    //                wait_ticks = 50;
-    //            break;
-    //        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
-    //            extinguish_fire();
-    //            direction = attack_direction;
-    //            image_set_animation(GROUP_FIGURE_PREFECT, 104, 36);
-    //            break;
+
+    default:
+        advance_action(ACTION_72_WATER_CARRIER_ROAMING);
+        break;
     }
 }
 
@@ -101,6 +91,15 @@ int figure_water_carrier::provide_service() {
         if (house) {
             auto &housed = house->runtime_data();
             housed.water_supply = MAX_COVERAGE;
+        }
+        
+        // Also provide water to breweries if feature is enabled
+        if (!!game_features::gameplay_brewery_requires_water) {
+            auto brewery = ((building *)b)->dcast_brewery();
+            if (brewery) {
+                constexpr uint8_t MAX_WATER = 100;
+                brewery->set_water_stored(MAX_WATER); // Fill to max when water carrier visits
+            }
         }
     });
 

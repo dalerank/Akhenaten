@@ -9,6 +9,7 @@ struct object_info;
 struct tooltip_context;
 
 struct event_show_tile_info { tile2i tile; bool avoid_mouse; pcstr source_location; };
+struct event_update_tile_info { bool avoid_mouse; };
 
 struct common_info_window : public ui::widget {
     virtual pcstr section() const { return ""; }
@@ -32,8 +33,8 @@ struct common_info_window : public ui::widget {
     static void register_handlers();
 };
 
-
 int window_building_info_get_type();
 void window_building_info_show_storage_orders();
+
 void window_building_register_handler(common_info_window *handler);
 void window_figure_register_handler(common_info_window *handler);

@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.16...3.26)
 include(CMakeDependentOption)
 include(FetchContent)
+include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
-option(OPTION_SYSTEM_LIBPNG "Use the system libpng" OFF)
-option(OPTION_BUILD_LIBPNG "Build libpng from source" OFF)
-message(STATUS "OPTION_SYSTEM_LIBPNG: ${OPTION_SYSTEM_LIBPNG}")
-message(STATUS "OPTION_BUILD_LIBPNG: ${OPTION_BUILD_LIBPNG}")
+option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" OFF)
+
+message(STATUS "OPTION_ENABLE_TRACY: ${OPTION_ENABLE_TRACY}")
 
 if (CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     message("Platform: win + emscripten")
-    set(WIN_EMSCRIPTEN TRUE)
+    set(WIN_EMSCRIPTEN TRUE) 
 else()
     set(WIN_EMSCRIPTEN FALSE)
 endif()
@@ -42,12 +42,51 @@ endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
 
+# Force using zlib from FetchContent, ignore system zlib
+# This prevents find_package(ZLIB) from finding system libraries
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+
+# Dependency versions
+set(SDL2_VERSION "2.32.10")
+set(SDL2_MIXER_VERSION "2.8.0")
+set(CPPTRACE_VERSION "v1.0.4")
+set(TRACY_VERSION "v0.10")
+set(CURL_VERSION "curl-8_10_1")
+set(ZLIB_VERSION "v1.3.1")
+set(FREETYPE_VERSION "VER-2-13-3")
+set(HARFBUZZ_VERSION "7.3.0")
+set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
+set(LIBPNG_VERSION "v1.6.50")
+set(IMGUI_VERSION "v1.92.2")
+
+# Function to set ZLIB_LIBRARY based on build configuration
+# Note: We set ZLIB_LIBRARY as INTERNAL to prevent it from appearing in Visual Studio project files
+# The actual linking should use the zlibstatic target, not ZLIB_LIBRARY
+function(set_zlib_library zlib_binary_dir)
+    if(MSVC)
+        # Set library path based on build configuration for find_package
+        # Use INTERNAL to prevent it from appearing in VS project files
+        # For multi-config generators, we can't know the config at configure time,
+        # so we set a reasonable default (Debug for development, Release for production)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            # Default to Debug for development builds or when CMAKE_BUILD_TYPE is not set (multi-config)
+            set(ZLIB_LIBRARY "${zlib_binary_dir}/Debug/zlibstaticd.lib" CACHE INTERNAL "Path to zlib library" FORCE)
+        else()
+            set(ZLIB_LIBRARY "${zlib_binary_dir}/Release/zlibstatic.lib" CACHE INTERNAL "Path to zlib library" FORCE)
+        endif()
+    else()
+        # For other platforms, construct the expected library path
+        set(ZLIB_LIBRARY "${zlib_binary_dir}/libzlibstatic.a" CACHE INTERNAL "Path to zlib library" FORCE)
+    endif()
+    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+endfunction()
+
 #
 # CppTrace
 #
 
 if(PLATFORM_ANDROID)
-    # no cpptrace for android, baa...
+    # no cpptrace for android
 else()
     if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
         if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
@@ -61,7 +100,7 @@ else()
         FetchContent_Declare(
                 cpptrace
                 GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-                GIT_TAG        v1.0.4 # <HASH or TAG>
+                GIT_TAG        ${CPPTRACE_VERSION}
         )
         FetchContent_MakeAvailable(cpptrace)
 
@@ -85,7 +124,7 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    set(USE_FLAGS "--use-port=sdl2 --use-port=sdl2_mixer -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
+    set(USE_FLAGS "-sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     ${USE_FLAGS} \
@@ -121,94 +160,166 @@ else()
     SET(GAME_BUILD_TYPE "Debug")
 endif()
 
-set(SDL2_VERSION "2.32.10")
-set(SDL2_MIXER_VERSION "2.8.1")
-set(OPENSSL_VERSION "3.0.17")
-
-set(SDL2_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
-set(OPENSSL_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/openssl")
-set(TRACY_EXT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/tracy")
-
 #
 # Dependencies and libs
 #
 if (MSVC OR WIN_EMSCRIPTEN)
+    # Unified configuration for MSVC and WIN_EMSCRIPTEN
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Setup SDL2 FetchContent
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-${SDL2_VERSION}
+    )
+    
+    # Configure SDL2 build options - build as static library
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2)
+    
+    # Set SDL2 variables for linking
+    set(SDL2_LIBRARY SDL2::SDL2)
+    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
+    if(SDL2_INCLUDE_DIR_TEMP)
+        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
+    else()
+        # Fallback: construct from source dir if available
+        if(DEFINED SDL2_SOURCE_DIR)
+            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
+        endif()
+    endif()
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
-    set(SDL2_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL.h")
-    if(NOT EXISTS "${SDL2_CHECK_PATH}")
-        set(SDL2_DEP_FILENAME "SDL2-devel-${SDL2_VERSION}-VC.zip")
-        set(SDL2_UNPACK_DIR "SDL2-${SDL2_VERSION}")
-        set(SDL2_DOWNLOAD_URL "http://libsdl.org/release/${SDL2_DEP_FILENAME}")
-        set(SDL2_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_DEP_FILENAME}")
-        message("Download SDL2 to ${SDL2_TMP_ZIP_PATH}")
-        
-        if (NOT EXISTS "${SDL2_TMP_ZIP_PATH}")
-            file(DOWNLOAD "${SDL2_DOWNLOAD_URL}" "${SDL2_TMP_ZIP_PATH}")
+    
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG        release-${SDL2_MIXER_VERSION}
+    )
+    
+    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
+    
+    FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # Set SDL2_mixer variables for linking
+    # SDL2_mixer may create different target names depending on version
+    if(TARGET SDL2::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
         endif()
-        
-        message("Unpack SDL2 to ${SDL2_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
-    endif()
-
-    set(SDL2_MIXER_DEP_FILENAME "SDL2_mixer-devel-${SDL2_MIXER_VERSION}-VC.zip")
-    set(SDL2_MIXER_DOWNLOAD_URL "https://libsdl.org/projects/SDL_mixer/release/${SDL2_MIXER_DEP_FILENAME}")
-    set(SDL2_MIXER_UNPACK_DIR "SDL2_mixer-${SDL2_MIXER_VERSION}")
-    set(SDL2_MIXER_CHECK_PATH "${SDL2_EXTRACT_PATH}/include/SDL_mixer.h")
-    set(SDL2_MIXER_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_DEP_FILENAME}")
-    if (NOT EXISTS "${SDL2_MIXER_CHECK_PATH}")
-        message("Download SDL2_mixer to ${SDL2_MIXER_TMP_ZIP_PATH}")
-
-        if (NOT EXISTS "${SDL2_MIXER_TMP_ZIP_PATH}")
-            file(DOWNLOAD "${SDL2_MIXER_DOWNLOAD_URL}" "${SDL2_MIXER_TMP_ZIP_PATH}")
+    elseif(TARGET SDL2_mixer::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
         endif()
-
-        message("Unpack SDL2_mixer to ${SDL2_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/include DESTINATION ${SDL2_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_UNPACK_DIR}/lib DESTINATION ${SDL2_EXTRACT_PATH})
+    elseif(TARGET SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    else()
+        # Fallback: assume SDL2::SDL2_mixer will be available at link time
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
     endif()
-
-    set(OPENSSL_CHECK_PATH "${OPENSSL_EXTRACT_PATH}/include/openssl/ssl.h")
-    message("Check ssl.h exist at ${OPENSSL_CHECK_PATH}")
-    if(NOT EXISTS "${OPENSSL_CHECK_PATH}")
-        set(OPENSSL_DEP_FILENAME "openssl-${OPENSSL_VERSION}.zip")
-        set(OPENSSL_UNPACK_DIR "openssl-${OPENSSL_VERSION}")
-        set(OPENSSL_DOWNLOAD_URL "https://download.firedaemon.com/FireDaemon-OpenSSL/${OPENSSL_DEP_FILENAME}")
-        set(OPENSSL_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${OPENSSL_DEP_FILENAME}")
-        message("Download openssl to ${OPENSSL_TMP_ZIP_PATH}")
-        file(DOWNLOAD "${OPENSSL_DOWNLOAD_URL}" "${OPENSSL_TMP_ZIP_PATH}")
-        message("Unpack openssl to ${OPENSSL_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${OPENSSL_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR})
-
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/lib DESTINATION ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/bin DESTINATION ${OPENSSL_EXTRACT_PATH})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${OPENSSL_UNPACK_DIR}/openssl-3.0/x64/include DESTINATION ${OPENSSL_EXTRACT_PATH})
+    
+    # Fallback: use source directory for includes if target properties not available
+    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
     endif()
-
-    file(GLOB SDL2_DLL_PUBLIC_DLL "${SDL2_EXTRACT_PATH}/lib/${GAME_PROCESSOR_ARCH}/*.dll")
-    file(COPY ${SDL2_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-
-    file(GLOB OPENSSL_DLL_PUBLIC_DLL "${OPENSSL_EXTRACT_PATH}/bin/*.dll")
-    file(COPY ${OPENSSL_DLL_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-
-    set(SDL_FFMPEG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/ffmpeg)
-    file(GLOB FFMPEG_PUBLIC_DLL "${SDL_FFMPEG_DIR}/bin/*.dll")
-    file(COPY ${FFMPEG_PUBLIC_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-    set(BUGTRAP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/bugtrap)
-    set(BUGTRAP_DLL "${BUGTRAP_DIR}/BugTrap-x64.dll")
-    file(COPY ${BUGTRAP_DLL} DESTINATION ${GAME_WORKING_DIRECTORY})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/update_binary_windows.cmd DESTINATION ${GAME_WORKING_DIRECTORY})
 endif()
 
-set(TRACY_CHECK_PATH "${TRACY_EXT_PATH}/public/TracyClient.cpp")
-if (EXISTS "${TRACY_CHECK_PATH}")
-    add_definitions(-DTRACY_ENABLE=ON)
-    set(TRACY_FILES ${PROJECT_SOURCE_DIR}/ext/tracy/public/TracyClient.cpp)
-    include_directories(${PROJECT_SOURCE_DIR}/ext/tracy/public/)
+# Use Tracy from repository via FetchContent (optional)
+set(TRACY_FILES "")
+if (OPTION_ENABLE_TRACY)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/tracy-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_TRACY "${LOCAL_DEPS_ROOT}/tracy-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_TRACY TRUE)
+    endif()
+
+    FetchContent_Declare(
+        tracy
+        GIT_REPOSITORY https://github.com/wolfpld/tracy.git
+        GIT_TAG        ${TRACY_VERSION}
+    )
+
+    # Configure Tracy options before FetchContent_MakeAvailable
+    # Build Tracy as static library
+    set(TRACY_STATIC ON CACHE BOOL "" FORCE)
+    option(TRACY_ENABLE "Enable profiling" ON)
+
+    FetchContent_MakeAvailable(tracy)
+endif()
+
+if (MSVC)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_CURL TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        curl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG        ${CURL_VERSION}
+    )
+    
+    # Configure curl build options
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_DICT ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FILE ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_FTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_GOPHER ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_IMAP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_POP3 ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_RTSP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_SMTP ON CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_TFTP ON CACHE BOOL "" FORCE)
+    set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel instead of OpenSSL
+    set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)  # Explicitly disable OpenSSL
+    set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
+    set(CURL_CA_PATH "" CACHE STRING "" FORCE)
+    
+    # Ensure zlib is available before curl tries to find it
+    # Set ZLIB variables for curl's find_package(ZLIB)
+    if(TARGET zlibstatic AND DEFINED zlib_SOURCE_DIR)
+        get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+        if(ZLIB_BINARY_DIR)
+            # Set ZLIB variables before curl's FetchContent_MakeAvailable
+            # This ensures curl can find zlib and zconf.h
+            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+        endif()
+    endif()
+    
+    FetchContent_MakeAvailable(curl)
+    
+    # zlib is already built before curl (via add_subdirectory), so no explicit dependency needed
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -246,48 +357,103 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
-# Check if sources are already available (e.g., in Flatpak build)
-# Try both source and binary directory locations
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_SOURCE_DIR}/_deps/freetype-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/freetype-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${CMAKE_BINARY_DIR}/_deps/freetype-src")
+# Always use zlib from repository via FetchContent (static library only)
+# Must be built before freetype and curl which depend on it
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    zlib
+    GIT_REPOSITORY https://github.com/madler/zlib
+    GIT_TAG ${ZLIB_VERSION}
+)
+FetchContent_MakeAvailable(zlib)
+
+if(TARGET zlibstatic AND NOT TARGET zlib)
+    add_library(zlib ALIAS zlibstatic)
 endif()
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_SOURCE_DIR}/_deps/harfbuzz-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src/CMakeLists.txt")
-    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${CMAKE_BINARY_DIR}/_deps/harfbuzz-src")
+if(TARGET zlibstatic)
+    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+    if(ZLIB_BINARY_DIR)
+        target_include_directories(zlibstatic INTERFACE ${ZLIB_BINARY_DIR})
+        include_directories(${ZLIB_BINARY_DIR})
+        if(EXISTS "${ZLIB_BINARY_DIR}/zconf.h")
+            file(COPY "${ZLIB_BINARY_DIR}/zconf.h" DESTINATION "${zlib_SOURCE_DIR}")
+        endif()
+    endif()
+    # Set ZLIB variables to force using our version from FetchContent
+    # This prevents find_package(ZLIB) from finding system libraries
+    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+    # Set ZLIB_LIBRARY for find_package(ZLIB) used by libpng
+    # The library file doesn't exist yet during configuration, but find_package needs the path
+    set_zlib_library(${ZLIB_BINARY_DIR})
+    # Mark zlib as found to prevent system search
+    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${zlib_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 endif()
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/_deps/stb-src/stb_image.h")
-    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_SOURCE_DIR}/_deps/stb-src")
-elseif(EXISTS "${CMAKE_BINARY_DIR}/_deps/stb-src/stb_image.h")
-    set(FETCHCONTENT_SOURCE_DIR_STB "${CMAKE_BINARY_DIR}/_deps/stb-src")
-endif()
-
+# Always use freetype from repository via FetchContent (never use system library)
+# Prevent find_package from finding system libraries
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG        VER-2-13-3
+    GIT_TAG        ${FREETYPE_VERSION}
 )
 FetchContent_MakeAvailable(freetype)
 
+# Set Freetype variables to force using our version from FetchContent
+# This prevents find_package(Freetype) from finding system libraries
+if(TARGET freetype AND DEFINED freetype_SOURCE_DIR)
+    set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+    set(FREETYPE_INCLUDE_DIRS "${freetype_SOURCE_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
+    set(FREETYPE_ROOT "${freetype_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${freetype_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+endif()
+
+# Always use harfbuzz from repository via FetchContent (never use system library)
+# Prevent find_package from finding system libraries
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG        7.3.0
+    GIT_TAG        ${HARFBUZZ_VERSION}
 )
-# Disable HarfBuzz optional features
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(harfbuzz)
+
+# Set HarfBuzz variables to force using our version from FetchContent
+# This prevents find_package from finding system libraries
+if(TARGET harfbuzz AND DEFINED harfbuzz_SOURCE_DIR)
+    set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
+    set(HARFBUZZ_INCLUDE_DIRS "${harfbuzz_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+    set(HARFBUZZ_ROOT "${harfbuzz_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
+    # Prevent find_package from searching system paths
+    set(CMAKE_PREFIX_PATH "${harfbuzz_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+endif()
 
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG        5736b15f7ea0ffb08dd38af21067c314d6a3aae9
+    GIT_TAG        ${STB_VERSION}
 )
 FetchContent_MakeAvailable(stb)
+
+# Use imgui from repository via FetchContent
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI TRUE)
+endif()
+
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG        ${IMGUI_VERSION}
+)
+FetchContent_MakeAvailable(imgui)
 
 if (PLATFORM_ANDROID)
     set(PROJECT_VERSION_MAJOR 0)
@@ -297,15 +463,7 @@ if (PLATFORM_ANDROID)
     set(VERSION_REVISION "")
 endif()
 
-add_subdirectory(ext/expat)
-add_subdirectory(ext/mujs)
-add_subdirectory(ext/lame)
-add_subdirectory(ext/lzma)
-add_subdirectory(ext/bzip)
-add_subdirectory(ext/aes)
-
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
-   # no filters on android
 else()
     add_subdirectory(ext/gpupixel)
 endif()
@@ -342,9 +500,16 @@ file(GLOB WINDOW_BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/window/building/*.cpp)
 file(GLOB DEV_FILES ${PROJECT_SOURCE_DIR}/src/dev/*.cpp)
 file(GLOB EDITOR_FILES ${PROJECT_SOURCE_DIR}/src/editor/*.cpp)
 file(GLOB TRANSLATION_FILES ${PROJECT_SOURCE_DIR}/src/translation/*.cpp)
-file(GLOB IMGUI_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp)
-file(GLOB IMGUI_CPP_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/misc/cpp/*.cpp)
-file(GLOB IMGUI_BACKEND_FILES ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.cpp)
+# imgui files from FetchContent (directly in project, not as separate library)
+set(IMGUI_FILES
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp
+    ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+)
 file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
 file(GLOB IO_FILES ${PROJECT_SOURCE_DIR}/src/io/*.cpp)
 file(GLOB IO_CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/io/config/*.cpp)
@@ -355,6 +520,10 @@ file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
 file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
+file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
+file(GLOB BZIP_FILES ${PROJECT_SOURCE_DIR}/src/bzip/*.c)
+file(GLOB LAME_FILES ${PROJECT_SOURCE_DIR}/src/lame/libmp3lame/*.c)
+file(GLOB MUJS_FILES ${PROJECT_SOURCE_DIR}/src/mujs/*.c)
 
 if (PLATFORM_ANDROID)
     add_definitions(-DANDROID_BUILD=ON)
@@ -362,7 +531,6 @@ if (PLATFORM_ANDROID)
     set(PLATFORM_FILES ${PLATFORM_FILES} ${ANDROID_BACKEND_FILES})
 
     set(CMAKE_CXX_FLAGS "-Wno-format-security ${CMAKE_CXX_FLAGS}")
-    # set(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
 endif()
 
 # Find revision ID and hash of the sourcetree
@@ -376,8 +544,6 @@ execute_process(
 
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
-
-set(IMGUI_FILES ${IMGUI_FILES} ${IMGUI_CPP_FILES} ${IMGUI_BACKEND_FILES})
 
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
@@ -407,8 +573,6 @@ if(MSVC)
     file(GLOB DEV_HEADERS ${PROJECT_SOURCE_DIR}/src/dev/*.h)
     file(GLOB EDITOR_HEADERS ${PROJECT_SOURCE_DIR}/src/editor/*.h)
     file(GLOB TRANSLATION_HEADERS ${PROJECT_SOURCE_DIR}/src/translation/*.h)
-    file(GLOB IMGUI_HEADERS ${PROJECT_SOURCE_DIR}/ext/imgui/*.h)
-    file(GLOB IMGUI_BACKEND_HEADERS ${PROJECT_SOURCE_DIR}/ext/imgui/backends/*.h)
 
     source_group("core" FILES ${CORE_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
@@ -440,7 +604,6 @@ if(MSVC)
     source_group("dev" FILES ${DEV_FILES})
     source_group("editor" FILES ${EDITOR_FILES})
     source_group("translation" FILES ${TRANSLATION_FILES})
-    source_group("imgui" FILES ${IMGUI_FILES})
     source_group("io" FILES ${IO_FILES} {IO_HEADERS})
     source_group("io/gamefiles" FILES ${IO_GAMEFILES_FILES})
     source_group("content" FILES ${CONTENT_FILES})
@@ -449,13 +612,14 @@ if(MSVC)
     source_group("graphics" FILES ${GRAPHICS_FILES})
     source_group("fontgen" FILE ${GRAPHICS_FONTGEN_FILES})
     source_group("js" FILES ${JS_FILES})
+    source_group("lzma" FILES ${LZMA_FILES})
+    source_group("bzip" FILES ${BZIP_FILES})
+    source_group("lame" FILES ${LAME_FILES})
 endif()
 
 set(MACOSX_FILES "")
 if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
-elseif(MSVC)
-    #set(RC_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.rc)
 endif()
 
 set(SOURCE_FILES
@@ -506,6 +670,10 @@ set(SOURCE_FILES
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${SCRIPTS_FILES}
+    ${LZMA_FILES}
+    ${BZIP_FILES}
+    ${LAME_FILES}
+    ${MUJS_FILES}
     ${MACOSX_FILES}
     ${CPPTRACE_FILES}
 )
@@ -531,13 +699,8 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-elseif (WIN_EMSCRIPTEN)
-    set(SDL2_LIBRARY "SDL2")
-    set(SDL2_INCLUDE_DIR "${EMSDK}/emscripten/system/include/SDL")
-    # set(SDL2_MIXER_LIBRARIES "${SDL2_EXTRACT_PATH}/lib/x64/SDL2_mixer.lib")
-    set(SDL2_MIXER_LIBRARY "SDL2_mixer")
-    # set(SDL2_MIXER_INCLUDE_DIRS "${SDL2_EXTRACT_PATH}/include")
-    set(SDL2_MIXER_INCLUDE_DIR "${EMSDK}/emscripten/system/include/SDL")
+elseif (MSVC OR WIN_EMSCRIPTEN)
+    # do nothing
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
@@ -546,15 +709,27 @@ endif()
 if (PLATFORM_ANDROID)
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
-    add_executable(${GAME} WIN32 ${SOURCE_FILES})
+    add_executable(${GAME} ${SOURCE_FILES})
+endif()
+
+# zlib is already built before ${GAME} (via add_subdirectory), so no explicit dependency needed
+
+# Set compile definitions for LAME files
+if(LAME_FILES)
+    set_source_files_properties(${LAME_FILES} PROPERTIES
+        COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\\\"Ozy\\\";PACKAGE_VERSION=\\\"static\\\";HAVE_MPGLIB=ON"
+    )
+    if(NOT MSVC)
+        set_source_files_properties(${LAME_FILES} PROPERTIES COMPILE_FLAGS "-Wno-absolute-value")
+    endif()
 endif()
 
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4098")
 endif()
 
 if(APPLE)
-    # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
         COMMAND mkdir -p akhenaten.iconset
         COMMAND sips -z 16 16    akhenaten_256.png --out akhenaten.iconset/icon_16x16.png
@@ -571,7 +746,6 @@ if(APPLE)
     set_source_files_properties(${PROJECT_SOURCE_DIR}/res/akhenaten.icns PROPERTIES
         MACOSX_PACKAGE_LOCATION "Resources")
 
-    # setting variables that will populate Info.plist
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.akhenaten")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version" FORCE)
@@ -587,34 +761,24 @@ if(APPLE)
     set(DIRS "")
     set(LIBS "")
 
-    # if SDL2 library is a framework, we need to indicate to CMake
-    # the path to its dependencies. SDL2_LIBRARY contains two parts.
-    # Example: /Library/Frameworks/SDL2.framework;-framework Cocoa
-    # So strip out everything after the ';'
     string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
     if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
     endif()
 
-    # if SDL2_mixer library is a framework, we need to indicate to CMake
-    # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
     endif()
 
-    # Install the bundle first
     install(TARGETS ${GAME}
         BUNDLE DESTINATION .
         RUNTIME DESTINATION bin)
     
-    # when installing, "fixup" automatically copies librairies inside the
-    # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\" \"${LIBS}\" \"${DIRS}\")
     ")
 
-    # perform ad-hoc codesigning
     set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
     set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
     install(CODE "
@@ -626,10 +790,9 @@ endif()
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
-include_directories(${EXTEXPAT_INCLUDE_DIR})
-include_directories(${EXTMUJS_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
 include_directories(${CMRC_INCLUDE_DIR})
-include_directories(${EXTLAME_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/src/lame/include)
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
     # no filters on android
@@ -640,18 +803,19 @@ endif()
 
 include_directories(ext)
 include_directories(src)
-include_directories(ext/imgui)
-include_directories(ext/imgui/backends)
-include_directories(ext/openssl/include)
+
+include_directories(${imgui_SOURCE_DIR})
+include_directories(${imgui_SOURCE_DIR}/backends)
+include_directories(${imgui_SOURCE_DIR}/misc/cpp)
+
 include_directories(${freetype_SOURCE_DIR}/include)
 include_directories(${freetype_SOURCE_DIR}/src)
+# Always use harfbuzz from FetchContent
 include_directories(${harfbuzz_SOURCE_DIR}/src)
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
-    include_directories(ext/imgui/dirent)
     include_directories(ext/bugtrap)
-    include_directories(ext/ffmpeg/include)
     set_target_properties(${GAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${GAME_WORKING_DIRECTORY}")
 endif()
 
@@ -659,55 +823,274 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-if (OPTION_BUILD_LIBPNG)
-    # Build libpng from source using FetchContent
-    FetchContent_Declare(
-            zlib
-            GIT_REPOSITORY https://github.com/madler/zlib
-            GIT_TAG v1.3.1
-    )
-    FetchContent_MakeAvailable(zlib)
-    include_directories(${ZLIB_INCLUDE_DIR})
-    target_link_libraries(${GAME} ${ZLIB_LIBRARY})
+# Link zlib static library
+# Use target directly - CMake will handle the correct library file for each configuration
+if(TARGET zlibstatic)
+    target_link_libraries(${GAME} zlibstatic)
+    message(STATUS "zlib: Linked statically with zlibstatic (CMake handles Debug/Release automatically)")
+endif()
 
-    FetchContent_Declare(
-            libpng
-            GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-            GIT_TAG v1.6.50
-    )
-    FetchContent_MakeAvailable(libpng)
-    set(PNG_LIBRARIES png_static)
+# Build libpng from source using FetchContent (static library only)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(PNG_SHARED OFF CACHE BOOL "" FORCE)
+set(PNG_STATIC ON CACHE BOOL "" FORCE)
+set(PNG_TESTS OFF CACHE BOOL "" FORCE)
+set(PNG_USE_FIND_PACKAGE_ZLIB OFF CACHE BOOL "" FORCE)
+
+# Ensure ZLIB variables are set for find_package(ZLIB) called by libpng
+# ZLIB_LIBRARY is already set after zlib configuration, just ensure other variables are set
+if(TARGET zlibstatic AND (NOT DEFINED ZLIB_INCLUDE_DIR OR NOT DEFINED ZLIB_ROOT))
+    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
+    if(ZLIB_BINARY_DIR AND DEFINED zlib_SOURCE_DIR)
+        if(NOT DEFINED ZLIB_INCLUDE_DIR OR ZLIB_INCLUDE_DIR STREQUAL "")
+            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+        endif()
+        if(NOT DEFINED ZLIB_ROOT OR ZLIB_ROOT STREQUAL "")
+            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
+        endif()
+        set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+    endif()
+endif()
+
+FetchContent_Declare(
+    libpng
+    GIT_REPOSITORY https://github.com/pnggroup/libpng.git
+    GIT_TAG ${LIBPNG_VERSION}
+)
+FetchContent_MakeAvailable(libpng)
+
+# Link our zlib to libpng
+# zlib is already built before libpng (via add_subdirectory), so no explicit dependency needed
+if(TARGET png_static AND TARGET zlibstatic)
+    target_link_libraries(png_static PRIVATE zlibstatic)
+endif()
+
+# Link libpng static library
+target_link_libraries(${GAME} png_static)
+message(STATUS "libpng: Linked statically with png_static")
+
+if(DEFINED PNG_INCLUDE_DIRS)
     include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${PNG_LIBRARIES})
-elseif (OPTION_SYSTEM_LIBPNG)
-    # Use system libpng
-    find_package(PNG REQUIRED)
-    include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${GAME} ${PNG_LIBRARIES})
-else()
-    # Use bundled ext/png
-    add_subdirectory(ext/png)
-    include_directories(${EXTPNG_INCLUDE_DIR})
-    target_link_libraries(${GAME} ${EXTPNG_LIBRARY})
 endif()
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} ${EXTMUJS_LIBRARY}
-                        ${EXTEXPAT_LIBRARY} ${CPPTRACE_LIBRARY}
-                        ${EXTLAME_LIBRARY} ${LZMA_LIBRARY} ${BZIP_LIBRARY} ${AES_LIBRARY} ${GPUPIXEL_LIBRARY} 
-                        freetype harfbuzz
-                        akhenaten::rc)
+                        ${SDL2_LIBRARY}
+                        $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
+                            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
+                                $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
+                        $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
+                        ${CPPTRACE_LIBRARY}
+                        ${GPUPIXEL_LIBRARY} 
+                        freetype
+                        harfbuzz
+                        akhenaten::rc
+                        $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
 if(MSVC)
-   target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
-   set(FFMPEG_LIB ${CMAKE_SOURCE_DIR}/ext/ffmpeg/lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avcodec.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/swscale.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avutil.lib)
-   target_link_libraries(${GAME} ${FFMPEG_LIB}/avformat.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libssl.lib)
-   target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/openssl/lib/libcrypto.lib)
+    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
+    
+    set(LIBVPX_DEPS_ROOT "${CMAKE_BINARY_DIR}/_deps")
+    set(LIBVPX_INSTALL_DIR "${LIBVPX_DEPS_ROOT}/libvpx")
+    set(LIBVPX_LIB_DIR "${LIBVPX_INSTALL_DIR}/lib")
+    set(LIBVPX_INCLUDE_DIR "${LIBVPX_INSTALL_DIR}/include")
+    
+    message(STATUS "libvpx: Checking for pre-built installation...")
+    set(LIBVPX_FOUND FALSE)
+    
+    # Check for existing installation
+    if(EXISTS "${LIBVPX_LIB_DIR}/libvpx.lib" AND EXISTS "${LIBVPX_INCLUDE_DIR}/vpx/vpx_encoder.h")
+        message(STATUS "libvpx: Found pre-built installation")
+        message(STATUS "libvpx: Installation directory: ${LIBVPX_INSTALL_DIR}")
+        set(LIBVPX_FOUND TRUE)
+    endif()
+    
+    # Download pre-built library if not found
+    if(NOT LIBVPX_FOUND)
+        message(STATUS "libvpx: Pre-built installation not found, downloading...")
+        
+        # Determine architecture
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(LIBVPX_ARCH "x64")
+        else()
+            set(LIBVPX_ARCH "x86")
+        endif()
+        
+        set(LIBVPX_VERSION "1.15.1")
+        set(LIBVPX_ZIP_FILE "${LIBVPX_DEPS_ROOT}/libvpx-v${LIBVPX_VERSION}-msvc.zip")
+        
+        file(MAKE_DIRECTORY ${LIBVPX_DEPS_ROOT})
+        message(STATUS "libvpx: Dependencies directory: ${LIBVPX_DEPS_ROOT}")
+        
+        if(NOT EXISTS "${LIBVPX_ZIP_FILE}")
+            message(STATUS "libvpx: Archive not found, starting download...")
+            message(STATUS "libvpx: Target archive: ${LIBVPX_ZIP_FILE}")
+            
+            set(DOWNLOAD_URLS
+                "https://github.com/ShiftMediaProject/libvpx/releases/download/v1.15.1/libvpx_v1.15.1_msvc17.zip"
+            )
+            
+            set(DOWNLOAD_SUCCESS FALSE)
+            set(URL_INDEX 0)
+            foreach(DOWNLOAD_URL ${DOWNLOAD_URLS})
+                math(EXPR URL_INDEX "${URL_INDEX} + 1")
+                message(STATUS "libvpx: [${URL_INDEX}] Attempting download from: ${DOWNLOAD_URL}")
+                
+                file(DOWNLOAD 
+                    ${DOWNLOAD_URL} 
+                    ${LIBVPX_ZIP_FILE}
+                    SHOW_PROGRESS
+                    STATUS DOWNLOAD_STATUS
+                    TLS_VERIFY ON
+                )
+                list(GET DOWNLOAD_STATUS 0 STATUS_CODE)
+                if(STATUS_CODE EQUAL 0)
+                    file(SIZE ${LIBVPX_ZIP_FILE} FILE_SIZE)
+                    if(FILE_SIZE GREATER 0)
+                        math(EXPR FILE_SIZE_MB "${FILE_SIZE} / 1048576")
+                        message(STATUS "libvpx: Download successful!")
+                        message(STATUS "libvpx: File size: ${FILE_SIZE} bytes (${FILE_SIZE_MB} MB)")
+                        set(DOWNLOAD_SUCCESS TRUE)
+                        break()
+                    else()
+                        message(WARNING "libvpx: Downloaded file is empty, removing...")
+                        file(REMOVE ${LIBVPX_ZIP_FILE})
+                    endif()
+                else()
+                    list(GET DOWNLOAD_STATUS 1 ERROR_MESSAGE)
+                    message(WARNING "libvpx: Download failed: ${ERROR_MESSAGE}")
+                    if(EXISTS "${LIBVPX_ZIP_FILE}")
+                        file(REMOVE ${LIBVPX_ZIP_FILE})
+                    endif()
+                endif()
+            endforeach()
+            
+            if(NOT DOWNLOAD_SUCCESS)
+                message(FATAL_ERROR "libvpx: Failed to download from all sources.\n"
+                    "Please download libvpx manually and extract to: ${LIBVPX_INSTALL_DIR}\n"
+                    "Or install via vcpkg: vcpkg install libvpx:x64-windows")
+            endif()
+        else()
+            file(SIZE ${LIBVPX_ZIP_FILE} FILE_SIZE)
+            math(EXPR FILE_SIZE_MB "${FILE_SIZE} / 1048576")
+            message(STATUS "libvpx: Archive already exists: ${LIBVPX_ZIP_FILE}")
+            message(STATUS "libvpx: Archive size: ${FILE_SIZE} bytes (${FILE_SIZE_MB} MB)")
+        endif()
+        
+        # Extract ZIP file
+        message(STATUS "libvpx: Starting extraction process...")
+        message(STATUS "libvpx: Source archive: ${LIBVPX_ZIP_FILE}")
+        message(STATUS "libvpx: Target directory: ${LIBVPX_INSTALL_DIR}")
+        
+        set(LIBVPX_EXTRACT_TEMP "${LIBVPX_DEPS_ROOT}/libvpx-temp")
+        file(MAKE_DIRECTORY ${LIBVPX_EXTRACT_TEMP})
+        
+        execute_process(
+            COMMAND ${CMAKE_COMMAND} -E tar xf ${LIBVPX_ZIP_FILE}
+            WORKING_DIRECTORY ${LIBVPX_EXTRACT_TEMP}
+            RESULT_VARIABLE EXTRACT_RESULT
+            OUTPUT_QUIET
+            ERROR_QUIET
+        )
+        
+        if(NOT EXTRACT_RESULT EQUAL 0)
+            message(FATAL_ERROR "libvpx: Extraction failed with exit code ${EXTRACT_RESULT}.\n"
+                "Please extract manually: ${LIBVPX_ZIP_FILE} to ${LIBVPX_INSTALL_DIR}")
+        endif()
+        
+        message(STATUS "libvpx: Archive extracted successfully")
+        
+        # Move extracted files to install directory
+        file(GLOB EXTRACTED_DIRS "${LIBVPX_EXTRACT_TEMP}/*")
+        list(LENGTH EXTRACTED_DIRS EXTRACTED_COUNT)
+        
+        if(EXTRACTED_COUNT EQUAL 1)
+            list(GET EXTRACTED_DIRS 0 EXTRACTED_ROOT)
+            file(MAKE_DIRECTORY ${LIBVPX_INSTALL_DIR})
+            file(GLOB EXTRACTED_CONTENTS "${EXTRACTED_ROOT}/*")
+            foreach(ITEM ${EXTRACTED_CONTENTS})
+                get_filename_component(ITEM_NAME ${ITEM} NAME)
+                set(TARGET_PATH "${LIBVPX_INSTALL_DIR}/${ITEM_NAME}")
+                if(EXISTS ${TARGET_PATH})
+                    file(REMOVE_RECURSE ${TARGET_PATH})
+                endif()
+                file(RENAME ${ITEM} ${TARGET_PATH})
+            endforeach()
+        else()
+            file(MAKE_DIRECTORY ${LIBVPX_INSTALL_DIR})
+            file(GLOB EXTRACTED_CONTENTS "${LIBVPX_EXTRACT_TEMP}/*")
+            foreach(ITEM ${EXTRACTED_CONTENTS})
+                get_filename_component(ITEM_NAME ${ITEM} NAME)
+                set(TARGET_PATH "${LIBVPX_INSTALL_DIR}/${ITEM_NAME}")
+                if(EXISTS ${TARGET_PATH})
+                    file(REMOVE_RECURSE ${TARGET_PATH})
+                endif()
+                file(RENAME ${ITEM} ${TARGET_PATH})
+            endforeach()
+        endif()
+        
+        file(REMOVE_RECURSE ${LIBVPX_EXTRACT_TEMP})
+        message(STATUS "libvpx: Extraction completed")
+        
+        # Find lib and include directories
+        file(GLOB_RECURSE VPX_LIB "${LIBVPX_INSTALL_DIR}/*/libvpx.lib")
+        file(GLOB_RECURSE VPX_HEADER "${LIBVPX_INSTALL_DIR}/*/vpx/vpx_encoder.h")
+        
+        if(VPX_LIB)
+            list(GET VPX_LIB 0 VPX_LIB_FILE)
+            get_filename_component(FOUND_LIB_DIR ${VPX_LIB_FILE} DIRECTORY)
+            set(LIBVPX_LIB_DIR ${FOUND_LIB_DIR})
+            message(STATUS "libvpx: Library directory found: ${LIBVPX_LIB_DIR}")
+        endif()
+        
+        if(VPX_HEADER)
+            list(GET VPX_HEADER 0 VPX_HEADER_FILE)
+            get_filename_component(FOUND_INCLUDE_DIR ${VPX_HEADER_FILE} DIRECTORY)
+            get_filename_component(FOUND_INCLUDE_DIR ${FOUND_INCLUDE_DIR} DIRECTORY)
+            set(LIBVPX_INCLUDE_DIR ${FOUND_INCLUDE_DIR})
+            message(STATUS "libvpx: Include directory found: ${LIBVPX_INCLUDE_DIR}")
+        endif()
+        
+        # Verify installation
+        if(EXISTS "${LIBVPX_LIB_DIR}/libvpx.lib")
+            if(EXISTS "${LIBVPX_INCLUDE_DIR}/vpx/vpx_encoder.h")
+                set(LIBVPX_FOUND TRUE)
+                message(STATUS "libvpx: Installation verified successfully")
+            endif()
+        endif()
+    endif()
+    
+    # Link libvpx if found
+    if(LIBVPX_FOUND)
+        target_link_libraries(${GAME} "${LIBVPX_LIB_DIR}/libvpx.lib")
+        target_include_directories(${GAME} PRIVATE ${LIBVPX_INCLUDE_DIR})
+        message(STATUS "libvpx: Linked from ${LIBVPX_INSTALL_DIR}")
+    else()
+        message(FATAL_ERROR "libvpx: Installation failed or incomplete.\n"
+            "Library or headers not found after download and extraction.")
+    endif()
+    target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
+    
+    if(TARGET CURL::libcurl)
+        target_link_libraries(${GAME} CURL::libcurl)
+    else()
+        if(TARGET libcurl)
+            target_link_libraries(${GAME} libcurl)
+        else()
+            message(WARNING "CURL::libcurl target not found, curl may not be built correctly")
+        endif()
+    endif()
+      
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:harfbuzz>
+        ${GAME_WORKING_DIRECTORY}
+    )
+    
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:freetype>
+        ${GAME_WORKING_DIRECTORY}
+    )
 endif()
 
 if (PLATFORM_ANDROID)

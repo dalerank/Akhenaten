@@ -2,6 +2,10 @@
 
 #include "figure/figure.h"
 
+enum e_shipwreck_action {
+    ACTION_15_SHIPWRECK_RETURNING = 15,
+};
+
 class figure_shipwreck : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_SHIPWRECK, figure_shipwreck)

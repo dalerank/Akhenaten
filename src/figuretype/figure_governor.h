@@ -2,6 +2,11 @@
 
 #include "figure/figure.h"
 
+enum e_governor_action {
+    ACTION_120_GOVERNOR_CREATED = 120,
+    ACTION_121_GOVERNOR_MOVING = 121,
+};
+
 class figure_governor : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_GOVERNOR, figure_governor)
@@ -9,6 +14,5 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_GOVERNOR, "governor"}; }
     virtual sound_key phrase_key() const override;
 };

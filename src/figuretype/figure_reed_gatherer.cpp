@@ -92,3 +92,20 @@ void figure_reed_gatherer::update_animation() {
 
     image_set_animation(animkey);
 }
+
+sound_key figure_reed_gatherer::phrase_key() const {
+    switch (action_state()) {
+    case ACTION_8_REED_GATHERER_RECALCULATE:
+    case ACTION_14_REED_GATHERER_CREATED:
+    case ACTION_9_REED_GATHERER_GOTO_RESOURCE:
+        return "reed_to_the_marsh_i_march";
+        
+    case ACTION_10_REED_GATHERER_WORK:
+        return "reed_will_make_some_fine_papyrus";
+        
+    case ACTION_11_REED_GATHERER_RETURN_HOME:
+        return "reed_will_make_some_fine_papyrus";
+    }
+    
+    return "reed_to_the_marsh_i_march";
+}

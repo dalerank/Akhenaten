@@ -10,7 +10,7 @@ overlays = [
   	tooltips:[]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
   	id:OVERLAY_RELIGION_RA
@@ -21,7 +21,7 @@ overlays = [
   	tooltips:[]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_RELIGION_SETH
@@ -30,7 +30,7 @@ overlays = [
     buildings:[BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_SHRINE_SETH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_NATIVE
@@ -39,7 +39,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_RELIGION_PTAH
@@ -48,7 +48,7 @@ overlays = [
     buildings:[BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_SHRINE_PTAH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_RELIGION_BAST
@@ -57,7 +57,7 @@ overlays = [
     buildings:[BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_SHRINE_BAST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_WATER
@@ -65,7 +65,7 @@ overlays = [
     buildings:[BUILDING_WELL, BUILDING_MENU_BEAUTIFICATION, BUILDING_WATER_LIFT, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_APOTHECARY
@@ -74,7 +74,7 @@ overlays = [
     buildings:[BUILDING_APOTHECARY, BUILDING_ROADBLOCK],
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_RELIGION
@@ -85,7 +85,7 @@ overlays = [
                 BUILDING_ROADBLOCK ]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_BANDSTAND
@@ -93,7 +93,14 @@ overlays = [
     buildings:[BUILDING_CONSERVATORY, BUILDING_BANDSTAND, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+
+    tooltips {
+      low { values:[ "#bandstand_none" ] }
+      usual { values:[ "#bandstand_low" ] }
+      medium { values:[ "#bandstand_medium" ] }
+      high { values:[ "#bandstand_high" ] }
+    }
+  }
 
   {
     id:OVERLAY_BAZAAR_ACCESS
@@ -102,7 +109,7 @@ overlays = [
     buildings:[BUILDING_BAZAAR, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_COUTHOUSE
@@ -111,7 +118,7 @@ overlays = [
     buildings:[BUILDING_COURTHOUSE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_CRIME
@@ -119,7 +126,7 @@ overlays = [
     buildings:[BUILDING_POLICE_STATION, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_PROBLEMS
@@ -128,7 +135,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_ROUTING
@@ -137,7 +144,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_DAMAGE
@@ -145,7 +152,7 @@ overlays = [
     buildings:[BUILDING_ARCHITECT_POST, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_DENTIST
@@ -154,7 +161,7 @@ overlays = [
     buildings:[BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_FERTILITY
@@ -163,7 +170,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_LIBRARY
@@ -171,7 +178,7 @@ overlays = [
     buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_ACADEMY
@@ -179,7 +186,7 @@ overlays = [
     buildings:[BUILDING_LIBRARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_EDUCATION
@@ -187,7 +194,7 @@ overlays = [
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_ENTERTAINMENT
@@ -198,7 +205,7 @@ overlays = [
                 BUILDING_ROADBLOCK ]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_SENET_HOUSE
@@ -206,7 +213,7 @@ overlays = [
     buildings:[BUILDING_BULLFIGHT_SCHOOL, BUILDING_SENET_HOUSE, BUILDING_ROADBLOCK]
     column_type:COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_FIRE
@@ -214,7 +221,7 @@ overlays = [
     buildings:[BUILDING_FIREHOUSE, BUILDING_BURNING_RUIN, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_HEALTH
@@ -223,7 +230,7 @@ overlays = [
     buildings:[BUILDING_MORTUARY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_DENTIST, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_LABOR
@@ -232,7 +239,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_BOOTH
@@ -240,7 +247,7 @@ overlays = [
     buildings:[BUILDING_JUGGLER_SCHOOL, BUILDING_BOOTH, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_MORTUARY
@@ -249,7 +256,7 @@ overlays = [
     buildings:[BUILDING_MORTUARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_POSITIVE
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_FOOD_STOCKS
@@ -258,7 +265,7 @@ overlays = [
     buildings:[BUILDING_BAZAAR, BUILDING_FISHING_WHARF, BUILDING_GRANARY, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_PAVILION
@@ -266,7 +273,7 @@ overlays = [
     buildings:[BUILDING_CONSERVATORY, BUILDING_DANCE_SCHOOL, BUILDING_PAVILLION, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_PHYSICIAN
@@ -274,7 +281,7 @@ overlays = [
     buildings:[BUILDING_PHYSICIAN, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_SCRIBAL_SCHOOL
@@ -282,7 +289,7 @@ overlays = [
     buildings:[BUILDING_SCRIBAL_SCHOOL, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_DESIRABILITY
@@ -291,7 +298,7 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_TAX_INCOME
@@ -300,7 +307,7 @@ overlays = [
     buildings:[BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_CITY_PALACE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
 
   {
     id:OVERLAY_LABOR_ACCESS
@@ -309,5 +316,14 @@ overlays = [
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_WATER_ACCESS
     column_anim: {pack:PACK_GENERAL, id:103}
-  },
+  }
+
+  {
+    id:OVERLAY_CRIMINAL
+    caption: "Criminal"
+    walkers:[]
+    buildings:[BUILDING_ROADBLOCK]
+    column_type: COLUMN_TYPE_WATER_ACCESS
+    column_anim: {pack:PACK_GENERAL, id:103}
+  }
 ]

@@ -19,6 +19,7 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
+#include "grid/crime.h"
 #include "grid/elevation.h"
 #include "grid/grid.h"
 #include "grid/random.h"
@@ -58,8 +59,11 @@ declare_console_command_p(destroytype) {
     }, (e_building_type)type);
 };
 
-const token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT> e_building_state_tokens;
-const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> ANK_CONFIG_ENUM(e_building_type_tokens);
+using e_building_state_tokens_t = token_holder<e_building_state, BUILDING_STATE_UNUSED, BUILDING_STATE_COUNT>;
+const e_building_state_tokens_t e_building_state_tokens;
+
+using e_building_type_tokens_t = token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX>;
+const e_building_type_tokens_t ANK_CONFIG_ENUM(e_building_type_tokens);
 
 static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
@@ -80,12 +84,11 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     damage_proof = props.damage_proof;
     is_adjacent_to_water = map_terrain_is_adjacent_to_water(tile, size);
     des_influence = props.desirability.to_influence();
+    crime_influence = props.crime.to_influence();
 
-    e_difficulty diff = g_settings.difficulty();
-    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
-    max_workers = approach_diff(props.laborers);
-    fire_risk_increase = approach_diff(props.fire_risk);
-    damage_risk_increase = approach_diff(props.damage_risk);
+    max_workers = props.laborers;
+    fire_risk_increase = props.fire_risk;
+    damage_risk_increase = props.damage_risk;
 
     // unique data
     input = params().input;
@@ -96,6 +99,20 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
 
 desirability_t::influence_t building_desirability_t::to_influence() const {
     desirability_t::influence_t inf;
+    e_difficulty diff = g_settings.difficulty();
+    auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
+
+    inf.size = 0;
+    inf.value = approach_diff(value);
+    inf.step = approach_diff(step);
+    inf.step_size = approach_diff(step_size);
+    inf.range = approach_diff(range);
+
+    return inf;
+}
+
+crime_t::influence_t building_crime_t::to_influence() const {
+    crime_t::influence_t inf;
     e_difficulty diff = g_settings.difficulty();
     auto approach_diff = [&] (auto &arr) { if (arr.empty()) return (int)0; return (int)arr[std::min<int>(diff, arr.size() - 1)]; };
 
@@ -657,7 +674,7 @@ int building::get_figures_number(e_figure_type ftype) {
 
 bool building::common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action) {
     if (common_spawn_figure_trigger(min_houses)) {
-        create_roaming_figure(type, created_action);
+        create_roaming_figure(type, created_action, BUILDING_SLOT_SERVICE);
         return true;
     }
     return false;
@@ -679,7 +696,7 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
-        figure* f = create_cartpusher(output.resource, amounts_to_carry);
+        figure* f = create_cartpusher(output.resource, amounts_to_carry, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         stored_amount_first -= amounts_to_carry;
         return f;
     }
@@ -706,7 +723,7 @@ void building::common_spawn_labor_seeker(int min_houses) {
         return;
     }
 
-    create_roaming_figure(FIGURE_LABOR_SEEKER, FIGURE_ACTION_125_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
+    create_roaming_figure(FIGURE_LABOR_SEEKER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
 }
 
 void building::check_labor_problem() {
@@ -1235,7 +1252,6 @@ void building_impl::on_tick(bool refresh_only) {
 }
 
 void building_static_params::archive_unload() {
-    cost.fill(0);
 }
 
 void building_static_params::initialize() {
@@ -1414,7 +1430,7 @@ const building_planer_renderer &building_planer_renderer::get(e_building_type e)
 }
 
 uint16_t building_static_params::get_cost() const {
-    const uint16_t mcost = this->cost[g_settings.difficulty()];
+    const uint16_t mcost = this->cost.get();
     return mcost;
 }
 

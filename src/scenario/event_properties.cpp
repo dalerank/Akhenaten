@@ -1,8 +1,8 @@
 #include "scenario_event_manager.h"
 
 #include "widget/debug_console.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 #include "game/game.h"
 
 void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {

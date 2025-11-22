@@ -57,9 +57,14 @@ FilterPtr Filter::createWithFragmentShaderString(const std::string &fragmentShad
 bool Filter::initWithShaderString(const std::string &vertexShaderSource, const std::string &fragmentShaderSource, int inputNumber /* = 1*/) {
     _inputNum = inputNumber;
     _filterProgram = GLProgram::createByShaderString(vertexShaderSource, fragmentShaderSource);
+    if (!_filterProgram) {
+        return false;
+    }
+
     _filterPositionAttribute = _filterProgram->getAttribLocation("position");
     GPUPixelContext::getInstance()->setActiveShaderProgram(_filterProgram);
     CHECK_GL(glEnableVertexAttribArray(_filterPositionAttribute));
+
     return true;
 }
 

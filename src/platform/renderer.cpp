@@ -81,7 +81,8 @@ struct renderer_data_t {
     SDL_Renderer* renderer;
     SDL_Texture* render_texture;
     SDL_Texture *filter_texture = nullptr;
-    std::vector<uint8_t> filter_pixels;
+    std::vector<uint8_t> filter_source_pixels;
+    std::vector<uint8_t> filter_output_pixels;
     SDL_GLContext main_gl_context;
     int is_software_renderer;
 
@@ -1118,7 +1119,9 @@ void graphics_renderer_interface::apply_filter() {
 
     SDL_QueryTexture(data.render_texture, &format, NULL, &w, &h);
     if (!data.filter_texture) {
-        data.filter_pixels.resize(w * h * SDL_BYTESPERPIXEL(format));
+        data.filter_source_pixels.resize(w * h * SDL_BYTESPERPIXEL(format));
+        data.filter_output_pixels.resize(w * h * SDL_BYTESPERPIXEL(format));
+
         data.filter_texture = SDL_CreateTexture(data.renderer, format, SDL_TEXTUREACCESS_STREAMING, w, h);
     }
 
@@ -1126,7 +1129,7 @@ void graphics_renderer_interface::apply_filter() {
     int error = -1;
     {
         OZZY_PROFILER_SECTION("Game/Run/Renderer/Render/Filter/ReadPixels");
-        error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_pixels.data(), w * SDL_BYTESPERPIXEL(format));
+        error = SDL_RenderReadPixels(data.renderer, NULL, format, data.filter_source_pixels.data(), w * SDL_BYTESPERPIXEL(format));
         
         SDL_RenderFlush(data.renderer);
         //error = 0;
@@ -1134,7 +1137,21 @@ void graphics_renderer_interface::apply_filter() {
 
     if (!error) {
         SDL_GL_MakeCurrent(data.window, data.main_gl_context);
-        platform_render_proceed_filter(w, h, format, data.filter_pixels, data.filter_texture, data.render_texture);
+        platform_render_proceed_filter(w, h, format, data.filter_source_pixels, data.filter_output_pixels);
+
+        // Copy filtered pixels back to filter_texture if it exists
+        if (data.filter_texture && !data.filter_output_pixels.empty()) {
+            void *dst_pixels = nullptr;
+            int dst_pitch;
+            if (SDL_LockTexture(data.filter_texture, nullptr, &dst_pixels, &dst_pitch) == 0) {
+                int src_pitch = w * SDL_BYTESPERPIXEL(format);
+                uint32_t expected_size = w * h * SDL_BYTESPERPIXEL(format);
+                
+                assert(dst_pitch == src_pitch);
+                memcpy(dst_pixels, data.filter_output_pixels.data(), expected_size);
+                SDL_UnlockTexture(data.filter_texture);
+            }
+        }
     }
 }
 

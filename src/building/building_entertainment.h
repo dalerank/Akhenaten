@@ -17,7 +17,8 @@ public:
         uint32_t booth_corner_grid_offset;
         uint32_t latched_venue_main_grid_offset;
         uint32_t latched_venue_add_grid_offset;
-        uint8_t ent_reserved_u8;
+        uint8_t conservatory_help;
+        bool spawned_special_figure;
         e_resource consume_material_id;
         uint16_t visitors_today;
         uint16_t visitors_month;

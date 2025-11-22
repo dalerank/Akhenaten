@@ -1,4 +1,4 @@
-#include "text_shaper.hpp"
+#include "text_shaper.h"
 
 #include "hb.h"
 #include "hb-ft.h"

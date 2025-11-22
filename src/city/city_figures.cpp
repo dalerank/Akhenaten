@@ -54,6 +54,10 @@ void city_figures_t::reload_objects() {
     }
 }
 
+int city_figures_t::total_invading_enemies() const {
+    return kingdome_soldiers + enemies;
+}
+
 void city_figures_t::on_post_load() {
     for (auto &figure: map_figures()) {
         if (figure->type == FIGURE_NONE) {
@@ -102,14 +106,6 @@ void city_t::figures_add_soldier() {
     figures.soldiers++;
 }
 
-//void city_figures_set_gladiator_revolt(void) {
-//    figure.attacking_natives = 10;
-//}
-
-int city_t::figures_total_invading_enemies() {
-    return figures.kingdome_soldiers + figures.enemies;
-}
-
 bool city_t::figures_has_security_breach() {
     return figures.security_breach_duration > 0;
 }
@@ -156,8 +152,7 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
-    f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
-    f->name = figure_name_get(type, 0);
+    f->name = figure_name_get(type);
     f->map_figure_add();
 
     f->dcast()->on_create();

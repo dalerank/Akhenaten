@@ -11,7 +11,6 @@ public:
     virtual void on_create() override {}
     virtual void update_shows() override;
     virtual svector<e_building_type, 4> allow_venue_types() const override;
-    virtual figure_phrase_t phrase() const override { return {FIGURE_MUSICIAN, "musician"}; }
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_BANDSTAND; }

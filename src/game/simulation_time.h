@@ -38,9 +38,16 @@ struct game_date_t {
     bool operator==(const game_date_t &o) const { return o.ym == ym; }
 };
 
+struct day_result {
+    bool week_advanced;
+    bool month_advanced;
+};
+
 struct simulation_time_t {
     enum {
         days_in_month = 16,
+        days_in_week = 8,
+        weeks_in_month = 2,
         ticks_in_day = 50,
         months_in_year = 12,
     };
@@ -58,7 +65,7 @@ struct simulation_time_t {
     int absolute_tick_year_start() const;
 
     bool advance_tick();
-    bool advance_day();
+    day_result advance_day();
     bool advance_month();
     void advance_year();
 

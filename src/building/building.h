@@ -18,9 +18,10 @@
 #include "game/resource.h"
 #include "grid/point.h"
 #include "grid/desirability.h"
+#include "grid/crime.h"
 #include "sound/sound_city.h"
+#include "game/difficulty.h"
 #include "core/variant.h"
-#include "model.h"
 
 #include <stdint.h>
 #include <algorithm>
@@ -90,6 +91,8 @@ class building_scribal_school;
 class building_tower;
 class building_senet_house;
 class building_gatehouse;
+class building_dancer_school;
+
 struct tooltip_context;
 struct object_info;
 struct painter;
@@ -251,6 +254,7 @@ public:
 
     // runtime data, not saves to disk
     desirability_t::influence_t des_influence;
+    crime_t::influence_t crime_influence;
 
     animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
@@ -321,16 +325,16 @@ public:
     int mothball_toggle();
     
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
-    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action = FIGURE_ACTION_125_ROAMING, e_building_slot slot = BUILDING_SLOT_SERVICE);
-    figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE);
-    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER);
+    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot);
+    figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action, e_building_slot slot = BUILDING_SLOT_SERVICE);
+    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot);
 
     int worker_percentage() const;
     int figure_spawn_timer();
     void check_labor_problem();
     bool common_spawn_figure_trigger(int min_houses, int slot = BUILDING_SLOT_SERVICE);
     void common_spawn_labor_seeker(int min_houses);
-    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action = FIGURE_ACTION_125_ROAMING);
+    bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action);
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
@@ -338,6 +342,8 @@ public:
     void destroy_by_collapse();
     void destroy_by_flooded();
     void destroy_by_fire();
+
+    int animation_offset(int image_id, int grid_offset, int max_frames, int duration);
 
     void mark_plague(int days);
     bool is_ajacent_tile(tile2i t) const;
@@ -420,6 +426,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(tower)
     ALLOW_SMART_CAST_BUILDING(senet_house)
     ALLOW_SMART_CAST_BUILDING(gatehouse)
+    ALLOW_SMART_CAST_BUILDING(dancer_school)
 
     int get_figures_number(e_figure_type ftype);
 
@@ -474,6 +481,16 @@ struct building_desirability_t {
     desirability_t::influence_t to_influence() const;
 };
 ANK_CONFIG_STRUCT(building_desirability_t, value, step, step_size, range)
+
+struct building_crime_t {
+    svector<int8_t, 6> value;
+    svector<int8_t, 6> step;
+    svector<int8_t, 6> step_size;
+    svector<int8_t, 6> range;
+
+    crime_t::influence_t to_influence() const;
+};
+ANK_CONFIG_STRUCT(building_crime_t, value, step, step_size, range)
 
 struct building_planner_update_rule {
     bool canals;
@@ -539,16 +556,16 @@ struct building_static_params {
     uint8_t min_houses_coverage;
     uint16_t production_rate;
     xstring info_title_id;
-    int num_types;
-    std::array<uint16_t, 5> cost;
+    uint16_dcy cost;
     building_desirability_t desirability;
+    building_crime_t crime;
     uint16_t progress_max;
     e_overlay overlay;
     uint16_t max_service;
 
-    svector<uint8_t, 5> laborers;
-    svector<int8_t, 5> fire_risk;
-    svector<int8_t, 5> damage_risk;
+    uint8_dcy laborers;
+    int8_dcy fire_risk;
+    int8_dcy damage_risk;
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
@@ -569,8 +586,8 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params, 
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
-    cost, desirability,
-    output_resource_second_rate, num_types, building_size, info_title_id, progress_max, overlay, max_service,
+    cost, desirability, crime,
+    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
@@ -689,6 +706,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(tower)
     ALLOW_SMART_CAST_BUILDING_I(senet_house)
     ALLOW_SMART_CAST_BUILDING_I(gatehouse)
+    ALLOW_SMART_CAST_BUILDING_I(dancer_school)
 
     inline building_impl *next() { return base.next()->dcast(); }
     inline building_impl *main() { return base.main()->dcast(); }
@@ -708,10 +726,10 @@ public:
     figure *get_figure_in_slot(int i);
 
     inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
-    inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action = ACTION_10_GOING, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
+    inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) { return base.create_figure_generic(_type, created_action, slot, created_dir); }
-    inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action = FIGURE_ACTION_20_INITIAL, e_building_slot slot = BUILDING_SLOT_CARTPUSHER) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
+    inline figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) { return base.create_cartpusher(resource_id, quantity, created_action, slot); }
     inline figure *get_figure(int slot) { return base.get_figure(slot); }
     inline const figure *get_figure(int slot) const { return base.get_figure(slot); }
     
@@ -891,6 +909,7 @@ GENERATE_SMART_CAST_BUILDING(tower)
 GENERATE_SMART_CAST_BUILDING(senet_house)
 GENERATE_SMART_CAST_BUILDING(gatehouse)
 GENERATE_SMART_CAST_BUILDING(work_camp)
+GENERATE_SMART_CAST_BUILDING(dancer_school)
 
 namespace buildings {
 

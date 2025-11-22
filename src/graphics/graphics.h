@@ -63,6 +63,8 @@ struct render_command_t {
     uint32_t flags = 0;
     uint32_t id = 0;
     uint32_t tag = 0;
+    bool use_sort_pixel = false;
+    vec2i sort_pixel = {};
     std::vector<render_command_t> commands;
 };
 

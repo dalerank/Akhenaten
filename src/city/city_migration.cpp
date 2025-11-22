@@ -9,6 +9,8 @@
 svector<city_migration_t::condition, 16> g_migration_conditions;
 city_migration_defaults_t ANK_VARIABLE(migration_defaults);
 svector<sentiment_step_t, 16> ANK_VARIABLE(migration_sentiment_influence);
+svector<unemployment_step_t, 16> ANK_VARIABLE(migration_unemployment_percentage);
+std::unordered_map<xstring, int> g_migration_cap_reasons;
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
@@ -18,24 +20,41 @@ void city_migration_t::update_status() {
     auto& params = migration_defaults;
 
     const auto &sentiment = g_city.sentiment;
-    auto it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [&] (const auto& t) {
-        return sentiment.value > t.s; 
+    auto sent_it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [sentiment = sentiment.value] (const auto& t) {
+        return sentiment > t.s; 
     });
 
-    percentage_by_sentiment = (it != migration_sentiment_influence.end()) ? it->i : 0;
-    percentage = percentage_by_sentiment;
+    const int8_t unemployment_percentage = g_city.labor.unemployment_percentage;
+    auto unemployment_it = std::find_if(migration_unemployment_percentage.begin(), migration_unemployment_percentage.end(), [unemployment_percentage] (const auto &t) {
+        return unemployment_percentage > t.u;
+    });
+
+    percentage_by_unemployments = (unemployment_it != migration_unemployment_percentage.end()) ? unemployment_it->p : 0;
+    percentage_by_sentiment = (sent_it != migration_sentiment_influence.end()) ? sent_it->i : 0;
+    percentage = (percentage_by_sentiment + percentage_by_unemployments);
 
     immigration_amount_per_batch = 0;
     emigration_amount_per_batch = 0;
 
-    if (population_cap > 0 && g_city.population.current >= population_cap) {
+    int cur_population_cap = 999999;
+    for (const auto &it: g_migration_cap_reasons) {
+        if (it.second > 0) {
+            cur_population_cap = std::min(cur_population_cap, it.second);
+        }
+    }
+
+    if (population_cap > 0) {
+        cur_population_cap = std::min(cur_population_cap, population_cap);
+    }
+
+    if (cur_population_cap > 0 && g_city.population.current >= cur_population_cap) {
         percentage = 0;
         migration_cap = true;
         return;
     }
 
     // war scares immigrants away
-    if (g_city.figures_total_invading_enemies() > 3 && percentage > 0) {
+    if (g_city.figures.total_invading_enemies() > 3 && percentage > 0) {
         percentage = 0;
         invading_cap = true;
         return;
@@ -67,6 +86,19 @@ void city_migration_t::create_immigrants(int num_people) {
     if (immigrated == 0) {
         refused_immigrants_today += num_people;
     }
+}
+
+void city_migration_t::set_migration_cap(xstring reason, int cap) {
+    if (cap == 0) {
+        g_migration_cap_reasons.erase(reason);
+        return;
+    }
+
+    g_migration_cap_reasons[reason] = cap;
+}
+
+const std::unordered_map<xstring, int> &city_migration_t::get_migration_caps() {
+    return g_migration_cap_reasons;
 }
 
 city_migration_defaults_t& city_migration_t::current_params() {

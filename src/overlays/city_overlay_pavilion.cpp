@@ -37,7 +37,7 @@ int city_overlay_pavilion::get_column_height(const building *b) const {
                 : COLUMN_TYPE_NONE;
 }
 
-xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) const {
+xstring city_overlay_pavilion::get_tooltip_for_building(tooltip_context *c, const building *b) {
     auto house = ((building *)b)->dcast_house();
 
     if (!house) {

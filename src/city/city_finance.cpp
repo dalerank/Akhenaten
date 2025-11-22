@@ -3,7 +3,6 @@
 #include "core/svector.h"
 #include "building/building.h"
 #include "building/building_house.h"
-#include "building/model.h"
 #include "buildings.h"
 #include "city/city.h"
 #include "game/game_events.h"

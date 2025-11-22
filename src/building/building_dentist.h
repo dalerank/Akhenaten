@@ -10,4 +10,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;
     virtual void spawn_figure() override;
+    virtual void update_month() override;
+    
+    building_id find_noble_house_with_max_bad_teeth();
 };

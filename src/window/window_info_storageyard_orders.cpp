@@ -1,11 +1,36 @@
 #include "window_info_storageyard.h"
 
 #include "window/building/distribution.h"
+#include "window/building/common.h"
 #include "building/building_storage_yard.h"
 #include "city/city_resource.h"
 #include "graphics/window.h"
+#include "graphics/screen.h"
 #include "input/input.h"
 #include "game/game.h"
+
+vec2i info_window_storageyard_orders::get_adjusted_offset(object_info *c) {
+    vec2i desired_offset = c->offset + parent_window_offset;
+    vec2i bgsize_px = ui["background"].pxsize();
+    
+    // Проверяем, не выходит ли окно за верхнюю границу экрана
+    if (desired_offset.y < MIN_Y_POSITION) {
+        desired_offset.y = MIN_Y_POSITION;
+    }
+    
+    // Проверяем, не выходит ли окно за нижнюю границу экрана
+    int screen_bottom = screen_height() - MARGIN_POSITION;
+    if (desired_offset.y + bgsize_px.y > screen_bottom) {
+        desired_offset.y = screen_bottom - bgsize_px.y;
+        // Если после корректировки окно все еще выходит за верхнюю границу, 
+        // размещаем его у верхней границы
+        if (desired_offset.y < MIN_Y_POSITION) {
+            desired_offset.y = MIN_Y_POSITION;
+        }
+    }
+    
+    return desired_offset;
+}
 
 void info_window_storageyard_orders::draw_background(object_info *c) {
     auto *storage = c->building_get()->dcast_storage_yard();
@@ -33,7 +58,8 @@ void info_window_storageyard_orders::draw_foreground(object_info *c) {
     auto storage = storageyard->storage();
     backup_storage_settings(storage_id);
 
-    ui.begin_widget(parent_window_offset, true);
+    vec2i adjusted_offset = get_adjusted_offset(c);
+    ui.begin_widget(adjusted_offset - c->offset, true);
     ui.draw();
 
     vec2i offset = ui["resource_base"].pos;
@@ -84,7 +110,8 @@ void info_window_storageyard_orders::draw_foreground(object_info *c) {
 }
 
 int info_window_storageyard_orders::window_info_handle_mouse(const mouse *m, object_info &c) {
-    ui.begin_widget(c.offset + parent_window_offset, true);
+    vec2i adjusted_offset = get_adjusted_offset(&c);
+    ui.begin_widget(adjusted_offset, true);
     int result = ui.handle_mouse(m);
     ui.end_widget();
 
