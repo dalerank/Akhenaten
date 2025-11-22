@@ -35,8 +35,6 @@
 
 #include <iostream>
 
-constexpr int CROPS_OFFSETS = 6;
-
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_grain);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_lettuce);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_chickpeas);
@@ -61,49 +59,7 @@ declare_console_command_p(farmgrow) {
     });
 };
 
-void building_farm::map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress) {
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    crop_image_offset += image_id_from_group(GROUP_BUILDING_FARMLAND);
-    //    if (!map_grid_is_inside(x, y, 3))
-    //        return;
-    //    // farmhouse
-    //    int x_leftmost, y_leftmost;
-    //    switch (city_view_orientation()) {
-    //    case DIR_0_TOP_RIGHT:
-    //        x_leftmost = 0;
-    //        y_leftmost = 1;
-    //        break;
-    //    case DIR_2_BOTTOM_RIGHT:
-    //        x_leftmost = 0;
-    //        y_leftmost = 0;
-    //        break;
-    //    case DIR_4_BOTTOM_LEFT:
-    //        x_leftmost = 1;
-    //        y_leftmost = 0;
-    //        break;
-    //    case DIR_6_TOP_LEFT:
-    //        x_leftmost = 1;
-    //        y_leftmost = 1;
-    //        break;
-    //    default:
-    //        return;
-    //    }
-    //    for (int dy = 0; dy < 2; dy++) {
-    //        for (int dx = 0; dx < 2; dx++) {
-    //            int grid_offset = MAP_OFFSET(x + dx, y + dy);
-    //            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-    //            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-    //            map_building_set(grid_offset, building_id);
-    //            map_property_clear_constructing(grid_offset);
-    //            map_property_set_multi_tile_size(grid_offset, 2);
-    //            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARM_HOUSE));
-    //            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_leftmost && dy == y_leftmost);
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
-        //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
-        //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
+void building_farm::map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int progress) {
     building *b = building_get(building_id);
     map_building_tiles_add(building_id, tile, b->size, get_farm_image(type, tile), TERRAIN_BUILDING);
 }
@@ -348,35 +304,35 @@ void building_farm::on_create(int orientation) {
 void building_farm::on_place_update_tiles(int orientation, int variant) {
     switch (type()) {
     case BUILDING_BARLEY_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_FLAX_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_GRAIN_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 2, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_LETTUCE_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 3, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_POMEGRANATES_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 4, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_CHICKPEAS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 5, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_FIGS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 6, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     case BUILDING_HENNA_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 7, 0);
+        map_building_tiles_add_farm(type(), id(), tile(), 0);
         break;
 
     default:
@@ -458,8 +414,7 @@ void building_farm::update_graphic() {
 }
 
 void building_farm::on_undo() {
-    int img_id = anim(animkeys().farmland).first_img();
-    map_building_tiles_add_farm(type(), id(), tile(), img_id, 0);
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
@@ -484,7 +439,7 @@ void building_farm::start_production() {
 }
 
 void building_farm::add_tiles() {
-    map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 int building_farm::expected_produce() {
@@ -601,8 +556,7 @@ bool building_farm::is_currently_flooded() const {
 
 void building_farm::update_tiles_image() {
     if (!is_currently_flooded()) {
-        int img_id = anim(animkeys().farmland).first_img();
-        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output.resource - 1), progress());
+        map_building_tiles_add_farm(type(), id(), tile(), progress());
     }
 }
 
