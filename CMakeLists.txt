@@ -31,13 +31,8 @@ set(GAME akhenaten)
 project(${GAME} CXX)
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(GAME_ARCH_64 TRUE)
-  set(GAME_PROCESSOR_ARCH "x64")
-else()
-  set(GAME_ARCH_64 FALSE)
-  set(GAME_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+set(GAME_ARCH_64 TRUE)
+set(GAME_PROCESSOR_ARCH "x64")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
@@ -305,21 +300,7 @@ if (MSVC)
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
     
-    # Ensure zlib is available before curl tries to find it
-    # Set ZLIB variables for curl's find_package(ZLIB)
-    if(TARGET zlibstatic AND DEFINED zlib_SOURCE_DIR)
-        get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-        if(ZLIB_BINARY_DIR)
-            # Set ZLIB variables before curl's FetchContent_MakeAvailable
-            # This ensures curl can find zlib and zconf.h
-            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-        endif()
-    endif()
-    
     FetchContent_MakeAvailable(curl)
-    
-    # zlib is already built before curl (via add_subdirectory), so no explicit dependency needed
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -357,82 +338,266 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
-# Always use zlib from repository via FetchContent (static library only)
-# Must be built before freetype and curl which depend on it
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
+set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
+set(PREBUILT_LIBS_DIR "${CMAKE_BINARY_DIR}/libs")
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_ZLIB "${LOCAL_DEPS_ROOT}/zlib-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB TRUE)
+endif()
+
+#
+#zlib section begin
+#
 
 FetchContent_Declare(
     zlib
     GIT_REPOSITORY https://github.com/madler/zlib
     GIT_TAG ${ZLIB_VERSION}
 )
-FetchContent_MakeAvailable(zlib)
 
-if(TARGET zlibstatic AND NOT TARGET zlib)
-    add_library(zlib ALIAS zlibstatic)
+FetchContent_GetProperties(zlib)
+if(NOT zlib_POPULATED)
+    FetchContent_Populate(zlib)
 endif()
 
-if(TARGET zlibstatic)
-    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-    if(ZLIB_BINARY_DIR)
-        target_include_directories(zlibstatic INTERFACE ${ZLIB_BINARY_DIR})
-        include_directories(${ZLIB_BINARY_DIR})
-        if(EXISTS "${ZLIB_BINARY_DIR}/zconf.h")
-            file(COPY "${ZLIB_BINARY_DIR}/zconf.h" DESTINATION "${zlib_SOURCE_DIR}")
-        endif()
-    endif()
-    # Set ZLIB variables to force using our version from FetchContent
-    # This prevents find_package(ZLIB) from finding system libraries
-    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-    # Set ZLIB_LIBRARY for find_package(ZLIB) used by libpng
-    # The library file doesn't exist yet during configuration, but find_package needs the path
-    set_zlib_library(${ZLIB_BINARY_DIR})
-    # Mark zlib as found to prevent system search
-    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${zlib_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
-endif()
+set(ZLIB_SOURCE_DIR "${zlib_SOURCE_DIR}")
+set(ZLIB_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/zlib")
+set(ZLIB_BUILD_DIR "${ZLIB_BUILD_BASE_DIR}/build")
+set(ZLIB_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/zlib")
+set(ZLIB_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
 
-# Always use freetype from repository via FetchContent (never use system library)
-# Prevent find_package from finding system libraries
-FetchContent_Declare(
-    freetype
-    GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG        ${FREETYPE_VERSION}
+# Create build directory in prebuild_libs/zlib
+file(MAKE_DIRECTORY ${ZLIB_BUILD_BASE_DIR})
+file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
+file(MAKE_DIRECTORY ${ZLIB_INSTALL_DIR})
+
+# Prepare variables for BuildZlib.cmake
+set(ZLIB_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildZlib.cmake")
+
+# Build zlib using execute_process (runs during configuration phase)
+message(STATUS "Building zlib static library...")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} 
+        -DZLIB_VERSION=${ZLIB_VERSION}
+        -DZLIB_SOURCE_DIR=${ZLIB_SOURCE_DIR}
+        -DZLIB_BUILD_DIR=${ZLIB_BUILD_DIR}
+        -DZLIB_INSTALL_DIR=${ZLIB_INSTALL_DIR}
+        -DZLIB_BUILD_CONFIG=${ZLIB_BUILD_CONFIG}
+        -DZLIB_IS_MSVC=${MSVC}
+        -P ${ZLIB_BUILD_SCRIPT}
+    WORKING_DIRECTORY ${ZLIB_BUILD_BASE_DIR}
+    RESULT_VARIABLE ZLIB_BUILD_RESULT
 )
-FetchContent_MakeAvailable(freetype)
 
-# Set Freetype variables to force using our version from FetchContent
-# This prevents find_package(Freetype) from finding system libraries
-if(TARGET freetype AND DEFINED freetype_SOURCE_DIR)
-    set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
-    set(FREETYPE_INCLUDE_DIRS "${freetype_SOURCE_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
-    set(FREETYPE_ROOT "${freetype_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${freetype_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
-endif()
+if(MSVC)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/zlibstaticd.lib")
+    else()
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/zlibstatic.lib")
+    endif()
+else()
+    set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/lib/libzlibstatic.a")
+endif()   
 
-# Always use harfbuzz from repository via FetchContent (never use system library)
-# Prevent find_package from finding system libraries
+set(ZLIB_INCLUDE_DIR "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
+set(ZLIB_ROOT "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib installation" FORCE)
+set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+
+#
+# zlib section end
+#
+
+#
+# harfbuzz section begin
+#
+
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
     GIT_TAG        ${HARFBUZZ_VERSION}
 )
 set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(harfbuzz)
 
-# Set HarfBuzz variables to force using our version from FetchContent
-# This prevents find_package from finding system libraries
-if(TARGET harfbuzz AND DEFINED harfbuzz_SOURCE_DIR)
-    set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
-    set(HARFBUZZ_INCLUDE_DIRS "${harfbuzz_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
-    set(HARFBUZZ_ROOT "${harfbuzz_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${harfbuzz_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+FetchContent_GetProperties(harfbuzz)
+if(NOT harfbuzz_POPULATED)
+    FetchContent_Populate(harfbuzz)
 endif()
+
+set(HARFBUZZ_SOURCE_DIR "${harfbuzz_SOURCE_DIR}")
+set(HARFBUZZ_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/harfbuzz-build")
+set(HARFBUZZ_INSTALL_DIR "${PREBUILT_LIBS_DIR}/harfbuzz")
+set(HARFBUZZ_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+
+# Create build and install directories
+file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_DIR})
+file(MAKE_DIRECTORY ${HARFBUZZ_INSTALL_DIR})
+
+set(HARFBUZZ_CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX=${HARFBUZZ_INSTALL_DIR}
+    -DBUILD_SHARED_LIBS=OFF
+    -DHB_BUILD_SUBSET=OFF
+    -DCMAKE_BUILD_TYPE=${HARFBUZZ_BUILD_CONFIG}
+)
+
+if(MSVC)
+    # Multi-config generator (Visual Studio)
+    add_custom_target(harfbuzz_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring harfbuzz..."
+        COMMAND ${CMAKE_COMMAND} ${HARFBUZZ_SOURCE_DIR} ${HARFBUZZ_CMAKE_ARGS} -B ${HARFBUZZ_BUILD_DIR} -S ${HARFBUZZ_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz for Debug..."
+        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz for Release..."
+        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR} --config Release
+        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR} --config Release
+        WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
+        COMMENT "Building harfbuzz static library"
+        BYPRODUCTS 
+            ${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib
+        VERBATIM
+    )
+else()
+    # Single-config generator
+    add_custom_target(harfbuzz_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring harfbuzz..."
+        COMMAND ${CMAKE_COMMAND} ${HARFBUZZ_SOURCE_DIR} ${HARFBUZZ_CMAKE_ARGS} -B ${HARFBUZZ_BUILD_DIR} -S ${HARFBUZZ_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building harfbuzz..."
+        COMMAND ${CMAKE_COMMAND} --build ${HARFBUZZ_BUILD_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Installing harfbuzz..."
+        COMMAND ${CMAKE_COMMAND} --install ${HARFBUZZ_BUILD_DIR}
+        WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
+        COMMENT "Building harfbuzz static library"
+        BYPRODUCTS 
+            ${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib
+            ${HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a
+        VERBATIM
+    )
+endif()
+
+if(CMAKE_CONFIGURATION_TYPES)
+    set(HARFBUZZ_LIBRARY_DEBUG "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+    set(HARFBUZZ_LIBRARY_RELEASE "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+    set(HARFBUZZ_LIBRARY_RELWITHDEBINFO "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+    set(HARFBUZZ_LIBRARY_MINSIZEREL "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+    set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+else()
+    # Single-config: путь зависит от CMAKE_BUILD_TYPE
+    if(MSVC)
+        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/harfbuzz.lib")
+    else()
+        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/lib/libharfbuzz.a")
+    endif()
+endif()
+
+set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
+set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+set(HARFBUZZ_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
+set(HarfBuzz_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source (alternative name)" FORCE)
+
+#
+# harfbuzz section end
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+endif()
+
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG        ${FREETYPE_VERSION}
+)
+
+FetchContent_GetProperties(freetype)
+if(NOT freetype_POPULATED)
+    FetchContent_Populate(freetype)
+endif()
+
+set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
+set(FREETYPE_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/freetype-build")
+set(FREETYPE_INSTALL_DIR "${PREBUILT_LIBS_DIR}/freetype")
+set(FREETYPE_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+
+# Create build and install directories
+file(MAKE_DIRECTORY ${FREETYPE_BUILD_DIR})
+file(MAKE_DIRECTORY ${FREETYPE_INSTALL_DIR})
+
+set(FREETYPE_CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX=${FREETYPE_INSTALL_DIR}
+    -DBUILD_SHARED_LIBS=OFF
+    -DFT_DISABLE_ZLIB=OFF
+    -DFT_REQUIRE_ZLIB=ON
+    -DFT_REQUIRE_HARFBUZZ=ON
+    -DCMAKE_BUILD_TYPE=${FREETYPE_BUILD_CONFIG}
+    -DZLIB_INCLUDE_DIR=${ZLIB_SOURCE_DIR}
+    -DZLIB_ROOT=${ZLIB_ROOT}
+    -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+    -DHarfBuzz_ROOT=${HARFBUZZ_SOURCE_DIR}
+    -DHarfBuzz_INCLUDE_DIRS=${HARFBUZZ_SOURCE_DIR}/src
+    -DHarfBuzz_LIBRARY=${HARFBUZZ_LIBRARY}
+)
+
+if(MSVC)
+    # Multi-config generator (Visual Studio)
+    add_custom_target(freetype_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring freetype..."
+        COMMAND ${CMAKE_COMMAND} ${FREETYPE_SOURCE_DIR} ${FREETYPE_CMAKE_ARGS} -B ${FREETYPE_BUILD_DIR} -S ${FREETYPE_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype for Debug..."
+        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype for Release..."
+        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR} --config Release
+        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR} --config Release
+        WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
+        COMMENT "Building freetype static library"
+        DEPENDS harfbuzz_build
+        BYPRODUCTS 
+            ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
+        VERBATIM
+    )
+else()
+    # Single-config generator
+    add_custom_target(freetype_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring freetype..."
+        COMMAND ${CMAKE_COMMAND} ${FREETYPE_SOURCE_DIR} ${FREETYPE_CMAKE_ARGS} -B ${FREETYPE_BUILD_DIR} -S ${FREETYPE_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building freetype..."
+        COMMAND ${CMAKE_COMMAND} --build ${FREETYPE_BUILD_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Installing freetype..."
+        COMMAND ${CMAKE_COMMAND} --install ${FREETYPE_BUILD_DIR}
+        WORKING_DIRECTORY ${FREETYPE_BUILD_DIR}
+        COMMENT "Building freetype static library"
+        DEPENDS harfbuzz_build
+        BYPRODUCTS 
+            ${FREETYPE_INSTALL_DIR}/lib/freetype.lib
+            ${FREETYPE_INSTALL_DIR}/lib/libfreetype.a
+        VERBATIM
+    )
+endif()
+
+if(CMAKE_CONFIGURATION_TYPES)
+    set(FREETYPE_LIBRARY_DEBUG "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+    set(FREETYPE_LIBRARY_RELEASE "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+    set(FREETYPE_LIBRARY_RELWITHDEBINFO "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+    set(FREETYPE_LIBRARY_MINSIZEREL "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+    set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+else()
+    # Single-config: путь зависит от CMAKE_BUILD_TYPE
+    if(MSVC)
+        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/freetype.lib")
+    else()
+        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/lib/libfreetype.a")
+    endif()
+endif()
+
+set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INSTALL_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
+set(FREETYPE_ROOT "${FREETYPE_INSTALL_DIR}" CACHE INTERNAL "Path to freetype installation" FORCE)
+set(CMAKE_PREFIX_PATH "${FREETYPE_INSTALL_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
 
 FetchContent_Declare(
     stb
@@ -441,7 +606,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stb)
 
-# Use imgui from repository via FetchContent
 set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
@@ -712,9 +876,6 @@ else()
     add_executable(${GAME} ${SOURCE_FILES})
 endif()
 
-# zlib is already built before ${GAME} (via add_subdirectory), so no explicit dependency needed
-
-# Set compile definitions for LAME files
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES
         COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\\\"Ozy\\\";PACKAGE_VERSION=\\\"static\\\";HAVE_MPGLIB=ON"
@@ -806,9 +967,7 @@ include_directories(src)
 include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-include_directories(${freetype_SOURCE_DIR}/include)
-include_directories(${freetype_SOURCE_DIR}/src)
-include_directories(${harfbuzz_SOURCE_DIR}/src)
+include_directories(${HARFBUZZ_INCLUDE_DIRS})
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
@@ -820,31 +979,41 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-if(TARGET zlibstatic)
-    target_link_libraries(${GAME} zlibstatic)
-    message(STATUS "zlib: Linked statically with zlibstatic (CMake handles Debug/Release automatically)")
+if(CMAKE_CONFIGURATION_TYPES)
+    target_link_libraries(${GAME} 
+        "$<$<CONFIG:Debug>:${ZLIB_LIBRARY_DEBUG}>"
+        "$<$<CONFIG:Release>:${ZLIB_LIBRARY_RELEASE}>"
+        "$<$<CONFIG:RelWithDebInfo>:${ZLIB_LIBRARY_RELWITHDEBINFO}>"
+        "$<$<CONFIG:MinSizeRel>:${ZLIB_LIBRARY_MINSIZEREL}>"
+    )
+else()
+    target_link_libraries(${GAME} ${ZLIB_LIBRARY})
 endif()
+target_include_directories(${GAME} PRIVATE ${ZLIB_INCLUDE_DIR})
+add_dependencies(${GAME} harfbuzz_build libpng_build freetype_build)
+message(STATUS "zlib: Linked statically with prebuilt library from ${ZLIB_INSTALL_DIR}")
 
-# Build libpng from source using FetchContent (static library only)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(PNG_SHARED OFF CACHE BOOL "" FORCE)
-set(PNG_STATIC ON CACHE BOOL "" FORCE)
-set(PNG_TESTS OFF CACHE BOOL "" FORCE)
-set(PNG_USE_FIND_PACKAGE_ZLIB OFF CACHE BOOL "" FORCE)
+if(CMAKE_CONFIGURATION_TYPES)
+    target_link_libraries(${GAME} 
+        "$<$<CONFIG:Debug>:${HARFBUZZ_LIBRARY_DEBUG}>"
+        "$<$<CONFIG:Release>:${HARFBUZZ_LIBRARY_RELEASE}>"
+        "$<$<CONFIG:RelWithDebInfo>:${HARFBUZZ_LIBRARY_RELWITHDEBINFO}>"
+        "$<$<CONFIG:MinSizeRel>:${HARFBUZZ_LIBRARY_MINSIZEREL}>"
+    )
+else()
+    target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
+endif()
+target_include_directories(${GAME} PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
+message(STATUS "harfbuzz: Linked statically with prebuilt library from ${HARFBUZZ_INSTALL_DIR}")
 
-# Ensure ZLIB variables are set for find_package(ZLIB) called by libpng
-# ZLIB_LIBRARY is already set after zlib configuration, just ensure other variables are set
-if(TARGET zlibstatic AND (NOT DEFINED ZLIB_INCLUDE_DIR OR NOT DEFINED ZLIB_ROOT))
-    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-    if(ZLIB_BINARY_DIR AND DEFINED zlib_SOURCE_DIR)
-        if(NOT DEFINED ZLIB_INCLUDE_DIR OR ZLIB_INCLUDE_DIR STREQUAL "")
-            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-        endif()
-        if(NOT DEFINED ZLIB_ROOT OR ZLIB_ROOT STREQUAL "")
-            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-        endif()
-        set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-    endif()
+#
+# libpng section begin
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/libpng-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_LIBPNG "${LOCAL_DEPS_ROOT}/libpng-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_LIBPNG TRUE)
 endif()
 
 FetchContent_Declare(
@@ -852,21 +1021,122 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/pnggroup/libpng.git
     GIT_TAG ${LIBPNG_VERSION}
 )
-FetchContent_MakeAvailable(libpng)
 
-# Link our zlib to libpng
-# zlib is already built before libpng (via add_subdirectory), so no explicit dependency needed
-if(TARGET png_static AND TARGET zlibstatic)
-    target_link_libraries(png_static PRIVATE zlibstatic)
+FetchContent_GetProperties(libpng)
+if(NOT libpng_POPULATED)
+    FetchContent_Populate(libpng)
 endif()
 
-# Link libpng static library
-target_link_libraries(${GAME} png_static)
-message(STATUS "libpng: Linked statically with png_static")
+set(LIBPNG_SOURCE_DIR "${libpng_SOURCE_DIR}")
+set(LIBPNG_BUILD_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/libpng-build")
+set(LIBPNG_INSTALL_DIR "${PREBUILT_LIBS_DIR}/libpng")
+set(LIBPNG_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
 
-if(DEFINED PNG_INCLUDE_DIRS)
-    include_directories(${PNG_INCLUDE_DIRS})
+# Create build and install directories
+file(MAKE_DIRECTORY ${LIBPNG_BUILD_DIR})
+file(MAKE_DIRECTORY ${LIBPNG_INSTALL_DIR})
+
+set(LIBPNG_CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX=${LIBPNG_INSTALL_DIR}
+    -DBUILD_SHARED_LIBS=OFF
+    -DPNG_SHARED=OFF
+    -DPNG_STATIC=ON
+    -DPNG_TESTS=OFF
+    -DPNG_USE_FIND_PACKAGE_ZLIB=OFF
+    -DZLIB_INCLUDE_DIR=${ZLIB_SOURCE_DIR}
+    -DZLIB_ROOT=${ZLIB_ROOT}
+    -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+    -DCMAKE_BUILD_TYPE=${LIBPNG_BUILD_CONFIG}
+)
+
+if(MSVC)
+    # Multi-config generator (Visual Studio)
+    add_custom_target(libpng_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring libpng..."
+        COMMAND ${CMAKE_COMMAND} ${LIBPNG_SOURCE_DIR} ${LIBPNG_CMAKE_ARGS} -B ${LIBPNG_BUILD_DIR} -S ${LIBPNG_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng for Debug..."
+        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR} --config Debug
+        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng for Release..."
+        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR} --config Release
+        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR} --config Release
+        WORKING_DIRECTORY ${LIBPNG_BUILD_DIR}
+        COMMENT "Building libpng static library"
+        BYPRODUCTS 
+            ${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib
+            ${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib
+        VERBATIM
+    )
+else()
+    # Single-config generator
+    add_custom_target(libpng_build
+        COMMAND ${CMAKE_COMMAND} -E echo "Configuring libpng..."
+        COMMAND ${CMAKE_COMMAND} ${LIBPNG_SOURCE_DIR} ${LIBPNG_CMAKE_ARGS} -B ${LIBPNG_BUILD_DIR} -S ${LIBPNG_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Building libpng..."
+        COMMAND ${CMAKE_COMMAND} --build ${LIBPNG_BUILD_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Installing libpng..."
+        COMMAND ${CMAKE_COMMAND} --install ${LIBPNG_BUILD_DIR}
+        WORKING_DIRECTORY ${LIBPNG_BUILD_DIR}
+        COMMENT "Building libpng static library"
+        BYPRODUCTS 
+            ${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib
+            ${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib
+            ${LIBPNG_INSTALL_DIR}/lib/libpng16.a
+        VERBATIM
+    )
 endif()
+
+if(CMAKE_CONFIGURATION_TYPES)
+    set(LIBPNG_LIBRARY_DEBUG "${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib")
+    set(LIBPNG_LIBRARY_RELEASE "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
+    set(LIBPNG_LIBRARY_RELWITHDEBINFO "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
+    set(LIBPNG_LIBRARY_MINSIZEREL "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
+    set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
+else()
+    if(MSVC)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_staticd.lib")
+        else()
+            set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16_static.lib")
+        endif()
+    else()
+        set(LIBPNG_LIBRARY "${LIBPNG_INSTALL_DIR}/lib/libpng16.a")
+    endif()
+endif()
+
+set(LIBPNG_INCLUDE_DIR "${LIBPNG_INSTALL_DIR}/include" CACHE PATH "Path to libpng include directory" FORCE)
+set(PNG_INCLUDE_DIRS "${LIBPNG_INSTALL_DIR}/include" CACHE PATH "Path to libpng include directories" FORCE)
+set(PNG_FOUND TRUE CACHE BOOL "Whether libpng was found" FORCE)
+
+#
+# libpng section end
+#
+
+if(CMAKE_CONFIGURATION_TYPES)
+    target_link_libraries(${GAME} 
+        "$<$<CONFIG:Debug>:${LIBPNG_LIBRARY_DEBUG}>"
+        "$<$<CONFIG:Release>:${LIBPNG_LIBRARY_RELEASE}>"
+        "$<$<CONFIG:RelWithDebInfo>:${LIBPNG_LIBRARY_RELWITHDEBINFO}>"
+        "$<$<CONFIG:MinSizeRel>:${LIBPNG_LIBRARY_MINSIZEREL}>"
+    )
+else()
+    target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
+endif()
+target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
+message(STATUS "libpng: Linked statically with prebuilt library from ${LIBPNG_INSTALL_DIR}")
+
+if(CMAKE_CONFIGURATION_TYPES)
+    target_link_libraries(${GAME} 
+        "$<$<CONFIG:Debug>:${FREETYPE_LIBRARY_DEBUG}>"
+        "$<$<CONFIG:Release>:${FREETYPE_LIBRARY_RELEASE}>"
+        "$<$<CONFIG:RelWithDebInfo>:${FREETYPE_LIBRARY_RELWITHDEBINFO}>"
+        "$<$<CONFIG:MinSizeRel>:${FREETYPE_LIBRARY_MINSIZEREL}>"
+    )
+else()
+    target_link_libraries(${GAME} ${FREETYPE_LIBRARY})
+endif()
+target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+message(STATUS "freetype: Linked statically with prebuilt library from ${FREETYPE_INSTALL_DIR}")
 
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY}
@@ -876,8 +1146,6 @@ target_link_libraries (${GAME}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
-                        freetype
-                        harfbuzz
                         akhenaten::rc
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
@@ -1075,17 +1343,7 @@ if(MSVC)
         endif()
     endif()
       
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:harfbuzz>
-        ${GAME_WORKING_DIRECTORY}
-    )
-    
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:freetype>
-        ${GAME_WORKING_DIRECTORY}
-    )
+    # harfbuzz and freetype are static libraries, no need to copy DLL
 endif()
 
 if (PLATFORM_ANDROID)
