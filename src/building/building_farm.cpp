@@ -98,22 +98,8 @@ void building_farm::preview::ghost_preview(build_planner &planer, painter &ctx, 
 }
 
 int building_farm::get_crops_image(e_building_type type, int growth) {
-    int base = 0;
-    base = image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
-    switch (type) {
-    case BUILDING_BARLEY_FARM: return base + 6 * 0 + growth;
-    case BUILDING_FLAX_FARM: return base + 6 * 6 + growth;
-    case BUILDING_GRAIN_FARM: return base + 6 * 2 + growth;
-    case BUILDING_LETTUCE_FARM: return base + 6 * 3 + growth;
-    case BUILDING_POMEGRANATES_FARM: return base + 6 * 4 + growth;
-    case BUILDING_CHICKPEAS_FARM: return base + 6 * 5 + growth;
-    case BUILDING_FIGS_FARM: return base + 6 * 1 + growth;
-
-    default:
-        assert(false);
-    }
-
-    return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
+    const auto &params = building_static_params::get(type);
+    return params.first_img(animkeys().crops) + growth;
 }
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
