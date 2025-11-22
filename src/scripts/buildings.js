@@ -1738,45 +1738,51 @@ building_brewery {
   damage_risk[2]
 }
 
-building_mine_copper = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:196 },
-    base : { pack:PACK_GENERAL, id:196 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
+building_mine_copper {
+  animations {
+    preview { pack:PACK_GENERAL, id:196 },
+    base { pack:PACK_GENERAL, id:196 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
   },
-  output : {
+  output {
     resource : RESOURCE_COPPER
   }
-  meta : { help_id:93, text_id:193 }
+  meta { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
     ore : true
   }
-  cost: [ 50, 75, 100, 150, 300 ]
-  desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
-  laborers:[10], fire_risk:[0], damage_risk: [2]
+  cost [ 50, 75, 100, 150, 300 ]
+  desirability { value[-12], step[2], step_size[2], range[6] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_mine_gems = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:188 },
-    base : { pack:PACK_GENERAL, id:188 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
-  },
-  output : {
+building_mine_gems {
+  animations {
+    preview { pack:PACK_GENERAL, id:188 },
+    base { pack:PACK_GENERAL, id:188 },
+    work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
+  }
+
+  output {
     resource : RESOURCE_GEMS
   }
+
   building_size : 2,
-  meta : { help_id:93, text_id:163 }
+  meta { help_id:93, text_id:163 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 50, 75, 100, 150, 300 ]
-  desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  cost [ 50, 75, 100, 150, 300 ]
+  desirability { value:[-12], step:[2], step_size:[2], range: [6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
 building_sandstone_quarry = {
