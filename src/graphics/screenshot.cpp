@@ -25,7 +25,7 @@
 #include "widget/widget_city.h"
 #include "game/game.h"
 
-#include "png.h"
+#include <png.h>
 
 #include <stdio.h>
 #include <stdlib.h>
