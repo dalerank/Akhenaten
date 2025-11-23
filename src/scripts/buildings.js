@@ -1524,38 +1524,42 @@ building_warship_wharf = {
   laborers:[15], fire_risk:[1], damage_risk: [1]
 }
 
-building_fishing_wharf = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:18 },
-    base : { pack:PACK_TERRAIN, id:18 },
-    work_n : { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 },
-    work_w : { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 },
-    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
-    wait_n : { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    wait_w : { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
-    wait_s : { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
-    wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+building_fishing_wharf {
+  animations {
+    preview { pack:PACK_TERRAIN, id:18 },
+    base { pack:PACK_TERRAIN, id:18 },
+    work_n { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 },
+    work_w { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 },
+    work_s { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 },
+    work_e { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
+    wait_n { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
+    wait_w { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
+    wait_s { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
+    wait_e { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
+    minimap{pack:PACK_GENERAL, id:149, offset:160}
   }
-  output : {
+  output {
     resource : RESOURCE_FISH
   }
   building_size : 2
-  planer_update_rule : {
+  planer_update_rule {
     relative_orientation: 1
   }
-  meta : { help_id: 84, text_id: 102 }
-  needs : {
+  meta { help_id: 84, text_id: 102 }
+  needs {
     water_access : true
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   min_houses_coverage : 100
-  cost: [40, 70, 100, 150, 300 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[6], fire_risk:[4], damage_risk: [1]
+  cost [40, 70, 100, 150, 300 ]
+  desirability { value:[-4], step:[1], step_size:[1], range: [4] }
+  laborers[6]
+  fire_risk[4]
+  damage_risk[1]
   max_storage: 400
+  wait_time_multiplier: 5
+  wait_time_base: 102
 }
 
 building_shipyard = {

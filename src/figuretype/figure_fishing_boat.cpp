@@ -214,8 +214,12 @@ void figure_fishing_boat::figure_action() {
     case ACTION_194_FISHING_BOAT_AT_WHARF: {
             int max_storage = wharf->current_params().max_storage;
             
+            // Calculate wait time based on worker percentage
             int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
-            int max_wait_ticks = 5 * (102 - pct_workers);
+            int wait_multiplier = wharf->current_params().wait_time_multiplier;
+            int wait_base = wharf->current_params().wait_time_base;
+            int max_wait_ticks = wait_multiplier * (wait_base - pct_workers);
+            
             if (wharf->runtime_data().has_fish) {
                 pct_workers = 0;
             }
