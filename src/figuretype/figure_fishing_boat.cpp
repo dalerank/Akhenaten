@@ -178,7 +178,24 @@ void figure_fishing_boat::figure_action() {
 
     case ACTION_192_FISHING_BOAT_FISHING:
         base.wait_ticks++;
-        if (base.wait_ticks >= 200) {
+        
+        // Calculate fishing time based on worker percentage
+        // More workers = faster fishing (less time needed)
+        int fishing_time_base = current_params().fishing_time_base;
+        int fishing_time = fishing_time_base;
+        if (wharf) {
+            int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
+            int time_multiplier = current_params().fishing_time_multiplier;
+            // Reduce fishing time based on worker percentage
+            // Formula: time = base - (multiplier * worker_percentage)
+            fishing_time = fishing_time_base - (time_multiplier * pct_workers);
+            // Ensure minimum fishing time
+            if (fishing_time < 50) {
+                fishing_time = 50;
+            }
+        }
+        
+        if (base.wait_ticks >= fishing_time) {
             base.wait_ticks = 0;
             advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
             base.destination_tile = base.source_tile;
