@@ -264,42 +264,7 @@ void building_farm::on_create(int orientation) {
 }
 
 void building_farm::on_place_update_tiles(int orientation, int variant) {
-    switch (type()) {
-    case BUILDING_BARLEY_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_FLAX_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_GRAIN_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_LETTUCE_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_POMEGRANATES_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_CHICKPEAS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_FIGS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    case BUILDING_HENNA_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0);
-        break;
-
-    default:
-        assert(false);
-    }
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
@@ -525,7 +490,7 @@ void building_farm::update_tiles_image() {
 void building_farm::deplete_soil() {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
     if (!!game_features::gameplay_change_soil_depletion) {
-        int malus = (float)progress() / (float)MAX_PROGRESS_FARM_PH * (float)-100;
+        int malus = (float)progress() / (float)current_params().progress_max * (float)-100;
         for (int _y = tiley(); _y < tiley() + size(); _y++) {
             for (int _x = tilex(); _x < tilex() + size(); _x++) {
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);

@@ -200,7 +200,7 @@ building_farm_chickpeas {
   month_harvest: [MONTH_APRIL]
   damage_proof : true
   meta { help_id:90, text_id:182 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
@@ -272,7 +272,7 @@ building_farm_pomegranates {
   fire_proof : true
   damage_proof : true
   meta { help_id:91, text_id:114 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
@@ -307,7 +307,7 @@ building_farm_barley {
   month_harvest [MONTH_FEBRUARY, MONTH_AUGUST]
   damage_proof : true
   meta { help_id:89, text_id:181 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
@@ -355,33 +355,36 @@ building_farm_flax {
   damage_risk[0]
 }
 
-building_farm_henna = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_henna {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, },
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  output {
     resource : RESOURCE_HENNA
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:90, text_id:306 }
-  progress_max: 2000,
+  building_size : 3
+  fire_proof : true
+  damage_proof : true
+  month_harvest[MONTH_DECEMBER]
+  meta { help_id:90, text_id:306 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+  cost [ 8, 10, 15, 20, 50 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
 building_farm_figs {
@@ -405,6 +408,7 @@ building_farm_figs {
   building_size : 3
   fire_proof : true
   month_harvest: [MONTH_SEPTEMPTER]
+  progress_max: 2000
   damage_proof : true
   meta { help_id:90, text_id:183 }
   progress_max: 2000,
