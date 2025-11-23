@@ -14,6 +14,8 @@ public:
 
     struct static_params : public building_static_params {
         uint16_t max_storage;
+        uint8_t wait_time_multiplier;  // Множитель для расчета времени ожидания
+        uint8_t wait_time_base;        // Базовое значение для расчета времени ожидания
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t : public building_wharf::runtime_data_t {
@@ -34,4 +36,4 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
-ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage)
+ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage, wait_time_multiplier, wait_time_base)
