@@ -1434,28 +1434,31 @@ building_mud_tower = {
   laborers:[6], fire_risk:[0], damage_risk: [3]
 }
 
-building_ferry = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:23 },
-    base : { pack:PACK_TERRAIN, id:23 },
-    work : { pack:PACK_TERRAIN, id:23 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:210}
-  },
-  building_size : 2,
-  needs : {
+building_ferry {
+  animations {
+    preview { pack:PACK_TERRAIN, id:23 }
+    base { pack:PACK_TERRAIN, id:23 }
+    work { pack:PACK_TERRAIN, id:23 }
+    top { pack:PACK_GENERAL, id:23 }
+    minimap {pack:PACK_GENERAL, id:149, offset:210}
+  }
+  building_size : 2
+  needs {
     water_access : true,
     shoreline : true
   }
-  planner_update_rule : {
+  planner_update_rule {
     ferries : true
     relative_orientation: 1
   }
   fire_proof : true,
-  meta : { help_id: 85, text_id: 91 }
+  meta { help_id: 85, text_id: 91 }
   labor_category : LABOR_CATEGORY_GOVERNMENT
-  cost: [8, 15, 30, 50, 100 ]
-  desirability : { value:[-5], step:[2], step_size:[2], range: [4] }
-  laborers:[5], fire_risk:[0], damage_risk: [2]
+  cost [8, 15, 30, 50, 100 ]
+  desirability { value[-5], step[2], step_size[2], range[4] }
+  laborers[5]
+  fire_risk[0]
+  damage_risk[2]
 }
 
 building_transport_wharf = {
