@@ -22,6 +22,8 @@ public:
 
     struct static_params : public figure_static_params {
         uint16_t fish_per_trip;
+        uint16_t fishing_time_base;        // Базовое время ловли (тиков)
+        uint8_t fishing_time_multiplier;   // Множитель для расчета времени ловли
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -39,4 +41,4 @@ public:
     virtual bool window_info_background(object_info &ctx) override;
     virtual void update_animation() override;
 };
-ANK_CONFIG_STRUCT(figure_fishing_boat::static_params, fish_per_trip)
+ANK_CONFIG_STRUCT(figure_fishing_boat::static_params, fish_per_trip, fishing_time_base, fishing_time_multiplier)

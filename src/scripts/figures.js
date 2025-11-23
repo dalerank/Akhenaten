@@ -1479,7 +1479,8 @@ figure_fishing_boat = {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ANY
 	fish_per_trip : 50
-
+	fishing_time_base : 200
+	fishing_time_multiplier : 1
 }
 
 figure_warship {
