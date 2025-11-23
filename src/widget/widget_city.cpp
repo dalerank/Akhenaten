@@ -152,10 +152,42 @@ void screen_city_t::clear_current_tile() {
     selected_tile = tile2i::invalid;
 }
 
+void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx) {
+    auto figures = map_figures_in_row(tile);
+
+    for (const auto &f : figures) {
+        const figure_static_params &params = figure_static_params::get(f.f->type);
+        if (!params.render_on_flat_tiles) {
+            continue;
+        }
+
+        const bool should_draw_main = !f.f->is_main_drawn;
+        if (!should_draw_main) {
+            continue;
+        }
+
+        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+            continue;
+        }
+
+        if (!selected_figure_id) {
+            int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
+            f.f->city_draw_figure(ctx, highlight);
+        } else if (f.f->id == selected_figure_id) {
+            f.f->city_draw_figure(ctx, 0);
+        }
+    }
+}
+
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto figures = map_figures_in_row(tile);
 
     for (const auto &f : figures) {
+        const figure_static_params &params = figure_static_params::get(f.f->type);
+        if (params.render_on_flat_tiles) {
+            continue; // Skip figures that render on flat tiles
+        }
+
         const bool should_draw_main = !f.f->is_main_drawn;
         const bool should_draw_cart = (f.draw_cart && !f.f->is_cart_drawn);
         if (!should_draw_main && !should_draw_cart && !force) {
@@ -190,6 +222,11 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     auto figures = map_figures_in_row(tile);
 
     for (const auto &f : figures) {
+        const figure_static_params &params = figure_static_params::get(f.f->type);
+        if (params.render_on_flat_tiles) {
+            continue; // Skip figures that render on flat tiles
+        }
+
         if (!g_city.overlay()->show_figure(f.f)) {
             continue;
         }
@@ -249,6 +286,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     map_figure_sort_by_y();
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_flat(pixel, tile, ctx); },
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
         draw_ornaments_flat
     );
 
@@ -508,7 +546,7 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         int offset_y = 15 * (img->width / 58) - 1;
             command.image_id = image_id;
             command.pixel = pixel - vec2i(0, offset_y );
-        command.mask = color_mask;
+            command.mask = color_mask;
             command.use_sort_pixel = true;
             command.sort_pixel = pixel;
         //command.virtual_xorder = TILE_WIDTH_PIXELS;
