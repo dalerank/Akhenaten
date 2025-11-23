@@ -180,6 +180,9 @@ if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
     endif()
     set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
     
+    # Set SDL2_SHARED before declaring SDL2_mixer to avoid conflicts
+    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
+    
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
@@ -191,7 +194,6 @@ if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
         GIT_TAG        release-${SDL2_MIXER_VERSION}
     )
     
-    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
     set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
     set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
     set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
@@ -204,6 +206,15 @@ if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
     endif()
     
     FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # Synchronize SDL2_SHARED property with SDL2_mixer's INTERFACE property
+    if(TARGET SDL2::SDL2_mixer)
+        set_target_properties(SDL2::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+    elseif(TARGET SDL2_mixer::SDL2_mixer)
+        set_target_properties(SDL2_mixer::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+    elseif(TARGET SDL2_mixer)
+        set_target_properties(SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+    endif()
     
     # After SDL2_mixer is available, ensure libxmp links with math library
     if(UNIX AND NOT APPLE)
