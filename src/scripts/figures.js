@@ -405,10 +405,10 @@ figure_ferry_boat {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:138, max_frames:4, duration:4 }
-		idle : { id:139, offset:3, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT 
+		idle { id:139, offset:3, max_frames:1 }
 		death { id: 15, max_frames:8, loop:false }
 		swim { id:138, max_frames:4, duration:4 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
 	}
 
 	sounds {
@@ -475,17 +475,17 @@ figure_ostrich_hunter {
   	max_hunting_distance : 15
 }
 
-figure_hunter_arrow = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
-		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
+figure_hunter_arrow {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
+		shadow { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+    max_damage : 100
+    missile_attack_value : 6
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_antelope_hunter {
@@ -518,9 +518,9 @@ figure_antelope_hunter_arrow = {
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+	max_damage : 100
+	missile_attack_value : 6
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_arrow = {
@@ -531,9 +531,9 @@ figure_arrow = {
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+    max_damage : 100
+    missile_attack_value : 6
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_spear = {
@@ -1478,6 +1478,7 @@ figure_fishing_boat = {
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ANY
+	fish_per_trip : 50
 
 }
 

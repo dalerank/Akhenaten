@@ -28,11 +28,11 @@ void info_window_fishing_wharf::init(object_info &c) {
     } else {
         figure *boat = b->get_figure(BUILDING_SLOT_BOAT);
         switch (boat->action_state) {
-        case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break;
-        case FIGURE_ACTION_192_FISHING_BOAT_FISHING: reason.id = 4; break;
-        case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break;
-        case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: reason.id = 6; break;
-        case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break;
+        case ACTION_191_FISHING_BOAT_GOING_TO_FISH: reason.id = 3; break;
+        case ACTION_192_FISHING_BOAT_FISHING: reason.id = 4; break;
+        case ACTION_193_FISHING_BOAT_GOING_TO_WHARF: reason.id = 5; break;
+        case ACTION_194_FISHING_BOAT_AT_WHARF: reason.id = 6; break;
+        case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: reason.id = 7; break;
         default: reason.id = 8; break;
         }
     }

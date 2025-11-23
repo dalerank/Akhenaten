@@ -1555,6 +1555,7 @@ building_fishing_wharf = {
   cost: [40, 70, 100, 150, 300 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
   laborers:[6], fire_risk:[4], damage_risk: [1]
+  max_storage: 400
 }
 
 building_shipyard = {

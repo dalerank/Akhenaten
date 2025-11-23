@@ -12,6 +12,10 @@ public:
         virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
+    struct static_params : public building_static_params {
+        uint16_t max_storage;
+    } BUILDING_STATIC_DATA_T;
+
     struct runtime_data_t : public building_wharf::runtime_data_t {
         bool has_fish;
     } BUILDING_RUNTIME_DATA_T;
@@ -30,3 +34,4 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
+ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage)

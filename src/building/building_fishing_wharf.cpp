@@ -82,7 +82,7 @@ void building_fishing_wharf::update_graphic() {
     int image_warf_base = base_img();
     const bool has_cart = base.get_figure_id(BUILDING_SLOT_CARTPUSHER);
     xstring animkey;
-    if (f->action_state != FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF) {
+    if (f->action_state != ACTION_194_FISHING_BOAT_AT_WHARF) {
         if (image_warf == image_warf_base) animkey = animkeys().wait_n;
         else if (image_warf == image_warf_base + 1) animkey = animkeys().wait_w;
         else if (image_warf == image_warf_base + 2) animkey = animkeys().wait_s;
@@ -119,7 +119,7 @@ void building_fishing_wharf::spawn_figure() {
                 if (!!game_features::gameplay_fishing_wharf_spawn_boats && dock_tile > 0) {
                     tile2i dtile(dock_tile);
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
-                    f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
+                    f->action_state = ACTION_190_FISHING_BOAT_CREATED;
                     f->set_home(id());
                     base.set_figure(BUILDING_SLOT_BOAT, f);
                     random_generate_next();
