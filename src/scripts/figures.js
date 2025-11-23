@@ -400,6 +400,29 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
+figure_ferry_boat {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:138, max_frames:4, duration:4 }
+		idle : { id:139, offset:3, max_frames:1 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT 
+		death { id: 15, max_frames:8, loop:false }
+		swim { id:138, max_frames:4, duration:4 }
+	}
+
+	sounds {
+		ferry_boat_ready { sound:"ferry_boat_e01.wav"}
+		ferry_boat_going { sound:"ferry_boat_e02.wav"}
+		ferry_boat_at_destination { sound:"ferry_boat_e03.wav"}
+		ferry_boat_returning { sound:"ferry_boat_e04.wav"}
+		ferry_boat_waiting { sound:"ferry_boat_e05.wav"}
+	}
+
+	category: figure_category_citizen
+	max_damage: 20
+	terrain_usage: TERRAIN_USAGE_ANY
+}
+
 figure_immigrant {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
@@ -1455,20 +1478,6 @@ figure_fishing_boat = {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ANY
 
-}
-
-figure_ferry_boat = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 }
-		swim : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 }
-		death : {pack:PACK_SPR_MAIN, id:138, max_frames:8, loop:false }
-		idle : {pack:PACK_SPR_MAIN, id:139, offset:3, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_warship {

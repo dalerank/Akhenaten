@@ -10,6 +10,8 @@
 #include "construction/build_planner.h"
 #include "js/js_game.h"
 #include "io/gamefiles/lang.h"
+#include "figuretype/figure_ferry_boat.h"
+#include "core/random.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
 info_window_ferry ferry_infow;
@@ -45,10 +47,11 @@ void building_ferry::update_map_orientation(int orientation) {
 bool building_ferry::force_draw_height_tile(painter &ctx, tile2i t, vec2i pixel, color mask) {
     if (this->main()->tile() == t) {
         int image_id = current_params().first_img(animkeys().top);
+        int image_offset = city_view_relative_orientation(base.orientation);
 
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile_top);
-        command.image_id = image_id;
-        command.pixel = pixel;
+        command.image_id = image_id + image_offset;
+        command.pixel = pixel + vec2i{ -HALF_TILE_WIDTH_PIXELS, -HALF_TILE_HEIGHT_PIXELS };
         command.mask = mask;
 
         return true;
@@ -80,6 +83,12 @@ void building_ferry::set_water_access_tiles(const water_access_tiles &tiles) {
     d.dock_tiles[1] = tiles.point_b.grid_offset();
 }
 
+bool building_ferry::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    //draw_normal_anim(ctx, point, tile, color_mask);
+
+    return true;
+}
+
 void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
     auto &d = runtime_data();
 
@@ -109,5 +118,44 @@ void info_window_ferry::init(object_info &c) {
 
     if (reason.id) {
         ui["warning_text"] = reason;
+    }
+}
+
+void building_ferry::spawn_figure() {
+    check_labor_problem();
+    
+    if (!has_road_access()) {
+        return;
+    }
+    
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
+    
+    int boat_id = base.get_figure_id(BUILDING_SLOT_BOAT);
+    if (boat_id > 0) {
+        return;
+    }
+
+    if (!map_routing_ferry_has_routes(&base)) {
+        return;
+    }
+
+    if (num_workers() <= 0) {
+        return;
+    }
+    
+    auto &d = runtime_data();
+    if (d.dock_tiles[0] > 0) {
+        tile2i dock_tile(d.dock_tiles[0]);
+        
+        if (map_terrain_is(dock_tile.grid_offset(), TERRAIN_WATER)) {
+            figure* f = figure_create(FIGURE_FERRY_BOAT, dock_tile, DIR_4_BOTTOM_LEFT);
+            if (f) {
+                f->action_state = ACTION_200_FERRY_BOAT_CREATED;
+                f->set_home(id());
+                base.set_figure(BUILDING_SLOT_BOAT, f);
+                random_generate_next();
+                f->wait_ticks = random_short() % 20;
+            }
+        }
     }
 }
