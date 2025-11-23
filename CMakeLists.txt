@@ -782,10 +782,9 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-elseif (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT PLATFORM_ANDROID))
-    # SDL2 is already configured via FetchContent above
-    # do nothing
 else()
+    set(SDL2_SHARED ON)  # or OFF for static
+    set(SDL2_MIXER_SHARED ${SDL2_SHARED})
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 endif()

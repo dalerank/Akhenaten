@@ -481,6 +481,7 @@ struct figure_static_params {
     int8_t defense_value;
     int8_t missile_defense_value;
     uint16_t corpse_time_delay;
+    bool render_on_flat_tiles;
 
     static void set(e_figure_type, const figure_static_params &);
     static const figure_static_params &get(e_figure_type);
@@ -490,7 +491,7 @@ struct figure_static_params {
 };
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds, 
     max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, category, attack_value, defense_value,
-    missile_defense_value, corpse_time_delay)
+    missile_defense_value, corpse_time_delay, render_on_flat_tiles)
 
 class figure_impl {
 public:

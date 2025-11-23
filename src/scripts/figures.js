@@ -1433,16 +1433,17 @@ figure_soldier_infantry {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_fishing_point = {
-	animations : {
-		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
-		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_POINT }
+figure_fishing_point {
+	animations {
+		point { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
+		bubbles { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_POINT }
 	}
 
 	category: figure_category_inactive
 	max_damage: 100
 	terrain_usage : TERRAIN_USAGE_ANY,
+	render_on_flat_tiles : true
 }
 
 figure_fishing_spot = {

@@ -44,6 +44,7 @@ struct screen_city_t {
     void draw_without_overlay(painter &ctx, int selected_figure_id);
     void draw_for_figure(painter &ctx, int figure_id);
     void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force);
+    void draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx);
     void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
