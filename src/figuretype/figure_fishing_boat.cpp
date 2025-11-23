@@ -16,6 +16,8 @@
 #include "graphics/image_desc.h"
 #include "building/building_fishing_wharf.h"
 #include "city/city.h"
+#include "city/city_warnings.h"
+#include "game/game_events.h"
 #include "js/js_game.h"
 #include <algorithm>
 
@@ -255,9 +257,19 @@ void figure_fishing_boat::figure_action() {
                     base.wait_ticks = 0;
                     tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+                        wharf->runtime_data().no_fishing_points_warning_shown = 0;
                         advance_action(ACTION_191_FISHING_BOAT_GOING_TO_FISH);
                         base.destination_tile = fish_tile;
                         route_remove();
+                    } else {
+                        // No fishing points available - show warning (limit frequency)
+                        auto &d = wharf->runtime_data();
+                        if (d.no_fishing_points_warning_shown == 0) {
+                            events::emit(event_city_warning{ "#no_fishing_points_available" });
+                            d.no_fishing_points_warning_shown = 30;
+                        } else {
+                            d.no_fishing_points_warning_shown--;
+                        }
                     }
                 }
             } else {
