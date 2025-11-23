@@ -116,9 +116,16 @@ elseif(WIN_EMSCRIPTEN)
     --std=c++17 \
     ${USE_FLAGS}")
 elseif(UNIX)
-    set(CMAKE_CXX_FLAGS "-fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-fno-exceptions --std=c++17 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_SHARED_LINKER_FLAGS}")
+    # Link with math library for Unix systems (needed for libxmp in SDL2_mixer)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm")
 else()
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions --std=c++17 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_SHARED_LINKER_FLAGS}")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -136,8 +143,8 @@ endif()
 #
 # Dependencies and libs
 #
-if (MSVC OR WIN_EMSCRIPTEN)
-    # Unified configuration for MSVC and WIN_EMSCRIPTEN
+if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
+    # Unified configuration for MSVC, WIN_EMSCRIPTEN, and Linux
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2 FetchContent
@@ -189,7 +196,27 @@ if (MSVC OR WIN_EMSCRIPTEN)
     set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
     set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
     
+    # Ensure math library is linked for SDL2_mixer dependencies (libxmp)
+    if(UNIX AND NOT APPLE)
+        # Set linker flags that will be used when building SDL2_mixer and its dependencies
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+    endif()
+    
     FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # After SDL2_mixer is available, ensure libxmp links with math library
+    if(UNIX AND NOT APPLE)
+        if(TARGET xmp_shared)
+            target_link_libraries(xmp_shared PRIVATE m)
+        endif()
+        if(TARGET xmp_static)
+            target_link_libraries(xmp_static PRIVATE m)
+        endif()
+        if(TARGET xmp)
+            target_link_libraries(xmp PRIVATE m)
+        endif()
+    endif()
     
     # Set SDL2_mixer variables for linking
     # SDL2_mixer may create different target names depending on version
@@ -410,6 +437,11 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(FT_DISABLE_ZLIB OFF CACHE BOOL "" FORCE)
 set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
 set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "" FORCE)  # Build freetype first without harfbuzz
+# Disable harfbuzz support completely in freetype
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+# Ensure harfbuzz is not found during freetype build
+set(HarfBuzz_FOUND FALSE CACHE BOOL "" FORCE)
+set(HARFBUZZ_FOUND FALSE CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
     freetype
@@ -748,7 +780,8 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-elseif (MSVC OR WIN_EMSCRIPTEN)
+elseif (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT PLATFORM_ANDROID))
+    # SDL2 is already configured via FetchContent above
     # do nothing
 else()
     find_package(SDL2 REQUIRED)
