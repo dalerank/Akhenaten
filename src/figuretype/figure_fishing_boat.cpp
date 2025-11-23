@@ -123,27 +123,29 @@ void figure_fishing_boat::figure_action() {
             }
         }
         break;
-       
-    case ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN: {
-            water_dest result = map_water_get_closest_wharf(base);
-            building *dest_wharf = building_get(result.bid);
-            if (result.found) {
-                set_destination(dest_wharf);
-                advance_action(ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
-            } else {
-                poof();
-            }
-        }
-        break;
 
-    case ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF: {
-            base.move_ticks(1);
-            base.height_adjusted_ticks = 0;
-            if (direction() == DIR_FIGURE_NONE) {
-                poof();
-            }
+    case ACTION_196_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN:
+    {
+        water_dest result = map_water_get_closest_wharf(base);
+        building *dest_wharf = building_get(result.bid);
+        if (result.found) {
+            set_destination(dest_wharf);
+            advance_action(ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF);
+        } else {
+            poof();
         }
-        break;
+    }
+    break;
+
+    case ACTION_196_FISHING_BOAT_RETURN_TO_RANDOM_WHARF:
+    {
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            poof();
+        }
+    }
+    break;
 
     case ACTION_191_FISHING_BOAT_GOING_TO_FISH:
         base.move_ticks(1);
@@ -176,31 +178,32 @@ void figure_fishing_boat::figure_action() {
         }
         break;
 
-    case ACTION_192_FISHING_BOAT_FISHING:
-        base.wait_ticks++;
+    case ACTION_192_FISHING_BOAT_FISHING: {
+            base.wait_ticks++;
         
-        // Calculate fishing time based on worker percentage
-        // More workers = faster fishing (less time needed)
-        int fishing_time_base = current_params().fishing_time_base;
-        int fishing_time = fishing_time_base;
-        if (wharf) {
-            int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
-            int time_multiplier = current_params().fishing_time_multiplier;
-            // Reduce fishing time based on worker percentage
-            // Formula: time = base - (multiplier * worker_percentage)
-            fishing_time = fishing_time_base - (time_multiplier * pct_workers);
-            // Ensure minimum fishing time
-            if (fishing_time < 50) {
-                fishing_time = 50;
+            // Calculate fishing time based on worker percentage
+            // More workers = faster fishing (less time needed)
+            int fishing_time_base = current_params().fishing_time_base;
+            int fishing_time = fishing_time_base;
+            if (wharf) {
+                int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
+                int time_multiplier = current_params().fishing_time_multiplier;
+                // Reduce fishing time based on worker percentage
+                // Formula: time = base - (multiplier * worker_percentage)
+                fishing_time = fishing_time_base - (time_multiplier * pct_workers);
+                // Ensure minimum fishing time
+                if (fishing_time < 50) {
+                    fishing_time = 50;
+                }
             }
-        }
         
-        if (base.wait_ticks >= fishing_time) {
-            base.wait_ticks = 0;
-            advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
-            base.destination_tile = base.source_tile;
-            route_remove();
-        }
+            if (base.wait_ticks >= fishing_time) {
+                base.wait_ticks = 0;
+                advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
+                base.destination_tile = base.source_tile;
+                route_remove();
+            }
+        } 
         break;
 
     case ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
