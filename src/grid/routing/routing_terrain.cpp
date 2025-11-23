@@ -22,6 +22,7 @@
 #include "city/city_buildings.h"
 #include "js/js_game.h"
 #include <array>
+#include <cstdlib>
 
 struct building_penalty {
     e_building_type type = BUILDING_NONE;
@@ -443,6 +444,17 @@ void map_routing_update_ferry_routes() {
 
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
+            // Check if ferries are close enough (difference in x or y not more than 2 tiles)
+            tile2i tile1 = (*f1)->tile;
+            tile2i tile2 = (*f2)->tile;
+            int dx = std::abs(tile1.x() - tile2.x());
+            int dy = std::abs(tile1.y() - tile2.y());
+            
+            // Only connect ferries that are close (difference in x or y <= 2)
+            if (dx > 4 && dy > 4) {
+                continue;
+            }
+            
             water_access_tiles fpoints_begin = map_water_get_access_points(**f1, (*f1)->dcast()->get_orientation(), 1);
             water_access_tiles fpoints_end = map_water_get_access_points(**f2, (*f2)->dcast()->get_orientation(), 1);
 
