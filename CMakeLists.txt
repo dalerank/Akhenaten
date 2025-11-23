@@ -207,17 +207,16 @@ if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
     
     FetchContent_MakeAvailable(SDL2_mixer)
     
-    # Synchronize SDL2_SHARED property with SDL2_mixer's INTERFACE property
-    if(TARGET SDL2::SDL2_mixer)
-        set_target_properties(SDL2::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
-    elseif(TARGET SDL2_mixer::SDL2_mixer)
-        set_target_properties(SDL2_mixer::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
-    elseif(TARGET SDL2_mixer)
-        set_target_properties(SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
-    endif()
-    
     # After SDL2_mixer is available, ensure libxmp links with math library
     if(UNIX AND NOT APPLE)
+        if(TARGET SDL2::SDL2_mixer)
+            set_target_properties(SDL2::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+        elseif(TARGET SDL2_mixer::SDL2_mixer)
+            set_target_properties(SDL2_mixer::SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+        elseif(TARGET SDL2_mixer)
+            set_target_properties(SDL2_mixer PROPERTIES INTERFACE_SDL2_SHARED OFF)
+        endif()
+
         if(TARGET xmp_shared)
             target_link_libraries(xmp_shared PRIVATE m)
         endif()
