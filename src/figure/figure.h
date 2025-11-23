@@ -56,6 +56,7 @@ class figure_animal;
 class figure_ballista;
 class figure_market_buyer;
 class figure_bricklayer;
+class figure_ferry_boat;
 
 struct animation_t;
 struct figure_static_params;
@@ -243,6 +244,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(ballista)
     ALLOW_SMART_CAST_FIGURE(market_buyer)
     ALLOW_SMART_CAST_FIGURE(bricklayer)
+    ALLOW_SMART_CAST_FIGURE(ferry_boat)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -549,6 +551,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(soldier)
     ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
     ALLOW_SMART_CAST_FIGURE_I(fishing_point)
+    ALLOW_SMART_CAST_FIGURE_I(ferry_boat)
     ALLOW_SMART_CAST_FIGURE_I(caravan_donkey)
     ALLOW_SMART_CAST_FIGURE_I(trade_caravan)
     ALLOW_SMART_CAST_FIGURE_I(warship)
@@ -636,6 +639,7 @@ GENERATE_SMART_CAST_FIGURE(dancer)
 GENERATE_SMART_CAST_FIGURE(labor_seeker)
 GENERATE_SMART_CAST_FIGURE(worker)
 GENERATE_SMART_CAST_FIGURE(fishing_boat)
+GENERATE_SMART_CAST_FIGURE(ferry_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)

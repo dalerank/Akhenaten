@@ -1442,7 +1442,7 @@ building_ferry {
     preview { pack:PACK_TERRAIN, id:23 }
     base { pack:PACK_TERRAIN, id:23 }
     work { pack:PACK_TERRAIN, id:23 }
-    top { pack:PACK_GENERAL, id:23 }
+    top { pack:PACK_TERRAIN, id:23 }
     minimap {pack:PACK_GENERAL, id:149, offset:210}
   }
   building_size : 2
