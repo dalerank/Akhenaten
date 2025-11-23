@@ -408,10 +408,9 @@ building_farm_figs {
   building_size : 3
   fire_proof : true
   month_harvest: [MONTH_SEPTEMPTER]
-  progress_max: 2000
   damage_proof : true
   meta { help_id:90, text_id:183 }
-  progress_max: 2000,
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
   needs {
     meadow : true
