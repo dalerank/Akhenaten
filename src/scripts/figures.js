@@ -30,6 +30,7 @@ figure_fireman {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_roam_length : 640
 	permission : epermission_maintenance
+	fire_detection_distance : 10
 }
 
 figure_water_carrier {
