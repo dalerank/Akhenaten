@@ -183,4 +183,5 @@ void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
 
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.has_fish);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.no_fishing_points_warning_shown);
 }
