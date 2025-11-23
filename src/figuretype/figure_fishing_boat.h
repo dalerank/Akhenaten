@@ -22,12 +22,13 @@ public:
 
     struct static_params : public figure_static_params {
         uint16_t fish_per_trip;
-        uint16_t fishing_time_base;        // Базовое время ловли (тиков)
-        uint8_t fishing_time_multiplier;   // Множитель для расчета времени ловли
+        uint16_t fishing_time_base;        
+        uint8_t fishing_time_multiplier;  
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
         bool had_home;
+        uint8_t fishing_point_check_attempts;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
