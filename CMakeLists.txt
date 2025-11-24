@@ -143,113 +143,6 @@ endif()
 #
 # Dependencies and libs
 #
-if (MSVC OR WIN_EMSCRIPTEN OR (UNIX AND NOT APPLE AND NOT PLATFORM_ANDROID))
-    # Unified configuration for MSVC, WIN_EMSCRIPTEN, and Linux
-    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    
-    # Setup SDL2 FetchContent
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG        release-${SDL2_VERSION}
-    )
-    
-    # Configure SDL2 build options - build as static library
-    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-    set(SDL_STATIC ON CACHE BOOL "" FORCE)
-    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
-    set(SDL_TEST OFF CACHE BOOL "" FORCE)
-    
-    FetchContent_MakeAvailable(SDL2)
-    
-    # Set SDL2 variables for linking
-    set(SDL2_LIBRARY SDL2::SDL2)
-    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
-    if(SDL2_INCLUDE_DIR_TEMP)
-        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
-    else()
-        # Fallback: construct from source dir if available
-        if(DEFINED SDL2_SOURCE_DIR)
-            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
-        endif()
-    endif()
-    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
-    
-    # Set SDL2_SHARED before declaring SDL2_mixer to avoid conflicts
-    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
-    
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2_mixer
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-        GIT_TAG        release-${SDL2_MIXER_VERSION}
-    )
-    
-    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
-    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
-    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
-    
-    # Ensure math library is linked for SDL2_mixer dependencies (libxmp)
-    if(UNIX AND NOT APPLE)
-        # Set linker flags that will be used when building SDL2_mixer and its dependencies
-        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
-    endif()
-    
-    FetchContent_MakeAvailable(SDL2_mixer)
-    
-    # After SDL2_mixer is available, ensure libxmp links with math library
-    if(UNIX AND NOT APPLE)
-        if(TARGET xmp_shared)
-            target_link_libraries(xmp_shared PRIVATE m)
-        endif()
-        if(TARGET xmp_static)
-            target_link_libraries(xmp_static PRIVATE m)
-        endif()
-        if(TARGET xmp)
-            target_link_libraries(xmp PRIVATE m)
-        endif()
-    endif()
-    
-    # Set SDL2_mixer variables for linking
-    # SDL2_mixer may create different target names depending on version
-    if(TARGET SDL2::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    elseif(TARGET SDL2_mixer::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    elseif(TARGET SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    else()
-        # Fallback: assume SDL2::SDL2_mixer will be available at link time
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-    endif()
-    
-    # Fallback: use source directory for includes if target properties not available
-    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
-        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
-    endif()
-endif()
 
 # Use Tracy from repository via FetchContent (optional)
 set(TRACY_FILES "")
@@ -421,6 +314,187 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 
 #
 # zlib section end
+#
+
+#
+# SDL2 section begin
+#
+
+# Skip SDL2 build for Android as it uses find_package
+if(NOT PLATFORM_ANDROID)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Setup SDL2 FetchContent
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-${SDL2_VERSION}
+    )
+    
+    FetchContent_GetProperties(SDL2)
+    if(NOT SDL2_POPULATED)
+        FetchContent_Populate(SDL2)
+    endif()
+    
+    # FetchContent_Populate creates SDL2_SOURCE_DIR automatically
+    set(SDL2_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2")
+    set(SDL2_BUILD_DIR "${SDL2_BUILD_BASE_DIR}/build")
+    set(SDL2_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2")
+    set(SDL2_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+    
+    # Create build directory in prebuild_libs/SDL2
+    file(MAKE_DIRECTORY ${SDL2_BUILD_BASE_DIR})
+    file(MAKE_DIRECTORY ${SDL2_BUILD_DIR})
+    file(MAKE_DIRECTORY ${SDL2_INSTALL_DIR})
+    
+    # Prepare variables for BuildSDL2.cmake
+    set(SDL2_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildSDL2.cmake")
+    
+    # Build SDL2 using execute_process (runs during configuration phase)
+    message(STATUS "Building SDL2 static library...")
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} 
+            -DSDL2_VERSION=${SDL2_VERSION}
+            -DSDL2_SOURCE_DIR=${SDL2_SOURCE_DIR}
+            -DSDL2_BUILD_DIR=${SDL2_BUILD_DIR}
+            -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
+            -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
+            -DSDL2_IS_MSVC=${MSVC}
+            -P ${SDL2_BUILD_SCRIPT}
+        WORKING_DIRECTORY ${SDL2_BUILD_BASE_DIR}
+        RESULT_VARIABLE SDL2_BUILD_RESULT
+    )
+    
+    # Set SDL2 library path - use absolute path to avoid issues with find_package
+    if(MSVC)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-staticd.lib")
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2maind.lib")            
+        else()
+            set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-static.lib")
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2main.lib")            
+        endif()
+
+        get_filename_component(SDL2_LIBRARY "${SDL2_LIBRARY}" ABSOLUTE)
+        get_filename_component(SDL2_MAIN_LIBRARY "${SDL2_MAIN_LIBRARY}" ABSOLUTE)
+    else()
+        set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/libSDL2-static.a")
+        set(SDL2_MAIN_LIBRARY "") 
+    endif()   
+  
+    # SDL2 headers are typically in include/SDL2 subdirectory, but code uses <SDL.h>
+    # So we point directly to the SDL2 subdirectory
+    if(EXISTS "${SDL2_INSTALL_DIR}/include/SDL2")
+        set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)
+    else()
+        set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include" CACHE PATH "Path to SDL2 include directory" FORCE)
+    endif()
+    
+    set(SDL2_ROOT "${SDL2_INSTALL_DIR}" CACHE PATH "Path to SDL2 installation" FORCE)
+    set(SDL2_FOUND TRUE CACHE BOOL "Whether SDL2 was found" FORCE)
+    
+    # Add SDL2 to CMAKE_PREFIX_PATH so SDL2_mixer can find it
+    set(CMAKE_PREFIX_PATH "${SDL2_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
+    # Set SDL2_DIR to help SDL2_mixer find SDL2 config files
+    set(SDL2_DIR "${SDL2_INSTALL_DIR}/lib/cmake/SDL2" CACHE PATH "" FORCE)
+    
+    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
+endif()
+
+#
+# SDL2 section end
+#
+
+#
+# SDL2_mixer section begin
+#
+
+# Skip SDL2_mixer build for Android as it uses find_package
+if(NOT PLATFORM_ANDROID)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Set SDL2_SHARED before declaring SDL2_mixer to avoid conflicts
+    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
+    
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG        release-${SDL2_MIXER_VERSION}
+    )
+    
+    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
+    
+    set(SDL2_LIBRARY ${SDL2_LIBRARY} CACHE FILEPATH "Path to SDL2 library" FORCE)
+    set(SDL2_INCLUDE_DIR ${SDL2_INCLUDE_DIR} CACHE PATH "Path to SDL2 include directory" FORCE)
+    set(SDL2_ROOT ${SDL2_ROOT} CACHE PATH "Path to SDL2 installation" FORCE)
+    
+    # Ensure math library is linked for SDL2_mixer dependencies (libxmp)
+    if(UNIX AND NOT APPLE)
+        # Set linker flags that will be used when building SDL2_mixer and its dependencies
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+    endif()
+    
+    FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # After SDL2_mixer is available, ensure libxmp links with math library
+    if(UNIX AND NOT APPLE)
+        if(TARGET xmp_shared)
+            target_link_libraries(xmp_shared PRIVATE m)
+        endif()
+        if(TARGET xmp_static)
+            target_link_libraries(xmp_static PRIVATE m)
+        endif()
+        if(TARGET xmp)
+            target_link_libraries(xmp PRIVATE m)
+        endif()
+    endif()
+    
+    # Set SDL2_mixer variables for linking
+    # SDL2_mixer may create different target names depending on version
+    if(TARGET SDL2::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    elseif(TARGET SDL2_mixer::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    elseif(TARGET SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    else()
+        # Fallback: assume SDL2::SDL2_mixer will be available at link time
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+    endif()
+    
+    # Fallback: use source directory for includes if target properties not available
+    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
+    endif()
+endif()
+
+#
+# SDL2_mixer section end
 #
 
 #
@@ -782,11 +856,6 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-else()
-    set(SDL2_SHARED ON)  # or OFF for static
-    set(SDL2_MIXER_SHARED ${SDL2_SHARED})
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
 endif()
 
 if (PLATFORM_ANDROID)
@@ -898,7 +967,7 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-message(STATUS "zlib: Linked statically with prebuilt library from ${ZLIB_INSTALL_DIR}")
+
 
 # Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
 target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
@@ -973,11 +1042,11 @@ target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
 message(STATUS "freetype: Linked via FetchContent from ${FREETYPE_SOURCE_DIR}")
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY}
+                        ${SDL2_LIBRARY} 
+                        ${SDL2_MAIN_LIBRARY}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
                             $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
-                        $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
                         ${ZLIB_LIBRARY}
