@@ -20,6 +20,8 @@ public:
 int map_image_at(int grid_offset);
 inline int map_image_at(tile2i tile) { return map_image_at(tile.grid_offset()); }
 
+bool map_image_all_ids_in_area_are(tile2i tile, int size, int image_id);
+
 int map_image_alt_at(int grid_offset);
 inline int map_image_alt_at(tile2i tile) { return map_image_alt_at(tile.grid_offset()); }
 

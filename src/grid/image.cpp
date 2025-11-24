@@ -14,6 +14,20 @@ int map_image_at(int grid_offset) {
     return (int)map_grid_get(g_images_grid, grid_offset);
 }
 
+bool map_image_all_ids_in_area_are(tile2i tile, int size, int image_id) {
+    if (!map_grid_is_inside(tile, size))
+        return false;
+
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
+            if (map_image_at(grid_offset) != image_id)
+                return false;
+        }
+    }
+    return true;
+}
+
 int map_image_alt_at(int grid_offset) {
     return (int)map_grid_get(g_images_alt_grid, grid_offset);
 }

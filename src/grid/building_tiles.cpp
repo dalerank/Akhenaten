@@ -48,14 +48,6 @@ static void adjust_to_absolute_xy(tile2i tile, int size) {
 }
 static void set_crop_tile(painter &ctx, int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth) {
     int grid_offset = MAP_OFFSET(x + dx, y + dy);
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-    //    map_terrain_add(grid_offset, TERRAIN_BUILDING);
-    //    map_building_set(grid_offset, building_id);
-    //    map_property_clear_constructing(grid_offset);
-    //    map_property_set_multi_tile_xy(grid_offset, dx, dy, 1);
-    //    map_image_set(grid_offset, crop_image_id + (growth < 4 ? growth : 4));
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH)
     ctx.img_isometric(crop_image_id + (growth < 4 ? growth : 4), vec2i{MAP_X(grid_offset), MAP_Y(grid_offset)});
 }
 
