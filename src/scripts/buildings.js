@@ -1645,20 +1645,39 @@ building_plaza = {
   desirability : { value:[4], step:[1], step_size:[-2], range: [2] }
 }
 
-building_garden = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:59 },
-    base : { pack:PACK_GENERAL, id:59 },
-  },
+building_garden {
+  animations {
+    preview { pack:PACK_GENERAL, id:59 }
+    base { pack:PACK_GENERAL, id:59 }
+  }
+
+  variants1 {
+    _1 { pack:PACK_GENERAL, id:59, offset:0 }
+    _2 { pack:PACK_GENERAL, id:59, offset:1 }
+    _3 { pack:PACK_GENERAL, id:59, offset:2 }
+    _4 { pack:PACK_GENERAL, id:59, offset:3 }
+  }
+
+  variants2 {
+    _1 { pack:PACK_GENERAL, id:59, offset:4 }
+    _2 { pack:PACK_GENERAL, id:59, offset:5 }
+    _3 { pack:PACK_GENERAL, id:59, offset:6 }
+  }
+
+  variants3 {
+    _1 { pack:PACK_GENERAL, id:59, offset:7 }
+  }
+  
   planner_update_rule : {
     is_draggable : true
   }
+
   fire_proof : true
   damage_proof : true
-  meta : { help_id:80, text_id:79 }
+  meta { help_id:80, text_id:79 }
   building_size : 1
-  cost : [ 3, 5, 10, 15, 20 ]
-  desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
+  cost [ 3, 5, 10, 15, 20 ]
+  desirability { value[3], step[1], step_size[-1], range[3] }
 }
 
 building_village_palace = {
