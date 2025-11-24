@@ -50,7 +50,7 @@ int building_garden::preview::place_impl(tile2i start, tile2i end, bool place) c
 
         items_placed++;
         int addition_flag = place ? 0 : TERRAIN_PLANER_FUTURE;
-        map_terrain_add(rtile, TERRAIN_GARDEN| addition_flag);
+        map_terrain_add(rtile, TERRAIN_GARDEN | addition_flag);
     });
     map_tiles_gardens_update_all();
 
@@ -71,44 +71,22 @@ void building_garden::on_place_checks() {  /*nothing*/ }
 void building_garden::set_image(int grid_offset) {
     tile2i tile(grid_offset);
     int garden_base = building_static_params::get(BUILDING_GARDENS).base_img();
+
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
             int image_id = garden_base;
-            if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_GARDEN)) {
-                switch (map_random_get(grid_offset) & 3) {
-                case 0:
-                case 1:
-                    image_id += 6;
-                    break;
-                case 2:
-                    image_id += 5;
-                    break;
-                case 3:
-                    image_id += 4;
-                    break;
-                }
+            if (map_terrain_all_tiles_in_area_are(tile, 3, TERRAIN_GARDEN) ) {
+                image_id = current_params().variants3.at(grid_offset).first_img();
+
+                map_building_tiles_add(0, tile, 3, image_id, TERRAIN_GARDEN);
+            } else if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_GARDEN)) {
+                image_id = current_params().variants2.at(grid_offset).first_img();
+
                 map_building_tiles_add(0, tile, 2, image_id, TERRAIN_GARDEN);
             } else {
-                if (tile.y() & 1) {
-                    switch (tile.x() & 3) {
-                    case 0:
-                    case 2:
-                        image_id += 2;
-                        break;
-                    case 1:
-                    case 3:
-                        image_id += 3;
-                        break;
-                    }
-                } else {
-                    switch (tile.x() & 3) {
-                    case 1:
-                    case 3:
-                        image_id += 1;
-                        break;
-                    }
-                }
+                image_id = current_params().variants1.at(grid_offset).first_img();
+
                 map_image_set(grid_offset, image_id);
             }
         }
