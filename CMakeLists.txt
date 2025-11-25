@@ -342,6 +342,7 @@ if(NOT PLATFORM_ANDROID)
     endif()
     
     # FetchContent_Populate creates SDL2_SOURCE_DIR automatically
+    set(SDL2_SOURCE_DIR "${sdl2_SOURCE_DIR}")
     set(SDL2_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2")
     set(SDL2_BUILD_DIR "${SDL2_BUILD_BASE_DIR}/build")
     set(SDL2_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2")
