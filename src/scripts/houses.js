@@ -61,6 +61,8 @@ building_house_crude_hut {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -118,6 +120,8 @@ building_house_sturdy_hut {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -174,6 +178,8 @@ building_house_meager_shanty {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -231,6 +237,8 @@ building_house_common_shanty {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -288,6 +296,8 @@ building_house_rough_cottage {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -344,6 +354,8 @@ building_house_ordinary_cottage {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -402,6 +414,8 @@ building_house_modest_homestead {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -457,6 +471,8 @@ building_house_spacious_homestead {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -512,6 +528,8 @@ building_house_modest_apartment {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -566,6 +584,8 @@ building_house_spacious_apartment {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -621,6 +641,8 @@ building_house_common_residence {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -676,6 +698,8 @@ building_house_spacious_residence {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -731,6 +755,8 @@ building_house_elegant_residence {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -786,6 +812,8 @@ building_house_fancy_residence {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -835,6 +863,8 @@ building_house_common_manor {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -884,6 +914,8 @@ building_house_spacious_manor {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -934,6 +966,8 @@ building_house_elegant_manor {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -984,6 +1018,8 @@ building_house_stately_manor {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -1034,6 +1070,8 @@ building_house_modest_estate {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
 
@@ -1085,5 +1123,7 @@ building_house_palatial_estate {
     entertainment_musician_divider[40,40,40,40,40]
     entertainment_dancer_divider[30,30,30,30,30]
     entertainment_senet_divider[25,25,25,25,25]
+    unreachable_ticks_devolve_threshold[2,2,2,2,2]
+    unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
   }
 }
