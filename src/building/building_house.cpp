@@ -668,7 +668,8 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
 
 bool building_house::has_devolve_delay(int status) {
     auto &d = runtime_data();
-    if (status == e_house_decay && d.devolve_delay < 2) {
+    const int max_delay = model().devolve_delay;
+    if (status == e_house_decay && d.devolve_delay < max_delay) {
         d.devolve_delay++;
         return true;
     } else {
