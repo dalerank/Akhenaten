@@ -388,14 +388,7 @@ if(NOT PLATFORM_ANDROID)
         set(SDL2_MAIN_LIBRARY "") 
     endif()   
   
-    # SDL2 headers are typically in include/SDL2 subdirectory, but code uses <SDL.h>
-    # So we point directly to the SDL2 subdirectory
-    if(EXISTS "${SDL2_INSTALL_DIR}/include/SDL2")
-        set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)
-    else()
-        set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include" CACHE PATH "Path to SDL2 include directory" FORCE)
-    endif()
-    
+    set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)    
     set(SDL2_ROOT "${SDL2_INSTALL_DIR}" CACHE PATH "Path to SDL2 installation" FORCE)
     set(SDL2_FOUND TRUE CACHE BOOL "Whether SDL2 was found" FORCE)
     
