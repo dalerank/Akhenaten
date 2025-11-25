@@ -35,7 +35,7 @@ public:
     static back_tile_orientation second_part_tile(build_planner &planer, tile2i end, int city_orientation);
     static void update_image_set(building &maingate);
 
-    //virtual void spawn_figure() override;
+    virtual void spawn_figure() override;
 };
 
 class building_brick_gatehouse : public building_gatehouse {
