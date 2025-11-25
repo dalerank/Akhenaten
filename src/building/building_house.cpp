@@ -525,11 +525,33 @@ void building_house::merge() {
 }
 
 e_house_progress building_house::check_requirements(house_demands* demands) {
+    auto &d = runtime_data();
+    const model_house& model = this->model();
+    
+    // If house is unreachable beyond threshold, it should devolve
+    if (d.unreachable_ticks >= model.unreachable_ticks_devolve_threshold) {
+        return e_house_decay;
+    }
+    
     e_house_progress status = check_evolve_desirability();
     if (!has_required_goods_and_services(0, demands)) { // check if it will devolve to previous step
         status = e_house_decay;
     } else if (status == e_house_evolve) { // check if it can evolve to the next step
-        status = has_required_goods_and_services(1, demands);
+        // House cannot evolve if it's unreachable beyond threshold
+        // If threshold is 0, any unreachable state blocks evolution
+        if (model.unreachable_ticks_block_evolve_threshold == 0) {
+            if (d.unreachable_ticks > 0) {
+                status = e_house_none;
+            } else {
+                status = has_required_goods_and_services(1, demands);
+            }
+        } else {
+            if (d.unreachable_ticks >= model.unreachable_ticks_block_evolve_threshold) {
+                status = e_house_none;
+            } else {
+                status = has_required_goods_and_services(1, demands);
+            }
+        }
     }
 
     return status;
