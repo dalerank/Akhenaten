@@ -39,6 +39,7 @@ struct model_house {
     int8_dcy disease_risk;
 
     int8_t fancy_bazaar;
+    int8_dcy devolve_delay;        /**< Number of ticks before house devolves (delay) */
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
@@ -47,4 +48,4 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     pottery, linen, jewelry, beer, food_storage_multiplier,
     crime_risk, crime_risk_base,
     prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
-    fancy_bazaar)
+    fancy_bazaar, devolve_delay)
