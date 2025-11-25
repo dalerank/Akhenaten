@@ -533,6 +533,13 @@ e_house_progress building_house::check_requirements(house_demands* demands) {
         return e_house_decay;
     }
     
+    // If house requires food and has been without food for too long, it should devolve
+    if (model.food_types > 0 && model.days_without_food_devolve_threshold > 0) {
+        if (d.days_without_food >= model.days_without_food_devolve_threshold) {
+            return e_house_decay;
+        }
+    }
+    
     e_house_progress status = check_evolve_desirability();
     if (!has_required_goods_and_services(0, demands)) { // check if it will devolve to previous step
         status = e_house_decay;
@@ -551,6 +558,11 @@ e_house_progress building_house::check_requirements(house_demands* demands) {
             } else {
                 status = has_required_goods_and_services(1, demands);
             }
+        }
+        
+        // House cannot evolve if it's been without food (only for houses that require food)
+        if (model.food_types > 0 && d.days_without_food > 0) {
+            status = e_house_none;
         }
     }
 

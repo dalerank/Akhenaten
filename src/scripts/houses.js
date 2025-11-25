@@ -63,6 +63,7 @@ building_house_crude_hut {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -122,6 +123,7 @@ building_house_sturdy_hut {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -180,6 +182,7 @@ building_house_meager_shanty {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -239,6 +242,7 @@ building_house_common_shanty {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -298,6 +302,7 @@ building_house_rough_cottage {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -356,6 +361,7 @@ building_house_ordinary_cottage {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -416,6 +422,7 @@ building_house_modest_homestead {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -473,6 +480,7 @@ building_house_spacious_homestead {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -530,6 +538,7 @@ building_house_modest_apartment {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -586,6 +595,7 @@ building_house_spacious_apartment {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -643,6 +653,7 @@ building_house_common_residence {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -700,6 +711,7 @@ building_house_spacious_residence {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -757,6 +769,7 @@ building_house_elegant_residence {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -814,6 +827,7 @@ building_house_fancy_residence {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -865,6 +879,7 @@ building_house_common_manor {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -916,6 +931,7 @@ building_house_spacious_manor {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -968,6 +984,7 @@ building_house_elegant_manor {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -1020,6 +1037,7 @@ building_house_stately_manor {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -1072,6 +1090,7 @@ building_house_modest_estate {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
 
@@ -1125,5 +1144,6 @@ building_house_palatial_estate {
     entertainment_senet_divider[25,25,25,25,25]
     unreachable_ticks_devolve_threshold[2,2,2,2,2]
     unreachable_ticks_block_evolve_threshold[0,0,0,0,0]
+    days_without_food_devolve_threshold[3,3,3,3,3]
   }
 }
