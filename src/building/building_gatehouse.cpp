@@ -14,6 +14,7 @@
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "city/city.h"
+#include "city/city_warnings.h"
 #include "grid/road_access.h"
 #include "building/building_barracks.h"
 
@@ -315,7 +316,14 @@ void building_gatehouse::on_place(int orientation, int variant) {
 }
 
 void building_gatehouse::on_place_checks() {
-    /*nothing*/
+    building_impl::on_place_checks();
+
+    // Use main part of the building for wall proximity check
+    building *main_building = base.main();
+    
+    construction_warnings warnings;
+    const bool near_walls = !map_terrain_is_adjacent_to_wall(main_building->tile.x(), main_building->tile.y(), main_building->size);
+    warnings.add_if(!near_walls, "#warning_shipwright_needed");
 }
 
 void building_gatehouse::spawn_figure() {
