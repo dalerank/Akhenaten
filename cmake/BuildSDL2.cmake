@@ -19,7 +19,7 @@ if(SDL2_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring SDL2...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${SDL2_SOURCE_DIR} ${SDL2_CMAKE_ARGS} -B ${SDL2_BUILD_DIR} -S ${SDL2_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} ${SDL2_CMAKE_ARGS}
         WORKING_DIRECTORY ${SDL2_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
