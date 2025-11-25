@@ -40,6 +40,10 @@ struct model_house {
 
     int8_t fancy_bazaar;
     int8_dcy devolve_delay;        /**< Number of ticks before house devolves (delay) */
+    int8_dcy entertainment_juggler_divider;  /**< Divider for juggler entertainment (value/10.0, e.g. 50 = 5.0) */
+    int8_dcy entertainment_musician_divider; /**< Divider for musician entertainment (value/10.0, e.g. 40 = 4.0) */
+    int8_dcy entertainment_dancer_divider;     /**< Divider for dancer entertainment (value/10.0, e.g. 30 = 3.0) */
+    int8_dcy entertainment_senet_divider;    /**< Divider for senet entertainment (value/10.0, e.g. 25 = 2.5) */
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
@@ -48,4 +52,6 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     pottery, linen, jewelry, beer, food_storage_multiplier,
     crime_risk, crime_risk_base,
     prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
-    fancy_bazaar, devolve_delay)
+    fancy_bazaar, devolve_delay,
+    entertainment_juggler_divider, entertainment_musician_divider,
+    entertainment_dancer_divider, entertainment_senet_divider)
