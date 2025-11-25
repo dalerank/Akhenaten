@@ -16,6 +16,7 @@
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
+#include "grid/routing/routing_terrain.h"
 #include "building/building_barracks.h"
 
 #include "js/js_game.h"
@@ -317,6 +318,10 @@ void building_gatehouse::on_place(int orientation, int variant) {
     base.orientation = back_tile.orientation;
 
     update_image_set(*mainside);
+
+    // Update routing for walls and land after placing gatehouse
+    map_routing_update_land();
+    map_routing_update_walls();
 }
 
 void building_gatehouse::on_place_checks() {
