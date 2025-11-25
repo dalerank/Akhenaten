@@ -307,6 +307,10 @@ void building_gatehouse::on_place(int orientation, int variant) {
     }
     assert(backside && mainside);
 
+    // Remove walls on the territory of both parts of the gatehouse
+    map_terrain_remove_with_radius(base.tile, base.size, 0, TERRAIN_WALL);
+    map_terrain_remove_with_radius(backside->tile, 1, 0, TERRAIN_WALL);
+
     map_building_tiles_add(base.id, base.tile, base.size, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
     map_building_tiles_add(backside->id, backside->tile, 1, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
 
