@@ -14,6 +14,8 @@
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "city/city.h"
+#include "grid/road_access.h"
+#include "building/building_barracks.h"
 
 #include "js/js_game.h"
 
@@ -314,6 +316,27 @@ void building_gatehouse::on_place(int orientation, int variant) {
 
 void building_gatehouse::on_place_checks() {
     /*nothing*/
+}
+
+void building_gatehouse::spawn_figure() {
+    // Use main part of the building for spawning figures
+    building *main_building = base.main();
+    
+    main_building->check_labor_problem();
+    tile2i road = map_get_road_access_tile(main_building->tile, main_building->size);
+    if (!road.valid()) {
+        return;
+    }
+
+    main_building->common_spawn_labor_seeker(main_building->current_params().min_houses_coverage);
+    if (main_building->num_workers <= 0) {
+        return;
+    }
+
+    // Request sentry from barracks if no sentry is present
+    if (!main_building->has_figure(0)) {
+        building_barracks_request_tower_sentry();
+    }
 }
 
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

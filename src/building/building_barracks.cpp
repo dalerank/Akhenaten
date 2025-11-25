@@ -142,9 +142,17 @@ bool building_recruiter::create_tower_sentry() {
     building* tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MUD_TOWER && b->num_workers > 0 && !b->has_figure(0)
-            && (b->road_network_id == base.road_network_id || !!game_features::gameplay_change_tower_sentries_go_offroad)) {
-            tower = b;
+        // Check for towers and gatehouses (use main part for multi-part buildings)
+        building* main_b = b->main();
+        bool is_tower_or_gatehouse = (main_b->type == BUILDING_MUD_TOWER || 
+                                       main_b->type == BUILDING_BRICK_TOWER ||
+                                       main_b->type == BUILDING_MUD_GATEHOUSE || 
+                                       main_b->type == BUILDING_BRICK_GATEHOUSE ||
+                                       main_b->type == BUILDING_TOWER_GATEHOUSE);
+        
+        if (main_b->state == BUILDING_STATE_VALID && is_tower_or_gatehouse && main_b->num_workers > 0 && !main_b->has_figure(0)
+            && (main_b->road_network_id == base.road_network_id || !!game_features::gameplay_change_tower_sentries_go_offroad)) {
+            tower = main_b;
             break;
         }
     }
