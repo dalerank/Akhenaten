@@ -144,12 +144,39 @@ else()
     endif()
     
   
-    # Copy header files if needed (should be in include/SDL2 or include)
-    if(EXISTS "${SDL2_INSTALL_DIR}/include/SDL2")
-        message(STATUS "SDL2: Headers already installed in ${SDL2_INSTALL_DIR}/include/SDL2")
-    elseif(EXISTS "${SDL2_SOURCE_DIR}/include")
-        file(COPY ${SDL2_SOURCE_DIR}/include DESTINATION ${SDL2_INSTALL_DIR})
-        message(STATUS "SDL2: Copied headers from ${SDL2_SOURCE_DIR}/include")
+    # Verify header installation and copy if needed
+    # SDL2's cmake --install should install headers to include/SDL2/
+    set(SDL2_HEADERS_FOUND FALSE)
+    if(EXISTS "${SDL2_INSTALL_DIR}/include/SDL2/SDL.h")
+        message(STATUS "SDL2: Headers found in ${SDL2_INSTALL_DIR}/include/SDL2")
+        set(SDL2_HEADERS_FOUND TRUE)
+    elseif(EXISTS "${SDL2_INSTALL_DIR}/include/SDL.h")
+        message(STATUS "SDL2: Headers found in ${SDL2_INSTALL_DIR}/include")
+        set(SDL2_HEADERS_FOUND TRUE)
+    endif()
+    
+    # If headers not found, try to copy from source
+    if(NOT SDL2_HEADERS_FOUND)
+        if(EXISTS "${SDL2_SOURCE_DIR}/include/SDL2")
+            file(COPY ${SDL2_SOURCE_DIR}/include DESTINATION ${SDL2_INSTALL_DIR})
+            message(STATUS "SDL2: Copied headers from ${SDL2_SOURCE_DIR}/include to ${SDL2_INSTALL_DIR}/include")
+        elseif(EXISTS "${SDL2_SOURCE_DIR}/include")
+            file(COPY ${SDL2_SOURCE_DIR}/include DESTINATION ${SDL2_INSTALL_DIR})
+            message(STATUS "SDL2: Copied headers from ${SDL2_SOURCE_DIR}/include to ${SDL2_INSTALL_DIR}/include")
+        else()
+            message(WARNING "SDL2: Headers not found in source directory ${SDL2_SOURCE_DIR}/include")
+        endif()
+    endif()
+    
+    # Final verification
+    if(EXISTS "${SDL2_INSTALL_DIR}/include/SDL2/SDL.h")
+        message(STATUS "SDL2: Headers verified at ${SDL2_INSTALL_DIR}/include/SDL2/SDL.h")
+    elseif(EXISTS "${SDL2_INSTALL_DIR}/include/SDL.h")
+        message(STATUS "SDL2: Headers verified at ${SDL2_INSTALL_DIR}/include/SDL.h")
+    else()
+        message(WARNING "SDL2: Headers not found after installation. Checked:")
+        message(WARNING "  - ${SDL2_INSTALL_DIR}/include/SDL2/SDL.h")
+        message(WARNING "  - ${SDL2_INSTALL_DIR}/include/SDL.h")
     endif()
        
     # Verify installation
