@@ -46,6 +46,7 @@ struct model_house {
     int8_dcy entertainment_senet_divider;    /**< Divider for senet entertainment (value/10.0, e.g. 25 = 2.5) */
     int8_dcy unreachable_ticks_devolve_threshold;  /**< Number of unreachable ticks before house devolves */
     int8_dcy unreachable_ticks_block_evolve_threshold;  /**< Number of unreachable ticks that blocks evolution (0 = any unreachable blocks) */
+    int8_dcy days_without_food_devolve_threshold;  /**< Number of days without food before house devolves (only for houses that require food) */
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
@@ -57,4 +58,5 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     fancy_bazaar, devolve_delay,
     entertainment_juggler_divider, entertainment_musician_divider,
     entertainment_dancer_divider, entertainment_senet_divider,
-    unreachable_ticks_devolve_threshold, unreachable_ticks_block_evolve_threshold)
+    unreachable_ticks_devolve_threshold, unreachable_ticks_block_evolve_threshold,
+    days_without_food_devolve_threshold)
