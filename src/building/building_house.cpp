@@ -697,6 +697,12 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         ++demands->missing.second_wine;
         return e_house_none;
     }
+
+    // fancy bazaar access (for high-level houses)
+    if (model.fancy_bazaar && d.fancy_bazaar_access <= 0) {
+        return e_house_none;
+    }
+
     return e_house_evolve;
 }
 
