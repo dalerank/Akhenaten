@@ -6,6 +6,9 @@
 #include "city/city_warnings.h"
 #include "city/city.h"
 #include "js/js_game.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
+#include "widget/city/ornaments.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_jewels_workshop);
 
@@ -40,7 +43,16 @@ void building_jewels_workshop::on_place_checks() {
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
-    //            ImageDraw::img_generic(image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount, x + 65, y + 3,
-    //            color_mask);
+
+    int amount = std::min<int>(2, ceil((float)base.stored_amount(RESOURCE_GEMS) / 100.0) - 1);
+    if (amount >= 0) {
+        int image_id = image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount;
+        
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = image_id;
+        command.pixel = point + vec2i(65, 3);
+        command.mask = color_mask;
+    }
+
     return true;
 }
