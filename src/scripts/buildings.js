@@ -1107,6 +1107,7 @@ building_jewels_workshop = {
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[12], fire_risk:[4], damage_risk: [0]
+  material_reduction_per_nearby_workshop : 5
 }
 
 building_reed_gatherer = {
