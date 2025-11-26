@@ -5,6 +5,8 @@
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
+#include "city/city_malaria_risk.h"
+#include "grid/malaria_risk.h"
 #include "grid/crime.h"
 #include "core/object_property.h"
 #include "grid/water.h"
@@ -201,7 +203,7 @@ void city_t::update_tick(int simtick) {
     case 9:
         house_decay_services();
     case 10:
-        //building_update_highest_id();
+        g_desirability.update();    
         break;
     case 12:
         house_service_decay_houses_covered();
@@ -276,10 +278,10 @@ void city_t::update_tick(int simtick) {
         house_service_calculate_culture_aggregates();
         break;
     case 37:
-        g_desirability.update();        
+        g_malaria_risk.update();
         break;
     case 38:
-        building_update_desirability();
+        building_update_desirability();        
         break;
     case 39:
         house_process_evolve();
@@ -308,6 +310,7 @@ void city_t::update_tick(int simtick) {
         festival.calculate_costs();
         break;
     case 50:
+        building_update_malaria_risk();
         break;
     }
 }
