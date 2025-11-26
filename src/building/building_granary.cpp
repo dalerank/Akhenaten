@@ -87,6 +87,10 @@ int building_granary::add_resource(e_resource resource, int amount, bool force) 
         return -1;
     }
 
+    if (is_empty_all()) {
+        return -1;
+    }
+
     auto &d = runtime_data();
     if (d.resource_stored[RESOURCE_NONE] <= 0) {
         return -1; // no space
@@ -143,9 +147,18 @@ granary_task_status building_granary::determine_worker_task() {
 
     if (is_empty_all()) {
         // bring food to another granary
+        e_resource best_resource = RESOURCE_NONE;
+        int max_amount = 0;
         for (const auto &r: resource_list::foods) {
-            if (amount(r.type) > 0)
-                return {GRANARY_TASK_EMPTYING, r.type};
+            int resource_amount = amount(r.type);
+            if (resource_amount > max_amount) {
+                max_amount = resource_amount;
+                best_resource = r.type;
+            }
+        }
+
+        if (best_resource != RESOURCE_NONE && max_amount > 0) {
+            return {GRANARY_TASK_EMPTYING, best_resource};
         }
 
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
