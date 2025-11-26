@@ -224,6 +224,15 @@ overlays = [
   }
 
   {
+    id:OVERLAY_MALARIA_RISK
+    caption: "Malaria Risk"
+    walkers:[FIGURE_HERBALIST]
+    buildings:[BUILDING_APOTHECARY, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
+    column_type: COLUMN_TYPE_RISK
+    column_anim: {pack:PACK_GENERAL, id:103}
+  }
+
+  {
     id:OVERLAY_HEALTH
     caption: "Health"
     walkers:[FIGURE_EMBALMER, FIGURE_HERBALIST, FIGURE_PHYSICIAN, FIGURE_DENTIST]

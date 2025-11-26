@@ -17,6 +17,7 @@ overlay_menu {
 			ids[ 
 			    OVERLAY_FIRE,
 				OVERLAY_DAMAGE,
+				OVERLAY_MALARIA_RISK,
 				OVERLAY_CRIME,
 				OVERLAY_CRIMINAL,
 				OVERLAY_NATIVE,
