@@ -54,7 +54,7 @@ if(SDL2_IS_MSVC)
     )
     
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_BUILD_DIR}/Release/SDL2main.lib ${SDL2_INSTALL_DIR}/SDL2mainc.lib
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_BUILD_DIR}/Release/SDL2main.lib ${SDL2_INSTALL_DIR}/SDL2main.lib
     )
     
     execute_process(
