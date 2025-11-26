@@ -42,42 +42,49 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz",
+                    "sha256" : "17e88863f3600672ab49182f217281b6fc4d3c762bde361935e436a95214d05c",
                     "dest" : "_deps/zlib-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.32.10.tar.gz",
+                    "sha256" : "03f9d7c191a837525c9cda6406af2f2e48be02b5e7eb03d949cc9f1e9ca41c8b",
                     "dest" : "_deps/SDL2-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-2.8.0.tar.gz",
+                    "sha256" : "1146f00815c8ad22c3d48fbe31ae23dc5997936ebf30b4b3aeab6eab7ea1db3e",
                     "dest" : "_deps/SDL2_mixer-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/pnggroup/libpng/archive/refs/tags/v1.6.50.tar.gz",
+                    "sha256" : "71158e53cfdf2877bc99bcab33641d78df3f48e6e0daad030afe9cb8c031aa46",
                     "dest" : "_deps/libpng-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.2.tar.gz",
+                    "sha256" : "994aad785a0aa572538d909b923bf0a64e7bfe5ab3360d8ae0e397c6bb312c04",
                     "dest" : "_deps/imgui-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/freetype/freetype/archive/refs/tags/VER-2-13-3.tar.gz",
+                    "sha256" : "bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103",
                     "dest" : "_deps/freetype-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
                     "url" : "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/7.3.0.tar.gz",
+                    "sha256" : "7cefc6cc161e9d5c88210dafc43bc733ca3e383fd3dd4f1e6178f81bd41cfaae",
                     "dest" : "_deps/harfbuzz-src",
                     "strip-components" : 1
                 }
