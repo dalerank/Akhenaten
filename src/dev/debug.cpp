@@ -30,6 +30,7 @@
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
+#include "grid/malaria_risk.h"
 #include "widget/city/building_ghost.h"
 #include "game/game.h"
 
@@ -542,6 +543,24 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_desirability:
         if (g_desirability.get(grid_offset) != 0) {
             debug_text(ctx, str, x, y + 10, 0, "", g_desirability.get(grid_offset), COLOR_LIGHT_RED);
+        }
+        break;
+
+    case e_debug_render_malaria_risk:
+        {
+            int risk = g_malaria_risk.get(grid_offset);
+            if (risk > 0) {
+                // Цвет зависит от уровня риска: зеленый (низкий), желтый (средний), красный (высокий)
+                color risk_color = (risk < 30) ? COLOR_LIGHT_GREEN : (risk < 60) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+                debug_text(ctx, str, x, y + 10, 0, "", risk, risk_color);
+            }
+            // Также показываем риск здания, если есть
+            if (b_id && b) {
+                if (b->malaria_risk > 0) {
+                    snprintf((char *)str, 30, "b:%d", b->malaria_risk);
+                    text_draw(ctx, (uint8_t*)str, x, y + 20, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
+                }
+            }
         }
         break;
 
