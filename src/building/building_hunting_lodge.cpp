@@ -26,6 +26,13 @@ void building_hunting_lodge::on_create(int orientation) {
     base.labor_category = current_params().labor_category;
 }
 
+int building_hunting_lodge::stored_amount(e_resource r) const {
+    if (r == RESOURCE_GAMEMEAT || r == base.output.resource) {
+        return base.stored_amount_first;
+    }
+    return building_industry::stored_amount(r);
+}
+
 int building_hunting_lodge::spawn_timer() {
     int pct_workers = worker_percentage();
     if (pct_workers >= 100) {
@@ -89,7 +96,7 @@ void building_hunting_lodge::spawn_figure() {
 bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)stored_amount(RESOURCE_GAMEMEAT) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim("gamemeat");
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
