@@ -39,6 +39,14 @@ struct model_house {
     int8_dcy disease_risk;
 
     int8_t fancy_bazaar;
+    int8_dcy devolve_delay;        /**< Number of ticks before house devolves (delay) */
+    int8_dcy entertainment_juggler_divider;  /**< Divider for juggler entertainment (value/10.0, e.g. 50 = 5.0) */
+    int8_dcy entertainment_musician_divider; /**< Divider for musician entertainment (value/10.0, e.g. 40 = 4.0) */
+    int8_dcy entertainment_dancer_divider;     /**< Divider for dancer entertainment (value/10.0, e.g. 30 = 3.0) */
+    int8_dcy entertainment_senet_divider;    /**< Divider for senet entertainment (value/10.0, e.g. 25 = 2.5) */
+    int8_dcy unreachable_ticks_devolve_threshold;  /**< Number of unreachable ticks before house devolves */
+    int8_dcy unreachable_ticks_block_evolve_threshold;  /**< Number of unreachable ticks that blocks evolution (0 = any unreachable blocks) */
+    int8_dcy days_without_food_devolve_threshold;  /**< Number of days without food before house devolves (only for houses that require food) */
 };
 ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     evolve_desirability, entertainment, water, religion,
@@ -47,4 +55,8 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
     pottery, linen, jewelry, beer, food_storage_multiplier,
     crime_risk, crime_risk_base,
     prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
-    fancy_bazaar)
+    fancy_bazaar, devolve_delay,
+    entertainment_juggler_divider, entertainment_musician_divider,
+    entertainment_dancer_divider, entertainment_senet_divider,
+    unreachable_ticks_devolve_threshold, unreachable_ticks_block_evolve_threshold,
+    days_without_food_devolve_threshold)

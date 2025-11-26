@@ -24,7 +24,7 @@ jobs:
         mkdir linux_build
         mkdir linux_build/data
         cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DOPTION_SYSTEM_LIBPNG=ON ..
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         cd ..
         cmake --build ./build
         cp ./build/akhenaten ./linux_build/akhenaten.linux

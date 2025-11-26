@@ -139,239 +139,288 @@ building_cattle_ranch = {
   laborers:[12], fire_risk:[1], damage_risk: [2]
 }
 
-building_farm_grain = {
+building_farm_grain {
   animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37, offset:0 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:12 }
   }
-  output : {
+  output  {
     resource : RESOURCE_GRAIN
     resource_second : RESOURCE_STRAW
   }
   output_resource_second_rate : 10
 
   building_size : 3
+  month_harvest: [MONTH_JANUARY, MONTH_MAY]
   fire_proof : true
   damage_proof : true
-  meta : { help_id:90, text_id:112 }
+  meta { help_id:90, text_id:112 }
   progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
-  needs : {
+
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_farm_chickpeas = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_chickpeas {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37, offset:0 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:30 }
+  }
+  
+  output {
     resource : RESOURCE_CHICKPEAS
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:90, text_id:182 }
-  progress_max: 2000,
+
+  building_size : 3
+  fire_proof : true
+  month_harvest: [MONTH_APRIL]
+  damage_proof : true
+  meta { help_id:90, text_id:182 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10],
+  fire_risk[0],
+  damage_risk[0]
 }
 
-building_farm_lettuce = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:15 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_lettuce {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37, offset:15 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:18 }
+  }
+
+  output {
     resource : RESOURCE_LETTUCE
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:91, text_id:113 }
-  progress_max: 2000,
+  
+  building_size : 3
+  month_harvest: [MONTH_APRIL]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:91, text_id:113 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_farm_pomegranates = {
+building_farm_pomegranates {
   animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:20 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37, offset:20 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:24 }
+  }
+
+  output {
     resource : RESOURCE_POMEGRANATES
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:91, text_id:114 }
-  progress_max: 2000,
+
+  building_size : 3
+  month_harvest: [MONTH_JUNE, MONTH_NOVEMBER]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:91, text_id:114 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[12], fire_risk:[4], damage_risk: [1]
+  cost [ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[12],
+  fire_risk[4],
+  damage_risk[1]
 }
 
-building_farm_barley = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_barley {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37, offset:0 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:0 }
+  }
+
+  output {
     resource : RESOURCE_BARLEY
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:89, text_id:181 }
-  progress_max: 2000,
+
+  building_size : 3
+  fire_proof : true
+  month_harvest [MONTH_FEBRUARY, MONTH_AUGUST]
+  damage_proof : true
+  meta { help_id:89, text_id:181 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_farm_flax = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_flax {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, },
+    base { pack:PACK_GENERAL, id:105, offset:0 },
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    farm_house { pack:PACK_GENERAL, id:225 },
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
+    farmland { pack:PACK_GENERAL, id:37, offset:0 },
+    minimap {pack:PACK_GENERAL, id:149, offset:160},
+    crops { pack:PACK_GENERAL, id:100, offset:36 }
+  }
+
+  output {
     resource : RESOURCE_FLAX
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id: 90, text_id: 115 }
-  progress_max: 2000,
+
+  building_size : 3
+  fire_proof : true
+  damage_proof : true
+  month_harvest: [MONTH_DECEMBER]
+  meta { help_id: 90, text_id: 115 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+
+  cost [ 8, 10, 15, 20, 50 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_farm_henna = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_henna {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, },
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+  }
+  output {
     resource : RESOURCE_HENNA
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:90, text_id:306 }
-  progress_max: 2000,
+  building_size : 3
+  fire_proof : true
+  damage_proof : true
+  month_harvest[MONTH_DECEMBER]
+  meta { help_id:90, text_id:306 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+  cost [ 8, 10, 15, 20, 50 ]
+  desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
-building_farm_figs = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:105, },
-    base : { pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house : { pack:PACK_GENERAL, id:225 },
-    tiling: { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding: { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting: { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland: { pack:PACK_GENERAL, id:37 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
-  },
-  output : {
+building_farm_figs {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, }
+    base { pack:PACK_GENERAL, id:105, offset:0 }
+    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
+    farm_house { pack:PACK_GENERAL, id:225 }
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
+    farmland { pack:PACK_GENERAL, id:37 }
+    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    crops { pack:PACK_GENERAL, id:100, offset:6 }
+  }
+
+  output {
     resource : RESOURCE_FIGS,
   }
-  building_size : 3,
-  fire_proof : true,
-  damage_proof : true,
-  meta : { help_id:90, text_id:183 }
-  progress_max: 2000,
+
+  building_size : 3
+  fire_proof : true
+  month_harvest: [MONTH_SEPTEMPTER]
+  damage_proof : true
+  meta { help_id:90, text_id:183 }
+  progress_max: 2000
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
-  needs : {
+  needs {
     meadow : true
   }
-  cost: [ 8, 10, 15, 20, 50 ]
-  desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers:[10], fire_risk:[0], damage_risk: [0]
+
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
 building_burning_ruin = {
@@ -392,25 +441,32 @@ building_burning_ruin = {
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
 }
 
-building_granary = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:99 },
-    base : { pack:PACK_GENERAL, id:99 },
-    work : { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-    resources : {pack:PACK_GENERAL, id:99, offset:2},
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
+building_granary {
+  animations {
+    preview { pack:PACK_GENERAL, id:99 },
+    base { pack:PACK_GENERAL, id:99 },
+    work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
+    resources {pack:PACK_GENERAL, id:99, offset:2},
+    minimap {pack:PACK_GENERAL, id:149, offset:160},
   }
+
   min_houses_coverage : 100
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  meta : { help_id: 3, text_id: 98 }
+  meta { help_id: 3, text_id: 98 }
   building_size : 4
-  planner_update_rule : {
+  planner_update_rule {
     roads : true
   }
-  cost: [ 50, 70, 100, 200, 300 ]
-  laborers:[20], fire_risk:[0], damage_risk: [5]
-  desirability : { value:[-8], step:[1], step_size:[2], range: [4] }
-  begin_spot_pos : [110, -74]
+  cost [ 50, 70, 100, 200, 300 ]
+  laborers[20]
+  fire_risk[0]
+  damage_risk[5]
+  desirability { value[-8], step[1], step_size[-2], range[4] }
+  begin_spot_pos [110, -74]
+  res_image_offsets [[0, 0], [16, 9], [35, 18], [51, 26], [-16, 7], [1, 16], [20, 26], [37, 35]]
+  min_workers_percent_for_tasks : 50
+  min_workers_percent_for_accepting :75
+  min_workers_percent_for_getting : 100
 }
 
 building_shrine_osiris = {
@@ -1388,28 +1444,31 @@ building_mud_tower = {
   laborers:[6], fire_risk:[0], damage_risk: [3]
 }
 
-building_ferry = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:23 },
-    base : { pack:PACK_TERRAIN, id:23 },
-    work : { pack:PACK_TERRAIN, id:23 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:210}
-  },
-  building_size : 2,
-  needs : {
+building_ferry {
+  animations {
+    preview { pack:PACK_TERRAIN, id:23 }
+    base { pack:PACK_TERRAIN, id:23 }
+    work { pack:PACK_TERRAIN, id:23 }
+    top { pack:PACK_TERRAIN, id:23 }
+    minimap {pack:PACK_GENERAL, id:149, offset:210}
+  }
+  building_size : 2
+  needs {
     water_access : true,
     shoreline : true
   }
-  planner_update_rule : {
+  planner_update_rule {
     ferries : true
     relative_orientation: 1
   }
   fire_proof : true,
-  meta : { help_id: 85, text_id: 91 }
+  meta { help_id: 85, text_id: 91 }
   labor_category : LABOR_CATEGORY_GOVERNMENT
-  cost: [8, 15, 30, 50, 100 ]
-  desirability : { value:[-5], step:[2], step_size:[2], range: [4] }
-  laborers:[5], fire_risk:[0], damage_risk: [2]
+  cost [8, 15, 30, 50, 100 ]
+  desirability { value[-5], step[2], step_size[2], range[4] }
+  laborers[5]
+  fire_risk[0]
+  damage_risk[2]
 }
 
 building_transport_wharf = {
@@ -1472,37 +1531,42 @@ building_warship_wharf = {
   laborers:[15], fire_risk:[1], damage_risk: [1]
 }
 
-building_fishing_wharf = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:18 },
-    base : { pack:PACK_TERRAIN, id:18 },
-    work_n : { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 },
-    work_w : { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 },
-    work_s : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
-    wait_n : { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    wait_w : { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
-    wait_s : { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
-    wait_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160}
+building_fishing_wharf {
+  animations {
+    preview { pack:PACK_TERRAIN, id:18 },
+    base { pack:PACK_TERRAIN, id:18 },
+    work_n { pos:[65, 0], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:1 },
+    work_w { pos:[80, 7], pack:PACK_SPR_AMBIENT, id:46, offset:0, max_frames:24, duration:3 },
+    work_s { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:2, max_frames:24, duration:4 },
+    work_e { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:46, offset:3, max_frames:24, duration:4 },
+    wait_n { pos:[85, 20], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
+    wait_w { pos:[85, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:3 },
+    wait_s { pos:[50, 17], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
+    wait_e { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:4 },
+    minimap{pack:PACK_GENERAL, id:149, offset:160}
   }
-  output : {
+  output {
     resource : RESOURCE_FISH
   }
   building_size : 2
-  planer_update_rule : {
+  planer_update_rule {
     relative_orientation: 1
   }
-  meta : { help_id: 84, text_id: 102 }
-  needs : {
+  meta { help_id: 84, text_id: 102 }
+  needs {
     water_access : true
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   min_houses_coverage : 100
-  cost: [40, 70, 100, 150, 300 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[6], fire_risk:[4], damage_risk: [1]
+  cost [40, 70, 100, 150, 300 ]
+  desirability { value:[-4], step:[1], step_size:[1], range: [4] }
+  laborers[6]
+  fire_risk[4]
+  damage_risk[1]
+  max_storage: 400
+  wait_time_multiplier: 5
+  wait_time_base: 102
 }
 
 building_shipyard = {
@@ -1588,20 +1652,39 @@ building_plaza = {
   desirability : { value:[4], step:[1], step_size:[-2], range: [2] }
 }
 
-building_garden = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:59 },
-    base : { pack:PACK_GENERAL, id:59 },
-  },
+building_garden {
+  animations {
+    preview { pack:PACK_GENERAL, id:59 }
+    base { pack:PACK_GENERAL, id:59 }
+  }
+
+  variants1 {
+    _1 { pack:PACK_GENERAL, id:59, offset:0 }
+    _2 { pack:PACK_GENERAL, id:59, offset:1 }
+    _3 { pack:PACK_GENERAL, id:59, offset:2 }
+    _4 { pack:PACK_GENERAL, id:59, offset:3 }
+  }
+
+  variants2 {
+    _1 { pack:PACK_GENERAL, id:59, offset:4 }
+    _2 { pack:PACK_GENERAL, id:59, offset:5 }
+    _3 { pack:PACK_GENERAL, id:59, offset:6 }
+  }
+
+  variants3 {
+    _1 { pack:PACK_GENERAL, id:59, offset:7 }
+  }
+  
   planner_update_rule : {
     is_draggable : true
   }
+
   fire_proof : true
   damage_proof : true
-  meta : { help_id:80, text_id:79 }
+  meta { help_id:80, text_id:79 }
   building_size : 1
-  cost : [ 3, 5, 10, 15, 20 ]
-  desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
+  cost [ 3, 5, 10, 15, 20 ]
+  desirability { value[3], step[1], step_size[-1], range[3] }
 }
 
 building_village_palace = {
@@ -1738,45 +1821,51 @@ building_brewery {
   damage_risk[2]
 }
 
-building_mine_copper = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:196 },
-    base : { pack:PACK_GENERAL, id:196 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
+building_mine_copper {
+  animations {
+    preview { pack:PACK_GENERAL, id:196 },
+    base { pack:PACK_GENERAL, id:196 },
+    work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
   },
-  output : {
+  output {
     resource : RESOURCE_COPPER
   }
-  meta : { help_id:93, text_id:193 }
+  meta { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
     ore : true
   }
-  cost: [ 50, 75, 100, 150, 300 ]
-  desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
-  laborers:[10], fire_risk:[0], damage_risk: [2]
+  cost [ 50, 75, 100, 150, 300 ]
+  desirability { value[-12], step[2], step_size[2], range[6] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[2]
 }
 
-building_mine_gems = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:188 },
-    base : { pack:PACK_GENERAL, id:188 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2 }
-  },
-  output : {
+building_mine_gems {
+  animations {
+    preview { pack:PACK_GENERAL, id:188 },
+    base { pack:PACK_GENERAL, id:188 },
+    work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
+  }
+
+  output {
     resource : RESOURCE_GEMS
   }
+
   building_size : 2,
-  meta : { help_id:93, text_id:163 }
+  meta { help_id:93, text_id:163 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
-  needs : {
+  needs {
     rock : true
   }
-  cost: [ 50, 75, 100, 150, 300 ]
-  desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
-  laborers:[8], fire_risk:[0], damage_risk: [2]
+  cost [ 50, 75, 100, 150, 300 ]
+  desirability { value:[-12], step:[2], step_size:[2], range: [6] }
+  laborers[8]
+  fire_risk[0]
+  damage_risk[2]
 }
 
 building_sandstone_quarry = {

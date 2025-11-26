@@ -228,7 +228,7 @@ bool figure_fireman::fight_fire() {
 
     auto result = building_burning_ruin::get_closest_from(tile());
     int distance = calc_maximum_distance(tile(), result.second);
-    if (result.first > 0 && distance <= 25) {
+    if (result.first > 0 && distance <= current_params().fire_detection_distance) {
         building* ruin = building_get(result.first);
         base.wait_ticks_missile = 0;
         advance_action(ACTION_74_FIREMAN_GOING_TO_FIRE, result.second);

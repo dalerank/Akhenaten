@@ -23,7 +23,6 @@
 #include "figure/figure.h"
 #include "game/game.h"
 #include "window/building/distribution.h"
-#include "widget/city/ornaments.h"
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
 #include "dev/debug.h"
@@ -39,13 +38,17 @@ const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
 
-declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
-declare_console_command(addgamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
+declare_console_command(add_chickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
+declare_console_command(add_gamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 
 int building_granary::amount(e_resource resource) const {
     if (!resource_is_food(resource)) {
+        return 0;
+    }
+
+    if (resource >= RESOURCES_FOODS_MAX) {
         return 0;
     }
 
@@ -78,12 +81,16 @@ bool building_granary::is_getting(e_resource resource) {
     }
 }
 
-int building_granary::is_not_accepting(e_resource resource) {
+bool building_granary::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
 }
 
 int building_granary::add_resource(e_resource resource, int amount, bool force) {
     if (!force && !resource_is_food(resource)) {
+        return -1;
+    }
+
+    if (is_empty_all()) {
         return -1;
     }
 
@@ -93,6 +100,10 @@ int building_granary::add_resource(e_resource resource, int amount, bool force) 
     }
 
     if (is_not_accepting(resource)) {
+        return -1;
+    }
+
+    if (resource >= RESOURCES_FOODS_MAX) {
         return -1;
     }
 
@@ -123,6 +134,10 @@ int building_granary::remove_resource(e_resource resource, int amount) {
         return 0;
     }
 
+    if (resource >= RESOURCES_FOODS_MAX) {
+        return 0;
+    }
+
     auto &d = runtime_data();
     const int removed = std::min<int>(d.resource_stored[resource], amount);
 
@@ -137,15 +152,24 @@ int building_granary::remove_resource(e_resource resource, int amount) {
 
 granary_task_status building_granary::determine_worker_task() {
     const int pct_workers = worker_percentage();
-    if (pct_workers < 50) {
+    if (pct_workers < current_params().min_workers_percent_for_tasks) {
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
     }
 
     if (is_empty_all()) {
         // bring food to another granary
+        e_resource best_resource = RESOURCE_NONE;
+        int max_amount = 0;
         for (const auto &r: resource_list::foods) {
-            if (amount(r.type) > 0)
-                return {GRANARY_TASK_EMPTYING, r.type};
+            int resource_amount = amount(r.type);
+            if (resource_amount > max_amount) {
+                max_amount = resource_amount;
+                best_resource = r.type;
+            }
+        }
+
+        if (best_resource != RESOURCE_NONE && max_amount > 0) {
+            return {GRANARY_TASK_EMPTYING, best_resource};
         }
 
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
@@ -157,7 +181,7 @@ granary_task_status building_granary::determine_worker_task() {
 
     for (const auto &r : resource_list::foods) {
         int now = amount(r.type);
-        const bool can_take = (g_city.resource.gettable(r.type) - now) > ONE_LOAD;
+        const bool can_take = uint16_t(g_city.resource.gettable(r.type) - now) > ONE_LOAD;
         if (is_getting(r.type) && can_take) {
             return {GRANARY_TASK_GETTING, r.type};
         }
@@ -177,8 +201,15 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         return 0;
     }
 
+    // Priority order (as in original Pharaoh):
+    // 1. First try granaries in "Accept" mode
+    // 2. Then try granaries in "Get" mode
+    // 3. Always avoid "Empty All" mode
+
     int min_dist = INFINITE;
     int min_building_id = 0;
+
+    // First pass: look for granaries in "Accept" mode
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building_granary* granary = building_get(i)->dcast_granary();
         if (!granary || !granary->is_valid())
@@ -189,14 +220,18 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
 
         if (!game_features::gameplay_change_understaffed_accept_goods) {
             int pct_workers = granary->worker_percentage();
-            if (pct_workers < 75) {
+            if (pct_workers < granary->current_params().min_workers_percent_for_accepting) {
                 if (understaffed)
                     *understaffed += 1;
                 continue;
             }
         }
 
-        if (granary->is_not_accepting(resource) || granary->is_empty_all())
+        if (granary->is_empty_all())
+            continue;
+
+        // Priority 1: Only "Accept" mode granaries
+        if (!granary->is_accepting(resource))
             continue;
 
         if (!!game_features::gameplay_change_only_deliver_to_accepting_granaries) {
@@ -214,7 +249,61 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
             }
         }
     }
+
+    // If found accepting granary, use it
+    if (min_building_id != 0) {
+        building* min = building_get(min_building_id);
+        tile2i granary_tile = min->tile.shifted(1, 1);
+        map_point_store_result(granary_tile, *dst);
+        return min_building_id;
+    }
+
+    // Second pass: look for granaries in "Get" mode (only if no "Accept" granaries found)
+    if (!game_features::gameplay_change_only_deliver_to_accepting_granaries) {
+        min_dist = INFINITE;
+        min_building_id = 0;
+
+        for (int i = 1; i < MAX_BUILDINGS; i++) {
+            building_granary* granary = building_get(i)->dcast_granary();
+            if (!granary || !granary->is_valid())
+                continue;
+
+            if (!granary->has_road_access() || granary->distance_from_entry() <= 0 || granary->road_network() != road_network_id)
+                continue;
+
+            if (!game_features::gameplay_change_understaffed_accept_goods) {
+                int pct_workers = granary->worker_percentage();
+                if (pct_workers < granary->current_params().min_workers_percent_for_accepting) {
+                    if (understaffed)
+                        *understaffed += 1;
+                    continue;
+                }
+            }
+
+            // Always avoid "Empty All" mode
+            if (granary->is_empty_all())
+                continue;
+
+            // Priority 2: Only "Get" mode granaries
+            if (!granary->is_getting(resource))
+                continue;
+
+            const auto &d = granary->runtime_data();
+            if (d.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
+                // there is room
+                int dist = calc_distance_with_penalty(vec2i(granary->tilex() + 1, granary->tiley() + 1), tile, distance_from_entry, granary->distance_from_entry());
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_building_id = i;
+                }
+            }
+        }
+    }
+
     // deliver to center of granary
+    if (min_building_id == 0) {
+        return 0;
+    }
     building* min = building_get(min_building_id);
     tile2i granary_tile = min->tile.shifted(1, 1);
     map_point_store_result(granary_tile, *dst);
@@ -244,7 +333,7 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
             continue;
 
         int pct_workers = granary->worker_percentage();
-        if (pct_workers < 100)
+        if (pct_workers < granary->current_params().min_workers_percent_for_getting)
             continue;
 
         if (granary->is_getting(resource) || granary->is_empty_all())
@@ -261,6 +350,9 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         }
     }
 
+    if (min_building_id == 0) {
+        return 0;
+    }
     building* min = building_get(min_building_id);
     tile2i storing_tile = min->tile.shifted(1, 1);
     map_point_store_result(storing_tile, *dst);
@@ -341,9 +433,13 @@ void building_granary::bless() {
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
+        building_granary* granary = b->dcast_granary();
+        if (!granary)
+            continue;
+
         int total_stored = 0;
         for (e_resource r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-            total_stored += this->amount(r);
+            total_stored += granary->amount(r);
         }
 
         if (total_stored < min_stored) {
@@ -418,21 +514,6 @@ void building_granary_storageyard_curse(int big) {
     }
 }
 
-static vec2i granary_offsets_ph[] = {
-    {0, 0},
-    {16, 9},
-    {35, 18},
-    {51, 26},
-    {-16, 7},
-    {1, 16},
-    {20, 26},
-    {37, 35},
-};
-
-void set_granary_res_offset(int i, vec2i v) {
-    granary_offsets_ph[i] = v;
-}
-
 void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mask, painter &ctx) {
 
 }
@@ -440,6 +521,10 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 void building_granary::on_create(int orientation) {
     runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored();
     base.storage_id = building_storage_create(BUILDING_GRANARY);
+}
+
+void building_granary::on_post_load() {
+    building_impl::on_post_load();
 }
 
 void building_granary::update_day() {
@@ -452,7 +537,7 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(2);
 
     auto &d = runtime_data();
-    for (int i = 0; i < RESOURCES_MAX; i++) {
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &d.resource_stored[i]);
     }
 }
@@ -514,7 +599,8 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
 
     const auto &d = runtime_data();
     const vec2i begin_spot_pos = current_params().begin_spot_pos;
-    for (int r = 1; r < 9; r++) {
+    const auto &res_image_offsets = current_params().res_image_offsets;
+    for (int r = 1; r < RESOURCES_FOODS_MAX; r++) {
         if (d.resource_stored[r] > 0) {
             int spots_filled = ceil((float)(d.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
             if (spots_filled == 0 && d.resource_stored[r] > 0)
@@ -522,7 +608,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
-                vec2i spot_pos = granary_offsets_ph[spot];
+                vec2i spot_pos = res_image_offsets[spot];
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
                 command.image_id = resources_id + r;
                 command.pixel = point + spot_pos + begin_spot_pos;

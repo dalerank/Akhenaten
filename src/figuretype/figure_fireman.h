@@ -18,6 +18,10 @@ public:
     FIGURE_METAINFO(FIGURE_FIREMAN, figure_fireman)
     figure_fireman(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figure_static_params {
+        int fire_detection_distance;
+    } FIGURE_STATIC_DATA_T;
+
     virtual figure_fireman *dcast_fireman() override { return this; }
 
     virtual void on_create() override;
@@ -32,3 +36,5 @@ public:
     void extinguish_fire();
     bool fight_fire();
 };
+ANK_CONFIG_STRUCT(figure_fireman::static_params,
+    fire_detection_distance)

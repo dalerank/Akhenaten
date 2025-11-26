@@ -186,7 +186,6 @@ bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain) {
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = tile.shifted(dx, dy).grid_offset();
-            //            if ((map_terrain_get(grid_offset) & TERRAIN_NOT_CLEAR) != terrain)
             if (!map_terrain_is(grid_offset, terrain))
                 return false;
         }

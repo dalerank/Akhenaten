@@ -35,8 +35,6 @@
 
 #include <iostream>
 
-constexpr int CROPS_OFFSETS = 6;
-
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_grain);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_lettuce);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_chickpeas);
@@ -61,49 +59,7 @@ declare_console_command_p(farmgrow) {
     });
 };
 
-void building_farm::map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int crop_image_offset, int progress) {
-    //if (GAME_ENV == ENGINE_ENV_C3) {
-    //    crop_image_offset += image_id_from_group(GROUP_BUILDING_FARMLAND);
-    //    if (!map_grid_is_inside(x, y, 3))
-    //        return;
-    //    // farmhouse
-    //    int x_leftmost, y_leftmost;
-    //    switch (city_view_orientation()) {
-    //    case DIR_0_TOP_RIGHT:
-    //        x_leftmost = 0;
-    //        y_leftmost = 1;
-    //        break;
-    //    case DIR_2_BOTTOM_RIGHT:
-    //        x_leftmost = 0;
-    //        y_leftmost = 0;
-    //        break;
-    //    case DIR_4_BOTTOM_LEFT:
-    //        x_leftmost = 1;
-    //        y_leftmost = 0;
-    //        break;
-    //    case DIR_6_TOP_LEFT:
-    //        x_leftmost = 1;
-    //        y_leftmost = 1;
-    //        break;
-    //    default:
-    //        return;
-    //    }
-    //    for (int dy = 0; dy < 2; dy++) {
-    //        for (int dx = 0; dx < 2; dx++) {
-    //            int grid_offset = MAP_OFFSET(x + dx, y + dy);
-    //            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-    //            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-    //            map_building_set(grid_offset, building_id);
-    //            map_property_clear_constructing(grid_offset);
-    //            map_property_set_multi_tile_size(grid_offset, 2);
-    //            map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_FARM_HOUSE));
-    //            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_leftmost && dy == y_leftmost);
-    //        }
-    //    }
-    //} else if (GAME_ENV == ENGINE_ENV_PHARAOH) {
-        //        int image_id = image_id_from_group(GROUP_BUILDING_FARM_HOUSE);
-        //        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_FLOODPLAIN))
-        //            image_id = image_id_from_group(GROUP_BUILDING_FARMLAND);
+void building_farm::map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int progress) {
     building *b = building_get(building_id);
     map_building_tiles_add(building_id, tile, b->size, get_farm_image(type, tile), TERRAIN_BUILDING);
 }
@@ -142,22 +98,8 @@ void building_farm::preview::ghost_preview(build_planner &planer, painter &ctx, 
 }
 
 int building_farm::get_crops_image(e_building_type type, int growth) {
-    int base = 0;
-    base = image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH);
-    switch (type) {
-    case BUILDING_BARLEY_FARM: return base + 6 * 0 + growth;
-    case BUILDING_FLAX_FARM: return base + 6 * 6 + growth;
-    case BUILDING_GRAIN_FARM: return base + 6 * 2 + growth;
-    case BUILDING_LETTUCE_FARM: return base + 6 * 3 + growth;
-    case BUILDING_POMEGRANATES_FARM: return base + 6 * 4 + growth;
-    case BUILDING_CHICKPEAS_FARM: return base + 6 * 5 + growth;
-    case BUILDING_FIGS_FARM: return base + 6 * 1 + growth;
-
-    default:
-        assert(false);
-    }
-
-    return image_id_from_group(GROUP_BUILDING_FARM_CROPS_PH) + (type - BUILDING_BARLEY_FARM) * 6; // temp
+    const auto &params = building_static_params::get(type);
+    return params.first_img(animkeys().crops) + growth;
 }
 
 int building_farm::get_farm_image(e_building_type type, tile2i tile) {
@@ -303,40 +245,16 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     }
 }
 
-static bool farm_harvesting_month_for_produce(int resource_id, int month) {
-    switch (resource_id) {
-        // annual meadow farms
-    case RESOURCE_CHICKPEAS:
-    case RESOURCE_LETTUCE:
-        return (month == MONTH_APRIL);
-
-    case RESOURCE_FIGS:
-        return (month == MONTH_SEPTEMPTER);
-
-    case RESOURCE_FLAX:
-        return (month == MONTH_DECEMBER);
-
-    // biannual meadow farms
-    case RESOURCE_GRAIN:
-        return (month == MONTH_JANUARY || month == MONTH_MAY);
-
-    case RESOURCE_BARLEY:
-        return (month == MONTH_FEBRUARY || month == MONTH_AUGUST);
-
-    case RESOURCE_POMEGRANATES:
-        return (month == MONTH_JUNE || month == MONTH_NOVEMBER);
-    }
-    return false;
-}
-
-bool building_farm_time_to_deliver(bool floodplains, int resource_id) {
+bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
         float current_cycle = g_floods.current_cycle();
         float start_cycle = g_floods.start_cycle();
         float harvest_cycle = start_cycle - 28.0f;
         return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
-        const bool result = game.simtime.day < 2 && farm_harvesting_month_for_produce(resource_id, game.simtime.month);
+        const auto &months = farm_params().month_harvest;
+        const bool is_correct_month = std::count(months.begin(), months.end(), game.simtime.month) > 0;
+        const bool result = is_correct_month && game.simtime.day < 2;
         return result;
     }
 }
@@ -346,42 +264,7 @@ void building_farm::on_create(int orientation) {
 }
 
 void building_farm::on_place_update_tiles(int orientation, int variant) {
-    switch (type()) {
-    case BUILDING_BARLEY_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
-        break;
-
-    case BUILDING_FLAX_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS, 0);
-        break;
-
-    case BUILDING_GRAIN_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 2, 0);
-        break;
-
-    case BUILDING_LETTUCE_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 3, 0);
-        break;
-
-    case BUILDING_POMEGRANATES_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 4, 0);
-        break;
-
-    case BUILDING_CHICKPEAS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 5, 0);
-        break;
-
-    case BUILDING_FIGS_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 6, 0);
-        break;
-
-    case BUILDING_HENNA_FARM:
-        map_building_tiles_add_farm(type(), id(), tile(), CROPS_OFFSETS * 7, 0);
-        break;
-
-    default:
-        assert(false);
-    }
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i t, color mask) {
@@ -443,11 +326,11 @@ void building_farm::spawn_figure() {
     bool is_floodplain = building_is_floodplain_farm(base);
     if (!is_floodplain && has_road_access()) { // only for meadow farms
         common_spawn_labor_seeker(current_params().min_houses_coverage);
-        if (building_farm_time_to_deliver(false, base.output.resource)) { // UGH!!
+        if (time_to_deliver(false, base.output.resource)) { // UGH!!
             spawn_figure_harvests();
         }
     } else if (is_floodplain) {
-        if (building_farm_time_to_deliver(true)) {
+        if (time_to_deliver(true)) {
             spawn_figure_harvests();
         }
     }
@@ -458,8 +341,7 @@ void building_farm::update_graphic() {
 }
 
 void building_farm::on_undo() {
-    int img_id = anim(animkeys().farmland).first_img();
-    map_building_tiles_add_farm(type(), id(), tile(), img_id, 0);
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
@@ -484,7 +366,7 @@ void building_farm::start_production() {
 }
 
 void building_farm::add_tiles() {
-    map_building_tiles_add_farm(type(), id(), tile(), 0, 0);
+    map_building_tiles_add_farm(type(), id(), tile(), 0);
 }
 
 int building_farm::expected_produce() {
@@ -601,15 +483,14 @@ bool building_farm::is_currently_flooded() const {
 
 void building_farm::update_tiles_image() {
     if (!is_currently_flooded()) {
-        int img_id = anim(animkeys().farmland).first_img();
-        map_building_tiles_add_farm(type(), id(), tile(), img_id + 5 * (base.output.resource - 1), progress());
+        map_building_tiles_add_farm(type(), id(), tile(), progress());
     }
 }
 
 void building_farm::deplete_soil() {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
     if (!!game_features::gameplay_change_soil_depletion) {
-        int malus = (float)progress() / (float)MAX_PROGRESS_FARM_PH * (float)-100;
+        int malus = (float)progress() / (float)current_params().progress_max * (float)-100;
         for (int _y = tiley(); _y < tiley() + size(); _y++) {
             for (int _x = tilex(); _x < tilex() + size(); _x++) {
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);

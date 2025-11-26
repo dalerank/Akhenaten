@@ -6,6 +6,7 @@
 #include "city/city_figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"
+#include "grid/terrain.h"
 
 #include <algorithm>
 #include <random>
@@ -121,7 +122,7 @@ void city_fishing_points_t::update(int points_num) {
     tile_cache &river = river_tiles();
     std::vector<int> deep_water;
     for (const auto &tile : river) {
-        if (map_terrain_is(tile, TERRAIN_DEEPWATER)) {
+        if (map_terrain_is(tile, TERRAIN_DEEPWATER) && !map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
             deep_water.push_back(tile);
         }
     }

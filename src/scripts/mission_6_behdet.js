@@ -31,68 +31,66 @@ mission6 = { // Behdet
 					BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
 					BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
 				]
-	stages {
-	}
-
-	enable_scenario_events : false,
+				
+	enable_scenario_events : false
 	events [
 		{
 			time { year : 2684, month : 1 }
 			resource : "pottery",
-			amount { value : 1400 },
-			deadline : 9,
+			amount { value : 1400 }
+			deadline : 9
 		}
 
 		{
 			time { year : 2683, month : 1 }
 			resource : "beer",
-			amount { value : 1100 },
-			deadline : 12,
+			amount { value : 1100 }
+			deadline : 12
 		}
 	]
 
 	cities [
 		{
-			name : "Byblos",
-			is_sea_trade : true,
+			name : "Byblos"
+			is_sea_trade : true
 			max_traders : 1
 			trade_limits : default_trade_limits
 		}
 
 		{
-			name: "Perwadjyt",
-			is_sea_trade : true,
+			name: "Perwadjyt"
+			is_sea_trade : true
 			max_traders : 1
 			trade_limits : default_trade_limits
 		}
 
 		{
-			name: "Men-nefer",
-			is_sea_trade : true,
+			name: "Men-nefer"
+			is_sea_trade : true
 			max_traders : 1
 			trade_limits : default_trade_limits
 		}
 	]
 
-	choice_background {pack:PACK_UNLOADED, id:12},
-	choice_image1 {pack:PACK_UNLOADED, id:13, offset:0},
-	choice_image1_pos [192, 144],
-	choice_title [144, 19],
+	choice_background {pack:PACK_UNLOADED, id:12}
+	choice_image1 {pack:PACK_UNLOADED, id:13, offset:0}
+	choice_image1_pos [192, 144]
+	choice_title [144, 19]
 	choice [
 		{
-			name : "Abydos",
-			id : 6,
-			image {pack:PACK_UNLOADED, id:20, offset:0},
-			tooltip [144, 20],
-			pos [620, 420],
+			name : "Abydos"
+			id : 6
+			image {pack:PACK_UNLOADED, id:20, offset:0}
+			tooltip [144, 20]
+			pos [620, 420]
 		}
 
 		{
-			name : "Behdet",
-			id : 7,
-			image {pack:PACK_UNLOADED, id:20},
-			tooltip [144, 21],
-			pos [640, 480],
+			name : "Behdet"
+			id : 7
+			image {pack:PACK_UNLOADED, id:20}
+			tooltip [144, 21]
+			pos [640, 480]
 		}
-	],
+	]
 }

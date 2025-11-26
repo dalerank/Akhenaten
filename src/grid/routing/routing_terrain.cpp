@@ -22,6 +22,7 @@
 #include "city/city_buildings.h"
 #include "js/js_game.h"
 #include <array>
+#include <cstdlib>
 
 struct building_penalty {
     e_building_type type = BUILDING_NONE;
@@ -145,11 +146,19 @@ static int get_land_type_noncitizen(int grid_offset) {
     return routing_amphibia_buildings[b->type].penalty;
 }
 
+static bool is_water_tile(int grid_offset) {
+    // Check if tile is water (either regular water or flooded floodplain)
+    // Must have TERRAIN_WATER flag - if it's floodplain without water, it's dry land
+    return map_terrain_is(grid_offset, TERRAIN_WATER);
+}
+
 static int is_surrounded_by_water(int grid_offset) {
-    return map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WATER)
-           && map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_WATER)
-           && map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_WATER)
-           && map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_WATER);
+    // All four cardinal neighbors must be water tiles
+    // This prevents boats from navigating on floodplain edges where land is adjacent
+    return is_water_tile(grid_offset + GRID_OFFSET(0, -1))
+           && is_water_tile(grid_offset + GRID_OFFSET(-1, 0))
+           && is_water_tile(grid_offset + GRID_OFFSET(1, 0))
+           && is_water_tile(grid_offset + GRID_OFFSET(0, 1));
 }
 
 static int is_wall_tile(int grid_offset) {
@@ -272,7 +281,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
         }
 
     case ROUTING_TYPE_WATER:
-        if (terrain & TERRAIN_WATER && is_surrounded_by_water(grid_offset)) {
+        if ((terrain & TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
             if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
                 switch (map_sprite_animation_at(grid_offset)) {
                 case 5:
@@ -435,6 +444,17 @@ void map_routing_update_ferry_routes() {
 
     for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
         for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
+            // Check if ferries are close enough (difference in x or y not more than 2 tiles)
+            tile2i tile1 = (*f1)->tile;
+            tile2i tile2 = (*f2)->tile;
+            int dx = std::abs(tile1.x() - tile2.x());
+            int dy = std::abs(tile1.y() - tile2.y());
+            
+            // Only connect ferries that are close (difference in x or y <= 2)
+            if (dx > 4 && dy > 4) {
+                continue;
+            }
+            
             water_access_tiles fpoints_begin = map_water_get_access_points(**f1, (*f1)->dcast()->get_orientation(), 1);
             water_access_tiles fpoints_end = map_water_get_access_points(**f2, (*f2)->dcast()->get_orientation(), 1);
 

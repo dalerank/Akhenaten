@@ -66,6 +66,8 @@ struct id_anim_t {
     static const xstring farm_house;
     static const xstring house;
     static const xstring big_image;
+    static const xstring crops;
+    static const xstring top;
 };
 
 const id_anim_t &animkeys();

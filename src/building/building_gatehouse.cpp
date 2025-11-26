@@ -14,6 +14,10 @@
 #include "construction/build_planner.h"
 #include "grid/image.h"
 #include "city/city.h"
+#include "city/city_warnings.h"
+#include "grid/road_access.h"
+#include "grid/routing/routing_terrain.h"
+#include "building/building_barracks.h"
 
 #include "js/js_game.h"
 
@@ -304,16 +308,55 @@ void building_gatehouse::on_place(int orientation, int variant) {
     }
     assert(backside && mainside);
 
+    // Remove walls on the territory of both parts of the gatehouse
+    map_terrain_remove_with_radius(base.tile, base.size, 0, TERRAIN_WALL);
+    map_terrain_remove_with_radius(backside->tile, 1, 0, TERRAIN_WALL);
+
     map_building_tiles_add(base.id, base.tile, base.size, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
     map_building_tiles_add(backside->id, backside->tile, 1, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
 
     base.orientation = back_tile.orientation;
 
     update_image_set(*mainside);
+
+    // Update routing for walls and land after placing gatehouse
+    map_routing_update_land();
+    map_routing_update_walls();
 }
 
 void building_gatehouse::on_place_checks() {
-    /*nothing*/
+    building_impl::on_place_checks();
+
+    // Use main part of the building for wall proximity check
+    building *main_building = base.main();
+    
+    construction_warnings warnings;
+    const bool near_walls = !map_terrain_is_adjacent_to_wall(main_building->tile.x(), main_building->tile.y(), main_building->size);
+    warnings.add_if(!near_walls, "#warning_shipwright_needed");
+}
+
+void building_gatehouse::spawn_figure() {
+    // Use main part of the building for spawning figures
+    building *main_building = base.main();
+    if (!main_building->is_valid()) {
+        return;
+    }
+    
+    main_building->check_labor_problem();
+    tile2i road = map_get_road_access_tile(main_building->tile, main_building->size);
+    if (!road.valid()) {
+        return;
+    }
+
+    main_building->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
+    if (main_building->num_workers <= 0) {
+        return;
+    }
+
+    // Request sentry from barracks if no sentry is present
+    if (!main_building->has_figure(0)) {
+        building_barracks_request_tower_sentry();
+    }
 }
 
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
