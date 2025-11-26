@@ -961,6 +961,10 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
+#
+# Apple specific
+#
+
 if(APPLE)
     target_link_libraries(${GAME}
         "-framework Cocoa"
@@ -978,6 +982,82 @@ if(APPLE)
         z
     )
 endif()
+
+if(APPLE)
+    set(EXECUTABLE_PATH "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS/akhenaten")
+    set(FRAMEWORKS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/Frameworks")
+    set(BROTLI_LIB_DIR "/opt/homebrew/opt/brotli/lib" CACHE PATH "Path to Brotli libs" FORCE)
+
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        # Frameworks-Ordner sicherstellen
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${FRAMEWORKS_DIR}"
+
+        # Brotli-Dylibs explizit ins Bundle kopieren
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${BROTLI_LIB_DIR}/libbrotlidec.1.2.0.dylib"
+            "${FRAMEWORKS_DIR}/libbrotlidec.1.2.0.dylib"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${BROTLI_LIB_DIR}/libbrotlicommon.1.dylib"
+            "${FRAMEWORKS_DIR}/libbrotlicommon.1.dylib"
+
+        # (Optional) Symlinks im Frameworks-Ordner
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+            "libbrotlidec.1.2.0.dylib"
+            "${FRAMEWORKS_DIR}/libbrotlidec.1.dylib"
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+            "libbrotlicommon.1.dylib"
+            "${FRAMEWORKS_DIR}/libbrotlicommon.dylib"
+
+        # Referenz von libbrotlidec -> libbrotlicommon im Bundle fixen
+        COMMAND install_name_tool
+            -change "@rpath/libbrotlicommon.1.dylib"
+                    "@loader_path/libbrotlicommon.1.dylib"
+            "${FRAMEWORKS_DIR}/libbrotlidec.1.2.0.dylib"
+
+        # Referenz des Executables auf die lokale libbrotlidec im Bundle umbiegen
+        COMMAND install_name_tool
+            -change "/opt/homebrew/opt/brotli/lib/libbrotlidec.1.dylib"
+                    "@executable_path/../Frameworks/libbrotlidec.1.2.0.dylib"
+            "${EXECUTABLE_PATH}"
+
+        # Bundle neu codesignen
+        COMMAND codesign --force --deep --sign - "${CMAKE_BINARY_DIR}/akhenaten.app"
+
+        COMMENT "Bundling Brotli dylibs and fixing install_name paths in app bundle (ohne dylibbundler)"
+        VERBATIM
+    )
+endif()
+
+
+if(APPLE)
+    set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
+    set(DATA_SRC_DIR "${CMAKE_SOURCE_DIR}/data")
+    set(LAUNCH_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/macos/launch.sh")
+
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        # Data‑Ordner anlegen
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${MACOS_DIR}/Data"
+
+        # Inhalt von data/ in Data/ kopieren
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${DATA_SRC_DIR}"
+                "${MACOS_DIR}/Data"
+
+        # launch.sh ins MacOS‑Verzeichnis kopieren und ausführbar machen
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${LAUNCH_SCRIPT_SRC}"
+                "${MACOS_DIR}/launch.sh"
+        COMMAND chmod +x "${MACOS_DIR}/launch.sh"
+
+        COMMENT "Copying game data and launch.sh into .app bundle"
+        VERBATIM
+    )
+endif()
+
+#
+# Apple specific End
+#
+
 
 # Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
 target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
