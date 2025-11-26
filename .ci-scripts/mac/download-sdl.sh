@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-ln -s "$HOME"/Library/Frameworks/SDL2_mixer.framework/Headers/SDL_mixer.h src/SDL_mixer.h
-
 FRAMEWORKS_PATH=$HOME/Library/Frameworks
 SDL2_VERSION=2.32.10
 SDL2_MIXER_VERSION=2.8.1
@@ -82,5 +80,9 @@ main () {
 }
 
 main
+
+mkdir -p ~/Library/Headers
+ln -s ~/Library/Frameworks/SDL2.framework/Headers ~/Library/Headers/SDL2
+ln -s "$HOME"/Library/Frameworks/SDL2_mixer.framework/Headers/SDL_mixer.h src/SDL_mixer.h
 
 exit 0
