@@ -57,6 +57,7 @@ class figure_ballista;
 class figure_market_buyer;
 class figure_bricklayer;
 class figure_ferry_boat;
+class figure_carpenter;
 
 struct animation_t;
 struct figure_static_params;
@@ -558,6 +559,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(warship)
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
+    ALLOW_SMART_CAST_FIGURE_I(carpenter)
     ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
     ALLOW_SMART_CAST_FIGURE_I(enemy_spearman)
@@ -647,6 +649,7 @@ GENERATE_SMART_CAST_FIGURE(caravan_donkey)
 GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
+GENERATE_SMART_CAST_FIGURE(carpenter)
 GENERATE_SMART_CAST_FIGURE(enemy)
 GENERATE_SMART_CAST_FIGURE(enemy_archer)
 GENERATE_SMART_CAST_FIGURE(enemy_spearman)

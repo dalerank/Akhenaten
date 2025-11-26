@@ -19,6 +19,7 @@ class figure_carpenter : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_CARPENTER, figure_carpenter)
     figure_carpenter(figure *f) : figure_impl(f) {}
+    virtual figure_carpenter *dcast_carpenter() override { return this; }
 
     struct runtime_data_t {
         short idle_wait_count;

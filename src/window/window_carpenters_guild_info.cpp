@@ -16,7 +16,7 @@ struct carpenters_guild_info_window : public building_info_window_t<carpenters_g
 
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        return c.building_get()->type == BUILDING_STONEMASONS_GUILD;
+        return c.building_get()->type == BUILDING_CARPENTERS_GUILD;
     }
 };
 
@@ -30,7 +30,7 @@ void carpenters_guild_info_window::init(object_info &c) {
     textid reason{ 0, 0 };
     if (!guild->has_road_access()) {
         reason = { 69, 25 };
-    } else if (g_city.resource.is_mothballed(RESOURCE_BRICKS)) {
+    } else if (g_city.resource.is_mothballed(RESOURCE_TIMBER)) {
         reason = { c.group_id, 4 };
     } else if (guild->num_workers() <= 0) {
         reason = { c.group_id, 5 };
