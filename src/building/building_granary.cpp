@@ -456,7 +456,7 @@ void building_granary::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(2);
 
     auto &d = runtime_data();
-    for (int i = 0; i < RESOURCES_MAX; i++) {
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &d.resource_stored[i]);
     }
 }
