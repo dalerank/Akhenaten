@@ -961,7 +961,23 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-
+if(APPLE)
+    target_link_libraries(${GAME}
+        "-framework Cocoa"
+        "-framework Carbon"
+        "-framework IOKit"
+        "-framework CoreFoundation"
+        "-framework ForceFeedback"
+        "-framework Metal"
+        "-framework MetalKit"
+        "-framework CoreVideo"
+        "-framework CoreAudio"
+        "-framework AudioToolbox"
+        "-framework CoreHaptics"
+        "-framework GameController"
+        z
+    )
+endif()
 
 # Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
 target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
