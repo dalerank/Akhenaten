@@ -95,6 +95,10 @@ void malaria_risk_t::update_terrain() {
                 add_to_terrain(tile, 1, 40, 1, -5, 2);
             }
             
+            if (terrain & TERRAIN_FLOODPLAIN) {
+                add_to_terrain(tile, 1, 40, 1, -5, 2);
+            }
+            
             if (terrain & TERRAIN_MARSHLAND) {
                 add_to_terrain(tile, 1, 60, 1, -8, 3);
             }
