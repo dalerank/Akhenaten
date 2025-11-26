@@ -38,6 +38,48 @@
                     "sha256" : "d00921d49b06af62aa6bfb97c1b136bec661dd11dd4eecbcb0da1f6da7cedb4c",
                     "dest" : "_deps/stb-src",
                     "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/madler/zlib/archive/refs/tags/v1.3.1.tar.gz",
+                    "dest" : "_deps/zlib-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.32.10.tar.gz",
+                    "dest" : "_deps/SDL2-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-2.8.0.tar.gz",
+                    "dest" : "_deps/SDL2_mixer-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/pnggroup/libpng/archive/refs/tags/v1.6.50.tar.gz",
+                    "dest" : "_deps/libpng-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.2.tar.gz",
+                    "dest" : "_deps/imgui-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/freetype/freetype/archive/refs/tags/VER-2-13-3.tar.gz",
+                    "dest" : "_deps/freetype-src",
+                    "strip-components" : 1
+                },
+                {
+                    "type" : "archive",
+                    "url" : "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/7.3.0.tar.gz",
+                    "dest" : "_deps/harfbuzz-src",
+                    "strip-components" : 1
                 }
             ]
         }
