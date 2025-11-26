@@ -3,7 +3,7 @@ log_info("akhenaten: ui workshops info window started")
 workshop_info_window {
     related_buildings [BUILDING_BREWERY_WORKSHOP, BUILDING_POTTERY_WORKSHOP
                        BUILDING_PAPYRUS_WORKSHOP, BUILDING_CHARIOTS_WORKSHOP, BUILDING_CATTLE_RANCH
-                       BUILDING_LAMP_WORKSHOP, BUILDING_PAINT_WORKSHOP, BUILDING_WEAPONSMITH]
+                       BUILDING_LAMP_WORKSHOP, BUILDING_PAINT_WORKSHOP, BUILDING_WEAPONSMITH, BUILDING_JEWELS_WORKSHOP]
     ui {
         background    : outer_panel({size[29, 17] }),
         title         : text({pos[0, 16], size[px(27), 20], text:"${building.name}", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
