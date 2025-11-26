@@ -338,6 +338,9 @@ void building_gatehouse::on_place_checks() {
 void building_gatehouse::spawn_figure() {
     // Use main part of the building for spawning figures
     building *main_building = base.main();
+    if (!main_building->is_valid()) {
+        return;
+    }
     
     main_building->check_labor_problem();
     tile2i road = map_get_road_access_tile(main_building->tile, main_building->size);
@@ -345,7 +348,7 @@ void building_gatehouse::spawn_figure() {
         return;
     }
 
-    main_building->common_spawn_labor_seeker(main_building->current_params().min_houses_coverage);
+    main_building->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
     if (main_building->num_workers <= 0) {
         return;
     }
