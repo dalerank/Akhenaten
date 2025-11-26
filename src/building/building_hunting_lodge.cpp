@@ -62,6 +62,10 @@ bool building_hunting_lodge::can_spawn_ostrich_hunter() { // no cache because fu
 }
 
 void building_hunting_lodge::spawn_figure() {
+    if (g_city.resource.is_mothballed(RESOURCE_GAMEMEAT)) {
+        return;
+    }
+    
     check_labor_problem();
 
     if (!base.has_road_access) {
