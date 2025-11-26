@@ -38,8 +38,8 @@ const int THREEQUARTERS_GRANARY = 2400;
 const int HALF_GRANARY = 1600;
 const int QUARTER_GRANARY = 800;
 
-declare_console_command(addchickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
-declare_console_command(addgamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
+declare_console_command(add_chickpeas, game_cheat_add_resource<RESOURCE_CHICKPEAS>);
+declare_console_command(add_gamemeat, game_cheat_add_resource<RESOURCE_GAMEMEAT>);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_granary);
 
@@ -599,6 +599,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
 
     const auto &d = runtime_data();
     const vec2i begin_spot_pos = current_params().begin_spot_pos;
+    const auto &res_image_offsets = current_params().res_image_offsets;
     for (int r = 1; r < RESOURCES_FOODS_MAX; r++) {
         if (d.resource_stored[r] > 0) {
             int spots_filled = ceil((float)(d.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
@@ -607,7 +608,7 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
 
             for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
                 // draw sprite on each granary "spot"
-                vec2i spot_pos = granary_offsets_ph[spot];
+                vec2i spot_pos = res_image_offsets[spot];
                 auto &command = ImageDraw::create_subcommand(render_command_t::ert_generic);
                 command.image_id = resources_id + r;
                 command.pixel = point + spot_pos + begin_spot_pos;

@@ -2,6 +2,7 @@
 
 #include "building/building_storage.h"
 #include "core/vec2i.h"
+#include "core/svector.h"
 #include "grid/point.h"
 #include "graphics/color.h"
 
@@ -32,6 +33,7 @@ public:
 
     struct static_params : building_static_params {
         vec2i begin_spot_pos;
+        svector<vec2i, 8> res_image_offsets;
         uint8_t min_workers_percent_for_tasks;
         uint8_t min_workers_percent_for_accepting;
         uint8_t min_workers_percent_for_getting;
@@ -71,7 +73,7 @@ public:
     template<e_building_type T>
     int better_getting_storage();
 };
-ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos,
+ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos, res_image_offsets,
     min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting);
 
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
