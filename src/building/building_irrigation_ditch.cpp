@@ -9,6 +9,7 @@
 #include "grid/property.h"
 #include "grid/canals.h"
 #include "grid/building.h"
+#include "grid/grid.h"
 #include "city/city_buildings.h"
 #include "city/city.h"
 #include "game/undo.h"
@@ -34,16 +35,9 @@ static bool has_water_source_nearby(tile2i tile) {
                 return true;
             }
         }
-    }
 
-    // Check for existing canal with water nearby
-    for (const auto &offset : adjacent_offsets) {
-        tile2i adjacent_tile = tile.shifted(offset);
         if (map_terrain_is(adjacent_tile, TERRAIN_CANAL)) {
-            int water_level = map_canal_at(adjacent_tile);
-            if (water_level > 0) {
-                return true;
-            }
+            return true;
         }
     }
 
@@ -96,8 +90,17 @@ bool building_irrigation_ditch::preview::can_construction_start(build_planner &p
 
 int building_irrigation_ditch::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
     int items_placed = building_construction_place_canal(/*measure_only*/true, start, end);
-    map_canal_update_all_tiles(0);
-
+    
+    // Update canal images in the region around the path for interactive preview
+    // Similar to how place_routed_building updates empty land around each tile
+    if (items_placed > 0) {
+        grid_area area = map_grid_get_area(start, end);
+        // Add padding for neighboring tiles (like routed.cpp does with -4, +4)
+        tile2i pmin = area.tmin.shifted(-2, -2);
+        tile2i pmax = area.tmax.shifted(2, 2);
+        map_tiles_update_region_canals(pmin, pmax);
+    }
+    
     return items_placed;
 }
 
@@ -128,18 +131,26 @@ bool building_irrigation_ditch::preview::is_road_tile_for_canal(tile2i tile, int
 }
 
 bool building_irrigation_ditch::preview::map_is_straight_road_for_canal(tile2i tile) const {
-    int road_tiles_x = is_road_tile_for_canal(tile.shifted(1, 0), 2) | is_road_tile_for_canal(tile.shifted(-1, 0), 2);
-    int road_tiles_y = is_road_tile_for_canal(tile.shifted(0, -1), 1) | is_road_tile_for_canal(tile.shifted(0, 1), 1);
+    bool road_tiles_x = is_road_tile_for_canal(tile.shifted(1, 0), 2) || is_road_tile_for_canal(tile.shifted(-1, 0), 2);
+    bool road_tiles_y = is_road_tile_for_canal(tile.shifted(0, -1), 1) || is_road_tile_for_canal(tile.shifted(0, 1), 1);
 
-    if (road_tiles_x == 2 && road_tiles_y == 0) {
+    if (road_tiles_x && !road_tiles_y) {
         return true;
     }
 
-    if (road_tiles_y == 2 && road_tiles_x == 0) {
+    if (road_tiles_y && !road_tiles_x) {
         return true;
     }
 
     return false;
+}
+
+bool building_irrigation_ditch::preview::ghost_allow_tile(build_planner &p, tile2i tile) const {
+    if (!p.in_progress) {
+        return has_water_source_nearby(tile);
+    }
+
+    return building_planer_renderer::ghost_allow_tile(p, tile);
 }
 
 void building_irrigation_ditch::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
@@ -152,8 +163,14 @@ void building_irrigation_ditch::preview::ghost_preview(build_planner &planer, pa
         if (!planer.total_cost) // ???
             blocked = true;
     } else {
+        // Check if starting point has water source nearby
+        if (!has_water_source_nearby(start)) {
+            blocked = true;
+            planer.set_warning("#irrigation_ditch_needs_water_source");
+        }
+        
         if (map_terrain_is(end, TERRAIN_ROAD)) {               // starting new aqueduct line
-            blocked = !map_is_straight_road_for_canal(end); // can't start over a road curve!
+            blocked = !map_is_straight_road_for_canal(end) || blocked; // can't start over a road curve!
             if (map_property_is_plaza_or_earthquake(end))      // todo: plaza not allowing aqueducts? maybe?
                 blocked = true;
         } else if (map_terrain_is(end, TERRAIN_NOT_CLEAR)
@@ -174,6 +191,15 @@ void building_irrigation_ditch::preview::ghost_preview(build_planner &planer, pa
         int canal_image = get_canal_image(end.grid_offset(), is_road, 0, img);
         planer.draw_building_ghost(ctx, canal_image, pixel);
     }
+}
+
+int building_irrigation_ditch::preview::can_place(build_planner &p, tile2i tile, tile2i end, int state) const {
+    // Check if starting point has water source nearby
+    if (!has_water_source_nearby(tile)) {
+        p.set_warning("#irrigation_ditch_needs_water_source");
+        return CAN_NOT_PLACE;
+    }
+    return state;
 }
 
 void building_irrigation_ditch::on_place_checks() {

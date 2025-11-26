@@ -758,14 +758,12 @@ void build_planner::update_requirements_check() {
     }
     if ((!!(special_flags & e_building_flag::Road) && !!additional_req_param1) == true) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_ROAD)) {
-            //immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if ((!!(special_flags & e_building_flag::Canals) && !!additional_req_param1) == true) {
         if (!map_terrain_is(end.grid_offset(), TERRAIN_CANAL)) {
-            //immediate_warning_id = additional_req_param2;
             can_place = CAN_NOT_PLACE;
         }
     }

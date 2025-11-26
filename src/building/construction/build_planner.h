@@ -69,7 +69,6 @@ class build_planner {
     void set_tile_size(int row, int column, int size);
 
     void set_flag(uint64_t flags, int param1 = -1, int param2 = -1, int param3 = -1);
-    void set_warning(xstring warning) { immediate_warning_id = warning; }
     void update_obstructions_check();
     void update_requirements_check();
     void update_special_case_orientations_check();
@@ -83,6 +82,8 @@ class build_planner {
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
+    void set_warning(xstring warning) { immediate_warning_id = warning; }
+
     int additional_req_param1 = -1;
 
     e_building_type build_type;
