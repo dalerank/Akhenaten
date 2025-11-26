@@ -2,7 +2,8 @@
 
 #include "core/profiler.h"
 #include "core/calc.h"
-#include "building/building_health.h"
+#include "building/building_apothecary.h"
+#include "building/building_mortuary.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
 #include "city/city.h"
