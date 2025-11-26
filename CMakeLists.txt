@@ -660,6 +660,7 @@ FetchContent_MakeAvailable(stb)
 
 if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
+    set(FETCHCONTENT_SOURCE_DIR_imgui "${FETCHCONTENT_SOURCE_DIR_IMGUI}")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI TRUE)
 endif()
 
