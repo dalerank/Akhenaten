@@ -54,7 +54,7 @@ public:
     virtual int add_resource(e_resource resource, int amount, bool force) override;
     virtual int freespace() const override;
     bool is_accepting(e_resource resource);
-    int is_not_accepting(e_resource resource);
+    bool is_not_accepting(e_resource resource);
     granary_getting_result find_storage_for_getting();
     int total_stored() const override;
     int capacity_stored() const { return 3200; }

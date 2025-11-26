@@ -78,7 +78,7 @@ bool building_granary::is_getting(e_resource resource) {
     }
 }
 
-int building_granary::is_not_accepting(e_resource resource) {
+bool building_granary::is_not_accepting(e_resource resource) {
     return !((is_accepting(resource) || is_getting(resource)));
 }
 
@@ -215,6 +215,9 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
         }
     }
     // deliver to center of granary
+    if (min_building_id == 0) {
+        return 0;
+    }
     building* min = building_get(min_building_id);
     tile2i granary_tile = min->tile.shifted(1, 1);
     map_point_store_result(granary_tile, *dst);
@@ -261,6 +264,9 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
         }
     }
 
+    if (min_building_id == 0) {
+        return 0;
+    }
     building* min = building_get(min_building_id);
     tile2i storing_tile = min->tile.shifted(1, 1);
     map_point_store_result(storing_tile, *dst);
