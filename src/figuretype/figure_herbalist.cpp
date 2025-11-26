@@ -85,6 +85,12 @@ int figure_herbalist::provide_service() {
                 base_terrain_risk = std::max(base_terrain_risk, 30);
             }
             
+            if (map_terrain_exists_tile_in_radius_with_type(b->tile, b->size, 1, TERRAIN_FLOODPLAIN)) {
+                base_terrain_risk = std::max(base_terrain_risk, 40);
+            } else if (map_terrain_exists_tile_in_radius_with_type(b->tile, b->size, 2, TERRAIN_FLOODPLAIN)) {
+                base_terrain_risk = std::max(base_terrain_risk, 30);
+            }
+            
             int new_risk = std::max(base_terrain_risk, (int)b->malaria_risk - 30);
             b->malaria_risk = (uint8_t)calc_bound(new_risk, 0, 100);
         }

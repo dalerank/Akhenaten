@@ -108,7 +108,8 @@ top_menu_widget = {
 		invasion_point  : menu_item({text:"xxx Inv. points", parameter: e_debug_render_invasion_point})
 		tile_random     : menu_item({text:"xxx Tile random", parameter: e_debug_render_tile_random})
 		soldier_strength  : menu_item({text:"xxx Sld. strength", parameter: e_debug_render_soldier_strength})
-	},
+		malaria_risk     : menu_item({text:"xxx Malaria risk", parameter: e_debug_render_malaria_risk})
+	}
 
 	ui : {
 		background 		: dummy({size:[sw(0), 30], fill_width: true}),

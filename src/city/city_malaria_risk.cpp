@@ -30,6 +30,12 @@ void building_update_malaria_risk(void) {
         } else if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 2, TERRAIN_WATER)) {
             base_terrain_risk = std::max(base_terrain_risk, 30); // Минимум 30 для воды в радиусе 2
         }
+
+        if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 1, TERRAIN_FLOODPLAIN)) {
+            base_terrain_risk = std::max(base_terrain_risk, 40); // Минимум 40 для пойменных земель рядом
+        } else if (map_terrain_exists_tile_in_radius_with_type(b.tile, b.size, 2, TERRAIN_FLOODPLAIN)) {
+            base_terrain_risk = std::max(base_terrain_risk, 30); // Минимум 30 для пойменных земель в радиусе 2
+        }
         
         // Применяем снижение от аптеки/водоснабжения, но не ниже базового риска от terrain
         auto house = b.dcast_house();
