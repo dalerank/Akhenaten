@@ -441,25 +441,31 @@ building_burning_ruin = {
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
 }
 
-building_granary = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:99 },
-    base : { pack:PACK_GENERAL, id:99 },
-    work : { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-    resources : {pack:PACK_GENERAL, id:99, offset:2},
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
+building_granary {
+  animations {
+    preview { pack:PACK_GENERAL, id:99 },
+    base { pack:PACK_GENERAL, id:99 },
+    work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
+    resources {pack:PACK_GENERAL, id:99, offset:2},
+    minimap {pack:PACK_GENERAL, id:149, offset:160},
   }
+
   min_houses_coverage : 100
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
-  meta : { help_id: 3, text_id: 98 }
+  meta { help_id: 3, text_id: 98 }
   building_size : 4
-  planner_update_rule : {
+  planner_update_rule {
     roads : true
   }
-  cost: [ 50, 70, 100, 200, 300 ]
-  laborers:[20], fire_risk:[0], damage_risk: [5]
-  desirability : { value:[-8], step:[1], step_size:[2], range: [4] }
-  begin_spot_pos : [110, -74]
+  cost [ 50, 70, 100, 200, 300 ]
+  laborers[20]
+  fire_risk[0]
+  damage_risk[5]
+  desirability { value[-8], step[1], step_size[-2], range[4] }
+  begin_spot_pos [110, -74]
+  min_workers_percent_for_tasks : 50
+  min_workers_percent_for_accepting :75
+  min_workers_percent_for_getting : 100
 }
 
 building_shrine_osiris = {

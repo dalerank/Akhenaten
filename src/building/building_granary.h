@@ -32,6 +32,9 @@ public:
 
     struct static_params : building_static_params {
         vec2i begin_spot_pos;
+        uint8_t min_workers_percent_for_tasks;
+        uint8_t min_workers_percent_for_accepting;
+        uint8_t min_workers_percent_for_getting;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -39,6 +42,7 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
+    virtual void on_post_load() override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GRANARY; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
@@ -67,7 +71,8 @@ public:
     template<e_building_type T>
     int better_getting_storage();
 };
-ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos);
+ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos,
+    min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting);
 
 int building_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int force_on_stockpile, int* understaffed, tile2i* dst);
 int building_getting_granary_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i* dst);
