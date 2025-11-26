@@ -725,7 +725,7 @@ public:
     inline int need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
     figure *get_figure_in_slot(int i);
 
-    inline bool has_figure_of_type(int i, e_figure_type _type) { return base.has_figure_of_type(i, _type);  }
+    inline bool has_figure_of_type(int i, e_figure_type _type) const { return base.has_figure_of_type(i, _type);  }
     inline figure *create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot = BUILDING_SLOT_SERVICE) { return base.create_figure_with_destination(_type, destination, created_action, slot); }
     inline figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) { return base.create_roaming_figure(_type, created_action, slot); }
     inline figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) { return base.create_figure_generic(_type, created_action, slot, created_dir); }

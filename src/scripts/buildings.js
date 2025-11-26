@@ -2442,6 +2442,11 @@ building_hunting_lodge = {
   cost: [ 5, 10, 25, 40, 60 ]
   desirability : { value:[-4], step:[1], step_size:[2], range: [4] }
   laborers:[6], fire_risk:[5], damage_risk: [2]
+  spawn_delay_100_percent : 1
+  spawn_delay_75_percent : 5
+  spawn_delay_50_percent : 10
+  spawn_delay_25_percent : 15
+  spawn_delay_default : 30
 }
 
 building_scribal_school = {

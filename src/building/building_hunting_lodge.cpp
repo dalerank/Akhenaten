@@ -34,17 +34,19 @@ int building_hunting_lodge::stored_amount(e_resource r) const {
 }
 
 int building_hunting_lodge::spawn_timer() {
+    const auto &params = current_params();
     int pct_workers = worker_percentage();
+    
     if (pct_workers >= 100) {
-        return 1;
+        return params.spawn_delay_100_percent;
     } else if (pct_workers >= 75) {
-        return 5;
+        return params.spawn_delay_75_percent;
     } else if (pct_workers >= 50) {
-        return 10;
+        return params.spawn_delay_50_percent;
     } else if (pct_workers >= 25) {
-        return 15;
+        return params.spawn_delay_25_percent;
     } else if (pct_workers >= 1) {
-        return 30;
+        return params.spawn_delay_default;
     } else {
         return -1;
     }
@@ -82,8 +84,7 @@ void building_hunting_lodge::spawn_figure() {
 
     if (can_spawn_ostrich_hunter()) {
         base.figure_spawn_delay = 10;
-        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
-        base.set_figure(BUILDING_SLOT_HUNTER, f);
+        figure* f = create_figure_generic(FIGURE_OSTRICH_HUNTER, ACTION_8_RECALCULATE, BUILDING_SLOT_HUNTER, DIR_4_BOTTOM_LEFT);
     }
 
     figure* fcart = base.common_spawn_goods_output_cartpusher();
@@ -119,5 +120,13 @@ void building_hunting_lodge::update_graphic() {
 }
 
 bool building_hunting_lodge::can_play_animation() const {
-    return (worker_percentage() > 50);
+    if (!building_industry::can_play_animation()) {
+        return false;
+    }
+
+    if (worker_percentage() <= 50) {
+        return false;
+    }
+    
+    return (base.stored_amount_first > 0 || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
 }
