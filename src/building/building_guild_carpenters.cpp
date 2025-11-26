@@ -5,13 +5,15 @@
 #include "core/random.h"
 #include "city/city_resource.h"
 #include "building/monument_mastaba.h"
+#include "building/building_statue.h"
 #include "city/city_buildings.h"
 #include "figuretype/figure_carpenter.h"
+#include "city/city.h"
 #include <iostream>
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
-declare_console_command(addtimber, game_cheat_add_resource<RESOURCE_TIMBER>);
+declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 void building_carpenters_guild::update_graphic() {
     const xstring &animkey = can_play_animation() ? animkeys().work : animkeys().none;
@@ -60,6 +62,11 @@ void building_carpenters_guild::spawn_figure() {
         return;
     }
 
+    // Check if TIMBER resource is available (not mothballed)
+    if (g_city.resource.is_mothballed(RESOURCE_TIMBER)) {
+        return;
+    }
+
     building *monument = buildings_valid_first([&] (building &b) {
         if (!b.is_monument() || !building_monument_is_unfinished(&b)) {
             return false;
@@ -73,40 +80,43 @@ void building_carpenters_guild::spawn_figure() {
     });
 
     if (monument) {
-        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)ACTION_10_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
+        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, monument, (e_figure_action)ACTION_10_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
         monument->dcast()->add_workers(f->id);
         f->wait_ticks = random_short() % 30; // ok
         return;
     }
 
-    // If no monument is found, create a stonemason figure with a statue destination
-    //int min_service_value = 9999;
-    //building_impl *min_service_statue = nullptr;
-    //buildings_valid_do([&] (building &b) {
-    //    const auto statue = b.dcast_statue();
-    //    if (!statue) {
-    //        return;
-    //    }
-    //
-    //    const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
-    //    if (has_worker) {
-    //        return;
-    //    }
-    //
-    //    const int value = statue->service();
-    //    if (value < min_service_value) {
-    //        min_service_value = value;
-    //        min_service_statue = statue;
-    //    }
-    //});
-    //
-    //if (min_service_statue) {
-    //    auto f = base.create_figure_with_destination(FIGURE_STONEMASON, &min_service_statue->base, (e_figure_action)FIGURE_ACTION_30_CARPENTER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
-    //    min_service_statue->add_workers(f->id);
-    //    f->wait_ticks = random_short() % 30;
-    //    f->data.stonemason.destination_bid = min_service_statue->id();
-    //    return;
-    //}
+    // If no monument is found, create a carpenter figure with a statue/garden destination
+    int min_service_value = 9999;
+    building_impl *min_service_statue = nullptr;
+    buildings_valid_do([&] (building &b) {
+        const auto statue = b.dcast_statue();
+        if (!statue) {
+            return;
+        }
+
+        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
+        if (has_worker) {
+            return;
+        }
+
+        const int value = statue->service();
+        if (value < min_service_value) {
+            min_service_value = value;
+            min_service_statue = statue;
+        }
+    });
+
+    if (min_service_statue) {
+        auto f = base.create_figure_with_destination(FIGURE_CARPENTER, &min_service_statue->base, (e_figure_action)ACTION_30_CARPENTER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        min_service_statue->add_workers(f->id);
+        f->wait_ticks = random_short() % 30;
+        auto carpenter = smart_cast<figure_carpenter>(f);
+        if (carpenter) {
+            carpenter->runtime_data().destination_bid = min_service_statue->id();
+        }
+        return;
+    }
 }
 
 bool building_carpenters_guild::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
