@@ -341,9 +341,13 @@ void building_granary::bless() {
         if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
             continue;
 
+        building_granary* granary = b->dcast_granary();
+        if (!granary)
+            continue;
+
         int total_stored = 0;
         for (e_resource r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; ++r) {
-            total_stored += this->amount(r);
+            total_stored += granary->amount(r);
         }
 
         if (total_stored < min_stored) {
