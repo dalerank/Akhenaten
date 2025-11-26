@@ -501,32 +501,67 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
 endif()
 
-# Configure freetype build options before FetchContent_MakeAvailable
-# First build freetype without harfbuzz
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(FT_DISABLE_ZLIB OFF CACHE BOOL "" FORCE)
-set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
-set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "" FORCE)  # Build freetype first without harfbuzz
-# Disable harfbuzz support completely in freetype
-set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
-# Ensure harfbuzz is not found during freetype build
-set(HarfBuzz_FOUND FALSE CACHE BOOL "" FORCE)
-set(HARFBUZZ_FOUND FALSE CACHE BOOL "" FORCE)
-
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
     GIT_TAG        ${FREETYPE_VERSION}
 )
 
-FetchContent_MakeAvailable(freetype)
-set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
-set(FREETYPE_LIBRARY freetype)
-set(FREETYPE_INCLUDE_DIR "${FREETYPE_SOURCE_DIR}/include")
-set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIR}" CACHE INTERNAL "Path to freetype include directory" FORCE)
+FetchContent_GetProperties(freetype)
+if(NOT freetype_POPULATED)
+    FetchContent_Populate(freetype)
+endif()
 
-set(FREETYPE_ROOT "${FREETYPE_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
-set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+# FetchContent_Populate creates freetype_SOURCE_DIR automatically
+set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
+set(FREETYPE_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/freetype")
+set(FREETYPE_BUILD_DIR "${FREETYPE_BUILD_BASE_DIR}/build")
+set(FREETYPE_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/freetype")
+set(FREETYPE_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+
+# Create build directory in prebuild_libs/freetype
+file(MAKE_DIRECTORY ${FREETYPE_BUILD_BASE_DIR})
+file(MAKE_DIRECTORY ${FREETYPE_BUILD_DIR})
+file(MAKE_DIRECTORY ${FREETYPE_INSTALL_DIR})
+
+# Prepare variables for BuildFreetype.cmake
+set(FREETYPE_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildFreetype.cmake")
+
+# Build freetype using execute_process (runs during configuration phase)
+message(STATUS "Building freetype static library...")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} 
+        -DFREETYPE_VERSION=${FREETYPE_VERSION}
+        -DFREETYPE_SOURCE_DIR=${FREETYPE_SOURCE_DIR}
+        -DFREETYPE_BUILD_DIR=${FREETYPE_BUILD_DIR}
+        -DFREETYPE_INSTALL_DIR=${FREETYPE_INSTALL_DIR}
+        -DFREETYPE_BUILD_CONFIG=${FREETYPE_BUILD_CONFIG}
+        -DFREETYPE_IS_MSVC=${MSVC}
+        -DZLIB_ROOT=${ZLIB_ROOT}
+        -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+        -P ${FREETYPE_BUILD_SCRIPT}
+    WORKING_DIRECTORY ${FREETYPE_BUILD_BASE_DIR}
+    RESULT_VARIABLE FREETYPE_BUILD_RESULT
+)
+
+# Set freetype library path - use absolute path to avoid issues with find_package
+if(MSVC)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/freetyped.lib")
+    else()
+        set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/freetype.lib")
+    endif()
+else()
+    set(FREETYPE_LIBRARY "${FREETYPE_INSTALL_DIR}/libfreetype.a")
+endif()   
+
+# Convert to absolute path to ensure correct linking
+get_filename_component(FREETYPE_LIBRARY "${FREETYPE_LIBRARY}" ABSOLUTE)
+set(FREETYPE_INCLUDE_DIR "${FREETYPE_INSTALL_DIR}/include/freetype2")
+set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIR}" CACHE PATH "Path to freetype include directory" FORCE)
+set(FREETYPE_ROOT "${FREETYPE_INSTALL_DIR}" CACHE PATH "Path to freetype installation" FORCE)
+set(FREETYPE_FOUND TRUE CACHE BOOL "Whether freetype was found" FORCE)
+set(FREETYPE_LIBRARIES "${FREETYPE_LIBRARY}" CACHE FILEPATH "Path to freetype library" FORCE)
 
 #
 # freetype section end
@@ -542,45 +577,69 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
 endif()
 
-# Configure harfbuzz build options before FetchContent_MakeAvailable
-set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-# Set freetype variables for harfbuzz to find
-set(Freetype_ROOT ${FREETYPE_SOURCE_DIR} CACHE PATH "" FORCE)
-set(Freetype_INCLUDE_DIR ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
-set(Freetype_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
-set(Freetype_LIBRARY ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
-# Add freetype to CMAKE_PREFIX_PATH so harfbuzz can find it via find_package
-set(CMAKE_PREFIX_PATH "${FREETYPE_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
-
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
     GIT_TAG        ${HARFBUZZ_VERSION}
 )
 
-FetchContent_MakeAvailable(harfbuzz)
-
-# Set harfbuzz variables for linking
-set(HARFBUZZ_SOURCE_DIR "${harfbuzz_SOURCE_DIR}")
-if(TARGET harfbuzz::harfbuzz)
-    set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz)
-    get_target_property(HARFBUZZ_INCLUDE_DIR_TEMP harfbuzz::harfbuzz INTERFACE_INCLUDE_DIRECTORIES)
-    if(HARFBUZZ_INCLUDE_DIR_TEMP)
-        list(GET HARFBUZZ_INCLUDE_DIR_TEMP 0 HARFBUZZ_INCLUDE_DIR)
-    else()
-        set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
-    endif()
-else()
-    # Fallback
-    set(HARFBUZZ_LIBRARY harfbuzz)
-    set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
+FetchContent_GetProperties(harfbuzz)
+if(NOT harfbuzz_POPULATED)
+    FetchContent_Populate(harfbuzz)
 endif()
 
-set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_INCLUDE_DIR}" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
-set(HARFBUZZ_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
-set(HarfBuzz_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source (alternative name)" FORCE)
-set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
+# FetchContent_Populate creates harfbuzz_SOURCE_DIR automatically
+set(HARFBUZZ_SOURCE_DIR "${harfbuzz_SOURCE_DIR}")
+set(HARFBUZZ_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/harfbuzz")
+set(HARFBUZZ_BUILD_DIR "${HARFBUZZ_BUILD_BASE_DIR}/build")
+set(HARFBUZZ_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/harfbuzz")
+set(HARFBUZZ_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+
+# Create build directory in prebuild_libs/harfbuzz
+file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_BASE_DIR})
+file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_DIR})
+file(MAKE_DIRECTORY ${HARFBUZZ_INSTALL_DIR})
+
+# Prepare variables for BuildHarfbuzz.cmake
+set(HARFBUZZ_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildHarfbuzz.cmake")
+
+# Build harfbuzz using execute_process (runs during configuration phase)
+message(STATUS "Building harfbuzz static library...")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} 
+        -DHARFBUZZ_VERSION=${HARFBUZZ_VERSION}
+        -DHARFBUZZ_SOURCE_DIR=${HARFBUZZ_SOURCE_DIR}
+        -DHARFBUZZ_BUILD_DIR=${HARFBUZZ_BUILD_DIR}
+        -DHARFBUZZ_INSTALL_DIR=${HARFBUZZ_INSTALL_DIR}
+        -DHARFBUZZ_BUILD_CONFIG=${HARFBUZZ_BUILD_CONFIG}
+        -DHARFBUZZ_IS_MSVC=${MSVC}
+        -DFREETYPE_ROOT=${FREETYPE_ROOT}
+        -DFREETYPE_INCLUDE_DIR=${FREETYPE_INCLUDE_DIRS}
+        -DFREETYPE_LIBRARY=${FREETYPE_LIBRARY}
+        -P ${HARFBUZZ_BUILD_SCRIPT}
+    WORKING_DIRECTORY ${HARFBUZZ_BUILD_BASE_DIR}
+    RESULT_VARIABLE HARFBUZZ_BUILD_RESULT
+)
+
+# Set harfbuzz library path - use absolute path to avoid issues with find_package
+if(MSVC)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/harfbuzzd.lib")
+    else()
+        set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/harfbuzz.lib")
+    endif()
+else()
+    set(HARFBUZZ_LIBRARY "${HARFBUZZ_INSTALL_DIR}/libharfbuzz.a")
+endif()   
+
+# Convert to absolute path to ensure correct linking
+get_filename_component(HARFBUZZ_LIBRARY "${HARFBUZZ_LIBRARY}" ABSOLUTE)
+set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_INSTALL_DIR}/include/harfbuzz")
+set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_INCLUDE_DIR}" CACHE PATH "Path to harfbuzz include directory" FORCE)
+set(HARFBUZZ_ROOT "${HARFBUZZ_INSTALL_DIR}" CACHE PATH "Path to harfbuzz installation" FORCE)
+set(HarfBuzz_ROOT "${HARFBUZZ_INSTALL_DIR}" CACHE PATH "Path to harfbuzz installation (alternative name)" FORCE)
+set(HARFBUZZ_FOUND TRUE CACHE BOOL "Whether harfbuzz was found" FORCE)
+set(HARFBUZZ_LIBRARIES "${HARFBUZZ_LIBRARY}" CACHE FILEPATH "Path to harfbuzz library" FORCE)
 
 #
 # harfbuzz section end
@@ -1058,11 +1117,12 @@ endif()
 # Apple specific End
 #
 
+target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+message(STATUS "freetype: Linked from ${FREETYPE_INSTALL_DIR}")
 
-# Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
-target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
+# Link harfbuzz after freetype
 target_include_directories(${GAME} PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
-message(STATUS "harfbuzz: Linked via FetchContent from ${HARFBUZZ_SOURCE_DIR}")
+message(STATUS "harfbuzz: Linked from ${HARFBUZZ_INSTALL_DIR}")
 
 set(ZLIB_ROOT ${ZLIB_ROOT} CACHE PATH "" FORCE)
 set(CMAKE_PREFIX_PATH "${ZLIB_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
@@ -1127,13 +1187,11 @@ target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
 message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
 
-target_link_libraries(${GAME} ${FREETYPE_LIBRARY})
-target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
-message(STATUS "freetype: Linked via FetchContent from ${FREETYPE_SOURCE_DIR}")
-
 target_link_libraries (${GAME}
                         ${SDL2_LIBRARY} 
                         ${SDL2_MAIN_LIBRARY}
+                        ${FREETYPE_LIBRARY}
+                        ${HARFBUZZ_LIBRARY}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
                             $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
