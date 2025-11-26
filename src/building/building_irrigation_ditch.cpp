@@ -8,12 +8,47 @@
 #include "grid/terrain.h"
 #include "grid/property.h"
 #include "grid/canals.h"
+#include "grid/building.h"
 #include "city/city_buildings.h"
 #include "city/city.h"
 #include "game/undo.h"
 #include "js/js_game.h"
 
+#include <array>
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_irrigation_ditch);
+
+static bool has_water_source_nearby(tile2i tile) {
+    // Check for water (river/lake) directly adjacent
+    if (map_terrain_count_directly_adjacent_with_type(tile, TERRAIN_WATER) > 0) {
+        return true;
+    }
+
+    // Check for water lift building nearby (within 1 tile radius)
+    std::array<vec2i, 4> adjacent_offsets = { vec2i(0, 1), vec2i(1, 0), vec2i(0, -1), vec2i(-1, 0) };
+    for (const auto &offset : adjacent_offsets) {
+        tile2i adjacent_tile = tile.shifted(offset);
+        if (map_terrain_is(adjacent_tile, TERRAIN_BUILDING)) {
+            building *b = building_at(adjacent_tile);
+            if (b && b->type == BUILDING_WATER_LIFT) {
+                return true;
+            }
+        }
+    }
+
+    // Check for existing canal with water nearby
+    for (const auto &offset : adjacent_offsets) {
+        tile2i adjacent_tile = tile.shifted(offset);
+        if (map_terrain_is(adjacent_tile, TERRAIN_CANAL)) {
+            int water_level = map_canal_at(adjacent_tile);
+            if (water_level > 0) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 int building_construction_place_canal(bool measure_only, tile2i start, tile2i end) {
     game_undo_restore_map(0);
@@ -37,7 +72,26 @@ routed_building_result building_construction_place_canal_for_lift(bool measure_o
 
 
 bool building_irrigation_ditch::preview::can_construction_start(build_planner &p, tile2i start) const {
-    return map_routing_calculate_distances_for_building(ROUTED_BUILDING_CANALS, start);
+    // First check if routing is possible
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_CANALS, start)) {
+        return false;
+    }
+
+    // Check if starting point is valid (road, canal, floodplain, or clear land)
+    bool is_valid_start = map_terrain_is(start, TERRAIN_ROAD) 
+                       || map_terrain_is(start, TERRAIN_CANAL)
+                       || map_terrain_is(start, TERRAIN_FLOODPLAIN)
+                       || (!map_terrain_is(start, TERRAIN_NOT_CLEAR) && !map_terrain_is(start, TERRAIN_WATER));
+    
+    if (!is_valid_start) {
+        return false;
+    }
+
+    if (!has_water_source_nearby(start)) {
+        return false;
+    }
+
+    return true;
 }
 
 int building_irrigation_ditch::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
