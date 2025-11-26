@@ -10,7 +10,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_jewels_workshop);
 
 bool building_jewels_workshop::can_play_animation() const {
-    if (base.stored_amount() < 100) {
+    if (base.stored_amount(RESOURCE_GEMS) < 100) {
         return false;
     }
 
