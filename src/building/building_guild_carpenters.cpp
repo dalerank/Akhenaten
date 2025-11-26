@@ -25,7 +25,7 @@ void building_carpenters_guild::on_create(int orientation) {
 }
 
 bool building_carpenters_guild::can_spawn_carpenter(int max_gatherers_per_building) {
-    bool has_free_man = (base.get_figures_number(FIGURE_STONEMASON) < runtime_data().max_workers);
+    bool has_free_man = (base.get_figures_number(FIGURE_CARPENTER) < runtime_data().max_workers);
     if (!has_free_man) {
         return false;
     }
@@ -69,7 +69,7 @@ void building_carpenters_guild::spawn_figure() {
             return false;
         }
 
-        return building_monument_need_stonemason(&b);
+        return building_monument_need_carpenter(&b);
     });
 
     if (monument) {

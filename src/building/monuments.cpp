@@ -772,6 +772,36 @@ bool building_monument_need_stonemason(const building *b) {
     return false;
 }
 
+bool building_monument_need_carpenter(const building *b) {
+    if (!building_is_monument(b->type)) {
+        return false;
+    }
+
+    auto &monumentd = ((building*)b)->dcast_monument()->runtime_data();
+    if (monumentd.phase == MONUMENT_FINISHED) {
+        return false;
+    }
+
+    int phase = monumentd.phase;
+    
+    // Check if monument needs TIMBER for current phase
+    int needs_timber = building_monument_needs_resources(b->type, RESOURCE_TIMBER, phase);
+    if (needs_timber <= 0) {
+        return false;
+    }
+
+    // Count existing carpenters
+    int works_carpenters = 0;
+    for (auto &id : monumentd.workers) {
+        figure *f = id > 0 ? figure_get(id) : nullptr;
+        works_carpenters += (f && f->type == FIGURE_CARPENTER) ? 1 : 0;
+    }
+
+    // Carpenters are needed if monument needs TIMBER and we don't have enough carpenters
+    // Typically need 1 carpenter for scaffolding construction
+    return works_carpenters < 1;
+}
+
 bool building_monument_need_bricklayers(const building *b) {
     if (!building_is_monument(b->type)) {
         return false;
