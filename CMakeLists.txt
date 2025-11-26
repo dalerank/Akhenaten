@@ -645,6 +645,12 @@ set(HARFBUZZ_LIBRARIES "${HARFBUZZ_LIBRARY}" CACHE FILEPATH "Path to harfbuzz li
 # harfbuzz section end
 #
 
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/stb-src" AND IS_DIRECTORY "${LOCAL_DEPS_ROOT}/stb-src")
+    set(FETCHCONTENT_SOURCE_DIR_STB "${LOCAL_DEPS_ROOT}/stb-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_STB TRUE)
+endif()
+
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
@@ -652,7 +658,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stb)
 
-set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_IMGUI TRUE)
