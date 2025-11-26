@@ -56,6 +56,8 @@ class figure_animal;
 class figure_ballista;
 class figure_market_buyer;
 class figure_bricklayer;
+class figure_ferry_boat;
+class figure_carpenter;
 
 struct animation_t;
 struct figure_static_params;
@@ -243,6 +245,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(ballista)
     ALLOW_SMART_CAST_FIGURE(market_buyer)
     ALLOW_SMART_CAST_FIGURE(bricklayer)
+    ALLOW_SMART_CAST_FIGURE(ferry_boat)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -479,6 +482,7 @@ struct figure_static_params {
     int8_t defense_value;
     int8_t missile_defense_value;
     uint16_t corpse_time_delay;
+    bool render_on_flat_tiles;
 
     static void set(e_figure_type, const figure_static_params &);
     static const figure_static_params &get(e_figure_type);
@@ -488,7 +492,7 @@ struct figure_static_params {
 };
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds, 
     max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, category, attack_value, defense_value,
-    missile_defense_value, corpse_time_delay)
+    missile_defense_value, corpse_time_delay, render_on_flat_tiles)
 
 class figure_impl {
 public:
@@ -549,11 +553,13 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(soldier)
     ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
     ALLOW_SMART_CAST_FIGURE_I(fishing_point)
+    ALLOW_SMART_CAST_FIGURE_I(ferry_boat)
     ALLOW_SMART_CAST_FIGURE_I(caravan_donkey)
     ALLOW_SMART_CAST_FIGURE_I(trade_caravan)
     ALLOW_SMART_CAST_FIGURE_I(warship)
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
+    ALLOW_SMART_CAST_FIGURE_I(carpenter)
     ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
     ALLOW_SMART_CAST_FIGURE_I(enemy_spearman)
@@ -636,12 +642,14 @@ GENERATE_SMART_CAST_FIGURE(dancer)
 GENERATE_SMART_CAST_FIGURE(labor_seeker)
 GENERATE_SMART_CAST_FIGURE(worker)
 GENERATE_SMART_CAST_FIGURE(fishing_boat)
+GENERATE_SMART_CAST_FIGURE(ferry_boat)
 GENERATE_SMART_CAST_FIGURE(soldier)
 GENERATE_SMART_CAST_FIGURE(warship)
 GENERATE_SMART_CAST_FIGURE(caravan_donkey)
 GENERATE_SMART_CAST_FIGURE(trade_caravan)
 GENERATE_SMART_CAST_FIGURE(transport_ship)
 GENERATE_SMART_CAST_FIGURE(stonemason)
+GENERATE_SMART_CAST_FIGURE(carpenter)
 GENERATE_SMART_CAST_FIGURE(enemy)
 GENERATE_SMART_CAST_FIGURE(enemy_archer)
 GENERATE_SMART_CAST_FIGURE(enemy_spearman)

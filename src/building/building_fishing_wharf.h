@@ -12,8 +12,15 @@ public:
         virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
     };
 
+    struct static_params : public building_static_params {
+        uint16_t max_storage;
+        uint8_t wait_time_multiplier;  // Множитель для расчета времени ожидания
+        uint8_t wait_time_base;        // Базовое значение для расчета времени ожидания
+    } BUILDING_STATIC_DATA_T;
+
     struct runtime_data_t : public building_wharf::runtime_data_t {
         bool has_fish;
+        uint8_t no_fishing_points_warning_shown;  // Counter to limit warning frequency
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -30,3 +37,4 @@ public:
     virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
+ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage, wait_time_multiplier, wait_time_base)

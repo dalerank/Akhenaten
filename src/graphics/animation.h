@@ -86,6 +86,26 @@ struct animations_t {
         auto it = data.find(key);
         return (it == data.end()) ? dummy : it->second;
     }
+
+    const animation_t &rand() const {
+        if (data.empty()) {
+            return dummy;
+        }
+        int rand_index = ::rand() % data.size();
+        auto it = data.cbegin();
+        std::advance(it, rand_index);
+        return it->second;
+    }
+
+    const animation_t &at(uint16_t index) const {
+        if (data.empty()) {
+            return dummy;
+        }
+        index = index % data.size();
+        auto it = data.cbegin();
+        std::advance(it, index);
+        return it->second;
+    }
 };
 
 template<> inline void archive::r<animations_t>(pcstr name, animations_t &v) { r(name, v.data); v.initialize(); }

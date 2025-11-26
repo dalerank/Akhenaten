@@ -17,6 +17,7 @@ overlay_menu {
 			ids[ 
 			    OVERLAY_FIRE,
 				OVERLAY_DAMAGE,
+				OVERLAY_MALARIA_RISK,
 				OVERLAY_CRIME,
 				OVERLAY_CRIMINAL,
 				OVERLAY_NATIVE,
@@ -121,6 +122,7 @@ overlay_menu {
 overlay_menu_widget {
 	pos [-85, 20]
 	ui {
+		background : dummy({})
 		category_item : dummy({pos[0, 24], size[160, 20]})
 		submenu_image : image({pos[-17, 6], pack:PACK_GENERAL, id:158, enabled:false})
 		submenu_item  : dummy({pos[-185, 24], size[160, 20]}) 

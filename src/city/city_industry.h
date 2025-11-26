@@ -4,12 +4,6 @@
 #include "graphics/graphics.h"
 #include "grid/point.h"
 
-// int get_farm_image(int grid_offset);
-// int get_crops_image(int type, int growth);
-// void draw_ph_crops(int type, int progress, int grid_offset, int x, int y, color color_mask);
-
-constexpr uint32_t MAX_PROGRESS_FARM_PH = 2000;
-
 struct city_industry_t {
     void update_production();
 };

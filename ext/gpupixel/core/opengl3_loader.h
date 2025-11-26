@@ -17,6 +17,15 @@
 //   https://github.com/ocornut/imgui/issues/4445
 //-----------------------------------------------------------------------------
 
+// Suppress warnings about OpenGL macro redefinitions (this file intentionally redefines them)
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmacro-redefined"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wbuiltin-macro-redefined"
+#endif
+
 /*
  * This file was generated with gl3w_gen.py, part of imgl3w
  * (hosted at https://github.com/dearimgui/gl3w_stripped)
@@ -876,4 +885,11 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+#endif
+
+// Restore warning settings
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
 #endif

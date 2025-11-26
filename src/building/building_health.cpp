@@ -23,21 +23,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 void building_apothecary::spawn_figure() {
     common_spawn_roamer(FIGURE_HERBALIST, current_params().min_houses_coverage, (e_figure_action)ACTION_62_HERBALIST_ROAMING);
-    //    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_DOCTOR))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(50);
-    //        int spawn_delay = figure_spawn_timer();
-    //        if (spawn_delay == -1)
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            create_roaming_figure(road.x, road.y, FIGURE_DOCTOR);
-    //        }
-    //    }
 }
 
 void building_apothecary::update_graphic() {

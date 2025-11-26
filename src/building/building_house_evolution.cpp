@@ -51,7 +51,7 @@ void building_house::determine_evolve_text() {
         return;
     }
     // food types
-    int foodtypes_required = model.food;
+    int foodtypes_required = model.food_types;
     const int foodtypes_available = std::accumulate(std::begin(housed.foods), std::end(housed.foods), 0, 
                                                     [] (short r, short it) { return r + ((it > 0) ? 1 : 0); });
     constexpr pcstr foodtype_text[] = { "empty", "#one_food_type_need", "#two_food_types_need", "#three_food_types_need" };
@@ -60,7 +60,10 @@ void building_house::determine_evolve_text() {
         return;
     }
 
-    if (!housed.bazaar_access) {
+    // bazaar access is only required for houses that need food or goods
+    // (houses with food_types > 0 or any goods requirement)
+    bool needs_bazaar = (model.food_types + model.pottery + model.linen + model.jewelry + model.beer > 0);
+    if (needs_bazaar && !housed.bazaar_access) {
         housed.evolve_text = "#no_bazaar_access";
         return;
     }

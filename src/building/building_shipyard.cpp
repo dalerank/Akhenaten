@@ -87,7 +87,7 @@ void building_shipyard::spawn_figure() {
     case FIGURE_FISHING_BOAT: 
         if ((params.fishingboat_progress_cost > 0 ) && d.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
-            f->action_state = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
+            f->action_state = ACTION_190_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
             d.progress = 0;

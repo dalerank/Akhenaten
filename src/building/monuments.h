@@ -55,6 +55,7 @@ int building_monument_needs_resources(e_building_type type, e_resource resource,
 int building_monument_needs_bricklayers(e_building_type type, int phase);
 bool building_monument_need_bricklayers(const building *b);
 bool building_monument_need_stonemason(const building *b);
+bool building_monument_need_carpenter(const building *b);
 int building_monument_resource_in_delivery(building *b, int resource_id);
 void building_monument_remove_delivery(int figure_id);
 void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads);

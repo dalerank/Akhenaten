@@ -28,16 +28,11 @@ endif()
 #
 
 set(GAME akhenaten)
-project(${GAME} CXX)
+project(${GAME} C CXX)
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  set(GAME_ARCH_64 TRUE)
-  set(GAME_PROCESSOR_ARCH "x64")
-else()
-  set(GAME_ARCH_64 FALSE)
-  set(GAME_PROCESSOR_ARCH "x86")
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+set(GAME_ARCH_64 TRUE)
+set(GAME_PROCESSOR_ARCH "x64")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include("${CMAKE_MODULE_PATH}/CMakeRC.cmake")
@@ -58,28 +53,6 @@ set(HARFBUZZ_VERSION "7.3.0")
 set(STB_VERSION "5736b15f7ea0ffb08dd38af21067c314d6a3aae9")
 set(LIBPNG_VERSION "v1.6.50")
 set(IMGUI_VERSION "v1.92.2")
-
-# Function to set ZLIB_LIBRARY based on build configuration
-# Note: We set ZLIB_LIBRARY as INTERNAL to prevent it from appearing in Visual Studio project files
-# The actual linking should use the zlibstatic target, not ZLIB_LIBRARY
-function(set_zlib_library zlib_binary_dir)
-    if(MSVC)
-        # Set library path based on build configuration for find_package
-        # Use INTERNAL to prevent it from appearing in VS project files
-        # For multi-config generators, we can't know the config at configure time,
-        # so we set a reasonable default (Debug for development, Release for production)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
-            # Default to Debug for development builds or when CMAKE_BUILD_TYPE is not set (multi-config)
-            set(ZLIB_LIBRARY "${zlib_binary_dir}/Debug/zlibstaticd.lib" CACHE INTERNAL "Path to zlib library" FORCE)
-        else()
-            set(ZLIB_LIBRARY "${zlib_binary_dir}/Release/zlibstatic.lib" CACHE INTERNAL "Path to zlib library" FORCE)
-        endif()
-    else()
-        # For other platforms, construct the expected library path
-        set(ZLIB_LIBRARY "${zlib_binary_dir}/libzlibstatic.a" CACHE INTERNAL "Path to zlib library" FORCE)
-    endif()
-    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-endfunction()
 
 #
 # CppTrace
@@ -143,9 +116,16 @@ elseif(WIN_EMSCRIPTEN)
     --std=c++17 \
     ${USE_FLAGS}")
 elseif(UNIX)
-    set(CMAKE_CXX_FLAGS "-fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-fno-exceptions --std=c++17 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_SHARED_LINKER_FLAGS}")
+    # Link with math library for Unix systems (needed for libxmp in SDL2_mixer)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm")
 else()
-    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions -static-libgcc --std=c++17 -static-libstdc++ ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-Wno-c++11-narrowing -fno-exceptions --std=c++17 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_SHARED_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_SHARED_LINKER_FLAGS}")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -163,91 +143,6 @@ endif()
 #
 # Dependencies and libs
 #
-if (MSVC OR WIN_EMSCRIPTEN)
-    # Unified configuration for MSVC and WIN_EMSCRIPTEN
-    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    
-    # Setup SDL2 FetchContent
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG        release-${SDL2_VERSION}
-    )
-    
-    # Configure SDL2 build options - build as static library
-    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-    set(SDL_STATIC ON CACHE BOOL "" FORCE)
-    set(SDL_STATIC_PIC ON CACHE BOOL "" FORCE)
-    set(SDL_TEST OFF CACHE BOOL "" FORCE)
-    
-    FetchContent_MakeAvailable(SDL2)
-    
-    # Set SDL2 variables for linking
-    set(SDL2_LIBRARY SDL2::SDL2)
-    get_target_property(SDL2_INCLUDE_DIR_TEMP SDL2::SDL2 INTERFACE_INCLUDE_DIRECTORIES)
-    if(SDL2_INCLUDE_DIR_TEMP)
-        list(GET SDL2_INCLUDE_DIR_TEMP 0 SDL2_INCLUDE_DIR)
-    else()
-        # Fallback: construct from source dir if available
-        if(DEFINED SDL2_SOURCE_DIR)
-            set(SDL2_INCLUDE_DIR "${SDL2_SOURCE_DIR}/include")
-        endif()
-    endif()
-    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
-    
-    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
-        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
-    endif()
-    
-    FetchContent_Declare(
-        SDL2_mixer
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-        GIT_TAG        release-${SDL2_MIXER_VERSION}
-    )
-    
-    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
-    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
-    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
-    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
-    
-    FetchContent_MakeAvailable(SDL2_mixer)
-    
-    # Set SDL2_mixer variables for linking
-    # SDL2_mixer may create different target names depending on version
-    if(TARGET SDL2::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    elseif(TARGET SDL2_mixer::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    elseif(TARGET SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    else()
-        # Fallback: assume SDL2::SDL2_mixer will be available at link time
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-    endif()
-    
-    # Fallback: use source directory for includes if target properties not available
-    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
-        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
-    endif()
-endif()
 
 # Use Tracy from repository via FetchContent (optional)
 set(TRACY_FILES "")
@@ -305,21 +200,7 @@ if (MSVC)
     set(CURL_CA_BUNDLE "" CACHE STRING "" FORCE)
     set(CURL_CA_PATH "" CACHE STRING "" FORCE)
     
-    # Ensure zlib is available before curl tries to find it
-    # Set ZLIB variables for curl's find_package(ZLIB)
-    if(TARGET zlibstatic AND DEFINED zlib_SOURCE_DIR)
-        get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-        if(ZLIB_BINARY_DIR)
-            # Set ZLIB variables before curl's FetchContent_MakeAvailable
-            # This ensures curl can find zlib and zconf.h
-            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-        endif()
-    endif()
-    
     FetchContent_MakeAvailable(curl)
-    
-    # zlib is already built before curl (via add_subdirectory), so no explicit dependency needed
 endif()
 
 if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
@@ -357,82 +238,353 @@ if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
     endif()
 endif()
 
-# Always use zlib from repository via FetchContent (static library only)
-# Must be built before freetype and curl which depend on it
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
+set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
+set(PREBUILT_LIBS_DIR "${CMAKE_BINARY_DIR}/libs")
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_ZLIB "${LOCAL_DEPS_ROOT}/zlib-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB TRUE)
+endif()
+
+#
+#zlib section begin
+#
 
 FetchContent_Declare(
     zlib
     GIT_REPOSITORY https://github.com/madler/zlib
     GIT_TAG ${ZLIB_VERSION}
 )
-FetchContent_MakeAvailable(zlib)
 
-if(TARGET zlibstatic AND NOT TARGET zlib)
-    add_library(zlib ALIAS zlibstatic)
+FetchContent_GetProperties(zlib)
+if(NOT zlib_POPULATED)
+    FetchContent_Populate(zlib)
 endif()
 
-if(TARGET zlibstatic)
-    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-    if(ZLIB_BINARY_DIR)
-        target_include_directories(zlibstatic INTERFACE ${ZLIB_BINARY_DIR})
-        include_directories(${ZLIB_BINARY_DIR})
-        if(EXISTS "${ZLIB_BINARY_DIR}/zconf.h")
-            file(COPY "${ZLIB_BINARY_DIR}/zconf.h" DESTINATION "${zlib_SOURCE_DIR}")
+set(ZLIB_SOURCE_DIR "${zlib_SOURCE_DIR}")
+set(ZLIB_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/zlib")
+set(ZLIB_BUILD_DIR "${ZLIB_BUILD_BASE_DIR}/build")
+set(ZLIB_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/zlib")
+set(ZLIB_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+
+# Create build directory in prebuild_libs/zlib
+file(MAKE_DIRECTORY ${ZLIB_BUILD_BASE_DIR})
+file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
+file(MAKE_DIRECTORY ${ZLIB_INSTALL_DIR})
+
+# Prepare variables for BuildZlib.cmake
+set(ZLIB_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildZlib.cmake")
+
+# Build zlib using execute_process (runs during configuration phase)
+message(STATUS "Building zlib static library...")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} 
+        -DZLIB_VERSION=${ZLIB_VERSION}
+        -DZLIB_SOURCE_DIR=${ZLIB_SOURCE_DIR}
+        -DZLIB_BUILD_DIR=${ZLIB_BUILD_DIR}
+        -DZLIB_INSTALL_DIR=${ZLIB_INSTALL_DIR}
+        -DZLIB_BUILD_CONFIG=${ZLIB_BUILD_CONFIG}
+        -DZLIB_IS_MSVC=${MSVC}
+        -P ${ZLIB_BUILD_SCRIPT}
+    WORKING_DIRECTORY ${ZLIB_BUILD_BASE_DIR}
+    RESULT_VARIABLE ZLIB_BUILD_RESULT
+)
+
+# Set ZLIB library path - use absolute path to avoid issues with find_package
+if(MSVC)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/zlibstaticd.lib")
+    else()
+        set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/zlibstatic.lib")
+    endif()
+else()
+    set(ZLIB_LIBRARY "${ZLIB_INSTALL_DIR}/libzlibstatic.a")
+endif()   
+
+# Convert to absolute path to ensure correct linking
+get_filename_component(ZLIB_LIBRARY "${ZLIB_LIBRARY}" ABSOLUTE)
+
+set(ZLIB_INCLUDE_DIR "${ZLIB_INSTALL_DIR}/include" CACHE PATH "Path to zlib include directory" FORCE)
+set(ZLIB_ROOT "${ZLIB_INSTALL_DIR}" CACHE PATH "Path to zlib installation" FORCE)
+set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
+
+# Set ZLIB_LIBRARIES for compatibility with find_package(ZLIB)
+set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE)
+
+#
+# zlib section end
+#
+
+#
+# SDL2 section begin
+#
+
+# Skip SDL2 build for Android as it uses find_package
+if(NOT PLATFORM_ANDROID)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Setup SDL2 FetchContent
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2 "${LOCAL_DEPS_ROOT}/SDL2-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2 TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-${SDL2_VERSION}
+    )
+    
+    FetchContent_GetProperties(SDL2)
+    if(NOT SDL2_POPULATED)
+        FetchContent_Populate(SDL2)
+    endif()
+    
+    # FetchContent_Populate creates SDL2_SOURCE_DIR automatically
+    set(SDL2_SOURCE_DIR "${sdl2_SOURCE_DIR}")
+    set(SDL2_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2")
+    set(SDL2_BUILD_DIR "${SDL2_BUILD_BASE_DIR}/build")
+    set(SDL2_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2")
+    set(SDL2_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
+    
+    # Create build directory in prebuild_libs/SDL2
+    file(MAKE_DIRECTORY ${SDL2_BUILD_BASE_DIR})
+    file(MAKE_DIRECTORY ${SDL2_BUILD_DIR})
+    file(MAKE_DIRECTORY ${SDL2_INSTALL_DIR})
+    
+    # Prepare variables for BuildSDL2.cmake
+    set(SDL2_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildSDL2.cmake")
+    
+    # Build SDL2 using execute_process (runs during configuration phase)
+    message(STATUS "Building SDL2 static library...")
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} 
+            -DSDL2_VERSION=${SDL2_VERSION}
+            -DSDL2_SOURCE_DIR=${SDL2_SOURCE_DIR}
+            -DSDL2_BUILD_DIR=${SDL2_BUILD_DIR}
+            -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
+            -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
+            -DSDL2_IS_MSVC=${MSVC}
+            -P ${SDL2_BUILD_SCRIPT}
+        WORKING_DIRECTORY ${SDL2_BUILD_BASE_DIR}
+        RESULT_VARIABLE SDL2_BUILD_RESULT
+    )
+    
+    # Set SDL2 library path - use absolute path to avoid issues with find_package
+    if(MSVC)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-staticd.lib")
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2maind.lib")            
+        else()
+            set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/SDL2-static.lib")
+            set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/SDL2main.lib")            
+        endif()
+
+        get_filename_component(SDL2_LIBRARY "${SDL2_LIBRARY}" ABSOLUTE)
+        get_filename_component(SDL2_MAIN_LIBRARY "${SDL2_MAIN_LIBRARY}" ABSOLUTE)
+    else()
+        set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/libSDL2-static.a")
+        set(SDL2_MAIN_LIBRARY "") 
+    endif()   
+  
+    set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)    
+    set(SDL2_ROOT "${SDL2_INSTALL_DIR}" CACHE PATH "Path to SDL2 installation" FORCE)
+    set(SDL2_FOUND TRUE CACHE BOOL "Whether SDL2 was found" FORCE)
+    
+    # Add SDL2 to CMAKE_PREFIX_PATH so SDL2_mixer can find it
+    set(CMAKE_PREFIX_PATH "${SDL2_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
+    # Set SDL2_DIR to help SDL2_mixer find SDL2 config files
+    set(SDL2_DIR "${SDL2_INSTALL_DIR}/lib/cmake/SDL2" CACHE PATH "" FORCE)
+    
+    set(SDL_EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2)
+endif()
+
+#
+# SDL2 section end
+#
+
+#
+# SDL2_mixer section begin
+#
+
+# Skip SDL2_mixer build for Android as it uses find_package
+if(NOT PLATFORM_ANDROID)
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    
+    # Set SDL2_SHARED before declaring SDL2_mixer to avoid conflicts
+    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
+    
+    if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
+    endif()
+    
+    FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG        release-${SDL2_MIXER_VERSION}
+    )
+    
+    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
+    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
+    
+    set(SDL2_LIBRARY ${SDL2_LIBRARY} CACHE FILEPATH "Path to SDL2 library" FORCE)
+    set(SDL2_INCLUDE_DIR ${SDL2_INCLUDE_DIR} CACHE PATH "Path to SDL2 include directory" FORCE)
+    set(SDL2_ROOT ${SDL2_ROOT} CACHE PATH "Path to SDL2 installation" FORCE)
+    
+    # Ensure math library is linked for SDL2_mixer dependencies (libxmp)
+    if(UNIX AND NOT APPLE)
+        # Set linker flags that will be used when building SDL2_mixer and its dependencies
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+    endif()
+    
+    FetchContent_MakeAvailable(SDL2_mixer)
+    
+    # After SDL2_mixer is available, ensure libxmp links with math library
+    if(UNIX AND NOT APPLE)
+        if(TARGET xmp_shared)
+            target_link_libraries(xmp_shared PRIVATE m)
+        endif()
+        if(TARGET xmp_static)
+            target_link_libraries(xmp_static PRIVATE m)
+        endif()
+        if(TARGET xmp)
+            target_link_libraries(xmp PRIVATE m)
         endif()
     endif()
-    # Set ZLIB variables to force using our version from FetchContent
-    # This prevents find_package(ZLIB) from finding system libraries
-    set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-    set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-    # Set ZLIB_LIBRARY for find_package(ZLIB) used by libpng
-    # The library file doesn't exist yet during configuration, but find_package needs the path
-    set_zlib_library(${ZLIB_BINARY_DIR})
-    # Mark zlib as found to prevent system search
-    set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${zlib_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+    
+    # Set SDL2_mixer variables for linking
+    # SDL2_mixer may create different target names depending on version
+    if(TARGET SDL2::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    elseif(TARGET SDL2_mixer::SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    elseif(TARGET SDL2_mixer)
+        set(SDL2_MIXER_LIBRARY SDL2_mixer)
+        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
+        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
+            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+        endif()
+    else()
+        # Fallback: assume SDL2::SDL2_mixer will be available at link time
+        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
+    endif()
+    
+    # Fallback: use source directory for includes if target properties not available
+    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
+    endif()
 endif()
 
-# Always use freetype from repository via FetchContent (never use system library)
-# Prevent find_package from finding system libraries
+#
+# SDL2_mixer section end
+#
+
+#
+# freetype section begin (must be before harfbuzz for harfbuzz to use freetype)
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/freetype-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_FREETYPE "${LOCAL_DEPS_ROOT}/freetype-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_FREETYPE TRUE)
+endif()
+
+# Configure freetype build options before FetchContent_MakeAvailable
+# First build freetype without harfbuzz
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(FT_DISABLE_ZLIB OFF CACHE BOOL "" FORCE)
+set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
+set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "" FORCE)  # Build freetype first without harfbuzz
+# Disable harfbuzz support completely in freetype
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
+# Ensure harfbuzz is not found during freetype build
+set(HarfBuzz_FOUND FALSE CACHE BOOL "" FORCE)
+set(HARFBUZZ_FOUND FALSE CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://github.com/freetype/freetype.git
     GIT_TAG        ${FREETYPE_VERSION}
 )
-FetchContent_MakeAvailable(freetype)
 
-# Set Freetype variables to force using our version from FetchContent
-# This prevents find_package(Freetype) from finding system libraries
-if(TARGET freetype AND DEFINED freetype_SOURCE_DIR)
-    set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
-    set(FREETYPE_INCLUDE_DIRS "${freetype_SOURCE_DIR}/include" CACHE INTERNAL "Path to freetype include directory" FORCE)
-    set(FREETYPE_ROOT "${freetype_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${freetype_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+FetchContent_MakeAvailable(freetype)
+set(FREETYPE_SOURCE_DIR "${freetype_SOURCE_DIR}")
+set(FREETYPE_LIBRARY freetype)
+set(FREETYPE_INCLUDE_DIR "${FREETYPE_SOURCE_DIR}/include")
+set(FREETYPE_INCLUDE_DIRS "${FREETYPE_INCLUDE_DIR}" CACHE INTERNAL "Path to freetype include directory" FORCE)
+
+set(FREETYPE_ROOT "${FREETYPE_SOURCE_DIR}" CACHE INTERNAL "Path to freetype source" FORCE)
+set(FREETYPE_FOUND TRUE CACHE INTERNAL "Whether freetype was found" FORCE)
+
+#
+# freetype section end
+#
+
+#
+# harfbuzz section begin
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/harfbuzz-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_HARFBUZZ "${LOCAL_DEPS_ROOT}/harfbuzz-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_HARFBUZZ TRUE)
 endif()
 
-# Always use harfbuzz from repository via FetchContent (never use system library)
-# Prevent find_package from finding system libraries
+# Configure harfbuzz build options before FetchContent_MakeAvailable
+set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+# Set freetype variables for harfbuzz to find
+set(Freetype_ROOT ${FREETYPE_SOURCE_DIR} CACHE PATH "" FORCE)
+set(Freetype_INCLUDE_DIR ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
+set(Freetype_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS} CACHE PATH "" FORCE)
+set(Freetype_LIBRARY ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
+# Add freetype to CMAKE_PREFIX_PATH so harfbuzz can find it via find_package
+set(CMAKE_PREFIX_PATH "${FREETYPE_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
+
 FetchContent_Declare(
     harfbuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
     GIT_TAG        ${HARFBUZZ_VERSION}
 )
-set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(harfbuzz)
 
-# Set HarfBuzz variables to force using our version from FetchContent
-# This prevents find_package from finding system libraries
-if(TARGET harfbuzz AND DEFINED harfbuzz_SOURCE_DIR)
-    set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
-    set(HARFBUZZ_INCLUDE_DIRS "${harfbuzz_SOURCE_DIR}/src" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
-    set(HARFBUZZ_ROOT "${harfbuzz_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
-    # Prevent find_package from searching system paths
-    set(CMAKE_PREFIX_PATH "${harfbuzz_SOURCE_DIR};${CMAKE_PREFIX_PATH}" CACHE PATH "CMake prefix path" FORCE)
+# Set harfbuzz variables for linking
+set(HARFBUZZ_SOURCE_DIR "${harfbuzz_SOURCE_DIR}")
+if(TARGET harfbuzz::harfbuzz)
+    set(HARFBUZZ_LIBRARY harfbuzz::harfbuzz)
+    get_target_property(HARFBUZZ_INCLUDE_DIR_TEMP harfbuzz::harfbuzz INTERFACE_INCLUDE_DIRECTORIES)
+    if(HARFBUZZ_INCLUDE_DIR_TEMP)
+        list(GET HARFBUZZ_INCLUDE_DIR_TEMP 0 HARFBUZZ_INCLUDE_DIR)
+    else()
+        set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
+    endif()
+else()
+    # Fallback
+    set(HARFBUZZ_LIBRARY harfbuzz)
+    set(HARFBUZZ_INCLUDE_DIR "${HARFBUZZ_SOURCE_DIR}/src")
 endif()
+
+set(HARFBUZZ_INCLUDE_DIRS "${HARFBUZZ_INCLUDE_DIR}" CACHE INTERNAL "Path to harfbuzz include directory" FORCE)
+set(HARFBUZZ_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source" FORCE)
+set(HarfBuzz_ROOT "${HARFBUZZ_SOURCE_DIR}" CACHE INTERNAL "Path to harfbuzz source (alternative name)" FORCE)
+set(HARFBUZZ_FOUND TRUE CACHE INTERNAL "Whether harfbuzz was found" FORCE)
+
+#
+# harfbuzz section end
+#
 
 FetchContent_Declare(
     stb
@@ -441,7 +593,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stb)
 
-# Use imgui from repository via FetchContent
 set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 if (EXISTS "${LOCAL_DEPS_ROOT}/imgui-src/CMakeLists.txt")
     set(FETCHCONTENT_SOURCE_DIR_IMGUI "${LOCAL_DEPS_ROOT}/imgui-src")
@@ -699,11 +850,6 @@ if (PLATFORM_ANDROID)
     find_package(SDL2 REQUIRED CONFIG)
     set(SDL2_LIBRARY SDL2::SDL2)
     set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-elseif (MSVC OR WIN_EMSCRIPTEN)
-    # do nothing
-else()
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
 endif()
 
 if (PLATFORM_ANDROID)
@@ -712,9 +858,6 @@ else()
     add_executable(${GAME} ${SOURCE_FILES})
 endif()
 
-# zlib is already built before ${GAME} (via add_subdirectory), so no explicit dependency needed
-
-# Set compile definitions for LAME files
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES
         COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\\\"Ozy\\\";PACKAGE_VERSION=\\\"static\\\";HAVE_MPGLIB=ON"
@@ -803,15 +946,10 @@ endif()
 
 include_directories(ext)
 include_directories(src)
-
 include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-
-include_directories(${freetype_SOURCE_DIR}/include)
-include_directories(${freetype_SOURCE_DIR}/src)
-# Always use harfbuzz from FetchContent
-include_directories(${harfbuzz_SOURCE_DIR}/src)
+include_directories(${HARFBUZZ_INCLUDE_DIRS})
 include_directories(ext/gpupixel/utils)
 
 if(MSVC)
@@ -823,66 +961,89 @@ if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQ
     target_link_libraries(${GAME} m)
 endif()
 
-# Link zlib static library
-# Use target directly - CMake will handle the correct library file for each configuration
-if(TARGET zlibstatic)
-    target_link_libraries(${GAME} zlibstatic)
-    message(STATUS "zlib: Linked statically with zlibstatic (CMake handles Debug/Release automatically)")
+
+
+# Link harfbuzz - freetype will be linked later, but harfbuzz needs it for hb_ft_* functions
+target_link_libraries(${GAME} ${HARFBUZZ_LIBRARY})
+target_include_directories(${GAME} PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
+message(STATUS "harfbuzz: Linked via FetchContent from ${HARFBUZZ_SOURCE_DIR}")
+
+set(ZLIB_ROOT ${ZLIB_ROOT} CACHE PATH "" FORCE)
+set(CMAKE_PREFIX_PATH "${ZLIB_ROOT};${CMAKE_PREFIX_PATH}" CACHE PATH "" FORCE)
+
+#
+# libpng section begin
+#
+
+set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+if (EXISTS "${LOCAL_DEPS_ROOT}/libpng-src/CMakeLists.txt")
+    set(FETCHCONTENT_SOURCE_DIR_LIBPNG "${LOCAL_DEPS_ROOT}/libpng-src")
+    set(FETCHCONTENT_UPDATES_DISCONNECTED_LIBPNG TRUE)
 endif()
 
-# Build libpng from source using FetchContent (static library only)
+# Configure libpng build options before FetchContent_MakeAvailable
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 set(PNG_STATIC ON CACHE BOOL "" FORCE)
 set(PNG_TESTS OFF CACHE BOOL "" FORCE)
-set(PNG_USE_FIND_PACKAGE_ZLIB OFF CACHE BOOL "" FORCE)
-
-# Ensure ZLIB variables are set for find_package(ZLIB) called by libpng
-# ZLIB_LIBRARY is already set after zlib configuration, just ensure other variables are set
-if(TARGET zlibstatic AND (NOT DEFINED ZLIB_INCLUDE_DIR OR NOT DEFINED ZLIB_ROOT))
-    get_target_property(ZLIB_BINARY_DIR zlibstatic BINARY_DIR)
-    if(ZLIB_BINARY_DIR AND DEFINED zlib_SOURCE_DIR)
-        if(NOT DEFINED ZLIB_INCLUDE_DIR OR ZLIB_INCLUDE_DIR STREQUAL "")
-            set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR};${ZLIB_BINARY_DIR}" CACHE PATH "Path to zlib include directory" FORCE)
-        endif()
-        if(NOT DEFINED ZLIB_ROOT OR ZLIB_ROOT STREQUAL "")
-            set(ZLIB_ROOT "${zlib_SOURCE_DIR}" CACHE PATH "Path to zlib source" FORCE)
-        endif()
-        set(ZLIB_FOUND TRUE CACHE BOOL "Whether zlib was found" FORCE)
-    endif()
-endif()
+set(PNG_USE_FIND_PACKAGE_ZLIB ON CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
     libpng
     GIT_REPOSITORY https://github.com/pnggroup/libpng.git
     GIT_TAG ${LIBPNG_VERSION}
 )
+
 FetchContent_MakeAvailable(libpng)
 
-# Link our zlib to libpng
-# zlib is already built before libpng (via add_subdirectory), so no explicit dependency needed
-if(TARGET png_static AND TARGET zlibstatic)
-    target_link_libraries(png_static PRIVATE zlibstatic)
+# Set libpng variables for linking
+set(LIBPNG_SOURCE_DIR "${libpng_SOURCE_DIR}")
+if(TARGET png_static)
+    set(LIBPNG_LIBRARY png_static)
+    get_target_property(LIBPNG_INCLUDE_DIR_TEMP png_static INTERFACE_INCLUDE_DIRECTORIES)
+    if(LIBPNG_INCLUDE_DIR_TEMP)
+        list(GET LIBPNG_INCLUDE_DIR_TEMP 0 LIBPNG_INCLUDE_DIR)
+    else()
+        set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
+    endif()
+elseif(TARGET png)
+    set(LIBPNG_LIBRARY png)
+    get_target_property(LIBPNG_INCLUDE_DIR_TEMP png INTERFACE_INCLUDE_DIRECTORIES)
+    if(LIBPNG_INCLUDE_DIR_TEMP)
+        list(GET LIBPNG_INCLUDE_DIR_TEMP 0 LIBPNG_INCLUDE_DIR)
+    else()
+        set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
+    endif()
+else()
+    # Fallback
+    set(LIBPNG_LIBRARY png)
+    set(LIBPNG_INCLUDE_DIR "${LIBPNG_SOURCE_DIR}")
 endif()
 
-# Link libpng static library
-target_link_libraries(${GAME} png_static)
-message(STATUS "libpng: Linked statically with png_static")
+set(PNG_INCLUDE_DIRS "${LIBPNG_INCLUDE_DIR}" CACHE PATH "Path to libpng include directories" FORCE)
+set(PNG_FOUND TRUE CACHE BOOL "Whether libpng was found" FORCE)
 
-if(DEFINED PNG_INCLUDE_DIRS)
-    include_directories(${PNG_INCLUDE_DIRS})
-endif()
+#
+# libpng section end
+#
+
+target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
+target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
+message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
+
+target_link_libraries(${GAME} ${FREETYPE_LIBRARY})
+target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
+message(STATUS "freetype: Linked via FetchContent from ${FREETYPE_SOURCE_DIR}")
 
 target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY}
+                        ${SDL2_LIBRARY} 
+                        ${SDL2_MAIN_LIBRARY}
                         $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
                             $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
                                 $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
-                        $<IF:$<TARGET_EXISTS:SDL2::SDL2main>,SDL2::SDL2main,>
                         ${CPPTRACE_LIBRARY}
                         ${GPUPIXEL_LIBRARY} 
-                        freetype
-                        harfbuzz
+                        ${ZLIB_LIBRARY}
                         akhenaten::rc
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
@@ -1080,17 +1241,7 @@ if(MSVC)
         endif()
     endif()
       
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:harfbuzz>
-        ${GAME_WORKING_DIRECTORY}
-    )
-    
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:freetype>
-        ${GAME_WORKING_DIRECTORY}
-    )
+    # harfbuzz and freetype are static libraries, no need to copy DLL
 endif()
 
 if (PLATFORM_ANDROID)

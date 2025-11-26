@@ -24,7 +24,7 @@ namespace ui {
         std::function<void()> close_callback;
 
         struct feature_t {
-            int original_value;
+            bool original_value;
             bool new_value;
             xstring text;
             bool volatile_value = false;

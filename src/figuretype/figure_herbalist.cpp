@@ -1,8 +1,10 @@
 #include "figure_herbalist.h"
 
 #include "core/profiler.h"
+#include "core/calc.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "grid/terrain.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_herbalist);
@@ -68,6 +70,23 @@ int figure_herbalist::provide_service() {
         if (house) {
             auto &housed = house->runtime_data();
             housed.apothecary = MAX_COVERAGE;
+            
+            int base_terrain_risk = 0;
+            
+            if (map_terrain_exists_tile_in_radius_with_type(b->tile, b->size, 3, TERRAIN_MARSHLAND)) {
+                base_terrain_risk = std::max(base_terrain_risk, 50);
+            } else if (map_terrain_exists_tile_in_radius_with_type(b->tile, b->size, 2, TERRAIN_MARSHLAND)) {
+                base_terrain_risk = std::max(base_terrain_risk, 40);
+            }
+            
+            if (map_terrain_is_adjacent_to_water(b->tile, b->size)) {
+                base_terrain_risk = std::max(base_terrain_risk, 40);
+            } else if (map_terrain_exists_tile_in_radius_with_type(b->tile, b->size, 2, TERRAIN_WATER)) {
+                base_terrain_risk = std::max(base_terrain_risk, 30);
+            }
+            
+            int new_risk = std::max(base_terrain_risk, (int)b->malaria_risk - 30);
+            b->malaria_risk = (uint8_t)calc_bound(new_risk, 0, 100);
         }
     });
 

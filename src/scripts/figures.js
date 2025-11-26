@@ -30,6 +30,7 @@ figure_fireman {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_roam_length : 640
 	permission : epermission_maintenance
+	fire_detection_distance : 10
 }
 
 figure_water_carrier {
@@ -400,6 +401,29 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
+figure_ferry_boat {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:138, max_frames:4, duration:4 }
+		idle { id:139, offset:3, max_frames:1 }
+		death { id: 15, max_frames:8, loop:false }
+		swim { id:138, max_frames:4, duration:4 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
+	}
+
+	sounds {
+		ferry_boat_ready { sound:"ferry_boat_e01.wav"}
+		ferry_boat_going { sound:"ferry_boat_e02.wav"}
+		ferry_boat_at_destination { sound:"ferry_boat_e03.wav"}
+		ferry_boat_returning { sound:"ferry_boat_e04.wav"}
+		ferry_boat_waiting { sound:"ferry_boat_e05.wav"}
+	}
+
+	category: figure_category_citizen
+	max_damage: 20
+	terrain_usage: TERRAIN_USAGE_ANY
+}
+
 figure_immigrant {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
@@ -451,17 +475,17 @@ figure_ostrich_hunter {
   	max_hunting_distance : 15
 }
 
-figure_hunter_arrow = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
-		shadow : { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
+figure_hunter_arrow {
+	animations {
+		walk { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
+		shadow { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+    max_damage : 100
+    missile_attack_value : 6
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_antelope_hunter {
@@ -494,9 +518,9 @@ figure_antelope_hunter_arrow = {
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+	max_damage : 100
+	missile_attack_value : 6
+	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
 figure_arrow = {
@@ -507,9 +531,9 @@ figure_arrow = {
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 6
-  terrain_usage : TERRAIN_USAGE_ANY,
+    max_damage : 100
+    missile_attack_value : 6
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_spear = {
@@ -680,17 +704,17 @@ figure_academy_scriber {
 	}
 
 	sounds {
-		scribe_these_festivals { sound: "scribe_e01.wav" } 
-		scribe_plague_could_break_out { sound: "scribe_g01.wav" } 
-		scribe_no_food_in_city { sound: "scribe_g02.wav" } 
-		scribe_defenses_are_weak { sound: "scribe_g03.wav" } 
-		scribe_need_more_workers { sound: "scribe_g04.wav" } 
-		scribe_gods_are_angry { sound: "scribe_g05.wav" } 
-		scribe_reputation_is_low { sound: "scribe_g06.wav" } 
-		scribe_high_unemployment { sound: "scribe_g07.wav" } 
-		scribe_low_entertainment { sound: "scribe_g08.wav" } 
-		scribe_city_is_ok { sound: "scribe_g09.wav" } 
-		scribe_city_is_amazing { sound: "scribe_g10.wav" } 
+		scriber_dicease_can_start { sound: "scribe_e01.wav" } 
+		scriber_plague_could_break_out { sound: "scribe_g01.wav" } 
+		scriber_no_food_in_city { sound: "scribe_g02.wav" } 
+		scriber_defenses_are_weak { sound: "scribe_g03.wav" } 
+		scriber_need_more_workers { sound: "scribe_g04.wav" } 
+		scriber_gods_are_angry { sound: "scribe_g05.wav" } 
+		scriber_reputation_is_low { sound: "scribe_g06.wav" } 
+		scriber_high_unemployment { sound: "scribe_g07.wav" } 
+		scriber_low_entertainment { sound: "scribe_g08.wav" } 
+		scriber_city_is_ok { sound: "scribe_g09.wav" } 
+		scriber_city_is_amazing { sound: "scribe_g10.wav" } 
 	}
 
 	category : figure_category_citizen
@@ -1409,16 +1433,17 @@ figure_soldier_infantry {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_fishing_point = {
-	animations : {
-		point : { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
-		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_POINT }
+figure_fishing_point {
+	animations {
+		point { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
+		bubbles { pack:PACK_SPR_AMBIENT, id:11, max_frames: 22, duration:4}
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FISHING_POINT }
 	}
 
 	category: figure_category_inactive
 	max_damage: 100
 	terrain_usage : TERRAIN_USAGE_ANY,
+	render_on_flat_tiles : true
 }
 
 figure_fishing_spot = {
@@ -1454,21 +1479,9 @@ figure_fishing_boat = {
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ANY
-
-}
-
-figure_ferry_boat = {
-	animations : {
-		walk : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 }
-		swim : {pack:PACK_SPR_MAIN, id:137, max_frames:4, duration:3 }
-		death : {pack:PACK_SPR_MAIN, id:138, max_frames:8, loop:false }
-		idle : {pack:PACK_SPR_MAIN, id:139, offset:3, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ANY,
+	fish_per_trip : 50
+	fishing_time_base : 200
+	fishing_time_multiplier : 1
 }
 
 figure_warship {
@@ -1624,8 +1637,8 @@ figure_market_trader = {
 	}
 
 	sounds {
-		goods_are_finished : {sound:"mkt_seller_e01.wav", group:245, text:0}
- 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav", group:245, text:0}
+		goods_are_finished : {sound:"mkt_seller_e01.wav" }
+ 	  	we_are_selling_goods : {sound:"mkt_seller_e02.wav" }
 	}
 
  	 category: figure_category_citizen

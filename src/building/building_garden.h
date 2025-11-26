@@ -7,6 +7,11 @@ public:
     BUILDING_METAINFO(BUILDING_GARDENS, building_garden, building_impl)
     virtual building_garden *dcast_garden() override { return this; }
 
+    struct static_params : public building_static_params {
+        animations_t variants1;
+        animations_t variants2;
+        animations_t variants3;
+    } BUILDING_STATIC_DATA_T;
 
     struct preview : building_planer_renderer {
         int place_impl(tile2i start, tile2i end, bool place) const;
@@ -20,3 +25,4 @@ public:
     static void set_image(int grid_offset);
     static void determine_tile(int grid_offset);
 };
+ANK_CONFIG_STRUCT(building_garden::static_params, variants1, variants2, variants3 )
