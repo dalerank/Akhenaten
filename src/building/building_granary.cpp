@@ -152,7 +152,7 @@ int building_granary::remove_resource(e_resource resource, int amount) {
 
 granary_task_status building_granary::determine_worker_task() {
     const int pct_workers = worker_percentage();
-    if (pct_workers < 50) {
+    if (pct_workers < current_params().min_workers_percent_for_tasks) {
         return {GRANARY_TASK_NONE, RESOURCE_NONE};
     }
 
@@ -220,7 +220,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
 
         if (!game_features::gameplay_change_understaffed_accept_goods) {
             int pct_workers = granary->worker_percentage();
-            if (pct_workers < 75) {
+            if (pct_workers < granary->current_params().min_workers_percent_for_accepting) {
                 if (understaffed)
                     *understaffed += 1;
                 continue;
@@ -273,7 +273,7 @@ int building_granary_for_storing(tile2i tile, e_resource resource, int distance_
 
             if (!game_features::gameplay_change_understaffed_accept_goods) {
                 int pct_workers = granary->worker_percentage();
-                if (pct_workers < 75) {
+                if (pct_workers < granary->current_params().min_workers_percent_for_accepting) {
                     if (understaffed)
                         *understaffed += 1;
                     continue;
@@ -333,7 +333,7 @@ int building_getting_granary_for_storing(tile2i tile, e_resource resource, int d
             continue;
 
         int pct_workers = granary->worker_percentage();
-        if (pct_workers < 100)
+        if (pct_workers < granary->current_params().min_workers_percent_for_getting)
             continue;
 
         if (granary->is_getting(resource) || granary->is_empty_all())
@@ -521,6 +521,10 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 void building_granary::on_create(int orientation) {
     runtime_data().resource_stored[RESOURCE_NONE] = capacity_stored();
     base.storage_id = building_storage_create(BUILDING_GRANARY);
+}
+
+void building_granary::on_post_load() {
+    building_impl::on_post_load();
 }
 
 void building_granary::update_day() {
