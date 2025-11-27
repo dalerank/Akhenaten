@@ -72,6 +72,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2A1974DB2ED8D39300CB7863 /* Copy innoextract */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = innoextract;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			name = "Copy innoextract";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2AC6216E2ED886340023FB4E /* Copy akhenaten binary */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -110,9 +120,61 @@
 		2AC621C42ED88D850023FB4E /* launch.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = launch.sh; path = ../../build/akhenaten.app/Contents/MacOS/launch.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2A1974DA2ED8D38600CB7863 /* Exceptions for "akhenaten" folder in "akhenaten" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				akhenaten.html,
+				innoextract/innoextract,
+			);
+			target = 2AC6211F2ED8833F0023FB4E /* akhenaten */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		2A1974E92ED8D3AB00CB7863 /* Exceptions for "akhenaten" folder in "Copy innoextract" phase from "akhenaten" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			attributesByRelativePath = {
+				innoextract/innoextract = (CodeSignOnCopy, );
+				innoextract/libboost_atomic.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_date_time.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_filesystem.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_iostreams.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_program_options.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_random.dylib = (CodeSignOnCopy, );
+				innoextract/libboost_regex.dylib = (CodeSignOnCopy, );
+				innoextract/libicudata.78.1.dylib = (CodeSignOnCopy, );
+				innoextract/libicui18n.78.1.dylib = (CodeSignOnCopy, );
+				innoextract/libicuuc.78.1.dylib = (CodeSignOnCopy, );
+				innoextract/liblzma.5.dylib = (CodeSignOnCopy, );
+				innoextract/libzstd.1.5.7.dylib = (CodeSignOnCopy, );
+			};
+			buildPhase = 2A1974DB2ED8D39300CB7863 /* Copy innoextract */;
+			membershipExceptions = (
+				innoextract/innoextract,
+				innoextract/libboost_atomic.dylib,
+				innoextract/libboost_date_time.dylib,
+				innoextract/libboost_filesystem.dylib,
+				innoextract/libboost_iostreams.dylib,
+				innoextract/libboost_program_options.dylib,
+				innoextract/libboost_random.dylib,
+				innoextract/libboost_regex.dylib,
+				innoextract/libicudata.78.1.dylib,
+				innoextract/libicui18n.78.1.dylib,
+				innoextract/libicuuc.78.1.dylib,
+				innoextract/liblzma.5.dylib,
+				innoextract/libzstd.1.5.7.dylib,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2AC621222ED8833F0023FB4E /* akhenaten */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2A1974DA2ED8D38600CB7863 /* Exceptions for "akhenaten" folder in "akhenaten" target */,
+				2A1974E92ED8D3AB00CB7863 /* Exceptions for "akhenaten" folder in "Copy innoextract" phase from "akhenaten" target */,
+			);
 			path = akhenaten;
 			sourceTree = "<group>";
 		};
@@ -172,6 +234,7 @@
 				2AC6211C2ED8833F0023FB4E /* Sources */,
 				2AC6211D2ED8833F0023FB4E /* Frameworks */,
 				2AC6211E2ED8833F0023FB4E /* Resources */,
+				2A1974DB2ED8D39300CB7863 /* Copy innoextract */,
 				2AC6216E2ED886340023FB4E /* Copy akhenaten binary */,
 				2AC6217D2ED886EE0023FB4E /* CopyFiles */,
 			);
@@ -242,9 +305,9 @@
 			targets = (
 				2ABE3CB12ED8923D00C22DCE /* Compile akhenaten */,
 				2AC6211F2ED8833F0023FB4E /* akhenaten */,
+				2A1974BD2ED8D16700CB7863 /* Bundle innoextract */,
 				2A9BCADD2ED8C4A900671ED4 /* Postscript */,
 				2A9BCAD82ED8C45600671ED4 /* Publish */,
-				2A1974BD2ED8D16700CB7863 /* Bundle innoextract */,
 			);
 		};
 /* End PBXProject section */
