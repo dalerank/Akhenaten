@@ -38,6 +38,7 @@ enum e_session_type {
 };
 
 class MovieWriter;
+struct event_game_mission_pre_load {};
 
 struct game_t {
     enum {

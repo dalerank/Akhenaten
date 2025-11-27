@@ -7,8 +7,6 @@
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
 
-
-
 void city_t::house_service_update_health() {
     OZZY_PROFILER_SECTION("Game/Update/House Service Update Health");
     buildings_house_do([] (auto house) {

@@ -818,10 +818,11 @@ building_library {
 
   min_houses_coverage : 50
   meta { help_id: 70, text_id: 87 }
+  labor_category : LABOR_CATEGORY_EDUCATION
   building_size : 3
   cost [ 90, 140, 200, 300, 400 ]
   desirability { value[8], step[2], step_size[-2], range[6] }
-  laborers[30]
+  laborers[20]
   fire_risk[6]
   damage_risk[1]
   max_service: 800
@@ -861,7 +862,11 @@ building_juggler_school {
     work { pos : [33, -38], id:46, offset:1, max_frames:14, duration:3 }
   }
 
-  spawn_interval : 10
+  spawn_delay_100_percent : 7   // ~4 жонглера в месяц
+  spawn_delay_75_percent : 15   // 2 жонглера в месяц
+  spawn_delay_50_percent : 30   // 1 жонглер в месяц
+  spawn_delay_25_percent : 60   // 1 жонглер за 2 месяца
+  spawn_delay_default : 90      // 1 жонглер за 3 месяца (для 1-24% работников)
   meta { text_id:77, help_link:"message_building_booth" }
 
   building_size : 2
