@@ -53,7 +53,6 @@ public:
     //*************************************************************************
     /// Allocate an object from the pool.
     /// If asserts or exceptions are enabled and there are no more free items an
-    /// etl::pool_no_allocation if thrown, otherwise a null pointer is returned.
     /// Static asserts if the specified type is too large for the pool.
     //*************************************************************************
     template <typename U>
@@ -154,7 +153,6 @@ public:
     //*************************************************************************
     /// Allocate an object from the pool.
     /// If asserts or exceptions are enabled and there are no more free items an
-    /// etl::pool_no_allocation if thrown, otherwise a null pointer is returned.
     /// Static asserts if the specified type is too large for the pool.
     //*************************************************************************
     template <typename U>
@@ -171,9 +169,9 @@ public:
     template <typename U, typename... Args>
     U* create(Args&&... args)
     {
-        static_assert(etl::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
+        static_assert(std::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
         static_assert(sizeof(U) <= VTypeSize, "Type too large for pool");
-        return ipool::create<U>(etl::forward<Args>(args)...);
+        return ipool::create<U>(std::forward<Args>(args)...);
     }
 
     //*************************************************************************
