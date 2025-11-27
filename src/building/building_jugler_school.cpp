@@ -27,7 +27,7 @@ void building_juggler_school::update_graphic() {
 }
 
 void building_juggler_school::spawn_figure() {
-    if (!common_spawn_figure_trigger(50)) {
+    if (!common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         return;
     }
 
@@ -36,14 +36,33 @@ void building_juggler_school::spawn_figure() {
         return;
     }
 
+    int pct_workers = worker_percentage();
+    int spawn_interval_days;
+    
+    const auto &params = current_params();
+    if (pct_workers >= 100) {
+        spawn_interval_days = params.spawn_delay_100_percent;
+    } else if (pct_workers >= 75) {
+        spawn_interval_days = params.spawn_delay_75_percent;
+    } else if (pct_workers >= 50) {
+        spawn_interval_days = params.spawn_delay_50_percent;
+    } else if (pct_workers >= 25) {
+        spawn_interval_days = params.spawn_delay_25_percent;
+    } else if (pct_workers >= 1) {
+        spawn_interval_days = params.spawn_delay_default;
+    } else {
+        return;
+    }
+
     int venue_destination = figure_entertainer::determine_venue_destination(base.road_access, FIGURE_JUGGLER, {BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH});
 
     building* dest = building_get(venue_destination);
     if (dest->id > 0) {
-        create_figure_with_destination(FIGURE_JUGGLER, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE);
-        d.spawned_entertainer_days = current_params().spawn_interval;
+        create_figure_with_destination(FIGURE_JUGGLER, dest, (e_figure_action)ACTION_92_ENTERTAINER_GOING_TO_VENUE, BUILDING_SLOT_JUGGLER);
+        d.spawned_entertainer_days = spawn_interval_days;
     } else {
-        common_spawn_roamer(FIGURE_JUGGLER, current_params().min_houses_coverage, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED);
+        create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER);
+        d.spawned_entertainer_days = spawn_interval_days;
     }
 }
 
