@@ -1,0 +1,5 @@
+Akhenaten version 0.2.6 b10780 macosx
+Initializing SDL
+SDL initialized
+Engine set to Akhenaten
+Attempting to load game from /Users/luigi/Library/Akhenaten

@@ -23,6 +23,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2A7FFC9C2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib in Copy akhenaten binary */ = {isa = PBXBuildFile; fileRef = 2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217C2ED886DE0023FB4E /* akhenaten in Copy akhenaten binary */ = {isa = PBXBuildFile; fileRef = 2AC6217B2ED886C10023FB4E /* akhenaten */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217E2ED887180023FB4E /* neucha.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621752ED886C10023FB4E /* neucha.ttf */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217F2ED887180023FB4E /* pharaoh_custom_pack.sgx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621762ED886C10023FB4E /* pharaoh_custom_pack.sgx */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -39,6 +40,7 @@
 			dstPath = game;
 			dstSubfolderSpec = 7;
 			files = (
+				2A7FFC9C2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib in Copy akhenaten binary */,
 				2AC621C52ED88D850023FB4E /* launch.sh in Copy akhenaten binary */,
 				2AC6217C2ED886DE0023FB4E /* akhenaten in Copy akhenaten binary */,
 			);
@@ -61,6 +63,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_mixer-2.0.801.0.0.dylib"; path = "../../build/akhenaten.app/Contents/MacOS/libSDL2_mixer-2.0.801.0.0.dylib"; sourceTree = "<group>"; };
 		2AC621202ED8833F0023FB4E /* akhenaten.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = akhenaten.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC621752ED886C10023FB4E /* neucha.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = neucha.ttf; sourceTree = "<group>"; };
 		2AC621762ED886C10023FB4E /* pharaoh_custom_pack.sgx */ = {isa = PBXFileReference; lastKnownFileType = file; path = pharaoh_custom_pack.sgx; sourceTree = "<group>"; };
@@ -106,6 +109,7 @@
 		2AC621172ED8833F0023FB4E = {
 			isa = PBXGroup;
 			children = (
+				2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */,
 				2AC621222ED8833F0023FB4E /* akhenaten */,
 				2AC6217B2ED886C10023FB4E /* akhenaten */,
 				2AC621C42ED88D850023FB4E /* launch.sh */,
@@ -170,6 +174,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+					"New-1",
+				);
 				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				ORGANIZATIONNAME = "SL-Soft.de";
