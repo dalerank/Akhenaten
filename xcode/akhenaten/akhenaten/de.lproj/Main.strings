@@ -1,0 +1,39 @@
+
+/* Class = "NSMenuItem"; title = "akhenaten"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "akhenaten";
+
+/* Class = "NSMenuItem"; title = "Quit akhenaten"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Qakhenaten beenden";
+
+/* Class = "NSMenuItem"; title = "About akhenaten"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "Über akhenaten";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Hauptmenu";
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "Fenster";
+
+/* Class = "NSMenuItem"; title = "Show All"; ObjectID = "Kd2-mp-pUS"; */
+"Kd2-mp-pUS.title" = "Alle zeigen";
+
+/* Class = "NSMenuItem"; title = "Hide akhenaten"; ObjectID = "Olw-nP-bQN"; */
+"Olw-nP-bQN.title" = "akhenaten ausblenden";
+
+/* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
+"Vdr-fp-XzO.title" = "Andere ausblenden";
+
+/* Class = "NSTextFieldCell"; title = "akhenaten"; ObjectID = "XCC-Eh-Td0"; */
+"XCC-Eh-Td0.title" = "akhenaten";
+
+/* Class = "NSButtonCell"; title = "Start Game"; ObjectID = "YQK-qq-I6Z"; */
+"YQK-qq-I6Z.title" = "Spiel starten";
+
+/* Class = "NSButtonCell"; title = "Visit GitHub Repo"; ObjectID = "puM-Ju-0YN"; */
+"puM-Ju-0YN.title" = "Besuche GitHub Project";
+
+/* Class = "NSMenu"; title = "akhenaten"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "akhenaten";
+
+/* Class = "NSButtonCell"; title = "Check for Updates"; ObjectID = "z2I-Rx-Hkj"; */
+"z2I-Rx-Hkj.title" = "Suche nach Updates";
