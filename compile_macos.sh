@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-MAIN_DIR="$PWD"
-
 CORES=$(sysctl -n hw.ncpu)
 
 rm -rf build 2>/dev/null
