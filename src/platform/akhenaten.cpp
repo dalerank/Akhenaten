@@ -181,6 +181,13 @@ static void setup() {
     g_args.set_data_directory(SDL_AndroidGetExternalStoragePath());
 #endif
 
+    // Show configuration window if --config flag is set
+    if (g_args.should_show_config_window()) {
+#ifndef GAME_PLATFORM_ANDROID
+        show_options_window(g_args);
+#endif
+    }
+
     // pre-init engine: assert game directory, pref files, etc.
     g_application.setup();
 #if defined(GAME_PLATFORM_ANDROID)
