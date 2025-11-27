@@ -7,6 +7,32 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		2A9BCAD82ED8C45600671ED4 /* Publish */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2A9BCADB2ED8C45600671ED4 /* Build configuration list for PBXAggregateTarget "Publish" */;
+			buildPhases = (
+				2A9BCADC2ED8C45A00671ED4 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Publish;
+			packageProductDependencies = (
+			);
+			productName = Publish;
+		};
+		2A9BCADD2ED8C4A900671ED4 /* Postscript */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2A9BCADE2ED8C4A900671ED4 /* Build configuration list for PBXAggregateTarget "Postscript" */;
+			buildPhases = (
+				2A9BCAE12ED8C4AD00671ED4 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Postscript;
+			packageProductDependencies = (
+			);
+			productName = Postscript;
+		};
 		2ABE3CB12ED8923D00C22DCE /* Compile akhenaten */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 2ABE3CB22ED8923D00C22DCE /* Build configuration list for PBXAggregateTarget "Compile akhenaten" */;
@@ -24,6 +50,7 @@
 
 /* Begin PBXBuildFile section */
 		2A7FFC9C2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib in Copy akhenaten binary */ = {isa = PBXBuildFile; fileRef = 2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		2A9BCB4F2ED8C6FD00671ED4 /* akhenaten.html in Resources */ = {isa = PBXBuildFile; fileRef = 2A9BCB4E2ED8C6FD00671ED4 /* akhenaten.html */; };
 		2AC6217C2ED886DE0023FB4E /* akhenaten in Copy akhenaten binary */ = {isa = PBXBuildFile; fileRef = 2AC6217B2ED886C10023FB4E /* akhenaten */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217E2ED887180023FB4E /* neucha.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621752ED886C10023FB4E /* neucha.ttf */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217F2ED887180023FB4E /* pharaoh_custom_pack.sgx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621762ED886C10023FB4E /* pharaoh_custom_pack.sgx */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -64,6 +91,7 @@
 
 /* Begin PBXFileReference section */
 		2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_mixer-2.0.801.0.0.dylib"; path = "../../build/akhenaten.app/Contents/MacOS/libSDL2_mixer-2.0.801.0.0.dylib"; sourceTree = "<group>"; };
+		2A9BCB4E2ED8C6FD00671ED4 /* akhenaten.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = akhenaten.html; path = akhenaten/akhenaten.html; sourceTree = "<group>"; };
 		2AC621202ED8833F0023FB4E /* akhenaten.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = akhenaten.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC621752ED886C10023FB4E /* neucha.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = neucha.ttf; sourceTree = "<group>"; };
 		2AC621762ED886C10023FB4E /* pharaoh_custom_pack.sgx */ = {isa = PBXFileReference; lastKnownFileType = file; path = pharaoh_custom_pack.sgx; sourceTree = "<group>"; };
@@ -110,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				2A7FFC9B2ED8BC8C00B2083E /* libSDL2_mixer-2.0.801.0.0.dylib */,
+				2A9BCB4E2ED8C6FD00671ED4 /* akhenaten.html */,
 				2AC621222ED8833F0023FB4E /* akhenaten */,
 				2AC6217B2ED886C10023FB4E /* akhenaten */,
 				2AC621C42ED88D850023FB4E /* launch.sh */,
@@ -150,7 +179,6 @@
 				2AC6211E2ED8833F0023FB4E /* Resources */,
 				2AC6216E2ED886340023FB4E /* Copy akhenaten binary */,
 				2AC6217D2ED886EE0023FB4E /* CopyFiles */,
-				2AC621C32ED88C1E0023FB4E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -182,6 +210,12 @@
 				LastUpgradeCheck = 2610;
 				ORGANIZATIONNAME = "SL-Soft.de";
 				TargetAttributes = {
+					2A9BCAD82ED8C45600671ED4 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
+					2A9BCADD2ED8C4A900671ED4 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
 					2ABE3CB12ED8923D00C22DCE = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
@@ -208,8 +242,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2AC6211F2ED8833F0023FB4E /* akhenaten */,
 				2ABE3CB12ED8923D00C22DCE /* Compile akhenaten */,
+				2AC6211F2ED8833F0023FB4E /* akhenaten */,
+				2A9BCADD2ED8C4A900671ED4 /* Postscript */,
+				2A9BCAD82ED8C45600671ED4 /* Publish */,
 			);
 		};
 /* End PBXProject section */
@@ -219,12 +255,47 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A9BCB4F2ED8C6FD00671ED4 /* akhenaten.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2A9BCADC2ED8C45A00671ED4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nbash /Volumes/Homeshare/Xcode/akhenaten/push.command\n\n";
+		};
+		2A9BCAE12ED8C4AD00671ED4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n\n\ncodesign --force --deep --sign \"Apple Development: apple@slsoft.de (85JZW6284R)\" \"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/akhenaten/upload\"\nif [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    cp \"$HOME/Documents/Xcode/Akhenaten/xcode/akhenaten/akhenaten/akhenaten.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/akhenaten.zip\"\nfi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
+		};
 		2ABE3CB52ED8924300C22DCE /* Compile */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,23 +314,6 @@
 			shellPath = /bin/bash;
 			shellScript = "#!/usr/bin/env bash\n\n# Absoluter Pfad zum Script\nSCRIPT_PATH=\"${PROJECT_DIR}/../../compile_macos.sh\"\nSCRIPT_DIR=\"$(cd \"$(dirname \"$SCRIPT_PATH\")\" && pwd)\"\n\n# Ins Script-Verzeichnis wechseln\ncd \"$SCRIPT_DIR\" || exit 1\n\n# Script ausführbar machen\nchmod 755 \"$SCRIPT_PATH\"\n\n# Homebrew-Tools priorisieren\nexport PATH=\"/opt/homebrew/bin:$PATH\"\n\n# Script mit Bash ausführen\n/bin/bash \"$SCRIPT_PATH\"\n";
 		};
-		2AC621C32ED88C1E0023FB4E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    #exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    #exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    #exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/relaydrive/upload\"\n#if [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    #cp \"$HOME/Documents/Xcode/RelayDrive/RelayDrive/relaydrive.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    #ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/relaydrive.zip\"\n#fi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -273,6 +327,42 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		2A9BCAD92ED8C45600671ED4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2A9BCADA2ED8C45600671ED4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2A9BCADF2ED8C4A900671ED4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2A9BCAE02ED8C4A900671ED4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		2ABE3CB32ED8923D00C22DCE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -421,7 +511,7 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = NO;
@@ -434,6 +524,7 @@
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				ENABLE_TESTABILITY = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = akhenaten/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
@@ -445,7 +536,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = de.slsoft.akhenaten;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -473,7 +564,8 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 100;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = NO;
@@ -486,6 +578,7 @@
 				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = NO;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = akhenaten/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
@@ -497,7 +590,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = de.slsoft.akhenaten;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -520,6 +613,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2A9BCADB2ED8C45600671ED4 /* Build configuration list for PBXAggregateTarget "Publish" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A9BCAD92ED8C45600671ED4 /* Debug */,
+				2A9BCADA2ED8C45600671ED4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2A9BCADE2ED8C4A900671ED4 /* Build configuration list for PBXAggregateTarget "Postscript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A9BCADF2ED8C4A900671ED4 /* Debug */,
+				2A9BCAE02ED8C4A900671ED4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2ABE3CB22ED8923D00C22DCE /* Build configuration list for PBXAggregateTarget "Compile akhenaten" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
