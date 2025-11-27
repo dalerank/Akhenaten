@@ -9,11 +9,12 @@
 
 #include <set>
 
-static auto &city_data = g_city;
+city_buildings_t::tracked_buildings_t g_tracked_buildings;
+
 const auto palace_types = { BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE };
 int city_buildings_t::get_palace_id() {
     for (auto btype : palace_types) {
-        const auto &palace = tracked_buildings->at(btype);
+        const auto &palace = tracked_buildings().at(btype);
         if (!palace.empty()) {
             return palace.front();
         }
@@ -23,16 +24,11 @@ int city_buildings_t::get_palace_id() {
 }
 
 void city_buildings_t::remove_palace(building &palace) {
-    assert(!!palace.dcast_palace());
-    for (auto btype : palace_types) {
-        auto &palace = tracked_buildings->at(btype);
-        palace.clear();
-    }
 }
 
 void city_buildings_t::track_building(building &b, bool active) {
-    tracked_buildings->at(b.type).push_back(b.id);
-    g_city.buildings.increase_count(b.type, active);
+    g_tracked_buildings[b.type].push_back(b.id);
+    increase_count(b.type, active);
 }
 
 void city_buildings_t::check_buildings_twins() {
@@ -49,93 +45,93 @@ void city_buildings_t::check_buildings_twins() {
 }
 
 bool city_buildings_has_distribution_center() {
-    return city_data.buildings.distribution_center_placed;
+    return g_city.buildings.distribution_center_placed;
 }
 
 void city_buildings_add_distribution_center(building* center) {
-    city_data.buildings.distribution_center_placed = 1;
-    if (!city_data.buildings.distribution_center.grid_offset()) {
-        city_data.buildings.distribution_center_building_id = center->id;
-        city_data.buildings.distribution_center.set(center->tile.grid_offset());
+    g_city.buildings.distribution_center_placed = 1;
+    if (!g_city.buildings.distribution_center.grid_offset()) {
+        g_city.buildings.distribution_center_building_id = center->id;
+        g_city.buildings.distribution_center.set(center->tile.grid_offset());
     }
 }
 
 void city_buildings_remove_distribution_center(building* center) {
-    if (center->tile.grid_offset() == city_data.buildings.distribution_center.grid_offset()) {
-        city_data.buildings.distribution_center.set(0);
-        //        city_data.buildings.distribution_center.grid_offset() = 0;
-        //        city_data.buildings.distribution_center.x = 0;
-        //        city_data.buildings.distribution_center.y = 0;
-        city_data.buildings.distribution_center_placed = 0;
+    if (center->tile.grid_offset() == g_city.buildings.distribution_center.grid_offset()) {
+        g_city.buildings.distribution_center.set(0);
+        //        g_city.buildings.distribution_center.grid_offset() = 0;
+        //        g_city.buildings.distribution_center.x = 0;
+        //        g_city.buildings.distribution_center.y = 0;
+        g_city.buildings.distribution_center_placed = 0;
     }
 }
 
 int city_buildings_get_trade_center() {
-    return city_data.buildings.trade_center_building_id;
+    return g_city.buildings.trade_center_building_id;
 }
 
 void city_buildings_set_trade_center(int building_id) {
-    city_data.buildings.trade_center_building_id = building_id;
+    g_city.buildings.trade_center_building_id = building_id;
 }
 
 bool city_buildings_has_senet_house() {
-    return city_data.buildings.senet_house_placed;
+    return g_city.buildings.senet_house_placed;
 }
 
 void city_buildings_add_senet_house() {
-    city_data.buildings.senet_house_placed = 1;
+    g_city.buildings.senet_house_placed = 1;
 }
 
 void city_buildings_remove_senet_house() {
-    city_data.buildings.senet_house_placed = 0;
+    g_city.buildings.senet_house_placed = 0;
 }
 
 int city_buildings_triumphal_arch_available(void) {
-    return city_data.buildings.triumphal_arches_available > city_data.buildings.triumphal_arches_placed;
+    return g_city.buildings.triumphal_arches_available > g_city.buildings.triumphal_arches_placed;
 }
 
 void city_buildings_build_triumphal_arch(void) {
-    city_data.buildings.triumphal_arches_placed++;
+    g_city.buildings.triumphal_arches_placed++;
 }
 
 void city_buildings_remove_triumphal_arch(void) {
-    if (city_data.buildings.triumphal_arches_placed > 0)
-        city_data.buildings.triumphal_arches_placed--;
+    if (g_city.buildings.triumphal_arches_placed > 0)
+        g_city.buildings.triumphal_arches_placed--;
 }
 
 void city_buildings_earn_triumphal_arch(void) {
-    city_data.buildings.triumphal_arches_available++;
+    g_city.buildings.triumphal_arches_available++;
 }
 
 tile2i city_buildings_main_native_meeting_center() {
-    return city_data.buildings.main_native_meeting;
+    return g_city.buildings.main_native_meeting;
 }
 void city_buildings_set_main_native_meeting_center(int x, int y) {
-    city_data.buildings.main_native_meeting.set(x, y);
+    g_city.buildings.main_native_meeting.set(x, y);
 }
 
 int city_buildings_is_mission_post_operational(void) {
-    return city_data.buildings.mission_post_operational > 0;
+    return g_city.buildings.mission_post_operational > 0;
 }
 
 void city_buildings_set_mission_post_operational(void) {
-    city_data.buildings.mission_post_operational = 1;
+    g_city.buildings.mission_post_operational = 1;
 }
 
 tile2i city_building_get_festival_square_position() {
-    return city_data.buildings.festival_square;
+    return g_city.buildings.festival_square;
 }
 
 void city_buildings_add_festival_square(building* square) {
-    city_data.buildings.festival_square = square->tile;
+    g_city.buildings.festival_square = square->tile;
 }
 
 void city_buildings_remove_festival_square() {
-    city_data.buildings.festival_square = tile2i::invalid;
+    g_city.buildings.festival_square = tile2i::invalid;
 }
 
 int city_buildings_unknown_value() {
-    return city_data.buildings.unknown_value;
+    return g_city.buildings.unknown_value;
 }
 
 void city_t::buildings_update_open_water_access() {
@@ -209,13 +205,14 @@ void city_buildings_t::on_post_load () {
     check_buildings_twins();
 }
 
+const city_buildings_t::tracked_buildings_t &city_buildings_t::tracked_buildings() const {
+    return g_tracked_buildings;
+}
+
 void city_buildings_t::init() {
-    tracked_buildings = new tracked_buildings_t();
 }
 
 void city_buildings_t::shutdown() {
-    delete tracked_buildings;
-    tracked_buildings = nullptr;
 }
 
 void city_buildings_t::update_tick(bool refresh_only) {
@@ -227,7 +224,7 @@ void city_buildings_t::update_tick(bool refresh_only) {
 }
 
 void city_buildings_t::reset_tracked_buildings_counters() {
-    for (auto &bids: *tracked_buildings) {
+    for (auto &bids: g_tracked_buildings) {
         bids.clear();
     }
 }
@@ -250,7 +247,7 @@ const e_building_type _temple_complex_types[] = {
 
 building_id city_buildings_t::temple_complex_id() {
     for (const e_building_type type : _temple_complex_types) {
-        const auto &complexes = g_city.buildings.tracked_buildings->at(type);
+        const auto &complexes = tracked_buildings().at(type);
         if (!complexes.empty()) {
             return complexes.front();
         }
@@ -262,7 +259,7 @@ building_id city_buildings_t::temple_complex_id() {
 bool city_buildings_t::has_temple_complex() {
     bool has_temple_complex = false;
     for (const e_building_type type : _temple_complex_types) {
-        const auto &complexes = g_city.buildings.tracked_buildings->at(type);
+        const auto &complexes = tracked_buildings().at(type);
         has_temple_complex |= !complexes.empty();
     }
 

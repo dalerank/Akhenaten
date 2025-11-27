@@ -510,18 +510,20 @@ info_window_burning_ruin = {
     }
 }
 
-info_window_mansion = {
+info_window_mansion {
     first_advisor : ADVISOR_IMPERIAL,
-    ui : {
-        background    : outer_panel({size: [29, 18]}),
+    ui {
+        background    : outer_panel({size[29, 18]}),
 
-        title               : text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        first_advisor : image_button({pos:[40, -1], size:[28, 28], pack:PACK_GENERAL, id:106 }),
-        warning_text    : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
-        change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin:{centerx:-200, bottom:-80}, size:[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
+        title       : text({pos[0, 16], text:"${building.name}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
+        first_advisor : image_button({pos[40, -1], size[28, 28], pack:PACK_GENERAL, id:106 }),
+        resource_img  : resource_icon({pos[16, 16], resource:RESOURCE_GOLD}),
+        savings_hold  : text({pos[44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
+        warning_text  : text({pos[32, 66], text:"${text.1}", wrap:px(27), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+        change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin{centerx:-200, bottom:-80}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
 
-      button_help   : help_button({}),
-      button_close  : close_button({}),
+        button_help   : help_button({})
+        button_close  : close_button({})
     }
 }
 

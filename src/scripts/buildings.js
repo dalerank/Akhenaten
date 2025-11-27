@@ -707,6 +707,11 @@ building_family_mansion {
 }
 
 building_dynasty_mansion {
+  animations {
+    preview { pack:PACK_GENERAL, id:87 }
+    base { pack:PACK_GENERAL, id:87 }
+    work { pos[-1, -1], pack:PACK_GENERAL, id:87, offset:1, max_frames:12 }
+  }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   building_size : 4
   planner_update_rule {

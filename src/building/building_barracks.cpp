@@ -33,7 +33,7 @@ bool building_recruiter::static_params::is_unique_building() const {
         return false;
     }
 
-    const bool exist = !g_city.buildings.tracked_buildings[TYPE].empty();
+    const bool exist = g_city.buildings.count_total(TYPE) > 0;
     return exist;
 }
 
