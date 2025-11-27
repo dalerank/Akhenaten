@@ -4,6 +4,8 @@
 #include "game/game.h"
 #include "scenario/scenario.h"
 #include "building/building_house.h"
+#include "empire/empire.h"
+#include "game/resource.h"
 
 void city_t::update_prosperity_explanation() {
     int change = 0;
@@ -51,6 +53,17 @@ void city_t::update_prosperity_explanation() {
     // working hippodrome: +1
     if (entertainment.senet_house_plays > 0)
         change += 1;
+
+    // luxury goods export bonus: +1 for >100 units/year, +2 for >500 units/year
+    int luxury_goods_exported = 0;
+    for (const auto &route : g_empire.get_routes()) {
+        luxury_goods_exported += route.traded(RESOURCE_LUXURY_GOODS);
+    }
+    if (luxury_goods_exported > 500) {
+        change += 2;
+    } else if (luxury_goods_exported > 100) {
+        change += 1;
+    }
 
     int reason;
     if (ratings.prosperity <= 0 && game.simtime.year == g_scenario.start_year)
@@ -118,6 +131,17 @@ void city_t::update_prosperity_rating() {
     // working hippodrome: +1
     if (entertainment.senet_house_plays > 0)
         change += 1;
+
+    // luxury goods export bonus: +1 for >100 units/year, +2 for >500 units/year
+    int luxury_goods_exported = 0;
+    for (const auto &route : g_empire.get_routes()) {
+        luxury_goods_exported += route.traded(RESOURCE_LUXURY_GOODS);
+    }
+    if (luxury_goods_exported > 500) {
+        change += 2;
+    } else if (luxury_goods_exported > 100) {
+        change += 1;
+    }
 
     ratings.prosperity += change;
     if (ratings.prosperity > ratings.prosperity_max)
