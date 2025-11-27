@@ -37,6 +37,7 @@ public:
 
     [[nodiscard]] bool use_crashdlg() const { return use_crashdlg_; }
     [[nodiscard]] bool create_fulldmp() const { return create_fulldmp_; }
+    [[nodiscard]] bool should_show_config_window() const { return show_config_window_; }
 
     [[nodiscard]] const char* get_scripts_directory() const;
     void parse(int argc, char **argv);
@@ -55,6 +56,7 @@ private:
     bool use_crashdlg_ = true;
     bool create_fulldmp_ = false;
     bool logjsfiles_ = false;
+    bool show_config_window_ = false;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);

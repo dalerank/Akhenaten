@@ -22,10 +22,6 @@ jobs:
           ~/Library/Frameworks/SDL2_mixer.framework
         key: ${{ runner.os }}-download-sdl-arm64-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
 
-    - name: download-sdl
-      if: steps.cache-sdl-libs.outputs.cache-hit != 'true'
-      run: ./.ci-scripts/mac/download-sdl.sh
-
     - name: update-workspace
       run: |
         mkdir -p build
