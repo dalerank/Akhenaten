@@ -173,6 +173,13 @@ void city_ratings_t::update_culture_rating() {
     culture_points.library = culture_library_rating_points.find(g_city.coverage.library);
     culture += culture_points.library;
 
+    // Add culture bonus from working jewels workshops: +1 per every 3 workshops (if enabled)
+    if (!!game_features::gameplay_jewels_workshops_culture_bonus) {
+        int active_jewels_workshops = g_city.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
+        int jewels_workshops_culture_bonus = active_jewels_workshops / 3;
+        culture += jewels_workshops_culture_bonus;
+    }
+
     culture = calc_bound(culture, 0, 100);
     update_culture_explanation();
 }
