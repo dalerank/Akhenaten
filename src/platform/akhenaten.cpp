@@ -181,8 +181,8 @@ static void setup() {
     g_args.set_data_directory(SDL_AndroidGetExternalStoragePath());
 #endif
 
-    // Show configuration window if --config flag is set
-    if (g_args.should_show_config_window()) {
+    // Show configuration window if --config flag is set or config file doesn't exist
+    if (g_args.should_show_config_window() || !g_args.config_file_exists()) {
 #ifndef GAME_PLATFORM_ANDROID
         show_options_window(g_args);
 #endif
