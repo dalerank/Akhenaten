@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: run on linux
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
       with:
@@ -17,7 +17,7 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes flatpak-builder appstream
+        sudo apt install --yes flatpak-builder appstream-util
     - name: build-project
       run: |
         sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
