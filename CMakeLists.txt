@@ -414,9 +414,7 @@ endif()
 if(NOT PLATFORM_ANDROID)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
-    # Set SDL2_SHARED before declaring SDL2_mixer to avoid conflicts
-    set(SDL2_SHARED OFF CACHE BOOL "" FORCE)
-    
+    # Setup SDL2_mixer FetchContent
     if (EXISTS "${LOCAL_DEPS_ROOT}/SDL2_mixer-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_SDL2_MIXER "${LOCAL_DEPS_ROOT}/SDL2_mixer-src")
         set(FETCHCONTENT_UPDATES_DISCONNECTED_SDL2_MIXER TRUE)
@@ -428,65 +426,59 @@ if(NOT PLATFORM_ANDROID)
         GIT_TAG        release-${SDL2_MIXER_VERSION}
     )
     
-    set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
-    set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)
-    set(SDL2MIXER_SHARED OFF CACHE BOOL "" FORCE)
-    
-    set(SDL2_LIBRARY ${SDL2_LIBRARY} CACHE FILEPATH "Path to SDL2 library" FORCE)
-    set(SDL2_INCLUDE_DIR ${SDL2_INCLUDE_DIR} CACHE PATH "Path to SDL2 include directory" FORCE)
-    set(SDL2_ROOT ${SDL2_ROOT} CACHE PATH "Path to SDL2 installation" FORCE)
-    
-    # Ensure math library is linked for SDL2_mixer dependencies (libxmp)
-    if(UNIX AND NOT APPLE)
-        # Set linker flags that will be used when building SDL2_mixer and its dependencies
-        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lm" CACHE STRING "" FORCE)
+    FetchContent_GetProperties(SDL2_mixer)
+    if(NOT SDL2_mixer_POPULATED)
+        FetchContent_Populate(SDL2_mixer)
     endif()
     
-    FetchContent_MakeAvailable(SDL2_mixer)
+    # FetchContent_Populate creates SDL2_mixer_SOURCE_DIR automatically
+    set(SDL2_MIXER_SOURCE_DIR "${sdl2_mixer_SOURCE_DIR}")
+    set(SDL2_MIXER_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/SDL2_mixer")
+    set(SDL2_MIXER_BUILD_DIR "${SDL2_MIXER_BUILD_BASE_DIR}/build")
+    set(SDL2_MIXER_INSTALL_DIR "${CMAKE_BINARY_DIR}/libs/SDL2_mixer")
+    set(SDL2_MIXER_BUILD_CONFIG ${CMAKE_BUILD_TYPE})
     
-    # After SDL2_mixer is available, ensure libxmp links with math library
-    if(UNIX AND NOT APPLE)
-        if(TARGET xmp_shared)
-            target_link_libraries(xmp_shared PRIVATE m)
-        endif()
-        if(TARGET xmp_static)
-            target_link_libraries(xmp_static PRIVATE m)
-        endif()
-        if(TARGET xmp)
-            target_link_libraries(xmp PRIVATE m)
-        endif()
-    endif()
+    # Create build directory in prebuild_libs/SDL2_mixer
+    file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_BASE_DIR})
+    file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_DIR})
+    file(MAKE_DIRECTORY ${SDL2_MIXER_INSTALL_DIR})
     
-    # Set SDL2_mixer variables for linking
-    # SDL2_mixer may create different target names depending on version
-    if(TARGET SDL2::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
+    # Prepare variables for BuildSDL2_mixer.cmake
+    set(SDL2_MIXER_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildSDL2_mixer.cmake")
+    
+    # Build SDL2_mixer using execute_process (runs during configuration phase)
+    message(STATUS "Building SDL2_mixer static library...")
+    set(SDL2_MIXER_BUILD_CMAKE_ARGS
+        -DSDL2_MIXER_VERSION=${SDL2_MIXER_VERSION}
+        -DSDL2_MIXER_SOURCE_DIR=${SDL2_MIXER_SOURCE_DIR}
+        -DSDL2_MIXER_BUILD_DIR=${SDL2_MIXER_BUILD_DIR}
+        -DSDL2_MIXER_INSTALL_DIR=${SDL2_MIXER_INSTALL_DIR}
+        -DSDL2_MIXER_BUILD_CONFIG=${SDL2_MIXER_BUILD_CONFIG}
+        -DSDL2_MIXER_IS_MSVC=${MSVC}
+        -DSDL2_ROOT=${SDL2_ROOT}
+    )
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} ${SDL2_MIXER_BUILD_CMAKE_ARGS} -P ${SDL2_MIXER_BUILD_SCRIPT}
+        WORKING_DIRECTORY ${SDL2_MIXER_BUILD_BASE_DIR}
+        RESULT_VARIABLE SDL2_MIXER_BUILD_RESULT
+    )
+    
+    # Set SDL2_mixer library path - use absolute path to avoid issues with find_package
+    if(MSVC)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR NOT CMAKE_BUILD_TYPE)
+            set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-staticd.lib")
+        else()
+            set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-static.lib")
         endif()
-    elseif(TARGET SDL2_mixer::SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer::SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer::SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
-    elseif(TARGET SDL2_mixer)
-        set(SDL2_MIXER_LIBRARY SDL2_mixer)
-        get_target_property(SDL2_MIXER_INCLUDE_DIR_TEMP SDL2_mixer INTERFACE_INCLUDE_DIRECTORIES)
-        if(SDL2_MIXER_INCLUDE_DIR_TEMP)
-            list(GET SDL2_MIXER_INCLUDE_DIR_TEMP 0 SDL2_MIXER_INCLUDE_DIR)
-        endif()
+
+        get_filename_component(SDL2_MIXER_LIBRARY "${SDL2_MIXER_LIBRARY}" ABSOLUTE)
     else()
-        # Fallback: assume SDL2::SDL2_mixer will be available at link time
-        set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-    endif()
-    
-    # Fallback: use source directory for includes if target properties not available
-    if(NOT SDL2_MIXER_INCLUDE_DIR AND DEFINED SDL2_mixer_SOURCE_DIR)
-        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_mixer_SOURCE_DIR}/include")
-    endif()
+        set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_INSTALL_DIR}/libSDL2_mixer-static.a")
+    endif()   
+  
+    set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)    
+    set(SDL2_MIXER_ROOT "${SDL2_MIXER_INSTALL_DIR}" CACHE PATH "Path to SDL2_mixer installation" FORCE)
+    set(SDL2_MIXER_FOUND TRUE CACHE BOOL "Whether SDL2_mixer was found" FORCE)
 endif()
 
 #
@@ -1213,7 +1205,7 @@ target_link_libraries (${GAME}
                         $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
 
 if(MSVC)
-    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi")
+    target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi" "setupapi" "version")
     
     set(LIBVPX_DEPS_ROOT "${CMAKE_BINARY_DIR}/_deps")
     set(LIBVPX_INSTALL_DIR "${LIBVPX_DEPS_ROOT}/libvpx")
