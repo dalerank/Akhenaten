@@ -19,8 +19,6 @@ jobs:
       id: cache-sdl-libs
       with:
         path: |
-          ~/Library/Frameworks/SDL2.framework
-          ~/Library/Frameworks/SDL2_image.framework
           ~/Library/Frameworks/SDL2_mixer.framework
         key: ${{ runner.os }}-download-sdl-arm64-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
 
