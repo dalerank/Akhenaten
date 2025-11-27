@@ -1,6 +1,6 @@
 # This file is used to build freetype as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildFreetype.cmake
-# Required variables: FREETYPE_SOURCE_DIR, FREETYPE_BUILD_DIR, FREETYPE_INSTALL_DIR, ZLIB_ROOT
+# Required variables: FREETYPE_SOURCE_DIR, FREETYPE_BUILD_DIR, FREETYPE_INSTALL_DIR, ZLIB_ROOT, FREETYPE_ADDITIONAL_CMAKE_ARGS
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${FREETYPE_BUILD_DIR})
@@ -19,19 +19,9 @@ set(FREETYPE_CMAKE_ARGS
     -DFT_DISABLE_BROTLI=ON
 )
 
-# Pass through macOS deployment target if defined
-if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
-    list(APPEND FREETYPE_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
-endif()
-
-# Pass through macOS architectures if defined
-if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
-    list(APPEND FREETYPE_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
-endif()
-
 # Set zlib path for freetype to find
 if(DEFINED ZLIB_ROOT)
-    set(FREETYPE_CMAKE_ARGS ${FREETYPE_CMAKE_ARGS}
+    set(FREETYPE_CMAKE_ARGS ${FREETYPE_CMAKE_ARGS} ${FREETYPE_ADDITIONAL_CMAKE_ARGS}
         -DZLIB_ROOT=${ZLIB_ROOT}
         -DZLIB_INCLUDE_DIR=${ZLIB_ROOT}/include
         -DZLIB_LIBRARY=${ZLIB_LIBRARY}

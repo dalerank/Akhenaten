@@ -3,6 +3,8 @@
 #include "building/building_house_demands.h"
 #include "building/building_house_model.h"
 #include "building/building.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 
 enum e_house_progress { 
     e_house_evolve = 1,
@@ -378,6 +380,37 @@ void buildings_house_do(T func) {
         auto house = it->dcast_house();
         if (house) {
             func(house);
+        }
+    }
+}
+
+template<typename T, typename Processed>
+void buildings_house_in_radius_do(tile2i center, int radius, Processed* processed_buildings, T func) {
+    grid_area area = map_grid_get_area(center, 1, radius);
+    for (int yy = area.tmin.y(); yy <= area.tmax.y(); yy++) {
+        for (int xx = area.tmin.x(); xx <= area.tmax.x(); xx++) {
+            tile2i current_tile(xx, yy);
+            int grid_offset = current_tile.grid_offset();
+            int building_id = map_building_at(grid_offset);
+
+            if (!building_id) {
+                continue;
+            }
+
+            if (processed_buildings && processed_buildings->find(building_id) != processed_buildings->end()) {
+                continue;
+            }
+
+            building *b = building_get(building_id);
+            auto house = b->dcast_house();
+
+            if (house) {
+                if (processed_buildings) {
+                    processed_buildings->insert(building_id);
+                }
+
+                func(house);
+            }
         }
     }
 }

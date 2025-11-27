@@ -31,7 +31,7 @@ struct city_buildings_t {
 
     using tracked_building_ids = std::vector<building_id>;
     using tracked_buildings_t = std::array<tracked_building_ids, BUILDING_MAX>;
-    tracked_buildings_t *tracked_buildings = nullptr;
+    const tracked_buildings_t &tracked_buildings() const;
 
     int32_t mission_post_operational;
     tile2i main_native_meeting;
@@ -65,15 +65,15 @@ struct city_buildings_t {
 
     void reset_tracked_buildings_counters();
     void track_building(building &b, bool active);
-    const tracked_building_ids &track_buildings(e_building_type type) const { return tracked_buildings->at(type); }
+    const tracked_building_ids &track_buildings(e_building_type type) const { return tracked_buildings().at(type); }
 
     void clear_fishing_boat_requests() { fishing_boats_requested = 0; }
     void request_fishing_boat() { ++fishing_boats_requested; }
     void request_warship_ship() { ++warships_requested; }
     void request_transport_ship() { ++transport_ships_requested; }
 
-    bool has_working_dock() const { return !tracked_buildings->at(BUILDING_DOCK).empty(); }
-    bool has_working_shipyard() const { return !tracked_buildings->at(BUILDING_SHIPWRIGHT).empty(); }
+    bool has_working_dock() const { return !tracked_buildings().at(BUILDING_DOCK).empty(); }
+    bool has_working_shipyard() const { return !tracked_buildings().at(BUILDING_SHIPWRIGHT).empty(); }
 
     void increase_count(e_building_type type, bool active);
     void increase_industry_count(int resource, bool active);

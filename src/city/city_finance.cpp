@@ -322,7 +322,30 @@ void city_finance_t::pay_monthly_salary() {
         return;
     }
 
-    process_request({ efinance_request_personal_salary, g_city.kingdome.salary_amount });
+    uint32_t salary = g_city.kingdome.salary_amount;
+    process_request({ efinance_request_personal_salary, salary });
+    
+    // Store savings in the mansion building
+    const e_building_type mansion_types[] = {
+        BUILDING_PERSONAL_MANSION,
+        BUILDING_FAMILY_MANSION,
+        BUILDING_DYNASTY_MANSION
+    };
+    
+    for (e_building_type type : mansion_types) {
+        const auto tracked = g_city.buildings.tracked_buildings()[type];
+        for (auto id : tracked) {
+            building *b = building_get(id);
+            if (b && b->is_valid() && b->state == BUILDING_STATE_VALID) {
+                auto mansion = b->dcast_mansion();
+                if (mansion && mansion->has_road_access()) {
+                    auto &d = mansion->runtime_data();
+                    d.personal_savings_storage += salary;
+                    return; // Store only in the first valid mansion
+                }
+            }
+        }
+    }
 }
 
 static void reset_taxes() {

@@ -23,6 +23,15 @@ else()
     set(PLATFORM_ANDROID FALSE)
 endif()
 
+# Prepare additional CMake args for macOS architecture settings
+set(BUILD_ADDITIONAL_CMAKE_ARGS "")
+if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
+    list(APPEND BUILD_ADDITIONAL_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
+endif()
+if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+    list(APPEND BUILD_ADDITIONAL_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
+endif()
+
 #
 # Akhenaten
 #
@@ -366,6 +375,7 @@ if(NOT PLATFORM_ANDROID)
         -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
         -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
         -DSDL2_IS_MSVC=${MSVC}
+        -DSDL2_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_BUILD_CMAKE_ARGS} -P ${SDL2_BUILD_SCRIPT}
@@ -456,6 +466,7 @@ if(NOT PLATFORM_ANDROID)
         -DSDL2_MIXER_BUILD_CONFIG=${SDL2_MIXER_BUILD_CONFIG}
         -DSDL2_MIXER_IS_MSVC=${MSVC}
         -DSDL2_ROOT=${SDL2_ROOT}
+        -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_MIXER_BUILD_CMAKE_ARGS} -P ${SDL2_MIXER_BUILD_SCRIPT}
@@ -476,7 +487,17 @@ if(NOT PLATFORM_ANDROID)
         set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_INSTALL_DIR}/libSDL2_mixer-static.a")
     endif()   
   
-    set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)    
+    # Determine the correct include directory based on where headers are actually installed
+    if(EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL2/SDL_mixer.h")
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)
+    elseif(EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL_mixer.h")
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include" CACHE PATH "Path to SDL2_mixer include directory" FORCE)
+    else()
+        # Default to include/SDL2 if neither location exists (headers might not be installed yet)
+        set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2_mixer include directory" FORCE)
+        message(WARNING "SDL2_mixer: Headers not found in expected locations. Using default: ${SDL2_MIXER_INCLUDE_DIR}")
+    endif()
+    
     set(SDL2_MIXER_ROOT "${SDL2_MIXER_INSTALL_DIR}" CACHE PATH "Path to SDL2_mixer installation" FORCE)
     set(SDL2_MIXER_FOUND TRUE CACHE BOOL "Whether SDL2_mixer was found" FORCE)
 endif()
@@ -523,6 +544,7 @@ set(FREETYPE_BUILD_SCRIPT "${CMAKE_SOURCE_DIR}/cmake/BuildFreetype.cmake")
 
 # Build freetype using execute_process (runs during configuration phase)
 message(STATUS "Building freetype static library...")
+
 set(FREETYPE_BUILD_CMAKE_ARGS
     -DFREETYPE_VERSION=${FREETYPE_VERSION}
     -DFREETYPE_SOURCE_DIR=${FREETYPE_SOURCE_DIR}
@@ -532,6 +554,7 @@ set(FREETYPE_BUILD_CMAKE_ARGS
     -DFREETYPE_IS_MSVC=${MSVC}
     -DZLIB_ROOT=${ZLIB_ROOT}
     -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+    -DFREETYPE_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
 )
 
 execute_process(
@@ -998,21 +1021,19 @@ include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/lame/include)
+include_directories(src)
+include_directories(${imgui_SOURCE_DIR})
+include_directories(${imgui_SOURCE_DIR}/backends)
+include_directories(${imgui_SOURCE_DIR}/misc/cpp)
+include_directories(${HARFBUZZ_INCLUDE_DIRS})
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
     # no filters on android
     set(GPUPIXEL_LIBRARY "")
 else()
     include_directories(${GPUPIXEL_INCLUDE_DIR})
+    include_directories(ext/gpupixel/utils)
 endif()
-
-include_directories(ext)
-include_directories(src)
-include_directories(${imgui_SOURCE_DIR})
-include_directories(${imgui_SOURCE_DIR}/backends)
-include_directories(${imgui_SOURCE_DIR}/misc/cpp)
-include_directories(${HARFBUZZ_INCLUDE_DIRS})
-include_directories(ext/gpupixel/utils)
 
 if(MSVC)
     include_directories(ext/bugtrap)

@@ -163,6 +163,9 @@ static void pre_load() { // do we NEED this...?
     map_image_context_init();
     map_random_init();
     map_tiles_gardens_clear_all();
+
+    events::emit(event_game_mission_pre_load{});
+    events::process();
 }
 
 static void post_load() {
