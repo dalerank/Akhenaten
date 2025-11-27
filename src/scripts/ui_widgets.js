@@ -513,13 +513,15 @@ info_window_burning_ruin = {
 info_window_mansion {
     first_advisor : ADVISOR_IMPERIAL,
     ui {
-        background    : outer_panel({size[29, 18]}),
+        background    : outer_panel({size[29, 20]}),
 
         title       : text({pos[0, 16], text:"${building.name}", size[px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
         first_advisor : image_button({pos[40, -1], size[28, 28], pack:PACK_GENERAL, id:106 }),
-        resource_img  : resource_icon({pos[16, 16], resource:RESOURCE_GOLD}),
+        resource_img  : resource_icon({pos[16, 44], resource:RESOURCE_GOLD}),
         savings_hold  : text({pos[44, 44], text:"${text.2} ${building.tax_income_or_storage} Db", font: FONT_NORMAL_BLACK_ON_LIGHT }),
-        warning_text  : text({pos[32, 66], text:"${text.1}", wrap:px(27), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+        protection_info : text({pos[32, 64], text:"${text.4}", font: FONT_SMALL_PLAIN, wrap:px(25), multiline:true }),
+        warning_text  : text({pos[32, 86], text:"${text.1}", wrap:px(27), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
+        salary_info   : text({pos[32, 150], text:"${text.5}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(25), multiline:true }),
         change_salary : button({text:"${player.rank_name} ${player.salary_amount} ${52.3}", margin{centerx:-200, bottom:-80}, size[400, 30], font: FONT_NORMAL_BLACK_ON_DARK }),
 
         button_help   : help_button({})
@@ -910,4 +912,31 @@ info_window_education = {
                                                         }
                                                     }),
     })
+}
+
+set_salary_window {
+    pos [(sw(0) - px(24))/2, (sh(0) - px(25))/2],
+    ui {
+        background_image : background({pack:PACK_UNLOADED, id:11})
+        background       : outer_panel({size[24, 25]})
+        resource_icon    : resource_icon({pos[16, 16], resource:RESOURCE_DEBEN})
+        title            : text_center({pos[48, 16], size[px(24) - 64, 20], text[52, 15], font: FONT_LARGE_BLACK_ON_LIGHT})
+        inner_panel      : inner_panel({pos[16, 48], size[22, 15]
+            ui {
+                salary_rank_0   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 5], size [px(22) - 64, 20]})
+                salary_rank_1   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 25], size [px(22) - 64, 20]})
+                salary_rank_2   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 45], size [px(22) - 64, 20]})
+                salary_rank_3   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 65], size [px(22) - 64, 20]})
+                salary_rank_4   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 85], size [px(22) - 64, 20]})
+                salary_rank_5   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 105], size [px(22) - 64, 20]})
+                salary_rank_6   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 125], size [px(22) - 64, 20]})
+                salary_rank_7   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 145], size [px(22) - 64, 20]})
+                salary_rank_8   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 165], size [px(22) - 64, 20]})
+                salary_rank_9   : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 185], size [px(22) - 64, 20]})
+                salary_rank_10  : button({font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 205], size [px(22) - 64, 20]})
+            }
+        })
+        explanation_text : text({pos[16, 304], size[px(22), -1], wrap:px(22), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true})
+        btn_cancel       : button({margin{centerx: -80, bottom: -40}, size[160, 20], text[13, 4], font: FONT_NORMAL_BLACK_ON_LIGHT})
+    }
 }

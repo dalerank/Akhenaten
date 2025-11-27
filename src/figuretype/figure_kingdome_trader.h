@@ -46,7 +46,7 @@ public:
     virtual void sell(int amounts) override { base.resource_amount_full += amounts; }
 
     empire_trader_handle empire_trader() const { return runtime_data().trader; }
-    empire_city_handle empire_city() const { return runtime_data().empire_city; }
+    virtual empire_city_handle empire_city() const override { return runtime_data().empire_city; }
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 };
