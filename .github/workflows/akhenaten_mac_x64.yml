@@ -1,4 +1,4 @@
-name: Akhenaten Build Mac
+name: Akhenaten Build Mac x86_64
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           ~/Library/Frameworks/SDL2.framework
           ~/Library/Frameworks/SDL2_image.framework
           ~/Library/Frameworks/SDL2_mixer.framework
-        key: ${{ runner.os }}-download-sdl-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
+        key: ${{ runner.os }}-download-sdl-x86_64-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
 
     - name: download-sdl
       if: steps.cache-sdl-libs.outputs.cache-hit != 'true'
