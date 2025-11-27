@@ -142,7 +142,7 @@ public:
     //*************************************************************************
     template <typename U>
     void release(const U *const p_object) {
-        static_assert((std::is_same<U, T>::value || std:::is_base_of<U, T>::value) && "Pool does not contain this type");
+        static_assert((std::is_same<U, T>::value || std::is_base_of<U, T>::value) && "Pool does not contain this type");
         base_t::release(p_object);
     }
 

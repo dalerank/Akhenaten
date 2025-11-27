@@ -57,7 +57,7 @@ bool is_aligned(const void *p) {
 //*****************************************************************************
 template <typename T>
 bool is_aligned(const void *p) {
-    return is_aligned<etl::alignment_of<T>::value>(p);
+    return is_aligned<std::alignment_of<T>::value>(p);
 }
 
 namespace private_alignment {
