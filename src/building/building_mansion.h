@@ -7,6 +7,10 @@ public:
     building_mansion(building &b) : building_impl(b) {}
     virtual building_mansion *dcast_mansion() override { return this; }
 
+    struct runtime_data_t {
+        int32_t personal_savings_storage;
+    } BUILDING_RUNTIME_DATA_T;
+
     virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
     virtual bool can_play_animation() const override { return true; }
@@ -16,6 +20,8 @@ public:
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MANSION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 
     static bool exist_in_city();
 };
