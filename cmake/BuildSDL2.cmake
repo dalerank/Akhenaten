@@ -1,6 +1,6 @@
 # This file is used to build SDL2 as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildSDL2.cmake
-# Required variables: SDL2_SOURCE_DIR, SDL2_BUILD_DIR, SDL2_INSTALL_DIR
+# Required variables: SDL2_SOURCE_DIR, SDL2_BUILD_DIR, SDL2_INSTALL_DIR, SDL2_ADDITIONAL_CMAKE_ARGS
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${SDL2_BUILD_DIR})
@@ -15,21 +15,11 @@ set(SDL2_CMAKE_ARGS
     -DSDL_TEST=OFF
 )
 
-# Pass through macOS deployment target if defined
-if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
-    list(APPEND SDL2_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
-endif()
-
-# Pass through macOS architectures if defined
-if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
-    list(APPEND SDL2_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
-endif()
-
 if(SDL2_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring SDL2...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} ${SDL2_CMAKE_ARGS}
+        COMMAND ${CMAKE_COMMAND} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} ${SDL2_CMAKE_ARGS} ${SDL2_ADDITIONAL_CMAKE_ARGS}
         WORKING_DIRECTORY ${SDL2_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
