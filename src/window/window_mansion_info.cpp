@@ -2,7 +2,11 @@
 
 #include "graphics/window.h"
 #include "building/building_mansion.h"
+#include "building/building_type.h"
 #include "city/object_info.h"
+#include "graphics/elements/ui.h"
+#include "window/set_salary.h"
+#include <algorithm>
 
 struct info_window_mansion : public building_info_window_t<info_window_mansion> {
     virtual void init(object_info &c) override;
@@ -19,20 +23,22 @@ void info_window_mansion::init(object_info &c) {
 
     building_mansion *mansion = c.building_get()->dcast_mansion();
 
-    textid reason{ c.group_id, 0 };
-    if (!mansion->has_road_access()) { reason = { 69, 25 }; }
-
-    if (reason.id > 0) {
-        ui["workers_desc"] = reason;
+    // Set warning text for road access
+    if (!mansion->has_road_access()) {
+        ui["warning_text"] = ui::str(69, 25); // "No road access"
+    } else {
+        ui["warning_text"] = "";
     }
 
-    ui["change_salary"].onclick([] {
-        if (g_city.victory_state.has_won()) {
-            return;
-        }
+    if (mansion->is_protected_by_police()) {
+        ui["protection_info"] = "Protected by police";
+    } else {
+        ui["protection_info"] = "Not protected - thieves may steal savings";
+    }
 
-        g_city.kingdome.set_salary_rank(0);
-        g_city.kingdome.update_explanation();
+    ui["change_salary"].readonly = g_city.victory_state.has_won();
+    ui["change_salary"].onclick([] {
+        window_set_salary_show();
     });
 }
 
