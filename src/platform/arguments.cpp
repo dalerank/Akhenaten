@@ -210,7 +210,7 @@ void Arguments::parse(int argc, char** argv) {
         }
     }
 #endif
-    arguments::load(*this);
+    config_file_exists_ = arguments::load(*this);
     parse_cli_(argc, argv);
 }
 
@@ -238,6 +238,8 @@ char const* Arguments::usage() {
            "         create full dump on crash\n"
            "  --logjsfiles\n"
            "         print logs which files open with js\n"
+           "  --config\n"
+           "         always show configuration window on startup\n"
            "\n"
            "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
 }
@@ -334,6 +336,8 @@ void Arguments::parse_cli_(int argc, char** argv) {
             window_mode_ = true;
         } else if (SDL_strcmp(argv[i], "--logjsfiles") == 0) {
             logjsfiles_ = true;
+        } else if (SDL_strcmp(argv[i], "--config") == 0) {
+            show_config_window_ = true;
         } else if (SDL_strcmp(argv[i], "--nosound") == 0) {
             use_sound_ = false;
         } else if (SDL_strcmp(argv[i], "--nocrashdlg") == 0) {
@@ -404,28 +408,30 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
 namespace arguments {
 
-void load(Arguments& arguments) {
+bool load(Arguments& arguments) {
     std::ifstream input(get_configuration_path(), std::ios::in);
 
     if (!input.is_open()) {
         logs::info("Configuration file was not found.");
-    } else {
-        std::string line;
-        while (std::getline(input, line)) {
-            auto pos = line.find('=');
-            if (pos == std::string::npos)
-                continue;
+        return false;
+    } 
+    
+    std::string line;
+    while (std::getline(input, line)) {
+        auto pos = line.find('=');
+        if (pos == std::string::npos)
+            continue;
 
-            auto const key = line.substr(0, pos);
-            auto const it = argument_types.find(key);
-            if (it == argument_types.end()) {
-                logs::warn("Unknown argument key: %s", key.c_str());
-                continue;
-            }
-
-            set_value(arguments, it->second, line.substr(pos + 1));
+        auto const key = line.substr(0, pos);
+        auto const it = argument_types.find(key);
+        if (it == argument_types.end()) {
+            logs::warn("Unknown argument key: %s", key.c_str());
+            continue;
         }
+
+        set_value(arguments, it->second, line.substr(pos + 1));
     }
+    return true;
 }
 
 void store(Arguments const& arguments) {

@@ -13,6 +13,16 @@ set(ZLIB_CMAKE_ARGS
     -DSKIP_INSTALL_ALL=ON
 )
 
+# Pass through macOS deployment target if defined
+if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+    list(APPEND ZLIB_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
+endif()
+
+# Pass through macOS architectures if defined
+if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
+    list(APPEND ZLIB_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
+endif()
+
 if(ZLIB_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring zlib...")

@@ -15,6 +15,16 @@ set(SDL2_CMAKE_ARGS
     -DSDL_TEST=OFF
 )
 
+# Pass through macOS deployment target if defined
+if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+    list(APPEND SDL2_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
+endif()
+
+# Pass through macOS architectures if defined
+if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
+    list(APPEND SDL2_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
+endif()
+
 if(SDL2_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring SDL2...")

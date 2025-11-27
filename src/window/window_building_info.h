@@ -7,7 +7,7 @@ class building;
 
 struct building_info_window : public common_info_window {
     e_advisor first_advisor = ADVISOR_NONE;
-    svector<e_building_type, 8> related_buildings;
+    svector<e_building_type, 16> related_buildings;
     xstring help_id;
 
     building_info_window();

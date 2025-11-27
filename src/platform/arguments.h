@@ -37,6 +37,8 @@ public:
 
     [[nodiscard]] bool use_crashdlg() const { return use_crashdlg_; }
     [[nodiscard]] bool create_fulldmp() const { return create_fulldmp_; }
+    [[nodiscard]] bool should_show_config_window() const { return show_config_window_; }
+    [[nodiscard]] bool config_file_exists() const { return config_file_exists_; }
 
     [[nodiscard]] const char* get_scripts_directory() const;
     void parse(int argc, char **argv);
@@ -55,6 +57,8 @@ private:
     bool use_crashdlg_ = true;
     bool create_fulldmp_ = false;
     bool logjsfiles_ = false;
+    bool show_config_window_ = false;
+    bool config_file_exists_ = false;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);
@@ -65,7 +69,8 @@ extern Arguments g_args;
 namespace arguments {
 
 /// Load configuration from the file (if exists)
-void load(Arguments& arguments);
+/// @return true if configuration file was found and loaded, false otherwise
+bool load(Arguments& arguments);
 
 /// Store configuration to the file system
 void store(Arguments const& arguments);
