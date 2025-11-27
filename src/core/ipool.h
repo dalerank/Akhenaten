@@ -220,8 +220,7 @@ public:
 
     //*************************************************************************
     /// Allocate storage for an object from the pool.
-    /// If asserts or exceptions are enabled and there are no more free items an
-    /// etl::pool_no_allocation if thrown, otherwise a null pointer is returned.
+    /// If asserts or exceptions are enabled and there are no more free items
     //*************************************************************************
     template <typename T>
     T *allocate() {
@@ -255,7 +254,7 @@ public:
     template <typename T>
     void destroy(const T *const p_object) {
         if (sizeof(T) > Item_Size) {
-            assert(false && "etl::pool_element_size");
+            assert(false && "pool_element_size");
         }
 
         p_object->~T();
@@ -264,8 +263,7 @@ public:
 
     //*************************************************************************
     /// Release an object in the pool.
-    /// If asserts or exceptions are enabled and the object does not belong to this
-    /// pool then an etl::pool_object_not_in_pool is thrown.
+    /// If asserts or exceptions are enabled and the object does not belong in pool
     /// \param p_object A pointer to the object to be released.
     //*************************************************************************
     void release(const void *const p_object) {
