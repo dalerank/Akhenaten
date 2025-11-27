@@ -1046,52 +1046,6 @@ if(APPLE)
 endif()
 
 if(APPLE)
-    set(EXECUTABLE_PATH "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS/akhenaten")
-    set(FRAMEWORKS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/Frameworks")
-    set(BROTLI_LIB_DIR "/opt/homebrew/opt/brotli/lib" CACHE PATH "Path to Brotli libs" FORCE)
-
-    add_custom_command(TARGET ${GAME} POST_BUILD
-        # Frameworks-Ordner sicherstellen
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${FRAMEWORKS_DIR}"
-
-        # Brotli-Dylibs explizit ins Bundle kopieren
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${BROTLI_LIB_DIR}/libbrotlidec.1.2.0.dylib"
-            "${FRAMEWORKS_DIR}/libbrotlidec.1.2.0.dylib"
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${BROTLI_LIB_DIR}/libbrotlicommon.1.dylib"
-            "${FRAMEWORKS_DIR}/libbrotlicommon.1.dylib"
-
-        # (Optional) Symlinks im Frameworks-Ordner
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
-            "libbrotlidec.1.2.0.dylib"
-            "${FRAMEWORKS_DIR}/libbrotlidec.1.dylib"
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
-            "libbrotlicommon.1.dylib"
-            "${FRAMEWORKS_DIR}/libbrotlicommon.dylib"
-
-        # Referenz von libbrotlidec -> libbrotlicommon im Bundle fixen
-        COMMAND install_name_tool
-            -change "@rpath/libbrotlicommon.1.dylib"
-                    "@loader_path/libbrotlicommon.1.dylib"
-            "${FRAMEWORKS_DIR}/libbrotlidec.1.2.0.dylib"
-
-        # Referenz des Executables auf die lokale libbrotlidec im Bundle umbiegen
-        COMMAND install_name_tool
-            -change "/opt/homebrew/opt/brotli/lib/libbrotlidec.1.dylib"
-                    "@executable_path/../Frameworks/libbrotlidec.1.2.0.dylib"
-            "${EXECUTABLE_PATH}"
-
-        # Bundle neu codesignen
-        COMMAND codesign --force --deep --sign - "${CMAKE_BINARY_DIR}/akhenaten.app"
-
-        COMMENT "Bundling Brotli dylibs and fixing install_name paths in app bundle (ohne dylibbundler)"
-        VERBATIM
-    )
-endif()
-
-
-if(APPLE)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
     set(DATA_SRC_DIR "${CMAKE_SOURCE_DIR}/data")
     set(LAUNCH_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/macos/launch.sh")
