@@ -7,6 +7,7 @@
 #include "grid/road_access.h"
 #include "figuretype/figure_robber.h"
 #include "building/building_house.h"
+#include "building/building_mansion.h"
 #include "figuretype/figure_rioter.h"
 #include "core/random.h"
 #include "game/tutorial.h"
@@ -128,4 +129,7 @@ void city_t::figures_generate_criminals() {
             }
         }
     }
+    
+    // Check for theft from mansions
+    building_mansion::check_theft_from_mansions();
 }
