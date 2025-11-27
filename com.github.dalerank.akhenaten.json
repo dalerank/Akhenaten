@@ -3,6 +3,9 @@
     "runtime" : "org.freedesktop.Platform",
     "runtime-version" : "24.08",
     "sdk" : "org.freedesktop.Sdk",
+    "build-extensions" : [
+        "org.freedesktop.Sdk.Extension.appstream-GLib//24.08"
+    ],
     "command" : "akhenaten",
     "finish-args" : [
         "--filesystem=home",
