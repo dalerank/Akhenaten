@@ -61,14 +61,16 @@ void show_options_window(Arguments& args) {
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
+        // Handle window resize events
+        int platform_window_w, platform_window_h;
+        SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
+
         // Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
             bstring512 data_directory = args.get_data_directory();
-            ImVec2 window_size(1280 * 0.75, 720 * 0.75);
-            int platform_window_w, platform_window_h;
-            SDL_GetWindowSize(platform_window, &platform_window_w, &platform_window_h);
+            ImVec2 window_size((float)platform_window_w, (float)platform_window_h);
 
-            ImVec2 window_pos{(platform_window_w - window_size.x) / 2, (platform_window_h - window_size.y) / 2};
+            ImVec2 window_pos(0, 0);
             ImGui::SetNextWindowPos(window_pos);
             ImGui::SetNextWindowSize(window_size);
 
@@ -84,7 +86,7 @@ void show_options_window(Arguments& args) {
                 ImGuiFileDialog::Instance()->OpenDialog("ChooseFolderDlgKey", "Choose Folder", nullptr, config);
             }
 
-            ImVec2 filedialog_size(1280 * 0.5, 720 * 0.5);
+            ImVec2 filedialog_size(window_size.x * 0.5f, window_size.y * 0.5f);
             if (ImGuiFileDialog::Instance()->Display("ChooseFolderDlgKey", ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize, filedialog_size)) {
                 ImGui::SetWindowFocus();
                 if (ImGuiFileDialog::Instance()->IsOk()) {
