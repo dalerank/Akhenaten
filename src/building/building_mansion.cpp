@@ -49,7 +49,8 @@ void building_mansion::on_post_load() {
 }
 
 void building_mansion::update_count() const {
-    const bool is_active = true;// (num_workers() > 0);
+    // Mansion is active if it's valid and has road access (needed for salary payments and governor access)
+    const bool is_active = (base.has_road_access);
     g_city.buildings.track_building(base, is_active);
 }
 

@@ -184,7 +184,7 @@ public:
     template <typename U>
     void destroy(const U* const p_object)
     {
-        static_assert(etl::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
+        static_assert(std::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
         static_assert(sizeof(U) <= VTypeSize, "Type too large for pool");
         ipool::destroy(p_object);
     }
