@@ -1,6 +1,6 @@
 # This file is used to build SDL2_mixer as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildSDL2_mixer.cmake
-# Required variables: SDL2_MIXER_SOURCE_DIR, SDL2_MIXER_BUILD_DIR, SDL2_MIXER_INSTALL_DIR, SDL2_ROOT
+# Required variables: SDL2_MIXER_SOURCE_DIR, SDL2_MIXER_BUILD_DIR, SDL2_MIXER_INSTALL_DIR, SDL2_ROOT, SDL2_MIXER_ADDITIONAL_CMAKE_ARGS
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_DIR})
@@ -34,7 +34,7 @@ if(SDL2_MIXER_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring SDL2_mixer...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -S ${SDL2_MIXER_SOURCE_DIR} -B ${SDL2_MIXER_BUILD_DIR} ${SDL2_MIXER_CMAKE_ARGS}
+        COMMAND ${CMAKE_COMMAND} -S ${SDL2_MIXER_SOURCE_DIR} -B ${SDL2_MIXER_BUILD_DIR} ${SDL2_MIXER_CMAKE_ARGS} ${SDL2_MIXER_ADDITIONAL_CMAKE_ARGS}
         WORKING_DIRECTORY ${SDL2_MIXER_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
