@@ -22,6 +22,9 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
+    
+    bool is_protected_by_police() const;
+    static void check_theft_from_mansions();
 
     static bool exist_in_city();
 };

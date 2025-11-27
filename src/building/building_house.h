@@ -4,6 +4,7 @@
 #include "building/building_house_model.h"
 #include "building/building.h"
 #include "grid/building.h"
+#include "grid/grid.h"
 
 enum e_house_progress { 
     e_house_evolve = 1,
