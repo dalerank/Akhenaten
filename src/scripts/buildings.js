@@ -1637,6 +1637,9 @@ building_mortuary {
     work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
   }
 
+  input : {
+    resource : RESOURCE_LINEN
+  }
   max_serve_clients : 1000
   min_houses_coverage : 50
   building_size : 2
