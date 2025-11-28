@@ -1,6 +1,6 @@
 # This file is used to build zlib as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildZlib.cmake
-# Required variables: ZLIB_SOURCE_DIR, ZLIB_BUILD_DIR, ZLIB_INSTALL_DIR
+# Required variables: ZLIB_SOURCE_DIR, ZLIB_BUILD_DIR, ZLIB_INSTALL_DIR, ZLIP_ADDITIONAL_CMAKE_ARGS
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
@@ -13,21 +13,11 @@ set(ZLIB_CMAKE_ARGS
     -DSKIP_INSTALL_ALL=ON
 )
 
-# Pass through macOS deployment target if defined
-if(APPLE AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
-    list(APPEND ZLIB_CMAKE_ARGS -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET})
-endif()
-
-# Pass through macOS architectures if defined
-if(APPLE AND DEFINED CMAKE_OSX_ARCHITECTURES)
-    list(APPEND ZLIB_CMAKE_ARGS -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES})
-endif()
-
 if(ZLIB_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring zlib...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${ZLIB_SOURCE_DIR} ${ZLIB_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIP_ADDITIONAL_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
         WORKING_DIRECTORY ${ZLIB_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
@@ -67,7 +57,7 @@ if(ZLIB_IS_MSVC)
 else()
     message(STATUS "Configuring zlib...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${ZLIB_SOURCE_DIR} ${ZLIB_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIP_ADDITIONAL_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
         WORKING_DIRECTORY ${ZLIB_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
