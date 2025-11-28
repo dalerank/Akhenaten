@@ -427,6 +427,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(senet_house)
     ALLOW_SMART_CAST_BUILDING(gatehouse)
     ALLOW_SMART_CAST_BUILDING(dancer_school)
+    ALLOW_SMART_CAST_BUILDING(transport_wharf)
 
     int get_figures_number(e_figure_type ftype);
 
