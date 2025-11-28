@@ -102,6 +102,14 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid) {
             g_empire.set_trade_route_type(city->route_id, city->is_sea_trade);
         });
     });
+
+    for (auto &city : cities) {
+        if (!city.in_use) {
+            continue;
+        }
+
+        city.name_str = empire_city::get_display_name(city.name_id);
+    }
 }
 
 void empire_t::update_month() {
