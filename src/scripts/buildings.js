@@ -841,6 +841,7 @@ building_military_academy = {
   },
   meta : { help_id: 88, text_id: 135 }
   building_size : 4,
+  min_houses_coverage : 50
   cost : [ 240, 300, 500, 1000, 1500 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[25], fire_risk:[4], damage_risk: [1]
