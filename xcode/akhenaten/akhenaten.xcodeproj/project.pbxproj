@@ -126,6 +126,19 @@
 			membershipExceptions = (
 				akhenaten.html,
 				innoextract/innoextract,
+				innoextract/innoextract.command,
+				innoextract/libboost_atomic.dylib,
+				innoextract/libboost_date_time.dylib,
+				innoextract/libboost_filesystem.dylib,
+				innoextract/libboost_iostreams.dylib,
+				innoextract/libboost_program_options.dylib,
+				innoextract/libboost_random.dylib,
+				innoextract/libboost_regex.dylib,
+				innoextract/libicudata.78.1.dylib,
+				innoextract/libicui18n.78.1.dylib,
+				innoextract/libicuuc.78.1.dylib,
+				innoextract/liblzma.5.dylib,
+				innoextract/libzstd.1.5.7.dylib,
 			);
 			target = 2AC6211F2ED8833F0023FB4E /* akhenaten */;
 		};
@@ -152,6 +165,7 @@
 			buildPhase = 2A1974DB2ED8D39300CB7863 /* Copy innoextract */;
 			membershipExceptions = (
 				innoextract/innoextract,
+				innoextract/innoextract.command,
 				innoextract/libboost_atomic.dylib,
 				innoextract/libboost_date_time.dylib,
 				innoextract/libboost_filesystem.dylib,
@@ -237,6 +251,7 @@
 				2A1974DB2ED8D39300CB7863 /* Copy innoextract */,
 				2AC6216E2ED886340023FB4E /* Copy akhenaten binary */,
 				2AC6217D2ED886EE0023FB4E /* CopyFiles */,
+				2A1974F62ED90F8F00CB7863 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -338,7 +353,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Erforderliche Abhängigkeiten:\n# ARM: /opt/homebrew/bin/brew install innoextract dylibbundler\n\nls -l \"$PROJECT_DIR/akhenaten/innoextract\" > /private/tmp/yo\n\n# Variablen definieren\nBIN=\"innoextract\"\nDEST_PATH=\"$PROJECT_DIR/akhenaten/innoextract\"\nARM_PATH=\"/opt/homebrew/bin\"\nARM_BUILD=\"arm\"\n\ncd \"$DEST_PATH\"\n\ncp \"$ARM_PATH/$BIN\" .\n\n# Abhängigkeiten bündeln\ndylibbundler -of -cd -b -x innoextract -d . -p \"@executable_path/\"\n\n\n";
+			shellScript = "# Erforderliche Abhängigkeiten:\n# ARM: /opt/homebrew/bin/brew install innoextract dylibbundler\n\nls -l \"$PROJECT_DIR/akhenaten/innoextract\" > /private/tmp/yo\n\n# Variablen definieren\nBIN=\"innoextract\"\nDEST_PATH=\"$PROJECT_DIR/akhenaten/innoextract\"\nARM_PATH=\"/opt/homebrew/bin\"\nARM_BUILD=\"arm\"\n\ncd \"$DEST_PATH\"\n\ncp \"$ARM_PATH/$BIN\" .\n\n# Abhängigkeiten bündeln\ndylibbundler -of -cd -b -x innoextract -d . -p \"@executable_path/\"\n\nchmod +x innoextract\n\n\n";
+		};
+		2A1974F62ED90F8F00CB7863 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\nset -euo pipefail\n\nBIN=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/innoextract/innoextract\"\n\nif [[ -f \"$BIN\" ]]; then\n    /bin/chmod 755 \"$BIN\"\n    /usr/bin/codesign --force --sign \"$EXPANDED_CODE_SIGN_IDENTITY\" --timestamp=none \"$BIN\"\n    echo \"Resigned $BIN with $EXPANDED_CODE_SIGN_IDENTITY\"\nelse\n    echo \"WARN: $BIN not found\"\nfi\n";
 		};
 		2A9BCADC2ED8C45A00671ED4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -535,7 +567,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";

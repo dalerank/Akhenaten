@@ -88,11 +88,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="akhenaten" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="210" height="213"/>
+                        <rect key="frame" x="0.0" y="0.0" width="282" height="247"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Qt-Ec-dyv">
-                                <rect key="frame" x="59" y="92" width="93" height="24"/>
+                                <rect key="frame" x="56" y="126" width="170" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Start Game" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YQK-qq-I6Z">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -103,7 +103,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZDJ-XN-FcS">
-                                <rect key="frame" x="36" y="56" width="138" height="24"/>
+                                <rect key="frame" x="56" y="90" width="170" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Check for Updates" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="z2I-Rx-Hkj">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -114,7 +114,7 @@
                                 </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cti-cW-XIW">
-                                <rect key="frame" x="-2" y="182" width="214" height="26"/>
+                                <rect key="frame" x="-2" y="216" width="286" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="akhenaten" id="XCC-Eh-Td0">
                                     <font key="font" metaFont="system" size="22"/>
@@ -123,12 +123,12 @@
                                 </textFieldCell>
                             </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vwr-re-sst">
-                                <rect key="frame" x="81" y="129" width="48" height="48"/>
+                                <rect key="frame" x="117" y="160" width="48" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="Qll-lx-o8Y"/>
                             </imageView>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fHL-hh-VRm">
-                                <rect key="frame" x="40" y="20" width="131" height="24"/>
+                                <rect key="frame" x="56" y="54" width="170" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Visit GitHub Repo" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="puM-Ju-0YN">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -138,13 +138,40 @@
                                     <action selector="openProjectPage:" target="XfG-lQ-9wD" id="GKe-j9-0wd"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ddw-4Q-YR8">
+                                <rect key="frame" x="56" y="20" width="170" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Install GOG Package" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3Ov-VU-kO4">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="install_gog:" target="XfG-lQ-9wD" id="fzj-0b-A6d"/>
+                                </connections>
+                            </button>
+                            <textField hidden="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jBq-80-ze1">
+                                <rect key="frame" x="-2" y="70" width="286" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Installing Game Files ..." id="tlM-Pc-uhD">
+                                    <font key="font" metaFont="system" size="22"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="installButton" destination="ddw-4Q-YR8" id="Q8i-YU-swr"/>
+                        <outlet property="installInfo" destination="jBq-80-ze1" id="hcy-dp-m0q"/>
+                        <outlet property="startButton" destination="1Qt-Ec-dyv" id="dhL-0t-wVn"/>
+                        <outlet property="updatesButton" destination="ZDJ-XN-FcS" id="GRY-xx-AkH"/>
+                        <outlet property="visitButton" destination="fHL-hh-VRm" id="qXH-sy-Ecv"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="9ta-wB-m1i" customClass="SPUStandardUpdaterController"/>
             </objects>
-            <point key="canvasLocation" x="7" y="620"/>
+            <point key="canvasLocation" x="43" y="636.5"/>
         </scene>
     </scenes>
     <resources>
