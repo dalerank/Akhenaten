@@ -15,6 +15,27 @@ void figure_magistrate::figure_action() {
         advance_action(ACTION_10_MAGISTRATE_GOING);
         break;
 
+    case ACTION_10_MAGISTRATE_GOING:
+        advance_action(ACTION_72_MAGISTRATE_ROAMING);
+        break;
+
+    case ACTION_74_MAGISTRATE_GOING_TO_FORT:
+        if (base.destination_tile.valid()) {
+            if (base.do_goto(base.destination_tile, TERRAIN_USAGE_ROADS, ACTION_75_MAGISTRATE_AT_FORT, ACTION_72_MAGISTRATE_ROAMING)) {
+                // Reached fort, start roaming around it
+                base.destination_tile = tile2i();
+            }
+        } else {
+            // No destination, just start roaming
+            advance_action(ACTION_72_MAGISTRATE_ROAMING);
+        }
+        break;
+
+    case ACTION_75_MAGISTRATE_AT_FORT:
+        // Start roaming around the fort
+        advance_action(ACTION_72_MAGISTRATE_ROAMING);
+        break;
+
     case ACTION_71_MAGISTRATE_ENTERING_EXITING:
         do_enterbuilding(true, home());
         break;
