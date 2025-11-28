@@ -175,6 +175,9 @@ void empire_traders_manager::clear_all() {
 empire_trader* empire_traders_manager::get_free_trader() {
     for (auto &trader : traders) {
         if (!trader.is_active) {
+            int tid = trader.id;
+            memset(&trader, 0, sizeof(empire_trader));
+            trader.id = tid;
             return &trader;
         }
     }
