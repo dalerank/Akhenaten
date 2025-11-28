@@ -1635,6 +1635,7 @@ building_mortuary {
     preview { pack:PACK_GENERAL, id:175 },
     base { pack:PACK_GENERAL, id:175 },
     work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
+    linen { pos : [45, 3], pack:PACK_GENERAL, id:206 },
   }
 
   input : {

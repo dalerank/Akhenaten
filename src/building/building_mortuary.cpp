@@ -13,14 +13,41 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "city/city.h"
+#include "city/city_resource.h"
+#include "city/city_warnings.h"
+#include "empire/empire.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
 #include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
+void building_mortuary::on_place_checks() {
+    if (g_city.buildings.count_industry_active(RESOURCE_LINEN) > 0) {
+        return;
+    }
+
+    if (g_city.resource.yards_stored(RESOURCE_LINEN) > 0) {
+        return;
+    }
+
+    construction_warnings warnings("#building_needs_linen");
+
+    const bool can_produce = g_city.can_produce_resource(RESOURCE_LINEN);
+    const bool can_import = g_empire.can_import_resource(RESOURCE_LINEN, true);
+    const bool trade_import = (city_resource_trade_status(RESOURCE_LINEN) != TRADE_STATUS_IMPORT);
+
+    warnings.add_if(can_produce, "#build_weaver_or_import_linen");
+    warnings.add_if(!can_import, "#setup_trade_route_to_import");
+    warnings.add_if(trade_import, "#overseer_of_commerce_to_import");
+}
+
 void building_mortuary::spawn_figure() {
-    if (base.stored_amount(RESOURCE_LINEN) < 100) {
+    if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
+        return;
+    }
+
+    if (base.stored_amount(RESOURCE_LINEN) < 20) {
         return;
     }
 
@@ -33,6 +60,10 @@ void building_mortuary::spawn_figure() {
 }
 
 bool building_mortuary::can_play_animation() const {
+    if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
+        return false;
+    }
+
     if (base.stored_amount(RESOURCE_LINEN) < 100) {
         return false;
     }
@@ -50,7 +81,21 @@ void building_mortuary::update_graphic() {
 bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
-    return false;
+    int amount = base.stored_amount(RESOURCE_LINEN) / 100;
+    if (amount > 0) {
+        const auto &ranim = anim(animkeys().linen);
+        vec2i pos = ranim.pos;
+        for (int i = 0; i < amount; ++i) {
+            auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+            command.image_id = ranim.first_img();
+            command.pixel = point + pos;
+            command.mask = color_mask;
+
+            pos += {5, -5};
+        }
+    }
+
+    return true;
 }
 
 void building_mortuary::update_count() const {
