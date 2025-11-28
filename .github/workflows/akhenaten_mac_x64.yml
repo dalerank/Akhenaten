@@ -20,7 +20,7 @@ jobs:
         mkdir -p build
         cd build
         export CXXFLAGS=-stdlib=libc++
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64" -DOPTION_SYSTEM_LIBPNG=OFF -DOPTION_BUILD_LIBPNG=ON .. -G "Unix Makefiles"
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="x86_64" -DOPTION_SYSTEM_LIBPNG=OFF -DOPTION_BUILD_LIBPNG=ON -DCMAKE_INSTALL_PREFIX="$PWD/install" .. -G "Unix Makefiles"
         cd ..
 
     - name: build
@@ -31,7 +31,7 @@ jobs:
       run: |
         cmake --build ./build --target install/local
         mkdir macos_build
-        cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
+        cp -R ./build/install/akhenaten.app ./macos_build/akhenaten.app
 
     - uses: actions/upload-artifact@v4
       with:
