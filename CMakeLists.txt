@@ -976,7 +976,9 @@ if(APPLE)
 
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.akhenaten")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version" FORCE)
+    if(NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
+    endif()
     set(MACOSX_BUNDLE_ICON_FILE "akhenaten.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "0.2.1 ${GAME_BUILD_NUMBER}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
@@ -984,7 +986,8 @@ if(APPLE)
 
     set_target_properties(${GAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist")
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist"
+        OSX_DEPLOYMENT_TARGET "${CMAKE_OSX_DEPLOYMENT_TARGET}")
 
     set(DIRS "")
     set(LIBS "")
