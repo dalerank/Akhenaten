@@ -21,7 +21,7 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes cmake build-essential ninja-build libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev
+        sudo apt install --yes cmake build-essential ninja-build libsdl2-dev libsdl2-mixer-dev
     - name: build-project
       run: |
         mkdir build
