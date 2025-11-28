@@ -55,6 +55,7 @@ const xstring id_anim_t::work_warship = "work_warship";
 const xstring id_anim_t::work_fishing_boat = "work_fishing_boat";
 const xstring id_anim_t::work_transport = "work_transport";
 const xstring id_anim_t::flax = "flax";
+const xstring id_anim_t::linen = "linen";
 const xstring id_anim_t::clay = "clay";
 const xstring id_anim_t::papyrus = "papyrus";
 const xstring id_anim_t::straw = "straw";
