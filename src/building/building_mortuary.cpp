@@ -20,7 +20,24 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 void building_mortuary::spawn_figure() {
-    common_spawn_roamer(FIGURE_EMBALMER, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
+    if (base.stored_amount(RESOURCE_LINEN) < 100) {
+        return;
+    }
+
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_SERVICE)) {
+        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), 20);
+        base.stored_amount_first -= spent;
+
+        create_roaming_figure(FIGURE_EMBALMER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
+    }
+}
+
+bool building_mortuary::can_play_animation() const {
+    if (base.stored_amount(RESOURCE_LINEN) < 100) {
+        return false;
+    }
+
+    return building_impl::can_play_animation();
 }
 
 void building_mortuary::update_graphic() {
