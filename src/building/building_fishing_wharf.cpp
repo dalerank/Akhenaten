@@ -32,6 +32,12 @@ int building_fishing_wharf::preview::construction_update(build_planner &planer, 
     return 1;
 }
 
+void building_fishing_wharf::preview::setup_preview_graphics(build_planner &planer) const {
+    const auto &params = building_static_params::get(planer.build_type);
+    const int imgid = params.base_img() + planer.relative_orientation;
+    planer.set_tiles_building(imgid, params.building_size);
+}
+
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = city_view_relative_orientation(orientation);
     int img_id = base_img();
