@@ -1026,13 +1026,14 @@ include_directories(${imgui_SOURCE_DIR})
 include_directories(${imgui_SOURCE_DIR}/backends)
 include_directories(${imgui_SOURCE_DIR}/misc/cpp)
 include_directories(${HARFBUZZ_INCLUDE_DIRS})
+include_directories(ext)
+include_directories(ext/gpupixel/utils)
 
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
     # no filters on android
     set(GPUPIXEL_LIBRARY "")
 else()
     include_directories(${GPUPIXEL_INCLUDE_DIR})
-    include_directories(ext/gpupixel/utils)
 endif()
 
 if(MSVC)
