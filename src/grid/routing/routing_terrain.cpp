@@ -161,6 +161,15 @@ static int is_surrounded_by_water(int grid_offset) {
            && is_water_tile(grid_offset + GRID_OFFSET(0, 1));
 }
 
+static bool has_land_corner(int grid_offset) {
+    // Check if any diagonal neighbor is land (not water)
+    // This prevents boats from navigating through land corners
+    return !is_water_tile(grid_offset + GRID_OFFSET(1, -1))
+           || !is_water_tile(grid_offset + GRID_OFFSET(1, 1))
+           || !is_water_tile(grid_offset + GRID_OFFSET(-1, 1))
+           || !is_water_tile(grid_offset + GRID_OFFSET(-1, -1));
+}
+
 static int is_wall_tile(int grid_offset) {
     return map_terrain_is(grid_offset, TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
 }
@@ -281,7 +290,7 @@ int map_routing_tile_check(int routing_type, int grid_offset) {
         }
 
     case ROUTING_TYPE_WATER:
-        if ((terrain & TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
+        if ((terrain & TERRAIN_WATER) && !(terrain & TERRAIN_FLOODPLAIN) && is_surrounded_by_water(grid_offset) && !has_land_corner(grid_offset)) {
             if (x > 0 && x < scenario_map_data()->width - 1 && y > 0 && y < scenario_map_data()->height - 1) {
                 switch (map_sprite_animation_at(grid_offset)) {
                 case 5:
