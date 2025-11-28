@@ -15,13 +15,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: actions/cache@v4
-      id: cache-sdl-libs
-      with:
-        path: |
-          ~/Library/Frameworks/SDL2_mixer.framework
-        key: ${{ runner.os }}-download-sdl-x86_64-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
-
     - name: update-workspace
       run: |
         mkdir -p build
