@@ -5,6 +5,7 @@ include(":hotkeys.conf")
 
 import common
 import camera
+import console_commands
 import game
 import math
 import rating_points
