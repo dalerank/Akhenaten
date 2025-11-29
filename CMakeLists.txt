@@ -402,7 +402,8 @@ if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
         set(SDL2_MAIN_LIBRARY "") 
     endif()   
   
-    set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)    
+    set(SDL2_INCLUDE_DIR "${SDL2_INSTALL_DIR}/include/SDL2" CACHE PATH "Path to SDL2 include directory" FORCE)
+    set(SDL2_INCLUDE_ADD_DIR "${SDL2_INSTALL_DIR}/include" CACHE PATH "Path to SDL2 include directory" FORCE)    
     set(SDL2_ROOT "${SDL2_INSTALL_DIR}" CACHE PATH "Path to SDL2 installation" FORCE)
     set(SDL2_FOUND TRUE CACHE BOOL "Whether SDL2 was found" FORCE)
     
@@ -1025,6 +1026,7 @@ endif()
 
 if(NOT WIN_EMSCRIPTEN)
     include_directories(${SDL2_INCLUDE_DIR})
+    include_directories(${SDL2_INCLUDE_ADD_DIR}) // special case for bazzite
     include_directories(${SDL2_MIXER_INCLUDE_DIR})
 endif()
 include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
