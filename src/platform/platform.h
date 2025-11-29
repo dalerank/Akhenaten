@@ -38,6 +38,10 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_NAME "linux"
 #endif
 
+#ifndef GAME_PLATFORM_NAME
+#define GAME_PLATFORM_NAME "unknown"
+#endif
+
 #if defined(__clang__) || defined(__GNUC__)
 #		define forceinline	__attribute__((always_inline)) inline
 #		define notinline	__attribute__((noinline))
