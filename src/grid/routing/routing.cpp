@@ -1,6 +1,6 @@
 #include "routing.h"
 
-#include "figure/formation_herd.h"
+#include "city/city_animals.h"
 #include "figure/route.h"
 #include "grid/vegetation.h"
 #include "building/building.h"
@@ -162,6 +162,7 @@ static void callback_calc_distance_build_road(int next_offset, int dist) {
     if (!blocked)
         enqueue(next_offset, dist);
 }
+
 static void callback_calc_distance_build_aqueduct(int next_offset, int dist) {
     bool blocked = false;
     int d_x = MAP_X(next_offset) - MAP_X(queue_get(0));
@@ -243,8 +244,9 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_aqueduct) {
     }
 
     // herd spawn points
-    if (formation_herd_breeding_ground_at(tile2i(grid_offset), 1))
+    if (g_city_animals.breeding_ground_at(tile2i(grid_offset), 1)) {
         return false;
+    }
     return true;
 }
 

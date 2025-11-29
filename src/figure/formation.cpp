@@ -7,7 +7,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_enemy.h"
 #include "figure/formation_enemy.h"
-#include "figure/formation_herd.h"
+#include "city/city_animals.h"
 #include "figure/formation_batalion.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
@@ -18,7 +18,7 @@
 #include <string.h>
 
 const e_formation_layout_tokens_t ANK_CONFIG_ENUM(e_formation_layout_tokens);
-formation g_formations[250];
+formation g_formations[MAX_FORMATIONS];
 
 struct formation_data_t {
     int id_last_formation;
@@ -532,7 +532,7 @@ void formation_update_all() {
     set_legion_max_figures();
     formation_batalion_update();
     formation_enemy_update();
-    g_animal_herds.update();
+    g_city_animals.update();
 }
 
 io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {

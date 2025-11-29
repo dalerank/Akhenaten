@@ -42,6 +42,10 @@ mission0 { // Nubt
 	}
 }
 
+[event=event_register_mission_animals, mission=mission0]
+function mission0_register_animals(ev) {
+}
+
 [event=event_update_mission_goal, mission=mission0]
 function mission0_update_goal(ev) {
 	if (mission.tutorial_granary_opened) {
