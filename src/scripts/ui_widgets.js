@@ -741,8 +741,10 @@ info_window_bullfight = {
 }
 
 info_window_police_station = {
+    related_buildings [BUILDING_POLICE_STATION]
     ui : __baseui(building_info_window, {
-
+        weapon_icon     : resource_icon({ pos[32, 205], resource:RESOURCE_WEAPONS })
+        weapon_stored   : text({ pos[55, 210], size[px(27), 20], text:"${building.weapon_stored}", font:FONT_NORMAL_BLACK_ON_LIGHT })
     })
 }
 

@@ -2391,6 +2391,7 @@ building_police_station = {
     preview { pack:PACK_GENERAL, id:64 },
     base { pack:PACK_GENERAL, id:64 },
     work { pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
+    resources {pack:PACK_GENERAL, id:99, offset:2},
   }
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
@@ -2402,6 +2403,7 @@ building_police_station = {
   laborers [6]
   fire_risk [2]
   damage_risk [2]
+  weapon_spot_pos [20, -20]
 }
 
 building_architect_post {
