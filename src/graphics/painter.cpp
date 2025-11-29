@@ -94,6 +94,10 @@ const image_t *painter::img_generic(int image_id, vec2i p, color color_mask, flo
 
 const image_t *painter::img_sprite(int image_id, vec2i p, color color_mask, float scale, ImgFlags flags) {
     const image_t *img = image_get(image_id);
+    if (!img) {
+        return nullptr;
+    }
+
     bool mirrored = (img->offset_mirror != 0);
 
     if (mirrored) {

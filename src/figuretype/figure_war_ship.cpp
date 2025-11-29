@@ -43,12 +43,12 @@ water_dest map_water_get_closest_working_warship_wharf(figure &boat) {
 
     int mindist = 9999;
     tile2i dock_tile;
-    wharf = building_first_ex<building_warship_wharf>([&] (building_warship_wharf *w) {
-        // Only consider working wharves (with workers)
-        if (!w->is_valid() || w->num_workers() == 0) {
-            return false;
+    buildings_valid_do([&] (building &b) {
+        auto w = b.dcast_warship_wharf();
+        if (!w) {
+            return;
         }
-        
+
         const auto water_tiles = w->get_water_access_tiles();
         const float curdist = boat.tile.dist(water_tiles.point_a);
         if (curdist < mindist) {
@@ -56,9 +56,7 @@ water_dest map_water_get_closest_working_warship_wharf(figure &boat) {
             mindist = curdist;
             dock_tile = water_tiles.point_a;
         }
-
-        return false;
-    });
+    }, BUILDING_TRANSPORT_WHARF);
 
     if (!wharf) {
         return { false, 0 };
