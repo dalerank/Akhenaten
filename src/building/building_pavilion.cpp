@@ -8,7 +8,6 @@
 #include "sound/sound_building.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "graphics/image.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
@@ -158,21 +157,21 @@ void building_pavilion::spawn_figure() {
     }
 
     auto &d = runtime_data();
-    if (common_spawn_figure_trigger(100, BUILDING_SLOT_JUGGLER)) {
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         if (d.juggler_visited > 0) {
             base.create_roaming_figure(FIGURE_JUGGLER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_JUGGLER);
             return;
         }
     }
 
-    if (common_spawn_figure_trigger(100, BUILDING_SLOT_MUSICIAN)) {
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_MUSICIAN)) {
         if (d.musician_visited > 0) {
             base.create_roaming_figure(FIGURE_MUSICIAN, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_MUSICIAN);
             return;
         }
     }
 
-    if (common_spawn_figure_trigger(100, BUILDING_SLOT_DANCER)) {
+    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_DANCER)) {
         if (d.dancer_visited > 0) {
             base.create_roaming_figure(FIGURE_DANCER, (e_figure_action)ACTION_94_ENTERTAINER_ROAMING, BUILDING_SLOT_DANCER);
             return;

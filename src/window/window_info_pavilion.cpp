@@ -59,7 +59,7 @@ void info_window_pavilion::init(object_info &c) {
     }
 
     if (d.dancer_visited > 0) {
-        ui["play3_text"].text_var("%s %s %d", ui::str(c.group_id, 16), ui::str(8, 44), d.musician_visited);
+        ui["play3_text"].text_var("%s %s %d", ui::str(c.group_id, 16), ui::str(8, 44), d.dancer_visited);
     } else {
         ui["play3_text"] = ui::str(c.group_id, 15);
     }
