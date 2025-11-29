@@ -106,7 +106,7 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    set(USE_FLAGS "-sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
+    set(USE_FLAGS "-sUSE_SDL=2 -sUSE_SDL_MIXER=2 -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     ${USE_FLAGS} \
