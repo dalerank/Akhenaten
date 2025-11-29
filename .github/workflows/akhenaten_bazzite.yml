@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         dnf update -y
-        dnf install -y git cmake gcc gcc-c++ make libstdc++-static SDL2-devel SDL2_mixer-devel SDL2_image-devel curl
+        dnf install -y git cmake gcc gcc-c++ make libstdc++-static curl
     - name: Install Homebrew (if needed by script)
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
