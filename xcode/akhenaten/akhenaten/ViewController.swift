@@ -22,6 +22,14 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let gogInstalled = UserDefaults.standard.bool(forKey: "GOGInstalled")
+
+        if gogInstalled {
+            startButton.isEnabled = true
+        } else {
+            startButton.isEnabled = false
+        }
 
         // Do any additional setup after loading the view.
     }

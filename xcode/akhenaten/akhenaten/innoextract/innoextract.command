@@ -34,6 +34,10 @@ function gog_install()
     
     ./innoextract --extract --include "app" "$gog_installer" -d "$DataPath"
     
+    if [ $? = 0 ]; then
+        defaults write "${ScriptHome}/Library/Preferences/de.slsoft.akhenaten" GOGInstalled -bool true
+    fi
+    
     cd "$DataPath"
     mv app/* .
     rm -rf "$DataPath"/app __support
