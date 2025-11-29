@@ -29,34 +29,30 @@ void scenario_editor_set_river_entry_point(int x, int y) {
 }
 
 void scenario_editor_set_river_exit_point(int x, int y) {
-    //    g_scenario.river_exit_point.x() = x;
-    //    g_scenario.river_exit_point.y() = y;
+    g_scenario.river_exit_point = tile2i{ x, y };
     g_scenario.is_saved = 0;
     update_river();
 }
 
 void scenario_editor_clear_predator_herd_points(void) {
     for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) {
-        //        g_scenario.herd_points_predator[i].x = -1;
-        //        g_scenario.herd_points_predator[i].y = -1;
+        g_scenario.herd_points_animals[i] = tile2i::invalid;
     }
     g_scenario.is_saved = 0;
 }
 
 tile2i scenario_editor_predator_herd_point(int id) {
-    return g_scenario.herd_points_predator[id];
+    return g_scenario.herd_points_animals[id];
 }
 
 void scenario_editor_set_predator_herd_point(int id, int x, int y) {
-    //    g_scenario.herd_points_predator[id].x = x;
-    //    g_scenario.herd_points_predator[id].y = y;
+    g_scenario.herd_points_animals[id] = tile2i::invalid;
     g_scenario.is_saved = 0;
 }
 
 void scenario_editor_clear_fishing_points(void) {
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        //        g_scenario.fishing_points[i].x = -1;
-        //        g_scenario.fishing_points[i].y = -1;
+        g_scenario.fishing_points[i] = tile2i::invalid;
     }
     g_scenario.is_saved = 0;
 }
@@ -66,8 +62,7 @@ tile2i scenario_editor_fishing_point(int id) {
 }
 
 void scenario_editor_set_fishing_point(int id, int x, int y) {
-    //    g_scenario.fishing_points[id].x = x;
-    //    g_scenario.fishing_points[id].y = y;
+    g_scenario.fishing_points[id] = tile2i{ x, y };
     g_scenario.is_saved = 0;
 }
 

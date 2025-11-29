@@ -260,8 +260,42 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param1, param2, param3); }); \
     }
 
-#define ANK_FUNCTION_AUTO_3(func) \
+#define ANK_FUNCTION_3(func) \
     ANK_FUNCTION_NAMED_3(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type)
+
+#define ANK_FUNCTION_NAMED_4(fname, func, type1, type2, type3, type4) \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 4); }, J); } \
+    void permanent_js2cpp_callback_##fname(js_State *J) { \
+        type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
+        type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
+        type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
+        type3 param4 = js_helpers::js_to_value<type4>(J, 4); \
+        constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
+        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param1, param2, param3, param4); }); \
+    }
+
+#define ANK_FUNCTION_4(func) \
+    ANK_FUNCTION_NAMED_4(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type, function_traits<decltype(&func)>::arg<3>::type)
+
+#define ANK_FUNCTION_3(func) \
+    ANK_FUNCTION_NAMED_3(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type)
+
+#define ANK_FUNCTION_NAMED_5(fname, func, type1, type2, type3, type4, type5) \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 5); }, J); } \
+    void permanent_js2cpp_callback_##fname(js_State *J) { \
+        type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
+        type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
+        type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
+        type3 param4 = js_helpers::js_to_value<type4>(J, 4); \
+        type3 param5 = js_helpers::js_to_value<type5>(J, 5); \
+        constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
+        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param1, param2, param3, param4, param5); }); \
+    }
+
+#define ANK_FUNCTION_5(func) \
+    ANK_FUNCTION_NAMED_5(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type, function_traits<decltype(&func)>::arg<3>::type,  function_traits<decltype(&func)>::arg<4>::type)
 
 #define ANK_PERMANENT_CALLBACK(event, a) \
     tmp_register_permanent_callback_ ##event(); \

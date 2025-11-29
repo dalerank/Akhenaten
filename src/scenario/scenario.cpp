@@ -286,18 +286,19 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
 
     if (iob->is_read_access()) {
         for (int i = 0; i < MAX_FISH_POINTS; i++) { g_scenario.fishing_points[i].invalidate_offset(); }
-        for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { g_scenario.herd_points_predator[i].invalidate_offset(); }
+        for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { g_scenario.herd_points_animals[i].invalidate_offset(); }
     }
 
-    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.herd_points_predator[i].private_access(_X)); }
-    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.herd_points_predator[i].private_access(_Y)); }
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.herd_points_animals[i].private_access(_X)); }
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.herd_points_animals[i].private_access(_Y)); }
 
     for (int i = 0; i < MAX_FISH_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.fishing_points[i].private_access(_X)); }
     for (int i = 0; i < MAX_FISH_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, g_scenario.fishing_points[i].private_access(_Y)); }
 
     iob->bind(BIND_SIGNATURE_UINT16, &g_scenario.alt_predator_type);
 
-    iob->bind____skip(42);
+    for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++) { iob->bind(BIND_SIGNATURE_UINT16, &g_scenario.herd_type_animals[i]); }
+    iob->bind____skip(34);
 
     if (iob->is_read_access()) {
         auto& lands = g_scenario.invasion_points_land;

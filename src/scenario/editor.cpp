@@ -75,11 +75,13 @@ void scenario_editor_create(int map_size) {
         g_scenario.invasion_points_sea[i].set(-1);
 
     for (int i = 0; i < MAX_FISH_POINTS; i++)
-        g_scenario.fishing_points[i].set(-1);
+        g_scenario.fishing_points[i] = tile2i::invalid;
+
     for (int i = 0; i < MAX_PREDATOR_HERD_POINTS; i++)
-        g_scenario.herd_points_predator[i].set(-1);
+        g_scenario.herd_points_animals[i] = tile2i::invalid;
+
     for (int i = 0; i < MAX_PREY_HERD_POINTS; i++)
-        g_scenario.herd_points_prey[i].set(-1);
+        g_scenario.herd_points_prey[i] = tile2i::invalid;
 
     //for (int i = 0; i < MAX_REQUESTS; i++) {
     //    g_scenario.requests[i].deadline_years = 5;

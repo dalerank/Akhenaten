@@ -17,36 +17,14 @@ declare_console_var_bool(allow_span_ostrich, true)
 
 city_animals_t ANK_VARIABLE_N(g_city_animals, "city_animals");
 
-void city_animals_t::create_herd(tile2i tile) {
-    e_figure_type herd_type;
-    int num_animals;
-    switch (scenario_property_climate()) {
-    case CLIMATE_CENTRAL:
-        herd_type = FIGURE_ANTELOPE;
-        num_animals = 10;
-        break;
-
-    case CLIMATE_NORTHERN:
-        herd_type = FIGURE_CROCODILE;
-        num_animals = 8;
-        break;
-
-    case CLIMATE_DESERT:
-        herd_type = FIGURE_OSTRICH;
-        num_animals = 12;
-        break;
-
-    default:
-        return;
-    }
-
-    int formation_id = formation_create_herd(herd_type, tile, num_animals);
-    if (formation_id > 0) {
+void city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
+    formation* formation = formation_create_herd(herd_type, tile, num_animals);
+    if (formation->id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
 
             figure *f = figure_create(herd_type, tile, DIR_0_TOP_RIGHT);
-            f->formation_id = formation_id;
+            f->formation_id = formation->id;
             f->wait_ticks = f->id & 0x1f;
 
             auto fanimal = f->dcast_animal();
@@ -60,13 +38,35 @@ void city_animals_t::create_herd(tile2i tile) {
 
 void city_animals_t::create_herds() {
     scenario_map_foreach_herd_point([this] (tile2i p) {
-        this->create_herd(p);
+        e_figure_type herd_type;
+        int num_animals;
+        switch (scenario_property_climate()) {
+        case CLIMATE_CENTRAL:
+            herd_type = FIGURE_ANTELOPE;
+            num_animals = rand() % 10;
+            break;
+
+        case CLIMATE_NORTHERN:
+            herd_type = FIGURE_CROCODILE;
+            num_animals = rand() % 8;
+            break;
+
+        case CLIMATE_DESERT:
+            herd_type = FIGURE_OSTRICH;
+            num_animals = rand() % 12;
+            break;
+
+        default:
+            return;
+        }
+
+        this->create_herd(p, herd_type, num_animals);
     });
 
     events::emit(event_register_mission_animals{});
 }
 
-static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
+bool city_animals_t::get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
     bool tile_found = false;
     tile2i tfound;
@@ -83,14 +83,14 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &
                 int desirability = g_desirability.get(grid_offset);
                 if (allow_negative_desirability) {
                     if (desirability > 1) {
-                        return 0;
+                        return false;
                     }
 
                 } else if (desirability) {
-                    return 0;
+                    return false;
                 }
 
-                tile_found = 1;
+                tile_found = true;
                 tfound = tile2i(xx, yy);
             }
         }
@@ -99,7 +99,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, tile2i &
     return tile_found;
 }
 
-static int get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile) {
+bool city_animals_t::get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
@@ -155,14 +155,20 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
             y_target = scenario_map_data()->height - 2;
 
         if (get_free_tile(x_target, y_target, allow_negative_desirability, outtile)) {
-            return 1;
+            return true;
         }
 
         target_direction += 2;
         if (target_direction > 6)
             target_direction = 0;
     }
-    return 0;
+    return false;
+}
+
+void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ftype, int num) {
+    g_scenario.herd_points_animals[index] = tile2i{ x, y };
+    g_scenario.herd_type_animals[index] = ftype;
+    create_herd(tile2i{ x, y }, ftype, num);
 }
 
 void city_animals_t::move_animals(const formation *m, int attacking_animals, int terrain_mask) {
@@ -210,10 +216,10 @@ bool city_animals_t::can_spawn_ph_wolf(formation *m) {
 
 bool city_animals_t::can_spawn_ostrich(formation *m) {
     if (m->num_figures < m->max_figures && m->figure_type == FIGURE_OSTRICH) {
-        m->herd_ostrich_spawn_delay++;
+        m->herd_spawn_delay++;
         int delay = 4;
-        if (m->herd_ostrich_spawn_delay > delay) {
-            m->herd_ostrich_spawn_delay = 0;
+        if (m->herd_spawn_delay > delay) {
+            m->herd_spawn_delay = 0;
             return true;
         }
     }
@@ -343,6 +349,19 @@ void city_animals_t::update_herd_formation(formation *m) {
 }
 
 void city_animals_t::init() {
+}
+
+void city_animals_t::remove_all() {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && m->is_herd && !m->batalion_id) {
+            m->in_use = false;
+
+            for (auto f : m->valid_figures()) {
+                f->poof();
+            }
+        }
+    }
 }
 
 void city_animals_t::update() {

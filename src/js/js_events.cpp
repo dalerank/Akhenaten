@@ -9,7 +9,7 @@
 #include "city/city_health.h"
 #include "scenario/scenario.h"
 #include "city/victory.h"
-#include "figure/formation_herd.h"
+#include "city/city_animals.h"
 #include "js/js_game.h"
 #include "js/js.h"
 

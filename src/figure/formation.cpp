@@ -77,7 +77,7 @@ static int formation_create(e_figure_type figure_type, e_formation_layout layout
     return formation_id;
 }
 
-int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals) {
+formation* formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals) {
     int formation_id = formation_create(figure_type, FORMATION_HERD, 0, tile);
     if (!formation_id)
         return 0;
@@ -86,7 +86,8 @@ int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animal
     f->is_herd = 1;
     f->wait_ticks = 24;
     f->max_figures = num_animals;
-    return formation_id;
+
+    return f;
 }
 
 int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence) {
@@ -360,6 +361,24 @@ void formation::set_destination_building(tile2i tile, int building_id) {
     destination_building_id = building_id;
 }
 
+svector<figure *, formation::max_figures_count> formation::valid_figures() {
+    svector<figure *, max_figures_count> result;
+    for (auto fid: figures) {
+        if (!fid) {
+            continue;
+        }
+
+        figure *f = figure_get(fid);
+        if (!f->is_valid()) {
+            continue;
+        }
+
+        result.push_back(f);
+    }
+
+    return result;
+}
+
 void formation_set_home(formation* m, tile2i tile) {
     m->home = tile;
 }
@@ -608,8 +627,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_very_low_morale);
         iob->bind(BIND_SIGNATURE_UINT8, &f->invasion_id);
-        // iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
-        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_ostrich_spawn_delay); // --> 4
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_spawn_delay); // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);           // 6
         iob->bind(BIND_SIGNATURE_UINT8, &f->failed_creation_count);           // 6
         iob->bind____skip(5);
