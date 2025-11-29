@@ -66,7 +66,7 @@ void game_file_editor_clear_data(void) {
     g_city.figures.init_figures();
     g_enemy_armies.clear();
     figure_name_init();
-    formations_clear();
+    g_formations.clear_all();
     figure_route_clear_all();
     g_empire_traders.init();
     game.simtime.init(2098);
