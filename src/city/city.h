@@ -228,6 +228,7 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_day();
+    void update_month();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

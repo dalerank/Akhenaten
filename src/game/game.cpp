@@ -158,10 +158,8 @@ void game_t::advance_week() {
 }
 
 void game_t::advance_month() {
-    g_city.migration.reset_newcomers();
-    g_city.health.update();
-    g_city.finance.advance_month();
-    g_city.resource.advance_month();
+    g_city.update_month();
+
     scenario_distant_battle_process();
 
     random_generate_next();                  // TODO: find out the source / reason for this
@@ -169,8 +167,6 @@ void game_t::advance_month() {
     g_scenario.events.process_random_events();
     g_scenario.events.process_events();
 
-    g_city.victory_state.update_months_to_govern();
-    g_city.update_allowed_foods();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
 
@@ -181,17 +177,6 @@ void game_t::advance_month() {
 
     if (simtime.advance_month()) {
         advance_year();
-    } else {
-        g_city.ratings_update(/*yearly_update*/false);
-        g_city.kingdome.advance_month();
-    }
-
-    g_city.population.record_monthly();
-    g_city.festival.update();
-    g_city.buildings.update_month();
-
-    if (g_city.can_produce_resource(RESOURCE_FISH)) {
-        g_city.fishing_points.update();
     }
 
     if (g_settings.monthly_autosave) {

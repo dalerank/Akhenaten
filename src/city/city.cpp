@@ -99,6 +99,28 @@ void city_t::update_day() {
     population.update_day();
 }
 
+void city_t::update_month() { 
+    migration.update_month();
+    health.update_month();
+    finance.advance_month();
+    resource.advance_month();
+    victory_state.update_months_to_govern();
+    update_allowed_foods();
+
+    population.record_monthly();
+    festival.update();
+    buildings.update_month();
+
+    if (can_produce_resource(RESOURCE_FISH)) {
+        fishing_points.update_month();
+    }
+
+    ratings_update(/*yearly_update*/false);
+    kingdome.advance_month();
+
+    formation_update_monthly_morale_deployed();
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
@@ -189,7 +211,7 @@ void city_t::update_tick(int simtick) {
         kingdome.update();
         break;
     case 5:
-        formation_update_all(false);
+        //
         break;
     case 6:
         map_natives_check_land();
@@ -249,7 +271,7 @@ void city_t::update_tick(int simtick) {
         buildings.update_religion_supply_houses();
         break;
     case 29:
-        formation_update_all(true);
+        formation_update_all();
         break;
     case 30:
         g_crime.update();

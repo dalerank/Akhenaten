@@ -158,6 +158,10 @@ void city_migration_t::update_conditions() {
     }
 }
 
+void city_migration_t::update_month() {
+    reset_newcomers();
+}
+
 void city_migration_t::update() {
     update_conditions();
     update_status();

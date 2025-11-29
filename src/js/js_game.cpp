@@ -174,9 +174,18 @@ void js_register_game_handlers(xstring missionid) {
                     }
 
                     bool should_handle_this_function = true;
-                    if (!!require_mission_id && !!missionid) {
-                        should_handle_this_function = (missionid == require_mission_id);
+                    // If function has a mission modifier, it must match the current mission
+                    // If function has no mission modifier, it's a global handler (register for all missions)
+                    if (!!require_mission_id) {
+                        // Function has a mission modifier - only register if it matches current mission
+                        if (!!missionid) {
+                            should_handle_this_function = (missionid == require_mission_id);
+                        } else {
+                            // No current mission, but function requires one - don't register
+                            should_handle_this_function = false;
+                        }
                     }
+                    // If no mission modifier, function is global - register it (should_handle_this_function stays true)
 
                     if (should_handle_this_function) {
                         mod = func->modifiers;
@@ -185,6 +194,8 @@ void js_register_game_handlers(xstring missionid) {
                                 auto r = event_type_handlers.insert(std::make_pair(xstring(mod->value), event_handlers{}));
                                 auto &handlers = r.first->second;
                                 handlers.insert(prop->name);
+                                logs::info("JS: Registered handler '%s' for event '%s' (mission: '%s')", 
+                                    prop->name, mod->value, missionid.c_str());
                             }
                             mod = mod->next;
                         }

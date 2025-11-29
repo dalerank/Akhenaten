@@ -9,6 +9,7 @@
 #include "city/city_health.h"
 #include "scenario/scenario.h"
 #include "city/victory.h"
+#include "figure/formation_herd.h"
 #include "js/js_game.h"
 #include "js/js.h"
 
@@ -24,3 +25,4 @@ ANK_SCRIPT_EVENT(event_building_create, bid)
 ANK_SCRIPT_EVENT(event_city_disease, absday)
 ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
 ANK_SCRIPT_EVENT(event_update_mission_goal, mid)
+ANK_SCRIPT_EVENT(event_register_mission_animals, mid)

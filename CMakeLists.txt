@@ -332,7 +332,8 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 #
 
 # Skip SDL2 build for Android as it uses find_package
-if(NOT PLATFORM_ANDROID)
+# Skip SDL2 build for Emscripten as it uses ports (-sUSE_SDL=2)
+if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2 FetchContent
@@ -422,7 +423,8 @@ endif()
 #
 
 # Skip SDL2_mixer build for Android as it uses find_package
-if(NOT PLATFORM_ANDROID)
+# Skip SDL2_mixer build for Emscripten as it uses ports (-sUSE_SDL_MIXER=2)
+if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2_mixer FetchContent
@@ -1021,8 +1023,10 @@ if(APPLE)
     ")
 endif()
 
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_MIXER_INCLUDE_DIR})
+if(NOT WIN_EMSCRIPTEN)
+    include_directories(${SDL2_INCLUDE_DIR})
+    include_directories(${SDL2_MIXER_INCLUDE_DIR})
+endif()
 include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/lame/include)
@@ -1171,19 +1175,27 @@ target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
 message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
 
-target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} 
-                        ${SDL2_MAIN_LIBRARY}
-                        ${FREETYPE_LIBRARY}
-                        ${HARFBUZZ_LIBRARY}
-                        $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
-                            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
-                                $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
-                        ${CPPTRACE_LIBRARY}
-                        ${GPUPIXEL_LIBRARY} 
-                        ${ZLIB_LIBRARY}
-                        akhenaten::rc
-                        $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
+if(WIN_EMSCRIPTEN)
+    # For Emscripten, SDL2 and SDL2_mixer are provided via ports (-sUSE_SDL=2 -sUSE_SDL_MIXER=2)
+    target_link_libraries (${GAME}
+                            ${FREETYPE_LIBRARY}
+                            ${HARFBUZZ_LIBRARY}
+                            ${ZLIB_LIBRARY})
+else()
+    target_link_libraries (${GAME}
+                            ${SDL2_LIBRARY} 
+                            ${SDL2_MAIN_LIBRARY}
+                            ${FREETYPE_LIBRARY}
+                            ${HARFBUZZ_LIBRARY}
+                            $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
+                                $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
+                                    $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
+                            ${CPPTRACE_LIBRARY}
+                            ${GPUPIXEL_LIBRARY} 
+                            ${ZLIB_LIBRARY}
+                            akhenaten::rc
+                            $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
+endif()
 
 if(MSVC)
     target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi" "setupapi" "version")

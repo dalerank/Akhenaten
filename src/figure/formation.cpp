@@ -522,15 +522,12 @@ static void set_legion_max_figures(void) {
     }
 }
 
-void formation_update_all(bool second_time) {
+void formation_update_all() {
     OZZY_PROFILER_SECTION("Game/Update/Formations");
     formation_calculate_legion_totals();
     formation_calculate_figures();
     update_directions();
     formation_batalion_decrease_damage();
-    if (!second_time) {
-        formation_update_monthly_morale_deployed();
-    }
 
     set_legion_max_figures();
     formation_batalion_update();

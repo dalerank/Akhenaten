@@ -5,9 +5,12 @@
 
 struct formation;
 
+struct event_register_mission_animals { uint8_t mid; };
+
 struct animal_herds_t {
     bool herd_migration;
 
+    void init();
     void update();
 
     void update_herd_formation(formation *m);
