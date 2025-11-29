@@ -861,17 +861,70 @@ bstring256 get_terrain_type(pcstr def, int type) {
     return buffer;
 }
 
-ANK_REGISTER_PROPS_ITERATOR(config_show_debug_properties);
-void config_show_debug_properties(bool header) {
+ANK_REGISTER_PROPS_ITERATOR(config_show_debug_render_properties);
+void config_show_debug_render_properties(bool header) {
     if (header) {
         return;
     }
 
-    ImGui::BeginTable("Debug", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
+    e_debug_render current_mode = debug_render_mode();
+    
+    // Build array of mode names and their indices
+    static pcstr mode_names[e_debug_render_size];
+    static int mode_indices[e_debug_render_size];
+    static int mode_count = 0;
+    static bool initialized = false;
+    
+    if (!initialized) {
+        mode_count = 0;
+        for (int i = e_debug_render_none + 1; i < e_debug_render_size; ++i) {
+            e_debug_render mode = (e_debug_render)i;
+            pcstr name = e_debug_render_tokens.name(mode);
+            if (name) {
+                mode_names[mode_count] = name;
+                mode_indices[mode_count] = i;
+                mode_count++;
+            }
+        }
+        initialized = true;
+    }
 
-    game_debug_show_property("Render Mode", e_debug_render_tokens.name((e_debug_render)debugrender()) );
+    int current_index = -1;
+    for (int i = 0; i < mode_count; ++i) {
+        if (mode_indices[i] == (int)current_mode) {
+            current_index = i;
+            break;
+        }
+    }
 
-    ImGui::EndTable();
+    if (current_mode == e_debug_render_none) {
+        current_index = -1;
+    }
+    
+    const char* preview = (current_index >= 0) ? mode_names[current_index] : "None";
+    
+    if (ImGui::BeginCombo("Render Mode", preview)) {
+        bool is_none_selected = (current_mode == e_debug_render_none);
+        if (ImGui::Selectable("None", is_none_selected)) {
+            set_debug_render_mode(e_debug_render_none);
+        }
+        if (is_none_selected) {
+            ImGui::SetItemDefaultFocus();
+        }
+        
+        // Add all other modes
+        for (int i = 0; i < mode_count; ++i) {
+            bool is_selected = (current_index == i);
+            if (ImGui::Selectable(mode_names[i], is_selected)) {
+                set_debug_render_mode((e_debug_render)mode_indices[i]);
+            }
+            if (is_selected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        
+        ImGui::EndCombo();
+    }
 }
 
 void draw_debug_ui(int x, int y) {
