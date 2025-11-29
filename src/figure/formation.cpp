@@ -34,7 +34,7 @@ void formations_t::clear(int formation_id) {
 
 formation *formations_t::get_from_herd(int index) {
     for (auto& m : formations) {
-        if (!m.in_use && m.herd_point) {
+        if (m.in_use && m.herd_point == index) {
             return &m;
         }
     }
