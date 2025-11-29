@@ -41,7 +41,8 @@ void figure_ostrich::figure_action() {
     case ACTION_8_OSTRICH_RECALCULATE:
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
-            if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/32, TERRAIN_IMPASSABLE_OSTRICH)) {
+            const int reseach_radius = (m->reseach_radius > 0) ? m->reseach_radius : 16;
+            if (figure_herd_roost( &base, /*step*/4, /*bias*/8, /*max_dist*/reseach_radius, TERRAIN_IMPASSABLE_OSTRICH)) {
                 base.wait_ticks = 0;
                 advance_action(ACTION_10_OSTRICH_GOING);
             } else {
@@ -50,13 +51,15 @@ void figure_ostrich::figure_action() {
         }
         break;
 
-    case ACTION_16_OSTRICH_FLEEING: // fleeing
-        // When fleeing, search for a more distant place
-        if (figure_herd_roost( &base, /*step*/8, /*bias*/16, /*max_dist*/64, TERRAIN_IMPASSABLE_OSTRICH)) {
-            base.wait_ticks = 0;
-            advance_action(ACTION_10_OSTRICH_GOING);
-        } else {
-            base.wait_ticks = 2;
+    case ACTION_16_OSTRICH_FLEEING: { // fleeing
+            // When fleeing, search for a more distant place
+            const int reseach_radius = (m->reseach_radius > 0) ? m->reseach_radius : 16;
+            if (figure_herd_roost( &base, /*step*/8, /*bias*/16, /*max_dist*/reseach_radius, TERRAIN_IMPASSABLE_OSTRICH)) {
+                base.wait_ticks = 0;
+                advance_action(ACTION_10_OSTRICH_GOING);
+            } else {
+                base.wait_ticks = 2;
+            }
         }
         break;
         
