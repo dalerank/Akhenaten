@@ -237,7 +237,8 @@ struct scenario_data_t {
     tile2i river_exit_point;
 
     tile2i earthquake_point;
-    tile2i herd_points_predator[MAX_PREDATOR_HERD_POINTS];
+    tile2i herd_points_animals[MAX_PREDATOR_HERD_POINTS];
+    e_figure_type herd_type_animals[MAX_PREDATOR_HERD_POINTS];
     tile2i herd_points_prey[MAX_PREY_HERD_POINTS];
     tile2i fishing_points[MAX_FISH_POINTS];
     tile2i disembark_points[MAX_DISEMBARK_POINTS];
