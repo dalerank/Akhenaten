@@ -21,8 +21,8 @@ void formation_batalion_delete_for_fort(building* fort) {
             if (m->standard_figure_id)
                 figure_get(m->standard_figure_id)->poof();
 
-            formation_clear(fort->formation_id);
-            formation_calculate_legion_totals();
+            g_formations.clear(fort->formation_id);
+            formation_calculate_batalion_totals();
         }
     }
 }

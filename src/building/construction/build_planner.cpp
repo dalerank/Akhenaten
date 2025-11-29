@@ -1088,7 +1088,7 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
-        if (formation_get_num_forts_cached() < 6) {
+        if (g_formations.num_batalions < 6) {
             vec2i offset = FORT_OFFSET[global_rotation][city_view_orientation() / 2];
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)

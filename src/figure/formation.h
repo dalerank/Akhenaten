@@ -135,9 +135,17 @@ struct formation {
     svector<figure *, max_figures_count> valid_figures();
 };
 
-void formations_clear(void);
+struct formations_t {
+    void clear_all();
+    void clear(int formation_id);
 
-void formation_clear(int formation_id);
+    uint8_t num_batalions;
+
+    std::array<formation, MAX_FORMATIONS> formations;
+};
+
+extern formations_t g_formations;
+
 
 formation* formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
 int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
@@ -175,8 +183,7 @@ int formation_grid_offset_for_invasion(int invasion_sequence);
 void formation_kingdome_pause(void);
 void formation_kingdome_retreat(void);
 
-int formation_get_num_forts_cached(void);
-void formation_calculate_legion_totals(void);
+void formation_calculate_batalion_totals();
 
 int formation_get_num_forts();
 int formation_get_max_forts();

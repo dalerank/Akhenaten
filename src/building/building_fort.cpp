@@ -54,7 +54,7 @@ const building_fort::base_params &get_fort_params(e_building_type type) {
 void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     bool fully_blocked = false;
     bool blocked = false;
-    if (formation_get_num_forts_cached() >= formation_get_max_forts() || g_city.finance.is_out_of_money()) {
+    if (g_formations.num_batalions >= formation_get_max_forts() || g_city.finance.is_out_of_money()) {
         fully_blocked = true;
         blocked = true;
     }
@@ -97,7 +97,7 @@ void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, 
 }
 
 formation_id building_fort::create_batalion() {
-    formation_calculate_legion_totals();
+    formation_calculate_batalion_totals();
 
     formation *m = formation_get_free(1);
     if (!m->id) {
