@@ -14,9 +14,9 @@ struct info_window_police_station : public building_info_window_t<info_window_po
 info_window_police_station g_police_infow;
 
 void info_window_police_station::init(object_info &c) {
-    building *b = c.building_get();
+    building_info_window::init(c);
 
-    ui["warning_text"] = ui::str(c.group_id, 1);
+    building *b = c.building_get();
 
     textid reason{ c.group_id, 0 };
     if (!b->has_road_access) { reason = { 69, 25 }; }
@@ -25,5 +25,7 @@ void info_window_police_station::init(object_info &c) {
     else { reason.id = 3; }
     int workers_desc = approximate_value(b->worker_percentage() / 100.f, make_array(8, 7, 6, 5, 4));
 
+    bstring512 warning_text(ui::str(c.group_id, 1), " ", ui::str(reason));
+    ui["warning_text"] = warning_text;
     ui["workers_desc"] = ui::str(c.group_id, workers_desc);
 }

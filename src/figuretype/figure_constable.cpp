@@ -179,6 +179,7 @@ void figure_constable::figure_action() {
 
     case ACTION_73_CONSTABLE_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
+        break;
 
     case ACTION_76_CONSTABLE_GOING_TO_ENEMY:
         base.terrain_usage = TERRAIN_USAGE_ANY;
