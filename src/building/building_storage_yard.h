@@ -1,7 +1,9 @@
 #pragma once
 
 #include "building/building_storage.h"
+#include "building/building_type.h"
 #include "grid/point.h"
+#include "core/svector.h"
 
 enum e_storageyard_state {
     STORAGEYARD_ROOM = 0,
@@ -15,6 +17,7 @@ enum e_storageyard_task {
     STORAGEYARD_TASK_DELIVERING = 1,
     STORAGEYARD_TASK_EMPTYING = 2,
     STORAGEYARD_TASK_MONUMENT = 3,
+    STORAGEYARD_TASK_POLICE_STATION = 4,
     //
     STORAGEYARD_TASK_GETTING_MOAR = 9,
 };
@@ -33,6 +36,10 @@ class building_storage_yard : public building_storage {
 public:
     BUILDING_METAINFO(BUILDING_STORAGE_YARD, building_storage_yard, building_storage)
     virtual building_storage_yard *dcast_storage_yard() override { return this; }
+
+    struct runtime_data_t {
+        std::array<building_id, 4> police_station_weapon_requests;
+    } BUILDING_RUNTIME_DATA_T;
 
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;

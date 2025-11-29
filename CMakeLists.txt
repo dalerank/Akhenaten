@@ -947,7 +947,7 @@ endif()
 
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES
-        COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\\\"Ozy\\\";PACKAGE_VERSION=\\\"static\\\";HAVE_MPGLIB=ON"
+        COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\"Ankh\";PACKAGE_VERSION=\"static\";HAVE_MPGLIB=ON"
     )
     if(NOT MSVC)
         set_source_files_properties(${LAME_FILES} PROPERTIES COMPILE_FLAGS "-Wno-absolute-value")

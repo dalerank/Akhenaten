@@ -5,6 +5,7 @@
 #include "building/building_granary.h"
 #include "building/building_scribal_school.h"
 #include "building/building_senet_house.h"
+#include "building/building_police_station.h"
 #include "city/city_industry.h"
 #include "building/rotation.h"
 #include "building/monuments.h"
@@ -492,6 +493,41 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
     return {STORAGEYARD_TASK_NONE};
 }
 
+storage_worker_task building_storageyard_deliver_weapons_to_police_stations(building *b) {
+    building_storage_yard *warehouse = b->dcast_storage_yard();
+    if (!warehouse) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
+    auto& requests = warehouse->runtime_data().police_station_weapon_requests;
+    if (requests.empty()) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
+    int weapons_available = warehouse->amount(RESOURCE_WEAPONS);
+    if (weapons_available <= 0) {
+        return { STORAGEYARD_TASK_NONE };
+    }
+
+    for (size_t i = 0; i < requests.size(); ++i) {
+        building_id station_id = requests[i];
+        building* station = building_get(station_id);
+        if (!station || !station->is_valid() || station->type != BUILDING_POLICE_STATION) {
+            requests[i] = 0;
+            continue;
+        }
+
+        if (station->road_network_id != warehouse->road_network()) {
+            continue;
+        }
+
+        int amount_to_send = std::min(50, weapons_available);
+        return { STORAGEYARD_TASK_POLICE_STATION, &warehouse->base, amount_to_send, RESOURCE_WEAPONS, station };
+    }
+
+    return { STORAGEYARD_TASK_NONE };
+}
+
 storage_worker_task building_storageyard_deliver_weapons(building *b) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
@@ -783,6 +819,7 @@ storage_worker_task building_storage_yard::determine_worker_task() {
     using action_type = decltype(building_storageyard_deliver_weapons);
     action_type *actions[] = {
         &building_storage_yard_determine_getting_up_resources,      // getting up resources
+        &building_storageyard_deliver_weapons_to_police_stations,   // deliver weapons to police stations
         &building_storageyard_deliver_weapons,                      // deliver weapons to barracks
         &building_storageyard_deliver_resource_to_workshop,         // deliver raw materials to workshops
         &building_storageyard_deliver_papyrus_to_scribal_school,    // deliver papyrus materials to scribal school
@@ -926,6 +963,23 @@ void building_storage_yard::spawn_figure() {
             task.amount = std::min<int>(task.amount, 400);
             cart->load_resource(task.resource, task.amount);
             remove_resource(task.resource, task.amount);
+            break;
+
+        case STORAGEYARD_TASK_POLICE_STATION:
+            if (task.resource == RESOURCE_WEAPONS && task.dest && task.dest->type == BUILDING_POLICE_STATION) {
+                task.amount = std::min<int>(task.amount, 400);
+                cart->load_resource(task.resource, task.amount);
+                remove_resource(task.resource, task.amount);
+
+                cart->base.destination_tile = task.dest->road_access;
+                cart->set_destination(task.dest->id);
+                auto &requests = runtime_data().police_station_weapon_requests;
+                for (auto& it : requests) {
+                    if (it == task.dest->id) {
+                        it = 0;
+                    }
+                }
+            }
             break;
 
         default:

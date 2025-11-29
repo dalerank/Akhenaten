@@ -11,6 +11,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "building/building_house.h"
+#include "building/building_storage_yard.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_constable);
@@ -179,6 +180,43 @@ void figure_constable::figure_action() {
 
     case ACTION_73_CONSTABLE_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
+        break;
+
+    case ACTION_74_CONSTABLE_REQUESTING_WEAPONS:
+        if (has_destination()) {
+            building* warehouse = destination();
+            if (warehouse && warehouse->dcast_storage_yard()) {
+                if (direction() == DIR_FIGURE_NONE) {
+                    building_storage_yard* yard = warehouse->dcast_storage_yard();
+                    auto& requests = yard->runtime_data().police_station_weapon_requests;
+                    building_id station_id = home()->id;
+
+                    const bool already_requested = std::count(requests.begin(), requests.end(), station_id) > 0;
+                    if (already_requested) {
+                        break;
+                    }
+
+                    const auto empty_it = std::find(requests.begin(), requests.end(), 0);
+                    if (empty_it != requests.end()) {
+                        *empty_it = station_id;
+                    }
+
+                    advance_action(ACTION_73_CONSTABLE_RETURNING);
+                    route_remove();
+                } else {
+                    base.move_ticks(1);
+                    if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                        advance_action(ACTION_73_CONSTABLE_RETURNING);
+                        route_remove();
+                    }
+                }
+            } else {
+                advance_action(ACTION_73_CONSTABLE_RETURNING);
+                route_remove();
+            }
+        } else {
+            advance_action(ACTION_73_CONSTABLE_RETURNING);
+        }
         break;
 
     case ACTION_76_CONSTABLE_GOING_TO_ENEMY:

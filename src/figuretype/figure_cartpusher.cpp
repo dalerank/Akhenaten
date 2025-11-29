@@ -109,7 +109,8 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             case BUILDING_RECRUITER:
             case BUILDING_SHIPWRIGHT:
             case BUILDING_SCRIBAL_SCHOOL: 
-            case BUILDING_SENET_HOUSE: {
+            case BUILDING_SENET_HOUSE:
+            case BUILDING_POLICE_STATION: {
                     building_impl *b = dest->dcast();
                     bool ok = b->add_resource(resource, amount_single_turn);
                     if (!ok) {
@@ -338,7 +339,15 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     building* warehouse = home();
 
     ////// delivering resource!
-    // priority 1: weapons to barracks
+    // priority 1: weapons to police stations (if destination already set)
+    if (base.resource_id == RESOURCE_WEAPONS && has_destination()) {
+        building* dest = destination();
+        if (dest && dest->type == BUILDING_POLICE_STATION) {
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+        }
+    }
+
+    // priority 2: weapons to barracks
     if (base.resource_id == RESOURCE_WEAPONS) {
         auto result = building_get_asker_for_resource(tile(), BUILDING_RECRUITER, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
