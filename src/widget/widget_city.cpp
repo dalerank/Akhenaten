@@ -295,6 +295,11 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     );
 
     ImageDraw::apply_render_commands(ctx);
+
+    // Experimental: draw debug layer after flat map rendering
+    draw_debug_animal_spawn_areas(ctx);
+    ImageDraw::apply_render_commands(ctx);
+
        
     city_view_foreach_valid_map_tile(ctx,
         [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
