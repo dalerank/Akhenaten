@@ -121,11 +121,16 @@ std::string get_configuration_path() {
         cfg_dir_path = std::string(xdg_cfg_dir_path) + '/' + CFG_FILE_DIR;
     } else {
         const passwd* pw = getpwuid(getuid());
+        if (!pw || !pw->pw_dir) {
+            logs::warn("Home folder to keep configuration file was not found");
+            return CFG_FILE_NAME;
+        }
         cfg_dir_path = std::string(pw->pw_dir) + "/.config/" + CFG_FILE_DIR;
     }
 
-    if (std::error_code ec; std::filesystem::create_directories(cfg_dir_path, ec)) {
-
+    // Try to create the directory, but continue even if it fails (directory might already exist)
+    std::error_code ec;
+    if (std::filesystem::create_directories(cfg_dir_path, ec)) {
         logs::info(("Created configuration directory " + cfg_dir_path).c_str());
     }
     else if (ec.value() != 0) {
@@ -134,12 +139,13 @@ std::string get_configuration_path() {
         char err_msg[buffer_size];
 
         snprintf(err_msg, buffer_size, format, cfg_dir_path.c_str(), ec.value(), ec.message().c_str());
-        logs::error(err_msg);
-        return CFG_FILE_NAME;
+        logs::warn(err_msg);
+        // Continue anyway - the directory might already exist and be readable
     }
 
-    if (std::filesystem::exists(cfg_dir_path))
-        return cfg_dir_path + '/' + CFG_FILE_NAME;
+    // Always return the full path, even if directory creation failed
+    // The file might still be readable if it was manually created
+    return cfg_dir_path + '/' + CFG_FILE_NAME;
 #endif
     logs::warn("Home folder to keep configuration file was not found");
 

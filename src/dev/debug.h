@@ -70,6 +70,7 @@ enum e_debug_render {
     e_debug_render_tile_random = 38,
     e_debug_render_soldier_strength = 39,
     e_debug_render_malaria_risk = 40,
+    e_debug_render_animal_spawn = 41,
 
     e_debug_render_size
 };

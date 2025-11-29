@@ -51,6 +51,9 @@
 #include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
 #include "scenario/scenario_invasion.h"
+#include "scenario/scenario.h"
+#include "figure/formation.h"
+#include "core/calc.h"
 
 #include "js/js_game.h"
 
@@ -637,7 +640,51 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             snprintf((char *)str, 30, "%d", d);
             debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_LIGHT_BLUE, FONT_SMALL_PLAIN);
         }
+        break;
+
+    case e_debug_render_animal_spawn: {
+        tile2i current_tile = tile2i(grid_offset);
+        int formation_id = 0;
+        
+        // Check all formations for herds
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
+            formation* m = formation_get(i);
+            if (!m->in_use || !m->is_herd || m->batalion_id) {
+                continue;
+            }
+            
+            // Get spawn point: use herd_points_animals if available, otherwise home or tile
+            tile2i spawn_point;
+            if (m->herd_point >= 0 && m->herd_point < MAX_PREDATOR_HERD_POINTS) {
+                spawn_point = g_scenario.herd_points_animals[m->herd_point];
+                if (!spawn_point.valid()) {
+                    spawn_point = m->home.valid() ? m->home : m->tile;
+                }
+            } else {
+                spawn_point = m->home.valid() ? m->home : m->tile;
+            }
+            if (!spawn_point.valid()) {
+                continue;
+            }
+            
+            // Check if current tile is within research_radius from spawn point
+            int distance = calc_maximum_distance(current_tile, spawn_point);
+            if (distance <= m->reseach_radius) {
+                formation_id = m->id;
+                break;
+            }
+        }
+        
+        if (formation_id > 0) {
+            // Draw colored overlay for the entire area (flat tile)
+            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_GREEN_10);
+            // Show formation number on each tile in the area
+            snprintf((char *)str, 30, "%d", formation_id);
+            debug_text_a(ctx, str, x, y + 15, 0, (pcstr)str, COLOR_BLACK, FONT_SMALL_PLAIN);
+        }
+        break;
     }
+}
 
 
 }
