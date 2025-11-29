@@ -6,12 +6,13 @@
 #include "io/gamefiles/lang.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
+#include "figuretype/figure_physician.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_physician);
 
 void building_physician::spawn_figure() {
-    common_spawn_roamer(FIGURE_PHYSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
+    common_spawn_roamer(FIGURE_PHYSICIAN, current_params().min_houses_coverage, (e_figure_action)ACTION_60_PHYSICIAN_CREATED);
 }
 
 void building_physician::update_graphic() {

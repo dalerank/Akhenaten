@@ -31,6 +31,33 @@ water_dest map_water_get_wharf_for_new_transport_ship(figure &boat) {
     return { dock_tile.valid(), wharf->id(), dock_tile };
 }
 
+water_dest map_water_get_closest_working_transport_wharf(figure &boat) {
+    building_transport_wharf *wharf = nullptr;
+
+    int mindist = 9999;
+    tile2i dock_tile;
+    buildings_valid_do([&] (building &b) {
+        auto w = b.dcast_transport_wharf();
+        if (!w) {
+            return;
+        }
+
+        const auto water_tiles = w->get_water_access_tiles();
+        const float curdist = boat.tile.dist(water_tiles.point_a);
+        if (curdist < mindist) {
+            wharf = w;
+            mindist = curdist;
+            dock_tile = water_tiles.point_a;
+        }
+    }, BUILDING_TRANSPORT_WHARF);
+
+    if (!wharf) {
+        return { false, 0 };
+    }
+
+    return { true, wharf->id(), dock_tile };
+}
+
 void figure_transport_ship::on_create() {
     figure_impl::on_create();
     base.allow_move_type = EMOVE_WATER;
@@ -46,8 +73,43 @@ void figure_transport_ship::before_poof() {
 
 void figure_transport_ship::figure_action() {
     building *b = home();
+    building_transport_wharf *wharf = b->dcast_transport_wharf();
+    
+    // Check if wharf is destroyed or invalid
+    if (!wharf) {
+        // Wharf was destroyed, find nearest working wharf and go there to disappear
+        if (action_state() != ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF || base.destination_building_id == 0) {
+            water_dest result = map_water_get_closest_working_transport_wharf(base);
+            if (result.found) {
+                set_destination(building_get(result.bid));
+                base.destination_tile = result.tile;
+                route_remove();
+                advance_action(ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
+                return;
+            } else {
+                // No working wharves available, disappear immediately
+                kill();
+                return;
+            }
+        }
 
-    int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
+        base.move_ticks(1);
+        if (direction(DIR_FIGURE_NONE, DIR_FIGURE_CAN_NOT_REACH, DIR_FIGURE_REROUTE)) {
+            // Reached the wharf, now disappear
+            poof();
+        }
+        return;
+    } 
+
+    // Check if wharf is not working (no workers)
+    if (wharf->num_workers() == 0 && action_state() != ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF) {
+        set_destination(&wharf->base);
+        base.destination_tile = wharf->get_water_access_tiles().point_a;
+        route_remove();
+        advance_action(ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF);
+    }
+
+    int wharf_boat_id = b ? b->get_figure_id(BUILDING_SLOT_BOAT) : 0;
     if (action_state() != ACTION_211_TRANSPORT_SHIP_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_transport_ship(base);
         b = building_get(result.bid);

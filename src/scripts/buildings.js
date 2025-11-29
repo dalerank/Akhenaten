@@ -841,6 +841,7 @@ building_military_academy = {
   },
   meta : { help_id: 88, text_id: 135 }
   building_size : 4,
+  min_houses_coverage : 50
   cost : [ 240, 300, 500, 1000, 1500 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[25], fire_risk:[4], damage_risk: [1]
@@ -1634,8 +1635,12 @@ building_mortuary {
     preview { pack:PACK_GENERAL, id:175 },
     base { pack:PACK_GENERAL, id:175 },
     work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
+    linen { pos : [45, 3], pack:PACK_GENERAL, id:206 },
   }
 
+  input : {
+    resource : RESOURCE_LINEN
+  }
   max_serve_clients : 1000
   min_houses_coverage : 50
   building_size : 2
@@ -2386,6 +2391,7 @@ building_police_station = {
     preview { pack:PACK_GENERAL, id:64 },
     base { pack:PACK_GENERAL, id:64 },
     work { pack:PACK_GENERAL, id:64, offset:1, max_frames:12 },
+    resources {pack:PACK_GENERAL, id:99, offset:2},
   }
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
@@ -2397,6 +2403,7 @@ building_police_station = {
   laborers [6]
   fire_risk [2]
   damage_risk [2]
+  weapon_spot_pos [20, -20]
 }
 
 building_architect_post {

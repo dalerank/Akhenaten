@@ -19,6 +19,7 @@
 #include "sound/effect.h"
 #include "dev/debug.h"
 #include "game/game_config.h"
+#include "game/game_events.h"
 #include "js/js_game.h"
 
 #include <vector>
@@ -196,21 +197,15 @@ static bool can_spawn_ostrich(formation* m) {
     return false;
 }
 
-static void set_figures_to_initial(const formation* m) {
+static void set_herd_figures_to_initial(const formation* m) {
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure* f = figure_get(m->figures[i]);
-            if (f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_150_ATTACK /*&& f->action_state != ACTION_16_FLEEING*/) {
-                f->action_state = ACTION_151_ENEMY_INITIAL;
-                f->wait_ticks = 0;
-
-                // ostriches!
-                random_generate_next();
-                f->wait_ticks = 255 + (random_byte()) - 64;
-                if (f->type == FIGURE_OSTRICH) {
-                    f->action_state = 18 + (random_byte() & 0x1);
-                }
+            if (!f->is_alive()) {
+                continue;
             }
+
+            f->dcast()->formation_reset_to_initial(m);
         }
     }
 }
@@ -269,11 +264,7 @@ void animal_herds_t::update_herd_formation(formation* m) {
         attacking_animals = 1;
         m->missile_attack_timeout--;
     }
-    //if (m->figures[0] && GAME_ENV != ENGINE_ENV_PHARAOH) {
-    //    figure* f = figure_get(m->figures[0]);
-    //    if (f->state == FIGURE_STATE_ALIVE)
-    //        formation_set_home(m, f->tile.x(), f->tile.y());
-    //}
+
     int roam_distance;
     int roam_delay;
     int allow_negative_desirability;
@@ -303,6 +294,7 @@ void animal_herds_t::update_herd_formation(formation* m) {
     default:
         return;
     }
+
     m->wait_ticks++;
     if (m->wait_ticks > roam_delay || attacking_animals) {
         m->wait_ticks = 0;
@@ -310,7 +302,7 @@ void animal_herds_t::update_herd_formation(formation* m) {
             formation_set_destination(m, m->home);
             move_animals(m, attacking_animals, terrain_mask);
         } else {
-            set_figures_to_initial(m);
+            set_herd_figures_to_initial(m);
 
             tile2i rtile;
             const bool found = get_roaming_destination(m->id, allow_negative_desirability, m->home, roam_distance, m->herd_direction, rtile);
@@ -325,6 +317,10 @@ void animal_herds_t::update_herd_formation(formation* m) {
             }
         }
     }
+}
+
+void animal_herds_t::init() {
+    events::emit(event_register_mission_animals{});
 }
 
 void animal_herds_t::update() {

@@ -38,6 +38,33 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
     return { dock_tile.valid(), wharf->id(), dock_tile };
 }
 
+water_dest map_water_get_closest_working_warship_wharf(figure &boat) {
+    building_warship_wharf *wharf = nullptr;
+
+    int mindist = 9999;
+    tile2i dock_tile;
+    buildings_valid_do([&] (building &b) {
+        auto w = b.dcast_warship_wharf();
+        if (!w) {
+            return;
+        }
+
+        const auto water_tiles = w->get_water_access_tiles();
+        const float curdist = boat.tile.dist(water_tiles.point_a);
+        if (curdist < mindist) {
+            wharf = w;
+            mindist = curdist;
+            dock_tile = water_tiles.point_a;
+        }
+    }, BUILDING_TRANSPORT_WHARF);
+
+    if (!wharf) {
+        return { false, 0 };
+    }
+
+    return { true, wharf->id(), dock_tile };
+}
+
 void figure_warship::on_create() {
     figure_impl::on_create();
     base.allow_move_type = EMOVE_WATER;
@@ -54,8 +81,42 @@ void figure_warship::before_poof() {
 
 void figure_warship::figure_action() {
     building* b = home();
+    building_warship_wharf *wharf = b->dcast_warship_wharf();
+    
+    // Check if wharf is destroyed or invalid
+    if (!wharf) {
+        // Wharf was destroyed, find nearest working wharf and go there to disappear
+        if (action_state() != ACTION_207_WARSHIP_GOING_TO_WHARF || base.destination_building_id == 0) {
+            water_dest result = map_water_get_closest_working_warship_wharf(base);
+            if (result.found) {
+                set_destination(result.bid);
+                base.destination_tile = result.tile;
+                route_remove();
+                advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+            } else {
+                // No working wharves available, disappear immediately
+                kill();
+                return;
+            }
+        }
 
-    int wharf_boat_id = b->get_figure_id(BUILDING_SLOT_BOAT);
+        base.move_ticks(1);
+        if (direction(DIR_FIGURE_NONE, DIR_FIGURE_CAN_NOT_REACH, DIR_FIGURE_REROUTE)) {
+            // Reached the wharf, now disappear
+            poof();
+        }
+        return;
+    } 
+        // Check if wharf is not working (no workers)
+    if (wharf->num_workers() == 0 && action_state() != ACTION_207_WARSHIP_GOING_TO_WHARF) {
+        runtime_data().active_order = e_order_goto_wharf;
+        set_destination(&wharf->base);
+        base.destination_tile = wharf->get_water_access_tiles().point_a;
+        route_remove();
+        advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+    }
+
+    int wharf_boat_id = b ? b->get_figure_id(BUILDING_SLOT_BOAT) : 0;
     if (action_state() != ACTION_205_WARSHIP_CREATED && wharf_boat_id != id()) {
         water_dest result = map_water_get_wharf_for_new_warship(base);
         b = building_get(result.bid);
@@ -146,8 +207,10 @@ void figure_warship::figure_action_goto_wharf() {
         return;
     }
 
-    building_warship_wharf *wharf = home()->dcast_warship_wharf();
-    if (!wharf) {
+    building *home_building = home();
+    building_warship_wharf *wharf = home_building ? home_building->dcast_warship_wharf() : nullptr;
+    if (!wharf || !home_building || !home_building->is_valid() || wharf->num_workers() == 0) {
+        // Home wharf is destroyed or not working
         return;
     }
 

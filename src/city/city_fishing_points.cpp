@@ -86,7 +86,7 @@ tile2i city_fishing_points_t::closest_fishing_point(tile2i pos, bool free_only) 
 void city_fishing_points_t::reset() {
     tile_cache &river = river_tiles();
     int num_points = std::max<int>(1, (int)river.size() / 500);
-    update(num_points);
+    update_month(num_points);
 }
 
 void city_fishing_points_t::clear() {
@@ -104,7 +104,7 @@ void city_fishing_points_t::clear() {
     }
 }
 
-void city_fishing_points_t::update(int points_num) {
+void city_fishing_points_t::update_month(int points_num) {
     clear();
 
     int num_fishing_spots = 0;

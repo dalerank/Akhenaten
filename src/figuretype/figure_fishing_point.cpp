@@ -15,7 +15,7 @@ declare_console_command_p(addfishpoints) {
     std::string args; is >> args;
     int count = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 
-    g_city.fishing_points.update(count);
+    g_city.fishing_points.update_month(count);
 }
 
 void figure_fishing_point::figure_action() {

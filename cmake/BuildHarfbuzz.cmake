@@ -1,6 +1,6 @@
 # This file is used to build harfbuzz as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildHarfbuzz.cmake
-# Required variables: HARFBUZZ_SOURCE_DIR, HARFBUZZ_BUILD_DIR, HARFBUZZ_INSTALL_DIR, FREETYPE_ROOT
+# Required variables: HARFBUZZ_SOURCE_DIR, HARFBUZZ_BUILD_DIR, HARFBUZZ_INSTALL_DIR, FREETYPE_ROOT, HARFBUZZ_ADDITIONAL_CMAKE_ARGS
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_DIR})
@@ -21,9 +21,6 @@ if(DEFINED FREETYPE_ROOT)
         -DFreetype_INCLUDE_DIR=${FREETYPE_INCLUDE_DIR}
         -DFreetype_INCLUDE_DIRS=${FREETYPE_INCLUDE_DIR}
         -DFreetype_LIBRARY=${FREETYPE_LIBRARY}
-    )
-    # Add freetype to CMAKE_PREFIX_PATH so harfbuzz can find it via find_package
-    set(HARFBUZZ_CMAKE_ARGS ${HARFBUZZ_CMAKE_ARGS}
         -DCMAKE_PREFIX_PATH=${FREETYPE_ROOT}
     )
 endif()
@@ -32,7 +29,7 @@ if(HARFBUZZ_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring harfbuzz...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -S ${HARFBUZZ_SOURCE_DIR} -B ${HARFBUZZ_BUILD_DIR} ${HARFBUZZ_CMAKE_ARGS}
+        COMMAND ${CMAKE_COMMAND} -S ${HARFBUZZ_SOURCE_DIR} -B ${HARFBUZZ_BUILD_DIR} ${HARFBUZZ_CMAKE_ARGS} ${HARFBUZZ_ADDITIONAL_CMAKE_ARGS}
         WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
@@ -79,7 +76,7 @@ if(HARFBUZZ_IS_MSVC)
 else()
     message(STATUS "Configuring harfbuzz...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${HARFBUZZ_SOURCE_DIR} ${HARFBUZZ_CMAKE_ARGS} -B ${HARFBUZZ_BUILD_DIR} -S ${HARFBUZZ_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} -S ${HARFBUZZ_SOURCE_DIR} -B ${HARFBUZZ_BUILD_DIR} ${HARFBUZZ_CMAKE_ARGS} ${HARFBUZZ_ADDITIONAL_CMAKE_ARGS}
         WORKING_DIRECTORY ${HARFBUZZ_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )

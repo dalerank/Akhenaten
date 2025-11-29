@@ -15,19 +15,12 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: actions/cache@v4
-      id: cache-sdl-libs
-      with:
-        path: |
-          ~/Library/Frameworks/SDL2_mixer.framework
-        key: ${{ runner.os }}-download-sdl-arm64-${{ hashFiles('./.ci-scripts/mac/download-sdl.sh') }}
-
     - name: update-workspace
       run: |
         mkdir -p build
         cd build
         export CXXFLAGS=-stdlib=libc++
-        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=11.7 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="arm64" -DOPTION_SYSTEM_LIBPNG=OFF -DOPTION_BUILD_LIBPNG=ON .. -G "Unix Makefiles"
+        cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=11.7 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_OSX_ARCHITECTURES="arm64" -DOPTION_SYSTEM_LIBPNG=OFF -DOPTION_BUILD_LIBPNG=ON -DCMAKE_INSTALL_PREFIX="$PWD/install" .. -G "Unix Makefiles"
         cd ..
 
     - name: build
@@ -38,7 +31,7 @@ jobs:
       run: |
         cmake --build ./build --target install/local
         mkdir macos_build
-        cp -R ./build/akhenaten.app ./macos_build/akhenaten.app
+        cp -R ./build/install/akhenaten.app ./macos_build/akhenaten.app
 
     - uses: actions/upload-artifact@v4
       with:

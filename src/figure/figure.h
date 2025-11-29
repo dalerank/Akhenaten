@@ -577,21 +577,29 @@ public:
     inline building *home() { return base.home(); }
     inline e_figure_type type() const { return base.type; }
     inline int id() { return base.id; }
-    inline short action_state() const { return base.action_state; }
 
+    inline short action_state() const { return base.action_state; }
     template<typename ... Args>
     bool action_state(const Args... args) const {
         int states[] = {args...};
         return std::find(std::begin(states), std::end(states), base.action_state) != std::end(states);
     }
 
+
     inline uint8_t direction() const { return base.direction; }
+    template<typename ... Args>
+    bool direction(const Args... args) const {
+        int states[] = { args... };
+        return std::find(std::begin(states), std::end(states), base.direction) != std::end(states);
+    }
+
     inline const building *home() const { return base.home(); }
     inline const animation_t &anim(const xstring &anim_key) const { return base.anim(anim_key); }
     inline animation_context &animation() { return base.animctx; }
     inline const animation_context &animation() const { return base.animctx; }
     inline void advance_action(int action) { int saved_action = action; base.advance_action(action); on_action_changed(saved_action); }
            void advance_action(int action, tile2i t);
+
     inline bool do_returnhome(e_terrain_usage terrainchoice, short next_action = -1) { return base.do_returnhome(terrainchoice, next_action); }
     inline bool do_gotobuilding(building *dest, bool stop_at_road = true, e_terrain_usage terrainchoice = TERRAIN_USAGE_ROADS, short NEXT_ACTION = -1, short FAIL_ACTION = -1) { return base.do_gotobuilding(dest, stop_at_road, terrainchoice, NEXT_ACTION, FAIL_ACTION); }
     inline bool do_enterbuilding(bool invisible, building *b, short next_action = -1, short fail_action = -1) { return base.do_enterbuilding(invisible, b, next_action, fail_action); }

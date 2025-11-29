@@ -163,7 +163,7 @@ void city_health_t::update_coverage() {
 }
 
 
-void city_health_t::update() {
+void city_health_t::update_month() {
     if (g_city.population.current < 200 || g_scenario.is_scenario_id(1, 2)) {
         value = 50;
         target_value = 50;

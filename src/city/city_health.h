@@ -11,7 +11,7 @@ struct city_health_t {
 
     void change(int amount);
     void start_disease(int total_people, bool force, int plague_people);
-    void update();
+    void update_month();
     void reset_mortuary_workers();
     void add_mortuary_workers(int amount);
     void update_coverage();

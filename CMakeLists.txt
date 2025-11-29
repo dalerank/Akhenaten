@@ -106,7 +106,7 @@ elseif(WIN_EMSCRIPTEN)
         message(FATAL_ERROR "Please define EMSDK to Emscripten SDK in system path!")
     endif()
     message("Emscripten SDK: ${EMSDK}")
-    set(USE_FLAGS "-sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
+    set(USE_FLAGS "-sUSE_SDL=2 -sUSE_SDL_MIXER=2 -sSDL2_MIXER_FORMATS=mp3 -s USE_MPG123=1 -gsource-map")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
     ${USE_FLAGS} \
@@ -294,6 +294,7 @@ set(ZLIB_BUILD_CMAKE_ARGS
     -DZLIB_INSTALL_DIR=${ZLIB_INSTALL_DIR}
     -DZLIB_BUILD_CONFIG=${ZLIB_BUILD_CONFIG}
     -DZLIB_IS_MSVC=${MSVC}
+    -DZLIB_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
 )
 execute_process(
     COMMAND ${CMAKE_COMMAND} ${ZLIB_BUILD_CMAKE_ARGS} -P ${ZLIB_BUILD_SCRIPT}
@@ -331,7 +332,8 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 #
 
 # Skip SDL2 build for Android as it uses find_package
-if(NOT PLATFORM_ANDROID)
+# Skip SDL2 build for Emscripten as it uses ports (-sUSE_SDL=2)
+if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2 FetchContent
@@ -375,7 +377,7 @@ if(NOT PLATFORM_ANDROID)
         -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
         -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
         -DSDL2_IS_MSVC=${MSVC}
-        -DSDL2_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
+        -DSDL2_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_BUILD_CMAKE_ARGS} -P ${SDL2_BUILD_SCRIPT}
@@ -421,7 +423,8 @@ endif()
 #
 
 # Skip SDL2_mixer build for Android as it uses find_package
-if(NOT PLATFORM_ANDROID)
+# Skip SDL2_mixer build for Emscripten as it uses ports (-sUSE_SDL_MIXER=2)
+if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2_mixer FetchContent
@@ -466,7 +469,7 @@ if(NOT PLATFORM_ANDROID)
         -DSDL2_MIXER_BUILD_CONFIG=${SDL2_MIXER_BUILD_CONFIG}
         -DSDL2_MIXER_IS_MSVC=${MSVC}
         -DSDL2_ROOT=${SDL2_ROOT}
-        -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
+        -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_MIXER_BUILD_CMAKE_ARGS} -P ${SDL2_MIXER_BUILD_SCRIPT}
@@ -554,7 +557,7 @@ set(FREETYPE_BUILD_CMAKE_ARGS
     -DFREETYPE_IS_MSVC=${MSVC}
     -DZLIB_ROOT=${ZLIB_ROOT}
     -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-    -DFREETYPE_ADDITIONAL_CMAKE_ARGS="${BUILD_ADDITIONAL_CMAKE_ARGS}"
+    -DFREETYPE_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
 )
 
 execute_process(
@@ -631,6 +634,7 @@ set(HARFBUZZ_BUILD_CMAKE_ARGS
     -DHARFBUZZ_INSTALL_DIR=${HARFBUZZ_INSTALL_DIR}
     -DHARFBUZZ_BUILD_CONFIG=${HARFBUZZ_BUILD_CONFIG}
     -DHARFBUZZ_IS_MSVC=${MSVC}
+    -DHARFBUZZ_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
     -DFREETYPE_ROOT=${FREETYPE_ROOT}
     -DFREETYPE_INCLUDE_DIR=${FREETYPE_INCLUDE_DIRS}
     -DFREETYPE_LIBRARY=${FREETYPE_LIBRARY}
@@ -945,7 +949,7 @@ endif()
 
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES
-        COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\\\"Ozy\\\";PACKAGE_VERSION=\\\"static\\\";HAVE_MPGLIB=ON"
+        COMPILE_DEFINITIONS "HAVE_CONFIG_H=ON;CPU_IS_LITTLE_ENDIAN=1;PACKAGE_NAME=\"Ankh\";PACKAGE_VERSION=\"static\";HAVE_MPGLIB=ON"
     )
     if(NOT MSVC)
         set_source_files_properties(${LAME_FILES} PROPERTIES COMPILE_FLAGS "-Wno-absolute-value")
@@ -976,7 +980,9 @@ if(APPLE)
 
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "mt.dalerank.akhenaten")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version" FORCE)
+    if(NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum OS X deployment version")
+    endif()
     set(MACOSX_BUNDLE_ICON_FILE "akhenaten.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "0.2.1 ${GAME_BUILD_NUMBER}")
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
@@ -984,7 +990,8 @@ if(APPLE)
 
     set_target_properties(${GAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist")
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist"
+        OSX_DEPLOYMENT_TARGET "${CMAKE_OSX_DEPLOYMENT_TARGET}")
 
     set(DIRS "")
     set(LIBS "")
@@ -1016,8 +1023,10 @@ if(APPLE)
     ")
 endif()
 
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_MIXER_INCLUDE_DIR})
+if(NOT WIN_EMSCRIPTEN)
+    include_directories(${SDL2_INCLUDE_DIR})
+    include_directories(${SDL2_MIXER_INCLUDE_DIR})
+endif()
 include_directories(${PROJECT_SOURCE_DIR}/src/mujs)
 include_directories(${CMRC_INCLUDE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/src/lame/include)
@@ -1166,19 +1175,28 @@ target_link_libraries(${GAME} ${LIBPNG_LIBRARY})
 target_include_directories(${GAME} PRIVATE ${LIBPNG_INCLUDE_DIR})
 message(STATUS "libpng: Linked via FetchContent from ${LIBPNG_SOURCE_DIR}")
 
-target_link_libraries (${GAME}
-                        ${SDL2_LIBRARY} 
-                        ${SDL2_MAIN_LIBRARY}
-                        ${FREETYPE_LIBRARY}
-                        ${HARFBUZZ_LIBRARY}
-                        $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
-                            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
-                                $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
-                        ${CPPTRACE_LIBRARY}
-                        ${GPUPIXEL_LIBRARY} 
-                        ${ZLIB_LIBRARY}
-                        akhenaten::rc
-                        $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
+if(WIN_EMSCRIPTEN)
+    # For Emscripten, SDL2 and SDL2_mixer are provided via ports (-sUSE_SDL=2 -sUSE_SDL_MIXER=2)
+    target_link_libraries (${GAME}
+                            ${FREETYPE_LIBRARY}
+                            ${HARFBUZZ_LIBRARY}
+                            ${ZLIB_LIBRARY}
+                            akhenaten::rc)
+else()
+    target_link_libraries (${GAME}
+                            ${SDL2_LIBRARY} 
+                            ${SDL2_MAIN_LIBRARY}
+                            ${FREETYPE_LIBRARY}
+                            ${HARFBUZZ_LIBRARY}
+                            $<IF:$<TARGET_EXISTS:SDL2::SDL2_mixer>,SDL2::SDL2_mixer,
+                                $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,
+                                    $<IF:$<TARGET_EXISTS:SDL2_mixer>,SDL2_mixer,${SDL2_MIXER_LIBRARY}>>>
+                            ${CPPTRACE_LIBRARY}
+                            ${GPUPIXEL_LIBRARY} 
+                            ${ZLIB_LIBRARY}
+                            akhenaten::rc
+                            $<IF:$<TARGET_EXISTS:Tracy::TracyClient>,Tracy::TracyClient,>)
+endif()
 
 if(MSVC)
     target_link_libraries(${GAME} "winmm" "imagehlp" "shlwapi" "setupapi" "version")
