@@ -331,7 +331,7 @@ void formation_enemy_approach_target(formation* m) {
     }
 }
 
-static void set_figures_to_initial(const formation* m) {
+static void set_enemy_figures_to_initial(const formation* m) {
     for (auto& fid: m->figures) {
         figure* f = figure_get(fid);
         if (!f->is_alive()) {
@@ -473,7 +473,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
             state->duration_halt--;
             if (state->duration_halt <= 0) {
                 state->duration_regroup = regroup_duration;
-                set_figures_to_initial(m);
+                set_enemy_figures_to_initial(m);
                 regroup = 0;
                 halt = 1;
             }
@@ -484,7 +484,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
             state->duration_regroup--;
             if (state->duration_regroup <= 0) {
                 state->duration_advance = advance_duration;
-                set_figures_to_initial(m);
+                set_enemy_figures_to_initial(m);
                 advance = 1;
                 regroup = 0;
             }
@@ -495,7 +495,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
             state->duration_advance--;
             if (state->duration_advance <= 0) {
                 state->duration_halt = halt_duration;
-                set_figures_to_initial(m);
+                set_enemy_figures_to_initial(m);
                 halt = 1;
                 advance = 0;
             }

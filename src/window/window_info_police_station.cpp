@@ -12,7 +12,7 @@ info_window_police_station g_police_infow;
 void info_window_police_station::init(object_info &c) {
     building_info_window::init(c);
 
-    building_police_station *station = c.building_get<building_police_station>();
+    auto station = c.building_get<building_police_station>();
 
     if (!station) {
         return;

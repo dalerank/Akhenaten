@@ -49,6 +49,7 @@ struct city_migration_t {
 
     void reset();
     void update();
+    void update_month();
     void update_conditions();
     void update_status();
     void nobles_leave_city(int num_people);

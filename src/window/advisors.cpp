@@ -160,7 +160,7 @@ void window_advisors::init() {
 
     g_city.houses_calculate_culture_demands();
     g_city.avg_coverage.update();
-    g_city.health.update();
+    g_city.health.update_month();
 
     g_city.resource.calculate_food_stocks_and_supply_wheat();
     formation_calculate_figures();
