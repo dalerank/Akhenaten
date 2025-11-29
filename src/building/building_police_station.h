@@ -8,8 +8,8 @@ public:
 
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_overlay get_overlay() const override { return OVERLAY_CRIME; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POLICE; }
     virtual int animation_speed(int speed) const override { return 3; }
-    //virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
 };
