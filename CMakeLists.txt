@@ -1180,7 +1180,8 @@ if(WIN_EMSCRIPTEN)
     target_link_libraries (${GAME}
                             ${FREETYPE_LIBRARY}
                             ${HARFBUZZ_LIBRARY}
-                            ${ZLIB_LIBRARY})
+                            ${ZLIB_LIBRARY}
+                            akhenaten::rc)
 else()
     target_link_libraries (${GAME}
                             ${SDL2_LIBRARY} 
