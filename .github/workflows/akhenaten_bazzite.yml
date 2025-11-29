@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         dnf update -y
-        dnf install -y git cmake gcc gcc-c++ make libstdc++-static curl
+        dnf install -y git cmake gcc gcc-c++ make libstdc++-static mesa-libGL-devel
     - name: Install Homebrew (if needed by script)
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
