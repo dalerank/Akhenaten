@@ -32,6 +32,16 @@ void formations_t::clear(int formation_id) {
     formations[formation_id].id = formation_id;
 }
 
+formation *formations_t::get_from_herd(int index) {
+    for (auto& m : formations) {
+        if (!m.in_use && m.herd_point) {
+            return &m;
+        }
+    }
+
+    return &formations[0];
+}
+
 static int get_free_formation(int start_index) {
     for (int i = start_index; i < MAX_FORMATIONS; i++) {
         if (!g_formations.formations[i].in_use) {
@@ -574,9 +584,9 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_recruit_type);
-        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->reseach_radius);
         iob->bind(BIND_SIGNATURE_UINT8, &f->has_military_training);
-        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_point);
 
         iob->bind____skip(2);                                  //     vv 6 hp per ostich?
         iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18

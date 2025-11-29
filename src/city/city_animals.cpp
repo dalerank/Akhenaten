@@ -17,7 +17,7 @@ declare_console_var_bool(allow_span_ostrich, true)
 
 city_animals_t ANK_VARIABLE_N(g_city_animals, "city_animals");
 
-void city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
+formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
     if (formation->id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
@@ -34,6 +34,8 @@ void city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_a
             }
         }
     }
+
+    return formation;
 }
 
 void city_animals_t::create_herds() {
@@ -168,7 +170,17 @@ bool city_animals_t::get_roaming_destination(int formation_id, int allow_negativ
 void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ftype, int num) {
     g_scenario.herd_points_animals[index] = tile2i{ x, y };
     g_scenario.herd_type_animals[index] = ftype;
-    create_herd(tile2i{ x, y }, ftype, num);
+    formation* m = create_herd(tile2i{ x, y }, ftype, num);
+    if (m->id > 0) {
+        m->herd_point = index;
+    }
+}
+
+void city_animals_t::set_animals_area(int index, int reseach_radius) {
+    formation *m = g_formations.get_from_herd(index);
+    if (m->id > 0) {
+        m->reseach_radius = reseach_radius;
+    }
 }
 
 void city_animals_t::move_animals(const formation *m, int attacking_animals, int terrain_mask) {

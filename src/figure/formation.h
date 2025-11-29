@@ -109,6 +109,8 @@ struct formation {
     int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
     uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
+    uint8_t reseach_radius;
+    uint8_t herd_point;
     bool is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
 
     /* Enemy-related */
@@ -142,6 +144,8 @@ struct formations_t {
     uint8_t num_batalions;
 
     std::array<formation, MAX_FORMATIONS> formations;
+
+    formation *get_from_herd(int index);
 };
 
 extern formations_t g_formations;
