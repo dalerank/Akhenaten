@@ -48,11 +48,12 @@ water_dest map_water_get_closest_wharf(figure &boat) {
 
     int mindist = 9999;
     tile2i dock_tile;
-    wharf = building_first_ex<building_wharf>([&] (building_wharf *w) {
-        if (!w->is_valid() || w->num_workers() == 0) {
-            return false;
+    buildings_valid_do([&] (building &b) {      
+        auto w = b.dcast_fishing_wharf();
+        if (!w) {
+            return;
         }
-        
+
         const auto water_tiles = w->get_water_access_tiles();
         const float curdist = boat.tile.dist(water_tiles.point_a);
         if (curdist < mindist) {
@@ -60,9 +61,7 @@ water_dest map_water_get_closest_wharf(figure &boat) {
             mindist = curdist;
             dock_tile = water_tiles.point_a;
         }
-
-        return false;
-    });
+    }, BUILDING_FISHING_WHARF);
 
     if (!wharf) {
         return { false, 0 };
@@ -113,13 +112,19 @@ void figure_fishing_boat::figure_action() {
         return;
     }
 
-    if (wharf && wharf->num_workers() == 0 && (action_state() != ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH)) {
-        // Wharf has no workers
-        set_destination(&wharf->base);
-        base.destination_tile = wharf->get_water_access_tiles().point_a;
-        route_remove();
-        advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
-        return;
+    if (wharf && wharf->num_workers() == 0) {
+        switch(action_state()) {
+        case ACTION_194_FISHING_BOAT_AT_WHARF:
+        case ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
+            break;
+
+        default:
+            set_destination(&wharf->base);
+            base.destination_tile = wharf->get_water_access_tiles().point_a;
+            route_remove();
+            advance_action(ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH);
+            return;
+        }
     }
 
     int wharf_boat_id = wharf ? wharf->get_figure_id(BUILDING_SLOT_BOAT) : 0;
