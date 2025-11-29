@@ -7,7 +7,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_enemy.h"
 #include "figure/formation_enemy.h"
-#include "figure/formation_herd.h"
+#include "city/city_animals.h"
 #include "figure/formation_batalion.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
@@ -18,33 +18,33 @@
 #include <string.h>
 
 const e_formation_layout_tokens_t ANK_CONFIG_ENUM(e_formation_layout_tokens);
-formation g_formations[250];
+formations_t g_formations;
 
-struct formation_data_t {
-    int id_last_formation;
-    int num_formations;
-};
-
-formation_data_t g_formation_data;
-
-void formations_clear(void) {
-    auto &data = g_formation_data;
+void formations_t::clear_all() {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
-        memset(&g_formations[i], 0, sizeof(formation));
-        g_formations[i].id = i;
+        memset(&formations[i], 0, sizeof(formation));
+        formations[i].id = i;
     }
-    data.id_last_formation = 0;
-    data.num_formations = 0;
 }
 
-void formation_clear(int formation_id) {
-    memset(&g_formations[formation_id], 0, sizeof(formation));
-    g_formations[formation_id].id = formation_id;
+void formations_t::clear(int formation_id) {
+    memset(&formations[formation_id], 0, sizeof(formation));
+    formations[formation_id].id = formation_id;
+}
+
+formation *formations_t::get_from_herd(int index) {
+    for (auto& m : formations) {
+        if (m.in_use && m.herd_point == index) {
+            return &m;
+        }
+    }
+
+    return &formations[0];
 }
 
 static int get_free_formation(int start_index) {
     for (int i = start_index; i < MAX_FORMATIONS; i++) {
-        if (!g_formations[i].in_use) {
+        if (!g_formations.formations[i].in_use) {
             return i;
         }
     }
@@ -57,7 +57,7 @@ static int formation_create(e_figure_type figure_type, e_formation_layout layout
         return 0;
     }
 
-    formation* f = &g_formations[formation_id];
+    formation* f = &g_formations.formations[formation_id];
     f->faction_id = 0;
     f->tile = tile;
     f->destination = tile;
@@ -77,16 +77,17 @@ static int formation_create(e_figure_type figure_type, e_formation_layout layout
     return formation_id;
 }
 
-int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals) {
+formation* formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals) {
     int formation_id = formation_create(figure_type, FORMATION_HERD, 0, tile);
     if (!formation_id)
         return 0;
 
-    formation* f = &g_formations[formation_id];
+    formation* f = &g_formations.formations[formation_id];
     f->is_herd = 1;
     f->wait_ticks = 24;
     f->max_figures = num_animals;
-    return formation_id;
+
+    return f;
 }
 
 int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence) {
@@ -94,7 +95,7 @@ int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_l
     if (!formation_id)
         return 0;
 
-    formation* f = &g_formations[formation_id];
+    formation* f = &g_formations.formations[formation_id];
     f->attack_type = attack_type;
     f->orientation = orientation;
     f->enemy_type = enemy_type;
@@ -109,11 +110,11 @@ formation *formation_get_free(int start_index) {
 }
 
 formation* formation_get(int formation_id) {
-    return &g_formations[formation_id];
+    return &g_formations.formations[formation_id];
 }
 
 void formation_toggle_empire_service(int formation_id) {
-    g_formations[formation_id].empire_service = g_formations[formation_id].empire_service ? 0 : 1;
+    g_formations.formations[formation_id].empire_service = g_formations.formations[formation_id].empire_service ? 0 : 1;
 }
 
 void formation_record_missile_fired(formation* m) {
@@ -131,7 +132,7 @@ void formation_record_fight(formation* m) {
 
 int formation_grid_offset_for_invasion(int invasion_sequence) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &g_formations[i];
+        formation* m = &g_formations.formations[i];
         if (m->in_use == 1 && !m->batalion_id && !m->is_herd && m->invasion_sequence == invasion_sequence) {
             if (m->home.valid() )
                 return m->home.grid_offset();
@@ -145,15 +146,15 @@ int formation_grid_offset_for_invasion(int invasion_sequence) {
 
 void formation_kingdome_pause(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
-            g_formations[i].wait_ticks = 20;
+        if (g_formations.formations[i].in_use == 1 && g_formations.formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
+            g_formations.formations[i].wait_ticks = 20;
     }
 }
 
 void formation_kingdome_retreat(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use == 1 && g_formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
-            g_formations[i].months_low_morale = 1;
+        if (g_formations.formations[i].in_use == 1 && g_formations.formations[i].figure_type == FIGURE_ENEMY_KINGDOME_INFANTRY)
+            g_formations.formations[i].months_low_morale = 1;
     }
 }
 
@@ -161,24 +162,22 @@ bool formation_has_low_morale(formation* m) {
     return m->months_low_morale || m->months_very_low_morale;
 }
 
-int formation_get_num_forts_cached() {
-    return g_formation_data.num_formations;
-}
+void formation_calculate_batalion_totals() {
+    auto &data = g_formations;
 
-void formation_calculate_legion_totals() {
-    auto &data = g_formation_data;
-    data.id_last_formation = 0;
-    data.num_formations = 0;
+    data.num_batalions = 0;
+
     g_city.military.clear_infantry_batalions();
+
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (m->in_use) {
             if (m->batalion_id) {
-                data.id_last_formation = i;
-                data.num_formations++;
+                data.num_batalions++;
                 if (m->figure_type == FIGURE_STANDARD_BEARER)
                     g_city.military.add_infantry_batalion();
             }
+
             if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
                 figure* f = figure_get(m->figures[0]);
                 if (f->state == FIGURE_STATE_ALIVE)
@@ -191,7 +190,7 @@ void formation_calculate_legion_totals() {
 int formation_get_num_forts() {
     int total = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use && g_formations[i].batalion_id)
+        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id)
             total++;
     }
     return total;
@@ -204,7 +203,7 @@ int formation_get_max_forts() {
 int formation_for_legion(int legion_index) {
     int index = 1;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use && g_formations[i].batalion_id) {
+        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id) {
             if (index++ == legion_index)
                 return i;
         }
@@ -263,7 +262,7 @@ void formation_update_morale_after_death(formation* m) {
 
 static void change_all_morale(int legion, int enemy) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &g_formations[i];
+        formation* m = &g_formations.formations[i];
         if (m->in_use && !m->is_herd) {
             if (m->batalion_id)
                 formation_change_morale(m, legion);
@@ -276,7 +275,7 @@ static void change_all_morale(int legion, int enemy) {
 
 void formation_update_monthly_morale_deployed() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &g_formations[i];
+        formation* f = &g_formations.formations[i];
         if (f->in_use != 1 || f->is_herd)
             continue;
 
@@ -304,7 +303,7 @@ void formation_update_monthly_morale_deployed() {
 
 void formation_update_monthly_morale_at_rest(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &g_formations[i];
+        formation* m = &g_formations.formations[i];
         if (m->in_use != 1 || m->is_herd)
             continue;
 
@@ -360,13 +359,31 @@ void formation::set_destination_building(tile2i tile, int building_id) {
     destination_building_id = building_id;
 }
 
+svector<figure *, formation::max_figures_count> formation::valid_figures() {
+    svector<figure *, max_figures_count> result;
+    for (auto fid: figures) {
+        if (!fid) {
+            continue;
+        }
+
+        figure *f = figure_get(fid);
+        if (!f->is_valid()) {
+            continue;
+        }
+
+        result.push_back(f);
+    }
+
+    return result;
+}
+
 void formation_set_home(formation* m, tile2i tile) {
     m->home = tile;
 }
 
 void formation_clear_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &g_formations[i];
+        formation* f = &g_formations.formations[i];
         for (int fig = 0; fig < formation::max_figures_count; fig++) {
             f->figures[fig] = 0;
         }
@@ -378,7 +395,7 @@ void formation_clear_figures(void) {
 }
 
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage) {
-    formation* f = &g_formations[formation_id];
+    formation* f = &g_formations.formations[formation_id];
     f->num_figures++;
     f->total_damage += damage;
     f->max_total_damage += max_damage;
@@ -397,13 +414,13 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 
 void formation_move_herds_away(tile2i tile) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* f = &g_formations[i];
+        formation* f = &g_formations.formations[i];
         if (f->in_use != 1 || f->batalion_id || !f->is_herd || f->num_figures <= 0)
             continue;
 
         if (calc_maximum_distance(tile, f->home) <= 6) {
-            g_formations[i].wait_ticks = 50;
-            g_formations[i].herd_direction = calc_general_direction(tile, f->home);
+            g_formations.formations[i].wait_ticks = 50;
+            g_formations.formations[i].herd_direction = calc_general_direction(tile, f->home);
         }
     }
 }
@@ -459,7 +476,7 @@ void formation_calculate_figures(void) {
             // enemy
             if (!m->own_batalion) {
                 if (m->num_figures <= 0) {
-                    formation_clear(m->id);
+                    g_formations.clear(m->id);
                 } else {
                     enemy_army_totals_add_enemy_formation(m->num_figures);
                 }
@@ -471,7 +488,7 @@ void formation_calculate_figures(void) {
 }
 
 static void update_direction(int formation_id, int first_figure_direction) {
-    formation* f = &g_formations[formation_id];
+    formation* f = &g_formations.formations[formation_id];
     if (f->unknown_fired) {
         f->unknown_fired--;
     } else if (f->missile_fired) {
@@ -509,7 +526,7 @@ static void update_direction(int formation_id, int first_figure_direction) {
 
 static void update_directions(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = &g_formations[i];
+        formation* m = &g_formations.formations[i];
         if (m->in_use && !m->is_herd)
             update_direction(m->id, figure_get(m->figures[0])->direction);
     }
@@ -517,14 +534,14 @@ static void update_directions(void) {
 
 static void set_legion_max_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations[i].in_use && g_formations[i].batalion_id)
-            g_formations[i].max_figures = 16;
+        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id)
+            g_formations.formations[i].max_figures = 16;
     }
 }
 
 void formation_update_all() {
     OZZY_PROFILER_SECTION("Game/Update/Formations");
-    formation_calculate_legion_totals();
+    formation_calculate_batalion_totals();
     formation_calculate_figures();
     update_directions();
     formation_batalion_decrease_damage();
@@ -532,12 +549,12 @@ void formation_update_all() {
     set_legion_max_figures();
     formation_batalion_update();
     formation_enemy_update();
-    g_animal_herds.update();
+    g_city_animals.update();
 }
 
 io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
-        formation* f = &g_formations[i];
+        formation* f = &g_formations.formations[i];
         f->id = i;                                   // 10
         iob->bind_bool(f->in_use); // 1
         iob->bind_u8(f->faction_id);
@@ -567,9 +584,9 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
         iob->bind____skip(1);
         iob->bind(BIND_SIGNATURE_UINT8, &f->batalion_recruit_type);
-        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->reseach_radius);
         iob->bind(BIND_SIGNATURE_UINT8, &f->has_military_training);
-        iob->bind____skip(1);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_point);
 
         iob->bind____skip(2);                                  //     vv 6 hp per ostich?
         iob->bind(BIND_SIGNATURE_INT16, &f->total_damage);     // --> 18
@@ -608,8 +625,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_from_home);
         iob->bind(BIND_SIGNATURE_UINT8, &f->months_very_low_morale);
         iob->bind(BIND_SIGNATURE_UINT8, &f->invasion_id);
-        // iob->bind(BIND_SIGNATURE_UINT8, &f->herd_wolf_spawn_delay);                      // --> 4
-        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_ostrich_spawn_delay); // --> 4
+        iob->bind(BIND_SIGNATURE_UINT8, &f->herd_spawn_delay); // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);           // 6
         iob->bind(BIND_SIGNATURE_UINT8, &f->failed_creation_count);           // 6
         iob->bind____skip(5);
@@ -621,10 +637,11 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         }
     }
 });
+
 io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = g_formation_data;
+    auto &data = g_formations.formations;
     int tmp;
     iob->bind(BIND_SIGNATURE_INT32, &tmp);
-    iob->bind(BIND_SIGNATURE_INT32, &data.id_last_formation);
-    iob->bind(BIND_SIGNATURE_INT32, &data.num_formations);
+    iob->bind(BIND_SIGNATURE_INT32, &tmp);
+    iob->bind(BIND_SIGNATURE_INT32, &tmp);
 });

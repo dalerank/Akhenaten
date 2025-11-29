@@ -42,9 +42,9 @@ jobs:
     - name: Checkout launcher 🛎️
       uses: actions/checkout@v4
       with:
-        #or use your fork
-        repository: ololoken/akhenaten-ems
+        repository: dalerank/akhenaten-ems
         ref: refs/heads/main
+        token: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/download-artifact@v4
       with:
         name: emscripten_build
@@ -58,7 +58,12 @@ jobs:
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: akhenaten-wasm
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository-name: dalerank/dalerank.github.io
+        branch: main
         folder: dist
+        target-folder: /
+        clean: true
+        single-commit: true
 
 

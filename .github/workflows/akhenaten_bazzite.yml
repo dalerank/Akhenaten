@@ -1,0 +1,46 @@
+name: Akhenaten Build Bazzite
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: run on bazzite (fedora-based)
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install dependencies
+      run: |
+        dnf update -y
+        dnf install -y git cmake gcc gcc-c++ make libstdc++-static mesa-libGL-devel
+    - name: Install Homebrew (if needed by script)
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || true
+        if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+        fi
+    - name: Build project
+      run: |
+        chmod +x ./update-workspace-bazzite.sh
+        mkdir -p bazzite_build
+        mkdir -p bazzite_build/data
+        ./update-workspace-bazzite.sh
+        cmake --build ./build
+        cp ./build/akhenaten ./bazzite_build/akhenaten.bazzite
+        cp ./data/pharaoh_fonts_pack.sgx ./bazzite_build/data/pharaoh_fonts_pack.sgx
+        cp ./data/pharaoh_custom_pack.sgx ./bazzite_build/data/pharaoh_custom_pack.sgx
+        cp ./data/pharaoh_houses_pack.sgx ./bazzite_build/data/pharaoh_houses_pack.sgx
+        cp ./data/neucha.ttf ./bazzite_build/data/neucha.ttf
+    - uses: actions/upload-artifact@v4
+      with:
+        name: bazzite_build
+        path: bazzite_build
+

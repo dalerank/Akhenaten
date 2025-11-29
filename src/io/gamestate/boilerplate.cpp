@@ -140,7 +140,7 @@ static void pre_load() { // do we NEED this...?
     g_city.figures.init_figures();
     g_enemy_armies.clear();
     figure_name_init();
-    formations_clear();
+    g_formations.clear_all();
     figure_route_clear_all();
     map_clear_floodplain_growth();
 

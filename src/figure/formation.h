@@ -5,7 +5,9 @@
 #include "game/game_environment.h"
 #include "grid/point.h"
 #include "core/tokenum.h"
+#include "core/svector.h"
 
+class figure;
 constexpr uint8_t MAX_BATALIONS = 6;
 
 enum e_batalion_recruit_type {
@@ -76,10 +78,10 @@ struct formation {
     uint8_t months_very_low_morale;
 
     /* Figures */
-    e_figure_type figure_type;          /**< Type of figure in this formation */
+    e_figure_type figure_type;              /**< Type of figure in this formation */
     uint8_t num_figures;                    /**< Current number of figures in the formation */
     uint8_t max_figures;                    /**< Maximum number of figures */
-    uint16_t figures[max_figures_count];     /**< Figure IDs */
+    std::array<uint16_t, max_figures_count> figures;    /**< Figure IDs */
     int16_t total_damage;                   /**< Total damage of all figures added */
     int16_t max_total_damage;               /**< Maximum total damage of all figures added */
 
@@ -107,6 +109,8 @@ struct formation {
     int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
     uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
+    uint8_t reseach_radius;
+    uint8_t herd_point;
     bool is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
 
     /* Enemy-related */
@@ -120,7 +124,7 @@ struct formation {
     /* Herd-related */
     uint8_t herd_direction;
     uint8_t failed_creation_count;
-    uint8_t herd_ostrich_spawn_delay;
+    uint8_t herd_spawn_delay;
 
     struct {
         e_formation_layout layout;
@@ -129,13 +133,25 @@ struct formation {
 
     void set_destination_building(tile2i tile, int building_id);
     const bool valid() const { return id != 0; }
+
+    svector<figure *, max_figures_count> valid_figures();
 };
 
-void formations_clear(void);
+struct formations_t {
+    void clear_all();
+    void clear(int formation_id);
 
-void formation_clear(int formation_id);
+    uint8_t num_batalions;
 
-int formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
+    std::array<formation, MAX_FORMATIONS> formations;
+
+    formation *get_from_herd(int index);
+};
+
+extern formations_t g_formations;
+
+
+formation* formation_create_herd(e_figure_type figure_type, tile2i tile, int num_animals);
 int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_layout layout, int orientation, e_enemy_type enemy_type, e_formation_attack_type attack_type, int invasion_id, int invasion_sequence);
 
 formation* formation_get(int formation_id);
@@ -171,8 +187,7 @@ int formation_grid_offset_for_invasion(int invasion_sequence);
 void formation_kingdome_pause(void);
 void formation_kingdome_retreat(void);
 
-int formation_get_num_forts_cached(void);
-void formation_calculate_legion_totals(void);
+void formation_calculate_batalion_totals();
 
 int formation_get_num_forts();
 int formation_get_max_forts();

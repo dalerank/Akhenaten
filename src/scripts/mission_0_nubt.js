@@ -42,6 +42,14 @@ mission0 { // Nubt
 	}
 }
 
+[event=event_register_mission_animals, mission=mission0]
+function mission0_register_animals(ev) {
+	city.remove_animals()
+
+	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_OSTRICH, 4)
+	city.set_animals_area(0, 16)
+}
+
 [event=event_update_mission_goal, mission=mission0]
 function mission0_update_goal(ev) {
 	if (mission.tutorial_granary_opened) {

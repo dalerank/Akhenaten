@@ -15,7 +15,7 @@ jobs:
     - name: update-workspace
       run: |
         sudo apt -qq update
-        sudo apt install --yes cmake build-essential libsdl2-dev libsdl2-mixer-dev libsdl2-image-dev libpng-dev unzip
+        sudo apt install --yes cmake build-essential libgl1-mesa-dev unzip
     - name: build-project
       run: |
         git clone https://github.com/jeremy-rifkin/cpptrace.git etc/cpptrace

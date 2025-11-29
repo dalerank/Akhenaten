@@ -23,7 +23,6 @@
 #include "window/window_building_info.h"
 #include "window/window_city.h"
 #include "window/console.h"
-#include "figure/formation_herd.h"
 #include "dev/debug.h"
 
 #include <string.h>

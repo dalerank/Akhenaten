@@ -11,7 +11,6 @@
 #include "figure/formation_layout.h"
 #include "figure/image.h"
 #include "figure/movement.h"
-#include "figure/formation_herd.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
