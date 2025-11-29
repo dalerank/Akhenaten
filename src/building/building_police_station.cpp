@@ -4,6 +4,7 @@
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
 #include "graphics/animation.h"
+#include "widget/city/ornaments.h"
 #include "figuretype/figure_constable.h"
 #include "js/js_game.h"
 
@@ -41,4 +42,10 @@ void building_police_station::update_graphic() {
     set_animation(animkey);
 
     building_impl::update_graphic();
+}
+
+bool building_police_station::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    draw_normal_anim(ctx, point, tile, color_mask);
+
+    return true;
 }
