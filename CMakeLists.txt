@@ -783,6 +783,10 @@ execute_process(
     ERROR_QUIET
 )
 
+if("${GAME_BUILD_NUMBER}" STREQUAL "")
+    set(GAME_BUILD_NUMBER 0)
+endif()
+
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
