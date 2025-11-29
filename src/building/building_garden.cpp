@@ -19,7 +19,7 @@
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/building_tiles.h"
-#include "figure/formation_herd.h"
+#include "city/city_animals.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "grid/tiles.h"
@@ -42,7 +42,7 @@ int building_garden::preview::place_impl(tile2i start, tile2i end, bool place) c
             return;
         }
 
-        if (formation_herd_breeding_ground_at(rtile, 1)) {
+        if (g_city_animals.breeding_ground_at(rtile, 1)) {
             map_property_clear_constructing_and_deleted();
             events::emit(event_city_warning{ "#cannot_build_over_animal_breeding_grounds" });
             return;
