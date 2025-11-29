@@ -41,9 +41,10 @@ function gog_install()
     if [ ! -d  "$HOME/.config/akhenaten" ]; then
         mkdir -p "$HOME/.config/akhenaten"
     fi
+
     
     if [ ! -f "$HOME/.config/akhenaten/akhenaten.cfg" ]; then
-        echo "data_directory="\""$DataPath\"" > "$HOME/.config/akhenaten/akhenaten.cfg"
+        echo "data_directory=""$DataPath" > "$HOME/.config/akhenaten/akhenaten.cfg"
         echo "window_mode=0" >> "$HOME/.config/akhenaten/akhenaten.cfg"
         echo "renderer=metal" >> "$HOME/.config/akhenaten/akhenaten.cfg"
         echo "display_scale_percentage=100" >> "$HOME/.config/akhenaten/akhenaten.cfg"
