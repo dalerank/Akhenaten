@@ -1,4 +1,4 @@
-name: Akhenaten Build Linux (Flatpak)
+name: Akhenaten Build Linux Flatpak
 
 on:
   push:
