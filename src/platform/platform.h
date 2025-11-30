@@ -111,6 +111,7 @@ struct platform_t {
 	}
 
 	int get_key_from_scancode(int scancode);
+	bool file_manager_should_case_correct_file();
 };
 
 extern platform_t platform;
