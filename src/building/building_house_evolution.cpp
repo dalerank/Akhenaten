@@ -248,9 +248,9 @@ void building_house::determine_evolve_text() {
         //}
     }
 
-    // magistrate
-    if (housed.magistrate < next_model.physician) {
-        housed.evolve_text = "#cannot_evolve_needs_magistrate";
+    // physician
+    if (housed.physician < next_model.physician) {
+        housed.evolve_text = "#cannot_evolve_needs_physician";
         return;
     }
 

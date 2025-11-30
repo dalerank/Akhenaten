@@ -1621,6 +1621,7 @@ building_dentist {
 
   overlay : OVERLAY_DENTIST
   min_houses_coverage : 50
+  max_serve_clients : 1000
   building_size : 1
   meta { help_id:65, text_id:84 }
   cost [ 10, 15, 30, 50, 80 ]
@@ -2325,6 +2326,7 @@ building_physician {
   }
 
   min_houses_coverage : 50
+  max_serve_clients : 1000
   overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   meta { help_id: 64, text_id: 83 }

@@ -857,6 +857,7 @@ figure_physician {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length : 384
 	permission : epermission_medicine
+	health_heal_amount : 1
 }
 
 figure_architector {

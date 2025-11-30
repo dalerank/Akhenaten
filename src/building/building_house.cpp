@@ -648,13 +648,13 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     }
 
     // physician
-    int magistrate = model.physician;
-    if (d.magistrate < magistrate) {
-        ++demands->missing.magistrate;
+    int physician_required = model.physician;
+    if (d.physician < physician_required) {
+        ++demands->missing.physician;
         return e_house_none;
     }
-    if (magistrate == 1) {
-        ++demands->requiring.magistrate;
+    if (physician_required == 1) {
+        ++demands->requiring.physician;
     }
 
     // health
