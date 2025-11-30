@@ -44,6 +44,8 @@ class ViewController: NSViewController {
         linkLabel.allowsEditingTextAttributes = true
         linkLabel.isSelectable = true
         linkLabel.attributedStringValue = attributed
+        
+        self.preferredContentSize = NSMakeSize(self.view.frame.size.width, self.view.frame.size.height)
     }
     
     class ClickableLinkLabel: NSTextField {
