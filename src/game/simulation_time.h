@@ -86,6 +86,12 @@ struct event_advance_day : public event_advance_date {
     }
 };
 
+struct event_advance_week : public event_advance_date{
+    static event_advance_week from_simtime(const simulation_time_t & tm) {
+        return { tm.year, tm.month, tm.day, tm.absolute_day(true) };
+    }
+};
+
 struct event_advance_month : public event_advance_date {
     static event_advance_month from_simtime(const simulation_time_t &tm) {
         return { tm.year, tm.month, tm.day, tm.absolute_day(true) };
