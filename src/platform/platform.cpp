@@ -3,7 +3,6 @@
 #include "core/log.h"
 
 #include <SDL.h>
-#include <ctime>
 
 int platform_sdl_version_at_least(int major, int minor, int patch) {
     SDL_version v;

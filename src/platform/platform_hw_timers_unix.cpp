@@ -2,6 +2,8 @@
 
 #if defined(GAME_PLATFORM_UNIX) || defined(GAME_PLATFORM_MACOSX) || defined(GAME_PLATFORM_WEB)
 
+#include <ctime>
+
 uint64_t platform_t::get_qpc() {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
