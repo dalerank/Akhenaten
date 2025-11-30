@@ -212,40 +212,6 @@ if (MSVC)
     FetchContent_MakeAvailable(curl)
 endif()
 
-if (CMAKE_BUILD_DEPENDENCIES STREQUAL "android")
-    set(SDL2_SRC_CHECK_PATH "${SDL2_EXTRACT_PATH}/SDL2-${SDL2_VERSION}/include/SDL.h")
-    set(SDL2_SRC_DOWNLOAD_URL "https://github.com/libsdl-org/SDL/releases/download/release-${SDL2_VERSION}/SDL2-${SDL2_VERSION}.zip")
-    set(SDL2_SRC_DEP_FILENAME "SDL2-${SDL2_VERSION}.zip")
-    set(SDL2_SRC_UNPACK_DIR "SDL2-${SDL2_VERSION}")
-    set(SDL2_SRC_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_SRC_DEP_FILENAME}")
-    set(SDL2_SRC_EXTRACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ext/SDL2")
-    if (NOT EXISTS "${SDL2_SRC_CHECK_PATH}")
-        message("Download SDL2 sources to ${SDL2_SRC_TMP_ZIP_PATH}")
-        file(DOWNLOAD "${SDL2_SRC_DOWNLOAD_URL}" "${SDL2_SRC_TMP_ZIP_PATH}")
-        message("Unpack SDL2 sources to ${SDL2_SRC_EXTRACT_PATH}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_SRC_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/${SDL2_SRC_UNPACK_DIR} DESTINATION ${SDL2_SRC_EXTRACT_PATH})
-    endif()
-
-    set(SDL2_MIXER_VERSION "2.8.0")
-    set(SDL2_MIXER_SRC_CHECK_PATH "${SDL2_EXTRACT_PATH}/SDL2_mixer-${SDL2_MIXER_VERSION}/mixer.h")
-    set(SDL2_MIXER_SRC_DOWNLOAD_URL "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-${SDL2_MIXER_VERSION}.zip")
-    set(SDL2_MIXER_SRC_DEP_FILENAME "SDL2_mixer-${SDL2_MIXER_VERSION}.zip")
-    set(SDL2_MIXER_SRC_UNPACK_DIR "SDL2_mixer-${SDL2_MIXER_VERSION}")
-    set(SDL2_MIXER_SRC_TMP_ZIP_PATH "${CMAKE_BINARY_DIR}/tmp/${SDL2_MIXER_SRC_DEP_FILENAME}")
-
-    if (NOT EXISTS "${SDL2_MIXER_SRC_CHECK_PATH}")
-        message("Download SDL2_mixer sources to ${SDL2_MIXER_SRC_TMP_ZIP_PATH}")
-        file(DOWNLOAD "${SDL2_MIXER_SRC_DOWNLOAD_URL}" "${SDL2_MIXER_SRC_TMP_ZIP_PATH}")
-        message("Unpack SDL2_mixer sources to ${CMAKE_BINARY_DIR}/tmp")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${SDL2_MIXER_SRC_TMP_ZIP_PATH} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
-        message("Copy SDL2_mixer sources to ${SDL2_SRC_EXTRACT_PATH}")
-        file(RENAME ${CMAKE_BINARY_DIR}/tmp/SDL_mixer-release-${SDL2_MIXER_VERSION} ${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION})
-        file(COPY ${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION} DESTINATION ${SDL2_SRC_EXTRACT_PATH})
-        set(SDL2_MIXER_SRC_EXTRACT_PATH "${CMAKE_BINARY_DIR}/tmp/SDL2_mixer-${SDL2_MIXER_VERSION}")
-        file(COPY ${SDL2_MIXER_SRC_EXTRACT_PATH}/include/SDL_mixer.h DESTINATION ${SDL2_EXTRACT_PATH}/SDL2_mixer-${SDL2_MIXER_VERSION}/include)
-    endif()
-endif()
 
 set(PREBUILT_LIBS_INTERMEDIATE_DIR "${CMAKE_BINARY_DIR}/prebuilt_libs" CACHE PATH "Directory for prebuilt libraries")
 set(PREBUILT_LIBS_DIR "${CMAKE_BINARY_DIR}/libs")
@@ -331,9 +297,8 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 # SDL2 section begin
 #
 
-# Skip SDL2 build for Android as it uses find_package
 # Skip SDL2 build for Emscripten as it uses ports (-sUSE_SDL=2)
-if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
+if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2 FetchContent
@@ -423,9 +388,8 @@ endif()
 # SDL2_mixer section begin
 #
 
-# Skip SDL2_mixer build for Android as it uses find_package
 # Skip SDL2_mixer build for Emscripten as it uses ports (-sUSE_SDL_MIXER=2)
-if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
+if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2_mixer FetchContent
@@ -783,6 +747,10 @@ execute_process(
     ERROR_QUIET
 )
 
+if("${GAME_BUILD_NUMBER}" STREQUAL "")
+    set(GAME_BUILD_NUMBER 0)
+endif()
+
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
@@ -936,11 +904,6 @@ if (!APPLE)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()
 
-if (PLATFORM_ANDROID)
-    find_package(SDL2 REQUIRED CONFIG)
-    set(SDL2_LIBRARY SDL2::SDL2)
-    set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-endif()
 
 if (PLATFORM_ANDROID)
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})

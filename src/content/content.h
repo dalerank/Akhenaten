@@ -43,12 +43,6 @@ pcstr platform_file_manager_get_ext_path();
 int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr extension, int (*callback)(pcstr));
 
 /**
- * Indicates whether the file name casing should be checked
- * @return Whether file name casing should be checked
- */
-int platform_file_manager_should_case_correct_file();
-
-/**
  * Opens a file
  * @param filename The file to open
  * @param mode The mode to open the file - refer to fopen()

@@ -70,6 +70,8 @@ enum e_debug_render {
     e_debug_render_tile_random = 38,
     e_debug_render_soldier_strength = 39,
     e_debug_render_malaria_risk = 40,
+    e_debug_render_animal_spawn = 41,
+    e_debug_render_animal_spawn_area = 42,
 
     e_debug_render_size
 };
@@ -97,6 +99,7 @@ void debug_draw_tile_box(int x, int y, color rect, color bb, int tile_size_x = 1
 void debug_draw_tile_top_bb(int x, int y, int height, color color, int size = 1);
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx);
+void draw_debug_animal_spawn_areas(painter &ctx);
 
 void draw_debug_ui(int x, int y);
 

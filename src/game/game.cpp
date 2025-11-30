@@ -153,12 +153,13 @@ void game_t::advance_year() {
 }
 
 void game_t::advance_week() {
-    g_city.resource.consume_food_weekly(game.simtime);
-    g_city.resource.consume_goods_weekly(game.simtime);
+    g_city.update_week(simtime);
+
+    events::emit(event_advance_week::from_simtime(simtime));
 }
 
 void game_t::advance_month() {
-    g_city.update_month();
+    g_city.update_month(simtime);
 
     scenario_distant_battle_process();
 
@@ -200,7 +201,7 @@ void game_t::advance_day() {
         advance_week();
     }
 
-    g_city.update_day();
+    g_city.update_day(simtime);
     g_city.victory_check();
 
     g_sound.music_update(false);

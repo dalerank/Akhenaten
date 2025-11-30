@@ -256,19 +256,3 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
 
     g_city.overlay()->draw_custom_top(pixel, point, ctx);
 }
-
-void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
-    int grid_offset = point.grid_offset();
-    int x = pixel.x;
-    int y = pixel.y;
-    int b_id = map_building_at(grid_offset);
-
-    if (b_id) {
-        const building* b = building_at(grid_offset);
-        if (g_city.overlay()->show_building(b)) {
-            draw_ornaments_and_animations_height(pixel, point, ctx);
-        }
-    } else {
-        draw_ornaments_and_animations_height(pixel, point, ctx);
-    }
-}

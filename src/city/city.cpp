@@ -89,7 +89,7 @@ void city_t::init() {
     g_building_menu_ctrl.init();
 }
 
-void city_t::update_day() {
+void city_t::update_day(simulation_time_t simtime) {
     sentiment.update_day();
     criminals_update_day();
     plague_update_day();
@@ -99,7 +99,12 @@ void city_t::update_day() {
     population.update_day();
 }
 
-void city_t::update_month() { 
+void city_t::update_week(simulation_time_t simtime) {
+    resource.consume_food_weekly(simtime);
+    resource.consume_goods_weekly(simtime);
+}
+
+void city_t::update_month(simulation_time_t simtime) {
     migration.update_month();
     health.update_month();
     finance.advance_month();

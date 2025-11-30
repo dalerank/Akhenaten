@@ -86,7 +86,32 @@ struct platform_t {
 	inline pcstr name() { return GAME_PLATFORM_NAME; }
 	void open_url(pcstr url, pcstr prefix);
 
+	inline constexpr bool is_android() const {
+#ifdef GAME_PLATFORM_ANDROID
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	inline constexpr bool is_emscripten() const {
+#ifdef GAME_PLATFORM_BROWSER
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	inline constexpr bool is_windows() const {
+#ifdef GAME_PLATFORM_WIN
+		return true;
+#else
+		return false;
+#endif
+	}
+
 	int get_key_from_scancode(int scancode);
+	bool file_manager_should_case_correct_file();
 };
 
 extern platform_t platform;

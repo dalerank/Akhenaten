@@ -295,10 +295,15 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     );
 
     ImageDraw::apply_render_commands(ctx);
+
+    // Experimental: draw debug layer after flat map rendering
+    draw_debug_animal_spawn_areas(ctx);
+    ImageDraw::apply_render_commands(ctx);
+
        
     city_view_foreach_valid_map_tile(ctx,
         [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
-        draw_ornaments_and_animations_height,
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
     );
 
@@ -423,6 +428,13 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
     map_render_set(tile, (top_height > 0) ? RENDER_TALL_TILE : 0);
 }
 
+void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx) {
+    color save = force_mask;
+    force_mask = mask;
+    draw_isometric_nonterrain_height(pixel, tile, ctx);
+    force_mask = save;
+}
+
 void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx) {
     int grid_offset = tile.grid_offset();
     // black tile outside of map
@@ -437,7 +449,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     g_city_planner.construction_record_view_position(pixel, tile);
     int building_id = map_building_at(grid_offset);
 
-    color color_mask = COLOR_MASK_NONE;
+    color color_mask = force_mask;
     building *b = building_get(building_id);
     bool deletion_tool = (g_city_planner.build_type == BUILDING_CLEAR_LAND && g_city_planner.end == tile);
     if (deletion_tool || map_property_is_deleted(tile) || drawing_building_as_deleted(b)) {
@@ -462,19 +474,6 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
     if (!should_draw) {
         return;
     }
-
-    //if (!ImageDraw::is_deffered() && tall_flat_tile && building_id > 0) {
-    //    map_grid_area_foreach(tile, tile.shifted(b->size, b->size), [] (tile2i tile) {
-    //        const bool is_building = map_terrain_is(tile, TERRAIN_BUILDING);
-    //        if (is_building) {
-    //            return;
-    //        }
-    //        int image_id = map_image_at(tile);
-    //        const image_t *img = image_get(image_id);
-    //        int top_height = img->isometric_top_height();
-    //        map_render_set(tile, top_height > 0);
-    //    });
-    //}
 
     int image_id = map_image_at(grid_offset);
     if (tall_flat_tile) {
@@ -568,6 +567,48 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
     }
 }
 
+void screen_city_t::draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
+    // tile must contain image draw data
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+
+
+    building *b = building_at(grid_offset);
+    if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
+        return;
+    }
+
+    // draw in red if necessary
+    int color_mask = force_mask;
+    if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
+        color_mask = COLOR_MASK_RED;
+    }
+
+    b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
+}
+
+void screen_city_t::draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx) {
+    int grid_offset = point.grid_offset();
+    int x = pixel.x;
+    int y = pixel.y;
+    int b_id = map_building_at(grid_offset);
+
+    if (b_id) {
+        const building *b = building_at(grid_offset);
+        if (g_city.overlay()->show_building(b)) {
+            color save = force_mask;
+            force_mask = g_city.overlay()->color_mask_building_def(b);
+            draw_ornaments_and_animations_height(pixel, point, ctx);
+            force_mask = save;
+        }
+    } else {
+        draw_ornaments_and_animations_height(pixel, point, ctx);
+    }
+}
+
+
 void screen_city_t::draw_with_overlay(painter &ctx) {
     const auto overlay = g_city.overlay();
     if (!overlay) {
@@ -587,7 +628,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
 
     city_view_foreach_valid_map_tile(ctx,
         draw_isometrics_overlay_height,
-        draw_ornaments_overlay,
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_overlay(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_overlay(pixel, tile, ctx); }
     );
 

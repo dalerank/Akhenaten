@@ -123,6 +123,10 @@ void building_house::on_undo() {
     /*nothing*/
 }
 
+void building_house::update_week() {
+    building_impl::update_week();
+}
+
 void building_house::update_count() const {
     g_city.buildings.increase_count(type(), runtime_data().hsize > 0);
 }

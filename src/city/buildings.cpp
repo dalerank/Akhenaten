@@ -276,6 +276,12 @@ void city_buildings_t::update_month() {
     });
 }
 
+void city_buildings_t::update_week() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_week();
+    });
+}
+
 void city_buildings_t::update_religion_supply_houses() {
     OZZY_PROFILER_SECTION("Game/Update/Religion Supply Update");
     svector<building*, 512> shrines;

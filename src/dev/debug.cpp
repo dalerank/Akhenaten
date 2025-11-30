@@ -1,6 +1,8 @@
 #include "debug.h"
 
 #include <cmath>
+#include <vector>
+#include <algorithm>
 
 #include "core/string.h"
 #include "graphics/text.h"
@@ -51,6 +53,10 @@
 #include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
 #include "scenario/scenario_invasion.h"
+#include "scenario/scenario.h"
+#include "figure/formation.h"
+#include "core/calc.h"
+#include "grid/grid.h"
 
 #include "js/js_game.h"
 
@@ -637,9 +643,111 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             snprintf((char *)str, 30, "%d", d);
             debug_text_a(ctx, str, x, y + 10, 0, (pcstr)str, COLOR_LIGHT_BLUE, FONT_SMALL_PLAIN);
         }
+        break;
+
+    case e_debug_render_animal_spawn: {
+        tile2i current_tile = tile2i(grid_offset);
+        int formation_id = 0;
+        
+        // Check all formations for herds
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
+            formation* m = formation_get(i);
+            if (!m->in_use || !m->is_herd || m->batalion_id) {
+                continue;
+            }
+            
+            // Get spawn point: use herd_points_animals if available, otherwise home or tile
+            tile2i spawn_point;
+            if (m->herd_point >= 0 && m->herd_point < MAX_PREDATOR_HERD_POINTS) {
+                spawn_point = g_scenario.herd_points_animals[m->herd_point];
+                if (!spawn_point.valid()) {
+                    spawn_point = m->home.valid() ? m->home : m->tile;
+                }
+            } else {
+                spawn_point = m->home.valid() ? m->home : m->tile;
+            }
+            if (!spawn_point.valid()) {
+                continue;
+            }
+            
+            // Check if current tile is within research_radius from spawn point
+            int distance = calc_maximum_distance(current_tile, spawn_point);
+            if (distance <= m->reseach_radius) {
+                formation_id = m->id;
+                break;
+            }
+        }
+        
+        if (formation_id > 0) {
+            // Draw colored overlay for the entire area (flat tile)
+            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_GREEN_10);
+            // Show formation number on each tile in the area
+            snprintf((char *)str, 30, "%d", formation_id);
+            debug_text_a(ctx, str, x, y + 15, 0, (pcstr)str, COLOR_BLACK, FONT_SMALL_PLAIN);
+        }
+        break;
+    }
+}
+
+
+}
+
+// Structure to hold spawn area data for drawing
+struct spawn_area_data_t {
+    tile2i spawn_point;
+    int radius;
+    int formation_id;
+};
+
+static std::vector<spawn_area_data_t> g_spawn_areas;
+
+void draw_debug_animal_spawn_areas(painter &ctx) {
+    if (debug_render_mode() != e_debug_render_animal_spawn_area) {
+        return;
     }
 
+    // Collect all spawn areas first
+    g_spawn_areas.clear();
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = formation_get(i);
+        if (!m->in_use || !m->is_herd || m->batalion_id) {
+            continue;
+        }
 
+        // Get spawn point: use herd_points_animals if available, otherwise home or tile
+        tile2i spawn_point;
+        if (m->herd_point >= 0 && m->herd_point < MAX_PREDATOR_HERD_POINTS) {
+            spawn_point = g_scenario.herd_points_animals[m->herd_point];
+            if (!spawn_point.valid()) {
+                spawn_point = m->home.valid() ? m->home : m->tile;
+            }
+        } else {
+            spawn_point = m->home.valid() ? m->home : m->tile;
+        }
+        if (!spawn_point.valid()) {
+            continue;
+        }
+
+        int radius = m->reseach_radius;
+        if (radius <= 0) {
+            continue;
+        }
+
+        g_spawn_areas.push_back({spawn_point, radius, m->id});
+    }
+
+    // Draw filled rectangular areas for all visible tiles in viewport
+    city_view_foreach_valid_map_tile(ctx, [&](vec2i pixel, tile2i tile, painter &ctx) {
+        // Check if this tile is within any spawn area
+        for (const auto& area : g_spawn_areas) {
+            int distance = calc_maximum_distance(tile, area.spawn_point);
+            if (distance <= area.radius) {
+                // Draw flat tile overlay with semi-transparent green
+                ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, COLOR_MASK_BLUE);
+                break; // Only draw once even if overlapping areas
+            }
+        }
+    });
 }
 
 void figure::draw_debug() {
