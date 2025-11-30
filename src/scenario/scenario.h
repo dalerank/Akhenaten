@@ -112,20 +112,6 @@ struct demand_change_t {
     int is_rise;
 };
 
-struct extra_damage_t {
-    e_building_type type;
-    int8_t fire;
-    int8_t collapse;
-};
-
-template<>
-struct std::hash<extra_damage_t> {
-    [[nodiscard]] size_t operator()(const extra_damage_t &d) const noexcept {
-        return d.type;
-    }
-};
-ANK_CONFIG_STRUCT(extra_damage_t, type, fire, collapse)
-
 struct building_stage_t {
     xstring key;
     svector<e_building_type, 16> buildings;
@@ -247,7 +233,6 @@ struct scenario_data_t {
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     resource_allow_vec init_resources;
-    std::array<extra_damage_t, BUILDING_MAX> extra_damage;
     std::unordered_map<xstring, building_stage_t> stages;
     settings_vars_t vars;
     xstring goal_tooltip;
@@ -334,8 +319,6 @@ ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_lea
 ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
-
-int scenario_additional_damage(e_building_type type, e_damage_type damage);
 
 int scenario_starting_kingdom();
 

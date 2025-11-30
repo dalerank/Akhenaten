@@ -21,6 +21,14 @@ city {
             total_stored: function() { return __granary_get_total_stored(building_id) }
         }
     }
+
+    get_random_house : function() {
+        var building_id = __city_get_random_house_id()
+        return {
+            id: building_id
+            add_fire_damage: function(damage) { __building_add_fire_damage(building_id, damage) }
+        }
+    }
 }
 
 finance { 

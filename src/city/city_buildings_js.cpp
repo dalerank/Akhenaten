@@ -27,3 +27,21 @@ bool __city_building_is_tax_collector(int bid) {
     return !!b->dcast_tax_collector();
 }
 ANK_FUNCTION_1(__city_building_is_tax_collector)
+
+int __city_get_random_house_id() {
+    svector<building_id, 128> houses;
+    buildings_valid_do([&] (building &b) { if (b.dcast_house()) {
+        houses.push_back(b.id);
+    }});
+
+    return houses[rand() % houses.size()];
+}
+ANK_FUNCTION(__city_get_random_house_id)
+
+void __building_add_fire_damage(int bid, int damage) {
+    building *b = building_get(bid);
+    if (b->is_valid()) {
+        b->force_damage(true, damage);
+    }
+}
+ANK_FUNCTION_2(__building_add_fire_damage)

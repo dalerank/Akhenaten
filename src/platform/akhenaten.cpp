@@ -163,7 +163,6 @@ static bool pre_init(pcstr custom_data_dir) {
     return false;
 }
 
-
 static void setup() {
     platform.init_timers();
 
@@ -182,10 +181,11 @@ static void setup() {
 #endif
 
     // Show configuration window if --config flag is set or config file doesn't exist
+    const bool support_window_options = !(platform.is_android() || platform.is_emscripten());
     if (g_args.should_show_config_window() || !g_args.config_file_exists()) {
-#ifndef GAME_PLATFORM_ANDROID
-        show_options_window(g_args);
-#endif
+        if (support_window_options) {
+            show_options_window(g_args);
+        }
     }
 
     // pre-init engine: assert game directory, pref files, etc.
@@ -205,6 +205,7 @@ static void setup() {
                                  "Pharaoh installation, or run: akhenaten path/to/directory",
 #endif
                                  nullptr);
+
 #if defined(GAME_PLATFORM_ANDROID)
         if (again) {
             const SDL_MessageBoxButtonData buttons[] = {
@@ -228,9 +229,10 @@ static void setup() {
         again = true;
         pcstr user_dir = android_show_pharaoh_path_dialog(again);
         g_args.set_data_directory(user_dir);
-#else
-        show_options_window(g_args);
-#endif
+ #endif
+        if (support_window_options) {
+            show_options_window(g_args);
+        }
     }
 
     // set up game display

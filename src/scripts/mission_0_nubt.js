@@ -50,6 +50,16 @@ function mission0_register_animals(ev) {
 	city.set_animals_area(0, 16)
 }
 
+[event=event_advance_week, mission=mission0]
+function mission0_hut_extra_fire_damage(ev) {
+	if (mission.tutorial_fire_handled) {
+		return;
+	}
+
+	var house = city.get_random_house()
+	house.add_fire_damage(Math.random() * 100)
+}
+
 [event=event_update_mission_goal, mission=mission0]
 function mission0_update_goal(ev) {
 	if (mission.tutorial_granary_opened) {

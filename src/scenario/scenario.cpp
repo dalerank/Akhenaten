@@ -94,9 +94,6 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         init_resources.clear();
         arch.r("init_resources", init_resources);
 
-        std::fill(extra_damage.begin(), extra_damage.end(), extra_damage_t{ BUILDING_NONE, 0, 0 });
-        arch.r_stable_array("extra_damage", extra_damage);
-
         stages.clear();
         arch.r("stages", stages);
 
@@ -181,12 +178,6 @@ bool scenario_data_t::is_scenario_id(custom_span<int> missions) {
     }
 
     return false;
-}
-
-int scenario_additional_damage(e_building_type type, e_damage_type damage) {
-    const auto &dmg = g_scenario.extra_damage;
-    auto it = std::find_if(dmg.begin(), dmg.end(), [type] (auto &i) { return i.type == type; });
-    return (it != dmg.end()) ? (damage == e_damage_collapse ? it->collapse : it->fire) : 0;
 }
 
 int scenario_data_t::is_before_mission(int mission) {
