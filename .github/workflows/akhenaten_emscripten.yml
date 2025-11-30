@@ -58,7 +58,7 @@ jobs:
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAGES_DEPLOY }}
         repository-name: dalerank/dalerank.github.io
         branch: main
         folder: dist
