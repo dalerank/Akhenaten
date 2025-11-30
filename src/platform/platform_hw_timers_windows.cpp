@@ -1,7 +1,7 @@
 #include "platform.h"
-#include "windows.h"
 
 #if defined(GAME_PLATFORM_WIN)
+#include "windows.h"
 
 uint64_t platform_t::get_qpc() {
     uint64_t _dest;
