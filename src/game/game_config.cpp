@@ -95,6 +95,7 @@ namespace game_features {
     game_feature gameplay_brewery_requires_water{ "gameplay_brewery_requires_water", "#TR_CONFIG_BREWERY_REQUIRES_WATER", true };
     game_feature gameplay_conservatory_helps_dance_school{ "gameplay_conservatory_helps_dance_school", "#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", true };
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", true };
+    game_feature gameui_overlay_show_gray_buildings{ "gameui_overlay_show_gray_buildings", "#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", false };
 
     custom_span<game_feature*> all() {
         return { _features.data(), _features.size() };

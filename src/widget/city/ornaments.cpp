@@ -93,29 +93,3 @@ void draw_ornaments_flat(vec2i point, tile2i tile, painter &ctx) {
 
     b->dcast()->draw_ornaments_and_animations_flat(ctx, point, tile, color_mask);
 }
-
-void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx) {
-    int grid_offset = tile.grid_offset();
-    // tile must contain image draw data
-    if (!map_property_is_draw_tile(grid_offset)) {
-        return;
-    }
-
-    //int image_id = map_image_at(grid_offset);
-    building* b = building_at(grid_offset);
-    //if (b->type == BUILDING_STORAGE_YARD && b->state == BUILDING_STATE_CREATED) {
-    //    ImageDraw::img_generic(ctx, image_id + 17, point.x - 5, point.y - 42);
-    //}
-
-    if (b->type == 0 || b->state == BUILDING_STATE_UNUSED) {
-        return;
-    }
-
-    // draw in red if necessary
-    int color_mask = 0;
-    if (drawing_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
-        color_mask = COLOR_MASK_RED;
-    }
-
-    b->dcast()->draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-}

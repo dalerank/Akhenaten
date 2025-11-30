@@ -13,6 +13,7 @@
 #include "widget/widget_city.h"
 #include "city/city_buildings.h"
 #include "io/gamefiles/lang.h"
+#include "game/game_config.h"
 
 #include "game/game.h"
 #include "js/js_game.h"
@@ -206,23 +207,24 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
 
     building* b = building_get(building_id);
     if (show_building(b)) {
+        color color_mask = color_mask_building_def(b);
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
                 auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
-                command.mask = COLOR_MASK_NONE;
+                command.mask = color_mask;
             } else if (map_property_is_draw_tile(tile)) {
                 auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
                 command.pixel = pos;
-                command.mask = COLOR_MASK_NONE;
+                command.mask = color_mask;
             }
         } else {
             auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
             command.pixel = pos;
-            command.mask = COLOR_MASK_NONE;
+            command.mask = color_mask;
         }
     } else {
         bool draw = true;
@@ -263,7 +265,23 @@ void city_overlay::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const
 }
 
 bool city_overlay::show_building(const building *b) const {
+    if (!!game_features::gameui_overlay_show_gray_buildings) {
+        return true;
+    }
+
     return std::find(buildings.begin(), buildings.end(), b->type) != buildings.end();
+}
+
+color city_overlay::color_mask_building_def(const building *b) const {
+    if (!game_features::gameui_overlay_show_gray_buildings) {
+        return COLOR_MASK_NONE;
+    }
+
+    return color_mask_building(b);
+}
+
+color city_overlay::color_mask_building(const building *b) const {
+    return COLOR_MASK_NONE;
 }
 
 void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i tile, painter &ctx) const {
@@ -287,8 +305,9 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
     building* b = building_at(tile);
 
     if (show_building(b)) {
+        color color_mask = color_mask_building_def(b);
         map_render_set(tile, RENDER_TALL_TILE);
-        g_screen_city.draw_isometric_nonterrain_height(pixel, tile, ctx);
+        g_screen_city.draw_isometric_nonterrain_height(pixel, tile, color_mask, ctx);
         return;
     }
 

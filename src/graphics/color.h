@@ -47,6 +47,7 @@ typedef uint32_t color;
 #define COLOR_MASK_GREEN_10 0x1018ff18
 #define COLOR_MASK_BLUE 0x663377ff
 #define COLOR_MASK_LEGION_HIGHLIGHT 0x66ff3300
+#define COLOR_MASK_GRAY 0xff808080
 
 #define COLOR_MINIMAP_VIEWPORT 0xffe7e75a
 #define COLOR_MINIMAP_DARK 0xff424242
@@ -98,3 +99,18 @@ constexpr uint32_t COLOR_MINIMAP_ANIMAL = 0xff00f700;
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_RED)                               \
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_GREEN)                             \
      | COLOR_BLEND_CHANNEL(src, dst, alpha_src, alpha_dst, alpha_mix, COLOR_CHANNEL_BLUE))
+
+inline color color_from_green_to_red(int value) {
+    if (value < 0) {
+        value = 0;
+    } else if (value > 100) {
+        value = 100;
+    }
+    
+    uint8_t red = (value * 255) / 100;
+    uint8_t green = 255 - red;
+    uint8_t blue = 0;
+    uint8_t alpha = 0xff;
+    
+    return (alpha << COLOR_BITSHIFT_ALPHA) | (red << COLOR_BITSHIFT_RED) | (green << COLOR_BITSHIFT_GREEN) | (blue << COLOR_BITSHIFT_BLUE);
+}

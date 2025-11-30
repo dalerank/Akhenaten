@@ -48,15 +48,17 @@ struct city_overlay {
     virtual xstring get_tooltip_for_building(tooltip_context *c, const building *b) { return {}; }
     virtual bool draw_custom_footprint(vec2i pixel, tile2i point, painter &ctx) const { return false; }
     virtual void draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const;
+    virtual void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     virtual bool show_building(const building *b) const;
+    virtual color color_mask_building(const building *b) const;
     virtual e_overlay get_type() const { return OVERLAY_NONE; }
     virtual void draw_building_top(vec2i pixel, tile2i tile, painter &ctx) const;
     virtual void draw_overlay_building_column(building *b, vec2i pixel, tile2i tile, painter &ctx) const;
 
     xstring title() const;
+    color color_mask_building_def(const building *b) const;
     const tooltips_t& get_tooltips(const xstring &level) const;
     void draw_overlay_column(e_column_color c, vec2i pixel, int height, int column_style, painter &ctx) const;
-    void draw_building_footprint(painter &ctx, vec2i pos, tile2i tile, int image_offset) const;
     bool is_drawable_farm_corner(tile2i tile) const;
     bool is_drawable_building_corner(tile2i tile, tile2i main, int size) const;
     bool is_drawable_farmhouse(tile2i tile, int map_orientation) const;

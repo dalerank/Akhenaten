@@ -13,6 +13,7 @@ struct painter;
 struct screen_city_t {
     tile2i current_tile;
     tile2i selected_tile;
+    color force_mask;
     int new_start_grid_offset;
     bool capture_input;
 
@@ -41,6 +42,8 @@ struct screen_city_t {
 
     void draw(painter &ctx);
     void draw_with_overlay(painter &ctx);
+    void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx);
+    void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
     void draw_without_overlay(painter &ctx, int selected_figure_id);
     void draw_for_figure(painter &ctx, int figure_id);
     void draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force);
@@ -49,6 +52,7 @@ struct screen_city_t {
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
+    void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx);
     void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
     void draw_tooltip(tooltip_context* c);
     void debug_draw_figures();
