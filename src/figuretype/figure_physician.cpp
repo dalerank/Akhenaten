@@ -2,6 +2,7 @@
 
 #include "core/profiler.h"
 #include "building/building_house.h"
+#include "building/building_physician.h"
 #include "city/city_health.h"
 #include "city/city.h"
 #include "figure/service.h"
@@ -88,14 +89,39 @@ sound_key figure_physician::phrase_key() const {
 }
 
 int figure_physician::provide_service() {
+    building *physician_building = home();
+    if (!physician_building) {
+        return 0;
+    }
+
+    auto physician = physician_building->dcast_physician();
+    if (!physician) {
+        return 0;
+    }
+
+    auto &physician_data = physician->runtime_data();
+    const auto &params = physician->current_params();
+
+    // Check if already served 1000 residents this month
+    if (physician_data.residents_served_this_month >= params.max_serve_clients) {
+        return 0;
+    }
+
     int heal_amount = current_params().health_heal_amount;
     int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         auto house = b->dcast_house();
-
-        if (house && house->house_population() > 0) {
-            house->runtime_data().physician = MAX_COVERAGE;
-            b->common_health = std::min(b->common_health + heal_amount, 100);
+        if (!house || house->house_population() <= 0) {
+            return;
         }
+
+        auto &housed = house->runtime_data();        
+        if (housed.physician < MAX_COVERAGE / 2) {
+            int house_population = house->house_population();
+            physician_data.residents_served_this_month += house_population;
+            housed.physician = MAX_COVERAGE;
+        }
+
+        b->common_health = std::min(b->common_health + heal_amount, 100);
     });
     return houses_serviced;
 }

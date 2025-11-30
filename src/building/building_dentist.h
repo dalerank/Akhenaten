@@ -10,6 +10,12 @@ public:
         int max_serve_clients;
     } BUILDING_STATIC_DATA_T;
 
+    struct runtime_data_t : public no_copy_assignment {
+        int residents_served_this_month;
+    } BUILDING_RUNTIME_DATA_T;
+
+    virtual building_dentist *dcast_dentist() override { return this; }
+
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DENTIST; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;

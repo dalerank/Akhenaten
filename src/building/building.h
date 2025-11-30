@@ -93,6 +93,7 @@ class building_senet_house;
 class building_gatehouse;
 class building_dancer_school;
 class building_police_station;
+class building_dentist;
 
 struct tooltip_context;
 struct object_info;
@@ -417,6 +418,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(entertainment)
     ALLOW_SMART_CAST_BUILDING(mansion)
     ALLOW_SMART_CAST_BUILDING(physician)
+    ALLOW_SMART_CAST_BUILDING(dentist)
     ALLOW_SMART_CAST_BUILDING(wharf)
     ALLOW_SMART_CAST_BUILDING(warship_wharf)
     ALLOW_SMART_CAST_BUILDING(temple_complex)
@@ -697,6 +699,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(entertainment)
     ALLOW_SMART_CAST_BUILDING_I(mansion)
     ALLOW_SMART_CAST_BUILDING_I(physician)
+    ALLOW_SMART_CAST_BUILDING_I(dentist)
     ALLOW_SMART_CAST_BUILDING_I(wharf)
     ALLOW_SMART_CAST_BUILDING_I(warship_wharf)
     ALLOW_SMART_CAST_BUILDING_I(shrine)
@@ -916,6 +919,7 @@ GENERATE_SMART_CAST_BUILDING(gatehouse)
 GENERATE_SMART_CAST_BUILDING(work_camp)
 GENERATE_SMART_CAST_BUILDING(dancer_school)
 GENERATE_SMART_CAST_BUILDING(police_station)
+GENERATE_SMART_CAST_BUILDING(dentist)
 
 namespace buildings {
 

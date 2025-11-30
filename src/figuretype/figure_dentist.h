@@ -22,5 +22,4 @@ public:
     
     building_id find_noble_house_with_bad_teeth();
     void treat_nobles_in_house(building_house *house);
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };
