@@ -93,6 +93,7 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
+    virtual void update_week() override;
     virtual void update_count() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool evolve(house_demands* demands) = 0;
@@ -121,7 +122,7 @@ public:
     static void change_to(building &b, e_building_type type, bool force = false);
     void merge();
     void merge_impl();
-    inline bool is_merged() const { return runtime_data().is_merged; }
+    inline bool is_merged() const { return runtime_data().is_merged; }    
     resource_list consume_goods_weekly();
     resource_list consume_food_weekly();
     void split(int num_tiles);
