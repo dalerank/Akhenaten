@@ -6,7 +6,6 @@
 #include "content/vfs.h"
 #include "platform/vita/vita.h"
 #include "platform/android/android.h"
-#include "platform/platform.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -68,11 +67,7 @@ typedef const char *dir_name;
 #define S_ISSOCK(m) 0
 #endif
 
-#ifdef __vita__
-#define CURRENT_DIR VITA_PATH_PREFIX
-#define set_dir_name(n) vita_prepend_path(n)
-#define free_dir_name(n) free((void*)n)
-#elif defined(_WIN32)
+#if defined(_WIN32)
 #define CURRENT_DIR L"."
 #define set_dir_name(n) utf8_to_wchar(n)
 #define free_dir_name(n) free((void*)n)
@@ -96,8 +91,9 @@ static int is_file(int mode) {
 }
 
 int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr extension, int (*callback)(pcstr)) {
-    if (type == TYPE_NONE)
+    if (type == TYPE_NONE) {
         return LIST_ERROR;
+    }
 
     path save_dir(platform_file_manager_get_base_path(), "/", dir);
     dir = save_dir.c_str();
@@ -110,8 +106,9 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
     }
 
     fs_dir_type *d = fs_dir_open(current_dir);
-    if (!d)
+    if (!d) {
         return LIST_ERROR;
+    }
 
     int match = LIST_NO_MATCH;
     fs_dir_entry *entry;
@@ -123,9 +120,9 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
         // When the current directory is a folder different than the working directory, stat() fails.
         // Since fstat() doesn't work for some reason and I'm afraid of touching things further,
         // I'll just concatenate the subdirectory name to the filename!
-        if (dir == 0)
+        if (dir == 0) {
             fullname = name;
-        else {
+        } else {
             char full_rel_name[256];
             snprintf(full_rel_name, sizeof(full_rel_name), "%s%s", dir, name);
             fullname = full_rel_name;
@@ -160,14 +157,6 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
     return match;
 }
 
-int platform_file_manager_should_case_correct_file() {
-#if defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_ANDROID)
-    return 0;
-#else
-    return 1;
-#endif
-}
-
 int platform_file_manager_set_base_path(pcstr path) {
     content_dir = path;
 #if defined(GAME_PLATFORM_ANDROID)
@@ -193,62 +182,5 @@ int platform_file_manager_set_ext_path(pcstr path) {
 pcstr platform_file_manager_get_ext_path() {
     return content_extdir.c_str();
 }
-
-#if defined(__vita__)
-
-FILE *platform_file_manager_open_file(pcst filename, pcstr mode) {
-    char *resolved_path = vita_prepend_path(filename);
-    FILE *fp = fopen(resolved_path, mode);
-    free(resolved_path);
-    return fp;
-}
-
-int platform_file_manager_remove_file(pcstr filename) {
-    char *resolved_path = vita_prepend_path(filename);
-    int result = remove(resolved_path);
-    free(resolved_path);
-    return result == 0;
-}
-
-#elif defined(GAME_PLATFORM_WIN)
-
-FILE *platform_file_manager_open_file(pcstr filename, pcstr mode) {
-    FILE *fp = fopen(filename, mode);
-
-    return fp;
-}
-
-bool platform_file_manager_remove_file(const char *filename) {
-    int result = remove(filename);
-    return result == 0;
-}
-
-#elif defined(GAME_PLATFORM_ANDROID)
-
-FILE *platform_file_manager_open_file(pcstr filename, pcstr mode) {
-    int fd = android_get_file_descriptor(filename, mode);
-    if (!fd) {
-        return NULL;
-    }
-    return fdopen(fd, mode);
-
-    //return fopen(filename, mode);
-}
-
-bool platform_file_manager_remove_file(const char *filename) {
-    return android_remove_file(filename);
-}
-
-#else
-
-FILE *platform_file_manager_open_file(const char *filename, const char *mode) {
-    return fopen(filename, mode);
-}
-
-bool platform_file_manager_remove_file(const char *filename) {
-    return remove(filename) == 0;
-}
-
-#endif
 
 } // vfs

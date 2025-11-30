@@ -34,6 +34,11 @@ void platform_t::open_url(pcstr url, pcstr prefix) {
 #endif
 }
 
+bool platform_t::file_manager_should_case_correct_file() {
+    const bool is_case_platform = !(is_windows() || is_android());
+    return is_case_platform;
+}
+
 void platform_t::init_timers() {
 #if defined(GAME_PLATFORM_WIN)
     uint64_t qwTimeFreq;
@@ -66,7 +71,7 @@ uint64_t platform_t::get_qpc() {
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return static_cast<uint64_t>(ts.tv_sec) * 1000000000ULL + ts.tv_nsec;
 #else
-#error "Unsupported platform"
+    #error "Unsupported platform"
 #endif
 }
 
