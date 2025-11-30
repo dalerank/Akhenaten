@@ -331,9 +331,8 @@ set(ZLIB_LIBRARIES "${ZLIB_LIBRARY}" CACHE FILEPATH "Path to zlib library" FORCE
 # SDL2 section begin
 #
 
-# Skip SDL2 build for Android as it uses find_package
 # Skip SDL2 build for Emscripten as it uses ports (-sUSE_SDL=2)
-if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
+if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2 FetchContent
@@ -423,9 +422,8 @@ endif()
 # SDL2_mixer section begin
 #
 
-# Skip SDL2_mixer build for Android as it uses find_package
 # Skip SDL2_mixer build for Emscripten as it uses ports (-sUSE_SDL_MIXER=2)
-if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN)
+if(NOT WIN_EMSCRIPTEN)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     
     # Setup SDL2_mixer FetchContent
@@ -940,11 +938,6 @@ if (!APPLE)
     set_source_files_properties(${SOURCE_FILES} PROPERTIES LANGUAGE CXX)
 endif()
 
-if (PLATFORM_ANDROID)
-    find_package(SDL2 REQUIRED CONFIG)
-    set(SDL2_LIBRARY SDL2::SDL2)
-    set(SDL2_MIXER_LIBRARY SDL2::SDL2_mixer)
-endif()
 
 if (PLATFORM_ANDROID)
     add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
