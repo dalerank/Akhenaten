@@ -142,3 +142,14 @@ mission8 { // Selima
 		}
 	]
 }
+
+[event=event_register_mission_animals, mission=mission8]
+function mission8_register_animals(ev) {
+	city.remove_animals()
+
+	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_CROCODILE, 2)
+	city.set_animals_area(0, 16)
+
+	city.add_animals_point(1, /*x*/60, /*y*/60, FIGURE_CROCODILE, 2)
+	city.set_animals_area(1, 16)
+}
