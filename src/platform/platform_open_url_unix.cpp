@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "core/log.h"
 
 #if defined(GAME_PLATFORM_LINUX)
 
