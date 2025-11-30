@@ -154,6 +154,8 @@ void game_t::advance_year() {
 
 void game_t::advance_week() {
     g_city.update_week(simtime);
+
+    events::emit(event_advance_week::from_simtime(simtime));
 }
 
 void game_t::advance_month() {
