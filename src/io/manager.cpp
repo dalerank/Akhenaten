@@ -67,48 +67,6 @@ const int FileIOManager::num_chunks() {
     return alloc_index;
 }
 
-int findex;
-char* fname;
-static void export_unzipped(file_chunk_t* chunk) {
-#if defined(GAME_PLATFORM_WIN)
-    //char* lfile = (char*)malloc(200);
-    ////    sprintf(lfile, "DEV_TESTING/zip/%03i_%i_%s", findex + 1, chunk->buf->size(), fname);
-    //const char *folder_fpath = dir_get_file("DEV_TESTING/zip/", 0);
-    //GamestateIO::prepare_folders(folder_fpath);
-    //sprintf(lfile, "DEV_TESTING/zip/%03i_%s", findex + 1, fname);
-    //const char *fs_fpath = dir_get_file(lfile, 0);
-    //FILE* log = fopen(fs_fpath, "wb+");
-    //if (log) {
-    //    fwrite(chunk->buf->get_data(), chunk->buf->size(), 1, log);
-    //}
-    //fclose(log);
-    //free(lfile);
-#endif
-}
-static void log_hex(file_chunk_t* chunk, int i, int offs, int num_chunks) {
-    // log first few bytes of the filepiece
-    size_t s = chunk->buf->size() < 16 ? chunk->buf->size() : 16;
-    char hexstr[40] = {0};
-    for (int b = 0; b < s; b++) {
-        char hexcode[3] = {0};
-        uint8_t inbyte = chunk->buf->get_value(b);
-        snprintf(hexcode, sizeof(hexcode) / sizeof(hexcode[0]), "%02X", inbyte);
-        strncat(hexstr, hexcode, sizeof(hexcode) / sizeof(hexcode[0]) - 1);
-        if ((b + 1) % 4 == 0 || (b + 1) == s)
-            strncat(hexstr, " ", 2);
-    }
-
-    // Unfortunately, MSVCRT only supports C89 and thus, "zu" leads to segfault
-    logs::info("Piece %s %03i/%i : %8i@ %-36s(%" PRI_SIZET ") %s",
-               chunk->compressed ? "(C)" : "---",
-               i + 1,
-               num_chunks,
-               offs,
-               hexstr,
-               chunk->buf->size(),
-               fname);
-}
-
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 static bool read_compressed_chunk(FILE* fp, buffer* buf, int filepiece_size) {
     // check that the stream size isn't above maximum temp buffer
@@ -282,8 +240,8 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     // read file contents into buffers
     for (int i = 0; i < num_chunks(); i++) {
         file_chunk_t* chunk = &file_chunks.at(i);
-        findex = i;
-        fname = chunk->name;
+        //findex = i;
+        //fname = chunk->name;
 
         long offs = ftell(fp);
 
@@ -308,10 +266,10 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
         }
 
         // ******** DEBUGGING ********
-        export_unzipped(chunk); // export uncompressed buffer data to zip folder
-        if (true) {
-            log_hex(chunk, i, offs, num_chunks()); // print full chunk read log info
-        }
+        //export_unzipped(chunk); // export uncompressed buffer data to zip folder
+        //if (true) {
+        //    log_hex(chunk, i, offs, num_chunks()); // print full chunk read log info
+        //}
         // ***************************
     }
 

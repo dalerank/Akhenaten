@@ -15,6 +15,10 @@ public:
     FIGURE_METAINFO(FIGURE_PHYSICIAN, figure_physician)
     figure_physician(figure *f) : figure_impl(f) {}
 
+    struct static_params : public figure_static_params {
+        int health_heal_amount;
+    } FIGURE_STATIC_DATA_T;
+
     virtual void on_create() override {}
     virtual void figure_action() override;
     virtual void figure_before_action() override;
@@ -23,3 +27,4 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_PHYSICIAN; }
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };
+ANK_CONFIG_STRUCT(figure_physician::static_params, health_heal_amount)

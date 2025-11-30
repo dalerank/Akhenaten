@@ -17,6 +17,10 @@ void figure_physician::figure_action() {
         advance_action(ACTION_10_PHYSICIAN_GOING);
         break;
 
+    case ACTION_10_PHYSICIAN_GOING:
+        advance_action(ACTION_62_PHYSICIAN_ROAMING);
+        break;
+
     case ACTION_61_PHYSICIAN_ENTERING_EXITING:
     case 9:
         do_enterbuilding(true, home());
@@ -84,12 +88,13 @@ sound_key figure_physician::phrase_key() const {
 }
 
 int figure_physician::provide_service() {
-    int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
+    int heal_amount = current_params().health_heal_amount;
+    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         auto house = b->dcast_house();
 
         if (house && house->house_population() > 0) {
             house->runtime_data().physician = MAX_COVERAGE;
-            b->common_health = std::min(b->common_health + 1, 100);
+            b->common_health = std::min(b->common_health + heal_amount, 100);
         }
     });
     return houses_serviced;
