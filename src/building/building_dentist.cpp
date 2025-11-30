@@ -58,6 +58,7 @@ building_id building_dentist::find_noble_house_with_max_bad_teeth() {
 
 void building_dentist::update_month() {
     building_impl::update_month();
+    runtime_data().residents_served_this_month = 0;
     
     if (has_figure(BUILDING_SLOT_SERVICE)) {
         return;

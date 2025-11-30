@@ -2,6 +2,7 @@
 
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "building/building_dentist.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/constants.h"
@@ -158,8 +159,29 @@ void figure_dentist::treat_nobles_in_house(building_house *house) {
     if (!house || !house->is_nobles() || house->house_population() <= 0) {
         return;
     }
+    
+    building *dentist_building = home();
+    if (!dentist_building) {
+        return;
+    }
+    
+    auto dentist = dentist_building->dcast_dentist();
+    if (!dentist) {
+        return;
+    }
+    
+    auto &dentist_data = dentist->runtime_data();
+    const auto &params = dentist->current_params();
+    
+    if (dentist_data.residents_served_this_month >= params.max_serve_clients) {
+        return;
+    }
+    
+    int house_population = house->house_population();
+   
     auto &housed = house->runtime_data();
     housed.dentist = MAX_COVERAGE;
+    dentist_data.residents_served_this_month += house_population;
 
     if (housed.nobles_with_bad_teeth > 0) {
         housed.nobles_with_bad_teeth--;
@@ -167,14 +189,37 @@ void figure_dentist::treat_nobles_in_house(building_house *house) {
 }
 
 int figure_dentist::provide_service() {
-    int houses_serviced = figure_provide_culture(tile(), &base, [] (building* b, figure *f) {
+    building *dentist_building = home();
+    if (!dentist_building) {
+        return 0;
+    }
+    
+    auto dentist = dentist_building->dcast_dentist();
+    if (!dentist) {
+        return 0;
+    }
+    
+    auto &dentist_data = dentist->runtime_data();
+    const auto &params = dentist->current_params();
+    
+    // Check if already served max_serve_clients residents this month
+    if (dentist_data.residents_served_this_month >= params.max_serve_clients) {
+        return 0;
+    }
+    
+    int houses_serviced = figure_provide_culture(tile(), &base, [&] (building* b, figure *f) {
         auto house = b->dcast_house();
-        if (!house) {
+        if (!house || house->house_population() <= 0) {
             return;
         }
         
         auto &housed = house->runtime_data();
-        housed.dentist = MAX_COVERAGE;
+
+        if (housed.dentist < MAX_COVERAGE / 2) {
+            int house_population = house->house_population();
+            dentist_data.residents_served_this_month += house_population;
+            housed.dentist = MAX_COVERAGE;
+        }            
     });
     return houses_serviced;
 }

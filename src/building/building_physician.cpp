@@ -22,6 +22,11 @@ void building_physician::update_graphic() {
     building_impl::update_graphic();
 }
 
+void building_physician::update_month() {
+    building_impl::update_month();
+    runtime_data().residents_served_this_month = 0;
+}
+
 bool building_physician::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
