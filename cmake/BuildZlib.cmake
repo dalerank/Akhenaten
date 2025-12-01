@@ -90,9 +90,11 @@ else()
     
     set(ZLIB_LIB_BUILD_PATHS
         "${ZLIB_BUILD_DIR}/libzlibstatic.a"
+        "${ZLIB_BUILD_DIR}/libz.a"
     )
     set(ZLIB_LIB_INSTALL_PATHS
         "${ZLIB_INSTALL_DIR}/lib/libzlibstatic.a"
+        "${ZLIB_INSTALL_DIR}/lib/libz.a"
     )
 
     set(ZLIB_LIB_FINAL_PATH "${ZLIB_INSTALL_DIR}/libzlibstatic.a")   
