@@ -1,7 +1,7 @@
 #include "content.h"
 #include "platform/platform.h"
 
-#if defined(GAME_PLATFORM_UNIX)
+#if defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_ANDROID)
 
 FILE *vfs::platform_file_manager_open_file(const char *filename, const char *mode) {
     return fopen(filename, mode);

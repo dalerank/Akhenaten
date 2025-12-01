@@ -39,6 +39,8 @@ void info_window_education::init(object_info &c) {
     switch (b->type) {
     case BUILDING_ACADEMY: ftype = FIGURE_SCRIBER; break;
     case BUILDING_LIBRARY: ftype = FIGURE_LIBRARIAN; break;
+    default:
+        break;
     }
 
     vec2i text_res{ 0, 0 };

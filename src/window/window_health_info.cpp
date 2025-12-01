@@ -27,6 +27,9 @@ void health_info_window::init(object_info &c) {
     case BUILDING_PHYSICIAN: ftype = FIGURE_PHYSICIAN; break;
     case BUILDING_DENTIST: ftype = FIGURE_DENTIST; break;
     case BUILDING_MORTUARY: ftype = FIGURE_EMBALMER; break;
+    default:
+        assert(false);
+        break;
     }
 
     textid reason = {c.group_id, 6};

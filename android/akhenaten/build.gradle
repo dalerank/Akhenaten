@@ -1,6 +1,465 @@
 apply plugin: 'com.android.application'
 // apply plugin: 'com.github.triplet.play'
 
+// Версии зависимостей (синхронизированы с основным CMakeLists.txt)
+ext.dependencyVersions = [
+    "zlib": "v1.3.1",
+    "SDL2": "release-2.32.10",
+    "SDL2_mixer": "release-2.8.0",
+    "freetype": "VER-2-13-3",
+    "harfbuzz": "7.3.0",
+    "libpng": "v1.6.50",
+    "imgui": "v1.92.2",
+    "stb": "master"
+]
+
+// Репозитории зависимостей
+ext.dependencyRepos = [
+    "zlib": "https://github.com/madler/zlib.git",
+    "SDL2": "https://github.com/libsdl-org/SDL.git",
+    "SDL2_mixer": "https://github.com/libsdl-org/SDL_mixer.git",
+    "freetype": "https://github.com/freetype/freetype.git",
+    "harfbuzz": "https://github.com/harfbuzz/harfbuzz.git",
+    "libpng": "https://github.com/pnggroup/libpng.git",
+    "imgui": "https://github.com/ocornut/imgui.git",
+    "stb": "https://github.com/nothings/stb.git"
+]
+
+// Директория для исходников зависимостей
+def depsDir = new File(projectDir, "src/main/cpp/_deps")
+// Директория для prebuilt библиотек
+def prebuiltDir = new File(projectDir.parent, "prebuilt")
+
+// Функция для получения путей к NDK и CMake
+def getNdkPath() {
+    def ndkPath = System.getenv("ANDROID_NDK")
+    if (ndkPath != null && new File(ndkPath).exists()) {
+        return new File(ndkPath)
+    }
+    
+    def os = System.getProperty('os.name').toLowerCase()
+    def homeDir = System.getProperty('user.home')
+    
+    if (os.contains('windows')) {
+        def paths = [
+            "${System.getenv('LOCALAPPDATA')}\\Android\\Sdk\\ndk",
+            "${System.getenv('ProgramFiles')}\\Android\\Sdk\\ndk",
+            "${homeDir}\\AppData\\Local\\Android\\Sdk\\ndk"
+        ]
+        for (def path : paths) {
+            if (path != null && !path.contains('null')) {
+                def ndkDir = new File(path)
+                if (ndkDir.exists()) {
+                    def versions = ndkDir.listFiles()?.findAll { it.isDirectory() && it.name.matches(/\\d+(\\.\\d+)*/) }
+                    if (versions && !versions.empty) {
+                        return versions.sort().last()
+                    }
+                }
+            }
+        }
+    } else {
+        def paths = [
+            "${homeDir}/Android/Sdk/ndk",
+            "${homeDir}/Library/Android/sdk/ndk",
+            "/opt/android-sdk/ndk"
+        ]
+        for (def path : paths) {
+            def ndkDir = new File(path)
+            if (ndkDir.exists()) {
+                def versions = ndkDir.listFiles()?.findAll { it.isDirectory() && it.name.matches(/\\d+(\\.\\d+)*/) }
+                if (versions && !versions.empty) {
+                    return versions.sort().last()
+                }
+            }
+        }
+    }
+    
+    try {
+        if (project.hasProperty('android')) {
+            def ndkDir = android.ndkDirectory
+            if (ndkDir != null && ndkDir.exists()) {
+                return ndkDir
+            }
+        }
+    } catch (Exception e) {}
+    
+    throw new GradleException("Android NDK not found. Please set ANDROID_NDK or configure NDK in build.gradle")
+}
+
+def getCmakePath() {
+    def cmakePath = System.getenv("CMAKE")
+    if (cmakePath != null && new File(cmakePath).exists()) {
+        return cmakePath
+    }
+    
+    def os = System.getProperty('os.name').toLowerCase()
+    if (os.contains('windows')) {
+        def paths = [
+            'C:\\Program Files\\CMake\\bin\\cmake.exe',
+            'C:\\Program Files (x86)\\CMake\\bin\\cmake.exe'
+        ]
+        for (def path : paths) {
+            if (new File(path).exists()) {
+                return path
+            }
+        }
+    } else {
+        def result = new ByteArrayOutputStream()
+        exec {
+            commandLine 'which', 'cmake'
+            standardOutput = result
+            ignoreExitValue = true
+        }
+        def path = result.toString().trim()
+        if (!path.isEmpty() && new File(path).exists()) {
+            return path
+        }
+    }
+    
+    throw new GradleException("CMake not found. Please install CMake and ensure it's in PATH")
+}
+
+// Задача для скачивания всех исходников зависимостей
+task downloadDependenciesSources {
+    description = 'Downloads source code for all native dependencies'
+    group = "build"
+    
+    doLast {
+        depsDir.mkdirs()
+        
+        dependencyRepos.each { name, repo ->
+            def depDir = new File(depsDir, "${name}-src")
+            def tag = dependencyVersions[name]
+            
+            if (!depDir.exists() || !new File(depDir, ".git").exists()) {
+                println "Downloading ${name} source (${tag})..."
+                exec {
+                    workingDir depsDir
+                    commandLine "git", "clone", "--depth", "1", "--branch", tag, repo, "${name}-src"
+                    ignoreExitValue = false
+                }
+            } else {
+                println "${name} source already exists, skipping..."
+            }
+        }
+    }
+}
+
+// Функция для создания задачи сборки библиотеки для одной ABI
+def createBuildLibraryTask(libName, abi) {
+    def libNameClean = libName.replace('-', '').replace('_', '')
+    def libNameUpper = libNameClean.toUpperCase()
+    def abiClean = abi.replace('-', '').replace('_', '')
+    def taskName = "build${libNameClean.capitalize()}${abiClean.capitalize()}"
+    
+    // Определяем переменные внутри функции, чтобы они были доступны в замыкании
+    def depsDirLocal = new File(projectDir, "src/main/cpp/_deps")
+    def prebuiltDirLocal = new File(projectDir.parent, "prebuilt")
+    
+    return tasks.create(taskName) {
+        description = "Builds ${libName} static library for ${abi}"
+        group = "build"
+        
+        def sourceDir = new File(depsDirLocal, "${libName}-src")
+        def buildDir = new File(projectDir.parent, "build_android_deps/${libName}/${abi}")
+        def installDir = new File(prebuiltDirLocal, "${abi}")
+        def libDir = new File(installDir, "lib")
+        def includeDir = new File(installDir, "include")
+        
+        dependsOn downloadDependenciesSources
+        
+        // Определяем ожидаемое имя библиотеки
+        def expectedLibName = "lib${libName.replace('-', '').replace('_', '')}.a"
+        if (libName == "zlib") {
+            expectedLibName = "libzlibstatic.a"
+        } else if (libName == "SDL2") {
+            expectedLibName = "libSDL2-static.a"
+        } else if (libName == "SDL2_mixer") {
+            expectedLibName = "libSDL2_mixer.a"
+        }
+        
+        doLast {
+            // Проверяем, нужно ли собирать библиотеку
+            libDir.mkdirs()
+            def libFile = new File(libDir, expectedLibName)
+            if (libFile.exists()) {
+                println "Library ${expectedLibName} already exists for ${abi}, skipping build..."
+                return
+            }
+            
+            println "Building ${libName} for ${abi}..."
+            buildDir.mkdirs()
+            libDir.mkdirs()
+            includeDir.mkdirs()
+            
+            def ndkPath = getNdkPath()
+            def cmakePath = getCmakePath()
+            def toolchainFile = new File(ndkPath, "build/cmake/android.toolchain.cmake")
+            
+            if (!toolchainFile.exists()) {
+                throw new GradleException("Android NDK toolchain file not found at: ${toolchainFile.absolutePath}")
+            }
+            
+            if (!sourceDir.exists()) {
+                throw new GradleException("Source directory not found: ${sourceDir.absolutePath}. Run downloadDependenciesSources first.")
+            }
+            
+            // Базовые аргументы CMake для Android
+            // Явно указываем генератор Ninja для Android (на Windows CMake может выбрать Visual Studio)
+            def cmakeConfigureArgs = [
+                cmakePath,
+                "-S", sourceDir.absolutePath,
+                "-B", buildDir.absolutePath,
+                "-G", "Ninja",
+                "-DCMAKE_TOOLCHAIN_FILE=${toolchainFile.absolutePath}",
+                "-DANDROID_ABI=${abi}",
+                "-DANDROID_PLATFORM=android-21",
+                "-DANDROID_STL=c++_static",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_INSTALL_PREFIX=${installDir.absolutePath}",
+                // Явно указываем линковку с libc++ для библиотек, использующих C++
+                "-DCMAKE_CXX_FLAGS=-static-libstdc++",
+                "-DCMAKE_EXE_LINKER_FLAGS=-static-libstdc++",
+                "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++"
+            ]
+            
+            // Специфичные настройки для каждой библиотеки
+            if (libName == "zlib") {
+                cmakeConfigureArgs.addAll([
+                    "-DBUILD_SHARED_LIBS=OFF"
+                ])
+            } else if (libName == "SDL2") {
+                cmakeConfigureArgs.addAll([
+                    "-DSDL_SHARED=OFF",
+                    "-DSDL_STATIC=ON",
+                    "-DSDL_STATIC_PIC=ON",
+                    "-DSDL_TEST=OFF",
+                    // Явно указываем линковку с libc++ для SDL2, так как он использует C++ (hid.cpp)
+                    "-DCMAKE_CXX_FLAGS=-static-libstdc++",
+                    "-DCMAKE_EXE_LINKER_FLAGS=-static-libstdc++",
+                    "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++"
+                ])
+            } else if (libName == "SDL2_mixer") {
+                // SDL2_mixer требует SDL2
+                def sdl2InstallDir = new File(prebuiltDirLocal, "${abi}")
+                cmakeConfigureArgs.addAll([
+                    "-DBUILD_SHARED_LIBS=OFF",
+                    "-DSDL2_DIR=${sdl2InstallDir.absolutePath}/lib/cmake/SDL2",
+                    "-DSDL2_ROOT=${sdl2InstallDir.absolutePath}",
+                    "-DSDL2MIXER_SAMPLES=OFF",
+                    "-DSDL2MIXER_STATIC=ON",
+                    "-DSDL2MIXER_SHARED=OFF",
+                    "-DSDL2MIXER_VENDORED=ON",
+                    "-DSDL2MIXER_OGG=OFF",
+                    "-DSDL2MIXER_FLAC=OFF",
+                    "-DSDL2MIXER_MOD=OFF",
+                    "-DSDL2MIXER_MP3=OFF",
+                    "-DSDL2MIXER_MIDI=OFF",
+                    "-DSDL2MIXER_OPUS=OFF",
+                    "-DSDL2MIXER_WAVPACK=OFF",
+                    // Явно указываем линковку с libc++ для SDL2_mixer, так как SDL2 использует C++
+                    "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -lc++_static"
+                ])
+            } else if (libName == "freetype") {
+                // freetype требует zlib
+                def zlibInstallDir = new File(prebuiltDirLocal, "${abi}")
+                cmakeConfigureArgs.addAll([
+                    "-DBUILD_SHARED_LIBS=OFF",
+                    "-DFT_DISABLE_ZLIB=OFF",
+                    "-DFT_REQUIRE_ZLIB=ON",
+                    "-DFT_REQUIRE_HARFBUZZ=OFF",
+                    "-DFT_DISABLE_HARFBUZZ=ON",
+                    "-DFT_DISABLE_BZIP2=ON",
+                    "-DFT_DISABLE_PNG=ON",
+                    "-DFT_DISABLE_BROTLI=ON",
+                    "-DZLIB_ROOT=${zlibInstallDir.absolutePath}",
+                    "-DZLIB_INCLUDE_DIR=${zlibInstallDir.absolutePath}/include",
+                    "-DZLIB_LIBRARY=${zlibInstallDir.absolutePath}/lib/libzlibstatic.a"
+                ])
+            } else if (libName == "harfbuzz") {
+                // harfbuzz требует freetype
+                def freetypeInstallDir = new File(prebuiltDirLocal, "${abi}")
+                cmakeConfigureArgs.addAll([
+                    "-DBUILD_SHARED_LIBS=OFF",
+                    "-DHB_BUILD_SUBSET=OFF",
+                    "-DHB_HAVE_FREETYPE=ON",
+                    "-DCMAKE_PREFIX_PATH=${freetypeInstallDir.absolutePath}",
+                    "-DFreetype_ROOT=${freetypeInstallDir.absolutePath}",
+                    "-DFREETYPE_ROOT=${freetypeInstallDir.absolutePath}",
+                    "-DFreetype_INCLUDE_DIR=${freetypeInstallDir.absolutePath}/include/freetype2",
+                    "-DFREETYPE_INCLUDE_DIR=${freetypeInstallDir.absolutePath}/include/freetype2",
+                    "-DFREETYPE_INCLUDE_DIRS=${freetypeInstallDir.absolutePath}/include/freetype2",
+                    "-DFreetype_LIBRARY=${freetypeInstallDir.absolutePath}/lib/libfreetype.a",
+                    "-DFREETYPE_LIBRARY=${freetypeInstallDir.absolutePath}/lib/libfreetype.a"
+                ])
+            } else if (libName == "libpng") {
+                // libpng требует zlib
+                def zlibInstallDir = new File(prebuiltDirLocal, "${abi}")
+                cmakeConfigureArgs.addAll([
+                    "-DPNG_SHARED=OFF",
+                    "-DPNG_STATIC=ON",
+                    "-DPNG_TESTS=OFF",
+                    "-DZLIB_ROOT=${zlibInstallDir.absolutePath}",
+                    "-DZLIB_INCLUDE_DIR=${zlibInstallDir.absolutePath}/include",
+                    "-DZLIB_LIBRARY=${zlibInstallDir.absolutePath}/lib/libzlibstatic.a"
+                ])
+            }
+            
+            // Шаг 1: Конфигурация CMake
+            println "Configuring ${libName} for ${abi}..."
+            exec {
+                commandLine cmakeConfigureArgs
+                workingDir buildDir
+                ignoreExitValue = false
+            }
+            
+            // Шаг 2: Сборка
+            println "Building ${libName} for ${abi}..."
+            exec {
+                commandLine cmakePath, "--build", buildDir.absolutePath, "--parallel"
+                workingDir buildDir
+                ignoreExitValue = false
+            }
+            
+            // Шаг 3: Установка
+            println "Installing ${libName} for ${abi}..."
+            exec {
+                commandLine cmakePath, "--install", buildDir.absolutePath, "--prefix", installDir.absolutePath
+                workingDir buildDir
+                ignoreExitValue = false
+            }
+            
+            // Для некоторых библиотек нужно скопировать файлы вручную
+            if (libName == "zlib") {
+                // zlib создает libz.a, но нам нужен libzlibstatic.a
+                // Проверяем несколько возможных мест, где может быть библиотека
+                def possibleLibPaths = [
+                    new File(buildDir, "libz.a"),
+                    new File(buildDir, "libzlibstatic.a"),
+                    new File(libDir, "libz.a"),
+                    new File(installDir, "lib/libz.a"),
+                    new File(installDir, "lib/libzlibstatic.a")
+                ]
+                
+                def libzFile = null
+                for (def path : possibleLibPaths) {
+                    if (path.exists()) {
+                        libzFile = path
+                        println "Found zlib library at: ${path.absolutePath}"
+                        break
+                    }
+                }
+                
+                def libzlibstaticFile = new File(libDir, "libzlibstatic.a")
+                if (libzFile != null && libzFile.exists() && !libzlibstaticFile.exists()) {
+                    // Копируем библиотеку в нужное место с правильным именем
+                    copy {
+                        from libzFile
+                        into libDir
+                        rename { "libzlibstatic.a" }
+                    }
+                    println "Copied and renamed zlib library to libzlibstatic.a"
+                } else if (libzlibstaticFile.exists()) {
+                    println "libzlibstatic.a already exists"
+                } else {
+                    println "WARNING: zlib library not found in expected locations"
+                }
+                
+                // zlib может не устанавливать заголовки правильно, копируем вручную
+                def zlibHeader = new File(sourceDir, "zlib.h")
+                if (zlibHeader.exists() && !new File(includeDir, "zlib.h").exists()) {
+                    copy {
+                        from zlibHeader
+                        into includeDir
+                    }
+                    println "Copied zlib.h to ${includeDir}"
+                }
+            } else if (libName == "SDL2") {
+                // SDL2 создает libSDL2.a, но нам нужен libSDL2-static.a
+                def libSDL2File = new File(libDir, "libSDL2.a")
+                def libSDL2StaticFile = new File(libDir, "libSDL2-static.a")
+                if (libSDL2File.exists() && !libSDL2StaticFile.exists()) {
+                    copy {
+                        from libSDL2File
+                        into libDir
+                        rename "libSDL2.a", "libSDL2-static.a"
+                    }
+                    println "Renamed libSDL2.a to libSDL2-static.a"
+                }
+            }
+            
+            println "Successfully built and installed ${libName} for ${abi}"
+        }
+    }
+}
+
+// Создаем задачи сборки для всех библиотек и ABI
+afterEvaluate {
+    def libraries = ['zlib', 'SDL2', 'SDL2_mixer', 'freetype', 'harfbuzz', 'libpng']
+    def abis = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+    def prebuiltDirLocal = new File(projectDir.parent, "prebuilt")
+    
+    // Задача для сборки всех библиотек для всех ABI
+    task buildAllDependencies {
+        description = 'Builds all native dependencies for all ABIs (only missing ones)'
+        group = "build"
+        dependsOn downloadDependenciesSources
+        
+        doFirst {
+            def requiredLibs = ['libSDL2-static.a', 'libSDL2_mixer.a', 'libzlibstatic.a', 
+                               'libfreetype.a', 'libharfbuzz.a', 'libpng.a']
+            def needsBuild = false
+            
+            abis.each { abi ->
+                def libDir = new File(prebuiltDirLocal, "${abi}/lib")
+                def missing = requiredLibs.findAll { !new File(libDir, it).exists() }
+                if (!missing.empty) {
+                    needsBuild = true
+                    println "Need to build libraries for ${abi}: ${missing.join(', ')}"
+                }
+            }
+            
+            if (!needsBuild) {
+                println "All prebuilt libraries are present. Skipping build."
+            }
+        }
+    }
+    
+    libraries.each { libName ->
+        abis.each { abi ->
+            def buildTask = createBuildLibraryTask(libName, abi)
+            buildAllDependencies.dependsOn buildTask
+            
+            // Добавляем зависимости между библиотеками
+            if (libName == "SDL2_mixer") {
+                def abiClean = abi.replace('-', '').replace('_', '')
+                def sdl2Task = tasks.findByName("buildSDL2${abiClean.capitalize()}")
+                if (sdl2Task != null) {
+                    buildTask.dependsOn sdl2Task
+                }
+            } else if (libName == "freetype") {
+                def abiClean = abi.replace('-', '').replace('_', '')
+                def zlibTask = tasks.findByName("buildZlib${abiClean.capitalize()}")
+                if (zlibTask != null) {
+                    buildTask.dependsOn zlibTask
+                }
+            } else if (libName == "harfbuzz") {
+                def abiClean = abi.replace('-', '').replace('_', '')
+                def freetypeTask = tasks.findByName("buildFreetype${abiClean.capitalize()}")
+                if (freetypeTask != null) {
+                    buildTask.dependsOn freetypeTask
+                }
+            } else if (libName == "libpng") {
+                def abiClean = abi.replace('-', '').replace('_', '')
+                def zlibTask = tasks.findByName("buildZlib${abiClean.capitalize()}")
+                if (zlibTask != null) {
+                    buildTask.dependsOn zlibTask
+                }
+            }
+        }
+    }
+}
+
 task getVersion {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
     def versionMajor = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
@@ -77,12 +536,6 @@ android {
         versionName getVersion.versionName
         versionCode getVersion.versionCode
 
-        externalNativeBuild {
-            cmake {
-                version "3.22.1"
-                arguments "-DCMAKE_BUILD_PLATFORM=android", "-DSYSTEM_LIBS=OFF","-DANDROID_STL=c++_static"
-            }
-        }
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
@@ -112,34 +565,102 @@ android {
         }
     }
     buildTypes {
-        rootProject.ext.usingAAR = false
         debug {
             ext.alwaysUpdateBuildId = false
             applicationIdSuffix ".debug"
-            if (file('libs/SDL2-debug.aar').exists()) {
-                println 'Using pre-packed SDL2 Debug AAR'
-                rootProject.ext.usingAAR = true
-                dependencies.debugImplementation files('libs/SDL2-debug.aar')
-            }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            if (file('libs/SDL2-release.aar').exists()) {
-                println 'Using pre-packed SDL2 Release AAR'
-                rootProject.ext.usingAAR = true
-                dependencies.releaseImplementation files('libs/SDL2-release.aar')
-            }
         }
     }
     externalNativeBuild {
         cmake {
-            version "3.22.1"
-            path "../../CMakeLists.txt"
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
     namespace 'com.github.dalerank.akhenaten'
+}
+
+// Задача для проверки наличия prebuilt библиотек (не требует сборки)
+task checkPrebuiltDependencies {
+    description = 'Checks if prebuilt native libraries are available'
+    group = "build"
+    
+    doLast {
+        def abis = ['armeabi-v7a', 'arm64-v8a', 'x86_64']
+        def allPresent = true
+        
+        abis.each { abi ->
+            def abiDir = new File(prebuiltDir, "${abi}")
+            def libDir = new File(abiDir, "lib")
+            
+            def requiredLibs = [
+                'libSDL2-static.a',
+                'libSDL2_mixer.a',
+                'libzlibstatic.a',
+                'libfreetype.a',
+                'libharfbuzz.a',
+                'libpng.a'
+            ]
+            
+            def missingLibs = requiredLibs.findAll { libName ->
+                !new File(libDir, libName).exists()
+            }
+            
+            if (!missingLibs.empty) {
+                println "WARNING: Missing libraries for ${abi}: ${missingLibs.join(', ')}"
+                allPresent = false
+            } else {
+                println "✓ All prebuilt libraries found for ${abi}"
+            }
+        }
+        
+        if (!allPresent) {
+            println "\nTo build missing libraries, run:"
+            println "  ./gradlew buildAllDependencies"
+        }
+    }
+}
+
+// Задача для скачивания исходников imgui (компилируется вместе с проектом)
+task downloadImguiSource {
+    description = 'Downloads imgui source code (compiled with project)'
+    group = "build"
+    dependsOn downloadDependenciesSources
+}
+
+// Убеждаемся, что зависимости готовы перед сборкой CMake
+afterEvaluate {
+    def libraries = ['zlib', 'SDL2', 'SDL2_mixer', 'freetype', 'harfbuzz', 'libpng']
+    
+    tasks.matching { 
+        def name = it.name
+        (name.contains("CMake") || name.contains("cmake")) && 
+        (name.contains("configure") || name.contains("build"))
+    }.configureEach { task ->
+        // Всегда проверяем зависимости и собираем их при необходимости
+        task.dependsOn buildAllDependencies, downloadImguiSource
+        
+        // Добавляем явные зависимости от конкретных задач сборки для каждой ABI
+        def abiMatch = task.name =~ /\[(.*)\]/
+        if (abiMatch.find()) {
+            def abi = abiMatch.group(1)
+            def abiClean = abi.replace('-', '').replace('_', '')
+            
+            // Зависимости должны быть собраны для этой ABI
+            libraries.each { libName ->
+                def libNameClean = libName.replace('-', '').replace('_', '')
+                def buildTaskName = "build${libNameClean.capitalize()}${abiClean.capitalize()}"
+                def buildTask = tasks.findByName(buildTaskName)
+                if (buildTask != null) {
+                    task.dependsOn buildTask
+                }
+            }
+        }
+    }
 }
 
 /** play {
@@ -149,20 +670,23 @@ android {
 repositories {
     google()
     mavenCentral()
+    // Репозиторий для нативных библиотек через prefab (если доступны)
+    // maven { url 'https://repo.example.com' } // Добавьте, если найдете готовые пакеты
 }
 
 dependencies {
-    if (!rootProject.ext.usingAAR) {
-        if (file('libs/SDL2.aar').exists()) {
-            println 'Using pre-packed SDL2 General AAR'
-            implementation files('libs/SDL2.aar')
-            rootProject.ext.usingAAR = true
-        } else {
-            println 'Pre-packed SDL2 AAR not found - building it'
-            implementation project(':SDL2')
-        }
-    }
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.documentfile:documentfile:1.0.1'
     implementation 'com.google.firebase:firebase-firestore:24.10.0'
+    
+    // Нативные библиотеки через prefab (если доступны в репозиториях)
+    // Пример для SDL2 (если доступен):
+    // implementation 'org.libsdl:SDL2:2.32.10'
+    // 
+    // К сожалению, большинство нативных библиотек (SDL2, freetype, harfbuzz, zlib, libpng)
+    // не доступны напрямую через Maven/Gradle репозитории как prefab пакеты.
+    // Их нужно либо:
+    // 1. Собрать заранее и разместить в prebuilt/
+    // 2. Использовать готовые сборки из GitHub releases
+    // 3. Собрать автоматически через основной CMakeLists.txt
 }

@@ -51,6 +51,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 /* In C++ the array first must be prototyped, why ? */
 
 

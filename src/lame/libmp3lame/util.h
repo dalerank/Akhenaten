@@ -567,7 +567,7 @@ extern  "C" {
 
 /* log/log10 approximations */
     extern void init_log_table(void);
-    extern ieee754_float32_t fast_log2(ieee754_float32_t x);
+    //extern ieee754_float32_t fast_log2(ieee754_float32_t x);
 
     int     isResamplingNecessary(SessionConfig_t const* cfg);
 

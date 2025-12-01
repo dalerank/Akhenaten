@@ -609,6 +609,9 @@ void city_religion_t::perform_major_blessing(e_god god) {
 void city_religion_t::perform_minor_blessing(e_god god) {
     int randm = 0;
     switch (god) {
+    default:
+        break;
+
     case GOD_OSIRIS:
         // slightly better flood
         randm = anti_scum_random_15bit();
@@ -733,6 +736,9 @@ void city_religion_t::perform_major_curse(e_god god) {
         BAST_houses_destruction();
         messages::popup("message_wrath_of_bast", 0, 0);
         return;
+
+    default:
+        break;
     }
 }
 
@@ -796,6 +802,9 @@ void city_religion_t::perform_minor_curse(e_god god) {
         // plague
         BAST_malaria_plague();
         events::emit(event_message_god{ GOD_BAST, "message_bast_is_upset" });
+        break;
+
+    default:
         break;
     }
 }

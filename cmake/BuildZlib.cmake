@@ -1,6 +1,6 @@
 # This file is used to build zlib as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildZlib.cmake
-# Required variables: ZLIB_SOURCE_DIR, ZLIB_BUILD_DIR, ZLIB_INSTALL_DIR, ZLIP_ADDITIONAL_CMAKE_ARGS
+# Required variables: ZLIB_SOURCE_DIR, ZLIB_BUILD_DIR, ZLIB_INSTALL_DIR, ZLIB_ADDITIONAL_CMAKE_ARGS, ZLIB_PLATFORM_EXTRA_ARGS, ZLIB_BUILD_TYPE
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
@@ -14,10 +14,9 @@ set(ZLIB_CMAKE_ARGS
 )
 
 if(ZLIB_IS_MSVC)
-    # Multi-config generator (Visual Studio)
-    message(STATUS "Configuring zlib...")
+    message(STATUS "Configuring zlib for MSVC...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIP_ADDITIONAL_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIB_ADDITIONAL_CMAKE_ARGS} ${ZLIB_PLATFORM_EXTRA_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
         WORKING_DIRECTORY ${ZLIB_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
@@ -54,10 +53,11 @@ if(ZLIB_IS_MSVC)
     else()
         message(WARNING "zlib: Library files not found in ${ZLIB_INSTALL_DIR}")
     endif()
+
 else()
-    message(STATUS "Configuring zlib...")
+    message(STATUS "Configuring zlib for unix...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIP_ADDITIONAL_CMAKE_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
+        COMMAND ${CMAKE_COMMAND} ${ZLIB_CMAKE_ARGS} ${ZLIB_ADDITIONAL_CMAKE_ARGS} ${ZLIB_PLATFORM_EXTRA_ARGS} -B ${ZLIB_BUILD_DIR} -S ${ZLIB_SOURCE_DIR}
         WORKING_DIRECTORY ${ZLIB_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
@@ -88,20 +88,14 @@ else()
         message(FATAL_ERROR "zlib: Install failed with exit code ${INSTALL_RESULT}")
     endif()
     
-    # After install, the library should be in lib/ subdirectory
-    # But we also check the build directory as fallback
-    # zlib might produce different library names, so check multiple possibilities
     set(ZLIB_LIB_BUILD_PATHS
         "${ZLIB_BUILD_DIR}/libzlibstatic.a"
-        "${ZLIB_BUILD_DIR}/libz.a"
     )
     set(ZLIB_LIB_INSTALL_PATHS
         "${ZLIB_INSTALL_DIR}/lib/libzlibstatic.a"
-        "${ZLIB_INSTALL_DIR}/lib/libz.a"
     )
-    set(ZLIB_LIB_FINAL_PATH "${ZLIB_INSTALL_DIR}/libzlibstatic.a")
-    
-    # Find and copy library from install directory first
+
+    set(ZLIB_LIB_FINAL_PATH "${ZLIB_INSTALL_DIR}/libzlibstatic.a")   
     set(ZLIB_LIB_FOUND FALSE)
     foreach(LIB_PATH ${ZLIB_LIB_INSTALL_PATHS})
         if(EXISTS "${LIB_PATH}")
