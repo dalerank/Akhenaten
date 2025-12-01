@@ -23,6 +23,10 @@
 #ifndef LAME_UTIL_H
 #define LAME_UTIL_H
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include "l3side.h"
 #include "id3tag.h"
 #include "lame_global_flags.h"
@@ -567,7 +571,7 @@ extern  "C" {
 
 /* log/log10 approximations */
     extern void init_log_table(void);
-    //extern ieee754_float32_t fast_log2(ieee754_float32_t x);
+    extern ieee754_float32_t fast_log2(ieee754_float32_t x);
 
     int     isResamplingNecessary(SessionConfig_t const* cfg);
 
