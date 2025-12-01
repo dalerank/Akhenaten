@@ -46,18 +46,9 @@ mission8 { // Selima
     enable_scenario_events : true
 	events [
 		{
-            tag_id : 1
-			type: EVENT_TYPE_REQUEST
-			time { year : 2649, month : 1 }
-			resource : RESOURCE_LUXURY_GOODS
-			amount { value : 2 } // * 100
-			months_initial : 4
-		}
-
-		{
 			tag_id : 2
 			type: EVENT_TYPE_TRADE_CITY_UNDER_SIEGE
-			time { year : 2648, month : 2 }
+			time { year : 2, month : 2 }
 			location_fields [-1, -1, -1, -1]
 			months_initial : 12
 			reasons [PHRASE_trade_city_siege_no_reason_A, PHRASE_trade_city_siege_no_reason_B, PHRASE_trade_city_siege_no_reason_C, -1]
@@ -66,7 +57,7 @@ mission8 { // Selima
 		{
 			tag_id : 3
 			type: EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING
-			time { year : 2648, month : 5 }
+			time { year : 2, month : 5 }
 			location_fields [-1, -1, -1, -1]
 			sender_faction: ENEMY_7_LIBIAN
 			reasons [PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1]
@@ -141,6 +132,10 @@ mission8 { // Selima
 			pos [640, 480]
 		}
 	]
+
+	vars {
+		pharaoh_requested_luxury_goods : false
+	}
 }
 
 [event=event_register_mission_animals, mission=mission8]
@@ -152,4 +147,19 @@ function mission8_register_animals(ev) {
 
 	city.add_animals_point(1, /*x*/45, /*y*/80, FIGURE_OSTRICH, 5)
 	city.set_animals_area(1, 16)
+}
+
+[event=event_advance_month, mission=mission8]
+function mission8_pharaoh_requested_luxury_goods(ev) {
+	if (mission.pharaoh_requested_luxury_goods) {
+		//return
+	}
+
+	if (ev.years_since_start < 2 && ev.month < 2) {
+		// return
+	}
+
+	log_info("akhenaten: mission 8 selima: pharaoh requested luxury goods")
+	mission.pharaoh_requested_luxury_goods = true
+	city.create_good_request(/*tag_id*/1, RESOURCE_LUXURY_GOODS, /*amount*/2, /*months_initial*/4)
 }

@@ -76,7 +76,7 @@ void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_act
 
     case e_event_state_initial:
         event.event_state = e_event_state_in_progress;
-        break;
+        // go to show message
 
     case e_event_state_in_progress:
         if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.amount) {
