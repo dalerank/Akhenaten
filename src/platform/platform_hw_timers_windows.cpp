@@ -16,10 +16,10 @@ void platform_t::init_timers() {
     qpc_per_milisec = qwTimeFreq / uint64_t(1000);
     qpc_per_microsec = qwTimeFreq / uint64_t(1000000);
 
-    start_time_ms = platform.get_elapsed_ms();
-
     _qpc_per_second = get_qpf();
     _qpc_base = get_qpc();
+
+    start_time_ms = platform.get_elapsed_ms();
 }
 
 uint64_t platform_t::get_qpf() {
