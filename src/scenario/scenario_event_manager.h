@@ -4,6 +4,7 @@
 #include "core/bstring.h"
 #include "core/tokenum.h"
 #include "game/simulation_time.h"
+#include "game/resource.h"
 
 enum e_event_type {
     EVENT_TYPE_NONE = 0,
@@ -212,4 +213,5 @@ struct event_manager_t {
 
     pcstr msg_text(int group_id, int index);
     void load_mission_metadata(const mission_id_t &missionid);
+    void create_good_request(int tag, e_resource r, int amount, int months_initial);
 };
