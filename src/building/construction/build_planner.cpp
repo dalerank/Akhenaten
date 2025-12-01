@@ -490,6 +490,8 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     case BUILDING_MENU_BEAUTIFICATION:
     case BUILDING_MENU_MONUMENTS:
         return;
+    default:
+        break;
     }
 
     const auto &params = building_static_params::get(type);
@@ -875,6 +877,8 @@ void build_planner::update_unique_only_one_check() {
         if (g_city.buildings.has_temple_complex() && !game_features::gameplay_change_multiple_temple_complexes) {
             unique_already_placed = true;
         }
+        break;
+    default:
         break;
     }
 

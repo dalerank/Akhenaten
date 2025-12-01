@@ -219,6 +219,8 @@ int get_temple_complex_part_image(e_building_type type, int part, int orientatio
     case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
     case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
         break;
+    default:
+        break;
     }
 
     if (packid == -1) {

@@ -362,6 +362,9 @@ bool building_temple_complex::has_upgrade(e_building_type btype) const {
     switch (btype) {
     case BUILDING_TEMPLE_COMPLEX_ALTAR: return has_upgrade(etc_upgrade_altar);
     case BUILDING_TEMPLE_COMPLEX_ORACLE: return has_upgrade(etc_upgrade_oracle);
+    default:
+        assert(false);
+        break;
     }
     return false;
 }

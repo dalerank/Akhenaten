@@ -249,6 +249,8 @@ void building_shipyard::update_graphic() {
     case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
     case FIGURE_FISHING_BOAT: animkey = animkeys().work_fishing_boat; break;
     case FIGURE_TRANSPORT_SHIP: animkey = animkeys().work_transport; break;
+    default:
+        break;
     }
 
     set_animation(animkey);

@@ -3,6 +3,8 @@
 
 #if defined(GAME_PLATFORM_ANDROID)
 
+#include "platform/android/android.h"
+
 FILE *vfs::platform_file_manager_open_file(pcstr filename, pcstr mode) {
     int fd = android_get_file_descriptor(filename, mode);
     if (!fd) {

@@ -35,6 +35,7 @@
 #include <dmalloc.h>
 #endif
 #include <assert.h>
+#include <string.h>
 
 static int gd_are_hip_tables_layer2_initialized = 0;
 
@@ -137,7 +138,7 @@ II_step_one(PMPSTR mp, sideinfo_layer_II *si, struct frame *fr)
     unsigned char scfsi[SBLIMIT][2];
     int     i, ch;
 
-    memset(si, 0, sizeof(*si));
+    memset((void*)si, 0, sizeof(*si));
     if (jsbound > sblimit)
         jsbound = sblimit;
     if (nch == 2) {

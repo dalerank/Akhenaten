@@ -843,7 +843,7 @@ void encoding_korean_to_utf8(const uint8_t* input, char* output, int output_leng
         } else {
             // multi-byte char
             // TODO narrow conversion here to fix or correctly static_cast
-            const korean_entry key = {input[0] << 8 | input[1]};
+            const korean_entry key = { uint16_t (input[0] << 8 | input[1]) };
             const korean_entry* entry = (korean_entry*)bsearch(&key, codepage_to_utf8, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS, sizeof(korean_entry), compare_codepage);
             if (entry && output + 3 <= max_output) {
                 for (int i = 0; i < 3; i++) {

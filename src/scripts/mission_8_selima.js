@@ -147,9 +147,9 @@ mission8 { // Selima
 function mission8_register_animals(ev) {
 	city.remove_animals()
 
-	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_CROCODILE, 2)
+	city.add_animals_point(0, /*x*/70, /*y*/50, FIGURE_OSTRICH, 5)
 	city.set_animals_area(0, 16)
 
-	city.add_animals_point(1, /*x*/60, /*y*/60, FIGURE_CROCODILE, 2)
+	city.add_animals_point(1, /*x*/45, /*y*/80, FIGURE_OSTRICH, 5)
 	city.set_animals_area(1, 16)
 }

@@ -13,8 +13,6 @@ void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name
 }
 
 bool io_buffer::validate() {
-    if (this == nullptr)
-        return false;
     if (p_buf == nullptr || !p_buf->is_valid(1))
         return false;
     if (access_type != CHUNK_ACCESS_REVOKED)

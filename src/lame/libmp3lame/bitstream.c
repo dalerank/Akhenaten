@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "lame.h"
 #include "machine.h"

@@ -21,8 +21,6 @@ public class AkhenatenMainActivity extends SDLActivity {
     @Override
     protected String[] getLibraries() {
         return new String[]{
-                "SDL2",
-                "SDL2_mixer",
                 "akhenaten"
         };
     }
@@ -52,6 +50,20 @@ public class AkhenatenMainActivity extends SDLActivity {
 
         if (shouldAskPermissions()) {
             askPermissions();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // Override to safely handle permission results when SDL2 is statically linked.
+        // If SDL2's nativePermissionResult is available, it will be called by the parent.
+        // If not, we catch the exception to prevent crashes.
+        try {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } catch (UnsatisfiedLinkError e) {
+            // SDL2's nativePermissionResult might not be available when statically linked.
+            // This is okay - we can continue without it.
+            android.util.Log.d("AkhenatenMainActivity", "SDL2 nativePermissionResult not available (expected when statically linked): " + e.getMessage());
         }
     }
 

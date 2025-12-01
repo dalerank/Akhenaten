@@ -799,7 +799,7 @@ void encoding_trad_chinese_to_utf8(const uint8_t* input, char* output, int outpu
             ++input;
         } else {
             // multi-byte char
-            const chinese_entry key = {(input[1] << 8) | input[0]};
+            const chinese_entry key = { uint16_t((input[1] << 8) | input[0]) };
             const chinese_entry* entry = (chinese_entry*)bsearch(&key,
                                                                  codepage_to_utf8,
                                                                  IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS,

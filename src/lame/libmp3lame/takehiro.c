@@ -33,7 +33,7 @@
 #include "util.h"
 #include "quantize_pvt.h"
 #include "tables.h"
-
+#include <string.h>
 
 static const struct {
     const int region0_count;

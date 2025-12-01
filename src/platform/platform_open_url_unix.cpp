@@ -10,3 +10,11 @@ void platform_t::open_url(pcstr url, pcstr prefix) {
 }
 
 #endif
+
+#if defined(GAME_PLATFORM_ANDROID)
+
+void platform_t::open_url(pcstr url, pcstr prefix) {
+
+}
+
+#endif

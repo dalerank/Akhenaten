@@ -125,9 +125,10 @@ resource_tile figure::find_resource_tile(e_resource resource) {
 
     case RESOURCE_TIMBER:
         return map_routing_citizen_found_timber(tile);
-    }
 
-    return { RESOURCE_NONE, tile2i::invalid };
+    default:
+        return { RESOURCE_NONE, tile2i::invalid };
+    }
 }
 
 static int get_nearest_enemy(int x, int y, int *distance) {

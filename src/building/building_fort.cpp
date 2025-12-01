@@ -45,6 +45,8 @@ const building_fort::base_params &get_fort_params(e_building_type type) {
     case BUILDING_FORT_CHARIOTEERS: return fort_static_params<building_fort_charioteers>(params);
     case BUILDING_FORT_ARCHERS: return fort_static_params<building_fort_archers>(params);
     case BUILDING_FORT_INFANTRY: return fort_static_params<building_fort_infantry>(params);
+    default:
+        break;
     }
 
     static building_fort::base_params dummy;

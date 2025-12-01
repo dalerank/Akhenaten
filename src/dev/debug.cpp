@@ -225,7 +225,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     int x = pixel.x;
     int y = pixel.y;
 
-    int DB2 = abs(debug_render_mode()) % e_debug_render_size;
+    int DB2 = debug_render_mode() % e_debug_render_size;
 
     if (DB2 == 0)
         return;
@@ -450,6 +450,8 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
         if (b_id && map_property_is_draw_tile(grid_offset) && (b->labor_category != LABOR_CATEGORY_NONE)) {
             switch (b->type) {
+            default:
+                break;
             case BUILDING_SMALL_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LARGE_STATUE:

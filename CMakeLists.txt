@@ -16,11 +16,13 @@ else()
     set(WIN_EMSCRIPTEN FALSE)
 endif()
 
-if (CMAKE_BUILD_PLATFORM STREQUAL "android")
-    message("Platform: android")
+if (CMAKE_BUILD_PLATFORM STREQUAL "android" OR ANDROID)
+    message(FATAL_ERROR "Platform android should build with gradle project")
     set(PLATFORM_ANDROID TRUE)
+    set(IS_MSVC_VALUE FALSE)
 else()
     set(PLATFORM_ANDROID FALSE)
+    set(IS_MSVC_VALUE ${MSVC})
 endif()
 
 # Prepare additional CMake args for macOS architecture settings
@@ -67,28 +69,25 @@ set(IMGUI_VERSION "v1.92.2")
 # CppTrace
 #
 
-if(PLATFORM_ANDROID)
-    # no cpptrace for android
-else()
-    if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
-        if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
-            add_compile_options(-fsanitize=address)
-            add_link_options(-fsanitize=address)
-        endif()
-
-        add_definitions(-DCPPTRACE_ENABLED=ON)
-        add_definitions(-DCPPTRACE_STATIC_DEFINE)
-
-        FetchContent_Declare(
-                cpptrace
-                GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-                GIT_TAG        ${CPPTRACE_VERSION}
-        )
-        FetchContent_MakeAvailable(cpptrace)
-
-        set(CPPTRACE_LIBRARY cpptrace::cpptrace)
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
+        add_compile_options(-fsanitize=address)
+        add_link_options(-fsanitize=address)
     endif()
+
+    add_definitions(-DCPPTRACE_ENABLED=ON)
+    add_definitions(-DCPPTRACE_STATIC_DEFINE)
+
+    FetchContent_Declare(
+            cpptrace
+            GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+            GIT_TAG        ${CPPTRACE_VERSION}
+    )
+    FetchContent_MakeAvailable(cpptrace)
+
+    set(CPPTRACE_LIBRARY cpptrace::cpptrace)
 endif()
+
 
 if (MSVC)
     add_compile_options(/wd4244)
@@ -261,6 +260,7 @@ set(ZLIB_BUILD_CMAKE_ARGS
     -DZLIB_BUILD_CONFIG=${ZLIB_BUILD_CONFIG}
     -DZLIB_IS_MSVC=${MSVC}
     -DZLIB_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
+    -DZLIB_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 )
 execute_process(
     COMMAND ${CMAKE_COMMAND} ${ZLIB_BUILD_CMAKE_ARGS} -P ${ZLIB_BUILD_SCRIPT}
@@ -341,8 +341,10 @@ if(NOT WIN_EMSCRIPTEN)
         -DSDL2_BUILD_DIR=${SDL2_BUILD_DIR}
         -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
         -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
-        -DSDL2_IS_MSVC=${MSVC}
+        -DSDL2_IS_MSVC=${IS_MSVC_VALUE}
         -DSDL2_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
+        -DSDL2_PLATFORM_EXTRA_ARGS=${BUILD_PLATFORM_EXTRA_ARGS}
+        -DSDL2_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_BUILD_CMAKE_ARGS} -P ${SDL2_BUILD_SCRIPT}
@@ -435,6 +437,8 @@ if(NOT WIN_EMSCRIPTEN)
         -DSDL2_MIXER_IS_MSVC=${MSVC}
         -DSDL2_ROOT=${SDL2_ROOT}
         -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
+        -DSDL2_MIXER_PLATFORM_EXTRA_ARGS=${BUILD_PLATFORM_EXTRA_ARGS}
+        -DSDL2_MIXER_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
     execute_process(
         COMMAND ${CMAKE_COMMAND} ${SDL2_MIXER_BUILD_CMAKE_ARGS} -P ${SDL2_MIXER_BUILD_SCRIPT}
@@ -905,11 +909,7 @@ if (!APPLE)
 endif()
 
 
-if (PLATFORM_ANDROID)
-    add_library(${GAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
-else()
-    add_executable(${GAME} ${SOURCE_FILES})
-endif()
+add_executable(${GAME} ${SOURCE_FILES})
 
 if(LAME_FILES)
     set_source_files_properties(${LAME_FILES} PROPERTIES
