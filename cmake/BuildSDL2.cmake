@@ -1,6 +1,6 @@
 # This file is used to build SDL2 as a standalone project
 # It should be called from the main CMakeLists.txt with: cmake -P BuildSDL2.cmake
-# Required variables: SDL2_SOURCE_DIR, SDL2_BUILD_DIR, SDL2_INSTALL_DIR, SDL2_ADDITIONAL_CMAKE_ARGS, SDL2_PLATFORM_EXTRA_ARGS
+# Required variables: SDL2_SOURCE_DIR, SDL2_BUILD_DIR, SDL2_INSTALL_DIR, SDL2_ADDITIONAL_CMAKE_ARGS, SDL2_IS_MSVC
 
 # Create build and install directories
 file(MAKE_DIRECTORY ${SDL2_BUILD_DIR})
@@ -21,7 +21,7 @@ if(SDL2_IS_MSVC)
     message(STATUS "Main options ${SDL2_ADDITIONAL_CMAKE_ARGS}")
     message(STATUS "Additional options ${SDL2_ADDITIONAL_CMAKE_ARGS}")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${SDL2_CMAKE_ARGS} ${SDL2_ADDITIONAL_CMAKE_ARGS} ${SDL2_PLATFORM_EXTRA_ARGS} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} 
+        COMMAND ${CMAKE_COMMAND} ${SDL2_CMAKE_ARGS} ${SDL2_ADDITIONAL_CMAKE_ARGS} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} 
         WORKING_DIRECTORY ${SDL2_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )
@@ -62,16 +62,39 @@ if(SDL2_IS_MSVC)
     execute_process(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_BUILD_DIR}/Debug/SDL2maind.lib ${SDL2_INSTALL_DIR}/SDL2maind.lib
     )
-                 
-    if(EXISTS "${SDL2_INSTALL_DIR}/SDL2-static.lib" OR EXISTS "${SDL2_INSTALL_DIR}/SDL2-staticd.lib")
-        message(STATUS "SDL2: Installation verified successfully")
+    
+    # Verify installation
+    if(NOT EXISTS "${SDL2_INSTALL_DIR}/SDL2-static.lib" AND NOT EXISTS "${SDL2_INSTALL_DIR}/SDL2-staticd.lib")
+        message(FATAL_ERROR "SDL2: Library files not found in ${SDL2_INSTALL_DIR} after installation")
     else()
-        message(WARNING "SDL2: Library files not found in ${SDL2_INSTALL_DIR}")
+        message(STATUS "SDL2: Installation verified successfully")
     endif()
+    
+    # Verify headers
+    if(NOT EXISTS "${SDL2_INSTALL_DIR}/include/SDL2/SDL.h" AND NOT EXISTS "${SDL2_INSTALL_DIR}/include/SDL.h")
+        # Try to copy from source
+        if(EXISTS "${SDL2_SOURCE_DIR}/include/SDL2")
+            file(MAKE_DIRECTORY "${SDL2_INSTALL_DIR}/include")
+            file(COPY ${SDL2_SOURCE_DIR}/include/SDL2 DESTINATION ${SDL2_INSTALL_DIR}/include)
+            message(STATUS "SDL2: Copied headers from ${SDL2_SOURCE_DIR}/include/SDL2 to ${SDL2_INSTALL_DIR}/include/SDL2")
+        elseif(EXISTS "${SDL2_SOURCE_DIR}/include")
+            file(MAKE_DIRECTORY "${SDL2_INSTALL_DIR}/include")
+            file(COPY ${SDL2_SOURCE_DIR}/include DESTINATION ${SDL2_INSTALL_DIR})
+            message(STATUS "SDL2: Copied headers from ${SDL2_SOURCE_DIR}/include to ${SDL2_INSTALL_DIR}/include")
+        else()
+            message(FATAL_ERROR "SDL2: Headers not found in installation directory or source directory")
+        endif()
+    endif()
+    
+    if(NOT EXISTS "${SDL2_INSTALL_DIR}/include/SDL2/SDL.h" AND NOT EXISTS "${SDL2_INSTALL_DIR}/include/SDL.h")
+        message(FATAL_ERROR "SDL2: Headers verification failed. SDL.h not found in ${SDL2_INSTALL_DIR}/include")
+    endif()
+    
+    message(STATUS "SDL2: Installation verified successfully")
 else()
     message(STATUS "Configuring SDL2 for unix...")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} ${SDL2_CMAKE_ARGS} ${SDL2_ADDITIONAL_CMAKE_ARGS} ${SDL2_PLATFORM_EXTRA_ARGS} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} 
+        COMMAND ${CMAKE_COMMAND} ${SDL2_CMAKE_ARGS} ${SDL2_ADDITIONAL_CMAKE_ARGS} -S ${SDL2_SOURCE_DIR} -B ${SDL2_BUILD_DIR} 
         WORKING_DIRECTORY ${SDL2_BUILD_DIR}
         RESULT_VARIABLE CONFIGURE_RESULT
     )

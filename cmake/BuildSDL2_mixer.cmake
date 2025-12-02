@@ -59,12 +59,42 @@ if(SDL2_MIXER_IS_MSVC)
     execute_process(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SDL2_MIXER_BUILD_DIR}/Debug/SDL2_mixer-staticd.lib ${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-staticd.lib
     )
-                 
-    if(EXISTS "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-static.lib" OR EXISTS "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-staticd.lib")
-        message(STATUS "SDL2_mixer: Installation verified successfully")
-    else()
-        message(WARNING "SDL2_mixer: Library files not found in ${SDL2_MIXER_INSTALL_DIR}")
+    
+    # Verify and copy headers
+    set(SDL2_MIXER_HEADERS_FOUND FALSE)
+    if(EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL2/SDL_mixer.h")
+        message(STATUS "SDL2_mixer: Headers found in ${SDL2_MIXER_INSTALL_DIR}/include/SDL2")
+        set(SDL2_MIXER_HEADERS_FOUND TRUE)
+    elseif(EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL_mixer.h")
+        message(STATUS "SDL2_mixer: Headers found in ${SDL2_MIXER_INSTALL_DIR}/include")
+        set(SDL2_MIXER_HEADERS_FOUND TRUE)
     endif()
+    
+    # If headers not found, try to copy from source
+    if(NOT SDL2_MIXER_HEADERS_FOUND)
+        if(EXISTS "${SDL2_MIXER_SOURCE_DIR}/include/SDL2")
+            file(MAKE_DIRECTORY "${SDL2_MIXER_INSTALL_DIR}/include")
+            file(COPY ${SDL2_MIXER_SOURCE_DIR}/include/SDL2 DESTINATION ${SDL2_MIXER_INSTALL_DIR}/include)
+            message(STATUS "SDL2_mixer: Copied headers from ${SDL2_MIXER_SOURCE_DIR}/include/SDL2 to ${SDL2_MIXER_INSTALL_DIR}/include/SDL2")
+        elseif(EXISTS "${SDL2_MIXER_SOURCE_DIR}/include")
+            file(MAKE_DIRECTORY "${SDL2_MIXER_INSTALL_DIR}/include")
+            file(COPY ${SDL2_MIXER_SOURCE_DIR}/include DESTINATION ${SDL2_MIXER_INSTALL_DIR})
+            message(STATUS "SDL2_mixer: Copied headers from ${SDL2_MIXER_SOURCE_DIR}/include to ${SDL2_MIXER_INSTALL_DIR}/include")
+        else()
+            message(FATAL_ERROR "SDL2_mixer: Headers not found in source directory ${SDL2_MIXER_SOURCE_DIR}/include")
+        endif()
+    endif()
+    
+    # Final verification
+    if(NOT EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL2/SDL_mixer.h" AND NOT EXISTS "${SDL2_MIXER_INSTALL_DIR}/include/SDL_mixer.h")
+        message(FATAL_ERROR "SDL2_mixer: Headers verification failed. SDL_mixer.h not found in ${SDL2_MIXER_INSTALL_DIR}/include")
+    endif()
+                    
+    if(NOT EXISTS "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-static.lib" AND NOT EXISTS "${SDL2_MIXER_INSTALL_DIR}/SDL2_mixer-staticd.lib")
+        message(FATAL_ERROR "SDL2_mixer: Library files not found in ${SDL2_MIXER_INSTALL_DIR} after installation")
+    endif()
+    
+    message(STATUS "SDL2_mixer: Installation verified successfully")
 else()
     message(STATUS "Configuring SDL2_mixer...")
     execute_process(
@@ -203,4 +233,5 @@ else()
 endif()
 
 message(STATUS "SDL2_mixer build completed successfully")
+
 
