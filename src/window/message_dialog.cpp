@@ -846,7 +846,6 @@ void window_show_help() {
         window_message_dialog_show(g_message_dialog.help_id, -1, nullptr);
     }
 }
-ANK_FUNCTION(window_show_help)
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
     static window_type window = {
