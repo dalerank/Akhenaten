@@ -113,89 +113,11 @@ void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg
     }
 
     lang_text_draw(12, 1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-    rich_text.draw(text.c_str(), vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks, text_height_blocks - 1, 0);
+    ui["content_text"] = text;
 }
 
 void ui::message_dialog_disaster::draw_background_image() {
-    painter ctx = game.painter();
-    const lang_message& msg = lang_get_message(text_id);
-    pos = { 32, 28 };
-
-    int small_font = 0;
-    int lines_available = 4;
-    if (msg.type == TYPE_MESSAGE) {
-        lines_available = 3;
-    }
-
-    rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    rich_text.clear_links();
-    int lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    if (lines_required > lines_available) {
-        small_font = 1;
-        rich_text.set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    }
-
-    outer_panel_draw(pos, 26, 28);
-    graphics_draw_rect(pos + vec2i{7, 7}, vec2i{402, 294}, COLOR_BLACK);
-
-    int y_base = pos.y + 308;
-    int inner_height_blocks = 6;
-    if (lines_required > lines_available) {
-        // create space to cram an extra line into the dialog
-        y_base = y_base - 8;
-        inner_height_blocks += 1;
-    }
-    inner_panel_draw({ pos.x + 8, y_base }, { 25, inner_height_blocks });
-    text_draw_centered(msg.title.text, pos.x + 8, pos.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-
-    int width = lang_text_draw(25, player_msg.month, pos.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, pos.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-
-    if (msg.type == TYPE_MESSAGE && msg.message_type == MESSAGE_TYPE_DISASTER && text_id == MESSAGE_DIALOG_THEFT) {
-        lang_text_draw_amount(8, 0, player_msg.param1, pos.x + 90 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    } else {
-        width += lang_text_draw(63, 5, pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-        text_draw(city_player_name(), pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
-    }
-
-    text_height_blocks = msg.size.y - 1 - (32 + y_text - pos.y) / 16;
-    text_width_blocks = msg.size.x - 4;
-    if (small_font) {
-        // Draw in black and then white to create shadow effect
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16 + 1, y_base + 24 + 1), 384, text_height_blocks - 1, COLOR_BLACK);
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, COLOR_WHITE);
-    } else {
-        rich_text.draw(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, 0);
-    }
-
-    assert(msg.message_type == MESSAGE_TYPE_DISASTER);
-
-    const image_t *img = nullptr;
-    assert(god == GOD_UNKNOWN);
-
-    if (background) {
-        int image_id = background_img;
-        if (image_id == messages::IMAGE_FROM_SCHEME) {
-            int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
-            img = image_get({ img_pack, msg.image.id, msg.image.offset });
-        } else {
-            img = image_get(image_id);
-        }
-    } 
-
-    if (img) {
-        int current_x = (500 - img->width) / 2;
-        ctx.img_generic(img, vec2i{ current_x, 96 });
-    }
-
-    // Enable go_to_problem button for disasters in image mode
-    assert(msg.message_type == MESSAGE_TYPE_DISASTER);
-    ui["button_go_to_problem"].enabled = true;
-    ui["button_go_to_problem"].pos = {pos.x + 48, pos.y + 407};
-    ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    
-    draw_foreground_image();
+    // ???
 }
 
 void ui::message_dialog_disaster::draw_background_video() {

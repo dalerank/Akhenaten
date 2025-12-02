@@ -76,7 +76,6 @@ namespace ui {
         int text_width_blocks;
         int focus_button_id;
         xstring help_id;
-        rich_text_t rich_text;
         
         xstring subtitle_text;
         vec2i subtitle_pos;

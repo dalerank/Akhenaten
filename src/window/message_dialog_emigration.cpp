@@ -49,6 +49,6 @@ void ui::message_dialog_emigration::draw_city_message_text(const lang_message& m
         int max_width = 16 * (text_width_blocks - 1) - 64;
         lang_text_draw_multiline(12, city_sentiment + 2, vec2i{pos.x + 64, y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
     }
-    rich_text.draw(text, vec2i(x_text + 8, y_text + 86), 16 * (text_width_blocks - 1), text_height_blocks - 1, 0);
+    ui["content_text"] = text;
 }
 

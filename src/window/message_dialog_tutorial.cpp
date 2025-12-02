@@ -35,6 +35,6 @@ void ui::message_dialog_tutorial::draw_city_message_text(const lang_message& msg
     if (!text) {
         return;
     }
-    rich_text.draw(text, vec2i(x_text + 8, y_text + 6), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+    ui["content_text"] = text;
 }
 
