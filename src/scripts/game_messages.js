@@ -3446,9 +3446,27 @@ game_messages {
         type: 2
         pos [0, 88]
         size [30, 20]
+        title { text: "A blessing from Ra" }
+        video { text: "@23" }
+        content { text: "Ra rewards his faithful! For the next 12 months, your city can sell its exports for half again their usual value." }
+    }
+    message_blessing_trade_from_ptah {
+        id: 297
+        type: 2
+        pos [0, 88]
+        size [30, 20]
         title { text: "A blessing from Ptah" }
         video { text: "@22" }
         content { text: "Ptah singles out a Storage Yard with excess capacity, and increases the gems, clay, pottery, flax, linen, or jewelry already present there." }
+    }
+    message_blessing_trade_from_seth {
+        id: 298
+        type: 2
+        pos [0, 88]
+        size [30, 20]
+        title { text: "A blessing from Ptah" }
+        video { text: "@21" }
+        content { text: "Seth approves of your fear and obedience, and so will strike down the next enemies who dare to violate your city." }
     }
     message_blessing_from_bast {
         id: 299,
