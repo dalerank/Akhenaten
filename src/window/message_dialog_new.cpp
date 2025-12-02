@@ -30,9 +30,9 @@
 #include "message_dialog.h"
 #include "core/string.h"
 
-static ui::message_dialog_window* g_message_dialog_instance = nullptr;
+static ui::message_dialog_base* g_message_dialog_instance = nullptr;
 
-ui::message_dialog_window::message_dialog_window() {
+ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_window(config_name), config_name(config_name) {
     num_history = 0;
     text_id = 0;
     message_id = -1;
@@ -64,7 +64,11 @@ ui::message_dialog_window::message_dialog_window() {
     }
 }
 
-void ui::message_dialog_window::init() {
+pcstr ui::message_dialog_base::get_section() const {
+    return config_name.c_str();
+}
+
+void ui::message_dialog_base::init() {
     // Setup button callbacks
     ui["button_close"].onclick([this] { button_close(); });
     ui["button_back"].onclick([this] { button_back(); });
@@ -82,7 +86,7 @@ void ui::message_dialog_window::init() {
     ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
 }
 
-void ui::message_dialog_window::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
+void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
     scroll_drag_end();
     for (auto &item : history) {
         item.text_id = 0;
@@ -124,6 +128,9 @@ void ui::message_dialog_window::init_data(xstring text_id, int message_id, void 
     show_video = false;
     background = false;
 
+    // Config is already loaded by the derived class constructor
+    _is_inited = false;
+
     if (!player_msg.use_popup) {
         return;
     }
@@ -136,7 +143,7 @@ void ui::message_dialog_window::init_data(xstring text_id, int message_id, void 
     }
 }
 
-void ui::message_dialog_window::set_city_message(int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
+void ui::message_dialog_base::set_city_message(int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
     player_msg.year = year;
     player_msg.month = month;
     player_msg.param1 = param1;
@@ -145,7 +152,7 @@ void ui::message_dialog_window::set_city_message(int year, int month, int param1
     player_msg.use_popup = use_popup;
 }
 
-void ui::message_dialog_window::eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
+void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
     const auto& msg = city_message_get(message_id);
 
     bstring32 amount;
@@ -224,18 +231,18 @@ void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates
     }
 }
 
-int ui::message_dialog_window::resource_image(int resource) {
+int ui::message_dialog_base::resource_image(int resource) {
     int image_id = image_id_resource_icon(resource);
     image_id += resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     return image_id;
 }
 
-int ui::message_dialog_window::is_problem_message(const lang_message& msg) {
+int ui::message_dialog_base::is_problem_message(const lang_message& msg) {
     return msg.type == TYPE_MESSAGE
            && (msg.message_type == MESSAGE_TYPE_DISASTER || msg.message_type == MESSAGE_TYPE_INVASION);
 }
 
-int ui::message_dialog_window::get_message_image_id(const lang_message& msg) {
+int ui::message_dialog_base::get_message_image_id(const lang_message& msg) {
     if (!msg.image.id) {
         return 0;
     } else if (text_id == 0) {
@@ -246,7 +253,7 @@ int ui::message_dialog_window::get_message_image_id(const lang_message& msg) {
     }
 }
 
-image_button* ui::message_dialog_window::get_advisor_button() {
+image_button* ui::message_dialog_base::get_advisor_button() {
     static image_button image_button_labor = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 0, nullptr, button_none, ADVISOR_LABOR, 0, 1};
     static image_button image_button_trade = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, nullptr, button_none, ADVISOR_TRADE, 0, 1};
     static image_button image_button_population = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 15, nullptr, button_none, ADVISOR_POPULATION, 0, 1};
@@ -276,7 +283,7 @@ image_button* ui::message_dialog_window::get_advisor_button() {
     }
 }
 
-void ui::message_dialog_window::draw_title(const lang_message& msg) {
+void ui::message_dialog_base::draw_title(const lang_message& msg) {
     painter ctx = game.painter();
     xstring text = msg.title.text;
     const city_message& city_msg = city_message_get(message_id);
@@ -312,7 +319,7 @@ void ui::message_dialog_window::draw_title(const lang_message& msg) {
     }
 }
 
-void ui::message_dialog_window::draw_subtitle(const lang_message& msg) {
+void ui::message_dialog_base::draw_subtitle(const lang_message& msg) {
     if (msg.subtitle.pos.x && !msg.subtitle.text.empty()) {
         int width = 16 * msg.size.x - 16 - msg.subtitle.pos.x;
         int height = text_draw_multiline(msg.subtitle.text, pos + msg.subtitle.pos, width, FONT_NORMAL_BLACK_ON_LIGHT, 0);
@@ -322,7 +329,7 @@ void ui::message_dialog_window::draw_subtitle(const lang_message& msg) {
     }
 }
 
-void ui::message_dialog_window::draw_city_message_text(const lang_message& msg) {
+void ui::message_dialog_base::draw_city_message_text(const lang_message& msg) {
     xstring text = msg.content.text;
     painter ctx = game.painter();
  
@@ -399,7 +406,7 @@ void ui::message_dialog_window::draw_city_message_text(const lang_message& msg) 
     }
 }
 
-void ui::message_dialog_window::draw_content(const lang_message& msg) {
+void ui::message_dialog_base::draw_content(const lang_message& msg) {
     xstring text = msg.content.text;
     if (is_eventmsg) {
         text = body_text;
@@ -427,7 +434,7 @@ void ui::message_dialog_window::draw_content(const lang_message& msg) {
     graphics_reset_clip_rectangle();
 }
 
-void ui::message_dialog_window::draw_background_normal() {
+void ui::message_dialog_base::draw_background_normal() {
     rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     const lang_message& msg = lang_get_message(text_id);
     pos = msg.pos;
@@ -449,7 +456,7 @@ void ui::message_dialog_window::draw_background_normal() {
     draw_content(msg);
 }
 
-void ui::message_dialog_window::draw_background_image() {
+void ui::message_dialog_base::draw_background_image() {
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
@@ -541,7 +548,7 @@ void ui::message_dialog_window::draw_background_image() {
     draw_foreground_image();
 }
 
-void ui::message_dialog_window::draw_background_video() {
+void ui::message_dialog_base::draw_background_video() {
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
@@ -613,7 +620,7 @@ void ui::message_dialog_window::draw_background_video() {
     draw_foreground_video();
 }
 
-int ui::message_dialog_window::draw_background(UiFlags flags) {
+int ui::message_dialog_base::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
     if (background_callback) {
@@ -635,7 +642,7 @@ int ui::message_dialog_window::draw_background(UiFlags flags) {
     return 0;
 }
 
-void ui::message_dialog_window::draw_foreground_normal() {
+void ui::message_dialog_base::draw_foreground_normal() {
     const lang_message& msg = lang_get_message(text_id);
 
     if (msg.type == TYPE_MANUAL && num_history > 0) {
@@ -666,7 +673,7 @@ void ui::message_dialog_window::draw_foreground_normal() {
     rich_text.draw_scrollbar(vec2i{0, 0});
 }
 
-void ui::message_dialog_window::draw_foreground_image() {
+void ui::message_dialog_base::draw_foreground_image() {
     ui["button_advisor"].enabled = true;
     ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
     ui["button_close"].enabled = true;
@@ -681,7 +688,7 @@ void ui::message_dialog_window::draw_foreground_image() {
     }
 }
 
-void ui::message_dialog_window::draw_foreground_video() {
+void ui::message_dialog_base::draw_foreground_video() {
     video_draw(pos.x + 8, pos.y + 8);
     ui["button_advisor"].enabled = true;
     ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
@@ -697,24 +704,8 @@ void ui::message_dialog_window::draw_foreground_video() {
     }
 }
 
-void ui::message_dialog_window::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
-    if (show_video) {
-        draw_foreground_video();
-    } else if (background) {
-        draw_foreground_image();
-    } else {
-        draw_foreground_normal();
-    }
-    
-    ui.begin_widget(pos);
-    ui.draw(flags);
-    ui.end_widget();
-    
-    graphics_reset_dialog();
-}
 
-bool ui::message_dialog_window::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
+bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
     if (msg.type == TYPE_MANUAL && num_history > 0) {
         vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
         if (m_dialog->left.went_down && 
@@ -768,7 +759,7 @@ bool ui::message_dialog_window::handle_input_normal(const mouse* m_dialog, const
     return false;
 }
 
-bool ui::message_dialog_window::handle_input_video(const mouse* m_dialog, const lang_message& msg) {
+bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const lang_message& msg) {
     vec2i btn_pos = {pos.x + 16, pos.y + 408};
     if (m_dialog->left.went_down && 
         m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
@@ -797,11 +788,11 @@ bool ui::message_dialog_window::handle_input_video(const mouse* m_dialog, const 
     return false;
 }
 
-bool ui::message_dialog_window::handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) {
+bool ui::message_dialog_base::handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) {
     return handle_input_video(m_dialog, msg);
 }
 
-int ui::message_dialog_window::ui_handle_mouse(const mouse *m) {
+int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
     const mouse* m_dialog = mouse_in_dialog(m);
     const lang_message& msg = lang_get_message(text_id);
@@ -829,11 +820,11 @@ int ui::message_dialog_window::ui_handle_mouse(const mouse *m) {
     return handled ? 1 : 0;
 }
 
-int ui::message_dialog_window::handle_mouse(const mouse *m) {
+int ui::message_dialog_base::handle_mouse(const mouse *m) {
     return 0;
 }
 
-void ui::message_dialog_window::cleanup() {
+void ui::message_dialog_base::cleanup() {
     if (show_video) {
         video_stop();
         show_video = false;
@@ -841,7 +832,7 @@ void ui::message_dialog_window::cleanup() {
     player_msg.message_advisor = 0;
 }
 
-void ui::message_dialog_window::button_back() {
+void ui::message_dialog_base::button_back() {
     if (num_history > 0) {
         num_history--;
         text_id = history[num_history].text_id;
@@ -849,12 +840,12 @@ void ui::message_dialog_window::button_back() {
     }
 }
 
-void ui::message_dialog_window::button_close() {
+void ui::message_dialog_base::button_close() {
     cleanup();
     window_go_back();
 }
 
-void ui::message_dialog_window::button_help() {
+void ui::message_dialog_base::button_help() {
     button_close();
     if (!help_id.empty()) {
         g_message_dialog_instance->show(help_id, -1, background_callback);
@@ -863,13 +854,13 @@ void ui::message_dialog_window::button_help() {
     }
 }
 
-void ui::message_dialog_window::button_advisor(int advisor) {
+void ui::message_dialog_base::button_advisor(int advisor) {
     cleanup();
     if (!window_advisors_show_advisor((e_advisor)advisor))
         window_city_show();
 }
 
-void ui::message_dialog_window::button_go_to_problem() {
+void ui::message_dialog_base::button_go_to_problem() {
     cleanup();
     const lang_message& msg = lang_get_message(text_id);
     int grid_offset = player_msg.param2;
@@ -886,7 +877,7 @@ void ui::message_dialog_window::button_go_to_problem() {
     window_city_show();
 }
 
-void ui::message_dialog_window::show(xstring text_id, int message_id, void (*background_callback)(void)) {
+void ui::message_dialog_base::show(xstring text_id, int message_id, void (*background_callback)(void)) {
     init_data(text_id, message_id, background_callback);
     
     static window_type instance = {
@@ -899,32 +890,64 @@ void ui::message_dialog_window::show(xstring text_id, int message_id, void (*bac
     window_show(&instance);
 }
 
-void ui::message_dialog_window::show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
+void ui::message_dialog_base::show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
     show(text_id, message_id, window_city_draw_all);
 }
 
-void ui::message_dialog_window::setup_help_id(xstring helpid) {
+void ui::message_dialog_base::setup_help_id(xstring helpid) {
     help_id = helpid;
 }
 
-void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
-    if (!g_message_dialog_instance) {
-        g_message_dialog_instance = new ui::message_dialog_window();
+static ui::message_dialog_base* create_message_dialog(xstring text_id) {
+    const lang_message& msg = lang_get_message(text_id);
+    
+    // Determine which class to create based on message type
+    if (msg.type == TYPE_MESSAGE && msg.message_type >= 0 && msg.message_type < 8) {
+        switch (msg.message_type) {
+            case MESSAGE_TYPE_GENERAL:
+                return new ui::message_dialog_general();
+            case MESSAGE_TYPE_DISASTER:
+                return new ui::message_dialog_disaster();
+            case MESSAGE_TYPE_IMPERIAL:
+                return new ui::message_dialog_imperial();
+            case MESSAGE_TYPE_EMIGRATION:
+                return new ui::message_dialog_emigration();
+            case MESSAGE_TYPE_TUTORIAL:
+                return new ui::message_dialog_tutorial();
+            case MESSAGE_TYPE_TRADE_CHANGE:
+                return new ui::message_dialog_trade_change();
+            case MESSAGE_TYPE_PRICE_CHANGE:
+                return new ui::message_dialog_price_change();
+            case MESSAGE_TYPE_INVASION:
+                return new ui::message_dialog_invasion();
+            default:
+                return new ui::message_dialog_general();
+        }
     }
+    // For TYPE_MANUAL, TYPE_ABOUT, TYPE_MISSION, use general
+    return new ui::message_dialog_general();
+}
+
+void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
+    if (g_message_dialog_instance) {
+        delete g_message_dialog_instance;
+    }
+    g_message_dialog_instance = create_message_dialog(text_id);
     g_message_dialog_instance->show(text_id, message_id, background_callback);
 }
 
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
-    if (!g_message_dialog_instance) {
-        g_message_dialog_instance = new ui::message_dialog_window();
+    if (g_message_dialog_instance) {
+        delete g_message_dialog_instance;
     }
+    g_message_dialog_instance = create_message_dialog(text_id);
     g_message_dialog_instance->show_city_message(text_id, message_id, year, month, param1, param2, message_advisor, use_popup);
 }
 
 void window_message_setup_help_id(xstring helpid) {
     if (!g_message_dialog_instance) {
-        g_message_dialog_instance = new ui::message_dialog_window();
+        g_message_dialog_instance = new ui::message_dialog_general();
     }
     g_message_dialog_instance->setup_help_id(helpid);
 }
@@ -935,5 +958,285 @@ void window_show_help() {
     if (g_message_dialog_instance && !g_message_dialog_instance->help_id.empty()) {
         window_message_dialog_show(g_message_dialog_instance->help_id.c_str(), -1, nullptr);
     }
+}
+
+// Derived class implementations
+int ui::message_dialog_general::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_general::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    draw_foreground_normal();
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+int ui::message_dialog_disaster::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_disaster::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    if (show_video) {
+        draw_foreground_video();
+    } else if (background) {
+        draw_foreground_image();
+    } else {
+        draw_foreground_normal();
+    }
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    if (player_msg.param1) {
+        if (text_id == MESSAGE_DIALOG_THEFT) {
+            lang_text_draw_amount(8, 0, player_msg.param1, pos.x + 240, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+        } else {
+            lang_text_draw(41, player_msg.param1, pos.x + 240, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+        }
+    } else {
+        width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+        text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+    }
+
+    lang_text_draw(12, 1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+    rich_text.draw(text.c_str(), vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks, text_height_blocks - 1, 0);
+}
+
+int ui::message_dialog_imperial::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_imperial::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    if (show_video) {
+        draw_foreground_video();
+    } else if (background) {
+        draw_foreground_image();
+    } else {
+        draw_foreground_normal();
+    }
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_imperial::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+    int lines = rich_text.draw(text, vec2i(x_text + 8, y_text + 56), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+    const auto& city_msg = city_message_get(message_id);
+    int y_offset = y_text + 86 + lines * 16;
+    ctx.img_generic(resource_image(city_msg.req_resource), vec2i{x_text + 8, y_offset - 4});
+    int width2 = text_draw_number(stack_proper_quantity(city_msg.req_amount, city_msg.req_resource), '@', " ", x_text + 28, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(23, city_msg.req_resource, x_text + 26 + width2, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    width2 = lang_text_draw_amount(8, 4, city_msg.req_months_left, x_text + 200, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    lang_text_draw(12, 2, x_text + 200 + width2, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+}
+
+int ui::message_dialog_emigration::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_emigration::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    draw_foreground_normal();
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_emigration::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+    int city_sentiment = g_city.sentiment.low_mood_cause;
+    if (city_sentiment >= 1 && city_sentiment <= 5) {
+        int max_width = 16 * (text_width_blocks - 1) - 64;
+        lang_text_draw_multiline(12, city_sentiment + 2, vec2i{pos.x + 64, y_text + 44}, max_width, FONT_NORMAL_WHITE_ON_DARK);
+    }
+    rich_text.draw(text, vec2i(x_text + 8, y_text + 86), 16 * (text_width_blocks - 1), text_height_blocks - 1, 0);
+}
+
+int ui::message_dialog_tutorial::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_tutorial::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    draw_foreground_normal();
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_tutorial::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    if (!text) {
+        return;
+    }
+    rich_text.draw(text, vec2i(x_text + 8, y_text + 6), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+}
+
+int ui::message_dialog_trade_change::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_trade_change::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    draw_foreground_normal();
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_trade_change::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+    ctx.img_generic(resource_image(player_msg.param2), { pos.x + 64, y_text + 40 });
+    lang_text_draw(21, g_empire.city(player_msg.param1)->name_id, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+    rich_text.draw(text, vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+}
+
+int ui::message_dialog_price_change::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_price_change::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    draw_foreground_normal();
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_price_change::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+    ctx.img_generic(resource_image(player_msg.param2), { pos.x + 64, y_text + 40 });
+    text_draw_money(player_msg.param1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+    rich_text.draw(text, vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+}
+
+int ui::message_dialog_invasion::handle_mouse(const mouse *m) {
+    return ui_handle_mouse(m);
+}
+
+void ui::message_dialog_invasion::draw_foreground(UiFlags flags) {
+    graphics_set_to_dialog();
+    if (show_video) {
+        draw_foreground_video();
+    } else if (background) {
+        draw_foreground_image();
+    } else {
+        draw_foreground_normal();
+    }
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+    graphics_reset_dialog();
+}
+
+void ui::message_dialog_invasion::draw_city_message_text(const lang_message& msg) {
+    xstring text = msg.content.text;
+    painter ctx = game.painter();
+ 
+    if (is_eventmsg) {
+        text = body_text;
+    }
+    
+    if (!text) {
+        return;
+    }
+    
+    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
+    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+
+    lang_text_draw(12, 1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
+    rich_text.draw(text.c_str(), vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks, text_height_blocks - 1, 0);
 }
 
