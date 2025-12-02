@@ -3464,7 +3464,7 @@ game_messages {
         type: 2
         pos [0, 88]
         size [30, 20]
-        title { text: "A blessing from Ptah" }
+        title { text: "A blessing from Seth" }
         video { text: "@21" }
         content { text: "Seth approves of your fear and obedience, and so will strike down the next enemies who dare to violate your city." }
     }
