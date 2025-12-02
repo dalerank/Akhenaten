@@ -18,12 +18,13 @@ struct text_tag_substitution {
 };
 
 namespace ui {
-    struct message_dialog_window : public autoconfig_window_t<message_dialog_window> {
-        message_dialog_window();
+    // Base class with common functionality
+    struct message_dialog_base : public autoconfig_window {
+        message_dialog_base(pcstr config_name);
         
-        virtual int handle_mouse(const mouse *m) override;
+        virtual int handle_mouse(const mouse *m) override = 0;
         virtual int get_tooltip_text() override { return 0; }
-        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_foreground(UiFlags flags) override = 0;
         virtual int draw_background(UiFlags flags) override;
         virtual void ui_draw_foreground(UiFlags flags) override {}
         virtual int ui_handle_mouse(const mouse *m) override;
@@ -80,19 +81,19 @@ namespace ui {
         void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier);
         void cleanup();
         
-        void draw_background_normal();
-        void draw_background_image();
-        void draw_background_video();
-        void draw_foreground_normal();
-        void draw_foreground_image();
-        void draw_foreground_video();
+        virtual void draw_background_normal();
+        virtual void draw_background_image();
+        virtual void draw_background_video();
+        virtual void draw_foreground_normal();
+        virtual void draw_foreground_image();
+        virtual void draw_foreground_video();
         
         void draw_title(const lang_message& msg);
         void draw_subtitle(const lang_message& msg);
-        void draw_content(const lang_message& msg);
-        void draw_city_message_text(const lang_message& msg);
+        virtual void draw_content(const lang_message& msg);
+        virtual void draw_city_message_text(const lang_message& msg);
         
-        bool handle_input_normal(const mouse* m_dialog, const lang_message& msg);
+        virtual bool handle_input_normal(const mouse* m_dialog, const lang_message& msg);
         bool handle_input_video(const mouse* m_dialog, const lang_message& msg);
         bool handle_input_godmsg(const mouse* m_dialog, const lang_message& msg);
         
@@ -106,6 +107,66 @@ namespace ui {
         int is_problem_message(const lang_message& msg);
         int get_message_image_id(const lang_message& msg);
         image_button* get_advisor_button();
+        
+        virtual pcstr get_section() const override;
+    protected:
+        xstring config_name;
+    };
+
+    // Derived classes for each message type
+    struct message_dialog_general : public message_dialog_base {
+        message_dialog_general() : message_dialog_base("message_dialog_window_general") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+    };
+
+    struct message_dialog_disaster : public message_dialog_base {
+        message_dialog_disaster() : message_dialog_base("message_dialog_window_disaster") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_imperial : public message_dialog_base {
+        message_dialog_imperial() : message_dialog_base("message_dialog_window_imperial") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_emigration : public message_dialog_base {
+        message_dialog_emigration() : message_dialog_base("message_dialog_window_emigration") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_tutorial : public message_dialog_base {
+        message_dialog_tutorial() : message_dialog_base("message_dialog_window_tutorial") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_trade_change : public message_dialog_base {
+        message_dialog_trade_change() : message_dialog_base("message_dialog_window_trade_change") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_price_change : public message_dialog_base {
+        message_dialog_price_change() : message_dialog_base("message_dialog_window_price_change") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
+    };
+
+    struct message_dialog_invasion : public message_dialog_base {
+        message_dialog_invasion() : message_dialog_base("message_dialog_window_invasion") {}
+        virtual int handle_mouse(const mouse *m) override;
+        virtual void draw_foreground(UiFlags flags) override;
+        virtual void draw_city_message_text(const lang_message& msg) override;
     };
 }
 
