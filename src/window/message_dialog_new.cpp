@@ -81,7 +81,7 @@ void ui::message_dialog_base::init_widgets(xstring text_id) {
     const lang_message &msg = lang_get_message(text_id);
     
     ui["button_close"].onclick([this] { button_close(); });
-    ui["button_back"].onclick([this] { button_back(); });
+    //ui["button_back"].onclick([this] { button_back(); });
     ui["button_help"].onclick([this] { button_help(); });
 
     // Advisor button will be set dynamically
@@ -109,7 +109,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         item.scroll_position = 0;
     }
     num_history = 0;
-    rich_text.reset(0);
+
     this->message_id = message_id;
     god = GOD_UNKNOWN;
     background_img = 0;
@@ -344,17 +344,16 @@ void ui::message_dialog_base::draw_city_message_text(const lang_message& msg) {
         return;
     }
     
-    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
 
-    switch (msg.message_type) {
-        default: {
-            rich_text.draw(text, vec2i(x_text + 8, y_text + 56), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
-            break;
-        }
-    }
+    bstring1024 header;
+    header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
+
+    const auto &city_msg = city_message_get(message_id);
+    bstring1024 full_text;
+    int resource_image = image_id_resource_icon(city_msg.req_resource);
+    full_text.printf("%s\n %s", header.c_str(), text.c_str());
+
+    ui["content_text"] = full_text;
 }
 
 void ui::message_dialog_base::draw_content(const lang_message& msg) {
@@ -366,27 +365,17 @@ void ui::message_dialog_base::draw_content(const lang_message& msg) {
     if (!text) {
         return;
     }
-    
-    int header_offset = msg.type == TYPE_MANUAL ? 48 : 32;
-    text_height_blocks = msg.size.y - 1 - (header_offset + y_text - pos.y) / 16;
-    text_width_blocks = rich_text.init(text, vec2i(x_text, y_text), msg.size.x - 4, text_height_blocks, /*adjust_width_on_no_scroll*/true);
-
-    // content!
-    inner_panel_draw({ x_text, y_text }, { text_width_blocks, text_height_blocks });
-    graphics_set_clip_rectangle({x_text + 3, y_text + 3}, {16 * text_width_blocks - 6, 16 * text_height_blocks - 6});
-    rich_text.clear_links();
 
     if (msg.type == TYPE_MESSAGE) {
         draw_city_message_text(msg);
     } else {
-        rich_text.draw(text, vec2i(x_text + 8, y_text + 6), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+        ui["content_text"] = text;
     }
     
     graphics_reset_clip_rectangle();
 }
 
 void ui::message_dialog_base::draw_background_normal() {
-    rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
     const lang_message& msg = lang_get_message(text_id);
 
     draw_image(msg);
@@ -398,45 +387,7 @@ void ui::message_dialog_base::draw_background_image() {
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
 
-    int small_font = 0;
-    int lines_available = 4;
-
-    rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    rich_text.clear_links();
-    int lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    if (lines_required > lines_available) {
-        small_font = 1;
-        rich_text.set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    }
-
-    outer_panel_draw(pos, 26, 28);
-    graphics_draw_rect(pos + vec2i{7, 7}, vec2i{402, 294}, COLOR_BLACK);
-
-    int y_base = pos.y + 308;
-    int inner_height_blocks = 6;
-    if (lines_required > lines_available) {
-        // create space to cram an extra line into the dialog
-        y_base = y_base - 8;
-        inner_height_blocks += 1;
-    }
-    inner_panel_draw({ pos.x + 8, y_base }, { 25, inner_height_blocks });
-    text_draw_centered(msg.title.text, pos.x + 8, pos.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-
-    int width = lang_text_draw(25, player_msg.month, pos.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, pos.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw(63, 5, pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw(city_player_name(), pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-    text_height_blocks = msg.size.y - 1 - (32 + y_text - pos.y) / 16;
-    text_width_blocks = msg.size.x - 4;
-    if (small_font) {
-        // Draw in black and then white to create shadow effect
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16 + 1, y_base + 24 + 1), 384, text_height_blocks - 1, COLOR_BLACK);
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, COLOR_WHITE);
-    } else {
-        rich_text.draw(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, 0);
-    }
+    ui["content_text"] = msg.content.text;
 
     const image_t *img = nullptr;
     if (god != GOD_UNKNOWN) {
@@ -465,45 +416,9 @@ void ui::message_dialog_base::draw_background_video() {
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
 
-    int small_font = 0;
-    int lines_available = 4;
-
-    rich_text.set_fonts(FONT_NORMAL_WHITE_ON_DARK, FONT_NORMAL_YELLOW);
-    rich_text.clear_links();
-    int lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    if (lines_required > lines_available) {
-        small_font = 1;
-        rich_text.set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
-        lines_required = rich_text.draw(msg.content.text, vec2i(0, 0), 384, lines_available, 1);
-    }
-
-    outer_panel_draw(pos, 26, 28);
     graphics_draw_rect(pos + vec2i{7, 7}, vec2i{402, 294}, COLOR_BLACK);
 
-    int y_base = pos.y + 308;
-    int inner_height_blocks = 6;
-    if (lines_required > lines_available) {
-        // create space to cram an extra line into the dialog
-        y_base = y_base - 8;
-        inner_height_blocks += 1;
-    }
-    inner_panel_draw({ pos.x + 8, y_base }, { 25, inner_height_blocks });
-    text_draw_centered(msg.title.text, pos.x + 8, pos.y + 414, 400, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-
-    int width = lang_text_draw(25, player_msg.month, pos.x + 16, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, pos.x + 18 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw(63, 5, pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw(city_player_name(), pos.x + 70 + width, y_base + 4, FONT_NORMAL_WHITE_ON_DARK, 0);
-
-    text_height_blocks = msg.size.y - 1 - (32 + y_text - pos.y) / 16;
-    text_width_blocks = msg.size.x - 4;
-    if (small_font) {
-        // Draw in black and then white to create shadow effect
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16 + 1, y_base + 24 + 1), 384, text_height_blocks - 1, COLOR_BLACK);
-        rich_text.draw_colored(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, COLOR_WHITE);
-    } else {
-        rich_text.draw(msg.content.text, vec2i(pos.x + 16, y_base + 24), 384, text_height_blocks - 1, 0);
-    }
+    ui["content_text"] = msg.content.text;
 
     draw_foreground_video();
 }
@@ -534,26 +449,22 @@ void ui::message_dialog_base::draw_foreground_normal() {
     const lang_message& msg = lang_get_message(text_id);
 
     if (msg.type == TYPE_MANUAL && num_history > 0) {
-        ui["button_back"].enabled = true;
-        ui["button_back"].pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
+        ui["button_close"].enabled = true;
+        ui["button_close"].pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
         lang_text_draw(12, 0, pos.x + 52, pos.y + 16 * msg.size.y - 31, FONT_NORMAL_BLACK_ON_LIGHT);
     } else {
-        ui["button_back"].enabled = false;
+        ui["button_close"].enabled = false;
     }
 
     if (msg.type == TYPE_MESSAGE) {
         ui["button_advisor"].enabled = true;
         ui["button_advisor"].pos = {pos.x + 16, pos.y + 16 * msg.size.y - 40};
-        ui["button_go_to_problem"].enabled = false;
     } else {
         ui["button_advisor"].enabled = false;
-        ui["button_go_to_problem"].enabled = false;
     }
     
     ui["button_close"].enabled = true;
     ui["button_close"].pos = {pos.x + 16 * msg.size.x - 38, pos.y + 16 * msg.size.y - 36};
-    
-    rich_text.draw_scrollbar(vec2i{0, 0});
 }
 
 void ui::message_dialog_base::draw_foreground_image() {
@@ -561,8 +472,6 @@ void ui::message_dialog_base::draw_foreground_image() {
     ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
     ui["button_close"].enabled = true;
     ui["button_close"].pos = {pos.x + 372, pos.y + 410};
-    
-    ui["button_go_to_problem"].enabled = false;
 }
 
 void ui::message_dialog_base::draw_foreground_video() {
@@ -571,8 +480,6 @@ void ui::message_dialog_base::draw_foreground_video() {
     ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
     ui["button_close"].enabled = true;
     ui["button_close"].pos = {pos.x + 372, pos.y + 410};
-    
-    ui["button_go_to_problem"].enabled = false;
 }
 
 bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
@@ -604,18 +511,17 @@ bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const l
         return true;
     }
 
-    rich_text.handle_mouse(m_dialog, vec2i{0, 0});
-    int text_id = rich_text.get_clicked_link(m_dialog);
-    if (text_id >= 0) {
-        if (num_history < MAX_HISTORY - 1) {
-            history[num_history].text_id = this->text_id;
-            history[num_history].scroll_position = rich_text.scroll_position();
-            num_history++;
-        }
-        this->text_id = text_id;
-        rich_text.reset(0);
-        return true;
-    }
+    // int text_id = rich_text.get_clicked_link(m_dialog);
+    // if (text_id >= 0) {
+    //     if (num_history < MAX_HISTORY - 1) {
+    //         history[num_history].text_id = this->text_id;
+    //         history[num_history].scroll_position = rich_text.scroll_position();
+    //         num_history++;
+    //     }
+    //     this->text_id = text_id;
+    //     rich_text.reset(0);
+    //     return true;
+    // }
     return false;
 }
 
@@ -684,11 +590,11 @@ void ui::message_dialog_base::cleanup() {
 }
 
 void ui::message_dialog_base::button_back() {
-    if (num_history > 0) {
-        num_history--;
-        text_id = history[num_history].text_id;
-        rich_text.reset(history[num_history].scroll_position);
-    }
+    // if (num_history > 0) {
+    //     num_history--;
+    //     text_id = history[num_history].text_id;
+    //     rich_text.reset(history[num_history].scroll_position);
+    // }
 }
 
 void ui::message_dialog_base::button_close() {

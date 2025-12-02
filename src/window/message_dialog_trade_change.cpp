@@ -47,6 +47,6 @@ void ui::message_dialog_trade_change::draw_city_message_text(const lang_message&
 
     ctx.img_generic(resource_image(player_msg.param2), { pos.x + 64, y_text + 40 });
     lang_text_draw(21, g_empire.city(player_msg.param1)->name_id, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-    rich_text.draw(text, vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks - 16, text_height_blocks - 1, 0);
+    ui["content_text"] = text;
 }
 

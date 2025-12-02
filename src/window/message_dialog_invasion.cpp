@@ -75,9 +75,8 @@ void ui::message_dialog_invasion::draw_city_message_text(const lang_message& msg
     text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
 
     lang_text_draw(12, 1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-    rich_text.draw(text.c_str(), vec2i(x_text + 8, y_text + 86), 16 * text_width_blocks, text_height_blocks - 1, 0);
+    ui["content_text"] = text;
 }
-
 
 void ui::message_dialog_invasion::button_go_to_problem() {
     cleanup();
