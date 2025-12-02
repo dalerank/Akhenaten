@@ -19,10 +19,8 @@ endif()
 if (CMAKE_BUILD_PLATFORM STREQUAL "android" OR ANDROID)
     message(FATAL_ERROR "Platform android should build with gradle project")
     set(PLATFORM_ANDROID TRUE)
-    set(IS_MSVC_VALUE FALSE)
 else()
     set(PLATFORM_ANDROID FALSE)
-    set(IS_MSVC_VALUE ${MSVC})
 endif()
 
 # Prepare additional CMake args for macOS architecture settings
@@ -341,7 +339,7 @@ if(NOT WIN_EMSCRIPTEN)
         -DSDL2_BUILD_DIR=${SDL2_BUILD_DIR}
         -DSDL2_INSTALL_DIR=${SDL2_INSTALL_DIR}
         -DSDL2_BUILD_CONFIG=${SDL2_BUILD_CONFIG}
-        -DSDL2_IS_MSVC=${IS_MSVC_VALUE}
+        -DSDL2_IS_MSVC=${MSVC}
         -DSDL2_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
         -DSDL2_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
