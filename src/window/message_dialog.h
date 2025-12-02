@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/xstring.h"
+#include "window/message_dialog_new.h"
 
 enum e_message_dialog_type {
     MESSAGE_DIALOG_ABOUT = 0,
@@ -30,15 +31,9 @@ enum e_message_dialog_type {
     MESSAGE_DIALOG_EDITOR_HELP = 332,
 };
 
-struct text_tag_substitution {
-    xstring tag;
-    xstring content;
-};
-
+// Forward declarations - functions are now in message_dialog_new.h
 void window_show_help();
-
 void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);
 void window_message_setup_help_id(xstring helpid);
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void));
-
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
