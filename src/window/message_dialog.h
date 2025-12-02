@@ -33,7 +33,9 @@ enum e_message_dialog_type {
 struct text_tag_substitution {
     xstring tag;
     xstring content;
-} ;
+};
+
+void window_show_help();
 
 void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);
 void window_message_setup_help_id(xstring helpid);
