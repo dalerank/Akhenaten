@@ -1470,7 +1470,13 @@ game_messages {
     }
 
     message_template_request {
-        id: 130
+        id: 130,
+        type: 2,
+        message_type: 2,
+        pos [0, 88],
+        size [30, 20],
+        title { text: "" },
+        content { text: "" }
     }
 
     message_wrath_of_bast_3 {

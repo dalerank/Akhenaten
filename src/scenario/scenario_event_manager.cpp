@@ -114,9 +114,12 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
 void event_manager_t::create_good_request(int tag, e_resource r, int amount, int months_initial) {
     auto& request = g_scenario_events.event_list.emplace_back();
     int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&request, 0, sizeof(event_ph_t));
     request.type = EVENT_TYPE_REQUEST;
     request.time.year = game.simtime.years_since_start();
     request.time.month = game.simtime.month;
+    request.item.value = r;
+    request.sender_faction = 1;
     request.amount.value = amount;
     request.tag_id = tag;
     request.location_fields = { -1, -1, -1, -1 };
@@ -124,6 +127,7 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     request.event_id = event_id;
     process_event(event_id, false, -1);
     process_active_request(event_id);
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
 int16_t event_manager_t::events_count() {
