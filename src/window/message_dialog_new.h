@@ -18,6 +18,15 @@ struct text_tag_substitution {
 };
 
 namespace ui {
+    // Forward declarations
+    struct message_dialog_disaster;
+    struct message_dialog_imperial;
+    struct message_dialog_emigration;
+    struct message_dialog_tutorial;
+    struct message_dialog_trade_change;
+    struct message_dialog_price_change;
+    struct message_dialog_invasion;
+    
     // Base class with common functionality
     struct message_dialog_base : public autoconfig_window {
         message_dialog_base(pcstr config_name);
@@ -29,6 +38,8 @@ namespace ui {
         virtual void ui_draw_foreground(UiFlags flags) override {}
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual void init() override;
+
+        void init_widgets(xstring text_id);
 
         void show(xstring text_id, int message_id, void (*background_callback)(void));
         void show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
@@ -66,6 +77,9 @@ namespace ui {
         int focus_button_id;
         xstring help_id;
         rich_text_t rich_text;
+        
+        xstring subtitle_text;
+        vec2i subtitle_pos;
 
         struct player_message {
             int year;
@@ -88,8 +102,7 @@ namespace ui {
         virtual void draw_foreground_image();
         virtual void draw_foreground_video();
         
-        void draw_title(const lang_message& msg);
-        void draw_subtitle(const lang_message& msg);
+        void draw_image(const lang_message& msg);
         virtual void draw_content(const lang_message& msg);
         virtual void draw_city_message_text(const lang_message& msg);
         
@@ -101,10 +114,8 @@ namespace ui {
         void button_close();
         void button_help();
         void button_advisor(int advisor);
-        void button_go_to_problem();
         
         int resource_image(int resource);
-        int is_problem_message(const lang_message& msg);
         int get_message_image_id(const lang_message& msg);
         image_button* get_advisor_button();
         
@@ -120,54 +131,10 @@ namespace ui {
         virtual void draw_foreground(UiFlags flags) override;
     };
 
-    struct message_dialog_disaster : public message_dialog_base {
-        message_dialog_disaster() : message_dialog_base("message_dialog_window_disaster") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
 
-    struct message_dialog_imperial : public message_dialog_base {
-        message_dialog_imperial() : message_dialog_base("message_dialog_window_imperial") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
 
-    struct message_dialog_emigration : public message_dialog_base {
-        message_dialog_emigration() : message_dialog_base("message_dialog_window_emigration") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
 
-    struct message_dialog_tutorial : public message_dialog_base {
-        message_dialog_tutorial() : message_dialog_base("message_dialog_window_tutorial") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
 
-    struct message_dialog_trade_change : public message_dialog_base {
-        message_dialog_trade_change() : message_dialog_base("message_dialog_window_trade_change") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_price_change : public message_dialog_base {
-        message_dialog_price_change() : message_dialog_base("message_dialog_window_price_change") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_invasion : public message_dialog_base {
-        message_dialog_invasion() : message_dialog_base("message_dialog_window_invasion") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
 }
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void));
