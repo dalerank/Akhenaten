@@ -655,6 +655,8 @@ tile2i building::access_tile() {
     case BUILDING_MEDIUM_MASTABA_WALL:
     case BUILDING_MEDIUM_MASTABA_SIDE:
         return main()->tile.shifted(0, 14);
+    default:
+        break;
     }
 
     return road_access;

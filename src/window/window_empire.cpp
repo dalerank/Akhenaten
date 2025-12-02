@@ -26,6 +26,7 @@
 #include "graphics/image.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "input/mouse.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/scenario_invasion.h"
@@ -104,6 +105,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_map();
     void draw_empire_object(const empire_object &obj);
     void draw_paneling();
+    void clear_city_info();
     void draw_object_info();
     void draw_city_want_sell(ui::element *e, UiFlags flags);
     void draw_city_want_buy(ui::element *e, UiFlags flags);
@@ -115,6 +117,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_trade_resource(UiFlags flags, e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
     void draw_trade_route(int route_id, e_empire_route_state effect);
     void draw_object_tooltip();
+    void draw_tooltip(tooltip_context *c);
 };
 
 empire_window g_empire_window;
@@ -349,10 +352,7 @@ void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
         }
     }
 }
-
-void empire_window::draw_city_info(const empire_object* object) {
-    const empire_city* city = g_empire.city(selected_city);
-
+void empire_window::clear_city_info() {
     ui["city_sell_title"].enabled = false;
     ui["city_sell_items"].enabled = false;
     ui["city_buy_title"].enabled = false;
@@ -361,7 +361,12 @@ void empire_window::draw_city_info(const empire_object* object) {
     ui["city_want_sell_items"].enabled = false;
     ui["city_want_buy_title"].enabled = false;
     ui["city_want_buy_items"].enabled = false;
+}
 
+void empire_window::draw_city_info(const empire_object* object) {
+    const empire_city* city = g_empire.city(selected_city);
+
+    clear_city_info();
     switch (city->type) {
     case EMPIRE_CITY_OURS:
         ui["info_tooltip"] = ui::str(sell_res_group, 1);
@@ -434,6 +439,7 @@ void empire_window::draw_object_info() {
         case EMPIRE_OBJECT_ENEMY_ARMY: draw_enemy_army_info(object);break;
         }
     } else {
+        clear_city_info();
         ui["info_tooltip"] = ui::str(47, 9);
     }
 }
@@ -726,13 +732,31 @@ void empire_window::draw_object_tooltip() {
     }
 }
 
+void empire_window::draw_tooltip(tooltip_context *c) {
+    // First check for button tooltips (goods icons)
+    int button_id = ui::button_hover(&mouse::get());
+    if (button_id > 0) {
+        pcstr tooltip = ui::button_tooltip(button_id - 1);
+        if (tooltip && *tooltip) {
+            c->text = tooltip;
+            return;
+        }
+    }
+    
+    // Fall back to UI tooltip (set by draw_object_tooltip for city names, etc.)
+    const tooltip_context &uitooltip = ui::get_tooltip();
+    if (!!uitooltip.text) {
+        c->text = uitooltip.text;
+    }
+}
+
 void window_empire_show() {
     static window_type window = {
         WINDOW_EMPIRE,
         [] (int flags) { g_empire_window.draw_background(flags); },
         [] (int flags) { g_empire_window.ui_draw_foreground(flags); },
         [] (const mouse *m, const hotkeys *h) { g_empire_window.ui_handle_mouse(m); },
-        nullptr
+        [] (tooltip_context *c) { g_empire_window.draw_tooltip(c); }
     };
 
     g_empire_window.init();

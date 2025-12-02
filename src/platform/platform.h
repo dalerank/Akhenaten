@@ -24,7 +24,7 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_BEOS
 #define GAME_PLATFORM_HAIKU
 #define GAME_PLATFORM_NAME "haiku"
-#elif defined(ANDROID)
+#elif defined(ANDROID) || defined(__ANDROID__)
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_ANDROID
 #define GAME_PLATFORM_NAME "android"
@@ -63,24 +63,25 @@ struct platform_t {
 	features_t features;
 
 	uint64_t get_qpc();
+    uint64_t get_qpf();
+
+    uint64_t _qpc_per_second;
+    uint64_t _qpc_base;
 
 	void init_timers();
 
-	uint64_t qpc_per_second = 0;
-	uint64_t qpc_per_milisec = 0;
-	uint64_t qpc_per_microsec = 0;
+    uint64_t qpc_per_second = 0;
+    uint64_t qpc_per_milisec = 0;
+    uint64_t qpc_per_microsec = 0;
+
 	uint32_t start_time_ms = 0;
 
-	uint64_t get_qpf();
-
 	forceinline	uint64_t get_elapsed_ticks() {
-		static const uint64_t qpc_base = get_qpc();
-		return (get_qpc() - qpc_base);
+		return (get_qpc() - _qpc_base);
 	}
 
 	forceinline	uint32_t get_elapsed_ms() {
-		static const uint64_t qpc_per_second = get_qpf();
-		return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / qpc_per_second));
+		return ((uint32_t)(get_elapsed_ticks() * (uint64_t)(1000) / _qpc_per_second));
 	}
 
 	inline pcstr name() { return GAME_PLATFORM_NAME; }

@@ -24,6 +24,8 @@ e_overlay building_shrine::get_overlay() const {
     case BUILDING_SHRINE_PTAH: return OVERLAY_RELIGION_PTAH;
     case BUILDING_SHRINE_SETH: return OVERLAY_RELIGION_SETH;
     case BUILDING_SHRINE_BAST: return OVERLAY_RELIGION_BAST;
+    default:
+        break;
     }
 
     return OVERLAY_NONE;

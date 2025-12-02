@@ -39,6 +39,8 @@ const building_statue::statue_params_t& get_statue_params(e_building_type type) 
     case BUILDING_SMALL_STATUE: return statue_static_params<building_small_statue>(params);
     case BUILDING_MEDIUM_STATUE: return statue_static_params<building_medium_statue>(params);
     case BUILDING_LARGE_STATUE: return statue_static_params<building_large_statue>(params);
+    default:
+        break;
     }
 
     static building_statue::statue_params_t dummy;

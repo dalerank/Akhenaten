@@ -37,6 +37,8 @@ void terrain_info_window::update(object_info &c) {
     case TERRAIN_INFO_ORE_ROCK: terrain_config = "terrain_orerock_info_window"; break;
     case TERRAIN_INFO_ROCK: terrain_config = "terrain_rock_info_window"; break;
     case TERRAIN_INFO_FLOODPLAIN: terrain_config = "terrain_floodplain_info_window"; break;
+    default:
+        break;
     }
 
     ui.load(terrain_config.c_str());

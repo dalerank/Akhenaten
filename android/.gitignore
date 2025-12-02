@@ -1,0 +1,4 @@
+prebuilt/
+build_android_deps/
+akhenaten/src/main/cpp/_deps/
+

@@ -59,9 +59,14 @@ inline void game_debug_properties_draw() {}
 inline void game_imgui_overlay_draw() {}
 inline void game_debug_show_property(...) {}
 inline void game_imgui_overlay_begin_frame() {}
+inline void game_debug_show_property(pcstr, pcstr, bool disabled = false) {}
+inline void game_debug_show_property(pcstr field, const setting_variant &, bool disabled = false) {}
+inline void game_debug_show_property(pcstr, const xstring &, bool disabled = false) {}
+inline void game_debug_show_property(pcstr, const bstring256 &, bool disabled = false) {}
+inline void game_debug_show_property(pcstr, const bstring32 &, bool disabled = false) {}
 inline void game_imgui_overlay_init() {}
 inline bool game_imgui_overlay_handle_event(...) { return false; }
-inline void bind_debug_command(...) {}
+inline void bind_debug_command(pcstr, std::function<void(std::istream &, std::ostream &)>) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}
 inline void bind_debug_console_var_uint8(...) {}

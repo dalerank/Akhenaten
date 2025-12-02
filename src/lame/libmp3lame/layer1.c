@@ -36,6 +36,7 @@
 #endif
 
 #include "layer1.h"
+#include <string.h>
 
 static int gd_are_hip_tables_layer1_initialized = 0;
 
@@ -62,7 +63,7 @@ I_step_one(PMPSTR mp, sideinfo_layer_I* si)
     int     i;
     int     illegal_value_detected = 0;
     unsigned char const ba15 = 15; /* bit pattern not allowed, looks like sync(?) */
-    memset(si, 0, sizeof(*si));
+    memset((void*)si, 0, sizeof(*si));
     assert(fr->stereo == 1 || fr->stereo == 2);
 
     if (fr->stereo == 2) {

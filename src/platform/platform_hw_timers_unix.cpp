@@ -1,6 +1,6 @@
 #include "platform.h"
 
-#if defined(GAME_PLATFORM_UNIX) || defined(GAME_PLATFORM_MACOSX) || defined(GAME_PLATFORM_WEB)
+#if defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX) || defined(GAME_PLATFORM_WEB)
 
 #include <ctime>
 
@@ -21,6 +21,9 @@ void platform_t::init_timers() {
         qpc_per_milisec = nanoseconds_per_second / nanoseconds_per_millisecond;
         qpc_per_microsec = nanoseconds_per_second / nanoseconds_per_microsecond;
     }
+
+    _qpc_per_second = get_qpf();
+    _qpc_base = get_qpc();
 
     start_time_ms = platform.get_elapsed_ms();
 }

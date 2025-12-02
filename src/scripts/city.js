@@ -13,6 +13,7 @@ city {
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
     set_advisor_available : __city_set_advisor_available
+    create_good_request : __city_create_good_request
 
     get_granary : function(building_id) {
         return {
