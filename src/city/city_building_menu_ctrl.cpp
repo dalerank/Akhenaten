@@ -330,12 +330,7 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
         // disable resources that aren't available on map
         disable_resources();
     } else {
-        const auto stage_it = g_scenario.stages.find(stage_name);
-        if (stage_it != g_scenario.stages.end()) {
-            for (const auto &b : stage_it->second.buildings ) {
-                toggle_building(b);
-            }
-        }
+        assert(false);
     }
 
     // disable government building tiers depending on mission rank

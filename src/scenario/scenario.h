@@ -112,12 +112,6 @@ struct demand_change_t {
     int is_rise;
 };
 
-struct building_stage_t {
-    xstring key;
-    svector<e_building_type, 16> buildings;
-};
-ANK_CONFIG_STRUCT(building_stage_t, key, buildings)
-
 enum e_scenario_mode {
     e_scenario_normal,
     e_scenario_selected,
@@ -233,7 +227,6 @@ struct scenario_data_t {
 
     bool allowed_buildings[BUILDING_MAX] = { 0 };
     resource_allow_vec init_resources;
-    std::unordered_map<xstring, building_stage_t> stages;
     settings_vars_t vars;
     xstring goal_tooltip;
 
