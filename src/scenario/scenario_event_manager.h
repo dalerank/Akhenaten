@@ -213,5 +213,10 @@ struct event_manager_t {
 
     pcstr msg_text(int group_id, int index);
     void load_mission_metadata(const mission_id_t &missionid);
+
     void create_good_request(int tag, e_resource r, int amount, int months_initial);
+    void create_trade_city_under_siege(int tag, int months_initial);
+    
+    void set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4);
+    void set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4);
 };

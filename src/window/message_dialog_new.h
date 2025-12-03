@@ -65,7 +65,6 @@ namespace ui {
 
         int text_height_blocks;
         int text_width_blocks;
-        int focus_button_id;
         xstring help_id;        
         xstring subtitle_text;
 
