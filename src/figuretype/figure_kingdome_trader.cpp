@@ -35,10 +35,14 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);
 
 void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     tile2i entry = g_city.map.entry_point;
-    auto &emp_city = *g_empire.city(ev.cid);
+    auto *emp_city = g_empire.city(ev.cid);
+    
+    if (!emp_city || !emp_city->in_use) {
+        return;
+    }
 
     // Find first available trader slot
-    const int empire_trader_index = emp_city.get_free_slot();
+    const int empire_trader_index = emp_city->get_free_slot();
     if (empire_trader_index == -1) {
         return;
     }
@@ -48,7 +52,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     auto caravan = f->dcast<figure_trade_caravan>();
     assert(caravan != nullptr);
 
-    caravan->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
+    caravan->runtime_data().empire_city = empire_city_handle{ emp_city->name_id };
     caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
     caravan->base.wait_ticks = caravan->current_params().wait_ticks_after_create;
     caravan->runtime_data().trader = empire_trader_handle{ ev.tid };
@@ -61,7 +65,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     donkey2->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
 
-    emp_city.trader_figure_ids[empire_trader_index] = caravan->id();
+    emp_city->trader_figure_ids[empire_trader_index] = caravan->id();
 }
 
 int figure::trader_total_sold() {

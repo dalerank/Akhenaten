@@ -27,23 +27,27 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_ship);
 void ANK_PERMANENT_CALLBACK(event_trade_ship_arrival, ev) {
     tile2i river_entry = scenario_map_river_entry();
 
-    auto& emp_city = *g_empire.city(ev.cid);
+    auto* emp_city = g_empire.city(ev.cid);
+    
+    if (!emp_city || !emp_city->in_use) {
+        return;
+    }
 
     // Find first available trader slot
-    const int empire_trader_index = emp_city.get_free_slot();
+    const int empire_trader_index = emp_city->get_free_slot();
     if (empire_trader_index == -1) {
         return;
     }
 
     auto f = figure_create(FIGURE_TRADE_SHIP, river_entry, DIR_0_TOP_RIGHT);
     auto ship = f->dcast<figure_trade_ship>();
-    ship->runtime_data().empire_city = empire_city_handle{ emp_city.name_id };
+    ship->runtime_data().empire_city = empire_city_handle{ emp_city->name_id };
     ship->advance_action(ACTION_110_TRADE_SHIP_CREATED);
     ship->base.allow_move_type = EMOVE_DEEPWATER;
     ship->base.wait_ticks = 10;
     ship->runtime_data().trader = empire_trader_handle{ ev.tid };
 
-    emp_city.trader_figure_ids[empire_trader_index] = ship->id();
+    emp_city->trader_figure_ids[empire_trader_index] = ship->id();
 }
 
 declare_console_command_p(sink_all_ships) {

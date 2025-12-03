@@ -2,6 +2,7 @@
 
 #include "empire/empire.h"
 #include "empire/empire_object.h"
+#include "empire/type.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/graphics.h"
@@ -93,11 +94,21 @@ void empire_trader::complete_trade() {
         state = estate_trading;
         current_route_point = 0;
         movement_delay = 10;
-        const auto base_city_id = g_empire.get_city_for_trade_route(trade_route_id);
+        
+        // Find the player's city index (destination city)
+        // When traders arrive, they come to the player's city, not the base city
+        const auto our_city = g_empire.get_our_city();
+        int player_city_id = our_city ? our_city->id : -1;
+        
+        if (player_city_id == -1) {
+            // Fallback: use base_city_id if player city not found
+            player_city_id = g_empire.get_city_for_trade_route(trade_route_id);
+        }
+        
         if (is_ship) {
-            events::emit(event_trade_ship_arrival{ base_city_id, id, SOURCE_LOCATION });
+            events::emit(event_trade_ship_arrival{ player_city_id, id, SOURCE_LOCATION });
         } else {
-            events::emit(event_trade_caravan_arrival{ base_city_id, id, SOURCE_LOCATION });
+            events::emit(event_trade_caravan_arrival{ player_city_id, id, SOURCE_LOCATION });
         }
         return;
     } 
