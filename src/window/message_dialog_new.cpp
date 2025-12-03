@@ -7,6 +7,7 @@
 #include "message_dialog_price_change.h"
 #include "message_dialog_invasion.h"
 #include "message_dialog_god.h"
+#include "message_dialog_image.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -50,7 +51,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     background_callback = nullptr;
     show_video = false;
     background = false;
-    background_img = 0;
     text_height_blocks = 0;
     text_width_blocks = 0;
     focus_button_id = 0;
@@ -85,7 +85,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     });
 
     this->message_id = message_id;
-    background_img = 0;
 
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(this->message_id);
@@ -98,10 +97,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
             eventmsg_template_combine(body_template.c_str(), body_text.data(), false);
         } else {
             is_eventmsg = false;
-        }
-
-        if (city_msg.background_img) {
-            background_img = city_msg.background_img;
         }
     } else {
         is_eventmsg = false;
@@ -139,8 +134,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     if (!msg.video.text.empty() && video_start(msg.video.text.c_str())) {
         show_video = true;
         video_init();
-    } else if (background_img) {
-        background = true;
     }
 }
 
@@ -313,28 +306,12 @@ void ui::message_dialog_base::draw_background_normal() {
 }
 
 void ui::message_dialog_base::draw_background_image() {
+    // Base implementation - should be overridden by derived classes
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
 
     ui["content_text"] = msg.content.text;
-
-    const image_t *img = nullptr;
-    if (background) {
-        int image_id = background_img;
-        if (image_id == messages::IMAGE_FROM_SCHEME) {
-            int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
-            img = image_get({ img_pack, msg.image.id, msg.image.offset });
-        } else {
-            img = image_get(image_id);
-        }
-    } 
-
-    if (img) {
-        int current_x = (500 - img->width) / 2;
-        ctx.img_generic(img, vec2i{ current_x, 96 });
-    }
-
     draw_foreground_image();
 }
 
@@ -546,6 +523,7 @@ ui::message_dialog_trade_change message_dialog_trade_change_window;
 ui::message_dialog_price_change message_dialog_price_change_window;
 ui::message_dialog_invasion message_dialog_invasion_window;
 ui::message_dialog_god message_dialog_god_window;
+ui::message_dialog_image message_dialog_image_window;
 
 static ui::message_dialog_base* create_message_dialog(xstring text_id, int message_id = -1) {
     const lang_message& msg = lang_get_message(text_id);
@@ -555,6 +533,10 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
         const city_message& city_msg = city_message_get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
             return &message_dialog_god_window;
+        }
+        // Check if message has background image
+        if (city_msg.background_img) {
+            return &message_dialog_image_window;
         }
     }
     
