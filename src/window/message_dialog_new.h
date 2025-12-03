@@ -69,7 +69,6 @@ namespace ui {
         uint16_t background_img;
         e_god god;
 
-        vec2i pos;
         int x_text;
         int y_text;
         int text_height_blocks;
@@ -78,7 +77,6 @@ namespace ui {
         xstring help_id;
         
         xstring subtitle_text;
-        vec2i subtitle_pos;
 
         struct player_message {
             int year;

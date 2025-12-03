@@ -1475,7 +1475,7 @@ game_messages {
         message_type: 2,
         pos [0, 88],
         size [30, 20],
-        title { text: "" },
+        title { text: "Pharaoh request goods" },
         content { text: "" }
     }
 
