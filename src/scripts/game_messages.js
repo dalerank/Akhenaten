@@ -1475,7 +1475,7 @@ game_messages {
         message_type: 2,
         pos [0, 88],
         size [30, 20],
-        title { text: "Pharaoh request goods" },
+        title { text: "Pharaoh request goods" }
         content { text: "" }
     }
 
@@ -1488,6 +1488,7 @@ game_messages {
         video { text: "@20" }
         content { text: "Woe unto you!  Bast is appalled at your indifference.  To show that you can not preserve your city's health without worshipping her, she has filled the river with blood, poisoning the water supply. Just hope your citizens can hold on until the water is pure again." }
     }
+
     message_city_unemployment {
         id: 135,
         type: 2,
@@ -1496,6 +1497,7 @@ game_messages {
         title { text: "City unemployment" }
         content { text: "There are too few jobs to employ everyone.  Unless new jobs are created, the unemployed may turn in desperation to crime, or even seek their fortunes elsewhere in the Kingdom." }
     }
+
     message_employees_needed {
         id: 136,
         pos [0, 88]
@@ -1503,6 +1505,7 @@ game_messages {
         title { text: "Employees needed" }
         content { text: "Too few people of working age are available to fill the city's jobs. Unless you find new workers quickly, city services will deteriorate and industrial production will suffer." }
     }
+
     message_common_festival {
         id: 137,
         pos [0, 88]
@@ -1510,6 +1513,7 @@ game_messages {
         title { text: "Common festival" }
         content { text: "Everyone appreciates getting out of work early to relax for awhile at the Festival Square, and your chosen god notices your kind gesture." }
     }
+
     message_lavish_festival {
         id: 138,
         pos [0, 88]
@@ -1517,6 +1521,7 @@ game_messages {
         title { text: "Lavish festival" }
         content { text: "The day-long festival is starting. People all over the city are heading for the Festival Square now, and seem to be in good spirits. Your chosen god appreciates your dedication." }
     }
+
     message_grand_festival {
         id: 139,
         pos [0, 88]
@@ -1524,6 +1529,7 @@ game_messages {
         title { text: "Grand festival" }
         content { text: "The much-anticipated two-day festival is under way at last! Everyone's converging on the Festival Square for free beer and wild entertainment. The god honored by this event is surely smiling upon you." }
     }
+
     message_wrath_of_osiris {
         id: 140
         type: 2
@@ -1533,6 +1539,7 @@ game_messages {
         video { text: "@24" }
         content { text: "Osiris resents this city's appalling lack of dedication.  Unless you appease him quickly, the next flood will be much worse than expected...it may not even come at all!" }
     }
+
     message_wrath_of_ptah {
         id: 141
         type: 2
@@ -1542,6 +1549,7 @@ game_messages {
         video { text: "@22" }
         content { text: "You have incurred the anger of Ptah! Your city currently has no industries to punish, but mind this god carefully when you start mining, manufacturing or quarrying." }
     }
+    
     message_wrath_of_ptah_2 {
         id: 142
         type: 2

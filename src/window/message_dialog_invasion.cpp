@@ -5,7 +5,10 @@
 #include "city/constants.h"
 #include "figure/formation.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/elements/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/video.h"
@@ -22,39 +25,23 @@ int ui::message_dialog_invasion::handle_mouse(const mouse *m) {
     return ui_handle_mouse(m);
 }
 
+void ui::message_dialog_invasion::init() {
+    message_dialog_base::init();
+}
+
 void ui::message_dialog_invasion::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
-    if (show_video) {
-        draw_foreground_video();
-        // Enable go_to_problem button for invasions in video mode
-        const lang_message& msg = lang_get_message(text_id);
-        assert(msg.message_type == MESSAGE_TYPE_INVASION);
-        ui["button_go_to_problem"].enabled = true;
-        ui["button_go_to_problem"].pos = {pos.x + 48, pos.y + 407};
-        ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    } else if (background) {
-        draw_foreground_image();
-        // Enable go_to_problem button for invasions in image mode
-        const lang_message& msg = lang_get_message(text_id);
-        assert(msg.message_type == MESSAGE_TYPE_INVASION);
-        ui["button_go_to_problem"].enabled = true;
-        ui["button_go_to_problem"].pos = {pos.x + 48, pos.y + 407};
-        ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    } else {
-        draw_foreground_normal();
+    draw_foreground_normal();
         
-        // Enable go_to_problem button for invasions in normal mode
-        const lang_message& msg = lang_get_message(text_id);
-        assert(msg.message_type == MESSAGE_TYPE_INVASION);
-        ui["button_go_to_problem"].enabled = true;
-        ui["button_go_to_problem"].pos = {pos.x + 64, y_text + 36};
-        ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    }
+    // Enable go_to_problem button for invasions in normal mode
+    const lang_message& msg = lang_get_message(text_id);
+    assert(msg.message_type == MESSAGE_TYPE_INVASION);
+    ui["button_go_to_problem"].enabled = true;
+    //ui["button_go_to_problem"].pos = {pos.x + 64, y_text + 36};
+    ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
     
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
-    graphics_reset_dialog();
 }
 
 void ui::message_dialog_invasion::draw_city_message_text(const lang_message& msg) {
@@ -69,13 +56,13 @@ void ui::message_dialog_invasion::draw_city_message_text(const lang_message& msg
         return;
     }
     
-    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+    bstring1024 header;
+    header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
 
-    lang_text_draw(12, 1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-    ui["content_text"] = text;
+    bstring1024 full_text;
+    full_text.printf("%s @P%s @P%s", header.c_str(), text.c_str(), ui::str(12, 1));
+
+    ui["content_text"] = full_text;
 }
 
 void ui::message_dialog_invasion::button_go_to_problem() {
