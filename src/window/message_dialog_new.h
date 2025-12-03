@@ -27,6 +27,7 @@ namespace ui {
     struct message_dialog_price_change;
     struct message_dialog_invasion;
     struct message_dialog_god;
+    struct message_dialog_image;
     
     // Base class with common functionality
     struct message_dialog_base : public autoconfig_window {
@@ -61,7 +62,6 @@ namespace ui {
         void (*background_callback)();
         bool show_video;
         bool background;
-        uint16_t background_img;
 
         int text_height_blocks;
         int text_width_blocks;

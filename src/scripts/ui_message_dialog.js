@@ -111,3 +111,13 @@ message_dialog_window_god {
     })
 }
 
+// Image message dialog (messages with background images)
+message_dialog_window_image {
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
+    help_id: ""
+    
+    ui :__baseui(message_dialog_window_general, {
+
+    })
+}
+
