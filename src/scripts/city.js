@@ -35,7 +35,7 @@ city {
         return {
             tag_id: tag_id
             months_initial: months_initial
-            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(tag_id, reasons) }
+            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(tag_id, r1, r2, r3, r4) }
         }
     }
 }

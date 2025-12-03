@@ -33,9 +33,6 @@ mission8 { // Selima
                 BUILDING_SCRIBAL_SCHOOL,
 			  ]
 
-	stages { // 
-	}
-
 	win_criteria {
 		population {enabled : true, goal : 2500 }
 		culture    {enabled : true, goal : 25 }

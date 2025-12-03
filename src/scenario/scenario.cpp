@@ -94,9 +94,6 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid) {
         init_resources.clear();
         arch.r("init_resources", init_resources);
 
-        stages.clear();
-        arch.r("stages", stages);
-
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
         arch.r("win_criteria", win_criteria);
