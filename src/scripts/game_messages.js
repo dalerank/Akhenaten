@@ -3,7 +3,7 @@ log_info("akhenaten: messages config started")
 game_messages {
     message_potter_history {
         id: 1,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Potter" }
         advisor: ADVISOR_TRADE
@@ -14,7 +14,7 @@ game_messages {
 
     message_bazaar_history {
         id: 2,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Bazaar" }
         content {
@@ -24,7 +24,7 @@ game_messages {
 
     message_building_granary {
         id: 3,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Granary" }
         content {
@@ -34,7 +34,7 @@ game_messages {
 
     message_building_storage_yard {
         id: 4,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Storage Yard" }
         content {
@@ -44,7 +44,7 @@ game_messages {
 
     message_granary_history_2 {
         id: 5
-        pos [0, 24]
+        
         size [30, 20]
         title { text: "Granary" }
         content {
@@ -54,7 +54,7 @@ game_messages {
 
     message_storage_yard_history {
         id: 6
-        pos [0, 24]
+        
         size [30, 20]
         image { id: 79, pos [15, 15] }
         title { text: "Storage Yard", pos [125, 15] }
@@ -66,7 +66,7 @@ game_messages {
 
     message_keyboard_commands {
         id: 7
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Keyboard Commands" }
         subtitle { text: "Game Controls" }
@@ -77,7 +77,7 @@ game_messages {
 
     message_work_camp_history {
         id: 8
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Work Camp" }
         content {
@@ -87,7 +87,7 @@ game_messages {
 
     message_frequently_asked_questions {
         id: 9
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Frequently Asked Questions" }
         content {
@@ -97,7 +97,7 @@ game_messages {
 
     message_table_of_contents {
         id: 10
-        pos [0, 24]
+        
         size [30, 28]
         image { id: 47, pos [15, 15] }
         title { text: "Table of Contents" }
@@ -109,7 +109,7 @@ game_messages {
     
     message_file_menu {
         id: 11
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "File Menu" }
         subtitle { text: "Game Controls" }
@@ -120,7 +120,7 @@ game_messages {
     
     message_optons_menu {
         id: 12
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Options Menu" }
         subtitle { text: "Game Controls" }
@@ -131,7 +131,7 @@ game_messages {
 
     message_help_menu {
         id: 13
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Help menu" }
         subtitle { text: "Game Controls" }
@@ -142,7 +142,7 @@ game_messages {
     
     message_overseers {
         id: 14,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Overseers" }
         subtitle {
@@ -155,7 +155,7 @@ game_messages {
     
     message_game_control_money_display_window {
         id: 15,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Money Display Window",
@@ -170,7 +170,7 @@ game_messages {
     
     message_game_control_population_display {
         id: 16,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Population Display",
@@ -185,7 +185,7 @@ game_messages {
    
     message_game_control_date_display {
         id: 17,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Date Display Window",
@@ -200,7 +200,7 @@ game_messages {
     
     message_overlay_selector {
         id: 18,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overlay Selector",
@@ -215,7 +215,7 @@ game_messages {
 
     message_control_panel_toggle {
         id: 19,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Control Panel Toggle",
@@ -230,7 +230,7 @@ game_messages {
 
     message_overseer_workers {
         id: 20,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of the Workers",
@@ -245,7 +245,7 @@ game_messages {
 
     message_overseer_military {
         id: 21,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of the Military",
@@ -260,7 +260,7 @@ game_messages {
 
     message_overseer_political {
         id: 22,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Political Overseer",
@@ -275,7 +275,7 @@ game_messages {
     
     message_overseer_ratings {
         id: 23,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Ratings Overseer",
@@ -290,7 +290,7 @@ game_messages {
 
     message_overseer_commerce {
         id: 24,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of Commerce",
@@ -305,7 +305,7 @@ game_messages {
     
     message_overseer_granaries {
         id: 25,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of the Granaries",
@@ -320,7 +320,7 @@ game_messages {
     
     message_overseer_public_health {
         id: 26,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of Public Health",
@@ -335,7 +335,7 @@ game_messages {
     
     message_overseer_learning {
         id: 27,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of Learning",
@@ -350,7 +350,7 @@ game_messages {
 
     message_overseer_diversions {
         id: 28,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Overseer of Diversions" }
         subtitle { text: "Game Control"  }
@@ -361,7 +361,7 @@ game_messages {
 
     message_overseer_temples {
         id: 29,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Overseer of the Temples",
@@ -376,7 +376,7 @@ game_messages {
 
     message_overseer_treasury {
         id: 30,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Overseer of the Treasury" }
         subtitle { text: "Game Control" }
@@ -387,7 +387,7 @@ game_messages {
 
     message_chief_overseer {
         id: 31,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Chief Overseer" }
         subtitle { text: "Game Control" }
@@ -398,7 +398,7 @@ game_messages {
 
     message_world_map {
         id: 32,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "The World Map" }
         subtitle { text: "Game Controls" }
@@ -409,7 +409,7 @@ game_messages {
 
     message_building_buttons {
         id: 33,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Building Buttons" }
         subtitle { text: "Game Controls" }
@@ -420,7 +420,7 @@ game_messages {
     
     message_game_control_messages {
         id: 34,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Messages" }
         subtitle { text: "Game Controls" }
@@ -431,7 +431,7 @@ game_messages {
 
     message_ratings {
         id: 35,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Ratings" }
         subtitle { text: "Game Concept" }
@@ -442,7 +442,7 @@ game_messages {
 
     message_city_crime {
         id: 36
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Crime" }
         subtitle { text: "Game Concept" }
@@ -453,7 +453,7 @@ game_messages {
 
     message_fort_and_company {
         id: 37,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Fort and Company",
@@ -465,7 +465,7 @@ game_messages {
     
     message_true_pyramid {
         id: 38,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "True Pyramid",
@@ -477,7 +477,7 @@ game_messages {
 
     message_population_groth_and_sentiment {
         id: 39,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Population Growth and City Sentiment",
@@ -493,7 +493,7 @@ game_messages {
     
     message_game_concept_workers {
         id: 40,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Workers" }
         subtitle { text: "Game Concept" }
@@ -504,7 +504,7 @@ game_messages {
 
     message_game_concept_scribes {
         id: 41,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Scribes" }
         subtitle { text: "Game Concept" }
@@ -515,7 +515,7 @@ game_messages {
 
     message_game_concept_walkers {
         id: 42,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Walkers",
@@ -527,7 +527,7 @@ game_messages {
 
     message_employment_unemployment {
         id: 43,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Employment and Unemployment" }
         subtitle { text: "Game Concept" }
@@ -538,7 +538,7 @@ game_messages {
     
     message_drinking_water {
         id: 44,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Drinking Water" }
         subtitle { text: "Game Concept" }
@@ -549,7 +549,7 @@ game_messages {
 
     message_tutorial_food_and_farming {
         id: 45,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Food and Farming" }
         subtitle { text: "Game Concept" }
@@ -560,7 +560,7 @@ game_messages {
 
     message_game_concept_industry {
         id: 46
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Industry" }
         subtitle { text: "Game Concept" }
@@ -571,7 +571,7 @@ game_messages {
 
     message_game_concept_trade {
         id: 47,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Trade",
@@ -586,7 +586,7 @@ game_messages {
     
     message_game_concept_money {
         id: 48,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Money",
@@ -601,7 +601,7 @@ game_messages {
 
     message_game_concept_entertainment {
         id: 49,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Entertainment",
@@ -616,7 +616,7 @@ game_messages {
 
     message_game_concept_education {
         id: 50,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Education",
@@ -631,7 +631,7 @@ game_messages {
 
     message_game_concept_relition {
         id: 51,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Religion",
@@ -646,7 +646,7 @@ game_messages {
 
     message_game_concept_war {
         id: 52
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "War"
@@ -661,7 +661,7 @@ game_messages {
 
     message_tutorial_health {
         id: 53
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Health" }
         subtitle { text: "Game Concept" }
@@ -672,7 +672,7 @@ game_messages {
 
     message_bent_pyramid {
         id: 54,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Bent Pyramid",
@@ -684,7 +684,7 @@ game_messages {
 
     message_brick_core_pyramid {
         id: 55,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Brick-core Pyramid",
@@ -696,7 +696,7 @@ game_messages {
 
     message_housing_and_desirability {
         id: 56
-        pos [0, 24]
+        
         size [35, 32]
         title { text: "Housing and Desirability" }
         content {
@@ -706,7 +706,7 @@ game_messages {
     
     message_game_concept_roads {
         id: 57,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Roads",
@@ -718,7 +718,7 @@ game_messages {
 
     message_game_concept_water_crossings {
         id: 58,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Water Crossings",
@@ -730,7 +730,7 @@ game_messages {
     
     message_game_concept_irrigation {
         id: 59,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Irrigation",
@@ -742,7 +742,7 @@ game_messages {
     
     message_building_weaver {
         id: 60,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Weaver",
@@ -754,7 +754,7 @@ game_messages {
     
     message_building_water_supply {
         id: 61,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Water Supply",
@@ -766,7 +766,7 @@ game_messages {
 
     message_building_well {
         id: 62,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Well",
@@ -778,7 +778,7 @@ game_messages {
 
     message_building_dentist {
         id: 63,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Dentist",
@@ -790,7 +790,7 @@ game_messages {
 
     message_building_physician {
         id: 64,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Physician",
@@ -802,7 +802,7 @@ game_messages {
 
     message_building_apothecary {
         id: 65,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Apothecary",
@@ -814,7 +814,7 @@ game_messages {
 
     message_building_mortuary {
         id: 66,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Mortuary",
@@ -826,7 +826,7 @@ game_messages {
 
     message_building_shrine_and_temple {
         id: 67,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Shrine and Temple",
@@ -838,7 +838,7 @@ game_messages {
 
     message_building_scribal_school {
         id: 68,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Scribal School",
@@ -850,7 +850,7 @@ game_messages {
 
     message_building_sun_temple {
         id: 69,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Sun Temple",
@@ -862,7 +862,7 @@ game_messages {
 
     message_building_library {
         id: 70,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Library",
@@ -874,7 +874,7 @@ game_messages {
 
     message_building_booth {
         id: 71,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Booth",
@@ -886,7 +886,7 @@ game_messages {
 
     message_building_bandstand {
         id: 72,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Bandstand",
@@ -898,7 +898,7 @@ game_messages {
 
     message_building_pavilion {
         id: 73,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Pavilion",
@@ -910,7 +910,7 @@ game_messages {
 
     message_building_senet_house {
         id: 74,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Senet House",
@@ -922,7 +922,7 @@ game_messages {
 
     message_building_trading_centers {
         id: 75,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Training Centers",
@@ -934,7 +934,7 @@ game_messages {
 
     message_building_courthouse {
         id: 76,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Courthouse",
@@ -946,7 +946,7 @@ game_messages {
     
     message_building_palace {
         id: 77,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Palace",
@@ -958,7 +958,7 @@ game_messages {
 
     message_building_mansion {
         id: 78,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Mansion",
@@ -970,7 +970,7 @@ game_messages {
     
     message_building_garden_plaze_statue {
         id: 79,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Garden, Plaza and Statue",
@@ -982,7 +982,7 @@ game_messages {
     
     message_building_tax_collector {
         id: 80,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Tax Collector",
@@ -994,7 +994,7 @@ game_messages {
 
     message_building_architect_post {
         id: 81,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Architect's Post",
@@ -1006,7 +1006,7 @@ game_messages {
 
     message_building_whipwright {
         id: 82,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Shipwright",
@@ -1018,7 +1018,7 @@ game_messages {
     
     message_building_dock {
         id: 83,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Dock",
@@ -1030,7 +1030,7 @@ game_messages {
 
     message_building_fishing_wharf {
         id: 84,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Fishing Wharf",
@@ -1042,7 +1042,7 @@ game_messages {
 
     message_building_defensive_structures {
         id: 85,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Defensive Structures",
@@ -1054,7 +1054,7 @@ game_messages {
 
     message_building_police_station {
         id: 86,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Police Station",
@@ -1066,7 +1066,7 @@ game_messages {
 
     message_company_orders {
         id: 87,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Company Orders",
@@ -1078,7 +1078,7 @@ game_messages {
 
     message_building_recruiter_academy {
         id: 88,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Recruiter and Academy",
@@ -1090,7 +1090,7 @@ game_messages {
 
     message_building_grain_farm {
         id: 89,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Grain Farm",
@@ -1102,7 +1102,7 @@ game_messages {
 
     message_building_fruit_vegetables_farm {
         id: 90,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Fruit and Vegetable Farms",
@@ -1114,7 +1114,7 @@ game_messages {
 
     message_building_barley_flax_henna_farm {
         id: 91,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Barley, Flax and Henna Farms",
@@ -1126,7 +1126,7 @@ game_messages {
 
     message_building_clay_pit {
         id: 92,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Clay Pit",
@@ -1138,7 +1138,7 @@ game_messages {
 
     message_building_gold_copper_mine {
         id: 93,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Gold and Copper Mines",
@@ -1150,7 +1150,7 @@ game_messages {
     
     message_building_woodcutter_and_reed_gatherer {
         id: 94,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Wood Cutter and Reed Gatherer" }
         content {
@@ -1160,7 +1160,7 @@ game_messages {
 
     message_building_stone_quarries {
         id: 95,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Stone Quarries",
@@ -1172,7 +1172,7 @@ game_messages {
 
     message_building_brewery {
         id: 96,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Brewery",
@@ -1184,7 +1184,7 @@ game_messages {
 
     message_building_papyrus_maker {
         id: 97,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Papyrus Maker",
@@ -1196,7 +1196,7 @@ game_messages {
 
     message_building_weapongsmith_and_chariot_maker {
         id: 98,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Weaponsmith and Chariot Maker",
@@ -1208,7 +1208,7 @@ game_messages {
 
     message_building_jeweler_and_luxury_goods {
         id: 99,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Jeweler and Luxury Goods",
@@ -1220,7 +1220,7 @@ game_messages {
 
     message_population_milestone_100 {
         id: 100,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Population milestone" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1229,7 +1229,7 @@ game_messages {
 
     message_population_milestone_500 {
         id: 101,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Population milestone" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1239,7 +1239,7 @@ game_messages {
     message_population_milestone_1000 {
         id: 102,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Population milestone" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1249,7 +1249,7 @@ game_messages {
     message_population_milestone_2000 {
         id: 103,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1259,7 +1259,7 @@ game_messages {
     message_population_milestone_3000 {
         id: 104,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1269,7 +1269,7 @@ game_messages {
     message_population_milestone_5000 {
         id: 105,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1279,7 +1279,7 @@ game_messages {
     message_population_milestone_10000 {
         id: 106,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1289,7 +1289,7 @@ game_messages {
     message_population_milestone_15000 {
         id: 107
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1299,7 +1299,7 @@ game_messages {
     message_population_milestone_20000 {
         id: 108,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1309,7 +1309,7 @@ game_messages {
     message_population_milestone_25000 {
         id: 109,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Population milestone" }
@@ -1319,7 +1319,7 @@ game_messages {
 
     message_the_control_panel {
         id: 110,
-        pos [0, 24]
+        
         size [30, 20]
         title { text: "The Control Panel"  }
         content {
@@ -1331,7 +1331,7 @@ game_messages {
         id: 111,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Fire in the city" }
@@ -1344,7 +1344,7 @@ game_messages {
         id: 112
         type: 2
         message_type: 1
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Collapsed building" }
@@ -1356,7 +1356,7 @@ game_messages {
     message_ship_aground {
         id: 114,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ship aground" }
         content { text: "Some inexperienced captains learn about flood plains the hard way, when their ships run aground." }
@@ -1364,7 +1364,7 @@ game_messages {
 
     message_out_of_money {
         id: 115,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Out of money!" }
         content { text: "Your treasury ran out of debens.  You are hereby granted additional funds, but no benefactor will rescue you again.  Use this gift to create money-making enterprises." }
@@ -1372,7 +1372,7 @@ game_messages {
 
     message_debt_again {
         id: 116,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Debt!" }
         content { text: "Your treasury bleeds money.  You can spend up to 5,000 debens' worth of credit, but @48debt can lead to the downfall of your family unless you repay it quickly." }
@@ -1380,7 +1380,7 @@ game_messages {
 
     message_out_of_money_again {
         id: 117,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Out of money!" }
         content { text: "City vaults have run dry, O Pharaoh.  Your loyal nomarchs donated all the debens they could spare, but they cannot afford to do so again." }
@@ -1389,7 +1389,7 @@ game_messages {
     message_wrath_of_the_emperor {
         id: 118,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Wrath of the Emperor" }
@@ -1399,7 +1399,7 @@ game_messages {
     message_attack_called_off {
         id: 120,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Attack called off" }
         content {
@@ -1408,7 +1408,7 @@ game_messages {
     }
     message_debt_anniversary {
         id: 121,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Debt anniversary" }
@@ -1421,7 +1421,7 @@ game_messages {
         id: 122
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Barbarians attack!" }
@@ -1432,7 +1432,7 @@ game_messages {
         id: 123
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Legion attacks" }
@@ -1441,7 +1441,7 @@ game_messages {
     message_distant_battle {
         id: 124
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Distant battle" }
         video { text: "@10" }
@@ -1451,7 +1451,7 @@ game_messages {
     message_enemies_closing {
         id: 125
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Enemies closing" }
         video { text: "@10" }
@@ -1461,7 +1461,7 @@ game_messages {
     message_enemies_at_the_door {
         id: 126
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Enemies at the door" }
@@ -1473,7 +1473,7 @@ game_messages {
         id: 130,
         type: 2,
         message_type: 2,
-        pos [0, 88],
+        ,
         size [30, 20],
         title { text: "Pharaoh request goods" }
         content { text: "" }
@@ -1482,7 +1482,7 @@ game_messages {
     message_wrath_of_bast_3 {
         id: 134,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Bast" }
         video { text: "@20" }
@@ -1492,7 +1492,7 @@ game_messages {
     message_city_unemployment {
         id: 135,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "City unemployment" }
         content { text: "There are too few jobs to employ everyone.  Unless new jobs are created, the unemployed may turn in desperation to crime, or even seek their fortunes elsewhere in the Kingdom." }
@@ -1500,7 +1500,7 @@ game_messages {
 
     message_employees_needed {
         id: 136,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Employees needed" }
         content { text: "Too few people of working age are available to fill the city's jobs. Unless you find new workers quickly, city services will deteriorate and industrial production will suffer." }
@@ -1508,7 +1508,7 @@ game_messages {
 
     message_common_festival {
         id: 137,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Common festival" }
         content { text: "Everyone appreciates getting out of work early to relax for awhile at the Festival Square, and your chosen god notices your kind gesture." }
@@ -1516,7 +1516,7 @@ game_messages {
 
     message_lavish_festival {
         id: 138,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Lavish festival" }
         content { text: "The day-long festival is starting. People all over the city are heading for the Festival Square now, and seem to be in good spirits. Your chosen god appreciates your dedication." }
@@ -1524,7 +1524,7 @@ game_messages {
 
     message_grand_festival {
         id: 139,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Grand festival" }
         content { text: "The much-anticipated two-day festival is under way at last! Everyone's converging on the Festival Square for free beer and wild entertainment. The god honored by this event is surely smiling upon you." }
@@ -1533,7 +1533,7 @@ game_messages {
     message_wrath_of_osiris {
         id: 140
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Osiris" }
         video { text: "@24" }
@@ -1543,7 +1543,7 @@ game_messages {
     message_wrath_of_ptah {
         id: 141
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ptah" }
         video { text: "@22" }
@@ -1553,7 +1553,7 @@ game_messages {
     message_wrath_of_ptah_2 {
         id: 142
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ptah" }
         video { text: "@22" }
@@ -1562,7 +1562,7 @@ game_messages {
     message_wrath_of_seth_noeffect {
         id: 143
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Seth" }
         video { text: "@21" }
@@ -1571,7 +1571,7 @@ game_messages {
     message_wrath_of_bast {
         id: 144,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Bast" }
         video { text: "@20" }
@@ -1580,7 +1580,7 @@ game_messages {
     message_blessing_from_ptah {
     id: 145,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Ptah" }
         video { text: "@22" }
@@ -1589,7 +1589,7 @@ game_messages {
     message_wrath_of_osiris_2 {
         id: 147
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Osiris" }
         video { text: "@24" }
@@ -1598,7 +1598,7 @@ game_messages {
     message_wrath_of_ptah_4 {
         id: 148,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ptah" }
         video { text: "@22" }
@@ -1609,7 +1609,7 @@ game_messages {
     message_local_wrath_of_seth {
         id: 149
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Seth" }
         video { text: "@21" }
@@ -1617,7 +1617,7 @@ game_messages {
     }
     message_farming {
     id: 150,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 81, pos [15, 15] }
         title { text: "Farming" }
@@ -1628,7 +1628,7 @@ game_messages {
     }
     message_industry {
         id: 151,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 82, pos [15, 15] }
         title { text: "Industry" }
@@ -1639,7 +1639,7 @@ game_messages {
     }
     message_housing {
         id: 152,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 83, pos [15, 15] }
         title { text: "Housing" }
@@ -1650,7 +1650,7 @@ game_messages {
     }
     message_roads {
         id: 153,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 84,
@@ -1669,7 +1669,7 @@ game_messages {
     }
     message_irrigation {
         id: 154,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 27,
@@ -1689,7 +1689,7 @@ game_messages {
     message_tutorial_labor {
         id: 155
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 85, pos [15, 15] }
         title { text: "Labor" }
@@ -1698,7 +1698,7 @@ game_messages {
     }
     message_tutorial_clean_water {
         id: 156
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 86, pos [15, 15] }
         title { text: "Well and Water Supply", pos [125, 15] }
@@ -1709,7 +1709,7 @@ game_messages {
     }
     message_nile {
         id: 157,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 87,
@@ -1728,7 +1728,7 @@ game_messages {
     }
     message_dentistry {
         id: 158,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 88, pos [15, 15] }
         title { text: "Dentistry" }
@@ -1739,7 +1739,7 @@ game_messages {
     }
     message_apothecary {
         id: 159,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 89,
@@ -1758,7 +1758,7 @@ game_messages {
     }
     message_medicine {
         id: 160,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 90,
@@ -1777,7 +1777,7 @@ game_messages {
     }
     message_embalmers {
         id: 161,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 23,
@@ -1796,7 +1796,7 @@ game_messages {
     }
     message_shrine_and_temple {
         id: 162,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 12, pos [15, 15] }
         title { text: "Shrine and Temple", pos [125, 15] }
@@ -1807,7 +1807,7 @@ game_messages {
     }
     message_school_and_eduction {
         id: 163,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 34, pos [15, 15] }
         title { text: "School and Education", pos [125, 15] }
@@ -1818,7 +1818,7 @@ game_messages {
     }
     message_library_and_literature {
         id: 164,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 91,
@@ -1837,7 +1837,7 @@ game_messages {
     }
     message_history_entertainment {
         id: 165,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 92,
@@ -1856,7 +1856,7 @@ game_messages {
     }
     message_children {
         id: 166,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 93,
@@ -1875,7 +1875,7 @@ game_messages {
     }
     message_history_population {
         id: 167,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 94,
@@ -1894,7 +1894,7 @@ game_messages {
     }
     message_history_society {
         id: 168,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 5, pos [15, 15] }
         title { text: "Society", pos [125, 15] }
@@ -1905,7 +1905,7 @@ game_messages {
     }
     message_history_juggling {
         id: 169,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 95, pos [15, 15] }
         title { text: "Juggling", pos [125, 15] }
@@ -1916,7 +1916,7 @@ game_messages {
     }
     message_history_music {
         id: 170,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 96,
@@ -1935,7 +1935,7 @@ game_messages {
     }
     message_history_dance {
         id: 171,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 97, pos [15, 15] }
         title { text: "Dance", pos [125, 15] }
@@ -1946,7 +1946,7 @@ game_messages {
     }
     message_history_senet {
         id: 172,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 98,
@@ -1965,7 +1965,7 @@ game_messages {
     }
     message_history_taxation_and_money {
         id: 173,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 99, pos [15, 15] }
         title { text: "Taxation and Money", pos [125, 15] }
@@ -1976,7 +1976,7 @@ game_messages {
     }
     message_history_government_and_bureaucracy {
         id: 174,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 40,
@@ -1995,7 +1995,7 @@ game_messages {
     }
     message_history_pharaohs_home {
         id: 175,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 100, pos [15, 15] }
         title { text: "Pharaoh's Home", pos [125, 15] }
@@ -2006,7 +2006,7 @@ game_messages {
     }
     message_history_gardens_and_public_art {
         id: 176,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 38,
@@ -2025,7 +2025,7 @@ game_messages {
     }
     message_history_trade {
         id: 177,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 30,
@@ -2044,7 +2044,7 @@ game_messages {
     }
     message_history_ships_and_ship_making {
         id: 179,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 101,
@@ -2063,7 +2063,7 @@ game_messages {
     }
     message_history_enemies {
         id: 181,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 102,
@@ -2082,7 +2082,7 @@ game_messages {
     }
     message_history_defensive_structures {
         id: 182,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 103,
@@ -2101,7 +2101,7 @@ game_messages {
     }
     message_history_law {
         id: 183,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 104,
@@ -2120,7 +2120,7 @@ game_messages {
     }
     message_history_military {
         id: 184,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 105,
@@ -2139,7 +2139,7 @@ game_messages {
     }
     message_history_grain_and_barley {
         id: 185,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 106,
@@ -2158,7 +2158,7 @@ game_messages {
     }
     message_history_cattle_ranching_and_fishing {
         id: 186,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 13,
@@ -2177,7 +2177,7 @@ game_messages {
     }
     message_history_fruits_and_vegetables {
         id: 187,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 107,
@@ -2196,7 +2196,7 @@ game_messages {
     }
     message_history_reeds {
         id: 188,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 108,
@@ -2215,7 +2215,7 @@ game_messages {
     }
     message_history_flax {
         id: 189,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 109,
@@ -2234,7 +2234,7 @@ game_messages {
     }
     message_history_clay {
         id: 190,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 110,
@@ -2253,7 +2253,7 @@ game_messages {
     }
     message_history_gold_and_gold_mining {
         id: 191,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 22,
@@ -2272,7 +2272,7 @@ game_messages {
     }
     message_history_wood_and_its_uses {
         id: 192,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 111,
@@ -2291,7 +2291,7 @@ game_messages {
     }
     message_history_quarries {
         id: 193,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 112,
@@ -2310,7 +2310,7 @@ game_messages {
     }
     message_history_beer {
         id: 194,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 113,
@@ -2329,7 +2329,7 @@ game_messages {
     }
     message_history_papyrus_making {
         id: 195,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 48,
@@ -2348,7 +2348,7 @@ game_messages {
     }
     message_history_weapons {
         id: 196,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 114,
@@ -2367,7 +2367,7 @@ game_messages {
     }
     message_history_luxury_goods {
         id: 197,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 115,
@@ -2386,7 +2386,7 @@ game_messages {
     }
     message_history_pottery {
         id: 198,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 25,
@@ -2405,7 +2405,7 @@ game_messages {
     }
     message_history_bazaar {
         id: 199,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 116,
@@ -3284,7 +3284,7 @@ game_messages {
         id: 271
         type: 2
         message_type: 1
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Flooded Clay Pit" }
         content { text: "One of our Clay Pits suffered a terrible flood. We had to destroy the Clay Pit to prevent others from falling in." }
@@ -3294,7 +3294,7 @@ game_messages {
         id: 279,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Kingdom Road blocked" }
         content { text: "Recent construction blocked the @57Kingdom&road running through these lands.  Royal architects reopened this vital route...but they had to remove a building or two in the process!" }
@@ -3304,7 +3304,7 @@ game_messages {
         id: 280,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ra" }
         video { text: "@23" }
@@ -3314,7 +3314,7 @@ game_messages {
         id: 281,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Seth" }
         video { text: "@21" }
@@ -3372,7 +3372,7 @@ game_messages {
     message_company_returns {
         id: 287,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Company returns" }
         content { text: "Under cover of night, surviving members of your disgraced company slink back to the comfort of the city's Forts, determined to never again suffer humiliation in battle." }
@@ -3380,7 +3380,7 @@ game_messages {
     message_heroes_return {
         id: 288,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Heroes return!",
@@ -3392,14 +3392,14 @@ game_messages {
     message_city_retaken {
         id: 289,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "City retaken" }
     }
     message_osiris_is_upset {
         id: 290
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Osiris is upset" }
         content { text: "The lord of the Nile flood will punish this city for its lack of devotion, and next year's flood will destroy all farms in its path!" }
@@ -3407,7 +3407,7 @@ game_messages {
     message_ra_is_upset_2 {
         id: 291
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ra is upset" }
         video { text: "@23" }
@@ -3416,7 +3416,7 @@ game_messages {
     message_ptah_is_upset {
         id: 292
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ptah is upset" }
         video { text: "@22" }
@@ -3425,7 +3425,7 @@ game_messages {
     message_seth_is_upset {
         id: 293
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Seth is upset" }
         video { text: "@21" }
@@ -3434,7 +3434,7 @@ game_messages {
     message_bast_is_upset {
         id: 294
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Bast is upset" }
         video { text: "@20" }
@@ -3443,7 +3443,7 @@ game_messages {
     message_blessing_from_osiris {
         id: 295
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Osiris" }
         video { text: "@24" }
@@ -3452,7 +3452,7 @@ game_messages {
     message_blessing_trade_from_ra {
         id: 296
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Ra" }
         video { text: "@23" }
@@ -3461,7 +3461,7 @@ game_messages {
     message_blessing_trade_from_ptah {
         id: 297
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Ptah" }
         video { text: "@22" }
@@ -3470,7 +3470,7 @@ game_messages {
     message_blessing_trade_from_seth {
         id: 298
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Seth" }
         video { text: "@21" }
@@ -3479,7 +3479,7 @@ game_messages {
     message_blessing_from_bast {
         id: 299,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Bast" }
         video { text: "@20" }
@@ -3488,7 +3488,7 @@ game_messages {
     message_the_gods_are_wrathful {
         id: 300
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "The gods are wrathful" }
         content { text: "At least one god is angry with the city. Your people beg you to build more Temples...and they always welcome a festival, too." }
@@ -3496,7 +3496,7 @@ game_messages {
     message_illness {
         id: 301,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Illness" }
         video { text: "smk\\sick.smk" }
@@ -3504,7 +3504,7 @@ game_messages {
     message_disease {
         id: 302,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Disease" }
         video { text: "smk\\sick.smk" }
@@ -3512,7 +3512,7 @@ game_messages {
     message_pestilence {
         id: 303,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Pestilence" }
         video { text: "smk\\sick.smk" }
@@ -3520,7 +3520,7 @@ game_messages {
     message_the_spirit_of_seth {
         id: 304,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "The spirit of Seth",
@@ -3535,7 +3535,7 @@ game_messages {
     message_the_emperors_respect {
         id: 305,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "The Emperor's respect",
@@ -3544,21 +3544,21 @@ game_messages {
     message_the_emperors_respect_1 {
         id: 306,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "The Emperor's respect" }
     }
     message_the_emperors_respect_2 {
         id: 307,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "The Emperor's respect" }
     }
     message_working_hippodrome {
         id: 308,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Working hippodrome" }
         video { text: "smk\\\\1st_chariot.smk" }
@@ -3567,7 +3567,7 @@ game_messages {
         id: 309,
         type: 2,
         message_type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Compliance now possible" }
         content { text: "Your Political Overseer reports that the city now has enough debens  to fulfill the recent request." }
@@ -3585,7 +3585,7 @@ game_messages {
     message_mission_defeat {
         id: 311,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Defeat!" }
         content { text: "O bitter day! Your ignoble end should have been unthinkable. You have failed your people, your ancestors and your descendants. Now Egypt yearns for another champion to take your place..." }
@@ -3593,7 +3593,7 @@ game_messages {
     message_mission_victory {
         id: 312,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "The Winner" }
         video { text: "smk\\win_game.smk" }
@@ -3603,7 +3603,7 @@ game_messages {
         id: 313
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Enemy army attacks" }
         video { text: "smk\\spy_army.smk" }
@@ -3613,7 +3613,7 @@ game_messages {
         id: 314,
         type: 2,
         message_type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Compliance now possible",
@@ -3625,7 +3625,7 @@ game_messages {
     message_kingdom_road_obstructed {
         id: 315,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Kingdom road obstructed",
@@ -3637,7 +3637,7 @@ game_messages {
     message_no_working_dock {
         id: 316,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "No Working Dock" }
         content { text: "Although you told your Overseer of Commerce to commence trade with a sea merchant, the merchant cannot land at our city! You need to construct a dock and supply it with workers. Once you have a dock operating, ships will come and begin trading." }
@@ -3645,7 +3645,7 @@ game_messages {
     message_fishing_boats_cant_navigate {
         id: 317,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Fishing Boats Can't Navigate" }
         content { text: "Our fishermen report that a Bridge blocks their route! Ships cannot sail under Bridges. Remove the Bridge to let the fishing boats supply your city with fresh fish." }
@@ -3653,7 +3653,7 @@ game_messages {
     message_health {
         id: 318,
         type: 3,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Health",
@@ -3665,7 +3665,7 @@ game_messages {
     message_messages_await_you {
         id: 319,
         type: 3,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Messages Await You",
@@ -3677,7 +3677,7 @@ game_messages {
     message_local_uprising {
         id: 320,
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Local uprising" }
@@ -3686,7 +3686,7 @@ game_messages {
     message_small_blessing_from_osiris {
         id: 321
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A small blessing from Osiris" }
         video { text: "@24" }
@@ -3695,7 +3695,7 @@ game_messages {
     message_minor_blessing_from_ra {
         id: 322
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A Minor blessing from Ra" }
         video { text: "@23"}
@@ -3704,7 +3704,7 @@ game_messages {
     message_minor_blessing_from_ptah {
         id: 323
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A Minor blessing from Ptah" }
         video { text: "@22" }
@@ -3713,7 +3713,7 @@ game_messages {
     message_minor_blessing_from_seth {
         id: 324
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A Minor blessing from Seth" }
         video { text: "@21" }
@@ -3722,7 +3722,7 @@ game_messages {
     message_small_blessing_from_bast {
         id: 325
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A small blessing from Bast" }
         video { text: "@20" }
@@ -3732,7 +3732,7 @@ game_messages {
         id: 326,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Disease Strikes",
@@ -3745,7 +3745,7 @@ game_messages {
         id: 327,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "A Plague",
@@ -3758,7 +3758,7 @@ game_messages {
         id: 328,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Malaria",
@@ -3770,7 +3770,7 @@ game_messages {
     message_blessing_reputation_from_ra {
         id: 329,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A blessing from Ra" }
         video { text: "@23" }
@@ -3781,7 +3781,7 @@ game_messages {
     message_minor_blessing_trading_from_ra {
         id: 331,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "A minor blessing from Ra" }
         video { text: "@23" }
@@ -3790,7 +3790,7 @@ game_messages {
     message_wrath_of_ra_2 {
         id: 332,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ra" }
         video { text: "@23" }
@@ -3799,7 +3799,7 @@ game_messages {
     message_wrath_of_ra_3 {
         id: 333,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Ra" }
         video { text: "@23" }
@@ -3808,7 +3808,7 @@ game_messages {
     message_ra_is_upset {
         id: 334,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 224, pos [15, 15] }
         title { text: "Ra is Upset!" }
@@ -3818,7 +3818,7 @@ game_messages {
     message_wrath_of_bast_2 {
         id: 335,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Bast", }
         content { text: "placeholder - report this to Ken if it appears" }
@@ -3826,7 +3826,7 @@ game_messages {
     message_wrath_of_ra_4 {
         id: 336,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Wrath of Ra",
@@ -3838,7 +3838,7 @@ game_messages {
     message_wrath_of_osiris_3 {
         id: 337,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Wrath of Osiris",
@@ -3853,7 +3853,7 @@ game_messages {
     message_blessing_inundation_from_osiris {
         id: 340,
         type: 2,
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Osiris Blesses you" }
         video { text: "@24" }
@@ -3862,7 +3862,7 @@ game_messages {
     message_wrath_of_osiris_4 {
         id: 341,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wrath of Osiris" }
         video { text: "@24" }
@@ -3871,7 +3871,7 @@ game_messages {
     message_mediocre_inundation_seers {
         id: 342,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3880,7 +3880,7 @@ game_messages {
     message_poor_inundation_seers {
         id: 343,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3889,7 +3889,7 @@ game_messages {
     message_no_inundation {
         id: 344,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3898,7 +3898,7 @@ game_messages {
     message_poor_inundation {   
         id: 345,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3907,7 +3907,7 @@ game_messages {
     message_mediocre_inundation {
         id: 346,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3916,7 +3916,7 @@ game_messages {
     message_good_inundation {
         id: 347,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3925,7 +3925,7 @@ game_messages {
     message_excellent_inundation {
         id: 348,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3934,7 +3934,7 @@ game_messages {
     message_perfect_inundation {
         id: 349,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer prediction" }
@@ -3942,7 +3942,7 @@ game_messages {
     }
     message_temple_complex_to_osiris {
         id: 350,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Temple Complex to Osiris",
@@ -3956,7 +3956,7 @@ game_messages {
     }
     message_temple_complex_to_ra {
         id: 351,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Temple Complex to Ra",
@@ -3967,7 +3967,7 @@ game_messages {
     }
     message_temple_complex_to_ptah {
         id: 352,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Temple Complex to Ptah",
@@ -3978,21 +3978,21 @@ game_messages {
     }
     message_temple_complex_to_seth {
         id: 353,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Temple Complex to Seth" }
         content { text: "When a city has a Temple Complex dedicated to him, Seth instills a fierce will in the city's soldiers, granting them more experience, protecting them in battle.  The additions to Seth's Temple Complex are:  @L@LAltar of Anubis, God of Death @LAnubis gives easier access to eternal life for citizens in the city.  With his blessing, Mortuaries need less linen to prepare bodies for eternity.   @L@LOracle of Sekhmet, Goddess of War @LSekhmet endows priests of Seth with the power to reduce the risk of crime in the houses that they pass and to apprehend criminals in the city.  @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Seth, Anubis and Sekhmet in ancient Egypt by clicking @379here." }
     }
     message_temple_complex_to_bast {
         id: 354,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Temple Complex to Bast" }
         content { text: "Building a Temple to Bast brings good fortune to any city.  Bast helps keep citizens happy by making them satisfied with less.  As a result of her benevolence, the rate at which your citizens consume food and goods is reduced, and the effects of entertainers, educators and health providers last longer.  Her sister goddesses also improve life for your citizens: @L@LAltar of Isis, Goddess of Healing @LThrough priestesses of Bast, Isis lays her healing hands on the city's populace, removing plagued walkers from the streets and cleansing any infected houses the priestesses may pass.  Isis also takes care to improve your city's overall health. @L@LOracle of Hathor, Goddess of Joy, Love and Festivity @LHathor, flattered by the Oracle you have built for her, will improve citizens' mood, resulting in a better @39City&Sentiment. @L@LPeople love living next to a Temple Complex. For more on religion, click @51here. @L@LFind out about Bast, Isis and Hathor in ancient Egypt by clicking @380here." }
     }
     message_building_firehouse {
         id: 355,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Firehouse",
@@ -4003,7 +4003,7 @@ game_messages {
     }
     message_building_warship_wharf {
         id: 356,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Warship Wharf",
@@ -4014,7 +4014,7 @@ game_messages {
     }
     message_building_transport_wharf {
         id: 357,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Transport Wharf",
@@ -4025,7 +4025,7 @@ game_messages {
     }
     message_building_roadblock {
         id: 358,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Roadblock",
@@ -4036,7 +4036,7 @@ game_messages {
     }
     message_building_hunting_lodge {
         id: 359,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Hunting Lodge",
@@ -4047,7 +4047,7 @@ game_messages {
     }
     message_building_cattle_ranch {
         id: 360,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Cattle Ranch",
@@ -4058,7 +4058,7 @@ game_messages {
     }
     message_building_gemstone_mine {
         id: 361,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Gemstone Mine",
@@ -4069,7 +4069,7 @@ game_messages {
     }
     message_building_sphinx {
         id: 362,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Sphinx",
@@ -4080,7 +4080,7 @@ game_messages {
     }
     message_construction_guilds {
         id: 363,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Construction Guilds",
@@ -4091,7 +4091,7 @@ game_messages {
     }
     message_building_brickworks {
         id: 364,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Brickworks",
@@ -4102,7 +4102,7 @@ game_messages {
     }
     message_building_warship {
         id: 365,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Warship",
@@ -4113,7 +4113,7 @@ game_messages {
     }
     message_building_festival_square {
         id: 366,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Festival Square",
@@ -4124,7 +4124,7 @@ game_messages {
     }
     message_figure_transport_ship {
         id: 367,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Transport Ship",
@@ -4138,7 +4138,7 @@ game_messages {
     }
     message_building_mausoleum {
         id: 368,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Mausoleum",
@@ -4149,7 +4149,7 @@ game_messages {
     }
     message_figure_construction_foreman {
         id: 369,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Construction Foreman",
@@ -4160,7 +4160,7 @@ game_messages {
     }
     message_building_monument_construction {
         id: 370,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Monument Construction",
@@ -4171,7 +4171,7 @@ game_messages {
     }
     message_building_mastaba {
         id: 371,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Mastaba",
@@ -4182,7 +4182,7 @@ game_messages {
     }
     message_building_obelisk {
         id: 372,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Obelisk",
@@ -4193,7 +4193,7 @@ game_messages {
     }
     message_overseer_monuments {
         id: 373,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Overseer of the Monuments",
@@ -4204,7 +4204,7 @@ game_messages {
     }
     message_burial_provisions {
         id: 374,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Burial Provisions",
@@ -4215,7 +4215,7 @@ game_messages {
     }
     message_building_stepped_pyramid {
         id: 375,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Stepped Pyramid",
@@ -4226,7 +4226,7 @@ game_messages {
     }
     message_osiris_sebek_min {
         id: 376,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 42,
@@ -4245,7 +4245,7 @@ game_messages {
     }
     message_ra_maat_horus {
         id: 377,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 18,
@@ -4264,7 +4264,7 @@ game_messages {
     }
     message_ptah_amon_thoth {
         id: 378,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 3,
@@ -4283,7 +4283,7 @@ game_messages {
     }
     message_seth_anubis_sekhmet {
         id: 379,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 117,
@@ -4302,7 +4302,7 @@ game_messages {
     }
     message_bast_isis_hathor {
         id: 380,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 28,
@@ -4321,7 +4321,7 @@ game_messages {
     }
     message_history_malaria {
         id: 381,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 118,
@@ -4340,7 +4340,7 @@ game_messages {
     }
     message_history_jewelry {
         id: 382,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 33,
@@ -4359,7 +4359,7 @@ game_messages {
     }
     message_history_hunting {
         id: 383,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 119,
@@ -4378,7 +4378,7 @@ game_messages {
     }
     message_history_priests {
         id: 384,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 120,
@@ -4397,7 +4397,7 @@ game_messages {
     }
     message_history_stonemasons {
         id: 385,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 121,
@@ -4416,7 +4416,7 @@ game_messages {
     }
     message_history_bricklayers {
         id: 386,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 122,
@@ -4435,7 +4435,7 @@ game_messages {
     }
     message_history_scribes {
         id: 387,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 21,
@@ -4454,7 +4454,7 @@ game_messages {
     }
     message_history_immigration {
         id: 388,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 123,
@@ -4473,7 +4473,7 @@ game_messages {
     }
     message_history_carpenters {
         id: 389,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 124,
@@ -4492,7 +4492,7 @@ game_messages {
     }
     message_history_bricks {
         id: 390,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 125,
@@ -4511,7 +4511,7 @@ game_messages {
     }
     message_history_sphinx {
         id: 391,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 8,
@@ -4530,7 +4530,7 @@ game_messages {
     }
     message_history_pyramids {
         id: 392,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 39,
@@ -4549,7 +4549,7 @@ game_messages {
     }
     message_history_festivals {
         id: 393,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 126,
@@ -4568,7 +4568,7 @@ game_messages {
     }
     message_history_mastaba {
         id: 394,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 127,
@@ -4587,7 +4587,7 @@ game_messages {
     }
     message_history_burial_provisions {
         id: 395,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 26,
@@ -4606,7 +4606,7 @@ game_messages {
     }
     message_history_other_monuments {
         id: 396,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1,
@@ -4625,7 +4625,7 @@ game_messages {
     }
     message_history_obelisk {
         id: 397,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 17,
@@ -4644,7 +4644,7 @@ game_messages {
     }
     message_history_linen_and_weaving {
         id: 398,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 24,
@@ -4663,7 +4663,7 @@ game_messages {
     }
     message_history_religion {
         id: 399,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 43,
@@ -5778,7 +5778,7 @@ game_messages {
     }
     message_mission_henna {
         id: 469,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1008,
@@ -5797,7 +5797,7 @@ game_messages {
     }
     message_mission_paint_maker {
         id: 470,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Paint Maker",
@@ -5809,7 +5809,7 @@ game_messages {
     message_illness_video {
         id: 471,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Illness",
@@ -5820,7 +5820,7 @@ game_messages {
     }
     message_history_artisans {
         id: 472,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1004,
@@ -5839,7 +5839,7 @@ game_messages {
     }
     message_building_lamp_maker {
         id: 473,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Lamp Maker",
@@ -5850,7 +5850,7 @@ game_messages {
     }
     message_history_lamps {
         id: 474,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1003,
@@ -5869,7 +5869,7 @@ game_messages {
     }
     message_history_valley_of_the_kings {
         id: 475,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1011,
@@ -5888,7 +5888,7 @@ game_messages {
     }
     message_history_oil {
         id: 476,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1009,
@@ -5907,7 +5907,7 @@ game_messages {
     }
     message_figure_tomb_robber {
         id: 477,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Tomb Robber",
@@ -5918,7 +5918,7 @@ game_messages {
     }
     message_building_royal_burial_tomb {
         id: 478,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Royal Burial Tomb",
@@ -5929,7 +5929,7 @@ game_messages {
     }
     message_building_zoo {
         id: 479,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Zoo",
@@ -5940,7 +5940,7 @@ game_messages {
     }
     message_history_zoo {
         id: 480,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1005,
@@ -5959,7 +5959,7 @@ game_messages {
     }
     message_history_alexandria_and_its_library {
         id: 481,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1001,
@@ -5978,7 +5978,7 @@ game_messages {
     }
     message_history_caesareum {
         id: 482,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1002,
@@ -5998,7 +5998,7 @@ game_messages {
     message_plague_of_locusts {
         id: 483,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6011,7 +6011,7 @@ game_messages {
     message_plague_of_frogs {
         id: 484,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6024,7 +6024,7 @@ game_messages {
     message_hailstorm {
         id: 485,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6037,7 +6037,7 @@ game_messages {
     message_river_of_blood {
         id: 486,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6049,7 +6049,7 @@ game_messages {
     }
     message_history_pharos_lighthouse {
         id: 487,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1006,
@@ -6068,7 +6068,7 @@ game_messages {
     }
     message_building_alexandria_library {
         id: 488,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Alexandria's Library",
@@ -6079,7 +6079,7 @@ game_messages {
     }
     message_building_pharos_lighthouse {
         id: 489,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Pharos Lighthouse",
@@ -6090,7 +6090,7 @@ game_messages {
     }
     message_building_caesareum {
         id: 490,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Caesareum",
@@ -6102,7 +6102,7 @@ game_messages {
     message_crime_wave {
         id: 491,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6114,7 +6114,7 @@ game_messages {
     }
     message_building_abu_simbel {
         id: 492,
-        pos [0, 24]
+        
         size [30, 28]
         title {
             text: "Abu Simbel",
@@ -6125,7 +6125,7 @@ game_messages {
     }
     message_history_abu_simbel {
         id: 493,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1007,
@@ -6144,14 +6144,14 @@ game_messages {
     }
     message_tutorial_major_plagues {
         id: 494
-        pos [0, 24]
+        
         size [30, 28]
         title { text: "Major Plagues" }
         content { text: "There are many calamities that may befall a city, regardless of its size or wealth, and Major Plagues are some of the worst. Please note, though, that Major Plagues are not the same thing as @53plague. Plague strikes the city when city health is particularly bad. Major Plagues may strike for no reason at all.  @PAll of the Major Plagues result in lower @39city&sentiment. Their other dire consequences are described below: @L@LRiver of Blood @LWhen the River of Blood strikes the city, the river and waters of your city will turn to blood for several months and be unfit for @44drinking&water and other uses. Some of the water that houses store on site will also be contaminated and undrinkable, with those living closest to the river feeling the effects the most. People living near the water will also be at an even greater risk for disease and malaria (for more details on disease and malaria, see @53city&health). @84Fishing&Wharves, @59Water&Lifts, @94Reed&Gatherers, @62Wells and @61Water&Supplies will stop working during the plague. An unhappy @354Bast might unleash this plague upon your city, or the plague may occur for no discernable reason at all. @L@LFrogs @LWhen the Plague of Frogs is visited upon your city, legions of frogs invade your borders and infest any houses they pass. No one can live in a frog-infested house, so the residents are forced out, and no one can move back in for several months. You can try to contain the frogs by building walls around them or strategically positioning buildings to pen them in. @352Ptah can bring this curse down on your city if you displease him, or the frogs may strike of their own volition. @L@LHailstorm @LDeadly hailstones are the progeny of Hailstorms, which can kill anyone walking in your city. Hailstones are non-discriminatory and can kill soldiers (including enemies) and animals just as easily as they can kill ordinary citizens. Hailstorms also bring violent turbulence to the river, and many of your ships may sink. If you neglect @353Seth, he may bring this terror to your city. Hailstorms can also be natural weather phenomenon. @L@LLocusts @LLocusts descend upon the land and devour any crops your @45farms are growing. The crops on both the flood plain and meadowland will be completely destroyed just before the harvest, robbing your city of the harvest's benefit for the year. When you have piqued @350Osiris' anger, he may send this plague to your city. Sometimes, though, locusts will appear without provocation.   @L@LTo learn more about major plagues that afflicted the land of the pharaohs, click @495here." }
     }
     message_history_major_plagues {
         id: 495,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1010,
@@ -6171,7 +6171,7 @@ game_messages {
     message_mummy_attacks {
         id: 496,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Mummy Attacks!" }
