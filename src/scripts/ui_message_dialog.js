@@ -2,7 +2,7 @@ log_info("akhenaten: message dialog window started")
 
 // General message dialog (MESSAGE_TYPE_GENERAL, TYPE_MANUAL, TYPE_ABOUT, TYPE_MISSION)
 message_dialog_window_general {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui {
@@ -11,7 +11,7 @@ message_dialog_window_general {
         title          : text({pos: [0, 14], size: [px(30), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT})
         subtitle       : text({pos: [0, 0], size: [px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
         
-        content_panel  : inner_panel({pos: [16, 48], size: [28, 16]})
+        content_panel  : inner_panel({pos: [16, 48], size: [28, 18]})
         content_text   : text({pos: [24, 54], size: [px(28), px(16)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
         
         button_help    : help_button({})
@@ -32,7 +32,7 @@ message_dialog_window_general {
 
 // Disaster message dialog (MESSAGE_TYPE_DISASTER)
 message_dialog_window_disaster {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui : __baseui(message_dialog_window_general, {
@@ -42,17 +42,18 @@ message_dialog_window_disaster {
 
 // Imperial message dialog (MESSAGE_TYPE_IMPERIAL)
 message_dialog_window_imperial {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui : __baseui(message_dialog_window_general, {
-
+        content_panel  : inner_panel({pos: [16, 48], size: [28, 14]}),
+        content_text   : text({pos: [24, 54], size: [px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
     })
 }
 
 // Emigration message dialog (MESSAGE_TYPE_EMIGRATION)
 message_dialog_window_emigration {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
@@ -62,7 +63,7 @@ message_dialog_window_emigration {
 
 // Tutorial message dialog (MESSAGE_TYPE_TUTORIAL)
 message_dialog_window_tutorial {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
@@ -72,7 +73,7 @@ message_dialog_window_tutorial {
 
 // Trade change message dialog (MESSAGE_TYPE_TRADE_CHANGE)
 message_dialog_window_trade_change {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
@@ -82,7 +83,7 @@ message_dialog_window_trade_change {
 
 // Price change message dialog (MESSAGE_TYPE_PRICE_CHANGE)
 message_dialog_window_price_change {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
@@ -92,7 +93,7 @@ message_dialog_window_price_change {
 
 // Invasion message dialog (MESSAGE_TYPE_INVASION)
 message_dialog_window_invasion {
-    pos [0, 0]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {

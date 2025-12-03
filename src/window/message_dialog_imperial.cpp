@@ -26,26 +26,13 @@ int ui::message_dialog_imperial::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_imperial::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
     draw_foreground_normal();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
-    graphics_reset_dialog();
 }
 
 void ui::message_dialog_imperial::draw_content(const lang_message &msg) {
-    xstring text = msg.content.text;
-    if (is_eventmsg) {
-        text = body_text;
-    }
-
-    if (!text) {
-        return;
-    } 
-
-    ui["content_text"] = text;
-
     assert(msg.type == TYPE_MESSAGE);
     draw_city_message_text(msg);
 }
@@ -67,11 +54,11 @@ void ui::message_dialog_imperial::draw_city_message_text(const lang_message& msg
 
     const auto& city_msg = city_message_get(message_id);
     bstring1024 full_text;
-    int resource_image = image_id_resource_icon(city_msg.req_resource);
-    full_text.printf("%s\n%s\n@I%d %d %s\n%s %d %s",
+    int resource_image_id = this->resource_image(city_msg.req_resource);
+    full_text.printf("%s @P@P%s @P@P @I%d %d %s %s %d %s",
                      header.c_str(),
                      text.c_str(), 
-                     resource_image, stack_proper_quantity(city_msg.req_amount, city_msg.req_resource), ui::str(23, city_msg.req_resource),
+                     resource_image_id, stack_proper_quantity(city_msg.req_amount, city_msg.req_resource), ui::str(23, city_msg.req_resource),
                      ui::str(8, 4), city_msg.req_months_left, ui::str(12, 2));
 
     ui["content_text"] = full_text;

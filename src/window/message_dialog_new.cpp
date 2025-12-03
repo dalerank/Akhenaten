@@ -52,7 +52,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     background = false;
     background_img = 0;
     god = GOD_UNKNOWN;
-    pos = {0, 0};
     x_text = 0;
     y_text = 0;
     text_height_blocks = 0;
@@ -65,7 +64,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     player_msg.message_advisor = 0;
     player_msg.use_popup = false;
     subtitle_text = "";
-    subtitle_pos = {0, 0};
     
     for (auto &item : history) {
         item.text_id = 0;
@@ -146,26 +144,19 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     
     // Setup subtitle from message
     subtitle_text = msg.subtitle.text;
-    subtitle_pos = msg.subtitle.pos;
-    if (!subtitle_text.empty() && subtitle_pos.x) {
+    if (!subtitle_text.empty()) {
         ui["subtitle"].text(subtitle_text.c_str());
-        ui["subtitle"].pos = {0, subtitle_pos.y};
         ui["subtitle"].enabled = true;
     } else {
         ui["subtitle"].enabled = false;
     }
 
-    pos = msg.pos;
-
     // Update UI element positions
-    ui["background"].pos = pos;
-    ui["background"].size = { msg.size.x, msg.size.y };
     ui["background"].enabled = true;
-
-    ui["title"].pos = { pos.x, pos.y + 14 };
-    ui["title"].size = { 16 * msg.size.x, 20 };
+    ui["title"] = msg.title.text;
     ui["title"].enabled = true;
 
+    ui["button_close"].enabled = true;
 
     // Config is already loaded by the derived class constructor
     _is_inited = false;
@@ -432,7 +423,6 @@ int ui::message_dialog_base::draw_background(UiFlags flags) {
         window_draw_underlying_window(0);
     }
 
-    graphics_set_to_dialog();
     if (show_video) {
         draw_background_video();
     } else if (background) {
@@ -441,45 +431,21 @@ int ui::message_dialog_base::draw_background(UiFlags flags) {
         draw_background_normal();
     }
 
-    graphics_reset_dialog();
     return 0;
 }
 
 void ui::message_dialog_base::draw_foreground_normal() {
-    const lang_message& msg = lang_get_message(text_id);
-
-    if (msg.type == TYPE_MANUAL && num_history > 0) {
-        ui["button_close"].enabled = true;
-        ui["button_close"].pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
-        lang_text_draw(12, 0, pos.x + 52, pos.y + 16 * msg.size.y - 31, FONT_NORMAL_BLACK_ON_LIGHT);
-    } else {
-        ui["button_close"].enabled = false;
-    }
-
-    if (msg.type == TYPE_MESSAGE) {
-        ui["button_advisor"].enabled = true;
-        ui["button_advisor"].pos = {pos.x + 16, pos.y + 16 * msg.size.y - 40};
-    } else {
-        ui["button_advisor"].enabled = false;
-    }
-    
-    ui["button_close"].enabled = true;
-    ui["button_close"].pos = {pos.x + 16 * msg.size.x - 38, pos.y + 16 * msg.size.y - 36};
 }
 
 void ui::message_dialog_base::draw_foreground_image() {
     ui["button_advisor"].enabled = true;
-    ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
     ui["button_close"].enabled = true;
-    ui["button_close"].pos = {pos.x + 372, pos.y + 410};
 }
 
 void ui::message_dialog_base::draw_foreground_video() {
     video_draw(pos.x + 8, pos.y + 8);
     ui["button_advisor"].enabled = true;
-    ui["button_advisor"].pos = {pos.x + 16, pos.y + 408};
     ui["button_close"].enabled = true;
-    ui["button_close"].pos = {pos.x + 372, pos.y + 410};
 }
 
 bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
@@ -688,17 +654,11 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id) {
 }
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
-    if (g_message_dialog_instance) {
-        delete g_message_dialog_instance;
-    }
     g_message_dialog_instance = create_message_dialog(text_id);
     g_message_dialog_instance->show(text_id, message_id, background_callback);
 }
 
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
-    if (g_message_dialog_instance) {
-        delete g_message_dialog_instance;
-    }
     g_message_dialog_instance = create_message_dialog(text_id);
     g_message_dialog_instance->show_city_message(text_id, message_id, year, month, param1, param2, message_advisor, use_popup);
 }
@@ -718,18 +678,15 @@ void window_show_help() {
     }
 }
 
-// Derived class implementations
 int ui::message_dialog_general::handle_mouse(const mouse *m) {
     return ui_handle_mouse(m);
 }
 
 void ui::message_dialog_general::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
     draw_foreground_normal();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
-    graphics_reset_dialog();
 }
 
 
