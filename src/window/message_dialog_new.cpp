@@ -40,7 +40,6 @@
 static ui::message_dialog_base* g_message_dialog_instance = nullptr;
 
 ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_window(config_name), config_name(config_name) {
-    num_history = 0;
     text_id = 0;
     message_id = -1;
     is_eventmsg = false;
@@ -52,8 +51,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     background = false;
     background_img = 0;
     god = GOD_UNKNOWN;
-    x_text = 0;
-    y_text = 0;
     text_height_blocks = 0;
     text_width_blocks = 0;
     focus_button_id = 0;
@@ -64,34 +61,10 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     player_msg.message_advisor = 0;
     player_msg.use_popup = false;
     subtitle_text = "";
-    
-    for (auto &item : history) {
-        item.text_id = 0;
-        item.scroll_position = 0;
-    }
 }
 
 pcstr ui::message_dialog_base::get_section() const {
     return config_name.c_str();
-}
-
-void ui::message_dialog_base::init_widgets(xstring text_id) {
-    const lang_message &msg = lang_get_message(text_id);
-    
-    ui["button_close"].onclick([this] { button_close(); });
-    //ui["button_back"].onclick([this] { button_back(); });
-    ui["button_help"].onclick([this] { button_help(); });
-
-    // Advisor button will be set dynamically
-    ui["button_advisor"].onclick([this] {
-        int advisor = player_msg.message_advisor;
-        if (advisor == 0) {
-            advisor = MESSAGE_ADVISOR_LABOR;
-        }
-        button_advisor(advisor);
-    });
-
-    // button_go_to_problem is set up in derived classes that need it
 }
 
 void ui::message_dialog_base::init() {
@@ -99,14 +72,17 @@ void ui::message_dialog_base::init() {
 }
 
 void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
-    init_widgets(text_id);
+    const lang_message &msg = lang_get_message(text_id);
 
-    scroll_drag_end();
-    for (auto &item : history) {
-        item.text_id = 0;
-        item.scroll_position = 0;
-    }
-    num_history = 0;
+    ui["button_close"].onclick([this] { button_close(); });
+    //ui["button_back"].onclick([this] { button_back(); });
+    ui["button_help"].onclick([this] { button_help(); });
+
+    ui["button_advisor"].enabled = (player_msg.message_advisor != ADVISOR_NONE);
+    ui["button_advisor"].onclick([this] {
+        int advisor = player_msg.message_advisor;
+        button_advisor(advisor);
+    });
 
     this->message_id = message_id;
     god = GOD_UNKNOWN;
@@ -119,8 +95,8 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
             title_text = g_scenario.events.msg_text(city_msg.eventmsg_title_id, 0);
             body_template = g_scenario.events.msg_text(city_msg.eventmsg_body_id, 0);
             phrase_template = g_scenario.events.msg_text(city_msg.eventmsg_phrase_id, 0);
-            eventmsg_template_combine(phrase_template, phrase_text.data(), true);
-            eventmsg_template_combine(body_template, body_text.data(), false);
+            eventmsg_template_combine(phrase_template.c_str(), phrase_text.data(), true);
+            eventmsg_template_combine(body_template.c_str(), body_text.data(), false);
         } else {
             is_eventmsg = false;
         }
@@ -136,7 +112,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         is_eventmsg = false;
     }
 
-    const lang_message& msg = lang_get_message(text_id);
     this->text_id = msg.id;
     this->background_callback = background_callback;
     show_video = false;
@@ -151,8 +126,9 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         ui["subtitle"].enabled = false;
     }
 
-    // Update UI element positions
-    ui["background"].enabled = true;
+    if (msg.size.x > 0) {
+        ui["background"].size = msg.size;
+    }
     ui["title"] = msg.title.text;
     ui["title"].enabled = true;
 
@@ -279,36 +255,6 @@ int ui::message_dialog_base::get_message_image_id(const lang_message& msg) {
     }
 }
 
-image_button* ui::message_dialog_base::get_advisor_button() {
-    static image_button image_button_labor = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 0, nullptr, button_none, ADVISOR_LABOR, 0, 1};
-    static image_button image_button_trade = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, nullptr, button_none, ADVISOR_TRADE, 0, 1};
-    static image_button image_button_population = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 15, nullptr, button_none, ADVISOR_POPULATION, 0, 1};
-    static image_button image_button_imperial = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 6, nullptr, button_none, ADVISOR_IMPERIAL, 0, 1};
-    static image_button image_button_military = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 3, nullptr, button_none, ADVISOR_MILITARY, 0, 1};
-    static image_button image_button_health = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 18, nullptr, button_none, ADVISOR_HEALTH, 0, 1};
-    static image_button image_button_religion = {0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 27, nullptr, button_none, ADVISOR_RELIGION, 0, 1};
-    static image_button image_button_help = {0, 0, 18, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, nullptr, button_none, 1, 0, 1};
-
-    switch (player_msg.message_advisor) {
-    case MESSAGE_ADVISOR_LABOR:
-        return &image_button_labor;
-    case MESSAGE_ADVISOR_TRADE:
-        return &image_button_trade;
-    case MESSAGE_ADVISOR_POPULATION:
-        return &image_button_population;
-    case MESSAGE_ADVISOR_IMPERIAL:
-        return &image_button_imperial;
-    case MESSAGE_ADVISOR_MILITARY:
-        return &image_button_military;
-    case MESSAGE_ADVISOR_HEALTH:
-        return &image_button_health;
-    case MESSAGE_ADVISOR_RELIGION:
-        return &image_button_religion;
-    default:
-        return &image_button_help;
-    }
-}
-
 void ui::message_dialog_base::draw_image(const lang_message& msg) {
     const city_message& city_msg = city_message_get(message_id);
     
@@ -339,9 +285,7 @@ void ui::message_dialog_base::draw_city_message_text(const lang_message& msg) {
     bstring1024 header;
     header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
 
-    const auto &city_msg = city_message_get(message_id);
     bstring1024 full_text;
-    int resource_image = image_id_resource_icon(city_msg.req_resource);
     full_text.printf("%s\n %s", header.c_str(), text.c_str());
 
     ui["content_text"] = full_text;
@@ -438,44 +382,40 @@ void ui::message_dialog_base::draw_foreground_normal() {
 }
 
 void ui::message_dialog_base::draw_foreground_image() {
-    ui["button_advisor"].enabled = true;
-    ui["button_close"].enabled = true;
 }
 
 void ui::message_dialog_base::draw_foreground_video() {
     video_draw(pos.x + 8, pos.y + 8);
-    ui["button_advisor"].enabled = true;
-    ui["button_close"].enabled = true;
 }
 
 bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
-    if (msg.type == TYPE_MANUAL && num_history > 0) {
-        vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
-        if (m_dialog->left.went_down && 
-            m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 31 &&
-            m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 20) {
-            button_back();
-            return true;
-        }
-    }
-
-    if (msg.type == TYPE_MESSAGE) {
-        vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 40};
-        if (m_dialog->left.went_down && 
-            m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
-            m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
-            button_advisor(player_msg.message_advisor);
-            return true;
-        }
-    }
-
-    vec2i btn_pos = {pos.x + 16 * msg.size.x - 38, pos.y + 16 * msg.size.y - 36};
-    if (m_dialog->left.went_down && 
-        m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
-        m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
-        button_close();
-        return true;
-    }
+    // if (msg.type == TYPE_MANUAL && num_history > 0) {
+    //     vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
+    //     if (m_dialog->left.went_down && 
+    //         m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 31 &&
+    //         m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 20) {
+    //         button_back();
+    //         return true;
+    //     }
+    // }
+    // 
+    // if (msg.type == TYPE_MESSAGE) {
+    //     vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 40};
+    //     if (m_dialog->left.went_down && 
+    //         m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
+    //         m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
+    //         button_advisor(player_msg.message_advisor);
+    //         return true;
+    //     }
+    // }
+    // 
+    // vec2i btn_pos = {pos.x + 16 * msg.size.x - 38, pos.y + 16 * msg.size.y - 36};
+    // if (m_dialog->left.went_down && 
+    //     m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
+    //     m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
+    //     button_close();
+    //     return true;
+    // }
 
     // int text_id = rich_text.get_clicked_link(m_dialog);
     // if (text_id >= 0) {
@@ -492,21 +432,21 @@ bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const l
 }
 
 bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const lang_message& msg) {
-    vec2i btn_pos = {pos.x + 16, pos.y + 408};
-    if (m_dialog->left.went_down && 
-        m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
-        m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
-        button_advisor(player_msg.message_advisor);
-        return true;
-    }
-
-    btn_pos = {pos.x + 372, pos.y + 410};
-    if (m_dialog->left.went_down && 
-        m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
-        m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
-        button_close();
-        return true;
-    }
+    //vec2i btn_pos = {pos.x + 16, pos.y + 408};
+    //if (m_dialog->left.went_down && 
+    //    m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
+    //    m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
+    //    button_advisor(player_msg.message_advisor);
+    //    return true;
+    //}
+    //
+    //btn_pos = {pos.x + 372, pos.y + 410};
+    //if (m_dialog->left.went_down && 
+    //    m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
+    //    m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
+    //    button_close();
+    //    return true;
+    //}
 
     return false;
 }

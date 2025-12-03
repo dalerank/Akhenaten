@@ -4,7 +4,10 @@
 #include "city/city.h"
 #include "city/constants.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/panel.h"
 #include "graphics/elements/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -19,12 +22,10 @@ int ui::message_dialog_price_change::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_price_change::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
     draw_foreground_normal();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
-    graphics_reset_dialog();
 }
 
 void ui::message_dialog_price_change::draw_city_message_text(const lang_message& msg) {
@@ -39,13 +40,15 @@ void ui::message_dialog_price_change::draw_city_message_text(const lang_message&
         return;
     }
     
-    int width = lang_text_draw(25, player_msg.month, x_text + 10, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw_year(player_msg.year, x_text + 12 + width, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    width += lang_text_draw(63, 5, x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK);
-    text_draw(city_player_name(), x_text + width + 60, y_text + 6, FONT_NORMAL_WHITE_ON_DARK, 0);
+    bstring1024 header;
+    header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
 
-    ctx.img_generic(resource_image(player_msg.param2), { pos.x + 64, y_text + 40 });
-    text_draw_money(player_msg.param1, pos.x + 100, y_text + 44, FONT_NORMAL_WHITE_ON_DARK);
-    ui["content_text"] = text;
+    bstring1024 full_text;
+    int resource_image_id = this->resource_image(player_msg.param2);
+    bstring64 money_str;
+    money_str.printf("%d %s", player_msg.param1, lang_get_string(6, 0));
+    full_text.printf("%s @P%s @P@I%d %s", header.c_str(), text.c_str(), resource_image_id, money_str.c_str());
+
+    ui["content_text"] = full_text;
 }
 

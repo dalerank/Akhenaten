@@ -39,8 +39,6 @@ namespace ui {
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual void init() override;
 
-        void init_widgets(xstring text_id);
-
         void show(xstring text_id, int message_id, void (*background_callback)(void));
         void show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
         void setup_help_id(xstring helpid);
@@ -48,20 +46,16 @@ namespace ui {
         struct history_item {
             int text_id;
             int scroll_position;
-        };
-        
-        static const int MAX_HISTORY = 200;
-        history_item history[MAX_HISTORY];
-        int num_history;
+        };       
 
         uint16_t text_id;
         int message_id;
         bool is_eventmsg;
-        pcstr title_text;
+        xstring title_text;
         bstring1024 body_text;
         bstring256 phrase_text;
-        pcstr body_template;
-        pcstr phrase_template;
+        xstring body_template;
+        xstring phrase_template;
 
         void (*background_callback)();
         bool show_video;
@@ -69,13 +63,10 @@ namespace ui {
         uint16_t background_img;
         e_god god;
 
-        int x_text;
-        int y_text;
         int text_height_blocks;
         int text_width_blocks;
         int focus_button_id;
-        xstring help_id;
-        
+        xstring help_id;        
         xstring subtitle_text;
 
         struct player_message {
@@ -95,6 +86,7 @@ namespace ui {
         virtual void draw_background_normal();
         virtual void draw_background_image();
         virtual void draw_background_video();
+
         virtual void draw_foreground_normal();
         virtual void draw_foreground_image();
         virtual void draw_foreground_video();
@@ -114,7 +106,6 @@ namespace ui {
         
         int resource_image(int resource);
         int get_message_image_id(const lang_message& msg);
-        image_button* get_advisor_button();
         
         virtual pcstr get_section() const override;
     protected:
@@ -127,11 +118,6 @@ namespace ui {
         virtual int handle_mouse(const mouse *m) override;
         virtual void draw_foreground(UiFlags flags) override;
     };
-
-
-
-
-
 }
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void));
