@@ -101,3 +101,13 @@ message_dialog_window_invasion {
     })
 }
 
+// God message dialog (messages from gods)
+message_dialog_window_god {
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
+    help_id: ""
+    
+    ui :__baseui(message_dialog_window_general, {
+
+    })
+}
+

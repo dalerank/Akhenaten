@@ -26,6 +26,7 @@ namespace ui {
     struct message_dialog_trade_change;
     struct message_dialog_price_change;
     struct message_dialog_invasion;
+    struct message_dialog_god;
     
     // Base class with common functionality
     struct message_dialog_base : public autoconfig_window {
@@ -61,7 +62,6 @@ namespace ui {
         bool show_video;
         bool background;
         uint16_t background_img;
-        e_god god;
 
         int text_height_blocks;
         int text_width_blocks;
@@ -78,7 +78,7 @@ namespace ui {
             bool use_popup;
         } player_msg;
 
-        void init_data(xstring text_id, int message_id, void (*background_callback)(void));
+        virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void));
         void set_city_message(int year, int month, int param1, int param2, int message_advisor, bool use_popup);
         void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier);
         void cleanup();

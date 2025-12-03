@@ -6,6 +6,7 @@
 #include "message_dialog_trade_change.h"
 #include "message_dialog_price_change.h"
 #include "message_dialog_invasion.h"
+#include "message_dialog_god.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -50,7 +51,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     show_video = false;
     background = false;
     background_img = 0;
-    god = GOD_UNKNOWN;
     text_height_blocks = 0;
     text_width_blocks = 0;
     focus_button_id = 0;
@@ -85,7 +85,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     });
 
     this->message_id = message_id;
-    god = GOD_UNKNOWN;
     background_img = 0;
 
     if (message_id != -1) {
@@ -99,10 +98,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
             eventmsg_template_combine(body_template.c_str(), body_text.data(), false);
         } else {
             is_eventmsg = false;
-        }
-
-        if (city_msg.god != GOD_UNKNOWN) {
-            god = (e_god)city_msg.god;
         }
 
         if (city_msg.background_img) {
@@ -144,7 +139,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     if (!msg.video.text.empty() && video_start(msg.video.text.c_str())) {
         show_video = true;
         video_init();
-    } else if ((god != GOD_UNKNOWN) || background_img) {
+    } else if (background_img) {
         background = true;
     }
 }
@@ -325,10 +320,7 @@ void ui::message_dialog_base::draw_background_image() {
     ui["content_text"] = msg.content.text;
 
     const image_t *img = nullptr;
-    if (god != GOD_UNKNOWN) {
-        int image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + god;
-        img = image_get(image_id);
-    } else if (background) {
+    if (background) {
         int image_id = background_img;
         if (image_id == messages::IMAGE_FROM_SCHEME) {
             int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
@@ -553,9 +545,18 @@ ui::message_dialog_tutorial message_dialog_tutorial_window;
 ui::message_dialog_trade_change message_dialog_trade_change_window;
 ui::message_dialog_price_change message_dialog_price_change_window;
 ui::message_dialog_invasion message_dialog_invasion_window;
+ui::message_dialog_god message_dialog_god_window;
 
-static ui::message_dialog_base* create_message_dialog(xstring text_id) {
+static ui::message_dialog_base* create_message_dialog(xstring text_id, int message_id = -1) {
     const lang_message& msg = lang_get_message(text_id);
+    
+    // Check if message is from a god first
+    if (message_id != -1) {
+        const city_message& city_msg = city_message_get(message_id);
+        if (city_msg.god != GOD_UNKNOWN) {
+            return &message_dialog_god_window;
+        }
+    }
     
     // Determine which class to create based on message type
     ui::message_dialog_base *window;
@@ -594,12 +595,12 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id) {
 }
 
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void)) {
-    g_message_dialog_instance = create_message_dialog(text_id);
+    g_message_dialog_instance = create_message_dialog(text_id, message_id);
     g_message_dialog_instance->show(text_id, message_id, background_callback);
 }
 
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup) {
-    g_message_dialog_instance = create_message_dialog(text_id);
+    g_message_dialog_instance = create_message_dialog(text_id, message_id);
     g_message_dialog_instance->show_city_message(text_id, message_id, year, month, param1, param2, message_advisor, use_popup);
 }
 
