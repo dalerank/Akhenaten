@@ -130,6 +130,39 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
+void event_manager_t::create_trade_city_under_siege(int tag, int months_initial) {
+    auto& event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_TRADE_CITY_UNDER_SIEGE;
+    event.time.year = game.simtime.years_since_start();
+    event.time.month = game.simtime.month;
+    event.tag_id = tag;
+    event.location_fields = { -1, -1, -1, -1 };
+    event.months_initial = months_initial;
+    event.event_id = event_id;
+    //event.event_trigger_type = EVENT_TRIGGER_GLOBAL_UPDATE;
+    event.event_state = e_event_state_initial;
+    process_event(event_id, false, -1);
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+void event_manager_t::set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it != g_scenario_events.event_list.end()) {
+        it->location_fields = { l1, l2, l3, l4 };
+    }
+}
+
+void event_manager_t::set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it != g_scenario_events.event_list.end()) {
+        it->reasons = { r1, r2, r3, r4 };
+    }
+}
+
 int16_t event_manager_t::events_count() {
     return g_scenario_events.event_list.size();
 }

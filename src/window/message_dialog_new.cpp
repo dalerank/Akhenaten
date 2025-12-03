@@ -53,7 +53,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     background = false;
     text_height_blocks = 0;
     text_width_blocks = 0;
-    focus_button_id = 0;
     player_msg.year = 0;
     player_msg.month = 0;
     player_msg.param1 = 0;

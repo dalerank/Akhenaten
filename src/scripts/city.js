@@ -30,6 +30,14 @@ city {
             add_fire_damage: function(damage) { __building_add_fire_damage(building_id, damage) }
         }
     }
+
+    create_trade_city_under_siege : function(tag_id, months_initial) {
+        return {
+            tag_id: tag_id
+            months_initial: months_initial
+            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(tag_id, reasons) }
+        }
+    }
 }
 
 finance { 
