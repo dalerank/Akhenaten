@@ -18,6 +18,17 @@ struct text_tag_substitution {
 };
 
 namespace ui {
+    // Forward declarations
+    struct message_dialog_disaster;
+    struct message_dialog_imperial;
+    struct message_dialog_emigration;
+    struct message_dialog_tutorial;
+    struct message_dialog_trade_change;
+    struct message_dialog_price_change;
+    struct message_dialog_invasion;
+    struct message_dialog_god;
+    struct message_dialog_image;
+    
     // Base class with common functionality
     struct message_dialog_base : public autoconfig_window {
         message_dialog_base(pcstr config_name);
@@ -37,35 +48,25 @@ namespace ui {
         struct history_item {
             int text_id;
             int scroll_position;
-        };
-        
-        static const int MAX_HISTORY = 200;
-        history_item history[MAX_HISTORY];
-        int num_history;
+        };       
 
         uint16_t text_id;
         int message_id;
         bool is_eventmsg;
-        pcstr title_text;
+        xstring title_text;
         bstring1024 body_text;
         bstring256 phrase_text;
-        pcstr body_template;
-        pcstr phrase_template;
+        xstring body_template;
+        xstring phrase_template;
 
         void (*background_callback)();
         bool show_video;
         bool background;
-        uint16_t background_img;
-        e_god god;
 
-        vec2i pos;
-        int x_text;
-        int y_text;
         int text_height_blocks;
         int text_width_blocks;
-        int focus_button_id;
-        xstring help_id;
-        rich_text_t rich_text;
+        xstring help_id;        
+        xstring subtitle_text;
 
         struct player_message {
             int year;
@@ -76,7 +77,7 @@ namespace ui {
             bool use_popup;
         } player_msg;
 
-        void init_data(xstring text_id, int message_id, void (*background_callback)(void));
+        virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void));
         void set_city_message(int year, int month, int param1, int param2, int message_advisor, bool use_popup);
         void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier);
         void cleanup();
@@ -84,12 +85,12 @@ namespace ui {
         virtual void draw_background_normal();
         virtual void draw_background_image();
         virtual void draw_background_video();
+
         virtual void draw_foreground_normal();
         virtual void draw_foreground_image();
         virtual void draw_foreground_video();
         
-        void draw_title(const lang_message& msg);
-        void draw_subtitle(const lang_message& msg);
+        void draw_image(const lang_message& msg);
         virtual void draw_content(const lang_message& msg);
         virtual void draw_city_message_text(const lang_message& msg);
         
@@ -101,12 +102,9 @@ namespace ui {
         void button_close();
         void button_help();
         void button_advisor(int advisor);
-        void button_go_to_problem();
         
         int resource_image(int resource);
-        int is_problem_message(const lang_message& msg);
         int get_message_image_id(const lang_message& msg);
-        image_button* get_advisor_button();
         
         virtual pcstr get_section() const override;
     protected:
@@ -118,55 +116,6 @@ namespace ui {
         message_dialog_general() : message_dialog_base("message_dialog_window_general") {}
         virtual int handle_mouse(const mouse *m) override;
         virtual void draw_foreground(UiFlags flags) override;
-    };
-
-    struct message_dialog_disaster : public message_dialog_base {
-        message_dialog_disaster() : message_dialog_base("message_dialog_window_disaster") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_imperial : public message_dialog_base {
-        message_dialog_imperial() : message_dialog_base("message_dialog_window_imperial") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_emigration : public message_dialog_base {
-        message_dialog_emigration() : message_dialog_base("message_dialog_window_emigration") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_tutorial : public message_dialog_base {
-        message_dialog_tutorial() : message_dialog_base("message_dialog_window_tutorial") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_trade_change : public message_dialog_base {
-        message_dialog_trade_change() : message_dialog_base("message_dialog_window_trade_change") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_price_change : public message_dialog_base {
-        message_dialog_price_change() : message_dialog_base("message_dialog_window_price_change") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
-    };
-
-    struct message_dialog_invasion : public message_dialog_base {
-        message_dialog_invasion() : message_dialog_base("message_dialog_window_invasion") {}
-        virtual int handle_mouse(const mouse *m) override;
-        virtual void draw_foreground(UiFlags flags) override;
-        virtual void draw_city_message_text(const lang_message& msg) override;
     };
 }
 
