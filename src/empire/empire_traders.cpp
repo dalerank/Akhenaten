@@ -56,9 +56,10 @@ void empire_trader::update() {
     }
 
     current_route_point++;
+    current_route_point = std::clamp<uint8_t>(current_route_point, 0, route.num_points - 1);
     const auto& point = (state == estate_returning_home)
-                            ? route.points[route.num_points - current_route_point]
-                            : route.points[current_route_point];
+                            ? route.points[current_route_point]
+                            : route.points[route.num_points - current_route_point];
     current_position = point.p;
 
     if (is_at_destination()) {
@@ -74,41 +75,29 @@ bool empire_trader::is_at_destination() const {
         return false;
     }
 
-    const auto base_city_id = g_empire.get_city_for_trade_route(trade_route_id);
-    const empire_city* city = g_empire.city((state == estate_returning_home) ? base_city_id : destination_city_id);
-    if (!city || !city->in_use) {
+    const map_route_object& route = g_empire.get_route_object(trade_route_id);
+    if (!route.in_use || route.num_points == 0) {
         return false;
     }
 
-    const empire_object* obj = city->get_empire_object();
-    if (!obj) {
-        return false;
-    }
-
-    int distance = calc_maximum_distance(current_position, obj->pos);
-    return distance <= 40; 
+    return current_route_point >= (route.num_points - 1);
 }
 
 void empire_trader::complete_trade() {
     if (state == estate_moving_to_destination) {
         state = estate_trading;
         current_route_point = 0;
+
+        const map_route_object &route = g_empire.get_route_object(trade_route_id);
+        current_position = route.points[current_route_point].p;
         movement_delay = 10;
-        
-        // Find the player's city index (destination city)
-        // When traders arrive, they come to the player's city, not the base city
-        const auto our_city = g_empire.get_our_city();
-        int player_city_id = our_city ? our_city->id : -1;
-        
-        if (player_city_id == -1) {
-            // Fallback: use base_city_id if player city not found
-            player_city_id = g_empire.get_city_for_trade_route(trade_route_id);
-        }
+              
+        int city_id = g_empire.get_city_for_trade_route(trade_route_id);
         
         if (is_ship) {
-            events::emit(event_trade_ship_arrival{ player_city_id, id, SOURCE_LOCATION });
+            events::emit(event_trade_ship_arrival{ city_id, id, SOURCE_LOCATION });
         } else {
-            events::emit(event_trade_caravan_arrival{ player_city_id, id, SOURCE_LOCATION });
+            events::emit(event_trade_caravan_arrival{ city_id, id, SOURCE_LOCATION });
         }
         return;
     } 
