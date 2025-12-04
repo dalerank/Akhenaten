@@ -1463,7 +1463,7 @@ game_messages {
         type: 2
         
         size [30, 20]
-        urgent: 1,
+        urgent: 1
         title { text: "Enemies at the door" }
         video { text: "@10" }
         content { text: "xxxx see eventmsg.txt" }
@@ -1471,10 +1471,9 @@ game_messages {
 
     message_template_request {
         id: 130,
-        type: 2,
-        message_type: 2,
-        ,
-        size [30, 20],
+        type: 2
+        message_type: 2
+        size [30, 20]
         title { text: "Pharaoh request goods" }
         content { text: "" }
     }

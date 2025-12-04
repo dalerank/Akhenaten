@@ -144,11 +144,11 @@ function mission8_pharaoh_requested_luxury_goods(ev) {
 		return
 	}
 
+	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} pharaoh requested luxury goods", {ev:ev})
 	if (ev.years_since_start < 2 && ev.month < 2) {
 		return
 	}
 
-	log_info("akhenaten: mission 8 selima: pharaoh requested luxury goods")
 	mission.pharaoh_requested_luxury_goods = true
 	city.create_good_request(/*tag_id*/1, RESOURCE_LUXURY_GOODS, /*amount*/2, /*months_initial*/4)
 }

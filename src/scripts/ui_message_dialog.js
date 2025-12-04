@@ -11,8 +11,8 @@ message_dialog_window_general {
         title          : text({pos: [0, 14], size: [px(30), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT})
         subtitle       : text({pos: [0, 0], size: [px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
         
-        content_panel  : inner_panel({pos: [16, 48], size: [28, 18]})
-        content_text   : text({pos: [24, 54], size: [px(28), px(16)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
+        content_panel  : inner_panel({pos: [16, 48], size: [28, 14]})
+        content_text   : text({pos: [24, 54], size: [px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
         
         button_help    : help_button({})
         button_close   : close_button({})
@@ -97,7 +97,7 @@ message_dialog_window_invasion {
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
-        button_go_to_problem : image_button({pos: [0, 0], size: [27, 27], pack: GROUP_SIDEBAR_BUTTONS, id: 52, enabled: false})
+        button_go_to_problem : image_button({pos: [0, 0], size: [27, 27], pack:PACK_GENERAL, id:136, enabled: false})
     })
 }
 
