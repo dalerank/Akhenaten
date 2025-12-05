@@ -794,53 +794,53 @@ localization_de = [
 
   { key: "#hunter_ostrich_good_city", lang:"de", text: "Mir gefällt es hier, aber es gibt immer Raum für Verbesserungen."}
   
-  { key: "#immigrant_im_new_here", text: "Ich bin neu hier. Ich frage mich, was die Stadt einer Person wie mir bieten wird." }
-  { key: "#immigrant_heard_there_is_a_job_here", text: "Ich hörte, es gibt hier einen Job für jeden, der einen will." }
-  { key: "#immigrant_city_has_plenty_of_food", text: "Die Leute sagen, dass diese Stadt reichlich Nahrung für alle hat." }
+  { key: "#immigrant_im_new_here", text: "Ich bin neu hier. Mal sehen, was die Stadt jemandem wie mir bieten kann." }
+  { key: "#immigrant_heard_there_is_a_job_here", text: "Ich hab gehört, dass hier jeder Arbeit finden kann, der Arbeit sucht." }
+  { key: "#immigrant_city_has_plenty_of_food", text: "Die Leute sagen, dass es in dieser Stadt viel zu essen gibt." }
   
-  { key: "#emigrant_no_job_in_city", text: "Ich kann hier keinen Job finden. Ich werde woanders suchen." }
-  { key: "#emigrant_no_food_in_city", text: "Es gibt nicht genug Nahrung für mich zum Essen. Ich ziehe aus dieser Wüste weg!" }
-  { key: "#emigrant_tax_too_high", text: "Die Steuern sind hier zu hoch. Ich bin überrascht, dass ich nicht fürs Verlassen besteuert wurde." }
-  { key: "#emigrant_salary_too_low", text: "Ich kann nicht von dem leben, was sie mir hier zahlen." }
-  { key: "#emigrant_no_house_for_me", text: "Die Häuser, die ich gesehen habe, sind vollgestopft mit Menschen. Ich kann nicht ohne Unterkunft bleiben." }
+  { key: "#emigrant_no_job_in_city", text: "Ich kann hier keine Arbeit finden. Ich werd mich mal woanders umsehen." }
+  { key: "#emigrant_no_food_in_city", text: "Hier gibt es für mich nicht genug zu essen. Ich verschwinde aus dieser Wüste!" }
+  { key: "#emigrant_tax_too_high", text: "Die Steuern sind hier einfach zu hoch. Dass ich nicht auch noch für meinen Auszug besteuert wurde, is' ein echtes Wunder." }
+  { key: "#emigrant_salary_too_low", text: "Von dem, was ich hier verdiene, kann ich nich' leben." }
+  { key: "#emigrant_no_house_for_me", text: "Die Häuser hier sind reichlich überbelegt. Aber wenn ich keine Wohnung finde, kann ich nich' hierbleiben." }
   
-  { key: "#recruiter_sick_people", text: "Ich sehe überall kranke Menschen. Eine Seuche könnte ausbrechen!" }
-  { key: "#recruiter_starving", text: "Ich verhungere. Ich würde lieber nach Nahrung suchen als nach Arbeitern. " }
-  { key: "#recruiter_city_defenses_weak", text: "Die Stadtverteidigungen sind so schwach, ich könnte bald Stellen mit Ausländern statt Ägyptern besetzen." }
-  { key: "#recruiter_without_workers", text: "Ohne verfügbare Arbeiter ist mein Job unmöglich." }
-  { key: "#recruiter_gods_unleash_fury", text: "Ich hoffe, die Götter entfesseln nicht ihre Wut. Wir müssen ihnen mehr Aufmerksamkeit schenken." }
-  { key: "#recruiter_enemies_attack", text: "Feinde könnten jederzeit angreifen. Unser Ruf ist niedrig, und niemand respektiert uns." }
-  { key: "#recruiter_able_people_out_of_work", text: "Mit so vielen fähigen Menschen ohne Arbeit sollte mein Job einfach sein." }
-  { key: "#recruiter_boring", text: "Es ist langweilig hier. Ich wünschte, ich könnte mehr Unterhalter einstellen." }
-  { key: "#recruiter_living_here", text: "Mir macht das Leben hier nichts aus. Es könnte sicherlich schlimmer sein." }
-  { key: "#recruiter_best_city", text: "Diese Stadt ist die beste!" }
+  { key: "#recruiter_sick_people", text: "So viele Leute sind krank. Ich hoffe, das wird nicht noch schlimmer." }
+  { key: "#recruiter_starving", text: "Ich sterbe vor Hunger. Mit leerem Magen kann man nicht gut arbeiten." }
+  { key: "#recruiter_city_defenses_weak", text: "Hoffentlich merken unsere Feinde nicht, wie einfach es wäre, uns zu überfallen." }
+  { key: "#recruiter_without_workers", text: "Überall gibt es freie Stellen! Vielleicht kann ich Arbeit bei der Feuerwehr kriegen!" }
+  { key: "#recruiter_gods_unleash_fury", text: "Ich kann nur hoffen, dass die Götter ihren Zorn nicht über uns ausgießen." }
+  { key: "#recruiter_enemies_attack", text: "Ich fürchte, unsere Stadt hat keinen guten Ruf. Wir könnten glatt überfallen werden!" }
+  { key: "#recruiter_able_people_out_of_work", text: "Ich hab Glück, diesen Job erwischt zu haben. Ich weiß, dass 'ne Menge Leute arbeitslos sind." }
+  { key: "#recruiter_boring", text: "Arbeiten, arbeiten, arbeiten. Was Anderes kann man in dieser Stadt nicht tun." }
+  { key: "#recruiter_living_here", text: "Mir gefällt's hier ganz gut, aber es kann immer noch irgendwo besser werden." }
+  { key: "#recruiter_best_city", text: "Ich hoffe, ich bleibe hier auf ewig!" }
   { key: "#recruiter_most_popular", text: "Ich bin die beliebteste Person in der Stadt. Viele Leute brauchen Jobs." }
   { key: "#recruiter_list_of_job_openings", text: "Meine Liste offener Stellen ist riesig, und ich kann keine Arbeiter finden, um sie zu besetzen." }
   
-  { key: "#barge_have_no_place_for_dock", text: "Ich frage mich, ob diese Stadt Sehenswürdigkeiten hat, die ich sehen könnte, während sie mein Schiff entladen." }
-  { key: "#barge_docked_wait_for_dockpushers", text: "Wir warten darauf, dass Fracht zu unserem Schiff geliefert wird." }
-  { key: "#barge_city_not_trades", text: "Ich weiß nicht, warum wir kamen. Diese Stadt handelt nie, und der Landgang ist langweilig." }
-  { key: "#barge_i_like_to_trage", text: "Ich liebe die Kunst des Handels! Ich kann es kaum erwarten, meine Vorräte zu handeln." }
-  { key: "#barge_amazing_trades", text: "Was für eine ertragreiche Reise!" }
+  { key: "#barge_have_no_place_for_dock", text: "Ob man sich in dieser Stadt wohl irgendwelche Sehenswürdigkeiten ansehen kann, während mein Schiff entladen wird?" }
+  { key: "#barge_docked_wait_for_dockpushers", text: "Wir warten darauf, dass unser Schiff mit Fracht beliefert wird." }
+  { key: "#barge_city_not_trades", text: "Ich weiß wirklich nicht, warum wir hergekommen sind. Diese Stadt treibt absolut keinen Handel, und der Landgang ist extrem langweilig." }
+  { key: "#barge_i_like_to_trage", text: "Ich liebe die Kunst des Handelns! Ich kann es kaum erwarten, mit meinen Waren zu handeln." }
+  { key: "#barge_amazing_trades", text: "Das ist eine wunderbare Reise!" }
   
-  { key: "#dancer_i_like_festivals", text: "Viele Menschen in der Stadt sind erkrankt. Ich hoffe, ich fange mir nichts ein!" }
-  { key: "#dancer_desease_can_start_at_any_moment", text: "Ich kann nicht sehr gut hüpfen und springen ohne genug Nahrung!" }
-  { key: "#dancer_no_food_in_city", text: "Invasoren hätten kaum Probleme, unsere Stadt zu übernehmen. Nichts verteidigt sie." }
-  { key: "#dancer_city_not_safety_workers_leaving", text: "Noch ein Tanzpartner durch den Arbeitermangel verloren! Ich hasse es, alleine zu tanzen." }
-  { key: "#dancer_need_workers", text: "Wir sollten mehr tun, um die Götter zu besänftigen - und schnell!" }
-  { key: "#dancer_gods_are_angry", text: "Der Ruf dieser Stadt ist schlechter als der eines Jongleurs! Ich hoffe, wir werden nicht angegriffen." }
-  { key: "#dancer_city_is_bad", text: "Wäre ich nicht so leichtfüßig, würde ich über all diese Arbeitslosen stolpern!" }
-  { key: "#dancer_much_unemployments", text: "(Gähn) Ich muss unterhalten werden!" }
-  { key: "#dancer_salary_too_low", text: "Diese Stadt ist ungefähr so gut wie jede andere Stadt, schätze ich." }
-  { key: "#dancer_city_is_good", text: "Diese Stadt ist fantastisch!" }
-  { key: "#dancer_city_is_amazing", text: "Diese Festmenschenmengen sind so enthusiastisch, sie geben mir Lust, höher zu springen." }
+  { key: "#dancer_i_like_festivals", text: "Ich hab noch nie so viele kranke Leute gesehen. Hoffentlich bricht keine Seuche aus." }
+  { key: "#dancer_desease_can_start_at_any_moment", text: "Is' ziemlich schwierig, die Keulen zu fangen, wenn man vor Hunger Krämpfe hat." }
+  { key: "#dancer_no_food_in_city", text: "Vielleicht halt ich den Feind ja auf, wenn ich ihm die Keulen ins Gesicht schmeiße. 'ne bessere Verteidigung hat die Stadt ja wohl nicht." }
+  { key: "#dancer_city_not_safety_workers_leaving", text: "Überall sehe ich offene Stellen. Vielleicht kann ich ja mit mehr als einem Job jonglieren." }
+  { key: "#dancer_need_workers", text: "Ich erwarte das Schlimmste. Die Götter glauben bestimmt, wir hätten sie vergessen." }
+  { key: "#dancer_gods_are_angry", text: "Der Ruf der Stadt is' noch schlechter als meiner. Hoffentlich greift uns niemand an." }
+  { key: "#dancer_city_is_bad", text: "Wenn's in dieser Stadt doch bloß mehr Arbeit gäbe. Ich versuche, die Leute zu unterhalten, und keiner kann mich dafür bezahlen." }
+  { key: "#dancer_much_unemployments", text: "Ein Mensch kann nur so viel jonglieren und nicht mehr. Wenn's in dieser Stadt doch bloß noch mehr Künstler wie mich gäbe." }
+  { key: "#dancer_salary_too_low", text: "Diese Stadt ist gar nicht so übel." }
+  { key: "#dancer_city_is_good", text: "Es gibt keine Stadt, in der ich lieber jonglieren würde." }
+  { key: "#dancer_city_is_amazing", text: "Vor Festgästen trete ich am liebsten auf. Sie sind alle so fröhlich!" }
   
-  { key: "#homeless_i_was_kicked_out_of_my_home", text: "Ich wurde aus meinem Zuhause geworfen, und das ohne meine Schuld." }
-  { key: "#homeless_i_cant_find_a_place_to_live", text: "Ich kann keinen Ort zum Leben finden!" }
+  { key: "#homeless_i_was_kicked_out_of_my_home", text: "Man hat mich aus meinem Haus geworfen." }
+  { key: "#homeless_i_cant_find_a_place_to_live", text: "Ich kann einfach keine Wohnung finden." }
   
-  { key: "#marketboy_these_baskets_are_too_heavy", text: "Diese Körbe sind zu schwer für ein kleines Kind wie mich!" }
-  { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Diese herrische Dame lässt mich den ganzen Tag Waren tragen!" }
-  { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Vielleicht trage ich jetzt nur Körbe, aber eines Tages werde ich den Basar leiten." }
+  { key: "#marketboy_these_baskets_are_too_heavy", text: "Diese Körbe sind viel zu schwer für jemanden wie mich!" }
+  { key: "#marketboy_bossy_lady_makes_me_carry_goods", text: "Ich muss den ganzen Tag Körbe für die dicke Frau da schleppen!" }
+  { key: "#marketboy_one_day_ill_run_the_bazaar", text: "Na gut, heute muss ich Körbe schleppen, aber irgendwann mal gehört mir der ganze Basar!" }
   
   { key: "#engineer_extreme_damage_level", text: "Viele Menschen sind in viel schlechterem Zustand als die Gebäude. Ich hoffe, es wird nicht schlimmer." }
   { key: "#engineer_no_food_in_city", text: "Verhungern mag die Stärke dieser Gebäude nicht beeinträchtigen, aber es beeinträchtigt sicher meine!" }
