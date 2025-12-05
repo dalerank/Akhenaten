@@ -25,8 +25,8 @@ struct vec2i {
     inline bool operator==(vec2i rhs) const { return (x == rhs.x && y == rhs.y); }
     inline bool operator!=(vec2i rhs) const { return !(*this == rhs); }
 
-    inline float dist(vec2i o) { return ::sqrtf(dist_sq(o)); }
-    inline float dist_sq(vec2i o) { int xx = x - o.x; int yy = y - o.y; return (xx * xx) + (yy * yy); }
+    inline float dist(vec2i o) const { return ::sqrtf(dist_sq(o)); }
+    inline float dist_sq(vec2i o) const { int xx = x - o.x; int yy = y - o.y; return (xx * xx) + (yy * yy); }
 };
 
 struct rect {
