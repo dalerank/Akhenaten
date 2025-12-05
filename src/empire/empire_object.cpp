@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/log.h"
+#include "core/svector.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -13,6 +14,12 @@
 #include "scenario/empire.h"
 #include "game/game.h"
 #include "dev/debug.h"
+
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <cstdlib>
+#include <cmath>
 
 #define MAX_OBJECTS 200
 #define MAX_ROUTES 20
@@ -323,6 +330,13 @@ map_route_object &empire_t::ref_route_object(int id) {
     return g_empire_route_objects[id];
 }
 
+void empire_t::fix_trade_routes() {
+    for (int id = 0; id < g_empire_route_objects.max_size(); id++) {
+        map_route_object &obj = g_empire_route_objects[id];
+        obj.improve_route();
+    }
+}
+
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_objects");
     auto& objects = g_empire_objects;
@@ -386,8 +400,7 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
 
 io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_routes");
-    const int MAX_ROUTE_OBJECTS = 50;
-    for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
+    for (int id = 0; id < g_empire_route_objects.max_size(); id++) {
         map_route_object& obj = g_empire_route_objects[id];
 
         iob->bind(BIND_SIGNATURE_UINT32, &obj.unk_header[0]); // 05 00 00 00
@@ -396,7 +409,8 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
         for (int i = 0; i < 50; i++) {
             iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].p.x);
             iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].p.y);
-            iob->bind(BIND_SIGNATURE_UINT16, &obj.points[i].is_in_use);
+            iob->bind(BIND_SIGNATURE_UINT8, &obj.points[i].is_in_use);
+            iob->bind____skip(1);
         }
         iob->bind(BIND_SIGNATURE_UINT32, &obj.length);
 
@@ -410,8 +424,6 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
         iob->bind(BIND_SIGNATURE_UINT8, &obj.unk_03);
 
         obj.path_length = obj.calc_length();
-        //        SDL_Log("TRADE DATA: %04i %04i -- %02i %02i %02i", obj->unk_header[0], obj->unk_header[1],
-        //        obj->route_type, obj->in_use, obj->unk_03);
     }
 });
 
@@ -442,4 +454,66 @@ int map_route_object::calc_length() {
     }
 
     return (int)pathlen;
+}
+
+void map_route_object::improve_route() {
+    if (!in_use || num_points < 2) {
+        return;
+    }
+
+    // Copy active points to a temporary vector
+    svector<map_route_object::point, 256> temp_points;
+    std::copy_n(points, num_points, std::back_inserter(temp_points));
+
+    if (temp_points.size() < 2) {
+        return;
+    }
+
+    // Step 1: Split short segments (< 50) into two parts
+    // Repeat until no short segments remain
+    bool has_changes = true;
+    while (has_changes) {
+        has_changes = false;
+
+        for (size_t i = 0; i < temp_points.size() - 1; i++) {
+            float dist = temp_points[i].p.dist(temp_points[i + 1].p);
+                
+            if (dist > 50.0f) {
+                // Split segment: insert a point in the middle
+                vec2i mid_point;
+                mid_point.x = (temp_points[i].p.x + temp_points[i + 1].p.x) / 2;
+                mid_point.y = (temp_points[i].p.y + temp_points[i + 1].p.y) / 2;
+
+                map_route_object::point new_point;
+                new_point.p = mid_point;
+                new_point.is_in_use = true;
+
+                temp_points.insert(temp_points.begin() + i + 1, new_point);
+                has_changes = true;
+                break;
+            }
+        }
+
+        // Safety check: prevent infinite loop
+        if (temp_points.size() > 100) {
+            break;
+        }
+    }
+
+    // Step 2: If we have more than 50 points, remove random points (except first and last)
+    while (temp_points.size() > 50) {
+        if (temp_points.size() <= 2) {
+            break; // Can't remove more
+        }
+
+        // Pick a random index between 1 and size-2
+        int index_to_remove = 1 + (rand() % (temp_points.size() - 2));
+        temp_points.erase(temp_points.begin() + index_to_remove);
+    }
+
+    // Copy back the improved points
+    num_points = std::min<uint8_t>(temp_points.size(), 50);
+    std::copy_n(temp_points.data(), num_points, points);
+
+    path_length = calc_length();
 }

@@ -641,6 +641,8 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     g_scenario.set_campaign_scenario(scenario_id);
     post_load();
 
+    g_empire.fix_trade_routes();
+
     widget_top_menu_clear_state();
 
     // finish loading and start
