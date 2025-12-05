@@ -80,6 +80,8 @@ public:
     void init_cities();
     void foreach_object(std::function<void(const empire_object &)> callback);
 
+    void fix_trade_routes();
+
     bool is_sea_trade_route(int route_id) const;
     void set_trade_route_type(int route_id, bool is_sea_route);
     int init_distant_battle_travel_months(int object_type);

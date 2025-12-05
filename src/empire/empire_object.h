@@ -47,8 +47,7 @@ struct full_empire_object {
 
 struct map_route_object {
     int unk_header[2]; // 05 00 00 00 00 00 00 00
-    /////
-    struct {
+    struct point {
         vec2i p;
         bool is_in_use;
     } points[50];
@@ -62,4 +61,5 @@ struct map_route_object {
     int path_length;
 
     int calc_length();
+    void improve_route();
 };
