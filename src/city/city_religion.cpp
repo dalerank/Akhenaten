@@ -30,15 +30,27 @@
 #include <algorithm>
 #include <array>
 
-declare_console_command_p(godminorblessing) {
-    std::string args; is >> args;
-    int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
-    g_city.religion.perform_minor_blessing((e_god)god_id);
+e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
 
-    events::emit(event_city_warning{ "Casted minor blessing" });
+e_god find_god_id_from_name(const std::string& god_name) {    
+    if (god_name == "osiris") return GOD_OSIRIS;
+    if (god_name == "ra") return GOD_RA;
+    if (god_name == "seth") return GOD_SETH;
+    if (god_name == "bast") return GOD_BAST;
+    if (god_name == "ptah") return GOD_PTAH;
+    return GOD_UNKNOWN;
 }
 
-declare_console_command_p(godmajorblessing) {
+declare_console_command_p(god_minor_blessing) {
+    std::string god_name; is >> god_name;
+    e_god god = find_god_id_from_name(god_name);
+    if (god != GOD_UNKNOWN) {
+        g_city.religion.perform_minor_blessing(god);
+        events::emit(event_city_warning{ "Cheated minor blessing" });
+    }
+}
+
+declare_console_command_p(god_major_blessing) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_blessing((e_god)god_id);
@@ -46,7 +58,7 @@ declare_console_command_p(godmajorblessing) {
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
-declare_console_command_p(godminorcurse) {
+declare_console_command_p(god_minor_curse) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_minor_curse((e_god)god_id);
@@ -54,7 +66,7 @@ declare_console_command_p(godminorcurse) {
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
-declare_console_command_p(godmajorcurse) {
+declare_console_command_p(god_major_curse) {
     std::string args; is >> args;
     int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
     g_city.religion.perform_major_curse((e_god)god_id);
@@ -62,7 +74,7 @@ declare_console_command_p(godmajorcurse) {
     events::emit(event_city_warning{ "Casted upset" });
 }
 
-declare_console_command_p(ranotrade) {
+declare_console_command_p(ra_no_trade) {
     std::string args; is >> args;
     int nomonth = atoi(args.empty() ? (pcstr)"0" : args.c_str());
 
@@ -73,12 +85,9 @@ declare_console_command_p(ranotrade) {
 
 stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");
 
-e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
-
 void city_religion_t::reset() {
-    static auto &city_data = g_city;
-    for (auto &god: city_data.religion.gods) {
-        god.type = e_god(std::distance(city_data.religion.gods, &god));
+    for (auto &god: gods) {
+        god.type = e_god(std::distance(gods, &god));
         god.target_mood = 50;
         god.mood = 50;
         god.wrath_bolts = 0;
@@ -91,7 +100,7 @@ void city_religion_t::reset() {
         god.is_known = GOD_STATUS_UNKNOWN;
     }
 
-    city_data.religion.angry_message_delay = 0;
+    angry_message_delay = 0;
 }
 
 int city_religion_t::coverage_avg(e_god god) {
@@ -616,8 +625,9 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         // slightly better flood
         randm = anti_scum_random_15bit();
         randm = randm & 0x80000003;
-        if ((int)randm < 0)
+        if ((int)randm < 0) {
             randm = (randm - 1 | 0xfffffffc) + 1;
+        }
         g_floods.adjust_next_quality(randm * 5 + 5);
         messages::popup("message_small_blessing_from_osiris", 0, 0);
         break;
@@ -644,7 +654,7 @@ void city_religion_t::perform_minor_blessing(e_god god) {
 
     case GOD_SETH:
         // protects soldiers far away
-        seth_protect_player_troops = 10;
+        seth_protect_player_troops_months = 10;
         messages::popup("message_minor_blessing_from_seth", 0, 0);
         return;
 

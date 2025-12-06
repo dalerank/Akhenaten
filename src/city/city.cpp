@@ -1316,8 +1316,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_reduced_trading_months_left);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT16, &data.religion.seth_protect_player_troops);
-    iob->bind____skip(6);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.seth_protect_player_troops_months);
+    iob->bind____skip(7);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);

@@ -1,6 +1,6 @@
 log_info("akhenaten: messages config started")
 
-game_messages {
+game_messages_en {
     message_potter_history {
         id: 1,
         

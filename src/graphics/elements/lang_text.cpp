@@ -107,6 +107,19 @@ bool lang_reload_localized_files() {
         }
     }
 
+    {
+        const xstring game_message_table = current_lang.game_messages;
+        vfs::path lang_file(":", game_message_table.c_str(), ".js");
+
+        const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
+        if (!lang_file_loaded && game_message_table == "game_messages_en") {
+            logs::error("Failed to load localization file: %s", lang_file.c_str());
+            return false;
+        }
+
+        lang_reload_game_messages(game_message_table);
+    }
+
     return true;
 }
 

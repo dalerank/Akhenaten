@@ -13,8 +13,11 @@ struct game_language {
     xstring base_table;
     xstring table;
     xstring message_table;
+    xstring game_messages;
 };
-ANK_CONFIG_STRUCT(game_language, lang, caption, key, base_table, table, message_table)
+ANK_CONFIG_STRUCT(game_language,
+    lang, caption, key, base_table,
+    table, message_table, game_messages)
 
 using game_languages_vec = svector<game_language, 12>;
 

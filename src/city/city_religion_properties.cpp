@@ -29,7 +29,7 @@ void game_debug_show_properties_religion(pcstr prefix, city_religion_t &religion
         game_debug_show_property("ra_slightly_increased_trading_months_left", religion.ra_slightly_increased_trading_months_left);
         game_debug_show_property("osiris_sank_ships", religion.osiris_sank_ships);
         game_debug_show_property("seth_crush_enemy_troops", religion.seth_crush_enemy_troops);
-        game_debug_show_property("seth_protect_player_troops", religion.seth_protect_player_troops);
+        game_debug_show_property("seth_protect_player_troops_months", religion.seth_protect_player_troops_months);
         game_debug_show_property("osiris_double_farm_yield_days", religion.osiris_double_farm_yield_days);
         game_debug_show_property("osiris_flood_will_destroy_active", religion.osiris_flood_will_destroy_active);
         game_debug_show_property("coverage_common", religion.coverage_common);

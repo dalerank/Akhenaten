@@ -101,6 +101,8 @@ const lang_message& lang_get_message(xstring id);
 xstring lang_get_message_id(int id);
 uint16_t lang_get_message_uid(xstring msg);
 
+void lang_reload_game_messages(const xstring table_name);
+
 enum e_text_info {
     e_text_title = 0,
     e_text_senate_tooltip = 68,
