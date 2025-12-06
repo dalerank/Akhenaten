@@ -79,10 +79,6 @@ int city_resource_operating_granaries() {
     return g_city.resource.granaries.operating;
 }
 
-e_trade_status city_resource_trade_status(e_resource resource) {
-    return g_city.resource.trade_status[resource];
-}
-
 void city_granaries_remove_resource(event_granaries_remove_resource &ev) {
     if (ev.amount <= 0) {
         return;
@@ -172,74 +168,6 @@ void city_resources_t::calculate_stocks() {
             }
         }
     }, { BUILDING_GRANARY, BUILDING_STORAGE_YARD });
-}
-
-void city_resource_cycle_trade_status(e_resource resource) {
-    auto &trade_status = g_city.resource.trade_status[resource];
-    trade_status = (e_trade_status)((int)trade_status + 1);
-    if (trade_status > TRADE_STATUS_EXPORT) {
-        trade_status = TRADE_STATUS_NONE;
-    }
-
-    if (trade_status == TRADE_STATUS_IMPORT && !g_empire.can_import_resource(resource, true)) {
-        trade_status = TRADE_STATUS_EXPORT;
-    }
-
-    if (trade_status == TRADE_STATUS_EXPORT && !g_empire.can_export_resource(resource, true)) {
-        trade_status = TRADE_STATUS_NONE;
-    }
-
-    if (trade_status == TRADE_STATUS_EXPORT) {
-        trade_status = TRADE_STATUS_NONE;
-    }
-}
-
-void city_resource_cycle_trade_import(e_resource resource) {
-    // no sellers?
-    if (!g_empire.can_import_resource(resource, true))
-        return;
-
-    switch (g_city.resource.trade_status[resource]) {
-    default:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_IMPORT_AS_NEEDED;
-        break;
-    case TRADE_STATUS_IMPORT_AS_NEEDED:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_IMPORT;
-        break;
-    case TRADE_STATUS_IMPORT:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_NONE;
-        break;
-    }
-}
-
-void city_resource_cycle_trade_export(e_resource resource) {
-    // no buyers?
-    if (!g_empire.can_export_resource(resource, true))
-        return;
-
-    switch (g_city.resource.trade_status[resource]) {
-    default:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_EXPORT_SURPLUS;
-        g_city.resource.stockpiled[resource] = false;
-        break;
-
-    case TRADE_STATUS_EXPORT_SURPLUS:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
-        g_city.resource.stockpiled[resource] = false;
-        break;
-
-    case TRADE_STATUS_EXPORT:
-        g_city.resource.trade_status[resource] = TRADE_STATUS_NONE;
-        break;
-    }
-}
-
-int city_resource_trading_amount(e_resource resource) {
-    return g_city.resource.trading_amount[resource];
-}
-
-void city_resource_change_trading_amount(e_resource resource, int delta) {
-    g_city.resource.trading_amount[resource] = calc_bound(g_city.resource.trading_amount[resource] + delta, 0, 10000);
 }
 
 int city_resources_t::is_stockpiled(e_resource resource) {

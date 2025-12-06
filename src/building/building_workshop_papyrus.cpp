@@ -4,6 +4,7 @@
 #include "widget/city/ornaments.h"
 #include "city/city_resource.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "graphics/graphics.h"
@@ -51,11 +52,9 @@ void building_papyrus_maker::on_place_checks() {
 
     construction_warnings warnings("#building_needs_reeds");
 
-    const bool can_produce_reeds = g_city.can_produce_resource(RESOURCE_REEDS);
-    const bool can_import_reeds = g_empire.can_import_resource(RESOURCE_REEDS, true);
-    const bool is_import_reeds = (city_resource_trade_status(RESOURCE_REEDS) == TRADE_STATUS_IMPORT);
+    const bool is_import_reeds = (city_resource_reeds.trade_status() == TRADE_STATUS_IMPORT);
     
-    warnings.add_if(!can_produce_reeds, "#build_reed_gatherer");
-    warnings.add_if(!can_import_reeds, "#setup_trade_route_to_import");
+    warnings.add_if(!city_resource_reeds.can_produce(), "#build_reed_gatherer");
+    warnings.add_if(!city_resource_reeds.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(!is_import_reeds, "#overseer_of_commerce_to_import");
 }

@@ -444,19 +444,6 @@ int stack_units_by_resource(int resource) {
     }
 }
 
-int stack_proper_quantity(int full, int resource) {
-    switch (stack_units_by_resource(resource)) {
-    default: // all other goods are 100 worth of, per pile
-        return full;
-
-    case RESOURCE_UNIT_BLOCK:
-    case RESOURCE_UNIT_WEAPON:
-    case RESOURCE_UNIT_CHARIOT:
-    case RESOURCE_WEAPONS:
-        return full / 100;
-    }
-}
-
 empire_city &city_t::ourcity() {
     auto const &cities = g_empire.get_cities();
     auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });

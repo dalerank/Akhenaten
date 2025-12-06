@@ -11,6 +11,7 @@
 
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/constants.h"
 #include "empire/empire.h"
 #include "figure/formation.h"
@@ -168,14 +169,16 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, pstr
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg.req_amount_past, msg.req_resource_past);
+        city_resource_handle hresource{ (e_resource)msg.req_resource_past };
+        int value = hresource.stack_proper_quantity(msg.req_amount_past);
         amount.printf("%d", value);
     } else {
         empire_city *city = g_empire.city(msg.req_city);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg.req_amount, msg.req_resource);
+        city_resource_handle hresource{ (e_resource)msg.req_resource };
+        int value = hresource.stack_proper_quantity(msg.req_amount);
         amount.printf("%d", value);
     }
 

@@ -2,6 +2,7 @@
 
 #include "city/military.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "game/game_events.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
@@ -266,8 +267,9 @@ void empire_window::draw_city_want_sell(ui::element *e, UiFlags flags) {
         if (!g_empire.city_sells_resource(object->id, r.type, false))
             continue;
 
+        city_resource_handle hresource{ r.type };
         int trade_max = trade_route.limit(r.type);
-        trade_max = stack_proper_quantity(trade_max, r.type);
+        trade_max = hresource.stack_proper_quantity(trade_max);
         draw_trade_resource(flags, r.type, -1, trade_max, e->pos + item_sell.size * sell_index, item_sell.font());
         sell_index++;
     }
@@ -286,8 +288,9 @@ void empire_window::draw_city_want_buy(ui::element *e, UiFlags flags) {
         if (!g_empire.city_buys_resource(object->id, r.type, false))
             continue;
 
+        city_resource_handle hresource{ r.type };
         int trade_max = trade_route.limit(r.type);
-        trade_max = stack_proper_quantity(trade_max, r.type);
+        trade_max = hresource.stack_proper_quantity(trade_max);
         draw_trade_resource(flags, r.type, -1, trade_max, e->pos + item_buy.size * buy_index, item_buy.font());
         buy_index++;
     }
@@ -309,8 +312,10 @@ void empire_window::draw_city_buy(ui::element *e, UiFlags flags) {
         const auto &trade_route = city->get_route();
         int trade_max = trade_route.limit(resource);
         int trade_now = std::min(trade_max, trade_route.traded(resource));
-        trade_now = stack_proper_quantity(trade_now, resource);
-        trade_max = stack_proper_quantity(trade_max, resource);
+
+        city_resource_handle hresource{ resource };
+        trade_now = hresource.stack_proper_quantity(trade_now);
+        trade_max = hresource.stack_proper_quantity(trade_max);
 
         vec2i local_offset = vec2i{ item_buy.size.x, 0 } * index;
         draw_trade_resource(flags, resource, trade_now, trade_max, e_offset + local_offset, item_buy.font());
@@ -339,8 +344,10 @@ void empire_window::draw_city_selling(ui::element *e, UiFlags flags) {
         const auto &trade_route = city->get_route();
         int trade_max = trade_route.limit(resource);
         int trade_now = std::min(trade_max, trade_route.traded(resource));
-        trade_now = stack_proper_quantity(trade_now, resource);
-        trade_max = stack_proper_quantity(trade_max, resource);
+
+        city_resource_handle hresource{ resource };
+        trade_now = hresource.stack_proper_quantity(trade_now);
+        trade_max = hresource.stack_proper_quantity(trade_max);
 
         vec2i local_offset = vec2i{ item_sell.size.x, 0 } * index;
         draw_trade_resource(flags, resource, trade_now, trade_max, e_offset + local_offset, item_sell.font());

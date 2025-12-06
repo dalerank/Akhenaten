@@ -3,6 +3,7 @@
 #include "city/city_resource.h"
 #include "city/city.h"
 #include "core/calc.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -18,7 +19,7 @@
 #include "game/game.h"
 
 struct trade_resource_settings_window : autoconfig_window_t<trade_resource_settings_window> {
-    e_resource resource;
+    city_resource_handle resource;
 
     virtual int draw_background(UiFlags flags) override;
     virtual void draw_foreground(UiFlags flags) override;
@@ -26,32 +27,37 @@ struct trade_resource_settings_window : autoconfig_window_t<trade_resource_setti
     virtual int get_tooltip_text() override { return 0; }
     virtual int ui_handle_mouse(const mouse *m) override;
     virtual void init() override;
+
+    void init(e_resource r) {
+        resource.resource = r;
+        init();
+    }
 };
 
 trade_resource_settings_window trade_resource_settings_w;
 
 void trade_resource_settings_window::init() {
-    ui["icon"].image(resource);
-    ui["title"] = ui::resource_name(resource);
+    ui["icon"].image(resource.resource);
+    ui["title"] = ui::resource_name(resource.resource);
 
-    ui["import_status"].onclick([this] { city_resource_cycle_trade_import(resource); });
-    ui["import_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
-    ui["import_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
+    ui["import_status"].onclick([this] { resource.cycle_trade_import(); });
+    ui["import_dec"].onclick([this] { resource.change_trading_amount(-100); });
+    ui["import_inc"].onclick([this] { resource.change_trading_amount(100); });
 
-    ui["export_status"].onclick([this] { city_resource_cycle_trade_export(resource); });
-    ui["export_dec"].onclick([this] { city_resource_change_trading_amount(resource, -100); });
-    ui["export_inc"].onclick([this] { city_resource_change_trading_amount(resource, 100); });
+    ui["export_status"].onclick([this] { resource.cycle_trade_export(); });
+    ui["export_dec"].onclick([this] { resource.change_trading_amount(-100); });
+    ui["export_inc"].onclick([this] { resource.change_trading_amount(100); });
 
     ui["toggle_industry"].onclick([this] { 
-        events::emit(event_toggle_industry_mothballed{ resource });
+        events::emit(event_toggle_industry_mothballed{ resource.resource });
     });
 
-    ui["stockpile_industry"].onclick([this] { g_city.resource.is_stockpiled(resource); });
+    ui["stockpile_industry"].onclick([this] { resource.toggle_stockpiled(); });
 
     ui["button_help"].onclick([] { window_message_dialog_show("message_game_concept_industry", -1, 0); });
     ui["button_close"].onclick([] { window_go_back(); });
 
-    const int stored = g_city.resource.yards_stored(resource);
+    const int stored = resource.yards_stored();
     ui["production_store"].text_var("%u %s %s", stored, ui::str(8, 10), ui::str(54, 15));
 }
 
@@ -61,12 +67,12 @@ int trade_resource_settings_window::draw_background(UiFlags flags) {
     window_draw_underlying_window(UiFlags_Readonly);
 
     bstring128 production_state;
-    if (g_city.can_produce_resource(resource)) {
-        int total_buildings = g_city.buildings.count_industry_total(resource);
-        int active_buildings = g_city.buildings.count_industry_active(resource);
-        if (g_city.buildings.count_industry_total(resource) <= 0) {
+    if (resource.can_produce()) {
+        int total_buildings = resource.industry_total();
+        int active_buildings = resource.industry_active();
+        if (resource.industry_total() <= 0) {
             production_state = ui::str(54, 7);
-        } else if (g_city.resource.is_mothballed(resource)) {
+        } else if (resource.is_mothballed()) {
             production_state.printf("%u %s", total_buildings, ui::str(54, 10 + (total_buildings > 1)));
         } else if (total_buildings == active_buildings) {
             // not mothballed, all working
@@ -90,15 +96,16 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
     ui.begin_widget(ui.pos);
     ui.draw();
 
-    bool can_import = g_empire.can_import_resource(resource, true);
-    bool can_export = g_empire.can_export_resource(resource, true);
-    bool could_import = g_empire.can_import_resource(resource, false);
-    bool could_export = g_empire.can_export_resource(resource, false);
+    city_resource_handle hresource{ resource };
+    bool can_import = hresource.can_import(true);
+    bool can_export = hresource.can_export(true);
+    bool could_import = hresource.can_import(false);
+    bool could_export = hresource.can_export(false);
 
-    int trade_status = city_resource_trade_status(resource);
+    int trade_status = hresource.trade_status();
     int trading_amount = 0;
     if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-        trading_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
+        trading_amount = resource.stack_proper_quantity(hresource.trading_amount());
     }
 
     // import
@@ -165,12 +172,11 @@ void trade_resource_settings_window::draw_foreground(UiFlags flags) {
         }
     }
 
-    // toggle industry button
-    ui["toggle_industry"].enabled = (g_city.buildings.count_industry_total(resource) > 0);
-    ui["toggle_industry"] = g_city.resource.is_mothballed(resource) ? ui::str(54, 17) : ui::str(54, 16);
+    ui["toggle_industry"].enabled = (hresource.industry_total() > 0);
+    ui["toggle_industry"] = hresource.is_mothballed() ? ui::str(54, 17) : ui::str(54, 16);
 
     bstring1024 stockpiled_str;
-    if (g_city.resource.is_stockpiled(resource)) {
+    if (hresource.is_stockpiled()) {
         stockpiled_str.printf("%s\n%s", ui::str(54, 26), ui::str(54, 27));
     } else {
         stockpiled_str.printf("%s\n%s", ui::str(54, 28), ui::str(54, 29));
@@ -201,7 +207,6 @@ void window_resource_settings_show(e_resource resource) {
         [] (const mouse *m, const hotkeys *h) { trade_resource_settings_w.ui_handle_mouse(m); }
     };
 
-    trade_resource_settings_w.resource = resource;
-    trade_resource_settings_w.init();
+    trade_resource_settings_w.init( resource );
     window_show(&window);
 }

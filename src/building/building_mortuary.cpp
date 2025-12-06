@@ -13,6 +13,7 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "empire/empire.h"
@@ -33,12 +34,10 @@ void building_mortuary::on_place_checks() {
 
     construction_warnings warnings("#building_needs_linen");
 
-    const bool can_produce = g_city.can_produce_resource(RESOURCE_LINEN);
-    const bool can_import = g_empire.can_import_resource(RESOURCE_LINEN, true);
-    const bool trade_import = (city_resource_trade_status(RESOURCE_LINEN) != TRADE_STATUS_IMPORT);
+    const bool trade_import = (city_resource_linen.trade_status() != TRADE_STATUS_IMPORT);
 
-    warnings.add_if(can_produce, "#build_weaver_or_import_linen");
-    warnings.add_if(!can_import, "#setup_trade_route_to_import");
+    warnings.add_if(city_resource_linen.can_produce(), "#build_weaver_or_import_linen");
+    warnings.add_if(!city_resource_linen.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(trade_import, "#overseer_of_commerce_to_import");
 }
 

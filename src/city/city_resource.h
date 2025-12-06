@@ -96,12 +96,6 @@ int city_resource_multiple_wine_available();
 int city_resource_food_supply_months();
 int city_resource_operating_granaries();
 
-e_trade_status city_resource_trade_status(e_resource resource);
-void city_resource_cycle_trade_status(e_resource resource);
-void city_resource_cycle_trade_import(e_resource resource);
-void city_resource_cycle_trade_export(e_resource resource);
-int city_resource_trading_amount(e_resource resource);
-void city_resource_change_trading_amount(e_resource resource, int delta);
 int city_resource_ready_for_using(e_resource resource);
 void city_resource_remove_from_granary(int food, int amount);
 void city_resource_calculate_storageyard_stocks();
