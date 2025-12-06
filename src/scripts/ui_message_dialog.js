@@ -103,11 +103,23 @@ message_dialog_window_invasion {
 
 // God message dialog (messages from gods)
 message_dialog_window_god {
-    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(28))/2]
     help_id: ""
-    
-    ui :__baseui(message_dialog_window_general, {
 
+    god_images {
+        osiris { pack:PACK_UNLOADED, id:16, offset:18 }
+        ra     { pack:PACK_UNLOADED, id:16, offset:19 }
+        seth   { pack:PACK_UNLOADED, id:16, offset:20 }
+        bast   { pack:PACK_UNLOADED, id:16, offset:21 }
+        ptah   { pack:PACK_UNLOADED, id:16, offset:22 }
+    }
+    
+    ui : __baseui(message_dialog_window_general, {
+        background     : outer_panel({size: [30, 28]}) 
+        title          : text({margin{ bottom:-36 }, size [px(30), 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
+        content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
+        god_image_area : dummy({ margin{ top:px(2) }, size [px(29), px(10)]})
+        content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
     })
 }
 

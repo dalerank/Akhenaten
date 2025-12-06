@@ -31,19 +31,20 @@
 #include <array>
 
 e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
+e_god_short_tokens_t e_god_short_tokens;
 
-e_god find_god_id_from_name(const std::string& god_name) {    
-    if (god_name == "osiris") return GOD_OSIRIS;
-    if (god_name == "ra") return GOD_RA;
-    if (god_name == "seth") return GOD_SETH;
-    if (god_name == "bast") return GOD_BAST;
-    if (god_name == "ptah") return GOD_PTAH;
+e_god find_god_id_from_short_name(const std::string& god_name) {    
+    for (const auto& it: e_god_short_tokens.values) {
+        if (god_name == it.name) {
+            return (e_god)it.id;
+        }
+    }
     return GOD_UNKNOWN;
 }
 
 declare_console_command_p(god_minor_blessing) {
     std::string god_name; is >> god_name;
-    e_god god = find_god_id_from_name(god_name);
+    e_god god = find_god_id_from_short_name(god_name);
     if (god != GOD_UNKNOWN) {
         g_city.religion.perform_minor_blessing(god);
         events::emit(event_city_warning{ "Cheated minor blessing" });
@@ -655,7 +656,7 @@ void city_religion_t::perform_minor_blessing(e_god god) {
     case GOD_SETH:
         // protects soldiers far away
         seth_protect_player_troops_months = 10;
-        messages::popup("message_minor_blessing_from_seth", 0, 0);
+        messages::god(GOD_SETH, "message_minor_blessing_from_seth");
         return;
 
     case GOD_BAST: {
@@ -666,9 +667,9 @@ void city_religion_t::perform_minor_blessing(e_god god) {
         city_data.festival.planned.months_to_go = 1;
         city_data.festival.first_festival_effect_months = 1;
 
-        city_data.religion.gods[GOD_RA].months_since_festival = 0;
-        city_data.religion.gods[GOD_PTAH].months_since_festival = 0;
-        city_data.religion.gods[GOD_SETH].months_since_festival = 0;
+        gods[GOD_RA].months_since_festival = 0;
+        gods[GOD_PTAH].months_since_festival = 0;
+        gods[GOD_SETH].months_since_festival = 0;
         messages::popup("message_small_blessing_from_bast", 0, 0);
         }
         return;

@@ -9,7 +9,10 @@
 #include "core/archive.h"
 
 using e_god_tokens_t = const token_holder<e_god, GOD_OSIRIS, MAX_GODS>;
+using e_god_short_tokens_t = const token_holder<e_god_short, osiris, max_gods>;
+
 extern e_god_tokens_t e_god_tokens;
+extern e_god_short_tokens_t e_god_short_tokens;
 
 enum e_god_status : uint8_t {
     GOD_STATUS_UNKNOWN = 0,
