@@ -3713,7 +3713,6 @@ game_messages_en {
         id: 324
         type: 2
         
-        size [30, 20]
         title { text: "A Minor blessing from Seth" }
         video { text: "@21" }
         content { text: "To reward your obedience to him, Seth vows to protect any of your soldiers sent to battle in far-off lands." }

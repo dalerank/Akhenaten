@@ -50,6 +50,8 @@ namespace ui {
             int scroll_position;
         };       
 
+        xstring debug_text_id;
+
         uint16_t text_id;
         int message_id;
         bool is_eventmsg;
@@ -107,6 +109,7 @@ namespace ui {
         int get_message_image_id(const lang_message& msg);
         
         virtual pcstr get_section() const override;
+
     protected:
         xstring config_name;
     };

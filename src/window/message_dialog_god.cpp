@@ -32,6 +32,38 @@ void ui::message_dialog_god::draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
+
+    painter ctx = game.painter();
+    const lang_message &msg = lang_get_message(text_id);
+
+    draw_city_message_text(msg);
+
+
+    assert(god != GOD_UNKNOWN);
+
+    const xstring god_name = e_god_short_tokens.name((e_god_short)god);
+    const uint16_t imgid = god_images[god_name].first_img();
+    const image_t *img = image_get(imgid);
+
+    if (img) {
+        vec2i area_pos = ui["god_image_area"].pos;
+        vec2i area_size = ui["god_image_area"].pxsize();
+
+        vec2i area_abs_pos = pos + area_pos;
+        int image_x = area_abs_pos.x + (area_size.x - img->width) / 2;
+        int image_y = area_abs_pos.y + (area_size.y - img->height) / 2;
+
+        int frame_base = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW);
+
+        int frame_padding_x = 20;
+        int frame_padding_y = 20;
+        int frame_width = img->width + frame_padding_x * 2;
+        int frame_height = img->height + frame_padding_y * 2;
+        int frame_x = image_x - frame_padding_x;
+        int frame_y = image_y - frame_padding_y;
+
+        ctx.img_generic(img, vec2i{ image_x, image_y });
+    }
 }
 
 void ui::message_dialog_god::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
@@ -47,33 +79,14 @@ void ui::message_dialog_god::init_data(xstring text_id, int message_id, void (*b
     }
 }
 
+void ui::message_dialog_god::archive_load(archive arch) {
+    message_dialog_base::archive_load(arch);
+
+    arch.r("god_images", god_images);
+}
+
 void ui::message_dialog_god::draw_background_image() {
-    painter ctx = game.painter();
-    const lang_message& msg = lang_get_message(text_id);
-    pos = { 32, 28 };
-
-    ui["content_text"] = msg.content.text;
-
-    const image_t *img = nullptr;
-    if (god != GOD_UNKNOWN) {
-        int image_id = image_id_from_group(GROUP_PANEL_GODS_DIALOGDRAW) + 19 + god;
-        img = image_get(image_id);
-    } else if (background && background_img) {
-        int image_id = background_img;
-        if (image_id == messages::IMAGE_FROM_SCHEME) {
-            int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
-            img = image_get({ img_pack, msg.image.id, msg.image.offset });
-        } else {
-            img = image_get(image_id);
-        }
-    } 
-
-    if (img) {
-        int current_x = (500 - img->width) / 2;
-        ctx.img_generic(img, vec2i{ current_x, 96 });
-    }
-
-    draw_foreground_image();
+    //
 }
 
 void ui::message_dialog_god::draw_city_message_text(const lang_message& msg) {

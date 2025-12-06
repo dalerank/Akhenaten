@@ -41,6 +41,15 @@
 
 static ui::message_dialog_base* g_message_dialog_instance = nullptr;
 
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_message_dialog) {
+    if (g_message_dialog_instance) {
+        g_message_dialog_instance->init_data(
+            g_message_dialog_instance->debug_text_id,
+            g_message_dialog_instance->message_id,
+            g_message_dialog_instance->background_callback);
+    }
+}
+
 ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_window(config_name), config_name(config_name) {
     text_id = 0;
     message_id = -1;
@@ -71,6 +80,8 @@ void ui::message_dialog_base::init() {
 }
 
 void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
+    this->debug_text_id = text_id;
+
     const lang_message &msg = lang_get_message(text_id);
 
     ui["button_close"].onclick([this] { button_close(); });
@@ -308,7 +319,6 @@ void ui::message_dialog_base::draw_background_image() {
     // Base implementation - should be overridden by derived classes
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
-    pos = { 32, 28 };
 
     ui["content_text"] = msg.content.text;
     draw_foreground_image();
@@ -527,21 +537,17 @@ ui::message_dialog_image message_dialog_image_window;
 static ui::message_dialog_base* create_message_dialog(xstring text_id, int message_id = -1) {
     const lang_message& msg = lang_get_message(text_id);
     
-    // Check if message is from a god first
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
             return &message_dialog_god_window;
         }
-        // Check if message has background image
         if (city_msg.background_img) {
             return &message_dialog_image_window;
         }
     }
     
-    // Determine which class to create based on message type
     ui::message_dialog_base *window;
-
     switch (msg.message_type) {
         case MESSAGE_TYPE_GENERAL:
             window = &message_dialog_general_window;
