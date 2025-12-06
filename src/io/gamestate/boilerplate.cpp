@@ -48,6 +48,7 @@
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
 #include "grid/water.h"
+#include "grid/sandstone.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -90,12 +91,12 @@
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
-vfs::path fullpath_saves(const char* filename) {
+vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         return vfs::path(filename);
     }
 
-    return vfs::path(vfs::SAVE_FOLDER, "/", (const char*)g_settings.player_name, "/", filename);
+    return vfs::path(vfs::SAVE_FOLDER, "/", g_settings.player_name.c_str(), "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -586,6 +587,9 @@ static void file_schema(e_file_format file_format, const int file_version) {
         if (file_version > 165) {
             FILEIO.push_chunk(51984, false, "rubble_type_grid", iob_rubble_type_grid); //  (228²) * 1
         }
+        if (file_version > 166) {
+            FILEIO.push_chunk(103968, false, "sandstone_grid", iob_sandstone);              // (228²) * 2
+        }
         break;
     }
 }
@@ -713,6 +717,7 @@ void GamestateIO::start_loaded_file() {
         map_tiles_river_refresh_entire();
         map_tiles_update_all_earthquake();
         map_tiles_update_all_rocks();
+        map_sandstone_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();
@@ -795,9 +800,9 @@ bool GamestateIO::delete_mission(const int scenario_id) {
     return false;
 }
 
-bool GamestateIO::delete_savegame(const char* filename_short) {
+bool GamestateIO::delete_savegame(vfs::path filename_short) {
     // concatenate string
-    bstring256 full = fullpath_saves(filename_short);
+    vfs::path full = fullpath_saves(filename_short);
 
     // delete file
     return vfs::file_remove(full);

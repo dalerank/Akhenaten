@@ -15,9 +15,10 @@
 //  163 akhenaten: save bazaar_days in house
 //  164 akhenaten: save water_supply in house
 //  165 akhenaten: save house health option
-constexpr uint32_t latest_save_version = 166;
+//  167 akhenaten: save sandstone terrain values
+constexpr uint32_t latest_save_version = 167;
 
-vfs::path fullpath_saves(const char* filename);
+vfs::path fullpath_saves(vfs::path filename);
 void fullpath_maps(char* full, const char* filename);
 
 namespace GamestateIO {
@@ -36,7 +37,7 @@ bool load_map(pcstr filename_short, bool start_immediately = true);
 void start_loaded_file();
 
 bool delete_mission(const int scenario_id);
-bool delete_savegame(const char* filename_short);
+bool delete_savegame(vfs::path filename_short);
 bool delete_map(const char* filename_short);
 
 } // namespace GamestateIO
