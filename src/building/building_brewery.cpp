@@ -6,6 +6,7 @@
 #include "city/city_labor.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 #include "game/game_config.h"
 #include "grid/terrain.h"
@@ -52,17 +53,15 @@ void building_brewery::on_place_checks() {
     construction_warnings warnings("#needs_barley");
 
     // Check for barley
-    if (g_city.buildings.count_industry_active(RESOURCE_BARLEY) > 0) {
+    if (city_resource_barley.industry_active() > 0) {
         // Barley available, skip barley warnings
-    } else if (g_city.resource.yards_stored(RESOURCE_BARLEY) > 0) {
+    } else if (city_resource_barley.yards_stored() > 0) {
         // Barley in storage, skip barley warnings
     } else {
-        const bool can_produce_barley = g_city.can_produce_resource(RESOURCE_BARLEY);
-        const bool can_import_barley = g_empire.can_import_resource(RESOURCE_BARLEY, true);
-        const bool is_import_barley = (city_resource_trade_status(RESOURCE_BARLEY) == TRADE_STATUS_IMPORT);
+        const bool is_import_barley = (city_resource_barley.trade_status() == TRADE_STATUS_IMPORT);
         
-        warnings.add_if(!can_produce_barley, "#needs_barley");
-        warnings.add_if(!can_import_barley, "#setup_trade_route_to_import");
+        warnings.add_if(!city_resource_barley.can_produce(), "#needs_barley");
+        warnings.add_if(!city_resource_barley.can_import(true), "#setup_trade_route_to_import");
         warnings.add_if(!is_import_barley, "#overseer_of_commerce_to_import");
     }
 

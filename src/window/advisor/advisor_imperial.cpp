@@ -4,6 +4,7 @@
 #include "city/city_finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
+#include "city/city_resource_handle.h"
 #include "city/city_resource.h"
 #include "empire/empire.h"
 #include "figure/formation_batalion.h"
@@ -184,8 +185,8 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         bstring256 saved_resources;
         bstring256 allow_str;
 
-        int request_amount = request.resource_amount();
-        int quat = stack_proper_quantity(request_amount, request.resource);
+        city_resource_handle hresource{ (e_resource)request.resource };
+        int quat = hresource.stack_proper_quantity(request.resource_amount());
 
         amount_text.printf("%u %s", quat, ui::str(23, request.resource));
         ui.label(amount_text, request_pos + amount_offset, button_request_amount.font());
@@ -202,13 +203,13 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
             allow_font = button_request_allow.font();
         } else {
             // normal goods request
-            int amount_stored = g_city.resource.yards_stored(request.resource);
-            amount_stored = stack_proper_quantity(amount_stored, request.resource);
-            int request_amount = request.resource_amount();
+            int city_stored = hresource.yards_stored();
+            city_stored = hresource.stack_proper_quantity(city_stored);
 
-            saved_resources.printf("%u %s", amount_stored, ui::str(52, 43));
-            allow_str = (amount_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
-            allow_font = (amount_stored < request_amount) ? button_request_allow.font() : FONT_NORMAL_YELLOW;
+            int request_amount = request.resource_amount();
+            saved_resources.printf("%u %s", city_stored, ui::str(52, 43));
+            allow_str = (city_stored < request_amount) ? ui::str(52, 48) : ui::str(52, 47);
+            allow_font = (city_stored < request_amount) ? button_request_allow.font() : FONT_NORMAL_YELLOW;
         }
 
         ui.label(saved_resources, request_pos + saved_offset, button_request_saved.font());

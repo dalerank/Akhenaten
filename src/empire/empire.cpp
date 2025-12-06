@@ -8,6 +8,7 @@
 #include "city/buildings.h"
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/city_population.h"
 #include "scenario/map.h"
 #include "trade_route.h"
@@ -345,13 +346,14 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
         return false;
     }
 
-    if (g_city.resource.yards_stored(resource) <= city_resource_trading_amount(resource)) {
+    city_resource_handle hresource{ resource };
+    if (g_city.resource.yards_stored(resource) <= hresource.trading_amount()) {
         // stocks too low
         return false;
     }
 
     if (city_id == 0 || city->buys_resource[resource]) {
-        int status = city_resource_trade_status(resource);
+        int status = hresource.trade_status();
         switch (status) {
         case TRADE_STATUS_EXPORT: return true;
         case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
@@ -367,7 +369,8 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
-    int status = city_resource_trade_status(resource);
+    city_resource_handle hresource{ resource };
+    int status = hresource.trade_status();
     switch (status) {
     case TRADE_STATUS_IMPORT:
     case TRADE_STATUS_IMPORT_AS_NEEDED:
@@ -434,7 +437,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
             break;
         }
     } else {
-        max_in_stock = city_resource_trading_amount(resource);
+        max_in_stock = hresource.trading_amount();
     }
 
     return in_stock < max_in_stock ? 1 : 0;

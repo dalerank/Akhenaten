@@ -9,6 +9,7 @@
 #include "js/js_game.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 
 #include "dev/debug.h"
@@ -31,12 +32,10 @@ void building_weaponsmith::on_place_checks() {
         
     construction_warnings warnings("#building_needs_copper_ore");
 
-    const bool can_produce_copper = g_city.can_produce_resource(RESOURCE_COPPER);
-    const bool can_import_copper = g_empire.can_import_resource(RESOURCE_COPPER, true);
-    const bool is_import_copper = (city_resource_trade_status(RESOURCE_COPPER) == TRADE_STATUS_IMPORT);
+    const bool is_import_copper = (city_resource_copper.trade_status() == TRADE_STATUS_IMPORT);
 
-    warnings.add_if(!can_produce_copper, "#build_copper_mine");
-    warnings.add_if(!can_import_copper, "#setup_trade_route_to_import");
+    warnings.add_if(!city_resource_copper.can_produce(), "#build_copper_mine");
+    warnings.add_if(!city_resource_copper.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(!is_import_copper, "#overseer_of_commerce_to_import");
 }
 

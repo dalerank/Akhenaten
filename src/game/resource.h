@@ -253,7 +253,6 @@ enum e_resource_unit {
 pcstr resource_name(e_resource resource);
 e_resource resource_type(const xstring &name);
 int stack_units_by_resource(int resource);
-int stack_proper_quantity(int full, int resource);
 
 const e_resource INV_RESOURCES[20] = {
   RESOURCE_POTTERY,
