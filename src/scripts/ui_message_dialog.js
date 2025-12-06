@@ -23,10 +23,10 @@ message_dialog_window_general {
         image_background : dummy({pos: [32, 28], size: [416, 312], enabled: false})
         
         // Bottom panel for video/image modes
-        bottom_panel    : outer_panel({pos: [32, 336], size: [26, 28], enabled: false})
-        bottom_title    : text({pos: [8, 414], size: [400, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
-        bottom_content  : inner_panel({pos: [40, 344], size: [25, 6], enabled: false})
-        bottom_text     : text({pos: [48, 368], size: [384, 96], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, enabled: false})
+        bottom_panel   : outer_panel({pos: [32, 336], size: [26, 28], enabled: false})
+        bottom_title   : text({pos: [8, 414], size: [400, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
+        bottom_content : inner_panel({pos: [40, 344], size: [25, 6], enabled: false})
+        bottom_text    : text({pos: [48, 368], size: [384, 96], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, enabled: false})
     }
 }
 

@@ -89,7 +89,7 @@ struct city_religion_t {
     uint8_t ra_slightly_increased_trading_months_left;
     int8_t osiris_sank_ships;
     int32_t seth_crush_enemy_troops;
-    int32_t seth_protect_player_troops;
+    uint8_t seth_protect_player_troops_months;
     uint8_t osiris_double_farm_yield_days;
     bool osiris_flood_will_destroy_active;
 
