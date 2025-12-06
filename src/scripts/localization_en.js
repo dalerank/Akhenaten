@@ -1142,4 +1142,6 @@ localization_en = [
   { key: "#magistrate_courthouse_in_peace", text: "All is quiet in the court. There is no crime here." }
   { key: "#magistrate_i_have_only_minor_cases", text: "I've been trying only petty cases. Nothing too serious!" }
   { key: "#magistrate_i_am_overwhelmed", text: "I can barely manage my caseload, yet the streets are still unsafe." }
+
+  { key: "#goto_site_of_event", text: "Go to site of event" }
 ]

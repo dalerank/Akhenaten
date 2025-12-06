@@ -10,6 +10,8 @@ namespace ui {
         virtual void draw_city_message_text(const lang_message& msg) override;
         virtual void draw_background_image() override;
         virtual void draw_background_video() override;
+        virtual void draw_background_normal() override;
+        virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void)) override;
         
         void button_go_to_problem();
     };
