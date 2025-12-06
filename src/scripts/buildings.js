@@ -1889,11 +1889,13 @@ building_sandstone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:197 },
     base : { pack:PACK_GENERAL, id:197 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_SANDSTONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:92, type:"sandstone_quarry", text_id:194
