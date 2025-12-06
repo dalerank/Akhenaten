@@ -44,39 +44,33 @@ int ui::message_dialog_disaster::handle_mouse(const mouse *m) {
     return handled ? 1 : 0;
 }
 
-void ui::message_dialog_disaster::draw_foreground(UiFlags flags) {
-    const lang_message& msg = lang_get_message(text_id);
-    
+void ui::message_dialog_disaster::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
+    message_dialog_base::init_data(text_id, message_id, background_callback);
+
+    const lang_message &msg = lang_get_message(text_id);
+
     draw_foreground_normal();
-    // Enable go_to_problem button for disasters in normal mode
     assert(msg.message_type == MESSAGE_TYPE_DISASTER);
     ui["button_go_to_problem"].enabled = true;
-    //ui["button_go_to_problem"].pos = {pos.x + 64, y_text + 36};
     ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
-    
-    ui.begin_widget(pos);
-    ui.draw(flags);
-    ui.end_widget();
-}
 
-void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg) {
     xstring text = msg.content.text;
     painter ctx = game.painter();
- 
+
     if (is_eventmsg) {
         text = body_text;
     }
-    
+
     if (!text) {
         return;
     }
-    
+
     bstring1024 header;
     if (player_msg.param1) {
-        if (text_id == MESSAGE_DIALOG_THEFT) {
+        if (this->text_id == MESSAGE_DIALOG_THEFT) {
             int amount_offset = (player_msg.param1 == 1 || player_msg.param1 == -1) ? 0 : 1;
-            header.printf("%s %d %s %s %d %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name(), 
-                         player_msg.param1, ui::str(8, amount_offset));
+            header.printf("%s %d %s %s %d %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name(),
+                          player_msg.param1, ui::str(8, amount_offset));
         } else {
             header.printf("%s %d %s %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name(), ui::str(41, player_msg.param1));
         }
@@ -85,9 +79,19 @@ void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg
     }
 
     bstring1024 full_text;
-    full_text.printf("%s @P%s @P%s", header.c_str(), text.c_str(), ui::str(12, 1));
+    full_text.printf("%s @P%s", header.c_str(), text.c_str());
 
     ui["content_text"] = full_text;
+}
+
+void ui::message_dialog_disaster::draw_foreground(UiFlags flags) {
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    ui.end_widget();
+}
+
+void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg) {
+    // ???
 }
 
 void ui::message_dialog_disaster::draw_background_image() {
@@ -95,6 +99,10 @@ void ui::message_dialog_disaster::draw_background_image() {
 }
 
 void ui::message_dialog_disaster::draw_background_video() {
+    // ???
+}
+
+void ui::message_dialog_disaster::draw_background_normal() {
     // ???
 }
 

@@ -405,4 +405,6 @@ localization_ru = [
     { key: "#magistrate_courthouse_in_peace", text: "В суде всё спокойно. Здесь нет преступлений." }
     { key: "#magistrate_i_have_only_minor_cases", text: "Я рассматривал только мелкие дела. Ничего слишком серьёзного!" }
     { key: "#magistrate_i_am_overwhelmed", text: "Я едва могу справиться с моей нагрузкой дел, но улицы всё ещё небезопасны." }
+
+    { key: "#goto_site_of_event", text: "Перейти к месту события" }
 ]

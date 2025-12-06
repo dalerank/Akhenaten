@@ -292,7 +292,6 @@ localization_base_en = [
     { group:11, id:10, text: "Loading Enemies ..." }
     { group:11, id:11, text: "Loading Settings ..." }
     { group:12, id:0, text: "Back" }
-    { group:12, id:1, text: "Go to site of event" }
     { group:12, id:2, text: "to comply" }
     { group:12, id:3, text: "Low food stocks are a problem" }
     { group:12, id:4, text: "High unemployment is a problem" }
