@@ -2415,6 +2415,8 @@ building_water_lift {
   laborers [8]
   fire_risk [0]
   damage_risk [3]
+  irrigation_radius : 2
+  canal_fill_water_level : 10
 }
 
 building_firehouse {

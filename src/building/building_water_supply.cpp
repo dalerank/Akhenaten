@@ -30,36 +30,6 @@ void building_water_supply::spawn_figure() {
     }
 
     common_spawn_roamer(FIGURE_WATER_CARRIER, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
-
-    //    check_labor_problem();
-    //    if (has_figure_of_type(FIGURE_WATER_CARRIER))
-    //        return;
-    //    map_point road;
-    //    if (map_has_road_access(x, y, size, &road)) {
-    //        spawn_labor_seeker(100);
-    //        int pct_workers = worker_percentage();
-    //        int spawn_delay;
-    //        if (pct_workers >= 100)
-    //            spawn_delay = 0;
-    //        else if (pct_workers >= 75)
-    //            spawn_delay = 1;
-    //        else if (pct_workers >= 50)
-    //            spawn_delay = 3;
-    //        else if (pct_workers >= 25)
-    //            spawn_delay = 7;
-    //        else if (pct_workers >= 1)
-    //            spawn_delay = 15;
-    //        else
-    //            return;
-    //        figure_spawn_delay++;
-    //        if (figure_spawn_delay > spawn_delay) {
-    //            figure_spawn_delay = 0;
-    //            figure *f = figure_create(FIGURE_WATER_CARRIER, road.x, road.y, DIR_0_TOP_RIGHT);
-    //            f->action_state = ACTION_1_ROAMING;
-    //            f->home() = b;
-    //            figure_id = f->id;
-    //        }
-    //    }
 }
 
 bool building_water_supply::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

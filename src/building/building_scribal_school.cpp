@@ -92,7 +92,7 @@ void building_scribal_school::update_graphic() {
 bool building_scribal_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)stored_amount(RESOURCE_PAPYRUS) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().papyrus);
         vec2i pos = ranim.pos;
