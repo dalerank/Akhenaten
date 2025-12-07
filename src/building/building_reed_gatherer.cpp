@@ -18,6 +18,14 @@ void building_reed_gatherer::on_create(int orientation) {
     runtime_data().max_gatheres = 1;
 }
 
+int building_reed_gatherer::stored_amount(e_resource r) const {
+    // For harvester buildings, resources are stored in stored_amount_first, not ready_production
+    if (base.output.resource == r) {
+        return base.stored_amount_first;
+    }
+    return building_industry::stored_amount(r);
+}
+
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = false;
     resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_MARSHLAND);
@@ -32,7 +40,7 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < max_loads) {
+        && gatherers_this_yard + (base.stored_amount(base.output.resource) / carry_per_person) < max_loads) {
         return true;
     }
 
@@ -46,7 +54,7 @@ bool building_reed_gatherer::can_play_animation() const {
 bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
-    int amount = std::min<int>(1, ceil((float)base.stored_amount() / 100.0) - 1);
+    int amount = std::min<int>(1, ceil((float)base.stored_amount(base.output.resource) / 100.0) - 1);
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().reeds);
 
