@@ -28,7 +28,7 @@ void map_clay_deplete(int grid_offset, int amount) {
 void map_clay_init() {
     // Initialize clay grid: mark all tiles within 2 tiles of water with value 65000
     constexpr int CLAY_MAX = 65000;
-    constexpr int RADIUS = 2;
+    constexpr int RADIUS = 3;
     
     int grid_offset = scenario_map_data()->start_offset;
     int map_width = scenario_map_data()->width;
