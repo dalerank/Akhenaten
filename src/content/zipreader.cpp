@@ -260,8 +260,14 @@ namespace vfs {
 
     //! Used for LZMA decompression. The lib has no default memory management
     namespace {
-        void *SzAlloc(void *p, size_t size) { p; return malloc(size); }
-        void SzFree(void *p, void *address) { p; free(address); }
+        void *SzAlloc(void *p, size_t size) {
+						(void)p;
+						return malloc(size);
+				}
+				void SzFree(void *p, void *address) {
+						(void)p;
+						free(address);
+				}
         ISzAlloc lzmaAlloc = { SzAlloc, SzFree };
     }
 

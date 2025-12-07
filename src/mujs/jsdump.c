@@ -723,8 +723,13 @@ void jsC_dumpfunction(js_State *J, js_Function *F)
 	int i;
 
 	LPRINTFMT("%s(%d)\n", F->name, F->numparams);
-	if (F->lightweight) LPRINTF("\tlightweight\n");
-	if (F->arguments) LPRINTF("\targuments\n");
+	if (F->lightweight) {
+			LPRINTF("\tlightweight\n");
+	}
+	
+	if (F->arguments) {
+			LPRINTF("\targuments\n");
+	}
 	LPRINTFMT("\tsource %s:%d\n", F->filename, F->line);
 	for (i = 0; i < F->funlen; ++i)
 		LPRINTFMT("\tfunction %d %s\n", i, F->funtab[i]->name);
