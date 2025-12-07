@@ -1807,19 +1807,20 @@ building_road {
   }
 }
 
-building_irrigation_ditch = {
-  animations : {
-    preview : { pack:PACK_TERRAIN, id:33 },
-    base : { pack:PACK_TERRAIN, id:33 },
+building_irrigation_ditch {
+  animations {
+    preview { pack:PACK_TERRAIN, id:33 },
+    base { pack:PACK_TERRAIN, id:33 },
   }
   building_size : 1
-  planner_update_rule : {
+  planner_update_rule {
     is_draggable : true
   }
-  needs : {
+  needs {
     canals : false
   }
-  cost : [ 2, 4, 7, 10, 15 ]
+  cost [ 2, 4, 7, 10, 15 ]
+  canal_irrigation_value_multiplier : 2
 }
 
 building_clay_pit = {
@@ -2417,6 +2418,7 @@ building_water_lift {
   damage_risk [3]
   irrigation_radius : 2
   canal_fill_water_level : 10
+  base_irrigation_value : 10
 }
 
 building_firehouse {
