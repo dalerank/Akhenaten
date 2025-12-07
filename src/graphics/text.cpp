@@ -6,6 +6,7 @@
 #include "graphics/view/view.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
+#include "graphics/elements/ui.h"
 #include "core/log.h"
 
 #define ELLIPSIS_LENGTH 4
@@ -76,7 +77,7 @@ void text_draw_cursor(int x_offset, int y_offset, int is_insert) {
                                           y_offset + input_cursor.y_offset + 14,
                                           COLOR_WHITE);
         } else {
-            ImageDraw::fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
+            ui::fill_rect(vec2i{x_offset + input_cursor.x_offset, y_offset + input_cursor.y_offset + 14},
                                  vec2i{input_cursor.width, 2},
                                  COLOR_WHITE);
         }

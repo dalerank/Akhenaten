@@ -24,8 +24,14 @@ struct tooltip_context {
     void set(int t, textid tx);
     void set(int t, pcstr tx);
     void set(int t, const xstring &tx);
+
+    void draw_box(int x, int y, int width, int height);
+    void draw_button_tooltip();
+    void draw_overlay_tooltip();
+    void draw_tile_tooltip();
+    void draw_tooltip();
+    bool should_draw_tooltip();
 };
 
 void tooltip_invalidate();
-void draw_tooltip_box(int x, int y, int width, int height);
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));

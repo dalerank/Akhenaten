@@ -50,3 +50,24 @@ bool building_firehouse::draw_ornaments_and_animations_height(painter &ctx, vec2
 
     return true;
 }
+
+void building_firehouse::update_month() {
+    building_impl::update_month();
+    
+    auto &data = runtime_data();
+    
+    // Update statistics
+    if (data.buildings_served_this_month > 0) {
+        data.months_active++;
+    }
+    data.total_buildings_served += data.buildings_served_this_month;
+    data.buildings_served_this_year += data.buildings_served_this_month;
+    
+    // Reset monthly counter
+    data.buildings_served_this_month = 0;
+}
+
+void building_firehouse::update_year() {
+    building_impl::update_year();
+    runtime_data().buildings_served_this_year = 0;
+}

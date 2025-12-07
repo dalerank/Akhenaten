@@ -214,6 +214,12 @@ void ui::begin_widget(vec2i offset, bool relative) {
     g_state._offset.push(offset);
 }
 
+void ui::fill_rect(vec2i offset, vec2i size, color c) {
+    painter ctx = game.painter();
+    const vec2i goffset = g_state.offset();
+    ctx.fill_rect(goffset + offset, size, c);
+}
+
 void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
@@ -494,20 +500,25 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
 }
 
 int ui::label_colored(textid tx, vec2i pos, e_font font, color color, int box_width) {
+    painter ctx = game.painter();
+    const vec2i offset = g_state.offset();
+
     if (box_width > 0) {
-        lang_text_draw_centered_colored(tx.group, tx.id, pos.x, pos.y, box_width, font, color);
+        lang_text_draw_centered_colored(tx.group, tx.id, offset.x + pos.x, offset.y + pos.y, box_width, font, color);
         return box_width;
     } else {
-        return lang_text_draw_colored(tx.group, tx.id, pos.x, pos.y, font, color);
+        return lang_text_draw_colored(tx.group, tx.id, offset.x + pos.x, offset.y + pos.y, font, color);
     }
 }
 
 int ui::label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width) {
+    painter ctx = game.painter();
+    const vec2i offset = g_state.offset();
     if (box_width > 0) {
-        text_draw_centered((const uint8_t*)tx, pos.x, pos.y, box_width, font, color);
+        text_draw_centered((const uint8_t*)tx, offset.x + pos.x, offset.y + pos.y, box_width, font, color);
         return box_width;
     } else {
-        return lang_text_draw_colored(tx, pos.x, pos.y, font, color);
+        return lang_text_draw_colored(tx, offset.x + pos.x, offset.y + pos.y, font, color);
     }
 }
 
@@ -540,7 +551,7 @@ void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
 void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     const vec2i offset = g_state.offset();
     if (fill) {
-        ImageDraw::fill_rect(offset + pos, size, fill);
+        ui::fill_rect(offset + pos, size, fill);
     } else {
         graphics_draw_rect(offset + pos, size, color);
     }

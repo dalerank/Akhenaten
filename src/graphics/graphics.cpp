@@ -25,10 +25,6 @@ void graphics_draw_rect(vec2i start, vec2i size, color color) {
     g_render.draw_rect(start, size, color);
 }
 
-void ImageDraw::fill_rect(vec2i start, vec2i size, color color) {
-    g_render.fill_rect(start, size, color);
-}
-
 void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     color alpha = (darkness << COLOR_BITSHIFT_ALPHA);
     g_render.fill_rect(start, size, alpha);
