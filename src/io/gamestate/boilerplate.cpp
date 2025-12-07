@@ -49,6 +49,7 @@
 #include "grid/floodplain.h"
 #include "grid/water.h"
 #include "grid/sandstone.h"
+#include "grid/stone.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -718,6 +719,7 @@ void GamestateIO::start_loaded_file() {
         map_tiles_update_all_earthquake();
         map_tiles_update_all_rocks();
         map_sandstone_init();
+        map_stone_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();

@@ -1924,14 +1924,15 @@ building_stone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:187 },
     base : { pack:PACK_GENERAL, id:187 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_STONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
-
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
     rock : true
