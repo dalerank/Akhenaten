@@ -1027,7 +1027,17 @@ void ui::etext::draw(UiFlags flags) {
         }
         text_draw_centered((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + additionaly, size.x, _font, _color);
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
+        // Clip multiline text if size is defined to prevent overflow
+        bool needs_clipping = (pxsize().y > 0);
+        if (needs_clipping) {
+            graphics_set_clip_rectangle(offset + pos, pxsize());
+        }
+        
         text_draw_multiline(_text, offset + pos, _wrap, _font, _color);
+        
+        if (needs_clipping) {
+            graphics_reset_clip_rectangle();
+        }
     } else if (!!(_flags & UiFlags_AlignYCentered)) {
         const int symbolh = font_definition_for(_font)->line_height;
         if (_shadow_color) {
@@ -1035,7 +1045,9 @@ void ui::etext::draw(UiFlags flags) {
         }
         text_draw((uint8_t *)_text.c_str(), offset.x + pos.x, offset.y + pos.y + (size.y - symbolh) / 2, _font, _color);
     } else if (!!(_flags & UiFlags_Rich)) {
-        if (_clip_area) {
+        // Always enable clipping for rich text when a size is defined or clip_area is set or scroll is disabled
+        bool should_clip = _clip_area || pxsize().y > 0;
+        if (should_clip) {
             graphics_set_clip_rectangle(offset + pos, pxsize());
         }
 
@@ -1055,7 +1067,7 @@ void ui::etext::draw(UiFlags flags) {
         rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/true);
         rich_text->draw(_text.c_str(), offset + pos, rwrap, maxlines, false);
         
-        if (_clip_area) {
+        if (should_clip) {
             graphics_reset_clip_rectangle();
         }
 
