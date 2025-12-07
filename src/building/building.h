@@ -617,6 +617,7 @@ public:
     virtual void update_day();
     virtual void update_week() {}
     virtual void update_month() {}
+    virtual void update_year() {}
     virtual void remove_dead_figures();
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);

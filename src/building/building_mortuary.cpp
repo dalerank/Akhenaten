@@ -109,7 +109,18 @@ void building_mortuary::update_count() const {
 
 void building_mortuary::update_month() {
     building_impl::update_month();
-    runtime_data().residents_served_this_month = 0;
+    
+    auto &data = runtime_data();
+    
+    // Update statistics
+    if (data.residents_served_this_month > 0) {
+        data.months_active++;
+    }
+    data.total_residents_served += data.residents_served_this_month;
+    data.residents_served_this_year += data.residents_served_this_month;
+    
+    // Reset monthly counter
+    data.residents_served_this_month = 0;
     
     // Monthly linen consumption if there are workers and road access
     if (num_workers() > 0 && has_road_access()) {
@@ -127,3 +138,7 @@ void building_mortuary::update_month() {
     }
 }
 
+void building_mortuary::update_year() {
+    building_impl::update_year();
+    runtime_data().residents_served_this_year = 0;
+}
