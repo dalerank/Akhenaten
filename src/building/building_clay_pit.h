@@ -15,5 +15,7 @@ public:
     virtual void spawn_figure() override;
     virtual void production_finished() override;
     virtual void update_production() override;
+    virtual void update_graphic() override;
+    virtual bool is_deletable() const override;
 };
 
