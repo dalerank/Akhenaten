@@ -3,10 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 73;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		2A1974BD2ED8D16700CB7863 /* Bundle innoextract */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2A1974BE2ED8D16700CB7863 /* Build configuration list for PBXAggregateTarget "Bundle innoextract" */;
+			buildPhases = (
+				2A1974C12ED8D16D00CB7863 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Bundle innoextract";
+			packageProductDependencies = (
+			);
+			productName = "Bundle innoextract";
+		};
 		2A9BCAD82ED8C45600671ED4 /* Publish */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 2A9BCADB2ED8C45600671ED4 /* Build configuration list for PBXAggregateTarget "Publish" */;
@@ -49,7 +62,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		2A9BCB4F2ED8C6FD00671ED4 /* akhenaten.html in Resources */ = {isa = PBXBuildFile; fileRef = 2A9BCB4E2ED8C6FD00671ED4 /* akhenaten.html */; };
 		2AC6217C2ED886DE0023FB4E /* akhenaten in Copy akhenaten binary */ = {isa = PBXBuildFile; fileRef = 2AC6217B2ED886C10023FB4E /* akhenaten */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217E2ED887180023FB4E /* neucha.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621752ED886C10023FB4E /* neucha.ttf */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2AC6217F2ED887180023FB4E /* pharaoh_custom_pack.sgx in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2AC621762ED886C10023FB4E /* pharaoh_custom_pack.sgx */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -60,6 +72,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2A1974DB2ED8D39300CB7863 /* Copy innoextract */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = innoextract;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			name = "Copy innoextract";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2AC6216E2ED886340023FB4E /* Copy akhenaten binary */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -99,24 +121,95 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2AC621C22ED888100023FB4E /* Exceptions for "akhenaten" folder in "akhenaten" target */ = {
+		2A1974DA2ED8D38600CB7863 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				akhenaten.html,
+				innoextract/innoextract,
+				innoextract/innoextract.command,
+				innoextract/libboost_atomic.dylib,
+				innoextract/libboost_date_time.dylib,
+				innoextract/libboost_filesystem.dylib,
+				innoextract/libboost_iostreams.dylib,
+				innoextract/libboost_program_options.dylib,
+				innoextract/libboost_random.dylib,
+				innoextract/libboost_regex.dylib,
+				innoextract/libicudata.78.1.dylib,
+				innoextract/libicui18n.78.1.dylib,
+				innoextract/libicuuc.78.1.dylib,
+				innoextract/liblzma.5.dylib,
+				innoextract/libzstd.1.5.7.dylib,
 			);
 			target = 2AC6211F2ED8833F0023FB4E /* akhenaten */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2AC621222ED8833F0023FB4E /* akhenaten */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				2AC621C22ED888100023FB4E /* Exceptions for "akhenaten" folder in "akhenaten" target */,
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		2A1974E92ED8D3AB00CB7863 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			attributesByRelativePath = {
+				innoextract/innoextract = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_atomic.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_date_time.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_filesystem.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_iostreams.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_program_options.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_random.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libboost_regex.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libicudata.78.1.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libicui18n.78.1.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libicuuc.78.1.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/liblzma.5.dylib = (
+					CodeSignOnCopy,
+				);
+				innoextract/libzstd.1.5.7.dylib = (
+					CodeSignOnCopy,
+				);
+			};
+			buildPhase = 2A1974DB2ED8D39300CB7863 /* Copy innoextract */;
+			membershipExceptions = (
+				innoextract/innoextract,
+				innoextract/innoextract.command,
+				innoextract/libboost_atomic.dylib,
+				innoextract/libboost_date_time.dylib,
+				innoextract/libboost_filesystem.dylib,
+				innoextract/libboost_iostreams.dylib,
+				innoextract/libboost_program_options.dylib,
+				innoextract/libboost_random.dylib,
+				innoextract/libboost_regex.dylib,
+				innoextract/libicudata.78.1.dylib,
+				innoextract/libicui18n.78.1.dylib,
+				innoextract/libicuuc.78.1.dylib,
+				innoextract/liblzma.5.dylib,
+				innoextract/libzstd.1.5.7.dylib,
 			);
-			path = akhenaten;
-			sourceTree = "<group>";
 		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2AC621222ED8833F0023FB4E /* akhenaten */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2A1974DA2ED8D38600CB7863 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2A1974E92ED8D3AB00CB7863 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = akhenaten; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +266,10 @@
 				2AC6211C2ED8833F0023FB4E /* Sources */,
 				2AC6211D2ED8833F0023FB4E /* Frameworks */,
 				2AC6211E2ED8833F0023FB4E /* Resources */,
+				2A1974DB2ED8D39300CB7863 /* Copy innoextract */,
 				2AC6216E2ED886340023FB4E /* Copy akhenaten binary */,
 				2AC6217D2ED886EE0023FB4E /* CopyFiles */,
+				2A1974F62ED90F8F00CB7863 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -206,6 +301,9 @@
 				LastUpgradeCheck = 2610;
 				ORGANIZATIONNAME = "SL-Soft.de";
 				TargetAttributes = {
+					2A1974BD2ED8D16700CB7863 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
 					2A9BCAD82ED8C45600671ED4 = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
@@ -233,13 +331,14 @@
 			packageReferences = (
 				2AC621822ED887E50023FB4E /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 56;
 			productRefGroup = 2AC621212ED8833F0023FB4E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				2ABE3CB12ED8923D00C22DCE /* Compile akhenaten */,
 				2AC6211F2ED8833F0023FB4E /* akhenaten */,
+				2A1974BD2ED8D16700CB7863 /* Bundle innoextract */,
 				2A9BCADD2ED8C4A900671ED4 /* Postscript */,
 				2A9BCAD82ED8C45600671ED4 /* Publish */,
 			);
@@ -251,13 +350,46 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A9BCB4F2ED8C6FD00671ED4 /* akhenaten.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2A1974C12ED8D16D00CB7863 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Erforderliche Abhängigkeiten:\n# ARM: /opt/homebrew/bin/brew install innoextract dylibbundler\n\nls -l \"$PROJECT_DIR/akhenaten/innoextract\" > /private/tmp/yo\n\n# Variablen definieren\nBIN=\"innoextract\"\nDEST_PATH=\"$PROJECT_DIR/akhenaten/innoextract\"\nARM_PATH=\"/opt/homebrew/bin\"\nARM_BUILD=\"arm\"\n\ncd \"$DEST_PATH\"\n\ncp \"$ARM_PATH/$BIN\" .\n\n# Abhängigkeiten bündeln\ndylibbundler -of -cd -b -x innoextract -d . -p \"@executable_path/\"\n\nchmod +x innoextract\n\n\n";
+		};
+		2A1974F62ED90F8F00CB7863 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\nset -euo pipefail\n\nBIN=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/innoextract/innoextract\"\n\nif [[ -f \"$BIN\" ]]; then\n    /bin/chmod 755 \"$BIN\"\n    /usr/bin/codesign --force --sign \"$EXPANDED_CODE_SIGN_IDENTITY\" --timestamp=none \"$BIN\"\n    echo \"Resigned $BIN with $EXPANDED_CODE_SIGN_IDENTITY\"\nelse\n    echo \"WARN: $BIN not found\"\nfi\n";
+		};
 		2A9BCADC2ED8C45A00671ED4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,7 +422,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n\n\ncodesign --force --deep --sign \"Apple Development: apple@slsoft.de (85JZW6284R)\" \"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/akhenaten/upload\"\nif [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    cp \"$HOME/Documents/Xcode/Akhenaten/xcode/akhenaten/akhenaten/akhenaten.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/akhenaten.zip\"\nfi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
+			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/imgui.ini\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/akhenaten-log.txt\n\ncodesign --force --deep --sign \"Apple Development: apple@slsoft.de (85JZW6284R)\" \"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/akhenaten/upload\"\nif [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    cp \"$HOME/Documents/Xcode/Akhenaten/xcode/akhenaten/akhenaten/akhenaten.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/akhenaten.zip\"\nfi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
 		};
 		2ABE3CB52ED8924300C22DCE /* Compile */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -323,6 +455,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		2A1974BF2ED8D16700CB7863 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2A1974C02ED8D16700CB7863 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4ATFWV7M4B;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		2A9BCAD92ED8C45600671ED4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -435,7 +585,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -507,7 +657,7 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = b10890;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = NO;
@@ -531,8 +681,13 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/akhenaten/innoextract",
+					"$(PROJECT_DIR)/akhenaten/languages",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.2.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = de.slsoft.akhenaten;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -560,7 +715,7 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = b10890;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
@@ -585,8 +740,13 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/akhenaten/innoextract",
+					"$(PROJECT_DIR)/akhenaten/languages",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.2.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = de.slsoft.akhenaten;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -609,6 +769,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2A1974BE2ED8D16700CB7863 /* Build configuration list for PBXAggregateTarget "Bundle innoextract" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A1974BF2ED8D16700CB7863 /* Debug */,
+				2A1974C02ED8D16700CB7863 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2A9BCADB2ED8C45600671ED4 /* Build configuration list for PBXAggregateTarget "Publish" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
