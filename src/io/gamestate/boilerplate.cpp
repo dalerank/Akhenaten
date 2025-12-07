@@ -53,6 +53,7 @@
 #include "grid/limestone.h"
 #include "grid/granite.h"
 #include "grid/golden.h"
+#include "grid/copper.h"
 #include "grid/clay.h"
 #include "game/game.h"
 #include "content/vfs.h"
@@ -732,6 +733,7 @@ void GamestateIO::start_loaded_file() {
         map_limestone_init();
         map_granite_init();
         map_golden_init();
+        map_copper_init();
         map_clay_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
