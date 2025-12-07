@@ -76,6 +76,7 @@ enum e_debug_render {
     e_debug_render_stone = 44,
     e_debug_render_limestone = 45,
     e_debug_render_granite = 46,
+    e_debug_render_golden = 47,
 
     e_debug_render_size
 };

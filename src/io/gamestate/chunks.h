@@ -99,6 +99,7 @@ extern io_buffer *iob_sandstone;
 extern io_buffer *iob_stone;
 extern io_buffer *iob_limestone;
 extern io_buffer *iob_granite;
+extern io_buffer *iob_golden;
 
 extern io_buffer* iob_junk14;
 

@@ -52,6 +52,7 @@
 #include "grid/stone.h"
 #include "grid/limestone.h"
 #include "grid/granite.h"
+#include "grid/golden.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -594,6 +595,9 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(103968, false, "limestone_grid", iob_limestone);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "granite_grid", iob_granite);              // (228²) * 2
         }
+        if (file_version > 168) {
+            FILEIO.push_chunk(103968, false, "golden_grid", iob_golden);              // (228²) * 2
+        }
         break;
     }
 }
@@ -725,6 +729,7 @@ void GamestateIO::start_loaded_file() {
         map_stone_init();
         map_limestone_init();
         map_granite_init();
+        map_golden_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();

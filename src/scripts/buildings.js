@@ -2010,6 +2010,9 @@ building_mine_gold {
   laborers [12]
   fire_risk [0]
   damage_risk [2]
+  progress_max : 200
+  production_rate : 100
+  production_divider : 10
 }
 
 building_clay_gatehouse = {
