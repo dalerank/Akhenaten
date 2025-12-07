@@ -46,12 +46,13 @@ void building_mortuary::spawn_figure() {
         return;
     }
 
-    if (base.stored_amount(RESOURCE_LINEN) < 20) {
+    const auto &params = current_params();
+    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_spawn) {
         return;
     }
 
-    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_SERVICE)) {
-        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), 20);
+    if (common_spawn_figure_trigger(params.min_houses_coverage, BUILDING_SLOT_SERVICE)) {
+        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), params.linen_required_for_spawn);
         base.stored_amount_first -= spent;
 
         create_roaming_figure(FIGURE_EMBALMER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
@@ -63,7 +64,8 @@ bool building_mortuary::can_play_animation() const {
         return false;
     }
 
-    if (base.stored_amount(RESOURCE_LINEN) < 100) {
+    const auto &params = current_params();
+    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_animation) {
         return false;
     }
 
@@ -99,5 +101,22 @@ bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i
 
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
+}
+
+void building_mortuary::update_month() {
+    building_impl::update_month();
+    runtime_data().residents_served_this_month = 0;
+    
+    // Monthly linen consumption if there are workers
+    if (num_workers() > 0) {
+        const auto &params = current_params();
+        if (params.monthly_linen_consumption > 0) {
+            int available = base.stored_amount(RESOURCE_LINEN);
+            int to_consume = std::min<int>(available, params.monthly_linen_consumption);
+            if (to_consume > 0) {
+                base.stored_amount_first -= to_consume;
+            }
+        }
+    }
 }
 

@@ -1646,6 +1646,9 @@ building_mortuary {
     resource : RESOURCE_LINEN
   }
   max_serve_clients : 1000
+  linen_required_for_spawn : 20
+  linen_required_for_animation : 100
+  monthly_linen_consumption : 50
   min_houses_coverage : 50
   building_size : 2
   meta { help_id:66, text_id:82 }
