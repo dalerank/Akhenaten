@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include "message_dialog_new.h"
 

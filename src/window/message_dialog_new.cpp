@@ -120,16 +120,16 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     
     // Setup subtitle from message
     subtitle_text = msg.subtitle.text;
-    if (!subtitle_text.empty()) {
-        ui["subtitle"].text(subtitle_text.c_str());
-        ui["subtitle"].enabled = true;
-    } else {
-        ui["subtitle"].enabled = false;
-    }
+    ui["subtitle"].enabled = !subtitle_text.empty();
+    ui["subtitle"] = subtitle_text;
 
     if (msg.size.x > 0) {
         ui["background"].size = msg.size;
+        ui["content_panel"].size = { msg.size.x - 4, msg.size.y - 6 };
+        ui["content_text"].size = { (msg.size.x - 3) * 16, (msg.size.y - 6) * 16 };
+        ui["title"].size.y = msg.size.y * 16;
     }
+
     ui["title"] = msg.title.text;
     ui["title"].enabled = true;
 
