@@ -1126,6 +1126,7 @@ building_reed_gatherer = {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19, duration:4 },
+    reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   }
   output : {
     resource : RESOURCE_REEDS
