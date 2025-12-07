@@ -1134,6 +1134,7 @@ building_reed_gatherer = {
   meta : { help_id : 92, text_id : 116 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
+  max_storage_amount : 200
   cost: [ 10, 20, 40, 80, 120 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[8], fire_risk:[2], damage_risk: [3]

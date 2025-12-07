@@ -567,6 +567,7 @@ struct building_static_params {
     uint16_t progress_max;
     e_overlay overlay;
     uint16_t max_service;
+    uint16_t max_storage_amount;
 
     uint8_dcy laborers;
     int8_dcy fire_risk;
@@ -592,7 +593,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
     cost, desirability, crime,
-    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service,
+    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service, max_storage_amount,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
