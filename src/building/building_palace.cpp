@@ -10,6 +10,9 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/tooltip.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
+#include "core/bstring.h"
+#include "graphics/text.h"
 #include "graphics/view/view.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -77,57 +80,88 @@ void building_palace::update_graphic() {
 }
 
 void building_palace::draw_tooltip(tooltip_context *c) {
-    int x, y;
+    vec2i mpos = c->mpos;
+    
     int width = 220;
     int height = 80;
+    vec2i pos;
 
-    if (c->mpos.x < width + 20)
-        x = c->mpos.x + 20;
+    if (mpos.x < width + 20)
+        pos.x = mpos.x + 20;
     else {
-        x = c->mpos.x - width - 20;
+        pos.x = mpos.x - width - 20;
     }
 
-    if (c->mpos.y < 200) {
-        y = c->mpos.y + 10;
-    } else if (c->mpos.y + height - 32 > screen_height()) {
-        y = screen_height() - height;
+    if (mpos.y < 200) {
+        pos.y = mpos.y + 10;
+    } else if (mpos.y + height - 32 > screen_height()) {
+        pos.y = screen_height() - height;
     } else {
-        y = c->mpos.y - 32;
+        pos.y = mpos.y - 32;
     }
 
-    //save_window_under_tooltip_to_buffer(x, y, width, height);
-    draw_tooltip_box(x, y, width, height);
-
+    ui::begin_widget(pos);
+        
+    ui::fill_rect({ 0, 0 }, { width, height }, COLOR_TOOLTIP_FILL);
+    ui::border({ 0, 0 }, { width, height }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None);
+        
     // unemployment
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_unemployed, x + 5, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    width = text_draw_number_colored(g_city.labor.unemployment_percentage, '@', "%", x + 140, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.labor.workers_unemployed - g_city.labor.workers_needed, '(', ")", x + 140 + width, y + 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    ui::label_colored(ui::str(e_text_senate_tooltip, e_text_senate_tooltip_unemployed), {5, 5}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    bstring64 unemployment_text;
+    unemployment_text.printf("@%d%%", g_city.labor.unemployment_percentage);
+    int text_width = ui::label_colored(unemployment_text.c_str(), {140, 5}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    int workers_diff = g_city.labor.workers_unemployed - g_city.labor.workers_needed;
+    if (workers_diff != 0) {
+        bstring32 workers_text;
+        workers_text.printf("(%d)", workers_diff);
+        ui::label_colored(workers_text.c_str(), {140 + text_width, 5}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    }
 
-    // ratings
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_culture, x + 5, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.culture, '@', " ", x + 140, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    // ratings - culture
+    ui::label_colored(ui::str(e_text_senate_tooltip, e_text_senate_tooltip_culture), {5, 19}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    bstring32 culture_text;
+    culture_text.printf("@%d ", g_city.ratings.culture);
+    text_width = ui::label_colored(culture_text.c_str(), {140, 19}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     if (!scenario_is_open_play() && winning_culture()) {
-        text_draw_number_colored(winning_culture(), '(', ")", x + 140 + width, y + 19, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        bstring32 winning_text;
+        winning_text.printf("(%d)", winning_culture());
+        ui::label_colored(winning_text.c_str(), {140 + text_width, 19}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
 
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_prosperity, x + 5, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.prosperity, '@', " ", x + 140, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-
+    // ratings - prosperity
+    ui::label_colored(ui::str(e_text_senate_tooltip, e_text_senate_tooltip_prosperity), {5, 33}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    bstring32 prosperity_text;
+    prosperity_text.printf("@%d ", g_city.ratings.prosperity);
+    text_width = ui::label_colored(prosperity_text.c_str(), {140, 33}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     if (!scenario_is_open_play() && winning_prosperity()) {
-        text_draw_number_colored(winning_prosperity(), '(', ")", x + 140 + width, y + 33, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        bstring32 winning_text;
+        winning_text.printf("(%d)", winning_prosperity());
+        ui::label_colored(winning_text.c_str(), {140 + text_width, 33}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
 
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_monuments, x + 5, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.ratings.monument, '@', " ", x + 140, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    // ratings - monuments
+    ui::label_colored(ui::str(e_text_senate_tooltip, e_text_senate_tooltip_monuments), {5, 47}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    bstring32 monument_text;
+    monument_text.printf("@%d ", g_city.ratings.monument);
+    text_width = ui::label_colored(monument_text.c_str(), {140, 47}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     if (!scenario_is_open_play() && winning_monuments()) {
-        text_draw_number_colored(winning_monuments(), '(', ")", x + 140 + width, y + 47, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        bstring32 winning_text;
+        winning_text.printf("(%d)", winning_monuments());
+        ui::label_colored(winning_text.c_str(), {140 + text_width, 47}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
 
-    lang_text_draw_colored(e_text_senate_tooltip, e_text_senate_tooltip_kingdom, x + 5, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
-    text_draw_number_colored(g_city.kingdome.rating, '@', " ", x + 140, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    // ratings - kingdom
+    ui::label_colored(ui::str(e_text_senate_tooltip, e_text_senate_tooltip_kingdom), {5, 61}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+    bstring32 kingdom_text;
+    kingdom_text.printf("@%d ", g_city.kingdome.rating);
+    text_width = ui::label_colored(kingdom_text.c_str(), {140, 61}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     if (!scenario_is_open_play() && winning_kingdom()) {
-        text_draw_number_colored(winning_kingdom(), '(', ")", x + 140 + width, y + 61, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        bstring32 winning_text;
+        winning_text.printf("(%d)", winning_kingdom());
+        ui::label_colored(winning_text.c_str(), {140 + text_width, 61}, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
     }
+
+    ui::end_widget();
 }
 
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

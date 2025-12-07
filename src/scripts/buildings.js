@@ -1646,6 +1646,9 @@ building_mortuary {
     resource : RESOURCE_LINEN
   }
   max_serve_clients : 1000
+  linen_required_for_spawn : 20
+  linen_required_for_animation : 100
+  monthly_linen_consumption : 20
   min_houses_coverage : 50
   building_size : 2
   meta { help_id:66, text_id:82 }
@@ -1850,6 +1853,8 @@ building_mine_copper {
   output {
     resource : RESOURCE_COPPER
   }
+  progress_max : 200,
+  production_rate : 100,
   meta { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,

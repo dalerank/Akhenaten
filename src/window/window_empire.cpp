@@ -225,7 +225,7 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
             }
 
             if (empire_window_draw_points()) {
-                ImageDraw::fill_rect(draw_offset + vec2i{ route_point.p.x - 4, route_point.p.y - 4 }, vec2i{ 8, 8 }, COLOR_BLACK);
+                ui::fill_rect(draw_offset + vec2i{ route_point.p.x - 4, route_point.p.y - 4 }, vec2i{ 8, 8 }, COLOR_BLACK);
             }
         }
     }

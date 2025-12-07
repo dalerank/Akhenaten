@@ -70,7 +70,6 @@ struct render_command_t {
 
 namespace ImageDraw {
 
-void fill_rect(vec2i p, vec2i size, color color);
 void img_background(painter &ctx, int image_id, float scale = 1.0f, vec2i offset = {0, 0});
 
 void apply_render_commands(painter& ctx);

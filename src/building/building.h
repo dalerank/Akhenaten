@@ -94,6 +94,7 @@ class building_gatehouse;
 class building_dancer_school;
 class building_police_station;
 class building_dentist;
+class building_mortuary;
 
 struct tooltip_context;
 struct object_info;
@@ -432,6 +433,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(dancer_school)
     ALLOW_SMART_CAST_BUILDING(transport_wharf)
     ALLOW_SMART_CAST_BUILDING(police_station)
+    ALLOW_SMART_CAST_BUILDING(mortuary)
 
     int get_figures_number(e_figure_type ftype);
 
@@ -615,6 +617,7 @@ public:
     virtual void update_day();
     virtual void update_week() {}
     virtual void update_month() {}
+    virtual void update_year() {}
     virtual void remove_dead_figures();
     virtual int window_info_handle_mouse(const mouse *m, object_info &c) { return 0; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask);
@@ -702,6 +705,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(mansion)
     ALLOW_SMART_CAST_BUILDING_I(physician)
     ALLOW_SMART_CAST_BUILDING_I(dentist)
+    ALLOW_SMART_CAST_BUILDING_I(mortuary)
     ALLOW_SMART_CAST_BUILDING_I(wharf)
     ALLOW_SMART_CAST_BUILDING_I(warship_wharf)
     ALLOW_SMART_CAST_BUILDING_I(shrine)
@@ -922,6 +926,7 @@ GENERATE_SMART_CAST_BUILDING(work_camp)
 GENERATE_SMART_CAST_BUILDING(dancer_school)
 GENERATE_SMART_CAST_BUILDING(police_station)
 GENERATE_SMART_CAST_BUILDING(dentist)
+GENERATE_SMART_CAST_BUILDING(mortuary)
 
 namespace buildings {
 

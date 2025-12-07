@@ -12,6 +12,11 @@ public:
     };
 
     virtual int produce_uptick_per_day() const override { return base.num_workers > 0 ? std::max<int>(1, base.num_workers / 2) : 0; }
+    virtual void update_production() override;
     virtual void on_before_collapse() override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual int stored_amount(e_resource r) const override;
+    virtual void spawn_figure() override;
+    virtual void production_finished() override;
 };
 
