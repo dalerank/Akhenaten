@@ -10,12 +10,19 @@
 #include "widget/city/ornaments.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "io/io_buffer.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
-    runtime_data().max_gatheres = 1;
+    runtime_data().max_gatheres = current_params().max_gatherers;
+}
+
+void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    iob->bind(BIND_SIGNATURE_UINT8, &d.max_gatheres);
 }
 
 int building_reed_gatherer::stored_amount(e_resource r) const {
