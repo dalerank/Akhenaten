@@ -120,6 +120,7 @@ public:
         _data[_size - 1] = 0;
         return *this;
     }
+
     inline ref tolower() {
         char* str = _data;
         while (*str) {
@@ -128,6 +129,7 @@ public:
         }
         return *this;
     }
+
     inline ref toupper() {
         char* str = _data;
         while (*str) {
@@ -136,15 +138,18 @@ public:
         }
         return *this;
     }
+
     inline ref trim() {
         char* end = std::remove_if(_data, _data + len(), ::isspace);
         *end = '\0';
 
         return *this;
     }
+
     inline bool starts_with(pcstr s) const {
         return !empty() && (strncmp(_data, s, strlen(s)) == 0);
     }
+
     inline bool ends_with(pcstr s) const {
         int slen = (s && *s) ? strlen(s) : 0;
         if (!slen) {
@@ -159,11 +164,16 @@ public:
     }
 
     inline char back() const { return empty() ? 0 : (_data[len() - 1]); }
+    inline size_t find(char t) {
+        pcstr p = ::strchr(_data, t);
+        return (p ? (p - _data) : -1);
+    }
 
     inline ref replace(const char x, const char y) {
         std::replace_if(_data, _data + len(), [x](char c) { return c == x; }, y);
         return *this;
     }
+
     inline ref replace_str(pcstr subst, pcstr repl) {
         size_t _len = len();
         const size_t subst_len = ::strlen(subst);
