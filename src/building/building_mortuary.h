@@ -15,6 +15,9 @@ public:
 
     struct runtime_data_t : public no_copy_assignment {
         int residents_served_this_month;
+        int residents_served_this_year;
+        int total_residents_served;
+        int months_active;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual building_mortuary *dcast_mortuary() override { return this; }
@@ -22,6 +25,7 @@ public:
     virtual void spawn_figure() override;
     virtual void on_place_checks() override;
     virtual void update_month() override;
+    virtual void update_year() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MORTUARY; }
     virtual int animation_speed(int speed) const override { return 3; }

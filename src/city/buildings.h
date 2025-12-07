@@ -52,6 +52,7 @@ struct city_buildings_t {
     void update_counters();
     void on_post_load();
     void update_month();
+    void update_year();
     void update_week();
     void update_day();
     void reload_objects();
