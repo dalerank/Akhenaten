@@ -10,12 +10,17 @@
 #include "widget/city/ornaments.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "io/io_buffer.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
-    runtime_data().max_gatheres = 1;
+    runtime_data().max_gatheres = current_params().max_gatherers;
+}
+
+void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
+    building_industry::bind_dynamic(iob, version);
 }
 
 int building_reed_gatherer::stored_amount(e_resource r) const {
@@ -35,12 +40,11 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     }
 
     int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
-
-    // can only spawn if there's space for more reed in the building
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
-    if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount(base.output.resource) / carry_per_person) < max_loads) {
+    int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
+    
+    if (gatherers_this_yard < max_gatherers_per_building && gatherers_this_yard + stored_loads < max_loads) {
         return true;
     }
 
