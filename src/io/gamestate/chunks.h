@@ -101,6 +101,7 @@ extern io_buffer *iob_limestone;
 extern io_buffer *iob_granite;
 extern io_buffer *iob_golden;
 extern io_buffer *iob_clay;
+extern io_buffer *iob_copper;
 
 extern io_buffer* iob_junk14;
 
