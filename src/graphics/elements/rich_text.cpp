@@ -21,7 +21,16 @@ int rich_text_t::init(pcstr text, vec2i ptext, int width_blocks, int height_bloc
         text_height_lines = height_blocks - 1;
         text_width_blocks = width_blocks;
 
-        num_lines = draw(text, vec2i(x_text + 8, y_text + 6), 16 * text_width_blocks - 16, text_height_lines, /*meaure_only*/true);
+        // Calculate available width and height considering margins
+        int available_width = 16 * text_width_blocks - 16 - margin.left - margin.right;
+        int margin_top_lines = (margin.top + 15) / 16;
+        int margin_bottom_lines = (margin.bottom + 15) / 16;
+        int available_height_lines = text_height_lines - margin_top_lines - margin_bottom_lines;
+        if (available_height_lines < 1) {
+            available_height_lines = 1;  // At least one line
+        }
+        
+        num_lines = draw(text, vec2i(x_text + 8 + margin.left, y_text + 6 + margin.top), available_width, available_height_lines, /*meaure_only*/true);
         dscrollbar.pos.x = x_text + 16 * text_width_blocks - 1;
         dscrollbar.pos.y = y_text;
         dscrollbar.height = 16 * text_height_blocks;
@@ -281,7 +290,18 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
     int lines_before_image = 0;
     int paragraph = 0;
     int has_more_characters = 1;
-    int y = offset.y;
+    
+    // Apply margins to offset and box width
+    vec2i adjusted_offset = { offset.x + margin.left, offset.y + margin.top };
+    int adjusted_box_width = box_width - margin.left - margin.right;
+    int margin_top_lines = (margin.top + 15) / 16;
+    int margin_bottom_lines = (margin.bottom + 15) / 16;
+    int adjusted_height_lines = height_lines - margin_top_lines - margin_bottom_lines;
+    if (adjusted_height_lines < 1) {
+        adjusted_height_lines = 1;  // At least one line
+    }
+    
+    int y = adjusted_offset.y;
     int guard = 0;
     int line = 0;
     int num_lines = 0;
@@ -303,7 +323,7 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
         paragraph = 0;
         int line_has_content = (current_width > 0) ? 1 : 0;
         
-        while ((has_more_characters || image_height_lines) && current_width < box_width) {
+        while ((has_more_characters || image_height_lines) && current_width < adjusted_box_width) {
             if (image_height_lines) {
                 image_height_lines--;
                 break;
@@ -312,86 +332,86 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
             int last_word_width = get_word_width(text, 0, &word_num_chars);
             
             // If adding this word would exceed box width and we already have content, break to next line
-            if (line_has_content && current_width + last_word_width >= box_width) {
+            if (line_has_content && current_width + last_word_width >= adjusted_box_width) {
                 break;
             }
             
             current_width += last_word_width;
             
             for (int i = 0; i < word_num_chars; i++) {
-                    char c = *text++;
-                    if (c == '@') {
-                        if (*text == 'P') {
-                            paragraph = 1;
-                            text++;
-                            current_width = box_width;
-                            break;
-                        } else if (*text == 'L') {
-                            text++;
-                            current_width = box_width;
-                            break;
-                        } else if (*text == 'I') {
-                            int small_image_id = atoi(text + 1);
-                            int id_word_width = get_lexem_width(text - 2, 0);
+                char c = *text++;
+                if (c == '@') {
+                    if (*text == 'P') {
+                        paragraph = 1;
+                        text++;
+                        current_width = adjusted_box_width;
+                        break;
+                    } else if (*text == 'L') {
+                        text++;
+                        current_width = adjusted_box_width;
+                        break;
+                    } else if (*text == 'I') {
+                        int small_image_id = atoi(text + 1);
+                        int id_word_width = get_lexem_width(text - 2, 0);
 
-                            const image_t *img = image_get(small_image_id);
-                            const int img_width = img->width;
+                        const image_t *img = image_get(small_image_id);
+                        const int img_width = img->width;
 
-                            current_width -= id_word_width;
-                            current_width -= img_width;
+                        current_width -= id_word_width;
+                        current_width -= img_width;
 
-                            tmp_line.append('@');
-                            while (c >= '0' && c <= '9') {
-                                tmp_line.append(c);
-                                c = *text++;
-                            }
-                            break;
-                        } else if (*text == 'G') {
-                            if (!tmp_line.empty()) {
-                                num_lines++;
-                            }
-
-                            text++; // skip 'G'
-                            current_width = box_width;
-                            image_id = atoi(text);
+                        tmp_line.append('@');
+                        while (c >= '0' && c <= '9') {
+                            tmp_line.append(c);
                             c = *text++;
-                            while (c >= '0' && c <= '9') {
-                                c = *text++;
-                            }
-                            image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
-                            image_height_lines = image_get(image_id)->height / 16 + 2;
-                            if (line > 0) {
-                                lines_before_image = 1;
-                            }
-
-                            break;
                         }
-                    }
+                        break;
+                    } else if (*text == 'G') {
+                        if (!tmp_line.empty()) {
+                            num_lines++;
+                        }
 
-                    if (!tmp_line.empty() || c != ' ') { // no space at start of line, should we need this trim?
-                        tmp_line.append(c);
+                        text++; // skip 'G'
+                        current_width = adjusted_box_width;
+                        image_id = atoi(text);
+                        c = *text++;
+                        while (c >= '0' && c <= '9') {
+                            c = *text++;
+                        }
+                        image_id += image_id_from_group(GROUP_MESSAGE_IMAGES) - 1;
+                        image_height_lines = image_get(image_id)->height / 16 + 2;
+                        if (line > 0) {
+                            lines_before_image = 1;
+                        }
+
+                        break;
                     }
                 }
-                
-                line_has_content = 1;
-                
-                if (!text || !*text) {
-                    has_more_characters = 0;
+
+                if (!tmp_line.empty() || c != ' ') { // no space at start of line, should we need this trim?
+                    tmp_line.append(c);
                 }
+            }
+            
+            line_has_content = 1;
+            
+            if (!text || !*text) {
+                has_more_characters = 0;
+            }
         }
 
         int outside_viewport = 0;
         if (!measure_only) {
-            if (line < dscrollbar.scroll_position || line >= dscrollbar.scroll_position + height_lines)
+            if (line < dscrollbar.scroll_position || line >= dscrollbar.scroll_position + adjusted_height_lines)
                 outside_viewport = 1;
         }
 
         if (!outside_viewport) {
             int centering_offset = 0;
             if (centered) {
-                centering_offset = (box_width - current_width) / 2;
+                centering_offset = (adjusted_box_width - current_width) / 2;
             }
-            draw_line(ctx, tmp_line, x_line_offset + offset.x + centering_offset, y, color, measure_only);
+            draw_line(ctx, tmp_line, x_line_offset + adjusted_offset.x + centering_offset, y, color, measure_only);
         }
 
         if (!measure_only) {
@@ -401,8 +421,8 @@ int rich_text_t::draw_impl(pcstr text, vec2i offset, int box_width, int height_l
                 else {
                     const image_t* img = image_get(image_id);
                     image_height_lines = img->height / 16 + 2;
-                    int image_offset_x = offset.x + (box_width - img->width) / 2 - 4;
-                    if (line < height_lines + dscrollbar.scroll_position) {
+                    int image_offset_x = adjusted_offset.x + (adjusted_box_width - img->width) / 2 - 4;
+                    if (line < adjusted_height_lines + dscrollbar.scroll_position) {
                         if (line >= dscrollbar.scroll_position)
                             ctx.img_generic(image_id, { image_offset_x, y + 8 });
                         else {

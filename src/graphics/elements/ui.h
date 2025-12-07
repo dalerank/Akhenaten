@@ -289,6 +289,8 @@ struct elabel : public element {
     xstring _tooltip;
     xstring _format;
 
+    rich_text_t::margin_t _text_margin;
+
     e_font _font;
     e_font _font_hover;
     e_font _font_link;
@@ -552,6 +554,8 @@ struct widget {
 };
 
 } // ui
+
+ANK_CONFIG_STRUCT(rich_text_t::margin_t, left, top, right, bottom)
 
 void ui_widget_load_elements(archive arch, pcstr section, ui::element *parent, ui::element::items &elements);
 
