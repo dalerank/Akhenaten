@@ -36,6 +36,7 @@
 #include "grid/golden.h"
 #include "grid/clay.h"
 #include "grid/copper.h"
+#include "grid/gems.h"
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
@@ -599,6 +600,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color copper_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, copper_color);
+        }
+        break;
+
+    case e_debug_render_gems:
+        d = map_get_gems(grid_offset);
+        if (d > 0) {
+            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
+            color gems_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+            debug_text(ctx, str, x, y + 10, 0, "", d, gems_color);
         }
         break;
 

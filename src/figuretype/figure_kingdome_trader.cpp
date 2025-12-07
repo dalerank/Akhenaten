@@ -56,6 +56,7 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
     caravan->base.wait_ticks = caravan->current_params().wait_ticks_after_create;
     caravan->runtime_data().trader = empire_trader_handle{ ev.tid };
+    assert(caravan->runtime_data().trader.valid());
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
     donkey1->action_state = ACTION_100_TRADE_CARAVAN_CREATED;

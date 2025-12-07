@@ -79,6 +79,7 @@ enum e_debug_render {
     e_debug_render_golden = 47,
     e_debug_render_clay = 48,
     e_debug_render_copper = 49,
+    e_debug_render_gems = 50,
 
     e_debug_render_size
 };
