@@ -754,6 +754,7 @@ endif()
 
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
+file(WRITE "${CMAKE_BINARY_DIR}/buildnumber.txt" "${GAME_BUILD_NUMBER}\n")
 
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
