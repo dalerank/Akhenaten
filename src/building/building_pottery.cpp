@@ -5,6 +5,7 @@
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 
 #include "widget/city/ornaments.h"
@@ -38,13 +39,10 @@ void building_pottery::on_place_checks() {
 
     construction_warnings warnings("#building_needs_clay");
 
-    const bool can_produce_clay = g_city.can_produce_resource(RESOURCE_CLAY);
-    warnings.add_if(!can_produce_clay, "#build_clay_pit");
+    const bool is_importing_clay = city_resource_clay.trade_status() == TRADE_STATUS_IMPORT;
 
-    const bool can_import_clay = g_empire.can_import_resource(RESOURCE_CLAY, true);
-    warnings.add_if(!can_import_clay, "#setup_trade_route_to_import");
-
-    const bool is_importing_clay = city_resource_trade_status(RESOURCE_CLAY) == TRADE_STATUS_IMPORT;
+    warnings.add_if(!city_resource_clay.can_produce(), "#build_clay_pit");
+    warnings.add_if(!city_resource_clay.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(!is_importing_clay, "#overseer_of_commerce_to_import");
 }
 

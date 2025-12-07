@@ -48,6 +48,13 @@
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
 #include "grid/water.h"
+#include "grid/sandstone.h"
+#include "grid/stone.h"
+#include "grid/limestone.h"
+#include "grid/granite.h"
+#include "grid/golden.h"
+#include "grid/copper.h"
+#include "grid/clay.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -90,12 +97,12 @@
 
 static const char MISSION_PACK_FILE[] = "mission1.pak";
 
-vfs::path fullpath_saves(const char* filename) {
+vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
         return vfs::path(filename);
     }
 
-    return vfs::path(vfs::SAVE_FOLDER, "/", (const char*)g_settings.player_name, "/", filename);
+    return vfs::path(vfs::SAVE_FOLDER, "/", g_settings.player_name.c_str(), "/", filename);
 }
 
 void fullpath_maps(char* full, const char* filename) {
@@ -583,8 +590,17 @@ static void file_schema(e_file_format file_format, const int file_version) {
         FILEIO.push_chunk(1776, false, "bizarre_ordered_fields_9", iob_bizarre_ordered_fields_9);
         FILEIO.push_chunk(51984, false, "terrain_floodplain_growth", iob_terrain_floodplain_growth);
         FILEIO.push_chunk(51984 * 4, false, "monuments_progress", iob_monuments_progress_grid); // (228²) * 4
-        if (file_version > 165) {
+        if (file_version > 167) {
             FILEIO.push_chunk(51984, false, "rubble_type_grid", iob_rubble_type_grid); //  (228²) * 1
+            FILEIO.push_chunk(103968, false, "sandstone_grid", iob_sandstone);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "stone_grid", iob_stone);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "limestone_grid", iob_limestone);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "granite_grid", iob_granite);              // (228²) * 2
+        }
+        if (file_version > 168) {
+            FILEIO.push_chunk(103968, false, "golden_grid", iob_golden);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "clay_grid", iob_clay);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "copper_grid", iob_copper);              // (228²) * 2
         }
         break;
     }
@@ -713,6 +729,13 @@ void GamestateIO::start_loaded_file() {
         map_tiles_river_refresh_entire();
         map_tiles_update_all_earthquake();
         map_tiles_update_all_rocks();
+        map_sandstone_init();
+        map_stone_init();
+        map_limestone_init();
+        map_granite_init();
+        map_golden_init();
+        map_copper_init();
+        map_clay_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();
@@ -795,9 +818,9 @@ bool GamestateIO::delete_mission(const int scenario_id) {
     return false;
 }
 
-bool GamestateIO::delete_savegame(const char* filename_short) {
+bool GamestateIO::delete_savegame(vfs::path filename_short) {
     // concatenate string
-    bstring256 full = fullpath_saves(filename_short);
+    vfs::path full = fullpath_saves(filename_short);
 
     // delete file
     return vfs::file_remove(full);

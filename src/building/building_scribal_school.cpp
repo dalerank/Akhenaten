@@ -9,6 +9,7 @@
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 #include "widget/city/ornaments.h"
 
@@ -35,12 +36,10 @@ void building_scribal_school::on_place_checks() {
 
     construction_warnings warnings("#needs_papyrus");
 
-    const bool can_produce_papyrus = g_city.can_produce_resource(RESOURCE_PAPYRUS);
-    const bool can_import_papyrus = g_empire.can_import_resource(RESOURCE_PAPYRUS, true);
-    const bool is_import_papyrus = (city_resource_trade_status(RESOURCE_PAPYRUS) == TRADE_STATUS_IMPORT);
+    const bool is_import_papyrus = (city_resource_papyrus.trade_status() == TRADE_STATUS_IMPORT);
 
-    warnings.add_if(!can_produce_papyrus, "#build_papyrus_maker");
-    warnings.add_if(!can_import_papyrus, "#import_papyrus_overseer");
+    warnings.add_if(!city_resource_papyrus.can_produce(), "#build_papyrus_maker");
+    warnings.add_if(!city_resource_papyrus.can_import(true), "#import_papyrus_overseer");
     warnings.add_if(!is_import_papyrus, "#import_papyrus_trade_route");
 }
 

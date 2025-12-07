@@ -13,6 +13,7 @@
 #include "window/building/common.h"
 #include "sound/sound_building.h"
 #include "empire/empire.h"
+#include "city/city_resource_handle.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_senet_house);
@@ -22,17 +23,13 @@ void building_senet_house::on_place_checks() {
     construction_warnings warnings;
 
     const bool has_senet_master = (g_city.buildings.count_active(BUILDING_BULLFIGHT_SCHOOL) > 0);
-    const bool nobrewery = g_city.buildings.count_industry_active(RESOURCE_BEER) <= 0;
-    const bool nostored_beer = g_city.resource.yards_stored(RESOURCE_BEER) <= 0;
-    const bool can_produce_beer = g_city.can_produce_resource(RESOURCE_BEER);
-    const bool can_import_beer = g_empire.can_import_resource(RESOURCE_BEER, true);
-    const bool is_import_beer = (city_resource_trade_status(RESOURCE_BEER) == TRADE_STATUS_IMPORT);
+    const bool is_import_beer = (city_resource_beer.trade_status() == TRADE_STATUS_IMPORT);
 
     warnings.add_if(!has_senet_master, "#build_senet_master");
-    warnings.add_if(!nostored_beer, "#need_beer");
-    warnings.add_if(!nobrewery, "#need_brewery");
-    warnings.add_if(!can_produce_beer, "#build_brewery");
-    warnings.add_if(!can_import_beer, "#import_beer_overseer");
+    warnings.add_if(city_resource_beer.yards_stored() <= 0, "#need_beer");
+    warnings.add_if(city_resource_beer.industry_active() <= 0, "#need_brewery");
+    warnings.add_if(!city_resource_beer.can_produce(), "#build_brewery");
+    warnings.add_if(!city_resource_beer.can_import(true), "#import_beer_overseer");
     warnings.add_if(!is_import_beer, "#import_beer_trade_route");
 }
 

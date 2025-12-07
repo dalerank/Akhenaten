@@ -72,6 +72,13 @@ enum e_debug_render {
     e_debug_render_malaria_risk = 40,
     e_debug_render_animal_spawn = 41,
     e_debug_render_animal_spawn_area = 42,
+    e_debug_render_sandstone = 43,
+    e_debug_render_stone = 44,
+    e_debug_render_limestone = 45,
+    e_debug_render_granite = 46,
+    e_debug_render_golden = 47,
+    e_debug_render_clay = 48,
+    e_debug_render_copper = 49,
 
     e_debug_render_size
 };

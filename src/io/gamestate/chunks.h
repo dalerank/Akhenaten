@@ -95,6 +95,13 @@ extern io_buffer* iob_empire_map_objects;
 extern io_buffer* iob_empire_map_routes;
 
 extern io_buffer* iob_vegetation_growth;
+extern io_buffer *iob_sandstone;
+extern io_buffer *iob_stone;
+extern io_buffer *iob_limestone;
+extern io_buffer *iob_granite;
+extern io_buffer *iob_golden;
+extern io_buffer *iob_clay;
+extern io_buffer *iob_copper;
 
 extern io_buffer* iob_junk14;
 

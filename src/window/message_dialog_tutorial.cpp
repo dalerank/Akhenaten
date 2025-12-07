@@ -19,12 +19,10 @@ int ui::message_dialog_tutorial::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_tutorial::draw_foreground(UiFlags flags) {
-    graphics_set_to_dialog();
     draw_foreground_normal();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
-    graphics_reset_dialog();
 }
 
 void ui::message_dialog_tutorial::draw_city_message_text(const lang_message& msg) {

@@ -1126,6 +1126,7 @@ building_reed_gatherer = {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:24 },
     work : { pos : [30, -17], pack:PACK_GENERAL, id:24, offset:1, max_frames:19, duration:4 },
+    reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   }
   output : {
     resource : RESOURCE_REEDS
@@ -1134,6 +1135,8 @@ building_reed_gatherer = {
   meta : { help_id : 92, text_id : 116 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
+  max_storage_amount : 200
+  max_gatherers : 1
   cost: [ 10, 20, 40, 80, 120 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[8], fire_risk:[2], damage_risk: [3]
@@ -1643,6 +1646,9 @@ building_mortuary {
     resource : RESOURCE_LINEN
   }
   max_serve_clients : 1000
+  linen_required_for_spawn : 20
+  linen_required_for_animation : 100
+  monthly_linen_consumption : 20
   min_houses_coverage : 50
   building_size : 2
   meta { help_id:66, text_id:82 }
@@ -1847,6 +1853,8 @@ building_mine_copper {
   output {
     resource : RESOURCE_COPPER
   }
+  progress_max : 200,
+  production_rate : 100,
   meta { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -1889,11 +1897,13 @@ building_sandstone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:197 },
     base : { pack:PACK_GENERAL, id:197 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_SANDSTONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:92, type:"sandstone_quarry", text_id:194
@@ -1922,14 +1932,15 @@ building_stone_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:187 },
     base : { pack:PACK_GENERAL, id:187 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_STONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
-
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
   needs : {
     rock : true
@@ -1943,11 +1954,13 @@ building_granite_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:38 },
     base : { pack:PACK_GENERAL, id:38 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_GRANITE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:92, text_id:192
@@ -1969,6 +1982,8 @@ building_limestone_quarry = {
   output : {
     resource : RESOURCE_LIMESTONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:93, text_id:119}
@@ -2003,6 +2018,9 @@ building_mine_gold {
   laborers [12]
   fire_risk [0]
   damage_risk [2]
+  progress_max : 200
+  production_rate : 100
+  production_divider : 10
 }
 
 building_clay_gatehouse = {

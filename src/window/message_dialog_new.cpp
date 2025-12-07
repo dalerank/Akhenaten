@@ -11,6 +11,7 @@
 
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/constants.h"
 #include "empire/empire.h"
 #include "figure/formation.h"
@@ -119,16 +120,16 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     
     // Setup subtitle from message
     subtitle_text = msg.subtitle.text;
-    if (!subtitle_text.empty()) {
-        ui["subtitle"].text(subtitle_text.c_str());
-        ui["subtitle"].enabled = true;
-    } else {
-        ui["subtitle"].enabled = false;
-    }
+    ui["subtitle"].enabled = !subtitle_text.empty();
+    ui["subtitle"] = subtitle_text;
 
     if (msg.size.x > 0) {
         ui["background"].size = msg.size;
+        ui["content_panel"].size = { msg.size.x - 4, msg.size.y - 6 };
+        ui["content_text"].size = { (msg.size.x - 3) * 16, (msg.size.y - 6) * 16 };
+        ui["title"].size.y = msg.size.y * 16;
     }
+
     ui["title"] = msg.title.text;
     ui["title"].enabled = true;
 
@@ -168,14 +169,16 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, pstr
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg.req_amount_past, msg.req_resource_past);
+        city_resource_handle hresource{ (e_resource)msg.req_resource_past };
+        int value = hresource.stack_proper_quantity(msg.req_amount_past);
         amount.printf("%d", value);
     } else {
         empire_city *city = g_empire.city(msg.req_city);
         if (city != nullptr) {
             city_name_id = city->name_id;
         }
-        int value = stack_proper_quantity(msg.req_amount, msg.req_resource);
+        city_resource_handle hresource{ (e_resource)msg.req_resource };
+        int value = hresource.stack_proper_quantity(msg.req_amount);
         amount.printf("%d", value);
     }
 

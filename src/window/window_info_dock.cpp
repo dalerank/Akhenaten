@@ -3,6 +3,7 @@
 #include "building/building_dock.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
+#include "city/city_resource_handle.h"
 #include "input/input.h"
 #include "graphics/window.h"
 #include "building/common.h"
@@ -85,8 +86,8 @@ void dock_orders_window::window_info_foreground(object_info &c) {
     const resource_list resources = g_city.resource.available();
     int row_y = 0;
     for (const auto &r : resources) {
-        e_trade_status trade_status = city_resource_trade_status(r.type);
-        if (trade_status == TRADE_STATUS_NONE) {
+        city_resource_handle hresource{ r.type };
+        if (hresource.trade_status() == TRADE_STATUS_NONE) {
             continue;
         }
 

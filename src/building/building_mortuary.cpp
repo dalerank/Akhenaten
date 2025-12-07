@@ -13,6 +13,7 @@
 #include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "empire/empire.h"
@@ -33,12 +34,10 @@ void building_mortuary::on_place_checks() {
 
     construction_warnings warnings("#building_needs_linen");
 
-    const bool can_produce = g_city.can_produce_resource(RESOURCE_LINEN);
-    const bool can_import = g_empire.can_import_resource(RESOURCE_LINEN, true);
-    const bool trade_import = (city_resource_trade_status(RESOURCE_LINEN) != TRADE_STATUS_IMPORT);
+    const bool trade_import = (city_resource_linen.trade_status() != TRADE_STATUS_IMPORT);
 
-    warnings.add_if(can_produce, "#build_weaver_or_import_linen");
-    warnings.add_if(!can_import, "#setup_trade_route_to_import");
+    warnings.add_if(city_resource_linen.can_produce(), "#build_weaver_or_import_linen");
+    warnings.add_if(!city_resource_linen.can_import(true), "#setup_trade_route_to_import");
     warnings.add_if(trade_import, "#overseer_of_commerce_to_import");
 }
 
@@ -46,13 +45,18 @@ void building_mortuary::spawn_figure() {
     if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
         return;
     }
-
-    if (base.stored_amount(RESOURCE_LINEN) < 20) {
+    
+    if (num_workers() <= 0) {
         return;
     }
 
-    if (common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_SERVICE)) {
-        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), 20);
+    const auto &params = current_params();
+    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_spawn) {
+        return;
+    }
+
+    if (common_spawn_figure_trigger(params.min_houses_coverage, BUILDING_SLOT_SERVICE)) {
+        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), params.linen_required_for_spawn);
         base.stored_amount_first -= spent;
 
         create_roaming_figure(FIGURE_EMBALMER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
@@ -64,7 +68,8 @@ bool building_mortuary::can_play_animation() const {
         return false;
     }
 
-    if (base.stored_amount(RESOURCE_LINEN) < 100) {
+    const auto &params = current_params();
+    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_animation) {
         return false;
     }
 
@@ -100,5 +105,25 @@ bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i
 
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
+}
+
+void building_mortuary::update_month() {
+    building_impl::update_month();
+    runtime_data().residents_served_this_month = 0;
+    
+    // Monthly linen consumption if there are workers and road access
+    if (num_workers() > 0 && has_road_access()) {
+        const auto &params = current_params();
+        if (params.monthly_linen_consumption > 0) {
+            int pct_workers = worker_percentage();
+            int consumption = calc_adjust_with_percentage<int>(params.monthly_linen_consumption, pct_workers);
+            
+            int available = base.stored_amount(RESOURCE_LINEN);
+            int to_consume = std::min<int>(available, consumption);
+            if (to_consume > 0) {
+                base.stored_amount_first -= to_consume;
+            }
+        }
+    }
 }
 

@@ -822,7 +822,22 @@ void ui::elabel::draw(UiFlags flags) {
     if (_body.x > 0) {
         small_panel_draw(pos + offset, _body.x, _body.y);
     }
-    ui::label(_text.c_str(), pos + ((_body.x > 0) ? vec2i{8, 4} : vec2i{0, 0}), _font, _flags, size.x);
+
+    auto dpos = pos + ((_body.x > 0) ? vec2i{ 8, 4 } : vec2i{ 0, 0 });
+    auto box_width = size.x;
+
+    if (!!(_flags & UiFlags_AlignCentered)) {
+        ::text_draw_centered(_text.c_str(), offset.x + dpos.x, offset.y + dpos.y, box_width, _font, 0);
+    } else if (!!(_flags & UiFlags_LabelMultiline)) {
+        text_draw_multiline(_text.c_str(), offset + dpos, box_width, _font, 0);
+    } else if (!!(_flags & UiFlags_Rich)) {
+        rich_text_t rich_text;
+        rich_text.set_fonts(_font, FONT_NORMAL_YELLOW);
+        rich_text.set_margin(_text_margin);
+        rich_text.draw(_text.c_str(), offset, box_width, 10, false);
+    } else {
+        lang_text_draw(_text.c_str(), offset + dpos, _font, box_width);
+    }
 
     if (_draw_callback) {
         _draw_callback(this, flags);
@@ -849,6 +864,8 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     _clip_area = arch.r_bool("clip_area");
     _shadow_color = arch.r_uint("shadow");
     _tooltip = arch.r_string("tooltip");
+    arch.r("text_margin", _text_margin);
+
     pcstr talign = arch.r_string("align");
     bool multiline = arch.r_bool("multiline");
     bool rich = arch.r_bool("rich");
@@ -1064,6 +1081,8 @@ void ui::etext::draw(UiFlags flags) {
         }
 
         rich_text->set_fonts(_font, _font_link);
+        rich_text->set_margin(_text_margin);
+
         rich_text->init(_text.c_str(), offset + pos, size.x / 16, size.y / 16, /*adjust_width_on_no_scroll*/true);
         rich_text->draw(_text.c_str(), offset + pos, rwrap, maxlines, false);
         

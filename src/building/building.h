@@ -94,6 +94,7 @@ class building_gatehouse;
 class building_dancer_school;
 class building_police_station;
 class building_dentist;
+class building_mortuary;
 
 struct tooltip_context;
 struct object_info;
@@ -432,6 +433,7 @@ public:
     ALLOW_SMART_CAST_BUILDING(dancer_school)
     ALLOW_SMART_CAST_BUILDING(transport_wharf)
     ALLOW_SMART_CAST_BUILDING(police_station)
+    ALLOW_SMART_CAST_BUILDING(mortuary)
 
     int get_figures_number(e_figure_type ftype);
 
@@ -567,6 +569,7 @@ struct building_static_params {
     uint16_t progress_max;
     e_overlay overlay;
     uint16_t max_service;
+    uint16_t max_storage_amount;
 
     uint8_dcy laborers;
     int8_dcy fire_risk;
@@ -592,7 +595,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs, 
     cost, desirability, crime,
-    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service,
+    output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service, max_storage_amount,
     meta_id, meta, production_rate, min_houses_coverage)
 
 class building_impl {
@@ -645,6 +648,7 @@ public:
 
     virtual void remove_worker(figure_id fid) {}
     virtual void add_workers(figure_id fid) {}
+    virtual bool is_deletable() const { return true; }
 
     #define ALLOW_SMART_CAST_BUILDING_I(type) virtual building_##type *dcast_##type() { return nullptr; }
     ALLOW_SMART_CAST_BUILDING_I(farm)
@@ -700,6 +704,7 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(mansion)
     ALLOW_SMART_CAST_BUILDING_I(physician)
     ALLOW_SMART_CAST_BUILDING_I(dentist)
+    ALLOW_SMART_CAST_BUILDING_I(mortuary)
     ALLOW_SMART_CAST_BUILDING_I(wharf)
     ALLOW_SMART_CAST_BUILDING_I(warship_wharf)
     ALLOW_SMART_CAST_BUILDING_I(shrine)
@@ -920,6 +925,7 @@ GENERATE_SMART_CAST_BUILDING(work_camp)
 GENERATE_SMART_CAST_BUILDING(dancer_school)
 GENERATE_SMART_CAST_BUILDING(police_station)
 GENERATE_SMART_CAST_BUILDING(dentist)
+GENERATE_SMART_CAST_BUILDING(mortuary)
 
 namespace buildings {
 

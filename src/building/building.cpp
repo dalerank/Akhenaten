@@ -474,7 +474,11 @@ bool building::need_resource(e_resource resource) const {
 }
 
 int building::max_storage_amount(e_resource resource) const {
-    return 200;
+    const auto &params = building_static_params::get(type);
+    if (params.max_storage_amount > 0) {
+        return params.max_storage_amount;
+    }
+    return 200; // default value
 }
 
 int building::stored_amount(int idx) const {
@@ -694,7 +698,7 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         return nullptr;
     }
 
-    while (stored_amount_first >= min_carry) {
+    if (stored_amount_first >= min_carry) {
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
@@ -1259,6 +1263,7 @@ void building_static_params::archive_unload() {
 void building_static_params::initialize() {
     if (production_rate == 0 ) production_rate = 100;
     if (min_houses_coverage == 0) min_houses_coverage = 100;
+    if (max_storage_amount == 0) max_storage_amount = 200;
 
     city_labor_t::set_category(type, labor_category);
 }

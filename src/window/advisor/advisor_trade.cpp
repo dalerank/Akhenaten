@@ -9,6 +9,8 @@
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "city/city.h"
+#include "city/city_resource_handle.h"
+#include "city/city_resource_handle.h"
 #include "empire/empire.h"
 #include "window/window_empire.h"
 #include "window/resource_settings.h"
@@ -66,13 +68,12 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
         e_resource resource = r.type;
         ui.icon(offset + item_icon.pos, resource);
 
-        const bool is_mothballed = g_city.resource.is_mothballed(resource);
-        e_font font_color = is_mothballed ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+        city_resource_handle hresource{ resource };
+        e_font font_color = hresource.is_mothballed() ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
 
         // resource name and amount in warehouses
-        int res_count = g_city.resource.yards_stored(resource);
-        int proper_quality = stack_proper_quantity(res_count, resource);
-        const bool is_stockpiled = g_city.resource.is_stockpiled(resource);
+        int res_count = hresource.yards_stored();
+        int proper_quality = hresource.stack_proper_quantity(res_count);
 
         ui.label(ui::str(23, resource), offset + item_name.pos, font_color, UiFlags_AlignYCentered);
         ui.label(bstring32().printf("%u", proper_quality).c_str(), offset + item_quality.pos, font_color, UiFlags_AlignYCentered, 60);
@@ -80,9 +81,9 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
         // mothballed / stockpiled
         {
             bstring128 text;
-            if (is_stockpiled) {
+            if (hresource.is_stockpiled()) {
                 text = ui::str(54, 3);
-            } else if (is_mothballed) {
+            } else if (hresource.is_mothballed()) {
                 text = ui::str(18, 5);
                 font_color = FONT_NORMAL_YELLOW;
             }
@@ -92,10 +93,9 @@ void ui::advisor_trade_window::ui_draw_foreground(UiFlags flags) {
             }
         }
 
-        e_trade_status trade_status = city_resource_trade_status(resource);
-        int trade_amount = stack_proper_quantity(city_resource_trading_amount(resource), resource);
+        int trade_amount = hresource.stack_proper_quantity(hresource.trading_amount());
         std::pair<bstring64, e_font> text;
-        switch (trade_status) {
+        switch (hresource.trade_status()) {
             case TRADE_STATUS_NONE: {
                 bool can_import = g_empire.can_import_resource(resource, true);
                 bool can_export = g_empire.can_export_resource(resource, true);

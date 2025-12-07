@@ -3,15 +3,32 @@
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "figure/figure.h"
+#include "figuretype/figure_reed_gatherer.h"
 #include "core/random.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
+#include "widget/city/ornaments.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "io/io_buffer.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
-    runtime_data().max_gatheres = 1;
+    runtime_data().max_gatheres = current_params().max_gatherers;
+}
+
+void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
+    building_industry::bind_dynamic(iob, version);
+}
+
+int building_reed_gatherer::stored_amount(e_resource r) const {
+    // For harvester buildings, resources are stored in stored_amount_first, not ready_production
+    if (base.output.resource == r) {
+        return base.stored_amount_first;
+    }
+    return building_industry::stored_amount(r);
 }
 
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
@@ -23,19 +40,33 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     }
 
     int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
-
-    // can only spawn if there's space for more reed in the building
-    int max_loads = 500 / carry_per_person;
-    if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
+    int max_storage = current_params().max_storage_amount;
+    int max_loads = max_storage / carry_per_person;
+    int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
+    
+    if (gatherers_this_yard < max_gatherers_per_building && gatherers_this_yard + stored_loads < max_loads) {
         return true;
     }
 
     return false;
 }
 
+bool building_reed_gatherer::can_play_animation() const {
+    return building_industry::can_play_animation();
+}
+
 bool building_reed_gatherer::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
+
+    int amount = std::min<int>(1, ceil((float)base.stored_amount(base.output.resource) / 100.0) - 1);
+    if (amount >= 0) {
+        const auto &ranim = anim(animkeys().reeds);
+
+        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        command.image_id = ranim.first_img() + amount;
+        command.pixel = point + ranim.pos;
+        command.mask = color_mask;
+    }
 
     return true;
 }
@@ -57,7 +88,7 @@ void building_reed_gatherer::spawn_figure() {
         base.figure_spawn_delay = 0;
 
         if (can_spawn_gatherer(runtime_data().max_gatheres, 50)) {
-            auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+            auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_REED_GATHERER_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
             random_generate_next();
             f->wait_ticks = random_short() % 30; // ok
             return;
