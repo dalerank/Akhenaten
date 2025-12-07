@@ -30,6 +30,7 @@
 #include "grid/terrain.h"
 #include "grid/vegetation.h"
 #include "grid/sandstone.h"
+#include "grid/stone.h"
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
@@ -539,6 +540,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color sandstone_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, sandstone_color);
+        }
+        break;
+
+    case e_debug_render_stone:
+        d = map_get_stone(grid_offset);
+        if (d > 0) {
+            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
+            color stone_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+            debug_text(ctx, str, x, y + 10, 0, "", d, stone_color);
         }
         break;
 
