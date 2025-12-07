@@ -16,7 +16,8 @@
 //  164 akhenaten: save water_supply in house
 //  165 akhenaten: save house health option
 //  167 akhenaten: save sandstone terrain values
-constexpr uint32_t latest_save_version = 167;
+//  168 akhenaten: save stone terrain values
+constexpr uint32_t latest_save_version = 168;
 
 vfs::path fullpath_saves(vfs::path filename);
 void fullpath_maps(char* full, const char* filename);
