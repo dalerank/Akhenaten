@@ -15,6 +15,8 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <variant>
+#include <optional>
+#include "core/variant.h"
 
 struct animation_t;
 
@@ -643,7 +645,13 @@ struct g_archive_section {
 #define ANK_CONFIG_STRUCT_PASTE63(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE62(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62)
 #define ANK_CONFIG_STRUCT_PASTE64(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE63(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63)
 
-#define ANK_CONFIG_STRUCT_FROM(v1) js_j.r(#v1, js_t.v1); 
+#define ANK_CONFIG_STRUCT_FROM(v1) js_j.r(#v1, js_t.v1);
+#define ANK_PROPERTY_FROM(v1) if (name == #v1) { return std::make_optional<bvariant>(bvariant(data.v1)); }
+
+namespace archive_helper {
+    template<typename T>
+    std::optional<bvariant> get(const T &data, const xstring &name, bool check);
+}
 
 template<typename, typename = void> struct class_has_load_function : std::false_type {};
 template<typename T> struct class_has_load_function<T, std::void_t<decltype(std::declval<T &>().archive_load(nullptr))>> : std::true_type {};
@@ -691,11 +699,19 @@ template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_
 #define ANK_CONFIG_STRUCT(Type, ...)                                                              \
 namespace archive_helper {                                                                        \
     template<> constexpr bool class_has_archive_reader<Type>() { return true; }                   \
-    template<>                                                                                    \
-    inline void reader<Type>(archive js_j, Type& js_t) {                                          \
+    template<> inline void reader<Type>(archive js_j, Type& js_t) {                               \
         call_unload_if_exists(js_t);                                                              \
         ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
         call_load_if_exists(js_j, js_t);                                                          \
+    }                                                                                             \
+}
+
+#define ANK_CONFIG_PROPERTY(Type, ...)                                                            \
+namespace archive_helper {                                                                        \
+    template<> inline std::optional<bvariant> get<Type>(const Type &data, const xstring &name, bool c) { \
+        if (!c) return {};                                                                        \
+        ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_PROPERTY_FROM, __VA_ARGS__));        \
+        return {};                                                                                \
     }                                                                                             \
 }
 

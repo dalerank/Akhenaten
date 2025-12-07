@@ -217,10 +217,22 @@ overlays = [
 
   {
     id:OVERLAY_FIRE
-    walkers:[FIGURE_FIREMAN]
-    buildings:[BUILDING_FIREHOUSE, BUILDING_BURNING_RUIN, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
+    walkers[FIGURE_FIREMAN]
+    buildings[BUILDING_FIREHOUSE, BUILDING_BURNING_RUIN, BUILDING_FESTIVAL_SQUARE, BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
-    column_anim: {pack:PACK_GENERAL, id:103}
+    column_anim {pack:PACK_GENERAL, id:103}
+
+    building_tooltips [
+      {
+        building_type : BUILDING_FIREHOUSE
+        tooltips [
+          "This month:\t${building.buildings_served_this_month}",
+          "This year:\t${building.buildings_served_this_year}",
+          "Total served:\t${building.total_buildings_served}",
+          "Months active:\t${building.months_active}"
+        ]
+      }
+    ]
   }
 
   {
