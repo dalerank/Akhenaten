@@ -6,6 +6,10 @@ class building_irrigation_ditch : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_IRRIGATION_DITCH, building_irrigation_ditch, building_impl)
 
+    struct static_params : public building_static_params {
+        uint8_t canal_irrigation_value_multiplier;
+    } BUILDING_STATIC_DATA_T;
+
     struct preview : building_planer_renderer {
         virtual bool can_construction_start(build_planner &p, tile2i start) const override;
         virtual int construction_update(build_planner &p, tile2i start, tile2i end) const override;
@@ -19,3 +23,4 @@ public:
 
     virtual void on_place_checks() override;
 };
+ANK_CONFIG_STRUCT(building_irrigation_ditch::static_params, canal_irrigation_value_multiplier)
