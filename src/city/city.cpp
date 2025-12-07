@@ -6,6 +6,7 @@
 #include "city/city_desirability.h"
 #include "city/city_malaria_risk.h"
 #include "grid/malaria_risk.h"
+#include "grid/irrigation_value.h"
 #include "grid/crime.h"
 #include "core/object_property.h"
 #include "grid/water.h"
@@ -216,7 +217,7 @@ void city_t::update_tick(int simtick) {
         kingdome.update();
         break;
     case 5:
-        //
+        g_irrigation_value.update();
         break;
     case 6:
         map_natives_check_land();
