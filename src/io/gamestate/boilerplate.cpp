@@ -50,6 +50,8 @@
 #include "grid/water.h"
 #include "grid/sandstone.h"
 #include "grid/stone.h"
+#include "grid/limestone.h"
+#include "grid/granite.h"
 #include "game/game.h"
 #include "content/vfs.h"
 #include "scenario/criteria.h"
@@ -589,6 +591,8 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(51984, false, "rubble_type_grid", iob_rubble_type_grid); //  (228²) * 1
             FILEIO.push_chunk(103968, false, "sandstone_grid", iob_sandstone);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "stone_grid", iob_stone);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "limestone_grid", iob_limestone);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "granite_grid", iob_granite);              // (228²) * 2
         }
         break;
     }
@@ -719,6 +723,8 @@ void GamestateIO::start_loaded_file() {
         map_tiles_update_all_rocks();
         map_sandstone_init();
         map_stone_init();
+        map_limestone_init();
+        map_granite_init();
         map_tiles_add_entry_exit_flags();
         map_tiles_update_all_cleared_land();
         map_tiles_update_all_empty_land();

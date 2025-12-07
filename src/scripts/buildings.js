@@ -1946,11 +1946,13 @@ building_granite_quarry = {
   animations : {
     preview : { pack:PACK_GENERAL, id:38 },
     base : { pack:PACK_GENERAL, id:38 },
-    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16 }
+    work : { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:49, max_frames: 16, duration:2 }
   },
   output : {
     resource : RESOURCE_GRANITE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:92, text_id:192
@@ -1972,6 +1974,8 @@ building_limestone_quarry = {
   output : {
     resource : RESOURCE_LIMESTONE
   }
+  progress_max : 200,
+  production_rate : 100,
   building_size : 2,
   meta : { help_id:93, text_id:162 }
   //help_id:93, text_id:119}
