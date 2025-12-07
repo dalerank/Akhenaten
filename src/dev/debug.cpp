@@ -34,6 +34,7 @@
 #include "grid/limestone.h"
 #include "grid/granite.h"
 #include "grid/golden.h"
+#include "grid/clay.h"
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
@@ -579,6 +580,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color golden_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, golden_color);
+        }
+        break;
+
+    case e_debug_render_clay:
+        d = map_get_clay(grid_offset);
+        if (d > 0) {
+            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
+            color clay_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+            debug_text(ctx, str, x, y + 10, 0, "", d, clay_color);
         }
         break;
 
