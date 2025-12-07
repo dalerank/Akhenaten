@@ -19,12 +19,9 @@ inline bool show_figure_none(const figure *f) { return false; }
 using overlay_list = std::array<struct city_overlay *, OVERLAY_SIZE>;
 
 struct tooltips_t {
-    using xstring_vec = svector<xstring, 8>;
     xstring key;
-    xstring_vec values;
+    svector<xstring, 8> values;
 };
-template<> inline void archive::r<tooltips_t::xstring_vec>(pcstr name, tooltips_t::xstring_vec &v) { r_array_str(name, v); }
-
 ANK_CONFIG_STRUCT(tooltips_t, key, values)
 
 struct city_overlay {

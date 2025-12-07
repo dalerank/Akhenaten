@@ -1,7 +1,6 @@
 #include "city.h"
 
 #include "city/constants.h"
-#include "city/city.h"
 #include "city/buildings.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
@@ -43,6 +42,7 @@
 #include "graphics/view/view.h"
 #include "city/city_building_menu_ctrl.h"
 #include "empire/empire_traders.h"
+#include "scenario/criteria.h"
 #include "graphics/clouds.h"
 
 #include <core/string.h>
@@ -1399,8 +1399,14 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().finance, "wages_kingdome", [] (const xstring &) { return bvariant(g_city.finance.wages_kingdome); }},
         { tags().city, "workers_employed", [] (const xstring&) { return bvariant(g_city.labor.workers_employed); }},
         { tags().city, "workers_unemployed", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed); }},
+        { tags().city, "workers_needed", [] (const xstring&) { return bvariant(g_city.labor.workers_needed); }},
+        { tags().city, "workers_diff", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
         { tags().city, "unemployment_percentage", [] (const xstring&) { return bvariant(g_city.labor.unemployment_percentage); }},
         { tags().city, "months_since_gift", [] (const xstring&) { return bvariant(g_city.kingdome.months_since_gift); }},
+        { tags().rating, "winning_culture", [] (const xstring&) { return bvariant(winning_culture()); }},
+        { tags().rating, "winning_prosperity", [] (const xstring&) { return bvariant(winning_prosperity()); }},
+        { tags().rating, "winning_monuments", [] (const xstring&) { return bvariant(winning_monuments()); }},
+        { tags().rating, "winning_kingdom", [] (const xstring&) { return bvariant(winning_kingdom()); }},
     };
 
     for (const auto &prop : cproperties) {

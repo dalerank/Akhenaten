@@ -156,6 +156,18 @@ std::vector<std::string> archive::to_array_str() {
     return result;
 }
 
+pcstr archive::to_string() {
+    auto vm = (js_State *)state;
+
+    if (js_isundefined(vm, -1)) {
+        return "";
+    } else if (js_isstring(vm, -1)) {
+        return js_tostring(vm, -1);
+    } 
+
+    return "";
+}
+
 archive::variant_t archive::to_variant() {
     auto vm = (js_State *)state;
 

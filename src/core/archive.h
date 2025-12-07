@@ -52,6 +52,7 @@ struct archive {
     using variant_t = std::variant<variant_none_t, float, bool, xstring, vec2i, variant_array_t, variant_object_t>;
     variant_t r_variant(pcstr name);
     variant_t to_variant();
+    pcstr to_string();
 
     std::vector<vec2i> r_array_vec2i(pcstr name, pcstr px = "x", pcstr py = "y");
 
@@ -86,6 +87,9 @@ struct archive {
 
     template<typename T, std::size_t N, typename = std::enable_if_t<std::is_enum_v<T> || std::is_arithmetic_v<T>>>
     inline void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
+
+    template<std::size_t N>
+    inline void r(pcstr name, svector<xstring, N> &v) { this->r_array_str(name, v); }
 
     template<typename T>
     void r(T& s);
