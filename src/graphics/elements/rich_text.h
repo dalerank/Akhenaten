@@ -27,6 +27,13 @@ struct rich_text_t {
     int num_lines;
     int max_scroll_position;
 
+    struct margin_t {
+        int16_t left;
+        int16_t top;
+        int16_t right;
+        int16_t bottom;
+    } margin;
+
     const font_definition *normal_font_def;
     const font_definition *link_font_def;
 
@@ -56,6 +63,8 @@ struct rich_text_t {
      * @param link_font Link text
      */
     void set_fonts(e_font normal_font, e_font link_font);
+
+    void set_margin(margin_t m) { margin = m; }
 
     void reset(int scroll_position);
     void clear_links(void);
