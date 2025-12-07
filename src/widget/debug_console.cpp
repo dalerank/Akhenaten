@@ -15,6 +15,7 @@
 #include "platform/renderer.h"
 
 #include "imgui.h"
+#include "graphics/elements/imui.h"
 #include "imgui_internal.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -264,7 +265,7 @@ void game_debug_properties_draw() {
     }
 
     ImGui::SetNextWindowSize(ImVec2(430, 450), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Properties", &game.debug_properties)) {
+    if (!ui::Begin("Properties", &game.debug_properties)) {
         ImGui::End();
         return;
     }
@@ -319,9 +320,6 @@ void game_imgui_overlay_begin_frame() {
 }
 
 void game_imgui_overlay_draw() {
-    if (!game.debug_console) {
-    //    return;
-    }
     ImGui::Render();
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), g_render.renderer());
 }
