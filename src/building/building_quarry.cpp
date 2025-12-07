@@ -1,6 +1,5 @@
 #include "building_quarry.h"
 
-#include "building/building_raw_material.h"
 #include "widget/city/ornaments.h"
 #include "js/js_game.h"
 #include "grid/sandstone.h"
