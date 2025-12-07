@@ -9,6 +9,7 @@ public:
     struct static_params : public building_static_params {
         uint8_t irrigation_radius;
         uint8_t canal_fill_water_level;
+        uint8_t base_irrigation_value;
     } BUILDING_STATIC_DATA_T;
 
     struct preview : building_planer_renderer {
@@ -36,4 +37,4 @@ public:
 
     void update_inout_tiles();
 };
-ANK_CONFIG_STRUCT(building_water_lift::static_params, irrigation_radius, canal_fill_water_level)
+ANK_CONFIG_STRUCT(building_water_lift::static_params, irrigation_radius, canal_fill_water_level, base_irrigation_value)
