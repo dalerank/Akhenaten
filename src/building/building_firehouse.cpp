@@ -7,6 +7,7 @@
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
 #include "core/object_property.h"
+#include "core/archive.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
@@ -56,15 +57,9 @@ void building_firehouse::update_month() {
     building_impl::update_month();
     
     auto &data = runtime_data();
-    
-    // Update statistics
-    if (data.buildings_served_this_month > 0) {
-        data.months_active++;
-    }
+    data.months_active += (data.buildings_served_this_month > 0) ? 1 : 0;
     data.total_buildings_served += data.buildings_served_this_month;
     data.buildings_served_this_year += data.buildings_served_this_month;
-    
-    // Reset monthly counter
     data.buildings_served_this_month = 0;
 }
 
@@ -74,20 +69,9 @@ void building_firehouse::update_year() {
 }
 
 bvariant building_firehouse::get_property(const xstring &domain, const xstring &name) const {
-    auto &d = runtime_data();
-    if (domain == tags().building) {
-        if (name == "buildings_served_this_month") {
-            return bvariant(d.buildings_served_this_month);
-        }
-        if (name == "buildings_served_this_year") {
-            return bvariant(d.buildings_served_this_year);
-        }
-        if (name == "total_buildings_served") {
-            return bvariant(d.total_buildings_served);
-        }
-        if (name == "months_active") {
-            return bvariant(d.months_active);
-        }
+    auto result = archive_helper::get(runtime_data(), name, domain == tags().building);
+    if (result) {
+        return result.value();
     }
     
     return building_impl::get_property(domain, name);
