@@ -600,6 +600,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
         if (file_version > 168) {
             FILEIO.push_chunk(103968, false, "golden_grid", iob_golden);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "clay_grid", iob_clay);              // (228²) * 2
+            FILEIO.push_chunk(103968, false, "copper_grid", iob_copper);              // (228²) * 2
         }
         break;
     }
