@@ -114,6 +114,7 @@ namespace game_features {
     extern game_feature gameplay_conservatory_helps_dance_school;
     extern game_feature gameplay_jewels_workshops_culture_bonus;
     extern game_feature gameui_overlay_show_gray_buildings;
+    extern game_feature gameplay_prevent_delete_near_burning_ruins;
 
     custom_span<game_feature*> all();
     game_feature* find(const xstring& name);
