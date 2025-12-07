@@ -79,6 +79,7 @@ extern io_buffer* iob_junk9a;
 extern io_buffer* iob_junk9b;
 
 extern io_buffer* iob_soil_fertility_grid;
+extern io_buffer* iob_irrigation_value_grid;
 extern io_buffer* iob_terrain_floodplain_growth;
 
 extern io_buffer* iob_scenario_events;

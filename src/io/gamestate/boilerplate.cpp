@@ -603,6 +603,7 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(103968, false, "clay_grid", iob_clay);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "copper_grid", iob_copper);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "gems_grid", iob_gems);              // (228²) * 2
+            FILEIO.push_chunk(51984, false, "irrigation_value_grid", iob_irrigation_value_grid);
         }
         break;
     }
