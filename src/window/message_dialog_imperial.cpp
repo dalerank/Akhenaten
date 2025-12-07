@@ -61,7 +61,7 @@ void ui::message_dialog_imperial::draw_city_message_text(const lang_message& msg
     full_text.printf("%s @P@P%s @P@P @I%d %d %s %s %d %s",
                      header.c_str(),
                      text.c_str(), 
-                     resource_image_id, hresource.stack_proper_quantity(city_msg.req_amount), hresource.name(),
+                     resource_image_id, hresource.stack_proper_quantity(city_msg.req_amount), hresource.name().c_str(),
                      ui::str(8, 4), city_msg.req_months_left, ui::str(12, 2));
 
     ui["content_text"] = full_text;
