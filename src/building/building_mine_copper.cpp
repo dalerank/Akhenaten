@@ -6,6 +6,7 @@
 #include "city/city_finance.h"
 #include "city/city_resource.h"
 #include "game/game_events.h"
+#include "figure/figure.h"
 #include "js/js_game.h"
 #include "grid/copper.h"
 #include "grid/grid.h"
