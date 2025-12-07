@@ -29,16 +29,24 @@
 #define SIZEOF_UNSIGNED_SHORT 2
 
 /* Define if you have the ANSI C header files.  */
-#define STDC_HEADERS
+#ifndef STDC_HEADERS
+#define STDC_HEADERS 1
+#endif
 
 /* Define if you have the <errno.h> header file.  */
-#define HAVE_ERRNO_H
+#ifndef HAVE_ERRNO_H
+#define HAVE_ERRNO_H 1
+#endif
 
 /* Define if you have the <fcntl.h> header file.  */
-#define HAVE_FCNTL_H
+#ifndef HAVE_FCNTL_H
+#define HAVE_FCNTL_H 1
+#endif
 
 /* Define if you have the <limits.h> header file.  */
-#define HAVE_LIMITS_H
+#ifndef HAVE_LIMITS_H
+#define HAVE_LIMITS_H 1
+#endif
 
 /* Name of package */
 #define PACKAGE "lame"
@@ -49,8 +57,13 @@
 /* faster log implementation with less but enough precission */
 #define USE_FAST_LOG 1
 
-#define HAVE_STRCHR
-#define HAVE_MEMCPY
+#ifndef HAVE_STRCHR
+#define HAVE_STRCHR 1
+#endif
+
+#ifndef HAVE_MEMCPY
+#define HAVE_MEMCPY 1
+#endif
 
 #include <stdint.h>
 
