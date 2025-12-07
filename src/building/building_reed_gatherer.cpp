@@ -20,9 +20,7 @@ void building_reed_gatherer::on_create(int orientation) {
 }
 
 void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-
-    iob->bind(BIND_SIGNATURE_UINT8, &d.max_gatheres);
+    building_industry::bind_dynamic(iob, version);
 }
 
 int building_reed_gatherer::stored_amount(e_resource r) const {
@@ -42,12 +40,11 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     }
 
     int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
-
-    // can only spawn if there's space for more reed in the building
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
-    if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount(base.output.resource) / carry_per_person) < max_loads) {
+    int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
+    
+    if (gatherers_this_yard < max_gatherers_per_building && gatherers_this_yard + stored_loads < max_loads) {
         return true;
     }
 
