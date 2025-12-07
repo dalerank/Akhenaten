@@ -45,6 +45,10 @@ void building_mortuary::spawn_figure() {
     if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
         return;
     }
+    
+    if (num_workers() <= 0) {
+        return;
+    }
 
     const auto &params = current_params();
     if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_spawn) {
@@ -107,12 +111,15 @@ void building_mortuary::update_month() {
     building_impl::update_month();
     runtime_data().residents_served_this_month = 0;
     
-    // Monthly linen consumption if there are workers
-    if (num_workers() > 0) {
+    // Monthly linen consumption if there are workers and road access
+    if (num_workers() > 0 && has_road_access()) {
         const auto &params = current_params();
         if (params.monthly_linen_consumption > 0) {
+            int pct_workers = worker_percentage();
+            int consumption = calc_adjust_with_percentage<int>(params.monthly_linen_consumption, pct_workers);
+            
             int available = base.stored_amount(RESOURCE_LINEN);
-            int to_consume = std::min<int>(available, params.monthly_linen_consumption);
+            int to_consume = std::min<int>(available, consumption);
             if (to_consume > 0) {
                 base.stored_amount_first -= to_consume;
             }
