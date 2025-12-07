@@ -1900,13 +1900,16 @@ building_mine_gems {
   animations {
     preview { pack:PACK_GENERAL, id:188 },
     base { pack:PACK_GENERAL, id:188 },
-    work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
+    work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true },
+    gems { pos : [93, 0], pack:PACK_GENERAL, id:203 }
   }
 
   output {
     resource : RESOURCE_GEMS
   }
-
+  progress_max : 200,
+  production_rate : 100,
+  production_divider : 3,
   building_size : 2,
   meta { help_id:93, text_id:163 }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -1914,7 +1917,7 @@ building_mine_gems {
     rock : true
   }
   cost [ 50, 75, 100, 150, 300 ]
-  desirability { value:[-12], step:[2], step_size:[2], range: [6] }
+  desirability { value[-12], step[2], step_size[2], range[6] }
   laborers[8]
   fire_risk[0]
   damage_risk[2]
