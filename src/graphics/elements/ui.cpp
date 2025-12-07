@@ -1047,7 +1047,13 @@ void ui::etext::draw(UiFlags flags) {
         // Clip multiline text if size is defined to prevent overflow
         bool needs_clipping = (pxsize().y > 0);
         if (needs_clipping) {
-            graphics_set_clip_rectangle(offset + pos, pxsize());
+            // Reduce bottom to add padding and prevent text from going outside the panel
+            vec2i clip_size = pxsize();
+            const int symbolh = font_definition_for(_font)->line_height;
+            if (clip_size.y > 0 && symbolh > 0) {
+                clip_size.y -= symbolh; // Subtract one line height as bottom buffer
+            }
+            graphics_set_clip_rectangle(offset + pos, clip_size);
         }
         
         text_draw_multiline(_text, offset + pos, _wrap, _font, _color);
@@ -1065,7 +1071,13 @@ void ui::etext::draw(UiFlags flags) {
         // Always enable clipping for rich text when a size is defined or clip_area is set or scroll is disabled
         bool should_clip = _clip_area || pxsize().y > 0;
         if (should_clip) {
-            graphics_set_clip_rectangle(offset + pos, pxsize());
+            // Reduce bottom to add padding and prevent text from going outside the panel
+            vec2i clip_size = pxsize();
+            const int symbolh = font_definition_for(_font)->line_height;
+            if (clip_size.y > 0 && symbolh > 0) {
+                clip_size.y -= symbolh; // Subtract one line height as bottom buffer
+            }
+            graphics_set_clip_rectangle(offset + pos, clip_size);
         }
 
         const int symbolh = font_definition_for(_font)->line_height;
