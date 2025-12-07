@@ -14,5 +14,6 @@ public:
     virtual int stored_amount(e_resource r) const override;
     virtual void spawn_figure() override;
     virtual void production_finished() override;
+    virtual void update_production() override;
 };
 

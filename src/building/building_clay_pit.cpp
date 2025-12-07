@@ -12,6 +12,8 @@
 #include "graphics/animation.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "grid/clay.h"
+#include "grid/grid.h"
 #include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_clay_pit);
@@ -65,6 +67,38 @@ void building_clay_pit::production_finished() {
 
         d.progress = 0;
         d.has_raw_materials = false;
+    }
+}
+
+void building_clay_pit::update_production() {
+    // Find tile with maximum clay in building area
+    auto &d = runtime_data();
+    int current_progress = d.progress;
+
+    tile2i best_tile = tile2i::invalid;
+    int best_clay = 0;
+
+    grid_area search_area = map_grid_get_area(base.tile, base.size, 0);
+    map_grid_area_foreach(search_area.tmin, search_area.tmax, [&] (tile2i t) {
+        int clay = map_get_clay(t);
+        if (clay > 0 && clay > best_clay) {
+            best_tile = t;
+            best_clay = clay;
+        }
+    });
+
+    // If no clay found, don't produce
+    if (best_clay <= 0) {
+        return;
+    }
+    
+    // Update production (increases progress)
+    building_industry::update_production();
+    int delta_progress = d.progress - current_progress;
+   
+    // Deplete clay from the best tile
+    if (delta_progress > 0) {
+        map_clay_deplete(best_tile, delta_progress);
     }
 }
 

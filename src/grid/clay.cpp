@@ -52,8 +52,7 @@ void map_clay_init() {
     grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < map_width; x++, grid_offset++) {
-            // Skip water tiles - clay should not be on water
-            if (map_terrain_is(grid_offset, TERRAIN_WATER) || 
+             if (map_terrain_is(grid_offset, TERRAIN_WATER) || 
                 map_terrain_is(grid_offset, TERRAIN_DEEPWATER) ||
                 map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN | TERRAIN_WATER)) {
                 continue;
