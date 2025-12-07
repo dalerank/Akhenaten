@@ -3,6 +3,7 @@
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "figure/figure.h"
+#include "figuretype/figure_reed_gatherer.h"
 #include "core/random.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
@@ -25,9 +26,10 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
     int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
 
     // can only spawn if there's space for more reed in the building
-    int max_loads = 500 / carry_per_person;
+    int max_storage = current_params().max_storage_amount;
+    int max_loads = max_storage / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
+        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < max_loads) {
         return true;
     }
 
@@ -57,7 +59,7 @@ void building_reed_gatherer::spawn_figure() {
         base.figure_spawn_delay = 0;
 
         if (can_spawn_gatherer(runtime_data().max_gatheres, 50)) {
-            auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+            auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_REED_GATHERER_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
             random_generate_next();
             f->wait_ticks = random_short() % 30; // ok
             return;
