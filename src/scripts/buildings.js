@@ -1850,6 +1850,8 @@ building_mine_copper {
   output {
     resource : RESOURCE_COPPER
   }
+  progress_max : 200,
+  production_rate : 100,
   meta { help_id:93, text_id:193 }
   building_size : 2,
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
