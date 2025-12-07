@@ -3064,7 +3064,7 @@ game_messages_en {
         type: 2,
         message_type: 4,
         size [40, 30]
-        title { text: "Gold and Crime", pos [0, 15] }
+        title { text: "Gold and Crime" }
         content {
             text: "@L@L Mining Gold @L@PSearch rocky areas for the presence of metal ore, evidenced by shiny metallic patches among the rocks. In order to extract the ore, you must build Gold Mines adjacent to these veins. @G53 @L@LPalace @L@PA Palace is needed to convert the raw gold ore, as well as to store the resulting gold bullion. The Palace is the seat of the city's government, and must be built where there is suitable access to ground water (grassy areas). @POnce your Palace is up and running, miners will deliver gold ore from any Gold Mines for conversion into cash, counted in 'debens'. @G54 @L@LCrime @L@PWith a supply of cash in reserve, however, comes the risk of theft. Constables can help reduce losses through theft, both by patrolling the streets to prevent crime and by subduing any criminals they encounter. @G55 @L@PThe best way to prevent crime, though, is to keep your population happy with adequate food, health care and jobs."
         }

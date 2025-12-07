@@ -11,8 +11,8 @@ message_dialog_window_general {
         title          : text({pos: [0, 14], size: [px(30), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT})
         subtitle       : text({pos: [0, 0], size: [px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
         
-        content_panel  : inner_panel({pos: [16, 48], size: [28, 14]})
-        content_text   : text({pos: [24, 54], size: [px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
+        content_panel  : inner_panel({pos[16, 48], size[28, 14]})
+        content_text   : text({pos[16, 48], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
         
         button_help    : help_button({})
         button_close   : close_button({})
@@ -37,7 +37,7 @@ message_dialog_window_disaster {
     
     ui : __baseui(message_dialog_window_general, {
         content_panel  : inner_panel({pos: [16, 48], size: [28, 13]})
-        content_text   : text({pos: [24, 54], size: [px(28), px(34)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
+        content_text   : text({pos: [24, 54], size: [px(28), px(34)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
         
         button_go_to_problem : image_button({ margin:{ bottom:-60, centerx:-87 }, size[27, 27], pack:PACK_GENERAL, id:136, offset:17*3+1  })
         button_go_to_problem_text : text({ margin:{ bottom:-40, centerx:-40 }, size[-1, 20], font: FONT_NORMAL_BLACK_ON_LIGHT, text: "#goto_site_of_event"})
@@ -50,8 +50,8 @@ message_dialog_window_imperial {
     help_id: ""
     
     ui : __baseui(message_dialog_window_general, {
-        content_panel  : inner_panel({pos: [16, 48], size: [28, 14]}),
-        content_text   : text({pos: [24, 54], size: [px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
+        content_panel  : inner_panel({pos[16, 48], size[28, 14]}),
+        content_text   : text({pos[24, 54], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
     })
 }
 
@@ -123,7 +123,7 @@ message_dialog_window_god {
         title          : text({margin{ bottom:-36 }, size [px(30), 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
         content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
         god_image_area : dummy({ margin{ top:px(2) }, size [px(29), px(10)]})
-        content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true})
+        content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
     })
 }
 
