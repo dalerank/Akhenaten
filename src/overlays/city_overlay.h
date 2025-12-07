@@ -24,6 +24,12 @@ struct tooltips_t {
 };
 ANK_CONFIG_STRUCT(tooltips_t, key, values)
 
+struct building_tooltips_t {
+    e_building_type building_type;
+    svector<xstring, 10> tooltips;
+};
+ANK_CONFIG_STRUCT(building_tooltips_t, building_type, tooltips)
+
 struct city_overlay {
     e_overlay id;
     building_id current_building_id;
@@ -32,6 +38,7 @@ struct city_overlay {
     svector<e_figure_type, 10> walkers;
     svector<e_building_type, 10> buildings;
     std::unordered_map<xstring, tooltips_t> tooltips;
+    svector<building_tooltips_t, 10> building_tooltips;
     e_column_type column_type = COLUMN_TYPE_NONE;
     animation_t column_anim;
     xstring caption;
@@ -65,7 +72,7 @@ struct city_overlay {
     static city_overlay *get(e_overlay e);
     static overlay_list &overlays();
 };
-ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption, tooltips)
+ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, caption, tooltips, building_tooltips)
 
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {

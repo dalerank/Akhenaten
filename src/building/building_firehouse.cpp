@@ -6,6 +6,7 @@
 #include "dev/debug.h"
 #include "graphics/animation.h"
 #include "widget/city/ornaments.h"
+#include "core/object_property.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
@@ -70,4 +71,24 @@ void building_firehouse::update_month() {
 void building_firehouse::update_year() {
     building_impl::update_year();
     runtime_data().buildings_served_this_year = 0;
+}
+
+bvariant building_firehouse::get_property(const xstring &domain, const xstring &name) const {
+    auto &d = runtime_data();
+    if (domain == tags().building) {
+        if (name == "buildings_served_this_month") {
+            return bvariant(d.buildings_served_this_month);
+        }
+        if (name == "buildings_served_this_year") {
+            return bvariant(d.buildings_served_this_year);
+        }
+        if (name == "total_buildings_served") {
+            return bvariant(d.total_buildings_served);
+        }
+        if (name == "months_active") {
+            return bvariant(d.months_active);
+        }
+    }
+    
+    return building_impl::get_property(domain, name);
 }
