@@ -4,6 +4,7 @@
 #include "construction/build_planner.h"
 #include "game/game_config.h"
 #include "city/city_finance.h"
+#include "city/city_resource.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 #include "grid/copper.h"
