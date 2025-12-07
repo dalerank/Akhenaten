@@ -149,6 +149,7 @@ void game_t::advance_year() {
     g_city.ratings_update(/*yearly_update*/true);
     g_empire.reset_yearly_trade_amounts();
     g_city.kingdome.advance_year();
+    g_city.buildings.update_year();
     //    city_gods_reset_yearly_blessings();
 }
 

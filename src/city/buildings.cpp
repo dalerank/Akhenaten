@@ -235,6 +235,12 @@ void city_buildings_t::update_day() {
     });
 }
 
+void city_buildings_t::update_year() {
+    buildings_valid_do([] (building &b) {
+        b.dcast()->update_year();
+    });
+}
+
 void city_buildings_t::reload_objects() {
     buildings_valid_do([] (building &b) {
         b.dcast()->on_config_reload();
