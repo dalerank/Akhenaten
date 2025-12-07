@@ -698,7 +698,7 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         return nullptr;
     }
 
-    while (stored_amount_first >= min_carry) {
+    if (stored_amount_first >= min_carry) {
         int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 

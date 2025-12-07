@@ -52,8 +52,7 @@ int building_hunting_lodge::spawn_timer() {
     }
 }
 
-
-bool building_hunting_lodge::can_spawn_ostrich_hunter() { // no cache because fuck the system (also I can't find the memory offset for this)
+bool building_hunting_lodge::can_spawn_ostrich_hunter() {
     if (has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER)) {
         return false;
     }

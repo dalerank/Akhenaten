@@ -168,6 +168,10 @@ void building_industry::spawn_figure() {
     const bool has_produced_resource = (industryd.progress >= industryd.progress_max);
 
     if (has_produced_resource) {
+        production_finished();
+    }
+
+    if (has_produced_resource) {
         start_production();
         const int expected_produce = ready_production();
         create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
