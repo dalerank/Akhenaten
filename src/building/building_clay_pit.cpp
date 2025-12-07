@@ -14,6 +14,10 @@
 #include "game/resource.h"
 #include "grid/clay.h"
 #include "grid/grid.h"
+#include "grid/terrain.h"
+#include "sound/sound.h"
+#include "city/city_maintenance.h"
+#include "building/construction/clear.h"
 #include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_clay_pit);
@@ -27,7 +31,10 @@ int building_clay_pit::get_fire_risk(int value) const {
 }
 
 void building_clay_pit::on_before_flooded() {
-    building_industry::on_before_flooded();
+    base.destroy_reason = e_destroy_flooded;
+    base.num_workers = 0;
+    auto &d = runtime_data();
+    d.progress = 0;
 
     if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
         events::emit(event_finance_request{ efinance_request_disasters, 250 });
@@ -35,7 +42,6 @@ void building_clay_pit::on_before_flooded() {
 }
 
 int building_clay_pit::stored_amount(e_resource r) const {
-    // For clay pit, resources are stored in stored_amount_first (like hunting_lodge and reed_gatherer)
     if (r == RESOURCE_CLAY || r == base.output.resource) {
         return base.stored_amount_first;
     }
@@ -43,6 +49,10 @@ int building_clay_pit::stored_amount(e_resource r) const {
 }
 
 void building_clay_pit::spawn_figure() {
+    if (base.destroy_reason == e_destroy_flooded) {
+        return;
+    }
+    
     check_labor_problem();
     if (!has_road_access()) {
         return;
@@ -71,7 +81,10 @@ void building_clay_pit::production_finished() {
 }
 
 void building_clay_pit::update_production() {
-    // Find tile with maximum clay in building area
+    if (base.destroy_reason == e_destroy_flooded) {
+        return;
+    }
+
     auto &d = runtime_data();
     int current_progress = d.progress;
 
@@ -87,23 +100,40 @@ void building_clay_pit::update_production() {
         }
     });
 
-    // If no clay found, don't produce
     if (best_clay <= 0) {
         return;
     }
     
-    // Update production (increases progress)
     building_industry::update_production();
     int delta_progress = d.progress - current_progress;
-   
-    // Deplete clay from the best tile
     if (delta_progress > 0) {
         map_clay_deplete(best_tile, delta_progress);
     }
 }
 
+void building_clay_pit::update_graphic() {
+    if (base.destroy_reason == e_destroy_flooded) {
+        set_animation("flooded");
+        return;
+    }
+
+    building_industry::update_graphic();
+}
+
+bool building_clay_pit::is_deletable() const {
+    if (base.destroy_reason == e_destroy_flooded) {
+        return false;
+    }
+
+    return true;
+}
+
 bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
+
+    if (base.destroy_reason == e_destroy_flooded) {
+        return true;
+    }
 
     int amount = ceil((float)stored_amount(RESOURCE_CLAY) / 100.0) - 1;
     if (amount >= 0) {

@@ -31,8 +31,9 @@ struct clear_confirm_t {
 
 static building* get_deletable_building(int grid_offset) {
     int building_id = map_building_at(grid_offset);
-    if (!building_id)
-        return 0;
+    if (!building_id) {
+        return nullptr;
+    }
 
     building* b = building_get(building_id)->main();
     if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_UNUSED_NATIVE_CROPS_93 || b->type == BUILDING_UNUSED_NATIVE_HUT_88
@@ -41,7 +42,11 @@ static building* get_deletable_building(int grid_offset) {
     }
 
     if (b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->is_deleted) {
-        return 0;
+        return nullptr;
+    }
+
+    if (!b->dcast()->is_deletable()) {
+        return nullptr;
     }
 
     return b;
