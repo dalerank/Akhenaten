@@ -110,6 +110,87 @@ pcstr resource_name(e_resource r);
 struct emenu_header;
 struct eimage_button;
 
+template<typename T>
+bstring1024 format(const T *o, pcstr fmt) {
+    if (!fmt || !*fmt) {
+        return {};
+    }
+
+    struct kv {
+        bstring64 key;
+        bstring1024 value;
+        pstr data() { return key.data(); }
+        kv &operator=(pcstr v) { key = v; return *this; }
+        void resize(size_t s) { key.resize(s); }
+        pcstr c_str() const { return key.c_str(); }
+    };
+    svector<kv, 32> items;
+
+    const char *start = fmt;
+    while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
+        const char *end = ::strchr(start, '}'); // Find the closing '}'
+        if (end != NULL) {
+            const int length = end - start + 1;
+
+            auto &item = items.emplace_back();
+            item.key.ncat(start, length);
+
+            // Move the pointer past the current block
+            start = end + 1;
+        } else {
+            break; // Exit if no closing '}' is found
+        }
+    }
+
+    for (auto &item : items) {
+        if (strncmp(item.key, "${", 2) != 0) {
+            continue;
+        }
+
+        pcstr scopeend = item.key.strchr('}');
+        if (scopeend == nullptr) {
+            continue;
+        }
+
+        item.key.resize(scopeend - item.key + 1);
+
+        int group, id;
+        uint32_t args_handled = sscanf(item.key.c_str(), "${%d.%d}", &group, &id);
+        if (args_handled == 2) {
+            item.value = ui::str(group, id);
+            continue;
+        }
+
+        bstring128 loc("#");
+        args_handled = sscanf(item.key.c_str(), "${loc.%[^}]}", loc.data() + 1);
+        if (args_handled == 1) {
+            item.value = lang_text_from_key(loc.c_str());
+            continue;
+        }
+
+        bstring128 domain, prop;
+        args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
+        if (args_handled == 2) {
+            bvariant bvar = o ? o->get_property(xstring(domain), xstring(prop)) : bvariant{};
+            if (bvar.is_empty()) {
+                bvar = city_get_property(xstring(domain), xstring(prop));
+            }
+
+            if (!bvar.is_empty()) {
+                item.value = bvar.to_str();
+            }
+        }
+    }
+
+    bstring1024 result = fmt;
+    for (const auto &item : items) {
+        if (item.value.len()) {
+            result.replace_str(item.key, item.value);
+        }
+    }
+
+    return result;
+}
 
 struct margini {
     static constexpr int nomargin = -99999;
@@ -358,6 +439,7 @@ struct egeneric_button : public elabel {
     std::function<void(int, int)> _func, _rfunc;
     xstring _tooltip;
     xstring _js_onclick_ref;  // JS function reference for onclick
+    xstring _js_textfn_ref;  // JS function reference for text generation
     uint8_t _border;
     bool _hbody;
     bool _split;
@@ -459,88 +541,6 @@ struct widget {
     void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags = UiFlags_None) { ui::rect(pos, size, fill, color, flags); }
 
     bool handle_mouse(const mouse *m) { return ui::handle_mouse(m); }
-
-    template<typename T>
-    bstring1024 format(const T * o, pcstr fmt) {
-        if (!fmt || !*fmt) {
-            return {};
-        }
-
-        struct kv {
-            bstring64 key;
-            bstring1024 value;
-            pstr data() { return key.data(); }
-            kv &operator=(pcstr v) { key = v; return *this; }
-            void resize(size_t s) { key.resize(s); }
-            pcstr c_str() const { return key.c_str(); }
-        };
-        svector<kv, 32> items;
-
-        const char *start = fmt;
-        while ((start = strstr(start, "${")) != NULL) {  // Find the start of "${"
-            const char *end = ::strchr(start, '}'); // Find the closing '}'
-            if (end != NULL) {
-                const int length = end - start + 1;
-
-                auto &item = items.emplace_back();
-                item.key.ncat(start, length);
-
-                // Move the pointer past the current block
-                start = end + 1;
-            } else {
-                break; // Exit if no closing '}' is found
-            }
-        }
-
-        for (auto &item : items) {
-            if (strncmp(item.key, "${", 2) != 0) {
-                continue;
-            }
-
-            pcstr scopeend = item.key.strchr('}');
-            if (scopeend == nullptr) {
-                continue;
-            }
-
-            item.key.resize(scopeend - item.key + 1);
-
-            int group, id;
-            uint32_t args_handled = sscanf(item.key.c_str(), "${%d.%d}", &group, &id);
-            if (args_handled == 2) {
-                item.value = ui::str(group, id);
-                continue;
-            }
-
-            bstring128 loc("#");
-            args_handled = sscanf(item.key.c_str(), "${loc.%[^}]}", loc.data() + 1);
-            if (args_handled == 1) {
-                item.value = lang_text_from_key(loc.c_str());
-                continue;
-            }
-
-            bstring128 domain, prop;
-            args_handled = sscanf(item.key.c_str(), "${%[^.].%[^}]}", domain.data(), prop.data());
-            if (args_handled == 2) {
-                bvariant bvar = o ? o->get_property(xstring(domain), xstring(prop)) : bvariant{};
-                if (bvar.is_empty()) {
-                    bvar = city_get_property(xstring(domain), xstring(prop));
-                }
-
-                if (!bvar.is_empty()) {
-                    item.value = bvar.to_str();
-                }
-            }
-        }
-
-        bstring1024 result = fmt;
-        for (const auto &item : items) {
-            if (item.value.len()) {
-                result.replace_str(item.key, item.value);
-            }
-        }
-
-        return result;
-    }
 
     template<typename T>
     void format_all(const T *o) {

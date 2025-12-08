@@ -1180,7 +1180,12 @@ void ui::earrow_button::draw(UiFlags flags) {
 
 ui::egeneric_button::~egeneric_button() {
     js_unref_function(_js_onclick_ref);
+    js_unref_function(_js_textfn_ref);
 }
+
+struct dummy_property_holder {
+    bvariant get_property(const xstring &domain, const xstring &name) const { return {}; }
+};
 
 void ui::egeneric_button::draw(UiFlags gflags) {
     UiFlags flags = _flags | gflags
@@ -1191,14 +1196,24 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (_selected ? UiFlags_Selected : UiFlags_None)
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
 
+    // Call JS text function if available to get dynamic text
+    xstring button_text = _text;
+    if (!_js_textfn_ref.empty()) {
+        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);
+        if (dynamic_text && *dynamic_text) {
+            dummy_property_holder holder;
+            button_text = ui::format(&holder, dynamic_text);
+        }
+    }
+
     generic_button *btn = nullptr;
     switch (mode) {
     case 0:
-        btn = &ui::button(_text.c_str(), pos, size, { _font, _font_hover }, flags);
+        btn = &ui::button(button_text.c_str(), pos, size, { _font, _font_hover }, flags);
         break;
 
     case 1:
-        btn = &ui::large_button(_text.c_str(), pos, size, _font);
+        btn = &ui::large_button(button_text.c_str(), pos, size, _font);
         break;
     }
 
@@ -1231,4 +1246,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
     _js_onclick_ref = arch.r_function("onclick");
+    _js_textfn_ref = arch.r_function("textfn");
+    param1 = arch.r_int("param1");
+    param2 = arch.r_int("param2");
 }

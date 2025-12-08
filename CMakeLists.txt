@@ -221,12 +221,13 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
 endif()
 
 # BugTrap DLL dependency
-FetchContent_Declare(
-    bugtrap
-    GIT_REPOSITORY https://github.com/bchavez/BugTrap.git
-    GIT_TAG        master  
-)
-FetchContent_MakeAvailable(bugtrap)
+# not fully worked, mb later we can move it to deps
+# FetchContent_Declare(
+#     bugtrap
+#     GIT_REPOSITORY https://github.com/bchavez/BugTrap.git
+#     GIT_TAG        master  
+# )
+# FetchContent_MakeAvailable(bugtrap)
 
 #
 #zlib section begin
