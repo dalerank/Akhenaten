@@ -138,59 +138,15 @@ static int parse_decimal_as_percentage(const char *str) {
 
 } // namespace
 
-// Register argument handler for --window
-std::optional<arguments::argument_result> handle_window(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--window") == 0) {
-        return arguments::argument_result("window", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_window, "--window", "enable window mode");
+// Register boolean argument handlers
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mode");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "not use sound manager");
 
-// Register argument handler for --nosound
-std::optional<arguments::argument_result> handle_nosound(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--nosound") == 0) {
-        return arguments::argument_result("sound", bvariant(false), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_nosound, "--nosound", "not use sound manager");
-
-// Register argument handler for --logjsfiles
-std::optional<arguments::argument_result> handle_logjsfiles(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--logjsfiles") == 0) {
-        return arguments::argument_result("logjsfiles", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_logjsfiles, "--logjsfiles", "print logs which files open with js");
-
-// Register argument handler for --nocrashdlg
-std::optional<arguments::argument_result> handle_nocrashdlg(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--nocrashdlg") == 0) {
-        return arguments::argument_result("crashdlg", bvariant(false), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_nocrashdlg, "--nocrashdlg", "do not show crash dialog");
-
-// Register argument handler for --fulldmp
-std::optional<arguments::argument_result> handle_fulldmp(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--fulldmp") == 0) {
-        return arguments::argument_result("fulldmp", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_fulldmp, "--fulldmp", "create full dump on crash");
-
-// Register argument handler for --config
-std::optional<arguments::argument_result> handle_config(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--config") == 0) {
-        return arguments::argument_result("config", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_config, "--config", "always show configuration window on startup");
+// Register boolean argument handlers
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full dump on crash");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show configuration window on startup");
 
 // Register argument handler for --render
 std::optional<arguments::argument_result> handle_render(int argc, char **argv, int current_index) {
@@ -270,14 +226,8 @@ std::optional<arguments::argument_result> handle_extdata(int argc, char **argv, 
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_extdata, "--extdata PATH", "set external data directory path");
 
-// Register argument handler for --save_debug_texture
-std::optional<arguments::argument_result> handle_save_debug_texture(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--save_debug_texture") == 0) {
-        return arguments::argument_result("save_debug_texture", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_save_debug_texture, "--save_debug_texture", "save debug textures to DEV_TESTING/tex/");
+// Register boolean argument handlers
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 
 // Register argument handler for --mixed
 std::optional<arguments::argument_result> handle_mixed(int argc, char **argv, int current_index) {
@@ -292,14 +242,8 @@ std::optional<arguments::argument_result> handle_mixed(int argc, char **argv, in
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_mixed, "--mixed PATH", "hot reload scripts from disk");
 
-// Register argument handler for --unpack_scripts
-std::optional<arguments::argument_result> handle_unpack_scripts(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--unpack_scripts") == 0) {
-        return arguments::argument_result("unpack_scripts", bvariant(true), 1);
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_unpack_scripts, "--unpack_scripts", "unpack embedded scripts to user directory");
+// Register boolean argument handlers
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 
 // Register argument handler for --language
 std::optional<arguments::argument_result> handle_language(int argc, char **argv, int current_index) {
