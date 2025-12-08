@@ -11,6 +11,7 @@
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
 #include "core/object_property.h"
+#include "core/archive.h"
 #include "grid/floodplain.h"
 #include "building/destruction.h"
 
@@ -189,6 +190,13 @@ const auto& get_properties() {
 }
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {
+    // Try to get property from static_params first
+    // auto result = archive_helper::get(current_params(), name, domain == tags().building);
+    // if (result) {
+    //     return result.value();
+    // }
+    
+    // Then try properties from get_properties()
     static const xstring wildname("*");
     for (const auto &prop : get_properties()) {
         if (prop.domain != domain) {

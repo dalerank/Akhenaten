@@ -69,7 +69,7 @@ std::array<enemy_properties_t *, ENEMY_COUNT> g_enemy_properties = {
     &enemy_seapeople,
 };
 
-static const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
+const int LOCAL_UPRISING_NUM_ENEMIES[20] = {0, 0, 0, 0, 0, 3, 3, 3, 0, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9};
 
 invasion_warning_t g_invasion_warning;
 invasion_data_t ANK_VARIABLE_N(g_invasions, "invasions");
@@ -375,24 +375,6 @@ int map_invasion_point(tile2i point) {
     }
 
     return 0;
-}
-
-int scenario_invasion_start_from_seth() {
-    auto &data = g_invasions;
-    int mission = g_scenario.campaign_scenario_id();
-    if (mission < 0 || mission > 19)
-        return 0;
-
-    int amount = LOCAL_UPRISING_NUM_ENEMIES[mission];
-    if (amount <= 0)
-        return 0;
-
-    tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
-    if (invasion_tile.grid_offset()) {
-        events::emit(event_message{ true, "message_local_wrath_of_seth", data.last_internal_invasion_id, invasion_tile.grid_offset() });
-    }
-
-    return 1;
 }
 
 bool scenario_invasion_start_from_kingdome(int size) {

@@ -1592,7 +1592,7 @@ game_messages_de {
             text: "Ptah ist empört, dass Sie sich weigern, ihm zu huldigen. Er lässt eine Froschplage über Ihre Stadt kommen. Die Frösche mit ihrer schleimigen Haut und ihrem ekelhaften Gestank werden viele Menschen aus ihren Häusern vertreiben."
         }
     }
-    message_local_wrath_of_seth {
+    message_hailstorm_wrath_of_seth {
         id: 149
         type: 2
         pos [0, 88]

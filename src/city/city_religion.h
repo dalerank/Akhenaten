@@ -23,7 +23,6 @@ enum e_god_status : uint8_t {
 struct event_religion_update {};
 struct event_religion_god_status_update { e_god god; e_god_status status; };
 
-
 struct god_state {
     struct static_params_t {
         e_god type;
@@ -46,6 +45,11 @@ struct god_state {
     e_god_status is_known;
 
     const static_params_t &static_params() const;
+};
+
+class city_god {
+public:
+    virtual void perform_major_curse() {}
 };
 
 template<>
@@ -98,6 +102,8 @@ struct city_religion_t {
 
     uint8_t coverage[MAX_GODS];
     uint8_t coverage_common;
+
+    city_god *get(e_god god);
 
     bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); };
     void reset();

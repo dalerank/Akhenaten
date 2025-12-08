@@ -21,6 +21,7 @@
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
 #include "sound/effect.h"
+#include "city_religion_seth.h"
 #include "dev/debug.h"
 #include "city/city_warnings.h"
 #include "game/game.h"
@@ -85,6 +86,14 @@ declare_console_command_p(ra_no_trade) {
 }
 
 stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");
+
+city_god *city_religion_t::get(e_god god) {
+    switch (god) {
+    case GOD_SETH: return &god_seth;
+    }
+
+    return nullptr;
+}
 
 void city_religion_t::reset() {
     for (auto &god: gods) {
@@ -355,17 +364,6 @@ static bool SETH_ships_destruction() {
     // TODO
     //                figure_sink_all_ships();
     //                city_data.religion.neptune_sank_ships = 1;
-    return 0;
-}
-static bool SETH_hailstorm() {
-    // TODO
-    //                if (formation_legion_curse()) {
-    //                    city_message_post(true, MESSAGE_CURSE_SETH_1, 0, 0);
-    //                    scenario_invasion_start_from_mars();
-    //                } else {
-    //                    city_message_post(true, MESSAGE_CURSE_SETH_NOEFFECT, 0, 0);
-    //                    return 0;
-    //                }
     return 0;
 }
 
@@ -729,19 +727,6 @@ void city_religion_t::perform_major_curse(e_god god) {
         }
         break;
 
-    case GOD_SETH:
-        if (anti_scum_random_bool()) {
-            // destroys all ships
-            SETH_ships_destruction();
-            messages::popup("message_wrath_of_seth", 0, 0);
-            return;
-        } else {
-            SETH_hailstorm();
-            messages::popup("message_wrath_of_seth_2", 0, 0);
-            return;
-        }
-        break;
-
     case GOD_BAST:
         // destroy some of the best houses
         BAST_houses_destruction();
@@ -750,6 +735,11 @@ void city_religion_t::perform_major_curse(e_god god) {
 
     default:
         break;
+    }
+
+    auto god_ptr = get(god);
+    if (god_ptr) {
+        god_ptr->perform_major_curse();
     }
 }
 

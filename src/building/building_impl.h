@@ -216,3 +216,8 @@ namespace archive_helper {
         archive_helper::reader(arch, bparams);
     }
 }
+
+// ANK_CONFIG_PROPERTY(building_impl::static_params,
+//     type, labor_category, building_size, min_houses_coverage, production_rate,
+//     progress_max, overlay, max_service, max_storage_amount,
+//     laborers, fire_risk, damage_risk)
