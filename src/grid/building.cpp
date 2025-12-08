@@ -92,6 +92,7 @@ void map_building_clear() {
     map_grid_clear(g_rubble_type_grid);
     map_grid_clear(g_height_building_grid);
 }
+
 void map_clear_highlights() {
     map_grid_clear(g_highlight_grid);
 }
