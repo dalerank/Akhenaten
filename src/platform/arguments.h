@@ -120,3 +120,12 @@ extern Arguments g_args;
     static arguments::argument_info ANK_CONFIG_CC1(arg_info_obj, __LINE__)(arg_name, description); \
     static arguments::ArgumentInfo ANK_CONFIG_CC1(arg_info_list, __LINE__)(&ANK_CONFIG_CC1(arg_info_obj, __LINE__)); \
     std::optional<arguments::argument_result> func(int argc, char** argv, int current_index)
+
+#define ANK_REGISTER_BOOL_ARGUMENT_HANDLER(arg_name, storage_name, value, description) \
+    std::optional<arguments::argument_result> ANK_CONFIG_CC1(handle_, __LINE__)(int argc, char **argv, int current_index) { \
+        if (strcmp(argv[current_index], arg_name) == 0) { \
+            return arguments::argument_result(storage_name, bvariant(value), 1); \
+        } \
+        return std::nullopt; \
+    } \
+    ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(ANK_CONFIG_CC1(handle_, __LINE__), arg_name, description)
