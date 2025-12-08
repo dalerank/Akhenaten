@@ -14,6 +14,8 @@ city {
     count_total_buildings : __city_count_total_buildings
     set_advisor_available : __city_set_advisor_available
     create_good_request : __city_create_good_request
+    rank_title : __city_rank_title
+    rank_salary : __city_rank_salary
 
     get_granary : function(building_id) {
         return {

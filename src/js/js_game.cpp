@@ -389,6 +389,42 @@ void js_call_function(xstring js_ref) {
     }
 }
 
+pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
+    if (js_ref.empty()) {
+        return "";
+    }
+
+    js_State *J = js_vm_state();
+    assert(J);
+
+    // Get the function from registry using the reference
+    js_getregistry(J, js_ref.c_str());
+    if (js_iscallable(J, -1)) {
+        js_pushnull(J);  // 'this' context
+        js_pushnumber(J, (double)param1);
+        js_pushnumber(J, (double)param2);
+        int result = js_pcall(J, 2);
+        if (result != 0) {
+            logs::error("JS textfn callback error: %s", js_tostring(J, -1));
+            js_pop(J, 1);
+            return "";
+        }
+        
+        pcstr result_str;
+        if (js_isstring(J, -1)) {
+            result_str = js_tostring(J, -1);
+        } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
+            result_str = js_tostring(J, -1);
+        }
+        js_pop(J, 1);  // Pop the result
+        return result_str;
+    } else {
+        js_pop(J, 1);
+    }
+    
+    return "";
+}
+
 void config::refresh(archive arch) {
     g_config_arch = {arch.state};
     animation_t::global_hashtime = game.frame;

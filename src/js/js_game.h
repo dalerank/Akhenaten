@@ -324,4 +324,5 @@ void js_register_mission_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
+pcstr js_call_function_with_result(xstring js_ref, int param1, int param2);
 void js_register_game_handlers(xstring missionid);

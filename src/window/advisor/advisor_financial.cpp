@@ -16,7 +16,7 @@
 ui::advisor_financial_window_t ANK_VARIABLE(advisor_financial_window)
 
 void ui::advisor_financial_window_t::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
-    auto ftext = ui.format(&g_city, text);
+    auto ftext = ui::format(&g_city, text);
 
     ui.label(ftext, vec2i{ row_text_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
     ui.label(bstring32(value_last_year), vec2i{ row_last_year_x, y }, FONT_NORMAL_BLACK_ON_LIGHT);
