@@ -482,6 +482,17 @@ static void main_loop() {
     }
 }
 
+static int handle_unpack_scripts() {
+    xstring scripts_path = vfs::platform_unpack_scripts();
+    if (!scripts_path.empty()) {
+        logs::info("Scripts unpacked successfully to: %s", scripts_path.c_str());
+        return 0;
+    } else {
+        logs::error("Failed to unpack scripts");
+        return 1;
+    }
+}
+
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
 
@@ -490,6 +501,11 @@ int main(int argc, char** argv) {
     logs::initialize();
 
     setup();
+
+    if (g_args.should_unpack_scripts()) {
+        return handle_unpack_scripts();
+    }
+    
     g_mouse.init();
     
     game_imgui_overlay_init();

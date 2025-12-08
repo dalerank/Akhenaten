@@ -216,6 +216,7 @@ cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
  --size // window size. Example: 800x600
  --window // enable window mode
  --mixed // hot reload scripts from disk
+ --unpack_scripts // unpack embedded scripts to user directory (exits after unpacking)
  --save_debug_texture // save screen output to game folder
 ```
 
