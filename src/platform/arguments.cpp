@@ -567,7 +567,7 @@ void store(Arguments const& arguments) {
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
 }
 
-std::vector<std::pair<xstring, xstring>> arguments::get_argument_descriptions() {
+std::vector<std::pair<xstring, xstring>> get_argument_descriptions() {
     std::vector<std::pair<xstring, xstring>> descriptions;
     for (ArgumentInfo *s = ArgumentInfo::tail; s; s = s->next) {
         if (s->func) {
