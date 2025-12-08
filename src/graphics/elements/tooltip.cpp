@@ -98,7 +98,7 @@ void tooltip_context::draw_button_tooltip() {
 }
 
 void tooltip_context::draw_overlay_tooltip() {
-    bstring1024 text = text.c_str();
+    bstring1024 text;  // Default-initialize (empty) [web:8][web:11]
     overlay_string.clear();
     if (has_numeric_prefix) {
         string_from_int((uint8_t*)overlay_string, numeric_prefix, 0);
@@ -145,6 +145,7 @@ void tooltip_context::draw_overlay_tooltip() {
     draw_box(x, y, width, height);
     text_draw_multiline(text.c_str(), { x + 5, y + 7 }, width - 5, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
 }
+
 
 void tooltip_context::draw_tile_tooltip() {
     screen_tile screen = pixel_to_screentile({mpos.x, mpos.y});
