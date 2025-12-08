@@ -522,7 +522,7 @@ int text_draw_multiline(xstring strkey, vec2i offset, int box_width, e_font font
 
     return y - offset.y;
 }
-int text_measure_multiline(const uint8_t* str, int box_width, e_font font) {
+int text_measure_multiline(pcstr str, int box_width, e_font font) {
     int has_more_characters = 1;
     int guard = 0;
     int num_lines = 0;
@@ -534,7 +534,7 @@ int text_measure_multiline(const uint8_t* str, int box_width, e_font font) {
         int line_has_content = 0;
         while (has_more_characters) {
             int word_num_chars;
-            int word_width = get_word_width(str, font, &word_num_chars);
+            int word_width = get_word_width((const uint8_t*)str, font, &word_num_chars);
             
             // If adding this word would exceed box width and we already have content, break to next line
             if (line_has_content && current_width + word_width >= box_width) {
