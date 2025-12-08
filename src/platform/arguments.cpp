@@ -138,11 +138,8 @@ static int parse_decimal_as_percentage(const char *str) {
 
 } // namespace
 
-// Register boolean argument handlers
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mode");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "not use sound manager");
-
-// Register boolean argument handlers
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full dump on crash");
@@ -226,7 +223,6 @@ std::optional<arguments::argument_result> handle_extdata(int argc, char **argv, 
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_extdata, "--extdata PATH", "set external data directory path");
 
-// Register boolean argument handlers
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 
 // Register argument handler for --mixed
@@ -242,7 +238,6 @@ std::optional<arguments::argument_result> handle_mixed(int argc, char **argv, in
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_mixed, "--mixed PATH", "hot reload scripts from disk");
 
-// Register boolean argument handlers
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 
 // Register argument handler for --language
@@ -511,7 +506,7 @@ void store(Arguments const& arguments) {
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
 }
 
-std::vector<std::pair<xstring, xstring>> arguments::get_argument_descriptions() {
+std::vector<std::pair<xstring, xstring>> get_argument_descriptions() {
     std::vector<std::pair<xstring, xstring>> descriptions;
     for (ArgumentInfo *s = ArgumentInfo::tail; s; s = s->next) {
         if (s->func) {
