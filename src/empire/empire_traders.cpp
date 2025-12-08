@@ -40,6 +40,12 @@ void empire_trader::update() {
         return;
     }
 
+    if (!id) {
+        // strange case, should not happens
+        is_active = false;
+        return;
+    }
+
     if (state == estate_trading) {
         return;
     }
