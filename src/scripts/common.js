@@ -8,7 +8,7 @@ var _format = function() {
     return formatted
 };
 
-function log_info(message, locals) {
+function _eformat(message, locals) {
     if (typeof message === 'string' && message.indexOf('${') !== -1) {
         try {
             message = message.replace(/\$\{([^}]+)\}/g, function(match, expr) {
@@ -37,39 +37,15 @@ function log_info(message, locals) {
             message = '[format error: ' + e + ']';
         }
     }
-    __log_info_native(message);
+    return message;
+}
+
+function log_info(message, locals) {
+    __log_info_native(_eformat(message, locals));
 }
 
 function log_warning(message, locals) {
-    if (typeof message === 'string' && message.indexOf('${') !== -1) {
-        try {
-            message = message.replace(/\$\{([^}]+)\}/g, function(match, expr) {
-                try {
-                    var result;
-                    if (locals && typeof locals === 'object') {
-                        with (locals) {
-                            result = eval(expr);
-                        }
-                    } else {
-                        result = eval(expr);
-                    }
-                    
-                    if (result === undefined) return 'undefined';
-                    if (result === null) return 'null';
-                    if (typeof result === 'object') {
-                        if (result.toString) return result.toString();
-                        return '[object]';
-                    }
-                    return String(result);
-                } catch (e) {
-                    return '[error: ' + e + ' in ${' + expr + '}]';
-                }
-            });
-        } catch (e) {
-            message = '[format error: ' + e + ']';
-        }
-    }
-    __log_warning_native(message);
+    __log_warning_native(_eformat(message, locals));
 }
 
 var trade_city_sell = {}

@@ -10,6 +10,8 @@
 #include <filesystem>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <algorithm>
 #include <SDL_system.h>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -31,64 +33,7 @@ namespace {
 auto const CFG_FILE_NAME = "akhenaten.cfg";
 auto const CFG_FILE_DIR = "akhenaten";
 
-enum class argument_type {
-    DATA_DIRECTORY,
-    WINDOW_MODE,
-    RENDERER,
-    DISPLAY_SCALE_PERCENTAGE,
-    CURSOR_SCALE_PERCENTAGE,
-    WINDOW_WIDTH,
-    WINDOW_HEIGHT,
-    MIXED_MODE,
-    EXTDATA_FOLDER,
-};
 
-const std::unordered_map<std::string, argument_type> argument_types{{"data_directory", argument_type::DATA_DIRECTORY},
-                                                                    {"extdata", argument_type::DATA_DIRECTORY},
-                                                                    {"window_mode", argument_type::WINDOW_MODE},
-                                                                    {"renderer", argument_type::RENDERER},
-                                                                    {"display_scale_percentage",argument_type::DISPLAY_SCALE_PERCENTAGE},
-                                                                    {"cursor_scale_percentage",argument_type::CURSOR_SCALE_PERCENTAGE},
-                                                                    {"window_width", argument_type::WINDOW_WIDTH},
-                                                                    {"window_height", argument_type::WINDOW_HEIGHT},
-                                                                    {"mixed", argument_type::MIXED_MODE}};
-
-void set_value(Arguments& arguments, argument_type type, std::string&& value) {
-    switch (type) {
-    case argument_type::DATA_DIRECTORY:
-        arguments.set_data_directory(value.c_str());
-        break;
-    case argument_type::WINDOW_MODE:
-        if (value == "1")
-            arguments.set_window_mode();
-        else
-            arguments.set_fullscreen();
-        break;
-    case argument_type::RENDERER:
-        arguments.set_renderer(value.c_str());
-        break;
-    case argument_type::DISPLAY_SCALE_PERCENTAGE:
-        arguments.set_display_scale_percentage(std::stoi(value));
-        break;
-    case argument_type::CURSOR_SCALE_PERCENTAGE:
-        arguments.set_cursor_scale_percentage(std::stoi(value));
-        break;
-    case argument_type::WINDOW_WIDTH: {
-        auto v = arguments.get_window_size();
-        v.x = std::stoi(value);
-        arguments.set_window_size(v);
-        break;
-    }
-    case argument_type::WINDOW_HEIGHT: {
-        auto v = arguments.get_window_size();
-        v.y = std::stoi(value);
-        arguments.set_window_size(v);
-        break;
-    }
-    default:
-        ; // nothing
-    };
-}
 
 /// Create formatted string
 /// NOTE: (use C++20 as soon as it will be available to get rid of this)
@@ -152,11 +97,9 @@ std::string get_configuration_path() {
     return CFG_FILE_NAME;
 }
 
-} // namespace
-
-static int parse_decimal_as_percentage(const char* str) {
-    const char* start = str;
-    char* end;
+static int parse_decimal_as_percentage(const char *str) {
+    const char *start = str;
+    char *end;
     long whole = SDL_strtol(start, &end, 10);
     int percentage = 100 * (int)whole;
     if (*end == ',' || *end == '.') {
@@ -172,7 +115,8 @@ static int parse_decimal_as_percentage(const char* str) {
         case 2:
             percentage += fraction;
             break;
-        default: {
+        default:
+        {
             int fraction_digits = (int)(end - start);
             while (fraction_digits > 2) {
                 fraction = fraction / 10;
@@ -180,7 +124,7 @@ static int parse_decimal_as_percentage(const char* str) {
             }
             percentage += fraction;
             break;
-            }
+        }
         }
     }
 
@@ -192,8 +136,186 @@ static int parse_decimal_as_percentage(const char* str) {
     return percentage;
 }
 
+} // namespace
+
+// Register argument handler for --window
+std::optional<arguments::argument_result> handle_window(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--window") == 0) {
+        return arguments::argument_result("window", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_window, "--window", "enable window mode");
+
+// Register argument handler for --nosound
+std::optional<arguments::argument_result> handle_nosound(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--nosound") == 0) {
+        return arguments::argument_result("sound", bvariant(false), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_nosound, "--nosound", "not use sound manager");
+
+// Register argument handler for --logjsfiles
+std::optional<arguments::argument_result> handle_logjsfiles(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--logjsfiles") == 0) {
+        return arguments::argument_result("logjsfiles", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_logjsfiles, "--logjsfiles", "print logs which files open with js");
+
+// Register argument handler for --nocrashdlg
+std::optional<arguments::argument_result> handle_nocrashdlg(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--nocrashdlg") == 0) {
+        return arguments::argument_result("crashdlg", bvariant(false), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_nocrashdlg, "--nocrashdlg", "do not show crash dialog");
+
+// Register argument handler for --fulldmp
+std::optional<arguments::argument_result> handle_fulldmp(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--fulldmp") == 0) {
+        return arguments::argument_result("fulldmp", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_fulldmp, "--fulldmp", "create full dump on crash");
+
+// Register argument handler for --config
+std::optional<arguments::argument_result> handle_config(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--config") == 0) {
+        return arguments::argument_result("config", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_config, "--config", "always show configuration window on startup");
+
+// Register argument handler for --render
+std::optional<arguments::argument_result> handle_render(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--render") == 0) {
+        if (current_index + 1 < argc) {
+            return arguments::argument_result("renderer", bvariant(xstring(argv[current_index + 1])), 2);
+        } else {
+            app_terminate("Option --render must be opengl,direct3d");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_render, "--render RENDERER", "use specific renderer");
+
+// Register argument handler for --display-scale
+std::optional<arguments::argument_result> handle_display_scale(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--display-scale") == 0) {
+        if (current_index + 1 < argc) {
+            int percentage = parse_decimal_as_percentage(argv[current_index + 1]);
+            if (percentage < 50 || percentage > 500) {
+                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+            }
+            return arguments::argument_result("display_scale_percentage", bvariant(percentage), 2);
+        } else {
+            app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_display_scale, "--display-scale NUMBER", "Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
+
+// Register argument handler for --cursor-scale
+std::optional<arguments::argument_result> handle_cursor_scale(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--cursor-scale") == 0) {
+        if (current_index + 1 < argc) {
+            int percentage = parse_decimal_as_percentage(argv[current_index + 1]);
+            if (percentage != 100 && percentage != 150 && percentage != 200) {
+                app_terminate(CURSOR_SCALE_ERROR_MESSAGE);
+            }
+            return arguments::argument_result("cursor_scale_percentage", bvariant(percentage), 2);
+        } else {
+            app_terminate("Option --cursor-scale must be followed by a scale value between 0.5 and 5");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_cursor_scale, "--cursor-scale NUMBER", "Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+
+// Register argument handler for --size
+std::optional<arguments::argument_result> handle_size(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--size") == 0) {
+        if (current_index + 1 < argc) {
+            vec2i size{800, 600};
+            if (SDL_sscanf(argv[current_index + 1], "%dx%d", &size.x, &size.y) == 2) {
+                return arguments::argument_result("window_size", bvariant(size), 2);
+            } else {
+                app_terminate("Option --size must should has fixed WxH format");
+            }
+        } else {
+            app_terminate("Option --size must should has fixed WxH format");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_size, "--size WxH", "window size. Example: 800x600");
+
+// Register argument handler for --extdata
+std::optional<arguments::argument_result> handle_extdata(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--extdata") == 0) {
+        if (current_index + 1 < argc) {
+            return arguments::argument_result("extdata_directory", bvariant(xstring(argv[current_index + 1])), 2);
+        } else {
+            app_terminate("Option --extdata folder should exist");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_extdata, "--extdata PATH", "set external data directory path");
+
+// Register argument handler for --save_debug_texture
+std::optional<arguments::argument_result> handle_save_debug_texture(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--save_debug_texture") == 0) {
+        return arguments::argument_result("save_debug_texture", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_save_debug_texture, "--save_debug_texture", "save debug textures to DEV_TESTING/tex/");
+
+// Register argument handler for --mixed
+std::optional<arguments::argument_result> handle_mixed(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--mixed") == 0) {
+        if (current_index + 1 < argc) {
+            return arguments::argument_result("scripts_directory", bvariant(xstring(argv[current_index + 1])), 2);
+        } else {
+            app_terminate(MIXED_MODE_ERROR_MESSAGE);
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_mixed, "--mixed PATH", "hot reload scripts from disk");
+
+// Register argument handler for --unpack_scripts
+std::optional<arguments::argument_result> handle_unpack_scripts(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--unpack_scripts") == 0) {
+        return arguments::argument_result("unpack_scripts", bvariant(true), 1);
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_unpack_scripts, "--unpack_scripts", "unpack embedded scripts to user directory");
+
+// Register argument handler for --language
+std::optional<arguments::argument_result> handle_language(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--language") == 0) {
+        if (current_index + 1 < argc) {
+            return arguments::argument_result("language", bvariant(xstring(argv[current_index + 1])), 2);
+        } else {
+            app_terminate("Option --language must be followed by a language code (e.g., ru, en, fr)");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_language, "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
+
 void Arguments::parse(int argc, char** argv) {
-    data_directory_ = std::filesystem::current_path().string().c_str();
+    xstring data_dir = std::filesystem::current_path().string().c_str();
 #if defined(GAME_PLATFORM_WIN)
     auto get_steam_path = [] () {
         DWORD dwType = REG_SZ;
@@ -212,122 +334,129 @@ void Arguments::parse(int argc, char** argv) {
         bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
         if (binary_exist) {
             logs::info("Steam pharaoh path: %s", pharaoh_steam_path);
-            data_directory_ = pharaoh_steam_path;
+            data_dir = pharaoh_steam_path.c_str();
         }
     }
 #endif
-    config_file_exists_ = arguments::load(*this);
+    args_["data_directory"] = bvariant(data_dir);    
+    const bool file_exists = arguments::load(*this);
+    args_["config_file_exists"] = bvariant(file_exists);
     parse_cli_(argc, argv);
+    
+    // Apply save_debug_texture from args to game
+    if (is("save_debug_texture", false)) {
+        game.save_debug_texture = true;
+    }
 }
 
 char const* Arguments::usage() {
-    return "Usage: akhenaten [ARGS] [DATA_DIR]\n"
-           "\n"
-           "ARGS may be:\n"
-           "  --display-scale NUMBER\n"
-           "          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5\n"
-           "  --cursor-scale NUMBER\n"
-           "          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2\n"
-           "  --render\n"
-           "          use specific renderer\n"
-           "  --size\n"
-           "          window size. Example: 800x600\n"
-           "  --window\n"
-           "          enable window mode\n"
-           "  --mixed\n"
-           "          hot reload scripts from disk\n"
-           "  --nosound\n"
-           "          not use sound manager\n"
-           "  --nocrashdlg\n"
-           "          do not show crash dialog\n"
-           "  --fulldmp\n"
-           "         create full dump on crash\n"
-           "  --logjsfiles\n"
-           "         print logs which files open with js\n"
-           "  --config\n"
-           "         always show configuration window on startup\n"
-           "\n"
-           "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
+    static std::string usage_text;
+    if (usage_text.empty()) {
+        usage_text = "Usage: akhenaten [ARGS] [DATA_DIR]\n"
+                     "\n"
+                     "ARGS may be:\n";
+        
+        auto descriptions = arguments::get_argument_descriptions();
+        // Sort by argument name for consistent output
+        std::sort(descriptions.begin(), descriptions.end(), 
+                  [](const auto& a, const auto& b) { return a.first < b.first; });
+        
+        for (const auto& desc : descriptions) {
+            bstring1024 help;
+            help.append_fmt("  %s\n", desc.first.c_str());
+            help.append_fmt("          %s\n", desc.second.c_str());
+            usage_text.append(help.c_str());
+        }
+        
+        usage_text += "\n"
+                      "The last argument, if present, is interpreted as data directory of the Pharaoh installation";
+    }
+    return usage_text.c_str();
 }
 
-bool Arguments::is_fullscreen() const {
-    return !window_mode_;
-}
+bool Arguments::is(const xstring & name, bool def) const {
+    auto fullscreen = get_arg(name);
+    if (fullscreen && fullscreen->is_bool()) {
+        return fullscreen->as_bool();
+    }
 
-bool Arguments::use_sound() const {
-    return use_sound_;
-}
-
-void Arguments::set_use_sound(bool flag) {
-    use_sound_ = flag;
-}
-
-void Arguments::set_fullscreen() {
-    window_mode_ = false;
-}
-
-bool Arguments::is_window_mode() const {
-    return window_mode_;
-}
-
-void Arguments::set_window_mode(bool flag) {
-    window_mode_ = flag;
+    return def;
 }
 
 int Arguments::get_display_scale_percentage() const {
-    return display_scale_percentage_;
+    auto scale = get_arg("display_scale_percentage");
+    if (scale && scale->is_int32()) {
+        return scale->as_int32();
+    }
+    return 100; // default value
 }
 
 void Arguments::set_display_scale_percentage(int value) {
-    if (value < 50 || value > 500) {
-        app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
-    }
-
-    display_scale_percentage_ = value;
+    args_["display_scale_percentage"] = bvariant(std::clamp(value, 50, 500));
 }
 
 int Arguments::get_cursor_scale_percentage() const {
-    return cursor_scale_percentage_;
+    auto scale = get_arg("cursor_scale_percentage");
+    if (scale && scale->is_int32()) {
+        return scale->as_int32();
+    }
+    return 100; // default value
 }
 
 void Arguments::set_cursor_scale_percentage(int value) {
-    if (value != 100 && value != 150 && value != 200) {
-        app_terminate(CURSOR_SCALE_ERROR_MESSAGE);
-    }
-
-    cursor_scale_percentage_ = value;
+    args_["cursor_scale_percentage"] = bvariant(std::clamp(value, 100, 200));
 }
 
 pcstr Arguments::get_renderer() const {
-    return renderer_.c_str();
+    auto renderer = get_arg("renderer");
+    if (renderer && renderer->is_str()) {
+        return renderer->as_str().c_str();
+    }
+    return "";
 }
 
 void Arguments::set_renderer(pcstr value) {
-    renderer_ = value;
+    args_["renderer"] = xstring(value);
 }
 
 const char *Arguments::get_data_directory() const {
-    return data_directory_;
+    auto dir = get_arg("data_directory");
+    if (dir && dir->is_str()) {
+        return dir->as_str().c_str();
+    }
+    return "";
 }
 
 void Arguments::set_data_directory(const char * value) {
-    data_directory_ = value;
+    args_["data_directory"] = bvariant(xstring(value));
 }
 
 const char *Arguments::get_extdata_directory() const {
-    return extdata_directory_;
+    auto dir = get_arg("extdata_directory");
+    if (dir && dir->is_str()) {
+        return dir->as_str().c_str();
+    }
+    return nullptr;
 }
 
 const char *Arguments::get_scripts_directory() const {
-    return scripts_directory_;
+    auto dir = get_arg("scripts_directory");
+    if (dir && dir->is_str()) {
+        return dir->as_str().c_str();
+    }
+    return nullptr;
 }
 
 vec2i Arguments::get_window_size() const {
-    return window_size_;
+    auto size = get_arg("window_size");
+    if (size && size->is_vec2i()) {
+        return size->as_vec2i();
+    }
+    return vec2i{800, 600}; // default value
 }
 
 void Arguments::set_window_size(vec2i value) {
-    window_size_ = value;
+    args_["window_size"] = bvariant(value);
 }
 
 void Arguments::parse_cli_(int argc, char** argv) {
@@ -337,79 +466,46 @@ void Arguments::parse_cli_(int argc, char** argv) {
         // https://hg.libsdl.org/SDL/file/c005c49beaa9/test/testdropfile.c#l47
         if (SDL_strcmp(argv[i], "-psn") == 0) {
             continue;
+        }
 
-        } else if (SDL_strcmp(argv[i], "--window") == 0) {
-            window_mode_ = true;
-        } else if (SDL_strcmp(argv[i], "--logjsfiles") == 0) {
-            logjsfiles_ = true;
-        } else if (SDL_strcmp(argv[i], "--config") == 0) {
-            show_config_window_ = true;
-        } else if (SDL_strcmp(argv[i], "--nosound") == 0) {
-            use_sound_ = false;
-        } else if (SDL_strcmp(argv[i], "--nocrashdlg") == 0) {
-            use_crashdlg_ = false;        
-        } else if (SDL_strcmp(argv[i], "--fulldmp") == 0) {
-            create_fulldmp_ = true;
-        } else if (SDL_strcmp(argv[i], "--render") == 0) {
-            if (i + 1 < argc) {
-                renderer_ = argv[i + 1];
-                ++i;
-            } else {
-                app_terminate("Option --render must be opengl,direct3d");
+        // Try registered argument handlers first
+        bool handled = false;
+        for (arguments::ArgumentHandler *s = arguments::ArgumentHandler::tail; s; s = s->next) {
+            auto result = s->func(argc, argv, i);
+            if (result.has_value()) {
+                args_[result->name] = result->value;
+                i += result->consumed_args - 1; // -1 because the loop will increment i
+                handled = true;
+                break;
             }
-        } else if (SDL_strcmp(argv[i], "--display-scale") == 0) {
-            if (i + 1 < argc) {
-                int percentage = parse_decimal_as_percentage(argv[i + 1]);
-                ++i;
+        }
+        if (handled) {
+            continue;
+        }
 
-                set_display_scale_percentage(percentage);
-            } else
-                app_terminate(DISPLAY_SCALE_ERROR_MESSAGE);
-        } else if (SDL_strcmp(argv[i], "--size") == 0) {
-            if (i + 1 < argc) {
-                SDL_sscanf(argv[i + 1], "%dx%d", &window_size_.x, &window_size_.y);
-                ++i;
-            } else {
-                app_terminate("Option --size must should has fixed WxH format");
-            }
-        } else if (SDL_strcmp(argv[i], "--extdata") == 0) {
-            if (i + 1 < argc) {
-                extdata_directory_ = argv[i + 1];
-                ++i;
-            } else {
-                app_terminate("Option --extdata folder should exist");
-            }
-        } else if (SDL_strcmp(argv[i], "--mixed") == 0) {
-            if (i + 1 < argc) {
-                scripts_directory_ = argv[i + 1];
-                ++i;
-            } else {
-                app_terminate("Option --mixed folder should exist");
-            }
-
-        } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
-            if (i + 1 < argc) {
-                int percentage = parse_decimal_as_percentage(argv[i + 1]);
-                ++i;
-
-                set_cursor_scale_percentage(percentage);
-            } else {
-                app_terminate("Option --cursor-scale must be followed by a scale value between 0.5 and 5");
-            }
-        } else if (SDL_strcmp(argv[i], "--help") == 0) {
+        if (SDL_strcmp(argv[i], "--help") == 0) {
             app_terminate(usage());
-
-        } else if (SDL_strcmp(argv[i], "--save_debug_texture") == 0) {
-            game.save_debug_texture = true;
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             logs::info(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
 
         } else {
             // TODO: ???? check that there are no other arguments after
-            data_directory_ = argv[i];
+            args_["data_directory"] = bvariant(xstring(argv[i]));
         }
     }
+}
+
+std::optional<bvariant> Arguments::get_arg(const xstring& name) const {
+    auto it = args_.find(name);
+    if (it != args_.end()) {
+        return it->second;
+    }
+    return std::nullopt;
+}
+
+bool Arguments::has_arg(const xstring& name) const {
+    return args_.find(name) != args_.end();
 }
 
 namespace arguments {
@@ -429,13 +525,32 @@ bool load(Arguments& arguments) {
             continue;
 
         auto const key = line.substr(0, pos);
-        auto const it = argument_types.find(key);
-        if (it == argument_types.end()) {
-            logs::warn("Unknown argument key: %s", key.c_str());
-            continue;
-        }
+        auto const value = line.substr(pos + 1);
 
-        set_value(arguments, it->second, line.substr(pos + 1));
+        if (key == "data_directory") {
+            arguments.set_data_directory(value.c_str());
+        } else if (key == "window_mode") {
+            if (value == "1")
+                arguments.set_window_mode();
+            else
+                arguments.set_fullscreen();
+        } else if (key == "renderer") {
+            arguments.set_renderer(value.c_str());
+        } else if (key == "display_scale_percentage") {
+            arguments.set_display_scale_percentage(std::stoi(value));
+        } else if (key == "cursor_scale_percentage") {
+            arguments.set_cursor_scale_percentage(std::stoi(value));
+        } else if (key == "window_width") {
+            auto v = arguments.get_window_size();
+            v.x = std::stoi(value);
+            arguments.set_window_size(v);
+        } else if (key == "window_height") {
+            auto v = arguments.get_window_size();
+            v.y = std::stoi(value);
+            arguments.set_window_size(v);
+        } else {
+            logs::warn("Unknown argument key: %s", key.c_str());
+        }
     }
     return true;
 }
@@ -450,6 +565,17 @@ void store(Arguments const& arguments) {
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
     output << "window_width" << '=' << arguments.get_window_size().x << '\n';
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
+}
+
+std::vector<std::pair<xstring, xstring>> arguments::get_argument_descriptions() {
+    std::vector<std::pair<xstring, xstring>> descriptions;
+    for (ArgumentInfo *s = ArgumentInfo::tail; s; s = s->next) {
+        if (s->func) {
+            argument_info* info = s->func;
+            descriptions.emplace_back(info->arg_name, info->description);
+        }
+    }
+    return descriptions;
 }
 
 } // namespace arguments

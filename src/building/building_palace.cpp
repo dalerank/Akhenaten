@@ -111,9 +111,8 @@ void building_palace::draw_tooltip(tooltip_context *c) {
     int label_x = 5;
     int value_x = 140;
     
-    ui::widget temp_widget;
     for (const auto &line : tooltip_lines) {
-        bstring1024 formatted = temp_widget.format(this, line.c_str());
+        bstring1024 formatted = ui::format(this, line.c_str());
         
         // Split line into label and value parts (format: "label@value" or "label@value (extra)")
         int at_pos = formatted.find('\t');

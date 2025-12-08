@@ -208,7 +208,7 @@ struct archive {
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
-            fixed_memory_resource<xstring, 128> keys_buffer;
+            fixed_memory_resource<xstring, 256> keys_buffer;
             std::pmr::vector<xstring> keys{ &keys_buffer };
             {
                 pcstr key;
