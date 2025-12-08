@@ -244,6 +244,8 @@ char const* Arguments::usage() {
            "         create full dump on crash\n"
            "  --logjsfiles\n"
            "         print logs which files open with js\n"
+           "  --unpack_scripts\n"
+           "         unpack embedded scripts to user directory\n"
            "  --config\n"
            "         always show configuration window on startup\n"
            "\n"
@@ -401,6 +403,8 @@ void Arguments::parse_cli_(int argc, char** argv) {
 
         } else if (SDL_strcmp(argv[i], "--save_debug_texture") == 0) {
             game.save_debug_texture = true;
+        } else if (SDL_strcmp(argv[i], "--unpack_scripts") == 0) {
+            unpack_scripts_ = true;
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             logs::info(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));

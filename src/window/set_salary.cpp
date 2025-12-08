@@ -41,14 +41,6 @@ void set_salary_window::init() {
             this->close();
         });
 
-        // Format: "Rank Name: Salary Amount Db"
-        // bstring128 full_text;
-        // pcstr rank_name = lang_get_string(52, rank + 4);
-        // int salary = g_city.kingdome.salary_for_rank(rank);
-        // pcstr currency = lang_get_string(6, 0); // "Db" or "Deben"
-        // full_text.printf("%s: %d %s", rank_name, salary, currency);
-
-        // ui[btn_id] = full_text;
         ui[btn_id].readonly = g_city.victory_state.has_won();
     }
 
