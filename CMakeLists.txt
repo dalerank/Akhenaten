@@ -220,6 +220,14 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB TRUE)
 endif()
 
+# BugTrap DLL dependency
+FetchContent_Declare(
+    bugtrap
+    GIT_REPOSITORY https://github.com/bchavez/BugTrap.git
+    GIT_TAG        master  
+)
+FetchContent_MakeAvailable(bugtrap)
+
 #
 #zlib section begin
 #
@@ -234,6 +242,8 @@ FetchContent_GetProperties(zlib)
 if(NOT zlib_POPULATED)
     FetchContent_Populate(zlib)
 endif()
+
+
 
 set(ZLIB_SOURCE_DIR "${zlib_SOURCE_DIR}")
 set(ZLIB_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/zlib")
