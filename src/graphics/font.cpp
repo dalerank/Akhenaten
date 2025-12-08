@@ -443,6 +443,7 @@ void font_atlas_regenerate() {
 
     int cp_index = 0;
     if (!vfs::file_exists(symbols_font)) {
+        g_font_data.needs_regeneration = false;
         bstring512 message_text;
         message_text.printf("The specified font symbols file does not exist:%s", symbols_font.c_str());
         popup_dialog::show_ok("Data issue", message_text.c_str());
