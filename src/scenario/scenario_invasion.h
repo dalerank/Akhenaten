@@ -53,14 +53,14 @@ struct invasion_data_t {
 ANK_CONFIG_STRUCT(invasion_data_t, min_invasion_amount, max_invasion_amount)
 extern invasion_data_t g_invasions;
 
+extern const int LOCAL_UPRISING_NUM_ENEMIES[20];
+
 
 bool scenario_invasion_exists_upcoming();
 
 void scenario_invasion_foreach_warning(std::function<void(vec2i, int)> callback);
 
 int scenario_invasion_count();
-
-int scenario_invasion_start_from_seth();
 
 bool scenario_invasion_start_from_kingdome(int size);
 
