@@ -217,6 +217,7 @@ cmake -DUSE_FUTURE_TRACY=ON .. && make akhenaten && ./akhenaten
  --window // enable window mode
  --mixed // hot reload scripts from disk
  --unpack_scripts // unpack embedded scripts to user directory (exits after unpacking)
+ --language=CODE or --language CODE // set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)
  --save_debug_texture // save screen output to game folder
 ```
 

@@ -40,6 +40,7 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return show_config_window_; }
     [[nodiscard]] bool config_file_exists() const { return config_file_exists_; }
     [[nodiscard]] bool should_unpack_scripts() const { return unpack_scripts_; }
+    [[nodiscard]] const char* get_language() const { return language_.empty() ? nullptr : language_.c_str(); }
 
     [[nodiscard]] const char* get_scripts_directory() const;
     void parse(int argc, char **argv);
@@ -61,6 +62,7 @@ private:
     bool show_config_window_ = false;
     bool config_file_exists_ = false;
     bool unpack_scripts_ = false;
+    bstring32 language_;
 
     /// apply parameters from command line
     void parse_cli_(int argc, char** argv);

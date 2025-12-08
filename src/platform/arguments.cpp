@@ -246,6 +246,8 @@ char const* Arguments::usage() {
            "         print logs which files open with js\n"
            "  --unpack_scripts\n"
            "         unpack embedded scripts to user directory\n"
+           "  --language=CODE or --language CODE\n"
+           "         set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)\n"
            "  --config\n"
            "         always show configuration window on startup\n"
            "\n"
@@ -405,6 +407,13 @@ void Arguments::parse_cli_(int argc, char** argv) {
             game.save_debug_texture = true;
         } else if (SDL_strcmp(argv[i], "--unpack_scripts") == 0) {
             unpack_scripts_ = true;
+        } else if (SDL_strcmp(argv[i], "--language") == 0) {
+            if (i + 1 < argc) {
+                language_ = argv[i + 1];
+                ++i;
+            } else {
+                app_terminate("Option --language must be followed by a language code (e.g., ru, en, fr)");
+            }
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
             logs::info(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
