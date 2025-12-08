@@ -103,7 +103,6 @@ void window_draw(int force) {
     {
         OZZY_PROFILER_SECTION("Render/Frame/Refresh");
         g_render.clear_screen();
-        tooltip_invalidate();
     }
         
     {

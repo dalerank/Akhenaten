@@ -42,4 +42,4 @@ void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int 
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, e_font font, color color);
 
 int text_draw_multiline(xstring str, vec2i offset, int box_width, e_font font, uint32_t color);
-int text_measure_multiline(const uint8_t* str, int box_width, e_font font);
+int text_measure_multiline(pcstr str, int box_width, e_font font);

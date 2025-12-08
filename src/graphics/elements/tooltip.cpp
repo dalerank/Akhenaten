@@ -21,25 +21,14 @@
 static const time_millis TOOLTIP_DELAY_MILLIS = 150;
 
 static time_millis last_update = 0;
-static bstring1024 overlay_string;
 
-struct button_tooltip_data_t {
-    bool is_active;
-    int x;
-    int y;
-    int width;
-    int height;
-    int buffer_id;
-};
-
-button_tooltip_data_t button_tooltip_info;
-
-static void reset_timer(void) {
+void tooltip_context::reset_timer(void) {
     last_update = time_get_millis();
 }
-static void reset_tooltip(tooltip_context* c) {
-    c->_drawtooltip = nullptr;
-    c->text = "";
+
+void tooltip_context::reset() {
+    _drawtooltip = nullptr;
+    text = "";
 }
 
 void tooltip_context::draw_box(int x, int y, int width, int height) {
@@ -53,10 +42,10 @@ void tooltip_context::draw_button_tooltip() {
     }
 
     int width = 200;
-    int lines = text_measure_multiline((const uint8_t *)text.c_str(), width - 5, FONT_SMALL_SHADED);
+    int lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline((const uint8_t*)text.c_str(), width - 5, FONT_SMALL_SHADED);
+        lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
     }
 
     int height = 16 * lines + 10;
@@ -98,15 +87,13 @@ void tooltip_context::draw_button_tooltip() {
 }
 
 void tooltip_context::draw_overlay_tooltip() {
-    bstring1024 text = text.c_str();
-    overlay_string.clear();
+    bstring1024 overlay_string;
     if (has_numeric_prefix) {
-        string_from_int((uint8_t*)overlay_string, numeric_prefix, 0);
-        overlay_string.append(text);
+        overlay_string.printf("%d%s", numeric_prefix, text.c_str());
         text = overlay_string;
     } else if (num_extra_values > 0) {
         text = overlay_string;
-        size_t offset = text.len();
+        size_t offset = text.size();
         overlay_string[offset++] = ':';
         overlay_string[offset++] = '\n';
         for (int i = 0; i < num_extra_values; i++) {
@@ -121,10 +108,10 @@ void tooltip_context::draw_overlay_tooltip() {
     }
 
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
+    int lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_SHADED);
+        lines = text_measure_multiline(text.c_str(), width - 5, FONT_SMALL_SHADED);
     }
     int height = 16 * lines + 10;
 
@@ -201,17 +188,13 @@ bool tooltip_context::should_draw_tooltip() {
     return true;
 }
 
-void tooltip_invalidate(void) {
-    button_tooltip_info.is_active = false;
-}
-
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
+    static tooltip_context context;
     if (m->is_touch && !m->left.is_down) {
-        reset_timer();
+        context.reset_timer();
         return;
     }
 
-    static tooltip_context context;
     context.mpos = *m;
     context.text = "";
     if (g_settings.tooltips && func) {
@@ -225,14 +208,12 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
 
     if (context.should_draw_tooltip()) {
         context.draw_tooltip();
-        reset_tooltip(&context);
-    } else {
-        button_tooltip_info.is_active = false;
+        context.reset();
     }
 }
 
 void tooltip_context::set(int t, textid tx) { 
-    text = (pcstr)lang_get_string(tx);
+    text = lang_get_string(tx);
 }
 
 void tooltip_context::set(int t, pcstr tx) {
