@@ -220,6 +220,14 @@ if (EXISTS "${LOCAL_DEPS_ROOT}/zlib-src/CMakeLists.txt")
     set(FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB TRUE)
 endif()
 
+# BugTrap DLL dependency
+FetchContent_Declare(
+    bugtrap
+    GIT_REPOSITORY https://github.com/bchavez/BugTrap.git
+    GIT_TAG        master  
+)
+FetchContent_MakeAvailable(bugtrap)
+
 #
 #zlib section begin
 #
@@ -234,6 +242,8 @@ FetchContent_GetProperties(zlib)
 if(NOT zlib_POPULATED)
     FetchContent_Populate(zlib)
 endif()
+
+
 
 set(ZLIB_SOURCE_DIR "${zlib_SOURCE_DIR}")
 set(ZLIB_BUILD_BASE_DIR "${PREBUILT_LIBS_INTERMEDIATE_DIR}/zlib")
@@ -925,13 +935,14 @@ endif()
 if(APPLE)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
         COMMAND mkdir -p akhenaten.iconset
-        COMMAND sips -z 16 16    akhenaten_256.png --out akhenaten.iconset/icon_16x16.png
-        COMMAND sips -z 32 32    akhenaten_256.png --out akhenaten.iconset/icon_16x16@2x.png
-        COMMAND sips -z 32 32    akhenaten_256.png --out akhenaten.iconset/icon_32x32.png
-        COMMAND sips -z 64 64    akhenaten_256.png --out akhenaten.iconset/icon_32x32@2x.png
+        COMMAND sips -z 16 16    akhenaten_72.png --out akhenaten.iconset/icon_16x16.png
+        COMMAND sips -z 32 32    akhenaten_72.png --out akhenaten.iconset/icon_16x16@2x.png
+        COMMAND sips -z 32 32    akhenaten_72.png --out akhenaten.iconset/icon_32x32.png
+        COMMAND sips -z 64 64    akhenaten_72.png --out akhenaten.iconset/icon_32x32@2x.png
         COMMAND sips -z 128 128  akhenaten_256.png --out akhenaten.iconset/icon_128x128.png
         COMMAND sips -z 256 256  akhenaten_256.png --out akhenaten.iconset/icon_128x128@2x.png
-        COMMAND sips -z 256 256  akhenaten_256.png --out akhenaten.iconset/icon_256x256.png
+        COMMAND sips -z 512 512  akhenaten_512.png --out akhenaten.iconset/icon_256x256@2x.png
+        COMMAND sips -z 1024 1024  akhenaten_1024.png --out akhenaten.iconset/icon_512x512@2x.png
         COMMAND iconutil -c icns akhenaten.iconset
         COMMAND rm -R akhenaten.iconset
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/res)

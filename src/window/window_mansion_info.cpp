@@ -38,7 +38,7 @@ void info_window_mansion::init(object_info &c) {
 
     ui["change_salary"].readonly = g_city.victory_state.has_won();
     ui["change_salary"].onclick([] {
-        window_set_salary_show();
+        set_salary_window::show(nullptr, false);
     });
 }
 

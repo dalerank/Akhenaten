@@ -80,7 +80,7 @@ int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     ui["salary_rank"].text_var("%s %u %s", ui::str(52, g_city.kingdome.salary_rank + 4), g_city.kingdome.salary_amount, ui::str(52, 3));
 
     ui["donate_to_city"].onclick([] { window_donate_to_city_show(); });
-    ui["salary_rank"].onclick([] { window_set_salary_show(); });
+    ui["salary_rank"].onclick([] { set_salary_window::show(window_advisors_show, true); });
     ui["send_gift"].onclick([] { ui::gift_to_kingdome_window::show(); });
 
     return 0;
