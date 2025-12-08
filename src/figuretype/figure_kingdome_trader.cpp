@@ -47,6 +47,11 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
         return;
     }
 
+    if (!ev.tid) {
+        assert(false);
+        return;
+    }
+
     figure *f = figure_create(FIGURE_TRADE_CARAVAN, entry, DIR_0_TOP_RIGHT);
 
     auto caravan = f->dcast<figure_trade_caravan>();

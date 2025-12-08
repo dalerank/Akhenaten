@@ -43,20 +43,15 @@ void building_water_lift::on_place_checks() {
     warnings.add_if(!has_water_lift, "#needs_access_to_water_lift");
 }
 
-void building_water_lift::spawn_figure() {
-    common_spawn_figure_trigger(50);
-}
 
 void building_water_lift::update_day() {
     building_impl::update_day();
 
     update_inout_tiles();
 
-    // check if has access to water
     const auto &d = runtime_data();
-
     const bool is_water1 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
-    const bool is_water2 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
+    const bool is_water2 = map_terrain_is(d.input_tiles[1], TERRAIN_WATER);
     base.has_water_access = (is_water1 || is_water2);
 
     // checks done, update
@@ -66,15 +61,15 @@ void building_water_lift::update_day() {
 
     const bool is_canal1 = map_terrain_is(d.output_tiles[0], TERRAIN_CANAL);
     if (is_canal1) {
-        map_canal_fill_from_offset(tile2i(d.output_tiles[0]), 10);
+        map_canal_fill_from_offset(tile2i(d.output_tiles[0]), current_params().canal_fill_water_level);
     }
 
     const bool is_canal2 = map_terrain_is(d.output_tiles[1], TERRAIN_CANAL);
     if (is_canal2) {
-        map_canal_fill_from_offset(tile2i(d.output_tiles[1]), 10);
+        map_canal_fill_from_offset(tile2i(d.output_tiles[1]), current_params().canal_fill_water_level);
     }
 
-    map_terrain_add_with_radius(tile(), current_params().building_size, /*radius*/2, TERRAIN_IRRIGATION_RANGE);
+    map_terrain_add_with_radius(tile(), current_params().building_size, current_params().irrigation_radius, TERRAIN_IRRIGATION_RANGE);
 }
 
 int building_water_lift::animation_speed(int speed) const {
@@ -86,7 +81,7 @@ int building_water_lift::animation_speed(int speed) const {
         return 0;
     }
 
-    return 0;
+    return speed;
 }
 
 bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -95,7 +90,7 @@ bool building_water_lift::draw_ornaments_and_animations_height(painter &ctx, vec
 }
 
 void building_water_lift::update_map_orientation(int orientation) {
-    int image_offset = city_view_relative_orientation(base.orientation);
+    int image_offset = city_view_relative_orientation(orientation);
     if (!map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_WATER)) {
         image_offset += 4;
     } else if (map_terrain_exists_tile_in_radius_with_type(tile(), 2, 1, TERRAIN_FLOODPLAIN)) {

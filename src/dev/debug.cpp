@@ -36,10 +36,12 @@
 #include "grid/golden.h"
 #include "grid/clay.h"
 #include "grid/copper.h"
+#include "grid/gems.h"
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
 #include "grid/malaria_risk.h"
+#include "grid/irrigation_value.h"
 #include "widget/city/building_ghost.h"
 #include "game/game.h"
 
@@ -602,6 +604,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         }
         break;
 
+    case e_debug_render_gems:
+        d = map_get_gems(grid_offset);
+        if (d > 0) {
+            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
+            color gems_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+            debug_text(ctx, str, x, y + 10, 0, "", d, gems_color);
+        }
+        break;
+
     case e_debug_render_damage:
         if (b_id && b) {
             snprintf((char *)str, 30, "f:%d/d:%d", b->fire_risk, b->damage_risk);
@@ -638,6 +649,17 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
                     snprintf((char *)str, 30, "b:%d", b->malaria_risk);
                     text_draw(ctx, (uint8_t*)str, x, y + 20, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
                 }
+            }
+        }
+        break;
+
+    case e_debug_render_irrigation_value:
+        {
+            int irrigation = g_irrigation_value.get(grid_offset);
+            if (irrigation != 0) {
+                // Цвет зависит от значения: зеленый (высокий), желтый (средний), красный (низкий)
+                color irrigation_color = (irrigation >= 10) ? COLOR_LIGHT_GREEN : (irrigation >= 5) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+                debug_text(ctx, str, x, y + 10, 0, "", irrigation, irrigation_color);
             }
         }
         break;

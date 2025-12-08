@@ -21,6 +21,7 @@
 #include "grid/tiles.h"
 #include "game/game_config.h"
 #include "window/popup_dialog.h"
+#include "building/building_burning_ruin.h"
 
 struct clear_confirm_t {
     tile2i cstart = tile2i();
@@ -28,6 +29,28 @@ struct clear_confirm_t {
     bool bridge_confirmed = false;
     bool fort_confirmed = false;
 };
+
+static bool has_burning_ruin_nearby(building* b) {
+    if (!b || !game_features::gameplay_prevent_delete_near_burning_ruins.to_bool()) {
+        return false;
+    }
+
+    // Проверяем соседние тайлы вокруг здания
+    grid_tiles_sm adjacent_tiles = map_grid_get_adjacent_tiles_sm(b, 1);
+    for (const auto& tile : adjacent_tiles) {
+        int building_id = map_building_at(tile);
+        if (building_id) {
+            building* nearby_building = building_get(building_id)->main();
+            if (nearby_building->type == BUILDING_BURNING_RUIN 
+                && nearby_building->fire_duration > 0
+                && (nearby_building->state == BUILDING_STATE_VALID || nearby_building->state == BUILDING_STATE_MOTHBALLED)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 static building* get_deletable_building(int grid_offset) {
     int building_id = map_building_at(grid_offset);
@@ -46,6 +69,10 @@ static building* get_deletable_building(int grid_offset) {
     }
 
     if (!b->dcast()->is_deletable()) {
+        return nullptr;
+    }
+
+    if (has_burning_ruin_nearby(b)) {
         return nullptr;
     }
 

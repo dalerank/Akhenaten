@@ -8,6 +8,7 @@
 #include "grid/canals.h"
 #include "building/building_well.h"
 #include "building/building_house.h"
+#include "building/building_water_lift.h"
 
 void city_buildings_t::mark_well_access(building *well) {
     int radius = 1;
@@ -58,10 +59,7 @@ void city_buildings_t::update_water_supply_houses() {
 }
 
 void city_buildings_t::update_canals_from_water_lifts() {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_WATER_LIFT) {
-            continue;
-        }
-    }
+    OZZY_PROFILER_SECTION("Game/Update/Canals From Water Lifts");
+    
+    // do nothing
 }
