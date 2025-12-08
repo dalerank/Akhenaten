@@ -31,7 +31,8 @@ struct tooltip_context {
     void draw_tile_tooltip();
     void draw_tooltip();
     bool should_draw_tooltip();
+    void reset();
+    void reset_timer();
 };
 
-void tooltip_invalidate();
 void tooltip_handle(const mouse* m, void (*func)(tooltip_context*));
