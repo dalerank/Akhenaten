@@ -48,7 +48,7 @@ namespace buildings {
 
         static building_impl *create(e_building_type e, building &b) {
             if (e == TYPE) {
-                return b.acquire_impl<building_type>();
+                return b.template acquire_impl<building_type>();
             }
             return nullptr;
         }
