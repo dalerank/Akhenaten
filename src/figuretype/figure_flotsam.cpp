@@ -6,6 +6,7 @@
 #include "core/random.h"
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
+#include "city/city_religion_osiris.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_flotsam);
@@ -34,7 +35,7 @@ void figure_flotsam::figure_action() {
         if (base.wait_ticks <= 0) {
             base.action_state = ACTION_129_FLOTSAM_FLOATING;
             base.wait_ticks = 0;
-            if (!base.resource_id && g_city.religion.osiris_create_shipwreck_flotsam()) {
+            if (!base.resource_id && god_osiris.create_shipwreck_flotsam()) {
                 base.min_max_seen = 1;
             }
 
