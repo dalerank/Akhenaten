@@ -3302,7 +3302,6 @@ game_messages_de {
         type: 2,
         message_type: 1,
         
-        size [30, 20]
         title { text: "Seth zürnt ..." }
         video { text: "@21" }
         content { text: "Ihr mangelnder Respekt gegenüber Seth hat den Gott dazu veranlasst, alle Ihre Schiffe zu zerstören!" }

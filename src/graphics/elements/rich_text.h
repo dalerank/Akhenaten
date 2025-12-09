@@ -28,10 +28,10 @@ struct rich_text_t {
     int max_scroll_position;
 
     struct margin_t {
-        int16_t left;
-        int16_t top;
-        int16_t right;
-        int16_t bottom;
+        int16_t left = 0;
+        int16_t top = 0;
+        int16_t right = 0;
+        int16_t bottom = 0;
     } margin;
 
     const font_definition *normal_font_def;

@@ -185,5 +185,6 @@ void ui::hold_festival_window::show(bool bg, std::function<void()> cb) {
 
     g_hold_festival_window.callback = cb;
     g_hold_festival_window.background = bg;
+    g_hold_festival_window.init();
     window_show(&window);
 }

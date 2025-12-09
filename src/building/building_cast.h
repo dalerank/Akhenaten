@@ -1,6 +1,8 @@
 #pragma once
 
-#include "building.h"
+class building;
+class building_impl;
+
 #include "core/smart_cast.h"
 
 GENERATE_SMART_CAST(building_impl)
