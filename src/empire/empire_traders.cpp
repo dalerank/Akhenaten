@@ -158,7 +158,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % (movement_delay_range.y));
 
     if (route.in_use && route.num_points > 0) {
-        const auto &point = route.points[trader->current_route_point];
+        const auto &point = route.points[route.num_points - 1];
         trader->current_position = point.p;
     }
 }
@@ -182,9 +182,8 @@ void empire_traders_manager::clear_all() {
 empire_trader* empire_traders_manager::get_free_trader() {
     for (auto &trader : traders) {
         if (!trader.is_active) {
-            int tid = trader.id;
             memset(&trader, 0, sizeof(empire_trader));
-            trader.id = tid;
+            trader.id = std::distance(traders.data(), &trader);
             return &trader;
         }
     }
