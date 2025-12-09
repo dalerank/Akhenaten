@@ -47,3 +47,13 @@ void god_ptah_t::perform_minor_curse() {
     }
 }
 
+bool god_ptah_t::perform_industry_restock() {
+    return g_city.religion.PTAH_industry_restock();
+}
+
+void god_ptah_t::perform_minor_blessing() {
+    // restocks shipwrights, weavers and jewelers
+    perform_industry_restock(); // <-- there is no message for when this fails.
+    messages::popup("message_minor_blessing_from_ptah", 0, 0);
+}
+

@@ -601,62 +601,9 @@ void city_religion_t::perform_major_blessing(e_god god) {
 }
 
 void city_religion_t::perform_minor_blessing(e_god god) {
-    int randm = 0;
-    switch (god) {
-    default:
-        break;
-
-    case GOD_OSIRIS:
-        // slightly better flood
-        randm = anti_scum_random_15bit();
-        randm = randm & 0x80000003;
-        if ((int)randm < 0) {
-            randm = (randm - 1 | 0xfffffffc) + 1;
-        }
-        g_floods.adjust_next_quality(randm * 5 + 5);
-        messages::popup("message_small_blessing_from_osiris", 0, 0);
-        break;
-
-    case GOD_RA:
-        if (anti_scum_random_bool()) {
-            // slightly increased trading
-            ra_slightly_increased_trading_months_left = 12;
-            messages::popup("message_minor_blessing_from_ra", 0, 0);
-            return;
-        } else {
-            // slightly increased reputation
-            messages::popup("message_minor_blessing_from_ra_2", 0, 0);
-            g_city.kingdome.increase_blessing_god(5);
-            return;
-        }
-        break;
-
-    case GOD_PTAH:
-        // restocks shipwrights, weavers and jewelers
-        PTAH_industry_restock(); // <-- there is no message for when this fails.
-        messages::popup("message_minor_blessing_from_ptah", 0, 0);
-        return;
-
-    case GOD_SETH:
-        // protects soldiers far away
-        seth_protect_player_troops_months = 10;
-        messages::god(GOD_SETH, "message_minor_blessing_from_seth");
-        return;
-
-    case GOD_BAST: {
-        // throws a festival for the other gods
-        static auto &city_data = g_city;
-        city_data.festival.planned.god = GOD_OSIRIS;
-        city_data.festival.planned.size = FESTIVAL_BAST_SPECIAL;
-        city_data.festival.planned.months_to_go = 1;
-        city_data.festival.first_festival_effect_months = 1;
-
-        gods[GOD_RA].months_since_festival = 0;
-        gods[GOD_PTAH].months_since_festival = 0;
-        gods[GOD_SETH].months_since_festival = 0;
-        messages::popup("message_small_blessing_from_bast", 0, 0);
-        }
-        return;
+    auto god_ptr = get(god);
+    if (god_ptr) {
+        god_ptr->perform_minor_blessing();
     }
 }
 
