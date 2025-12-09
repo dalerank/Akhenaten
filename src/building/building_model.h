@@ -49,12 +49,7 @@ namespace buildings {
             base.initialize();
         }
 
-        static building_impl *create(e_building_type e, building &b) {
-            if (e == TYPE) {
-                return b.template acquire_impl<building_type>();
-            }
-            return nullptr;
-        }
+        static building_impl *create(e_building_type e, building &b);
     };
 
 } // buildings

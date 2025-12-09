@@ -79,6 +79,4 @@ GENERATE_SMART_CAST_BUILDING(dentist)
 GENERATE_SMART_CAST_BUILDING(mortuary)
 
 template <typename dest_type, typename r_type = std::add_pointer_t<std::remove_pointer_t<dest_type>>>
-inline r_type smart_cast(building *b) {
-    return ::smart_cast<r_type>(b->dcast());
-}
+inline r_type smart_cast(building *b);

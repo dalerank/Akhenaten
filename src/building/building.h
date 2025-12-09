@@ -397,6 +397,22 @@ inline bool building_type_none_of(building &b, const std::initializer_list<e_bui
 }
 
 void add_building(building *b, int orientation, int variant);
+
+namespace buildings {
+    template<typename T>
+    building_impl *model_t<T>::create(e_building_type e, building &b) {
+        if (e == TYPE) {
+            return b.template acquire_impl<building_type>();
+        }
+        return nullptr;
+    }
+}
+
+template <typename dest_type, typename r_type>
+inline r_type smart_cast(building *b) {
+    return ::smart_cast<r_type>(b->dcast());
+}
+
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
