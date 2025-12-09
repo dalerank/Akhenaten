@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core/archive.h"
+#include "building_static_params.h"
+#include "building_planer_renderer.h"
+#include "building_fwd.h"
 class building_impl;
 
 namespace buildings {
