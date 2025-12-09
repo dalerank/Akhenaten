@@ -1629,7 +1629,7 @@ game_messages_en {
             text: "Farming and agriculture were the basis of the Egyptian economy. Abundant crops allowed Egypt to @177trade with neighbors, bringing new goods into Egypt. @L@LThe key to successful farming was the Inundation, called akhet. Every year, the Nile flooded its banks, refertilizing the soil. As long as the Inundation occurred, the Egyptians could count on having plenty of food to eat. In years of low or no Inundation, famine struck Egypt, which was sometimes enough to topple governments. @L@LTo take advantage of the restoring Inundation, dykes were built around farms to capture the water as it rose. As the Nile receded (called peret), the water, along with its nutrients, slowly soaked into the soil. After about six weeks, the farmer opened the dykes and let the rest of the water drain out. Of course, being submerged in water made the ground quite soft. Before he could sow his seed, the farmer had to wait for the land to dry out a little and become firm. @L@LFinally, during shemu, the crops were harvested. Crops meant for Egyptian consumption were stored in @5granaries. Food for export was stored in @6Storage&Yards until it could be loaded onto barges.  @L@LEstate owners or the government owned farms and employed laborers to do many of the most arduous tasks on the land. Farming was not easy work, and much of the work was done by hand. The tools farmers had at their disposal included the hoe, the hand-held plough, and the sickle. Domesticated oxen eased some of the plowing. @L@LFarming produced both raw materials and foodstuffs. @185Grain&and&barley were key food crops, and @189flax, which was manufactured into @398linen, was the most important raw material crop. @L@LFarming and agriculture were also integral to the Eygptian afterlife. Once the deceased has been granted entry into the afterlife, he finds himself working the soil in the Field of Reeds."
         }
     }
-    
+
     message_industry {
         id: 151,
         
@@ -3322,6 +3322,17 @@ game_messages_en {
         
         size [30, 20]
         title { text: "Wrath of Seth" }
+        video { text: "@21" }
+        content { text: "Your disregard for Seth prompts the god to destroy all of your ships!" }
+    }
+
+    message_wrath_of_seth_2 {
+        id: 281,
+        type: 2,
+        message_type: 1,
+        
+        size [30, 20]
+        title { text: "Wrath of Seth 2" }
         video { text: "@21" }
         content { text: "Your disregard for Seth prompts the god to destroy all of your ships!" }
     }
