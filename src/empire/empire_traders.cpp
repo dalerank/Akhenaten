@@ -180,14 +180,15 @@ void empire_traders_manager::clear_all() {
 }
 
 empire_trader* empire_traders_manager::get_free_trader() {
-    for (auto &trader : traders) {
-        if (!trader.is_active) {
-            memset(&trader, 0, sizeof(empire_trader));
-            trader.id = std::distance(traders.data(), &trader);
-            return &trader;
-        }
+    auto it = std::find_if(traders.begin() + 1, traders.end(), [] (auto &t) { return !t.is_active; });
+    
+    if (it == traders.end()) {
+        return nullptr;
     }
-    return nullptr;
+    
+    memset(&*it, 0, sizeof(empire_trader));
+    it->id = std::distance(traders.begin(), it);
+    return &*it;
 }
 
 vec2i empire_traders_manager::get_position_on_route(int route_id, int point_index) {
