@@ -57,3 +57,23 @@ void god_ra_t::perform_minor_curse() {
     }
 }
 
+void god_ra_t::perform_slightly_increased_trading() {
+    g_city.religion.ra_slightly_increased_trading_months_left = 12;
+    messages::popup("message_minor_blessing_from_ra", 0, 0);
+}
+
+void god_ra_t::perform_slightly_increased_reputation() {
+    g_city.kingdome.increase_blessing_god(5);
+    messages::popup("message_minor_blessing_from_ra_2", 0, 0);
+}
+
+void god_ra_t::perform_minor_blessing() {
+    if (anti_scum_random_bool()) {
+        // slightly increased trading
+        perform_slightly_increased_trading();
+    } else {
+        // slightly increased reputation
+        perform_slightly_increased_reputation();
+    }
+}
+

@@ -84,3 +84,13 @@ void god_seth_t::perform_minor_curse() {
         events::emit(event_message_god{ GOD_SETH, "message_seth_is_upset_noeffect" });
     }
 }
+
+void god_seth_t::perform_protect_troops() {
+    g_city.religion.seth_protect_player_troops_months = 10;
+    messages::god(GOD_SETH, "message_minor_blessing_from_seth");
+}
+
+void god_seth_t::perform_minor_blessing() {
+    // protects soldiers far away
+    perform_protect_troops();
+}

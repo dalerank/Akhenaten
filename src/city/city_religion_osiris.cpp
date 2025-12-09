@@ -63,3 +63,18 @@ void god_osiris_t::perform_minor_curse() {
     }
 }
 
+void god_osiris_t::perform_slightly_better_flood() {
+    int randm = anti_scum_random_15bit();
+    randm = randm & 0x80000003;
+    if ((int)randm < 0) {
+        randm = (randm - 1 | 0xfffffffc) + 1;
+    }
+    g_floods.adjust_next_quality(randm * 5 + 5);
+    messages::popup("message_small_blessing_from_osiris", 0, 0);
+}
+
+void god_osiris_t::perform_minor_blessing() {
+    // slightly better flood
+    perform_slightly_better_flood();
+}
+

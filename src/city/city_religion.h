@@ -51,6 +51,7 @@ class city_god {
 public:
     virtual void perform_major_curse() {}
     virtual void perform_minor_curse() {}
+    virtual void perform_minor_blessing() {}
 };
 
 template<>
