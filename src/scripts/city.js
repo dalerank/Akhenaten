@@ -1,6 +1,9 @@
 log_info("akhenaten: city.js started")
 
 city {
+    [property]
+    festival_selected_god { get: __city_festival_selected_god }
+    
     use_building: city_use_building
     set_goal_tooltip: scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason

@@ -52,6 +52,15 @@ void js_log_warn_native(js_State *J) {
     js_pushundefined(J);
 }
 
+void js_loc_native(js_State *J) {
+    int p1 = js_tointeger(J, 1);
+    int p2 = js_tointeger(J, 2);
+
+    pcstr result = lang_get_string(p1, p2);
+
+    js_pushstring(J, result);
+}
+
 void js_game_load_text(js_State *J) {
     const char *path = js_tostring(J, 1);
     char *text = 0;
@@ -350,6 +359,7 @@ void js_register_game_objects(js_State *J) {
 void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_info_native, "__log_info_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_loc_native, "__loc", 2);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_register_console_command, "__register_console_command", 3);
     

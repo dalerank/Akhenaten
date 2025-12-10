@@ -22,6 +22,10 @@
 
 #include <stack>
 
+struct dummy_property_holder {
+    bvariant get_property(const xstring &domain, const xstring &name) const { return {}; }
+};
+
 namespace ui {
     tooltip_context tooltipctx;
 
@@ -828,8 +832,21 @@ void ui::eresource_icon::load(archive arch, element *parent, items &elems) {
     prop = arch.r_string("prop");
 }
 
+ui::elabel::~elabel() {
+    js_unref_function(_js_textfn_ref);
+}
+
 void ui::elabel::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
+
+    if (!_js_textfn_ref.empty()) {
+        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        if (dynamic_text && *dynamic_text) {
+            dummy_property_holder holder;
+            _text = ui::format(&holder, dynamic_text);
+        }
+    }
+
     if (_body.x > 0) {
         small_panel_draw(pos + offset, _body.x, _body.y);
     }
@@ -859,6 +876,7 @@ void ui::elabel::load(archive arch, element *parent, items &elems) {
     element::load(arch, parent, elems);
 
     _text = arch.r_string("text");
+    _js_textfn_ref = arch.r_function("textfn");
     if (_text[0] == '#') {
         _text = lang_text_from_key(_text.c_str());
     }
@@ -1044,6 +1062,15 @@ void ui::escrollbar::load(archive arch, element *parent, items &elems) {
 
 void ui::etext::draw(UiFlags flags) {
     const vec2i offset = g_state.offset();
+
+    if (!_js_textfn_ref.empty()) {
+        pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
+        if (dynamic_text && *dynamic_text) {
+            dummy_property_holder holder;
+            _text = ui::format(&holder, dynamic_text);
+        }
+    }
+
     if (!!(_flags & UiFlags_AlignCentered)) {
         int additionaly = 0;
         if (pxsize().y > 0) {            
@@ -1183,10 +1210,6 @@ ui::egeneric_button::~egeneric_button() {
     js_unref_function(_js_textfn_ref);
 }
 
-struct dummy_property_holder {
-    bvariant get_property(const xstring &domain, const xstring &name) const { return {}; }
-};
-
 void ui::egeneric_button::draw(UiFlags gflags) {
     UiFlags flags = _flags | gflags
                       | ((darkened == 1) ? UiFlags_Darkened : UiFlags_None)
@@ -1196,7 +1219,6 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (_selected ? UiFlags_Selected : UiFlags_None)
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
 
-    // Call JS text function if available to get dynamic text
     xstring button_text = _text;
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);

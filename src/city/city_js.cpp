@@ -13,3 +13,7 @@ int __city_rank_salary(int rank) {
 }
 ANK_FUNCTION_1(__city_rank_salary)
 
+int __city_festival_selected_god() {
+    return g_city.festival.selected_god();
+}
+ANK_FUNCTION(__city_festival_selected_god)
