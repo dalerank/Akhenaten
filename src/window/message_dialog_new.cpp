@@ -130,7 +130,11 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         ui["title"].size.y = msg.size.y * 16;
     }
 
-    ui["title"] = msg.title.text;
+    if (is_eventmsg && !title_text.empty()) {
+        ui["title"] = title_text;
+    } else {
+        ui["title"] = msg.title.text;
+    }
     ui["title"].enabled = true;
 
     ui["button_close"].enabled = true;

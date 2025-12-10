@@ -125,8 +125,8 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     request.location_fields = { -1, -1, -1, -1 };
     request.months_initial = months_initial;
     request.event_id = event_id;
-    process_event(event_id, false, -1);
-    process_active_request(event_id);
+    //process_event(event_id, false, -1);
+    //process_active_request(event_id);
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
@@ -143,8 +143,19 @@ void event_manager_t::create_trade_city_under_siege(int tag, int months_initial)
     event.event_id = event_id;
     //event.event_trigger_type = EVENT_TRIGGER_GLOBAL_UPDATE;
     event.event_state = e_event_state_initial;
-    process_event(event_id, false, -1);
+    //process_event(event_id, false, -1);
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+void event_manager_t::execute_event(int tag) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it == g_scenario_events.event_list.end()) {
+        return;
+    }
+
+    process_event(it->event_id, false, -1);
+    process_active_request(it->event_id);
 }
 
 void event_manager_t::set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4) {

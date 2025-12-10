@@ -16,7 +16,6 @@ city {
     count_active_buildings : __city_count_active_buildings
     count_total_buildings : __city_count_total_buildings
     set_advisor_available : __city_set_advisor_available
-    create_good_request : __city_create_good_request
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
 
@@ -36,11 +35,22 @@ city {
         }
     }
 
+    create_good_request : function(tag_id, resource, amount, months_initial) {
+        __city_create_good_request(tag_id, resource, amount, months_initial)
+        return {
+            tag_id: tag_id
+            months_initial: months_initial
+            execute: function() { __city_request_execute(tag_id) }
+        }
+    }
+
     create_trade_city_under_siege : function(tag_id, months_initial) {
+        __city_event_create_trade_city_under_siege(tag_id, months_initial)
         return {
             tag_id: tag_id
             months_initial: months_initial
             set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(tag_id, r1, r2, r3, r4) }
+            execute: function() { __city_request_execute(tag_id) }
         }
     }
 }
