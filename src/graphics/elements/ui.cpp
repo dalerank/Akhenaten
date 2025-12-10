@@ -19,12 +19,9 @@
 #include "io/gamefiles/lang.h"
 #include "core/crc32.h"
 #include "js/js_game.h"
+#include "ui_scope_property.h"
 
 #include <stack>
-
-struct dummy_property_holder {
-    bvariant get_property(const xstring &domain, const xstring &name) const { return {}; }
-};
 
 namespace ui {
     tooltip_context tooltipctx;
@@ -263,6 +260,10 @@ void ui::clear_active_elements() {
 
 pcstr ui::str(int group, int id) {
     return (pcstr)lang_get_string(group, id);
+}
+
+pcstr ui::str_from_key(pcstr key) {
+    return lang_text_from_key(key);
 }
 
 pcstr ui::resource_name(e_resource r) {
@@ -842,7 +843,7 @@ void ui::elabel::draw(UiFlags flags) {
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
         if (dynamic_text && *dynamic_text) {
-            dummy_property_holder holder;
+            ui_scope_property holder;
             _text = ui::format(&holder, dynamic_text);
         }
     }
@@ -1066,7 +1067,7 @@ void ui::etext::draw(UiFlags flags) {
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, 0, 0);
         if (dynamic_text && *dynamic_text) {
-            dummy_property_holder holder;
+            ui_scope_property holder;
             _text = ui::format(&holder, dynamic_text);
         }
     }
@@ -1223,7 +1224,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);
         if (dynamic_text && *dynamic_text) {
-            dummy_property_holder holder;
+            ui_scope_property holder;
             button_text = ui::format(&holder, dynamic_text);
         }
     }

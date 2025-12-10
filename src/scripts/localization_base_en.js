@@ -2378,11 +2378,6 @@ localization_base_en = [
     { group:58, id:22, text: "Citizens grumble at the lack of festivals held in your city." }
     { group:58, id:23, text: "Your people cannot bear the prospect of another year without a festival." }
     { group:58, id:24, text: "Depressed residents doubt that they will live to see another festival." }
-    { group:58, id:25, text: "Hold festival to Osiris" }
-    { group:58, id:26, text: "Hold festival to Ra" }
-    { group:58, id:27, text: "Hold festival to Ptah" }
-    { group:58, id:28, text: "Hold festival to Seth" }
-    { group:58, id:29, text: "Hold festival to Bast" }
     { group:58, id:30, text: "costs" }
     { group:58, id:31, text: "Common festival" }
     { group:58, id:32, text: "Lavish festival" }
