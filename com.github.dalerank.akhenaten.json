@@ -137,7 +137,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/mpg123/archive/refs/heads/v1.31.3-SDL.tar.gz",
-                    "sha256" : "57c7699028af2da94822a07730c500f4c0058443ca27d8be6b81a68591659a1f",
+                    "sha256" : "05d1c752be1270e2fb4bbb618093a1d9940a90ae81ff01ebe74bcaac3fe165e5",
                     "dest" : "_deps/sdl_mixer_deps/mpg123",
                     "strip-components" : 1
                 },
