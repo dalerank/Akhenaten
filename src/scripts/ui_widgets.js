@@ -940,7 +940,7 @@ set_salary_window {
                 salary_rank_7   : button({textfn: salary_rank_text, param1:7, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 145], size [px(22) - 64, 20]})
                 salary_rank_8   : button({textfn: salary_rank_text, param1:8, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 165], size [px(22) - 64, 20]})
                 salary_rank_9   : button({textfn: salary_rank_text, param1:9, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 185], size [px(22) - 64, 20]})
-                salary_rank_10  : button({textfn: salary_rank_text, param1:1, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 205], size [px(22) - 64, 20]})
+                salary_rank_10  : button({textfn: salary_rank_text, param1:10, font: FONT_NORMAL_WHITE_ON_DARK, hbody:false, pos [32, 205], size [px(22) - 64, 20]})
             }
         })
         explanation_text : text({pos[16, 304], size[px(22), -1], wrap:px(22), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true})

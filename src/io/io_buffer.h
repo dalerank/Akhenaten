@@ -76,6 +76,18 @@ public:
     // this will CHECK that the buffer is valid and RESET the buffer pointer
     bool validate();
 
+    template<uint8_t size>
+    void bind_xstr(xstring& s) {        
+        if (is_read_access()) {
+            bstring<size + 1> data;
+            bind(BIND_SIGNATURE_RAW, &data, size);
+            data[size] = '\0';
+            s = data.c_str();
+        } else {
+            bind(BIND_SIGNATURE_RAW, s.c_str(), size);
+        }
+    }
+
     // called for every data field in the chunk.
     // writes/reads from the buffer depending on the signature
     // and the selected access type -- must be implemented HERE
