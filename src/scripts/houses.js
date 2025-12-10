@@ -264,6 +264,10 @@ building_house_rough_cottage {
     _1 { pack: PACK_GENERAL, id: 28, offset:4 }
   }
 
+  variants_merged_inside {
+    _1 { pack: PACK_CUSTOM_HOUSE, id: 0, offset:3 }
+  }
+
   desirability { value[-2], step[1], step_size[1], range[2] }
   crime { value[1], step[1], step_size[-1], range[4] }
   

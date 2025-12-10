@@ -363,7 +363,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
                     auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
                     command.image_id = image_grounded + ((dy * 4 + dx) & 7);
                     command.pixel = offset;
-                    command.mask = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);;
+                    command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);;
                     command.flags = ImgFlag_Alpha;
                 }
             }
@@ -426,7 +426,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
                     auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
                     command.image_id = img;
                     command.pixel = offset;
-                    command.mask = ((0xff * progress / 200) << 24) | (color_mask & 0x00ffffff);
+                    command.mask = ((0xff * progress / 200) << COLOR_BITSHIFT_ALPHA) | (color_mask & 0x00ffffff);
                     command.flags = ImgFlag_Alpha;
                 }
             }

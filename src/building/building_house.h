@@ -27,6 +27,7 @@ public:
         bool can_merge;
         animations_t variants;
         animations_t variants_merged;
+        animations_t variants_merged_inside;
     };
 
     // Persistent state for a single house instance.
@@ -82,8 +83,10 @@ public:
         uint8_t nobles_with_bad_teeth;
         uint8_t toothache_probability;
         building_id worst_desirability_building_id;
-        xstring evolve_text;
         uint16_t image_id;
+        uint8_t fade_alpha;
+        xstring evolve_text;
+        xstring image_key;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -101,6 +104,9 @@ public:
     virtual void highlight_waypoints() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override; 
     virtual void spawn_figure() override;
+    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    
+    void update_fade_alpha();
 
     inline short house_population() const { return runtime_data().population; }
     inline void change_population(short delta) { runtime_data().population += delta; }
@@ -150,7 +156,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, 
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_sturdy_hut : public building_house {
 public:
@@ -161,7 +168,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_meager_shanty : public building_house {
 public:
@@ -172,7 +180,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_common_shanty : public building_house {
 public:
@@ -183,7 +192,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_common_shanty::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_common_shanty::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_rough_cottage : public building_house {
 public:
@@ -194,7 +204,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_ordinary_cottage : public building_house {
 public:
@@ -205,7 +216,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_modest_homestead : public building_house {
 public:
@@ -216,7 +228,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_spacious_homestead : public building_house {
 public:
@@ -227,7 +240,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_modest_apartment : public building_house {
 public:
@@ -238,7 +252,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_spacious_apartment : public building_house {
 public:
@@ -250,7 +265,8 @@ public:
     virtual bool evolve(house_demands *demands) override;
     void expand_to_common_residence();
 };
-ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_common_residence : public building_house {
 public:
@@ -261,7 +277,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_common_residence::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_common_residence::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_spacious_residence : public building_house {
 public:
@@ -272,7 +289,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_elegant_residence : public building_house {
 public:
@@ -283,7 +301,8 @@ public:
 
     virtual bool evolve(house_demands *demands) override;
 };
-ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_fancy_residence : public building_house {
 public:
@@ -295,7 +314,8 @@ public:
     virtual bool evolve(house_demands *demands) override;
     void expand_to_common_manor();
 };
-ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_common_manor : public building_house {
 public:
@@ -308,7 +328,8 @@ public:
     virtual void update_month() override;
     void devolve_to_fancy_residence();
 };
-ANK_CONFIG_STRUCT(building_house_common_manor::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_common_manor::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_spacious_manor : public building_house {
 public:
@@ -320,7 +341,8 @@ public:
     virtual bool evolve(house_demands *demands) override;
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_elegant_manor : public building_house {
 public:
@@ -332,7 +354,8 @@ public:
     virtual bool evolve(house_demands *demands) override;
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_stately_manor : public building_house {
 public:
@@ -345,7 +368,8 @@ public:
     virtual void update_month() override;
     void expand_to_modest_estate();
 };
-ANK_CONFIG_STRUCT(building_house_stately_manor::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_stately_manor::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_modest_estate : public building_house {
 public:
@@ -358,7 +382,8 @@ public:
     virtual void update_month() override;
     void devolve_to_statel_manor();
 };
-ANK_CONFIG_STRUCT(building_house_modest_estate::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_modest_estate::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 class building_house_palatial_estate : public building_house {
 public:
@@ -370,7 +395,8 @@ public:
     virtual bool evolve(house_demands *demands) override;
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merge, variants, variants_merged)
+ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params,
+    model, can_merge, variants, variants_merged, variants_merged_inside)
 
 // ----------------------------------------------------------------------
 // Helpers that iterate over all valid houses. They are used by various

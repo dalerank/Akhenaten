@@ -239,6 +239,7 @@ public:
     }
 };
 
+using bstring16 = bstring<16>;
 using bstring32 = bstring<32>;
 using bstring64 = bstring<64>;
 using bstring128 = bstring<128>;

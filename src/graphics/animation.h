@@ -97,6 +97,10 @@ struct animations_t {
         return it->second;
     }
 
+    bool empty() const {
+        return data.empty();
+    }
+
     const animation_t &at(uint16_t index) const {
         if (data.empty()) {
             return dummy;
