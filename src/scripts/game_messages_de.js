@@ -1220,7 +1220,7 @@ game_messages_de {
 
     message_population_milestone_100 {
         id: 100,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wichtige Bevölkerungszahl" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1229,7 +1229,7 @@ game_messages_de {
 
     message_population_milestone_500 {
         id: 101,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wichtige Bevölkerungszahl" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1239,7 +1239,7 @@ game_messages_de {
     message_population_milestone_1000 {
         id: 102,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Wichtige Bevölkerungszahl" }
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
@@ -1249,7 +1249,7 @@ game_messages_de {
     message_population_milestone_2000 {
         id: 103,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1259,7 +1259,7 @@ game_messages_de {
     message_population_milestone_3000 {
         id: 104,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1269,7 +1269,7 @@ game_messages_de {
     message_population_milestone_5000 {
         id: 105,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1279,7 +1279,7 @@ game_messages_de {
     message_population_milestone_10000 {
         id: 106,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1289,7 +1289,7 @@ game_messages_de {
     message_population_milestone_15000 {
         id: 107
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1299,7 +1299,7 @@ game_messages_de {
     message_population_milestone_20000 {
         id: 108,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1309,7 +1309,7 @@ game_messages_de {
     message_population_milestone_25000 {
         id: 109,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { pack:PACK_UNLOADED, id: 16, offset: 16, pos [15, 15] }
         title { text: "Wichtige Bevölkerungszahl" }
@@ -1331,7 +1331,7 @@ game_messages_de {
         id: 111,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Feuer in der Stadt!" }
@@ -1344,7 +1344,7 @@ game_messages_de {
         id: 112
         type: 2
         message_type: 1
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Eingestürztes Gebäude!" }
@@ -1356,7 +1356,7 @@ game_messages_de {
     message_ship_aground {
         id: 114,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Schiff auf Grund gelaufen!" }
         content { text: "Unerfahrene Kapitäne lernen Überschwemmungsgebiete oft auf die harte Tour kennen, wenn ihre Schiffe hier auf Grund laufen." }
@@ -1364,7 +1364,7 @@ game_messages_de {
 
     message_out_of_money {
         id: 115,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Kein Geld mehr!" }
         content { text: "Ihrer Finanzkasse sind die Deben ausgegangen. Sie erhalten hiermit zusätzliches Geld, aber niemand wird ein weiteres Mal helfen. Setzen Sie dieses Geschenk zum Aufbau lukrativer Betriebe ein." }
@@ -1372,7 +1372,7 @@ game_messages_de {
 
     message_debt_again {
         id: 116,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Schulden!" }
         content { text: "Ihre Finanzkasse verliert Geld. Sie verfügen über einen Kreditrahmen von bis zu 5000 Deben, aber @48Schulden können das Ende Ihrer Familie bedeuten, wenn Sie sie nicht schnell zurückzahlen." }
@@ -1380,7 +1380,7 @@ game_messages_de {
 
     message_out_of_money_again {
         id: 117,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Kein Geld mehr!" }
         content { text: "Die Kassen der Stadt sind leer, oh Pharao. Ihre treuen Nomarchen haben alle Deben gespendet, die sie erübrigen konnten, aber nochmals ist ihnen das nicht möglich." }
@@ -1389,7 +1389,7 @@ game_messages_de {
     message_wrath_of_the_emperor {
         id: 118,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Der Pharao ist wütend!" }
@@ -1399,7 +1399,7 @@ game_messages_de {
     message_attack_called_off {
         id: 120,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Nachricht der Invasionstruppen" }
         content {
@@ -1408,7 +1408,7 @@ game_messages_de {
     }
     message_debt_anniversary {
         id: 121,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Immer noch Schulden!" }
@@ -1421,7 +1421,7 @@ game_messages_de {
         id: 122
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Barbarians attack!" }
@@ -1432,7 +1432,7 @@ game_messages_de {
         id: 123
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Legion attacks" }
@@ -1441,7 +1441,7 @@ game_messages_de {
     message_distant_battle {
         id: 124
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Distant battle" }
         video { text: "@10" }
@@ -1451,7 +1451,7 @@ game_messages_de {
     message_enemies_closing {
         id: 125
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Enemies closing" }
         video { text: "@10" }
@@ -1461,7 +1461,7 @@ game_messages_de {
     message_enemies_at_the_door {
         id: 126
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Enemies at the door" }
@@ -1476,7 +1476,7 @@ game_messages_de {
     message_wrath_of_bast_3 {
         id: 134,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Bastet zürnt" }
         video { text: "@20" }
@@ -1485,35 +1485,35 @@ game_messages_de {
     message_city_unemployment {
         id: 135,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Arbeitslosigkeit in der Stadt!" }
         content { text: "Es gibt zu wenige Arbeitsplätze, um allen Leuten Arbeit zu geben. Falls keine neuen Arbeitsplätze geschaffen werden, wenden sich die Arbeitslosen in ihrer Verzweiflung möglicherweise der Kriminalität zu oder suchen ihr Glück woanders im Königreich." }
     }
     message_employees_needed {
         id: 136,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Arbeitskräfte benötigt!" }
         content { text: "In der Stadt gibt es nicht genügend Leute im arbeitsfähigen Alter. Falls die Stadt nicht bald weitere Arbeitskräfte findet, werden die Dienstleistungen sich verschlechtern und die Produktion der Gewerbe zurückgehen." }
     }
     message_common_festival {
         id: 137,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Gewöhnliches Fest" }
         content { text: "Alle Leute freuen sich darüber, früher Feierabend zu machen und ein paar entspannende Stunden auf dem Festplatz zuzubringen. Und die so geehrte Gottheit hat die Geste wohlwollend zur Kenntnis genommen." }
     }
     message_lavish_festival {
         id: 138,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Üppiges Fest" }
         content { text: "Das den ganzen Tag über andauernde Fest beginnt. Überall in der Stadt begeben sich die Leute jetzt zum Festplatz und sind dabei ausgezeichneter Laune. Die geehrte Gottheit freut sich über Ihren Eifer." }
     }
     message_grand_festival {
         id: 139,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Gewaltiges Fest" }
         content { text: "Das so lange und sehnsüchtig erwartete Fest hat endlich begonnen! Alle Leute versammeln sich auf dem Festplatz, um kostenloses Bier und mitreißende Unterhaltung zu genießen. Die mit diesem Ereignis geehrte Gottheit lächelt freudig auf Sie herab." }
@@ -1521,7 +1521,7 @@ game_messages_de {
     message_wrath_of_osiris {
         id: 140
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Osiris zürnt ..." }
         video { text: "@24" }
@@ -1530,7 +1530,7 @@ game_messages_de {
     message_wrath_of_ptah {
         id: 141
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ptah zürnt ..." }
         video { text: "@22" }
@@ -1539,7 +1539,7 @@ game_messages_de {
     message_wrath_of_ptah_2 {
         id: 142
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ptah zürnt ..." }
         video { text: "@22" }
@@ -1548,7 +1548,7 @@ game_messages_de {
     message_wrath_of_seth_noeffect {
         id: 143
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Seth zürnt ..." }
         video { text: "@21" }
@@ -1557,7 +1557,7 @@ game_messages_de {
     message_wrath_of_bast {
         id: 144,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Bastet zürnt ..." }
         video { text: "@20" }
@@ -1566,7 +1566,7 @@ game_messages_de {
     message_blessing_from_ptah {
     id: 145,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Ptah" }
         video { text: "@22" }
@@ -1575,7 +1575,7 @@ game_messages_de {
     message_wrath_of_osiris_2 {
         id: 147
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Osiris zürnt ..." }
         video { text: "@24" }
@@ -1584,7 +1584,7 @@ game_messages_de {
     message_wrath_of_ptah_4 {
         id: 148,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ptah zürnt ..." }
         video { text: "@22" }
@@ -1592,10 +1592,10 @@ game_messages_de {
             text: "Ptah ist empört, dass Sie sich weigern, ihm zu huldigen. Er lässt eine Froschplage über Ihre Stadt kommen. Die Frösche mit ihrer schleimigen Haut und ihrem ekelhaften Gestank werden viele Menschen aus ihren Häusern vertreiben."
         }
     }
-    message_local_wrath_of_seth {
+    message_hailstorm_wrath_of_seth {
         id: 149
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Seth zürnt ..." }
         video { text: "@21" }
@@ -1603,7 +1603,7 @@ game_messages_de {
     }
     message_farming {
     id: 150,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 81, pos [15, 15] }
         title { text: "Landwirtschaft" }
@@ -1614,7 +1614,7 @@ game_messages_de {
     }
     message_industry {
         id: 151,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 82, pos [15, 15] }
         title { text: "Gewerbe" }
@@ -1625,7 +1625,7 @@ game_messages_de {
     }
     message_housing {
         id: 152,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 83, pos [15, 15] }
         title { text: "Wohnungen" }
@@ -1636,7 +1636,7 @@ game_messages_de {
     }
     message_roads {
         id: 153,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 84,
@@ -1655,7 +1655,7 @@ game_messages_de {
     }
     message_irrigation {
         id: 154,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 27,
@@ -1675,7 +1675,7 @@ game_messages_de {
     message_tutorial_labor {
         id: 155
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 85, pos [15, 15] }
         title { text: "Arbeit" }
@@ -1684,7 +1684,7 @@ game_messages_de {
     }
     message_tutorial_clean_water {
         id: 156
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 86, pos [15, 15] }
         title { text: "Ziehbrunnen und Zisternen", pos [125, 15] }
@@ -1695,7 +1695,7 @@ game_messages_de {
     }
     message_nile {
         id: 157,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 87,
@@ -1714,7 +1714,7 @@ game_messages_de {
     }
     message_dentistry {
         id: 158,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 88, pos [15, 15] }
         title { text: "Zahnärzte" }
@@ -1725,7 +1725,7 @@ game_messages_de {
     }
     message_apothecary {
         id: 159,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 89,
@@ -1744,7 +1744,7 @@ game_messages_de {
     }
     message_medicine {
         id: 160,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 90,
@@ -1763,7 +1763,7 @@ game_messages_de {
     }
     message_embalmers {
         id: 161,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 23,
@@ -1782,7 +1782,7 @@ game_messages_de {
     }
     message_shrine_and_temple {
         id: 162,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 12, pos [15, 15] }
         title { text: "Schreine und Tempel", pos [125, 15] }
@@ -1793,7 +1793,7 @@ game_messages_de {
     }
     message_school_and_eduction {
         id: 163,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 34, pos [15, 15] }
         title { text: "Schulen und Ausbildung", pos [125, 15] }
@@ -1804,7 +1804,7 @@ game_messages_de {
     }
     message_library_and_literature {
         id: 164,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 91,
@@ -1823,7 +1823,7 @@ game_messages_de {
     }
     message_history_entertainment {
         id: 165,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 92,
@@ -1842,7 +1842,7 @@ game_messages_de {
     }
     message_children {
         id: 166,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 93,
@@ -1861,7 +1861,7 @@ game_messages_de {
     }
     message_history_population {
         id: 167,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 94,
@@ -1880,7 +1880,7 @@ game_messages_de {
     }
     message_history_society {
         id: 168,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 5, pos [15, 15] }
         title { text: "Die ägyptische Gesellschaft", pos [125, 15] }
@@ -1891,7 +1891,7 @@ game_messages_de {
     }
     message_history_juggling {
         id: 169,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 95, pos [15, 15] }
         title { text: "Jongleure", pos [125, 15] }
@@ -1902,7 +1902,7 @@ game_messages_de {
     }
     message_history_music {
         id: 170,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 96,
@@ -1921,7 +1921,7 @@ game_messages_de {
     }
     message_history_dance {
         id: 171,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 97, pos [15, 15] }
         title { text: "Tanz", pos [125, 15] }
@@ -1932,7 +1932,7 @@ game_messages_de {
     }
     message_history_senet {
         id: 172,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 98,
@@ -1951,7 +1951,7 @@ game_messages_de {
     }
     message_history_taxation_and_money {
         id: 173,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 99, pos [15, 15] }
         title { text: "Steuern", pos [125, 15] }
@@ -1962,7 +1962,7 @@ game_messages_de {
     }
     message_history_government_and_bureaucracy {
         id: 174,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 40,
@@ -1981,7 +1981,7 @@ game_messages_de {
     }
     message_history_pharaohs_home {
         id: 175,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 100, pos [15, 15] }
         title { text: "So wohnte der Pharao", pos [125, 15] }
@@ -1992,7 +1992,7 @@ game_messages_de {
     }
     message_history_gardens_and_public_art {
         id: 176,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 38,
@@ -2011,7 +2011,7 @@ game_messages_de {
     }
     message_history_trade {
         id: 177,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 30,
@@ -2030,7 +2030,7 @@ game_messages_de {
     }
     message_history_ships_and_ship_making {
         id: 179,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 101,
@@ -2049,7 +2049,7 @@ game_messages_de {
     }
     message_history_enemies {
         id: 181,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 102,
@@ -2068,7 +2068,7 @@ game_messages_de {
     }
     message_history_defensive_structures {
         id: 182,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 103,
@@ -2087,7 +2087,7 @@ game_messages_de {
     }
     message_history_law {
         id: 183,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 104,
@@ -2106,7 +2106,7 @@ game_messages_de {
     }
     message_history_military {
         id: 184,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 105,
@@ -2125,7 +2125,7 @@ game_messages_de {
     }
     message_history_grain_and_barley {
         id: 185,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 106,
@@ -2144,7 +2144,7 @@ game_messages_de {
     }
     message_history_cattle_ranching_and_fishing {
         id: 186,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 13,
@@ -2163,7 +2163,7 @@ game_messages_de {
     }
     message_history_fruits_and_vegetables {
         id: 187,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 107,
@@ -2182,7 +2182,7 @@ game_messages_de {
     }
     message_history_reeds {
         id: 188,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 108,
@@ -2201,7 +2201,7 @@ game_messages_de {
     }
     message_history_flax {
         id: 189,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 109,
@@ -2220,7 +2220,7 @@ game_messages_de {
     }
     message_history_clay {
         id: 190,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 110,
@@ -2239,7 +2239,7 @@ game_messages_de {
     }
     message_history_gold_and_gold_mining {
         id: 191,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 22,
@@ -2258,7 +2258,7 @@ game_messages_de {
     }
     message_history_wood_and_its_uses {
         id: 192,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 111,
@@ -2277,7 +2277,7 @@ game_messages_de {
     }
     message_history_quarries {
         id: 193,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 112,
@@ -2296,7 +2296,7 @@ game_messages_de {
     }
     message_history_beer {
         id: 194,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 113,
@@ -2315,7 +2315,7 @@ game_messages_de {
     }
     message_history_papyrus_making {
         id: 195,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 48,
@@ -2334,7 +2334,7 @@ game_messages_de {
     }
     message_history_weapons {
         id: 196,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 114,
@@ -2353,7 +2353,7 @@ game_messages_de {
     }
     message_history_luxury_goods {
         id: 197,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 115,
@@ -2372,7 +2372,7 @@ game_messages_de {
     }
     message_history_pottery {
         id: 198,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 25,
@@ -2391,7 +2391,7 @@ game_messages_de {
     }
     message_history_bazaar {
         id: 199,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 116,
@@ -3270,7 +3270,7 @@ game_messages_de {
         id: 271
         type: 2
         message_type: 1
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Überflutete Tongrube" }
         content { text: "Es gab einen üblen Wassereinbruch in einer unserer Tongruben. Wir mussten die Grube zerstören, damit kein noch größeres Unglück geschieht." }
@@ -3280,7 +3280,7 @@ game_messages_de {
         id: 279,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Dringend: Straße blockiert" }
         content { text: "Die Straße zum Königreich ist blockiert. Räumen Sie sofort das Geröll weg." }
@@ -3290,22 +3290,34 @@ game_messages_de {
         id: 280,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Re zürnt ..." }
         video { text: "@23" }
         content { text: "Re straft Ihre Arroganz, indem er Ihren Ruf im ganzen Königreich deutlich heruntersetzt. So wie Sie den Gott mit Verachtung straften, werden die anderen Ägypter jetzt Sie wiederum strafen." }
     }
+
     message_wrath_of_seth {
         id: 281,
         type: 2,
         message_type: 1,
-        pos [0, 88]
-        size [30, 20]
+        
         title { text: "Seth zürnt ..." }
         video { text: "@21" }
         content { text: "Ihr mangelnder Respekt gegenüber Seth hat den Gott dazu veranlasst, alle Ihre Schiffe zu zerstören!" }
     }
+
+    message_wrath_of_seth_2 {
+        id: 281,
+        type: 2,
+        message_type: 1,
+        
+        size [30, 20]
+        title { text: "Seth zürnt 2..." }
+        video { text: "@21" }
+        content { text: "Ihr mangelnder Respekt gegenüber Seth hat den Gott dazu veranlasst, alle Ihre Schiffe zu zerstören!" }
+    }
+
     message_the_world_map {
         id: 282,
         type: 2,
@@ -3358,7 +3370,7 @@ game_messages_de {
     message_company_returns {
         id: 287,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Kompanie kehrt zurück" }
         content { text: "Im Schutze der Nacht schleichen sich die überlebenden Mitglieder Ihrer gedemütigten Kompanie in den Schoß ihres Forts zurück. Niemals wieder wollen sie eine solche Niederlage im Kampf erleiden." }
@@ -3366,7 +3378,7 @@ game_messages_de {
     message_heroes_return {
         id: 288,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Rückkehr der Helden!",
@@ -3378,14 +3390,14 @@ game_messages_de {
     message_city_retaken {
         id: 289,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "City retaken" }
     }
     message_osiris_is_upset {
         id: 290
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Osiris ist böse" }
         content { text: "Falls nicht bald etwas unternommen wird, um Osiris zu besänftigen, wird der Herr der Nilflut die Stadt für ihre Respektlosigkeit bestrafen und bei der nächsten Überschwemmung alle in ihrem Einzugsbereich liegenden Farmen vernichten!" }
@@ -3393,7 +3405,7 @@ game_messages_de {
     message_ra_is_upset_2 {
         id: 291
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Re ist böse" }
         video { text: "@23" }
@@ -3402,7 +3414,7 @@ game_messages_de {
     message_ptah_is_upset {
         id: 292
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Ptah ist böse" }
         video { text: "@22" }
@@ -3411,7 +3423,7 @@ game_messages_de {
     message_seth_is_upset {
         id: 293
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Seth ist böse" }
         video { text: "@21" }
@@ -3420,7 +3432,7 @@ game_messages_de {
     message_bast_is_upset {
         id: 294
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Bastet ist böse" }
         video { text: "@20" }
@@ -3429,7 +3441,7 @@ game_messages_de {
     message_blessing_from_osiris {
         id: 295
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Osiris" }
         video { text: "@24" }
@@ -3438,7 +3450,7 @@ game_messages_de {
    message_blessing_trade_from_ra {
         id: 296
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Re" }
         video { text: "@23" }
@@ -3447,7 +3459,7 @@ game_messages_de {
     message_blessing_trade_from_ptah {
         id: 297
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Ptah" }
         video { text: "@22" }
@@ -3456,7 +3468,7 @@ game_messages_de {
     message_blessing_trade_from_seth {
         id: 298
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Seth" }
         video { text: "@21" }
@@ -3465,7 +3477,7 @@ game_messages_de {
     message_blessing_from_bast {
         id: 299,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Bastet" }
         video { text: "@20" }
@@ -3474,7 +3486,7 @@ game_messages_de {
     message_the_gods_are_wrathful {
         id: 300
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Die Götter sind erzürnt" }
         content { text: "Mindestens eine Gottheit ist der Stadt zornig gestimmt. Dein Volk fleht dich an, mehr Tempel zu errichten … und ein Fest ist ebenfalls immer willkommen." }
@@ -3482,7 +3494,7 @@ game_messages_de {
     message_illness {
         id: 301,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Krankheit" }
         video { text: "smk\\sick.smk" }
@@ -3490,7 +3502,7 @@ game_messages_de {
     message_disease {
         id: 302,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Krankheit" }
         video { text: "smk\\sick.smk" }
@@ -3498,7 +3510,7 @@ game_messages_de {
     message_pestilence {
         id: 303,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Seuche" }
         video { text: "smk\\sick.smk" }
@@ -3506,7 +3518,7 @@ game_messages_de {
     message_the_spirit_of_seth {
         id: 304,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Der Schutzgeist des Seth ...",
@@ -3521,7 +3533,7 @@ game_messages_de {
     message_the_emperors_respect {
         id: 305,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "The Emperor's respect",
@@ -3530,21 +3542,21 @@ game_messages_de {
     message_the_emperors_respect_1 {
         id: 306,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Der Respekt des Kaisers" }
     }
     message_the_emperors_respect_2 {
         id: 307,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Der Respekt des Kaisers" }
     }
     message_working_hippodrome {
         id: 308,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Funktionsfähige Rennbahn" }
         video { text: "smk\\\\1st_chariot.smk" }
@@ -3553,7 +3565,7 @@ game_messages_de {
         id: 309,
         type: 2,
         message_type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Forderung kann erfüllt werden" }
         content { text: "Der Aufseher der Politik berichtet, dass der Stadt jetzt genügend Deben zur Verfügung stehen, um die aktuelle Forderung zu erfüllen." }
@@ -3571,7 +3583,7 @@ game_messages_de {
     message_mission_defeat {
         id: 311,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Niederlage!" }
         content { text: "Ein bitterer Tag! Ein solch unrühmliches Ende ist eigentlich undenkbar. Sie haben Ihr Volk, Ihre Vorfahren und Ihre Nachkommen enttäuscht. Nun sehnt sich Ägypten nach einem anderen Helden, der Ihren Platz einnehmen wird ..." }
@@ -3579,7 +3591,7 @@ game_messages_de {
     message_mission_victory {
         id: 312,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Der Gewinner" }
         video { text: "smk\\win_game.smk" }
@@ -3589,7 +3601,7 @@ game_messages_de {
         id: 313
         type: 2
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Feindliche Armee greift an" }
         video { text: "smk\\spy_army.smk" }
@@ -3599,7 +3611,7 @@ game_messages_de {
         id: 314,
         type: 2,
         message_type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Forderung kann erfüllt werden",
@@ -3611,7 +3623,7 @@ game_messages_de {
     message_kingdom_road_obstructed {
         id: 315,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Dringend: Straße blockiert",
@@ -3623,7 +3635,7 @@ game_messages_de {
     message_no_working_dock {
         id: 316,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Kein funktionierendes Dock..." }
         content { text: "Obwohl Sie dem Aufseher des Handels aufgetragen hatten, Handelsbeziehungen zu einem zur See fahrenden Händler aufzubauen, kann der Händler in Ihrer Stadt nicht landen! Sie müssen ein Dock errichten und es mit Arbeitskräften versorgen. Sobald das Dock funktioniert, werden Schiffe anlegen und mit dem Handel beginnen." }
@@ -3631,7 +3643,7 @@ game_messages_de {
     message_fishing_boats_cant_navigate {
         id: 317,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Fischerboote sind blockiert" }
         content { text: "Unsere Fischer berichten, dass eine Brücke sie behindert! Schiffe können unter Brücken nicht hindurchsegeln. Entfernen Sie die Brücke, damit die Fischerboote Ihre Stadt mit frischem Fisch versorgen können." }
@@ -3639,7 +3651,7 @@ game_messages_de {
     message_health {
         id: 318,
         type: 3,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Gesundheit",
@@ -3651,7 +3663,7 @@ game_messages_de {
     message_messages_await_you {
         id: 319,
         type: 3,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Nachrichten warten auf Sie",
@@ -3663,7 +3675,7 @@ game_messages_de {
     message_local_uprising {
         id: 320,
         message_type: 7
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Lokaler Aufstand" }
@@ -3672,7 +3684,7 @@ game_messages_de {
     message_small_blessing_from_osiris {
         id: 321
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Osiris" }
         video { text: "@24" }
@@ -3681,7 +3693,7 @@ game_messages_de {
     message_minor_blessing_from_ra {
         id: 322
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Re" }
         video { text: "@23"}
@@ -3690,7 +3702,7 @@ game_messages_de {
     message_minor_blessing_from_ptah {
         id: 323
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Ptah" }
         video { text: "@22" }
@@ -3699,7 +3711,7 @@ game_messages_de {
     message_minor_blessing_from_seth {
         id: 324
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Seth" }
         video { text: "@21" }
@@ -3708,7 +3720,7 @@ game_messages_de {
     message_small_blessing_from_bast {
         id: 325
         type: 2
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Bastet" }
         video { text: "@20" }
@@ -3718,7 +3730,7 @@ game_messages_de {
         id: 326,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Krankheit bricht aus",
@@ -3731,7 +3743,7 @@ game_messages_de {
         id: 327,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Eine Seuche",
@@ -3744,7 +3756,7 @@ game_messages_de {
         id: 328,
         type: 2,
         message_type: 1,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Malaria",
@@ -3756,7 +3768,7 @@ game_messages_de {
     message_blessing_reputation_from_ra {
         id: 329,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine Segnung von Re" }
         video { text: "@23" }
@@ -3767,7 +3779,7 @@ game_messages_de {
     message_minor_blessing_trading_from_ra {
         id: 331,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Eine kleine Segnung von Re" }
         video { text: "@23" }
@@ -3776,7 +3788,7 @@ game_messages_de {
     message_wrath_of_ra_2 {
         id: 332,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Re zürnt ..." }
         video { text: "@23" }
@@ -3785,7 +3797,7 @@ game_messages_de {
     message_wrath_of_ra_3 {
         id: 333,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Re zürnt ..." }
         video { text: "@23" }
@@ -3794,7 +3806,7 @@ game_messages_de {
     message_ra_is_upset {
         id: 334,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         image { id: 224, pos [15, 15] }
         title { text: "Re ist böse!" }
@@ -3804,7 +3816,7 @@ game_messages_de {
     message_wrath_of_bast_2 {
         id: 335,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Bast zürnt ...", }
         content { text: "Der Zorn der Bast ist über dich gekommen. Lächle schnell, wenn du es wagst, denn auch wenn sie heute keine Macht über dich hat … beim nächsten Mal hast du vielleicht nicht so viel Glück!" }
@@ -3812,7 +3824,7 @@ game_messages_de {
     message_wrath_of_ra_4 {
         id: 336,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Re zürnt ...",
@@ -3824,7 +3836,7 @@ game_messages_de {
     message_wrath_of_osiris_3 {
         id: 337,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Osiris zürnt ...",
@@ -3848,7 +3860,7 @@ game_messages_de {
     message_wrath_of_osiris_4 {
         id: 341,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Osiris zürnt ..." }
         video { text: "@24" }
@@ -3857,7 +3869,7 @@ game_messages_de {
     message_mediocre_inundation_seers {
         id: 342,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3866,7 +3878,7 @@ game_messages_de {
     message_poor_inundation_seers {
         id: 343,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3875,7 +3887,7 @@ game_messages_de {
     message_no_inundation {
         id: 344,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3884,7 +3896,7 @@ game_messages_de {
     message_poor_inundation {   
         id: 345,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3893,7 +3905,7 @@ game_messages_de {
     message_mediocre_inundation {
         id: 346,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3902,7 +3914,7 @@ game_messages_de {
     message_good_inundation {
         id: 347,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3911,7 +3923,7 @@ game_messages_de {
     message_excellent_inundation {
         id: 348,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3920,7 +3932,7 @@ game_messages_de {
     message_perfect_inundation {
         id: 349,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title { text: "Nilometer-Vorhersage" }
@@ -3928,7 +3940,7 @@ game_messages_de {
     }
     message_temple_complex_to_osiris {
         id: 350,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Tempelkomplex des Osiris",
@@ -3942,7 +3954,7 @@ game_messages_de {
     }
     message_temple_complex_to_ra {
         id: 351,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Tempelkomplex des Re",
@@ -3953,7 +3965,7 @@ game_messages_de {
     }
     message_temple_complex_to_ptah {
         id: 352,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Tempelkomplex des Ptah",
@@ -3964,21 +3976,21 @@ game_messages_de {
     }
     message_temple_complex_to_seth {
         id: 353,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Tempelkomplex des Seth" }
         content { text: "Wenn eine Stadt einen Tempelkomplex zu seinen Ehren errichtet hat, verleiht Seth den Soldaten der Stadt einen eisernen Willen, schenkt ihnen mehr Erfahrung und schützt sie im Kampf. Die Anbauten am Tempelkomplex des Seth sind:  @L@LAltar des Anubis, Gott des Todes. @LAnubis gewährt den Bürgern der Stadt leichteren Zugang zum ewigen Leben. Mit seinem Segen benötigen Einbalsamierungshäuser weniger Leinen, um Leichen für die Ewigkeit vorzubereiten.  @L@LOrakel der Sachmet, Göttin des Krieges. @LSachmet gibt Priestern des Seth die Macht, das Risiko der Kriminalität in den Häusern zu verringern, an denen sie vorbeikommen, und Verbrecher in der Stadt festzunehmen.  @L@LDie Leute leben ausgesprochen gern neben einem Tempelkomplex. Weitere Informationen zum Thema 'Religion' finden Sie @51hier. @L@LKlicken Sie @379hier, um mehr über Seth, Anubis und Sachmet zu erfahren." }
     }
     message_temple_complex_to_bast {
         id: 354,
-        pos [0, 88]
+        
         size [30, 20]
         title { text: "Tempelkomplex der Bastet" }
         content { text: "Der Göttin Bastet einen Tempel zu bauen, bringt jeder Stadt Glück. Bastet trägt zur Zufriedenheit der Bürger bei, indem sie deren Ansprüche zurückschraubt. Es ist Ausdruck ihrer Güte, wenn sich die Geschwindigkeit verringert, mit der Ihre Bürger Nahrungsmittel und Waren verbrauchen, und sich der Einfluss verlängert, der von Künstlern, Lehrern und Gesundheitsdiensten ausgeht. Ihre göttlichen Schwestern tragen das Ihre dazu bei, um das Leben Ihrer Bürger zu verbessern: @L@LAltar der Isis, Göttin der Heilkunst. @LDurch die Priesterinnen der Bastet legt Isis der Bevölkerung ihre heilenden Hände auf, entfernt kranke Fußgänger von den Straßen und reinigt infizierte Häuser, an denen die Priesterinnen vorbeikommen. Isis verbessert darüber hinaus den gesamten gesundheitlichen Zustand der Stadt. @L@LOrakel der Hathor, Göttin der Freude, der Liebe und der Feste. @LHathor, durch das zu ihren Ehren errichtete Orakel geschmeichelt, verbessert die Laune der Bürger und die @39Stimmung&in&der&Stadt. @L@LDie Leute leben ausgesprochen gern neben einem Tempelkomplex. Weitere Informationen zum Thema 'Religion' finden Sie @51hier. @L@LKlicken Sie @380hier, um mehr über Bastet, Isis and Hathor zu erfahren." }
     }
     message_building_firehouse {
         id: 355,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Feuerwache",
@@ -3989,7 +4001,7 @@ game_messages_de {
     }
     message_building_warship_wharf {
         id: 356,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Kriegshafen",
@@ -4000,7 +4012,7 @@ game_messages_de {
     }
     message_building_transport_wharf {
         id: 357,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Transporthafen",
@@ -4011,7 +4023,7 @@ game_messages_de {
     }
     message_building_roadblock {
         id: 358,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Straßensperre",
@@ -4022,7 +4034,7 @@ game_messages_de {
     }
     message_building_hunting_lodge {
         id: 359,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Jagdhof",
@@ -4033,7 +4045,7 @@ game_messages_de {
     }
     message_building_cattle_ranch {
         id: 360,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Rinderfarm",
@@ -4044,7 +4056,7 @@ game_messages_de {
     }
     message_building_gemstone_mine {
         id: 361,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Edelsteinmine",
@@ -4055,7 +4067,7 @@ game_messages_de {
     }
     message_building_sphinx {
         id: 362,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Sphinx",
@@ -4066,7 +4078,7 @@ game_messages_de {
     }
     message_construction_guilds {
         id: 363,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Baugilden",
@@ -4077,7 +4089,7 @@ game_messages_de {
     }
     message_building_brickworks {
         id: 364,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Ziegelei",
@@ -4088,7 +4100,7 @@ game_messages_de {
     }
     message_building_warship {
         id: 365,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Kriegsschiff",
@@ -4099,7 +4111,7 @@ game_messages_de {
     }
     message_building_festival_square {
         id: 366,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Festplatz",
@@ -4110,7 +4122,7 @@ game_messages_de {
     }
     message_figure_transport_ship {
         id: 367,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Transportschiffe",
@@ -4124,7 +4136,7 @@ game_messages_de {
     }
     message_building_mausoleum {
         id: 368,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Mausoleum",
@@ -4135,7 +4147,7 @@ game_messages_de {
     }
     message_figure_construction_foreman {
         id: 369,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Vorarbeiter des Baus",
@@ -4146,7 +4158,7 @@ game_messages_de {
     }
     message_building_monument_construction {
         id: 370,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Bau von Monumenten",
@@ -4157,7 +4169,7 @@ game_messages_de {
     }
     message_building_mastaba {
         id: 371,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Mastaba",
@@ -4168,7 +4180,7 @@ game_messages_de {
     }
     message_building_obelisk {
         id: 372,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Obelisk",
@@ -4179,7 +4191,7 @@ game_messages_de {
     }
     message_overseer_monuments {
         id: 373,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Aufseher der Monumente",
@@ -4190,7 +4202,7 @@ game_messages_de {
     }
     message_burial_provisions {
         id: 374,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Grabbeigaben",
@@ -4201,7 +4213,7 @@ game_messages_de {
     }
     message_building_stepped_pyramid {
         id: 375,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Stufenpyramide",
@@ -4212,7 +4224,7 @@ game_messages_de {
     }
     message_osiris_sebek_min {
         id: 376,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 42,
@@ -4231,7 +4243,7 @@ game_messages_de {
     }
     message_ra_maat_horus {
         id: 377,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 18,
@@ -4250,7 +4262,7 @@ game_messages_de {
     }
     message_ptah_amon_thoth {
         id: 378,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 3,
@@ -4269,7 +4281,7 @@ game_messages_de {
     }
     message_seth_anubis_sekhmet {
         id: 379,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 117,
@@ -4288,7 +4300,7 @@ game_messages_de {
     }
     message_bast_isis_hathor {
         id: 380,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 28,
@@ -4307,7 +4319,7 @@ game_messages_de {
     }
     message_history_malaria {
         id: 381,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 118,
@@ -4326,7 +4338,7 @@ game_messages_de {
     }
     message_history_jewelry {
         id: 382,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 33,
@@ -4345,7 +4357,7 @@ game_messages_de {
     }
     message_history_hunting {
         id: 383,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 119,
@@ -4364,7 +4376,7 @@ game_messages_de {
     }
     message_history_priests {
         id: 384,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 120,
@@ -4383,7 +4395,7 @@ game_messages_de {
     }
     message_history_stonemasons {
         id: 385,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 121,
@@ -4402,7 +4414,7 @@ game_messages_de {
     }
     message_history_bricklayers {
         id: 386,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 122,
@@ -4421,7 +4433,7 @@ game_messages_de {
     }
     message_history_scribes {
         id: 387,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 21,
@@ -4440,7 +4452,7 @@ game_messages_de {
     }
     message_history_immigration {
         id: 388,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 123,
@@ -4459,7 +4471,7 @@ game_messages_de {
     }
     message_history_carpenters {
         id: 389,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 124,
@@ -4478,7 +4490,7 @@ game_messages_de {
     }
     message_history_bricks {
         id: 390,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 125,
@@ -4497,7 +4509,7 @@ game_messages_de {
     }
     message_history_sphinx {
         id: 391,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 8,
@@ -4516,7 +4528,7 @@ game_messages_de {
     }
     message_history_pyramids {
         id: 392,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 39,
@@ -4535,7 +4547,7 @@ game_messages_de {
     }
     message_history_festivals {
         id: 393,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 126,
@@ -4554,7 +4566,7 @@ game_messages_de {
     }
     message_history_mastaba {
         id: 394,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 127,
@@ -4573,7 +4585,7 @@ game_messages_de {
     }
     message_history_burial_provisions {
         id: 395,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 26,
@@ -4592,7 +4604,7 @@ game_messages_de {
     }
     message_history_other_monuments {
         id: 396,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1,
@@ -4611,7 +4623,7 @@ game_messages_de {
     }
     message_history_obelisk {
         id: 397,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 17,
@@ -4630,7 +4642,7 @@ game_messages_de {
     }
     message_history_linen_and_weaving {
         id: 398,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 24,
@@ -4649,7 +4661,7 @@ game_messages_de {
     }
     message_history_religion {
         id: 399,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 43,
@@ -5768,7 +5780,7 @@ game_messages_de {
     }
     message_mission_henna {
         id: 469,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1008,
@@ -5799,7 +5811,7 @@ game_messages_de {
     message_illness_video {
         id: 471,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         title {
             text: "Krankheit",
@@ -5810,7 +5822,7 @@ game_messages_de {
     }
     message_history_artisans {
         id: 472,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1004,
@@ -5840,7 +5852,7 @@ game_messages_de {
     }
     message_history_lamps {
         id: 474,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1003,
@@ -5859,7 +5871,7 @@ game_messages_de {
     }
     message_history_valley_of_the_kings {
         id: 475,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1011,
@@ -5878,7 +5890,7 @@ game_messages_de {
     }
     message_history_oil {
         id: 476,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1009,
@@ -5930,7 +5942,7 @@ game_messages_de {
     }
     message_history_zoo {
         id: 480,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1005,
@@ -5949,7 +5961,7 @@ game_messages_de {
     }
     message_history_alexandria_and_its_library {
         id: 481,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1001,
@@ -5968,7 +5980,7 @@ game_messages_de {
     }
     message_history_caesareum {
         id: 482,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1002,
@@ -5988,7 +6000,7 @@ game_messages_de {
     message_plague_of_locusts {
         id: 483,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6001,7 +6013,7 @@ game_messages_de {
     message_plague_of_frogs {
         id: 484,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6014,7 +6026,7 @@ game_messages_de {
     message_hailstorm {
         id: 485,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6027,7 +6039,7 @@ game_messages_de {
     message_river_of_blood {
         id: 486,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6039,7 +6051,7 @@ game_messages_de {
     }
     message_history_pharos_lighthouse {
         id: 487,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1006,
@@ -6092,7 +6104,7 @@ game_messages_de {
     message_crime_wave {
         id: 491,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1,
         title {
@@ -6115,7 +6127,7 @@ game_messages_de {
     }
     message_history_abu_simbel {
         id: 493,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1007,
@@ -6141,7 +6153,7 @@ game_messages_de {
     }
     message_history_major_plagues {
         id: 495,
-        pos [0, 88]
+        
         size [30, 20]
         image {
             id: 1010,
@@ -6161,7 +6173,7 @@ game_messages_de {
     message_mummy_attacks {
         id: 496,
         type: 2,
-        pos [0, 88]
+        
         size [30, 20]
         urgent: 1
         title { text: "Mumie greift an!" }

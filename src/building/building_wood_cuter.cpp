@@ -73,7 +73,7 @@ void building_wood_cutter::spawn_figure() {
 }
 
 bool building_wood_cutter::can_play_animation() const {
-    if (base.stored_amount() < 100) {
+    if (base.stored_amount() >= current_params().max_storage_amount) {
         return false;
     }
 
