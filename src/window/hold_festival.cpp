@@ -47,8 +47,6 @@ int ui::hold_festival_window::draw_background(UiFlags flags) {
         widget_sidebar_city_draw_foreground();
     }
 
-    ui["title"] = ui::str(58, 25 + g_city.festival.selected_god());
-
     for (e_god god = GOD_OSIRIS; god < MAX_GODS; ++god) {
         bstring32 god_id; god_id.printf("god%d", god);
         if (g_city.religion.is_god_known(god) == GOD_STATUS_UNKNOWN) {

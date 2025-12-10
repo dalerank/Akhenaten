@@ -218,6 +218,8 @@ struct element {
     bool fill_width = false;
     bool fill_height = false;
 
+    virtual ~element() {}
+
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);
     virtual void text(pcstr) {}
@@ -368,6 +370,8 @@ struct einner_panel : public element {
 
 struct elabel : public element {
     xstring _text;
+    xstring _js_textfn_ref;
+
     xstring _tooltip;
     xstring _format;
 
@@ -382,6 +386,8 @@ struct elabel : public element {
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
+
+    ~elabel() override;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
