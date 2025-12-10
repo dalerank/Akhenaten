@@ -16,6 +16,7 @@
 #include "window/message_dialog.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"
+#include "graphics/elements/ui_scope_property.h"
 #include "game/game.h"
 
 ui::hold_festival_window g_hold_festival_window;
@@ -39,6 +40,9 @@ void ui::hold_festival_window::select_size(int size) {
 
 int ui::hold_festival_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
+
+    ui_scope_property scope;
+    ui.format_all(&scope);
 
     if (!background) {
         game.animation = false;

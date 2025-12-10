@@ -9,7 +9,7 @@ hold_festival_window {
         background      : outer_panel({size[34, 20]})
 
         title           : text_center({pos[0, 20], size[px(34), -1], font : FONT_LARGE_BLACK_ON_LIGHT,
-                                       textfn: function(_1, _2) { return __loc(58, 25 + city.festival_selected_god) } })
+                                       text: "${loc.hold_festival_to} ${city.festival_selected_god_name}" })
 
         god0            : image_button({pos[100 * 0 + 30, 66], pack:PACK_UNLOADED, id:21, offset:16 + 0, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true })
         god1            : image_button({pos[100 * 1 + 30, 66], pack:PACK_UNLOADED, id:21, offset:16 + 1, offset_pressed:5, offset_focused:5, offset_disabled:0, border:true })
