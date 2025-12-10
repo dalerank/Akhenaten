@@ -22,6 +22,10 @@
 #include "scenario/scenario.h"
 #include "sound/effect.h"
 #include "city_religion_seth.h"
+#include "city_religion_osiris.h"
+#include "city_religion_ra.h"
+#include "city_religion_ptah.h"
+#include "city_religion_bast.h"
 #include "dev/debug.h"
 #include "city/city_warnings.h"
 #include "game/game.h"
@@ -89,7 +93,11 @@ stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods"
 
 city_god *city_religion_t::get(e_god god) {
     switch (god) {
+    case GOD_OSIRIS: return &god_osiris;
+    case GOD_RA: return &god_ra;
+    case GOD_PTAH: return &god_ptah;
     case GOD_SETH: return &god_seth;
+    case GOD_BAST: return &god_bast;
     }
 
     return nullptr;
@@ -185,10 +193,6 @@ void city_religion_t::set_god_known(e_god god, e_god_status v) {
    gods[god].is_known = v;
 }
 
-static bool OSIRIS_locusts() {
-    // TODO
-    return 0;
-}
 
 bool city_religion_t::PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
@@ -355,11 +359,6 @@ bool city_religion_t::PTAH_industry_destruction() {
     return false;
 }
 
-static bool SETH_fort_destruction() {
-    // TODO
-    //            formation_legion_curse();
-    return 0;
-}
 static bool SETH_ships_destruction() {
     // TODO
     //                figure_sink_all_ships();
@@ -367,10 +366,6 @@ static bool SETH_ships_destruction() {
     return 0;
 }
 
-static bool PTAH_frogs() {
-    // TODO
-    return 0;
-}
 
 static bool BAST_refill_houses_and_bazaar() {
     // TODO
@@ -555,15 +550,6 @@ bool city_religion_t::BAST_houses_destruction() {
     return false;
 }
 
-static bool BAST_malaria_plague() {
-    // TODO
-    //            city_sentiment_set_max_happiness(50);
-    //            city_sentiment_change_happiness(-5);
-    //            city_health_change(-10);
-    //            city_sentiment_update();
-    return 0;
-}
-
 void city_religion_t::perform_major_blessing(e_god god) {
     bool success = false;
     switch (god) {
@@ -615,128 +601,13 @@ void city_religion_t::perform_major_blessing(e_god god) {
 }
 
 void city_religion_t::perform_minor_blessing(e_god god) {
-    int randm = 0;
-    switch (god) {
-    default:
-        break;
-
-    case GOD_OSIRIS:
-        // slightly better flood
-        randm = anti_scum_random_15bit();
-        randm = randm & 0x80000003;
-        if ((int)randm < 0) {
-            randm = (randm - 1 | 0xfffffffc) + 1;
-        }
-        g_floods.adjust_next_quality(randm * 5 + 5);
-        messages::popup("message_small_blessing_from_osiris", 0, 0);
-        break;
-
-    case GOD_RA:
-        if (anti_scum_random_bool()) {
-            // slightly increased trading
-            ra_slightly_increased_trading_months_left = 12;
-            messages::popup("message_minor_blessing_from_ra", 0, 0);
-            return;
-        } else {
-            // slightly increased reputation
-            messages::popup("message_minor_blessing_from_ra_2", 0, 0);
-            g_city.kingdome.increase_blessing_god(5);
-            return;
-        }
-        break;
-
-    case GOD_PTAH:
-        // restocks shipwrights, weavers and jewelers
-        PTAH_industry_restock(); // <-- there is no message for when this fails.
-        messages::popup("message_minor_blessing_from_ptah", 0, 0);
-        return;
-
-    case GOD_SETH:
-        // protects soldiers far away
-        seth_protect_player_troops_months = 10;
-        messages::god(GOD_SETH, "message_minor_blessing_from_seth");
-        return;
-
-    case GOD_BAST: {
-        // throws a festival for the other gods
-        static auto &city_data = g_city;
-        city_data.festival.planned.god = GOD_OSIRIS;
-        city_data.festival.planned.size = FESTIVAL_BAST_SPECIAL;
-        city_data.festival.planned.months_to_go = 1;
-        city_data.festival.first_festival_effect_months = 1;
-
-        gods[GOD_RA].months_since_festival = 0;
-        gods[GOD_PTAH].months_since_festival = 0;
-        gods[GOD_SETH].months_since_festival = 0;
-        messages::popup("message_small_blessing_from_bast", 0, 0);
-        }
-        return;
+    auto god_ptr = get(god);
+    if (god_ptr) {
+        god_ptr->perform_minor_blessing();
     }
 }
 
 void city_religion_t::perform_major_curse(e_god god) {
-    bool success = false;
-    switch (god) {
-    case GOD_OSIRIS:
-        if (anti_scum_random_bool()) {
-            // worse flood quality
-            g_floods.adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
-            messages::popup("message_wrath_of_osiris", 0, 0);
-            return;
-        } else {
-            // locusts
-            OSIRIS_locusts();
-            messages::popup("message_wrath_of_osiris_2", 0, 0);
-            return;
-        }
-        break;
-
-    case GOD_RA:
-        if (anti_scum_random_15bit() % 3 == 0) {
-            // lowers commerce prices
-            ra_harshly_reduced_trading_months_left = 12;
-            messages::popup("message_wrath_of_ra", 0, 0);
-            return;
-        }
-
-        if (anti_scum_random_15bit() % 3 == 1) {
-            // lowers reputation
-            g_city.kingdome.reduce_god_wrath(15);
-            messages::popup("message_wrath_of_ra_2", 0, 0);
-            return;
-        }
-        // no trading ships/caravans for one year
-        ra_no_traders_months_left = 12;
-        messages::popup("message_wrath_of_ra_3", 0, 0);
-        return;
-
-    case GOD_PTAH:
-        if (anti_scum_random_bool()) {
-            // destroys some industrial buildings
-            success = PTAH_industry_destruction();
-            if (success)
-                messages::popup("message_wrath_of_ptah", 0, 0);
-            else // no yard found
-                messages::popup("message_wrath_of_ptah_no_effect", 0, 0);
-            return;
-        } else {
-            // frogs
-            PTAH_frogs();
-            messages::popup("message_wrath_of_ptah_2", 0, 0);
-            return;
-        }
-        break;
-
-    case GOD_BAST:
-        // destroy some of the best houses
-        BAST_houses_destruction();
-        messages::popup("message_wrath_of_bast", 0, 0);
-        return;
-
-    default:
-        break;
-    }
-
     auto god_ptr = get(god);
     if (god_ptr) {
         god_ptr->perform_major_curse();
@@ -744,69 +615,9 @@ void city_religion_t::perform_major_curse(e_god god) {
 }
 
 void city_religion_t::perform_minor_curse(e_god god) {
-    bool success = false;
-    switch (god) {
-    case GOD_OSIRIS:
-        if (anti_scum_random_bool()) {
-            // next flood will destroys farms
-            osiris_flood_will_destroy_active = 1;
-            events::emit(event_message_god{ GOD_OSIRIS, "message_small_curse_osiris" });
-            return;
-        } else {
-            // lower quality flood
-            int randm = anti_scum_random_15bit();
-            randm = randm & 0x80000003;
-            if ((int)randm < 0) {
-                randm = (randm - 1 | 0xfffffffc) + 1;
-            }
-            g_floods.adjust_next_quality((-1 - randm) * 5);
-            events::emit(event_message_god{ GOD_OSIRIS, "message_small_curse_osiris" });
-            return;
-        }
-        break;
-
-    case GOD_RA:
-        if (anti_scum_random_bool()) {
-            // lowers amount of traded goods
-            ra_slightly_reduced_trading_months_left = 12;
-            events::emit(event_message_god{ GOD_RA, "message_ra_is_upset" });
-            return;
-        } else {
-            // lowers reputation
-            g_city.kingdome.reduce_god_wrath(5);
-            events::emit(event_message_god{ GOD_RA, "message_ra_is_upset_2" });
-            return;
-        }
-        break;
-
-    case GOD_PTAH:
-        // destroys random storage yard
-        success = PTAH_warehouse_destruction();
-        if (success) {
-            events::emit(event_message_god{ GOD_PTAH, "message_ptah_is_upset" });
-        } else { // no yard found 
-            events::emit(event_message_god{ GOD_PTAH, "message_curse_ptah_noeffect" });
-        }
-        return;
-
-    case GOD_SETH:
-        // destroys the best fort
-        success = SETH_fort_destruction();
-        if (success) {
-            events::emit(event_message_god{ GOD_SETH, "message_seth_is_upset" });
-        } else {
-            events::emit(event_message_god{ GOD_SETH, "message_seth_is_upset_noeffect" });
-        }
-        break;
-
-    case GOD_BAST:
-        // plague
-        BAST_malaria_plague();
-        events::emit(event_message_god{ GOD_BAST, "message_bast_is_upset" });
-        break;
-
-    default:
-        break;
+    auto god_ptr = get(god);
+    if (god_ptr) {
+        god_ptr->perform_minor_curse();
     }
 }
 
@@ -1146,15 +957,6 @@ int city_religion_t::spirit_of_seth_power() {
 
 void city_religion_t::spirit_of_seth_mark_used() {
    seth_crush_enemy_troops = 0;
-}
-
-bool city_religion_t::osiris_create_shipwreck_flotsam() {
-    if (osiris_sank_ships) {
-        osiris_sank_ships = 0;
-        return true;
-    } else {
-        return false;
-    }
 }
 
 const god_state::static_params_t &god_state::static_params() const {

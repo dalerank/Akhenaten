@@ -45,6 +45,7 @@
 #include "empire/empire_traders.h"
 #include "scenario/criteria.h"
 #include "graphics/clouds.h"
+#include "city/city_religion_osiris.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -1246,7 +1247,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
     }
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_wine);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_sank_ships);
+    iob->bind(BIND_SIGNATURE_INT8, &god_osiris.sank_ships);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.senet_house_has_plays);
     iob->bind____skip(3);

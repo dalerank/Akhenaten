@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core/archive.h"
+#include "building_static_params.h"
+#include "building_planer_renderer.h"
+#include "building_fwd.h"
 class building_impl;
 
 namespace buildings {
@@ -46,12 +49,7 @@ namespace buildings {
             base.initialize();
         }
 
-        static building_impl *create(e_building_type e, building &b) {
-            if (e == TYPE) {
-                return b.template acquire_impl<building_type>();
-            }
-            return nullptr;
-        }
+        static building_impl *create(e_building_type e, building &b);
     };
 
 } // buildings

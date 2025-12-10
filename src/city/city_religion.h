@@ -50,6 +50,8 @@ struct god_state {
 class city_god {
 public:
     virtual void perform_major_curse() {}
+    virtual void perform_minor_curse() {}
+    virtual void perform_minor_blessing() {}
 };
 
 template<>
@@ -94,7 +96,6 @@ struct city_religion_t {
     uint8_t ra_no_traders_months_left;
     uint8_t ra_slightly_reduced_trading_months_left;
     uint8_t ra_slightly_increased_trading_months_left;
-    int8_t osiris_sank_ships;
     int32_t seth_crush_enemy_troops;
     uint8_t seth_protect_player_troops_months;
     uint8_t osiris_double_farm_yield_days;
@@ -129,7 +130,6 @@ struct city_religion_t {
     bool BAST_houses_destruction();
     int spirit_of_seth_power();
     void spirit_of_seth_mark_used();
-    bool osiris_create_shipwreck_flotsam();
 
     void perform_minor_blessing(e_god god);
     void perform_minor_curse(e_god god);

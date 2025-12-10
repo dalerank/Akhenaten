@@ -3,10 +3,10 @@
 #include "widget/debug_console.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "city/city_religion_osiris.h"
 #include "city/city.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_god_properties);
-
 void game_debug_show_properties_religion(pcstr prefix, city_religion_t &religion) {
     ImGui::PushID(0x80000000 | 1);
 
@@ -27,7 +27,7 @@ void game_debug_show_properties_religion(pcstr prefix, city_religion_t &religion
         game_debug_show_property("ra_no_traders_months_left", religion.ra_no_traders_months_left);
         game_debug_show_property("ra_slightly_reduced_trading_months_left", religion.ra_slightly_reduced_trading_months_left);
         game_debug_show_property("ra_slightly_increased_trading_months_left", religion.ra_slightly_increased_trading_months_left);
-        game_debug_show_property("osiris_sank_ships", religion.osiris_sank_ships);
+        game_debug_show_property("osiris_sank_ships", god_osiris.sank_ships);
         game_debug_show_property("seth_crush_enemy_troops", religion.seth_crush_enemy_troops);
         game_debug_show_property("seth_protect_player_troops_months", religion.seth_protect_player_troops_months);
         game_debug_show_property("osiris_double_farm_yield_days", religion.osiris_double_farm_yield_days);
