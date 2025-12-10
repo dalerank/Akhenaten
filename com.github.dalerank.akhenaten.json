@@ -151,7 +151,7 @@
                 {
                     "type" : "archive",
                     "url" : "https://github.com/libsdl-org/wavpack/archive/refs/heads/5.6.0-sdl.tar.gz",
-                    "sha256" : "384f56046a136fefe85ada848fb22bf68939ba15637c29d9aa851a44c3bbfe2e",
+                    "sha256" : "20f1546319abfebf548594bd67201d7341083bea8116149a278087bb5035aa39",
                     "dest" : "_deps/sdl_mixer_deps/wavpack",
                     "strip-components" : 1
                 },
