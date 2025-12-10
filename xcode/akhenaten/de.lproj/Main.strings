@@ -1,0 +1,78 @@
+/* Class = "NSMenuItem"; title = "akhenaten"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "akhenaten";
+
+/* Class = "NSButtonCell"; title = "Install GOG Package"; ObjectID = "3Ov-VU-kO4"; */
+"3Ov-VU-kO4.title" = "Installiere GOG Paket";
+
+/* Class = "NSMenuItem"; title = "Quit akhenaten"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Qakhenaten beenden";
+
+/* Class = "NSMenuItem"; title = "About akhenaten"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "Über akhenaten";
+
+/* Class = "NSTabViewItem"; label = "Setttngs/Patches"; ObjectID = "6un-lu-s78"; */
+"6un-lu-s78.label" = "Einstellungen/Patches";
+
+/* Class = "NSButtonCell"; title = "Download and Install"; ObjectID = "9YE-lD-QlQ"; */
+"9YE-lD-QlQ.title" = "Runterladen / Installieren";
+
+/* Class = "NSTabViewItem"; label = "General"; ObjectID = "awt-1C-E9w"; */
+"awt-1C-E9w.label" = "Allgemein";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Hauptmenu";
+
+/* Class = "NSButtonCell"; title = "Quit"; ObjectID = "d7W-Nu-sIp"; */
+"d7W-Nu-sIp.title" = "Beenden";
+
+/* Class = "NSTextFieldCell"; title = "Buy on GOG"; ObjectID = "f1J-t7-Ry4"; */
+"f1J-t7-Ry4.title" = "Bei GOG kaufen";
+
+/* Class = "NSTextFieldCell"; title = "Cursor Scaling"; ObjectID = "FRG-vt-WYb"; */
+"FRG-vt-WYb.title" = "Zeigerskalierung";
+
+/* Class = "NSWindow"; title = "akhenaten"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "Fenster";
+
+/* Class = "NSMenuItem"; title = "Show All"; ObjectID = "Kd2-mp-pUS"; */
+"Kd2-mp-pUS.title" = "Alle zeigen";
+
+/* Class = "NSButtonCell"; title = "Window Mode"; ObjectID = "Lzr-6D-cbO"; */
+"Lzr-6D-cbO.title" = "Fenster Modus";
+
+/* Class = "NSMenuItem"; title = "Hide akhenaten"; ObjectID = "Olw-nP-bQN"; */
+"Olw-nP-bQN.title" = "akhenaten ausblenden";
+
+/* Class = "NSTextFieldCell"; title = "Sound Patches"; ObjectID = "ozG-ql-U8n"; */
+"ozG-ql-U8n.title" = "Sound Patches";
+
+/* Class = "NSButtonCell"; title = "Visit GitHub Repo"; ObjectID = "puM-Ju-0YN"; */
+"puM-Ju-0YN.title" = "Besuche GitHub Projekt";
+
+/* Class = "NSButtonCell"; title = "Quit"; ObjectID = "QPg-X6-vD2"; */
+"QPg-X6-vD2.title" = "Beenden";
+
+/* Class = "NSTextFieldCell"; title = "Screen Scaling"; ObjectID = "sie-ZT-7Qg"; */
+"sie-ZT-7Qg.title" = "Fensterskalierung";
+
+/* Class = "NSTextFieldCell"; title = "Pixels"; ObjectID = "syR-X5-Q59"; */
+"syR-X5-Q59.title" = "Pixel";
+
+/* Class = "NSMenu"; title = "akhenaten"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "akhenaten";
+
+/* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
+"Vdr-fp-XzO.title" = "Andere ausblenden";
+
+/* Class = "NSTextFieldCell"; title = "akhenaten Launcher"; ObjectID = "XCC-Eh-Td0"; */
+"XCC-Eh-Td0.title" = "akhenaten Launcher";
+
+/* Class = "NSButtonCell"; title = "Start Game"; ObjectID = "YQK-qq-I6Z"; */
+"YQK-qq-I6Z.title" = "Spiel starten";
+
+/* Class = "NSButtonCell"; title = "Check for Updates"; ObjectID = "z2I-Rx-Hkj"; */
+"z2I-Rx-Hkj.title" = "Suche nach Updates";
+
+/* Class = "NSTextFieldCell"; title = "A modern Port for the classic Pharaoh & Cleopatra Game published by Impressions Games 1999."; ObjectID = "zn7-ho-LTc"; */
+"zn7-ho-LTc.title" = "Ein moderner Port des klassischen Spiels Pharaoh & Cleopatra, veröffentlicht von Impressions Games im Jahr 1999.";
+
