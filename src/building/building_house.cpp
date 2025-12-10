@@ -11,6 +11,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
+#include "graphics/graphics.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
@@ -23,6 +24,7 @@
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
 #include "js/js_game.h"
+#include "widget/widget_city.h"
 #include "dev/debug.h"
 #include <iostream>
 
@@ -194,6 +196,8 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u8(d.drunkard_active);
     iob->bind_u8(d.nobles_with_bad_teeth);
     iob->bind_u8(d.toothache_probability);
+    iob->bind_u8(d.fade_alpha);
+    iob->bind_xstr<8>(d.image_key);
 }
 
 int building_house::get_fire_risk(int value) const {
@@ -391,12 +395,14 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
         const size_t rand_anim = rand() % max_anims;        
         auto anim_it = house_params.variants_merged.data.begin();
         std::advance(anim_it, rand_anim);
+        d.image_key = anim_it->first;
         image_id = anim_it->second.first_img();
     } else {
         const size_t max_anims = house_params.variants.data.size();
         const size_t rand_anim = rand() % max_anims;
         auto anim_it = house_params.variants.data.begin();
         std::advance(anim_it, rand_anim);
+        d.image_key = anim_it->first;
         image_id = anim_it->second.first_img();
     }
 
@@ -1160,6 +1166,7 @@ void building_house::on_create(int orientation) {
     }
 
     d.hsize = 0;
+    d.fade_alpha = 0;
     if (type() >= BUILDING_HOUSE_CRUDE_HUT && type() <= BUILDING_HOUSE_SPACIOUS_APARTMENT) {
         d.hsize = 1;
     } else if (type() >= BUILDING_HOUSE_COMMON_RESIDENCE && type() <= BUILDING_HOUSE_FANCY_RESIDENCE) {
@@ -1178,6 +1185,24 @@ void building_house::on_destroy() {
 void building_house::on_post_load() {
     const int imgid = map_image_at(tile());
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
+
+    auto &d = runtime_data();
+    const auto &house_params = get_house_params(base.type);
+    if (d.image_key.empty()) {
+        const auto &variants = house_params.variants.data;
+        auto it = std::find_if(variants.begin(), variants.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
+        if (it != variants.end()) {
+            d.image_key = it->first;
+        }
+    }
+
+    if (d.image_key.empty()) {
+        const auto &variants_merged = house_params.variants_merged.data;
+        auto it = std::find_if(variants_merged.begin(), variants_merged.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
+        if (it != variants_merged.end()) {
+            d.image_key = it->first;
+        }
+    }
 }
 
 void building_house::on_place_checks() {
@@ -1673,4 +1698,57 @@ bool building_house_palatial_estate::evolve(house_demands* demands) {
     }
 
     return false;
+}
+
+void building_house::update_fade_alpha() {
+    auto &d = runtime_data();
+    
+    // Check if cursor is over this house building
+    extern screen_city_t g_screen_city;
+    tile2i current_tile = g_screen_city.current_tile;
+    
+    bool is_hovered = false;
+    if (current_tile.valid()) {
+        int hover_building_id = map_building_at(current_tile);
+        building* hover_b = building_get(hover_building_id);
+        
+        if (hover_b && hover_b->main()->id == base.main()->id && hover_b->dcast_house()) {
+            is_hovered = true;
+        }
+    }
+    
+    if (is_hovered) {
+        if (d.fade_alpha < 255) {
+            d.fade_alpha = std::min<int>(255, d.fade_alpha + 15); // Increase by 15 per frame
+        }
+    } else {
+        if (d.fade_alpha > 0) {
+            d.fade_alpha = std::max<int>(0, d.fade_alpha - 10); // Decrease by 10 per frame
+        }
+    }
+}
+
+bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
+    
+    update_fade_alpha();
+    
+    auto &d = runtime_data();
+    if (d.fade_alpha > 0) {
+        const auto &params = get_house_params(base.type);
+        
+        if (!params.variants_merged_inside.empty() && is_merged()) {
+            const auto& ranim = params.variants_merged_inside[d.image_key];
+              
+            if (ranim.first_img() > 0) {
+                auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+                command.image_id = ranim.first_img();
+                command.pixel = point;
+                command.mask = (d.fade_alpha << COLOR_BITSHIFT_ALPHA) | (color_mask != 0 ? (color_mask & 0x00FFFFFF) : 0x00FFFFFF);
+                command.flags = ImgFlag_Alpha;
+            }
+        }
+    }
+    
+    return true;
 }
