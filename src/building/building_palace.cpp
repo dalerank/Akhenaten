@@ -122,7 +122,7 @@ void building_palace::draw_tooltip(tooltip_context *c) {
             ui::label_colored(label_part.c_str(), { label_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
             
             // Draw value part starting from value_x
-            pcstr value_start = formatted.c_str() + at_pos;
+            pcstr value_start = formatted.c_str() + at_pos + 1; // "\t"
             int value_width = ui::label_colored(value_start, { value_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
         } else {
             // No \t separator, draw as single label

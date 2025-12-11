@@ -150,7 +150,8 @@ function mission8_pharaoh_requested_luxury_goods(ev) {
 	}
 
 	mission.pharaoh_requested_luxury_goods = true
-	city.create_good_request(/*tag_id*/1, RESOURCE_LUXURY_GOODS, /*amount*/2, /*months_initial*/4)
+	var request = city.create_good_request(/*tag_id*/1, RESOURCE_LUXURY_GOODS, /*amount*/2, /*months_initial*/4)
+	request.execute()
 }
 
 [event=event_advance_month, mission=mission8]
@@ -163,6 +164,9 @@ function mission8_random_trade_city_under_siege(ev) {
 		return
 	}
 
+	mission.random_trade_city_under_siege = true
+
 	var request = city.create_trade_city_under_siege(/*tag_id*/2, /*months_initial*/12)
 	request.set_reasons(PHRASE_trade_city_siege_no_reason_A, PHRASE_trade_city_siege_no_reason_B, PHRASE_trade_city_siege_no_reason_C, -1)
+	request.execute()
 }

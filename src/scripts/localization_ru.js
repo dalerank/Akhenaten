@@ -407,4 +407,17 @@ localization_ru = [
     { key: "#magistrate_i_am_overwhelmed", text: "Я едва могу справиться с моей нагрузкой дел, но улицы всё ещё небезопасны." }
 
     { key: "#goto_site_of_event", text: "Перейти к месту события" }
+
+    { key: "#hold_festival_to", text: "Провести фестиваль" }
+    { key: "#god_osiris", text: "Осирис" }
+    { key: "#god_ra", text: "Ра" }
+    { key: "#god_ptah", text: "Птах" }
+    { key: "#god_seth", text: "Сет" }
+    { key: "#god_bast", text: "Бастет" }
+
+    { key: "#god_to_osiris", text: "Осирису" }
+    { key: "#god_to_ra", text: "Ра" }
+    { key: "#god_to_ptah", text: "Птаху" }
+    { key: "#god_to_seth", text: "Сету" }
+    { key: "#god_to_bast", text: "Бастет" }
 ]

@@ -22,9 +22,15 @@ int city_festival_t::months_till_next() {
     return planned.months_to_go;
 }
 
-int city_festival_t::selected_god() {
+e_god city_festival_t::selected_god() {
     return selected.god;
 }
+
+xstring city_festival_t::selected_god_name() {
+    auto key = (e_god_short)g_city.festival.selected_god();
+    return bstring16("#god_", e_god_short_tokens.name(key)).c_str();
+}
+
 void city_festival_t::select_god(e_god god_id) {
     selected.god = god_id;
 }

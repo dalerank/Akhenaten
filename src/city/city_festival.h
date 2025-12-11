@@ -44,7 +44,8 @@ struct city_festival_t {
 
     bool is_planned();
     int months_till_next();
-    int selected_god();
+    e_god selected_god();
+    xstring selected_god_name();
     void select_god(e_god god_id);
     int selected_size();
     bool select_size(e_festival_type size);

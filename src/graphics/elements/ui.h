@@ -8,6 +8,7 @@
 #include "core/variant.h"
 
 #include "input/hotkey.h"
+#include "graphics/elements/ui_scope_property.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/arrow_button.h"
@@ -25,9 +26,6 @@
 
 struct mouse;
 struct tooltip_context;
-
-bvariant city_get_property(const xstring &domain, const xstring &name);
-pcstr lang_text_from_key(pcstr key);
 
 enum UiFlags_ {
     UiFlags_None = 0,
@@ -103,6 +101,15 @@ scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size
 void fill_rect(vec2i offset, vec2i size, color c);
 
 pcstr str(int group, int id);
+pcstr str_from_key(pcstr key);
+
+template<typename ... Args>
+pcstr str_from_key(pcstr fmt, Args ... args) {
+    bstring64 key;
+    key.printf(fmt, args...);
+    return str_from_key(key.c_str());
+}
+
 inline pcstr str(std::pair<int, int> r) { return str(r.first, r.second); }
 inline pcstr str(textid r) { return str(r.group, r.id); }
 pcstr resource_name(e_resource r);
@@ -164,7 +171,7 @@ bstring1024 format(const T *o, pcstr fmt) {
         bstring128 loc("#");
         args_handled = sscanf(item.key.c_str(), "${loc.%[^}]}", loc.data() + 1);
         if (args_handled == 1) {
-            item.value = lang_text_from_key(loc.c_str());
+            item.value = ui::str_from_key(loc.c_str());
             continue;
         }
 
@@ -173,7 +180,8 @@ bstring1024 format(const T *o, pcstr fmt) {
         if (args_handled == 2) {
             bvariant bvar = o ? o->get_property(xstring(domain), xstring(prop)) : bvariant{};
             if (bvar.is_empty()) {
-                bvar = city_get_property(xstring(domain), xstring(prop));
+                ui_scope_property dummy;
+                bvar = dummy.get_property(xstring(domain), xstring(prop));
             }
 
             if (!bvar.is_empty()) {
@@ -217,6 +225,8 @@ struct element {
     draw_callback _draw_callback;
     bool fill_width = false;
     bool fill_height = false;
+
+    virtual ~element() {}
 
     virtual void draw(UiFlags flags) {}
     virtual void load(archive, element* parent, items &elems);
@@ -368,6 +378,8 @@ struct einner_panel : public element {
 
 struct elabel : public element {
     xstring _text;
+    xstring _js_textfn_ref;
+
     xstring _tooltip;
     xstring _format;
 
@@ -382,6 +394,8 @@ struct elabel : public element {
     UiFlags _flags;
     int _wrap;
     bool _clip_area;
+
+    ~elabel() override;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
