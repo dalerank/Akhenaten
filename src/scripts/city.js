@@ -35,11 +35,11 @@ city {
         }
     }
 
-    create_good_request : function(tag_id, resource, amount, months_initial) {
-        __city_create_good_request(tag_id, resource, amount, months_initial)
+    create_good_request : function(obj) {
+        __city_create_good_request(obj)
         return {
-            tag_id: tag_id
-            months_initial: months_initial
+            tag_id: tag_id,
+            months_initial: months_initial,
             execute: function() { __city_request_execute(tag_id) }
         }
     }
