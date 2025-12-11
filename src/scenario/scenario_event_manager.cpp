@@ -3,6 +3,7 @@
 #include "city/city_message.h"
 #include "core/string.h"
 #include "core/log.h"
+#include "core/variant.h"
 #include "event_phrases.h"
 #include "io/gamefiles/lang.h"
 #include "empire/empire.h"

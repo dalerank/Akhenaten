@@ -8,6 +8,7 @@
 #include "js/js_defines.h"
 #include "core/vec2i.h"
 #include "core/archive.h"
+#include "core/variant.h"
 
 #include <vector>
 #include <string>
@@ -117,6 +118,43 @@ namespace js_helpers {
         } else {
             js_invoke_and_push_impl(J, std::true_type{}, func);
         }
+    }
+
+    // Convert JS object to bvariant_map
+    inline bvariant_map js_object_to_bvariant_map(js_State *J, int idx) {
+        bvariant_map result;
+        if (!js_isobject(J, idx) || js_isarray(J, idx)) {
+            return result;
+        }
+        
+        js_pushiterator(J, idx, 1); // own properties only
+        pcstr key;
+        while ((key = js_nextiterator(J, -1))) {
+            js_getproperty(J, idx, key);
+            bvariant value;
+            
+            if (js_isboolean(J, -1)) {
+                value = bvariant(js_toboolean(J, -1));
+            } else if (js_isnumber(J, -1) || js_iscnumber(J, 1)) {
+                double num = js_tonumber(J, -1);
+                // Try to preserve integer if possible
+                if (num == (int)num) {
+                    value = bvariant((int)num);
+                } else {
+                    value = bvariant((float)num);
+                }
+            } else if (js_isstring(J, -1)) {
+                value = bvariant(xstring(js_tostring(J, -1)));
+            } else {
+                value = bvariant(); // none
+            }
+            
+            result.values[xstring(key)] = value;
+            js_pop(J, 1); // pop value
+        }
+        js_pop(J, 1); // pop iterator
+        
+        return result;
     }
 }
 
@@ -295,7 +333,25 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
     }
 
 #define ANK_FUNCTION_5(func) \
-    ANK_FUNCTION_NAMED_5(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type, function_traits<decltype(&func)>::arg<3>::type,  function_traits<decltype(&func)>::arg<4>::type)
+     ANK_FUNCTION_NAMED_5(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type, function_traits<decltype(&func)>::arg<3>::type,  function_traits<decltype(&func)>::arg<4>::type)
+
+#define ANK_FUNCTION_UNIFIED(func)                                                      \
+    func(const bvariant_map&);                                                          \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func);                   \
+    void permanent_js2cpp_callback_##func(js_State* J);                                 \
+    void register_js2cpp_callback_##func(js_State* J) {                                 \
+        static std::once_flag flag;                                                     \
+        std::call_once(flag, [] (js_State* J) {                                         \
+            REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##func, #func, 1);    \
+        }, J);                                                                          \
+    }                                                                                   \
+    void permanent_js2cpp_callback_##func(js_State *J) {                                \
+        bvariant_map params = js_helpers::js_object_to_bvariant_map(J, 1);              \
+        constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
+        js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(params); });     \
+    }                                                                                   \
+    function_traits<decltype(&func)>::return_type func
+
 
 #define ANK_PERMANENT_CALLBACK(event, a) \
     tmp_register_permanent_callback_ ##event(); \

@@ -150,7 +150,7 @@ function mission8_pharaoh_requested_luxury_goods(ev) {
 	}
 
 	mission.pharaoh_requested_luxury_goods = true
-	var request = city.create_good_request(/*tag_id*/1, RESOURCE_LUXURY_GOODS, /*amount*/2, /*months_initial*/4)
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_LUXURY_GOODS, amount: 2, months_initial: 4 })
 	request.execute()
 }
 
