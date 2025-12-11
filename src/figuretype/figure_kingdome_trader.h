@@ -23,12 +23,15 @@ public:
     struct runtime_data_t {
         empire_trader_handle trader;
         empire_city_handle empire_city;
+        uint16_t capacity;
         uint16_t amount_bought;
     } FIGURE_RUNTIME_DATA_T;
 
     struct static_params : figure_static_params {
         uint16_t wait_ticks_after_create;
+        uint16_t min_capacity;
         uint16_t max_capacity;
+        uint8_t capacity_random;
     } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override;
@@ -41,13 +44,19 @@ public:
     virtual xstring action_tip() const override;
     virtual void debug_show_properties() override;
     virtual bvariant get_property(const xstring& domain, const xstring& name) const override;
-    virtual uint16_t total_bought() const override { return runtime_data().amount_bought; }
     virtual void buy(int amounts) override { runtime_data().amount_bought += amounts; }
     virtual void sell(int amounts) override { base.resource_amount_full += amounts; }
+
+    virtual uint16_t total_bought() const override { return runtime_data().amount_bought; }
+    virtual uint16_t max_capacity() const override { return runtime_data().capacity; }
 
     empire_trader_handle empire_trader() const { return runtime_data().trader; }
     virtual empire_city_handle empire_city() const override { return runtime_data().empire_city; }
 
     void go_to_next_storageyard(tile2i src_tile, int distance_to_entry);
 };
-ANK_CONFIG_STRUCT(figure_trade_caravan::static_params, wait_ticks_after_create, max_capacity)
+ANK_CONFIG_STRUCT(figure_trade_caravan::static_params, 
+    wait_ticks_after_create, min_capacity, max_capacity, capacity_random)
+
+ANK_CONFIG_PROPERTY(figure_trade_caravan::runtime_data_t,
+    capacity, amount_bought)

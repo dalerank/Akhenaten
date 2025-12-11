@@ -14,5 +14,7 @@ public:
 
     virtual void buy(int amounts) = 0;
     virtual void sell(int amounts) = 0;
+
     virtual uint16_t total_bought() const = 0;
+    virtual uint16_t max_capacity() const = 0;
 };
