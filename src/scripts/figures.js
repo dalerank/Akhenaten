@@ -1199,7 +1199,7 @@ figure_trade_caravan {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
 	max_capacity : 800
 	min_capacity : 100
-	random_capacity : 700
+	capacity_random : 700
 }
 
 figure_caravan_donkey = {
