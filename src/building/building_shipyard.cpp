@@ -172,7 +172,7 @@ int approach_progress(int pct_workers, const T &thresholds) {
 }
 
 void building_shipyard::update_day() {
-    building_industry::update_day();
+    building_impl::update_day();
 
     int pct_workers = worker_percentage();
     int delta = 0;
@@ -236,13 +236,13 @@ void building_shipyard::update_day() {
 }
 
 void building_shipyard::update_month() {
-    building_industry::update_month();
+    building_impl::update_month();
 
     map_water_update_docking_points(base, get_orientation(), 2);
 }
 
 void building_shipyard::update_graphic() {
-    building_industry::update_graphic();
+    building_impl::update_graphic();
 
     xstring animkey;
     switch (runtime_data().process_type) {

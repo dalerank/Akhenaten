@@ -76,7 +76,7 @@ void building_clay_pit::production_finished() {
         base.stored_amount_first += ready_production();
 
         d.progress = 0;
-        d.has_raw_materials = false;
+        //d.has_raw_materials = false;
     }
 }
 
