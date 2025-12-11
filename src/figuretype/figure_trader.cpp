@@ -104,11 +104,11 @@ bool figure_trader::can_sell(building* b, empire_city_handle city) const {
 }
 
 int figure_trader::get_closest_storageyard(tile2i tile, empire_city_handle city, int distance_from_entry, tile2i &warehouse) {
-    const resource_list exportable = total_bought() < 800 
+    const resource_list exportable = total_bought() < max_capacity()
                                         ? g_empire.exportable_resources_from_city(city.handle)
                                         : resource_list{};
 
-    const resource_list importable = base.get_carrying_amount() < 800 
+    const resource_list importable = base.get_carrying_amount() < max_capacity()
                                         ? g_empire.importable_resources_from_city(city.handle)
                                         : resource_list{};
 

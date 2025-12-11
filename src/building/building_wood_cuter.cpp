@@ -18,12 +18,6 @@ void building_wood_cutter::on_create(int orientation) {
     runtime_data().max_gatheres = current_params().max_gatherers;
 }
 
-void building_wood_cutter::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-
-    iob->bind(BIND_SIGNATURE_UINT8, &d.max_gatheres);
-}
-
 bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_TREE);
 

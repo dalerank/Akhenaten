@@ -107,7 +107,7 @@ void building_jewels_workshop::start_production() {
     if (can_start_b && can_start_a) {
         auto &d = runtime_data();
         d.progress = 0;
-        d.has_raw_materials = true;
+       // d.has_raw_materials = true;
         
         int nearby_count = count_nearby_workshops();
         int reduction_per_workshop = current_params().material_reduction_per_nearby_workshop;

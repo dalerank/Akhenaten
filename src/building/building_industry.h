@@ -17,7 +17,7 @@ public:
         uint8_t unk_b[9];
         uint8_t unk_c[13];
         uint8_t produce_multiplier;
-        bool has_raw_materials;
+        //bool has_raw_materials;
         uint8_t unk_6[5];
         short reserved_id_13;
         uint8_t unk_40[40];
@@ -41,6 +41,7 @@ public:
     virtual void start_production() override;
     virtual void spawn_figure() override;
     virtual void update_count() const override;
+    virtual void update_day() override;
     virtual bool can_play_animation() const override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
 

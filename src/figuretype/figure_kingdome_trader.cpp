@@ -99,6 +99,10 @@ void figure_trade_caravan::debug_show_properties() {
 
 void figure_trade_caravan::on_create() {
     figure_trader::on_create();
+    auto &d = runtime_data();
+    const uint16_t max_capacity = (current_params().capacity_random == 0) ? 800 : current_params().capacity_random;
+    const uint16_t capacity = current_params().min_capacity + rand() % max_capacity;
+    d.capacity = std::clamp(capacity, current_params().min_capacity, current_params().max_capacity);
 }
 
 void figure_trade_caravan::on_destroy() {
@@ -231,9 +235,9 @@ void figure_trade_caravan::update_animation() {
 }
 
 bvariant figure_trade_caravan::get_property(const xstring& domain, const xstring& name) const {
-    auto& d = runtime_data();
-    if (domain == tags().figure && name == tags().capacity) {
-        return bvariant(current_params().max_capacity);
+    auto result = archive_helper::get(runtime_data(), name, domain == tags().figure);
+    if (result) {
+        return result.value();
     }
 
     return figure_impl::get_property(domain, name);
