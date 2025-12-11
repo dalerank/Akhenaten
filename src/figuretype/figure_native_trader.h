@@ -29,6 +29,7 @@ public:
     virtual void buy(int amounts) override { runtime_data().amount_bought += amounts; }
     virtual void sell(int amounts) override { base.resource_amount_full += amounts; }
     virtual uint16_t total_bought() const override { return runtime_data().amount_bought; }
+    virtual uint16_t max_capacity() const override { return 200; }
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
