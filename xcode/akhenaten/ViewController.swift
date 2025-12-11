@@ -1,6 +1,8 @@
 import Cocoa
 import Foundation
 import AppKit
+import CoreText
+import CryptoKit
 
 extension Substring {
     func intValue(forKey key: String) -> Int? {
@@ -22,6 +24,9 @@ class ViewController: NSViewController {
     @IBOutlet weak var linkLabel: NSTextField!
     
     @IBOutlet weak var install_soundpatch_button: NSButton!
+    @IBOutlet weak var already_installed: NSTextField!
+    
+    @IBOutlet weak var settings_tab: NSTabViewItem!
     
     @IBOutlet weak var language_selector: NSPopUpButton!
     
@@ -31,6 +36,9 @@ class ViewController: NSViewController {
     @IBOutlet weak var cursor_scaling: NSPopUpButton!
     @IBOutlet weak var window_width: NSTextField!
     @IBOutlet weak var window_height: NSTextField!
+    
+    @IBOutlet weak var game_font: NSPopUpButton!
+    
     
     var configWindowMode: Int = 1
     var configWindowWidth: Int = 800
@@ -51,15 +59,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let fileURL = FileManager.default
-            .homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Application Support/akhenaten/eventmsg.txt")
-        
-        if FileManager.default.fileExists(atPath: fileURL.path) {
-            startButton.isEnabled = true
-        } else {
-            startButton.isEnabled = false
-        }
+        isGOGinstalled()
         
         let urlString = "https://www.gog.com/de/game/pharaoh_cleopatra"
         let displayText = NSLocalizedString("Buy on GOG", comment: "")
@@ -108,9 +108,14 @@ class ViewController: NSViewController {
         language_selector.item(at: 6)?.tag = 6
         
         language_selector.addItem(
-            withTitle: "🇹🇭 " + NSLocalizedString("Thai (Missions only)", comment: "")
+            withTitle: "🇺🇸 " + NSLocalizedString("English", comment: "")
         )
         language_selector.item(at: 7)?.tag = 7
+        
+        language_selector.addItem(
+            withTitle: "🇹🇭 " + NSLocalizedString("Thai (Missions only)", comment: "")
+        )
+        language_selector.item(at: 8)?.tag = 8
         
         updateInstallButtonState()
         
@@ -132,6 +137,11 @@ class ViewController: NSViewController {
         // DANN Config laden und anwenden
         loadConfig()
         applyConfigToUI()
+        
+        registerCustomFonts()
+        setupGameFontPopup()
+        
+        updateInstalledSoundpatchLabel()
         
         let enabled = (configWindowMode == 1)
         
@@ -291,8 +301,33 @@ class ViewController: NSViewController {
                 // Overlay wieder ausblenden im Main Thread
                 DispatchQueue.main.async {
                     self?.hideOverlay()
+                    self?.isGOGinstalled()
                 }
             }
+        }
+    }
+    
+    func isGOGinstalled() {
+        let fileURL = FileManager.default
+            .homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Application Support/akhenaten/eventmsg.txt")
+        
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            startButton.isEnabled = true
+            language_selector.isEnabled = true
+            window_mode.isEnabled = true
+            screen_scaling.isEnabled = true
+            cursor_scaling.isEnabled = true
+            window_width.isEnabled = true
+            window_height.isEnabled = true
+        } else {
+            startButton.isEnabled = false
+            language_selector.isEnabled = false
+            window_mode.isEnabled = false
+            screen_scaling.isEnabled = false
+            cursor_scaling.isEnabled = false
+            window_width.isEnabled = false
+            window_height.isEnabled = false
         }
     }
     
@@ -349,8 +384,14 @@ class ViewController: NSViewController {
                 urlString: "https://www.sl-soft.de/extern/software/akhenaten/pharaoh_russian.7z",
                 archiveName: "pharaoh_russian.7z"
             )
-            
+        
         case 7:
+            installLanguagePack(
+                urlString: "https://www.sl-soft.de/extern/software/akhenaten/pharaoh_english.7z",
+                archiveName: "pharaoh_english.7z"
+            )
+            
+        case 8:
             installLanguagePack(
                 urlString: "https://www.sl-soft.de/extern/software/akhenaten/pharaoh_thai.7z",
                 archiveName: "pharaoh_thai.7z"
@@ -429,6 +470,7 @@ class ViewController: NSViewController {
             
             DispatchQueue.main.async { [weak self] in
                 self?.hideOverlay()
+                self?.updateInstalledSoundpatchLabel()
             }
         }
     }
@@ -613,7 +655,65 @@ class ViewController: NSViewController {
         overlayView?.removeFromSuperview()
         overlayView = nil
     }
+
+    func registerCustomFonts() {
+        // Alle TTFs im Subfolder "fonts" holen
+        let urls = Bundle.main.urls(forResourcesWithExtension: "ttf",
+                                    subdirectory: "fonts") ?? []
+
+        for url in urls {
+            CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+        }
+    }
+
+    func setupGameFontPopup() {
+        game_font.removeAllItems()
+        let fontNames = ["STIX Two Text Regular", "STIX Two Text Medium", "STIX Two Text Bold"]
+
+        for name in fontNames {
+            game_font.addItem(withTitle: name)
+            if let item = game_font.lastItem,
+               let font = NSFont(name: name, size: 17) {
+                let attr = NSAttributedString(string: name,
+                                              attributes: [.font: font])
+                item.attributedTitle = attr
+            }
+        }
+    }
     
+    func updateInstalledSoundpatchLabel() {
+        let fm = FileManager.default
+        let home = fm.homeDirectoryForCurrentUser
+        let fileURL = home
+            .appendingPathComponent("Library/Application Support/akhenaten/AUDIO/Voice/Mission/200_mission_classic.mp3")
+
+        // SHA1 -> Flaggen-Emoji
+        let hashToFlag: [String: String] = [
+            "7f97701612bd31d436047d58ffb396971a849aa7": "🇺🇸",
+            "76fb6ac52aec51fb270a0e596095e01bcc0351c8": "🇷🇺",
+            "a04b6a370f20fac7161c272a7134a2fdebcaf474": "🇩🇪",
+            "819e4fe1f7ff84eec60db93dac11bce72658f61a": "🇫🇷",
+            "371c0ca3d78d8efa8bd6db00523d862a593b1872": "🇵🇱",
+            "c9798ccdcf3a44fc35de7802e28758b9ea50843c": "🇮🇹",
+            "c92e5c2e48c40909a721993f1e1cfeee1ca683f9": "🇹🇭",
+            "4bbae939a12a71ec8d87dc62a47d3c8e1ea883c3": "🇪🇸"
+        ]
+
+        guard let data = try? Data(contentsOf: fileURL) else {
+            already_installed.stringValue = ""
+            return
+        }
+
+        let digest = Insecure.SHA1.hash( data: data)
+        let hex = digest.map { String(format: "%02x", $0) }.joined()
+
+        if let flag = hashToFlag[hex] {
+            already_installed.stringValue = flag
+        } else {
+            already_installed.stringValue = ""
+        }
+    }
+
     @IBAction func quitApp(_ sender: Any) {
         NSApp.terminate(nil)
     }

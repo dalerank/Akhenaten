@@ -205,8 +205,8 @@
                                             </subviews>
                                         </view>
                                     </tabViewItem>
-                                    <tabViewItem label="Setttngs/Patches" identifier="" id="6un-lu-s78">
-                                        <view key="view" id="nTv-iP-fEn">
+                                    <tabViewItem label="Settings/Patches" identifier="" id="6un-lu-s78">
+                                        <view key="view" wantsLayer="YES" id="nTv-iP-fEn">
                                             <rect key="frame" x="10" y="33" width="388" height="226"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -348,6 +348,57 @@
                                                         <action selector="quitApp:" target="XfG-lQ-9wD" id="cXt-fa-uyf"/>
                                                     </connections>
                                                 </button>
+                                                <popUpButton hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4zF-W8-qjP">
+                                                    <rect key="frame" x="10" y="14" width="251" height="24"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="fq8-sO-9EI">
+                                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                        <font key="font" metaFont="menu"/>
+                                                        <menu key="menu" id="d5D-sy-zTg"/>
+                                                    </popUpButtonCell>
+                                                </popUpButton>
+                                                <textField hidden="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="37Z-Ut-rAl">
+                                                    <rect key="frame" x="11" y="47" width="165" height="16"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Ingame Font" id="ptE-uI-FbZ">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4CG-Q9-Ar1">
+                                                    <rect key="frame" x="200" y="200" width="131" height="16"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Already Installed" id="KJB-RC-qjE">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <box fixedFrame="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Lkx-d2-jfI">
+                                                    <rect key="frame" x="337" y="196" width="28" height="25"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <view key="contentView" id="50h-BG-WLO">
+                                                        <rect key="frame" x="1" y="1" width="26" height="23"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <subviews>
+                                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BHR-lp-Xeh">
+                                                                <rect key="frame" x="-2" y="2" width="31" height="23"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                <shadow key="shadow">
+                                                                    <size key="offset" width="1" height="1"/>
+                                                                    <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </shadow>
+                                                                <textFieldCell key="cell" lineBreakMode="clipping" id="cCi-4t-QcX">
+                                                                    <font key="font" metaFont="system" size="22"/>
+                                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                        </subviews>
+                                                    </view>
+                                                    <color key="fillColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                </box>
                                             </subviews>
                                         </view>
                                     </tabViewItem>
@@ -356,12 +407,15 @@
                         </subviews>
                     </view>
                     <connections>
+                        <outlet property="already_installed" destination="BHR-lp-Xeh" id="fUH-g9-DkN"/>
                         <outlet property="cursor_scaling" destination="nev-7c-7aX" id="tgU-5e-HSg"/>
+                        <outlet property="game_font" destination="4zF-W8-qjP" id="TAu-F9-qR8"/>
                         <outlet property="installButton" destination="ddw-4Q-YR8" id="Q8i-YU-swr"/>
                         <outlet property="install_soundpatch_button" destination="baV-Cl-T3Z" id="KMq-XY-PVA"/>
                         <outlet property="language_selector" destination="0dR-2d-ALz" id="NWK-61-3Ui"/>
                         <outlet property="linkLabel" destination="adK-ZN-EBu" id="hIV-6j-XnC"/>
                         <outlet property="screen_scaling" destination="GCH-dd-HMy" id="4N3-pa-d5e"/>
+                        <outlet property="settings_tab" destination="6un-lu-s78" id="WOC-kF-fXG"/>
                         <outlet property="startButton" destination="1Qt-Ec-dyv" id="dhL-0t-wVn"/>
                         <outlet property="updatesButton" destination="ZDJ-XN-FcS" id="GRY-xx-AkH"/>
                         <outlet property="visitButton" destination="fHL-hh-VRm" id="qXH-sy-Ecv"/>
