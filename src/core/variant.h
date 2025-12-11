@@ -250,4 +250,111 @@ protected:
 };
 
 using bvariant = variant_t<8>;
-using bvariant_map = std::unordered_map<xstring, bvariant>;
+
+struct bvariant_map {
+    using ValuesT = std::unordered_map<xstring, bvariant>;
+
+    const bvariant& def() const {
+        static bvariant dummy;
+        return dummy;
+    }
+
+    const bvariant& value(const xstring &name) const {
+        auto it = values.find(name);
+        return (it != values.end()) ? it->second : def();
+    }
+
+    inline float n(const xstring &name) const {
+        const auto &v = value(name);
+        switch (v.value_type()) {
+        case bvariant::etype_bool: return (v.as_bool() ? 1.f : 0.f);
+        case bvariant::etype_u16: return v.as_u16();
+        case bvariant::etype_int32: return v.as_int32();
+        case bvariant::etype_uint32: return v.as_uint32();
+        case bvariant::etype_uint64: return v.as_uint64();
+        case bvariant::etype_float: return v.as_float();
+        }
+
+        return 0.f;
+    }
+
+    inline bool bool_or_def(const xstring &name, const bool def) const { 
+        const auto &v = value(name);
+        return v.is_bool() ? v.as_bool() : def; 
+    }
+
+    inline int32_t int32_or_def(const xstring &name, const int32_t def) const {
+        const auto &v = value(name);
+        return v.is_int32() ? v.as_int32() : def; 
+    }
+    inline int32_t i32(const xstring &name, const int32_t def = 0) const {
+        return int32_or_def(name, def);
+    }
+
+    inline uint32_t uint32_or_def(const xstring &name, const uint32_t def) const { 
+        const auto &v = value(name);
+        return v.is_uint32() ? v.as_uint32() : def; 
+    }
+
+    inline uint32_t u32(const xstring &name, const uint32_t def = 0) const {
+        return uint32_or_def(name, def);
+    }
+
+    inline uint64_t uint64_or_def(const xstring &name, const uint64_t def) const { 
+        const auto &v = value(name);
+        return v.is_uint64() ? v.as_uint64() : def;
+    }
+
+    inline uint64_t u64(const xstring &name, const uint64_t def = 0) const {
+        return uint64_or_def(name, def);
+    }
+
+    inline float float_or_def(const xstring& name, const float def) const { 
+        const auto &v = value(name);
+        return v.is_float() ? v.as_float() : def; 
+    }
+
+    inline float f(const xstring &name, const float def = 0.0f) const {
+        return float_or_def(name, def);
+    }
+
+    inline const xstring &str_or_def(const xstring &name, const xstring &def) const {
+        const auto &v = value(name);
+        return v.is_str() ? v.as_str() : def; 
+    }
+
+    inline const xstring &s(const xstring &name, const xstring &def = xstring()) const {
+        return str_or_def(name, def);
+    }
+
+    inline vec2i vec2i_or_def(const xstring &name, const vec2i &def) const { 
+        const auto &v = value(name);
+        return v.is_vec2i() ? v.as_vec2i() : def; 
+    }
+
+    inline uint8_t value_type(const xstring &name) const { 
+        return value(name).value_type();
+    }
+
+    const bvariant& operator[](const xstring& name) const {
+        auto it = values.find(name);
+        return (it != values.end()) ? it->second : def();
+    }
+
+    bvariant &operator[](const xstring &name) {
+        return values[name];
+    }
+
+    ValuesT::iterator find(const xstring &name) { return values.find(name); }
+    ValuesT::const_iterator find(const xstring &name) const { return values.find(name); }
+
+    ValuesT::iterator begin() { return values.begin(); }
+    ValuesT::const_iterator begin() const { return values.begin(); }
+    ValuesT::const_iterator cbegin() const { return values.cbegin(); }
+
+    ValuesT::iterator end() { return values.end(); }
+    ValuesT::const_iterator end() const { return values.end(); }
+    ValuesT::const_iterator cend() const { return values.cend(); }
+
+    ValuesT values;
+};

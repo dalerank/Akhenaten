@@ -3,6 +3,7 @@
 #include "core/archive.h"
 #include "core/bstring.h"
 #include "core/tokenum.h"
+#include "core/variant.h"
 #include "game/simulation_time.h"
 #include "game/resource.h"
 
