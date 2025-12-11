@@ -100,7 +100,8 @@ void figure_trade_caravan::debug_show_properties() {
 void figure_trade_caravan::on_create() {
     figure_trader::on_create();
     auto &d = runtime_data();
-    const uint16_t capacity = current_params().min_capacity + rand() % current_params().capacity_random;
+    const uint16_t max_capacity = (current_params().capacity_random == 0) ? 800 : current_params().capacity_random;
+    const uint16_t capacity = current_params().min_capacity + rand() % max_capacity;
     d.capacity = std::clamp(capacity, current_params().min_capacity, current_params().max_capacity);
 }
 
