@@ -2,9 +2,9 @@
 
 #include "building/building_industry.h"
 
-class building_shipyard : public building_industry {
+class building_shipyard : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_SHIPWRIGHT, building_shipyard, building_industry)
+    BUILDING_METAINFO(BUILDING_SHIPWRIGHT, building_shipyard, building_impl)
 
     virtual building_shipyard *dcast_shipyard() override { return this; }
 

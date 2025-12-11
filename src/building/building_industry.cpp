@@ -31,7 +31,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.produce_multiplier);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.has_raw_materials);
+    iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &d.has_raw_materials);
     iob->bind____skip(1);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT16, &d.progress_max);
@@ -78,7 +78,7 @@ void building_industry::update_graphic() {
 
 void building_industry::update_production() {
     auto &d = runtime_data();
-    d.has_raw_materials = false;
+    // d.has_raw_materials = false;
 
     if (g_city.resource.is_mothballed(base.output.resource)) {
         return;
@@ -138,8 +138,8 @@ void building_industry::start_production() {
 
     if (can_start_b && can_start_a) {
         auto &d = runtime_data();
-        d.progress = 0;
-        d.has_raw_materials = true;
+        d.progress = 1;
+        // d.has_raw_materials = true;
         if (base.stored_amount_second >= 100) {
             base.stored_amount_second -= 100;
         }
@@ -163,19 +163,12 @@ void building_industry::spawn_figure() {
         return;
     }
 
-    const auto &industryd = runtime_data();
-    assert(industryd.progress_max > 100);
-    const bool has_produced_resource = (industryd.progress >= industryd.progress_max);
-
-    if (has_produced_resource) {
-        production_finished();
-    }
-
-    if (has_produced_resource) {
-        start_production();
-        const int expected_produce = ready_production();
-        create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
-        events::emit(event_produced_resources{ base.output.resource, expected_produce });
+    const uint16_t stored_output = base.stored_amount(base.output.resource);
+    const uint16_t load_to_cart = ready_production();
+    if (stored_output >= load_to_cart) {
+        
+        create_cartpusher(base.output.resource, load_to_cart, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+        events::emit(event_produced_resources{ base.output.resource, load_to_cart });
     }
 }
 
@@ -188,6 +181,23 @@ void building_industry::update_count() const {
 
     if (base.output.resource_second != RESOURCE_NONE) {
         g_city.buildings.increase_industry_count(base.output.resource_second, num_workers() > 0);
+    }
+}
+
+void building_industry::update_day() {
+    building_impl::update_day();
+    const auto &d = runtime_data();
+
+    assert(d.progress_max > 100);
+    const bool has_produced_resource = (d.progress >= d.progress_max);
+
+    if (has_produced_resource) {
+        production_finished();
+        return;
+    }
+
+    if (d.progress == 0) {
+        start_production();
     }
 }
 
@@ -208,6 +218,6 @@ void building_industry::debug_draw_properties() {
     game_debug_show_property("spawned_worker_this_month", d.spawned_worker_this_month);
     game_debug_show_property("max_gatheres", d.max_gatheres);
     game_debug_show_property("produce_multiplier", d.produce_multiplier);
-    game_debug_show_property("has_raw_materials", d.has_raw_materials);
+    //game_debug_show_property("has_raw_materials", d.has_raw_materials);
     game_debug_show_property("processed_figure", d.processed_figure);
 }
