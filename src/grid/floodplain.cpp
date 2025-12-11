@@ -185,7 +185,7 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
         } else {
             int fertility_value = map_get_fertility(grid_offset, FERT_WITH_MALUS);
             int fertility_index = std::clamp(fertility_value / 25, 0, 3);
-            int image_id = image_group(floodplain_tile);
+            int image_id = floodplain_tile.tid();
             image_id += 12 * fertility_index;
             map_image_set(grid_offset, image_id);
         }
@@ -340,7 +340,7 @@ void set_floodplain_land_tiles_image(int grid_offset, bool force) {
     }
 
     int growth = map_get_floodplain_growth(grid_offset);
-    int image_id = image_group(floodplain_tile) + growth;
+    int image_id = floodplain_tile.tid() + growth;
     int image_alt_id = image_id;
     int fertility_index = 0;
 
@@ -412,13 +412,13 @@ void map_image_set_road_floodplain(tile2i tile) {
     const int grid_offset = tile.grid_offset();
     const terrain_image img = map_image_context_get_dirt_road(tile);
     if (map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_FLOODPLAIN)) {
-        map_image_set(grid_offset, image_group(floodplain_tile) + 84);
+        map_image_set(grid_offset, floodplain_tile.tid() + 84);
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(1, 0), TERRAIN_FLOODPLAIN)) {
-        map_image_set(grid_offset, image_group(floodplain_tile) + 85);
+        map_image_set(grid_offset, floodplain_tile.tid() + 85);
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_FLOODPLAIN)) {
-        map_image_set(grid_offset, image_group(floodplain_tile) + 86);
+        map_image_set(grid_offset, floodplain_tile.tid() + 86);
     } else if (map_terrain_is(grid_offset + GRID_OFFSET(-1, 0), TERRAIN_FLOODPLAIN)) {
-        map_image_set(grid_offset, image_group(floodplain_tile) + 87);
+        map_image_set(grid_offset, floodplain_tile.tid() + 87);
     } else {
         int base_img = building_static_params::get(BUILDING_ROAD).base_img();
         map_image_set(grid_offset, base_img + img.group_offset + img.item_offset + 49);
@@ -438,7 +438,7 @@ void set_floodplain_edges_image(int grid_offset) {
         }
 
         const terrain_image img = map_image_context_get_floodplain_shore(tile2i(grid_offset)); // this checks against FLOODPLAIN tiles
-        image_id = image_group(floodplain_tile) + 48 + img.group_offset + img.item_offset;
+        image_id = floodplain_tile.tid() + 48 + img.group_offset + img.item_offset;
 
     } else { // floodplain which is ALSO flooded --  this is a waterline
         const terrain_image img = map_image_context_get_floodplain_waterline(tile2i(grid_offset)); // this checks against WATER tiles

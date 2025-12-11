@@ -40,10 +40,10 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
         if (image_id < 0) {
             const bool isdown = (buttons[i].state & 0x10);
             if (tiny) {
-                image_id = image_group(isdown ? g_arrow_button_images.arrow_button_tiny_down : g_arrow_button_images.arrow_button_tiny_up);
+                image_id = (isdown ? g_arrow_button_images.arrow_button_tiny_down : g_arrow_button_images.arrow_button_tiny_up).tid();
                 image_id += (buttons[i].state & 0xf);
             } else {
-                image_id = image_group(isdown ? g_arrow_button_images.arrow_button_down : g_arrow_button_images.arrow_button_up);
+                image_id = (isdown ? g_arrow_button_images.arrow_button_down : g_arrow_button_images.arrow_button_up).tid();
                 image_id += buttons[i].pressed ? -1 : 0;
             }
         }

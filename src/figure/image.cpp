@@ -168,10 +168,10 @@ void figure::cart_image_update() {
     case RESOURCE_BRICKS:
         if (resource_amount_full > 0) {
             image_desc imgd = resource_to_sled_image(resource_id);
-            cart_image_id = image_group(imgd);
+            cart_image_id = imgd.tid();
         } else {
             image_desc imgd = resource_to_sled_image(RESOURCE_NONE);
-            cart_image_id = image_group(imgd);
+            cart_image_id = imgd.tid();
         }
         break;
 
@@ -184,16 +184,16 @@ void figure::cart_image_update() {
     case RESOURCE_GEMS:
     case RESOURCE_FLAX:
     case RESOURCE_TIMBER:
-        cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
+        cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
         if (resource_amount_full > 0) {
-            cart_image_id = image_group(resource2cartanim(resource_id));
+            cart_image_id = resource2cartanim(resource_id).tid();
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 * amount_offset;
         }
         break;
 
     default:
-        cart_image_id = image_group(resource2cartanim(RESOURCE_NONE));
+        cart_image_id = resource2cartanim(RESOURCE_NONE).tid();
         if (resource_amount_full > 0) {
             int amount_offset = cart_image_offset_from_amount(resource_amount_full);
             cart_image_id += 8 + 24 * (resource_id - 1) + 8 * amount_offset;

@@ -136,7 +136,6 @@ bool image_data_render_on_new_loadpacks();
 bool image_load_paks();
 
 int image_id_resource_icon(int resource);
-int image_group(image_desc desc);
 int image_id_from_group(int collection, int group);
 
 const image_t* image_get(int id);
