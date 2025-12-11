@@ -536,7 +536,7 @@ const image_t *ui::eimage(int imgid, vec2i pos) {
 const image_t *ui::eimage(image_desc imgd, vec2i pos) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    return ctx.img_generic(image_group(imgd), pos + offset);
+    return ctx.img_generic(imgd.tid(), pos + offset);
 }
 
 void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
@@ -574,7 +574,7 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
 void ui::icon(vec2i pos, e_advisor adv) {
     painter ctx = game.painter();
     const vec2i offset = g_state.offset();
-    ctx.img_generic(image_group(advisor_icons) + (adv - 1), offset + pos);
+    ctx.img_generic(advisor_icons.tid() + (adv - 1), offset + pos);
 }
 
 arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
@@ -740,7 +740,7 @@ void ui::eimg::draw(UiFlags flags) {
     if (isometric) {
         const vec2i offset = g_state.offset();
         painter ctx = game.painter();
-        ctx.img_isometric(image_group(img_desc), offset + pos, COLOR_MASK_NONE);
+        ctx.img_isometric(img_desc.tid(), offset + pos, COLOR_MASK_NONE);
     } else {
         ui::eimage(img_desc, pos);
     }
@@ -771,7 +771,7 @@ void ui::eimg::image(int image) {
 
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
-    ImageDraw::img_background(ctx, image_group(img_desc), 1.f, pos);
+    ImageDraw::img_background(ctx, img_desc.tid(), 1.f, pos);
 }
 
 void ui::ebackground::load(archive arch, element *parent, items &elems) {
@@ -783,6 +783,7 @@ void ui::ebackground::load(archive arch, element *parent, items &elems) {
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
+    img_desc.path = arch.r_string("path");
 }
 
 void ui::eborder::load(archive arch, element *parent, items &elems) {
@@ -811,7 +812,7 @@ void ui::eresource_icon::draw(UiFlags flags) {
 }
 
 int image_id_resource_icon(int resource) {
-    return image_group(ui::resource_icons) + resource;
+    return ui::resource_icons.tid() + resource;
 }
 
 void ui::eresource_icon::image(int image) {

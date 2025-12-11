@@ -134,7 +134,7 @@ void widget_sidebar_editor_draw_background() {
     painter ctx = game.painter();
 
     image_desc side_panel{ PACK_GENERAL, 121 };
-    int image_base = image_group(side_panel);
+    int image_base = side_panel.tid();
     int x_offset = sidebar_common_get_x_offset_expanded();
     ctx.img_generic(image_base, { x_offset, TOP_MENU_HEIGHT });
     draw_buttons();

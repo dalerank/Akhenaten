@@ -190,15 +190,15 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
         break;
 
     case ROUTE_CLOSED_SELECTED: // highlighted, closed
-        image_id = image_group(closed_trade_route_hl);
+        image_id = closed_trade_route_hl.tid();
         break;
 
     case ROUTE_OPEN: // open
-        image_id = image_group(open_trade_route);
+        image_id = open_trade_route.tid();
         break;
 
     case ROUTE_OPEN_SELECTED: // highlighted, open
-        image_id = image_group(open_trade_route_hl);
+        image_id = open_trade_route_hl.tid();
         break;
     }
 

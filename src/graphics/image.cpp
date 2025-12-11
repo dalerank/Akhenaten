@@ -101,10 +101,6 @@ static imagepak* pak_from_collection_id(int collection) {
     return nullptr;
 }
 
-int image_group(image_desc desc) {
-    return image_id_from_group(desc.pack, desc.id) + desc.offset;
-}
-
 int image_id_from_group(int collection, int group) {
     imagepak* pak = pak_from_collection_id(collection);
     if (pak == nullptr) {

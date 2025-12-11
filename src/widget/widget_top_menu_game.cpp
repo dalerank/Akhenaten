@@ -655,7 +655,7 @@ void widget_sub_menu_show() {
 void top_menu_widget_t::draw_background_impl() {
     painter ctx = game.painter();
 
-    int img_id = image_group(background);
+    int img_id = background.tid();
     const image_t *img = image_get(img_id);
     const int block_width = img->width;
     assert(block_width > 0);

@@ -13,7 +13,7 @@ int sidebar_common_get_height() {
 void sidebar_common_draw_relief(vec2i offset, image_desc desc) {
     painter ctx = game.painter();
 
-    int image_id = image_group(desc);
+    int image_id = desc.tid();
     int y_max = screen_height();
 
     while (offset.y < y_max) {

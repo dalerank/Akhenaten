@@ -67,7 +67,7 @@ int building_statue::get_image(e_building_type type, int orientation, int varian
     while (variant > (size - 1)) { variant -= size; }
 
     variant %= size;
-    return image_group(statue_params.variants[variant]);
+    return statue_params.variants[variant].tid();
 }
 
 void building_statue::preview::setup_preview_graphics(build_planner &planer) const {
