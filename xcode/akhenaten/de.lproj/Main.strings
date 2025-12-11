@@ -10,7 +10,7 @@
 /* Class = "NSMenuItem"; title = "About akhenaten"; ObjectID = "5kV-Vb-QxS"; */
 "5kV-Vb-QxS.title" = "Über akhenaten";
 
-/* Class = "NSTabViewItem"; label = "Setttngs/Patches"; ObjectID = "6un-lu-s78"; */
+/* Class = "NSTabViewItem"; label = "Settings/Patches"; ObjectID = "6un-lu-s78"; */
 "6un-lu-s78.label" = "Einstellungen/Patches";
 
 /* Class = "NSButtonCell"; title = "Download and Install"; ObjectID = "9YE-lD-QlQ"; */
@@ -37,6 +37,9 @@
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "Kd2-mp-pUS"; */
 "Kd2-mp-pUS.title" = "Alle zeigen";
 
+/* Class = "NSTextFieldCell"; title = "Already Installed"; ObjectID = "KJB-RC-qjE"; */
+"KJB-RC-qjE.title" = "Bereits installiert";
+
 /* Class = "NSButtonCell"; title = "Window Mode"; ObjectID = "Lzr-6D-cbO"; */
 "Lzr-6D-cbO.title" = "Fenster Modus";
 
@@ -45,6 +48,9 @@
 
 /* Class = "NSTextFieldCell"; title = "Sound Patches"; ObjectID = "ozG-ql-U8n"; */
 "ozG-ql-U8n.title" = "Sound Patches";
+
+/* Class = "NSTextFieldCell"; title = "Ingame Font"; ObjectID = "ptE-uI-FbZ"; */
+"ptE-uI-FbZ.title" = "Ingame Schriftart";
 
 /* Class = "NSButtonCell"; title = "Visit GitHub Repo"; ObjectID = "puM-Ju-0YN"; */
 "puM-Ju-0YN.title" = "Besuche GitHub Projekt";

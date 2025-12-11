@@ -46,7 +46,6 @@ function gog_install()
         mkdir -p "$HOME/.config/akhenaten"
     fi
 
-    
     if [ ! -f "$HOME/.config/akhenaten/akhenaten.cfg" ]; then
         echo "data_directory=""$DataPath" > "$HOME/.config/akhenaten/akhenaten.cfg"
         echo "window_mode=0" >> "$HOME/.config/akhenaten/akhenaten.cfg"

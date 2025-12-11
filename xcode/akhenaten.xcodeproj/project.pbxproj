@@ -82,6 +82,16 @@
 			name = "Copy 7z";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2A0B89002EEAB89B00EEE9B3 /* Copy fonts */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = fonts;
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			name = "Copy fonts";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2A1974DB2ED8D39300CB7863 /* Copy innoextract */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -168,6 +178,15 @@
 				bin/7z,
 			);
 		};
+		2A0B89102EEAB94400EEE9B3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 2A0B89002EEAB89B00EEE9B3 /* Copy fonts */;
+			membershipExceptions = (
+				"fonts/stixtwotext-bold.ttf",
+				"fonts/stixtwotext-medium.ttf",
+				"fonts/stixtwotext-regular.ttf",
+			);
+		};
 		2A1974E92ED8D3AB00CB7863 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
@@ -232,7 +251,7 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2AC621222ED8833F0023FB4E /* akhenaten */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2A1974DA2ED8D38600CB7863 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2A1974E92ED8D3AB00CB7863 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 2A0ADD6D2EE8EDF60080CBED /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = akhenaten; sourceTree = "<group>"; };
+		2AC621222ED8833F0023FB4E /* akhenaten */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2A1974DA2ED8D38600CB7863 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2A1974E92ED8D3AB00CB7863 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 2A0B89102EEAB94400EEE9B3 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 2A0ADD6D2EE8EDF60080CBED /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = akhenaten; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +309,7 @@
 				2AC6211D2ED8833F0023FB4E /* Frameworks */,
 				2AC6211E2ED8833F0023FB4E /* Resources */,
 				2A1974DB2ED8D39300CB7863 /* Copy innoextract */,
+				2A0B89002EEAB89B00EEE9B3 /* Copy fonts */,
 				2A0ADD6B2EE8EDE40080CBED /* Copy 7z */,
 				2AC6216E2ED886340023FB4E /* Copy akhenaten binary */,
 				2AC6217D2ED886EE0023FB4E /* CopyFiles */,
@@ -456,7 +476,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/imgui.ini\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/akhenaten-log.txt\n\ncodesign --force --deep --sign \"Apple Development: apple@slsoft.de (85JZW6284R)\" \"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/akhenaten/upload\"\nif [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    cp \"$HOME/Documents/Xcode/akhenatenLauncher/akhenaten/akhenaten.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/akhenaten.zip\"\nfi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
+			shellScript = "MAIN_APP_PATH=\"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/imgui.ini\nrm \"$MAIN_APP_PATH\"/Contents/Resources/game/akhenaten-log.txt\n\ncodesign --force --deep --sign \"Apple Development: apple@slsoft.de (85JZW6284R)\" \"${BUILT_PRODUCTS_DIR}/${PROJECT_NAME}.app\"\n\n# Prüft Signierung\nif ! spctl --assess --type execute --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Gatekeeper hat die App abgelehnt.\"\n    exit 1\nfi\n\nif ! codesign --verify --deep --strict --verbose=4 \"$MAIN_APP_PATH\"; then\n    echo \"❌ Signaturprüfung fehlgeschlagen.\"\n    exit 1\nfi\n\nERRORS=0\n\nfind \"$MAIN_APP_PATH\" -type f -perm -111 | while IFS= read -r file; do\n    if ! codesign --verify --verbose=4 \"$file\" >/dev/null 2>&1; then\n        echo \"❌ Fehlerhafte Signatur: $file\"\n        ERRORS=1\n    fi\ndone\n\nif [ \"$ERRORS\" -ne 0 ]; then\n    echo \"❌ Mindestens eine Datei im Bundle ist falsch signiert.\"\n    exit 1\nfi\n\n# Prüfen, ob das Upload-Verzeichnis existiert, und Dateien vorbereiten\nUPLOAD_DIR=\"/Volumes/Homeshare/Xcode/akhenaten/upload\"\nif [ -d \"$UPLOAD_DIR\" ]; then\n\n    # HTML-Datei kopieren\n    cp \"$HOME/Documents/GitHub/akhenaten/xcode/akhenaten/akhenaten.html\" \"$UPLOAD_DIR/\"\n    \n    # App als ZIP-Archiv erstellen\n    ditto -c -k --sequesterRsrc --keepParent \"$MAIN_APP_PATH\" \"$UPLOAD_DIR/akhenaten.zip\"\nfi\n\n# Sicherstellen, dass keine alte Version der App auf dem Desktop existiert\nDESKTOP_APP=\"$HOME/Desktop/${PROJECT_NAME}.app\"\nif [ -d \"$DESKTOP_APP\" ]; then\n    rm -rf \"$DESKTOP_APP\"\nfi\n\n# App auf den Desktop kopieren\ncp -a \"$MAIN_APP_PATH\" \"$HOME/Desktop/\"\n";
 		};
 		2ABE3CB52ED8924300C22DCE /* Compile */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -691,7 +711,7 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10973;
+				CURRENT_PROJECT_VERSION = 10980;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_DEBUG_DYLIB = NO;
@@ -749,7 +769,7 @@
 				AUTOMATION_APPLE_EVENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 10973;
+				CURRENT_PROJECT_VERSION = 10980;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4ATFWV7M4B;
 				ENABLE_APP_SANDBOX = NO;
