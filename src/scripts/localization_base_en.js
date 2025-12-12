@@ -4403,15 +4403,6 @@ localization_base_en = [
     { group:152, id:28, text: "XVIII" }
     { group:152, id:29, text: "XXIX" }
     { group:152, id:30, text: "XXX" }
-    { group:153, id:0, text: "Difficulty settings" }
-    { group:153, id:1, text: "Very easy" }
-    { group:153, id:2, text: "Easy" }
-    { group:153, id:3, text: "Normal" }
-    { group:153, id:4, text: "Hard" }
-    { group:153, id:5, text: "Very hard" }
-    { group:153, id:6, text: "Gods effects OFF" }
-    { group:153, id:7, text: "Gods effects ON" }
-    { group:153, id:8, text: "Right click to continue" }
     { group:154, id:0, text: "Hunting Lodge" }
     { group:154, id:1, text: "Hunters based here track and hunt local wildlife. The Hunting Lodge then distributes game meat to local Storage Yards or Granaries." }
     { group:154, id:2, text: "Production is" }

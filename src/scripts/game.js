@@ -14,4 +14,7 @@ game {
         [property]
         h { get: __game_screen_height }
     }
+
+    [property]
+    difficulty { get: __game_difficulty }
 }

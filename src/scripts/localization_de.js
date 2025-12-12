@@ -1144,4 +1144,17 @@ localization_de = [
   { key: "#magistrate_courthouse_in_peace", text: "Alles ist ruhig am Gericht. Es gibt hier keine Verbrechen." }
   { key: "#magistrate_i_have_only_minor_cases", text: "Ich verhandle nur Bagatellsachen. Nichts zu Ernstes!" }
   { key: "#magistrate_i_am_overwhelmed", text: "Ich kann kaum meinen Fallbestand bewältigen, und trotzdem sind die Straßen noch unsicher." }
+
+  // group 153
+  { key: "#difficulty_settings", text: "Schwierigkeitseinstellungen" }
+  { key: "#difficulty_right_click_to_continue", text: "Rechtsklick zum Fortfahren" }
+
+  { key: "#difficulty_very_easy", text: "Sehr leicht" }
+  { key: "#difficulty_easy", text: "Leicht" }
+  { key: "#difficulty_normal", text: "Normal" }
+  { key: "#difficulty_hard", text: "Schwer" }
+  { key: "#difficulty_very_hard", text: "Sehr schwer" }
+  
+  { key: "#difficulty_gods_effects_off", text: "Göttereffekte AUS" }
+  { key: "#difficulty_gods_effects_on", text: "Göttereffekte AN" }
 ]

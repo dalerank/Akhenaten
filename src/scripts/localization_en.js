@@ -1150,4 +1150,23 @@ localization_en = [
   { key: "#god_ptah", text: "Ptah" }
   { key: "#god_seth", text: "Seth" }
   { key: "#god_bast", text: "Bast" }
+
+  { key: "#god_to_osiris", text: "Osiris" }
+  { key: "#god_to_ra", text: "Ra" }
+  { key: "#god_to_ptah", text: "Ptah" }
+  { key: "#god_to_seth", text: "Seth" }
+  { key: "#god_to_bast", text: "Bast" }
+
+  // group 153
+  { key: "#difficulty_settings", text: "Difficulty settings" }
+  { key: "#difficulty_right_click_to_continue", text: "Right click to continue" }
+
+  { key: "#difficulty_very_easy", text: "Very easy" }
+  { key: "#difficulty_easy", text: "Easy" }
+  { key: "#difficulty_normal", text: "Normal" }
+  { key: "#difficulty_hard", text: "Hard" }
+  { key: "#difficulty_very_hard", text: "Very hard" }
+  
+  { key: "#difficulty_gods_effects_off", text: "Gods effects OFF" }
+  { key: "#difficulty_gods_effects_on", text: "Gods effects ON" }
 ]

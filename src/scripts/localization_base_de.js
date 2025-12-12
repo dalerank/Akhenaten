@@ -4408,15 +4408,7 @@ localization_base_de = [
     { group:152, id:28, text: "XVIII" }
     { group:152, id:29, text: "XXIX" }
     { group:152, id:30, text: "XXX" }
-    { group:153, id:0, text: "Schwierigkeitseinstellungen" }
-    { group:153, id:1, text: "Sehr leicht" }
-    { group:153, id:2, text: "Leicht" }
-    { group:153, id:3, text: "Normal" }
-    { group:153, id:4, text: "Schwer" }
-    { group:153, id:5, text: "Sehr schwer" }
-    { group:153, id:6, text: "Göttereffekte AUS" }
-    { group:153, id:7, text: "Göttereffekte AN" }
-    { group:153, id:8, text: "Rechtsklick zum Fortfahren" }
+    
     { group:154, id:0, text: "Jagdhütte" }
     { group:154, id:1, text: "Von hier aus aufspüren und jagen Jäger lokale Wildtiere. Die Jagdhütte verteilt dann Wildfleisch an örtliche Lagerhöfe oder Getreidespeicher." }
     { group:154, id:2, text: "Produktion ist" }
