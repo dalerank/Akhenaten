@@ -89,6 +89,10 @@ public:
     }
 
     [[nodiscard]] const char* get_scripts_directory() const;
+    
+    [[nodiscard]] const char* get_custom_font() const;
+    void set_custom_font(const char *value);
+    
     void parse(int argc, char **argv);
 
     bool is(const xstring &name, bool def) const;

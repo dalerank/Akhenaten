@@ -11,6 +11,7 @@
 #include "graphics/fontgen/dynamic_font.h"
 #include "window/popup_dialog.h"
 #include "game/game_config.h"
+#include "platform/arguments.h"
 
 #include <set>
 
@@ -367,7 +368,13 @@ void font_atlas_regenerate() {
 
         arch.r("font_configs", font_configs);
 
-        symbols_font = arch.r_string("font");
+        // Check if custom font is set (from CLI or config file), otherwise use font from language config
+        const char* custom_font = g_args.get_custom_font();
+        if (custom_font && *custom_font) {
+            symbols_font = custom_font;
+        } else {
+            symbols_font = arch.r_string("font");
+        }
 
         svector<bstring32, 1024> data_str;
         string_to_array_t(data_str, symbols, ',');
