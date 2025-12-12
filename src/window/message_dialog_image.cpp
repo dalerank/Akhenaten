@@ -53,7 +53,7 @@ void ui::message_dialog_image::draw_background_image() {
     if (background_img) {
         int image_id = background_img;
         if (image_id == messages::IMAGE_FROM_SCHEME) {
-            int img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
+            int16_t img_pack = msg.image.pack > 0 ? msg.image.pack : PACK_UNLOADED;
             img = image_get({ img_pack, msg.image.id, msg.image.offset });
         } else {
             img = image_get(image_id);

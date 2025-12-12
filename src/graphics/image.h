@@ -48,8 +48,9 @@ struct image_t {
     xstring pak_name;
     struct {
         xstring name;
+        xstring tname;
         uint8_t group_id;
-        int entry_index;
+        int16_t entry_index;
     } bmp;
     int sgx_index;
     int rect_index;
@@ -67,8 +68,8 @@ struct image_t {
     //
     short width;
     short height;
-    short unk01; //
-    short unk02; //
+    uint16_t group_id; //
+    uint16_t group_index; //
     short unk03; //
     struct {
         uint16_t num_sprites;
@@ -87,7 +88,7 @@ struct image_t {
     bool is_fully_compressed;
     bool is_external;
     bool has_isometric_top;
-    int isometric_box_height;
+    int16_t isometric_box_height;
     int8_t unk11; //
     int8_t unk12; //
     int8_t unk13; //
@@ -137,13 +138,17 @@ bool image_load_paks();
 
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);
+int image_id_from_name(const xstring &name);
 
-const image_t* image_get(int id);
+image_desc image_desc_from_name(const xstring &name);
+
+const image_t *image_get(int id);
 const image_t *image_get(int pak, int id, int offset = 0);
 const image_t *image_get(image_desc desc);
+const image_t *image_get(const xstring &name);
 
-const image_t* image_letter(int letter_id);
-const image_t* image_get_enemy(int type, int id);
+const image_t *image_letter(int letter_id);
+const image_t *image_get_enemy(int type, int id);
 const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index);
 
 int image_copy_to_atlas(const image_t &img);

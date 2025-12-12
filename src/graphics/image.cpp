@@ -6,6 +6,7 @@
 #include "graphics/imagepak_holder.h"
 #include "content/dir.h"
 #include "core/svector.h"
+#include "core/log.h"
 
 #include <array>
 
@@ -55,13 +56,14 @@ bool image_load_paks() {
     data.font_base_offset = 0;
 
     auto &fontpack = data.pak_list[PACK_FONT];
-    fontpack.handle = new imagepak("Pharaoh_Fonts", 18765, false, true);
+    fontpack.handle = new imagepak(PACK_FONT, "Pharaoh_Fonts", 18765, false, true);
     fontpack.entries_num = fontpack.handle->get_entry_count();
     fontpack.index = fontpack.handle->global_image_index_offset;
     fontpack.id = PACK_FONT;
     data.fonts_loaded = true;
 
-    for (auto &imgpak : g_image_data->pak_list) {
+    for (uint8_t pakidx = 0; pakidx < g_image_data->pak_list.size(); ++pakidx) {
+        auto &imgpak = g_image_data->pak_list[pakidx];
         if (imgpak.name.empty()) {
             continue;
         }
@@ -75,9 +77,13 @@ bool image_load_paks() {
             continue;
         }
 
-        imgpak.handle = new imagepak(imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
+        imgpak.handle = new imagepak(pakidx, imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom);
         if (imgpak.custom) {
             imgpak.entries_num = imgpak.handle->get_entry_count();
+        }
+        // Check if pack loaded successfully
+        if (imgpak.handle && imgpak.handle->image_ids().size() == 0) {
+            logs::error("image_load_paks: pack %d (%s) loaded but has 0 groups", pakidx, imgpak.name.c_str());
         }
     }
 
@@ -86,15 +92,47 @@ bool image_load_paks() {
     return true;
 }
 
+static imagepak*pak_from_collection_name(const xstring &name) {
+    auto &data = *g_image_data;
+    const auto &pak_list = g_image_data->pak_list;
+
+    for (const auto& pak: pak_list) {
+        if (pak.name != name) {
+            continue;
+        }        
+
+        if (!pak.handle) {
+            image_data_touch(pak);
+        }
+
+        if (pak.handle) {
+            return pak.handle;
+        }
+    }
+
+    return nullptr;
+}
+
 static imagepak* pak_from_collection_id(int collection) {
     auto& data = *g_image_data;
-    const auto &imgpak = g_image_data->pak_list[collection];
+    if (collection < 0 || collection >= data.pak_list.size()) {
+        logs::error("pak_from_collection_id: invalid collection %d", collection);
+        return nullptr;
+    }
+    
+    const auto &imgpak = data.pak_list[collection];
 
     if (!imgpak.handle) {
-        image_data_touch(g_image_data->pak_list[collection]);
+        image_data_touch(data.pak_list[collection]);
     }
     
     if (imgpak.handle) {
+        // Check if pack loaded successfully (has at least one group)
+        if (imgpak.handle->image_ids().size() == 0) {
+            logs::error("pak_from_collection_id: pack %d (%s) loaded but has 0 groups - pack file may be missing or corrupted", 
+                        collection, imgpak.name.c_str());
+            return nullptr;
+        }
         return imgpak.handle;
     }
 
@@ -106,7 +144,28 @@ int image_id_from_group(int collection, int group) {
     if (pak == nullptr) {
         return -1;
     }
-    return pak->get_global_image_index(group);
+
+    int result = pak->get_global_image_index(group);
+    if (result < 0) {
+        logs::error("image_id_from_group: group %d not found in pack %d (pack has %d groups)", 
+                    group, collection, pak->image_ids().size());
+    }
+    return result;
+}
+
+image_desc image_desc_from_name(const xstring &name) {
+    bstring128 tname = name.c_str();
+
+    svector<bstring128, 4> parts;
+    string_to_array_t(parts, tname, '/');
+    if (parts.size() > 1) {
+        imagepak *pak = pak_from_collection_name(parts[0].c_str());
+        if (pak) {
+            return pak->get_image_desc(name);
+        }
+    }
+
+    return image_desc{};
 }
 
 const image_t *image_get(image_desc desc) {
@@ -151,7 +210,7 @@ const image_t *image_get(int pak, int id, int offset) {
 
     auto &pakref = data.pak_list[pak];
     if (pakref.handle == nullptr) {
-        pakref.handle = new imagepak(pakref.name, pakref.index, pakref.system, false, pakref.custom);
+        pakref.handle = new imagepak(pak, pakref.name, pakref.index, pakref.system, false, pakref.custom);
         if (pakref.custom) {
             pakref.entries_num = pakref.handle->get_entry_count();
         }
@@ -176,8 +235,8 @@ const image_t* image_get(int id) {
     }
 
     const image_t* img = nullptr;
-    for (int i = 1; i < data.pak_list.size(); ++i) {
-        auto &pak = data.pak_list[i];
+    for (uint8_t pakidx = 1; pakidx < data.pak_list.size(); ++pakidx) {
+        auto &pak = data.pak_list[pakidx];
         if (pak.index < 0) {
             break;
         }
@@ -188,7 +247,7 @@ const image_t* image_get(int id) {
         }
 
         if (pak.handle == nullptr) {
-            pak.handle = new imagepak(pak.name, pak.index, pak.system, false, pak.custom);
+            pak.handle = new imagepak(pakidx, pak.name, pak.index, pak.system, false, pak.custom);
         }
 
         img = pak.handle->get_image(id);
