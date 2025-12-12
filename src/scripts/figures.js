@@ -891,6 +891,8 @@ figure_architector {
 	max_service_buildings : 100
 	max_roam_length : 640
 	permission : epermission_maintenance
+	effect_radius : 2
+	risk_reduction_strength : 100
 }
 
 figure_market_buyer {

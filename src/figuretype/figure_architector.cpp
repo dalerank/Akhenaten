@@ -5,6 +5,8 @@
 #include "city/city.h"
 #include "figure/service.h"
 #include "js/js_game.h"
+#include "grid/grid.h"
+#include "grid/building.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
 
@@ -86,11 +88,33 @@ figure_sound_t figure_architector::get_sound_reaction(xstring key) const {
 }
 
 int figure_architector::provide_service() {
+    const auto& params = current_params();
+    int effect_radius = params.effect_radius > 0 ? params.effect_radius : 2; // Default to 2 if not set
+    int risk_reduction = params.risk_reduction_strength;
+
     int max_damage = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
-        b = b->main();
-        max_damage = std::max<short>(b->damage_risk, max_damage);
-        b->damage_risk = 0;
+    int houses_serviced = 0;
+
+    // Use custom radius for service area
+    grid_area area = map_grid_get_area(tile(), 1, effect_radius);
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i tile) {
+        int grid_offset = tile.grid_offset();
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *b = building_get(building_id)->main();
+            max_damage = std::max<short>(b->damage_risk, max_damage);
+
+            if (risk_reduction > 0) {
+                if (risk_reduction >= 100) {
+                    // Complete removal (original behavior)
+                    b->damage_risk = 0;
+                } else {
+                    // Partial reduction as percentage
+                    b->damage_risk = std::max(0, b->damage_risk - (b->damage_risk * risk_reduction / 100));
+                }
+            }
+            houses_serviced++;
+        }
     });
 
     if (max_damage > base.min_max_seen) {

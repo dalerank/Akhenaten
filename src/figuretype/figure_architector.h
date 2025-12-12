@@ -16,6 +16,8 @@ public:
 
     struct static_params : public figure_static_params {
         int max_service_buildings;
+        int effect_radius;
+        int risk_reduction_strength;
     } FIGURE_STATIC_DATA_T;
 
     virtual void figure_action() override;
@@ -27,4 +29,4 @@ public:
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };
 ANK_CONFIG_STRUCT(figure_architector::static_params,
-    max_service_buildings)
+    max_service_buildings, effect_radius, risk_reduction_strength)
