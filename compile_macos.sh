@@ -3,10 +3,10 @@
 ### Compile script for macOS as Universal Binary
 ###
 ### Dependencies on ARM Device:
-### /opt/homebrew/bin/brew install cmake ninja git pkg-config sdl2 sdl2_mixer libpng freetype harfbuzz zlib
+### /opt/homebrew/bin/brew install cmake git libpng
 ###
 ### Dependencies on Intel Device:
-### /usr/local/bin/brew install cmake ninja git pkg-config sdl2 sdl2_mixer libpng freetype harfbuzz zlib
+### /usr/local/bin/brew install cmake git libpng
 
 if [ "$1" == "" ]; then
     echo "Usage: ./compile_macos.sh [arm64|x86_64|universal|clean]"
