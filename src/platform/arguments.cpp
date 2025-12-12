@@ -253,6 +253,19 @@ std::optional<arguments::argument_result> handle_language(int argc, char **argv,
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_language, "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
 
+// Register argument handler for --font
+std::optional<arguments::argument_result> handle_font(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--font") == 0) {
+        if (current_index + 1 < argc) {
+            return arguments::argument_result("custom_font", bvariant(xstring(argv[current_index + 1])), 2);
+        } else {
+            app_terminate("Option --font must be followed by a font file path");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_font, "--font PATH", "use custom TTF font file (overrides font from localization.js)");
+
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();
 #if defined(GAME_PLATFORM_WIN)
@@ -386,6 +399,18 @@ const char *Arguments::get_scripts_directory() const {
     return nullptr;
 }
 
+const char *Arguments::get_custom_font() const {
+    auto font = get_arg("custom_font");
+    if (font && font->is_str() && !font->as_str().empty()) {
+        return font->as_str().c_str();
+    }
+    return nullptr;
+}
+
+void Arguments::set_custom_font(const char *value) {
+    args_["custom_font"] = bvariant(xstring(value));
+}
+
 vec2i Arguments::get_window_size() const {
     auto size = get_arg("window_size");
     if (size && size->is_vec2i()) {
@@ -487,6 +512,8 @@ bool load(Arguments& arguments) {
             auto v = arguments.get_window_size();
             v.y = std::stoi(value);
             arguments.set_window_size(v);
+        } else if (key == "custom_font") {
+            arguments.set_custom_font(value.c_str());
         } else {
             logs::warn("Unknown argument key: %s", key.c_str());
         }
@@ -504,6 +531,9 @@ void store(Arguments const& arguments) {
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
     output << "window_width" << '=' << arguments.get_window_size().x << '\n';
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
+    if (arguments.get_custom_font()) {
+        output << "custom_font" << '=' << arguments.get_custom_font() << '\n';
+    }
 }
 
 std::vector<std::pair<xstring, xstring>> get_argument_descriptions() {
