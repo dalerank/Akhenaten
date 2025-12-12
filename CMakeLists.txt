@@ -1369,6 +1369,12 @@ if(MSVC)
         message(FATAL_ERROR "libvpx: Installation failed or incomplete.\n"
             "Library or headers not found after download and extraction.")
     endif()
+    if(MSVC)
+        set_target_properties(${GAME} PROPERTIES
+            LINK_FLAGS "/DELAYLOAD:\"BugTrap-x64.dll\""
+        )
+        target_link_libraries(${GAME} delayimp)
+    endif()
     target_link_libraries(${GAME} ${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.lib)
     
     if(TARGET CURL::libcurl)
@@ -1402,7 +1408,11 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    set(BINARY_FILES "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe" "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb")
+    set(BINARY_FILES 
+        "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.exe"
+        "${CMAKE_BINARY_DIR}/${GAME_BUILD_TYPE}/${GAME}.pdb"
+        "${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.dll"
+    )
     foreach( file_i ${BINARY_FILES})
         add_custom_command(
             TARGET ${GAME}
