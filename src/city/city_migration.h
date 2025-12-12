@@ -35,9 +35,9 @@ struct city_migration_t {
     uint8_t immigrated_today;
     uint8_t emigrated_today;
     uint8_t refused_immigrants_today;
-    int8_t percentage;
-    int8_t percentage_by_sentiment;
-    int8_t percentage_by_unemployments;
+    int16_t percentage;
+    int16_t percentage_by_sentiment;
+    int16_t percentage_by_unemployments;
     int32_t population_cap;
     int8_t no_immigration_cause;
     int8_t emigration_message_shown;
@@ -57,6 +57,7 @@ struct city_migration_t {
     void create_emigrants(int num_people);
     void create_immigrants(int num_people);
     void set_migration_cap(xstring reason, int cap);
+    void set_unemployments_cap(xstring reason, int min, int max);
     const std::unordered_map<xstring, int> &get_migration_caps();
 
     city_migration_defaults_t& current_params();

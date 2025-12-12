@@ -158,8 +158,8 @@ int city_population_t::create_immigrants(int num_people) {
             continue; // house already has immigrant
         }
 
-        to_immigrate -= std::min(to_immigrate, 4);
         events::emit(event_create_immigrant{ house->id(), to_immigrate, SOURCE_LOCATION });
+        to_immigrate -= std::min(to_immigrate, 4);
     }
 
     // houses with less room
@@ -172,8 +172,8 @@ int city_population_t::create_immigrants(int num_people) {
             continue; // immigrant algready going to this house
         }
         const int population_room = house->population_room();
-        to_immigrate -= std::min(to_immigrate, population_room);
         events::emit(event_create_immigrant{ house->id(), to_immigrate, SOURCE_LOCATION });
+        to_immigrate -= std::min(to_immigrate, population_room);
     }
 
     return num_people - to_immigrate;

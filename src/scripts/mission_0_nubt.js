@@ -72,6 +72,10 @@ function mission0_update_goal(ev) {
 
 [event=event_mission_start, mission=mission0]
 function mission0_on_start(ev) {
+	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 0)
+	}
+
 	if (mission.tutorial_granary_opened) {
 		city.use_building(BUILDING_HUNTING_LODGE, true)
 		city.use_building(BUILDING_GRANARY, true)
@@ -91,7 +95,6 @@ function mission0_on_start(ev) {
 	}
 
 	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
-	city.set_victory_reason(mission.victory_reason, false)
 }
 
 [event=event_fire_damage, mission=mission0]
@@ -171,5 +174,5 @@ function mission0_handle_victory_state(ev) {
 
 [event=event_migration_update, mission=mission0]
 function mission0_handle_population_cap(ev) {
-	// do nothing
+	migration.set_unemployments_cap({reason:"mission_0_unemployment_cap", min:-10, max:10})
 }

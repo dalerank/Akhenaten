@@ -135,6 +135,8 @@ namespace js_helpers {
             
             if (js_isboolean(J, -1)) {
                 value = bvariant(js_toboolean(J, -1));
+            } else if (js_isstring(J, -1)) {
+                value = bvariant(xstring(js_tostring(J, -1)));
             } else if (js_isnumber(J, -1) || js_iscnumber(J, 1)) {
                 double num = js_tonumber(J, -1);
                 // Try to preserve integer if possible
@@ -143,8 +145,6 @@ namespace js_helpers {
                 } else {
                     value = bvariant((float)num);
                 }
-            } else if (js_isstring(J, -1)) {
-                value = bvariant(xstring(js_tostring(J, -1)));
             } else {
                 value = bvariant(); // none
             }

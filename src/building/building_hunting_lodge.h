@@ -2,9 +2,9 @@
 
 #include "building/building_industry.h"
 
-class building_hunting_lodge : public building_industry {
+class building_hunting_lodge : public building_impl {
 public:
-    BUILDING_METAINFO(BUILDING_HUNTING_LODGE, building_hunting_lodge, building_industry)
+    BUILDING_METAINFO(BUILDING_HUNTING_LODGE, building_hunting_lodge, building_impl)
 
     struct static_params : public building_static_params {
         uint8_t spawn_delay_100_percent; 

@@ -35,4 +35,5 @@ migration_unemployment_percentage = [
 
 migration {
     set_population_cap: __migration_set_population_cap
+    set_unemployments_cap : __migration_set_unemployments_cap
 }

@@ -11,6 +11,7 @@ city_migration_defaults_t ANK_VARIABLE(migration_defaults);
 svector<sentiment_step_t, 16> ANK_VARIABLE(migration_sentiment_influence);
 svector<unemployment_step_t, 16> ANK_VARIABLE(migration_unemployment_percentage);
 std::unordered_map<xstring, int> g_migration_cap_reasons;
+std::unordered_map<xstring, std::pair<int, int>> g_migration_unemployment_cap_reasons;
 
 void city_migration_t::nobles_leave_city(int num_people) {
     nobles_leave_city_this_year += num_people;
@@ -29,7 +30,14 @@ void city_migration_t::update_status() {
         return unemployment_percentage > t.u;
     });
 
-    percentage_by_unemployments = (unemployment_it != migration_unemployment_percentage.end()) ? unemployment_it->p : 0;
+    int want_percentage_by_unemployments = (unemployment_it != migration_unemployment_percentage.end()) ? unemployment_it->p : 0;
+    std::pair<int, int> range_percentage_by_unemployments{ -9999, 9999 };
+    for (const auto &it : g_migration_unemployment_cap_reasons) {
+        range_percentage_by_unemployments.first = std::max(range_percentage_by_unemployments.first, it.second.first);
+        range_percentage_by_unemployments.second = std::min(range_percentage_by_unemployments.second, it.second.first);
+    }
+    percentage_by_unemployments = std::clamp(want_percentage_by_unemployments, range_percentage_by_unemployments.first, range_percentage_by_unemployments.second);
+
     percentage_by_sentiment = (sent_it != migration_sentiment_influence.end()) ? sent_it->i : 0;
     percentage = (percentage_by_sentiment + percentage_by_unemployments);
 
@@ -86,6 +94,15 @@ void city_migration_t::create_immigrants(int num_people) {
     if (immigrated == 0) {
         refused_immigrants_today += num_people;
     }
+}
+
+void city_migration_t::set_unemployments_cap(xstring reason, int min, int max) {
+    if (min == 0 && max == 0) {
+        g_migration_unemployment_cap_reasons.erase(reason);
+        return;
+    }
+
+    g_migration_unemployment_cap_reasons[reason] = { min, max };
 }
 
 void city_migration_t::set_migration_cap(xstring reason, int cap) {
