@@ -68,6 +68,7 @@ const xstring id_anim_t::house = "house";
 const xstring id_anim_t::big_image = "big_image";
 const xstring id_anim_t::crops = "crops";
 const xstring id_anim_t::top = "top";
+const xstring id_anim_t::gamemeat = "gamemeat";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

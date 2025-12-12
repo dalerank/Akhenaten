@@ -30,7 +30,7 @@ int building_hunting_lodge::stored_amount(e_resource r) const {
     if (r == RESOURCE_GAMEMEAT || r == base.output.resource) {
         return base.stored_amount_first;
     }
-    return building_industry::stored_amount(r);
+    return building_impl::stored_amount(r);
 }
 
 int building_hunting_lodge::spawn_timer() {
@@ -102,7 +102,7 @@ bool building_hunting_lodge::draw_ornaments_and_animations_height(painter &ctx, 
 
     int amount = ceil((float)stored_amount(RESOURCE_GAMEMEAT) / 100.0) - 1;
     if (amount >= 0) {
-        const auto &ranim = anim("gamemeat");
+        const auto &ranim = anim(animkeys().gamemeat);
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
         command.image_id = ranim.first_img() + amount;
         command.pixel = point + ranim.pos;
@@ -123,7 +123,7 @@ void building_hunting_lodge::update_graphic() {
 }
 
 bool building_hunting_lodge::can_play_animation() const {
-    if (!building_industry::can_play_animation()) {
+    if (!building_impl::can_play_animation()) {
         return false;
     }
 

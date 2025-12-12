@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <csignal>
+#include <cstdlib>
 #include <iostream>
 #include <unordered_map>
 
@@ -18,6 +19,7 @@
 
 #if defined(GAME_PLATFORM_WIN)
 #include <Windows.h>
+#include <crtdbg.h>
 #elif defined(GAME_PLATFORM_ANDROID)
 #include <android/log.h>
 #endif
@@ -72,7 +74,15 @@ SDL_LogPriority get_log_priority() {
     return SDL_LOG_PRIORITY_INFO;
 }
 
-void sig_handler(int /* signal */) {
+void sig_handler(int signal_num) {
+#if defined(GAME_PLATFORM_WIN)
+    if (signal_num == SIGABRT && IsDebuggerPresent()) {
+        signal(SIGABRT, SIG_DFL);
+        abort();
+        return;
+    }
+#endif
+
 #ifdef CPPTRACE_ENABLED
     auto const trace = cpptrace::generate_trace();
     std::ostringstream output_stream;
@@ -90,6 +100,12 @@ namespace logs {
 void initialize() {
     signal(SIGSEGV, sig_handler);
     signal(SIGABRT, sig_handler);
+
+#if defined(GAME_PLATFORM_WIN) && defined(_DEBUG)
+    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
+    _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+#endif
 
     SDL_LogSetOutputFunction(Logger::write, nullptr);
     SDL_LogSetAllPriority(get_log_priority());

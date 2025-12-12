@@ -70,6 +70,7 @@ struct id_anim_t {
     static const xstring big_image;
     static const xstring crops;
     static const xstring top;
+    static const xstring gamemeat;
 };
 
 const id_anim_t &animkeys();

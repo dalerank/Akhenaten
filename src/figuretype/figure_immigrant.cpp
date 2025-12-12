@@ -18,6 +18,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_immigrant);
 
 void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
+    assert(ev.num_people > 0);
     auto house = building_get(ev.bid)->dcast_house();;
 
     if (!house) {
