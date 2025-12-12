@@ -79,6 +79,52 @@ building* building_get(building_id id);
 
 struct event_building_create { building_id bid; };
 
+struct building_store : public std::array<resource_value, 4> {
+    inline building_store() {}
+
+    inline building_store(std::initializer_list<e_resource> r) {
+        const std::size_t n = std::min(r.size(), size());
+        std::transform(r.begin(), r.begin() + n, begin(),
+            [] (e_resource e) { return resource_value{ e, 0 }; }
+        );
+    }
+
+    inline int &operator[](e_resource r) {
+        for (auto &it: *this) {
+            if (it.type == r) {
+                return it.value;
+            }
+        };
+
+        for (auto &it : *this) {
+            if (it.type == RESOURCE_NONE) {
+                it.type = r;
+                it.value = 0;
+                return it.value;
+            }
+        }
+
+        assert(false);
+        static int dummy = 0;
+        return dummy;
+    }
+
+    inline int operator[](e_resource r) const {
+        auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
+        return it == end() ? 0 : it->value;
+    }
+
+    inline void append(const building_store &o) {
+        for (auto &t : o) {
+            (*this)[t.type] += t.value;
+        }
+    }
+
+    inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
+    inline int sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
+};
+
+
 class building {
 public:
     enum { max_figures = 4 };
@@ -108,8 +154,8 @@ public:
     figure_id prev_part_building_id;
     figure_id next_part_building_id;
     building_input input;
-    short stored_amount_first;
-    short stored_amount_second;
+    //short stored_amount_first;
+    //short stored_amount_second;
     bool has_well_access;
     uint8_t num_workers;
     uint8_t max_workers;
@@ -145,6 +191,11 @@ public:
     union {
         int8_t native_anger;
     } sentiment;
+
+    building_store storage;
+
+    void consume_resource(e_resource r, int16_t amount) { storage[r] -= amount; }
+    void store_resource(e_resource r, int16_t amount) { storage[r] += amount; }
 
     // runtime data, not saves to disk
     desirability_t::influence_t des_influence;
@@ -214,8 +265,13 @@ public:
     int need_resource_amount(e_resource resource) const;
     bool need_resource(e_resource resource) const;
     int max_storage_amount(e_resource res) const;
-    int stored_amount(int idx = 0) const;
     int stored_amount(e_resource res) const;
+
+    const resource_value& stored_first() const { return storage.data()[0]; }
+    resource_value& stored_first() { return storage.data()[0]; }
+
+    const resource_value& stored_second() const { return storage.data()[1]; }
+    
     int mothball_toggle();
     
     figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);

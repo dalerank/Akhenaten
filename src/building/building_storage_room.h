@@ -11,18 +11,13 @@ public:
     virtual building_storage *dcast_storage() override { return main()->dcast_storage(); }
     virtual building_storage_room *dcast_storage_room() override { return this; }
 
-    struct runtime_data_t {
-        e_resource resource_id;
-    } BUILDING_RUNTIME_DATA_T;
-
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override { /*nothing*/ }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool can_play_animation() const override { return false; }
     virtual int get_fire_risk(int value) const override { return 0; }
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    e_resource resource() const { return runtime_data().resource_id; }
+    e_resource resource() const { return base.storage.data()[0].type; }
     void take_resource(int amount);
 
     const storage_t *storage();

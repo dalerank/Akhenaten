@@ -16,13 +16,13 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_scribal_school);
 
 void building_scribal_school::update_month() {
-    if (base.stored_amount_first <= 0) {
+    if (stored_amount(RESOURCE_PAPYRUS) <= 0) {
         return;
     }
 
     short want_spent = calc_adjust_with_percentage<short>(base.num_workers, 50);
-    short spent = std::min(base.stored_amount_first, want_spent);
-    base.stored_amount_first -= spent;
+    short spent = std::min<short>(stored_amount(RESOURCE_PAPYRUS), want_spent);
+    consume_resource(RESOURCE_PAPYRUS, spent);
 }
 
 void building_scribal_school::on_place_checks() {
@@ -49,7 +49,7 @@ bool building_scribal_school::add_resource(e_resource resource, int amount) {
     }
 
     assert(id() > 0);
-    base.stored_amount_first += amount;
+    store_resource(RESOURCE_PAPYRUS, amount);
     return true;
 }
 

@@ -16,15 +16,11 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_room);
 void building_storage_room::on_create(int orientation) {
 }
 
-void building_storage_room::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT8, &d.resource_id);
-}
-
 void building_storage_room::take_resource(int amount) {
-    base.stored_amount_first -= amount;
-    if (base.stored_amount_first <= 0) {
-        runtime_data().resource_id = RESOURCE_NONE;
+    e_resource resource = base.storage.data()[0].type;
+    consume_resource(resource, amount);
+    if (stored_amount(resource) <= 0) {
+        base.storage.data()[0].type = RESOURCE_NONE;
     }
 }
 
@@ -34,19 +30,18 @@ const storage_t *building_storage_room::storage() {
 
 void building_storage_room::set_image(e_resource resource) {
     int image_id;
-    if (base.stored_amount_first <= 0) {
+    if (base.stored_first().value <= 0) {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_EMPTY);
     } else {
         image_id = image_id_from_group(GROUP_BUILDING_STORAGE_YARD_SPACE_FILLED) + 4 * (resource - 1)
                     + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE)
-                    + (int)ceil((float)base.stored_amount_first / 100.0f) - 1;
+                    + (int)ceil((float)base.stored_first().value / 100.0f) - 1;
     }
     map_image_set(tile(), image_id);
 }
 
 void building_storage_room::add_import(e_resource resource) {
-    base.stored_amount_first += 100;
-    runtime_data().resource_id = resource;
+    store_resource(resource, 100);
 
     uint32_t price = trade_price_buy(resource);
     events::emit(event_stats_append_resource{ resource, 100 });
@@ -56,9 +51,9 @@ void building_storage_room::add_import(e_resource resource) {
 }
 
 void building_storage_room::remove_export(e_resource resource) {
-    base.stored_amount_first -= 100;
-    if (base.stored_amount_first <= 0) {
-        runtime_data().resource_id = RESOURCE_NONE;
+    consume_resource(resource, 100);
+    if (base.stored_first().value <= 0) {
+        base.storage.data()[0].type = RESOURCE_NONE;
     }
 
     uint32_t price = trade_price_sell(resource);
@@ -77,7 +72,7 @@ int building_storage_room::distance_with_penalty(tile2i src, e_resource r, int d
     }
 
     // check for spaces that already has some of the resource, first
-    if (resource() == r && base.stored_amount_first < 400) {
+    if (resource() == r && base.stored_first().value < 400) {
         return calc_distance_with_penalty(tile(), src, distance_from_entry, base.distance_from_entry);
     }
 

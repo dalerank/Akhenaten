@@ -26,13 +26,6 @@ void building_hunting_lodge::on_create(int orientation) {
     base.labor_category = current_params().labor_category;
 }
 
-int building_hunting_lodge::stored_amount(e_resource r) const {
-    if (r == RESOURCE_GAMEMEAT || r == base.output.resource) {
-        return base.stored_amount_first;
-    }
-    return building_impl::stored_amount(r);
-}
-
 int building_hunting_lodge::spawn_timer() {
     const auto &params = current_params();
     int pct_workers = worker_percentage();
@@ -57,7 +50,7 @@ bool building_hunting_lodge::can_spawn_ostrich_hunter() {
         return false;
     }
 
-    return (base.stored_amount_first < 500);
+    return (stored_amount(RESOURCE_GAMEMEAT) < 500);
 }
 
 void building_hunting_lodge::spawn_figure() {
@@ -131,5 +124,5 @@ bool building_hunting_lodge::can_play_animation() const {
         return false;
     }
     
-    return (base.stored_amount_first > 0 || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
+    return (stored_amount(RESOURCE_GAMEMEAT) > 0 || has_figure_of_type(BUILDING_SLOT_HUNTER, FIGURE_OSTRICH_HUNTER));
 }

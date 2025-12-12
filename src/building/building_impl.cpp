@@ -181,12 +181,28 @@ const auto& get_properties() {
         { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource)); }},
         { tags().building, tags().second_output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource_second)); }},
         { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource)); }},
-        { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_first); }},
+        { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_first().value); }},
         { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource_second)); }},
-        { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount_second); }},
+        { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_second().value); }},
         { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
     };
     return bproperties;
+}
+
+void building_impl::consume_resource(e_resource r, int16_t amount) { 
+    base.consume_resource(r, amount); 
+}
+
+void building_impl::store_resource(e_resource r, int16_t amount) {
+    base.store_resource(r, amount);
+}
+
+const resource_value& building_impl::stored_first() const {
+    return base.stored_first();
+}
+
+resource_value &building_impl::stored_first() {
+    return base.stored_first();
 }
 
 bvariant building_impl::get_property(const xstring &domain, const xstring &name) const {

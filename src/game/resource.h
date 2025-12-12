@@ -220,7 +220,7 @@ struct resource_list : public svector<resource_value, RESOURCES_MAX> {
     }
 
     inline bool any() const { return std::find_if(begin(), end(), [] (auto &it) { return it.value > 0; }) != end(); }
-    inline bool sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
+    inline int sum() const { return std::accumulate(begin(), end(), 0, [] (int r, resource_value it) { return r + it.value; }); }
     static const resource_list foods;
     static const resource_list all;
     static const resource_list values;

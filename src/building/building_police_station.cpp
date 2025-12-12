@@ -26,7 +26,7 @@ bool building_police_station::request_weapons_if_need() {
         return false;
     }
 
-    if (base.stored_amount_first > 50) {
+    if (stored_amount(RESOURCE_WEAPONS) > 50) {
         return false;
     } 
     
@@ -110,8 +110,8 @@ void building_police_station::spawn_figure() {
     }
 
     if (base.figure_spawn_delay > spawn_delay) {
-        if (base.stored_amount_first > 0) {
-            base.stored_amount_first--;
+        if (stored_amount(RESOURCE_WEAPONS) > 0) {
+            consume_resource(RESOURCE_WEAPONS, 1);
         }
 
         base.figure_spawn_delay = 0;
@@ -144,20 +144,15 @@ bool building_police_station::draw_ornaments_and_animations_height(painter &ctx,
 
 bool building_police_station::add_resource(e_resource resource, int amount) {
     if (resource == RESOURCE_WEAPONS) {
-        // Добавляем оружие (максимум 200 единиц)
         int max_storage = 200;
-        int current = base.stored_amount_first;
-        int to_add = std::min(amount, max_storage - current);
-        if (to_add > 0) {
-            base.stored_amount_first += to_add;
-            return true;
-        }
+        store_resource(RESOURCE_WEAPONS, amount);
+        return true;
     }
     return false;
 }
 
 void building_police_station::draw_weapons(vec2i point, color color_mask, painter &ctx) {
-    int weapon_amount = base.stored_amount_first;
+    int weapon_amount = stored_amount(RESOURCE_WEAPONS);
     if (weapon_amount <= 0) {
         return;
     }

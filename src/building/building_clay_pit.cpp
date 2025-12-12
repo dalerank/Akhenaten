@@ -41,13 +41,6 @@ void building_clay_pit::on_before_flooded() {
     }
 }
 
-int building_clay_pit::stored_amount(e_resource r) const {
-    if (r == RESOURCE_CLAY || r == base.output.resource) {
-        return base.stored_amount_first;
-    }
-    return building_industry::stored_amount(r);
-}
-
 void building_clay_pit::spawn_figure() {
     if (base.destroy_reason == e_destroy_flooded) {
         return;
@@ -73,7 +66,7 @@ void building_clay_pit::production_finished() {
 
     auto &d = runtime_data();
     if (d.progress >= d.progress_max) {
-        base.stored_amount_first += ready_production();
+        store_resource(base.output.resource, ready_production());
 
         d.progress = 0;
         //d.has_raw_materials = false;

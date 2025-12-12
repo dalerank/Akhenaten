@@ -25,7 +25,7 @@ void building_guild::on_create(int orientation) {
 }
 
 bool building_guild::has_resources() const {
-    bool hase_first_resource = (base.stored_amount_first >= 100);
+    const bool hase_first_resource = (stored_amount(base.input.resource) >= 100);
     return hase_first_resource;
 }
 

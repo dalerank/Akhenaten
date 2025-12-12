@@ -64,13 +64,6 @@ void building_mine_gems::on_before_collapse() {
     }
 }
 
-int building_mine_gems::stored_amount(e_resource r) const {
-    if (r == RESOURCE_GEMS || r == base.output.resource) {
-        return base.stored_amount_first;
-    }
-    return building_industry::stored_amount(r);
-}
-
 bool building_mine_gems::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 

@@ -44,7 +44,7 @@ bool figure_docker::try_import_resource(building* b, e_resource resource, empire
     // try existing storage bay with the same resource
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400 && space->resource() == resource) {
+        if (space->stored_amount(resource) > 0 && space->stored_amount(resource) < 400) {
             trade_route.increase_traded(resource, 100);
             space->add_import(resource);
             return true;
@@ -76,7 +76,7 @@ bool figure_docker::try_export_resource(building* b, e_resource resource, empire
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first && space->resource() == resource) {
+        if (space->stored_amount(resource)) {
             auto &trade_route = city.get_route();
             trade_route.increase_traded(resource, 100);
             space->remove_export(resource);
@@ -134,7 +134,7 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
                 distance_penalty -= 8;
             }
 
-            if (space->resource() == resource && space->base.stored_amount_first < 400) {
+            if (space->base.stored_amount(resource) < 400) {
                 distance_penalty -= 4;
             }
 
@@ -205,7 +205,7 @@ building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire
         int distance_penalty = 32;
         building_storage_room *space = warehouse->room();
         while (space) {
-            if (space->resource() == resource && space->base.stored_amount_first > 0) {
+            if (space->stored_amount(resource) > 0) {
                 distance_penalty--;
             }
 

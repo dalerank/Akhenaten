@@ -57,7 +57,7 @@ void building_mortuary::spawn_figure() {
 
     if (common_spawn_figure_trigger(params.min_houses_coverage, BUILDING_SLOT_SERVICE)) {
         const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), params.linen_required_for_spawn);
-        base.stored_amount_first -= spent;
+        consume_resource(RESOURCE_LINEN, spent);
 
         create_roaming_figure(FIGURE_EMBALMER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
     }
@@ -131,9 +131,7 @@ void building_mortuary::update_month() {
             
             int available = base.stored_amount(RESOURCE_LINEN);
             int to_consume = std::min<int>(available, consumption);
-            if (to_consume > 0) {
-                base.stored_amount_first -= to_consume;
-            }
+            consume_resource(RESOURCE_LINEN, to_consume);
         }
     }
 }

@@ -265,10 +265,9 @@ void city_resource_calculate_storageyard_stocks() {
 
         room->base.has_road_access = warehouse->has_road_access();
         if (room->resource()) {
-            int amounts = room->base.stored_amount_first;
-            e_resource resource = room->resource();
-            g_city.resource.stored_in_storages[resource] += amounts;
-            g_city.resource.space_in_storages[resource] += 400 - amounts;
+            const auto r = room->base.stored_first();
+            g_city.resource.stored_in_storages[r.type] += r.value;
+            g_city.resource.space_in_storages[r.type] += 400 - r.value;
         } else {
             g_city.resource.space_in_storages[RESOURCE_NONE] += 4;
         }

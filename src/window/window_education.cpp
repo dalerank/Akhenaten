@@ -52,7 +52,7 @@ void info_window_education::init(object_info &c) {
     c.help_id = meta.help_id;
 
     ui["resource_icon"].image(b->input.resource);
-    ui["resource_stored"] = bstring32(b->stored_amount());
+    ui["resource_stored"] = bstring32(b->stored_amount(RESOURCE_PAPYRUS));
 
     textid text{ meta.text_id, 1 };
     if (ftype != FIGURE_NONE && b->has_figure_of_type(BUILDING_SLOT_SERVICE, ftype)) {

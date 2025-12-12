@@ -43,7 +43,7 @@ bool building_senet_house::add_resource(e_resource resource, int amount) {
     }
 
     assert(id() > 0);
-    base.stored_amount_first += amount;
+    store_resource(RESOURCE_BEER, amount);
     return true;
 }
 
@@ -54,15 +54,15 @@ void building_senet_house::spawn_figure() {
         return;
     }
 
-    if (base.stored_amount_first <= 0) {
+    if (stored_amount(RESOURCE_BEER) <= 0) {
         return;
     }
 
     auto &d = runtime_data();
     const bool can_spawn_drunk = common_spawn_figure_trigger(100, BUILDING_SLOT_DRUNKARD);
     if (can_spawn_drunk) {
-        const short spent = std::min<short>(base.stored_amount_first, 20);
-        base.stored_amount_first -= spent;
+        const short spent = std::min<short>(stored_amount(RESOURCE_BEER), 20);
+        consume_resource(RESOURCE_BEER, spent);
 
         create_roaming_figure(FIGURE_DRUNKARD, (e_figure_action)ACTION_14_DRUNKARD_CREATED, BUILDING_SLOT_DRUNKARD);
         return;
@@ -79,7 +79,7 @@ void building_senet_house::update_graphic() {
 bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)base.stored_amount(RESOURCE_BEER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().beer);
         vec2i pos = ranim.pos;
@@ -99,7 +99,7 @@ bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, ve
 bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)base.stored_amount(RESOURCE_STRAW) / 100.0) - 1;
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().straw);
         vec2i pos = ranim.pos;

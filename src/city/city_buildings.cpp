@@ -281,12 +281,15 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->houses_covered);
         iob->bind(BIND_SIGNATURE_INT16, &b->percentage_houses_covered);
 
-        iob->bind____skip(2);
-        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[0].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[1].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[2].value);
+        iob->bind(BIND_SIGNATURE_INT8, &b->storage.data()[3].value);
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
-        iob->bind____skip(2);
 
-        iob->bind____skip(2); 
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[2].value);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[3].value);
+        
         iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 
         iob->bind(BIND_SIGNATURE_UINT16, &b->figure_ids[0]);
@@ -302,7 +305,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->malaria_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->prev_part_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->next_part_building_id);
-        iob->bind(BIND_SIGNATURE_INT16, &b->stored_amount_first);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[0].value);
         iob->bind(BIND_SIGNATURE_UINT8, &b->disease_days);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_well_access);
 
@@ -329,7 +332,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         assert(currind > 0);
         iob->bind____skip(186 - currind);
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->stored_amount_second);
+        iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[1].value);
         iob->bind____skip(1); // 
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_plague); // 1
 

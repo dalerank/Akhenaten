@@ -307,7 +307,7 @@ void figure_fishing_boat::figure_action() {
 
     case ACTION_194_FISHING_BOAT_AT_WHARF: {
             int max_storage = wharf->current_params().max_storage;
-            int current_storage = wharf->base.stored_amount_first;
+            int current_storage = wharf->stored_amount(RESOURCE_FISH);
             
             // Calculate wait time based on worker percentage
             int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
@@ -327,7 +327,6 @@ void figure_fishing_boat::figure_action() {
                     tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), true);
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
                         wharf->runtime_data().no_fishing_points_warning_shown = 0;
-                        wharf->runtime_data().has_fish = false; // Reset has_fish when boat goes fishing
                         runtime_data().fishing_point_check_attempts = 0;
                         advance_action(ACTION_191_FISHING_BOAT_GOING_TO_FISH);
                         base.destination_tile = fish_tile;
@@ -360,11 +359,10 @@ void figure_fishing_boat::figure_action() {
             int max_storage = wharf->current_params().max_storage;
             
             // Add fish up to storage limit
-            int current_storage = wharf->base.stored_amount_first;
+            int current_storage = wharf->stored_amount(RESOURCE_FISH);
             int amount_to_add = std::min(fish_per_trip, max_storage - current_storage);
             if (amount_to_add > 0) {
-                wharf->base.stored_amount_first += amount_to_add;
-                wharf->runtime_data().has_fish = (wharf->base.stored_amount_first > 0);
+                wharf->store_resource(RESOURCE_FISH, amount_to_add);
             }
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();

@@ -66,7 +66,7 @@ void figure_reed_gatherer::figure_action() {
 
     case ACTION_11_REED_GATHERER_RETURN_HOME: // returning with resource
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
-            home()->stored_amount_first += current_params().max_amount;
+            home()->store_resource(RESOURCE_REEDS, current_params().max_amount);
         }
         break;
     }

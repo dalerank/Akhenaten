@@ -45,7 +45,7 @@ void warshipwharf_info_window::init(object_info &c) {
         }
     }
 
-    ui["resource_img"].image(RESOURCE_FISH);
+    ui["resource_img"].image(RESOURCE_TIMBER);
     ui["warning_text"] = ui::str(reason.first, reason.second);
-    ui["storage_desc"].text_var("Stored weapons %d", b->stored_amount_first);
+    ui["storage_desc"].text_var("Stored weapons %d", b->stored_amount(RESOURCE_TIMBER));
 }
