@@ -773,7 +773,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         }
 
         img.bmp.entry_index = last_idx_in_bmp;
-        bstring64 img_bmp_short_name = bmp_names[img.bmp.group_id];
+        bstring64 img_bmp_short_name = bmp_names[img.bmp.group_id].data();
         img_bmp_short_name.replace_str(".bmp", "");
         bstring256 img_bmp_tname;
         img_bmp_tname.printf("%s/%s_%05d", name.c_str(), img_bmp_short_name.c_str(), img.bmp.entry_index);
