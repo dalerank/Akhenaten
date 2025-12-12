@@ -30,7 +30,7 @@ bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     const auto &ranim = anim(animkeys().work);
     building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
 
-    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
+    int amount = std::min<int>(2, ceil((float)stored_amount(RESOURCE_BEER) / 100.0) - 1);
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().barley);
 

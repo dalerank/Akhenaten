@@ -26,6 +26,21 @@ int building_mine_gold::produce_uptick_per_day() const {
     return std::max<int>(1, production);
 }
 
+void building_mine_gold::production_finished() {
+    const auto &params = current_params();
+    if (stored_amount(params.output.resource) >= base.max_storage_amount(params.output.resource)) {
+        return;
+    }
+
+    auto &d = runtime_data();
+    if (d.progress >= d.progress_max) {
+        store_resource(RESOURCE_GOLD, ready_production());
+
+        d.progress = 0;
+        //d.has_raw_materials = false;
+    }
+}
+
 void building_mine_gold::update_production() {
     auto &d = runtime_data();
     int current_progress = d.progress;

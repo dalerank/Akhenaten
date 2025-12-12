@@ -16,7 +16,6 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
     virtual bool can_play_animation() const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual int stored_amount(e_resource r) const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     bool can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person);

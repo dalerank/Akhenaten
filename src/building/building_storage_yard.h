@@ -71,7 +71,7 @@ public:
     virtual bool is_getting(e_resource resource) override;
 
     int freespace(e_resource resource);
-    int stored_full_amount() const { return base.stored_amount_first;  }
+    int16_t stored_full_amount() const { return base.storage.sum();  }
 
     int for_getting(e_resource resource, tile2i *dst);
 

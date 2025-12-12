@@ -14,7 +14,8 @@ constexpr short MAX_PROGRESS_WORKSHOP = 400;
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    iob->bind_i16(d.ready_production);
+    short tmp_short;
+    iob->bind_i16(tmp_short);
     iob->bind_i16(d.progress);
     iob->bind_bool(d.spawned_worker_this_month);
     iob->bind_u8(d.max_gatheres);
@@ -119,33 +120,30 @@ void building_industry::on_create(int orientation) {
 }
 
 int building_industry::stored_amount(e_resource r) const {
-    if (base.output.resource == r) {
-        return runtime_data().ready_production;
-    }
     return building_impl::stored_amount(r);
 }
 
 void building_industry::start_production() {
     bool can_start_b = true;
     if (base.input.resource_second != RESOURCE_NONE) {
-        can_start_b = (base.stored_amount_second >= 100);
+        can_start_b = (stored_amount(base.input.resource_second) >= 100);
     } 
 
     bool can_start_a = true;
     if (base.input.resource != RESOURCE_NONE) {
-        can_start_a = (base.stored_amount_first >= 100);
+        can_start_a = (stored_amount(base.input.resource) >= 100);
     }
 
     if (can_start_b && can_start_a) {
         auto &d = runtime_data();
         d.progress = 1;
-        // d.has_raw_materials = true;
-        if (base.stored_amount_second >= 100) {
-            base.stored_amount_second -= 100;
+
+        if (stored_amount(base.input.resource_second) >= 100) {
+            consume_resource(base.input.resource_second, 100);
         }
 
-        if (base.stored_amount_first >= 100) {
-            base.stored_amount_first -= 100;
+        if (stored_amount(base.input.resource) >= 100) {
+            consume_resource(base.input.resource, 100);
         }
 
         production_started();
@@ -165,9 +163,9 @@ void building_industry::spawn_figure() {
 
     const uint16_t stored_output = base.stored_amount(base.output.resource);
     const uint16_t load_to_cart = ready_production();
-    if (stored_output >= load_to_cart) {
-        
+    if (stored_output >= load_to_cart) {        
         create_cartpusher(base.output.resource, load_to_cart, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+        consume_resource(base.output.resource, load_to_cart);
         events::emit(event_produced_resources{ base.output.resource, load_to_cart });
     }
 }
@@ -212,7 +210,6 @@ bvariant building_industry::get_property(const xstring &domain, const xstring &n
 
 void building_industry::debug_draw_properties() {
     auto &d = runtime_data();
-    game_debug_show_property("ready_production", d.ready_production);
     game_debug_show_property("progress", d.progress);
     game_debug_show_property("progress_max", d.progress_max);
     game_debug_show_property("spawned_worker_this_month", d.spawned_worker_this_month);

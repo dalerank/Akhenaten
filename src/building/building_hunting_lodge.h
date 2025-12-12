@@ -20,7 +20,6 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_graphic() override;       
     virtual bool can_play_animation() const override;
-    virtual int stored_amount(e_resource r) const override;
 
     int spawn_timer();
     bool can_spawn_ostrich_hunter();

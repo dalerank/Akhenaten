@@ -83,7 +83,7 @@ int building_storage_yard::get_space_info() const {
     const building_storage_room* space = room();
     while (space) {
         if (space->resource()) {
-            total_amounts += space->base.stored_amount_first;
+            total_amounts += space->stored_first().value;
         } else {
             empty_spaces++;
         }
@@ -107,7 +107,7 @@ int building_storage_yard::amount(e_resource resource) const {
     const building_storage_room *space = room();
     while (space) {
         if (space->resource() && space->resource() == resource) {
-            total += space->base.stored_amount_first;
+            total += space->stored_first().value;
         }
         space = space->next_room();
     }
@@ -130,7 +130,7 @@ int building_storage_yard::freespace(e_resource resource) {
         if (!space->resource()) {
             freespace += 400;
         } else if(space->resource() == resource) {
-            freespace += (400 - space->base.stored_amount_first);
+            freespace += (400 - space->stored_first().value);
         }
         space = space->next_room();
     }
@@ -168,7 +168,7 @@ int building_storage_yard::add_resource(e_resource resource, int amount, bool fo
             bool space_found = false;
             while (space) {
                 if (!space->resource() || space->resource() == resource) {
-                    if (space->base.stored_amount_first < 400) {
+                    if (space->stored_first().value < 400) {
                         space_found = true;
                         break;
                     }
@@ -181,10 +181,10 @@ int building_storage_yard::add_resource(e_resource resource, int amount, bool fo
             }
         }
 
-        space->runtime_data().resource_id = resource;
-        int space_on_tile = 400 - space->base.stored_amount_first;
+        space->base.storage.data()[0].type = resource;
+        int space_on_tile = 400 - space->stored_first().value;
         int unloading_amount = std::min<int>(space_on_tile, amount_left);
-        space->base.stored_amount_first += unloading_amount;
+        space->stored_first().value += unloading_amount;
         space_on_tile -= unloading_amount;
         events::emit(event_stats_append_resource{resource, unloading_amount});
         
@@ -209,21 +209,21 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
             return 0;
         }
 
-        if (space->resource() != resource || space->base.stored_amount_first <= 0) {
+        if (space->resource() != resource || space->stored_first().value <= 0) {
             space = space->next_room();
             continue;
         }
 
-        if (space->base.stored_amount_first > amount) {
+        if (space->stored_first().value > amount) {
             events::emit(event_stats_remove_resource{ resource, amount });
-            space->base.stored_amount_first -= amount;
+            space->stored_first().value -= amount;
             amount = 0;
 
         } else {
-            events::emit(event_stats_remove_resource{ resource, space->base.stored_amount_first });
-            amount -= space->base.stored_amount_first;
-            space->base.stored_amount_first = 0;
-            space->runtime_data().resource_id = RESOURCE_NONE;
+            events::emit(event_stats_remove_resource{ resource, space->stored_first().value });
+            amount -= space->stored_first().value;
+            space->stored_first().value = 0;
+            space->stored_first().type = RESOURCE_NONE;
         }
         space->set_image(resource);
         space = space->next_room();
@@ -235,20 +235,20 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
 void building_storage_yard::remove_resource_curse(int amount) {  
     building_storage_room* space = room();
     while(space && amount > 0) {
-        if (space->base.stored_amount_first <= 0) {
+        if (space->stored_first().value <= 0) {
             continue;
         }
 
         e_resource resource = space->resource();
-        if (space->base.stored_amount_first > amount) {
+        if (space->stored_first().value > amount) {
             events::emit(event_stats_remove_resource{ resource, amount });
-            space->base.stored_amount_first -= amount;
+            space->stored_first().value -= amount;
             amount = 0;
         } else {
-            events::emit(event_stats_remove_resource{ resource, space->base.stored_amount_first });
-            amount -= space->base.stored_amount_first;
-            space->base.stored_amount_first = 0;
-            space->runtime_data().resource_id = RESOURCE_NONE;
+            events::emit(event_stats_remove_resource{ resource, space->stored_first().value });
+            amount -= space->stored_first().value;
+            space->stored_first().value = 0;
+            space->stored_first().type = RESOURCE_NONE;
         }
         space->set_image(resource);
         space = space->next_room();
@@ -366,9 +366,9 @@ int building_storage_yard::for_getting(e_resource resource, tile2i* dst) {
         building_storage_room* space = other_warehouse->room();
         const storage_t* s = space->storage();
         while (space) {
-            if (space->base.stored_amount_first > 0) {
+            if (space->stored_first().value > 0) {
                 if (space->resource() == resource)
-                    amounts_stored += space->base.stored_amount_first;
+                    amounts_stored += space->stored_first().value;
             }
             space = space->next_room();
         }
@@ -435,7 +435,7 @@ static bool contains_non_stockpiled_food(building* b, const resource_list &foods
         return false;
     }
 
-    if (space->base.stored_amount_first <= 0) {
+    if (space->stored_first().value <= 0) {
         return false;
     }
 
@@ -462,13 +462,13 @@ storage_worker_task building_storage_yard_determine_getting_up_resources(buildin
         int room = 0;         // total potential room for resource!
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_amount_first <= 0) { // this space (tile) is empty! FREE REAL ESTATE
+            if (space->stored_first().value <= 0) { // this space (tile) is empty! FREE REAL ESTATE
                 room += 4;
             }
 
             if (space->resource() == check_resource) { // found a space (tile) with resource on it!
-                total_stored += space->base.stored_amount_first;   // add loads to total, if any!
-                room += 400 - space->base.stored_amount_first;     // add room to total, if any!
+                total_stored += space->stored_first().value;   // add loads to total, if any!
+                room += 400 - space->stored_first().value;     // add room to total, if any!
             }
             space = space->next_room();
         }
@@ -556,8 +556,8 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         int available = 0;
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_amount_first > 0 && space->resource() == RESOURCE_WEAPONS) {
-                available += space->base.stored_amount_first;
+            if (space->stored_first().value > 0 && space->resource() == RESOURCE_WEAPONS) {
+                available += space->stored_first().value;
             }
             space = space->next_room();
         }
@@ -585,8 +585,8 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
         int available = 0;
         auto space = warehouse->room();
         for (int i = 0; i < 8; i++) {
-            if (space->base.stored_amount_first > 0 && space->resource() == RESOURCE_TIMBER) {
-                available += space->base.stored_amount_first;
+            if (space->stored_first().value > 0 && space->resource() == RESOURCE_TIMBER) {
+                available += space->stored_first().value;
             }
             space = space->next_room();
         }
@@ -618,8 +618,8 @@ storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b
         int available = 0;
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_amount_first > 0 && space->resource() == RESOURCE_BEER) {
-                available += space->base.stored_amount_first;
+            if (space->stored_first().value > 0 && space->resource() == RESOURCE_BEER) {
+                available += space->stored_first().value;
             }
             space = space->next_room();
         }
@@ -651,8 +651,8 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
         int available = 0;
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_amount_first > 0 && space->resource() == RESOURCE_PAPYRUS) {
-                available += space->base.stored_amount_first;
+            if (space->stored_first().value > 0 && space->resource() == RESOURCE_PAPYRUS) {
+                available += space->stored_first().value;
             }
             space = space->next_room();
         }
@@ -674,7 +674,7 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
 
     auto space = warehouse->room();
     for (; space; space = space->next_room()) {
-        if (space->base.stored_amount_first <= 0) {
+        if (space->stored_first().value <= 0) {
             continue;
         }
 
@@ -768,7 +768,7 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
 
     auto space = warehouse->room();
     for (; space; space = space->next_room()) {
-        int available = space->base.stored_amount_first;
+        int available = space->stored_first().value;
         if (!space->resource() || available <= 0) {
             continue;
         }
@@ -842,8 +842,8 @@ storage_worker_task building_storage_yard::determine_worker_task() {
     if (is_empty_all()) {
         auto space = room();
         while (space) {
-            if (space->base.stored_amount_first > 0) {
-                return {STORAGEYARD_TASK_DELIVERING, &space->base, space->base.stored_amount_first, space->resource()};
+            if (space->stored_first().value > 0) {
+                return {STORAGEYARD_TASK_DELIVERING, &space->base, space->stored_first().value, space->resource()};
             }
             space = space->next_room();
         }

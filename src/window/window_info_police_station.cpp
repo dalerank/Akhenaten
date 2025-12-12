@@ -29,6 +29,6 @@ void info_window_police_station::init(object_info &c) {
     ui["warning_text"] = warning_text;
     ui["workers_desc"] = ui::str(c.group_id, workers_desc);
 
-    int weapon_amount = station ? station->base.stored_amount_first : 0;
+    int weapon_amount = station->stored_amount(RESOURCE_WEAPONS);
     ui["weapon_stored"] = bstring32(weapon_amount);
 }

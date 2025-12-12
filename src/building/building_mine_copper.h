@@ -15,7 +15,6 @@ public:
     virtual void update_production() override;
     virtual void on_before_collapse() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual int stored_amount(e_resource r) const override;
     virtual void spawn_figure() override;
     virtual void production_finished() override;
 };

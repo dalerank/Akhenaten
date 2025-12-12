@@ -23,14 +23,6 @@ void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
     building_industry::bind_dynamic(iob, version);
 }
 
-int building_reed_gatherer::stored_amount(e_resource r) const {
-    // For harvester buildings, resources are stored in stored_amount_first, not ready_production
-    if (base.output.resource == r) {
-        return base.stored_amount_first;
-    }
-    return building_industry::stored_amount(r);
-}
-
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
     bool resource_reachable = false;
     resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_MARSHLAND);

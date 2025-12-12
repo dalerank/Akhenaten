@@ -45,12 +45,12 @@ delivery_destination building_get_asker_for_resource(tile2i tile, e_building_typ
             return;
         }
 
-        if (b.stored_amount_first >= b.need_resource_amount(resource) * 100) {
+        if (b.stored_amount(resource) >= b.need_resource_amount(resource) * 100) {
             return;
         }
 
         int dist = calc_distance_with_penalty(b.tile, tile, distance_from_entry, b.distance_from_entry);
-        dist += 8 * b.stored_amount_first / 100;
+        dist += 8 * b.stored_amount(resource) / 100;
         if (dist < min_dist) {
             min_dist = dist;
             min_building = &b;
@@ -216,13 +216,9 @@ void building_curse_farms(int big_curse) {
 }
 
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
-    if (b->id > 0
-        && building_is_workshop(b->type)
-        && b->need_resource(res)) {
-        if (b->input.resource == res) {
-            b->stored_amount_first += amount;
-        } else if (b->input.resource_second == res) {
-            b->stored_amount_second += amount;
+    if (b->id > 0 && building_is_workshop(b->type) && b->need_resource(res)) {
+        if (b->input.resource == res || b->input.resource_second == res) {
+            b->store_resource(b->input.resource, amount);
         } else {
             assert(false);
         }

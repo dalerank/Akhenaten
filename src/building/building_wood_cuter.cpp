@@ -30,7 +30,7 @@ bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, 
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
     if (gatherers_this_yard < max_gatherers_per_building
-        && gatherers_this_yard + (base.stored_amount() / carry_per_person) < (max_loads - gatherers_this_yard)) {
+        && gatherers_this_yard + (base.stored_amount(RESOURCE_TIMBER) / carry_per_person) < (max_loads - gatherers_this_yard)) {
         return true;
     }
 
@@ -67,7 +67,7 @@ void building_wood_cutter::spawn_figure() {
 }
 
 bool building_wood_cutter::can_play_animation() const {
-    if (base.stored_amount() >= current_params().max_storage_amount) {
+    if (base.stored_amount(RESOURCE_TIMBER) >= current_params().max_storage_amount) {
         return false;
     }
 
@@ -77,7 +77,7 @@ bool building_wood_cutter::can_play_animation() const {
 bool building_wood_cutter::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)base.stored_amount(RESOURCE_TIMBER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &eanim = anim(animkeys().wood);
 

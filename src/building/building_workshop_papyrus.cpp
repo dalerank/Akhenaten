@@ -19,7 +19,8 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_papyrus_maker);
 declare_console_command(addpapyrus, game_cheat_add_resource<RESOURCE_PAPYRUS>);
 
 bool building_papyrus_maker::can_play_animation() const {
-    if (base.stored_amount() < 100) {
+    auto &d = runtime_data();
+    if (base.stored_amount(RESOURCE_REEDS) < 100 && d.progress == 0) {
         return false;
     }
 
@@ -29,7 +30,7 @@ bool building_papyrus_maker::can_play_animation() const {
 bool building_papyrus_maker::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
-    int amount = std::min<int>(2, ceil((float)base.stored_amount() / 100.0) - 1);
+    int amount = std::min<int>(2, ceil((float)base.stored_amount(RESOURCE_REEDS) / 100.0) - 1);
     if (amount >= 0) {
         const auto &ranim = anim(animkeys().reeds);
 

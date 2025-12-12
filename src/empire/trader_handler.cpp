@@ -78,7 +78,7 @@ e_resource empire_trader_handle::get_buy_resource(building* b, empire_city_handl
     building_storage_room* space = warehouse->room();
     while (space) {
         e_resource resource = space->resource();
-        if (space->base.stored_amount_first >= amount && g_empire.can_export_resource_to_city(city.handle, resource)) {
+        if (space->stored_amount(resource) >= amount && g_empire.can_export_resource_to_city(city.handle, resource)) {
             // update stocks
             events::emit(event_stats_remove_resource{ resource, amount });
             space->take_resource(amount);
@@ -117,18 +117,18 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     // add to existing bay with room
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first > 0 && space->base.stored_amount_first < 400
-            && space->resource() == resource_to_import) {
+        if (space->stored_amount(resource_to_import) > 0) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
         }
         space = space->next_room();
     }
+
     // add to empty bay
     space = warehouse->room();
     while (space) {
-        if (!space->base.stored_amount_first) {
+        if (!space->base.stored_first().type) {
             space->add_import(resource_to_import);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -141,7 +141,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
         if (g_empire.can_import_resource_from_city(city.handle, resource_to_import)) {
             space = warehouse->room();
             while (space) {
-                if (space->base.stored_amount_first < 400 && space->resource() == resource_to_import) {
+                if (space->stored_amount(resource_to_import) < 400) {
                     space->add_import(resource_to_import);
                     return resource_to_import;
                 }

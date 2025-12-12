@@ -30,7 +30,7 @@ bool figure_trader::can_buy(building* b, empire_city_handle city) const {
 
     building_storage_room* space = warehouse->room();
     while (space) {
-        if (space->base.stored_amount_first >= 100 && g_empire.can_export_resource_to_city(city.handle, space->resource())) {
+        if (space->stored_first().value >= 100 && g_empire.can_export_resource_to_city(city.handle, space->resource())) {
             return true;
         }
         space = space->next_room();
@@ -87,8 +87,8 @@ bool figure_trader::can_sell(building* b, empire_city_handle city) const {
         // check if warehouse can store any importable goods
         auto space = warehouse->room();
         while (space) {
-            if (space->base.stored_amount_first < 400) {
-                if (!space->base.stored_amount_first) {
+            if (space->stored_first().value < 400) {
+                if (!space->stored_first().value) {
                     // empty space
                     return true;
                 }
@@ -156,7 +156,7 @@ int figure_trader::get_closest_storageyard(tile2i tile, empire_city_handle city,
                     if (space->resource() == RESOURCE_NONE)
                         distance_penalty -= 16;
 
-                    if (importable[space->resource()] && space->base.stored_amount_first < 400
+                    if (importable[space->resource()] && space->stored_amount(space->resource()) < 400
                         && space->resource() == resource) {
                         distance_penalty -= 8;
                     }

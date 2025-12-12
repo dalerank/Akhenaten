@@ -145,15 +145,7 @@ bool building_impl::required_resource(e_resource r) const {
 }
 
 int building_impl::stored_amount(e_resource r) const {
-    if (base.input.resource == r) {
-        return base.stored_amount_first;
-    }
-
-    if (base.input.resource_second == r) {
-        return base.stored_amount_second;
-    }
-
-    return base.stored_amount_first;
+    return base.storage[r];
 }
 
 resource_vec building_impl::required_resources() const { 
@@ -481,24 +473,14 @@ int building::max_storage_amount(e_resource resource) const {
     return 200; // default value
 }
 
-int building::stored_amount(int idx) const {
-    switch (idx) {
-    case 0: return stored_amount_first;
-    case 1: return stored_amount_second;
-    }
-
-    assert(false);
-    return 0;
-}
-
 bool building::workshop_has_resources() {
     assert(is_workshop());
     bool has_second_material = true;
     if (input.resource_second != RESOURCE_NONE) {
-        has_second_material = (stored_amount_second > 100);
+        has_second_material = (stored_amount(input.resource_second) > 100);
     }
 
-    bool hase_first_resource = (stored_amount_first >= 100);
+    bool hase_first_resource = (stored_amount(input.resource) >= 100);
     return has_second_material && hase_first_resource;
 }
 
@@ -698,12 +680,13 @@ figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_ca
         return nullptr;
     }
 
-    if (stored_amount_first >= min_carry) {
-        int amounts_to_carry = std::min<int>(stored_amount_first, max_carry);
+    int stored_resources = stored_amount(output.resource);
+    if (stored_resources >= min_carry) {
+        int amounts_to_carry = std::min<int>(stored_resources, max_carry);
         amounts_to_carry -= amounts_to_carry % 100; // remove pittance
 
         figure* f = create_cartpusher(output.resource, amounts_to_carry, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
-        stored_amount_first -= amounts_to_carry;
+        consume_resource(output.resource, amounts_to_carry);
         return f;
     }
 

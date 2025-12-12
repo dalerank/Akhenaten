@@ -32,7 +32,7 @@ void info_window_recruiter::init(object_info &c) {
     else if (!barracks_soldiers_requested) { reason.id = 4; } 
     else {
         int offset = 0;
-        if (baracks->base.stored_amount_first > 0) {
+        if (baracks->stored_amount(RESOURCE_WEAPONS) > 0) {
             offset = 4;
         }
 

@@ -139,8 +139,6 @@ void building_fishing_wharf::spawn_figure() {
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
     }
-    // Update has_fish status based on current storage
-    d.has_fish = (base.stored_amount_first > 0);
 }
 
 void building_fishing_wharf::on_place_checks() {
@@ -188,7 +186,8 @@ void building_fishing_wharf::highlight_waypoints() {
 void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {
     building_wharf::bind_dynamic(iob, version);
 
+    int tmp = 0;
     auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT8, &d.has_fish);
+    iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &d.no_fishing_points_warning_shown);
 }

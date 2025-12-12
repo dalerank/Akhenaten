@@ -76,7 +76,7 @@ static int get_closest_military_academy(building* fort) {
 }
 
 bool building_recruiter::create_soldier() {
-    if (base.stored_amount_first < 100) {
+    if (base.stored_amount(RESOURCE_WEAPONS) < 100) {
         return false;
     }
 
@@ -86,7 +86,7 @@ bool building_recruiter::create_soldier() {
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        base.stored_amount_first -= 100;
+        consume_resource(RESOURCE_WEAPONS, 100);
 
         building* fort = building_get(m->building_id);
         int academy_id = get_closest_military_academy(fort);
@@ -200,7 +200,7 @@ bool building_recruiter::add_resource(e_resource resource, int amount) {
     }
 
     assert(id() > 0);
-    base.stored_amount_first += amount;
+    store_resource(resource, amount);
     return true;
 }
 

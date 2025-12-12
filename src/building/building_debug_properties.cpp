@@ -40,8 +40,8 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("has_open_water_access", b->has_open_water_access);
         game_debug_show_property("prev_part_building_id", b->prev_part_building_id);
         game_debug_show_property("next_part_building_id", b->next_part_building_id);
-        game_debug_show_property("stored_amount_first", b->stored_amount_first);
-        game_debug_show_property("stored_amount_second", b->stored_amount_second);
+        game_debug_show_property("stored_amount_first", b->stored_first().value, true);
+        game_debug_show_property("stored_amount_second", b->stored_second().value, true);
         game_debug_show_property("num_workers", b->num_workers);
         game_debug_show_property("fancy_state", b->fancy_state);
         game_debug_show_property("labor_category", b->labor_category);

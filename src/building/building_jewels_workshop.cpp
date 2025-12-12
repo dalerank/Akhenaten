@@ -96,13 +96,12 @@ int building_jewels_workshop::count_nearby_workshops() const {
 void building_jewels_workshop::start_production() {
     bool can_start_b = true;
     if (base.input.resource_second != RESOURCE_NONE) {
-        can_start_b = (base.stored_amount_second >= 100);
+        can_start_b = (stored_amount(base.input.resource_second) >= 100);
     } 
     
     bool can_start_a = true;
-    if (base.input.resource != RESOURCE_NONE) {
-        can_start_a = (base.stored_amount_first >= 100);
-    }
+    assert(base.input.resource != RESOURCE_NONE);
+    can_start_a = (stored_amount(base.input.resource) >= 100);
     
     if (can_start_b && can_start_a) {
         auto &d = runtime_data();
@@ -114,15 +113,15 @@ void building_jewels_workshop::start_production() {
         int material_reduction = nearby_count * reduction_per_workshop;
         
         // Apply reduction to second resource if present
-        if (base.stored_amount_second >= 100) {
+        if (stored_amount(base.input.resource_second) >= 100) {
             int amount_to_consume = std::max(100 - material_reduction, 50); // Minimum 50, maximum reduction to 50
-            base.stored_amount_second -= amount_to_consume;
+            consume_resource(base.input.resource_second, amount_to_consume);
         }
         
         // Apply reduction to first resource
-        if (base.stored_amount_first >= 100) {
+        if (stored_amount(base.input.resource) >= 100) {
             int amount_to_consume = std::max(100 - material_reduction, 50); // Minimum 50, maximum reduction to 50
-            base.stored_amount_first -= amount_to_consume;
+            consume_resource(base.input.resource, amount_to_consume);
         }
         
         production_started();

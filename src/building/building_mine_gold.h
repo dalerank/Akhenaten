@@ -12,6 +12,7 @@ public:
 
     virtual int produce_uptick_per_day() const override;
     virtual void update_production() override;
+    virtual void production_finished() override;
     virtual void on_before_collapse() override;
 };
 ANK_CONFIG_STRUCT(building_mine_gold::static_params, production_divider)

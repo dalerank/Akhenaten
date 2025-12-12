@@ -120,7 +120,7 @@ void building_shipyard::update_map_orientation(int orientation) {
 bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     draw_normal_anim(ctx, point, tile, mask);
 
-    int amount = ceil((float)base.stored_amount() / 100.0) - 1;
+    int amount = ceil((float)base.stored_amount(RESOURCE_TIMBER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &canim = anim(animkeys().wood);
         auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
@@ -160,7 +160,7 @@ bool building_shipyard::add_resource(e_resource resource, int amount) {
     }
 
     assert(id() > 0);
-    base.stored_amount_first += amount;
+    store_resource(RESOURCE_TIMBER, amount);
     return true;
 }
 
@@ -179,11 +179,12 @@ void building_shipyard::update_day() {
     int resources = 0;
 
     auto &d = runtime_data();
-    if (d.process_type == FIGURE_WARSHIP && base.stored_amount_first > 0) {
+    int timber_amount = base.stored_amount(RESOURCE_TIMBER);
+    if (d.process_type == FIGURE_WARSHIP && timber_amount > 0) {
         const std::array<std::pair<int, int>, 5> thresholds = { {{1, 1}, {25, 2}, {50, 3}, {75, 4}, {100, 5}} };
         delta = approach_progress(pct_workers, thresholds);
         resources = delta;
-    } else if (d.process_type == FIGURE_TRANSPORT_SHIP && base.stored_amount_first > 0) {
+    } else if (d.process_type == FIGURE_TRANSPORT_SHIP && timber_amount > 0) {
         const std::array<std::pair<int, int>, 5> thresholds = { {{1, 0}, {25, 1}, {50, 2}, {75, 2}, {100, 3}} };
         delta = approach_progress(pct_workers, thresholds);
         resources = delta;
@@ -193,11 +194,11 @@ void building_shipyard::update_day() {
     }
 
     if (resources > 0) {
-        resources = std::min<int>(resources, base.stored_amount_first);
+        resources = std::min<int>(resources, timber_amount);
         delta = resources;
     }
     d.progress += delta;
-    base.stored_amount_first -= resources;
+    consume_resource(RESOURCE_TIMBER, resources);
 
     if (d.process_type == FIGURE_WARSHIP && g_city.buildings.warships_requested > 0) {
         g_city.buildings.warships_requested--;
@@ -215,13 +216,13 @@ void building_shipyard::update_day() {
     }
 
     if (d.process_type == FIGURE_NONE) {
-        if (g_city.buildings.warships_requested > 0 && base.stored_amount_first >= 100) {
+        if (g_city.buildings.warships_requested > 0 && timber_amount >= 100) {
             d.process_type = FIGURE_WARSHIP;
             g_city.buildings.warships_requested--;
             return;
         }
 
-        if (g_city.buildings.transport_ships_requested > 0 && base.stored_amount_first >= 100) {
+        if (g_city.buildings.transport_ships_requested > 0 && timber_amount >= 100) {
             d.process_type = FIGURE_TRANSPORT_SHIP;
             g_city.buildings.transport_ships_requested--;
             return;

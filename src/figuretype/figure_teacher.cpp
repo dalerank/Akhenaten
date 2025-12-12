@@ -83,14 +83,14 @@ int figure_teacher::provide_service() {
             return;
         }
 
-        if (f->home()->stored_amount_first <= 0) {
+        if (f->home()->stored_amount(RESOURCE_PAPYRUS) <= 0) {
             return;
         }
 
         const uint8_t delta_allow_papyrus = MAX_COVERAGE / 4;
         auto &housed = house->runtime_data();
         if ((MAX_COVERAGE - housed.school) > delta_allow_papyrus) {
-            f->home()->stored_amount_first--;
+            f->home()->consume_resource(RESOURCE_PAPYRUS, 1);
         }
         housed.school = MAX_COVERAGE;
     });

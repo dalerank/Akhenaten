@@ -206,6 +206,11 @@ public:
     inline const static_params &current_params() const { return (const static_params &)building_static_params::get(type()); }
     inline const static_params &current_params() { return (static_params &)building_static_params::get(type()); }
 
+    void consume_resource(e_resource r, int16_t amount);
+    void store_resource(e_resource r, int16_t amount);
+    const resource_value &stored_first() const;
+    resource_value &stored_first();
+
     building &base;
 };
 

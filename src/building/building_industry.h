@@ -8,7 +8,6 @@ public:
     virtual building_industry *dcast_industry() override { return this; }
 
     struct runtime_data_t : public no_copy_assignment {
-        short ready_production;
         short progress;
         short progress_max;
         bool spawned_worker_this_month;

@@ -39,5 +39,5 @@ void info_window_fishing_wharf::init(object_info &c) {
 
     ui["resource_img"].image(RESOURCE_FISH);
     ui["warning_text"] = reason;
-    ui["storage_desc"].text_var("Stored fish %d", b->stored_amount_first);
+    ui["storage_desc"].text_var("Stored fish %d", b->stored_amount(RESOURCE_FISH));
 }

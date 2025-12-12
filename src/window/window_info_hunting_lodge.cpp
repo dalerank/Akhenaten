@@ -27,7 +27,7 @@ void info_window_hunting_lodge::init(object_info &c) {
         reason.id = 5;
     } else if (g_city.resource.is_mothballed(RESOURCE_GAMEMEAT)) {
         reason.id = 4;
-    } else if (b->stored_amount() <= 0) {
+    } else if (b->stored_amount(RESOURCE_GAMEMEAT) <= 0) {
         reason.id = 11;
     }
     
@@ -36,5 +36,5 @@ void info_window_hunting_lodge::init(object_info &c) {
     int worker_desc = approximate_value(b->worker_percentage() / 100.f, make_array(10, 9, 8, 7, 6));
     ui["workers_desc"] = ui::str(c.group_id, worker_desc);
 
-    ui["resource_amount"] = bstring128().printf("%s %d", ui::str(c.group_id, 13), b->stored_amount());
+    ui["resource_amount"] = bstring128().printf("%s %d", ui::str(c.group_id, 13), b->stored_amount(RESOURCE_GAMEMEAT));
 }

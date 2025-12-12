@@ -65,13 +65,6 @@ void building_mine_copper::on_before_collapse() {
     }
 }
 
-int building_mine_copper::stored_amount(e_resource r) const {
-    if (r == RESOURCE_COPPER || r == base.output.resource) {
-        return base.stored_amount_first;
-    }
-    return building_industry::stored_amount(r);
-}
-
 void building_mine_copper::spawn_figure() {
     check_labor_problem();
     if (!has_road_access()) {
@@ -99,7 +92,7 @@ void building_mine_copper::production_finished() {
 
     auto &d = runtime_data();
     if (d.progress >= d.progress_max) {
-        base.stored_amount_first += ready_production();
+        store_resource(RESOURCE_COPPER, ready_production());
 
         d.progress = 0;
         //d.has_raw_materials = false;
