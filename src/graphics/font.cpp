@@ -298,8 +298,6 @@ void add_symbols_to_font_packer(imagepak_handle font_pack, pcstr symbols_font, f
         img.temp.symdeck = codepoint;
         img.temp.font_type = fconfig.type;
 
-        img.unk01 = -1;
-        img.unk02 = -1;
         img.unk03 = -1;
         img.animation.num_sprites = -1;
         img.animation.unk04 = -1;

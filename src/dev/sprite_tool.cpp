@@ -22,7 +22,7 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
 
         const auto &names = ipak.handle->names();
         const auto &ids = ipak.handle->image_ids(); 
-        for (int i = 0, size = ids.size(); i < size && go; ++i) {
+        for (int16_t i = 0, size = ids.size(); i < size && go; ++i) {
             ImGui::PushID(0x83000000 + i);
 
             ImGui::TableNextRow();
@@ -117,7 +117,7 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
                                 img->debug.frame = 0;
                                 break;
                             }
-                            const image_t *animg = image_get(image_desc{ ipak.id, i, img->debug.frame * 8 + dir });
+                            const image_t *animg = image_get(image_desc{ ipak.id, i, int16_t(img->debug.frame * 8 + dir) });
                             maxImageSize(animg, msize);
                         }
 
@@ -126,8 +126,8 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
                         const int dir_max = (img->debug.animate == 1) ? 8 : 1;
                         for (int dir = 0; dir < dir_max; ++dir) {
                             const image_t *animg = (img->debug.animate == 1)
-                                ? image_get(image_desc{ ipak.id, i, img->debug.frame * 8 + dir })
-                                : image_get(image_desc{ ipak.id, i, img->debug.frame });
+                                ? image_get(image_desc{ ipak.id, i, int16_t(img->debug.frame * 8 + dir) })
+                                : image_get(image_desc{ ipak.id, i, int16_t(img->debug.frame) });
                             drawImage(animg, dir, msize);
                             ImGui::SameLine();
                         }

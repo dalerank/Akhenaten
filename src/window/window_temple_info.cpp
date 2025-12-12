@@ -17,7 +17,7 @@ void temple_info_window::init(object_info &c) {
 
     auto temple = c.building_get()->dcast_temple();
 
-    int image_offset = 0;
+    int16_t image_offset = 0;
     switch (temple->type()) {
     case BUILDING_TEMPLE_OSIRIS: image_offset = 21; break;
     case BUILDING_TEMPLE_RA: image_offset = 22; break;

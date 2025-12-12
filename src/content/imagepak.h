@@ -23,7 +23,9 @@ public:
 
 private:
     bool userpack;
-    int useridx;
+    uint8_t pack;
+    uint16_t useridx;
+
     int version;
     size_t groups_num;
     std::array<bmp_name, PAK_GROUPS_MAX> bmp_names;
@@ -45,7 +47,7 @@ public:
 
     int global_image_index_offset = 0;
 
-    imagepak(xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
+    imagepak(uint8_t idx, xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
     span_const<bmp_name> names();
@@ -56,7 +58,9 @@ public:
 
     inline int get_entry_count() const { return entries_num; }
     int get_global_image_index(int group);
-    inline int get_user_idx() const { return useridx; }
+    image_desc get_image_desc(const xstring &name) const;
+    inline uint16_t get_user_idx() const { return useridx; }
+    inline uint8_t get_pack() const { return pack; }
     const image_t* get_image(int id, bool relative = false);
     bool loaded_system_sprites() const { return should_load_system_sprites; }
 

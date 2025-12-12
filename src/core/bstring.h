@@ -122,7 +122,7 @@ public:
     }
 
     inline ref tolower() {
-        char* str = _data;
+        pstr str = _data;
         while (*str) {
             *str = std::tolower(*str);
             ++str;
@@ -131,7 +131,7 @@ public:
     }
 
     inline ref toupper() {
-        char* str = _data;
+        pstr str = _data;
         while (*str) {
             *str = std::toupper(*str);
             ++str;
@@ -140,7 +140,7 @@ public:
     }
 
     inline ref trim() {
-        char* end = std::remove_if(_data, _data + len(), ::isspace);
+        pstr end = std::remove_if(_data, _data + len(), ::isspace);
         *end = '\0';
 
         return *this;

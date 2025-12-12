@@ -30,9 +30,12 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     g_render.fill_rect(start, size, alpha);
 }
 
-void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i offset)
-{
+void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i offset) {
     const image_t* img = image_get(image_id);
+    if (!img) {
+        return;
+    }
+
     if (scale == -1) {
         //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
     }

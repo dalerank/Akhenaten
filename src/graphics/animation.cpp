@@ -10,7 +10,7 @@ int animation_t::global_hashtime = 0;
 animation_t animations_t::dummy;
 
 bool animation_t::archive_load(archive arch) {
-    duration = std::max(1, duration);
+    duration = std::max<int16_t>(1, duration);
     loop = arch.r_bool("loop", true);
     hashtime = global_hashtime;
     bool internal_offset = arch.r_bool("internal_offset", false);
@@ -32,7 +32,7 @@ void animation_context::setup(const animation_t &anim) {
     base = image_id_from_group(anim.pack, anim.id);
     offset = anim.offset;
     max_frames = anim.max_frames;
-    frame_duration = std::max(1, anim.duration);
+    frame_duration = std::max<int16_t>(1, anim.duration);
     pos = anim.pos;
     loop = anim.loop;
     was_finished = false;

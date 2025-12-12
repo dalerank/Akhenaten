@@ -13,14 +13,14 @@ struct animation_timer {
 struct animation_t {
     xstring key;
     vec2i pos;
-    int pack;
-    int id;
-    int offset;
-    int max_frames;
-    int duration;
-    int start_frame;
-    int hashtime = 0;
     uint32_t flags;
+    int hashtime = 0;
+    int16_t pack;
+    int16_t id;
+    int16_t offset;
+    int8_t max_frames;
+    int8_t duration;
+    int8_t start_frame;
     bool can_reverse;
     bool loop = true;
     bool reverse = false;

@@ -606,7 +606,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
 
         if (img && img->animation.speed_id) {
             int new_animation = g_empire.update_animation(obj, image_id);
-            ui::eimage({ PACK_GENERAL, image_id + new_animation }, draw_pos + img->animation.sprite_offset);
+            ui::eimage({ PACK_GENERAL, int16_t(image_id + new_animation) }, draw_pos + img->animation.sprite_offset);
         }
     }
 }

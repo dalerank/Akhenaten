@@ -2,7 +2,8 @@ log_info("akhenaten: main menu started")
 
 main_menu_screen {
 	ui {
-		background    : { type:"background"; pack:PACK_UNLOADED, id:14, offset:0 }
+		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
+
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5]})
 		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], onclick: window_player_selection_show })
 		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], onclick: window_records_show })

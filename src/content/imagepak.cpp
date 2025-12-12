@@ -247,7 +247,8 @@ static buffer* load_external_data(const image_t &img) {
         // try in 555 dir
         size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img.data_length, img.sgx_data_offset - 1);
         if (!size) {
-            logs::error("unable to load external image %s", img.bmp.name.c_str());
+            logs::error("unable to load external image %s (tried: %s, offset=%d, length=%d)", 
+                        img.bmp.name.c_str(), filename.c_str(), img.sgx_data_offset, img.data_length);
             return nullptr;
         }
     }
@@ -350,10 +351,11 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
 
 #define MAX_FILE_SCRATCH_SIZE 20000000
 
-imagepak::imagepak(xstring pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
+imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool system_sprites, bool fonts, bool custom) {
     //    images = nullptr;
     //    image_data = nullptr;
     entries_num = 0;
+    pack = ipack;
     std::memset(group_image_ids, 0, PAK_GROUPS_MAX * sizeof(uint16_t));
     should_load_system_sprites = system_sprites;
     should_convert_fonts = fonts;
@@ -367,6 +369,8 @@ imagepak::imagepak(xstring pak_name, int starting_index, bool system_sprites, bo
     } 
 
     if (!load_pak(pak_name.c_str(), starting_index)) {
+        logs::error("imagepak: failed to load pack '%s' (id=%d, index=%d) - file may be missing or corrupted", 
+                    pak_name.c_str(), ipack, starting_index);
         cleanup_and_destroy();
     }
 }
@@ -463,8 +467,6 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.height = surface ? surface->h : 0;
         img.temp.surface = (void*)surface;
 
-        img.unk01 = -1;
-        img.unk02 = -1;
         img.unk03 = -1;
         img.animation.num_sprites = -1;
         img.animation.unk04 = -1;
@@ -683,7 +685,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     std::sort(offset_ids_vec.begin(), offset_ids_vec.end(), [] (auto &lhs, auto &rhs) { return lhs.start < rhs.start; });
 
     // parse bitmap names
-    using bmp_name_data = std::array<char, 200>;
+    using bmp_name_data = std::array<char, bmp_name::capacity>;
     std::vector<bmp_name_data> names(num_bmp_names);
     pak_buf->read_raw(names.data(), num_bmp_names * bmp_name::capacity);
     for (int i = 0; i < num_bmp_names; ++i) {
@@ -729,8 +731,8 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         img.width = std::max<int>(0, img.width);
         img.height = pak_buf->read_i16();
         img.height = std::max<int>(0, img.height);
-        img.unk01 = pak_buf->read_i16();
-        img.unk02 = pak_buf->read_i16();
+        img.group_id = pak_buf->read_u16();
+        img.group_index = pak_buf->read_u16();
         img.unk03 = pak_buf->read_i16();
         img.animation.num_sprites = pak_buf->read_u16();
         img.animation.unk04 = pak_buf->read_i16();
@@ -758,12 +760,25 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         }
 
         if (img.bmp.group_id == 0) {
-            auto it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), last_idx_in_bmp, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
-            img.bmp.group_id = it->id;
+            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), last_idx_in_bmp, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
+            img.bmp.group_id = group_it->id;
             img.bmp.name.printf("group_%d", img.bmp.group_id);
+        } else {
+            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
+            if (group_it != offset_ids_vec.end()) {
+                --group_it;
+                img.group_id = group_it->id;
+                img.group_index = img.sgx_index - group_it->start;
+            }
         }
 
         img.bmp.entry_index = last_idx_in_bmp;
+        bstring64 img_bmp_short_name = bmp_names[img.bmp.group_id];
+        img_bmp_short_name.replace_str(".bmp", "");
+        bstring256 img_bmp_tname;
+        img_bmp_tname.printf("%s/%s_%05d", name.c_str(), img_bmp_short_name.c_str(), img.bmp.entry_index);
+        img.bmp.tname = img_bmp_tname.tolower().c_str();
+
         last_idx_in_bmp++;
         img.unk13 = pak_buf->read_i8();
         img.animation.speed_id = pak_buf->read_u8();
@@ -851,7 +866,15 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 
         // load and convert image bitmap data
         pak_buf->set_offset(img.sgx_data_offset);
-        convert_image_data(pak_buf, img, should_convert_fonts);
+        if (!convert_image_data(pak_buf, img, should_convert_fonts)) {
+            if (img.is_external) {
+                logs::error("imagepak: failed to convert external image %s (group=%d, sgx_index=%d, rect_index=%d) - external file may be missing", 
+                            img.bmp.name.c_str(), img.group_id, img.sgx_index, img.rect_index);
+            } else {
+                logs::error("imagepak: failed to convert image %s (group=%d, sgx_index=%d, rect_index=%d)", 
+                            img.bmp.name.c_str(), img.group_id, img.sgx_index, img.rect_index);
+            }
+        }
     }
 
     // create textures from atlas data
@@ -899,6 +922,24 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     platform_renderer_render();
 
     return true;
+}
+
+image_desc imagepak::get_image_desc(const xstring &name) const {
+    bstring256 name_lower = name.c_str();
+    name_lower.tolower();
+    
+    for (const auto& img : images_array) {
+        if (img.bmp.tname == name_lower.c_str()) {
+            image_desc desc;
+            desc.pack = static_cast<int16_t>(get_pack());
+            desc.id = static_cast<int16_t>(img.group_id);
+            desc.offset = static_cast<int16_t>(img.group_index);
+            desc.path = img.bmp.tname;
+            return desc;
+        }
+    }
+    
+    return image_desc{};
 }
 
 int imagepak::get_global_image_index(int group) {

@@ -6,7 +6,7 @@
 
 struct imagepak_handle {
     xstring name;
-    int id = -1;
+    int16_t id = -1;
     int index = -1;
     uint32_t entries_num = 0;
     bool system = false;

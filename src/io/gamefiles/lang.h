@@ -29,8 +29,8 @@ struct lang_message {
 
     struct limage {
         vec2i pos;
-        uint8_t pack, id;
-        uint16_t offset;
+        int16_t pack, id;
+        int16_t offset;
     };
 
     ltext title;
