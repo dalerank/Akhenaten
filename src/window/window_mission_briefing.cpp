@@ -36,20 +36,12 @@ void ui::mission_briefing_window::init() {
         g_mission_briefing.campaign_mission_loaded = 1;
     }
 
-    ui["dec_difficulty"].onclick([] {
-        g_settings.difficulty.decrease();
-    });
-
     if (!g_mission_briefing.is_review) {
         ui["back"].onclick([sid = scenario_id] {
             g_sound.speech_stop();
             ui::mission_choice_window::show(sid);
         });
     }
-
-    ui["inc_difficulty"].onclick([] {
-        g_settings.difficulty.increase();
-    });
 
     ui["start_mission"].onclick([this] {
         if (!is_review) {
@@ -67,7 +59,6 @@ void ui::mission_briefing_window::init() {
 
     ui["title"] = msg.title.text;
     ui["subtitle"] = msg.subtitle.text;
-    ui["difficulty_label"] = ui::str(153, g_settings.difficulty() + 1);
 
     const pcstr widgets[] = { "goal_0", "goal_1", "goal_2", "goal_3", "goal_4", "goal_5" };
     auto goal_label = widgets;

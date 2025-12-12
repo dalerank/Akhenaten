@@ -420,4 +420,17 @@ localization_ru = [
     { key: "#god_to_ptah", text: "Птаху" }
     { key: "#god_to_seth", text: "Сету" }
     { key: "#god_to_bast", text: "Бастет" }
+
+    // group 153
+    { key:"#difficulty_settings", text: "Настройки сложности" }
+    { key:"#difficulty_right_click_to_continue", text: "Правый клик для продолжения" }
+
+    { key:"#difficulty_very_easy", text: "Очень легко" }
+    { key:"#difficulty_easy", text: "Легко" }
+    { key:"#difficulty_normal", text: "Нормально" }
+    { key:"#difficulty_hard", text: "Сложно" }
+    { key:"#difficulty_very_hard", text: "Очень сложно" }
+    
+    { key:"#difficulty_gods_effects_off", text: "Эффекты богов ВЫКЛ" }
+    { key:"#difficulty_gods_effects_on", text: "Эффекты богов ВКЛ" }
 ]
