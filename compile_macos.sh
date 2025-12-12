@@ -3,10 +3,10 @@
 ### Compile script for macOS as Universal Binary
 ###
 ### Dependencies on ARM Device:
-### /opt/homebrew/bin/brew install cmake git libpng
+### /opt/homebrew/bin/brew install cmake git
 ###
 ### Dependencies on Intel Device:
-### /usr/local/bin/brew install cmake git libpng
+### /usr/local/bin/brew install cmake git
 
 if [ "$1" == "" ]; then
     echo "Usage: ./compile_macos.sh [arm64|x86_64|universal|clean]"
@@ -26,7 +26,7 @@ function arm64 {
     cmake -B build-arm64 \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_OSX_ARCHITECTURES=arm64 \
-    -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0
     cmake --build build-arm64 -- -j"$CORES"
 }
 
@@ -35,7 +35,7 @@ function x86_64 {
     cmake -B build-x86_64 \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_OSX_ARCHITECTURES=x86_64 \
-    -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0
     cmake --build build-x86_64 -- -j"$CORES"
 }
 
