@@ -23,8 +23,6 @@
 #include "building/building_well.h"
 #include "building/building_bridge.h"
 #include "city/city_industry.h"
-#include "building/monument_mastaba.h"
-#include "building/rotation.h"
 #include "building/building_fort.h"
 #include "building/building.h"
 #include "building/building_temple_complex.h"
