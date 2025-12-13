@@ -215,6 +215,7 @@ struct element {
     using items = std::vector<ptr>;
     using draw_callback = std::function<void(element*, UiFlags)>;
 
+    int debug_tag;
     xstring id;
     vec2i pos;
     vec2i size;

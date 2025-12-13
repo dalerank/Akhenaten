@@ -611,6 +611,7 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
 
 void ui::element::load(archive arch, element *parent, element::items &items) {
     vec2i parent_offset = parent ? parent->pos : vec2i{0, 0};
+    debug_tag = arch.r_int("debug_tag");
     pos = arch.r_vec2i("pos") + parent_offset;
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
