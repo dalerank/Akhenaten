@@ -5,7 +5,9 @@
 
 #include <cstdint>
 
-int platform_screen_create(const char * title, const char* renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size);
+class xstring;
+
+int platform_screen_create(const xstring& title, const xstring& renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size);
 void platform_screen_destroy();
 
 bool platform_screen_resize(int pixel_width, int pixel_height, int save);

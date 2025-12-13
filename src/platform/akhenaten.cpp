@@ -114,9 +114,9 @@ static int init_sdl() {
     return 1;
 }
 
-bool pre_init_dir_attempt(pcstr data_dir, pcstr lmsg) {
+bool pre_init_dir_attempt(const xstring& data_dir, pcstr lmsg) {
     logs::info(lmsg, data_dir); // TODO: get rid of data ???
-    const bool ok = vfs::platform_file_manager_set_base_path(data_dir);
+    const bool ok = vfs::platform_file_manager_set_base_path(data_dir.c_str());
     if (!ok) {
         logs::info("%s: directory not found", data_dir);
     }
@@ -128,7 +128,7 @@ bool pre_init_dir_attempt(pcstr data_dir, pcstr lmsg) {
     return false;
 }
 
-static bool pre_init(pcstr custom_data_dir) {
+static bool pre_init(const xstring& custom_data_dir) {
     if (pre_init_dir_attempt(custom_data_dir, "Attempting to load game from %s")) {
         return true;
     }
@@ -146,7 +146,7 @@ static bool pre_init(pcstr custom_data_dir) {
 #else
     char* tmp_path = SDL_GetBasePath();
 #endif
-    bstring512 base_path(tmp_path);
+    xstring base_path(tmp_path);
     SDL_free(tmp_path);
     if (pre_init_dir_attempt(base_path, "Attempting to load game from base path %s")) {
         return true;
@@ -246,7 +246,7 @@ static void setup() {
         exit(-2);
     }
 
-    vfs::platform_file_manager_set_ext_path(g_args.get_extdata_directory());
+    vfs::platform_file_manager_set_ext_path(g_args.get_extdata_directory().c_str());
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
@@ -256,7 +256,7 @@ static void setup() {
     vfs::path scripts_base_path(base_path, vfs::SCRIPTS_FOLDER);
     js_vm_add_scripts_folder(scripts_base_path);    // setup script engine data scripts folder
 
-    js_vm_add_scripts_folder(g_args.get_scripts_directory());    // setup script engine user folder
+    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str());    // setup script engine user folder
     js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
 
     js_vm_setup();
@@ -272,7 +272,7 @@ static void setup() {
     }
 
     // Set language from command line if specified (after game_features::load() in check_valid())
-    if (g_args.get_language()) {
+    if (!g_args.get_language().empty()) {
         game_features::gameopt_language.set(g_args.get_language());
         logs::info("Language set from command line: %s", g_args.get_language());
         // Reload language to apply the change

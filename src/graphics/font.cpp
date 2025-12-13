@@ -369,9 +369,9 @@ void font_atlas_regenerate() {
         arch.r("font_configs", font_configs);
 
         // Check if custom font is set (from CLI or config file), otherwise use font from language config
-        pcstr custom_font = g_args.get_custom_font();
-        if (custom_font && *custom_font) {
-            symbols_font = custom_font;
+        const xstring& custom_font = g_args.get_custom_font();
+        if (!custom_font.empty()) {
+            symbols_font = custom_font.c_str();
         } else {
             symbols_font = arch.r_string("font");
         }

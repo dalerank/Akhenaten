@@ -137,7 +137,7 @@ bool platform_render_support_filters() {
 void platform_render_init_filters() {
     auto &data = g_renderer_filter;
 
-    std::string driver = get_video_driver();
+    xstring driver = get_video_driver();
     data.render_support_filters = (driver == "opengl");
     data.render_support_filters &= SDL_VERSION_ATLEAST(2, 0, 12);
 
