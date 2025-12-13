@@ -8,13 +8,19 @@
 #include "grid/property.h"
 #include "grid/ring.h"
 #include "grid/terrain.h"
+#include "grid/trees.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
 #include "city/city.h"
 
 grid_xx g_malaria_risk_grid = {0, FS_INT8};
 
-malaria_risk_t g_malaria_risk;
+malaria_risk_t ANK_VARIABLE_N(g_malaria_risk, "malaria_risk");
+
+static void add_tree_malaria_reduction(int grid_offset) {
+    tile2i tile(grid_offset);
+    g_malaria_risk.add_to_terrain(tile, 1, g_malaria_risk.tree_risk, 1, g_malaria_risk.tree_step_delta, g_malaria_risk.tree_risk_range);
+}
 
 void malaria_risk_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int risk) {
     int partially_outside_map = 0;
@@ -37,14 +43,14 @@ void malaria_risk_t::add_to_terrain_at_distance(tile2i tile, int size, int dista
             const ring_tile* tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
                 int new_risk = map_grid_get(g_malaria_risk_grid, base_offset + tile->grid_offset) + risk;
-                map_grid_set(g_malaria_risk_grid, base_offset + tile->grid_offset, calc_bound(new_risk, 0, 100));
+                map_grid_set(g_malaria_risk_grid, base_offset + tile->grid_offset, calc_bound(new_risk, 0, max_risk));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
             int new_risk = map_grid_get(g_malaria_risk_grid, base_offset + tile->grid_offset) + risk;
-            map_grid_set(g_malaria_risk_grid, base_offset + tile->grid_offset, calc_bound(new_risk, 0, 100));
+            map_grid_set(g_malaria_risk_grid, base_offset + tile->grid_offset, calc_bound(new_risk, 0, max_risk));
         }
     }
 }
@@ -54,7 +60,7 @@ void malaria_risk_t::add_to_terrain(tile2i tile, int size, int risk, int step, i
         return;
     }
 
-    range = std::min(range, 6);
+    range = std::min<int>(range, max_range);
     int tiles_within_step = 0;
     int distance = 1;
     while (range > 0) {
@@ -77,7 +83,7 @@ void malaria_risk_t::update_buildings() {
     });
 
     buildings_valid_do([this] (building &b) {
-        if (b.type == BUILDING_WATER_SUPPLY && b.state == BUILDING_STATE_VALID && b.num_workers > 0) {
+        if (b.type == BUILDING_WELL) {
             add_to_terrain(b.tile, b.size, -20, 1, 0, 4);
         }
     });
@@ -92,17 +98,22 @@ void malaria_risk_t::update_terrain() {
             tile2i tile(x, y);
             
             if (terrain & TERRAIN_WATER) {
-                add_to_terrain(tile, 1, 40, 1, -5, 2);
+                add_to_terrain(tile, 1, water_risk, 1, water_step_delta, water_risk_range);
             }
             
             if (terrain & TERRAIN_FLOODPLAIN) {
-                add_to_terrain(tile, 1, 40, 1, -5, 2);
+                add_to_terrain(tile, 1, floodplain_risk, 1, floodplain_step_delta, floodplain_risk_range);
             }
             
             if (terrain & TERRAIN_MARSHLAND) {
-                add_to_terrain(tile, 1, 60, 1, -8, 3);
+                add_to_terrain(tile, 1, marshland_risk, 1, marshland_step_delta, marshland_risk_range);
             }
         }
+    }
+
+    // Trees reduce malaria risk around them
+    if (tree_risk < 0 && tree_risk_range > 0) {
+        map_tree_foreach_tile(add_tree_malaria_reduction);
     }
 }
 
