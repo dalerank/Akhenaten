@@ -183,6 +183,8 @@ struct city_t {
     void reset_overlay();
 
     void init();
+    void reload_objects();
+
     void init_custom_map();
     void init_campaign_mission();
     void init_mission_resources(const resource_allow_vec &resources);

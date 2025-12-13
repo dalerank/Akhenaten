@@ -39,6 +39,7 @@ enum e_session_type {
 
 class MovieWriter;
 struct event_game_mission_pre_load {};
+struct event_game_scripts_was_reloaded {};
 
 struct game_t {
     enum {
