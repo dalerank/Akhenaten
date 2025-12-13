@@ -779,6 +779,13 @@ endif()
 add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 message("GAME_BUILD_NUMBER now is ${GAME_BUILD_NUMBER}")
 
+set(BUILD_INFO_DIR "${CMAKE_BINARY_DIR}")
+file(MAKE_DIRECTORY "${BUILD_INFO_DIR}")
+file(WRITE
+    "${CMAKE_BINARY_DIR}/buildnumber.txt"
+    "${GAME_BUILD_NUMBER}\n"
+)
+
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
     file(GLOB IO_HEADERS ${PROJECT_SOURCE_DIR}/src/io/*.h)
@@ -1069,6 +1076,8 @@ if(APPLE)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
     set(DATA_SRC_DIR "${CMAKE_SOURCE_DIR}/data")
     set(LAUNCH_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/macos/launch.sh")
+    set(UPDATE_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/updater.sh")
+    set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 
     add_custom_command(TARGET ${GAME} POST_BUILD
         # Data‑Ordner anlegen
@@ -1085,7 +1094,11 @@ if(APPLE)
                 "${MACOS_DIR}/launch.sh"
         COMMAND chmod +x "${MACOS_DIR}/launch.sh"
 
-        COMMENT "Copying game data and launch.sh into .app bundle"
+        # updater.sh ins MacOS‑Verzeichnis kopieren und ausführbar machen
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${MACOS_DIR}/updater.sh"
+        COMMAND chmod +x "${MACOS_DIR}/updater.sh"
         VERBATIM
     )
 endif()
@@ -1093,6 +1106,44 @@ endif()
 #
 # Apple specific End
 #
+
+# Copy buildnumber.txt and updater.sh beside binary
+
+set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
+set(UPDATE_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/updater.sh")
+
+if(APPLE)
+    set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${BUILD_NUMBER_SRC}"
+                "${MACOS_DIR}/buildnumber.txt"
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${MACOS_DIR}/updater.sh"
+    )
+endif()
+
+if(UNIX AND NOT APPLE)
+    set(UNIX_DIR "${CMAKE_BINARY_DIR}")
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${BUILD_NUMBER_SRC}"
+                "${UNIX_DIR}/buildnumber.txt"
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${UNIX_DIR}/updater.sh"
+    )
+endif()
+
+if(WIN32)
+    set(WIN32_DIR "${CMAKE_BINARY_DIR}")
+    add_custom_command(TARGET ${GAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${BUILD_NUMBER_SRC}"
+                "${WIN32_DIR}/buildnumber.txt"
+    )
+endif()
 
 target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
 message(STATUS "freetype: Linked from ${FREETYPE_INSTALL_DIR}")
