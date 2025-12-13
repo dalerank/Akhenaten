@@ -160,65 +160,14 @@ namespace js_helpers {
 
 namespace config {
 
-void refresh(archive);
-archive load(pcstr filename);
-
-using config_iterator_function_cb = void ();
-using ArchiveIterator = FuncLinkedList<config_iterator_function_cb*>;
-
-struct type_enum{};
-using config_iterator_enum_function_cb = void(type_enum);
-using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb*>;
-
-using jsfunc_iterator_function_cb = void(js_State*);
-using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
+    using jsfunc_iterator_function_cb = void(js_State *);
+    using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *>;
 
 } // end namespace config
-
-#define ANK_DECLARE_CONFIG_ITERATOR(func) void func(); \
-    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
-    static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func)
 
 #define ANK_DECLARE_JSFUNCTION_ITERATOR(func) void func(js_State*); \
     namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
     static config::FunctionIterator ANK_CONFIG_CC1(func_handler, __LINE__)(func)
-
-#define ANK_REGISTER_CONFIG_ITERATOR(func) func(); \
-    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
-    static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func); void func() 
-
-#define ANK_CONFIG_OBJECT_VARIABLE(a) \
-    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" #a); a.archive_init(); }
-
-#define ANK_CONFIG_OBJECT_VARIABLE_N(a, name)                   \
-    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a);             \
-    void config_load_ ## a() {                                  \
-        call_unload_if_exists(a);                               \
-        const bool ok = g_config_arch.r(name, a);               \
-        call_init_if_exists(a);                                 \
-        { assert(ok && "Variable not exist in config:" name); } \
-    }
-
-#define ANK_CONFIG_ARRAY_VARIABLE(a, name) \
-    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.archive_unload(); g_config_arch.r_array(name, [] (archive arch) { auto &it = a.emplace_back(); a.archive_load(it, arch); }); a.archive_init(); }
-
-#define ANK_CONFIG_OBJECTS_VARIABLE(a, name) \
-    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { g_config_arch.r(name, a); call_init_if_exists(a); }
-
-#define ANK_ARRAY_VARIABLE(a) a; \
-    ANK_CONFIG_ARRAY_VARIABLE(a, #a)
-
-#define ANK_OBJECTS_VARIABLE(a) a; \
-    ANK_CONFIG_OBJECTS_VARIABLE(a, #a)
-
-#define ANK_VARIABLE(a) a; \
-    ANK_CONFIG_OBJECT_VARIABLE_N(a, #a)
-
-#define ANK_VARIABLE_N(a, name) a; \
-    ANK_CONFIG_OBJECT_VARIABLE_N(a, name)
 
 template<typename Func>
 struct function_traits;
@@ -351,14 +300,6 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(params); });     \
     }                                                                                   \
     function_traits<decltype(&func)>::return_type func
-
-
-#define ANK_PERMANENT_CALLBACK(event, a) \
-    tmp_register_permanent_callback_ ##event(); \
-    ANK_DECLARE_CONFIG_ITERATOR(register_permanent_callback_ ##event); \
-    void permanent_callback_ ##event(event a); \
-    void register_permanent_callback_ ##event() { events::subscribe_permanent(permanent_callback_ ##event); } \
-    void permanent_callback_ ##event(event a)
 
 #define ANK_CONFIG_ENUM(enumt) enumt; \
     void register_enum_##enumt(config::type_enum); \

@@ -5,6 +5,8 @@
 
 #include "mujs/mujs.h"
 
+g_archive g_config_arch{ nullptr };
+
 void archive::getproperty(int idx, pcstr name) {
     js_getproperty((js_State*)state, idx, name);
 }

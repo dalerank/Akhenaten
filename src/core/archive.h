@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "core/core.h"
 #include "core/xstring.h"
 #include "core/bstring.h"
 #include "core/vec2i.h"
@@ -714,6 +715,62 @@ namespace archive_helper {                                                      
         return {};                                                                                \
     }                                                                                             \
 }
+
+#define ANK_DECLARE_CONFIG_ITERATOR(func) void func(); \
+    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
+    static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func)
+
+
+#define ANK_REGISTER_CONFIG_ITERATOR(func) func(); \
+    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
+    static config::ArchiveIterator ANK_CONFIG_CC1(config_handler, __LINE__)(func); void func() 
+
+#define ANK_CONFIG_OBJECT_VARIABLE(a) \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
+    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" #a); a.archive_init(); }
+
+#define ANK_CONFIG_OBJECT_VARIABLE_N(a, name)                   \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a);             \
+    void config_load_ ## a() {                                  \
+        call_unload_if_exists(a);                               \
+        const bool ok = g_config_arch.r(name, a);               \
+        call_init_if_exists(a);                                 \
+        { assert(ok && "Variable not exist in config:" name); } \
+    }
+
+#define ANK_CONFIG_ARRAY_VARIABLE(a, name) \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
+    void config_load_ ## a() { a.archive_unload(); g_config_arch.r_array(name, [] (archive arch) { auto &it = a.emplace_back(); a.archive_load(it, arch); }); a.archive_init(); }
+
+#define ANK_CONFIG_OBJECTS_VARIABLE(a, name) \
+    ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
+    void config_load_ ## a() { g_config_arch.r(name, a); call_init_if_exists(a); }
+
+#define ANK_ARRAY_VARIABLE(a) a; \
+    ANK_CONFIG_ARRAY_VARIABLE(a, #a)
+
+#define ANK_OBJECTS_VARIABLE(a) a; \
+    ANK_CONFIG_OBJECTS_VARIABLE(a, #a)
+
+#define ANK_VARIABLE(a) a; \
+    ANK_CONFIG_OBJECT_VARIABLE_N(a, #a)
+
+#define ANK_VARIABLE_N(a, name) a; \
+    ANK_CONFIG_OBJECT_VARIABLE_N(a, name)
+
+namespace config {
+
+    void refresh(archive);
+    archive load(pcstr filename);
+
+    using config_iterator_function_cb = void();
+    using ArchiveIterator = FuncLinkedList<config_iterator_function_cb *>;
+
+    struct type_enum {};
+    using config_iterator_enum_function_cb = void(type_enum);
+    using EnumIterator = FuncLinkedList<config_iterator_enum_function_cb *>;
+
+} // end namespace config
 
 template<> inline void archive::r<int>(pcstr name, int &v) { v = r_int(name); }
 template<> inline void archive::r<int8_t>(pcstr name, int8_t &v) { v = r_int(name); }
