@@ -3,9 +3,12 @@ log_info("akhenaten: city.js started")
 city {
     [property]
     festival_selected_god { get: __city_festival_selected_god }
+
+    [property]
+    population : __city_population
     
     use_building: city_use_building
-    set_goal_tooltip: scenario_set_goal_tooltip
+    set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals
     add_animals_point : __city_add_animals_point
@@ -32,6 +35,7 @@ city {
         return {
             id: building_id
             add_fire_damage: function(damage) { __building_add_fire_damage(building_id, damage) }
+            add_collapse_damage: function(damage) { __building_add_collapse_damage(building_id, damage) }
         }
     }
 

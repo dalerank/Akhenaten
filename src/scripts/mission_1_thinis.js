@@ -16,7 +16,7 @@ mission1 {
 
 	buildings  [
 					BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD,
-					BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
+					BUILDING_FIREHOUSE, BUILDING_POLICE_STATION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_WATER_SUPPLY,
 					BUILDING_GOLD_MINE, BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
 				]
 
@@ -24,9 +24,14 @@ mission1 {
 		gold_mined : 500
 		victory_last_action_delay : 4
 		nogranary_population_cap : 150
+		population_to_start_collapse_event : 200
 
 		gold_mined_handled : false
 		temples_built : false
+		booth_built : false
+		juggler_school_built : false
+		tutorial_collapsed_handled : false
+		last_action_time : 0
 	}
 }
 
@@ -62,8 +67,39 @@ function mission1_on_start(ev) {
 		city.use_building(BUILDING_JUGGLER_SCHOOL, true)
 	}
 
+	if (mission.tutorial_collapsed_handle) {
+		city.use_building(BUILDING_ARCHITECT_POST, true)
+	}
+
     city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
+}
+
+[event=event_advance_week, mission=mission1]
+function mission0_handle_collapse_event(ev) {
+	if (mission.tutorial_collapsed_handled) {
+		return;
+	}
+
+	if (city.population < mission.population_to_start_collapse_event) {
+		return;
+	}
+
+	var house = city.get_random_house()
+	house.add_collapse_damage(2000)
+}
+
+[event=event_collase_damage, mission=mission1]
+function mission1_handle_collapse(ev) {
+    if (mission.tutorial_collapsed_handled) {
+        return;
+    }
+	
+	mission.last_action_time = game.absolute_day
+	mission.tutorial_collapsed_handled = true
+
+	city.use_building(BUILDING_ARCHITECT_POST, true)
+    ui.popup_message("message_tutorial_collapsed_building")
 }
 
 [event=event_advance_day, mission=mission1]
@@ -76,7 +112,7 @@ function mission1_check_gold_mined(ev) {
         return
     }
 
-    mission.last_action = game.absolute_day
+    mission.last_action_time = game.absolute_day
     mission.gold_mined_handled = true
 
 	city.use_building(BUILDING_TEMPLE_BAST, true)
@@ -98,8 +134,11 @@ function mission1_handle_population_cap(ev) {
 function mission1_handle_victory_state(ev) {
 	city.set_victory_reason("gold_mined_handled", mission.gold_mined_handled)
 	city.set_victory_reason("temples_built", mission.temples_built)
+	city.set_victory_reason("tutorial_collapsed_handled", mission.tutorial_collapsed_handled)
+	city.set_victory_reason("booth_built", mission.booth_built)
+	city.set_victory_reason("juggler_school_built", mission.juggler_school_built)
 
-    var some_days_after_last_action = (game.absolute_day - mission.last_action) > mission.victory_last_action_delay;
+    var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
 	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
@@ -121,4 +160,34 @@ function mission1_on_build_temple(ev) {
     mission.temples_built = true
 
     ui.popup_message("message_tutorial_entertainment");
+}
+
+[event=event_advance_day, mission=mission1]
+function mission1_on_build_booth(ev) {
+    if (mission.booth_built) {
+        return
+    }
+
+    var booth_count = city.count_active_buildings(BUILDING_BOOTH)
+    if (booth_count == 0) {
+        return
+    }
+
+	mission.last_action = game.absolute_day
+    mission.booth_built = true
+}
+
+[event=event_advance_day, mission=mission1]
+function mission1_on_build_juggler_school(ev) {
+	if (mission.juggler_school_built) {
+		return
+	}
+
+	var juggler_school_count = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL)
+	if (juggler_school_count == 0) {
+		return
+	}
+
+	mission.last_action = game.absolute_day
+    mission.juggler_school_built = true
 }

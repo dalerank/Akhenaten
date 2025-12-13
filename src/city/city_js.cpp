@@ -17,3 +17,8 @@ int __city_festival_selected_god() {
     return g_city.festival.selected_god();
 }
 ANK_FUNCTION(__city_festival_selected_god)
+
+int __city_population() {
+    return g_city.population.current;
+}
+ANK_FUNCTION(__city_population)

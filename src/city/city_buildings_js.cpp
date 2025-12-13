@@ -1,5 +1,7 @@
 #include "js/js_game.h"
+
 #include "city/city.h"
+#include "building/building_house.h"
 
 int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
@@ -30,9 +32,12 @@ ANK_FUNCTION_1(__city_building_is_tax_collector)
 
 int __city_get_random_house_id() {
     svector<building_id, 128> houses;
-    buildings_valid_do([&] (building &b) { if (b.dcast_house()) {
-        houses.push_back(b.id);
-    }});
+    buildings_valid_do([&] (building &b) { 
+        auto house = b.dcast_house();
+        if (house && house->house_population() > 0) {
+            houses.push_back(b.id);
+        }
+    });
 
     return houses[rand() % houses.size()];
 }
@@ -45,3 +50,11 @@ void __building_add_fire_damage(int bid, int damage) {
     }
 }
 ANK_FUNCTION_2(__building_add_fire_damage)
+
+void __building_add_collapse_damage(int bid, int damage) {
+    building *b = building_get(bid);
+    if (b->is_valid()) {
+        b->force_damage(false, damage);
+    }
+}
+ANK_FUNCTION_2(__building_add_collapse_damage)
