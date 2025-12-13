@@ -92,6 +92,12 @@ void city_t::init() {
     g_building_menu_ctrl.init();
 }
 
+void city_t::reload_objects() {
+    buildings.reload_objects();
+    figures.reload_objects();
+    g_city_planner.init();
+}
+
 void city_t::update_day(simulation_time_t simtime) {
     sentiment.update_day();
     criminals_update_day();

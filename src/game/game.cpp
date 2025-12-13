@@ -256,8 +256,9 @@ void game_t::write_frame() {
 }
 
 void game_t::reload_objects() {
-    g_city.buildings.reload_objects();
-    g_city.figures.reload_objects();
+    g_city.reload_objects();
+
+    events::emit(event_game_scripts_was_reloaded{});
 }
 
 ::painter game_t::painter() {
