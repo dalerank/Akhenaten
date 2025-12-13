@@ -83,9 +83,25 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_localization) {
 }
 
 bool lang_reload_localized_files() {
+    // Ensure localization.js is loaded if game_languages is empty
+    if (game_languages.empty()) {
+        logs::info("game_languages is empty, attempting to load localization.js");
+        js_vm_load_file_and_exec(":localization.js");
+        config::refresh(js_vm_state());
+        
+        // Check again after loading
+        if (game_languages.empty()) {
+            logs::error("Failed to load game_languages from localization.js");
+        }
+    }
+
     const auto current_lang = lang_get_current_language();
 
     const xstring localization_base_table = current_lang.base_table;
+    if (localization_base_table.empty()) {
+        logs::error("localization_base_table is empty, cannot load localization files");
+        return false;
+    }
     {
         vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
         const bool lang_base_file_loaded = js_vm_load_file_and_exec(lang_base_file.c_str());
@@ -97,6 +113,10 @@ bool lang_reload_localized_files() {
 
     {
         const xstring localization_table = current_lang.table;
+        if (localization_table.empty()) {
+            logs::error("localization_table is empty, cannot load localization files");
+            return false;
+        }
 
         vfs::path lang_file(":", localization_table.c_str(), ".js");
 
@@ -109,6 +129,10 @@ bool lang_reload_localized_files() {
 
     {
         const xstring game_message_table = current_lang.game_messages;
+        if (game_message_table.empty()) {
+            logs::error("game_message_table is empty, cannot load game messages");
+            return false;
+        }
         vfs::path lang_file(":", game_message_table.c_str(), ".js");
 
         const bool lang_file_loaded = js_vm_load_file_and_exec(lang_file.c_str());
@@ -242,6 +266,18 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, e_font fon
 }
 
 game_language lang_get_current_language() {
+    if (game_languages.empty()) {
+        logs::error("game_languages is empty, cannot get current language");
+        // Return a default language structure with English fallback
+        game_language default_lang;
+        default_lang.lang = "en";
+        default_lang.base_table = "localization_base_en";
+        default_lang.table = "localization_en";
+        default_lang.message_table = "eventmsg_en";
+        default_lang.game_messages = "game_messages_en";
+        return default_lang;
+    }
+
     const xstring current_lang = game_features::gameopt_language.to_string();
     auto find_lang = std::find_if(game_languages.begin(), game_languages.end(),
         [current_lang] (const game_language &lang) {

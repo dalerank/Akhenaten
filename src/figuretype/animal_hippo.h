@@ -4,8 +4,10 @@
 
 enum e_hippo_action {
     ACTION_8_HIPPO_RECALCULATE = 8,
+    ACTION_9_HIPPO_SEARCHING_FOOD = 9,
     ACTION_10_HIPPO_GOING = 10,
     ACTION_11_HIPPO_ATTACKING = 11,
+    ACTION_12_HIPPO_EATING = 12,
     ACTION_15_HIPPO_TERRIFIED = 15,
     ACTION_16_HIPPO_CHASING = 16,
     ACTION_18_HIPPO_ROOSTING = 18,
@@ -40,11 +42,14 @@ public:
     struct runtime_data_t {
         int8_t applied_damage;
         int attacker_id;
+        int8_t satiety;
+        uint32_t last_day_update;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
     virtual void on_post_load() override;
     virtual void figure_action() override;
+    virtual void update_day() override;
     virtual void update_animation() override;
     virtual void apply_damage(int hit_dmg, figure_id attacker_id) override;
     
