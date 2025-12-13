@@ -2,7 +2,7 @@
 
 #include "autoconfig_window.h"
 
-class scroll_list_panel;
+class scrollable_list;
 
 namespace ui {
     /**
@@ -23,7 +23,7 @@ namespace ui {
         static void show();
 
     private:
-        scroll_list_panel *panel = nullptr;
+        scrollable_list *panel = nullptr;
     };
 }
 

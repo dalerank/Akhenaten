@@ -22,39 +22,36 @@ ui::display_options_window g_display_options_window;
 
 void ui::display_options_window::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
-
-    num_files_in_view = arch.r_int("num_files_in_view", 13);
 }
 
 void ui::display_options_window::init(close_callback close_cb) {
-    if (!panel) {
-        scrollable_list_ui_params ui_params;
-        ui_params.blocks_x = 20;
-        ui_params.blocks_y = num_files_in_view + 1;
-        ui_params.draw_scrollbar_always = true;
-
-        panel = new scroll_list_panel(num_files_in_view,
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      ui_params, false, "", "");
-    }
+    autoconfig_window::init();
 
     _close_cb = close_cb;
-
-    panel->clear_entry_list();
-    video_modes = get_video_modes();
-    for (const auto& mode : video_modes) {
-        panel->add_entry(mode.str.c_str());
-    }
 
     auto wsize = g_settings.display_size;
     original_resolution = wsize;
     selected_resolution = wsize;
-
     video_mode selected(wsize.x, wsize.y);
-    panel->select(selected.str);
+
+    auto resolutions = ui["resolutions"].dcast_scrollable_list();
+    if (resolutions) {
+        resolutions->clear();
+        resolutions->onrefill([] (std::vector<xstring>& r) {
+            auto video_modes = get_video_modes();
+            for (const auto &mode : video_modes) {
+                r.push_back(mode.str.c_str());
+            }            
+        });
+
+        resolutions->select_entry(selected.str.c_str());
+        resolutions->onclick_item([this] (int selected_idx, int) {
+            auto video_modes = get_video_modes();
+            auto it = video_modes.begin();
+            std::advance(it, selected_idx);
+            selected_resolution = { it->x, it->y };
+        });
+    }
 
     ui["btnok"].onclick([this] {
         app_window_resize(selected_resolution);
@@ -73,32 +70,19 @@ void ui::display_options_window::init(close_callback close_cb) {
         app_fullscreen(!g_settings.is_fullscreen(e_setting_none));
         _close_cb();
     });
+
+    ui_scope_property scope;
+    ui.format_all(&scope);
 }
 
 void ui::display_options_window::ui_draw_foreground(UiFlags flags) {
-    ui.begin_widget(pos);
-    
+    ui.begin_widget(pos);    
     ui.draw();
-
-    panel->ui_params.pos = ui["resolutions"].screen_pos();
-    panel->draw();
-
     ui.end_widget();
 }
 
 int ui::display_options_window::ui_handle_mouse(const mouse* m) {
     int result = autoconfig_window::ui_handle_mouse(m);
-
-    ui.begin_widget(pos);
-    vec2i scrpos = ui["resolutions"].screen_pos();
-    mouse m_dialog = *m;
-    m_dialog -= scrpos;
-    if (panel->input_handle(&m_dialog)) {
-        auto it = video_modes.begin();
-        std::advance(it, panel->get_selected_entry_idx());
-        selected_resolution = {it->x, it->y};
-    }
-    ui.end_widget();
 
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {

@@ -18,9 +18,9 @@ namespace ui {
 
         static void show(close_callback close_cb);
 
-        void draw_message(int index, int flags, const scroll_list_panel::entry_data &entry, vec2i pos, e_font font);
+        void draw_message(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font);
 
-        scroll_list_panel *panel = nullptr;
+        scrollable_list *panel = nullptr;
         close_callback *_close_cb;
 
         int num_messages_in_view;

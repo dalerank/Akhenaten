@@ -43,6 +43,7 @@ function arrowdown(config) { return __extend({type:"arrow_button", down:true}, c
 function background(config) { return __extend({type:"background", down:true}, config) }
 function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
 function large_button(config) { return __extend({ type : "large_button"}, config) }
+function scrollable_list(config) { return __extend({ type : "scrollable_list"}, config) }
 
 function help_button(config) { var i = image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, onclick: window_show_help }); return __extend(i, config) }
 function close_button(config) { var i = image_button({margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4, onclick: window_go_back }); return __extend(i, config) }

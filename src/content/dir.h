@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/string.h"
+#include "core/xstring.h"
 
 #include <vector>
 
@@ -8,10 +8,6 @@
  * @file
  * Directory-related functions.
  */
-
-#define ASSETS_DIR_NAME "assets"
-#define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
-
 enum {
     NOT_LOCALIZED = 0,
     MAY_BE_LOCALIZED = 1,
@@ -70,6 +66,13 @@ struct path : public bstring256 {
         return *this;
     }
 
+    void remove_extension() {
+        pstr ptr_point = ::strchr(_data, '.');
+        if (ptr_point) {
+            *ptr_point = 0;
+        }
+    }
+
     /**
      * Get the case sensitive and localized filename of the file
      * @param filepath File path to match to a case-sensitive file on the filesystem
@@ -93,7 +96,7 @@ constexpr pcstr content_audio = "AUDIO/";
  * @param extension Extension of the files to find
  * @return Directory listing
  */
-const dir_listing *dir_find_files_with_extension(pcstr dir, pcstr extension);
+const dir_listing *dir_find_files_with_extension(pcstr dir, const xstring& extension);
 const dir_listing *dir_append_files_with_extension(pcstr dir, pcstr extension);
 
 /**

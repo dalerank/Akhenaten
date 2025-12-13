@@ -63,7 +63,7 @@ struct file_dialog : public autoconfig_window_t<file_dialog> {
     file_type_data* file_data;
     uint8_t typed_name[MAX_FILE_NAME];
     char selected_file[MAX_FILE_NAME];
-    scroll_list_panel* panel = nullptr;
+    scrollable_list * panel = nullptr;
 
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}
@@ -331,15 +331,15 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 
 void window_file_dialog_show(file_type type, file_dialog_type dialog_type) {
     if (!g_file_dialog.panel) {
-        g_file_dialog.panel = new scroll_list_panel(NUM_FILES_IN_VIEW,
-                                                    button_select_file,
-                                                    button_none,
-                                                    button_double_click,
-                                                    button_none,
-                                                    ui_params,
-                                                    true,
-                                                    "Save/",
-                                                    "folders");
+        ui_params.use_file_finder = true;
+        ui_params.view_items = NUM_FILES_IN_VIEW;
+        ui_params.files_dir = "Save/";
+        ui_params.file_ext = "folders";
+        g_file_dialog.panel = new scrollable_list(button_select_file,
+                                                  button_none,
+                                                  button_double_click,
+                                                  button_none,
+                                                  ui_params);
     }
 
     static window_type window = {

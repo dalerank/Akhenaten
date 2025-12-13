@@ -11,6 +11,8 @@
 
 struct scrollable_list_ui_params {
     vec2i pos = { 0, 0 };
+    xstring file_ext;
+    xstring files_dir = ".";
     int blocks_x = 10;
     int blocks_y = 10;
     int buttons_size_x = -1; // default: defined by paneling
@@ -20,14 +22,16 @@ struct scrollable_list_ui_params {
     int text_padding_x = 6; // padding of text inside the buttons
     int text_padding_y = 0;
     int text_max_width = -1;    // for text ellipsing
-    bool text_centered = false; // text centered inside padding/button
     int scrollbar_margin_x = 0;
     int scrollbar_margin_top = 0;
     int scrollbar_margin_bottom = 0;
     int scrollbar_dot_padding = 0;
+    bool use_file_finder = false;
+    bool text_centered = false; // text centered inside padding/button
     bool thin_scrollbar = false;
     bool draw_scrollbar_always = false;
     bool draw_paneling = true;
+    uint8_t view_items = 10;
     e_font font_asleep = FONT_NORMAL_BLACK_ON_DARK;
     e_font font_focus = FONT_NORMAL_YELLOW;
     e_font font_selected = FONT_NORMAL_WHITE_ON_DARK;
@@ -39,8 +43,10 @@ enum scroll_list_file_param {
     FILE_FULL_PATH,
 };
 
-class scroll_list_panel {
+class scrollable_list {
 public:
+    using onclick_callback = std::function<void(int, int)>;
+
     struct entry_data {
         xstring text;
         void *user_data;
@@ -70,8 +76,8 @@ public:
     void set_file_finder_usage(bool use);
     void clear_entry_list();
     void add_entry(xstring entry_text, void* user_data = nullptr);
-    void change_file_path(const char* dir, const char* ext = nullptr);
-    void append_files_with_extension(const char* dir, const char* ext);
+    void change_file_path(const xstring& dir, const xstring& ext);
+    void append_files_with_extension(pcstr dir, pcstr ext);
     void refresh_file_finder();
     void refresh_scrollbar();
     void clamp_scrollbar_position();
@@ -79,35 +85,32 @@ public:
     void draw();
     int input_handle(const mouse* m);
 
-    scroll_list_panel(int n_buttons,
-                      void (*lmb)(int param1, int param2),
-                      void (*rmb)(int param1, int param2),
-                      void (*dmb)(int param1, int param2),
-                      void (*fcc)(int param1, int param2),
-                      scrollable_list_ui_params params,
-                      bool use_file_finder,
-                      pcstr dir = ".",
-                      pcstr ext = "");
+    scrollable_list(onclick_callback lmb,
+                    onclick_callback rmb,
+                    onclick_callback dmb,
+                    onclick_callback fcc,
+                    scrollable_list_ui_params params);
 
-    ~scroll_list_panel();
+    ~scrollable_list();
+
+    void set_onclick_entry(onclick_callback lmb) {
+        left_click_callback = lmb;
+    }
 
 private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
     int num_total_entries = 0;
-    int num_buttons;
     int focus_button_id = 0;     // first valid --> 1
     int selected_entry_idx = -1; // first valid --> 0
-    void (*left_click_callback)(int param1, int param2) = nullptr;
-    void (*right_click_callback)(int param1, int param2) = nullptr;
-    void (*double_click_callback)(int param1, int param2) = nullptr;
-    void (*focus_change_callback)(int param1, int param2) = nullptr;
+
+    onclick_callback left_click_callback;
+    onclick_callback right_click_callback;
+    onclick_callback double_click_callback;
+    onclick_callback focus_change_callback;
 
     scrollbar_t scrollbar;
 
     const dir_listing *file_finder = nullptr;
-    bstring256 files_dir;
-    bstring256 files_ext;
-    bool using_file_finder;
 
     svector<entry_data, MAX_MANUAL_ENTRIES> manual_entry_list;
 

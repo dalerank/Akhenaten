@@ -18,13 +18,11 @@ void ui::records_window::init() {
         ui_params.blocks_x = ui["records_panel"].size.x;
         ui_params.blocks_y = ui["records_panel"].size.y + 1;
         ui_params.draw_scrollbar_always = true;
+        ui_params.use_file_finder = false;
+        ui_params.view_items = ui["records_panel"].size.y;
+        ui_params.files_dir = "";
 
-        panel = new scroll_list_panel(ui["records_panel"].size.y,
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      button_none, 
-                                      ui_params, false, "", "");
+        panel = new scrollable_list(button_none, button_none, button_none, button_none, ui_params);
     }
 
     // Load highscores
