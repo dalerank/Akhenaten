@@ -9,10 +9,10 @@ message_dialog_window_general {
         background     : outer_panel({size: [30, 20]})
         
         title          : text({pos[0, 14], size[px(30), 20], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT})
-        subtitle       : text({pos[0, 0], size[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
+        subtitle       : text({pos[0, 34], size[px(30), 20], align:"center", font: FONT_NORMAL_BLACK_ON_LIGHT})
         
-        content_panel  : inner_panel({pos[16, 48], size[28, 14]})
-        content_text   : text({pos[16, 48], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true, text_margin{ left:10, right:20 }})
+        content_panel  : inner_panel({pos[16, 54], size[28, 14]})
+        content_text   : text({pos[16, 54], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true, text_margin{ left:10, right:20 }})
         
         button_help    : help_button({})
         button_close   : close_button({})
