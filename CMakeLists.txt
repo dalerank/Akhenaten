@@ -1076,6 +1076,7 @@ if(APPLE)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
     set(DATA_SRC_DIR "${CMAKE_SOURCE_DIR}/data")
     set(LAUNCH_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/macos/launch.sh")
+    set(UPDATE_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/updater.sh")
     set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 
     add_custom_command(TARGET ${GAME} POST_BUILD
@@ -1092,6 +1093,12 @@ if(APPLE)
                 "${LAUNCH_SCRIPT_SRC}"
                 "${MACOS_DIR}/launch.sh"
         COMMAND chmod +x "${MACOS_DIR}/launch.sh"
+
+        # updater.sh ins MacOS‑Verzeichnis kopieren und ausführbar machen
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${MACOS_DIR}/updater.sh"
+        COMMAND chmod +x "${MACOS_DIR}/updater.sh"
         VERBATIM
     )
 endif()
@@ -1100,11 +1107,10 @@ endif()
 # Apple specific End
 #
 
-# Copy buildnumber.txt beside binary
+# Copy buildnumber.txt and updater.sh beside binary
 
 set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 set(UPDATE_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/updater.sh")
-set(UPDATE_SCRIPT_WIN "${CMAKE_SOURCE_DIR}/res/updater.bat")
 
 if(APPLE)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
@@ -1112,6 +1118,9 @@ if(APPLE)
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${BUILD_NUMBER_SRC}"
                 "${MACOS_DIR}/buildnumber.txt"
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${MACOS_DIR}/updater.sh"
     )
 endif()
 
@@ -1121,6 +1130,9 @@ if(UNIX AND NOT APPLE)
         COMMAND ${CMAKE_COMMAND} -E copy
                 "${BUILD_NUMBER_SRC}"
                 "${UNIX_DIR}/buildnumber.txt"
+        COMMAND ${CMAKE_COMMAND} -E copy
+                "${UPDATE_SCRIPT_SRC}"
+                "${UNIX_DIR}/updater.sh"
     )
 endif()
 
