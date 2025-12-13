@@ -167,6 +167,7 @@ void city_migration_t::create_migrants() {
 
 void city_migration_t::reset() {
     g_migration_conditions.clear();
+    g_migration_unemployment_cap_reasons.clear();
 }
 
 void city_migration_t::update_conditions() {
