@@ -29,8 +29,6 @@
 #include <sstream>
 #include <string>
 
-g_archive g_config_arch{nullptr};
-
 using event_handlers = std::unordered_set<xstring>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
 

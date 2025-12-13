@@ -60,3 +60,10 @@ namespace events {
         g_permanent_events.process();
     }
 } // namespace events
+
+#define ANK_PERMANENT_CALLBACK(event, a) \
+    tmp_register_permanent_callback_ ##event(); \
+    ANK_DECLARE_CONFIG_ITERATOR(register_permanent_callback_ ##event); \
+    void permanent_callback_ ##event(event a); \
+    void register_permanent_callback_ ##event() { events::subscribe_permanent(permanent_callback_ ##event); } \
+    void permanent_callback_ ##event(event a)
