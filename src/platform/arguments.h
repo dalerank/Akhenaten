@@ -67,8 +67,8 @@ public:
     [[nodiscard]] pcstr get_renderer() const;
     void set_renderer(pcstr value);
 
-    [[nodiscard]] const char* get_data_directory() const;
-    void set_data_directory(const char *value);
+    [[nodiscard]] pcstr get_data_directory() const;
+    void set_data_directory(pcstr value);
 
     [[nodiscard]] const char* get_extdata_directory() const;
 
@@ -80,7 +80,7 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
-    [[nodiscard]] const char* get_language() const {
+    [[nodiscard]] pcstr get_language() const {
         auto lang = get_arg("language");
         if (lang && lang->is_str() && !lang->as_str().empty()) {
             return lang->as_str().c_str();
@@ -88,10 +88,10 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] const char* get_scripts_directory() const;
+    [[nodiscard]] pcstr get_scripts_directory() const;
     
-    [[nodiscard]] const char* get_custom_font() const;
-    void set_custom_font(const char *value);
+    [[nodiscard]] pcstr get_custom_font() const;
+    void set_custom_font(pcstr value);
     
     void parse(int argc, char **argv);
 
@@ -133,3 +133,16 @@ extern Arguments g_args;
         return std::nullopt; \
     } \
     ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(ANK_CONFIG_CC1(handle_, __LINE__), arg_name, description)
+
+#define ANK_REGISTER_STRING_ARGUMENT_HANDLER(arg_name, storage_name, error_message, arg_format, description) \
+    std::optional<arguments::argument_result> ANK_CONFIG_CC1(handle_, __LINE__)(int argc, char **argv, int current_index) { \
+        if (SDL_strcmp(argv[current_index], arg_name) == 0) { \
+            if (current_index + 1 < argc) { \
+                return arguments::argument_result(storage_name, bvariant(xstring(argv[current_index + 1])), 2); \
+            } else { \
+                app_terminate(error_message); \
+            } \
+        } \
+        return std::nullopt; \
+    } \
+    ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(ANK_CONFIG_CC1(handle_, __LINE__), arg_format, description)

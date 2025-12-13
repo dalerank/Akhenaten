@@ -144,19 +144,14 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print lo
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not show crash dialog");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full dump on crash");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show configuration window on startup");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 
-// Register argument handler for --render
-std::optional<arguments::argument_result> handle_render(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--render") == 0) {
-        if (current_index + 1 < argc) {
-            return arguments::argument_result("renderer", bvariant(xstring(argv[current_index + 1])), 2);
-        } else {
-            app_terminate("Option --render must be opengl,direct3d");
-        }
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_render, "--render RENDERER", "use specific renderer");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extdata", "extdata_directory", "Option --extdata folder should exist", "--extdata PATH", "set external data directory path");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mixed", "scripts_directory", MIXED_MODE_ERROR_MESSAGE, "--mixed PATH", "hot reload scripts from disk");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --language must be followed by a language code (e.g., ru, en, fr)", "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
 
 // Register argument handler for --display-scale
 std::optional<arguments::argument_result> handle_display_scale(int argc, char **argv, int current_index) {
@@ -210,61 +205,6 @@ std::optional<arguments::argument_result> handle_size(int argc, char **argv, int
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_size, "--size WxH", "window size. Example: 800x600");
 
-// Register argument handler for --extdata
-std::optional<arguments::argument_result> handle_extdata(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--extdata") == 0) {
-        if (current_index + 1 < argc) {
-            return arguments::argument_result("extdata_directory", bvariant(xstring(argv[current_index + 1])), 2);
-        } else {
-            app_terminate("Option --extdata folder should exist");
-        }
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_extdata, "--extdata PATH", "set external data directory path");
-
-ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
-
-// Register argument handler for --mixed
-std::optional<arguments::argument_result> handle_mixed(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--mixed") == 0) {
-        if (current_index + 1 < argc) {
-            return arguments::argument_result("scripts_directory", bvariant(xstring(argv[current_index + 1])), 2);
-        } else {
-            app_terminate(MIXED_MODE_ERROR_MESSAGE);
-        }
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_mixed, "--mixed PATH", "hot reload scripts from disk");
-
-ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
-
-// Register argument handler for --language
-std::optional<arguments::argument_result> handle_language(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--language") == 0) {
-        if (current_index + 1 < argc) {
-            return arguments::argument_result("language", bvariant(xstring(argv[current_index + 1])), 2);
-        } else {
-            app_terminate("Option --language must be followed by a language code (e.g., ru, en, fr)");
-        }
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_language, "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
-
-// Register argument handler for --font
-std::optional<arguments::argument_result> handle_font(int argc, char **argv, int current_index) {
-    if (SDL_strcmp(argv[current_index], "--font") == 0) {
-        if (current_index + 1 < argc) {
-            return arguments::argument_result("custom_font", bvariant(xstring(argv[current_index + 1])), 2);
-        } else {
-            app_terminate("Option --font must be followed by a font file path");
-        }
-    }
-    return std::nullopt;
-}
-ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_font, "--font PATH", "use custom TTF font file (overrides font from localization.js)");
 
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();
@@ -371,7 +311,7 @@ void Arguments::set_renderer(pcstr value) {
     args_["renderer"] = xstring(value);
 }
 
-const char *Arguments::get_data_directory() const {
+pcstr Arguments::get_data_directory() const {
     auto dir = get_arg("data_directory");
     if (dir && dir->is_str()) {
         return dir->as_str().c_str();
@@ -379,11 +319,11 @@ const char *Arguments::get_data_directory() const {
     return "";
 }
 
-void Arguments::set_data_directory(const char * value) {
+void Arguments::set_data_directory(pcstr value) {
     args_["data_directory"] = bvariant(xstring(value));
 }
 
-const char *Arguments::get_extdata_directory() const {
+pcstr Arguments::get_extdata_directory() const {
     auto dir = get_arg("extdata_directory");
     if (dir && dir->is_str()) {
         return dir->as_str().c_str();
@@ -391,7 +331,7 @@ const char *Arguments::get_extdata_directory() const {
     return nullptr;
 }
 
-const char *Arguments::get_scripts_directory() const {
+pcstr Arguments::get_scripts_directory() const {
     auto dir = get_arg("scripts_directory");
     if (dir && dir->is_str()) {
         return dir->as_str().c_str();
@@ -399,7 +339,7 @@ const char *Arguments::get_scripts_directory() const {
     return nullptr;
 }
 
-const char *Arguments::get_custom_font() const {
+pcstr Arguments::get_custom_font() const {
     auto font = get_arg("custom_font");
     if (font && font->is_str() && !font->as_str().empty()) {
         return font->as_str().c_str();
@@ -407,7 +347,7 @@ const char *Arguments::get_custom_font() const {
     return nullptr;
 }
 
-void Arguments::set_custom_font(const char *value) {
+void Arguments::set_custom_font(pcstr value) {
     args_["custom_font"] = bvariant(xstring(value));
 }
 
