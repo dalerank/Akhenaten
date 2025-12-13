@@ -5,6 +5,6 @@ SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_SOURCE")" >/dev/null 2>&1 && pwd)"
 
 cd "$SCRIPT_DIR"
 
-/bin/bash updater.sh
+./updater.sh
 
 ./akhenaten &
