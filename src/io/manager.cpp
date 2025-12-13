@@ -206,7 +206,7 @@ bool FileIOManager::unserialize(pcstr filename, int offset, e_file_format format
     file_format = format;
 
     // open file handle
-    vfs::path fs_path = vfs::content_file(file_path);
+    vfs::path fs_path = vfs::path::resolve(file_path);
     FILE* fp = vfs::file_open_os(fs_path, "rb");
     if (!fp) {
         logs::error("Unable to read file [%s], file could not be accessed.", fs_path.c_str());

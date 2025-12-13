@@ -9,7 +9,7 @@
 namespace vfs {
 
     ZipArchive::ZipArchive(const vfs::path &file) : _filepath(file) {
-        vfs::path ospath = vfs::content_file(file);
+        vfs::path ospath = vfs::path::resolve(file);
         _data = vfs::file_open(ospath, "rb");
 
         SZIPFileHeader header;

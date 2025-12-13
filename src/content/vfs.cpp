@@ -208,7 +208,7 @@ void file_remove_extension(char * filename) {
 }
 
 bool file_exists(pcstr filename) {
-    path fspath = content_file(filename);
+    path fspath = path(filename).resolve();
     if (fspath.empty()) {
         return false;
     }

@@ -62,8 +62,7 @@ void sound_manager_t::play_track(const xstring track) {
         corrected_filename = vfs::path(vfs::content_audio, it->file.c_str());
     }
 
-    corrected_filename = vfs::content_file(corrected_filename);
-    play_music(corrected_filename, volume);
+    play_music(corrected_filename.resolve(), volume);
 
     music.current_track = track;
 }
