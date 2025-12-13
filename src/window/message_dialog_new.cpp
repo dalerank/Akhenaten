@@ -127,7 +127,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
         ui["background"].size = msg.size;
         ui["content_panel"].size = { msg.size.x - 4, msg.size.y - 6 };
         ui["content_text"].size = { (msg.size.x - 3) * 16, (msg.size.y - 6) * 16 };
-        ui["title"].size.y = msg.size.y * 16;
+        ui["title"].size.x = msg.size.x * 16;
     }
 
     if (is_eventmsg && !title_text.empty()) {

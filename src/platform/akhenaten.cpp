@@ -27,6 +27,7 @@
 #include "widget/debug_console.h"
 #include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
+#include "game/mission.h"
 #include "renderer.h"
 
 #include <SDL.h>
@@ -259,7 +260,7 @@ static void setup() {
     js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
 
     js_vm_setup();
-    js_vm_sync();
+    js_vm_sync({});
 
     // init game!
     time_set_millis(SDL_GetTicks());
@@ -329,7 +330,9 @@ static void run_and_draw() {
     game.frame_end();
     game.write_frame();
 
-    const bool need_reload = js_vm_sync();
+    int scenario_id = g_scenario.campaign_scenario_id();
+    mission_id_t missionid(scenario_id);
+    const bool need_reload = js_vm_sync(missionid.value());
     if (need_reload) {
         game.reload_objects();
     }

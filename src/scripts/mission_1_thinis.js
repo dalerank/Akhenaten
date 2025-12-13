@@ -47,6 +47,10 @@ function mission1_update_goal(ev) {
 
 [event=event_mission_start, mission=mission1]
 function mission1_on_start(ev) {
+	for (var i = 0; i <= ADVISOR_DIPLOMACY; i++) {
+		city.set_advisor_available(i, 0)
+	}
+
 	if (mission.gold_mined_handled) {
 		city.use_building(BUILDING_TEMPLE_BAST, true)
 		city.use_building(BUILDING_SHRINE_BAST, true)
@@ -99,14 +103,14 @@ function mission1_handle_victory_state(ev) {
 	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
 }
 
-[event=event_building_create, mission=mission1]
+[event=event_advance_day, mission=mission1]
 function mission1_on_build_temple(ev) {
     if (mission.temples_built) {
         return
     }
 
-    var is_temple = city.building_is_temple(ev.bid)
-    if (!is_temple) {
+    var temples_count = city.count_active_buildings(BUILDING_TEMPLE_BAST)
+    if (temples_count == 0) {
         return
     }
 
