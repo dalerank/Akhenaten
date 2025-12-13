@@ -438,6 +438,9 @@ void set_floodplain_edges_image(int grid_offset) {
         }
 
         const terrain_image img = map_image_context_get_floodplain_shore(tile2i(grid_offset)); // this checks against FLOODPLAIN tiles
+        if (!img.is_valid) { // no adjacent floodplain tiles, skip
+            return;
+        }
         image_id = floodplain_tile.tid() + 48 + img.group_offset + img.item_offset;
 
     } else { // floodplain which is ALSO flooded --  this is a waterline
