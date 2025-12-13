@@ -1,6 +1,7 @@
 #pragma once
 
 #include "content/dir.h"
+#include "core/string.h"
 #include "core/archive.h"
 
 enum e_message_arhtype : int8_t { 

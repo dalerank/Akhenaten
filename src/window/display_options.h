@@ -3,7 +3,7 @@
 #include "platform/renderer.h"
 #include "autoconfig_window.h"
 
-class scroll_list_panel;
+class scrollable_list;
 
 namespace ui {
     struct display_options_window : public autoconfig_window_t<display_options_window> {
@@ -26,8 +26,5 @@ namespace ui {
         close_callback *_close_cb;
         vec2i original_resolution;
         vec2i selected_resolution;
-        scroll_list_panel* panel = nullptr;
-        int num_files_in_view;
-        std::vector<video_mode> video_modes;
     };
 }

@@ -20,17 +20,12 @@ void ui::mods_window::init() {
         ui_params.blocks_x = ui["mods_panel"].size.x;
         ui_params.blocks_y = ui["mods_panel"].size.y + 1;
         ui_params.draw_scrollbar_always = true;
+        ui_params.view_items = ui["mods_panel"].size.y;
+        ui_params.use_file_finder = false;
+        ui_params.files_dir = "";
 
-        panel = new scroll_list_panel(ui["mods_panel"].size.y,
-            button_none,
-            button_none,
-            button_none,
-            button_none,
-            ui_params, false, "", "");
+        panel = new scrollable_list(button_none, button_none, button_none, button_none, ui_params);
     }
-
-    // Load highscores
-    highscores_load();
 
     int first_entry_idx = panel ? panel->get_focused_entry_idx() : 0;
     if (first_entry_idx < 0) {

@@ -134,11 +134,11 @@ static int add_to_listing(pcstr filename) {
     return LIST_CONTINUE;
 }
 
-const dir_listing *dir_find_files_with_extension(pcstr dir, pcstr extension) {
+const dir_listing *dir_find_files_with_extension(pcstr dir, const xstring& extension) {
     auto &data = g_dir_data;
 
     clear_dir_listing();
-    platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
+    platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension.c_str(), add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
 }

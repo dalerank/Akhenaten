@@ -53,13 +53,11 @@ void ui::message_list_window::init() {
         ui_params.blocks_y = ui["messages_area"].size.y;
         ui_params.buttons_size_y = ui["message_row"].size.y;
         ui_params.draw_scrollbar_always = true;
+        ui_params.view_items = num_messages_in_view;
+        ui_params.use_file_finder = false;
+        ui_params.files_dir = "";
 
-        panel = new scroll_list_panel(num_messages_in_view,
-                                      button_message_handler,
-                                      button_delete_handler,
-                                      button_none,
-                                      button_none,
-                                      ui_params, false, "", "");
+        panel = new scrollable_list(button_message_handler, button_delete_handler, button_none, button_none, ui_params);
     }
     
     panel->clear_entry_list();
@@ -69,7 +67,7 @@ void ui::message_list_window::init() {
         panel->add_entry("", (void*)&msg);
     }
 
-    panel->set_custom_render_func([this] (int index, int flags, const scroll_list_panel::entry_data &entry, vec2i pos, e_font font) {
+    panel->set_custom_render_func([this] (int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
         this->draw_message(index, flags, entry, pos, font);
     });
 
@@ -84,7 +82,7 @@ void ui::message_list_window::init() {
     });
 }
 
-void ui::message_list_window::draw_message(int index, int flags, const scroll_list_panel::entry_data &entry, vec2i pos, e_font font) {
+void ui::message_list_window::draw_message(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
     painter ctx = game.painter();
 
     const auto &message_row = ui["message_row"];

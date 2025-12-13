@@ -60,13 +60,17 @@ static scrollable_list_ui_params ui_params = [] {
 }();
 
 struct window_player_selection_t {
-    scroll_list_panel* panel = nullptr;
+    scrollable_list * panel = nullptr;
     int focus_button_id;
     bstring32 selected_player;
     bstring32 selected_player_utf8;
 
     window_player_selection_t() {
-        panel = new scroll_list_panel(NUM_FILES_IN_VIEW, button_select_file, button_none, button_double_click, button_none, ui_params, true, "Save/", "folders");
+        ui_params.view_items = NUM_FILES_IN_VIEW;
+        ui_params.use_file_finder = true;
+        ui_params.file_ext = "folders";
+        ui_params.files_dir = "Save/";
+        panel = new scrollable_list(button_select_file, button_none, button_double_click, button_none, ui_params);
     }
 };
 

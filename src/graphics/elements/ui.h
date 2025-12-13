@@ -8,6 +8,7 @@
 #include "core/variant.h"
 
 #include "input/hotkey.h"
+#include "graphics/elements/scroll_list_panel.h"
 #include "graphics/elements/ui_scope_property.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/image_button.h"
@@ -26,6 +27,7 @@
 
 struct mouse;
 struct tooltip_context;
+class scrollable_list;
 
 enum UiFlags_ {
     UiFlags_None = 0,
@@ -116,6 +118,7 @@ pcstr resource_name(e_resource r);
 
 struct emenu_header;
 struct eimage_button;
+struct escrollable_list;
 
 template<typename T>
 bstring1024 format(const T *o, pcstr fmt) {
@@ -268,6 +271,7 @@ struct element {
 
     virtual emenu_header *dcast_menu_header() { return nullptr; }
     virtual eimage_button *dcast_image_button() { return nullptr; }
+    virtual escrollable_list *dcast_scrollable_list() { return nullptr; }
 
     pcstr text_from_key(pcstr key);
 
@@ -427,6 +431,27 @@ struct escrollbar : public element {
     virtual void onevent(std::function<void()> func) override { scrollbar.onscroll(func); }
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
+};
+
+struct escrollable_list : public element {
+    scrollable_list_ui_params params;
+    std::unique_ptr<scrollable_list> panel;
+    std::function<void(std::vector<xstring>&)> _refill_cb;
+
+    virtual void draw(UiFlags flags) override;
+    virtual void load(archive elem, element *parent, items &elems) override;
+    virtual ~escrollable_list();
+
+    void clear();
+    void add_entry(pcstr item);
+    void select_entry(pcstr item);
+    void onclick_item(std::function<void(int, int)> lmb);
+    void onrefill(std::function<void(std::vector<xstring>&)> f);
+
+    virtual escrollable_list *dcast_scrollable_list() override { return this; }
+
+    scrollable_list* get_panel() { return panel.get(); }
+    const scrollable_list* get_panel() const { return panel.get(); }
 };
 
 struct emenu_header : public element {

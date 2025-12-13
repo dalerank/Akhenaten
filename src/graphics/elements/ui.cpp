@@ -20,6 +20,7 @@
 #include "core/crc32.h"
 #include "js/js_game.h"
 #include "ui_scope_property.h"
+#include "graphics/elements/scroll_list_panel.h"
 
 #include <stack>
 
@@ -138,6 +139,7 @@ namespace ui {
         std::stack<vec2i> _offset;
         std::vector<universal_button> buttons;
         std::vector<scrollbar_t*> scrollbars;
+        std::vector<scrollable_list*> scrollable_lists;
 
         inline const vec2i offset() { return _offset.empty() ? vec2i{0, 0} : _offset.top(); }
     };
@@ -163,6 +165,7 @@ static ui::element::ptr create_element(const xstring type) {
     switch (type.crc()) {
     case _("outer_panel"): elm = std::make_shared<ui::eouter_panel>(); break;
     case _("scrollbar"): elm = std::make_shared<ui::escrollbar>(); break;
+    case _("scrollable_list"): elm = std::make_shared<ui::escrollable_list>(); break;
     case _("menu_header"): elm = std::make_shared<ui::emenu_header>(); break;
     case _("inner_panel"): elm = std::make_shared<ui::einner_panel>(); break;
     case _("background"):  elm = std::make_shared<ui::ebackground>(); break;
@@ -227,6 +230,7 @@ void ui::begin_frame() {
     g_state._offset = {};
     g_state.buttons.clear();
     g_state.scrollbars.clear();
+    g_state.scrollable_lists.clear();
     tooltipctx.set(0, "");
 }
 
@@ -248,6 +252,13 @@ bool ui::handle_mouse(const mouse *m) {
 
     for (int i = g_state.scrollbars.size() - 1; i >= 0 && !handle; --i) {
         handle |= !!scrollbar_handle_mouse(g_state.offset(), g_state.scrollbars[i], m);
+    }
+
+    for (int i = g_state.scrollable_lists.size() - 1; i >= 0 && !handle; --i) {
+        auto panel = g_state.scrollable_lists[i];
+        mouse m_relative = *m;
+        m_relative -= g_state.offset();
+        handle |= !!panel->input_handle(&m_relative);
     }
 
     return handle;
@@ -1061,6 +1072,106 @@ void ui::escrollbar::load(archive arch, element *parent, items &elems) {
 
     scrollbar.pos = pos;
     scrollbar.height = size.y;
+}
+
+void ui::escrollable_list::clear() {
+    if (!panel) {
+        return;
+    }
+
+    panel->clear_entry_list();
+}
+
+void ui::escrollable_list::add_entry(pcstr item) {
+    if (!panel) {
+        return;
+    }
+
+    panel->add_entry(item);
+}
+
+void ui::escrollable_list::select_entry(pcstr item) {
+    if (!panel) {
+        return;
+    }
+
+    panel->select(item);
+}
+
+void ui::escrollable_list::onclick_item(std::function<void(int, int)> lmb) {
+    if (!panel) {
+        return;
+    }
+
+    panel->set_onclick_entry(lmb);
+}
+
+void ui::escrollable_list::onrefill(std::function<void(std::vector<xstring>&)> f) {
+    _refill_cb = f;
+}
+
+ui::escrollable_list::~escrollable_list() {
+    // panel will be automatically destroyed by unique_ptr
+}
+
+void ui::escrollable_list::draw(UiFlags flags) {
+    if (!panel) {
+        panel = std::make_unique<scrollable_list>(
+            button_none,  // left_click_callback
+            button_none,  // right_click_callback
+            button_none,  // double_click_callback
+            button_none,  // focus_change_callback
+            params
+        );
+
+        if (_refill_cb) {
+            std::vector<xstring> items;
+            _refill_cb(items);
+            for (const auto& it: items) {
+                panel->add_entry(it);
+            }
+        }
+    }
+
+    vec2i screen_pos = this->screen_pos();
+    panel->ui_params.pos = screen_pos;
+    panel->draw();
+    
+    // Register panel for mouse handling
+    g_state.scrollable_lists.push_back(panel.get());
+}
+
+void ui::escrollable_list::load(archive arch, element *parent, items &elems) {
+    element::load(arch, parent, elems);
+
+    pcstr type = arch.r_string("type");
+    assert(!strcmp(type, "scrollable_list"));
+
+    params.files_dir = arch.r_string("dir");
+    params.file_ext = arch.r_string("file_ext");
+    params.use_file_finder = arch.r_bool("use_file_finder", false);
+    params.view_items = arch.r_int("view_items", 10);
+    params.pos = pos;
+    params.blocks_x = size.x;
+    params.blocks_y = size.y;
+    params.buttons_size_x = arch.r_int("buttons_size_x", -1);
+    params.buttons_size_y = arch.r_int("buttons_size_y", 16);
+    params.buttons_margin_x = arch.r_int("buttons_margin_x", 2);
+    params.buttons_margin_y = arch.r_int("buttons_margin_y", 10);
+    params.text_padding_x = arch.r_int("text_padding_x", 6);
+    params.text_padding_y = arch.r_int("text_padding_y", 0);
+    params.text_max_width = arch.r_int("text_max_width", -1);
+    params.text_centered = arch.r_bool("text_centered", false);
+    params.scrollbar_margin_x = arch.r_int("scrollbar_margin_x", 0);
+    params.scrollbar_margin_top = arch.r_int("scrollbar_margin_top", 0);
+    params.scrollbar_margin_bottom = arch.r_int("scrollbar_margin_bottom", 0);
+    params.scrollbar_dot_padding = arch.r_int("scrollbar_dot_padding", 0);
+    params.thin_scrollbar = arch.r_bool("thin_scrollbar", false);
+    params.draw_scrollbar_always = arch.r_bool("draw_scrollbar_always", false);
+    params.draw_paneling = arch.r_bool("draw_paneling", true);
+    params.font_asleep = (e_font)arch.r_int("font_asleep", FONT_NORMAL_BLACK_ON_DARK);
+    params.font_focus = (e_font)arch.r_int("font_focus", FONT_NORMAL_YELLOW);
+    params.font_selected = (e_font)arch.r_int("font_selected", FONT_NORMAL_WHITE_ON_DARK);
 }
 
 void ui::etext::draw(UiFlags flags) {

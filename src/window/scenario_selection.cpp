@@ -47,7 +47,7 @@ static scrollable_list_ui_params ui_params = [] {
 }();
 
 struct window_scenario_selection_t {
-    scroll_list_panel *panel = nullptr;
+    scrollable_list *panel = nullptr;
     e_map_selection_dialog_type dialog;
     int campaign_sub_dialog;
     int scores_or_goals;
@@ -87,7 +87,11 @@ static void init(e_map_selection_dialog_type dialog_type, int sub_dialog_selecto
     g_scenario.set_campaign_scenario(-1);
 
     if (!data.panel) {
-        data.panel = new scroll_list_panel(MAX_SCENARIOS, button_select_item, button_none, button_none, button_none, ui_params, true, "Maps/", "map");
+        ui_params.view_items = MAX_SCENARIOS;
+        ui_params.use_file_finder = true;
+        ui_params.file_ext = "map";
+        ui_params.files_dir = "Maps/";
+        data.panel = new scrollable_list(button_select_item, button_none, button_none, button_none, ui_params);
     }
 
     switch (dialog_type) {
