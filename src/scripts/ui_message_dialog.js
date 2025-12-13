@@ -8,8 +8,8 @@ message_dialog_window_general {
     ui {
         background     : outer_panel({size: [30, 20]})
         
-        title          : text({pos: [0, 14], size: [px(30), 20], align: "center", font: FONT_LARGE_BLACK_ON_LIGHT})
-        subtitle       : text({pos: [0, 0], size: [px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
+        title          : text({pos[0, 14], size[px(30), 20], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT})
+        subtitle       : text({pos[0, 0], size[px(30), 20], font: FONT_NORMAL_BLACK_ON_LIGHT})
         
         content_panel  : inner_panel({pos[16, 48], size[28, 14]})
         content_text   : text({pos[16, 48], size[px(28), px(14)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true, text_margin{ left:10, right:20 }})
@@ -17,16 +17,16 @@ message_dialog_window_general {
         button_help    : help_button({})
         button_close   : close_button({})
 
-        button_advisor : image_button({pos: [0, 0], size: [27, 27], pack:PACK_GENERAL, id:106, enabled: false})
+        button_advisor : image_button({pos[0, 0], size[27, 27], pack:PACK_GENERAL, id:106, enabled: false})
         
-        video_area     : dummy({pos: [32, 28], size: [416, 312], enabled: false})
-        image_background : dummy({pos: [32, 28], size: [416, 312], enabled: false})
+        video_area     : dummy({pos[32, 28], size[416, 312], enabled: false})
+        image_background : dummy({pos[32, 28], size[416, 312], enabled: false})
         
         // Bottom panel for video/image modes
-        bottom_panel   : outer_panel({pos: [32, 336], size: [26, 28], enabled: false})
-        bottom_title   : text({pos: [8, 414], size: [400, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
-        bottom_content : inner_panel({pos: [40, 344], size: [25, 6], enabled: false})
-        bottom_text    : text({pos: [48, 368], size: [384, 96], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, enabled: false})
+        bottom_panel   : outer_panel({pos[32, 336], size[26, 28], enabled: false})
+        bottom_title   : text({pos[8, 414], size[400, 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
+        bottom_content : inner_panel({pos[40, 344], size[25, 6], enabled: false})
+        bottom_text    : text({pos[48, 368], size[384, 96], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, enabled: false})
     }
 }
 
@@ -71,7 +71,7 @@ message_dialog_window_tutorial {
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
-
+        title          : text({ pos[0, 14], size[px(30), 20], align:"center", font: FONT_LARGE_BLACK_ON_LIGHT}) 
     })
 }
 

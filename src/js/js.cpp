@@ -34,7 +34,6 @@ struct {
     int have_error;
     bstring256 error_str;
     js_State *J;
-    xstring missionid;
 } vm;
 
 void js_reset_vm_state();
@@ -71,10 +70,6 @@ int js_vm_trypcall(js_State *J, int params) {
 
 bool js_vm_have_error() {
     return vm.have_error;
-}
-
-void js_vm_set_active_mission(xstring missionid) {
-    vm.missionid = missionid;
 }
 
 int js_vm_load_file_and_exec(pcstr path) {
@@ -122,7 +117,7 @@ js_State *js_vm_state() {
     return vm.J;
 }
 
-bool js_vm_sync() {
+bool js_vm_sync(const xstring &mission_id) {
     if (!vm.files2load_num) {
         return false;
     }
@@ -143,7 +138,7 @@ bool js_vm_sync() {
     }
 
     config::refresh(vm.J);
-    js_register_game_handlers(vm.missionid);
+    js_register_game_handlers(mission_id);
 
     vm.files2load_num = 0;
     vm.have_error = 0;
