@@ -1107,10 +1107,12 @@ endif()
 # Apple specific End
 #
 
-# Copy buildnumber.txt and updater.sh beside binary
+# Copy buildnumber.txt and updater.sh/bat beside binary
 
 set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 set(UPDATE_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/updater.sh")
+set(UPDATE_SCRIPT_WIN "${CMAKE_SOURCE_DIR}/res/updater.bat")
+
 
 if(APPLE)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
