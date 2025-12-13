@@ -24,11 +24,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     js_register_mission_vars(g_scenario.vars);
 }
 
-void scenario_set_goal_tooltip(xstring text) {
-    g_scenario.goal_tooltip = text;
-}
-ANK_FUNCTION_1(scenario_set_goal_tooltip)
-
 void scenario_data_t::init() {
     settings.campaign_scenario_id = 0;
     settings.campaign_mission_rank = 0;

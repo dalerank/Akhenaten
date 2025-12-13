@@ -32,42 +32,15 @@ mission0 { // Nubt
 		population_cap_firstfire : 0
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
+		population_to_start_fire_event : 120
 		population_cap : 250
 
 		tutorial_fire_handled : false
-		tutorial_collapsed_handle : false
+		tutorial_firehouse_built : false
 		tutorial_granary_opened : false
 		tutorial_gamemeat_stored : false
 		last_action_time : 0
 	}
-}
-
-[event=event_register_mission_animals, mission=mission0]
-function mission0_register_animals(ev) {
-	city.remove_animals()
-
-	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_OSTRICH, 4)
-	city.set_animals_area(0, 16)
-}
-
-[event=event_advance_week, mission=mission0]
-function mission0_hut_extra_fire_damage(ev) {
-	if (mission.tutorial_fire_handled) {
-		return;
-	}
-
-	var house = city.get_random_house()
-	house.add_fire_damage(Math.random() * 100)
-}
-
-[event=event_update_mission_goal, mission=mission0]
-function mission0_update_goal(ev) {
-	if (mission.tutorial_granary_opened) {
-		city.set_goal_tooltip("#mission0_goal_build_granary")
-		return
-	}
-
-	city.set_goal_tooltip("#mission0_goal_create_housing")
 }
 
 [event=event_mission_start, mission=mission0]
@@ -86,15 +59,58 @@ function mission0_on_start(ev) {
 		city.use_building(BUILDING_FIREHOUSE, true)
 	}
 
-	if (mission.tutorial_collapsed_handle) {
-		city.use_building(BUILDING_ARCHITECT_POST, true)
-	}
-
 	if (mission.tutorial_gamemeat_stored) {
 		city.use_building(BUILDING_WATER_SUPPLY, true)
 	}
 
 	migration.set_population_cap("first_mission_population_cap", mission.population_cap)
+}
+
+[event=event_register_mission_animals, mission=mission0]
+function mission0_register_animals(ev) {
+	city.remove_animals()
+
+	city.add_animals_point(0, /*x*/40, /*y*/60, FIGURE_OSTRICH, 4)
+	city.set_animals_area(0, 16)
+}
+
+[event=event_advance_day, mission=mission1]
+function mission0_on_build_firehouse(ev) {
+    if (mission.tutorial_firehouse_built) {
+        return
+    }
+
+    var firehouse_count = city.count_active_buildings(BUILDING_FIREHOUSE)
+    if (firehouse_count == 0) {
+        return
+    }
+
+	mission.last_action = game.absolute_day
+    mission.tutorial_firehouse_built = true
+}
+
+[event=event_advance_week, mission=mission0]
+function mission0_handle_fire_event(ev) {
+	if (mission.tutorial_fire_handled) {
+		return;
+	}
+
+	if (city.population < mission.population_to_start_fire_event) {
+		return;
+	}
+
+	var house = city.get_random_house()
+	house.add_fire_damage(2000)
+}
+
+[event=event_update_mission_goal, mission=mission0]
+function mission0_update_goal(ev) {
+	if (mission.tutorial_granary_opened) {
+		city.set_goal_tooltip("#mission0_goal_build_granary")
+		return
+	}
+
+	city.set_goal_tooltip("#mission0_goal_create_housing")
 }
 
 [event=event_fire_damage, mission=mission0]
@@ -130,19 +146,6 @@ function mission0_handle_population_for_granary(ev) {
 	ui.popup_message("message_tutorial_food_or_famine")
 }
 
-[event=event_collase_damage, mission=mission0]
-function mission0_handle_collapse(ev) {
-    if (mission.tutorial_collapsed_handle) {
-        return;
-    }
-	
-	mission.last_action_time = game.absolute_day
-	mission.tutorial_collapsed_handle = true
-
-	city.use_building(BUILDING_ARCHITECT_POST, true)
-    ui.popup_message("message_tutorial_collapsed_building")
-}
-
 [event=event_granary_resource_added, mission=mission0]
 function mission0_on_filled_granary(ev) {
     if (mission.tutorial_gamemeat_stored) {
@@ -167,6 +170,7 @@ function mission0_on_filled_granary(ev) {
 function mission0_handle_victory_state(ev) {
 	city.set_victory_reason("gamemeat_stored", mission.tutorial_gamemeat_stored)
 	city.set_victory_reason("tutorial_granary_opened", mission.tutorial_granary_opened)
+	city.set_victory_reason("tutorial_firehouse_built", mission.tutorial_firehouse_built)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
 	city.set_victory_reason("some_days_after_last_action", some_days_after_last_action)
