@@ -202,9 +202,22 @@ vfs::path content_file(pcstr filepath) {
         return corrected_filename;
     }
 
-    pcstr extpath = platform_file_manager_get_ext_path();
-    vfs::path corrected_ext_filename = content_path(filepath, (extpath && *extpath) ? extpath : "./");
-    corrected_ext_filename = std::filesystem::absolute(corrected_ext_filename.c_str()).string();
+    bool is_absolute_path = false;
+    if (platform.is_windows()) {
+        is_absolute_path = std::isalpha(*filepath) && (*(filepath + 1) == ':') && ((*(filepath + 2) == '/') || (*(filepath + 2) == '\\'));
+    } else {
+        is_absolute_path = (*filepath) == '/';
+    }
+
+    vfs::path corrected_ext_filename;
+    if (!is_absolute_path) {
+        pcstr extpath = platform_file_manager_get_ext_path();
+        corrected_ext_filename = content_path(filepath, (extpath && *extpath) ? extpath : "./");
+        corrected_ext_filename = std::filesystem::absolute(corrected_ext_filename.c_str()).string();
+    } else {
+        corrected_ext_filename = filepath;
+    }
+
     exists = std::filesystem::exists(corrected_ext_filename.c_str());
     if (exists) {
         return corrected_ext_filename;
