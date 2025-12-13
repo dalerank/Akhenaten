@@ -4,7 +4,7 @@
 #include "platform/platform.h"
 
 int io_read_sgx_entries_num(vfs::path filepath) {
-    vfs::path fs_file = vfs::content_file(filepath);
+    vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
         return 0;
     }
@@ -37,7 +37,7 @@ int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, i
         return 0;
     }
 
-    vfs::path fs_file = vfs::content_file(filepath);
+    vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
         return 0;
     }
@@ -64,7 +64,7 @@ int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, i
 }
 
 int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* buf, int size, int offset_in_file) {
-    vfs::path fs_file = vfs::content_file(filepath);
+    vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
         return 0;
     }
@@ -83,7 +83,7 @@ int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* 
 
 int io_write_buffer_to_file(vfs::path  filepath, buffer* buf, int size) {
     // Find existing file to overwrite
-    vfs::path fs_file = vfs::content_file(filepath);
+    vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
         fs_file = filepath;
     }

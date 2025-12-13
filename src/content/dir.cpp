@@ -194,8 +194,9 @@ vfs::path content_path(pcstr path, pcstr extdir) {
     return orig_path;
 }
 
-vfs::path content_file(pcstr filepath) {
+vfs::path vfs::path::resolve() {
 #ifndef GAME_PLATFORM_ANDROID
+    pcstr filepath = data();
     vfs::path corrected_filename = content_path(filepath);
     bool exists = std::filesystem::exists(corrected_filename.c_str());
     if (exists) {

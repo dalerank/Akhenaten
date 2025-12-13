@@ -14,7 +14,7 @@ vfs::path sound_manager_t::speech_filename(xstring filename) {
         fs_path = vfs::path(vfs::content_audio, filename_str);
     }
 
-    return vfs::content_file(fs_path);
+    return fs_path.resolve();
 }
 
 bool sound_manager_t::speech_file_exist(xstring filename) {
@@ -34,7 +34,7 @@ void sound_manager_t::speech_play_file(xstring filename, int volume) {
         fs_path = vfs::path(vfs::content_audio, filename_str);
     }
 
-    fs_path = vfs::content_file(fs_path);
+    fs_path = vfs::path::resolve(fs_path);
     if (fs_path.empty()) {
         logs::error("Cant open audio file %s", filename.c_str());
         return;
