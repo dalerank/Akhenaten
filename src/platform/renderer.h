@@ -7,6 +7,7 @@
 #include "content/vfs.h"
 #include "core/string.h"
 #include "core/vec2i.h"
+#include "core/svector.h"
 #include "graphics/image.h"
 
 #include <string>
@@ -31,7 +32,7 @@ enum e_image_filter_mode {
     IMAGE_FILTER_LINEAR = 1 
 };
 
-int platform_renderer_init(SDL_Window* window, std::string renderer);
+int platform_renderer_init(SDL_Window* window, xstring renderer);
 int platform_renderer_create_render_texture(int width, int height);
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
@@ -40,7 +41,7 @@ void platform_renderer_render();
 void platform_renderer_pause();
 void platform_renderer_resume();
 void platform_renderer_destroy();
-void platform_render_setup_options(pcstr driver);
+void platform_render_setup_options(xstring driver);
 void platform_render_init_filters();
 bool platform_render_support_filters();
 bool platform_render_any_filter_active();
@@ -111,5 +112,5 @@ extern graphics_renderer_interface g_render;
 
 void set_render_scale(painter &ctx, float scale);
 std::vector<video_mode> get_video_modes();
-std::vector<std::string> get_video_drivers(bool log);
-std::string get_video_driver();
+svector<xstring, 8> get_video_drivers(bool log);
+xstring get_video_driver();

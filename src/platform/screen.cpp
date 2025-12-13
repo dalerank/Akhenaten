@@ -111,7 +111,7 @@ static void set_window_icon() {
 }
 #endif
 
-int platform_screen_create(pcstr title, pcstr renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size) {
+int platform_screen_create(const xstring& title, const xstring& renderer, bool fullscreen, int display_scale_percentage, vec2i screen_size) {
 #if defined(GAME_PLATFORM_ANDROID)
     //scale.screen_density = android_get_screen_density();
 #endif
@@ -157,7 +157,7 @@ int platform_screen_create(pcstr title, pcstr renderer, bool fullscreen, int dis
     }
 
     platform_render_setup_options(renderer);
-    g_screen.window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);
+    g_screen.window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);
 
     if (!g_screen.window) {
         logs::error("Unable to create window: %s", SDL_GetError());

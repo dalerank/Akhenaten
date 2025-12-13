@@ -787,7 +787,7 @@ SDL_Window *graphics_renderer_interface::window() {
     return g_renderer_data.window;
 }
 
-bool graphics_renderer_interface::save_texture_to_file(const char* filename, SDL_Texture* tex, e_file_format file_format) {
+bool graphics_renderer_interface::save_texture_to_file(pcstr filename, SDL_Texture* tex, e_file_format file_format) {
     auto &data = g_renderer_data;
     SDL_Texture* ren_tex;
     SDL_Surface* surf;
@@ -883,9 +883,9 @@ cleanup:
         return true;
 }
 
-std::vector<std::string> get_video_drivers(bool log) {
+svector<xstring, 8> get_video_drivers(bool log) {
     SDL_RendererInfo info;
-    std::vector<std::string> drivers;
+    svector<xstring, 8> drivers;
     for (int k = 0; k < SDL_GetNumRenderDrivers(); k++) {
         SDL_GetRenderDriverInfo(k, &info);
         if (log) {
@@ -897,7 +897,7 @@ std::vector<std::string> get_video_drivers(bool log) {
     return drivers;
 }
 
-std::string get_video_driver() {
+xstring get_video_driver() {
     auto &data = g_renderer_data;
 
     SDL_RendererInfo info;
@@ -909,7 +909,7 @@ std::string get_video_driver() {
 void platform_render_save_options() {
     auto &data = g_renderer_data;
 
-    std::string driver = get_video_driver();
+    xstring driver = get_video_driver();
     data.is_opengl_context = (driver == "opengl");
 }
 
@@ -930,7 +930,7 @@ void platform_render_create_context() {
     }
 }
 
-int platform_renderer_init(SDL_Window* window, std::string renderer) {
+int platform_renderer_init(SDL_Window* window, xstring renderer) {
     auto &data = g_renderer_data;
 
     auto drivers = get_video_drivers(true);
@@ -1214,7 +1214,7 @@ void platform_renderer_destroy(void) {
     }
 }
 
-void platform_render_setup_options(pcstr driver) {
+void platform_render_setup_options(xstring driver) {
     auto &data = g_renderer_data;
     if (data.is_opengl_context) {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);

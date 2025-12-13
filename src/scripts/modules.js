@@ -45,3 +45,4 @@ import enemies
 import sentiment
 import empire
 import console_commands
+import malaria_risk

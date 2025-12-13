@@ -64,13 +64,13 @@ public:
     [[nodiscard]] int get_cursor_scale_percentage() const;
     void set_cursor_scale_percentage(int value);
 
-    [[nodiscard]] pcstr get_renderer() const;
+    [[nodiscard]] const xstring &get_renderer() const { return get_str("renderer"); }
     void set_renderer(pcstr value);
 
-    [[nodiscard]] pcstr get_data_directory() const;
+    [[nodiscard]] const xstring &get_data_directory() const { return get_str("data_directory"); }
     void set_data_directory(pcstr value);
 
-    [[nodiscard]] const char* get_extdata_directory() const;
+    [[nodiscard]] const xstring &get_extdata_directory() const { return get_str("extdata_directory"); }
 
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
@@ -80,17 +80,12 @@ public:
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
-    [[nodiscard]] pcstr get_language() const {
-        auto lang = get_arg("language");
-        if (lang && lang->is_str() && !lang->as_str().empty()) {
-            return lang->as_str().c_str();
-        }
-        return nullptr;
-    }
-
-    [[nodiscard]] pcstr get_scripts_directory() const;
     
-    [[nodiscard]] pcstr get_custom_font() const;
+    [[nodiscard]] const xstring& get_language() const { return get_str("language"); }
+    [[nodiscard]] const xstring& get_scripts_directory() const { return get_str("scripts_directory"); }
+    [[nodiscard]] const xstring& get_mods_directory() const { return get_str("mods_directory"); }    
+    [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
+
     void set_custom_font(pcstr value);
     
     void parse(int argc, char **argv);
@@ -99,7 +94,9 @@ public:
 
     /// Get a custom argument value by name
     /// @return optional bvariant if the argument was set, empty optional otherwise
-    [[nodiscard]] std::optional<bvariant> get_arg(const xstring& name) const;
+    [[nodiscard]] const bvariant& get_arg(const xstring& name) const;
+
+    [[nodiscard]] const xstring& get_str(const xstring &name) const;
     
     /// Check if a custom argument exists
     [[nodiscard]] bool has_arg(const xstring& name) const;

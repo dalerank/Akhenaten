@@ -67,7 +67,7 @@ void show_options_window(Arguments& args) {
 
         // Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            bstring512 data_directory = args.get_data_directory();
+            bstring512 data_directory = args.get_data_directory().c_str();
             ImVec2 window_size((float)platform_window_w, (float)platform_window_h);
 
             ImVec2 window_pos(0, 0);

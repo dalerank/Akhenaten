@@ -149,6 +149,7 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extdata", "extdata_directory", "Option --extdata folder should exist", "--extdata PATH", "set external data directory path");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mixed", "scripts_directory", MIXED_MODE_ERROR_MESSAGE, "--mixed PATH", "hot reload scripts from disk");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --language must be followed by a language code (e.g., ru, en, fr)", "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
@@ -267,18 +268,18 @@ char const* Arguments::usage() {
 }
 
 bool Arguments::is(const xstring & name, bool def) const {
-    auto fullscreen = get_arg(name);
-    if (fullscreen && fullscreen->is_bool()) {
-        return fullscreen->as_bool();
+    const auto& fullscreen = get_arg(name);
+    if (fullscreen.is_bool()) {
+        return fullscreen.as_bool();
     }
 
     return def;
 }
 
 int Arguments::get_display_scale_percentage() const {
-    auto scale = get_arg("display_scale_percentage");
-    if (scale && scale->is_int32()) {
-        return scale->as_int32();
+    const auto& scale = get_arg("display_scale_percentage");
+    if (scale.is_int32()) {
+        return scale.as_int32();
     }
     return 100; // default value
 }
@@ -288,9 +289,9 @@ void Arguments::set_display_scale_percentage(int value) {
 }
 
 int Arguments::get_cursor_scale_percentage() const {
-    auto scale = get_arg("cursor_scale_percentage");
-    if (scale && scale->is_int32()) {
-        return scale->as_int32();
+    const auto& scale = get_arg("cursor_scale_percentage");
+    if (scale.is_int32()) {
+        return scale.as_int32();
     }
     return 100; // default value
 }
@@ -299,52 +300,22 @@ void Arguments::set_cursor_scale_percentage(int value) {
     args_["cursor_scale_percentage"] = bvariant(std::clamp(value, 100, 200));
 }
 
-pcstr Arguments::get_renderer() const {
-    auto renderer = get_arg("renderer");
-    if (renderer && renderer->is_str()) {
-        return renderer->as_str().c_str();
-    }
-    return "";
-}
-
 void Arguments::set_renderer(pcstr value) {
     args_["renderer"] = xstring(value);
-}
-
-pcstr Arguments::get_data_directory() const {
-    auto dir = get_arg("data_directory");
-    if (dir && dir->is_str()) {
-        return dir->as_str().c_str();
-    }
-    return "";
 }
 
 void Arguments::set_data_directory(pcstr value) {
     args_["data_directory"] = bvariant(xstring(value));
 }
 
-pcstr Arguments::get_extdata_directory() const {
-    auto dir = get_arg("extdata_directory");
-    if (dir && dir->is_str()) {
-        return dir->as_str().c_str();
+const xstring& Arguments::get_str(const xstring& name) const {
+    const bvariant& font = get_arg(name);
+    if (font.is_str() && !font.as_str().empty()) {
+        return font.as_str();
     }
-    return nullptr;
-}
 
-pcstr Arguments::get_scripts_directory() const {
-    auto dir = get_arg("scripts_directory");
-    if (dir && dir->is_str()) {
-        return dir->as_str().c_str();
-    }
-    return nullptr;
-}
-
-pcstr Arguments::get_custom_font() const {
-    auto font = get_arg("custom_font");
-    if (font && font->is_str() && !font->as_str().empty()) {
-        return font->as_str().c_str();
-    }
-    return nullptr;
+    static const xstring dummy;
+    return dummy;
 }
 
 void Arguments::set_custom_font(pcstr value) {
@@ -352,9 +323,9 @@ void Arguments::set_custom_font(pcstr value) {
 }
 
 vec2i Arguments::get_window_size() const {
-    auto size = get_arg("window_size");
-    if (size && size->is_vec2i()) {
-        return size->as_vec2i();
+    const bvariant& size = get_arg("window_size");
+    if (size.is_vec2i()) {
+        return size.as_vec2i();
     }
     return vec2i{800, 600}; // default value
 }
@@ -400,12 +371,14 @@ void Arguments::parse_cli_(int argc, char** argv) {
     }
 }
 
-std::optional<bvariant> Arguments::get_arg(const xstring& name) const {
+const bvariant& Arguments::get_arg(const xstring& name) const {
     auto it = args_.find(name);
     if (it != args_.end()) {
         return it->second;
     }
-    return std::nullopt;
+
+    static bvariant dummy;
+    return dummy;
 }
 
 bool Arguments::has_arg(const xstring& name) const {
@@ -464,15 +437,15 @@ bool load(Arguments& arguments) {
 void store(Arguments const& arguments) {
     std::ofstream output(get_configuration_path(), std::ios::trunc | std::ios::out);
 
-    output << "data_directory" << '=' << arguments.get_data_directory() << '\n';
+    output << "data_directory" << '=' << arguments.get_data_directory().c_str() << '\n';
     output << "window_mode" << '=' << arguments.is_window_mode() << '\n';
-    output << "renderer" << '=' << arguments.get_renderer() << '\n';
+    output << "renderer" << '=' << arguments.get_renderer().c_str() << '\n';
     output << "display_scale_percentage" << '=' << arguments.get_display_scale_percentage() << '\n';
     output << "cursor_scale_percentage" << '=' << arguments.get_cursor_scale_percentage() << '\n';
     output << "window_width" << '=' << arguments.get_window_size().x << '\n';
     output << "window_height" << '=' << arguments.get_window_size().y << '\n';
-    if (arguments.get_custom_font()) {
-        output << "custom_font" << '=' << arguments.get_custom_font() << '\n';
+    if (!arguments.get_custom_font().empty()) {
+        output << "custom_font" << '=' << arguments.get_custom_font().c_str() << '\n';
     }
 }
 
