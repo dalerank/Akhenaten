@@ -33,6 +33,13 @@ void map_vegetation_deplete(int grid_offset) {
     map_tiles_update_vegetation(grid_offset);
 }
 
+void map_vegetation_deplete(tile2i tile, int delta) {
+    int grid_offset = tile.grid_offset();
+    int value = map_grid_get(g_terrain_vegetation_growth, grid_offset);
+    map_grid_set(g_terrain_vegetation_growth, grid_offset, std::max(0, value - delta));
+    map_tiles_update_vegetation(grid_offset);
+}
+
 void vegetation_tile_update(int grid_offset, vegetation_opt opt) {
     int growth = g_terrain_vegetation_growth.get(grid_offset);
     if (opt.random_max == 0) {

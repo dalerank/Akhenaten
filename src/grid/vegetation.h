@@ -12,6 +12,7 @@ int map_get_vegetation_growth(int grid_offset);
 inline int map_get_vegetation_growth(tile2i tile) { return map_get_vegetation_growth(tile.grid_offset()); }
 void map_vegetation_deplete(int grid_offset);
 inline void map_vegetation_deplete(tile2i tile) { return map_vegetation_deplete(tile.grid_offset()); }
+void map_vegetation_deplete(tile2i tile, int delta);
 void map_vegetation_growth_update();
 
 int gatherers_harvesting_point(int grid_offset);
