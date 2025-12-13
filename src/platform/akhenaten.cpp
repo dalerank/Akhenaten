@@ -115,10 +115,10 @@ static int init_sdl() {
 }
 
 bool pre_init_dir_attempt(const xstring& data_dir, pcstr lmsg) {
-    logs::info(lmsg, data_dir); // TODO: get rid of data ???
+    logs::info(lmsg, data_dir.c_str()); // TODO: get rid of data ???
     const bool ok = vfs::platform_file_manager_set_base_path(data_dir.c_str());
     if (!ok) {
-        logs::info("%s: directory not found", data_dir);
+        logs::info("%s: directory not found", data_dir.c_str());
     }
 
     if (game.check_valid()) {
