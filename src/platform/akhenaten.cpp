@@ -274,7 +274,7 @@ static void setup() {
     // Set language from command line if specified (after game_features::load() in check_valid())
     if (!g_args.get_language().empty()) {
         game_features::gameopt_language.set(g_args.get_language());
-        logs::info("Language set from command line: %s", g_args.get_language());
+        logs::info("Language set from command line: %s", g_args.get_language().c_str());
         // Reload language to apply the change
         game_reload_language();
     }
