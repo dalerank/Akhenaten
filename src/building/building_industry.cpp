@@ -77,6 +77,20 @@ void building_industry::update_graphic() {
     building_impl::update_graphic();
 }
 
+void building_industry::production_finished() {
+    if (stored_amount(base.output.resource) >= base.max_storage_amount(base.output.resource)) {
+        return;
+    }
+
+    auto &d = runtime_data();
+    if (d.progress >= d.progress_max) {
+        store_resource(base.output.resource, ready_production());
+
+        d.progress = 0;
+        //d.has_raw_materials = false;
+    }
+}
+
 void building_industry::update_production() {
     auto &d = runtime_data();
     // d.has_raw_materials = false;

@@ -29,7 +29,7 @@ public:
     virtual void update_preproduction() { /*do nothing*/ }
     virtual void update_production();
     virtual void production_started() { /*do nothing*/ }
-    virtual void production_finished() { /*do nothing*/ }
+    virtual void production_finished();
     
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;

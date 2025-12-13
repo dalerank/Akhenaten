@@ -46,31 +46,7 @@ void building_clay_pit::spawn_figure() {
         return;
     }
     
-    check_labor_problem();
-    if (!has_road_access()) {
-        return;
-    }
-
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
-            
-    figure* fcart = base.common_spawn_goods_output_cartpusher();
-    if (fcart) {
-        events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
-    }
-}
-
-void building_clay_pit::production_finished() {
-    if (stored_amount(RESOURCE_CLAY) >= base.max_storage_amount(RESOURCE_CLAY)) {
-        return;
-    }
-
-    auto &d = runtime_data();
-    if (d.progress >= d.progress_max) {
-        store_resource(base.output.resource, ready_production());
-
-        d.progress = 0;
-        //d.has_raw_materials = false;
-    }
+    building_industry::spawn_figure();
 }
 
 void building_clay_pit::update_production() {

@@ -12,7 +12,6 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CLAY_PIT; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void spawn_figure() override;
-    virtual void production_finished() override;
     virtual void update_production() override;
     virtual void update_graphic() override;
     virtual bool is_deletable() const override;
