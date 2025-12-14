@@ -188,7 +188,7 @@ public:
     mapped_reference at(const_key_reference key) {
         iterator it = find(key);
         if (it == end()) {
-            throw std::out_of_range("flat_map::at");
+            assert(false && "flat_map::at");
         }
         return it->second;
     }
@@ -196,7 +196,7 @@ public:
     const_mapped_reference at(const_key_reference key) const {
         const_iterator it = find(key);
         if (it == end()) {
-            throw std::out_of_range("flat_map::at");
+            assert(false && "flat_map::at");
         }
         return it->second;
     }
