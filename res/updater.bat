@@ -4,10 +4,15 @@ setlocal EnableExtensions EnableDelayedExpansion
 REM --- Configuration ---
 set "SERVER_BUILD_URL=https://www.slsoft.de/extern/software/akhenaten/buildnumber.txt"
 set "SERVER_ZIP_URL=https://www.slsoft.de/extern/software/akhenaten/windows_build.zip"
-
-REM Lokale buildnumber.txt neben der .bat (robuster als %CD%)
 set "LOCAL_BUILD_FILE=%~dp0buildnumber.txt"
+
+REM --- Lokale buildnumber.txt neben der .bat prüfen ---
 set "CURRENT_DIR=%CD%"
+if exist "%CURRENT_DIR%\buildnumber_nightly.txt" (
+    set "SERVER_BUILD_URL=https://www.slsoft.de/extern/software/akhenaten/buildnumber_nightly.txt"
+    set "SERVER_ZIP_URL=https://www.slsoft.de/extern/software/akhenaten/windows_build_nightly.zip"
+    set "LOCAL_BUILD_FILE=%~dp0buildnumber_nightly.txt"
+)
 
 set "TEMP_DIR=%TEMP%\akhenaten_update"
 if not exist "%TEMP_DIR%\" md "%TEMP_DIR%"
