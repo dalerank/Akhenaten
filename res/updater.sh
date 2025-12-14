@@ -1,14 +1,24 @@
 #!/bin/bash
 
-# --- Configuration ---
-SERVER_BUILD_URL="https://www.slsoft.de/extern/software/akhenaten/buildnumber.txt"
-LOCAL_BUILD_FILE="buildnumber.txt"
 CURRENT_DIR="$(pwd)"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/macos_build.zip"
+# --- Configuration ---
+if [ -f "$CURRENT_DIR"/buildnumber.txt ]; then
+    SERVER_BUILD_URL="https://www.slsoft.de/extern/software/akhenaten/buildnumber.txt"
+    LOCAL_BUILD_FILE="buildnumber.txt"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/macos_build.zip"
+    else
+        SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/linux_build.zip"
+    fi
 else
-    SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/linux_build.zip"
+    SERVER_BUILD_URL="https://www.slsoft.de/extern/software/akhenaten/buildnumber_nightly.txt"
+    LOCAL_BUILD_FILE="buildnumber_nightly.txt"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/macos_build_nightly.zip"
+    else
+        SERVER_ZIP_URL="https://www.slsoft.de/extern/software/akhenaten/linux_build_nightly.zip"
+    fi
 fi
 
 # --- Temp-Folder OS related ---
