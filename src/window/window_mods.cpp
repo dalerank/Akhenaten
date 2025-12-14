@@ -11,61 +11,57 @@
 #include "content/content.h"
 #include "window/popup_dialog.h"
 #include "js/js_game.h"
+#include "content/dir.h"
+#include "core/xstring.h"
+
+#include <vector>
+#include <map>
+
+struct mod_info {
+    xstring path;
+    bool enabled;
+};
+
+static std::vector<mod_info> g_mods_list;
+static std::map<xstring, bool> g_mods_status;
 
 ui::mods_window g_mods_window;
 
 void ui::mods_window::init() {
-    if (!panel) {
-        scrollable_list_ui_params ui_params;
-        ui_params.blocks_x = ui["mods_panel"].size.x;
-        ui_params.blocks_y = ui["mods_panel"].size.y + 1;
-        ui_params.draw_scrollbar_always = true;
-        ui_params.view_items = ui["mods_panel"].size.y;
-        ui_params.use_file_finder = false;
-        ui_params.files_dir = "";
+    autoconfig_window::init();
 
-        panel = new scrollable_list(button_none, button_none, button_none, button_none, ui_params);
+    g_mods_list.clear();
+    const dir_listing *sgx_files = vfs::dir_find_files_with_extension("Mods", "sgx");
+
+    for (int i = 0; i < sgx_files->num_files; ++i) {
+        mod_info mod;
+        mod.path.printf("Mods/%s", sgx_files->files[i]);
+
+        auto it = g_mods_status.find(mod.path);
+        mod.enabled = (it != g_mods_status.end()) ? it->second : true;
+
+        g_mods_list.push_back(mod);
     }
 
-    int first_entry_idx = panel ? panel->get_focused_entry_idx() : 0;
-    if (first_entry_idx < 0) {
-        first_entry_idx = 0;
+    auto mods = ui["mods"].dcast_scrollable_list();
+    if (mods) {
+        mods->clear();
+        mods->onrefill([] (std::vector<xstring> &r) {
+            for (size_t i = 0; i < g_mods_list.size(); i++) {
+                for (const auto &mod : g_mods_list) {
+                    bstring128 entry;
+                    entry.printf("[%s] %s", mod.enabled ? "ON" : "OFF", mod.path.c_str());
+                    r.push_back(entry.c_str());
+                }
+            }
+        });
+
+        mods->onclick_item([] (int selected_idx, int) {
+            if (selected_idx >= 0 && selected_idx < (int)g_mods_list.size()) {
+                mods_toggle(selected_idx);
+            }
+        });
     }
-
-    for (int i = 0; i < ui["mods_panel"].size.y; i++) {
-        const player_record *record = highscores_get(first_entry_idx + i);
-        bstring128 str;
-        if (record->nonempty) {
-            str.append(bstring32("S:", record->score));
-            str.append(bstring32("R:", records_calc_score(record)));
-            str.append(bstring32("M:", record->mission_idx));
-            str.append(bstring32("C:", record->rating_culture));
-            str.append(bstring32("P:", record->rating_prosperity));
-            str.append(bstring32("K:", record->rating_kingdom));
-            str.append(bstring32("P:", record->final_population));
-            str.append(bstring32("F:", record->final_funds));
-            str.append(bstring32("m:", record->completion_months));
-            str.append(bstring32("D:", record->difficulty));
-        }
-
-        panel->add_entry(str.c_str(), (void*)record);
-    }
-
-    // Clear and populate panel
-    panel->clear_entry_list();
-
-    int count = highscores_count();
-    for (int i = 0; i < count; i++) {
-        const player_record *record = highscores_get(i);
-        if (record->nonempty) {
-            // Create entry string - just a placeholder, actual rendering done in draw
-            bstring128 entry;
-            entry.printf("Record %d", i + 1);
-            panel->add_entry(entry.c_str());
-        }
-    }
-
-    _is_inited = true;
 }
 
 int ui::mods_window::draw_background(UiFlags flags) {
@@ -77,19 +73,6 @@ int ui::mods_window::draw_background(UiFlags flags) {
     return 0;
 }
 
-void ui::mods_window::ui_draw_foreground(UiFlags flags) {
-    ui.begin_widget(pos);
-    ui.draw(flags);
-    ui.end_widget();
-
-    graphics_set_to_dialog();
-    if (panel) {
-        panel->ui_params.pos = ui["mods_panel"].pos;
-        panel->draw();
-    }
-    graphics_reset_dialog();
-}
-
 int ui::mods_window::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
@@ -97,22 +80,7 @@ int ui::mods_window::ui_handle_mouse(const mouse *m) {
         return 0;
     }
 
-    int result = 0;
-    if (panel) {
-        ui.begin_widget(pos);
-        result = autoconfig_window::ui_handle_mouse(m);
-
-        mouse m_dialog = *m;
-        vec2i panel_offset = ui["mods_panel"].pos;
-        m_dialog.x -= panel_offset.x;
-        m_dialog.y -= panel_offset.y;
-
-        if (panel->input_handle(&m_dialog)) {
-        }
-        ui.end_widget();
-    }
-
-    return result;
+    return 0;
 }
 
 void ui::mods_window::show() {
@@ -134,6 +102,40 @@ void window_mods_show(void) {
 void platform_unpack_scripts() {
     xstring vpath = vfs::platform_unpack_scripts();
     popup_dialog::show_ok("#scripts_unpacked_to", vpath);
+}
+
+vfs::path mods_get_path(int index) {
+    if (index < 0 || index >= (int)g_mods_list.size()) {
+        return "";
+    }
+    return g_mods_list[index].path.c_str();
+}
+
+bool mods_get_enabled(int index) {
+    if (index < 0 || index >= (int)g_mods_list.size()) {
+        return false;
+    }
+    return g_mods_list[index].enabled;
+}
+
+void mods_set_enabled(int index, bool enabled) {
+    if (index < 0 || index >= (int)g_mods_list.size()) {
+        return;
+    }
+    g_mods_list[index].enabled = enabled;
+    g_mods_status[g_mods_list[index].path] = enabled;
+    
+    // Refresh the window if it's open
+    if (g_mods_window._is_inited) {
+        g_mods_window.init();
+    }
+}
+
+void mods_toggle(int index) {
+    if (index < 0 || index >= (int)g_mods_list.size()) {
+        return;
+    }
+    mods_set_enabled(index, !g_mods_list[index].enabled);
 }
 
 ANK_FUNCTION(window_mods_show)
