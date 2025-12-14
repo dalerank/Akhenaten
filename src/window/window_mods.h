@@ -16,15 +16,16 @@ namespace ui {
         virtual int get_tooltip_text() override { return 0; }
         virtual void draw_foreground(UiFlags flags) override {}
         virtual int draw_background(UiFlags flags) override;
-        virtual void ui_draw_foreground(UiFlags flags) override;
         virtual int ui_handle_mouse(const mouse *m) override;
         virtual void init() override;
 
         static void show();
-
-    private:
-        scrollable_list *panel = nullptr;
     };
 }
 
 void window_mods_show(void);
+
+vfs::path mods_get_path(int index);
+bool mods_get_enabled(int index);
+void mods_set_enabled(int index, bool enabled);
+void mods_toggle(int index);

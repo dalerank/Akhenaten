@@ -15,7 +15,8 @@ mods_window {
                                         onclick: platform_unpack_scripts
                                       })
 
-        mods_panel : dummy({pos[16, 70], size[33, 21]}),
+        mods         : scrollable_list({pos[16, 70], size[36, 23], view_items:22, draw_scrollbar_always:true }),
+        
         bottom_text  : text({text[31, 1]
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
                              multiline:false, align:"center"
