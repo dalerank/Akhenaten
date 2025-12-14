@@ -69,10 +69,10 @@ if (( SERVER_BUILD > LOCAL_BUILD )); then
     
     if [[ "$OSTYPE" == "darwin"* ]]; then
     	cd "$CURRENT_DIR"/../../../
-    	tar -xf "$ZIP_PATH"
+    	unzip "$ZIP_PATH"
 		else
 			cd "$CURRENT_DIR"
-    	tar -xf "$ZIP_PATH"
+    	unzip "$ZIP_PATH"
 		fi
 
     if [[ $? -ne 0 ]]; then
