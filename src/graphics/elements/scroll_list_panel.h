@@ -45,14 +45,16 @@ enum scroll_list_file_param {
 
 class scrollable_list {
 public:
-    using onclick_callback = std::function<void(int, int)>;
-
     struct entry_data {
         xstring text;
         void *user_data;
     };
 
-    using custom_text_render_func = void(int idx, int flags, const entry_data &entry, vec2i pos, e_font font);
+    using onclick_callback = std::function<void(int, int)>;
+    using onclick_ex_callback = std::function<void(entry_data*)>;
+    using onclick_double_ex_callback = std::function<void(entry_data*)>;
+    using custom_text_render_func = std::function<void(int idx, int flags, const entry_data &entry, vec2i pos, e_font font)>;
+
     scrollable_list_ui_params ui_params;
 
     void select(const char* button_text);
@@ -69,7 +71,7 @@ public:
     const xstring get_selected_entry_text(int filename_syntax);
     int get_entry_idx(pcstr button_text);
     bool has_entry(const char* button_text);
-    void set_custom_render_func(std::function<custom_text_render_func> f) {
+    void set_custom_render_func(custom_text_render_func f) {
         custom_text_render = f;
     }
 
@@ -93,9 +95,9 @@ public:
 
     ~scrollable_list();
 
-    void set_onclick_entry(onclick_callback lmb) {
-        left_click_callback = lmb;
-    }
+    void set_onclick_entry(onclick_callback lmb) { left_click_callback = lmb; }
+    void set_onclick_entry(onclick_ex_callback lmb) { left_click_ex_callback = lmb; }
+    void set_onclick_dbl_entry(onclick_double_ex_callback lmb) { double_click_ex_callback = lmb; }
 
 private:
     generic_button list_buttons[MAX_BUTTONS_IN_SCROLLABLE_LIST] = {};
@@ -104,8 +106,10 @@ private:
     int selected_entry_idx = -1; // first valid --> 0
 
     onclick_callback left_click_callback;
+    onclick_ex_callback left_click_ex_callback;
     onclick_callback right_click_callback;
     onclick_callback double_click_callback;
+    onclick_double_ex_callback double_click_ex_callback;
     onclick_callback focus_change_callback;
 
     scrollbar_t scrollbar;
@@ -114,7 +118,7 @@ private:
 
     svector<entry_data, MAX_MANUAL_ENTRIES> manual_entry_list;
 
-    std::function<custom_text_render_func> custom_text_render;
+    custom_text_render_func custom_text_render;
 
     bool WAS_DRAWN = false; // for frame-ordered caching logic purposes
 };

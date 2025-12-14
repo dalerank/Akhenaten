@@ -1098,16 +1098,18 @@ void ui::escrollable_list::select_entry(pcstr item) {
     panel->select(item);
 }
 
-void ui::escrollable_list::onclick_item(std::function<void(int, int)> lmb) {
+void ui::escrollable_list::refill() {
     if (!panel) {
         return;
     }
 
-    panel->set_onclick_entry(lmb);
-}
-
-void ui::escrollable_list::onrefill(std::function<void(std::vector<xstring>&)> f) {
-    _refill_cb = f;
+    if (_refill_cb) {
+        entry_data_vec items;
+        _refill_cb(items);
+        for (const auto &it : items) {
+            panel->add_entry(it.text, it.user_data);
+        }
+    }
 }
 
 ui::escrollable_list::~escrollable_list() {
@@ -1124,20 +1126,18 @@ void ui::escrollable_list::draw(UiFlags flags) {
             params
         );
 
-        if (_refill_cb) {
-            std::vector<xstring> items;
-            _refill_cb(items);
-            for (const auto& it: items) {
-                panel->add_entry(it);
-            }
-        }
+        refill();
+
+        panel->set_onclick_entry(_onclick_cb);
+        panel->set_onclick_entry(_onclick_ex_cb);
+        panel->set_onclick_dbl_entry(_onclick_dbl_ex_cb);
+        panel->set_custom_render_func(_custom_render_cb);
     }
 
     vec2i screen_pos = this->screen_pos();
     panel->ui_params.pos = screen_pos;
     panel->draw();
     
-    // Register panel for mouse handling
     g_state.scrollable_lists.push_back(panel.get());
 }
 

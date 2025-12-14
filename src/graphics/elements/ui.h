@@ -27,7 +27,6 @@
 
 struct mouse;
 struct tooltip_context;
-class scrollable_list;
 
 enum UiFlags_ {
     UiFlags_None = 0,
@@ -434,9 +433,22 @@ struct escrollbar : public element {
 };
 
 struct escrollable_list : public element {
+    using entry_data = scrollable_list::entry_data;
+    using entry_data_vec = std::vector<entry_data>;
+    using refill_callback = std::function<void(entry_data_vec &)>;
+    using onclick_callback = scrollable_list::onclick_callback;
+    using onclick_ex_callback = scrollable_list::onclick_ex_callback;
+    using onclick_double_ex_callback = scrollable_list::onclick_double_ex_callback;
+    using custom_text_render_func = scrollable_list::custom_text_render_func;
+
     scrollable_list_ui_params params;
     std::unique_ptr<scrollable_list> panel;
-    std::function<void(std::vector<xstring>&)> _refill_cb;
+
+    refill_callback _refill_cb;
+    onclick_callback _onclick_cb;
+    onclick_ex_callback _onclick_ex_cb;
+    onclick_double_ex_callback _onclick_dbl_ex_cb;
+    custom_text_render_func _custom_render_cb;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;
@@ -445,8 +457,12 @@ struct escrollable_list : public element {
     void clear();
     void add_entry(pcstr item);
     void select_entry(pcstr item);
-    void onclick_item(std::function<void(int, int)> lmb);
-    void onrefill(std::function<void(std::vector<xstring>&)> f);
+    void onclick_item(onclick_callback lmb) { _onclick_cb = lmb; }
+    void onclick_ex_item(onclick_ex_callback lmb) { _onclick_ex_cb = lmb; }
+    void onclick_double_ex_item(onclick_double_ex_callback lmb) { _onclick_dbl_ex_cb = lmb; }
+    void onrender_item(custom_text_render_func f) { _custom_render_cb = f; }
+    void onrefill(refill_callback f) { _refill_cb = f; }
+    void refill();
 
     virtual escrollable_list *dcast_scrollable_list() override { return this; }
 

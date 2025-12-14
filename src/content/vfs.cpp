@@ -149,8 +149,13 @@ int file_close(FILE * stream) {
 }
 
 bool file_has_extension(pcstr filename, pcstr extension) {
-    if (!extension || !*extension)
+    if (!filename || !*filename) {
+        return false;
+    }
+
+    if (!extension || !*extension) {
         return true;
+    }
 
     char c;
     do {
@@ -220,6 +225,21 @@ bool file_remove(pcstr filename) {
     bool res = platform_file_manager_remove_file(filename);
     sync_em_fs();
     return res;
+}
+
+void umount_pack(pcstr filename) {
+    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [filename] (const ZipArchive *arch) {
+        return arch->filepath() == filename;
+    });
+
+    if (it == g_mounted_archives.end()) {
+        return;
+    }
+
+    auto *pack_to_umount = *it;
+    g_mounted_archives.erase(it);
+
+    delete pack_to_umount;
 }
 
 bool mount_pack(pcstr filename) {
