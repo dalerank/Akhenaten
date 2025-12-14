@@ -83,6 +83,7 @@ bool file_exists(pcstr filename);
 bool file_remove(pcstr filename);
 
 bool mount_pack(pcstr filename);
+void umount_pack(pcstr filename);
 
 /**
 * Create folders if not exists

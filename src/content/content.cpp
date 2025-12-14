@@ -127,21 +127,24 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
             snprintf(full_rel_name, sizeof(full_rel_name), "%s%s", dir, name);
             fullname = full_rel_name;
         }
+
         if (stat(fullname, &file_info) != -1) {
             int m = file_info.st_mode;
             if ((!(type & TYPE_FILE) && is_file(m)) || (!(type & TYPE_DIR) && S_ISDIR(m)) || S_ISCHR(m) || S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m)) {
                 continue;
             }
-            if (is_file(m) && !vfs::file_has_extension(name, extension))
+
+            if (is_file(m) && !vfs::file_has_extension(name, extension)) {
                 continue;
+            }
 
             if (type & TYPE_DIR && name[0] == '.') {
                 // Skip current (.), parent (..) and hidden directories (.*)
                 continue;
             }
+
             match = callback(name);
         } else if (vfs::file_has_extension(name, extension)) {
-            logs::error("[%s.%s] platform_file_manager_list_directory_contents: %s %u", name, extension, strerror(errno), errno);
             match = callback(name);
         }
 

@@ -157,12 +157,14 @@ static void on_scroll(void) {
 }
 
 int scrollable_list::input_handle(const mouse* m) {
-    if (!WAS_DRAWN)
+    if (!WAS_DRAWN) {
         return 0;
+    }
 
     WAS_DRAWN = false;
-    if (scrollbar_handle_mouse(vec2i{0, 0}, &scrollbar, m))
+    if (scrollbar_handle_mouse(vec2i{ 0, 0 }, &scrollbar, m)) {
         return 0;
+    }
 
     int last_focused = focus_button_id;
     int handled_button_id = generic_buttons_handle_mouse(m, vec2i{0, 0}, list_buttons, ui_params.view_items, &focus_button_id);
@@ -171,29 +173,48 @@ int scrollable_list::input_handle(const mouse* m) {
         if (m->left.went_up) {
             select_by_button_id(handled_button_id);
 
-            // left click callback
-            left_click_callback(button->parameter1, button->parameter2);
+            if (left_click_callback) {
+                left_click_callback(button->parameter1, button->parameter2);
+            }
+
+            auto &item = manual_entry_list[selected_entry_idx];
+            if (left_click_ex_callback) {
+                left_click_ex_callback(&item);
+            }
 
             // double click callback (LMB only)
-            if (m->left.double_click)
-                double_click_callback(button->parameter1, button->parameter2);
-        } else if (m->right.went_up)
+            if (m->left.double_click) {
+                if (double_click_callback) {
+                    double_click_callback(button->parameter1, button->parameter2);
+                }
 
-            // right click callback
+                if (double_click_ex_callback) {
+                    double_click_ex_callback(&item);
+                }
+            }
+
+        } else if (m->right.went_up) {
             right_click_callback(button->parameter1, button->parameter2);
+        }
 
         // focus change callback
         if (last_focused != focus_button_id) {
             focus_change_callback(button->parameter1, button->parameter2);
         }
+
         return handled_button_id;
     } else {
-        if (last_focused != focus_button_id)
+        if (last_focused != focus_button_id) {
             focus_change_callback(-1, -1);
+        }
+
         if (handled_button_id > 0 && m->left.went_up) {
             unselect();
             // left click callback
             left_click_callback(-1, -1);
+            if (left_click_ex_callback) {
+                left_click_ex_callback(nullptr);
+            }
         }
     }
     return 0;
@@ -277,6 +298,7 @@ scrollable_list::scrollable_list(onclick_callback lmb,
     right_click_callback = rmb;
     double_click_callback = dmb;
     focus_change_callback = fcc;
+
     for (int i = 0; i < ui_params.view_items; ++i) {
         int button_pos_x = ui_params.pos.x + ui_params.buttons_margin_x;
         int button_pos_y = ui_params.pos.y + ui_params.buttons_size_y * i + ui_params.buttons_margin_y;

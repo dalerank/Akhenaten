@@ -3,6 +3,8 @@
 #include "core/log.h"
 #include "js/js_game.h"
 #include "window/message_dialog.h"
+#include "graphics/window.h"
+#include "input/input.h"
 #include <mutex>
 
 using autoconfig_windows = std::vector<autoconfig_window *>;
@@ -44,12 +46,23 @@ void autoconfig_window::archive_load(archive arch) {
     assert(elements.size() > 0);
     _is_inited = false;
     help_id = arch.r_string("help_id");
+    allow_rmb_goback = arch.r_string("allow_rmb_goback");
 }
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
     int result = ui::handle_mouse(m);
+    
+    if (allow_rmb_goback) {
+        const hotkeys *h = hotkey_state();
+        if (input_go_back_requested(m, h)) {
+            window_go_back();
+            return 0;
+        }
+    }
+    
     ui.end_widget();
+
 
     return result;
 }

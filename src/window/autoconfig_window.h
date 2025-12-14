@@ -20,6 +20,7 @@ struct autoconfig_window : public ui::widget {
     virtual int ui_handle_mouse(const mouse *m);
 
     bool _is_inited = false;
+    bool allow_rmb_goback = false;
     xstring help_id;
 
     static void before_mission_start();

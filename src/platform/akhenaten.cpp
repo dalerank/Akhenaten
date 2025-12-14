@@ -28,6 +28,7 @@
 #include "window/autoconfig_window.h"
 #include "graphics/imagepak_holder.h"
 #include "game/mission.h"
+#include "content/mods.h"
 #include "renderer.h"
 
 #include <SDL.h>
@@ -258,6 +259,8 @@ static void setup() {
 
     js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str());    // setup script engine user folder
     js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);      // setup script engine additional folder
+
+    mods_init();
 
     js_vm_setup();
     js_vm_sync({});

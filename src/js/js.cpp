@@ -15,6 +15,7 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "core/variant.h"
+#include "content/mods.h"
 
 #include <filesystem>
 
@@ -78,6 +79,26 @@ int js_vm_load_file_and_exec(pcstr path) {
     }
 
     pcstr npath = (*path == ':') ? (path + 1) : path;
+
+    auto r = mods_find_script(npath, true);
+    if (!!r.reader) {
+        const uint32_t fsize = r.reader->size();
+        std::string data = (char *)r.reader->data();
+
+        int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
+        if (error) {
+            logs::info("!!! Error on open file %s", js_tostring(vm.J, -1));
+            return 0;
+        }
+
+        js_getglobal(vm.J, "");
+        int ok = js_vm_trypcall(vm.J, 0);
+        if (!ok) {
+            logs::info("Fatal error on call base after load %s", r.path.c_str());
+            return 0;
+        }
+        return 1;
+    }
 
     vfs::path rpath = path;
     if (!vm.scripts_folders.empty()) {
@@ -145,12 +166,12 @@ bool js_vm_sync(const xstring &mission_id) {
     return true;
 }
 
-void js_vm_reload_file(const char *path) {
+void js_vm_reload_file(pcstr path) {
     vm.files2load[vm.files2load_num] = path;
     vm.files2load_num++;
 }
 
-int js_vm_exec_function_args(const char *funcname, const char *szTypes, ...) {
+int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
     if (vm.have_error)
         return 0;
     int i, ok, savetop;
@@ -208,12 +229,12 @@ int js_vm_exec_function_args(const char *funcname, const char *szTypes, ...) {
     return ok;
 }
 
-int js_vm_exec_function(const char *funcname) {
+int js_vm_exec_function(pcstr funcname) {
     return js_vm_exec_function_args(funcname, "");
 }
 
 void js_vm_load_module(js_State *J) {
-    const char *scriptName = js_tostring(J, 1);
+    pcstr scriptName = js_tostring(J, 1);
 
     vm.files2load[vm.files2load_num] = scriptName;
     vm.files2load_num++;
@@ -223,7 +244,7 @@ void js_game_panic(js_State *J) {
     logs::info("JSE !!! Uncaught exception: %s", js_tostring(J, -1));
 }
 
-int js_game_import(js_State *J, const char* filename) {
+int js_game_import(js_State *J, pcstr filename) {
     vm.files2load[vm.files2load_num] = vfs::path(":", filename, ".js");
     vm.files2load_num++;
 
