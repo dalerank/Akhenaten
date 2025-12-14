@@ -130,7 +130,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
         vfs::path mod_script_path(it.second.path.c_str(), "/", script_path);
         vfs::reader reader = vfs::file_open(mod_script_path, "rt");
         if (reader) {
-            return { mod_script_path, reader };
+            return { mod_script_path.c_str(), reader };
         }
     }
 
