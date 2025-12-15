@@ -67,6 +67,10 @@ void window_show(const window_type* window) {
 
 void window_go_back() {
     auto& data = g_window_manager;
+    // cant exit from city with rmb
+    if (data.current_window->id == WINDOW_CITY || data.current_window->id == WINDOW_MAIN_MENU) {
+        return;
+    }
     reset_input();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
