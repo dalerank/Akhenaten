@@ -11,6 +11,7 @@ struct mod_info {
     xstring desc;
     uint16_t useridx;
     uint16_t start_index;
+    uint16_t entries_num;
     svector<xstring, 16> scripts;
     bool enabled = false;
 

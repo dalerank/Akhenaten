@@ -409,6 +409,11 @@ void imagepak::cleanup_and_destroy() {
     atlas_pages.clear();
 }
 
+struct offset_ids {
+    int start;
+    int id;
+};
+
 bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     OZZY_PROFILER_SECTION("Game/Loading/Resources/ImageFolderPak");
     name = pak;
@@ -418,14 +423,21 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     int bmp_last_group_id = 0;
     int last_idx_in_bmp = 1;
 
-    vfs::path datafile("Data/", pak, ".zip");
-    
-    if (!vfs::file_exists(datafile)) {
-        datafile.printf("Data/%s.sgx", pak);
+    pcstr allow_dirs_to_find[] = { "Mods", "Data" };
+    bool found = false;
+    vfs::path datafile;
 
-        if (!vfs::file_exists(datafile)) {
-            return false;
+    for (const auto &dir : allow_dirs_to_find) {
+        datafile.printf("%s/%s.sgx", dir, pak);
+
+        if (vfs::file_exists(datafile)) {
+            found = true;
+            break;
         }
+    }
+
+    if (!found) {
+        return false;
     }
 
     if (!vfs::mount_pack(datafile)) {
@@ -451,6 +463,13 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     assert(global_image_index_offset >= 30000);
     images_array.reserve(entries_num);
+
+    svector<offset_ids, PAK_GROUPS_MAX> offset_ids_vec;
+    for (int ii = 0; ii < groups_num; ++ii) {
+        offset_ids_vec.push_back({ group_image_ids[ii], ii });
+    }
+
+    std::sort(offset_ids_vec.begin(), offset_ids_vec.end(), [] (auto &lhs, auto &rhs) { return lhs.start < rhs.start; });
 
     auto load_img = [&] (pcstr fn, int i, int group_id, int atlas_rect_id) {
         image_t img;
@@ -500,7 +519,27 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         }
 
         img.bmp.entry_index = last_idx_in_bmp;
+
+        bstring64 img_bmp_short_name = bmp_names[img.bmp.group_id].data();
+        img_bmp_short_name.replace_str(".bmp", "");
+        bstring256 img_bmp_tname;
+        img_bmp_tname.printf("%s/%s_%05d", name.c_str(), img_bmp_short_name.c_str(), img.bmp.entry_index);
+        img.bmp.tname = img_bmp_tname.tolower().c_str();
+
+        if (offset_ids_vec.size() == 1) {
+            img.group_id = 0;
+            img.group_index = img.sgx_index - offset_ids_vec.front().start;
+        } else {
+            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
+            if (group_it != offset_ids_vec.end()) {
+                --group_it;
+                img.group_id = group_it->id;
+                img.group_index = img.sgx_index - group_it->start;
+            }
+        }
+
         last_idx_in_bmp++;
+
         img.unk13 = -1;
         img.animation.speed_id = 1;
         img.unk14 = -1;
@@ -527,7 +566,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     int tmp_group_id = 0, atlas_rect_id = 0;
     g_config_arch.r_array(pak, [&] (archive arch) {
-        pcstr prefix = arch.r_string("prefix");
+        bstring128 prefix = arch.r_string("prefix");
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
         if (finish_index <= 0) {
@@ -537,7 +576,10 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
         for (int i = start_index; i <= finish_index; ++i) {
             bstring512 name;
-            name.printf("%s%05u.png", prefix, i);
+            if (!prefix.ends_with("_")) {
+                logs::warn("WARN! %s incorrect prefix format for %s, should ends with '_'", datafile.c_str(), name.c_str());
+            }
+            name.printf("%s%05u.png", prefix.c_str(), i);
             load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id, atlas_rect_id);
             ++atlas_rect_id;
         }
@@ -683,12 +725,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         has_system_bmp = true;
     }
 
-    struct offset_ids {
-        int start;
-        int id;
-    };
     svector<offset_ids, PAK_GROUPS_MAX> offset_ids_vec;
-
     for (int ii = 0; ii < groups_num; ++ii) {
         offset_ids_vec.push_back({ group_image_ids[ii], ii });
     }
@@ -944,6 +981,11 @@ image_desc imagepak::get_image_desc(const xstring &name) const {
     name_lower.tolower();
     
     for (const auto& img : images_array) {
+        assert(!img.bmp.tname.empty() && "Texture name shouldn't be empty");
+        if (img.bmp.tname.empty()) {
+            continue;
+        }
+
         if (img.bmp.tname == name_lower.c_str()) {
             image_desc desc;
             desc.pack = static_cast<int16_t>(get_pack());

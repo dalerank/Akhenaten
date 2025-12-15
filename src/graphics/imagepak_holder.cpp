@@ -12,7 +12,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config) {
     g_config_arch.r("imagepaks", g_image_data->pak_list);
 
     for (auto &pak : g_image_data->pak_list) {
-        bstring256 pak_name = pak.name.empty() ? "unknown" : pak.name.c_str();
+        bstring256 pak_name = pak.name.empty() ? "" : pak.name.c_str();
         pak.name = pak_name.tolower();
     }
 

@@ -18,7 +18,7 @@ mods_window {
 
         mods         : scrollable_list({pos[16, 70], size[36, 23], view_items:22, draw_scrollbar_always:true })
         
-        bottom_text  : text({text[31, 1]
+        bottom_text  : text({text:"Right click to exit, double click to toggle mod"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
                              multiline:false
                              align:"center"

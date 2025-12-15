@@ -95,7 +95,7 @@ bool image_load_paks() {
     return true;
 }
 
-static imagepak*pak_from_collection_name(const xstring &name) {
+static imagepak* pak_from_collection_name(const xstring &name) {
     auto &data = *g_image_data;
     const auto &pak_list = g_image_data->pak_list;
 
