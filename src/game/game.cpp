@@ -53,6 +53,7 @@
 #include "window/file_dialog.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
+#include "content/mods.h"
 #include "undo.h"
 
 #include "dev/debug.h"
@@ -372,7 +373,8 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    //    mods_init();
+    mods_init();
+
     if (!!(opts & game_opt_sound)) {
         g_sound.init();
     }
@@ -384,8 +386,9 @@ bool game_init(game_opts opts) {
 }
 
 bool game_init_editor() {
-    if (!reload_language(1, 0))
+    if (!reload_language(1, 0)) {
         return false;
+    }
 
     game_file_editor_clear_data();
     game_file_editor_create_scenario(2);

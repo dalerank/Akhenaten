@@ -9,13 +9,6 @@
 #include <cstddef>
 #include <stdexcept>
 
-template<typename T>
-struct standart_less {
-    bool operator()(const T& lhs, const T& rhs) const {
-        return lhs < rhs;
-    }
-};
-
 // Helper: equal algorithm
 template<typename InputIterator1, typename InputIterator2>
 bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
@@ -34,7 +27,7 @@ bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) {
 /// Has insertion of O(N) and find of O(logN).
 /// Duplicate entries are not allowed.
 //***************************************************************************
-template <typename TKey, typename TMapped, const size_t MAX_SIZE_, typename TKeyCompare = less<TKey>>
+template <typename TKey, typename TMapped, const size_t MAX_SIZE_, typename TKeyCompare = std::less<TKey>>
 class flat_map {
 public:
     typedef std::pair<const TKey, TMapped> value_type;
@@ -74,7 +67,6 @@ private:
     key_compare compare_;
 
     iterator insert_sorted(const_reference value) {
-        compare cmp;
         const key_type& key = value.first;
 
         // Find insertion point using binary search
@@ -87,7 +79,7 @@ private:
             it = first;
             step = count / 2;
             it += step;
-            if (cmp(*it, key)) {
+            if (compare_(it->first, key)) {
                 first = ++it;
                 count -= step + 1;
             } else {
@@ -96,7 +88,7 @@ private:
         }
 
         // Check for duplicate
-        if (first != data_.end() && !cmp(key, first->first)) {
+        if (first != data_.end() && !compare_(key, first->first)) {
             return first; // Duplicate found
         }
 
@@ -183,8 +175,7 @@ public:
 
     mapped_reference operator [](const_key_reference key) {
         iterator i_element = lower_bound(key);
-        compare cmp;
-        if ((i_element == end()) || cmp(key, i_element->first)) {
+        if ((i_element == end()) || compare_(key, i_element->first)) {
             // Insert default value
             value_type value;
             const_cast<key_type&>(value.first) = key;
@@ -197,7 +188,7 @@ public:
     mapped_reference at(const_key_reference key) {
         iterator it = find(key);
         if (it == end()) {
-            throw std::out_of_range("flat_map::at");
+            assert(false && "flat_map::at");
         }
         return it->second;
     }
@@ -205,20 +196,21 @@ public:
     const_mapped_reference at(const_key_reference key) const {
         const_iterator it = find(key);
         if (it == end()) {
-            throw std::out_of_range("flat_map::at");
+            assert(false && "flat_map::at");
         }
         return it->second;
     }
 
     std::pair<iterator, bool> insert(const_reference value) {
         iterator i_element = lower_bound(value.first);
-        compare cmp;
-        if ((i_element != end()) && !cmp(value.first, i_element->first)) {
+        if ((i_element != end()) && !compare_(value.first, i_element->first)) {
             return std::make_pair(i_element, false);
         }
+
         if (full()) {
             return std::make_pair(end(), false);
         }
+
         iterator inserted = insert_sorted(value);
         return std::make_pair(inserted, true);
     }
@@ -255,8 +247,7 @@ public:
 
     iterator find(const_key_reference key) {
         iterator it = lower_bound(key);
-        compare cmp;
-        if (it != end() && !cmp(key, it->first)) {
+        if (it != end() && !compare_(key, it->first)) {
             return it;
         }
         return end();
@@ -264,8 +255,7 @@ public:
 
     const_iterator find(const_key_reference key) const {
         const_iterator it = lower_bound(key);
-        compare cmp;
-        if (it != end() && !cmp(key, it->first)) {
+        if (it != end() && !compare_(key, it->first)) {
             return it;
         }
         return end();
@@ -276,7 +266,6 @@ public:
     }
 
     iterator lower_bound(const_key_reference key) {
-        compare cmp;
         iterator first = data_.begin();
         iterator last = data_.end();
         iterator it;
@@ -286,7 +275,7 @@ public:
             it = first;
             step = count / 2;
             it += step;
-            if (cmp(*it, key)) {
+            if (compare_(it->first, key)) {
                 first = ++it;
                 count -= step + 1;
             } else {
@@ -297,7 +286,6 @@ public:
     }
 
     const_iterator lower_bound(const_key_reference key) const {
-        compare cmp;
         const_iterator first = data_.begin();
         const_iterator last = data_.end();
         const_iterator it;
@@ -307,7 +295,7 @@ public:
             it = first;
             step = count / 2;
             it += step;
-            if (cmp(*it, key)) {
+            if (compare_(it->first, key)) {
                 first = ++it;
                 count -= step + 1;
             } else {
@@ -319,8 +307,7 @@ public:
 
     iterator upper_bound(const_key_reference key) {
         iterator it = lower_bound(key);
-        compare cmp;
-        if (it != end() && !cmp(key, it->first)) {
+        if (it != end() && !compare_(key, it->first)) {
             ++it;
         }
         return it;
@@ -328,8 +315,7 @@ public:
 
     const_iterator upper_bound(const_key_reference key) const {
         const_iterator it = lower_bound(key);
-        compare cmp;
-        if (it != end() && !cmp(key, it->first)) {
+        if (it != end() && !compare_(key, it->first)) {
             ++it;
         }
         return it;

@@ -73,7 +73,17 @@ void file_remove_extension(char *filename);
  * @param localizable Whether the file may be localized (see core/dir.h)
  * @return boolean true if the file exists, false otherwise
  */
-bool file_exists(pcstr filename);
+
+namespace detail {
+    bool file_exists(pcstr filename);
+    inline pcstr to_path_str(pcstr filename) { return filename; }
+    inline pcstr to_path_str(const xstring &filename) { return filename.c_str(); }
+}
+
+template<typename T>
+bool file_exists(const T& filename) {
+    return detail::file_exists(detail::to_path_str(filename));
+}
 
 /**
  * Remove a file
@@ -83,6 +93,7 @@ bool file_exists(pcstr filename);
 bool file_remove(pcstr filename);
 
 bool mount_pack(pcstr filename);
+void umount_pack(pcstr filename);
 
 /**
 * Create folders if not exists

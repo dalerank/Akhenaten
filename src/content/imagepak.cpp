@@ -13,6 +13,7 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/image.h"
+#include "content/zipreader.hpp"
 
 #include "game/game.h"
 
@@ -26,6 +27,9 @@
 
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 image_packer packer;
+
+uint16_t imagepak::max_seen_imgid = 0;
+uint16_t imagepak::max_seen_useridx = 0;
 
 static int convert_uncompressed(buffer* buf, const image_t &img) {
     int pixels_count = 0;
@@ -91,8 +95,9 @@ static int convert_footprint_tile(buffer* buf, const image_t &img, int x_offset,
         int x_max = FOOTPRINT_WIDTH - x_start;
         for (int x = x_start; x < x_max; x++) {
             int dst_index = (y + y_offset + img.atlas.offset.y) * p_atlas->width + img.atlas.offset.x + x + x_offset;
-            if (dst_index >= p_atlas->bmp_size)
+            if (dst_index >= p_atlas->bmp_size) {
                 continue;
+            }
             p_atlas->temp.pixel_buffer[dst_index] = image_to_32_bit(buf->read_u16());
         }
     }
@@ -366,7 +371,9 @@ imagepak::imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool sys
             cleanup_and_destroy();
         }
         return;
-    } 
+    }
+
+    useridx_update(ipack);
 
     if (!load_pak(pak_name.c_str(), starting_index)) {
         logs::error("imagepak: failed to load pack '%s' (id=%d, index=%d) - file may be missing or corrupted", 
@@ -602,9 +609,13 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     if (image_data_fonts_ready()) {
         text_draw(bstring512("loading folder pak (", pak, ")").c_str(), 5, y_offset, FONT_NORMAL_WHITE_ON_DARK, COLOR_FONT_YELLOW);
     }
-    //painter ctx = game.painter();
-    //graphics_renderer()->draw_image(ctx, &images_array.at(0), 0, 0, 0xffffffff, 1.0f, false);
+
     platform_renderer_render();
+
+    int max_imgid_this_pak = global_image_index_offset + entries_num;
+    assert(max_imgid_this_pak < 0xffff);
+    update_max_imgid(max_imgid_this_pak);
+
     return true;
 }
 
@@ -921,6 +932,10 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
     platform_renderer_render();
 
+    int max_imgid_this_pak = global_image_index_offset + entries_num;
+    assert(max_imgid_this_pak < 0xffff);
+    update_max_imgid(max_imgid_this_pak);
+
     return true;
 }
 
@@ -963,10 +978,26 @@ const image_t* imagepak::get_image(int id, bool relative) {
     return &images_array[id];
 }
 
-int imagepak::get_entries_num(xstring pak_name) {
-    vfs::path filename_full("Data/", pak_name.c_str());
+void imagepak::useridx_update(uint16_t index) {
+    max_seen_useridx = std::max(max_seen_useridx, index);
+}
 
-    // split in .555 and .sg3 filename strings
-    vfs::path filename_sgx(filename_full, ".sg3");
-    return io_read_sgx_entries_num(filename_sgx);;
+void imagepak::update_max_imgid(uint16_t imgid) {
+    max_seen_imgid = std::max(max_seen_imgid, imgid);
+}
+
+int imagepak::get_entries_num(xstring pak_name) {
+    vfs::path filename_sgx(pak_name.c_str());
+    if (!vfs::file_has_extension(filename_sgx, "sgx")) {
+        filename_sgx.append(".sgx");
+        filename_sgx = filename_sgx.resolve();
+    }
+    
+    if (!filename_sgx.empty() && vfs::file_exists(filename_sgx.c_str())) {
+        return io_read_sgx_entries_num(filename_sgx);
+    }
+
+    vfs::path filename_full("Data/", pak_name.c_str());
+    vfs::path filename_sg3(filename_full, ".sg3");
+    return io_read_sg3_entries_num(filename_sg3);
 }

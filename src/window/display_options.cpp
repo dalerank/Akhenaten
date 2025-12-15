@@ -37,10 +37,10 @@ void ui::display_options_window::init(close_callback close_cb) {
     auto resolutions = ui["resolutions"].dcast_scrollable_list();
     if (resolutions) {
         resolutions->clear();
-        resolutions->onrefill([] (std::vector<xstring>& r) {
+        resolutions->onrefill([] (escrollable_list::entry_data_vec& r) {
             auto video_modes = get_video_modes();
             for (const auto &mode : video_modes) {
-                r.push_back(mode.str.c_str());
+                r.push_back({ mode.str.c_str(), nullptr });
             }            
         });
 
