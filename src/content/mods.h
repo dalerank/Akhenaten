@@ -35,5 +35,7 @@ void mods_toggle(xstring hash);
 void mods_init();
 const mod_info& mods_find(xstring hash);
 void mods_remount();
+void mods_save();
+void mods_load();
 
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled);
