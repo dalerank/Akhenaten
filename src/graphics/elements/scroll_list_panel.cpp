@@ -116,6 +116,7 @@ void scrollable_list::add_entry(xstring entry_text, void* user_data) {
 
 void scrollable_list::change_file_path(const xstring& dir, const xstring& ext) {
     ui_params.files_dir = dir;
+    ui_params.file_ext = ext;
     refresh_file_finder();
 }
 
