@@ -3,6 +3,7 @@
 #include "content/content.h"
 #include "content/reader.h"
 #include "content/zipreader.hpp"
+#include "graphics/imagepak_holder.h"
 #include "core/log.h"
 #include "js/js.h"
 
@@ -74,6 +75,13 @@ void mods_init() {
                 mod_info &mod = g_mods_list[mod_name];
                 mod.path.printf("Mods/%s", files->files[i]);
                 mod.name = mod_name;
+                mod.useridx = imagepak::get_max_useridx() + 1;
+                mod.start_index = imagepak::get_maxseen_imgid() + 1;
+
+                imagepak::useridx_update(mod.useridx);
+
+                const int enteries_num = imagepak::get_entries_num(mod.path);
+                imagepak::update_max_imgid(mod.start_index + enteries_num);
 
                 vfs::path full_path = vfs::path::resolve(mod.path.c_str()).resolve();
                 if (full_path.empty()) {
