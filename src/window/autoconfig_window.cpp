@@ -53,7 +53,7 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
     bool handled = ui::handle_mouse(m);
     
-    if (allow_rmb_goback && handled) {
+    if (allow_rmb_goback && !handled) {
         const hotkeys *h = hotkey_state();
         if (input_go_back_requested(m, h)) {
             window_go_back();

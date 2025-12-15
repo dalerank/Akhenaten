@@ -138,8 +138,22 @@ namespace ui {
     struct state {
         std::stack<vec2i> _offset;
         std::vector<universal_button> buttons;
-        std::vector<scrollbar_t*> scrollbars;
-        std::vector<scrollable_list*> scrollable_lists;
+        svector<scrollbar_t*, 32> scrollbars;
+        svector<scrollable_list*, 32> scrollable_lists;
+
+        void remove_scrolbar(scrollbar_t *p) {
+            auto it = std::find(scrollbars.begin(), scrollbars.end(), p);
+            if (it != scrollbars.end()) {
+                scrollbars.erase(it);
+            }
+        }
+
+        void remove_scrollable_list(scrollable_list* p) {
+            auto it = std::find(scrollable_lists.begin(), scrollable_lists.end(), p);
+            if (it != scrollable_lists.end()) {
+                scrollable_lists.erase(it);
+            }
+        }
 
         inline const vec2i offset() { return _offset.empty() ? vec2i{0, 0} : _offset.top(); }
     };
@@ -1113,6 +1127,7 @@ void ui::escrollable_list::refill() {
 }
 
 ui::escrollable_list::~escrollable_list() {
+    g_state.remove_scrollable_list(panel.get());
     // panel will be automatically destroyed by unique_ptr
 }
 
