@@ -1032,7 +1032,34 @@ int platform_renderer_create_render_texture(int width, int height) {
 #endif
 
     SDL_SetRenderTarget(data.renderer, NULL);
-    SDL_RenderSetLogicalSize(data.renderer, width, height);
+    
+    // Check if texture is larger than window to prevent automatic window resizing
+    // SDL_RenderSetLogicalSize can automatically resize window if logical size > window size
+    // So we only set logical size if texture fits within window or if in fullscreen/maximized mode
+    int window_w = 0, window_h = 0;
+    bool should_set_logical_size = true;
+    if (data.window) {
+        Uint32 flags = SDL_GetWindowFlags(data.window);
+        bool is_fullscreen = (flags & SDL_WINDOW_FULLSCREEN) || (flags & SDL_WINDOW_FULLSCREEN_DESKTOP);
+        bool is_maximized = (flags & SDL_WINDOW_MAXIMIZED) != 0;
+        
+        if (!is_fullscreen && !is_maximized) {
+            SDL_GetWindowSize(data.window, &window_w, &window_h);
+            
+            // If texture is larger than window, don't set logical size to prevent window resize
+            // The texture will still be created, but logical size won't be set
+            if (window_w > 0 && window_h > 0 && (width > window_w || height > window_h)) {
+                should_set_logical_size = false;
+            }
+        }
+    }
+    
+    // Only set logical size if it won't cause window resize
+    // If texture is larger than window, don't set logical size to prevent automatic window resize
+    if (should_set_logical_size) {
+        SDL_RenderSetLogicalSize(data.renderer, width, height);
+    }
+    // Otherwise, leave logical size unchanged to avoid affecting window size
 
     data.render_texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
 

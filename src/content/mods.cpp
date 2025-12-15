@@ -6,6 +6,9 @@
 #include "graphics/imagepak_holder.h"
 #include "core/log.h"
 #include "js/js.h"
+#include "game/game_config.h"
+#include "core/settings_vars.h"
+#include "content/vfs.h"
 
 flat_map<xstring, mod_info, 32> g_mods_list;
 
@@ -31,6 +34,7 @@ void mods_set_enabled(xstring name, bool enabled) {
         return;
     }
     it->second.enabled = enabled;
+    mods_save();
 }
 
 void mods_toggle(xstring name) {
@@ -40,6 +44,7 @@ void mods_toggle(xstring name) {
     }
 
     it->second.enabled = !it->second.enabled;
+    mods_save();
 }
 
 void mods_remount() {
@@ -47,17 +52,40 @@ void mods_remount() {
         if (it.second.enabled) {
             vfs::mount_pack(it.second.path.c_str());
 
+            auto &modpack = g_image_data->pak_list[it.second.useridx];            
+            if (!modpack.handle) {
+                modpack.entries_num = it.second.entries_num;
+                modpack.index = it.second.start_index;
+                modpack.id = it.second.useridx;
+                modpack.name = it.second.name;
+                modpack.delayed = true;
+                modpack.custom = true;
+            }
+
             for (const auto &s: it.second.scripts) {
                 js_vm_reload_file(s.c_str());
             }
         } else {
             vfs::umount_pack(it.second.path.c_str());
 
+            auto &modpack = g_image_data->pak_list[it.second.useridx];
+            if (modpack.handle) {
+                delete modpack.handle;
+
+                modpack.entries_num = 0;
+                modpack.index = 0;
+                modpack.id = 0;
+                modpack.delayed = true;
+                modpack.name = xstring();
+            }
+
             for (const auto &s : it.second.scripts) {
                 js_vm_reload_file(s.c_str());
             }
         }
     }
+
+    mods_save();
 }
 
 void mods_init() {
@@ -77,11 +105,10 @@ void mods_init() {
                 mod.name = mod_name;
                 mod.useridx = imagepak::get_max_useridx() + 1;
                 mod.start_index = imagepak::get_maxseen_imgid() + 1;
+                mod.entries_num = imagepak::get_entries_num(mod.path);
 
                 imagepak::useridx_update(mod.useridx);
-
-                const int enteries_num = imagepak::get_entries_num(mod.path);
-                imagepak::update_max_imgid(mod.start_index + enteries_num);
+                imagepak::update_max_imgid(mod.start_index + mod.entries_num);
 
                 vfs::path full_path = vfs::path::resolve(mod.path.c_str()).resolve();
                 if (full_path.empty()) {
@@ -143,4 +170,28 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
     }
 
     return {};
+}
+
+void mods_save() {
+    std::string enabled_mods;
+    for (const auto &it : g_mods_list) {
+        if (it.second.enabled) {
+            enabled_mods.append(it.first.c_str());
+            enabled_mods.append(",");
+        }
+    }
+    game_features::gameopt_enabled_mods = enabled_mods.c_str();
+    game_features::save();
+}
+
+void mods_load() {
+    xstring enabled_mods = game_features::gameopt_enabled_mods.to_string();
+
+    svector<bstring64, 128> mod_names;
+    string_to_array_t(mod_names, enabled_mods.c_str(), ',');
+    
+    // Restore enabled status for each mod
+    for (const auto &name : mod_names) {
+        mods_set_enabled(name.c_str(), true);
+    }
 }

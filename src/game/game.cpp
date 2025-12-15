@@ -374,6 +374,8 @@ bool game_init(game_opts opts) {
     }
 
     mods_init();
+    mods_load();
+    mods_remount();
 
     if (!!(opts & game_opt_sound)) {
         g_sound.init();
@@ -483,11 +485,11 @@ void game_t::before_start_simulation() {
     });
 
     events::subscribe([] (event_save_city ev) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
+        window_file_dialog_save_show(FILE_TYPE_SAVED_GAME);
     });
 
     events::subscribe([] (event_load_city ev) {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+        window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
     });
 }
 

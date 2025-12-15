@@ -45,13 +45,16 @@ void ui::display_options_window::init(close_callback close_cb) {
         });
 
         resolutions->select_entry(selected.str.c_str());
-        resolutions->onclick_item([this] (int selected_idx, int) {
+        resolutions->onclick_ex_item([this] (escrollable_list::entry_data *r) {
             auto video_modes = get_video_modes();
-            auto it = video_modes.begin();
-            std::advance(it, selected_idx);
-            selected_resolution = { it->x, it->y };
+            for (const auto& mode : video_modes) {
+                if (r->text == mode.str) {
+                    selected_resolution = { mode.x, mode.y };                
+                }
+            }
         });
     }
+    resolutions->refill();
 
     ui["btnok"].onclick([this] {
         app_window_resize(selected_resolution);

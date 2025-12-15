@@ -51,20 +51,20 @@ void autoconfig_window::archive_load(archive arch) {
 
 int autoconfig_window::ui_handle_mouse(const mouse *m) {
     ui.begin_widget(pos);
-    int result = ui::handle_mouse(m);
+    bool handled = ui::handle_mouse(m);
     
-    if (allow_rmb_goback) {
+    if (allow_rmb_goback && handled) {
         const hotkeys *h = hotkey_state();
         if (input_go_back_requested(m, h)) {
             window_go_back();
+            ui.end_widget();
             return 0;
         }
     }
     
     ui.end_widget();
 
-
-    return result;
+    return handled ? 1 : 0;
 }
 
 void autoconfig_window::before_mission_start() {

@@ -91,6 +91,7 @@ namespace game_features {
     game_feature gameopt_last_player{ "gameopt_last_player", "", "" };
     game_feature gameopt_language { "gameopt_language", "", "" };
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "" };
+    game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "" };
     game_feature gameplay_brewery_requires_water{ "gameplay_brewery_requires_water", "#TR_CONFIG_BREWERY_REQUIRES_WATER", true };
     game_feature gameplay_conservatory_helps_dance_school{ "gameplay_conservatory_helps_dance_school", "#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", true };
