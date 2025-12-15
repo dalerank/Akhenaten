@@ -374,6 +374,8 @@ bool game_init(game_opts opts) {
     }
 
     mods_init();
+    mods_load();
+    mods_remount();
 
     if (!!(opts & game_opt_sound)) {
         g_sound.init();

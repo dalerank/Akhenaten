@@ -108,6 +108,7 @@ namespace game_features {
     extern game_feature gameopt_last_player;
     extern game_feature gameopt_language;
     extern game_feature gameopt_last_save_filename;
+    extern game_feature gameopt_enabled_mods;
     extern game_feature gameopt_last_game_version;
     extern game_feature gameplay_change_hasanimals;
     extern game_feature gameplay_brewery_requires_water;

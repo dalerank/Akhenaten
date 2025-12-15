@@ -6,6 +6,9 @@
 #include "graphics/imagepak_holder.h"
 #include "core/log.h"
 #include "js/js.h"
+#include "game/game_config.h"
+#include "core/settings_vars.h"
+#include "content/vfs.h"
 
 flat_map<xstring, mod_info, 32> g_mods_list;
 
@@ -31,6 +34,7 @@ void mods_set_enabled(xstring name, bool enabled) {
         return;
     }
     it->second.enabled = enabled;
+    mods_save();
 }
 
 void mods_toggle(xstring name) {
@@ -40,6 +44,7 @@ void mods_toggle(xstring name) {
     }
 
     it->second.enabled = !it->second.enabled;
+    mods_save();
 }
 
 void mods_remount() {
@@ -79,6 +84,8 @@ void mods_remount() {
             }
         }
     }
+
+    mods_save();
 }
 
 void mods_init() {
@@ -163,4 +170,28 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
     }
 
     return {};
+}
+
+void mods_save() {
+    std::string enabled_mods;
+    for (const auto &it : g_mods_list) {
+        if (it.second.enabled) {
+            enabled_mods.append(it.first.c_str());
+            enabled_mods.append(",");
+        }
+    }
+    game_features::gameopt_enabled_mods = enabled_mods.c_str();
+    game_features::save();
+}
+
+void mods_load() {
+    xstring enabled_mods = game_features::gameopt_enabled_mods.to_string();
+
+    svector<bstring64, 128> mod_names;
+    string_to_array_t(mod_names, enabled_mods.c_str(), ',');
+    
+    // Restore enabled status for each mod
+    for (const auto &name : mod_names) {
+        mods_set_enabled(name.c_str(), true);
+    }
 }
