@@ -26,6 +26,9 @@ private:
     uint8_t pack;
     uint16_t useridx;
 
+    static uint16_t max_seen_imgid;
+    static uint16_t max_seen_useridx;
+
     int version;
     size_t groups_num;
     std::array<bmp_name, PAK_GROUPS_MAX> bmp_names;
@@ -42,12 +45,12 @@ public:
     xstring name;
     std::vector<atlas_data_t> atlas_pages;
 
-    int entries_num;
+    uint16_t entries_num;
     std::vector<image_t> images_array;
 
     int global_image_index_offset = 0;
 
-    imagepak(uint8_t idx, xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
+    imagepak(uint8_t ipack, xstring pak_name, int starting_index, bool system_sprites = false, bool fonts = false, bool custom = false);
     ~imagepak();
 
     span_const<bmp_name> names();
@@ -63,7 +66,13 @@ public:
     inline uint8_t get_pack() const { return pack; }
     const image_t* get_image(int id, bool relative = false);
     bool loaded_system_sprites() const { return should_load_system_sprites; }
+    static void useridx_update(uint16_t index);
+    static uint16_t get_max_useridx() { return max_seen_useridx; }
+
+    static void update_max_imgid(uint16_t imgid);
+    static uint16_t get_maxseen_imgid() { return max_seen_imgid; }
 
     static int get_entries_num(xstring pak_name);
+
     void cleanup_and_destroy();
 };

@@ -9,6 +9,8 @@ struct mod_info {
     xstring path;
     xstring name;
     xstring desc;
+    uint16_t useridx;
+    uint16_t start_index;
     svector<xstring, 16> scripts;
     bool enabled = false;
 

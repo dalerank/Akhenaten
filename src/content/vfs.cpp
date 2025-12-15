@@ -43,6 +43,17 @@ void log_io(pcstr fmt, Args ... args) {
     logs::info(fmt, args...);
 }
 
+namespace detail {
+    bool file_exists(pcstr filename) {
+        path fspath = path(filename).resolve();
+        if (fspath.empty()) {
+            return false;
+        }
+
+        return std::filesystem::exists(fspath.c_str());
+    }
+}
+
 vfs::path extract_pack_path(const vfs::path &path) {
     vfs::path result;
     result = path;
@@ -212,15 +223,6 @@ void file_remove_extension(char * filename) {
     }
 }
 
-bool file_exists(pcstr filename) {
-    path fspath = path(filename).resolve();
-    if (fspath.empty()) {
-        return false;
-    }
-
-    return std::filesystem::exists(fspath.c_str());
-}
-
 bool file_remove(pcstr filename) {
     bool res = platform_file_manager_remove_file(filename);
     sync_em_fs();
@@ -243,7 +245,7 @@ void umount_pack(pcstr filename) {
 }
 
 bool mount_pack(pcstr filename) {
-    if (!vfs::file_exists(filename)) {
+    if (!file_exists(filename)) {
         return false;
     }
 

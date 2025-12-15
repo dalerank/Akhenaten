@@ -7,7 +7,9 @@
  * @file
  * I/O functions.
  */
-int io_read_sgx_entries_num(vfs::path filepath);
+int io_read_sg3_entries_num(vfs::path filepath);
+
+int io_read_sgx_entries_num(vfs::path filename);
 
 /**
  * Reads the entire file into the buffer

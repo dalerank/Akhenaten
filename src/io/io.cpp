@@ -1,9 +1,10 @@
 #include "io.h"
 
 #include "content/vfs.h"
+#include "content/zipreader.hpp"
 #include "platform/platform.h"
 
-int io_read_sgx_entries_num(vfs::path filepath) {
+int io_read_sg3_entries_num(vfs::path filepath) {
     vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
         return 0;
@@ -30,6 +31,22 @@ int io_read_sgx_entries_num(vfs::path filepath) {
     sgx_header.entries_num += 1;
 
     return sgx_header.entries_num;
+}
+
+int io_read_sgx_entries_num(vfs::path filename) {
+    vfs::ZipArchive archive(filename);
+    if (!archive.isValid()) {
+        return 0;
+    }
+        
+    const auto &entries = archive.entries();
+    int png_count = 0;
+    for (const auto &entry : entries) {
+        if (vfs::file_has_extension(entry.c_str(), "png")) {
+            png_count++;
+        }
+    }
+    return png_count;
 }
 
 int io_read_file_into_buffer(vfs::path filepath, int localizable, buffer* buf, int max_size) {

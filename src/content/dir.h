@@ -25,8 +25,7 @@ struct dir_listing {
 namespace vfs {
 
 struct path : public bstring256 {
-    template<typename ...Args>
-    inline path(Args &&...args) : bstring256(std::forward<Args>(args)...) {
+    void unify() {
         bstring256 tmp = *this;
         clear();
         tmp.replace('\\', '/'); // Replace backslashes with slashes
@@ -52,17 +51,29 @@ struct path : public bstring256 {
         replace('\\', '/'); // Replace backslashes with slashes
     }
 
+    template<typename ...Args>
+    path(Args &&...args) : bstring256(std::forward<Args>(args)...) {
+        unify();
+    }
+
     path &operator=(pcstr str) {
         clear();
         append(str);
-        replace('\\', '/'); // Replace backslashes with slashes
+        unify();
         return *this;
     }
 
     path &operator=(const std::string &str) {
         clear();
         append(str.c_str());
-        replace('\\', '/'); // Replace backslashes with slashes
+        unify();
+        return *this;
+    }
+
+    path &operator=(const xstring &str) {
+        clear();
+        append(str.c_str());
+        unify();
         return *this;
     }
 

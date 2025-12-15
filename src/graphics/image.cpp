@@ -68,11 +68,14 @@ bool image_load_paks() {
             continue;
         }
 
+        imagepak::useridx_update(pakidx);
+
         const int pack_entries = imagepak::get_entries_num(imgpak.name);
         if (pack_entries > 0) {
             imgpak.entries_num = pack_entries;
+            imagepak::update_max_imgid(imgpak.index + imgpak.entries_num);  
         }
-  
+
         if (imgpak.delayed) {
             continue;
         }
@@ -81,7 +84,7 @@ bool image_load_paks() {
         if (imgpak.custom) {
             imgpak.entries_num = imgpak.handle->get_entry_count();
         }
-        // Check if pack loaded successfully
+
         if (imgpak.handle && imgpak.handle->image_ids().size() == 0) {
             logs::error("image_load_paks: pack %d (%s) loaded but has 0 groups", pakidx, imgpak.name.c_str());
         }
