@@ -23,7 +23,6 @@ js_State *js_vm_state();
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_game_constants(js_State *J) {
     _R(FILE_TYPE_SAVED_GAME)
-    _R(FILE_DIALOG_LOAD)
 
     // repeated for alias id
     _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)

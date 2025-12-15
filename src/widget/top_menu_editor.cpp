@@ -175,13 +175,13 @@ static void menu_file_new_map(int param) {
 static void menu_file_load_map(int param) {
     clear_state();
     window_editor_map_show();
-    window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
+    window_file_dialog_load_show(FILE_TYPE_SCENARIO);
 }
 
 static void menu_file_save_map(int param) {
     clear_state();
     window_editor_map_show();
-    window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
+    window_file_dialog_save_show(FILE_TYPE_SCENARIO);
 }
 
 static void menu_file_exit_editor(int param) {

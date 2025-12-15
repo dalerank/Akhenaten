@@ -65,7 +65,7 @@ void ui::window_dinasty_menu::init() {
     });
 
     ui["btnload"].onclick([] {
-        window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
+        window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
     });
 
     ui["btncustom"].onclick([] {
