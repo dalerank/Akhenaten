@@ -47,11 +47,32 @@ void mods_remount() {
         if (it.second.enabled) {
             vfs::mount_pack(it.second.path.c_str());
 
+            auto &modpack = g_image_data->pak_list[it.second.useridx];            
+            if (!modpack.handle) {
+                modpack.entries_num = it.second.entries_num;
+                modpack.index = it.second.start_index;
+                modpack.id = it.second.useridx;
+                modpack.name = it.second.name;
+                modpack.delayed = true;
+                modpack.custom = true;
+            }
+
             for (const auto &s: it.second.scripts) {
                 js_vm_reload_file(s.c_str());
             }
         } else {
             vfs::umount_pack(it.second.path.c_str());
+
+            auto &modpack = g_image_data->pak_list[it.second.useridx];
+            if (modpack.handle) {
+                delete modpack.handle;
+
+                modpack.entries_num = 0;
+                modpack.index = 0;
+                modpack.id = 0;
+                modpack.delayed = true;
+                modpack.name = xstring();
+            }
 
             for (const auto &s : it.second.scripts) {
                 js_vm_reload_file(s.c_str());
@@ -77,11 +98,10 @@ void mods_init() {
                 mod.name = mod_name;
                 mod.useridx = imagepak::get_max_useridx() + 1;
                 mod.start_index = imagepak::get_maxseen_imgid() + 1;
+                mod.entries_num = imagepak::get_entries_num(mod.path);
 
                 imagepak::useridx_update(mod.useridx);
-
-                const int enteries_num = imagepak::get_entries_num(mod.path);
-                imagepak::update_max_imgid(mod.start_index + enteries_num);
+                imagepak::update_max_imgid(mod.start_index + mod.entries_num);
 
                 vfs::path full_path = vfs::path::resolve(mod.path.c_str()).resolve();
                 if (full_path.empty()) {
