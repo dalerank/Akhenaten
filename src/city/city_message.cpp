@@ -192,6 +192,13 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
         msg->req_city_past = -1;
     }
 
+    if (event->image.valid()) {
+        int image_id = event->image.tid();
+        if (image_id >= 0) {
+            msg->background_img = image_id;
+        }
+    }
+
     // default for sound info / template
 
     if (use_popup && window_is(WINDOW_CITY))

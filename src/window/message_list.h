@@ -20,9 +20,6 @@ namespace ui {
 
         void draw_message(int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font);
 
-        scrollable_list *panel = nullptr;
         close_callback *_close_cb;
-
-        int num_messages_in_view;
     };
 }

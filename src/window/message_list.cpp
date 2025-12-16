@@ -22,8 +22,6 @@ ui::message_list_window g_message_list_window;
 
 void ui::message_list_window::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
-
-    num_messages_in_view = arch.r_int("num_messages_in_view", 15);
 }
 
 static void button_message_handler(int param1, int param2) {
@@ -47,29 +45,30 @@ void ui::message_list_window::init() {
     autoconfig_window::init();
     city_message_sort_and_compact();
 
-    if (!panel) {
-        scrollable_list_ui_params ui_params;
-        ui_params.blocks_x = ui["messages_area"].size.x;
-        ui_params.blocks_y = ui["messages_area"].size.y;
-        ui_params.buttons_size_y = ui["message_row"].size.y;
-        ui_params.draw_scrollbar_always = true;
-        ui_params.view_items = num_messages_in_view;
-        ui_params.use_file_finder = false;
-        ui_params.files_dir = "";
+    auto messages_list = ui["messages_list"].dcast_scrollable_list();
+    if (messages_list) {
+        messages_list->clear();
+        messages_list->onrefill([] (escrollable_list::entry_data_vec &r) {
+            int total_messages = city_message_count();
+            for (int i = 0; i < total_messages; i++) {
+                r.push_back({ "", (uintptr_t)i });
+            }
+        });
 
-        panel = new scrollable_list(button_message_handler, button_delete_handler, button_none, button_none, ui_params);
-    }
-    
-    panel->clear_entry_list();
-    int total_messages = city_message_count();
-    for (int i = 0; i < total_messages; i++) {
-        const city_message &msg = city_message_get(i);      
-        panel->add_entry("", (void*)&msg);
-    }
+        messages_list->onclick_ex_item([] (escrollable_list::entry_data *r) {
+            if (!r) {
+                return;
+            }
 
-    panel->set_custom_render_func([this] (int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
-        this->draw_message(index, flags, entry, pos, font);
-    });
+            size_t index = (size_t)r->user_data;
+            button_message_handler(index, 0);
+        });
+
+        messages_list->onrender_item([this] (int index, int flags, const scrollable_list::entry_data &entry, vec2i pos, e_font font) {
+            this->draw_message(index, flags, entry, pos, font);
+        });
+    }
+    messages_list->refill(); 
 
     ui["btnhelp"].onclick([this] {
         window_message_dialog_show("message_dialog_messages", -1, window_city_draw_all);
@@ -93,8 +92,8 @@ void ui::message_list_window::draw_message(int index, int flags, const scrollabl
     int y_text = pos.y + message_row.pos.y;
     int x_text = pos.x + message_row.pos.x;
 
-    const city_message& msg = *(const city_message*)entry.user_data;
-    const int mm_id = city_message_get_text_id(index);
+    const city_message &msg = city_message_get((int)entry.user_data);
+    const int mm_id = city_message_get_text_id((int)entry.user_data);
     const lang_message& lang_msg = lang_get_message(mm_id);
 
     int image_type_offset = 0;
@@ -114,8 +113,11 @@ void ui::message_list_window::draw_message(int index, int flags, const scrollabl
     if (msg.eventmsg_body_id != -1) {
         auto text = g_scenario.events.msg_text(msg.eventmsg_title_id, 0);
         text_draw(text, x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
-    } else if (!lang_msg.title.text.empty()) {
-        text_draw(lang_msg.title.text.c_str(), x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
+    } else {
+        const xstring mm_msg = lang_get_message_id(msg.MM_text_id);
+        const lang_message &model_msg = lang_get_message(mm_msg);
+ 
+        text_draw(model_msg.title.text.c_str(), x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
     }
 }
 
@@ -126,27 +128,13 @@ int ui::message_list_window::draw_background(UiFlags flags) {
 void ui::message_list_window::ui_draw_foreground(UiFlags flags) {
     window_city_draw_all();
 
-    ui.begin_widget(pos);
-    
-    ui.draw();
-    panel->ui_params.pos = ui["messages_area"].screen_pos();
-    panel->draw();
-
+    ui.begin_widget(pos);    
+    ui.draw();    
     ui.end_widget();
 }
 
 int ui::message_list_window::ui_handle_mouse(const mouse* m) {
     int result = autoconfig_window::ui_handle_mouse(m);
-
-    ui.begin_widget(pos);
-    vec2i scrpos = ui["messages_area"].screen_pos();
-    mouse m_dialog = *m;
-    m_dialog -= scrpos;
-    if (panel->input_handle(&m_dialog)) {
-        //button_message_handler();
-        //button_delete_handler();
-    }
-    ui.end_widget();
 
     const hotkeys *h = hotkey_state();
     if (input_go_back_requested(m, h)) {
