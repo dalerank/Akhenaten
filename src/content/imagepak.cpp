@@ -461,7 +461,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         ++groups_num;
     });
 
-    assert(global_image_index_offset >= 30000);
+    assert(global_image_index_offset >= 25000);
     images_array.reserve(entries_num);
 
     svector<offset_ids, PAK_GROUPS_MAX> offset_ids_vec;

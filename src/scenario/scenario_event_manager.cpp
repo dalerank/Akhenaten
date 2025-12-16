@@ -148,6 +148,21 @@ void event_manager_t::create_trade_city_under_siege(int tag, int months_initial)
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
+void event_manager_t::create_foreign_army_attack_warning(int tag, int8_t sender_faction) {
+    auto& event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING;
+    event.time.year = game.simtime.years_since_start();
+    event.time.month = game.simtime.month;
+    event.tag_id = tag;
+    event.location_fields = { -1, -1, -1, -1 };
+    event.sender_faction = sender_faction;
+    event.event_id = event_id;
+    event.event_state = e_event_state_initial;
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
 void event_manager_t::execute_event(int tag) {
     auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
 
@@ -172,6 +187,22 @@ void event_manager_t::set_request_reasons(int tag, uint16_t r1, uint16_t r2, uin
 
     if (it != g_scenario_events.event_list.end()) {
         it->reasons = { r1, r2, r3, r4 };
+    }
+}
+
+void event_manager_t::set_request_image(int tag, xstring image) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it != g_scenario_events.event_list.end()) {
+        it->image = image_desc::resolve(image);
+    }
+}
+
+void event_manager_t::set_request_sender_faction(int tag, int8_t sender_faction) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it != g_scenario_events.event_list.end()) {
+        it->sender_faction = sender_faction;
     }
 }
 
@@ -587,9 +618,9 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT8, &event.subtype);
         iob->bind(BIND_SIGNATURE_INT8, &event.__unk15_i8); // 07 --> 05
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk16);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk17);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk18);
-        iob->bind(BIND_SIGNATURE_INT16, &event.__unk19);
+        iob->bind(BIND_SIGNATURE_INT16, &event.image.pack);
+        iob->bind(BIND_SIGNATURE_INT16, &event.image.id);
+        iob->bind(BIND_SIGNATURE_INT16, &event.image.offset);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_completed_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_refusal_msgAlt);
         iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);

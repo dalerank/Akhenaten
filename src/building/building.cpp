@@ -145,7 +145,7 @@ bool building_impl::required_resource(e_resource r) const {
 }
 
 int building_impl::stored_amount(e_resource r) const {
-    return base.storage[r];
+    return base.storage.get(r);
 }
 
 resource_vec building_impl::required_resources() const { 

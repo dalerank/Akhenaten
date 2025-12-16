@@ -70,8 +70,6 @@ public:
     [[nodiscard]] const xstring &get_data_directory() const { return get_str("data_directory"); }
     void set_data_directory(pcstr value);
 
-    [[nodiscard]] const xstring &get_extdata_directory() const { return get_str("extdata_directory"); }
-
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
 

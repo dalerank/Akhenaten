@@ -11,7 +11,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-static bstring512 content_dir, content_extdir;
+static bstring512 content_dir;
 
 namespace vfs {
 
@@ -175,15 +175,6 @@ int platform_file_manager_set_base_path(pcstr path) {
 
 pcstr platform_file_manager_get_base_path() {
     return content_dir.c_str();
-}
-
-int platform_file_manager_set_ext_path(pcstr path) {
-    content_extdir = path;
-    return true;
-}
-
-pcstr platform_file_manager_get_ext_path() {
-    return content_extdir.c_str();
 }
 
 } // vfs
