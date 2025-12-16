@@ -114,8 +114,11 @@ void ui::message_list_window::draw_message(int index, int flags, const scrollabl
     if (msg.eventmsg_body_id != -1) {
         auto text = g_scenario.events.msg_text(msg.eventmsg_title_id, 0);
         text_draw(text, x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
-    } else if (!lang_msg.title.text.empty()) {
-        text_draw(lang_msg.title.text.c_str(), x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
+    } else {
+        const xstring mm_msg = lang_get_message_id(msg.MM_text_id);
+        const lang_message &model_msg = lang_get_message(mm_msg);
+ 
+        text_draw(model_msg.title.text.c_str(), x_text + message_title.pos.x, y_text + message_title.pos.y, font, 0);
     }
 }
 
