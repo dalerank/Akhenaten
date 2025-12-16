@@ -78,7 +78,6 @@ void sig_handler(int signal_num) {
 #if defined(GAME_PLATFORM_WIN)
     if (signal_num == SIGABRT && IsDebuggerPresent()) {
         signal(SIGABRT, SIG_DFL);
-        abort();
         return;
     }
 #endif
@@ -98,17 +97,17 @@ void sig_handler(int signal_num) {
 namespace logs {
 
 void initialize() {
-    signal(SIGSEGV, sig_handler);
-    signal(SIGABRT, sig_handler);
-
-#if defined(GAME_PLATFORM_WIN) && defined(_DEBUG)
-    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
-    _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-#endif
-
     SDL_LogSetOutputFunction(Logger::write, nullptr);
     SDL_LogSetAllPriority(get_log_priority());
+
+#if defined(GAME_PLATFORM_WIN)
+    if (!IsDebuggerPresent()) {
+        return;
+    }
+#endif 
+
+    signal(SIGSEGV, sig_handler);
+    signal(SIGABRT, sig_handler);
 }
 
 void switch_output(pcstr folder) {

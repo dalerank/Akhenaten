@@ -110,7 +110,7 @@ void mods_init() {
                 imagepak::useridx_update(mod.useridx);
                 imagepak::update_max_imgid(mod.start_index + mod.entries_num);
 
-                vfs::path full_path = vfs::path::resolve(mod.path.c_str()).resolve();
+                vfs::path full_path = vfs::path::resolve(mod.path.c_str());
                 if (full_path.empty()) {
                     continue;
                 }
