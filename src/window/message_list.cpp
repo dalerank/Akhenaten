@@ -51,7 +51,7 @@ void ui::message_list_window::init() {
         messages_list->onrefill([] (escrollable_list::entry_data_vec &r) {
             int total_messages = city_message_count();
             for (int i = 0; i < total_messages; i++) {
-                r.push_back({ "", (void *)i });
+                r.push_back({ "", (uintptr_t)i });
             }
         });
 
@@ -60,7 +60,7 @@ void ui::message_list_window::init() {
                 return;
             }
 
-            int index = (int)r->user_data;
+            size_t index = (size_t)r->user_data;
             button_message_handler(index, 0);
         });
 

@@ -31,7 +31,7 @@ void ui::mods_window::init() {
         mods->clear();
         mods->onrefill([] (escrollable_list::entry_data_vec &r) {
             for (auto &mod : g_mods_list) {
-                r.push_back({ mod.second.name, nullptr });
+                r.push_back({ mod.second.name, 0 });
             }
         });
 
