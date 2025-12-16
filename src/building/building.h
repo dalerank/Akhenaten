@@ -109,6 +109,11 @@ struct building_store : public std::array<resource_value, 4> {
         return dummy;
     }
 
+    inline int get(e_resource r) const {
+        auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
+        return it == end() ? 0 : it->value;
+    }
+
     inline int operator[](e_resource r) const {
         auto it = std::find_if(begin(), end(), [r] (auto &i) { return i.type == r; });
         return it == end() ? 0 : it->value;
