@@ -13,8 +13,8 @@ message_list_window {
         message_row   : dummy({pos[0, 0], size[px(13), 20]})
         message_read_icon : dummy({pos[0, 0]})
         message_month : text({pos[42, 0]})
-        message_year : text({pos[78, 0]})
-        message_title : text({pos[120, 0], size[px(8), 20]})
+        message_year : text({pos[76, 0]})
+        message_title : text({pos[190, 0], size[px(8), 20]})
 
         help_text     : text({margin{left:50, bottom:-45}, size[16 * 26 - 100, -1], text[63, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, multiline:true, wrap:16 * 26 - 100})
         empty_text    : text({margin{left:32, centery:-20}, size[16 * 26 - 48, -1], text[63, 1], enabled:false, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:16 * 26 - 48})
