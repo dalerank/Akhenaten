@@ -247,6 +247,10 @@ static void setup() {
     }
 
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
+    if (g_args.has_window_pos()) {
+        const auto &pos = g_args.get_window_pos();
+        platform_screen_move(pos.x, pos.y);
+    }
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
     image_data_init();                                         // image paks structures init

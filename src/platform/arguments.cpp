@@ -205,6 +205,22 @@ std::optional<arguments::argument_result> handle_size(int argc, char **argv, int
 }
 ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_size, "--size WxH", "window size. Example: 800x600");
 
+std::optional<arguments::argument_result> handle_pos(int argc, char **argv, int current_index) {
+    if (SDL_strcmp(argv[current_index], "--pos") == 0) {
+        if (current_index + 1 < argc) {
+            vec2i pos{ 10, 10 };
+            if (SDL_sscanf(argv[current_index + 1], "%d,%d", &pos.x, &pos.y) == 2) {
+                return arguments::argument_result("window_pos", bvariant(pos), 2);
+            } else {
+                app_terminate("Option --pos must should has fixed x, y format");
+            }
+        } else {
+            app_terminate("Option --pos must should has fixed x,y format");
+        }
+    }
+    return std::nullopt;
+}
+ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_pos, "--pos x,y", "window pos. Example: 10,10");
 
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();

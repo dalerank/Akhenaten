@@ -73,6 +73,9 @@ public:
     [[nodiscard]] vec2i get_window_size() const;
     void set_window_size(vec2i value);
 
+    [[nodiscard]] vec2i get_window_pos() const { return get_arg("window_pos").as_vec2i(); }
+    [[nodiscard]] bool has_window_pos() const { return has_arg("window_pos"); }
+
     [[nodiscard]] bool use_crashdlg() const { return is("crashdlg", true); }
     [[nodiscard]] bool create_fulldmp() const { return is("fulldmp", false); }
     [[nodiscard]] bool should_show_config_window() const { return is("config", false); }
