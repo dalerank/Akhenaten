@@ -33,17 +33,14 @@ struct path_uri {
 
 std::map<size_t, path_uri> path_cache;
 
-vfs::path content_internal_path(pcstr path, pcstr dir) {
-    if (!dir) {
-        dir = platform_file_manager_get_base_path();
-    }
-
+vfs::path content_internal_path(pcstr path) {
+    pcstr dir = platform_file_manager_get_base_path();
     vfs::path corrected_path(dir, "/", path);
     return corrected_path;
 }
 
 void content_cache_real_file_paths(pcstr f) {
-    vfs::path folder = content_internal_path(f, nullptr);
+    vfs::path folder = content_internal_path(f);
     if (!fs::exists(folder.c_str()) || !fs::is_directory(folder.c_str())) {
         return;
     }
@@ -179,8 +176,8 @@ static int correct_case(pcstr dir, char *filename, int type) {
     return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
 }
 
-vfs::path content_path(pcstr path, pcstr extdir) {
-    vfs::path uri_path = content_internal_path(path, extdir);
+vfs::path content_path(pcstr path) {
+    vfs::path uri_path = content_internal_path(path);
     vfs::path orig_path = uri_path;
     vfs::path lower = uri_path.tolower();
     const size_t lhash = lower.hash();
@@ -197,34 +194,37 @@ vfs::path content_path(pcstr path, pcstr extdir) {
 vfs::path vfs::path::resolve() {
 #ifndef GAME_PLATFORM_ANDROID
     pcstr filepath = data();
-    vfs::path corrected_filename = content_path(filepath);
-    bool exists = std::filesystem::exists(corrected_filename.c_str());
-    if (exists) {
-        return corrected_filename;
-    }
-
+    
+    // Check if the path is absolute
     bool is_absolute_path = false;
     if (platform.is_windows()) {
         is_absolute_path = std::isalpha(*filepath) && (*(filepath + 1) == ':') && ((*(filepath + 2) == '/') || (*(filepath + 2) == '\\'));
     } else {
         is_absolute_path = (*filepath) == '/';
     }
-
-    vfs::path corrected_ext_filename;
-    if (!is_absolute_path) {
-        pcstr extpath = platform_file_manager_get_ext_path();
-        corrected_ext_filename = content_path(filepath, (extpath && *extpath) ? extpath : "./");
-        corrected_ext_filename = std::filesystem::absolute(corrected_ext_filename.c_str()).string();
-    } else {
-        corrected_ext_filename = filepath;
+    
+    // For absolute paths, return as-is (normalized)
+    if (is_absolute_path) {
+        return filepath;
+    }
+    
+    // If not found in extdata, try base content_path
+    vfs::path corrected_filename = content_path(filepath);
+    bool exists_in_content = std::filesystem::exists(corrected_filename.c_str());
+    if (exists_in_content) {
+        return corrected_filename;
     }
 
-    exists = std::filesystem::exists(corrected_ext_filename.c_str());
-    if (exists) {
-        return corrected_ext_filename;
+    corrected_filename = vfs::path("./", filepath);
+    bool exists_in_pwd = std::filesystem::exists(corrected_filename.c_str());
+    if (exists_in_pwd) {
+        corrected_filename = std::filesystem::absolute(corrected_filename.c_str()).string().c_str();
+        return corrected_filename;
     }
 
-    return vfs::path();
+    // If file not found anywhere, return base path as fallback
+    // This allows proper error handling in calling code
+    return corrected_filename;
 #else
     vfs::path corrected_filename = content_path(filepath);
     // works with native fs

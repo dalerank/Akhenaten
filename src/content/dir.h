@@ -117,7 +117,7 @@ const dir_listing *dir_append_files_with_extension(pcstr dir, pcstr extension);
 const dir_listing *dir_find_all_subdirectories(pcstr dir);
 std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
 
-vfs::path content_path(pcstr filepath, pcstr extdir = nullptr);
+vfs::path content_path(pcstr filepath);
 
 void content_cache_real_file_paths(pcstr folder);
 void content_cache_paths();

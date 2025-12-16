@@ -29,9 +29,6 @@ enum {
 int platform_file_manager_set_base_path(pcstr path);
 pcstr platform_file_manager_get_base_path();
 
-int platform_file_manager_set_ext_path(pcstr path);
-pcstr platform_file_manager_get_ext_path();
-
 /**
  * Gets the contents of a directory by the specified extension
  * @param dir The directory to search on, or null if base directory
