@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
+static const char* ASSETS_DIR_NAME = "Assets";
+
 static enum {
     ASSETS_LOCATION_NONE = 0,
     ASSETS_LOCATION_DIRECTORY = 1,

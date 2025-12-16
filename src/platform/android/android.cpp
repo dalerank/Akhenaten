@@ -100,6 +100,7 @@ int android_set_base_path(const char *path)
     return result;
 }
 
+pcstr ASSETS_DIRECTORY = "Assets";
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
 {
     if (strncmp(dir, ASSETS_DIRECTORY, strlen(ASSETS_DIRECTORY)) == 0) {
