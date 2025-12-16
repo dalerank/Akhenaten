@@ -447,16 +447,17 @@ void font_atlas_regenerate() {
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
     int cp_index = 0;
-    if (!vfs::file_exists(symbols_font)) {
+    vfs::path resolved_font_path = symbols_font.resolve();
+    if (!vfs::file_exists(resolved_font_path)) {
         g_font_data.needs_regeneration = false;
         bstring512 message_text;
-        message_text.printf("The specified font symbols file does not exist:%s", symbols_font.c_str());
+        message_text.printf("The specified font symbols file does not exist:%s", resolved_font_path.c_str());
         popup_dialog::show_ok("Data issue", message_text.c_str());
         return;
     }
 
     for (const auto &fconfig : font_configs) {
-        add_symbols_to_font_packer(font_pack, symbols_font.c_str(), fconfig, utf8_symbols, cp_index);
+        add_symbols_to_font_packer(font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
         font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
     }
 
@@ -481,6 +482,7 @@ void font_atlas_regenerate() {
     }
 
     // Finish filling in image and atlas information
+    assert(font_pack.handle->images_array.size() < 2000);
     for (int i = 0; i < font_pack.handle->images_array.size(); i++) {
         image_t &img = font_pack.handle->images_array.at(i);
 
@@ -494,6 +496,9 @@ void font_atlas_regenerate() {
         image_copy_to_atlas(img);
 
         int image_id = font_pack.handle->global_image_index_offset + i;
+        assert(image_id < 0xffff);
+        imagepak::update_max_imgid(image_id);
+
         font_set_letter_id((e_font)img.temp.font_type, img.temp.symdeck, image_id, { img.temp.bearing_x, img.temp.bearing_y });
     }
 
