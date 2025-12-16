@@ -180,10 +180,8 @@ struct event_ph_t {
     int16_t route_fields[4];
     int8_t subtype;
     int8_t __unk15_i8;
-    int8_t __unk16;
-    int8_t __unk17;
-    int16_t __unk18;
-    int16_t __unk19;
+    int16_t __unk16;
+    image_desc image;
     int8_t on_completed_msgAlt;
     int8_t on_refusal_msgAlt;
     int8_t on_tooLate_msgAlt;
@@ -219,7 +217,10 @@ struct event_manager_t {
 
     void create_good_request(int tag, e_resource r, int amount, int months_initial);
     void create_trade_city_under_siege(int tag, int months_initial);
+    void create_foreign_army_attack_warning(int tag, int8_t sender_faction);
     
     void set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4);
     void set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4);
+    void set_request_image(int tag, xstring image);
+    void set_request_sender_faction(int tag, int8_t sender_faction);
 };

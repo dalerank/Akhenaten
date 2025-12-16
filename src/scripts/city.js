@@ -25,8 +25,8 @@ city {
     get_granary : function(building_id) {
         return {
             id: building_id        
-            amount: function(resource_type) { return __granary_get_amount(building_id, resource_type) }    
-            total_stored: function() { return __granary_get_total_stored(building_id) }
+            amount: function(resource_type) { return __granary_get_amount(this.id, resource_type) }    
+            total_stored: function() { return __granary_get_total_stored(this.id) }
         }
     }
 
@@ -34,17 +34,16 @@ city {
         var building_id = __city_get_random_house_id()
         return {
             id: building_id
-            add_fire_damage: function(damage) { __building_add_fire_damage(building_id, damage) }
-            add_collapse_damage: function(damage) { __building_add_collapse_damage(building_id, damage) }
+            add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
+            add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
         }
     }
 
     create_good_request : function(obj) {
         __city_create_good_request(obj)
         return {
-            tag_id: tag_id,
-            months_initial: months_initial,
-            execute: function() { __city_request_execute(tag_id) }
+            tag_id: obj.tag_id
+            execute: function() { __city_request_execute(this.tag_id) }
         }
     }
 
@@ -52,9 +51,20 @@ city {
         __city_event_create_trade_city_under_siege(tag_id, months_initial)
         return {
             tag_id: tag_id
-            months_initial: months_initial
-            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(tag_id, r1, r2, r3, r4) }
-            execute: function() { __city_request_execute(tag_id) }
+            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(this.tag_id, r1, r2, r3, r4) }
+            execute: function() { __city_request_execute(this.tag_id) }
+        }
+    }
+
+    create_foreign_army_attack_warning : function(obj) {
+        __city_event_create_foreign_army_attack_warning(obj)
+        return {
+            tag_id: obj.tag_id
+            set_location_fields: function(l1, l2, l3, l4) { __city_request_set_location_fields(this.tag_id, l1, l2, l3, l4) }
+            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(this.tag_id, r1, r2, r3, r4) }
+            set_sender_faction: function(sender_faction) { __city_request_set_sender_faction(this.tag_id, sender_faction) }
+            set_image: function(image) { __city_request_set_image(this.tag_id, image) }
+            execute: function() { __city_request_execute(this.tag_id) }
         }
     }
 }
