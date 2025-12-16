@@ -238,6 +238,7 @@ void platform_screen_move(int x, int y) {
         g_screen.pos.x = x;
         g_screen.pos.y = y;
         g_screen.centered = 0;
+        SDL_SetWindowPosition(g_screen.window, x, y);
     }
 }
 
