@@ -246,7 +246,6 @@ static void setup() {
         exit(-2);
     }
 
-    vfs::platform_file_manager_set_ext_path(g_args.get_extdata_directory().c_str());
     g_settings.set_cli_fullscreen(g_args.is_fullscreen());
     platform_init_cursors(g_args.get_cursor_scale_percentage()); // this has to come after platform_screen_create,
                                                                // otherwise it fails on Nintendo Switch
