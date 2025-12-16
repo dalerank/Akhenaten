@@ -47,7 +47,7 @@ class scrollable_list {
 public:
     struct entry_data {
         xstring text;
-        void *user_data;
+        uintptr_t user_data;
     };
 
     using onclick_callback = std::function<void(int, int)>;
