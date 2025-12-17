@@ -49,7 +49,7 @@ void ui::records_window::init() {
             str.append(bstring32("D:", record->difficulty));
         }
 
-        panel->add_entry(str.c_str(), (void*)record);
+        panel->add_entry(str.c_str(), (uintptr_t)record);
     }
 
     // Clear and populate panel
