@@ -26,14 +26,16 @@
 declare_console_command_p(start_invasion) {
     e_enemy_type enemy_type = (e_enemy_type)parse_integer_from<bstring32>(is); // 0 type, 1 kingdome, 2 seth natives
     int size = parse_integer_from<bstring32>(is);
-    int invasion_point = parse_integer_from<bstring32>(is);
-    scenario_invasion_start_from_console(ATTACK_TYPE_ENEMIES, enemy_type, size, invasion_point);
+    int tilex = parse_integer_from<bstring32>(is);
+    int tiley = parse_integer_from<bstring32>(is);
+
+    scenario_invasion_start_from_console(ATTACK_TYPE_ENEMIES, enemy_type, size, {tilex, tiley});
 
     events::emit(event_city_warning{ "Started invasion" });
 }
 
 declare_console_command_p(start_invasion_fast) {
-    tile2i tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+    tile2i tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, 150, -1, FORMATION_ATTACK_FOOD_CHAIN, 23, tile2i::invalid);
     if (tile.valid()) {
         events::emit(event_message{ true, "message_barbarians_attack", g_invasions.last_internal_invasion_id, tile.grid_offset() });
     }
@@ -169,7 +171,7 @@ static void determine_formations(int num_soldiers, int* num_formations, int sold
     }
 }
 
-tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id) {
+tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id, tile2i tile_inv) {
     auto &data = g_invasions;
     if (amount <= 0) {
         return tile2i::invalid;
@@ -205,18 +207,22 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
     determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
 
     // determine invasion point
-    if (enemy_type == ENEMY_3_EGYPTIAN) {
-        invasion_tile = scenario_map_entry();
-    } else {
-        if (invasion_point < 0) {
-            auto& lands = g_scenario.invasion_points_land;
-            svector<tile2i, 8> points;
-            std::copy_if(lands.begin(), lands.end(), std::back_inserter(points), [] (auto& p) { return p.valid(); });
-            invasion_tile = points.at(rand() % points.size());
+    if (invasion_point >= 0) {
+        if (enemy_type == ENEMY_3_EGYPTIAN) {
+            invasion_tile = scenario_map_entry();
         } else {
-            invasion_tile = g_scenario.invasion_points_land[invasion_point];
+            if (invasion_point < 0) {
+                auto &lands = g_scenario.invasion_points_land;
+                svector<tile2i, 8> points;
+                std::copy_if(lands.begin(), lands.end(), std::back_inserter(points), [] (auto &p) { return p.valid(); });
+                invasion_tile = points.at(rand() % points.size());
+            } else {
+                invasion_tile = g_scenario.invasion_points_land[invasion_point];
+            }
         }
-    }
+    } else if (invasion_point < 0 && tile_inv.valid()) {
+        invasion_tile = tile_inv;
+    } 
 
     if (!invasion_tile.valid()) {
         invasion_tile = scenario_map_exit();
@@ -326,7 +332,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[warning.invasion_id].amount,
                                                  g_scenario.invasions[warning.invasion_id].from,
                                                  g_scenario.invasions[warning.invasion_id].attack_type,
-                                                 warning.invasion_id);
+                                                 warning.invasion_id, tile2i::invalid);
                 if (invasion_tile.valid()) {
                     events::emit(event_message{ true, "message_barbarians_attack", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
@@ -336,7 +342,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[warning.invasion_id].amount,
                                                  g_scenario.invasions[warning.invasion_id].from,
                                                  g_scenario.invasions[warning.invasion_id].attack_type,
-                                                 warning.invasion_id);
+                                                 warning.invasion_id, tile2i::invalid);
                 if (invasion_tile.valid()) {
                     events::emit(event_message{ true, "message_legion_attacks", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
@@ -352,7 +358,7 @@ void scenario_invasion_process() {
                                                  g_scenario.invasions[i].amount,
                                                  g_scenario.invasions[i].from,
                                                  g_scenario.invasions[i].attack_type,
-                                                 i);
+                                                 i, tile2i::invalid);
                 if (invasion_tile.valid()) {
                     events::emit(event_message{ true, "message_local_uprising", g_invasions.last_internal_invasion_id, invasion_tile.grid_offset() });
                 }
@@ -379,7 +385,7 @@ int map_invasion_point(tile2i point) {
 
 bool scenario_invasion_start_from_kingdome(int size) {
     auto &data = g_invasions;
-    tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_3_EGYPTIAN, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
+    tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_3_EGYPTIAN, size, -1, FORMATION_ATTACK_BEST_BUILDINGS, 24, tile2i::invalid);
     if (invasion_tile.valid()) {
         events::emit(event_message{ true, "message_kingdome_army_attack", data.last_internal_invasion_id, invasion_tile.grid_offset() });
         return true;
@@ -387,11 +393,11 @@ bool scenario_invasion_start_from_kingdome(int size) {
     return false;
 }
 
-void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, int invasion_point) {
+void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, tile2i invation_point) {
     auto &data = g_invasions;
     switch (attack_type) {
     case ATTACK_TYPE_ENEMIES: {
-        tile2i invasion_tile = scenario_start_invasion_impl(enemy_type, size, invasion_point, FORMATION_ATTACK_RANDOM, 23);
+        tile2i invasion_tile = scenario_start_invasion_impl(enemy_type, size, -1, FORMATION_ATTACK_RANDOM, 23, invation_point);
         if (invasion_tile.valid()) {
             events::emit(event_message{ true, "message_barbarians_attack", data.last_internal_invasion_id, invasion_tile.grid_offset() });
         }
@@ -402,7 +408,7 @@ void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_ty
         break;
     }
     case ATTACK_TYPE_NATIVES: {
-        tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, size, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+        tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, size, -1, FORMATION_ATTACK_FOOD_CHAIN, 23, invation_point);
         if (invasion_tile.valid())
             events::emit(event_message{ true, "message_local_wrath_of_seth", data.last_internal_invasion_id, invasion_tile.grid_offset()});
 

@@ -124,6 +124,8 @@ void figure_enemy_spearman::enemy_marching(formation *m) {
 void figure_enemy_spearman::enemy_fighting(formation *m) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman/Fighting");
 
+    base.set_flag(e_figure_flag_inattack);
+
     if (!m->recent_fight) {
         advance_action(ACTION_151_ENEMY_SPEARMAN_INITIAL);
     }
@@ -186,6 +188,7 @@ void figure_enemy_spearman::figure_action() {
     formation *m = formation_get(base.formation_id);
     // int dir = get_missile_direction(m);
     g_city.figures_add_enemy();
+    base.set_flag(e_figure_flag_inattack, false);
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
 
     switch (action_state()) {
@@ -215,6 +218,7 @@ void figure_enemy_spearman::figure_action() {
         break;
 
     case ACTION_155_ENEMY_SPEARMAN_RELOAD:
+        base.set_flag(e_figure_flag_inattack, false);
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             advance_action(ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE);

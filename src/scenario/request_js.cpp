@@ -2,6 +2,7 @@
 
 #include "js/js_game.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_invasion.h"
 #include "core/variant.h"
 
 void ANK_FUNCTION_UNIFIED(__city_create_good_request)(const bvariant_map &args) {
@@ -43,3 +44,10 @@ void __city_request_execute(int tag) {
     g_scenario.events.execute_event(tag);
 }
 ANK_FUNCTION_1(__city_request_execute)
+
+void ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map &args) {
+    e_enemy_type enemy_type = (e_enemy_type)args.n("enemy");
+    int size = args.n("size");
+    tile2i invasion_point = { (int)args.n("tilex"), (int)args.n("tiley") };
+    scenario_invasion_start_from_console(ATTACK_TYPE_ENEMIES, enemy_type, size, invasion_point);
+}

@@ -40,7 +40,7 @@ void figure_slave::figure_action() {
 
 void figure_slave::update_animation() {
     int dir;
-    if (base.action_state == FIGURE_ACTION_150_ATTACK || base.direction == DIR_FIGURE_ATTACK)
+    if (base.action_state == ACTION_150_SLAVE_ATTACK || base.direction == DIR_FIGURE_ATTACK)
         dir = base.attack_direction;
     else if (base.direction < 8)
         dir = base.direction;
@@ -50,7 +50,7 @@ void figure_slave::update_animation() {
     dir = base.figure_image_normalize_direction(dir);
 
     assert(false);
-    if (base.action_state == FIGURE_ACTION_150_ATTACK || base.direction == DIR_FIGURE_ATTACK) {
+    if (base.action_state == ACTION_150_SLAVE_ATTACK || base.direction == DIR_FIGURE_ATTACK) {
         //sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + dir + 104 + 8 * (anim.frame / 2);
     } else if (base.action_state == FIGURE_ACTION_149_CORPSE) {
         //sprite_image_id = image_id_from_group(GROUP_FIGURE_MUSICIAN) + 96 + figure_image_corpse_offset();

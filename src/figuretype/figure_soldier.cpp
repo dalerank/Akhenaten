@@ -96,12 +96,33 @@ int figure::find_mop_up_target() {
 }
 
 void figure_soldier::formation_reset_to_initial(const formation *m) {
-    if (is_attack()) {
+    if (base.in_attack()) {
         return;
     }
 
     base.action_state = ACTION_90_SOLDIER_INITIAL;
     base.wait_ticks = 0;
+}
+
+void figure_soldier::going_to_standard() {
+    advance_action(ACTION_83_SOLDIER_GOING_TO_STANDARD);
+}
+
+void figure_soldier::goback_to_fort() {
+    if (base.in_attack()) {
+        return;
+    }
+    
+    if (base.action_state == FIGURE_ACTION_149_CORPSE) {
+        return;
+    }
+        
+    if (action_state(FIGURE_ACTION_148_FLEEING)) {
+        return;
+    }
+
+    advance_action(FIGURE_ACTION_148_FLEEING);
+    route_remove();
 }
 
 void figure_soldier::update_image(const formation* m, int &dir) {

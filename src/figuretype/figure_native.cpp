@@ -75,22 +75,14 @@ void figure_native::figure_action() {
 
 void figure_native::update_animation() {
     int dir;
-    if (base.action_state == FIGURE_ACTION_150_ATTACK || base.direction == DIR_FIGURE_ATTACK)
-        dir = base.attack_direction;
-    else if (base.direction < 8)
+    if (base.direction < 8) {
         dir = base.direction;
-    else {
+    } else {
         dir = base.previous_tile_direction;
     }
     dir = base.figure_image_normalize_direction(dir);
 
-    if (base.action_state == FIGURE_ACTION_150_ATTACK) {
-        if (base.attack_image_offset >= 12)
-            base.main_image_id = 393 + dir + 8 * ((base.attack_image_offset - 12) / 2);
-        else {
-            base.main_image_id = 393 + dir;
-        }
-    } else if (base.action_state == FIGURE_ACTION_149_CORPSE)
+    if (base.action_state == FIGURE_ACTION_149_CORPSE)
         base.main_image_id = 441 + base.figure_image_corpse_offset();
     else if (base.direction == DIR_FIGURE_ATTACK)
         base.main_image_id = 393 + dir + 8 * (base.animctx.frame / 2);

@@ -10,10 +10,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_labor_seeker);
 
 void figure_labor_seeker::figure_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK:
-        base.figure_combat_handle_attack();
-        break;
-
     case FIGURE_ACTION_149_CORPSE:
         base.figure_combat_handle_corpse();
         break;

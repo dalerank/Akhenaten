@@ -195,7 +195,7 @@ void city_animals_t::move_animals(const formation *m, int attacking_animals, int
             continue;
         }
 
-        if (f->action_state == FIGURE_ACTION_149_CORPSE || f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
             continue;
         }
 
@@ -205,12 +205,7 @@ void city_animals_t::move_animals(const formation *m, int attacking_animals, int
                 f->destination_tile.set(0, 0);
                 figure_herd_roost(f, 4, 8, 22, terrain_mask);
                 if (f->destination_tile.x() != 0 && f->destination_tile.y() != 0) {
-                    auto fanimal = f->dcast_animal();
-                    if (fanimal) {
-                        fanimal->moveto(f->destination_tile);
-                    } else {
-                        f->advance_action(16);
-                    }
+                    fanimal->moveto(f->destination_tile);
                 }
             } else {
                 fanimal->herd_moved();
@@ -297,7 +292,7 @@ void city_animals_t::update_herd_formation(formation *m) {
     int attacking_animals = 0;
     for (int fig = 0; fig < formation::max_figures_count; fig++) {
         int figure_id = m->figures[fig];
-        if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK)
+        if (figure_id > 0 && figure_get(figure_id)->in_attack())
             attacking_animals++;
     }
 

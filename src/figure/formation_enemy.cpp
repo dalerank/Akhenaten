@@ -554,7 +554,7 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance)
 
     for (figure_id fid : m->figures) {
         figure* f = figure_get(fid);
-        if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->in_attack()) {
             figure* opponent = figure_get(f->opponent_id);
             if (!opponent->is_dead() && ::smart_cast<figure_soldier>(opponent)) {
                 formation_record_fight(m);
@@ -565,7 +565,7 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance)
     if (formation_has_low_morale(m)) {
         for (figure_id fid : m->figures) {
             figure* f = figure_get(fid);
-            if (f->action_state != FIGURE_ACTION_150_ATTACK && f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_148_FLEEING) {
+            if (!f->in_attack() && f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_148_FLEEING) {
                 f->action_state = FIGURE_ACTION_148_FLEEING;
                 f->route_remove();
             }

@@ -3,6 +3,7 @@
 #include "figure_animal.h"
 
 enum e_hyena_action {
+    ACTION_150_HYENA_ATTACK = 150,
     ACTION_196_HYENA_AT_REST = 196,
     ACTION_197_HYENA_MOVING = 197,
     ACTION_199_HYENA_ATTACKING = 199,

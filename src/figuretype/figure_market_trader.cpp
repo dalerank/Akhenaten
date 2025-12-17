@@ -10,10 +10,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_trader);
 
 void figure_market_trader::figure_roaming_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK:
-        base.figure_combat_handle_attack();
-        break;
-
     case FIGURE_ACTION_149_CORPSE:
         base.figure_combat_handle_corpse();
         break;

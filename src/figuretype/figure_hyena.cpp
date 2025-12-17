@@ -124,11 +124,11 @@ void figure_hyena::on_destroy() {
 
 void figure_hyena::update_animation() {
     int dir = base.figure_image_direction();
-    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+    if (action_state(FIGURE_ACTION_149_CORPSE)) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_DEATH) + base.figure_image_corpse_offset();
-    } else if (action_state() == FIGURE_ACTION_150_ATTACK) {
+    } else if (action_state(ACTION_150_HYENA_ATTACK)) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_ATTACK) + 104 + dir + 8 * (base.attack_image_offset / 4);
-    } else if (action_state() == ACTION_196_HYENA_AT_REST) {
+    } else if (action_state(ACTION_196_HYENA_AT_REST)) {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_IDLE) + 152 + dir;
     } else {
         base.main_image_id = image_id_from_group(GROUP_FIGURE_HYENA_WALK) + dir + 8 * base.animctx.frame;

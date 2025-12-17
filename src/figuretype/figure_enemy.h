@@ -23,7 +23,7 @@ public:
     virtual e_figure_type missile_type() const { return FIGURE_NONE; }
     virtual bool ignore_pharaoh_soldiers() const { return false; }
 
-    virtual bool is_attack() const { return action_state() == FIGURE_ACTION_150_ATTACK; }
+    virtual bool is_attack() const { assert(false && "this function should be implemented"); return false; }
     virtual void formation_reset_to_initial(const formation *m) override;
 
     //virtual sound_key phrase_key() const override;
