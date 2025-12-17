@@ -32,6 +32,10 @@ void ui::message_dialog_image::draw_foreground(UiFlags flags) {
 void ui::message_dialog_image::init_data(xstring text_id, int message_id, void (*background_callback)(void)) {
     message_dialog_base::init_data(text_id, message_id, background_callback);
     
+    // Reset background image
+    background_img = 0;
+    background = false;
+    
     // Initialize background image from city message
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(message_id);
@@ -47,8 +51,7 @@ void ui::message_dialog_image::draw_background_image() {
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
 
-    ui["content_text"] = msg.content.text;
-
+    // Draw the background image first
     const image_t *img = nullptr;
     if (background_img) {
         int image_id = background_img;
@@ -64,6 +67,9 @@ void ui::message_dialog_image::draw_background_image() {
         int current_x = (500 - img->width) / 2;
         ctx.img_generic(img, vec2i{ current_x, 96 });
     }
+
+    // Draw the content text (handles event messages and regular messages)
+    draw_content(msg);
 
     draw_foreground_image();
 }

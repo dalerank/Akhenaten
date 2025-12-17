@@ -132,13 +132,29 @@ function mission8_register_animals(ev) {
 }
 
 [event=event_advance_month, mission=mission8]
-function mission8_pharaoh_requested_luxury_goods(ev) {
+function mission8_pharaoh_requested1_luxury_goods(ev) {
 	if (mission.pharaoh_requested_luxury_goods) {
 		return
 	}
 
 	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} pharaoh requested luxury goods", {ev:ev})
 	if (ev.years_since_start < 2 && ev.month < 2) {
+		return
+	}
+
+	mission.pharaoh_requested_luxury_goods = true
+	var request = city.create_good_request({ tag_id: 1, resource: RESOURCE_LUXURY_GOODS, amount: 2, months_initial: 4 })
+	request.execute()
+}
+
+[event=event_advance_month, mission=mission8]
+function mission8_pharaoh_requested2_luxury_goods(ev) {
+	if (mission.pharaoh_requested_luxury_goods) {
+		return
+	}
+
+	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} pharaoh requested luxury goods", {ev:ev})
+	if (ev.years_since_start < 4 && ev.month < 4) {
 		return
 	}
 

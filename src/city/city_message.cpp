@@ -193,7 +193,8 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
     }
 
     if (event->image.valid()) {
-        int image_id = event->image.tid();
+        image_desc tmp_img = event->image;
+        int image_id = tmp_img.tid();
         if (image_id >= 0) {
             msg->background_img = image_id;
         }
