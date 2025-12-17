@@ -3,6 +3,7 @@
 #include "core/buffer.h"
 #include "core/vec2i.h"
 #include "core/svector.h"
+#include "core/hvector.h"
 #include "point.h"
 #include "scenario/map.h"
 #include "core/core_utility.h"
@@ -116,7 +117,7 @@ struct grid_area {
 };
 
 using grid_tiles = std::vector<tile2i>;
-using grid_tiles_sm = svector<tile2i, 32>;
+using grid_tiles_sm = hvector<tile2i, 32>;
 
 void map_grid_init(grid_xx& grid);
 int32_t map_grid_get(grid_xx& grid, uint32_t at);

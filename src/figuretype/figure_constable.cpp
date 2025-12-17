@@ -26,10 +26,10 @@ void figure_constable::figure_before_action() {
 void figure_constable::update_animation() {
     figure_impl::update_animation();
 
-    pcstr anim_key = "walk";
+    xstring anim_key = animkeys().walk;
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK: anim_key = "attack"; break;
-    case FIGURE_ACTION_149_CORPSE: anim_key = "death"; break;
+    case ACTION_150_CONSTABLE_ATTACK: anim_key = animkeys().attack; break;
+    case FIGURE_ACTION_149_CORPSE: anim_key = animkeys().death; break;
     }
 
     image_set_animation(anim_key);

@@ -305,7 +305,7 @@ void figure::figure_combat_handle_attack() {
 void figure::figure_combat_attack_figure_at(int grid_offset) {    
     if (category() <= figure_category_inactive
         || category() >= figure_category_criminal
-        || action_state == FIGURE_ACTION_150_ATTACK) {
+        || in_attack()) {
         return;
     }
 
@@ -323,37 +323,38 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
 
         e_figure_category opponent_category = opponent->category();
         e_figure_category my_category = category();
-        int attack = 0;
-        if (opponent->state != FIGURE_STATE_ALIVE)
-            attack = 0;
-        else if (opponent->action_state == FIGURE_ACTION_149_CORPSE)
-            attack = 0;
-        else if (my_category == figure_category_armed && opponent_category == figure_category_native) {
+        bool attack = false;
+        if (opponent->state != FIGURE_STATE_ALIVE) {
+            attack = false;
+        } else if (opponent->action_state == FIGURE_ACTION_149_CORPSE) {
+            attack = false;
+        } else if (my_category == figure_category_armed && opponent_category == figure_category_native) {
             if (opponent->is_enemy()) {
-                attack = 1;
+                attack = true;
             }
 
         } else if (my_category == figure_category_armed && opponent_category == figure_category_criminal)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_armed && opponent_category == figure_category_hostile)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_hostile && opponent_category == figure_category_citizen)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_hostile && opponent_category == figure_category_armed)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_hostile && opponent_category == figure_category_criminal)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_armed && opponent_category == figure_category_animal)
-            attack = 1;
+            attack = true;
         else if (my_category == figure_category_hostile && opponent_category == figure_category_animal)
-            attack = 1;
+            attack = true;
 
-        if (attack && opponent->action_state == FIGURE_ACTION_150_ATTACK && opponent->num_attackers >= 2)
-            attack = 0;
+        if (attack && in_attack() && opponent->num_attackers >= 2) {
+            attack = false;
+        }
 
         if (attack) {
             action_state_before_attack = action_state;
-            action_state = FIGURE_ACTION_150_ATTACK;
+            acquire_attack();
             opponent_id = opponent_id;
             attacker_id1 = opponent_id;
             num_attackers = 1;
@@ -367,12 +368,13 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             if (attack_direction >= 8)
                 attack_direction = 0;
 
-            if (opponent->action_state != FIGURE_ACTION_150_ATTACK) {
+            if (!opponent->in_attack()) {
                 opponent->action_state_before_attack = opponent->action_state;
-                opponent->action_state = FIGURE_ACTION_150_ATTACK;
+                opponent->acquire_attack();
                 opponent->attack_image_offset = 0;
                 opponent->attack_direction = (attack_direction + 4) % 8;
             }
+
             if (opponent->num_attackers == 0) {
                 opponent->attacker_id1 = id;
                 opponent->opponent_id = id;
@@ -381,6 +383,7 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
                 opponent->attacker_id2 = id;
                 opponent->num_attackers = 2;
             }
+
             return;
         }
         opponent_id = opponent->next_figure;

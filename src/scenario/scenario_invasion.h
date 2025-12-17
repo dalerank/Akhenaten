@@ -64,10 +64,10 @@ int scenario_invasion_count();
 
 bool scenario_invasion_start_from_kingdome(int size);
 
-void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, int invasion_point);
+void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, tile2i invasion_point);
 
 void scenario_invasion_process();
 
 int map_invasion_point(tile2i point);
 
-tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id);
+tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id, tile2i tile_inv);

@@ -21,6 +21,7 @@ city {
     set_advisor_available : __city_set_advisor_available
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
+    start_foreign_army_invasion : __city_start_foreign_army_invasion
 
     get_granary : function(building_id) {
         return {

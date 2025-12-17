@@ -102,11 +102,11 @@ void figure_antelope::update_animation() {
         image_set_animation(animkeys().death);
         break;
 
-    case FIGURE_ACTION_150_ATTACK:
+    //case FIGURE_ACTION_150_ATTACK:
         // TODO: dalerank antelope want to attack anybody
         //advance_action(ACTION_8_ANTELOPE_RECALCULATE);
         //image_set_animation(GROUP_FIGURE_ANTELOPE_ATTACK, 0, 8);
-        break;
+    //    break;
 
     default:
         // In any strange situation load eating/roosting animation

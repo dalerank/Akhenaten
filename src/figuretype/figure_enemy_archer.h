@@ -29,13 +29,12 @@ public:
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
+    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE; }
 
     virtual int8_t missile_attack_value() const { return base_params().missile_attack_value; }
     virtual int8_t missile_delay() const { return base_params().missile_delay;}
     virtual int8_t attack_distance() const { return base_params().attack_distance; }
     virtual e_figure_type missile_type() const override { return base_params().missile_type; }
-
-    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE; }
 
     //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }
@@ -45,6 +44,7 @@ public:
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m)override;
+    virtual void debug_draw() override;
 };
 
 class figure_barbarian_archer : public figure_enemy_archer {

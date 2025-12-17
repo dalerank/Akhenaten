@@ -14,7 +14,7 @@
 // Usage:
 //     hvector<int, 100> vec;  // Can hold up to 100 ints in stack buffer before using heap
 //     vec.push_back(42);
-template<typename T, size_t ItemCount, bool WarnOnFull = true>
+template<typename T, size_t Prealocated, bool WarnOnFull = true>
 class hvector {
 public:
     using value_type = T;
@@ -30,12 +30,10 @@ public:
     using const_reverse_iterator = typename std::pmr::vector<T>::const_reverse_iterator;
     using allocator_type = std::pmr::polymorphic_allocator<T>;
 
-    static constexpr size_t fixed_capacity = ItemCount;
+    static constexpr size_t fixed_capacity = Prealocated;
 
     hvector() : _resource(), _vec(&_resource) {
-    }
-
-    explicit hvector(size_type count) : _resource(), _vec(count, &_resource) {
+        _vec.reserve(fixed_capacity);
     }
 
     hvector(size_type count, const T& value) : _resource(), _vec(count, value, &_resource) {
@@ -273,7 +271,7 @@ public:
     }
 
 private:
-    fixed_memory_resource<T, ItemCount, WarnOnFull> _resource;
+    fixed_memory_resource<T, fixed_capacity, WarnOnFull> _resource;
     std::pmr::vector<T> _vec;
 };
 

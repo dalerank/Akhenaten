@@ -58,6 +58,7 @@ class figure_market_buyer;
 class figure_bricklayer;
 class figure_ferry_boat;
 class figure_carpenter;
+class figure_soldier;
 
 struct animation_t;
 struct figure_static_params;
@@ -107,6 +108,7 @@ enum e_figure_flag {
     e_figure_flag_friendly = 1 << 1,
     e_figure_flag_soldier = 1 << 2,
     e_figure_flag_criminal = 1 << 3,
+    e_figure_flag_inattack = 1 << 4,
 };
 
 class figure {
@@ -246,6 +248,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(market_buyer)
     ALLOW_SMART_CAST_FIGURE(bricklayer)
     ALLOW_SMART_CAST_FIGURE(ferry_boat)
+    ALLOW_SMART_CAST_FIGURE(soldier)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -265,6 +268,13 @@ public:
     inline bool is_criminal() const { return !!(flags & e_figure_flag_criminal); }
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
     inline bool is_soldier() const { return !!(flags & e_figure_flag_soldier); }
+    inline bool in_attack() const { return !!(flags & e_figure_flag_inattack); }
+
+    inline void set_flag(e_figure_flag fl, bool v = true) {
+        if (v) { flags |= fl; }
+        else { flags &= ~fl; }
+    }
+
     bool is_herd();
     bool is_citizen();          
     bool is_non_citizen();
@@ -331,6 +341,7 @@ public:
     void route_remove();
 
     void reset_flags();
+    void acquire_attack();
 
     // image.c
     void image_set_animation(const animation_t &anim);
@@ -534,6 +545,7 @@ public:
     virtual empire_city_handle empire_city() const { return empire_city_handle{}; }
     virtual void formation_reset_to_initial(const formation *m) {}
     virtual void apply_damage(int hit_dmg, figure_id attaker_id) { base.damage += hit_dmg; }
+    virtual void acquire_attack();
 
     static void acquire(e_figure_type e, figure &b);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;

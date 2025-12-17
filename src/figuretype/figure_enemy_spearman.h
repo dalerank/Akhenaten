@@ -29,13 +29,12 @@ public:
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
+    virtual bool is_attack() const override { return base.in_attack(); }
 
     virtual int8_t missile_attack_value() const { return current_params().missile_attack_value; }
     virtual int8_t missile_delay() const { return current_params().missile_delay; }
     virtual int8_t attack_distance() const { return current_params().attack_distance; }
     virtual e_figure_type missile_type() const override { return current_params().missile_type; }
-
-    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE; }
 
     //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }

@@ -31,9 +31,10 @@ public:
     virtual void update_image(const formation *m, int &dir);
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_SOLDIER; }
     virtual bool play_die_sound() override;
-
-    virtual bool is_attack() const { return action_state() == FIGURE_ACTION_150_ATTACK; }
     virtual void formation_reset_to_initial(const formation *m) override;
+
+    virtual void going_to_standard();
+    virtual void goback_to_fort();
 };
 
 class figure_soldier_infantry : public figure_soldier {

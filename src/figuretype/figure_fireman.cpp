@@ -213,7 +213,6 @@ bool figure_fireman::fight_fire() {
     }
 
     switch (base.action_state) {
-    case FIGURE_ACTION_150_ATTACK:
     case FIGURE_ACTION_149_CORPSE:
     case ACTION_70_FIREMAN_CREATED:
     case ACTION_71_FIREMAN_ENTERING_EXITING:

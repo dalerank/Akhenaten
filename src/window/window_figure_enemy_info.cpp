@@ -11,7 +11,7 @@
 struct figure_enemy_info_window : public figure_info_window_t<figure_enemy_info_window> {
     virtual void init(object_info &c) override;
     virtual bool check(object_info &c) override {
-        figure *f = c.figure_get_id() ? figure_get(c) : nullptr;
+        figure *f = c.figure_get();
         return f && f->is_enemy();
     }
 };

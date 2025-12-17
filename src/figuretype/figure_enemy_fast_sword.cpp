@@ -7,6 +7,12 @@
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
+#include "figure/formation.h"
+#include "city/city_buildings.h"
+#include "city/city_figures.h"
+#include "graphics/view/lookup.h"
+#include "dev/debug.h"
+#include "grid/image.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_sword)
@@ -26,6 +32,7 @@ void figure_enemy_fast_sword::figure_action() {
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);
     g_city.figures_add_enemy();
+    base.set_flag(e_figure_flag_inattack, false);
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
 
     switch (action_state()) {
@@ -59,6 +66,7 @@ void figure_enemy_fast_sword::figure_action() {
 void figure_enemy_fast_sword::enemy_fighting(formation *m) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword/EnemyFighting");
 
+    base.set_flag(e_figure_flag_inattack, false);
     if (!m->recent_fight) {
         advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
     }
@@ -199,4 +207,50 @@ void figure_enemy_fast_sword::update_animation() {
     }
 
     image_set_animation(animkey);
+}
+
+void figure_enemy_fast_sword::debug_draw() {
+    if (!(base.draw_mode & e_figure_draw_routing)) {
+        return;
+    }
+
+    if (base.formation_id <= 0) {
+        return;
+    }
+
+    formation *m = formation_get(base.formation_id);
+    if (!m) {
+        return;
+    }
+
+    // Draw target building
+    if (m->destination_building_id > 0) {
+        building *target_building = building_get(m->destination_building_id)->main();
+        if (target_building && target_building->state == BUILDING_STATE_VALID) {
+            tile2i offset = { 0, 0 };
+            int bsize = target_building->size - 1;
+            int city_orientation = city_view_orientation() / 2;
+            switch (city_orientation) {
+            case 0: offset = { 0, bsize }; break;
+            case 1: offset = { 0, 0 }; break;
+            case 2: offset = { bsize, 0 }; break;
+            case 3: offset = { bsize, bsize }; break;
+            }
+            vec2i target_coords = lookup_tile_to_pixel(target_building->tile.shifted(offset));
+
+            auto &command = ImageDraw::create_command(render_command_t::ert_drawtile_full);
+            command.image_id = map_image_at(target_building->tile);
+            command.pixel = target_coords;
+            command.mask = COLOR_LIGHT_RED;
+        }
+    }
+
+    // Draw target figure
+    if (base.target_figure_id > 0) {
+        figure *target_f = figure_get(base.target_figure_id);
+        if (target_f && target_f->is_valid() && !target_f->is_dead()) {
+            vec2i target_coords = lookup_tile_to_pixel(target_f->tile);
+            debug_draw_tile_box(target_coords.x, target_coords.y, COLOR_YELLOW, COLOR_FONT_YELLOW);
+        }
+    }
 }
