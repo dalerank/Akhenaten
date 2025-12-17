@@ -10,7 +10,11 @@ struct image_desc {
     xstring path;
 
     int tid();
-    inline image_desc resolve() { tid(); return *this; }
+
+    inline image_desc resolve() {
+        tid();
+        return *this;
+    }
 
     static image_desc resolve(const xstring &image) {
         image_desc r;
@@ -18,6 +22,11 @@ struct image_desc {
         return r.resolve();
     }
 
-    image_desc operator+(int16_t v) const { return {pack, id, int16_t(offset + v)}; }
-    bool valid() const { return pack || id || offset; }
+    image_desc operator+(int16_t v) const {
+        return {pack, id, int16_t(offset + v)};
+    }
+
+    bool valid() const {
+        return pack || id || offset;
+    }
 };

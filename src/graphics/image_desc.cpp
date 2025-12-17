@@ -1,5 +1,4 @@
 #include "image_desc.h"
-
 #include "image.h"
 
 int image_desc::tid() {
@@ -9,8 +8,8 @@ int image_desc::tid() {
 
     if (!pack && !id && !offset && !path.empty()) {
         auto o = image_desc_from_name(path);
-        pack = o.pack;
-        id = o.id;
+        pack   = o.pack;
+        id     = o.id;
         offset = o.offset;
 
         if (!pack && !id && !offset) {
