@@ -40,7 +40,7 @@ void ui::display_options_window::init(close_callback close_cb) {
         resolutions->onrefill([] (escrollable_list::entry_data_vec& r) {
             auto video_modes = get_video_modes();
             for (const auto &mode : video_modes) {
-                r.push_back({ mode.str.c_str(), nullptr });
+                r.push_back({ mode.str.c_str(), 0 });
             }            
         });
 

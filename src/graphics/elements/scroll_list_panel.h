@@ -77,7 +77,7 @@ public:
 
     void set_file_finder_usage(bool use);
     void clear_entry_list();
-    void add_entry(xstring entry_text, void* user_data = nullptr);
+    void add_entry(xstring entry_text, uintptr_t user_data = 0);
     void change_file_path(const xstring& dir, const xstring& ext);
     void append_files_with_extension(pcstr dir, pcstr ext);
     void refresh_file_finder();

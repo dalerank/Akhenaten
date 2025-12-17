@@ -108,7 +108,7 @@ void scrollable_list::clear_entry_list() {
     manual_entry_list.clear();
 }
 
-void scrollable_list::add_entry(xstring entry_text, void* user_data) {
+void scrollable_list::add_entry(xstring entry_text, uintptr_t user_data) {
     manual_entry_list.push_back({ entry_text, user_data });
     num_total_entries++;
     refresh_scrollbar();
