@@ -253,6 +253,14 @@ void figure_enemy_fast_sword::debug_draw() {
         command.mask = COLOR_LIGHT_BLUE;
     }
 
+    {
+        vec2i target_coords = lookup_tile_to_pixel(m->destination);
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(m->destination);
+        command.pixel = target_coords;
+        command.mask = COLOR_BLUE;
+    }
+
     // Draw target figure
     if (base.target_figure_id > 0) {
         figure *target_f = figure_get(base.target_figure_id);

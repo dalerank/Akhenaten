@@ -48,6 +48,7 @@ struct id_anim_t {
     static const xstring musician_sn;
     static const xstring musician_we;
     static const xstring attack;
+    static const xstring bow_attack;
     static const xstring farmland;
     static const xstring square;
     static const xstring juggler;

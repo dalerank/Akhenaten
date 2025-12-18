@@ -203,21 +203,17 @@ public:
     xstring phrase_key;
     figure_id target_figure_id;
     short targeted_by_figure_id;
-    //unsigned short created_sequence;
-    //unsigned short target_figure_created_sequence;
-    unsigned char num_attackers;
+    uint8_t num_attackers;
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
     vec2i main_cached_pos;
     vec2i cart_cached_pos;
 
-    // 7 bytes 00 00 00 00 00 00 00
-    unsigned char routing_try_reroute_counter;
+    uint8_t routing_try_reroute_counter;
     uint16_t collecting_item_max;
-    unsigned short sender_building_id;
+    building_id sender_building_id;
 
-    // 115 bytes
     uint8_t draw_mode;
     uint32_t flags;
     

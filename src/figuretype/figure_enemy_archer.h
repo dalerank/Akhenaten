@@ -7,8 +7,6 @@ enum e_action_enemy_archer {
     ACTION_152_ENEMY_ARCHER_WAITING = 152,
     ACTION_153_ENEMY_ARCHER_MARCHING = 153,
     ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE = 154,
-    ACTION_155_ENEMY_ARCHER_RELOAD = 155,
-    ACTION_156_ENEMY_ARCHER_SHOOT_AROUND = 156,
 };
 
 class figure_enemy_archer : public figure_enemy {

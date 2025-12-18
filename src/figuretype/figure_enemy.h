@@ -13,6 +13,10 @@ public:
     figure_enemy(figure *f) : figure_impl(f) {}
     virtual figure_enemy *dcast_enemy() override { return this; }
 
+    struct runtime_data_t {
+        tile2i last_target;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_create() override;
     virtual void figure_action() override;
     //virtual void figure_before_action() override;

@@ -52,11 +52,11 @@ void figure_enemy_archer::enemy_initial(formation *m) {
 
         tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
         tile2i destination_tile = m->destination.shifted(formation_t);
-        if (m->recent_fight) {
+        if (m->recent_fight || tile() == destination_tile) {
             advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-        } else if (tile() == destination_tile) {
-            advance_action(ACTION_156_ENEMY_ARCHER_SHOOT_AROUND);
-        } else {
+        } 
+        
+        if (!m->recent_fight && tile() != destination_tile) {
             base.destination_tile = destination_tile;
             int dir = calc_general_direction(tile(), base.destination_tile);
             if (dir > attack_distance()) {
@@ -64,52 +64,16 @@ void figure_enemy_archer::enemy_initial(formation *m) {
             }
         }
     }
-
-    assert(is_archer() || is_mounted_archer() || is_spearman());
-    // missile throwers
-    base.wait_ticks_missile++;
-    target_figure target;
-    if (base.wait_ticks_missile > missile_delay()) {
-        base.wait_ticks_missile = 0;
-        target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4);
-        if (target.fid) {
-            base.attack_image_offset = 1;
-            base.direction = calc_missile_shooter_direction(target.tile, base.destination_tile);
-        } else {
-            base.attack_image_offset = 0;
-        }
-    }
-
-    if (base.attack_image_offset) {
-        e_figure_type missilet = missile_type();
-        assert(missilet != FIGURE_NONE && "archer should has missile");
-        if (missilet == FIGURE_NONE) {
-            missilet = FIGURE_SPEAR;
-        }
-
-        if (base.attack_image_offset == 1) {
-            if (!target.tile.valid()) {
-                map_point_get_last_result(target.tile);
-            }
-
-            figure *f = figure_get(base.target_figure_id);
-            figure_missile::create(base.home_building_id, target.tile, f->tile, missilet);
-            formation_record_missile_fired(m);
-        }
-
-        if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
-            g_sound.play_effect(SOUND_EFFECT_ARROW);
-        }
-
-        base.attack_image_offset++;
-        if (base.attack_image_offset > 100)
-            base.attack_image_offset = 0;
-    }
 }
 
 void figure_enemy_archer::enemy_marching(formation *m) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyArcher/Marching");
     base.wait_ticks--;
+
+    if (city_sound_update_march_enemy()) {
+        g_sound.play_effect(SOUND_EFFECT_MARCHING);
+    }
+
     if (base.wait_ticks <= 0) {
         base.wait_ticks = 50;
 
@@ -131,7 +95,7 @@ void figure_enemy_archer::enemy_marching(formation *m) {
     }
 
     if (base.destination_tile == base.tile) {
-        advance_action(ACTION_156_ENEMY_ARCHER_SHOOT_AROUND);
+        advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
     }
 }
 
@@ -143,13 +107,11 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyArcher/Fighting");
 
     base.set_flag(e_figure_flag_inattack);
+    auto &d = runtime_data();
 
-    if (!m->recent_fight) {
-        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
-    }
-
-    if (city_sound_update_march_enemy()) {
-        g_sound.play_effect(SOUND_EFFECT_MARCHING);
+    if (base.wait_ticks >= 0) {
+        --base.wait_ticks;
+        return;
     }
 
     figure_id target_id = base.target_figure_id;
@@ -178,9 +140,18 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             float dist = tile().dist(b->tile);
             if (dist < attack_distance()) {
                 base.direction = calc_missile_shooter_direction(tile(), b->tile);
-                figure_missile::create(id(), tile(), b->tile, missile_type());
                 base.wait_ticks = missile_delay();
-                advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+                tile2i btile = b->tile;
+                figure_id owner = base.id;
+                tile2i owner_tile = base.tile;
+                e_figure_type missilet = missile_type();
+                int8_t attack_value = missile_attack_value();
+                d.last_target = btile;
+                base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
+                    auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
+                    assert(missile);
+                    missile->runtime_data().missile_attack_value = attack_value;
+                });
                 can_shoot_building = true;
                 return;
             }
@@ -193,9 +164,18 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         float dist = tile().dist(target->tile);
         if (dist < attack_distance()) {
             base.direction = calc_missile_shooter_direction(tile(), target->tile);
-            figure_missile::create(id(), tile(), target->tile, missile_type());
             base.wait_ticks = missile_delay();
-            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            tile2i btile = target->tile;
+            figure_id owner = base.id;
+            tile2i owner_tile = base.tile;
+            e_figure_type missilet = missile_type();
+            int8_t attack_value = missile_attack_value();
+            d.last_target = btile;
+            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
+                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
+                assert(missile);
+                missile->runtime_data().missile_attack_value = attack_value;
+            });
             can_shoot_target = true;
             return;
         }
@@ -226,9 +206,40 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
 
         if (b) {
             base.direction = calc_missile_shooter_direction(tile(), b->tile);
-            figure_missile::create(id(), tile(), b->tile, missile_type());
             base.wait_ticks = missile_delay();
-            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            tile2i btile = b->tile;
+            figure_id owner = base.id;
+            tile2i owner_tile = base.tile;
+            e_figure_type missilet = missile_type();
+            int8_t attack_value = missile_attack_value();
+            d.last_target = btile;
+            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
+                
+                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
+                assert(missile);
+                missile->runtime_data().missile_attack_value = attack_value;
+            });
+            return;
+        }
+    }
+
+    if (!can_shoot_target) {
+        auto result = figure_combat_get_missile_target_for_enemy(&base, attack_distance(), g_city.figures.soldiers < 4);
+        if (result.fid) {
+            figure *f = figure_get(result.fid);
+            base.direction = calc_missile_shooter_direction(tile(), f->tile);
+            base.wait_ticks = missile_delay();
+            tile2i btile = f->tile;
+            figure_id owner = base.id;
+            tile2i owner_tile = base.tile;
+            e_figure_type missilet = missile_type();
+            int8_t attack_value = missile_attack_value();
+            d.last_target = btile;
+            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
+                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
+                assert(missile);
+                missile->runtime_data().missile_attack_value = attack_value;
+            });
             return;
         }
     }
@@ -238,7 +249,7 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         figure *f = nullptr;
         float dist = 100.f;
         map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
-            figure* ftile = map_figure_get(t);
+            figure *ftile = map_figure_get(t);
             int cur_dist = t.dist(tile());
             if (ftile && ftile->is_valid() && cur_dist < dist) {
                 dist = cur_dist;
@@ -248,12 +259,25 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
 
         if (f) {
             base.direction = calc_missile_shooter_direction(tile(), f->tile);
-            figure_missile::create(id(), tile(), f->tile, missile_type());
             base.wait_ticks = missile_delay();
-            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            tile2i btile = f->tile;
+            figure_id owner = base.id;
+            tile2i owner_tile = base.tile;
+            e_figure_type missilet = missile_type();
+            int8_t attack_value = missile_attack_value();
+            d.last_target = btile;
+            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
+                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
+                assert(missile);
+                missile->runtime_data().missile_attack_value = attack_value;
+            });
             return;
         }
     }
+
+    // fallback
+    advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
+    base.target_figure_id = 0;
 }
 
 void figure_enemy_archer::figure_action() {
@@ -291,32 +315,17 @@ void figure_enemy_archer::figure_action() {
     case ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE:
         enemy_fighting(m);
         break;
-
-    case ACTION_155_ENEMY_ARCHER_RELOAD:
-        base.set_flag(e_figure_flag_inattack);
-        base.wait_ticks--;
-        if (base.wait_ticks <= 0) {
-            advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-            base.animctx.frame = 0;
-        }
-        break;
-
-    case ACTION_156_ENEMY_ARCHER_SHOOT_AROUND:
-        enemy_shoot_around(m);
     }
 }
 
 void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
     if (action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE) {
-        animkey = animkeys().attack;
+        animkey = animkeys().bow_attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
     } else if (action_state() == ACTION_153_ENEMY_ARCHER_MARCHING) {
         animkey = animkeys().walk;
-    } else if (action_state() == ACTION_155_ENEMY_ARCHER_RELOAD) {
-        animkey = animkeys().attack;
-        base.animctx.frame = 0;
     }
 
     image_set_animation(animkey);
@@ -365,6 +374,15 @@ void figure_enemy_archer::debug_draw() {
         command.image_id = map_image_at(base.destination_tile);
         command.pixel = target_coords;
         command.mask = COLOR_LIGHT_BLUE;
+    }
+
+    {
+        auto &d = runtime_data();
+        vec2i target_coords = lookup_tile_to_pixel(d.last_target);
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(d.last_target);
+        command.pixel = target_coords;
+        command.mask = COLOR_RED;
     }
 
     // Draw target figure
