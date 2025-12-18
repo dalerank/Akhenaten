@@ -18,7 +18,7 @@ struct enemy_armies_t {
         MAX_ENEMY_ARMIES = 125,
     };
 
-    void clear(void);
+    void clear();
 
     enemy_army data[MAX_ENEMY_ARMIES];
 };

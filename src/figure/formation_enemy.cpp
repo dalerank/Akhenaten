@@ -18,10 +18,12 @@
 #include "grid/routing/routing.h"
 #include "grid/soldier_strength.h"
 #include "grid/terrain.h"
+#include "core/flat_map.h"
 #include "js/js_game.h"
 
 using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
 using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
+using attacked_buildings = flat_map<building_id, bool, 32>;
 
 struct enemy_attack_priority_t {
     stage_attack_rules food_chain;
@@ -209,7 +211,7 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
      }
 };
 
-static void set_enemy_target_building(formation* m) {
+static void set_enemy_target_building(formation* m, attacked_buildings& attackd_buildings) {
     if (m->destination_building_id > 0) {
         building *current_target = building_get(m->destination_building_id);
         if (current_target->state == BUILDING_STATE_VALID && 
@@ -223,11 +225,23 @@ static void set_enemy_target_building(formation* m) {
         attack = (e_formation_attack_type)(random_byte() % FORMATION_ATTACK_RANDOM);
     }
 
+    auto is_building_attacked = [&] (building* b) -> bool {
+        if (!b) return false;
+        building_id main_bid = b->main()->id;
+        auto it = attackd_buildings.find(main_bid);
+        return (it != attackd_buildings.end());
+    };
+
     auto get_best_target = [&] (const stage_attack_weight& weights) {
         building *best_building = nullptr;
         int max_score = -9999;
         for (auto b = building_begin(); b != building_end(); ++b) {
             if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+                continue;
+            }
+
+            // Skip buildings that are already being attacked by other formations
+            if (is_building_attacked(b)) {
                 continue;
             }
 
@@ -250,6 +264,11 @@ static void set_enemy_target_building(formation* m) {
         int min_distance = 9999;
         for (auto b = building_begin(); b != building_end(); ++b) {
             if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+                continue;
+            }
+
+            // Skip buildings that are already being attacked by other formations
+            if (is_building_attacked(b)) {
                 continue;
             }
 
@@ -277,11 +296,8 @@ static void set_enemy_target_building(formation* m) {
     }
 
     if (best_building) {
-        if (best_building->type == BUILDING_STORAGE_YARD) {
-            m->set_destination_building(best_building->tile.shifted(1, 0), best_building->id + 1);
-        } else {
-            m->set_destination_building(best_building->tile, best_building->id);
-        }
+        attackd_buildings.insert({ best_building->id, true });
+        m->set_destination_building(best_building->tile, best_building->id);
     }
 }
 
@@ -439,7 +455,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     } else {
         int halt_duration, advance_duration, regroup_duration;
         if (army->layout == FORMATION_ENEMY_MOB || army->layout == FORMATION_ENEMY12) {
-            switch (m->enemy_legion_index) {
+            switch (m->enemy_batalion_index) {
             case 0:
             case 1:
                 regroup_duration = 2;
@@ -530,8 +546,8 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     } else if (regroup) {
         int layout = army->layout;
         tile2i army_home = army->home;
-        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] + army_home.x();
-        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] + army_home.y();
+        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index] + army_home.x();
+        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index + 1] + army_home.y();
         auto destination = formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset));
         if (destination.valid) {
             formation_set_destination(m, destination.tile);
@@ -539,8 +555,8 @@ static void update_enemy_movement(formation* m, int roman_distance) {
 
     } else if (advance) {
         int layout = army->layout;
-        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] + army->destination.x();
-        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] + army->destination.y();
+        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index] + army->destination.x();
+        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index + 1] + army->destination.y();
         auto destination = formation_enemy_move_formation_to(m, tile2i(x_offset, y_offset));
         if (destination.valid) {
             formation_set_destination(m, destination.tile);
@@ -548,7 +564,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     }
 }
 
-static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance) {
+static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance, attacked_buildings& attackd_buildings) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_batalions()) {
         const auto figure = figure_get<figure_enemy>(m->figure_type);
@@ -614,7 +630,7 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance)
             army->destination = strength_tile.tile;
             army->destination_building_id = 0;
         } else {
-            set_enemy_target_building(m);
+            set_enemy_target_building(m, attackd_buildings);
             formation_enemy_approach_target(m);
 
             army->destination = m->destination;
@@ -622,8 +638,16 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance)
         }
     }
 
-    m->enemy_legion_index = army->num_batalions++;
+    m->enemy_batalion_index = army->num_batalions++;
     m->wait_ticks++;
+
+    if (m->destination_building_id == 0) {
+        set_enemy_target_building(m, attackd_buildings);
+        formation_enemy_approach_target(m);
+
+        army->destination = m->destination;
+        army->destination_building_id = m->destination_building_id;
+    }
 
     m->set_destination_building(army->destination, army->destination_building_id);
     update_enemy_movement(m, *pharaoh_batalion_distance);
@@ -635,11 +659,31 @@ void formation_enemy_update(void) {
     } else {
         enemy_army_calculate_kingdome_influence();
         enemy_armies_clear_formations();
+        
+        // Collect all buildings that are currently being attacked by enemy formations
+        // and update the list as we process each formation to avoid conflicts
+        attacked_buildings attackd_buildings;
+        
+        // First pass: collect existing targets
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
+            formation* m = formation_get(i);
+            if (m->in_use && !m->is_herd && !m->own_batalion && m->destination_building_id > 0) {
+                building* target = building_get(m->destination_building_id);
+                if (target && target->state == BUILDING_STATE_VALID) {
+                    building_id bid = target->main()->id;
+                    auto result = attackd_buildings.insert({ bid, true });
+                    if (!result.second) {
+                        m->destination_building_id = 0;
+                    }
+                }
+            }
+        }
+        
         int pharaoh_batalion_distance = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation* m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->own_batalion) {
-                update_enemy_formation(m, &pharaoh_batalion_distance);
+                update_enemy_formation(m, &pharaoh_batalion_distance, attackd_buildings);
             }
         }
     }

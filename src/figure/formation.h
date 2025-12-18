@@ -115,7 +115,7 @@ struct formation {
 
     /* Enemy-related */
     e_enemy_type enemy_type;
-    int enemy_legion_index;
+    int enemy_batalion_index;
     e_formation_attack_type attack_type;
     int invasion_id;
     int invasion_sequence;
