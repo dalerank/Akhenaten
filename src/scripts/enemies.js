@@ -727,7 +727,7 @@ figure_libian_archer = {
     animations : {
         walk : { pack:PACK_ENEMY_LIBIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_LIBIAN, id:1, max_frames:8, loop:false }
-        bow_attack : { pack:PACK_ENEMY_LIBIAN, id:2, max_frames:12 }
+        bow_attack : { pack:PACK_ENEMY_LIBIAN, id:2, max_frames:12, duration:3, loop:false }
         dagger_attack : { pack:PACK_ENEMY_LIBIAN, id:3, max_frames:7 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }

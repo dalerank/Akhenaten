@@ -85,7 +85,7 @@ void game_debug_show_properties_object(pcstr prefix, figure *f) {
         game_debug_show_property("main_cached_pos", f->main_cached_pos);
         game_debug_show_property("cart_cached_pos", f->cart_cached_pos);
 
-        if (f->dcast()) {
+        if (f->type > 0 && f->dcast()) {
             f->dcast()->debug_show_properties();
         }
 
