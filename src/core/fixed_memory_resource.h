@@ -35,7 +35,7 @@ public:
         if (std::align(align, bytes, currBuffer, _available_fixed_size) == nullptr) {
             if constexpr (WarnOnFull) {
                 printf(
-                    "Local stack buffer exceeded - Max:%zu Free:%zu Alloc:%zu",
+                    "Local stack buffer exceeded - Max:%zu Free:%zu Alloc:%zu\n",
                     FixedSize,
                     _available_fixed_size,
                     bytes);

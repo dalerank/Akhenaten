@@ -39,6 +39,10 @@ int __city_get_random_house_id() {
         }
     });
 
+    if (houses.empty()) {
+        return 0;
+    }
+
     return houses[rand() % houses.size()];
 }
 ANK_FUNCTION(__city_get_random_house_id)
