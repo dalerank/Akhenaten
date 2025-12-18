@@ -912,6 +912,11 @@ void building_storage_yard::spawn_figure() {
         return;
     }
 
+    if (is_enemies_nearby()) {
+        // cant spawn when enemies close to building
+        return;
+    }
+
     building *space = &base;
     for (int i = 0; i < 8; i++) {
         space = space->next();

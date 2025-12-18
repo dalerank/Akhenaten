@@ -39,6 +39,12 @@ bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, 
 
 void building_wood_cutter::spawn_figure() {
     check_labor_problem();
+
+    if (is_enemies_nearby()) {
+        // cant spawn when enemies close to building
+        return;
+    }
+
     if (has_road_access()) {
         common_spawn_labor_seeker(current_params().min_houses_coverage);
         int pct_workers = worker_percentage();
