@@ -77,7 +77,6 @@ SDL_LogPriority get_log_priority() {
 void sig_handler(int signal_num) {
 #if defined(GAME_PLATFORM_WIN)
     if (signal_num == SIGABRT && IsDebuggerPresent()) {
-        signal(SIGABRT, SIG_DFL);
         return;
     }
 #endif
@@ -89,7 +88,6 @@ void sig_handler(int signal_num) {
 
     logs::critical(output_stream.str().c_str());
 #endif // CPPTRACE_ENABLED
-    exit(EXIT_FAILURE);
 }
 
 } // namespace

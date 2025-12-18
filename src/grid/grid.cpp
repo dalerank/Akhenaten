@@ -337,7 +337,7 @@ grid_tiles_sm map_grid_get_tiles_sm(building *b, int radius) {
 }
 
 grid_tiles_sm map_grid_get_adjacent_tiles_sm(building *b, int radius) {
-    building *part = b;
+    building *part = b->main();
     grid_tiles_sm tiles;
 
     while (part) {
