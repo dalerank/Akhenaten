@@ -13,6 +13,7 @@
 #include "graphics/view/lookup.h"
 #include "dev/debug.h"
 #include "grid/image.h"
+#include "grid/grid.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_sword)
@@ -25,6 +26,26 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_nubian_axeman)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_swordman)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_legioner)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_axeman)
+
+tile2i figure_enemy_fast_sword::get_formation_position(formation *m, int figure_index) {
+    if (m->destination_building_id <= 0) {
+        return formation_layout_position(m->layout, figure_index);
+    }
+
+    building *b = building_get(m->destination_building_id);
+    if (!b || b->state != BUILDING_STATE_VALID) {
+        return formation_layout_position(m->layout, figure_index);
+    }
+
+    grid_tiles_sm perimeter_tiles = map_grid_get_adjacent_tiles_sm(b, 1);
+    if (perimeter_tiles.empty()) {
+        return formation_layout_position(m->layout, figure_index);
+    }
+
+    int perimeter_index = figure_index % perimeter_tiles.size();
+    tile2i target_tile = perimeter_tiles[perimeter_index];
+    return target_tile.sub(m->destination);
+}
 
 void figure_enemy_fast_sword::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyFastSword");
@@ -133,7 +154,7 @@ void figure_enemy_fast_sword::enemy_marching(formation *m) {
     if (base.wait_ticks <= 0) {
         base.wait_ticks = 50;
 
-        tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+        tile2i formation_t = get_formation_position(m, base.index_in_formation);
 
         base.destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
@@ -187,7 +208,7 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
         }
     }
 
-    tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+    tile2i formation_t = get_formation_position(m, base.index_in_formation);
     base.destination_tile = m->destination.shifted(formation_t);
 
     int dir = calc_general_direction(tile(), base.destination_tile);

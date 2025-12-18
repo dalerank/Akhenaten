@@ -36,6 +36,7 @@ public:
     virtual void debug_draw() override;
 
     virtual int8_t interval_attack_delay() const { return 100; }
+    tile2i get_formation_position(formation *m, int figure_index);
 };
 
 class figure_barbarian_sword : public figure_enemy_fast_sword {

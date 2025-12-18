@@ -60,10 +60,10 @@ struct grid_area {
 
     template<typename T>
     void for_each_bound(T f) {
-        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++) { f(tile2i(xx, tmin.y())); }
-        for (int yy = tmin.y(), endy = tmax.y(); yy <= endy; yy++) { f(tile2i(tmax.x(), yy)); }
-        for (int xx = tmax.x(), endx = tmin.x(); xx >= endx; xx--) { f(tile2i(xx, tmax.y())); }
-        for (int yy = tmax.y(), endy = tmin.y(); yy >= endy; yy--) { f(tile2i(tmin.x(), yy)); }
+        for (int xx = tmin.x(), endx = tmax.x(); xx <= endx; xx++)   { f(tile2i(xx, tmin.y())); }
+        for (int yy = tmin.y()+1, endy = tmax.y(); yy <= endy; yy++) { f(tile2i(tmax.x(), yy)); }
+        for (int xx = tmax.x()-1, endx = tmin.x(); xx >= endx; xx--) { f(tile2i(xx, tmax.y())); }
+        for (int yy = tmax.y()-1, endy = tmin.y(); yy >= endy; yy--) { f(tile2i(tmin.x(), yy)); }
     }
 
     template<typename T>
