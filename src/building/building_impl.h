@@ -49,6 +49,7 @@ public:
     virtual e_overlay get_overlay() const { return current_params().overlay; }
     virtual bool need_road_access() const { return true; }
     virtual bool can_play_animation() const;
+    virtual bool is_enemies_nearby() const;
     virtual void update_count() const;
     virtual void update_map_orientation(int orientation) {}
     virtual e_sound_channel_city sound_channel() const { return SOUND_CHANNEL_CITY_NONE; }

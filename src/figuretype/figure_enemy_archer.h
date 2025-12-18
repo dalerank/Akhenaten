@@ -7,7 +7,6 @@ enum e_action_enemy_archer {
     ACTION_152_ENEMY_ARCHER_WAITING = 152,
     ACTION_153_ENEMY_ARCHER_MARCHING = 153,
     ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE = 154,
-    ACTION_155_ENEMY_ARCHER_RELOAD = 155,
 };
 
 class figure_enemy_archer : public figure_enemy {
@@ -43,8 +42,10 @@ public:
     //bool fight_enemy(int category, int max_distance);
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
-    virtual void enemy_fighting(formation *m)override;
+    virtual void enemy_fighting(formation *m) override;
     virtual void debug_draw() override;
+
+    void enemy_shoot_around(formation *m);
 };
 
 class figure_barbarian_archer : public figure_enemy_archer {

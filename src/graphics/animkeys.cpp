@@ -46,6 +46,7 @@ const xstring id_anim_t::dancer = "dancer";
 const xstring id_anim_t::musician_sn = "musician_sn";
 const xstring id_anim_t::musician_we = "musician_we";
 const xstring id_anim_t::attack = "attack";
+const xstring id_anim_t::bow_attack = "bow_attack";
 const xstring id_anim_t::farmland = "farmland";
 const xstring id_anim_t::square = "square";
 const xstring id_anim_t::juggler = "juggler";

@@ -174,8 +174,9 @@ void victory_state_t::determine_state() {
     }
 
     if (figures.total_invading_enemies() > 2 + figures.soldiers) {
-        if (population.current < population.highest_ever / 4)
+        if (population.current < population.highest_ever / 4) {
             state = e_victory_state_lost;
+        }
     }
 
     if (figures.total_invading_enemies() > 0 && population.current <= 0) {

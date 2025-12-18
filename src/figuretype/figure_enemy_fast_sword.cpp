@@ -31,7 +31,7 @@ void figure_enemy_fast_sword::figure_action() {
 
     base.speed_multiplier = 1;
     formation *m = formation_get(base.formation_id);
-    g_city.figures_add_enemy();
+    g_city.figures.add_enemy();
     base.set_flag(e_figure_flag_inattack, false);
     base.terrain_usage = TERRAIN_USAGE_ENEMY;
 
@@ -243,6 +243,22 @@ void figure_enemy_fast_sword::debug_draw() {
             command.pixel = target_coords;
             command.mask = COLOR_LIGHT_RED;
         }
+    }
+
+    {
+        vec2i target_coords = lookup_tile_to_pixel(base.destination_tile);
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(base.destination_tile);
+        command.pixel = target_coords;
+        command.mask = COLOR_LIGHT_BLUE;
+    }
+
+    {
+        vec2i target_coords = lookup_tile_to_pixel(m->destination);
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(m->destination);
+        command.pixel = target_coords;
+        command.mask = COLOR_BLUE;
     }
 
     // Draw target figure
