@@ -603,7 +603,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         f->enemy_state.duration_advance = 0;
         f->enemy_state.duration_regroup = 0;
         f->enemy_state.duration_halt = 0;
-        f->enemy_legion_index = 0;
+        f->enemy_batalion_index = 0;
 
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_halted);
         iob->bind____skip(1);

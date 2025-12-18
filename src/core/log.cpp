@@ -99,7 +99,7 @@ void initialize() {
     SDL_LogSetAllPriority(get_log_priority());
 
 #if defined(GAME_PLATFORM_WIN)
-    if (!IsDebuggerPresent()) {
+    if (IsDebuggerPresent()) {
         return;
     }
 #endif 
