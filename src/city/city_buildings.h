@@ -12,6 +12,8 @@ building *building_next(building_id id, e_building_type type);
 
 building_id building_id_first(e_building_type type);
 building_id building_id_random(e_building_type type);
+building_id building_id_closest(e_building_type type, tile2i center, int8_t radius);
+
 building *building_first(e_building_type type);
 
 building *building_create(e_building_type type, tile2i tile, int orientation);

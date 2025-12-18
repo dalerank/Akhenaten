@@ -24,11 +24,15 @@ void figure_water_carrier::figure_action() {
     building* b = home();
     switch (action_state()) {
     case ACTION_72_WATER_CARRIER_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_126_ROAMER_RETURNING);
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_WATER_CARRIER_RETURNING);
         break;
 
     case ACTION_73_WATER_CARRIER_RETURNING:
         do_returnhome(TERRAIN_USAGE_PREFER_ROADS);
+        break;
+
+    case ACTION_150_WATER_CARRIER_ATTACKED:
+        kill();
         break;
 
     default:
@@ -108,4 +112,8 @@ int figure_water_carrier::provide_service() {
 
 figure_sound_t figure_water_carrier::get_sound_reaction(xstring key) const {
     return current_params().sounds[key];
+}
+
+void figure_water_carrier::acquire_attack() {
+    kill();
 }

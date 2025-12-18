@@ -5,6 +5,7 @@
 enum e_water_carrier_action {
     ACTION_72_WATER_CARRIER_ROAMING = 72,
     ACTION_73_WATER_CARRIER_RETURNING = 73,
+    ACTION_150_WATER_CARRIER_ATTACKED = 150,
 };
 
 class figure_water_carrier : public figure_impl {
@@ -19,4 +20,5 @@ public:
     virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
     virtual figure_sound_t get_sound_reaction(xstring key) const override;
+    virtual void acquire_attack() override;
 };
