@@ -18,6 +18,7 @@
 #include "city/city.h"
 #include "graphics/clouds.h"
 #include "graphics/view/lookup.h"
+#include "graphics/view/zoom.h"
 #include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/floodplain.h"
@@ -855,29 +856,36 @@ void figure::draw_debug() {
     char str[10];
     vec2i pixel = lookup_tile_to_pixel(tile);
     pixel = adjust_pixel_offset(pixel);
-    pixel.x -= 10;
-    pixel.y -= 80;
+    float zoom_scale = g_zoom.get_scale();
+    pixel.x = (int)(pixel.x * zoom_scale);
+    pixel.y = (int)(pixel.y * zoom_scale);
+    int text_offset_x = (int)(-10 * zoom_scale);
+    int text_offset_y = (int)(-80 * zoom_scale);
+    int text_line_height = (int)(10 * zoom_scale);
+    int text_block_spacing = (int)(80 * zoom_scale);
+    pixel.x += text_offset_x;
+    pixel.y += text_offset_y;
     int indent = 0;
     color col = COLOR_WHITE;
     painter ctx = game.painter();
 
     if (!!(draw_mode & e_figure_draw_overlay)) {
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", id, COLOR_WHITE);
-        debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", type, COLOR_LIGHT_BLUE);
-        debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", action_state, COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", wait_ticks, COLOR_WHITE);
-        debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", roam_length, COLOR_WHITE);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", type, COLOR_LIGHT_BLUE);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", action_state, COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", wait_ticks, COLOR_WHITE);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", roam_length, COLOR_WHITE);
         if (true) {
             vec2i tp = lookup_tile_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
-        pixel.y += 80;
+        pixel.y += text_block_spacing;
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", tile.x(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", tile.y(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", tile.grid_offset(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x + 30, pixel.y + 30, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", tile.y(), COLOR_FONT_MEDIUM_GRAY);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", tile.grid_offset(), COLOR_FONT_MEDIUM_GRAY);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
+        debug_text(ctx, str, pixel.x + (int)(30 * zoom_scale), pixel.y + text_line_height * 3, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
     }
 
     if (!!(draw_mode & e_figure_draw_routing)) {
@@ -890,7 +898,7 @@ void figure::draw_debug() {
             int tx = tile.x();
             int ty = tile.y();
             coords = lookup_tile_to_pixel(tile);
-            ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + 3, coords * zoom_scale);
             int starting_tile_index = routing_path_current_tile;
             if (progress_on_tile >= 0 && progress_on_tile < 8) { // adjust half-tile offset
                 starting_tile_index--;
@@ -910,65 +918,65 @@ void figure::draw_debug() {
                 case 7: tx--; ty--; break;
                 }
                 coords = lookup_tile_to_pixel(tile2i(tx, ty));
-                ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + img_index, coords);
+                ctx.img_generic(image_id_from_group(PACK_CUSTOM, 1) + img_index, coords * zoom_scale);
             }
         }
 
         // the rest of values, on top of all else
         if (routing_path_id) {
             debug_text(ctx, str, pixel.x, pixel.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
-            debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
-            debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", routing_path_length, COLOR_LIGHT_RED);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", routing_path_length, COLOR_LIGHT_RED);
         } else {
             debug_text(ctx, str, pixel.x, pixel.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
-            debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
-            debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
         }
 
-        debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "", terrain_usage, COLOR_WHITE);
+        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", terrain_usage, COLOR_WHITE);
 
         switch (direction) {
         case DIR_FIGURE_CAN_NOT_REACH:
-            debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_LIGHT_RED);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_LIGHT_RED);
             break;
         case DIR_FIGURE_REROUTE:
-            debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_LIGHT_BLUE);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_LIGHT_BLUE);
             break;
         case DIR_FIGURE_NONE:
-            debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_GREEN);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_GREEN);
             break;
         default:
-            debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", direction, COLOR_WHITE);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_WHITE);
             break;
         }
-        debug_text(ctx, str, pixel.x + 10, pixel.y + 40, 5, ":", roam_turn_direction, roam_turn_direction ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
+        debug_text(ctx, str, pixel.x + (int)(10 * zoom_scale), pixel.y + text_line_height * 4, (int)(5 * zoom_scale), ":", roam_turn_direction, roam_turn_direction ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
 
-        pixel.y += 50;
-        text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + 30, FONT_SMALL_PLAIN, 0);
+        pixel.y += (int)(50 * zoom_scale);
+        text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + (int)(30 * zoom_scale), FONT_SMALL_PLAIN, 0);
     }
 
     if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
         if (resource_id) {
             debug_text(ctx, str, pixel.x, pixel.y, indent, "", resource_id, COLOR_GREEN);
-            debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : COLOR_FONT_MEDIUM_GRAY);
-            debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : COLOR_FONT_MEDIUM_GRAY);
+            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
         }
     }
 
     if (!!(draw_mode & e_figure_draw_building)) {
         debug_text(ctx, str, pixel.x + 0, pixel.y, indent, "", homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y, 8, ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 0, pixel.y + 10, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 20, pixel.y + 10, 8, ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + (int)(20 * zoom_scale), pixel.y, (int)(8 * zoom_scale), ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + 0, pixel.y + text_line_height, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        debug_text(ctx, str, pixel.x + (int)(20 * zoom_scale), pixel.y + text_line_height, (int)(8 * zoom_scale), ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
     }
 
     if (!!(draw_mode & e_figure_draw_festival)) {
-        pixel.y += 30;
+        pixel.y += (int)(30 * zoom_scale);
         //debug_text(ctx, str, pixel.x, pixel.y, indent, "", unk_ph1_269, COLOR_WHITE);
-        //debug_text(ctx, str, pixel.x, pixel.y + 10, indent, "service[0]", data.value[0], COLOR_WHITE);
-        //debug_text(ctx, str, pixel.x, pixel.y + 20, indent, "service[1]", data.value[1], COLOR_WHITE);
-        //debug_text(ctx, str, pixel.x, pixel.y + 30, indent, "service[2]", data.value[2], COLOR_WHITE);
-        // debug_text(ctx, str, pixel.x, pixel.y + 40, indent, "", festival_remaining_dances, COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "service[0]", data.value[0], COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "service[1]", data.value[1], COLOR_WHITE);
+        //debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "service[2]", data.value[2], COLOR_WHITE);
+        // debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", festival_remaining_dances, COLOR_WHITE);
     }
 
     if (!!(draw_mode & e_figure_cross_country_move)) { // CROSS-COUNTRY MOVEMENT
@@ -985,23 +993,23 @@ void figure::draw_debug() {
         }
         col = use_cross_country ? COLOR_WHITE : COLOR_FONT_MEDIUM_GRAY;
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", use_cross_country);
-        pixel.y += 10;
+        pixel.y += text_line_height;
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_direction, col);
-        pixel.y += 10;
+        pixel.y += text_line_height;
 
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_coords.x, col);
-        debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_coords.y, col);
-        pixel.y += 10;
+        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_coords.y, col);
+        pixel.y += text_line_height;
 
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_destination.x, col);
-        debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_destination.y, col);
-        pixel.y += 10;
+        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_destination.y, col);
+        pixel.y += text_line_height;
 
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta_xy, col);
-        pixel.y += 10;
+        pixel.y += text_line_height;
         debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta.x, col);
-        debug_text(ctx, str, pixel.x + 40, pixel.y, indent, "", cc_delta.y, col);
-        pixel.y += 10;
+        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_delta.y, col);
+        pixel.y += text_line_height;
     }
 
     dcast()->debug_draw();
