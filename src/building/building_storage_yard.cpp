@@ -214,18 +214,17 @@ int building_storage_yard::remove_resource(e_resource resource, int amount) {
             continue;
         }
 
+        int take_amount = 0;
         if (space->stored_first().value > amount) {
             events::emit(event_stats_remove_resource{ resource, amount });
-            space->stored_first().value -= amount;
+            take_amount = amount;
             amount = 0;
-
         } else {
             events::emit(event_stats_remove_resource{ resource, space->stored_first().value });
-            amount -= space->stored_first().value;
-            space->stored_first().value = 0;
-            space->stored_first().type = RESOURCE_NONE;
+            take_amount = space->stored_first().value;
+            amount -= take_amount;
         }
-        space->set_image(resource);
+        space->take_resource(take_amount);
         space = space->next_room();
     }
 
@@ -240,17 +239,17 @@ void building_storage_yard::remove_resource_curse(int amount) {
         }
 
         e_resource resource = space->resource();
+        int take_amount = 0;
         if (space->stored_first().value > amount) {
             events::emit(event_stats_remove_resource{ resource, amount });
-            space->stored_first().value -= amount;
+            take_amount = amount;
             amount = 0;
         } else {
             events::emit(event_stats_remove_resource{ resource, space->stored_first().value });
-            amount -= space->stored_first().value;
-            space->stored_first().value = 0;
-            space->stored_first().type = RESOURCE_NONE;
+            take_amount = space->stored_first().value;
+            amount -= take_amount;
         }
-        space->set_image(resource);
+        space->take_resource(take_amount);
         space = space->next_room();
     }
 }
@@ -679,6 +678,10 @@ storage_worker_task building_storageyard_deliver_resource_to_workshop(building *
         }
 
         e_resource check_resource = space->resource();
+        if (check_resource == RESOURCE_NONE) {
+            continue;
+        }
+
         if (g_city.resource.is_stockpiled(check_resource)) {
             continue;
         }

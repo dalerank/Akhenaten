@@ -458,6 +458,7 @@ int building::stored_amount(e_resource res) const {
 }
 
 int building::need_resource_amount(e_resource resource) const {
+    assert(resource != RESOURCE_NONE);
     return max_storage_amount(resource) - stored_amount(resource);
 }
 

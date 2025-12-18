@@ -25,6 +25,8 @@ public:
     building_storage_room *next_room() { return next()->dcast_storage_room(); }
     const building_storage_room *next_room() const { return ((building_impl*)this)->next()->dcast_storage_room(); }
     void set_image(e_resource resource);
+    void update_image();
+
     void add_import(e_resource resource);
     int distance_with_penalty(tile2i tile, e_resource resource, int distance_from_entry);
     void remove_export(e_resource resource);
