@@ -10,6 +10,7 @@
 #include "city/city_population.h"
 #include "grid/building.h"
 #include "grid/tiles.h"
+#include "grid/grid.h"
 #include "grid/canals.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
@@ -69,6 +70,21 @@ building_id building_id_random(e_building_type type) {
     return 0;
 }
 
+building_id building_id_closest(e_building_type type, tile2i center, int8_t radius) {
+    grid_area area = map_grid_get_area(center, 1, radius);
+    building_id result = 0;
+    float dist = 100.f;
+    map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+        building_id bid = map_building_at(t);
+        int cur_dist = t.dist(center);
+        if (bid && building_get(bid)->is_valid() && cur_dist < dist) {
+            dist = cur_dist;
+            result = bid;
+        }
+    });
+
+    return result;
+}
 
 building *building_first(e_building_type type) {
     for (int i = 1; i < MAX_BUILDINGS; ++i) {

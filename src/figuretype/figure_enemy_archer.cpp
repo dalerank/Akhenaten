@@ -5,6 +5,7 @@
 #include "city/sound.h"
 #include "sound/sound.h"
 #include "figure/combat.h"
+#include "grid/building.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
 #include "figure/formation.h"
@@ -49,29 +50,17 @@ void figure_enemy_archer::enemy_initial(formation *m) {
             }
         }
 
+        tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+        tile2i destination_tile = m->destination.shifted(formation_t);
         if (m->recent_fight) {
             advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
+        } else if (tile() == destination_tile) {
+            advance_action(ACTION_156_ENEMY_ARCHER_SHOOT_AROUND);
         } else {
-            tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
-
-            base.destination_tile = m->destination.shifted(formation_t);
+            base.destination_tile = destination_tile;
             int dir = calc_general_direction(tile(), base.destination_tile);
-            if (dir < 8) {
+            if (dir > attack_distance()) {
                 advance_action(ACTION_153_ENEMY_ARCHER_MARCHING);
-            }
-        }
-    }
-
-    // Check if we should attack a building
-    if (m->destination_building_id > 0) {
-        building *b = building_get(m->destination_building_id);
-        if (b->state == BUILDING_STATE_VALID) {
-            float dist = tile().dist(b->tile);
-            const float attack_dist = attack_distance();
-            assert(attack_dist > 1 && "archers should has positive distance");
-            if (dist < attack_dist) {
-                advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-                return;
             }
         }
     }
@@ -141,22 +130,13 @@ void figure_enemy_archer::enemy_marching(formation *m) {
         advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
     }
 
-    // Check if we should attack a building
-    if (m->destination_building_id > 0) {
-        building *b = building_get(m->destination_building_id);
-        if (b->state == BUILDING_STATE_VALID) {
-            float dist = tile().dist(b->tile);
-            if (dist < attack_distance()) {
-                advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-                return;
-            }
-        }
+    if (base.destination_tile == base.tile) {
+        advance_action(ACTION_156_ENEMY_ARCHER_SHOOT_AROUND);
     }
+}
 
-    float dist = tile().dist(base.destination_tile);
-    if (dist < attack_distance()) {
-        advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
-    }
+void figure_enemy_archer::enemy_shoot_around(formation *m) {
+    enemy_fighting(m);
 }
 
 void figure_enemy_archer::enemy_fighting(formation *m) {
@@ -191,6 +171,7 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         }
     }
 
+    bool can_shoot_building = false;
     if (m->destination_building_id > 0) {
         building *b = building_get(m->destination_building_id);
         if (b->state == BUILDING_STATE_VALID) {
@@ -200,12 +181,25 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
                 figure_missile::create(id(), tile(), b->tile, missile_type());
                 base.wait_ticks = missile_delay();
                 advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+                can_shoot_building = true;
                 return;
             }
         }
     }
 
+    bool can_shoot_target = false;
     if (target_id > 0) {
+        figure *target = figure_get(target_id);
+        float dist = tile().dist(target->tile);
+        if (dist < attack_distance()) {
+            base.direction = calc_missile_shooter_direction(tile(), target->tile);
+            figure_missile::create(id(), tile(), target->tile, missile_type());
+            base.wait_ticks = missile_delay();
+            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            can_shoot_target = true;
+            return;
+        }
+
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE) {
             figure *target = figure_get(base.target_figure_id);
@@ -215,9 +209,50 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
             base.target_figure_id = 0;
         }
-    } else {
-        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
-        base.wait_ticks = 50;
+    }
+
+    if (!can_shoot_building) {
+        grid_area area = map_grid_get_area(tile(), 1, attack_distance());
+        building *b = nullptr;
+        float dist = 100.f;
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+            building_id bid = map_building_at(t);
+            int cur_dist = t.dist(tile());
+            if (bid && building_get(bid)->is_valid() && cur_dist < dist) {
+                dist = cur_dist;
+                b = building_get(bid);
+            }
+        });
+
+        if (b) {
+            base.direction = calc_missile_shooter_direction(tile(), b->tile);
+            figure_missile::create(id(), tile(), b->tile, missile_type());
+            base.wait_ticks = missile_delay();
+            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            return;
+        }
+    }
+
+    if (!can_shoot_target) {
+        grid_area area = map_grid_get_area(tile(), 1, attack_distance());
+        figure *f = nullptr;
+        float dist = 100.f;
+        map_grid_area_foreach(area.tmin, area.tmax, [&] (tile2i t) {
+            figure* ftile = map_figure_get(t);
+            int cur_dist = t.dist(tile());
+            if (ftile && ftile->is_valid() && cur_dist < dist) {
+                dist = cur_dist;
+                f = ftile;
+            }
+        });
+
+        if (f) {
+            base.direction = calc_missile_shooter_direction(tile(), f->tile);
+            figure_missile::create(id(), tile(), f->tile, missile_type());
+            base.wait_ticks = missile_delay();
+            advance_action(ACTION_155_ENEMY_ARCHER_RELOAD);
+            return;
+        }
     }
 }
 
@@ -265,6 +300,9 @@ void figure_enemy_archer::figure_action() {
             base.animctx.frame = 0;
         }
         break;
+
+    case ACTION_156_ENEMY_ARCHER_SHOOT_AROUND:
+        enemy_shoot_around(m);
     }
 }
 
@@ -319,6 +357,14 @@ void figure_enemy_archer::debug_draw() {
             command.pixel = target_coords;
             command.mask = COLOR_LIGHT_RED;
         }
+    }
+
+    {
+        vec2i target_coords = lookup_tile_to_pixel(base.destination_tile);
+        auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
+        command.image_id = map_image_at(base.destination_tile);
+        command.pixel = target_coords;
+        command.mask = COLOR_LIGHT_BLUE;
     }
 
     // Draw target figure

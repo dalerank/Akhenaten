@@ -210,6 +210,14 @@ static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
 };
 
 static void set_enemy_target_building(formation* m) {
+    if (m->destination_building_id > 0) {
+        building *current_target = building_get(m->destination_building_id);
+        if (current_target->state == BUILDING_STATE_VALID && 
+            !map_soldier_strength_get(current_target->tile)) {
+            return;
+        }
+    }
+
     e_formation_attack_type attack = m->attack_type;
     if (attack == FORMATION_ATTACK_RANDOM) {
         attack = (e_formation_attack_type)(random_byte() % FORMATION_ATTACK_RANDOM);
