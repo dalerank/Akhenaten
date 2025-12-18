@@ -98,23 +98,17 @@ void enemy_army_calculate_kingdome_influence() {
 
         if (m->batalion_id && m->own_batalion) {
             // Own batalions
-            if (m->num_figures > 0)
-                map_soldier_strength_add(m->home, 7, 1);
-
-            if (m->num_figures > 3)
-                map_soldier_strength_add(m->home, 6, 1);
-
-            if (m->num_figures > 6)
-                map_soldier_strength_add(m->home, 5, 1);
-
-            if (m->num_figures > 9)
-                map_soldier_strength_add(m->home, 4, 1);
-
-            if (m->num_figures > 12)
-                map_soldier_strength_add(m->home, 3, 1);
-
-            if (m->num_figures > 15)
-                map_soldier_strength_add(m->home, 2, 1);
+            int figures_num = 0;
+            for (int fig = 0; fig < formation::max_figures_count; fig++) {
+                if (m->figures[fig] > 0) {
+                    figure *f = figure_get(m->figures[fig]);
+                    figures_num++;
+                    uint8_t radiuses[] = { 7, 7, 7, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2 };
+                    if (f && f->state == FIGURE_STATE_ALIVE && f->is_enemy()) {
+                        map_soldier_strength_add(f->tile, radiuses[figures_num], 1);
+                    }
+                }
+            }
         } else if (m->invasion_id > 0) {
             int figures_num = 0;
             for (int fig = 0; fig < formation::max_figures_count; fig++) {
@@ -123,7 +117,7 @@ void enemy_army_calculate_kingdome_influence() {
                     figures_num++;
                     uint8_t radiuses[] = { 7, 7, 7, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2 };
                     if (f && f->state == FIGURE_STATE_ALIVE && f->is_enemy()) {
-                        map_enemy_strength_add(f->tile, radiuses[figures_num], 1); // Add 1 to the tile where figure is
+                        map_enemy_strength_add(f->tile, radiuses[figures_num], 1);
                     }
                 }
             }
