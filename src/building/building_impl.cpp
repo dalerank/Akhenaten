@@ -14,6 +14,7 @@
 #include "core/archive.h"
 #include "grid/floodplain.h"
 #include "building/destruction.h"
+#include "grid/enemy_strength.h"
 
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
@@ -125,7 +126,22 @@ bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     return false;
 }
 
+bool building_impl::is_enemies_nearby() const {
+    if (g_city.figures.total_invading_enemies() > 0) {
+        if (map_enemy_strength_get(base.tile) > 0) {
+            // building can't work when enemy nearby
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool building_impl::can_play_animation() const {
+    if (is_enemies_nearby()) {
+        return false;
+    }
+
     return base.main()->num_workers > 0;
 }
 
