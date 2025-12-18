@@ -113,6 +113,17 @@ void figure_trade_caravan::on_destroy() {
 void figure_trade_caravan::figure_action() {
     int last_action_state = action_state();
     auto& d = runtime_data();
+    
+    if (g_city.figures.enemies > 0) {
+        switch (action_state()) {
+        default:
+            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
+            break;
+        }
+    }
+    
     switch (action_state()) {
     default:
     case ACTION_100_TRADE_CARAVAN_CREATED:
