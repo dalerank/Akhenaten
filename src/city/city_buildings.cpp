@@ -341,7 +341,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->health_proof);
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
-        static_assert(sizeof(building::runtime_data) == 186, "runtime_data more then 40 bytes");
+        static_assert(sizeof(building::runtime_data) == 186, "runtime_data more then 186 bytes");
         b->dcast()->bind_dynamic(iob, version); // 102 for PH
 
         int currind = iob->get_offset() - sind;

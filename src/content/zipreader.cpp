@@ -370,7 +370,7 @@ namespace vfs {
                     mem[pBuf.size()] = 0; // null-terminate the string
                 }
 
-                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
+                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, static_cast<int>(memsize));
                 return r;
             }
         }
@@ -427,7 +427,7 @@ namespace vfs {
                     mem[pBuf.size()] = 0; // null-terminate the string
                 }
 
-                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, memsize);
+                auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, static_cast<int>(memsize));
                 return r;
             }
         }
