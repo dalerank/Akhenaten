@@ -22,6 +22,7 @@ void building_storage_room::take_resource(int amount) {
     if (stored_amount(resource) <= 0) {
         base.storage.data()[0].type = RESOURCE_NONE;
     }
+    set_image(resource);
 }
 
 const storage_t *building_storage_room::storage() {
