@@ -128,11 +128,6 @@ void figure_entertainer::figure_action() {
     building* b = home();
     int speed_factor = (type() == FIGURE_CHARIOR_RACER ? 2 : 1);
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK:
-        base.figure_combat_handle_attack();
-        //            figure_image_increase_offset(32);
-        break;
-
     case FIGURE_ACTION_149_CORPSE:
         base.figure_combat_handle_corpse();
         break;
@@ -245,12 +240,7 @@ void figure_entertainer::update_animation() {
         return;
     }
 
-    if (action_state() == FIGURE_ACTION_150_ATTACK) {
-        if (type() == FIGURE_MUSICIAN)
-            image_id = image_id + 104 + dir + 8 * (base.animctx.frame / 2);
-        else
-            image_id = image_id + dir;
-    } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
         image_id = image_id + 96 + base.figure_image_corpse_offset();
         base.cart_image_id = 0;
     } else

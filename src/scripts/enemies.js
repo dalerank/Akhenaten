@@ -117,6 +117,7 @@ figure_assyrian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -220,6 +221,7 @@ figure_canaanite_archer = {
     missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -358,6 +360,7 @@ figure_egyptian_archer = {
     missile_delay : 50 
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -429,6 +432,7 @@ figure_hittite_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -449,6 +453,7 @@ figure_hittite_spearman = {
     defense_value: 3
     missile_defense_value : 0
     missile_type : FIGURE_SPEAR
+    attack_distance : 3
     is_enemy : true
     max_amount : 25
 }
@@ -534,6 +539,7 @@ figure_hyksos_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -634,6 +640,7 @@ figure_kushite_spearman = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
+    attack_distance : 3
     is_enemy : true
     max_amount : 25
 }
@@ -734,6 +741,7 @@ figure_libian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -835,6 +843,7 @@ figure_nubian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -937,6 +946,7 @@ figure_persian_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -954,6 +964,7 @@ figure_persian_spearman = {
     attack_value : 7
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
+    attack_distance : 3
     is_enemy : true
     max_amount : 25
 }
@@ -1038,6 +1049,7 @@ figure_phoenician_spearman = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_SPEAR
+    attack_distance : 3
     is_enemy : true
     max_amount : 25
 }
@@ -1133,6 +1145,7 @@ figure_roman_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }
@@ -1234,6 +1247,7 @@ figure_seapeople_archer = {
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     missile_type : FIGURE_ARROW
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }

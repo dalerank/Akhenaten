@@ -24,6 +24,7 @@ public:
     virtual void figure_action() override;
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
+    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_FAST_SWORD_ATTACK; }
 
     //virtual sound_key phrase_key() const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_ENEMIES; }
@@ -32,7 +33,7 @@ public:
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m) override;
-    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_FAST_SWORD_ATTACK; }
+    virtual void debug_draw() override;
 
     virtual int8_t interval_attack_delay() const { return 100; }
 };

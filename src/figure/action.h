@@ -9,7 +9,6 @@ enum e_common_action {
 
     FIGURE_ACTION_148_FLEEING = 148,
     FIGURE_ACTION_149_CORPSE = 149,
-    FIGURE_ACTION_150_ATTACK = 150,
 };
 
 enum e_roamer_action {

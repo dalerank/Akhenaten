@@ -117,6 +117,7 @@ mission8 { // Selima
 		pharaoh_requested_luxury_goods : false
 		random_trade_city_under_siege : false
 		foreign_army_attack_warning_shown : false
+		foreign_army_attacked_city : false
 	}
 }
 
@@ -194,9 +195,31 @@ function mission8_foreign_army_attack_warning(ev) {
 
 	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} foreign army attack warning", {ev:ev})
 
-	var request = city.create_foreign_army_attack_warning({ tag_id: 3, sender_faction: ENEMY_7_LIBIAN })
+	var request = city.create_foreign_army_attack_warning({ tag_id: 4, sender_faction: ENEMY_7_LIBIAN })
 	request.set_location_fields(-1, -1, -1, -1)
 	request.set_image("pharaoh_unloaded/dialougedrawing_00012")
-	request.set_reasons(PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
+	request.set_reasons(PHRASE_foreign_army_attacks_you_1month_Warning, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
+	request.execute()
+}
+
+[event=event_advance_month, mission=mission8]
+function mission8_foreign_army_attack(ev) {	
+	if (mission.foreign_army_attacked_city) {
+		return
+	}
+
+	if (ev.years_since_start < 3 || ev.month < 6) {
+		return
+	}
+
+	mission.foreign_army_attacked_city = true
+	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} foreign army attack", {ev:ev})
+
+	city.start_foreign_army_invasion({ enemy: ENEMY_7_LIBIAN, size: 10, tilex: 30, tiley: 26 })
+
+	var request = city.create_foreign_army_attack_warning({ tag_id: 5, sender_faction: ENEMY_7_LIBIAN })
+	request.set_location_fields(-1, -1, -1, -1)
+	request.set_image("pharaoh_unloaded/dialougedrawing_00012")
+	request.set_reasons(PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
 	request.execute()
 }

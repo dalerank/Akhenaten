@@ -118,6 +118,10 @@ void figure::reset_flags() {
     flags |= (params().is_soldier ? e_figure_flag_soldier : e_figure_flag_none);
 }
 
+void figure::acquire_attack() {
+    dcast()->acquire_attack();
+}
+
 resource_tile figure::find_resource_tile(e_resource resource) {
     switch (resource) {
     case RESOURCE_REEDS:
@@ -506,7 +510,7 @@ xstring figure::action_tip() {
 
 int figure::get_direction() {
     int dir;
-    if (action_state == FIGURE_ACTION_150_ATTACK)
+    if (in_attack())
         dir = attack_direction;
     else if (direction < 8)
         dir = direction;
@@ -518,7 +522,7 @@ int figure::get_direction() {
 
 int figure::get_missile_direction(const formation *m) {
     int dir;
-    if (action_state == FIGURE_ACTION_150_ATTACK)
+    if (in_attack())
         dir = attack_direction;
     else if (m->missile_fired || direction < 8)
         dir = direction;
@@ -596,9 +600,9 @@ void figure_impl::on_change_terrain(int old, int current) {
 
 void figure_impl::figure_roaming_action() {
     switch (action_state()) {
-    case FIGURE_ACTION_150_ATTACK:
-        base.figure_combat_handle_attack();
-        break;
+    //case FIGURE_ACTION_150_ATTACK:
+    //    base.figure_combat_handle_attack();
+    //    break;
 
     case FIGURE_ACTION_149_CORPSE:
         base.figure_combat_handle_corpse();
@@ -711,6 +715,10 @@ bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
 
 void figure_impl::kill() {
     base.kill();
+}
+
+void figure_impl::acquire_attack() {
+
 }
 
 void figure_static_params::set(e_figure_type e, const figure_static_params &p) {

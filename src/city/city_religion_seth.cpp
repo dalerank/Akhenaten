@@ -42,7 +42,7 @@ int god_seth_t::invasion_start_from_seth() {
         return 0;
     }
 
-    tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+    tile2i invasion_tile = scenario_start_invasion_impl(ENEMY_0_BARBARIAN, amount, -1, FORMATION_ATTACK_FOOD_CHAIN, 23, tile2i::invalid);
     if (invasion_tile.grid_offset()) {
         events::emit(event_message_god{ GOD_SETH, "message_local_wrath_of_seth" });
     }
