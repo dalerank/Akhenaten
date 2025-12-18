@@ -6,8 +6,8 @@
 #include "core/bstring.h"
 #include "core/vec2i.h"
 #include "grid/point.h"
-#include "core/fixed_memory_resource.h"
 #include "core/svector.h"
+#include "core/hvector.h"
 #include "core/stable_array.h"
 #include "graphics/image_desc.h"
 
@@ -209,8 +209,7 @@ struct archive {
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
-            fixed_memory_resource<xstring, 256> keys_buffer;
-            std::pmr::vector<xstring> keys{ &keys_buffer };
+            hvector<pcstr, 512> keys;
             {
                 pcstr key;
                 pushiterator(s_arch, -1, 1);
@@ -221,9 +220,9 @@ struct archive {
             }
 
             for (const auto &key : keys) {
-                getproperty(s_arch, -1, key.c_str());
+                getproperty(s_arch, -1, key);
                 //const bool isobj = isobject(s_arch, -1);
-                read_func(key.c_str(), s_arch);
+                read_func(key, s_arch);
                 pop(s_arch, 1);
             }
         });
@@ -231,8 +230,7 @@ struct archive {
 
     template<typename T>
     inline void r_variants_impl(archive s_arch, T &container) {
-        fixed_memory_resource<pcstr, 128> keys_buffer;
-        std::pmr::vector<pcstr> keys{ &keys_buffer };
+        hvector<pcstr, 128, false> keys;
         {
             pcstr key;
             pushiterator(s_arch, -1, 1);
