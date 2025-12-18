@@ -3,6 +3,8 @@
 #include "figure/formation.h"
 #include "game/game_environment.h"
 #include "grid/soldier_strength.h"
+#include "city/city_figures.h"
+#include "grid/enemy_strength.h"
 
 struct enemy_army_in_city_t {
     int enemy_formations;
@@ -87,29 +89,43 @@ void enemy_army_calculate_kingdome_influence() {
         return;
 
     map_soldier_strength_clear();
+    map_enemy_strength_clear();
 
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         const formation* m = formation_get(i);
-        if (m->in_use != 1 || !m->batalion_id || !m->own_batalion)
+        if (m->in_use != 1)
             continue;
 
-        if (m->num_figures > 0)
-            map_soldier_strength_add(m->home, 7, 1);
+        if (m->batalion_id && m->own_batalion) {
+            // Own batalions
+            if (m->num_figures > 0)
+                map_soldier_strength_add(m->home, 7, 1);
 
-        if (m->num_figures > 3)
-            map_soldier_strength_add(m->home, 6, 1);
+            if (m->num_figures > 3)
+                map_soldier_strength_add(m->home, 6, 1);
 
-        if (m->num_figures > 6)
-            map_soldier_strength_add(m->home, 5, 1);
+            if (m->num_figures > 6)
+                map_soldier_strength_add(m->home, 5, 1);
 
-        if (m->num_figures > 9)
-            map_soldier_strength_add(m->home, 4, 1);
+            if (m->num_figures > 9)
+                map_soldier_strength_add(m->home, 4, 1);
 
-        if (m->num_figures > 12)
-            map_soldier_strength_add(m->home, 3, 1);
+            if (m->num_figures > 12)
+                map_soldier_strength_add(m->home, 3, 1);
 
-        if (m->num_figures > 15)
-            map_soldier_strength_add(m->home, 2, 1);
+            if (m->num_figures > 15)
+                map_soldier_strength_add(m->home, 2, 1);
+        } else if (m->invasion_id > 0) {
+            // Enemy formations - add strength only on tiles where enemy figures are located
+            for (int fig = 0; fig < formation::max_figures_count; fig++) {
+                if (m->figures[fig] > 0) {
+                    figure* f = figure_get(m->figures[fig]);
+                    if (f && f->state == FIGURE_STATE_ALIVE && f->is_enemy()) {
+                        map_enemy_strength_add(f->tile, 0, 1); // Add 1 to the tile where figure is
+                    }
+                }
+            }
+        }
     }
 }
 
