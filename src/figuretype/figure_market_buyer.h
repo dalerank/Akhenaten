@@ -7,6 +7,7 @@ enum e_market_buyer_action {
     ACTION_145_MARKET_BUYER_GOING_TO_STORAGE = 145,
     ACTION_146_MARKET_BUYER_RETURNING = 146,
     ACTION_147_MARKET_BUYER_REROUTING = 147,
+    ACTION_150_MARKET_BUYER_ATTACKED = 150,
 };
 
 class figure_market_buyer : public figure_impl {
@@ -23,6 +24,7 @@ public:
     virtual int provide_service() override;
     virtual bvariant get_property(const xstring &domain, const xstring &name) const override;
     virtual xstring action_tip() const override;
+    virtual void acquire_attack() override;
 
     bool take_resource_from_storageyard(building *warehouse);
     int take_food_from_storage(building *market, building *granary);

@@ -62,6 +62,9 @@ void figure_market_buyer::figure_action() {
             //logs::info("stop");
         }
         break;
+
+    case ACTION_150_MARKET_BUYER_ATTACKED:
+        kill();
     }
 }
 
@@ -300,6 +303,10 @@ xstring figure_market_buyer::action_tip() const {
     }
 
     return "#market_buyer_idle";
+}
+
+void figure_market_buyer::acquire_attack() {
+    kill();
 }
 
 int figure_market_buyer::take_food_from_storage(building* market, building* b) {
