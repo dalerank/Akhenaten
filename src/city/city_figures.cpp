@@ -54,6 +54,10 @@ void city_figures_t::reload_objects() {
     }
 }
 
+void city_figures_t::add_enemy() {
+    enemies++;
+}
+
 int city_figures_t::total_invading_enemies() const {
     return kingdome_soldiers + enemies;
 }
@@ -86,10 +90,6 @@ void city_figures_t::add_animal() {
 void city_t::figures_add_attacking_native() {
     figures.security_breach_duration = 10;
     figures.attacking_natives++;
-}
-
-void city_t::figures_add_enemy() {
-    figures.enemies++;
 }
 
 void city_t::figures_add_kingdome_soldier() {

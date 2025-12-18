@@ -8,7 +8,7 @@ struct city_figures_t {
     uint8_t fish_number;
     uint8_t animals_number;
     int32_t attacking_natives;
-    int32_t enemies;
+    int16_t enemies;
     int32_t kingdome_soldiers;
     int32_t rioters;
     int32_t soldiers;
@@ -20,6 +20,8 @@ struct city_figures_t {
     void add_animal();
     void init_figures();
     void reload_objects();
+
+    void add_enemy();
 
     int total_invading_enemies() const;
 };

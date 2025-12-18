@@ -199,7 +199,6 @@ struct city_t {
     void set_produce_resource(e_resource resource, bool v);
 
     void figures_add_attacking_native();
-    void figures_add_enemy();
     void figures_add_kingdome_soldier();
     void figures_add_rioter(int is_attacking);
     void figures_add_soldier();
