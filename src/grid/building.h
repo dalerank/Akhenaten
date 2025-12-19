@@ -24,6 +24,8 @@ int map_building_height_at(int grid_offset);
 void map_building_height_set(int grid_offset, int8_t height);
 
 int map_building_damage_increase(int grid_offset);
+int map_get_building_damage(int grid_offset);
+inline int map_get_building_damage(tile2i tile) { return map_get_building_damage(tile.grid_offset()); }
 void map_building_damage_clear(int grid_offset);
 
 int map_rubble_building_type(int grid_offset);

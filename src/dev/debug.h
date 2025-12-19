@@ -82,6 +82,7 @@ enum e_debug_render {
     e_debug_render_copper = 50,
     e_debug_render_gems = 51,
     e_debug_render_irrigation_value = 52,
+    e_debug_render_damage_grid = 53,
 
     e_debug_render_size
 };

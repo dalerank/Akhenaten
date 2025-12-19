@@ -45,7 +45,7 @@ const enemy_army& enemy_armies_t::get(uint8_t invasion_id) {
     return data[invasion_id];
 }
 
-enemy_army* enemy_army_get_editable(int invasion_id) {
+enemy_army* enemy_army_get_editable(uint8_t invasion_id) {
     return &g_enemy_armies.data[invasion_id];
 }
 

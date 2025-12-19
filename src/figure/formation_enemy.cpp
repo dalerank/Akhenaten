@@ -588,7 +588,6 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
         army->ignore_pharaoh_soldiers = figure && figure->ignore_pharaoh_soldiers();
     }
 
-    // Проверяем, нужно ли врагам уходить из города
     if (army->buildings_to_destroy > 0 && army->buildings_destroyed >= army->buildings_to_destroy) {
         for (figure_id fid : m->figures) {
             figure* f = figure_get(fid);
