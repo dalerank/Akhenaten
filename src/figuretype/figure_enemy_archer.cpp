@@ -315,6 +315,10 @@ void figure_enemy_archer::figure_action() {
     case ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE:
         enemy_fighting(m);
         break;
+
+    case ACTION_156_ENEMY_LEAVING:
+        enemy_leaving();
+        break;
     }
 }
 

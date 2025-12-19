@@ -34,6 +34,8 @@ void enemy_armies_t::clear() {
         data[i].destination = tile2i::invalid;
         data[i].destination_building_id = 0;
         data[i].ignore_pharaoh_soldiers = 0;
+        data[i].buildings_to_destroy = 0;
+        data[i].buildings_destroyed = 0;
     }
 
     g_enemy_army_in_city.clear();
@@ -160,8 +162,8 @@ void enemy_armies_save_state(buffer* buf, buffer* totals_buf) {
     }
     for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
         buf->write_i8(g_enemy_armies.data[i].ignore_pharaoh_soldiers);
-        buf->write_i16(0); // padding
-        buf->write_i8(0); // padding
+        buf->write_i16(g_enemy_armies.data[i].buildings_to_destroy);
+        buf->write_i16(g_enemy_armies.data[i].buildings_destroyed);
     }
     totals_buf->write_i32(g_enemy_army_in_city.enemy_formations);
     totals_buf->write_i32(g_enemy_army_in_city.enemy_strength);
@@ -198,8 +200,8 @@ void enemy_armies_load_state(buffer* buf, buffer* totals_buf) {
     }
     for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
         g_enemy_armies.data[i].ignore_pharaoh_soldiers = buf->read_i8();
-        buf->read_i16(); // padding
-        buf->read_i8(); // padding
+        g_enemy_armies.data[i].buildings_to_destroy = buf->read_i16();
+        g_enemy_armies.data[i].buildings_destroyed = buf->read_i16();
     }
     g_enemy_army_in_city.enemy_formations = totals_buf->read_i32();
     g_enemy_army_in_city.enemy_strength = totals_buf->read_i32();

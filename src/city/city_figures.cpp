@@ -87,9 +87,9 @@ void city_figures_t::add_animal() {
     animals_number++;
 }
 
-void city_t::figures_add_attacking_native() {
-    figures.security_breach_duration = 10;
-    figures.attacking_natives++;
+void city_figures_t::add_attacking_native() {
+    security_breach_duration = 10;
+    attacking_natives++;
 }
 
 void city_t::figures_add_kingdome_soldier() {

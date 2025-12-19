@@ -13,6 +13,8 @@ struct enemy_army {
     uint16_t destination_building_id;
     uint8_t num_batalions;
     bool ignore_pharaoh_soldiers;
+    uint16_t buildings_to_destroy;  // 0 - unlimited
+    uint16_t buildings_destroyed;
 };
 
 struct enemy_armies_t {   

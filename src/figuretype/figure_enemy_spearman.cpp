@@ -225,6 +225,10 @@ void figure_enemy_spearman::figure_action() {
             base.animctx.frame = 0;
         }
         break;
+
+    case ACTION_156_ENEMY_LEAVING:
+        enemy_leaving();
+        break;
     }
 }
 

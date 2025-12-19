@@ -5,6 +5,7 @@
 #include "city/sound.h"
 #include "figure/combat.h"
 #include "figure/formation_layout.h"
+#include "grid/road_access.h"
 
 void figure_enemy::on_create() {
     figure_impl::on_create();
@@ -132,5 +133,25 @@ void figure_enemy::enemy_fighting(formation *m) {
     } else {
         advance_action(ACTION_151_ENEMY_INITIAL);
         base.wait_ticks = 50;
+    }
+}
+
+void figure_enemy::enemy_leaving() {
+    if (do_goto(g_city.map.exit_point, TERRAIN_USAGE_ANY)) {
+        poof();
+        return;
+    }
+
+    if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        base.routing_try_reroute_counter++;
+        if (base.routing_try_reroute_counter > 20) {
+            poof();
+            return;
+        }
+        base.wait_ticks = 20;
+        route_remove();
+        base.state = FIGURE_STATE_ALIVE;
+        base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+        base.direction = DIR_0_TOP_RIGHT;
     }
 }
