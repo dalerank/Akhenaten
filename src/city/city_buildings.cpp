@@ -290,8 +290,8 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->curse_days_left);
         iob->bind(BIND_SIGNATURE_UINT8, &b->blessing_days_left);
         iob->bind____skip(2);
-        iob->bind(BIND_SIGNATURE_UINT16, &b->type);
-        iob->bind____skip(2); // (BIND_SIGNATURE_INT16, &b->subtype.data); // which union field we use does not matter
+        iob->bind_u16((uint16_t&)b->type);
+        iob->bind_u16(b->structure_damage);
         iob->bind(BIND_SIGNATURE_UINT16, &b->road_network_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->native_meeting_center_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->houses_covered);

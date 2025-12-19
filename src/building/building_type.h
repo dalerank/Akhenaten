@@ -3,7 +3,7 @@
 #include "core/tokenum.h"
 
 using building_id = uint16_t;
-enum e_building_type {
+enum e_building_type : uint16_t {
 	BUILDING_NONE = 0,
 	BUILDING_RESERVED_1 = 1,
 	BUILDING_MENU_FARMS = 2,
@@ -296,7 +296,7 @@ enum e_house_level {
 	HOUSE_LEVEL_MAX = 20,
 };
 
-enum e_damage_type {
+enum e_damage_type : uint8_t {
 	// origin game types
 	e_damage_fire = 0,
 	e_damage_collapse = 1,
@@ -322,7 +322,7 @@ enum e_damage_type {
 	e_damage_neglect = 19,           // Neglect (low priority, no workers assigned)
 	e_damage_weak_foundation = 20,   // Built on weak soil → subsidence, cracks
 	e_damage_mold = 21,              // Moisture → rot, mold, wall degradation
-	e_damage_battle = 22,            // Military action, combat-related damage
+	e_damage_enemy = 22,            // Military action, combat-related damage
 
 	e_damage_count
 };

@@ -16,9 +16,14 @@
 #include "city/city_warnings.h"
 #include "city/city_message.h"
 #include "grid/routing/routing.h"
-#include "grid/routing/routing_terrain.h"
+#include "grid/terrain.h"
+#include "grid/building_tiles.h"
 #include "game/game_config.h"
 #include "game/undo.h"
+#include "figure/enemy_army.h"
+#include "building/building_wall.h"
+#include "grid/tiles.h"
+#include "figuretype/wall.h"
 #include "game/difficulty.h"
 
 void fire_building(building *b) {
@@ -37,6 +42,72 @@ void city_maintenance_t::collapse_building(building *b) {
     b->destroy_by_collapse();
 }
 
+int city_maintenance_t::find_nearest_enemy_formation(tile2i tile) {
+    int min_formation_id = 0;
+    int min_distance = 10000;
+
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (!m->in_use || m->is_herd || m->own_batalion || m->invasion_id <= 0) {
+            continue;
+        }
+
+        for (figure_id fid : m->figures) {
+            if (fid <= 0) {
+                continue;
+            }
+
+            figure *f = figure_get(fid);
+            if (!f->is_alive() || !f->is_enemy()) {
+                continue;
+            }
+
+            int distance = calc_maximum_distance(tile, f->tile);
+            if (distance < min_distance && distance <= 10) {
+                min_distance = distance;
+                min_formation_id = i;
+            }
+        }
+    }
+
+    return min_formation_id;
+}
+
+void city_maintenance_t::destroy_by_enemy(building *b) {
+    bool was_valid_building = false;
+
+    tile2i tile = b->tile;
+    if (b->state == BUILDING_STATE_VALID) {
+        was_valid_building = true;
+        g_city.ratings.monument_building_destroyed(b->type);
+        b->destroy_by_collapse();
+    }
+
+    if (map_terrain_is(tile, TERRAIN_WALL)) {
+        figure_kill_tower_sentries_at(tile);
+    }
+
+    map_building_tiles_set_rubble(0, tile, 1);
+
+    if (was_valid_building) {
+        int formation_id = find_nearest_enemy_formation(tile);
+        if (formation_id > 0) {
+            formation *m = formation_get(formation_id);
+            if (m->invasion_id > 0 && m->invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES) {
+                enemy_army *army = enemy_army_get_editable(m->invasion_id);
+                if (army->buildings_to_destroy > 0) {
+                    army->buildings_destroyed++;
+                }
+            }
+        }
+    }
+
+    figure_tower_sentry_reroute();
+    building_mud_wall::update_area_walls(tile, 3);
+    map_tiles_update_region_canals(tile.shifted(-3, -3), tile.shifted(3, 3));
+    map_routing_update_land();
+    map_routing_update_walls();
+}
 
 void city_maintenance_t::flood_building(building *b) {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
@@ -56,7 +127,7 @@ void city_maintenance_t::update_fire_direction() {
     fire_spread_direction = random_byte() & 7;
 }
 
-void city_maintenance_t::check_fire_collapse() {
+void city_maintenance_t::check_building_destroying() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Fire Collapse Update");
 
     int climate = scenario_property_climate();
@@ -70,6 +141,12 @@ void city_maintenance_t::check_fire_collapse() {
             int damage_risk_increase = b.collapse_risk_increase;
             damage_risk_increase = difficulty_multiply_risk(b.collapse_risk_increase);
             b.collapse_risk += damage_risk_increase;
+        }
+
+        if (b.structure_damage > 1000) {
+            destroy_by_enemy(&b);
+            recalculate_terrain = 1;
+            return;
         }
 
         if (b.collapse_risk > 1000) {
@@ -86,10 +163,6 @@ void city_maintenance_t::check_fire_collapse() {
             fire_risk_increase = difficulty_multiply_risk(fire_risk_increase);
 
             b.fire_risk += fire_risk_increase;
-            //            if (climate == CLIMATE_NORTHERN)
-            //                b->fire_risk = 0;
-            //            else if (climate == CLIMATE_DESERT)
-            //                b->fire_risk += 30;
         }
 
         if (b.fire_risk > 1000) {
