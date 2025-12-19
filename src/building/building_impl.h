@@ -59,7 +59,7 @@ public:
     virtual int ready_production() const { return current_params().production_rate; }
     virtual void draw_normal_anim(painter &ctx, vec2i point, tile2i tile, color mask);
     virtual void draw_normal_anim(painter &ctx, const animation_context &ranim, vec2i point, tile2i tile, color mask);
-    virtual void draw_tooltip(tooltip_context *c) {};
+    virtual void draw_tooltip(tooltip_context *c) const {};
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool add_resource(e_resource resource, int amount) { return false; }
