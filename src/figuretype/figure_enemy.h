@@ -39,4 +39,8 @@ public:
     virtual void enemy_marching(formation *m);
     virtual void enemy_fighting(formation *m);
     virtual void enemy_leaving();
+
+    virtual void before_poof() override;
+
+    virtual void leave_city();
 };

@@ -81,7 +81,16 @@ void figure_enemy_fast_sword::figure_action() {
     case ACTION_154_ENEMY_FAST_SWORD_ATTACK:
         enemy_fighting(m);
         break;
+
+    case ACTION_156_ENEMY_FAST_SWORD_LEAVING:
+        enemy_leaving();
+        break;
     }
+}
+
+void figure_enemy_fast_sword::leave_city() {
+    base.destination_tile = g_city.map.exit_point;
+    advance_action(ACTION_156_ENEMY_FAST_SWORD_LEAVING);
 }
 
 void figure_enemy_fast_sword::enemy_fighting(formation *m) {
@@ -137,7 +146,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
             d.damage_action++;
             m->recent_fight = 6;
             if (d.damage_action > interval_attack_delay()) {
-                b->force_damage(false, base.attack_value());
+                b->force_damage(e_damage_enemy, base.attack_value());
                 d.damage_action = 0;
             }
         }

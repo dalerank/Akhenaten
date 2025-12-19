@@ -8,6 +8,7 @@ enum e_action_enemy_spearman {
     ACTION_153_ENEMY_SPEARMAN_MARCHING = 153,
     ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE = 154,
     ACTION_155_ENEMY_SPEARMAN_RELOAD = 155,
+    ACTION_156_ENEMY_SPEARMAN_LEAVING = 156,
 };
 
 class figure_enemy_spearman : public figure_enemy {
@@ -43,7 +44,8 @@ public:
     //bool fight_enemy(int category, int max_distance);
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
-    virtual void enemy_fighting(formation *m)override;
+    virtual void enemy_fighting(formation *m) override;
+    virtual void leave_city() override;
 };
 ANK_CONFIG_STRUCT(figure_enemy_spearman::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)

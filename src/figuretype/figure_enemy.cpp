@@ -137,21 +137,29 @@ void figure_enemy::enemy_fighting(formation *m) {
 }
 
 void figure_enemy::enemy_leaving() {
-    if (do_goto(g_city.map.exit_point, TERRAIN_USAGE_ANY)) {
+    int action_leaving = base.action_state;
+    if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, action_leaving, action_leaving)) {
         poof();
         return;
     }
 
     if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
         base.routing_try_reroute_counter++;
-        if (base.routing_try_reroute_counter > 20) {
-            poof();
-            return;
-        }
+        //if (base.routing_try_reroute_counter > 20) {
+        //    poof();
+        //    return;
+        //}
         base.wait_ticks = 20;
         route_remove();
         base.state = FIGURE_STATE_ALIVE;
         base.destination_tile = g_city.map.closest_exit_tile_within_radius();
         base.direction = DIR_0_TOP_RIGHT;
     }
+}
+
+void figure_enemy::before_poof() {
+    int i = 0;
+}
+
+void figure_enemy::leave_city() {
 }

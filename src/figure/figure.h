@@ -60,7 +60,6 @@ class figure_market_buyer;
 class figure_bricklayer;
 class figure_ferry_boat;
 class figure_carpenter;
-class figure_soldier;
 
 struct animation_t;
 struct figure_static_params;
@@ -249,6 +248,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(bricklayer)
     ALLOW_SMART_CAST_FIGURE(ferry_boat)
     ALLOW_SMART_CAST_FIGURE(soldier)
+    ALLOW_SMART_CAST_FIGURE(enemy)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL
@@ -564,6 +564,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(labor_seeker)
     ALLOW_SMART_CAST_FIGURE_I(worker)
     ALLOW_SMART_CAST_FIGURE_I(soldier)
+    ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(fishing_boat)
     ALLOW_SMART_CAST_FIGURE_I(fishing_point)
     ALLOW_SMART_CAST_FIGURE_I(ferry_boat)
@@ -573,7 +574,6 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(transport_ship)
     ALLOW_SMART_CAST_FIGURE_I(stonemason)
     ALLOW_SMART_CAST_FIGURE_I(carpenter)
-    ALLOW_SMART_CAST_FIGURE_I(enemy)
     ALLOW_SMART_CAST_FIGURE_I(enemy_archer)
     ALLOW_SMART_CAST_FIGURE_I(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE_I(missile)
