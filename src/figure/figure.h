@@ -21,7 +21,9 @@
 
 #include <algorithm>
 #include <memory.h>
+#include <vector>
 
+struct tooltip_context;
 class building;
 class figure_impl;
 class figure_immigrant;
@@ -114,10 +116,12 @@ enum e_figure_flag {
 class figure {
 public: 
     using ptr_buffer_t = char[16];
+    using debug_lines_t = hvector<bstring32, 8>;
 
 private:
     ptr_buffer_t _ptr_buffer = { 0 };
     figure_impl *_ptr = nullptr;
+    debug_lines_t *_debug_lines;
 
 public:
     char runtime_data[40] = { 0 };
@@ -259,6 +263,9 @@ public:
 
     void apply_damage(int hit_dmg, figure_id attaker_id);
 
+    debug_lines_t &debug_lines();
+    void debug_lines_clear();
+
     bool is_dead(); 
     inline bool is_enemy() const { return !!(flags & e_figure_flag_enemy); }
     inline bool is_criminal() const { return !!(flags & e_figure_flag_criminal); }
@@ -351,19 +358,17 @@ public:
     int figure_image_direction();
     vec2i tile_pixel_coords();
 
-    // city_figure.c
     void draw_debug();
+    void draw_tooltip(tooltip_context *c) const;
     vec2i adjust_pixel_offset(const vec2i pixel);
     vec2i main_sprite_pixel() const;
     vec2i cart_sprite_pixel() const;
-    //    void draw_figure(int x, int y, int highlight);
+    
     void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
     void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
     void city_draw_figure(painter &ctx, int highlight);
-    //    void city_draw_selected_figure(int x, int y, pixel_coordinate *coord);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
-    // movement.c
     void advance_figure_tick();
     void set_target_height_bridge();
     void set_target_height_building();

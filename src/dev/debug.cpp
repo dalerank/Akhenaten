@@ -68,6 +68,10 @@
 #include "figure/formation.h"
 #include "core/calc.h"
 #include "grid/grid.h"
+#include "graphics/elements/tooltip.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
+#include "city/city_figures.h"
 
 #include "js/js_game.h"
 
@@ -857,11 +861,16 @@ void draw_debug_animal_spawn_areas(painter &ctx) {
 
 void figure::draw_debug() {
     if (draw_mode == 0) {
+        debug_lines_clear();
         return;
     }
 
     building *b = home();
     building *bdest = destination();
+
+    // Clear previous debug lines
+    auto& dlines = debug_lines();
+    dlines.clear();
 
     char str[10];
     vec2i pixel = lookup_tile_to_pixel(tile);
@@ -880,22 +889,22 @@ void figure::draw_debug() {
     painter ctx = game.painter();
 
     if (!!(draw_mode & e_figure_draw_overlay)) {
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", id, COLOR_WHITE);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", type, COLOR_LIGHT_BLUE);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", action_state, COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", wait_ticks, COLOR_WHITE);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", roam_length, COLOR_WHITE);
+        dlines.emplace_back().printf("ID: %d", id);
+        dlines.emplace_back().printf("Type: %d", type);
+        dlines.emplace_back().printf("Action: %d", action_state);
+        dlines.emplace_back().printf("Wait: %d", wait_ticks);
+        dlines.emplace_back().printf("Roam: %d", roam_length);
+        
         if (true) {
             vec2i tp = lookup_tile_to_pixel(tile);
             if (tile.grid_offset() != -1)
                 debug_draw_tile_box(tp.x, tp.y, COLOR_LIGHT_BLUE, COLOR_GREEN);
         }
         pixel.y += text_block_spacing;
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", tile.x(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", tile.y(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", tile.grid_offset(), COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", progress_on_tile, COLOR_FONT_MEDIUM_GRAY);
-        debug_text(ctx, str, pixel.x + (int)(30 * zoom_scale), pixel.y + text_line_height * 3, indent, "", routing_path_current_tile, COLOR_FONT_MEDIUM_GRAY);
+        dlines.emplace_back().printf("Tile: (%d, %d)", tile.x(), tile.y());
+        dlines.emplace_back().printf("Grid: %d", tile.grid_offset());
+        dlines.emplace_back().printf("Progress: %d", progress_on_tile);
+        dlines.emplace_back().printf("Path Tile: %d", routing_path_current_tile);      
     }
 
     if (!!(draw_mode & e_figure_draw_routing)) {
@@ -934,32 +943,27 @@ void figure::draw_debug() {
 
         // the rest of values, on top of all else
         if (routing_path_id) {
-            debug_text(ctx, str, pixel.x, pixel.y, indent, "", routing_path_id, COLOR_LIGHT_RED);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", routing_path_current_tile, COLOR_LIGHT_RED);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", routing_path_length, COLOR_LIGHT_RED);
+            dlines.emplace_back().printf("Path ID: %d", routing_path_id);
+            dlines.emplace_back().printf("Path Tile: %d", routing_path_current_tile);
+            dlines.emplace_back().printf("Path Length: %d", routing_path_length);
         } else {
-            debug_text(ctx, str, pixel.x, pixel.y, indent, "", roam_length, COLOR_LIGHT_BLUE);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", roam_wander_freely, COLOR_LIGHT_BLUE);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", max_roam_length, COLOR_LIGHT_BLUE);
+            dlines.emplace_back().printf("Roam Length: %d", roam_length);
+            dlines.emplace_back().printf("Roam Free: %d", roam_wander_freely);
+            dlines.emplace_back().printf("Max Roam: %d", max_roam_length);
         }
 
-        debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 3, indent, "", terrain_usage, COLOR_WHITE);
+        dlines.emplace_back().printf("Terrain Usage: %d", terrain_usage);
 
         switch (direction) {
-        case DIR_FIGURE_CAN_NOT_REACH:
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_LIGHT_RED);
-            break;
-        case DIR_FIGURE_REROUTE:
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_LIGHT_BLUE);
-            break;
-        case DIR_FIGURE_NONE:
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_GREEN);
-            break;
+        case DIR_FIGURE_CAN_NOT_REACH: dlines.emplace_back().printf("Direction: %d (CANNOT_REACH)", direction); break;
+        case DIR_FIGURE_REROUTE: dlines.emplace_back().printf("Direction: %d (REROUTE)", direction); break;
+        case DIR_FIGURE_NONE: dlines.emplace_back().printf("Direction: %d (NONE)", direction); break;
         default:
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 4, indent, "", direction, COLOR_WHITE);
+            dlines.emplace_back().printf("Direction: %d", direction);
             break;
         }
-        debug_text(ctx, str, pixel.x + (int)(10 * zoom_scale), pixel.y + text_line_height * 4, (int)(5 * zoom_scale), ":", roam_turn_direction, roam_turn_direction ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
+
+        dlines.emplace_back().printf("Roam Turn: %d", roam_turn_direction);
 
         pixel.y += (int)(50 * zoom_scale);
         text_draw(bstring32(progress_on_tile).c_str(), pixel.x, pixel.y + (int)(30 * zoom_scale), FONT_SMALL_PLAIN, 0);
@@ -967,17 +971,15 @@ void figure::draw_debug() {
 
     if (!!(draw_mode & e_figure_draw_carry)) { // RESOURCE CARRY
         if (resource_id) {
-            debug_text(ctx, str, pixel.x, pixel.y, indent, "", resource_id, COLOR_GREEN);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height, indent, "", resource_amount_full, resource_amount_full ? COLOR_GREEN : COLOR_FONT_MEDIUM_GRAY);
-            debug_text(ctx, str, pixel.x, pixel.y + text_line_height * 2, indent, "", collecting_item_id, collecting_item_id ? COLOR_LIGHT_BLUE : COLOR_FONT_MEDIUM_GRAY);
+            dlines.emplace_back().printf("Resource: %d", resource_id);
+            dlines.emplace_back().printf("Amount: %d", resource_amount_full);
+            dlines.emplace_back().printf("Collecting: %d", collecting_item_id);
         }
     }
 
     if (!!(draw_mode & e_figure_draw_building)) {
-        debug_text(ctx, str, pixel.x + 0, pixel.y, indent, "", homeID(), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + (int)(20 * zoom_scale), pixel.y, (int)(8 * zoom_scale), ":", home()->get_figure_slot(this), homeID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + 0, pixel.y + text_line_height, indent, "", destinationID(), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
-        debug_text(ctx, str, pixel.x + (int)(20 * zoom_scale), pixel.y + text_line_height, (int)(8 * zoom_scale), ":", destination()->get_figure_slot(this), destinationID() > 0 ? COLOR_WHITE : COLOR_LIGHT_RED);
+        dlines.emplace_back().printf("Home: %d (slot: %d)", homeID(), homeID() > 0 ? home()->get_figure_slot(this) : -1);
+        dlines.emplace_back().printf("Dest: %d (slot: %d)", destinationID(), destinationID() > 0 ? destination()->get_figure_slot(this) : -1);
     }
 
     if (!!(draw_mode & e_figure_draw_festival)) {
@@ -1002,27 +1004,57 @@ void figure::draw_debug() {
             }
         }
         col = use_cross_country ? COLOR_WHITE : COLOR_FONT_MEDIUM_GRAY;
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", use_cross_country);
-        pixel.y += text_line_height;
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_direction, col);
-        pixel.y += text_line_height;
-
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_coords.x, col);
-        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_coords.y, col);
-        pixel.y += text_line_height;
-
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_destination.x, col);
-        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_destination.y, col);
-        pixel.y += text_line_height;
-
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta_xy, col);
-        pixel.y += text_line_height;
-        debug_text(ctx, str, pixel.x, pixel.y, indent, "", cc_delta.x, col);
-        debug_text(ctx, str, pixel.x + (int)(40 * zoom_scale), pixel.y, indent, "", cc_delta.y, col);
-        pixel.y += text_line_height;
+        dlines.emplace_back().printf("CC Move: %d", use_cross_country);
+        dlines.emplace_back().printf("CC Dir: %d", cc_direction);
+        dlines.emplace_back().printf("CC Coords: (%d, %d)", cc_coords.x, cc_coords.y);
+        dlines.emplace_back().printf("CC Dest: (%d, %d)", cc_destination.x, cc_destination.y);
+        dlines.emplace_back().printf("CC Delta XY: %d", cc_delta_xy);
+        dlines.emplace_back().printf("CC Delta: (%d, %d)", cc_delta.x, cc_delta.y);
     }
 
     dcast()->debug_draw();
+}
+
+void figure::draw_tooltip(tooltip_context *c) const {
+    if (!_debug_lines) {
+        return;
+    }
+    
+    vec2i mpos = c->mpos;
+    
+    int width = 220;
+    int line_height = 14;
+    int height = (int)_debug_lines->size() * line_height + 10;
+    vec2i pos;
+    
+    if (mpos.x < width + 20)
+        pos.x = mpos.x + 20;
+    else {
+        pos.x = mpos.x - width - 20;
+    }
+    
+    if (mpos.y < 200) {
+        pos.y = mpos.y + 10;
+    } else if (mpos.y + height - 32 > screen_height()) {
+        pos.y = screen_height() - height;
+    } else {
+        pos.y = mpos.y - 32;
+    }
+    
+    ui::begin_widget(pos);
+    
+    ui::fill_rect({ 0, 0 }, { width, height }, COLOR_TOOLTIP_FILL);
+    ui::border({ 0, 0 }, { width, height }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None);
+    
+    int y_offset = 5;
+    int label_x = 5;
+    
+    for (const auto &line : *_debug_lines) {
+        ui::label_colored(line.c_str(), { label_x, y_offset }, FONT_SMALL_SHADED, COLOR_TOOLTIP_TEXT);
+        y_offset += line_height;
+    }
+    
+    ui::end_widget();
 }
 
 void set_debug_building_id(int bid) {

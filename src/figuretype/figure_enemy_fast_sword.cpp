@@ -244,6 +244,11 @@ void figure_enemy_fast_sword::debug_draw() {
         return;
     }
 
+    auto &dlines = base.debug_lines();
+    dlines.emplace_back().printf("formation_id: %d", base.formation_id);
+    dlines.emplace_back().printf("index_in_formation: %d", base.index_in_formation);
+    dlines.emplace_back().printf("destination_building_id: %d", m->destination_building_id);
+
     // Draw target building
     if (m->destination_building_id > 0) {
         building *target_building = building_get(m->destination_building_id)->main();
