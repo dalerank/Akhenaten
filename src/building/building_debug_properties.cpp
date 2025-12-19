@@ -91,6 +91,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("common_health", b->common_health);
         game_debug_show_property("malaria_risk", b->malaria_risk);
         game_debug_show_property("collapse_risk", b->collapse_risk);
+        game_debug_show_property("structure_damage", b->structure_damage);
         game_debug_show_property("fire_risk", b->fire_risk);
         game_debug_show_property("fire_duration", b->fire_duration);
         game_debug_show_property("health_proof", b->health_proof);
