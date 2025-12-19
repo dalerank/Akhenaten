@@ -21,7 +21,7 @@ enum e_column_color {
     COLUMN_COLOR_BLUE = 12,
 };
 
-enum e_overlay {
+enum e_overlay : uint8_t {
     OVERLAY_NONE = 0,
     OVERLAY_WATER = 2,
     OVERLAY_RELIGION = 4,

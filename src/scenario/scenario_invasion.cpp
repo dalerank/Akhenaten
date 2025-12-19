@@ -252,7 +252,10 @@ tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int inv
             return tile2i::invalid;
         }
     } else if (map_terrain_is(invasion_tile, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
-        building_destroy_by_enemy(invasion_tile);
+        building *b = building_get(invasion_tile.grid_offset());
+        if (b->id) {
+            g_city.maintenance.destroy_by_enemy(b);
+        }
     }
 
     // spawn the lot!
