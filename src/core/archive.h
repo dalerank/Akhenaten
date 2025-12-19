@@ -209,7 +209,7 @@ struct archive {
     template<typename T>
     inline void r_objects(pcstr name, T read_func) {
         this->r_section(name, [this, &read_func] (archive s_arch) {
-            hvector<pcstr, 512> keys;
+            hvector<pcstr, 512, false> keys;
             {
                 pcstr key;
                 pushiterator(s_arch, -1, 1);
@@ -479,8 +479,7 @@ struct g_archive : public archive {
         if (isobject(-1)) {
             pcstr key;
 
-            fixed_memory_resource<bstring128, 128> keys_buffer;
-            std::pmr::vector<bstring128> keys{ &keys_buffer };
+            hvector<pcstr, 256, false> keys;
             pushiterator(state, -1, 1);
             while ((key = nextiterator(state, -1))) {
                 keys.push_back(key);
@@ -488,9 +487,8 @@ struct g_archive : public archive {
             pop(state, 1);
 
             for (const auto &key : keys) {
-                getproperty(state, -1, key.c_str());
-                //const bool isobj = isobject(state, -1);
-                read_func(key.c_str(), state);
+                getproperty(state, -1, key);
+                read_func(key, state);
                 pop(state, 1);
             }
         }
