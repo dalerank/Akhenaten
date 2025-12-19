@@ -104,7 +104,7 @@ struct building_crime_t {
 };
 ANK_CONFIG_STRUCT(building_crime_t, value, step, step_size, range)
 
-enum e_building_state {
+enum e_building_state : uint8_t {
     BUILDING_STATE_UNUSED = 0,
     BUILDING_STATE_VALID = 1,
     BUILDING_STATE_UNDO = 2,
