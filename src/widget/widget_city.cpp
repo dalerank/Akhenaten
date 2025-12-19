@@ -43,6 +43,9 @@
 #include "overlays/city_overlay.h"
 #include "building/building.h"
 #include "dev/debug.h"
+#include "graphics/elements/tooltip.h"
+#include "city/city_figures.h"
+#include "input/mouse.h"
 
 screen_city_t g_screen_city;
 
@@ -1100,6 +1103,38 @@ xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
     return tooltip;
 }
 
+static const figure* get_figure_at_mouse(vec2i mouse_pos) {
+    tile2i tile = g_screen_city.update_city_view_coords(mouse_pos);
+    
+    if (!tile.valid()) {
+        return figure_get(0);
+    }
+    
+    vec2i center_pos = lookup_tile_to_pixel(tile) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
+    const int radius = 30;
+    
+    grid_tiles tiles = map_grid_get_tiles(tile.shifted(-1, -1), tile.shifted(1, 1));
+    figure* closest_figure = figure_get(0);
+    float closest_dist_sq = radius * radius;
+    
+    for (const auto &t : tiles) {
+        int figure_id = map_figure_id_get(t);
+        while (figure_id > 0) {
+            figure *f = figure_get(figure_id);
+            if (f && f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
+                float dist_sq = center_pos.dist_sq(f->main_cached_pos);
+                if (dist_sq < closest_dist_sq) {
+                    closest_dist_sq = dist_sq;
+                    closest_figure = f;
+                }
+            }
+            figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
+        }
+    }
+    
+    return closest_figure;
+}
+
 void screen_city_t::draw_tooltip(tooltip_context* c) {
     if (g_settings.tooltips == e_tooltip_show_none) {
         return;
@@ -1113,21 +1148,18 @@ void screen_city_t::draw_tooltip(tooltip_context* c) {
         return;
     }
 
+    // Check for figure with debug info under mouse
+    const figure* f = get_figure_at_mouse(c->mpos);
+    f->draw_tooltip(c);
+
     if (g_city.overlay()) {
         c->high_priority = 1;
         c->text = get_overlay_tooltip(c, current_tile);
     }
 
     int building_id = map_building_at(current_tile);
-    building_impl *b = building_get(building_id)->dcast();
-    b->draw_tooltip(c);
-    // cheat tooltips
-    //if (game.current_overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
-    //    c->type = TOOLTIP_TILES;
-    //    c->high_priority = 1;
-    //    return;
-    //}
-    //
-    //// overlay tooltips
-    
+    if (building_id) {
+        building_impl *b = building_get(building_id)->dcast();
+        b->draw_tooltip(c);
+    }
 }
