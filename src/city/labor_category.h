@@ -2,7 +2,7 @@
 
 #include "core/tokenum.h"
 
-enum e_labor_category {
+enum e_labor_category : int8_t {
     LABOR_CATEGORY_NONE = -1,
     LABOR_CATEGORY_FOOD_PRODUCTION = 0, // todo: wrong index...
     LABOR_CATEGORY_INDUSTRY_COMMERCE = 1,
@@ -16,7 +16,7 @@ enum e_labor_category {
     LABOR_CATEGORY_CULTURE = 9,
     LABOR_CATEGORY_SIZE = 10,
 
-    LABOR_CATEGORY_INVALID = 0xff
+    LABOR_CATEGORY_INVALID = -1
 };
 
 extern const token_holder<e_labor_category, LABOR_CATEGORY_NONE, LABOR_CATEGORY_SIZE> e_labor_category_tokens;

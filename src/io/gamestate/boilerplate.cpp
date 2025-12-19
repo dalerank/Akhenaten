@@ -603,8 +603,12 @@ static void file_schema(e_file_format file_format, const int file_version) {
             FILEIO.push_chunk(103968, false, "clay_grid", iob_clay);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "copper_grid", iob_copper);              // (228²) * 2
             FILEIO.push_chunk(103968, false, "gems_grid", iob_gems);              // (228²) * 2
-            FILEIO.push_chunk(51984, false, "irrigation_value_grid", iob_irrigation_value_grid);
+            FILEIO.push_chunk(51984, false, "irrigation_value_grid", iob_irrigation_value_grid); // (228²) * 1
         }
+        if (file_version > 169) {
+            FILEIO.push_chunk(16384, false, "iob_enemy_armies_stats", iob_enemy_armies_stats); // actual 15360 + 256 bytes
+        }
+            
         break;
     }
 }

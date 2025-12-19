@@ -134,78 +134,25 @@ int enemy_army_is_stronger_than_batalions() {
     return g_enemy_army_in_city.enemy_strength > 2 * g_enemy_army_in_city.batalion_strength;
 }
 
-void enemy_armies_save_state(buffer* buf, buffer* totals_buf) {
+io_buffer *iob_enemy_armies_stats = new io_buffer([] (io_buffer *iob, size_t version) {
+    iob->bind_i32(g_enemy_army_in_city.enemy_formations);
+    iob->bind_i32(g_enemy_army_in_city.enemy_strength);
+    iob->bind_i32(g_enemy_army_in_city.batlion_formations);
+    iob->bind_i32(g_enemy_army_in_city.batalion_strength);
+    iob->bind_i32(g_enemy_army_in_city.days_since_pharaoh_influence_calculation);
+    iob->bind____skip(256);
     for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].formation_id);
+        iob->bind_u8(g_enemy_armies.data[i].formation_id);
+        iob->bind_tile(g_enemy_armies.data[i].home);
+        iob->bind_u8(g_enemy_armies.data[i].layout);
+        iob->bind_tile(g_enemy_armies.data[i].destination);
+        iob->bind_u16(g_enemy_armies.data[i].destination_building_id);
+        iob->bind_u8(g_enemy_armies.data[i].num_batalions);
+        iob->bind_bool(g_enemy_armies.data[i].ignore_pharaoh_soldiers);
+        iob->bind_u8(g_enemy_armies.data[i].buildings_to_destroy);
+        iob->bind_u8(g_enemy_armies.data[i].buildings_destroyed);
+        iob->bind_u16(g_enemy_armies.data[i].want_money);
+        iob->bind_u16(g_enemy_armies.data[i].grab_money);
+        iob->bind____skip(64);
     }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].home.x());
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].home.y());
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].layout);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_t2i(g_enemy_armies.data[i].destination);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        // buf->write_i32(enemy_armies[i].destination.y());
-        buf->write_i32(0);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].destination_building_id);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i32(g_enemy_armies.data[i].num_batalions);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->write_i8(g_enemy_armies.data[i].ignore_pharaoh_soldiers);
-        buf->write_i16(g_enemy_armies.data[i].buildings_to_destroy);
-        buf->write_i16(g_enemy_armies.data[i].buildings_destroyed);
-    }
-    totals_buf->write_i32(g_enemy_army_in_city.enemy_formations);
-    totals_buf->write_i32(g_enemy_army_in_city.enemy_strength);
-    totals_buf->write_i32(g_enemy_army_in_city.batlion_formations);
-    totals_buf->write_i32(g_enemy_army_in_city.batalion_strength);
-    totals_buf->write_i32(g_enemy_army_in_city.days_since_pharaoh_influence_calculation);
-}
-
-void enemy_armies_load_state(buffer* buf, buffer* totals_buf) {
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].formation_id = buf->read_i32();
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].home.set_x(buf->read_i32());
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].home.set_y(buf->read_i32());
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].layout = buf->read_i32();
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        buf->read_t2i(g_enemy_armies.data[i].destination);
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        // enemy_armies[i].destination_y = buf->read_i32();
-        int tmp = buf->read_i32();
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].destination_building_id = buf->read_i32();
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].num_batalions = buf->read_i32();
-    }
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].ignore_pharaoh_soldiers = buf->read_i8();
-        g_enemy_armies.data[i].buildings_to_destroy = buf->read_i16();
-        g_enemy_armies.data[i].buildings_destroyed = buf->read_i16();
-    }
-    g_enemy_army_in_city.enemy_formations = totals_buf->read_i32();
-    g_enemy_army_in_city.enemy_strength = totals_buf->read_i32();
-    g_enemy_army_in_city.batlion_formations = totals_buf->read_i32();
-    g_enemy_army_in_city.batalion_strength = totals_buf->read_i32();
-    g_enemy_army_in_city.days_since_pharaoh_influence_calculation = totals_buf->read_i32();
-}
+});

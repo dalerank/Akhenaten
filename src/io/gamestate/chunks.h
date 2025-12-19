@@ -71,6 +71,7 @@ extern io_buffer* iob_trade_routes_limits;
 extern io_buffer* iob_trade_routes_traded;
 
 extern io_buffer* iob_routing_stats;
+extern io_buffer* iob_enemy_armies_stats;
 
 extern io_buffer* iob_scenario_map_name;
 extern io_buffer* iob_city_bookmarks;

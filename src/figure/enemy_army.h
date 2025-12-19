@@ -13,13 +13,16 @@ struct enemy_army {
     uint16_t destination_building_id;
     uint8_t num_batalions;
     bool ignore_pharaoh_soldiers;
-    uint16_t buildings_to_destroy;  // 0 - unlimited
-    uint16_t buildings_destroyed;
+    uint8_t buildings_to_destroy;  // 0 - unlimited
+    uint8_t buildings_destroyed;
+    uint16_t want_money;  // 0 - unlimited
+    uint16_t grab_money;
+    char reserved_[72];
 };
 
 struct enemy_armies_t {   
     enum {
-        MAX_ENEMY_ARMIES = 125,
+        MAX_ENEMY_ARMIES = 120,
     };
 
     void clear();
@@ -48,7 +51,3 @@ void enemy_army_totals_add_enemy_formation(int strength);
 void enemy_army_calculate_kingdome_influence();
 
 int enemy_army_is_stronger_than_batalions(void);
-
-void enemy_armies_save_state(buffer* buf, buffer* totals_buf);
-
-void enemy_armies_load_state(buffer* buf, buffer* totals_buf);
