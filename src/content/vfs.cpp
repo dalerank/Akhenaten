@@ -134,7 +134,7 @@ reader file_open(path path, pcstr mode) {
             void *mem = malloc(str.size() + 1);
             memcpy(mem, str.c_str(), str.size());
             ((char *)mem)[str.size()] = 0; // null-terminate the string
-            return std::make_shared<data_reader>(path.c_str(), mem, str.size());
+            return std::make_shared<data_reader>(path.c_str(), mem, static_cast<int>(str.size()) );
         }
 
         return reader();

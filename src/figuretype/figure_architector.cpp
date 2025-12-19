@@ -51,8 +51,8 @@ sound_key figure_architector::phrase_key() const {
     int houses_damage_risk = 0;
     int hoeses_damage_high = 0;
     buildings_valid_do([&] (building &b) {
-        houses_damage_risk += (b.damage_risk > 70) ? 1 : 0;
-        hoeses_damage_high += (b.damage_risk > 50) ? 1 : 0;
+        houses_damage_risk += (b.collapse_risk > 70) ? 1 : 0;
+        hoeses_damage_high += (b.collapse_risk > 50) ? 1 : 0;
     });
 
     const int sentiment = g_city.sentiment.value;
@@ -102,15 +102,15 @@ int figure_architector::provide_service() {
         int building_id = map_building_at(grid_offset);
         if (building_id) {
             building *b = building_get(building_id)->main();
-            max_damage = std::max<short>(b->damage_risk, max_damage);
+            max_damage = std::max<short>(b->collapse_risk, max_damage);
 
             if (risk_reduction > 0) {
                 if (risk_reduction >= 100) {
                     // Complete removal (original behavior)
-                    b->damage_risk = 0;
+                    b->collapse_risk = 0;
                 } else {
                     // Partial reduction as percentage
-                    b->damage_risk = std::max(0, b->damage_risk - (b->damage_risk * risk_reduction / 100));
+                    b->collapse_risk = std::max(0, b->collapse_risk - (b->collapse_risk * risk_reduction / 100));
                 }
             }
             houses_serviced++;

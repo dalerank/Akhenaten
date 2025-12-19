@@ -613,7 +613,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_damage:
         if (b_id && b) {
-            snprintf((char *)str, 30, "f:%d/d:%d", b->fire_risk, b->damage_risk);
+            snprintf((char *)str, 30, "f:%d/d:%d", b->fire_risk, b->collapse_risk);
             text_draw(ctx, (uint8_t*)str, x, y + 10, FONT_SMALL_PLAIN, COLOR_LIGHT_BLUE, 0.5f);
         }
         break;

@@ -67,12 +67,12 @@ void city_maintenance_t::check_fire_collapse() {
     buildings_valid_do([&] (building &b) {
         /////// COLLAPSE
         if (!b.damage_proof) {
-            int damage_risk_increase = b.damage_risk_increase;
-            damage_risk_increase = difficulty_multiply_risk(b.damage_risk_increase);
-            b.damage_risk += damage_risk_increase;
+            int damage_risk_increase = b.collapse_risk_increase;
+            damage_risk_increase = difficulty_multiply_risk(b.collapse_risk_increase);
+            b.collapse_risk += damage_risk_increase;
         }
 
-        if (b.damage_risk > 1000) {
+        if (b.collapse_risk > 1000) {
             collapse_building(&b);
             recalculate_terrain = 1;
             return;
