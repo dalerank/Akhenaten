@@ -280,6 +280,11 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
     base.target_figure_id = 0;
 }
 
+void figure_enemy_archer::leave_city() {
+    base.destination_tile = g_city.map.exit_point;
+    advance_action(ACTION_156_ENEMY_ARCHER_LEAVING);
+}
+
 void figure_enemy_archer::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemyArcher");
 
@@ -316,7 +321,7 @@ void figure_enemy_archer::figure_action() {
         enemy_fighting(m);
         break;
 
-    case ACTION_156_ENEMY_LEAVING:
+    case ACTION_156_ENEMY_ARCHER_LEAVING:
         enemy_leaving();
         break;
     }

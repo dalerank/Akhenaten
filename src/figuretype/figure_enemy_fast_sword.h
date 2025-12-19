@@ -7,6 +7,7 @@ enum e_action_enemy_fast_sword {
     ACTION_152_ENEMY_FAST_SWORD_WAITING = 152,
     ACTION_153_ENEMY_FAST_SWORD_MARCHING = 153,
     ACTION_154_ENEMY_FAST_SWORD_ATTACK = 154,
+    ACTION_156_ENEMY_FAST_SWORD_LEAVING = 156,
 };
 
 class figure_enemy_fast_sword : public figure_enemy {
@@ -33,6 +34,7 @@ public:
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;
     virtual void enemy_fighting(formation *m) override;
+    virtual void leave_city() override;
     virtual void debug_draw() override;
 
     virtual int8_t interval_attack_delay() const { return 100; }

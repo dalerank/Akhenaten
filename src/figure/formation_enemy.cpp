@@ -9,6 +9,7 @@
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figuretype/figure_soldier.h"
 #include "figure/formation_layout.h"
 #include "figuretype/figure_enemy.h"
 #include "figure/route.h"
@@ -590,13 +591,10 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
 
     if (army->buildings_to_destroy > 0 && army->buildings_destroyed >= army->buildings_to_destroy) {
         for (figure_id fid : m->figures) {
-            figure* f = figure_get(fid);
-            if (f->is_alive() && f->action_state != FIGURE_ACTION_149_CORPSE && 
-                f->action_state != FIGURE_ACTION_148_FLEEING && 
-                f->action_state != ACTION_156_ENEMY_LEAVING) {
-                f->action_state = ACTION_156_ENEMY_LEAVING;
+            figure_enemy *f = figure_get(fid)->dcast_enemy();
+            if (f && f->is_alive()) {
+                f->leave_city();
                 f->route_remove();
-                f->destination_tile = g_city.map.closest_exit_tile_within_radius();
             }
         }
         return;

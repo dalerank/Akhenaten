@@ -181,6 +181,11 @@ void figure_enemy_spearman::enemy_fighting(formation *m) {
     }
 }
 
+void figure_enemy_spearman::leave_city() {
+    base.destination_tile = g_city.map.exit_point;
+    advance_action(ACTION_156_ENEMY_SPEARMAN_LEAVING);
+}
+
 void figure_enemy_spearman::figure_action() {
     OZZY_PROFILER_SECTION("Game/Run/Tick/Figure/EnemySpearman");
 
@@ -226,7 +231,7 @@ void figure_enemy_spearman::figure_action() {
         }
         break;
 
-    case ACTION_156_ENEMY_LEAVING:
+    case ACTION_156_ENEMY_SPEARMAN_LEAVING:
         enemy_leaving();
         break;
     }

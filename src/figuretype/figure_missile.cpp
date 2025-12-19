@@ -110,7 +110,7 @@ void figure_missile::missile_hit_building(building_id target_id) {
         return;
     }
 
-    b->force_damage(false, runtime_data().missile_attack_value);
+    b->force_damage(e_damage_enemy, runtime_data().missile_attack_value);
 
     poof();
 }
