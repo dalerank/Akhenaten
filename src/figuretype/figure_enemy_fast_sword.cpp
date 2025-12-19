@@ -115,9 +115,10 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
 
     bool attacking = false;
     if (target_id > 0) {
+        figure *target = figure_get(base.target_figure_id);
+        base.direction = calc_general_direction(tile(), target->tile);
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE) {
-            figure *target = figure_get(base.target_figure_id);
             base.destination_tile = target->tile;
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -132,6 +133,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         float dist = tile().dist(b->tile);
         attacking |= (dist < 2);
         if (attacking) {
+            base.direction = calc_general_direction(tile(), b->tile);
             d.damage_action++;
             m->recent_fight = 6;
             if (d.damage_action > interval_attack_delay()) {
