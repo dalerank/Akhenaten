@@ -550,7 +550,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_sandstone:
         d = map_get_sandstone(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color sandstone_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, sandstone_color);
         }
@@ -559,7 +558,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_stone:
         d = map_get_stone(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color stone_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, stone_color);
         }
@@ -568,7 +566,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_limestone:
         d = map_get_limestone(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color limestone_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, limestone_color);
         }
@@ -577,7 +574,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_granite:
         d = map_get_granite(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color granite_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, granite_color);
         }
@@ -586,7 +582,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_golden:
         d = map_get_golden(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color golden_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, golden_color);
         }
@@ -595,7 +590,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_clay:
         d = map_get_clay(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color clay_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, clay_color);
         }
@@ -604,7 +598,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_copper:
         d = map_get_copper(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color copper_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, copper_color);
         }
@@ -613,7 +606,6 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
     case e_debug_render_gems:
         d = map_get_gems(grid_offset);
         if (d > 0) {
-            // Цвет зависит от уровня: зеленый (много), желтый (средний), красный (мало/истощено)
             color gems_color = (d > 40000) ? COLOR_LIGHT_GREEN : (d > 20000) ? COLOR_YELLOW : COLOR_LIGHT_RED;
             debug_text(ctx, str, x, y + 10, 0, "", d, gems_color);
         }
@@ -645,11 +637,9 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         {
             int risk = g_malaria_risk.get(grid_offset);
             if (risk > 0) {
-                // Цвет зависит от уровня риска: зеленый (низкий), желтый (средний), красный (высокий)
                 color risk_color = (risk < 30) ? COLOR_LIGHT_GREEN : (risk < 60) ? COLOR_YELLOW : COLOR_LIGHT_RED;
                 debug_text(ctx, str, x, y + 10, 0, "", risk, risk_color);
             }
-            // Также показываем риск здания, если есть
             if (b_id && b) {
                 if (b->malaria_risk > 0) {
                     snprintf((char *)str, 30, "b:%d", b->malaria_risk);
@@ -663,10 +653,17 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         {
             int irrigation = g_irrigation_value.get(grid_offset);
             if (irrigation != 0) {
-                // Цвет зависит от значения: зеленый (высокий), желтый (средний), красный (низкий)
                 color irrigation_color = (irrigation >= 10) ? COLOR_LIGHT_GREEN : (irrigation >= 5) ? COLOR_YELLOW : COLOR_LIGHT_RED;
                 debug_text(ctx, str, x, y + 10, 0, "", irrigation, irrigation_color);
             }
+        }
+        break;
+
+    case e_debug_render_damage_grid:
+        d = map_get_building_damage(grid_offset);
+        if (d > 0) {
+            color damage_color = (d < 5) ? COLOR_LIGHT_GREEN : (d < 10) ? COLOR_YELLOW : COLOR_LIGHT_RED;
+            debug_text(ctx, str, x, y + 10, 0, "", d, damage_color);
         }
         break;
 

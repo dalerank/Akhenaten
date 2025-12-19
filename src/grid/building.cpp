@@ -72,6 +72,10 @@ void map_building_height_set(int grid_offset, int8_t height) {
     map_grid_set(g_height_building_grid, grid_offset, height);
 }
 
+int map_get_building_damage(int grid_offset) {
+    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(g_damage_grid, grid_offset) : 0;
+}
+
 int map_building_damage_increase(int grid_offset) {
     int d = map_grid_get(g_damage_grid, grid_offset) + 1;
     map_grid_set(g_damage_grid, grid_offset, d);

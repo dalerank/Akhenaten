@@ -32,7 +32,7 @@ struct enemy_armies_t {
 extern enemy_armies_t g_enemy_armies;
 
 
-enemy_army* enemy_army_get_editable(int invasion_id);
+enemy_army* enemy_army_get_editable(uint8_t invasion_id);
 
 void enemy_armies_clear_ignore_pharaoh_soldiers();
 
