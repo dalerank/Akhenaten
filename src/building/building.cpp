@@ -485,16 +485,19 @@ bool building::workshop_has_resources() {
     return has_second_material && hase_first_resource;
 }
 
-void building::force_damage(bool fire, int8_t value) {
+void building::force_damage(e_damage_type type, int8_t value) {
     const bool valid = (state == BUILDING_STATE_VALID || state == BUILDING_STATE_MOTHBALLED);
     if (!valid) {
         return;
     }
 
-    if (fire) {
-        fire_risk += value;
-    } else {    
-        collapse_risk += value;
+    switch (type) {
+    case e_damage_fire: fire_risk += value; break;
+    case e_damage_collapse: collapse_risk += value; break;
+    case e_damage_enemy: structure_damage += value; break;
+    default:
+        structure_damage += value;
+        break;
     }
 }
 

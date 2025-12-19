@@ -60,13 +60,14 @@ enum e_labor_state {
     LABOR_STATE_JUST_ENTERED
 };
 
-enum e_destroy_reason {
+enum e_destroy_reason : uint8_t {
     e_destroy_simple = 0,
     e_destroy_collapse = 1,
     e_destroy_flooded = 2,
+    e_destroy_enemy = 3,
 };
 
-enum e_fancy_state {
+enum e_fancy_state : uint8_t {
     efancy_normal,
     efancy_good
 };
@@ -171,11 +172,12 @@ public:
     bool has_road_access;
     uint8_t disease_days;
     uint8_t common_health;
-    uint8_t malaria_risk;
     uint8_t spawned_worker_this_month;
     uint8_t curse_days_left;
     uint8_t blessing_days_left;
 
+    uint8_t malaria_risk;
+    uint16_t structure_damage;
     uint16_t collapse_risk;
     uint16_t fire_risk;
 
@@ -294,7 +296,7 @@ public:
     figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 800);
     bool workshop_has_resources();
 
-    void force_damage(bool fire, int8_t value);
+    void force_damage(e_damage_type type, int8_t value);
     void destroy_by_collapse();
     void destroy_by_flooded();
     void destroy_by_fire();

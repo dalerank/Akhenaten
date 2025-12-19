@@ -35,11 +35,18 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_architect_post);
 // Options reading from config "info_window_architect_post"
 info_window_architect_post architect_post_infow;
 
-// Console command to remove damage risk from all buildings
+// Console command to remove collapse risk from all buildings
 declare_console_command_p(collapse_no) {
     buildings_valid_do([&] (building &b) {
         b.collapse_risk = 0;
     });
+}
+
+// Console command to remove damage risk from all buildings
+declare_console_command_p(damage_no) {
+    buildings_valid_do([&] (building &b) {
+        b.structure_damage = 0;
+    });    
 }
 
 // Console command to collapse a specified number of buildings (default 10)
