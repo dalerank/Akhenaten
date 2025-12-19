@@ -62,8 +62,9 @@ void figure_native::figure_action() {
             route_remove();
         }
         break;
+
     case ACTION_159_NATIVE_ATTACKING:
-        g_city.figures_add_attacking_native();
+        g_city.figures.add_attacking_native();
         base.terrain_usage = TERRAIN_USAGE_ENEMY;
         base.move_ticks(1);
         if (base.direction == DIR_FIGURE_NONE || base.direction == DIR_FIGURE_REROUTE || base.direction == DIR_FIGURE_CAN_NOT_REACH) {

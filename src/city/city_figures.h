@@ -22,6 +22,7 @@ struct city_figures_t {
     void reload_objects();
 
     void add_enemy();
+    void add_attacking_native();
 
     int total_invading_enemies() const;
 };
