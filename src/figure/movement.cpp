@@ -159,8 +159,6 @@ void figure::advance_route_tile(int roaming_enabled) {
     } else if (!map_routing_passable_by_usage(terrain_usage, target_grid_offset)) {
         direction = DIR_FIGURE_REROUTE;
     } else if (terrain_usage == TERRAIN_USAGE_ENEMY) {
-        //        if (!map_routing_noncitizen_is_passable(target_grid_offset))
-        //            direction = DIR_FIGURE_REROUTE;
         if (map_routing_is_destroyable(target_grid_offset)) {
             int cause_damage = 1;
             int max_damage = 0;
@@ -182,19 +180,16 @@ void figure::advance_route_tile(int roaming_enabled) {
                 max_damage = 150;
                 break;
             }
+
             if (cause_damage) {
                 attack_direction = direction;
                 direction = DIR_FIGURE_ATTACK;
-                if (!(game.simtime.tick & 3))
+                if (!(game.simtime.tick & 3)) {
                     building_destroy_increase_enemy_damage(target_grid_offset, max_damage);
+                }
             }
         }
-    }
-    //    else if (terrain_usage == TERRAIN_USAGE_WALLS) {
-    //        if (!map_routing_is_wall_passable(target_grid_offset))
-    //            direction = DIR_FIGURE_REROUTE;
-    //    }
-    else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
+    } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
         if (map_terrain_is(target_grid_offset, TERRAIN_WATER) && map_terrain_is(target_grid_offset, TERRAIN_FLOODPLAIN)) {
             direction = DIR_FIGURE_REROUTE;
         } else if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {

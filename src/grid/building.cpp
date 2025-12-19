@@ -76,12 +76,6 @@ int map_get_building_damage(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) ? map_grid_get(g_damage_grid, grid_offset) : 0;
 }
 
-int map_building_damage_increase(int grid_offset) {
-    int d = map_grid_get(g_damage_grid, grid_offset) + 1;
-    map_grid_set(g_damage_grid, grid_offset, d);
-    return d;
-}
-
 int map_rubble_building_type(int grid_offset) {
     return map_grid_get(g_rubble_type_grid, grid_offset);
 }
