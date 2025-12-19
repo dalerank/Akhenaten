@@ -39,8 +39,8 @@ void enemy_armies_t::clear() {
     g_enemy_army_in_city.clear();
 }
 
-const enemy_army* enemy_army_get(int invasion_id) {
-    return &g_enemy_armies.data[invasion_id];
+const enemy_army& enemy_armies_t::get(uint8_t invasion_id) {
+    return data[invasion_id];
 }
 
 enemy_army* enemy_army_get_editable(int invasion_id) {
@@ -53,10 +53,13 @@ void enemy_armies_clear_ignore_pharaoh_soldiers() {
     }
 }
 
-void enemy_armies_clear_formations(void) {
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        g_enemy_armies.data[i].formation_id = 0;
-        g_enemy_armies.data[i].num_batalions = 0;
+void enemy_armies_t::clear_formations() {
+    uint8_t army_id = 0;
+    for (auto &army: data) {
+        army.army_id = army_id;
+        army_id++;
+        army.formation_id = 0;
+        army.num_batalions = 0;
     }
 }
 

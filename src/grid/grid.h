@@ -117,7 +117,7 @@ struct grid_area {
 };
 
 using grid_tiles = std::vector<tile2i>;
-using grid_tiles_sm = hvector<tile2i, 32>;
+using grid_tiles_sm = hvector<tile2i, 64>;
 
 void map_grid_init(grid_xx& grid);
 int32_t map_grid_get(grid_xx& grid, uint32_t at);

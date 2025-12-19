@@ -2,9 +2,11 @@
 
 #include "core/buffer.h"
 #include "grid/point.h"
+#include <array>
 
 struct enemy_army {
-    int formation_id;
+    uint8_t army_id;
+    uint8_t formation_id;
     uint8_t layout;
     tile2i home;
     tile2i destination;
@@ -20,18 +22,18 @@ struct enemy_armies_t {
 
     void clear();
 
-    enemy_army data[MAX_ENEMY_ARMIES];
+    std::array<enemy_army, MAX_ENEMY_ARMIES> data;
+    const enemy_army& get(uint8_t invasion_id);
+    void clear_formations(void);
 };
 
 extern enemy_armies_t g_enemy_armies;
 
-const enemy_army* enemy_army_get(int invasion_id);
 
 enemy_army* enemy_army_get_editable(int invasion_id);
 
 void enemy_armies_clear_ignore_pharaoh_soldiers();
 
-void enemy_armies_clear_formations(void);
 
 int enemy_army_total_enemy_formations(void);
 
