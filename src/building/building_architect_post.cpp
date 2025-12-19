@@ -38,7 +38,7 @@ info_window_architect_post architect_post_infow;
 // Console command to remove damage risk from all buildings
 declare_console_command_p(collapse_no) {
     buildings_valid_do([&] (building &b) {
-        b.damage_risk = 0;
+        b.collapse_risk = 0;
     });
 }
 

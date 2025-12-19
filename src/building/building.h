@@ -175,10 +175,11 @@ public:
     uint8_t spawned_worker_this_month;
     uint8_t curse_days_left;
     uint8_t blessing_days_left;
-    uint16_t damage_risk;
+
+    uint16_t collapse_risk;
     uint16_t fire_risk;
 
-    int8_t damage_risk_increase;
+    int8_t collapse_risk_increase;
     int8_t fire_risk_increase;
 
     short fire_duration;

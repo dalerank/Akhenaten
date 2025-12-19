@@ -15,11 +15,11 @@ int city_overlay_damage::get_column_height(const building *b) const {
         return COLUMN_TYPE_NONE;
     }
 
-    if (!b->damage_risk && b->damage_risk <= 0) {
+    if (!b->collapse_risk && b->collapse_risk <= 0) {
         return COLUMN_TYPE_NONE;
     }
 
-    return b->damage_risk / 100;
+    return b->collapse_risk / 100;
 }
 
 void city_overlay_damage::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx) const {
@@ -30,22 +30,22 @@ void city_overlay_damage::draw_custom_top(vec2i pixel, tile2i tile, painter &ctx
         if (b->id) {
             auto house = b->dcast_house();
             bstring32 text;
-            text.printf("%d", b->damage_risk);
+            text.printf("%d", b->collapse_risk);
             debug_text_a(ctx, text, pixel.x + 15, pixel.y + 15, 0, text, COLOR_LIGHT_BLUE);
         }
     }
 }
 
 xstring city_overlay_damage::get_tooltip_for_building(tooltip_context *c, const building *b) {
-    if (b->damage_risk <= 0)
+    if (b->collapse_risk <= 0)
         return ui::str(66, 52);
-    else if (b->damage_risk <= 40)
+    else if (b->collapse_risk <= 40)
         return ui::str(66, 53);
-    else if (b->damage_risk <= 80)
+    else if (b->collapse_risk <= 80)
         return ui::str(66, 54);
-    else if (b->damage_risk <= 120)
+    else if (b->collapse_risk <= 120)
         return ui::str(66, 55);
-    else if (b->damage_risk <= 160)
+    else if (b->collapse_risk <= 160)
         return ui::str(66, 56);
     else {
         return ui::str(66, 57);

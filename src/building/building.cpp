@@ -88,7 +88,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
 
     max_workers = props.laborers;
     fire_risk_increase = props.fire_risk;
-    damage_risk_increase = props.damage_risk;
+    collapse_risk_increase = props.damage_risk;
 
     // unique data
     input = params().input;
@@ -494,7 +494,7 @@ void building::force_damage(bool fire, int8_t value) {
     if (fire) {
         fire_risk += value;
     } else {    
-        damage_risk += value;
+        collapse_risk += value;
     }
 }
 
@@ -528,7 +528,7 @@ void building::destroy_by_flooded() {
 void building::destroy_on_fire_impl(bool plagued) {
     game_undo_disable();
     fire_risk = 0;
-    damage_risk = 0;
+    collapse_risk = 0;
 
     events::emit(event_fire_damage{ id });
 

@@ -331,7 +331,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_road_access);
         iob->bind____skip(1);
 
-        iob->bind(BIND_SIGNATURE_UINT16, &b->damage_risk);
+        iob->bind(BIND_SIGNATURE_INT16, &b->collapse_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->fire_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->fire_duration);
         iob->bind(BIND_SIGNATURE_UINT8, &b->fire_proof);
@@ -383,7 +383,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         b->des_influence = params.desirability.to_influence();
         b->crime_influence = params.crime.to_influence();
         b->fire_risk_increase = params.fire_risk;
-        b->damage_risk_increase = params.damage_risk;
+        b->collapse_risk_increase = params.damage_risk;
         b->max_workers = params.laborers;
     }
     //building_extra_data.created_sequence = 0;
