@@ -16,7 +16,7 @@ template<
     typename T,
     size_t ItemCount,
     bool WarnOnFull = true,
-    size_t FixedSize = ItemCount * sizeof(T)>
+    size_t FixedSize = ItemCount * sizeof(T) + 32>
 class fixed_memory_resource : public std::pmr::memory_resource {
 public:
     fixed_memory_resource() = default;
