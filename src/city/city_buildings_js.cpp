@@ -50,7 +50,7 @@ ANK_FUNCTION(__city_get_random_house_id)
 void __building_add_fire_damage(int bid, int damage) {
     building *b = building_get(bid);
     if (b->is_valid()) {
-        b->force_damage(true, damage);
+        b->force_damage(e_damage_fire, damage);
     }
 }
 ANK_FUNCTION_2(__building_add_fire_damage)
@@ -58,7 +58,7 @@ ANK_FUNCTION_2(__building_add_fire_damage)
 void __building_add_collapse_damage(int bid, int damage) {
     building *b = building_get(bid);
     if (b->is_valid()) {
-        b->force_damage(false, damage);
+        b->force_damage(e_damage_collapse, damage);
     }
 }
 ANK_FUNCTION_2(__building_add_collapse_damage)

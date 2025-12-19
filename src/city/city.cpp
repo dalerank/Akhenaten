@@ -329,7 +329,7 @@ void city_t::update_tick(int simtick) {
         building_burning_ruin::update_all_ruins();
         break;
     case 44:
-        maintenance.check_fire_collapse();
+        maintenance.check_building_destroying();
         sentiment.reset_protesters_criminals();
         break;
     case 45:
