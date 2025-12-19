@@ -27,6 +27,7 @@
 #include "game/game_config.h"
 #include "grid/routing/routing.h"
 #include "js/js_game.h"
+#include "core/pool.h"
 
 #include <string.h>
 #include <map>
@@ -35,6 +36,8 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #endif // _MSC_VER
+
+pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
 static const vec2i crowd_offsets[] = {
     {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
@@ -291,6 +294,10 @@ void figure::figure_delete_UNSAFE() {
         b->remove_figure_by_id(id);
     }
 
+    if (_debug_lines) {
+        debug_tooltip_lines.destroy(_debug_lines);
+    }
+
     switch (type) {
     case FIGURE_BALLISTA:
         if (has_home())
@@ -355,6 +362,24 @@ void figure::add_roam_history(int goffset) {
 
 void figure::apply_damage(int hit_dmg, figure_id attaker_id) {
     dcast()->apply_damage(hit_dmg, attaker_id);
+}
+
+figure::debug_lines_t &figure::debug_lines() {
+    if (_debug_lines) {
+        return *_debug_lines;
+    }
+
+    _debug_lines = debug_tooltip_lines.create();
+    return *_debug_lines;
+}
+
+void figure::debug_lines_clear() {
+    if (!_debug_lines) {
+        return;
+    }
+
+    debug_tooltip_lines.destroy(_debug_lines);
+    _debug_lines = nullptr;
 }
 
 bool figure::is_dead() {
