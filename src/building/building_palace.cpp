@@ -74,7 +74,7 @@ void building_palace::update_graphic() {
     building_impl::update_graphic();
 }
 
-void building_palace::draw_tooltip(tooltip_context *c) {
+void building_palace::draw_tooltip(tooltip_context *c) const {
     vec2i mpos = c->mpos;
     
     const auto &tooltip_lines = palace_params().tooltips;
