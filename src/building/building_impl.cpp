@@ -15,6 +15,8 @@
 #include "grid/floodplain.h"
 #include "building/destruction.h"
 #include "grid/enemy_strength.h"
+#include "grid/tiles.h"
+#include "sound/sound.h"
 
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
@@ -264,7 +266,21 @@ int building_impl::get_figure_id(int i) const { return base.get_figure_id(i); }
 int building_impl::need_resource_amount(e_resource r) const { return base.need_resource_amount(r); }
 
 void building_impl::destroy_by_poof(bool clouds) {
-    building_destroy_by_poof(&base, clouds);
+    building* b = base.main();
+    if (clouds) {
+        figure_create_explosion_cloud(b->tile, b->size);
+        g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+    }
+
+    do {
+        b->state = BUILDING_STATE_UNUSED;
+        map_tiles_update_region_empty_land(true, b->tile, b->tile.shifted(b->size - 1, b->size - 1));
+        if (b->next_part_building_id < 1) {
+            return;
+        }
+
+        b = b->next();
+    } while (true);
 }
 
 void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building
