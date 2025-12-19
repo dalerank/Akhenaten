@@ -20,6 +20,7 @@
 #include "grid/terrain.h"
 #include "core/flat_map.h"
 #include "js/js_game.h"
+#include "grid/road_access.h"
 
 using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
 using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
@@ -571,6 +572,21 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
     if (enemy_army_is_stronger_than_batalions()) {
         const auto figure = figure_get<figure_enemy>(m->figure_type);
         army->ignore_pharaoh_soldiers = figure && figure->ignore_pharaoh_soldiers();
+    }
+
+    // Проверяем, нужно ли врагам уходить из города
+    if (army->buildings_to_destroy > 0 && army->buildings_destroyed >= army->buildings_to_destroy) {
+        for (figure_id fid : m->figures) {
+            figure* f = figure_get(fid);
+            if (f->is_alive() && f->action_state != FIGURE_ACTION_149_CORPSE && 
+                f->action_state != FIGURE_ACTION_148_FLEEING && 
+                f->action_state != ACTION_156_ENEMY_LEAVING) {
+                f->action_state = ACTION_156_ENEMY_LEAVING;
+                f->route_remove();
+                f->destination_tile = g_city.map.closest_exit_tile_within_radius();
+            }
+        }
+        return;
     }
 
     formation_decrease_monthly_counters(m);

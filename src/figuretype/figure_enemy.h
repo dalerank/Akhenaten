@@ -6,6 +6,7 @@ enum e_enemy_action {
     ACTION_151_ENEMY_INITIAL = 151,
     ACTION_153_ENEMY_MARCHING = 153,
     ACTION_154_ENEMY_FIGHTING = 154,
+    ACTION_156_ENEMY_LEAVING = 156,
 };
 
 class figure_enemy : public figure_impl {
@@ -37,4 +38,5 @@ public:
     virtual void enemy_initial(formation *m);
     virtual void enemy_marching(formation *m);
     virtual void enemy_fighting(formation *m);
+    virtual void enemy_leaving();
 };

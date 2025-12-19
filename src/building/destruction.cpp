@@ -6,6 +6,8 @@
 #include "city/city_population.h"
 #include "city/city.h"
 #include "figuretype/wall.h"
+#include "figure/enemy_army.h"
+#include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -60,11 +62,44 @@ void building_destroy_increase_enemy_damage(int grid_offset, int max_damage) {
     }
 }
 
+static int find_nearest_enemy_formation(tile2i tile) {
+    int min_formation_id = 0;
+    int min_distance = 10000;
+    
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = formation_get(i);
+        if (!m->in_use || m->is_herd || m->own_batalion || m->invasion_id <= 0) {
+            continue;
+        }
+        
+        for (figure_id fid : m->figures) {
+            if (fid <= 0) {
+                continue;
+            }
+            figure* f = figure_get(fid);
+            if (!f->is_alive() || !f->is_enemy()) {
+                continue;
+            }
+            
+            int distance = calc_maximum_distance(tile, f->tile);
+            if (distance < min_distance && distance <= 10) { // в радиусе 10 тайлов
+                min_distance = distance;
+                min_formation_id = i;
+            }
+        }
+    }
+    
+    return min_formation_id;
+}
+
 void building_destroy_by_enemy(tile2i tile) {
     int building_id = map_building_at(tile);
+    bool was_valid_building = false;
+    
     if (building_id > 0) {
         building* b = building_get(building_id);
         if (b->state == BUILDING_STATE_VALID) {
+            was_valid_building = true;
             g_city.ratings.monument_building_destroyed(b->type);
             b->destroy_by_collapse();
         }
@@ -75,6 +110,20 @@ void building_destroy_by_enemy(tile2i tile) {
 
         map_building_tiles_set_rubble(0, tile, 1);
     }
+    
+    if (was_valid_building) {
+        int formation_id = find_nearest_enemy_formation(tile);
+        if (formation_id > 0) {
+            formation* m = formation_get(formation_id);
+            if (m->invasion_id > 0 && m->invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES) {
+                enemy_army* army = enemy_army_get_editable(m->invasion_id);
+                if (army->buildings_to_destroy > 0) {
+                    army->buildings_destroyed++;
+                }
+            }
+        }
+    }
+    
     figure_tower_sentry_reroute();
     building_mud_wall::update_area_walls(tile, 3);
     map_tiles_update_region_canals(tile.shifted(-3, -3), tile.shifted(3, 3));
