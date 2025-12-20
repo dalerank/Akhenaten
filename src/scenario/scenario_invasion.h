@@ -9,7 +9,7 @@
 #include <array>
 #include <functional>
 
-enum e_attack_type { 
+enum e_attack_faction { 
     ATTACK_TYPE_ENEMIES, 
     ATTACK_TYPE_KINGDOME, 
     ATTACK_TYPE_NATIVES 
@@ -27,6 +27,16 @@ struct invasion_warning_t {
     int month_notified;
     int months_to_go;
     int invasion_id;
+};
+
+struct invasion_opts_t {
+    e_attack_faction mode;
+    e_enemy_type enemy_type;
+    int size;
+    int invasion_id;
+    e_formation_attack_type attack_type;
+    tile2i invasion_point;
+    uint8_t want_destroy;
 };
 
 struct enemy_properties_t {
@@ -64,10 +74,10 @@ int scenario_invasion_count();
 
 bool scenario_invasion_start_from_kingdome(int size);
 
-void scenario_invasion_start_from_console(int attack_type, e_enemy_type enemy_type, int size, tile2i invasion_point);
+void scenario_invasion_start(invasion_opts_t opts);
 
 void scenario_invasion_process();
 
 int map_invasion_point(tile2i point);
 
-tile2i scenario_start_invasion_impl(e_enemy_type enemy_type, int amount, int invasion_point, e_formation_attack_type attack_type, int invasion_id, tile2i tile_inv);
+tile2i scenario_start_invasion_impl(invasion_opts_t opts);

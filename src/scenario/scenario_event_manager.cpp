@@ -79,6 +79,10 @@ uint16_t event_ph_t::rand_reason() const {
     return active_reasons.size() > 0 ? active_reasons[rand() % active_reasons.size()] : 0xffff;
 }
 
+void event_ph_t::set_param(pcstr name, int param) {
+
+}
+
 void event_ph_t::archive_load(archive arch) {
     switch (type) {
     case EVENT_TYPE_REQUEST:
@@ -187,6 +191,14 @@ void event_manager_t::set_request_reasons(int tag, uint16_t r1, uint16_t r2, uin
 
     if (it != g_scenario_events.event_list.end()) {
         it->reasons = { r1, r2, r3, r4 };
+    }
+}
+
+void event_manager_t::set_request_param(int tag, pcstr name, int param) {
+    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+
+    if (it != g_scenario_events.event_list.end()) {
+        it->set_param(name, param);
     }
 }
 
@@ -606,11 +618,12 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         // ...
         // ...
         // ...
-        iob->bind____skip(24); // ???
+        iob->bind____skip(20); // ???
+        iob->bind(BIND_SIGNATURE_INT32, &event.param1);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
         iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
         iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);
-        iob->bind(BIND_SIGNATURE_INT8, &event.__unk13_i8);
+        iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &event.__unk13_i8);
         iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[0]);
         iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[1]);
         iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[2]);

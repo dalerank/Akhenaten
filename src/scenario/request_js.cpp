@@ -45,9 +45,18 @@ void __city_request_execute(int tag) {
 }
 ANK_FUNCTION_1(__city_request_execute)
 
+void __city_request_set_param_1(int tag, pcstr name, int param1) {
+    g_scenario.events.set_request_param(tag, name, param1);
+}
+ANK_FUNCTION_3(__city_request_set_param_1)
+
 void ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map &args) {
-    e_enemy_type enemy_type = (e_enemy_type)args.n("enemy");
-    int size = args.n("size");
-    tile2i invasion_point = { (int)args.n("tilex"), (int)args.n("tiley") };
-    scenario_invasion_start_from_console(ATTACK_TYPE_ENEMIES, enemy_type, size, invasion_point);
+    invasion_opts_t opts;
+    opts.mode = ATTACK_TYPE_ENEMIES;
+    opts.enemy_type = (e_enemy_type)args.n("enemy"); // 0 type, 1 kingdome, 2 seth natives
+    opts.size = args.n("size");
+    opts.invasion_point = { (int)args.n("tilex"), (int)args.n("tiley") };
+    opts.invasion_id = args.n("invasion_id");
+    opts.want_destroy = args.n("want_destroy_buildings");
+    scenario_invasion_start(opts);
 }
