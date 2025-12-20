@@ -82,11 +82,19 @@ void figure_missile::figure_action() {
         return;
     } 
 
-    building* b = building_at(tile());
-    if (b->is_valid()) {
-        missile_hit_building(b->id);
-        events::emit(event_sound_effect{ SOUND_EFFECT_ARROW_HIT });
-        return;
+    // Check if missile has reached destination tile and is close to center
+    // Center of tile in cross-country coordinates is around 7-8 (out of 0-14)
+    bool at_destination_center = (base.tile == base.destination_tile) && 
+                                  (base.cc_coords.x % 15 >= 6 && base.cc_coords.x % 15 <= 9) &&
+                                  (base.cc_coords.y % 15 >= 6 && base.cc_coords.y % 15 <= 9);
+    
+    if (at_destination_center || should_die) {
+        building* b = building_at(base.destination_tile);
+        if (b->is_valid()) {
+            missile_hit_building(b->id);
+            events::emit(event_sound_effect{ SOUND_EFFECT_ARROW_HIT });
+            return;
+        }
     }
 
     if (should_die) {
