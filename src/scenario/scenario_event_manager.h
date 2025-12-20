@@ -176,7 +176,7 @@ struct event_ph_t {
     int16_t on_too_late_action;
     int16_t on_defeat_action;
     int8_t sender_faction;
-    int8_t __unk13_i8;
+    int32_t param1;
     int16_t route_fields[4];
     int8_t subtype;
     int8_t __unk15_i8;
@@ -189,6 +189,8 @@ struct event_ph_t {
     int16_t reserved_1;
     std::array<uint16_t, 4> reasons;
     uint16_t rand_reason() const;
+
+    void set_param(pcstr name, int param);
 
     game_date_t date() { return {time.year, time.month}; }
     void archive_load(archive arch);
@@ -223,4 +225,5 @@ struct event_manager_t {
     void set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4);
     void set_request_image(int tag, xstring image);
     void set_request_sender_faction(int tag, int8_t sender_faction);
+    void set_request_param(int tag, pcstr name, int param);
 };

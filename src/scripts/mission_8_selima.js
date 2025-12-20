@@ -215,11 +215,11 @@ function mission8_foreign_army_attack(ev) {
 	mission.foreign_army_attacked_city = true
 	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} foreign army attack", {ev:ev})
 
-	city.start_foreign_army_invasion({ enemy: ENEMY_7_LIBIAN, size: 10, tilex: 30, tiley: 26 })
+	city.start_foreign_army_invasion({ invasion_id: 0, enemy: ENEMY_7_LIBIAN, size: 10, tilex: 30, tiley: 26, want_destroy_buildings: 10 })
 
-	var request = city.create_foreign_army_attack_warning({ tag_id: 5, sender_faction: ENEMY_7_LIBIAN })
-	request.set_location_fields(-1, -1, -1, -1)
-	request.set_image("pharaoh_unloaded/dialougedrawing_00012")
-	request.set_reasons(PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
-	request.execute()
+	var event = city.create_foreign_army_attack_warning({ tag_id: 5, sender_faction: ENEMY_7_LIBIAN })
+	event.set_location_fields(-1, -1, -1, -1)
+	event.set_image("pharaoh_unloaded/dialougedrawing_00012")
+	event.set_reasons(PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
+	event.execute()
 }
