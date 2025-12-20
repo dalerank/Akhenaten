@@ -49,7 +49,7 @@ figure_id figure_missile::get_citizen_on_tile() {
 
 void figure_missile::set_image_direction(vec2i src, vec2i dst) {
     float dx = dst.x - src.x;
-    float dy = dst.y - src.y;
+    float dy = src.y - dst.y;
     float angle_rad = atan2(dy, dx);
     float angle_deg = angle_rad * 180.0f / M_PI;
     if (angle_deg < 0) {
