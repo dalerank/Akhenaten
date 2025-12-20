@@ -140,6 +140,10 @@ void empire_window::init() {
     ui["button_open_trade"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_open_trade", [] {
             empire_city *city = g_empire.city(g_empire_window.selected_city);
+            // Prevent opening trade route if city is under siege
+            if (city && city->is_sieged()) {
+                return;
+            }
             g_city.finance.process_construction(city->cost_to_open);
             city->is_open = 1;
             window_trade_opened_show(g_empire_window.selected_city);
@@ -540,6 +544,18 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         int empire_city_id = g_empire.get_city_for_object(obj.id);
         const empire_city* city = g_empire.city(empire_city_id);
 
+        // draw siege icon if city is under siege
+        if (city && city->is_sieged()) {
+            image_desc siege_icon_desc = image_desc_from_name("pharaoh_general/empire_bits_00001");
+            if (siege_icon_desc.pack != PACK_NONE) {
+                const image_t *siege_icon = image_get(siege_icon_desc);
+                if (siege_icon) {
+                    vec2i siege_icon_pos = draw_pos + vec2i{img->width / 2 - siege_icon->width / 2, -siege_icon->height - 5};
+                    ui::eimage(siege_icon_desc, siege_icon_pos);
+                }
+            }
+        }
+
         // draw routes!
         if (city->type == EMPIRE_CITY_EGYPTIAN_TRADING || city->type == EMPIRE_CITY_FOREIGN_TRADING || city->type == EMPIRE_CITY_PHARAOH_TRADING) {
             e_empire_route_state state = ROUTE_CLOSED;
@@ -565,6 +581,12 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         case 1: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
         case 2: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
         case 3: ui::label_colored(tooltip_text, text_pos, FONT_SMALL_PLAIN, COLOR_FONT_DARK_RED, obj.width); break;
+        }
+
+        // draw "under siege" text if city is under siege
+        if (city && city->is_sieged()) {
+            vec2i siege_text_pos = text_pos + vec2i{0, letter_height + 2};
+            ui::label_colored("under siege", siege_text_pos, FONT_SMALL_PLAIN, COLOR_FONT_RED, obj.width);
         }
 
     } else if (obj.type == EMPIRE_OBJECT_TEXT) {
