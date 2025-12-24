@@ -10,7 +10,7 @@
 #include "figuretype/figure_entertainer.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
-#include "window/building/common.h"
+#include "core/core.h"
 #include "sound/sound_building.h"
 #include "empire/empire.h"
 #include "city/city_resource_handle.h"
@@ -42,7 +42,7 @@ bool building_senet_house::add_resource(e_resource resource, int amount) {
         return false;
     }
 
-    assert(id() > 0);
+    verify_no_crash(id() > 0);
     store_resource(RESOURCE_BEER, amount);
     return true;
 }

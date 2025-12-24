@@ -28,7 +28,7 @@ int ui::message_dialog_god::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_god::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
@@ -37,7 +37,6 @@ void ui::message_dialog_god::draw_foreground(UiFlags flags) {
     const lang_message &msg = lang_get_message(text_id);
 
     draw_city_message_text(msg);
-
 
     assert(god != GOD_UNKNOWN);
 
@@ -74,7 +73,6 @@ void ui::message_dialog_god::init_data(xstring text_id, int message_id, void (*b
         const city_message& city_msg = city_message_get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
             god = (e_god)city_msg.god;
-            background = true;
         }
     }
 }
@@ -83,10 +81,6 @@ void ui::message_dialog_god::archive_load(archive arch) {
     message_dialog_base::archive_load(arch);
 
     arch.r("god_images", god_images);
-}
-
-void ui::message_dialog_god::draw_background_image() {
-    //
 }
 
 void ui::message_dialog_god::draw_city_message_text(const lang_message& msg) {

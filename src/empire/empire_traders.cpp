@@ -99,7 +99,7 @@ void empire_trader::complete_trade() {
         movement_delay = 10;
               
         int city_id = g_empire.get_city_for_trade_route(trade_route_id);
-        assert(id != 0);
+        verify_no_crash(id != 0);
         
         if (is_ship) {
             events::emit(event_trade_ship_arrival{ city_id, id, SOURCE_LOCATION });

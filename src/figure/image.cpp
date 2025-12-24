@@ -125,7 +125,7 @@ image_desc resource_to_sled_image(e_resource res) {
     case RESOURCE_BRICKS: return {PACK_SPR_MAIN, 89};
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return { PACK_SPR_MAIN, 77 };

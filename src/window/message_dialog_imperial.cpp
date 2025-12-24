@@ -27,7 +27,7 @@ int ui::message_dialog_imperial::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_imperial::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
@@ -65,10 +65,6 @@ void ui::message_dialog_imperial::draw_city_message_text(const lang_message& msg
                      ui::str(8, 4), city_msg.req_months_left, ui::str(12, 2));
 
     ui["content_text"] = full_text;
-}
-
-void ui::message_dialog_imperial::draw_background_image() {
-    // ???
 }
 
 void ui::message_dialog_imperial::draw_background_video() {

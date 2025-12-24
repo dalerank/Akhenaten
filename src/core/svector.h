@@ -406,7 +406,7 @@ public:
 
 private:
     void assign_impl_val(size_t count, const T& value) {
-        assert(count < Capacity);
+        verify_no_crash(count < Capacity);
 
         for (size_t i = 0; i < count; ++i) {
             push_back(value);
@@ -415,7 +415,7 @@ private:
 
     template <class InputIterator>
     void assign_impl_iter(InputIterator first, InputIterator last) {
-        assert(long(last - first) < long(Capacity));
+        verify_no_crash(long(last - first) < long(Capacity));
 
         for (auto i = first; i != last; ++i) {
             push_back(*i);
@@ -423,7 +423,7 @@ private:
     }
 
     void assign_impl_ilist(std::initializer_list<T> l) {
-        assert(l.size() <= Capacity);
+        verify_no_crash(l.size() <= Capacity);
 
         for (auto&& i : l) {
             push_back(i);

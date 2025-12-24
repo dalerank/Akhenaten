@@ -23,7 +23,7 @@ int ui::message_dialog_image::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_image::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
@@ -34,19 +34,17 @@ void ui::message_dialog_image::init_data(xstring text_id, int message_id, void (
     
     // Reset background image
     background_img = 0;
-    background = false;
     
     // Initialize background image from city message
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(message_id);
         if (city_msg.background_img) {
             background_img = city_msg.background_img;
-            background = true;
         }
     }
 }
 
-void ui::message_dialog_image::draw_background_image() {
+void ui::message_dialog_image::draw_background_content() {
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
     pos = { 32, 28 };
@@ -70,7 +68,5 @@ void ui::message_dialog_image::draw_background_image() {
 
     // Draw the content text (handles event messages and regular messages)
     draw_content(msg);
-
-    draw_foreground_image();
 }
 

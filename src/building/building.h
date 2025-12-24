@@ -105,7 +105,7 @@ struct building_store : public std::array<resource_value, 4> {
             }
         }
 
-        assert(false);
+        verify_no_crash(false);
         static int dummy = 0;
         return dummy;
     }

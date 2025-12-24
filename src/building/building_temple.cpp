@@ -34,7 +34,7 @@ e_overlay building_temple::get_overlay() const {
     case BUILDING_TEMPLE_BAST: return OVERLAY_RELIGION_BAST;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return OVERLAY_NONE;
@@ -49,7 +49,7 @@ e_sound_channel_city building_temple::sound_channel() const {
     case BUILDING_TEMPLE_BAST: return SOUND_CHANNEL_CITY_TEMPLE_BAST;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return SOUND_CHANNEL_CITY_NONE;

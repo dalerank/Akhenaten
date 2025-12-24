@@ -310,7 +310,7 @@ int get_max_food_stock_for_population(e_resource resource) {
         return std::max(100, (city_population / 100) * 100);
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return 0;

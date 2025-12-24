@@ -78,7 +78,7 @@ void building_statue::preview::setup_preview_graphics(build_planner &planer) con
 }
 
 int building_statue::preview::setup_building_variant(e_building_type type, tile2i tile, int variant) const {
-    assert(building_is_statue(type));
+    verify_no_crash(building_is_statue(type));
 
     const auto &statue_params = get_statue_params(type);
     int size = statue_params.variants.size();

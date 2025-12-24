@@ -307,11 +307,11 @@ public:
     }
 
     inline uint32_t data(const uint32_t idx) const {
-        assert(idx < ints);
+        verify_no_crash(idx < ints);
         return _data[idx];
     }
     inline self_type &data(const uint32_t idx, const uint32_t value) {
-        assert(idx < ints);
+        verify_no_crash(idx < ints);
         _data[idx] = value;
         return *this;
     }
@@ -324,7 +324,7 @@ public:
         return (result);
     }
     inline uint32_t index_of_one(const uint32_t id) const {
-        assert(0 != this->test(id));
+        verify_no_crash(0 != this->test(id));
 
         const uint32_t idx = (id / 32);
         uint32_t result = 0;

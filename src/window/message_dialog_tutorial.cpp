@@ -19,7 +19,7 @@ int ui::message_dialog_tutorial::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_tutorial::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();

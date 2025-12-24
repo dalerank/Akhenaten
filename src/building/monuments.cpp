@@ -151,7 +151,7 @@ grid_area building_monument_get_area(building *b) {
     case BUILDING_MEDIUM_MASTABA: end = main.shifted(5, 13); break;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return {main, end};
@@ -187,7 +187,7 @@ tile2i building_monument_center_point(building *b) {
         break;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return main.add(end).div(2);
@@ -198,7 +198,7 @@ tile2i building_monument_access_point(building *b) {
     case BUILDING_SMALL_MASTABA: return b->tile.shifted(0, 10);
     case BUILDING_MEDIUM_MASTABA: return b->tile.shifted(0, 14);
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     if (b->size < 3) {
@@ -247,7 +247,7 @@ int get_temple_complex_part_image(e_building_type type, int part, int orientatio
 int get_monument_part_image(int part, int orientation, int level) {
     level = std::clamp(level, 0, 11);
 
-    assert(false && "not implemented yet");
+    verify_no_crash(false && "not implemented yet");
     int base_image_id = 0;// image_id_from_group(GROUP_MONUMENT_BLOCKS);
     return base_image_id;
 
@@ -405,7 +405,7 @@ int building_image_get(building *b) {
         }
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return 0;
@@ -827,7 +827,7 @@ bool building_monument_need_bricklayers(const building *b) {
         return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, monumentd.phase));
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
 
     return false;

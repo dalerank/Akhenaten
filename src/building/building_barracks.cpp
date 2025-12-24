@@ -199,7 +199,7 @@ bool building_recruiter::add_resource(e_resource resource, int amount) {
         return false;
     }
 
-    assert(id() > 0);
+    verify_no_crash(id() > 0);
     store_resource(resource, amount);
     return true;
 }

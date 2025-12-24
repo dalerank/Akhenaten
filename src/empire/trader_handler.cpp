@@ -154,7 +154,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
 
 io_buffer* iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_empire_traders;
-    assert(data.traders.size() == 100);
+    verify_no_crash(data.traders.size() == 100);
     for (int i = 0; i < data.traders.size(); i++) {
         empire_trader& t = data.traders[i];
         t.id = i;

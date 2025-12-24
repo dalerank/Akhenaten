@@ -5,6 +5,7 @@
 #include <cstring>
 
 #include "grid/point.h"
+#include "core/core.h"
 
 void safe_realloc_for_size(buffer** p_buf, int size) {
     // this function is ONLY valid for buffers created on the HEAP.
@@ -241,7 +242,7 @@ void buffer::write_raw(const void* value, size_t s) {
 
 void buffer::skip(size_t s) {
     if (!is_valid(s)) {
-        assert(false);
+        verify_no_crash(false);
         index = size();
     } else {
         index += s;
@@ -249,7 +250,7 @@ void buffer::skip(size_t s) {
 }
 
 size_t buffer::from_file(size_t count, FILE* fp) {
-    assert(count <= size());
+    verify_no_crash(count <= size());
     size_t result = 0;
     if (count <= size())
         result = fread(data.data(), sizeof(get_value(0)), count, fp);
@@ -257,7 +258,7 @@ size_t buffer::from_file(size_t count, FILE* fp) {
 }
 
 size_t buffer::to_file(size_t count, FILE* fp) const {
-    assert(count <= size());
+    verify_no_crash(count <= size());
     size_t result = 0;
     if (count <= size() && fp != nullptr)
         result = fwrite(get_data(), sizeof(get_value(0)), count, fp);

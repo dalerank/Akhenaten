@@ -37,7 +37,7 @@ void city_buildings_t::check_buildings_twins() {
         if (b.is_valid()) {
             auto result = occuped.insert(b.tile.grid_offset());
             if (!result.second) {
-                assert(false && "twin building, second will be removed");
+                verify_no_crash(false && "twin building, second will be removed");
                 b.state = BUILDING_STATE_UNUSED;
             }
         }

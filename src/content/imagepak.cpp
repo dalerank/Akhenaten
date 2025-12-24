@@ -454,14 +454,14 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         if (finish_index <= 0) {
             finish_index = start_index;
         }
-        assert(finish_index >= start_index);
+        verify_no_crash(finish_index >= start_index);
         group_image_ids[groups_num] = entries_num;
         bmp_names[groups_num] = arch.r_string("name");
         entries_num += (finish_index - start_index) + 1;
         ++groups_num;
     });
 
-    assert(global_image_index_offset >= 25000);
+    verify_no_crash(global_image_index_offset >= 25000);
     images_array.reserve(entries_num);
 
     svector<offset_ids, PAK_GROUPS_MAX> offset_ids_vec;
@@ -530,11 +530,15 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
             img.group_id = 0;
             img.group_index = img.sgx_index - offset_ids_vec.front().start;
         } else {
-            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
-            if (group_it != offset_ids_vec.end()) {
+            // Find the last group where start <= i
+            auto group_it = std::upper_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (int value, const auto &offsetid) { return value < offsetid.start; });
+            if (group_it != offset_ids_vec.begin()) {
                 --group_it;
                 img.group_id = group_it->id;
                 img.group_index = img.sgx_index - group_it->start;
+            } else if (!offset_ids_vec.empty()) {
+                img.group_id = offset_ids_vec.front().id;
+                img.group_index = img.sgx_index - offset_ids_vec.front().start;
             }
         }
 
@@ -572,7 +576,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         if (finish_index <= 0) {
             finish_index = start_index;
         }
-        assert(finish_index >= start_index);
+        verify_no_crash(finish_index >= start_index);
 
         for (int i = start_index; i <= finish_index; ++i) {
             bstring512 name;
@@ -655,7 +659,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
     platform_renderer_render();
 
     int max_imgid_this_pak = global_image_index_offset + entries_num;
-    assert(max_imgid_this_pak < 0xffff);
+    verify_no_crash(max_imgid_this_pak < 0xffff);
     update_max_imgid(max_imgid_this_pak);
 
     return true;
@@ -742,7 +746,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     }
 
     // (move buffer to the rest of the data)
-    assert(vfs::file_has_extension((const char *)filename_sgx, "sg3"));
+    verify_no_crash(vfs::file_has_extension((const char *)filename_sgx, "sg3"));
     pak_buf->set_offset(PAK_HEADER_SIZE_BASE + (200 * bmp_name::capacity)); // sg3 = 40680 bytes
 
     // prepare atlas packer & renderer
@@ -808,15 +812,26 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
         }
 
         if (img.bmp.group_id == 0) {
-            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), last_idx_in_bmp, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
-            img.bmp.group_id = group_it->id;
-            img.bmp.name.printf("group_%d", img.bmp.group_id);
+            // Find the last group where start <= last_idx_in_bmp
+            auto group_it = std::upper_bound(offset_ids_vec.begin(), offset_ids_vec.end(), last_idx_in_bmp, [] (int value, const auto &offsetid) { return value < offsetid.start; });
+            if (group_it != offset_ids_vec.begin()) {
+                --group_it;
+                img.bmp.group_id = group_it->id;
+                img.bmp.name.printf("group_%d", img.bmp.group_id);
+            } else if (!offset_ids_vec.empty()) {
+                img.bmp.group_id = offset_ids_vec.front().id;
+                img.bmp.name.printf("group_%d", img.bmp.group_id);
+            }
         } else {
-            auto group_it = std::lower_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (const auto &offsetid, int value) { return offsetid.start <= value; });
-            if (group_it != offset_ids_vec.end()) {
+            // Find the last group where start <= i
+            auto group_it = std::upper_bound(offset_ids_vec.begin(), offset_ids_vec.end(), i, [] (int value, const auto &offsetid) { return value < offsetid.start; });
+            if (group_it != offset_ids_vec.begin()) {
                 --group_it;
                 img.group_id = group_it->id;
                 img.group_index = img.sgx_index - group_it->start;
+            } else if (!offset_ids_vec.empty()) {
+                img.group_id = offset_ids_vec.front().id;
+                img.group_index = img.sgx_index - offset_ids_vec.front().start;
             }
         }
 
@@ -970,23 +985,22 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     platform_renderer_render();
 
     int max_imgid_this_pak = global_image_index_offset + entries_num;
-    assert(max_imgid_this_pak < 0xffff);
+    verify_no_crash(max_imgid_this_pak < 0xffff);
     update_max_imgid(max_imgid_this_pak);
 
     return true;
 }
 
 image_desc imagepak::get_image_desc(const xstring &name) const {
-    bstring256 name_lower = name.c_str();
-    name_lower.tolower();
+    const xstring name_lower = bstring128(name.c_str()).tolower();
     
     for (const auto& img : images_array) {
-        assert(!img.bmp.tname.empty() && "Texture name shouldn't be empty");
+        verify_no_crash(!img.bmp.tname.empty() && "Texture name shouldn't be empty");
         if (img.bmp.tname.empty()) {
             continue;
         }
 
-        if (img.bmp.tname == name_lower.c_str()) {
+        if (img.bmp.tname == name_lower) {
             image_desc desc;
             desc.pack = static_cast<int16_t>(get_pack());
             desc.id = static_cast<int16_t>(img.group_id);

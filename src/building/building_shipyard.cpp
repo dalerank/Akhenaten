@@ -96,7 +96,7 @@ void building_shipyard::spawn_figure() {
         break;
 
     default:
-        assert(false && "building_shipyard: incorrect type requested");
+        verify_no_crash_var(false, "building_shipyard: incorrect type requested");
     }
 }
 
@@ -159,7 +159,7 @@ bool building_shipyard::add_resource(e_resource resource, int amount) {
         return false;
     }
 
-    assert(id() > 0);
+    verify_no_crash(id() > 0);
     store_resource(RESOURCE_TIMBER, amount);
     return true;
 }

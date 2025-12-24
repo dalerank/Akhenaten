@@ -49,7 +49,7 @@ void ui::message_dialog_disaster::init_data(xstring text_id, int message_id, voi
 
     const lang_message &msg = lang_get_message(text_id);
 
-    draw_foreground_normal();
+    draw_foreground_content();
     assert(msg.message_type == MESSAGE_TYPE_DISASTER);
     ui["button_go_to_problem"].enabled = true;
     ui["button_go_to_problem"].onclick([this] { button_go_to_problem(); });
@@ -94,15 +94,11 @@ void ui::message_dialog_disaster::draw_city_message_text(const lang_message& msg
     // ???
 }
 
-void ui::message_dialog_disaster::draw_background_image() {
-    // ???
-}
-
 void ui::message_dialog_disaster::draw_background_video() {
     // ???
 }
 
-void ui::message_dialog_disaster::draw_background_normal() {
+void ui::message_dialog_disaster::draw_background_content() {
     // ???
 }
 

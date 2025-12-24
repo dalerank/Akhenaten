@@ -236,7 +236,7 @@ empire_trader_handle building_dock::empire_trader() const {
     }
 
     auto ship = figure_get<figure_trade_ship>(d.trade_ship);
-    assert(ship != nullptr);
+    verify_no_crash(ship != nullptr);
 
     return ship->empire_trader();
 }

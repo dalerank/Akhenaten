@@ -151,7 +151,7 @@ int building_storage_yard::freespace() const {
 }
 
 int building_storage_yard::add_resource(e_resource resource, int amount, bool force) {
-    assert(id() > 0);
+    verify_no_crash(id() > 0);
 
     if (!force && is_not_accepting(resource)) {
         return -1;
@@ -398,7 +398,7 @@ static bool determine_granary_accept_foods(resource_list &foods, int road_networ
     foods.clear();
     buildings_valid_do([&] (building &b) {
         building_granary *granary = b.dcast_granary();
-        assert(granary);
+        verify_no_crash(granary);
         if (!granary->has_road_access()) {
             return;
         }
@@ -951,7 +951,7 @@ void building_storage_yard::spawn_figure() {
     } else if (!base.has_figure(BUILDING_SLOT_SERVICE)) {
         figure* f = figure_create(FIGURE_STORAGEYARD_CART, base.road_access, DIR_4_BOTTOM_LEFT);
         auto cart = smart_cast<figure_storageyard_cart>(f);
-        assert(cart);
+        verify_no_crash(cart);
         if (!cart) {
             f->poof();
             return;
@@ -991,7 +991,7 @@ void building_storage_yard::spawn_figure() {
             break;
 
         default:
-            assert(false);
+            verify_no_crash(false);
         }
         base.set_figure(0, f->id);
         f->set_home(base.id);

@@ -330,7 +330,7 @@ figure_impl *figure::dcast() {
         figure_impl::acquire(type, *this);
     }
 
-    assert(!!_ptr);
+    verify_no_crash(!!_ptr);
     return _ptr;
 }
 
@@ -343,7 +343,7 @@ const figure_impl *figure::dcast() const {
         figure_impl::acquire(type, *(figure*)this);
     }
 
-    assert(!!_ptr);
+    verify_no_crash(!!_ptr);
     return _ptr;
 }
 
@@ -354,7 +354,7 @@ bool figure::in_roam_history(int goffset) {
 void figure::add_roam_history(int goffset) {
 #ifdef _MSC_VER
     if (IsDebuggerPresent() && !roam_history.empty()) {
-        assert(roam_history.tail() != goffset);
+        verify_no_crash(roam_history.tail() != goffset);
     }
 #endif // _MSC_VER
     roam_history.push_tail(goffset);

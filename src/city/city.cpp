@@ -385,7 +385,7 @@ bool city_t::generate_trader_from(empire_city &city) {
         trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
     }
 
-    assert(city.max_traders > 0);
+    verify_no_crash(city.max_traders > 0);
     if (trades_in_city >= city.max_traders) {
         return false;
     }
@@ -457,7 +457,7 @@ empire_city &city_t::ourcity() {
     auto const &cities = g_empire.get_cities();
     auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
 
-    assert(it != cities.end());
+    verify_no_crash(it != cities.end());
     return *it;
 }
 
@@ -661,7 +661,7 @@ uint16_t &game_speed();
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
     iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
-    assert(iob->get_offset() == 18904);
+    verify_no_crash(iob->get_offset() == 18904);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a0);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a1);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a2);
@@ -903,7 +903,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.expenses.wages);
     iob->bind(BIND_SIGNATURE_UINT32, &data.finance.this_year.income.gold_delivered);
     iob->bind(BIND_SIGNATURE_UINT32, &data.finance.last_year.income.gold_delivered);
-    assert(iob->get_offset() == 30440);
+    verify_no_crash(iob->get_offset() == 30440);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.expenses.disasters);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.expenses.disasters);
     for (int i = 0; i < 1380; i++)
@@ -1319,7 +1319,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
     iob->bind____skip(3);
     iob->bind____skip(57);
-    assert(iob->get_offset() == 37808);
+    verify_no_crash(iob->get_offset() == 37808);
 });
 
 io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
@@ -1485,7 +1485,7 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
     foods.clear();
     buildings_valid_do([&] (building &b) {
         building_granary *granary = b.dcast_granary();
-        assert(granary);
+        verify_no_crash(granary);
         if (!granary->has_road_access()) {
             return;
         }

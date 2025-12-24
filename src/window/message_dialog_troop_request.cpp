@@ -27,7 +27,7 @@ int ui::message_dialog_troop_request::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_troop_request::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
@@ -37,21 +37,18 @@ void ui::message_dialog_troop_request::init_data(xstring text_id, int message_id
     message_dialog_base::init_data(text_id, message_id, background_callback);
     
     background_img = 0;
-    background = false;
     
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(message_id);
         if (city_msg.background_img) {
             background_img = city_msg.background_img;
-            background = true;
         }
     }
 }
 
-void ui::message_dialog_troop_request::draw_background_image() {
+void ui::message_dialog_troop_request::draw_background_content() {
     painter ctx = game.painter();
     const lang_message& msg = lang_get_message(text_id);
-    pos = { 32, 28 };
 
     const image_t *img = nullptr;
     if (background_img) {
@@ -73,8 +70,6 @@ void ui::message_dialog_troop_request::draw_background_image() {
     }
 
     draw_content(msg);
-
-    draw_foreground_image();
 }
 
 void ui::message_dialog_troop_request::draw_city_message_text(const lang_message& msg) {

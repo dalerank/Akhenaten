@@ -723,7 +723,7 @@ namespace archive_helper {                                                      
 
 #define ANK_CONFIG_OBJECT_VARIABLE(a) \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a); \
-    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); assert(ok && "Variable not exist in config:" #a); a.archive_init(); }
+    void config_load_ ## a() { a.archive_unload(); const bool ok = g_config_arch.r_section(a.archive_section(), [] (archive arch) { a.archive_load(arch); }); verify_no_crash(ok && "Variable not exist in config:" #a); a.archive_init(); }
 
 #define ANK_CONFIG_OBJECT_VARIABLE_N(a, name)                   \
     ANK_DECLARE_CONFIG_ITERATOR(config_load_ ## a);             \

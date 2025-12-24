@@ -62,7 +62,6 @@ ui::message_dialog_base::message_dialog_base(pcstr config_name) : autoconfig_win
     phrase_template = nullptr;
     background_callback = nullptr;
     show_video = false;
-    background = false;
     text_height_blocks = 0;
     text_width_blocks = 0;
     player_msg.year = 0;
@@ -118,7 +117,6 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     this->text_id = msg.id;
     this->background_callback = background_callback;
     show_video = false;
-    background = false;
     
     // Setup subtitle from message
     subtitle_text = msg.subtitle.text;
@@ -317,20 +315,11 @@ void ui::message_dialog_base::draw_content(const lang_message& msg) {
     graphics_reset_clip_rectangle();
 }
 
-void ui::message_dialog_base::draw_background_normal() {
+void ui::message_dialog_base::draw_background_content() {
     const lang_message& msg = lang_get_message(text_id);
 
     draw_image(msg);
     draw_content(msg);
-}
-
-void ui::message_dialog_base::draw_background_image() {
-    // Base implementation - should be overridden by derived classes
-    painter ctx = game.painter();
-    const lang_message& msg = lang_get_message(text_id);
-
-    ui["content_text"] = msg.content.text;
-    draw_foreground_image();
 }
 
 void ui::message_dialog_base::draw_background_video() {
@@ -356,19 +345,13 @@ int ui::message_dialog_base::draw_background(UiFlags flags) {
 
     if (show_video) {
         draw_background_video();
-    } else if (background) {
-        draw_background_image();
-    } else {
-        draw_background_normal();
-    }
+    } 
+    draw_background_content();
 
     return 0;
 }
 
-void ui::message_dialog_base::draw_foreground_normal() {
-}
-
-void ui::message_dialog_base::draw_foreground_image() {
+void ui::message_dialog_base::draw_foreground_content() {
 }
 
 void ui::message_dialog_base::draw_foreground_video() {
@@ -438,10 +421,6 @@ bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const la
     return false;
 }
 
-bool ui::message_dialog_base::handle_input_godmsg(const mouse* m_dialog, const lang_message& msg) {
-    return handle_input_video(m_dialog, msg);
-}
-
 int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
     const mouse* m_dialog = mouse_in_dialog(m);
@@ -450,8 +429,6 @@ int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
     bool handled = false;
     if (show_video) {
         handled = handle_input_video(m_dialog, msg);
-    } else if (background) {
-        handled = handle_input_godmsg(m_dialog, msg);
     } else {
         handled = handle_input_normal(m_dialog, msg);
     }
@@ -624,16 +601,8 @@ int ui::message_dialog_general::handle_mouse(const mouse *m) {
 }
 
 void ui::message_dialog_general::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
     ui.begin_widget(pos);
     ui.draw(flags);
     ui.end_widget();
 }
-
-
-
-
-
-
-
-

@@ -345,7 +345,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         b->dcast()->bind_dynamic(iob, version); // 102 for PH
 
         int currind = iob->get_offset() - sind;
-        assert(currind > 0);
+        verify_no_crash(currind > 0);
         iob->bind____skip(186 - currind);
 
         iob->bind(BIND_SIGNATURE_INT16, &b->storage.data()[1].value);

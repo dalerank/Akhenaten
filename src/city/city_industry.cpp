@@ -114,7 +114,7 @@ void building_industry_update_farms(void) {
 
     buildings_valid_farms_do([] (building &b) {
         building_farm *farm = b.dcast_farm();
-        assert(b.output.resource != RESOURCE_NONE);
+        verify_no_crash(b.output.resource != RESOURCE_NONE);
 
         if (!farm) {
             return;
@@ -178,7 +178,7 @@ void building_industry_update_wheat_production() {
         return;
 
     buildings_valid_do([] (building &b) {
-        assert(b.type == BUILDING_GRAIN_FARM);
+        verify_no_crash(b.type == BUILDING_GRAIN_FARM);
         if (!b.output.resource) {
             return;
         }
@@ -220,7 +220,7 @@ void building_workshop_add_raw_material(building* b, int amount, e_resource res)
         if (b->input.resource == res || b->input.resource_second == res) {
             b->store_resource(b->input.resource, amount);
         } else {
-            assert(false);
+            verify_no_crash(false);
         }
     } else {
         //assert(false);

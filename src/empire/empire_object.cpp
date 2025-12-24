@@ -166,7 +166,7 @@ const empire_object* empire_t::get_our_city() const {
                 return obj;
         }
     }
-    assert(false && "our city should exist");
+    verify_no_crash(false && "our city should exist");
     return nullptr;
 }
 
@@ -436,7 +436,7 @@ void full_empire_object::add_sell_resource(e_resource r) {
 
     // find empty place
     it = std::find(std::begin(city_sells_resource), std::end(city_sells_resource), 0);
-    assert(it != std::end(city_sells_resource));
+    verify_no_crash(it != std::end(city_sells_resource));
     *it = r;
 }
 
