@@ -49,19 +49,7 @@ struct city_t {
     city_maintenance_t maintenance;
     e_availability advisors[ADVISOR_MAX];
 
-    struct {
-        uint8_t city;
-        int8_t city_foreign_months_left;
-        int8_t total_count;
-        int8_t won_count;
-        uint8_t enemy_strength;
-        uint8_t roman_strength;
-        int8_t months_until_battle;
-        int8_t roman_months_to_travel_forth;
-        int8_t roman_months_to_travel_back;
-        int8_t enemy_months_traveled;
-        int8_t roman_months_traveled;
-    } distant_battle;
+    distant_battles_t distant_battle;
 
     city_finance_t finance;
     city_resources_t resource;

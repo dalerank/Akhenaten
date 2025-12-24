@@ -15,6 +15,11 @@ void ANK_FUNCTION_UNIFIED(__city_event_create_foreign_army_attack_warning)(const
     g_scenario.events.create_foreign_army_attack_warning(args.n("tag_id"), args.n("sender_faction"));
 }
 
+void ANK_FUNCTION_UNIFIED(__city_event_create_distant_battle)(const bvariant_map &args) {
+    const xstring pcity = args.s("city");
+    g_scenario.events.create_distant_battle(args.n("tag_id"), pcity.c_str(), args.vec2i_or_def("pos", {0, 0}));
+}
+
 void __city_request_set_image(int tag, xstring image) {
     g_scenario.events.set_request_image(tag, image);
 }
@@ -45,10 +50,10 @@ void __city_request_execute(int tag) {
 }
 ANK_FUNCTION_1(__city_request_execute)
 
-void __city_request_set_param_1(int tag, pcstr name, int param1) {
+void __city_request_set_param(int tag, pcstr name, int param1) {
     g_scenario.events.set_request_param(tag, name, param1);
 }
-ANK_FUNCTION_3(__city_request_set_param_1)
+ANK_FUNCTION_3(__city_request_set_param)
 
 void ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map &args) {
     invasion_opts_t opts;

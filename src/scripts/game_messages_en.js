@@ -1440,7 +1440,8 @@ game_messages_en {
 
     message_distant_battle {
         id: 124
-        type: 2
+        type: MESSAGE_ARCH_MESSAGE
+        message_type: MESSAGE_TYPE_DISTANT_BATTLE
         
         size [30, 20]
         title { text: "Distant battle" }

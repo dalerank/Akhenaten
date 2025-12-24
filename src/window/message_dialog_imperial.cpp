@@ -34,7 +34,7 @@ void ui::message_dialog_imperial::draw_foreground(UiFlags flags) {
 }
 
 void ui::message_dialog_imperial::draw_content(const lang_message &msg) {
-    assert(msg.type == TYPE_MESSAGE);
+    assert(msg.type == MESSAGE_ARCH_MESSAGE);
     draw_city_message_text(msg);
 }
 

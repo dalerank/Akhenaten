@@ -140,10 +140,11 @@ void empire_window::init() {
     ui["button_open_trade"].onclick([] {
         popup_dialog::show_yesno("#popup_dialog_open_trade", [] {
             empire_city *city = g_empire.city(g_empire_window.selected_city);
-            // Prevent opening trade route if city is under siege
+
             if (city && city->is_sieged()) {
                 return;
             }
+            
             g_city.finance.process_construction(city->cost_to_open);
             city->is_open = 1;
             window_trade_opened_show(g_empire_window.selected_city);

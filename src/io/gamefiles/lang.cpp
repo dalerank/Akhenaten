@@ -11,6 +11,9 @@
 using game_message_t = std::unordered_map<xstring, lang_message>;
 game_message_t game_messages;
 
+e_message_arch_tokens_t ANK_CONFIG_ENUM(e_message_arch_tokens);
+e_message_category_tokens_t ANK_CONFIG_ENUM(e_message_category_tokens);
+
 void lang_reload_game_messages(const xstring table_name) {
     game_messages.clear();
 
