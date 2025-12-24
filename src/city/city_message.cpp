@@ -171,7 +171,7 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
     if (msg->req_amount < 100) {
         msg->req_amount *= 100;
     }
-    msg->req_city = event->location_fields[0] - 1;
+    msg->req_city = event->city_id > 0 ? event->city_id : event->location_fields[0] - 1;
 
     if (event->is_active) {
         msg->req_months_left = event->quest_months_left;

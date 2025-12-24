@@ -14,15 +14,15 @@
 #include "game/game.h"
 #include "scenario/scenario.h"
 
-int scenario_distant_battle_kingdome_travel_months(void) {
+int scenario_distant_battle_kingdome_travel_months() {
     return g_scenario.empire.distant_battle_kingdome_travel_months;
 }
 
-int scenario_distant_battle_enemy_travel_months(void) {
+int scenario_distant_battle_enemy_travel_months() {
     return g_scenario.empire.distant_battle_enemy_travel_months;
 }
 
-void scenario_distant_battle_process(void) {
+void scenario_distant_battle_process() {
     for (int i = 0; i < MAX_INVASIONS; i++) {
         if (g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
             && game.simtime.year == g_scenario.invasions[i].year + g_scenario.start_year

@@ -80,7 +80,10 @@ uint16_t event_ph_t::rand_reason() const {
 }
 
 void event_ph_t::set_param(pcstr name, int param) {
-
+    bstring32 pname(name);
+    if (pname == "months_initial") {
+        months_initial = param;
+    }
 }
 
 void event_ph_t::archive_load(archive arch) {
@@ -162,6 +165,23 @@ void event_manager_t::create_foreign_army_attack_warning(int tag, int8_t sender_
     event.tag_id = tag;
     event.location_fields = { -1, -1, -1, -1 };
     event.sender_faction = sender_faction;
+    event.event_id = event_id;
+    event.event_state = e_event_state_initial;
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+void event_manager_t::create_distant_battle(int tag, pcstr city, vec2i pos) {
+    auto &event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_DISTANT_BATTLE;
+    event.time.year = game.simtime.years_since_start();
+    event.time.month = game.simtime.month;
+    event.tag_id = tag;
+    const auto city_ptr = g_empire.city(city);
+    event.city_id = city_ptr ? city_ptr->name_id : 0;
+    event.location_fields = { -1, -1, -1, -1 };
+    //event.sender_faction = sender_faction;
     event.event_id = event_id;
     event.event_state = e_event_state_initial;
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
@@ -457,6 +477,15 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         }
         break;
 
+    case EVENT_TYPE_DISTANT_BATTLE:{
+            const int annoucement = event.reasons[0];
+            const int reason = event.reasons[1];
+            city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
+                PHRASE_distant_battle_title_P, annoucement, reason,
+                id, 0);
+        }
+        break;
+
     case EVENT_TYPE_REPUTATION_DECREASE:
     case EVENT_TYPE_CITY_STATUS_CHANGE:
         break;
@@ -629,7 +658,7 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
         iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[2]);
         iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[3]);
         iob->bind(BIND_SIGNATURE_INT8, &event.subtype);
-        iob->bind(BIND_SIGNATURE_INT8, &event.__unk15_i8); // 07 --> 05
+        iob->bind(BIND_SIGNATURE_INT8, &event.city_id);
         iob->bind(BIND_SIGNATURE_INT16, &event.__unk16);
         iob->bind(BIND_SIGNATURE_INT16, &event.image.pack);
         iob->bind(BIND_SIGNATURE_INT16, &event.image.id);
@@ -646,9 +675,6 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
 io_buffer* iob_scenario_events_extra = new io_buffer([](io_buffer* iob, size_t version) {
     // TODO ????????
 });
-
-#define TMP_BUFFER_SIZE 100000
-static const uint8_t PHRASE[] = {'P', 'H', 'R', 'A', 'S', 'E', '_', 0};
 
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;

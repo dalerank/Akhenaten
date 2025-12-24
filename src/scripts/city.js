@@ -68,6 +68,18 @@ city {
             execute: function() { __city_request_execute(this.tag_id) }
         }
     }
+
+    create_distant_battle : function(obj) {
+        __city_event_create_distant_battle(obj)
+        return {
+            tag_id: obj.tag_id
+            set_location_fields: function(l1, l2, l3, l4) { __city_request_set_location_fields(this.tag_id, l1, l2, l3, l4) }
+            set_reasons: function(r1, r2, r3, r4) { __city_request_set_reasons(this.tag_id, r1, r2, r3, r4) }
+            set_image: function(image) { __city_request_set_image(this.tag_id, image) }
+            set_param: function(param, value) { __city_request_set_param(this.tag_id, param, value) }
+            execute: function() { __city_request_execute(this.tag_id) }
+        }
+    }
 }
 
 finance { 

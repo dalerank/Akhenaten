@@ -28,6 +28,7 @@ namespace ui {
     struct message_dialog_invasion;
     struct message_dialog_god;
     struct message_dialog_image;
+    struct message_dialog_troop_request;
     
     // Base class with common functionality
     struct message_dialog_base : public autoconfig_window {

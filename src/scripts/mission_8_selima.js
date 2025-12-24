@@ -41,8 +41,7 @@ mission8 { // Selima
 	}
 
     enable_scenario_events : true
-	events [
-    ]
+
 
     invasion_points_land [
         [30, 26]
@@ -118,6 +117,7 @@ mission8 { // Selima
 		random_trade_city_under_siege : false
 		foreign_army_attack_warning_shown : false
 		foreign_army_attacked_city : false
+		distant_battle_requested : false
 	}
 }
 
@@ -222,4 +222,26 @@ function mission8_foreign_army_attack(ev) {
 	event.set_image("pharaoh_unloaded/dialougedrawing_00012")
 	event.set_reasons(PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A, -1, -1)
 	event.execute()
+}
+
+[event=event_advance_month, mission=mission8]
+function mission8_distant_battle_request(ev) {
+	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} distant battle request", {ev:ev})
+	if (mission.distant_battle_requested) {
+		return
+	}
+
+	if (ev.years_since_start < 5 || ev.month < 1) {
+		return
+	}
+
+	mission.distant_battle_requested = true
+	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} distant battle request", {ev:ev})
+
+	var battle = city.create_distant_battle({ tag_id: 5, city: "Kerma" })
+	battle.set_location_fields(-1, -1, -1, -1)
+	battle.set_image("pharaoh_unloaded/dialougedrawing_00012")
+	battle.set_param("months_initial", 14)
+	battle.set_reasons(PHRASE_distant_battle_initial_announcement_P, PHRASE_distant_battle_initial_announcement_C, -1, -1)
+	battle.execute()
 }

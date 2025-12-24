@@ -8,6 +8,7 @@
 #include "message_dialog_invasion.h"
 #include "message_dialog_god.h"
 #include "message_dialog_image.h"
+#include "message_dialog_troop_request.h"
 
 #include "city/city_message.h"
 #include "city/city.h"
@@ -39,6 +40,7 @@
 #include "game/game.h"
 #include "message_dialog.h"
 #include "core/string.h"
+#include "city/military.h"
 
 static ui::message_dialog_base* g_message_dialog_instance = nullptr;
 
@@ -306,7 +308,7 @@ void ui::message_dialog_base::draw_content(const lang_message& msg) {
         return;
     }
 
-    if (msg.type == TYPE_MESSAGE) {
+    if (msg.type == MESSAGE_ARCH_MESSAGE) {
         draw_city_message_text(msg);
     } else {
         ui["content_text"] = text;
@@ -540,6 +542,7 @@ ui::message_dialog_price_change message_dialog_price_change_window;
 ui::message_dialog_invasion message_dialog_invasion_window;
 ui::message_dialog_god message_dialog_god_window;
 ui::message_dialog_image message_dialog_image_window;
+ui::message_dialog_troop_request message_dialog_troop_request_window;
 
 static ui::message_dialog_base* create_message_dialog(xstring text_id, int message_id = -1) {
     const lang_message& msg = lang_get_message(text_id);
@@ -558,6 +561,9 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
     switch (msg.message_type) {
         case MESSAGE_TYPE_GENERAL:
             window = &message_dialog_general_window;
+            break;
+        case MESSAGE_TYPE_DISTANT_BATTLE:
+            window = &message_dialog_troop_request_window;
             break;
         case MESSAGE_TYPE_DISASTER:
             window = &message_dialog_disaster_window;
