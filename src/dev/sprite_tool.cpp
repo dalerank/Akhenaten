@@ -77,7 +77,7 @@ bool game_debug_show_properties_object(imagepak_handle &ipak) {
                     auto drawImage = [] (const image_t *img, int idx, vec2i msize) {
                         if (img->mirrored_img != 0) {
                             img = img->mirrored_img;
-                            assert(img);
+                            verify_no_crash(img);
                         }
                         const vec2i tx_offset = img->atlas.offset;
                         const vec2i atlas_size(img->atlas.p_atlas->width, img->atlas.p_atlas->height);

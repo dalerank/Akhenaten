@@ -30,7 +30,7 @@ void ui::message_dialog_invasion::init() {
 }
 
 void ui::message_dialog_invasion::draw_foreground(UiFlags flags) {
-    draw_foreground_normal();
+    draw_foreground_content();
         
     // Enable go_to_problem button for invasions in normal mode
     const lang_message& msg = lang_get_message(text_id);

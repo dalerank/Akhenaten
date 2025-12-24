@@ -173,7 +173,7 @@ void building_impl::draw_normal_anim(painter &ctx, const animation_context &rani
 }
 
 void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
-    assert(base.output.resource == current_params().output.resource);
+    verify_no_crash(base.output.resource == current_params().output.resource);
 }
 
 const auto& get_properties() {

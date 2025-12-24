@@ -123,15 +123,15 @@ public:
     inline bool is_str() const { return (etype_str == _value_type); }
     inline bool is_vec2i() const { return (etype_vec2i == _value_type); }
     
-    inline bool	as_bool() const { assert(etype_bool == _value_type); return _value.bool_value; }
-    inline uint16_t as_u16() const { assert(this->is_u16()); return _value.u16_value; }   
-    inline int32_t as_int32() const { assert(etype_int32 == _value_type); return _value.int32_value; }
-    inline uint32_t as_uint32() const { assert(etype_uint32 == _value_type); return _value.uint32_value; }
-    inline uint64_t as_uint64() const { assert(etype_uint64 == _value_type); return _value.uint64_value; }
-    inline float as_float() const { assert(etype_float == _value_type); return _value.float_value; }
-    inline void *as_ptr() const { assert(etype_ptr == _value_type); return _value.ptr_value; }
-    inline const xstring &as_str() const { assert(etype_str == _value_type); return *cast<xstring>(); }
-    inline const vec2i &as_vec2i() const { assert(etype_vec2i == _value_type); return *cast<vec2i>(); }
+    inline bool	as_bool() const { verify_no_crash(etype_bool == _value_type); return _value.bool_value; }
+    inline uint16_t as_u16() const { verify_no_crash(this->is_u16()); return _value.u16_value; }
+    inline int32_t as_int32() const { verify_no_crash(etype_int32 == _value_type); return _value.int32_value; }
+    inline uint32_t as_uint32() const { verify_no_crash(etype_uint32 == _value_type); return _value.uint32_value; }
+    inline uint64_t as_uint64() const { verify_no_crash(etype_uint64 == _value_type); return _value.uint64_value; }
+    inline float as_float() const { verify_no_crash(etype_float == _value_type); return _value.float_value; }
+    inline void *as_ptr() const { verify_no_crash(etype_ptr == _value_type); return _value.ptr_value; }
+    inline const xstring &as_str() const { verify_no_crash(etype_str == _value_type); return *cast<xstring>(); }
+    inline const vec2i &as_vec2i() const { verify_no_crash(etype_vec2i == _value_type); return *cast<vec2i>(); }
 
     inline variant_t &as_bool(bool v) { return assign(v, etype_bool); }
     inline variant_t &as_u16(uint16_t v) { assign(v, etype_u16); return *this; }
@@ -154,7 +154,7 @@ public:
 
     using pvoid = void *;
     inline void acquire(const uint8_t type) {
-        assert(etype_none == _value_type);
+        verify_no_crash(etype_none == _value_type);
         _value_type = type;
 
         switch (_value_type) {
@@ -198,7 +198,7 @@ public:
             break;
         }
         default:
-            assert(false);
+            verify_no_crash(false);
         };
 
         return result;
@@ -223,7 +223,7 @@ public:
             break;
         }
         default:
-            assert(false);
+            verify_no_crash(false);
         };
 
         return result;

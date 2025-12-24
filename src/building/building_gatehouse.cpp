@@ -306,7 +306,7 @@ void building_gatehouse::on_place(int orientation, int variant) {
         backside->prev_part_building_id = 0;
         mainside = backside;
     }
-    assert(backside && mainside);
+    verify_no_crash(backside && mainside);
 
     // Remove walls on the territory of both parts of the gatehouse
     map_terrain_remove_with_radius(base.tile, base.size, 0, TERRAIN_WALL);

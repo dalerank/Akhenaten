@@ -64,7 +64,6 @@ namespace ui {
 
         void (*background_callback)();
         bool show_video;
-        bool background;
 
         int text_height_blocks;
         int text_width_blocks;
@@ -85,12 +84,10 @@ namespace ui {
         void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier);
         void cleanup();
         
-        virtual void draw_background_normal();
-        virtual void draw_background_image();
+        virtual void draw_background_content();
         virtual void draw_background_video();
 
-        virtual void draw_foreground_normal();
-        virtual void draw_foreground_image();
+        virtual void draw_foreground_content();
         virtual void draw_foreground_video();
         
         void draw_image(const lang_message& msg);
@@ -99,7 +96,6 @@ namespace ui {
         
         virtual bool handle_input_normal(const mouse* m_dialog, const lang_message& msg);
         bool handle_input_video(const mouse* m_dialog, const lang_message& msg);
-        bool handle_input_godmsg(const mouse* m_dialog, const lang_message& msg);
         
         void button_back();
         void button_close();

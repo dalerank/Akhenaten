@@ -100,7 +100,7 @@ void building_jewels_workshop::start_production() {
     } 
     
     bool can_start_a = true;
-    assert(base.input.resource != RESOURCE_NONE);
+    verify_no_crash(base.input.resource != RESOURCE_NONE);
     can_start_a = (stored_amount(base.input.resource) >= 100);
     
     if (can_start_b && can_start_a) {

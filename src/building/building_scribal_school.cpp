@@ -48,7 +48,7 @@ bool building_scribal_school::add_resource(e_resource resource, int amount) {
         return false;
     }
 
-    assert(id() > 0);
+    verify_no_crash(id() > 0);
     store_resource(RESOURCE_PAPYRUS, amount);
     return true;
 }

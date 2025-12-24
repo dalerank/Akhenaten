@@ -11,6 +11,14 @@
 #define STRINGIFY2(x) STRINGIFY1(x)
 #define SOURCE_LOCATION __FILE__ ":" STRINGIFY2(__LINE__)
 
+namespace debug {
+    void critical(const char* FILE, int line, const char* F, ...);
+    constexpr void dummy_func() {}
+} // debug
+
+#define verify_no_crash(expr) { if (!(expr)) { ::debug::critical(__FILE__, __LINE__, #expr); } } ::debug::dummy_func()
+#define verify_no_crash_var(expr, ...) { if (!(expr)) { ::debug::critical(__FILE__, __LINE__, __VA_ARGS__); } } ::debug::dummy_func()
+
 template<typename Func>
 struct FuncLinkedList {
     FuncLinkedList(Func cb) : func(cb) {

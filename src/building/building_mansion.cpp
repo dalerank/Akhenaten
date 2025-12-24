@@ -91,7 +91,7 @@ bool building_mansion::draw_ornaments_and_animations_height(painter &ctx, vec2i 
         break;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
     return true;
 }

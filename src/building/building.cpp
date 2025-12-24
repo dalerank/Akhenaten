@@ -70,7 +70,7 @@ static std::array<const building_static_params*, BUILDING_MAX> *building_impl_pa
 building_static_params building_static_params::dummy;
 
 void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
-    assert(!_ptr);
+    verify_no_crash(!_ptr);
     const auto &props = building_static_params::get(_tp);
     type = _tp;
     tile = _tl;
@@ -197,7 +197,7 @@ const building_static_params &building_static_params::get(e_building_type e) {
 
 building_static_params &building_static_params::ref(e_building_type e) {
     auto *cfg = building_impl_params->at(e);
-    assert(cfg);
+    verify_no_crash(cfg);
     return *const_cast<building_static_params *>(cfg);
 }
 
@@ -207,7 +207,7 @@ const building_impl *building::dcast() const {
         building_impl::acquire(type, const_cast<building&>(*this));
     }
 
-    assert(!!_ptr);
+    verify_no_crash(!!_ptr);
     return _ptr;
 }
 
@@ -216,7 +216,7 @@ building_impl *building::dcast() {
         building_impl::acquire(type, *this);
     }
 
-    assert(!!_ptr);
+    verify_no_crash(!!_ptr);
     return _ptr;
 }
 
@@ -458,7 +458,7 @@ int building::stored_amount(e_resource res) const {
 }
 
 int building::need_resource_amount(e_resource resource) const {
-    assert(resource != RESOURCE_NONE);
+    verify_no_crash(resource != RESOURCE_NONE);
     return max_storage_amount(resource) - stored_amount(resource);
 }
 
@@ -475,7 +475,7 @@ int building::max_storage_amount(e_resource resource) const {
 }
 
 bool building::workshop_has_resources() {
-    assert(is_workshop());
+    verify_no_crash(is_workshop());
     bool has_second_material = true;
     if (input.resource_second != RESOURCE_NONE) {
         has_second_material = (stored_amount(input.resource_second) > 100);
@@ -502,7 +502,7 @@ void building::force_damage(e_damage_type type, int8_t value) {
 }
 
 void building::destroy_by_collapse() {
-    assert(is_main());
+    verify_no_crash(is_main());
 
     events::emit(event_collase_damage{ id });
 
@@ -516,7 +516,7 @@ void building::destroy_by_collapse() {
 }
 
 void building::destroy_by_flooded() {
-    assert(is_main());
+    verify_no_crash(is_main());
 
     events::emit(event_flooded_damage{ id });
 
@@ -567,7 +567,7 @@ void building::destroy_on_fire_impl(bool plagued) {
 }
 
 void building::destroy_by_fire() {
-    assert(is_main());
+    verify_no_crash(is_main());
 
     destroy_on_fire_impl(false);
     destroy_linked_parts(true);
@@ -608,7 +608,7 @@ void building::destroy_linked_parts(bool on_fire) {
 }
 
 void building::mark_plague(int days) {
-    assert(is_main());
+    verify_no_crash(is_main());
     disease_days = days;
     has_plague = true;
 }
@@ -804,7 +804,7 @@ figure *building::get_figure(int i) const {
 bool building::has_figure(int i, int figure_id) const {
     // seatrch through all the figures if index is -1
     if (i == -1) {
-        assert(figure_id > 0);
+        verify_no_crash(figure_id > 0);
         for (int i = 0; i < max_figures; i++) {
             figure* f = this->get_figure(i);
             if (f->id == figure_id) {

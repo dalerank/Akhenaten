@@ -2,6 +2,7 @@
 
 #include "log.h"
 #include "crc32.h"
+#include "core/core.h"
 
 #include <mutex>
 #include <unordered_map>
@@ -29,8 +30,8 @@ void xstring_container::verify() {
     for (const auto &it: data) {
         const auto crc = crc32(it.second->value.c_str(), it.second->length);
         bstring32 crc_str;
-        assert(crc == it.second->crc);// , "error: read-only memory corruption (shared_strings)"); // itoa(value->dwCRC, crc_str, 16));
-        assert(it.second->length == it.second->value.length());// , "error: read-only memory corruption (shared_strings, internal structures)");// , value->value);
+        verify_no_crash(crc == it.second->crc);// , "error: read-only memory corruption (shared_strings)"); // itoa(value->dwCRC, crc_str, 16));
+        verify_no_crash(it.second->length == it.second->value.length());// , "error: read-only memory corruption (shared_strings, internal structures)");// , value->value);
     }
     logs::info("strings verify completed");
 }
@@ -56,7 +57,7 @@ xstring_value *xstring_container::dock(pcstr value) {
     // calc len
     const size_t s_len = strlen(value);
     const size_t s_len_with_zero = s_len + 1;
-    assert(sizeof(xstring_value) + s_len_with_zero < (2 * 4096 + 2048));
+    verify_no_crash(sizeof(xstring_value) + s_len_with_zero < (2 * 4096 + 2048));
 
     // setup find structure
     uint16_t length = static_cast<uint32_t>(s_len);

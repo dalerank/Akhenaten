@@ -200,7 +200,7 @@ void building_industry::update_day() {
     building_impl::update_day();
     const auto &d = runtime_data();
 
-    assert(d.progress_max > 100);
+    verify_no_crash(d.progress_max > 100);
     const bool has_produced_resource = (d.progress >= d.progress_max);
 
     if (has_produced_resource) {

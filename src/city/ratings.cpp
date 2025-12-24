@@ -30,7 +30,7 @@ struct rating_points {
     using points_t = svector<city_ratings_t::point, 32>;
     points_t points;
 
-    void archive_init() { assert(!points.empty()); }
+    void archive_init() { verify_no_crash(!points.empty()); }
 
     void archive_unload() { points.clear(); }
     auto &emplace_back() { return points.emplace_back(); }

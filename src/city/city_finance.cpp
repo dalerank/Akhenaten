@@ -172,7 +172,7 @@ void city_finance_t::process_request(event_finance_request request) {
         break;
 
     default:
-        assert(false && "something strange");
+        verify_no_crash(false && "something strange");
     }
 }
 

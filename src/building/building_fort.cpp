@@ -116,7 +116,7 @@ formation_id building_fort::create_batalion() {
     m->is_at_fort = 1;
     m->batalion_id = m->id - 1;
     m->max_figures = 16;
-    assert(m->batalion_id <= 9);
+    verify_no_crash(m->batalion_id <= 9);
 
     building_fort_ground *fort_ground = ground();
     m->home = fort_ground->tile();

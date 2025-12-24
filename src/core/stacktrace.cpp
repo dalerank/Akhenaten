@@ -6,6 +6,11 @@
 
 #include "SDL.h"
 
+#if defined(GAME_PLATFORM_WIN)
+#include <Windows.h>
+#include <crtdbg.h>
+#endif
+
 static void display_crash_message() {
     platform_screen_show_error_message_box(
       "Ozzy has crashed :(",
@@ -18,6 +23,32 @@ static void display_crash_message() {
       "With your help, we can avoid this crash in the future.\n"
       "Copy this message press Ctrl + C.\n"
       "Thanks!\n");
+}
+
+namespace debug {
+    void va_backend(pcstr msg, pcstr FILE, int line, pcstr F, va_list arg) {
+        bstring<4096> reason;
+        bstring<4096> buffer;
+        _vsnprintf(buffer, sizeof(buffer) - 1, F, arg);
+        buffer[sizeof(buffer) - 1] = 0;
+
+        buffer[4000] = 0; // if longer than can fit in reason
+        reason.printf("%s:%d|%s\n%s", FILE, line, msg, buffer.c_str());
+
+#ifdef GAME_PLATFORM_WIN
+        if (IsDebuggerPresent()) {
+            __debugbreak();
+        }
+#endif
+        logs::critical("%s", reason);
+    }
+
+    void critical(const char *FILE, int line, const char* F, ...) {
+        va_list		args;
+        va_start(args, F);
+        va_backend("", FILE, line, F, args);
+        va_end(args);
+    }
 }
 
 #if defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_WIN64) && !defined(ANDROID_BUILD)

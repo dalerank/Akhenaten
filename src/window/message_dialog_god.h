@@ -10,7 +10,6 @@ namespace ui {
         virtual int handle_mouse(const mouse *m) override;
         virtual void draw_foreground(UiFlags flags) override;
         virtual void draw_city_message_text(const lang_message& msg) override;
-        virtual void draw_background_image() override;
         virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void)) override;
         virtual void archive_load(archive arch) override;
         

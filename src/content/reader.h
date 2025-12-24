@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 
+#include "core/core.h"
 #include "core/bstring.h"
 
 namespace vfs {
@@ -21,7 +22,7 @@ struct reader_base {
     inline int tell() const { return __pos; };
     inline void seek(int ptr) {
         __pos = ptr;
-        assert((__pos <= __size) && (__pos >= 0));
+        verify_no_crash((__pos <= __size) && (__pos >= 0));
     };
     inline char *begin() { return (char*)__data; }
     inline char *end() { return (char*)(__data + __size); }
@@ -33,12 +34,12 @@ struct reader_base {
     inline void *current_pointer() const { return (void *)(__data + __pos); };
     inline void advance(size_t cnt) {
         __pos += (int)cnt;
-        assert((__pos <= __size) && (__pos >= 0));
+        verify_no_crash((__pos <= __size) && (__pos >= 0));
     };
     inline void rewind() { seek(0); }
 
     inline void r(void *p, int c) {
-        assert(__pos + c <= __size);
+        verify_no_crash(__pos + c <= __size);
         memcpy(p, current_pointer(), c);
         advance(c);
     }
@@ -130,7 +131,7 @@ protected:
         __size = size;
         __pos = pos;
         __debug_info = _debug_info;
-        assert(__debug_info.size() > 0u);
+        verify_no_crash(__debug_info.size() > 0u);
     }
 
 private:
@@ -138,7 +139,7 @@ private:
 
 public:
     pcstr debug_info() const {
-        assert(__debug_info.size() > 0);
+        verify_no_crash(__debug_info.size() > 0);
         return __debug_info.c_str();
         return nullptr;
     }

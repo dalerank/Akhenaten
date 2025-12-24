@@ -300,7 +300,7 @@ e_sound_channel_city building_farm::sound_channel() const {
         return SOUND_CHANNEL_CITY_CHICKFARM;
 
     default:
-        assert(false);
+        verify_no_crash(false);
     }
     return SOUND_CHANNEL_CITY_CHICKFARM;
 }

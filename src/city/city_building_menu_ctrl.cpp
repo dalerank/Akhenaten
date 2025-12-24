@@ -32,7 +32,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_building_menu) {
     auto copy_config = g_building_menu_ctrl;
     g_config_arch.r_array("building_menu", g_building_menu_ctrl.groups, [&copy_config] (archive arch, auto &group) {
         group.type = arch.r_int("id");
-        assert(group.type != 0);
+        verify_no_crash(group.type != 0);
         arch.r_desc("anim", group.img);
         auto items = arch.r_array_num<int>("items");
         for (auto &it : items) {
@@ -330,7 +330,7 @@ void building_menu_ctrl_t::update(const xstring stage_name) {
         // disable resources that aren't available on map
         disable_resources();
     } else {
-        assert(false);
+        verify_no_crash(false);
     }
 
     // disable government building tiers depending on mission rank

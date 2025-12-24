@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <math.h>
 
+#include "core/core.h"
+
 struct vec2i {
     int x = 0;
     int y = 0;
@@ -13,7 +15,8 @@ struct vec2i {
     vec2i(int _x, int _y) : x(_x), y(_y) {}
 
     inline vec2i operator-(vec2i rhs) const { return {x - rhs.x, y - rhs.y}; }
-    inline vec2i operator-(const std::initializer_list<int> &rhs) const { assert(rhs.size() > 0); 
+    inline vec2i operator-(const std::initializer_list<int> &rhs) const { 
+        verify_no_crash(rhs.size() > 0); 
         return rhs.size() > 1 ? vec2i{x - *rhs.begin(), y - *(rhs.begin() + 1)} : vec2i{x - *rhs.begin(), y - *rhs.begin()};
     }
     inline vec2i operator-=(vec2i rhs) { *this = *this - rhs; return *this; }

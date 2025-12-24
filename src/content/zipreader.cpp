@@ -147,7 +147,7 @@ namespace vfs {
         // read filename
         {
             char tmp[512] = { 0 };
-            assert(entry.header.FilenameLength + 2 < sizeof(tmp));
+            verify_no_crash(entry.header.FilenameLength + 2 < sizeof(tmp));
             _data->r(tmp, entry.header.FilenameLength);
             tmp[entry.header.FilenameLength] = 0;
             entry_name = tmp;

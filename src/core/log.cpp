@@ -76,6 +76,7 @@ SDL_LogPriority get_log_priority() {
 
 void sig_handler(int signal_num) {
 #if defined(GAME_PLATFORM_WIN)
+    // SIGABRT обрабатывается отдельным обработчиком под отладчиком
     if (signal_num == SIGABRT && IsDebuggerPresent()) {
         return;
     }
@@ -101,8 +102,8 @@ void initialize() {
 #if defined(GAME_PLATFORM_WIN)
     if (IsDebuggerPresent()) {
         return;
-    }
-#endif 
+    } 
+#endif
 
     signal(SIGSEGV, sig_handler);
     signal(SIGABRT, sig_handler);

@@ -58,7 +58,7 @@ void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx
 int building_planer_renderer::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
     // by default, get size from building's properties
     const auto &params = building_static_params::get(planer.build_type);
-    assert(params.building_size > 0);
+    verify_no_crash(params.building_size > 0);
 
     // correct building placement for city orientations
     switch (city_view_orientation()) {
