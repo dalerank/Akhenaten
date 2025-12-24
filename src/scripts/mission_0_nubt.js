@@ -74,7 +74,7 @@ function mission0_register_animals(ev) {
 	city.set_animals_area(0, 16)
 }
 
-[event=event_advance_day, mission=mission1]
+[event=event_advance_day, mission=mission0]
 function mission0_on_build_firehouse(ev) {
     if (mission.tutorial_firehouse_built) {
         return
