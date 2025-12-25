@@ -229,7 +229,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
-            vec2i v = r_vec2i_impl(px, py);
+            vec2i v = r_vec2i_impl({ 0, 0 }, px, py);
             result.push_back(v);
             js_pop(vm, 1);
         }
@@ -270,35 +270,35 @@ bool archive::r_bool(pcstr name, bool def) {
     return result;
 }
 
-vec2i archive::r_size2i(pcstr name, pcstr w, pcstr h) {
-    return r_vec2i(name, w, h);
+vec2i archive::r_size2i(pcstr name, vec2i def, pcstr w, pcstr h) {
+    return r_vec2i(name, def, w, h);
 }
 
-vec2i archive::r_vec2i_impl(pcstr x, pcstr y) {
+vec2i archive::r_vec2i_impl(vec2i def, pcstr x, pcstr y) {
     auto vm = (js_State *)state;
-    vec2i result(0, 0);
+    vec2i result = def;
     if (js_isobject(vm, -1)) {
         if (js_isarray(vm, -1)) {
             int length = js_getlength(vm, -1);
             if (length > 0) {
-                js_getindex(vm, -1, 0); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+                js_getindex(vm, -1, 0); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
                 if (length > 1) {
-                    js_getindex(vm, -1, 1); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+                    js_getindex(vm, -1, 1); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
                 }
             }
         } else {
-            js_getproperty(vm, -1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-            js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getproperty(vm, -1, x); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
+            js_getproperty(vm, -1, y); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
         }
     }
 
     return result;
 }
 
-vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
+vec2i archive::r_vec2i(pcstr name, vec2i def, pcstr x, pcstr y) {
     auto vm = (js_State *)state;
     js_getproperty(vm, -1, name);
-    vec2i result = r_vec2i_impl(x, y);
+    vec2i result = r_vec2i_impl(def, x, y);
     js_pop(vm, 1);
 
     return result;
@@ -307,7 +307,7 @@ vec2i archive::r_vec2i(pcstr name, pcstr x, pcstr y) {
 tile2i archive::r_tile2i(pcstr name, pcstr i, pcstr j) {
     auto vm = (js_State*)state;
     js_getproperty(vm, -1, name);
-    vec2i t = r_vec2i_impl(i, j);
+    vec2i t = r_vec2i_impl({ 0, 0 }, i, j);
     js_pop(vm, 1);
 
     return tile2i(t.x, t.y);
