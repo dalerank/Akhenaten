@@ -68,8 +68,9 @@ struct image_t {
     //
     short width;
     short height;
-    uint16_t group_id; //
-    uint16_t group_index; //
+    int16_t pak_id;
+    int16_t group_id; //
+    int16_t group_index; //
     short unk03; //
     struct {
         uint16_t num_sprites;
@@ -128,6 +129,8 @@ struct image_t {
     const int isometric_size() const;
     const int isometric_top_height() const;
     const int isometric_3d_height() const;
+
+    image_desc desc() const { return { pak_id, group_id, group_index }; }
 };
 
 extern int terrain_ph_offset;
