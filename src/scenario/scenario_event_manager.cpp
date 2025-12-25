@@ -478,10 +478,10 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_DISTANT_BATTLE:{
-            const int annoucement = event.reasons[0];
+            const int template_str = event.reasons[0];
             const int reason = event.reasons[1];
             city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
-                PHRASE_distant_battle_title_P, annoucement, reason,
+                PHRASE_distant_battle_title_P, template_str, reason,
                 id, 0);
         }
         break;

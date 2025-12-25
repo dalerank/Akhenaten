@@ -26,6 +26,7 @@ enum e_message_category : uint8_t {
     MESSAGE_TYPE_PRICE_CHANGE = 6,
     MESSAGE_TYPE_INVASION = 7,
     MESSAGE_TYPE_DISTANT_BATTLE = 8,
+    MESSAGE_TYPE_IMAGE = 9,
 
     MESSAGE_TYPE_MAX
 };
