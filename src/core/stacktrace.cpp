@@ -29,7 +29,7 @@ namespace debug {
     void va_backend(pcstr msg, pcstr FILE, int line, pcstr F, va_list arg) {
         bstring<4096> reason;
         bstring<4096> buffer;
-        _vsnprintf(buffer, sizeof(buffer) - 1, F, arg);
+        vsnprintf(buffer, sizeof(buffer) - 1, F, arg);
         buffer[sizeof(buffer) - 1] = 0;
 
         buffer[4000] = 0; // if longer than can fit in reason
