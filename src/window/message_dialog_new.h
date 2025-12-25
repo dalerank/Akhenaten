@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <algorithm>
+
 #include "autoconfig_window.h"
 #include "core/xstring.h"
 #include "core/bstring.h"
@@ -81,7 +84,9 @@ namespace ui {
 
         virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void));
         void set_city_message(int year, int month, int param1, int param2, int message_advisor, bool use_popup);
-        void eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier);
+
+        template<typename T>
+        void eventmsg_template_combine(pcstr template_ptr, T& out_ptr, bool phrase_modifier);
         void cleanup();
         
         virtual void draw_background_content();
@@ -123,5 +128,43 @@ void window_message_dialog_show(xstring text_id, int message_id, void (*backgrou
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
 void window_message_setup_help_id(xstring helpid);
 void window_show_help();
-void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags);
+
+template<typename R, typename T>
+void text_fill_in_tags(pcstr src, R& result, T &tag_templates) {
+    if (!src) {
+        result = "";
+        return;
+    }
+
+    size_t pos = 0;
+    constexpr size_t max_tag_length = 200;
+    result = src;
+
+    while ((pos = result.find('[', pos)) != std::string::npos) {
+        size_t end_pos = result.find(']', pos);
+        if (end_pos == std::string::npos || (end_pos - pos) > max_tag_length) {
+            ++pos;
+            continue;
+        }
+
+        bstring64 full_tag = result.substr(pos, end_pos - pos + 1);
+        auto tag_it = std::find_if(std::begin(tag_templates), std::end(tag_templates),
+            [&full_tag](const auto& tag_template) {
+                pcstr tag_cstr = tag_template.tag.c_str();
+                return tag_cstr && full_tag == tag_cstr;
+            });
+
+        if (tag_it != std::end(tag_templates)) {
+            pcstr content_cstr = tag_it->content.c_str();
+            if (content_cstr) {
+                result.replace_str(full_tag.c_str(), content_cstr);
+                pos += tag_it->content.size();
+            } else {
+                pos = end_pos + 1;
+            }
+        } else {
+            pos = end_pos + 1;
+        }
+    }
+}
 

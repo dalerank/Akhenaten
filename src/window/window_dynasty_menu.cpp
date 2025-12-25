@@ -32,7 +32,7 @@ void ui::window_dinasty_menu::init() {
 
     string_copy(g_settings.player_name, player_name, MAX_PLAYER_NAME);
     text_tag_substitution tags[] = {{"[player_name]", (pcstr)player_name}};
-    text_fill_in_tags((pcstr)lang_get_string(293, 5), (pstr)player_name_title, tags, 1);
+    text_fill_in_tags((pcstr)lang_get_string(293, 5), player_name_title, tags);
 
     player_data_load(player_name);
 

@@ -8,8 +8,8 @@ namespace ui {
         bool has_saved_games;
         pcstr last_autosave;
 
-        uint8_t player_name[256];
-        uint8_t player_name_title[256];
+        bstring256 player_name;
+        bstring256 player_name_title;
 
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual int get_tooltip_text() override { return 0; }
