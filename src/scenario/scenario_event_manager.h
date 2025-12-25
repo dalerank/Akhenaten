@@ -7,7 +7,7 @@
 #include "game/simulation_time.h"
 #include "game/resource.h"
 
-enum e_event_type {
+enum e_event_type : uint8_t {
     EVENT_TYPE_NONE = 0,
 
     EVENT_TYPE_REQUEST = 1,
@@ -46,7 +46,7 @@ enum e_event_type {
 using e_event_type_tokens_t = token_holder<e_event_type, EVENT_TYPE_NONE, EVENT_TYPE_MAX>;
 extern const e_event_type_tokens_t e_event_type_tokens;
 
-enum e_event_state {
+enum e_event_state : uint8_t {
     e_event_state_initial = 0,
     e_event_state_in_progress = 1,
     e_event_state_overdue = 2,
@@ -60,7 +60,7 @@ enum e_event_state {
 using e_event_state_tokens_t = token_holder<e_event_state, e_event_state_initial, e_event_state_max>;
 extern const e_event_state_tokens_t e_event_state_tokens;
 
-enum e_event_subtype {
+enum e_event_subtype : uint8_t {
     EVENT_SUBTYPE_GENERIC_REQUEST = 0,
     EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,
     EVENT_SUBTYPE_MSG_CITY_SAVED = 0,
@@ -98,14 +98,14 @@ enum e_event_trigger_type {
 using e_event_trigger_type_tokens_t = token_holder<e_event_trigger_type, EVENT_TRIGGER_ONCE, EVENT_TRIGGER_MAX>;
 extern const e_event_trigger_type_tokens_t e_event_trigger_type_tokens;
 
-enum e_event_invabder {
+enum e_event_invader : uint8_t {
     EVENT_INVADER_ENEMY = 1,
     EVENT_INVADER_EGYPT = 2,
     EVENT_INVADER_PHARAOH = 3,
     EVENT_INVADER_BEDUINS = 4,
 };
 
-enum e_event_attack {
+enum e_event_attack : uint8_t {
     EVENT_ATTACK_TARGET_FOOD = 0,
     EVENT_ATTACK_TARGET_VAULTS = 1,
     EVENT_ATTACK_TARGET_BEST_BUILDINGS = 2,
@@ -113,7 +113,7 @@ enum e_event_attack {
     EVENT_ATTACK_TARGET_RANDOM = 4,
 };
 
-enum e_event_var {
+enum e_event_var : uint8_t {
     EVENT_VAR_DIRECT_RESULT = 0, // because
     EVENT_VAR_INCIDENTALLY = 1,  // (no conjunction)
     EVENT_VAR_IN_SPITE_OF = 2,   // even though...
@@ -123,7 +123,7 @@ enum e_event_var {
     EVENT_VAR_AUTO = 6, // (automatically set)
 };
 
-enum e_event_action {
+enum e_event_action : int8_t {
     EVENT_ACTION_NONE = -1,
     EVENT_ACTION_COMPLETED = 0,
     EVENT_ACTION_REFUSED = 1,
