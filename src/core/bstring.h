@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "core/core.h"
+
 using pcstr = const char *;
 using pstr = char *;
 
@@ -164,14 +166,27 @@ public:
     }
 
     inline char back() const { return empty() ? 0 : (_data[len() - 1]); }
-    inline size_t find(char t) {
+    inline size_t find(char t) const {
         pcstr p = ::strchr(_data, t);
+        return (p ? (p - _data) : -1);
+    }
+
+    inline size_t find(char t, size_t pos) const {
+        pcstr p = ::strchr(_data + pos, t);
         return (p ? (p - _data) : -1);
     }
 
     inline ref replace(const char x, const char y) {
         std::replace_if(_data, _data + len(), [x](char c) { return c == x; }, y);
         return *this;
+    }
+
+    inline bstring substr(size_t b, size_t count) {
+        bstring result(_data + b);
+        if (count < len()) {
+            result.resize(count);
+        }
+        return result;
     }
 
     inline ref replace_str(pcstr subst, pcstr repl) {
@@ -182,8 +197,12 @@ public:
         char* found_pos = std::search(_data, _data + len(), subst, subst + subst_len);
 
         while (found_pos != _data + _len) {
-            std::ptrdiff_t sizeDiff = repl_len - subst_len;
             ::memmove(found_pos + repl_len, found_pos + subst_len, _data + _len - (found_pos + subst_len) + 1);
+            std::ptrdiff_t sizeDiff = found_pos - _data;
+            if (sizeDiff + repl_len >= _size) {
+                verify_no_crash_var(false, "replace_str fail: %s/%s", subst, repl);
+                break;
+            } 
             ::memcpy(found_pos, repl, repl_len);
             _len = len();
             found_pos = std::search(found_pos + repl_len, _data + _len, subst, subst + subst_len);
