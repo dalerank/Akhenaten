@@ -473,6 +473,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
 
     auto load_img = [&] (pcstr fn, int i, int group_id, int atlas_rect_id) {
         image_t img;
+        img.pak_id = pack;
         img.pak_name = name;
         img.sgx_index = i;
         img.data_length = -1;
@@ -767,6 +768,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
     images_array.reserve(entries_num * 2);
     for (int i = 0; i < entries_num; i++) {
         image_t &img = images_array.emplace_back();
+        img.pak_id = pack;
         img.is_isometric_foot = true;
         img.is_isometric_top = false;
         img.pak_name = name;
