@@ -40,7 +40,7 @@ namespace debug {
             __debugbreak();
         }
 #endif
-        logs::critical("%s", reason);
+        logs::critical("%s", reason.c_str());
     }
 
     void critical(const char *FILE, int line, const char* F, ...) {
