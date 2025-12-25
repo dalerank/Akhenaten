@@ -109,6 +109,18 @@ public:
         }
         return (xstring&)*this;
     }
+
+    xstring tolower() const {
+        size_t lsize = size();
+        char *buffer = (char*)alloca(lsize + 1);
+        ::memcpy(buffer, c_str(), lsize);
+        while (*buffer) {
+            *buffer = std::tolower(*buffer);
+            ++buffer;
+        }
+        buffer[lsize] = '\0';
+        return xstring(buffer);
+    }
 };
 
 template<>
