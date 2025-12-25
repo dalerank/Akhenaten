@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <vector>
 
+#include "core/core.h"
+
 template <typename T, size_t Capacity>
 struct svector {
     struct fake_allocator {
