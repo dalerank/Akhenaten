@@ -331,6 +331,7 @@ struct element {
 struct eimg : public element {
     image_desc img_desc;
     bool isometric;
+    vec2i centering;
 
     virtual void draw(UiFlags flags) override;
     virtual void load(archive elem, element *parent, items &elems) override;

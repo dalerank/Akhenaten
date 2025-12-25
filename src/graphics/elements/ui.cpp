@@ -768,7 +768,16 @@ void ui::eimg::draw(UiFlags flags) {
         painter ctx = game.painter();
         ctx.img_isometric(img_desc.tid(), offset + pos, COLOR_MASK_NONE);
     } else {
-        ui::eimage(img_desc, pos);
+        vec2i rpos = pos;
+        if (centering.x > -1000 || centering.y > -1000) {
+            const image_t *img = image_get(img_desc);
+            if (img) {
+                const vec2i psize = pxsize();  
+                rpos.x += (centering.x > -1000) ? ((psize.x - img->width) / 2 + centering.x) : 0;
+                rpos.y += (centering.y > -1000) ? ((psize.y - img->height) / 2 + centering.y) : 0;
+            }
+        }
+        ui::eimage(img_desc, rpos);
     }
 }
 
@@ -781,6 +790,7 @@ void ui::eimg::load(archive arch, element *parent, items &elems) {
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
     isometric = arch.r_bool("isometric");
+    centering = arch.r_vec2i("centering", { -1001, -1001 });
 }
 
 void ui::eimg::image(const image_desc& image) {
