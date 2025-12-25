@@ -32,8 +32,8 @@ struct archive {
     float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
     bool r_bool(pcstr name, bool def = false);
-    vec2i r_size2i(pcstr name, pcstr w = "w", pcstr h = "h");
-    vec2i r_vec2i(pcstr name, pcstr x = "x", pcstr y = "y");
+    vec2i r_size2i(pcstr name, vec2i def = {0, 0}, pcstr w = "w", pcstr h = "h");
+    vec2i r_vec2i(pcstr name, vec2i def = {0, 0}, pcstr x = "x", pcstr y = "y");
     tile2i r_tile2i(pcstr name, pcstr i = "i", pcstr j = "j");
     bool r_anim(pcstr name, animation_t &anim);
     bool r_desc(pcstr name, image_desc &desc);
@@ -203,7 +203,7 @@ struct archive {
         pop(1);
     }
 
-    vec2i r_vec2i_impl(pcstr x, pcstr y);
+    vec2i r_vec2i_impl(vec2i def, pcstr x, pcstr y);
     bool r_desc_impl(image_desc &desc);
 
     template<typename T>
@@ -667,10 +667,10 @@ namespace archive_helper {
     inline void reader(archive js_j, T &js_t);
 
     template<>
-    inline void reader<vec2i>(archive arch, vec2i &v) { v = arch.r_vec2i_impl("x", "y"); }
+    inline void reader<vec2i>(archive arch, vec2i &v) { v = arch.r_vec2i_impl({ 0, 0 }, "x", "y"); }
 
     template<>
-    inline void reader<tile2i>(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl("i", "j"); v = { t.x, t.y }; }
+    inline void reader<tile2i>(archive arch, tile2i &v) { vec2i t = arch.r_vec2i_impl({ 0, 0 }, "i", "j"); v = { t.x, t.y }; }
 
     template<>
     inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
