@@ -994,7 +994,7 @@ bool imagepak::load_pak(pcstr pak_name, int starting_index) {
 }
 
 image_desc imagepak::get_image_desc(const xstring &name) const {
-    const xstring name_lower = bstring128(name.c_str()).tolower();
+    const xstring name_lower = name.tolower();
     
     for (const auto& img : images_array) {
         verify_no_crash(!img.bmp.tname.empty() && "Texture name shouldn't be empty");
