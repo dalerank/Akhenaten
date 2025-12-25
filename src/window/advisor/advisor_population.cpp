@@ -30,7 +30,9 @@ struct advisor_population_graph {
     vec2i x_axis_offset;
     int y_axis_label_w;
 };
-ANK_CONFIG_STRUCT(advisor_population_graph, y_axis_height, y_axis_height, y_axis_offset, y_axis_label_w, x_axis_offset, x_axis_width)
+ANK_CONFIG_STRUCT(advisor_population_graph, 
+    y_axis_height, y_axis_height, y_axis_offset, 
+    y_axis_label_w, x_axis_offset, x_axis_width)
 
 advisor_population_graph ANK_VARIABLE(advisor_population_graph_census);
 advisor_population_graph ANK_VARIABLE(advisor_population_graph_history);

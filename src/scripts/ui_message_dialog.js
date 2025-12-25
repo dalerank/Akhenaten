@@ -121,19 +121,31 @@ message_dialog_window_god {
     ui : __baseui(message_dialog_window_general, {
         background     : outer_panel({size: [30, 28]}) 
         title          : text({margin{ bottom:-36 }, size [px(30), 20], align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
-        content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
         god_image_area : dummy({ margin{ top:px(2) }, size [px(29), px(10)]})
+        content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
         content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
     })
 }
 
-// Image message dialog (messages with background images)
 message_dialog_window_image {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
     help_id: ""
     
     ui :__baseui(message_dialog_window_general, {
 
+    })
+}
+
+message_dialog_window_troop_request {
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(32))/2]
+    help_id: ""
+    
+    ui :__baseui(message_dialog_window_general, {
+        background     : outer_panel({size: [30, 30]}) 
+        image          : image({ margin { left:0, top:16 }, pack:PACK_UNLOADED, id:16, offset:11, size [px(30), px(16)], centering [0, 0] })
+        content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
+        content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
+        title          : text({ margin{ bottom:-36 }, size [px(30), 20], text: "Distant Battle", align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
     })
 }
 

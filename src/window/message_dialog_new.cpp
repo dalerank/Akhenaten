@@ -105,8 +105,8 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
             title_text = g_scenario.events.msg_text(city_msg.eventmsg_title_id, 0);
             body_template = g_scenario.events.msg_text(city_msg.eventmsg_body_id, 0);
             phrase_template = g_scenario.events.msg_text(city_msg.eventmsg_phrase_id, 0);
-            eventmsg_template_combine(phrase_template.c_str(), phrase_text.data(), true);
-            eventmsg_template_combine(body_template.c_str(), body_text.data(), false);
+            eventmsg_template_combine(phrase_template.c_str(), phrase_text, true);
+            eventmsg_template_combine(body_template.c_str(), body_text, false);
         } else {
             is_eventmsg = false;
         }
@@ -161,7 +161,8 @@ void ui::message_dialog_base::set_city_message(int year, int month, int param1, 
     player_msg.use_popup = use_popup;
 }
 
-void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, pstr out_ptr, bool phrase_modifier) {
+template<typename T>
+void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, T& buffer, bool phrase_modifier) {
     const auto& msg = city_message_get(message_id);
 
     bstring32 amount;
@@ -200,46 +201,8 @@ void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, pstr
       {"[travel_time]", ""},       // TODO
       {"[god]", ""},               // TODO
     };
-    text_fill_in_tags(template_ptr, out_ptr, tags, 12);
-}
 
-static void write_to_body_text_buffer(pcstr in, pstr* out) {
-    const size_t size = strlen(in);
-    memcpy(*out, in, size);
-    *out += size;
-}
-
-static void swap_tag(pcstr curr_byte, pstr* curr_byte_out, pcstr tag, pcstr content) {
-    if (index_of_string(curr_byte, tag, 200) == 1) {
-        write_to_body_text_buffer(content, curr_byte_out);
-    }
-}
-
-void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates, int num_tags) {
-    pstr curr_byte_out = dst;
-    memset(curr_byte_out, 0, 1);
-    for (int c = 0; c < 1000; c++) {
-        pcstr curr_byte = src + c;
-
-        if ((char)*curr_byte == '[') { // found an opening bracket
-            pcstr tag_end_ptr = curr_byte + index_of((const uint8_t *)curr_byte, ']', 200);
-            int size = static_cast<int>(tag_end_ptr - curr_byte - 1);
-
-            // needs to go over all the possible tags...
-            for (int i = 0; i < num_tags; ++i) {
-                swap_tag(curr_byte, &curr_byte_out, tag_templates[i].tag.c_str(), tag_templates[i].content.c_str());
-            }
-
-            // go to the end of the tag, then resume
-            curr_byte += size;
-            c += size;
-        } else {
-            memcpy(curr_byte_out, curr_byte, 1);
-            curr_byte_out++;
-            if ((char)*curr_byte == '\0')
-                return;
-        }
-    }
+    text_fill_in_tags(template_ptr, buffer, tags);
 }
 
 int ui::message_dialog_base::resource_image(int resource) {
@@ -359,65 +322,10 @@ void ui::message_dialog_base::draw_foreground_video() {
 }
 
 bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {
-    // if (msg.type == TYPE_MANUAL && num_history > 0) {
-    //     vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 36};
-    //     if (m_dialog->left.went_down && 
-    //         m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 31 &&
-    //         m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 20) {
-    //         button_back();
-    //         return true;
-    //     }
-    // }
-    // 
-    // if (msg.type == TYPE_MESSAGE) {
-    //     vec2i btn_pos = {pos.x + 16, pos.y + 16 * msg.size.y - 40};
-    //     if (m_dialog->left.went_down && 
-    //         m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
-    //         m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
-    //         button_advisor(player_msg.message_advisor);
-    //         return true;
-    //     }
-    // }
-    // 
-    // vec2i btn_pos = {pos.x + 16 * msg.size.x - 38, pos.y + 16 * msg.size.y - 36};
-    // if (m_dialog->left.went_down && 
-    //     m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
-    //     m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
-    //     button_close();
-    //     return true;
-    // }
-
-    // int text_id = rich_text.get_clicked_link(m_dialog);
-    // if (text_id >= 0) {
-    //     if (num_history < MAX_HISTORY - 1) {
-    //         history[num_history].text_id = this->text_id;
-    //         history[num_history].scroll_position = rich_text.scroll_position();
-    //         num_history++;
-    //     }
-    //     this->text_id = text_id;
-    //     rich_text.reset(0);
-    //     return true;
-    // }
     return false;
 }
 
 bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const lang_message& msg) {
-    //vec2i btn_pos = {pos.x + 16, pos.y + 408};
-    //if (m_dialog->left.went_down && 
-    //    m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 27 &&
-    //    m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 27) {
-    //    button_advisor(player_msg.message_advisor);
-    //    return true;
-    //}
-    //
-    //btn_pos = {pos.x + 372, pos.y + 410};
-    //if (m_dialog->left.went_down && 
-    //    m_dialog->x >= btn_pos.x && m_dialog->x < btn_pos.x + 24 &&
-    //    m_dialog->y >= btn_pos.y && m_dialog->y < btn_pos.y + 24) {
-    //    button_close();
-    //    return true;
-    //}
-
     return false;
 }
 
@@ -529,9 +437,6 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
         if (city_msg.god != GOD_UNKNOWN) {
             return &message_dialog_god_window;
         }
-        if (city_msg.background_img) {
-            return &message_dialog_image_window;
-        }
     }
     
     ui::message_dialog_base *window;
@@ -562,6 +467,9 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
             break;
         case MESSAGE_TYPE_INVASION:
             window = &message_dialog_invasion_window;
+            break;
+        case MESSAGE_TYPE_IMAGE:
+            window = &message_dialog_image_window;
             break;
         default:
             window = &message_dialog_general_window;

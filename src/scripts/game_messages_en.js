@@ -1443,7 +1443,6 @@ game_messages_en {
         type: MESSAGE_ARCH_MESSAGE
         message_type: MESSAGE_TYPE_DISTANT_BATTLE
         
-        size [30, 20]
         title { text: "Distant battle" }
         video { text: "@10" }
         content { text: "xxxx see eventmsg.txt" }
