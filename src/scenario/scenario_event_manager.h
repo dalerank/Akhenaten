@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/archive.h"
-#include "core/bstring.h"
+#include "core/xstring.h"
 #include "core/tokenum.h"
 #include "core/variant.h"
 #include "game/simulation_time.h"
@@ -215,7 +215,7 @@ struct event_manager_t {
     bool is_valid_event_index(int id);
     int get_auto_reason_phrase_id(int param_1, int param_2);
 
-    pcstr msg_text(int group_id, int index);
+    xstring msg_text(int group_id, int index);
     void load_mission_metadata(const mission_id_t &missionid);
 
     void create_good_request(int tag, e_resource r, int amount, int months_initial);
