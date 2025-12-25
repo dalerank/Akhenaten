@@ -316,7 +316,7 @@ int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
     return eventmsg_auto_phrases[param_1].phrase_ids[param_2];
 }
 
-pcstr event_manager_t::msg_text(int group_id, int index) {
+xstring event_manager_t::msg_text(int group_id, int index) {
     auto& data = g_scenario_events;
     return lang_text_from_message(group_id + index);
 }
