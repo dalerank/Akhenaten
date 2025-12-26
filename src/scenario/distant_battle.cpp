@@ -24,25 +24,44 @@ int scenario_distant_battle_enemy_travel_months() {
     return g_scenario.empire.distant_battle_enemy_travel_months;
 }
 
-void scenario_distant_battle_process() {
-    const bool has_distant_battle = g_city.distant_battle.has_distant_battle();
+int distant_battles_t::months_until_distant_battle() {
+    return battle.months_until_battle;
+}
 
-    for (int i = 0; i < MAX_INVASIONS; i++) {
-        const bool should_start_battle = g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
-            && game.simtime.year == g_scenario.invasions[i].year + g_scenario.start_year
-            && game.simtime.month == g_scenario.invasions[i].month
-            && g_scenario.empire.distant_battle_enemy_travel_months > 4
-            && g_scenario.empire.distant_battle_kingdome_travel_months > 4
-            && !has_distant_battle;
+int distant_battles_t::kingdome_army_is_traveling_forth() {
+    return battle.egyptian_months_to_travel_forth > 0;
+}
 
-        if (should_start_battle) {
-            events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0 });
-            g_city.distant_battle.init_distant_battle(g_scenario.invasions[i].amount);
-            return;
+void distant_battles_t::process() {
+    if (!has_distant_battle()) {
+        for (int i = 0; i < MAX_INVASIONS; i++) {
+            const bool should_start_battle = g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
+                && game.simtime.year == g_scenario.invasions[i].year + g_scenario.start_year
+                && game.simtime.month == g_scenario.invasions[i].month
+                && g_scenario.empire.distant_battle_enemy_travel_months > 4
+                && g_scenario.empire.distant_battle_kingdome_travel_months > 4;
+
+            if (should_start_battle) {
+                events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0 });
+                g_city.distant_battle.init_distant_battle(g_scenario.invasions[i].amount);
+                return;
+            }
         }
     }
 
-    g_city.distant_battle.process_distant_battle();
+    process_distant_battle_impl();
+}
+
+void distant_battles_t::determine_distant_battle_city() {
+    battle.city = g_empire.get_city_vulnerable();
+}
+
+int distant_battles_t::battle_city() {
+    return battle.city;
+}
+
+bool distant_battles_t::city_is_egyptian() {
+    return battle.city_foreign_months_left <= 0;
 }
 
 void distant_battles_t::init_distant_battle(int enemy_strength) {
@@ -62,7 +81,7 @@ int distant_battles_t::has_distant_battle() {
         || battle.city_foreign_months_left > 0;
 }
 
-void distant_battles_t::process_distant_battle() {
+void distant_battles_t::process_distant_battle_impl() {
     if (battle.months_until_battle > 0) {
         --battle.months_until_battle;
         if (battle.months_until_battle > 0)
@@ -79,6 +98,10 @@ void distant_battles_t::set_city_vulnerable() {
     if (battle.city) {
         g_empire.city(battle.city)->set_vulnerable();
     }
+}
+
+int distant_battles_t::enemy_strength() {
+    return battle.enemy_strength;
 }
 
 void distant_battles_t::update_aftermath() {

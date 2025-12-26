@@ -209,7 +209,7 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         else if (g_city.figures.enemies) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (scenario_invasion_exists_upcoming()) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (city_military_distant_battle_kingdome_army_is_traveling()) { military_status = {170, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (city_military_months_until_distant_battle() > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (g_city.distant_battle.months_until_distant_battle() > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (g_city.figures.soldiers > 0) { military_status = {177, FONT_NORMAL_BLACK_ON_DARK}; }
         else { military_status = {171, FONT_NORMAL_BLACK_ON_DARK}; }
 

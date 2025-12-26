@@ -14,6 +14,7 @@
 #include "game/game.h"
 #include "request.h"
 #include "js/js_game.h"
+#include "city/city.h"
 #include "dev/debug.h"
 #include "graphics/elements/lang_text.h"
 
@@ -81,9 +82,8 @@ uint16_t event_ph_t::rand_reason() const {
 
 void event_ph_t::set_param(pcstr name, int param) {
     bstring32 pname(name);
-    if (pname == "months_initial") {
-        months_initial = param;
-    }
+    if (pname == "months_initial") { months_initial = param; return; }
+    if (pname == "amount") { amount.value = param; return; }
 }
 
 void event_ph_t::archive_load(archive arch) {
@@ -350,6 +350,9 @@ void event_manager_t::process_event_distant_battle(const event_ph_t &event, bool
     city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
         PHRASE_distant_battle_title_P, template_str, reason,
         event.event_id, 0);
+
+    g_city.distant_battle.init_distant_battle(event.amount.value);
+    g_city.distant_battle.battle.city = event.city_id;
 }
 
 void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
@@ -360,6 +363,7 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
             int route_id = g_empire.trade_route_for_city(city->name_id);
             return g_empire.is_trade_route_open(route_id);
         });
+
         if (trade_cities.size() > 0) {
             cityid = trade_cities[rand() % trade_cities.size()]->name_id;
         }

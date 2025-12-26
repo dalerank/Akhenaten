@@ -204,9 +204,7 @@ static void post_load() {
     g_city.reset_overlay();
     game_undo_disable();
 
-    // military
-    // image_set_enemy_pak(scenario_property_enemy());
-    g_city.military.determine_distant_battle_city();
+    g_city.distant_battle.determine_distant_battle_city();
 
     int karmy = g_empire.init_distant_battle_travel_months(EMPIRE_OBJECT_KINGDOME_ARMY);
     g_scenario.distant_battle_set_kingdome_travel_months(karmy);
@@ -773,7 +771,7 @@ void GamestateIO::start_loaded_file() {
         scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
         g_invasions.init();
-        g_city.military.determine_distant_battle_city();
+        g_city.distant_battle.determine_distant_battle_city();
         scenario_request_init();
         scenario_demand_change_init();
         scenario_price_change_init();

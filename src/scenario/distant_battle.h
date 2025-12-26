@@ -20,17 +20,24 @@ struct distant_battles_t {
     battle_state battle;
     void init_distant_battle(int enemy_strength);
     int has_distant_battle();
-    void process_distant_battle();
     void update_time_traveled();
     void fight_distant_battle();
     void update_aftermath();
     void set_city_vulnerable();
     void set_city_foreign();
     bool player_has_won();
+    void process();
+    int enemy_strength();
+    bool city_is_egyptian();
+    int months_until_distant_battle();
+    int kingdome_army_is_traveling_forth();
+
+    void determine_distant_battle_city();
+    int battle_city();
+
+    void process_distant_battle_impl();
 };
 
 int scenario_distant_battle_kingdome_travel_months(void);
-
 int scenario_distant_battle_enemy_travel_months(void);
 
-void scenario_distant_battle_process(void);

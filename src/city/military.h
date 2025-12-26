@@ -17,24 +17,11 @@ struct city_military_t {
     bool is_native_attack_active();
     void start_native_attack();
     void decrease_native_attack_duration();
-    void determine_distant_battle_city();
 };
 
-int city_military_distant_battle_city();
-int city_military_distant_battle_city_is_egyptian();
-
-int city_military_distant_battle_enemy_strength();
-
-void city_military_dispatch_to_distant_battle(int roman_strength);
+void city_military_dispatch_to_distant_battle(int strength);
 int city_military_distant_battle_kingdome_army_is_traveling();
-int city_military_distant_battle_kingdome_army_is_traveling_forth();
 int city_military_distant_battle_kingdome_army_is_traveling_back();
 
 int city_military_distant_battle_enemy_months_traveled();
 int city_military_distant_battle_kingdome_months_traveled();
-
-
-
-int city_military_months_until_distant_battle();
-
-

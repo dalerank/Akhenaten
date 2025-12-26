@@ -242,6 +242,7 @@ function mission8_distant_battle_request(ev) {
 	battle.set_location_fields(-1, -1, -1, -1)
 	battle.set_image("pharaoh_unloaded/dialougedrawing_00012")
 	battle.set_param("months_initial", 14)
+	battle.set_param("amount", 2)
 	battle.set_reasons(PHRASE_distant_battle_initial_announcement_P, -1, -1, -1)
 	battle.execute()
 }

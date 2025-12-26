@@ -72,9 +72,9 @@ void ui::message_dialog_troop_request::draw_city_message_text(const lang_message
     bstring1024 header;
     header.printf("%s %d %s %s", ui::str(25, player_msg.month), player_msg.year, ui::str(63, 5), city_player_name());
 
-    int months_until_battle = city_military_months_until_distant_battle();
-    int enemy_strength = city_military_distant_battle_enemy_strength();
-    int distant_city_id = city_military_distant_battle_city();
+    int months_until_battle = g_city.distant_battle.months_until_distant_battle();
+    int enemy_strength = g_city.distant_battle.enemy_strength();
+    int distant_city_id = g_city.distant_battle.battle_city();
     
     bstring1024 full_text;
     
