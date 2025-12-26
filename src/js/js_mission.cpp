@@ -11,10 +11,10 @@
 #include "city/city_message.h"
 #include "js/js_game.h"
 
-void city_use_building(int building_type, bool enabled) {   
+void __city_use_building(int building_type, bool enabled) {   
     g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled);
 }
-ANK_FUNCTION_2(city_use_building)
+ANK_FUNCTION_2(__city_use_building)
 
 void ui_popup_message(xstring message) {
     messages::popup(message, 0, 0);
