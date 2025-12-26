@@ -5,9 +5,12 @@ city {
     festival_selected_god { get: __city_festival_selected_god }
 
     [property]
-    population : __city_population
+    population { get: __city_population }
+
+    [property]
+    rating_kingdom { get: __city_rating_kingdom }
     
-    use_building: city_use_building
+    use_building: __city_use_building
     set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
     remove_animals : __city_remove_animals

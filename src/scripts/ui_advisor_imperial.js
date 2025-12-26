@@ -1,12 +1,16 @@
 log_info("akhenaten: ui advisor imperial started")
 
+function rating_advice_text() {
+    return __loc(52, (city.rating_kingdom / 5) + 22)
+}
+
 advisor_imperial_window {
     ui {
         background   : outer_panel({size[40, 27]})
         advisor_icon : image({pack:PACK_GENERAL, id:128, offset:2, pos[10, 10] })
         header_label : header({pos[60, 17]})
-        rating_label : label({pos[460, 24]})
-        rating_advice : multiline({pos[60, 46], wrap: 500})
+        rating_label : label({pos[460, 24], text:"${52.0} ${rating.kingdom}"})
+        rating_advice : multiline({pos[60, 46], wrap: 500, textfn:rating_advice_text})
         inner_panel  : inner_panel({pos[32, 90], size[36, 14] })
         button_request : dummy({pos[38, 96], size[562, 45],
             ui {
