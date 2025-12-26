@@ -24,7 +24,6 @@
 #include "graphics/image_groups.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
-#include "graphics/image.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "input/mouse.h"
@@ -37,7 +36,6 @@
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
-#include "window/autoconfig_window.h"
 #include "game/game_config.h"
 #include "window/trade_opened.h"
 #include "platform/renderer.h"
@@ -46,7 +44,7 @@
 #include "js/js_game.h"
 #include "dev/debug.h"
 
-int empire_images_remap[32000] = {0};
+uint16_t empire_images_remap[32000] = {0};
 
 declare_console_var_bool(empire_window_draw_points, false)
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_images_remap_config) {
@@ -67,58 +65,6 @@ const static vec2i EMPIRE_SIZE{1200 + 32,  1600 + 136 + 20};
 struct object_trade_info {
     rect r;
     e_resource res;
-};
-
-struct empire_window : public autoconfig_window_t<empire_window> {
-    int selected_button = 0;
-    int selected_city = 1;
-    vec2i min_pos, max_pos;
-    vec2i draw_offset;
-    vec2i last_mouse_pos;
-    int is_scrolling;
-    int finished_scroll;
-    int trade_column_spacing;
-    int trade_row_spacing;
-    int info_y_traded;
-    int trade_button_offset_x;
-    int info_y_city_desc;
-    int trade_resource_size;
-    const int sell_res_group = 47;
-    int trade_button_offset_y;
-    vec2i start_pos, finish_pos;
-    image_desc image, bottom_image, horizontal_bar,
-               vertical_bar, cross_bar, trade_amount,
-               closed_trade_route_hl, open_trade_route, open_trade_route_hl;
-    xstring hovered_object_tooltip;
-    //svector<object_trade_info, 16> buying_goods;
-    //svector<object_trade_info, 16> selling_goods;
-
-    virtual int handle_mouse(const mouse *m) override { return 0; }
-    virtual int get_tooltip_text() override { return 0; }
-    virtual void draw_foreground(UiFlags flags) override {}
-    virtual int draw_background(UiFlags flags) override;
-    virtual void ui_draw_foreground(UiFlags flags) override;
-    virtual int ui_handle_mouse(const mouse *m) override;
-    virtual void init() override;
-
-    virtual void archive_load(archive arch) override;
-
-    void draw_map();
-    void draw_empire_object(const empire_object &obj);
-    void draw_paneling();
-    void clear_city_info();
-    void draw_object_info();
-    void draw_city_want_sell(ui::element *e, UiFlags flags);
-    void draw_city_want_buy(ui::element *e, UiFlags flags);
-    void draw_city_selling(ui::element *e, UiFlags flags);
-    void draw_city_buy(ui::element *e, UiFlags flags);
-    bool is_outside_map(int x, int y);
-    void determine_selected_object(const mouse *m);
-    void draw_city_info(const empire_object *object);
-    void draw_trade_resource(UiFlags flags, e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
-    void draw_trade_route(int route_id, e_empire_route_state effect);
-    void draw_object_tooltip();
-    void draw_tooltip(tooltip_context *c);
 };
 
 empire_window g_empire_window;
@@ -421,7 +367,7 @@ static void draw_kingdome_army_info(const empire_object* object) {
         if (city_military_distant_battle_kingdome_months_traveled() == object->distant_battle_travel_months) {
             vec2i offset{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68};
             int text_id;
-            if (city_military_distant_battle_kingdome_army_is_traveling_forth())
+            if (g_city.distant_battle.kingdome_army_is_traveling_forth())
                 text_id = 15;
             else {
                 text_id = 16;
@@ -431,9 +377,9 @@ static void draw_kingdome_army_info(const empire_object* object) {
     }
 }
 
-static void draw_enemy_army_info(const empire_object* object) {
+void empire_window::draw_enemy_army_info(const empire_object* object) {
     auto &data = g_empire_window;
-    if (city_military_months_until_distant_battle() > 0) {
+    if (g_city.distant_battle.months_until_distant_battle() > 0) {
         if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
             lang_text_draw_multiline(data.sell_res_group, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         }
@@ -605,7 +551,7 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     }
 
     if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        if (city_military_months_until_distant_battle() <= 0)
+        if (g_city.distant_battle.months_until_distant_battle() <= 0)
             return;
 
         if (city_military_distant_battle_enemy_months_traveled() != obj.distant_battle_travel_months)
