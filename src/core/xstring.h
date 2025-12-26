@@ -110,15 +110,20 @@ public:
         return (xstring&)*this;
     }
 
+    [[nodiscard]]
     xstring tolower() const {
         size_t lsize = size();
-        char *buffer = (char*)alloca(lsize + 1);
-        ::memcpy(buffer, c_str(), lsize);
-        while (*buffer) {
-            *buffer = std::tolower(*buffer);
-            ++buffer;
+        if (!lsize) {
+            return {};
         }
-        buffer[lsize] = '\0';
+        char *buffer = (char*)alloca(lsize + 1);
+        ::strcpy(buffer, c_str());
+        char *s = buffer;
+        while (*s) {
+            *s = std::tolower(*s);
+            ++s;
+        }
+        *s = '\0';
         return xstring(buffer);
     }
 };
