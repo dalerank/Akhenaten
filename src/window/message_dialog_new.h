@@ -130,7 +130,7 @@ void window_message_setup_help_id(xstring helpid);
 void window_show_help();
 
 template<typename R, typename T>
-void text_fill_in_tags(pcstr src, R& result, T &tag_templates) {
+void text_fill_in_tags(pcstr src, R& result, const T &tag_templates) {
     if (!src) {
         result = "";
         return;
