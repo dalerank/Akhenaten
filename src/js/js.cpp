@@ -47,20 +47,23 @@ int js_vm_trypcall(js_State *J, int params) {
     int error = js_pcall(vm.J, params);
     if (error) {
         vm.have_error = 1;
-        const char *cur_symbol = js_tostring(vm.J, -1);
+        const char *error_msg = js_tostring(vm.J, -1);
+        const char *cur_symbol = error_msg;
         const char *start_str = cur_symbol;
+        bstring256 temp_str;
         while (*cur_symbol) {
             if (*cur_symbol != '\n') {
                 cur_symbol++;
                 continue;
             }
 
-            vm.error_str.printf("%.*s", cur_symbol - start_str, start_str);
+            temp_str.printf("%.*s", cur_symbol - start_str, start_str);
             start_str = cur_symbol + 1;
             cur_symbol += 2;
-            logs::info("!!! pcall error %s", vm.error_str.c_str());
+            logs::info("!!! pcall error %s", temp_str.c_str());
         }
         logs::info("!!! pcall error %s", start_str);
+        vm.error_str = error_msg;
         js_pop(J, 1);
         return 0;
     }
@@ -95,6 +98,14 @@ int js_vm_load_file_and_exec(pcstr path) {
         int ok = js_vm_trypcall(vm.J, 0);
         if (!ok) {
             logs::info("Fatal error on call base after load %s", r.path.c_str());
+            if (vm.error_str.len() > 0) {
+                logs::info("Error details: %s", vm.error_str.c_str());
+            } else if (js_gettop(vm.J) > 0) {
+                pcstr error_msg = js_tostring(vm.J, -1);
+                if (error_msg && *error_msg) {
+                    logs::info("Error details: %s", error_msg);
+                }
+            }
             return 0;
         }
         return 1;
@@ -128,6 +139,14 @@ int js_vm_load_file_and_exec(pcstr path) {
     int ok = js_vm_trypcall(vm.J, 0);
     if (!ok) {
         logs::info("Fatal error on call base after load %s", path);
+        if (vm.error_str.len() > 0) {
+            logs::info("Error details: %s", vm.error_str.c_str());
+        } else if (js_gettop(vm.J) > 0) {
+            pcstr error_msg = js_tostring(vm.J, -1);
+            if (error_msg && *error_msg) {
+                logs::info("Error details: %s", error_msg);
+            }
+        }
         //js_pop(internal_J, 1);
         return 0;
     }

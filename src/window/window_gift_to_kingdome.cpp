@@ -14,6 +14,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 ui::gift_to_kingdome_window g_gift_to_kingdome_window;
 
@@ -120,3 +121,6 @@ void ui::gift_to_kingdome_window::show() {
     g_gift_to_kingdome_window.init();
     window_show(&window);
 }
+
+void window_gift_to_kingdome_show() { ui::gift_to_kingdome_window::show(); }
+ANK_FUNCTION(window_gift_to_kingdome_show)

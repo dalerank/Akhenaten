@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "content/vfs.h"
 #include "io/io.h"
-#include "game/player_data.h"
+#include "game/player.h"
 #include "scenario/scenario.h"
 
 struct mission_data_t {

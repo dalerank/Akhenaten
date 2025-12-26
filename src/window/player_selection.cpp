@@ -20,7 +20,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
-#include "game/player_data.h"
+#include "game/player.h"
 #include "main_menu.h"
 #include "popup_dialog.h"
 #include "window/window_city.h"

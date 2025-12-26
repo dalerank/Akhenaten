@@ -73,22 +73,14 @@ void ui::advisor_imperial_window::draw_foreground(UiFlags flags) {
 int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
-    ui["header_label"] = (pcstr)city_player_name();
-    ui["rating_advice"] = ui::str(52, g_city.kingdome.rating / 5 + 22);
-    ui["player_rank"] = ui::str(32, g_city.kingdome.player_rank);
-    ui["salary_rank"].text_var("%s %u %s", ui::str(52, g_city.kingdome.salary_rank + 4), g_city.kingdome.salary_amount, ui::str(52, 3));
-
-    ui["donate_to_city"].onclick([] { window_donate_to_city_show(); });
     ui["salary_rank"].onclick([] { set_salary_window::show(window_advisors_show, true); });
-    ui["send_gift"].onclick([] { ui::gift_to_kingdome_window::show(); });
+    ui["send_gift"].onclick([] { gift_to_kingdome_window::show(); });
 
     return 0;
 }
 
 void ui::advisor_imperial_window::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
-
-
 }
 
 void ui::advisor_imperial_window::handle_request(int index) {

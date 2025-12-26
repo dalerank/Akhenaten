@@ -1362,9 +1362,9 @@ io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t ve
 });
 
 const uint8_t* city_player_name() {
-    auto &data = g_city;
-    return data.kingdome.player_name;
+    return g_city.kingdome.player_name;
 }
+
 void city_set_player_name(const uint8_t* name) {
     auto &data = g_city;
     string_copy(name, data.kingdome.player_name, MAX_PLAYER_NAME);
@@ -1401,6 +1401,7 @@ bvariant city_get_property(const xstring &domain, const xstring &name) {
         { tags().rating, tags().monument, [] (const xstring &) { return bvariant(g_city.ratings.monument); }},
         { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.kingdome.rating); }},
         { tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
+        { tags().player, "name", [] (const xstring&) { return bvariant((pcstr)city_player_name()); }},
         { tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
         { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},
         { tags().finance, "estimated_wages", [] (const xstring &) { return bvariant(g_city.finance.estimated_wages); }},

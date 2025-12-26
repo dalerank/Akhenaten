@@ -5,7 +5,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "game/player_data.h"
+#include "game/player.h"
 #include "game/game.h"
 #include "content/content.h"
 #include "content/reader.h"
