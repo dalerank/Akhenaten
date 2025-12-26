@@ -20,8 +20,6 @@ struct city_military_t {
 };
 
 void city_military_dispatch_to_distant_battle(int strength);
-int city_military_distant_battle_kingdome_army_is_traveling();
 int city_military_distant_battle_kingdome_army_is_traveling_back();
 
-int city_military_distant_battle_enemy_months_traveled();
 int city_military_distant_battle_kingdome_months_traveled();

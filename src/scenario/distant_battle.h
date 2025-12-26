@@ -19,6 +19,8 @@ struct distant_battles_t {
 
     battle_state battle;
     void init_distant_battle(int enemy_strength);
+    int kingdome_army_is_traveling();
+    int enemy_months_traveled();
     int has_distant_battle();
     void update_time_traveled();
     void fight_distant_battle();

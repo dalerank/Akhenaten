@@ -51,6 +51,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void clear_city_info();
     void draw_object_info();
     void draw_enemy_army_info(const empire_object *object);
+    void draw_kingdome_army_info(const empire_object *object);
     void draw_city_want_sell(ui::element *e, UiFlags flags);
     void draw_city_want_buy(ui::element *e, UiFlags flags);
     void draw_city_selling(ui::element *e, UiFlags flags);

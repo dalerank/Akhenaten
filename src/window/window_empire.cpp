@@ -361,27 +361,26 @@ void empire_window::draw_city_info(const empire_object* object) {
     }
 }
 
-static void draw_kingdome_army_info(const empire_object* object) {
-    auto &data = g_empire_window;
-    if (city_military_distant_battle_kingdome_army_is_traveling()) {
+void empire_window::draw_kingdome_army_info(const empire_object* object) {
+    if (g_city.distant_battle.kingdome_army_is_traveling()) {
         if (city_military_distant_battle_kingdome_months_traveled() == object->distant_battle_travel_months) {
-            vec2i offset{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68};
+            vec2i offset{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68};
             int text_id;
             if (g_city.distant_battle.kingdome_army_is_traveling_forth())
                 text_id = 15;
             else {
                 text_id = 16;
             }
-            lang_text_draw_multiline(data.sell_res_group, text_id, offset, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+
+            lang_text_draw_multiline(sell_res_group, text_id, offset, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 }
 
 void empire_window::draw_enemy_army_info(const empire_object* object) {
-    auto &data = g_empire_window;
     if (g_city.distant_battle.months_until_distant_battle() > 0) {
-        if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(data.sell_res_group, 14, vec2i{(data.min_pos.x + data.max_pos.x - 240) / 2, data.max_pos.y - 68}, 240, FONT_NORMAL_BLACK_ON_LIGHT);
+        if (g_city.distant_battle.enemy_months_traveled() == object->distant_battle_travel_months) {
+            lang_text_draw_multiline(sell_res_group, 14, vec2i{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68}, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
 }
@@ -394,7 +393,7 @@ void empire_window::draw_object_info() {
         switch (object->type) {
         case EMPIRE_OBJECT_CITY: draw_city_info(object); break;
         case EMPIRE_OBJECT_KINGDOME_ARMY: draw_kingdome_army_info(object); break;
-        case EMPIRE_OBJECT_ENEMY_ARMY: draw_enemy_army_info(object);break;
+        case EMPIRE_OBJECT_ENEMY_ARMY: draw_enemy_army_info(object); break;
         }
     } else {
         clear_city_info();
@@ -554,12 +553,12 @@ void empire_window::draw_empire_object(const empire_object &obj) {
         if (g_city.distant_battle.months_until_distant_battle() <= 0)
             return;
 
-        if (city_military_distant_battle_enemy_months_traveled() != obj.distant_battle_travel_months)
+        if (g_city.distant_battle.enemy_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
     
     if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
-        if (!city_military_distant_battle_kingdome_army_is_traveling())
+        if (!g_city.distant_battle.kingdome_army_is_traveling())
             return;
 
         if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
@@ -598,6 +597,20 @@ void empire_window::draw_map() {
     scenario_invasion_foreach_warning([&] (vec2i pos, int image_id) {
         ui::eimage(image_id, draw_offset + pos);
     });
+
+    if (g_city.distant_battle.has_distant_battle()) {
+        const empire_city *city = g_empire.city(g_city.distant_battle.battle_city());
+        if (city) {
+            image_desc battle_icon_desc = image_desc_from_name("pharaoh_general/empire_bits_00001");
+            if (battle_icon_desc.pack != PACK_NONE) {
+                const image_t *siege_icon = image_get(battle_icon_desc);
+                if (siege_icon) {
+                    vec2i siege_icon_pos = draw_offset + city->get_empire_object()->pos + vec2i{ -siege_icon->width / 2, -siege_icon->height / 2 };
+                    ui::eimage(battle_icon_desc, siege_icon_pos);
+                }
+            }
+        }
+    }
 
     for (auto &trader: g_empire_traders.traders) {
         if (!trader.is_active) {
