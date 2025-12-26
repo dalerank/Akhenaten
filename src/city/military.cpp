@@ -99,52 +99,57 @@ int city_military_distant_battle_kingdome_months_traveled() {
     return city_data.distant_battle.battle.egyptian_months_traveled;
 }
 
-int city_military_has_distant_battle() {
-    return city_data.distant_battle.battle.months_until_battle > 0 || city_data.distant_battle.battle.egyptian_months_to_travel_back > 0
-           || city_data.distant_battle.battle.egyptian_months_to_travel_forth > 0
-           || city_data.distant_battle.battle.city_foreign_months_left > 0;
+int distant_battles_t::has_distant_battle() {
+    return battle.months_until_battle > 0 
+           || battle.egyptian_months_to_travel_back > 0
+           || battle.egyptian_months_to_travel_forth > 0
+           || battle.city_foreign_months_left > 0;
 }
 
 int city_military_months_until_distant_battle() {
     return city_data.distant_battle.battle.months_until_battle;
 }
 
-void city_military_init_distant_battle(int enemy_strength) {
-    city_data.distant_battle.battle.enemy_months_traveled = 1;
-    city_data.distant_battle.battle.egyptian_months_traveled = 1;
-    city_data.distant_battle.battle.months_until_battle = 24;
-    city_data.distant_battle.battle.enemy_strength = enemy_strength;
-    city_data.distant_battle.battle.total_count++;
-    city_data.distant_battle.battle.egyptian_months_to_travel_back = 0;
-    city_data.distant_battle.battle.egyptian_months_to_travel_forth = 0;
+void distant_battles_t::init_distant_battle(int enemy_strength) {
+    battle.enemy_months_traveled = 1;
+    battle.egyptian_months_traveled = 1;
+    battle.months_until_battle = 24;
+    battle.enemy_strength = enemy_strength;
+    battle.total_count++;
+    battle.egyptian_months_to_travel_back = 0;
+    battle.egyptian_months_to_travel_forth = 0;
 }
 
-static void update_time_traveled() {
-    int roman_travel_months = scenario_distant_battle_kingdome_travel_months();
+void distant_battles_t::update_time_traveled() {
+    int egyptian_travel_months = scenario_distant_battle_kingdome_travel_months();
     int enemy_travel_months = scenario_distant_battle_enemy_travel_months();
-    if (city_data.distant_battle.battle.months_until_battle < enemy_travel_months)
-        city_data.distant_battle.battle.enemy_months_traveled
-          = enemy_travel_months - city_data.distant_battle.battle.months_until_battle + 1;
-    else {
-        city_data.distant_battle.battle.enemy_months_traveled = 1;
+
+    if (battle.months_until_battle < enemy_travel_months) {
+        battle.enemy_months_traveled = enemy_travel_months - battle.months_until_battle + 1;
+    } else {
+        battle.enemy_months_traveled = 1;
     }
-    if (city_data.distant_battle.battle.egyptian_months_to_travel_forth >= 1) {
-        if (roman_travel_months - city_data.distant_battle.battle.egyptian_months_traveled
-            > enemy_travel_months - city_data.distant_battle.battle.enemy_months_traveled) {
-            city_data.distant_battle.battle.egyptian_months_to_travel_forth -= 2;
+
+    if (battle.egyptian_months_to_travel_forth >= 1) {
+        if (egyptian_travel_months - battle.egyptian_months_traveled
+            > enemy_travel_months - battle.enemy_months_traveled) {
+            battle.egyptian_months_to_travel_forth -= 2;
         } else {
-            city_data.distant_battle.battle.egyptian_months_to_travel_forth--;
+            battle.egyptian_months_to_travel_forth--;
         }
-        if (city_data.distant_battle.battle.egyptian_months_to_travel_forth <= 1)
-            city_data.distant_battle.battle.egyptian_months_to_travel_forth = 1;
 
-        city_data.distant_battle.battle.egyptian_months_traveled
-          = roman_travel_months - city_data.distant_battle.battle.egyptian_months_to_travel_forth + 1;
-        if (city_data.distant_battle.battle.egyptian_months_traveled < 1)
-            city_data.distant_battle.battle.egyptian_months_traveled = 1;
+        if (battle.egyptian_months_to_travel_forth <= 1) {
+            battle.egyptian_months_to_travel_forth = 1;
+        }
 
-        if (city_data.distant_battle.battle.egyptian_months_traveled > roman_travel_months)
-            city_data.distant_battle.battle.egyptian_months_traveled = roman_travel_months;
+        battle.egyptian_months_traveled = egyptian_travel_months - battle.egyptian_months_to_travel_forth + 1;
+        if (battle.egyptian_months_traveled < 1) {
+            battle.egyptian_months_traveled = 1;
+        }
+
+        if (battle.egyptian_months_traveled > egyptian_travel_months) {
+            battle.egyptian_months_traveled = egyptian_travel_months;
+        }
     }
 }
 
@@ -244,10 +249,10 @@ static void update_aftermath() {
     }
 }
 
-void city_military_process_distant_battle() {
-    if (city_data.distant_battle.battle.months_until_battle > 0) {
-        --city_data.distant_battle.battle.months_until_battle;
-        if (city_data.distant_battle.battle.months_until_battle > 0)
+void distant_battles_t::process_distant_battle() {
+    if (battle.months_until_battle > 0) {
+        --battle.months_until_battle;
+        if (battle.months_until_battle > 0)
             update_time_traveled();
         else {
             fight_distant_battle();

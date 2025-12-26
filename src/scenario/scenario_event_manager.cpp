@@ -344,6 +344,14 @@ void event_manager_t::process_active_request(int id) {
     scenario_request_handle(event, -1, chain_action_next);
 }
 
+void event_manager_t::process_event_distant_battle(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
+    const int template_str = event.reasons[0];
+    const int reason = event.reasons[1];
+    city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
+        PHRASE_distant_battle_title_P, template_str, reason,
+        event.event_id, 0);
+}
+
 void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
     int8_t cityid = event.location_fields[0];
     if (cityid == -1) {
@@ -375,6 +383,7 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
     if (reason == 0xffff) {
         reason = PHRASE_trade_city_siege_no_reason_A;
     }
+
     city_message_post_full(true, "message_template_general", &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
         PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, reason,
         event.event_id, cityid);
@@ -478,11 +487,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_DISTANT_BATTLE:{
-            const int template_str = event.reasons[0];
-            const int reason = event.reasons[1];
-            city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
-                PHRASE_distant_battle_title_P, template_str, reason,
-                id, 0);
+            process_event_distant_battle(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
         }
         break;
 
