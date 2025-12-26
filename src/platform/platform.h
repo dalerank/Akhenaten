@@ -111,6 +111,14 @@ struct platform_t {
 #endif
 	}
 
+	inline constexpr bool is_macos() const {
+#ifdef GAME_PLATFORM_MACOSX
+		return true;
+#else
+		return false;
+#endif
+	}
+
 	int get_key_from_scancode(int scancode);
 	bool file_manager_should_case_correct_file();
 };
