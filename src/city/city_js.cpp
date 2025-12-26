@@ -17,3 +17,9 @@ ANK_FUNCTION(__city_festival_selected_god)
 
 int __city_population() { return g_city.population.current; }
 ANK_FUNCTION(__city_population)
+
+int __city_player_rank() { return g_city.kingdome.player_rank; }
+ANK_FUNCTION(__city_player_rank)
+
+pcstr __city_player_name() { return (pcstr)city_player_name; }
+ANK_FUNCTION(__city_player_name)

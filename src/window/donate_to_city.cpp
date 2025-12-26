@@ -14,6 +14,7 @@
 #include "input/input.h"
 #include "window/advisors.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 static void button_set_amount(int amount_id, int param2);
 static void button_donate(int param1, int param2);
@@ -140,20 +141,6 @@ static void arrow_button_amount(int is_down, int param2) {
     g_city.kingdome.change_donation_amount(is_down ? -10 : 10);
 }
 
-//static void get_tooltip(tooltip_context* c) {
-//    if (!data.focus_button_id && !data.focus_arrow_button_id)
-//        return;
-//    c->type = TOOLTIP_BUTTON;
-//    if (data.focus_button_id == 1)
-//        c->text.id = 98;
-//    else if (data.focus_button_id == 2)
-//        c->text.id = 99;
-//    else if (data.focus_button_id)
-//        c->text.id = 100;
-//    else if (data.focus_arrow_button_id)
-//        c->text.id = 101;
-//}
-
 void window_donate_to_city_show(void) {
     static window_type window = {
         WINDOW_DONATE_TO_CITY, 
@@ -165,3 +152,4 @@ void window_donate_to_city_show(void) {
     g_city.kingdome.init_donation_amount();
     window_show(&window);
 }
+ANK_FUNCTION(window_donate_to_city_show)
