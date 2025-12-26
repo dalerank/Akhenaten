@@ -36,6 +36,10 @@ struct distant_battles_t {
     };
 
     battle_state battle;
+    void init_distant_battle(int enemy_strength);
+    int has_distant_battle();
+    void process_distant_battle();
+    void update_time_traveled();
 };
 
 int city_military_distant_battle_city();
@@ -51,8 +55,8 @@ int city_military_distant_battle_kingdome_army_is_traveling_back();
 int city_military_distant_battle_enemy_months_traveled();
 int city_military_distant_battle_kingdome_months_traveled();
 
-void city_military_init_distant_battle(int enemy_strength);
-int city_military_has_distant_battle();
+
+
 int city_military_months_until_distant_battle();
 
-void city_military_process_distant_battle();
+

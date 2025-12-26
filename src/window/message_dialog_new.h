@@ -147,12 +147,9 @@ void text_fill_in_tags(pcstr src, R& result, T &tag_templates) {
             continue;
         }
 
-        bstring64 full_tag = result.substr(pos, end_pos - pos + 1);
-        auto tag_it = std::find_if(std::begin(tag_templates), std::end(tag_templates),
-            [&full_tag](const auto& tag_template) {
-                pcstr tag_cstr = tag_template.tag.c_str();
-                return tag_cstr && full_tag == tag_cstr;
-            });
+        auto full_tag = result.substr(pos, end_pos - pos + 1);
+        auto tag_it = std::find_if(std::begin(tag_templates), std::end(tag_templates), 
+                                    [&full_tag](const auto& tag_template) { return tag_template.tag == full_tag; });
 
         if (tag_it != std::end(tag_templates)) {
             pcstr content_cstr = tag_it->content.c_str();
