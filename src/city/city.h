@@ -32,6 +32,7 @@
 #include "city/city_hotkeys_handler.h"
 #include "grid/bookmark.h"
 #include "building/building_house_demands.h"
+#include "scenario/distant_battle.h"
 
 struct empire_city;
 struct city_overlay;
