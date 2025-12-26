@@ -16,6 +16,7 @@ struct advisor_imperial_window : public advisor_window_t<advisor_imperial_window
     virtual void archive_load(archive arch) override;
 
     void handle_request(int index);
+    int get_request_status(int index);
 
     static advisor_window *instance();
 };

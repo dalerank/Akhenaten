@@ -34,7 +34,7 @@ enum E_STATUS {
     STATUS_NO_LEGIONS_AVAILABLE = -4,
 };
 
-static int get_request_status(int index) {
+int ui::advisor_imperial_window::get_request_status(int index) {
     scenario_request request = scenario_request_get_visible(index);
     if (!request.is_valid()) {
         return -1;
@@ -45,8 +45,8 @@ static int get_request_status(int index) {
     } 
     
     if (request.resource == RESOURCE_TROOPS
-         && city_military_months_until_distant_battle() > 0 
-         && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
+         && g_city.distant_battle.months_until_distant_battle() > 0 
+         && !g_city.distant_battle.kingdome_army_is_traveling_forth()) {
 
         if (g_city.military.total_batalions <= 0) {
             return STATUS_NO_LEGIONS_AVAILABLE;
@@ -126,38 +126,39 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
     const auto &button_request_saved = ui["button_request_saved"];
     const auto &button_request_allow = ui["button_request_allow"];
 
-    int start_req_index = 0;
-    if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_kingdome_army_is_traveling_forth()) {
-        
-        // can send to distant battle
-        ui.button("", vec2i{ 38, 96 }, vec2i{ 560, 40 }, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
-            .onclick([] (int, int) {
-                formation_batalions_dispatch_to_distant_battle();
-                window_empire_show();
-            });
-
-        ui.icon(vec2i{50, 106}, RESOURCE_WEAPONS);
-
-        bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(city_military_distant_battle_city())->name_id));
-        ui.label(distant_battle_text, vec2i{80, 102}, FONT_NORMAL_WHITE_ON_DARK);
-
-        int strength_text_id = 75;
-        int enemy_strength = city_military_distant_battle_enemy_strength();
-        if (enemy_strength < 46) { strength_text_id = 73;}
-        else if (enemy_strength < 89) { strength_text_id = 74; } 
-
-        bstring128 distant_strenght_text;
-        distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), city_military_months_until_distant_battle());
-        ui.label(distant_strenght_text, vec2i{80, 120}, FONT_NORMAL_WHITE_ON_DARK);
-        start_req_index = 1;
-    }
-
     const vec2i icon_offset = button_request_icon.pos - button_request.pos;
     const vec2i amount_offset = button_request_amount.pos - button_request.pos;
     const vec2i months_offset = button_request_months.pos - button_request.pos;
     const vec2i saved_offset = button_request_saved.pos - button_request.pos;
     const vec2i allow_offset = button_request_allow.pos - button_request.pos;
+
+    int start_req_index = 0;
+    if (g_city.distant_battle.months_until_distant_battle() > 0
+        && !g_city.distant_battle.kingdome_army_is_traveling_forth()) {
+        
+        // can send to distant battle
+        vec2i request_pos = button_request.pos + vec2i{ 0, 0 * button_request.size.y };
+        ui.button("", request_pos, button_request.size, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
+            .onclick([] (int, int) {
+                formation_batalions_dispatch_to_distant_battle();
+                window_empire_show();
+            });
+
+        ui.icon(request_pos + icon_offset, RESOURCE_TROOPS);
+
+        bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(g_city.distant_battle.battle_city())->name_id));
+        ui.label(distant_battle_text, request_pos + amount_offset, FONT_NORMAL_WHITE_ON_DARK);
+
+        int strength_text_id = 75;
+        int enemy_strength = g_city.distant_battle.enemy_strength();
+        if (enemy_strength < 46) { strength_text_id = 73;}
+        else if (enemy_strength < 89) { strength_text_id = 74; } 
+
+        bstring128 distant_strenght_text;
+        distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_city.distant_battle.months_until_distant_battle());
+        ui.label(distant_strenght_text, request_pos + months_offset, FONT_NORMAL_WHITE_ON_DARK);
+        start_req_index = 1;
+    }
 
     auto requests = scenario_get_visible_requests();
     int num_requests = std::min<int>(5, (int)requests.size());
@@ -207,9 +208,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         ui.label(allow_str, request_pos + allow_offset, allow_font);
     }
 
-    if (!num_requests) {
-        ui.label(ui::str(52, 21), vec2i{64, 160}, FONT_NORMAL_WHITE_ON_DARK, UiFlags_LabelMultiline, 512);
-    }
+    ui["no_requests"].enabled = (num_requests + start_req_index <= 0);
 
     ui.end_widget();
 }
