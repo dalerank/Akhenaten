@@ -20,7 +20,7 @@
 #include "io/gamefiles/lang.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/manager.h"
-#include "game/player_data.h"
+#include "game/player.h"
 #include "game/game.h"
 
 #include "graphics/elements/ui.h"
