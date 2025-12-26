@@ -65,8 +65,8 @@ int ui::advisor_military_window::draw_background(UiFlags flags) {
 
     int distant_battle_text_id = 12;
     if (city_military_distant_battle_kingdome_army_is_traveling_back()) { distant_battle_text_id = 15; }
-    else if (city_military_distant_battle_kingdome_army_is_traveling_forth()) { distant_battle_text_id = 14; }
-    else if (city_military_months_until_distant_battle() > 0) { distant_battle_text_id = 13; }
+    else if (g_city.distant_battle.kingdome_army_is_traveling_forth()) { distant_battle_text_id = 14; }
+    else if (g_city.distant_battle.months_until_distant_battle() > 0) { distant_battle_text_id = 13; }
 
     int bullet_x = 60;
     int text_x = 80;
