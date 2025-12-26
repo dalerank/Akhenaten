@@ -74,13 +74,8 @@ int ui::advisor_imperial_window::draw_background(UiFlags flags) {
     autoconfig_window::draw_background(flags);
 
     ui["salary_rank"].onclick([] { set_salary_window::show(window_advisors_show, true); });
-    ui["send_gift"].onclick([] { gift_to_kingdome_window::show(); });
 
     return 0;
-}
-
-void ui::advisor_imperial_window::archive_load(archive arch) {
-    autoconfig_window::archive_load(arch);
 }
 
 void ui::advisor_imperial_window::handle_request(int index) {
@@ -156,7 +151,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
 
         bstring128 distant_strenght_text;
         distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_city.distant_battle.months_until_distant_battle());
-        ui.label(distant_strenght_text, request_pos + months_offset, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(distant_strenght_text, request_pos + saved_offset, FONT_NORMAL_WHITE_ON_DARK);
         start_req_index = 1;
     }
 

@@ -38,9 +38,11 @@ advisor_imperial_window {
                                  text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK 
                                  onclick: window_donate_to_city_show
                                 })
+                                
         send_gift    : button({pos[320, 352], size[250, 20], 
                                text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK, 
                                onclick: window_gift_to_kingdome_show })
+
         personal_savings : label({pos[72, 374], text:"${52.1} ${city.personal_savings} ${6.0}" })
         money_lost   : label({pos[272, 374], text:"0 debens lost this year throught theft" })
         no_requests  : label({margin{ centerx:-100, centery:-10}, text:"${52.21}", font:FONT_NORMAL_WHITE_ON_DARK })

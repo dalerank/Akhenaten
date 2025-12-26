@@ -123,16 +123,15 @@ int platform_screen_create(const xstring& title, const xstring& renderer, bool f
         fullscreen = true;
     }
 
-    if (fullscreen) {
-        if (platform.is_emscripten()) {
-            // For emscripten, use a reasonable default size as SDL_GetDesktopDisplayMode
-            // may return incorrect values. The actual size will be obtained after window creation.
-            wsize = { 1920, 1080 };
-        } else {
-            SDL_DisplayMode mode;
-            SDL_GetDesktopDisplayMode(0, &mode);
-            wsize = { mode.w, mode.h };
-        }
+    // For emscripten, always use windowed mode and get size from canvas
+    if (platform.is_emscripten()) {
+        fullscreen = false;
+        // Use a reasonable default size - actual size will be obtained after window creation
+        wsize = { 1920, 1080 };
+    } else if (fullscreen) {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(0, &mode);
+        wsize = { mode.w, mode.h };
     } else {
         wsize = g_settings.display_size;
         wsize.x = std::max<int>(wsize.x, screen_size.x);
@@ -177,7 +176,7 @@ int platform_screen_create(const xstring& title, const xstring& renderer, bool f
 
     // For emscripten and fullscreen-only platforms, always get the actual window size
     // as the canvas size may differ from the requested size
-    if (system_is_fullscreen_only()) {
+    if (system_is_fullscreen_only() || platform.is_emscripten()) {
         SDL_GetWindowSize(g_screen.window, &wsize.x, &wsize.y);
     }
 
@@ -363,7 +362,7 @@ void system_set_mouse_position(int* x, int* y) {
 }
 
 int system_is_fullscreen_only(void) {
-#if defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_BROWSER) || defined(__SWITCH__) || defined(__vita__)
+#if defined(GAME_PLATFORM_ANDROID) || defined(__SWITCH__) || defined(__vita__)
     return 1;
 #else
     return 0;

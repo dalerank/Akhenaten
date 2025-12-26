@@ -63,17 +63,8 @@ void city_military_dispatch_to_distant_battle(int roman_strength) {
     city_data.distant_battle.battle.egyptian_strength = roman_strength;
 }
 
-int city_military_distant_battle_kingdome_army_is_traveling() {
-    return city_data.distant_battle.battle.egyptian_months_to_travel_forth > 0
-           || city_data.distant_battle.battle.egyptian_months_to_travel_back > 0;
-}
-
 int city_military_distant_battle_kingdome_army_is_traveling_back() {
     return city_data.distant_battle.battle.egyptian_months_to_travel_back > 0;
-}
-
-int city_military_distant_battle_enemy_months_traveled() {
-    return city_data.distant_battle.battle.egyptian_months_traveled;
 }
 
 int city_military_distant_battle_kingdome_months_traveled() {

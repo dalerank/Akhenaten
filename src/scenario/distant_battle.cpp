@@ -64,6 +64,14 @@ bool distant_battles_t::city_is_egyptian() {
     return battle.city_foreign_months_left <= 0;
 }
 
+int distant_battles_t::kingdome_army_is_traveling() {
+    return battle.egyptian_months_to_travel_forth > 0 || battle.egyptian_months_to_travel_back > 0;
+}
+
+int distant_battles_t::enemy_months_traveled() {
+    return battle.egyptian_months_traveled;
+}
+
 void distant_battles_t::init_distant_battle(int enemy_strength) {
     battle.enemy_months_traveled = 1;
     battle.egyptian_months_traveled = 1;
