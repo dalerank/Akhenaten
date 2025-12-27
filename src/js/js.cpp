@@ -295,6 +295,7 @@ void js_reset_vm_state() {
     js_register_game_objects(vm.J);
     js_register_mission_objects(vm.J);
     js_register_empire_objects(vm.J);
+    js_register_ui_objects(vm.J);
     //js_register_mouse_functions(vm.J);
     //js_register_hotkey_functions(vm.J);
     js_register_game_constants(vm.J);

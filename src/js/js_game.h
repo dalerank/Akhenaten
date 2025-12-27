@@ -56,6 +56,19 @@ namespace js_helpers {
         return xstring(js_tostring(J, idx));
     }
     
+    template<>
+    inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
+        vec2i result;
+        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+            js_getproperty(J, idx, "x"); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);            
+            js_getproperty(J, idx, "y"); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        } else if (js_isarray(J, idx)) {
+            js_getindex(J, idx, 0); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            js_getindex(J, idx, 1); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        }
+        return result;
+    }
+    
     template<typename T>
     inline void js_push_value(js_State *J, T value);
     
@@ -85,8 +98,15 @@ namespace js_helpers {
     }
     
     template<>
-    inline void js_push_value<std::string>(js_State *J, std::string value) {
+    inline void js_push_value<const std::string&>(js_State *J, const std::string& value) {
         js_pushstring(J, value.c_str());
+    }
+
+    template<>
+    inline void js_push_value<vec2i>(js_State *J, vec2i value) {
+        js_newobject(J);
+        js_pushnumber(J, value.x); js_setproperty(J, -2, "x");
+        js_pushnumber(J, value.y); js_setproperty(J, -2, "y");
     }
     
     template<>
@@ -319,6 +339,7 @@ void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);
 void js_register_empire_objects(js_State *J);
 void js_register_mission_objects(js_State *J);
+void js_register_ui_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
 void js_call_function(xstring onclick_ref);
