@@ -1,9 +1,5 @@
 log_info("akhenaten: ui widgets started")
 
-ui {
-    popup_message: ui_popup_message
-}
-
 uioptions {
     resource_icons  : {pack:PACK_EXPANSION, id:3}
     advisor_icons   : {pack:PACK_GENERAL, id:128, offset:0}

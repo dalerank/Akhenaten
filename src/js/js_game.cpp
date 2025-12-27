@@ -153,6 +153,16 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
                 // No direct pointer transport to JS; pass null
                 js_pushnull(J);
                 break;
+            case bvariant::etype_vec2i:
+                js_newobject(J);
+                {
+                    const vec2i pos = val.as_vec2i();
+                    js_pushnumber(J, pos.x);
+                    js_setproperty(J, -2, "x");
+                    js_pushnumber(J, pos.y);
+                    js_setproperty(J, -2, "y");
+                }
+                break;
             case bvariant::etype_none:
             default:
                 js_pushundefined(J);

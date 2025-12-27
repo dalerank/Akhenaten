@@ -2,6 +2,7 @@
 
 #include "io/gamefiles/lang.h"
 #include "city/city.h"
+#include "city/city_building_menu_ctrl.h"
 
 pcstr __city_rank_title(int rank) { return lang_get_string(52, rank + 4); }
 ANK_FUNCTION_1(__city_rank_title)
@@ -23,3 +24,6 @@ ANK_FUNCTION(__city_player_rank)
 
 pcstr __city_player_name() { return (pcstr)city_player_name; }
 ANK_FUNCTION(__city_player_name)
+
+void __city_use_building(int building_type, bool enabled) { g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled); }
+ANK_FUNCTION_2(__city_use_building)

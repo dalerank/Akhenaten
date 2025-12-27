@@ -69,5 +69,6 @@ function empire_window_draw_distant_battle_icon(window) {
     var battle_icon_pos = vec2i(window.draw_offset)
                             .add(ecity.empire_object.pos)
                             .add({x:-battle_icon.width / 2, y:-battle_icon.height / 2})
+                            
     ui.image(battle_icon, battle_icon_pos)
 }
