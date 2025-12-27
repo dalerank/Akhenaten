@@ -43,6 +43,7 @@
 
 #include "js/js_game.h"
 #include "js/js_events.h"
+#include "graphics/elements/ui_js.h"
 #include "dev/debug.h"
 
 uint16_t empire_images_remap[32000] = {0};
@@ -71,7 +72,7 @@ struct object_trade_info {
 empire_window g_empire_window;
 
 struct empire_window_draw { vec2i draw_offset; };
-ANK_REGISTER_SCRIPT_EVENT(empire_window_draw, draw_offset);
+ANK_REGISTER_STRUCT_WRITER(empire_window_draw, draw_offset);
 
 void empire_window::init() {
     selected_button = 0;
