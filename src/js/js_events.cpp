@@ -10,6 +10,7 @@
 #include "scenario/scenario.h"
 #include "city/victory.h"
 #include "city/city_animals.h"
+#include "city/city_population.h"
 #include "js/js_game.h"
 #include "js/js.h"
 
