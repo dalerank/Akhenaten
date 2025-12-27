@@ -18,14 +18,3 @@ game {
     [property]
     difficulty { get: __game_difficulty }
 }
-
-player {
-    [property]
-    name { get: __city_player_name }
-
-    [property]
-    salary_rank { get: __player_salary_rank }
-
-    [property]
-    salary_amount { get: __player_salary_amount }
-}

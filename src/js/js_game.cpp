@@ -71,6 +71,40 @@ void js_game_load_text(js_State *J) {
     js_pushstring(J, ftext->begin());
 }
 
+void js_game_get_image(js_State *J) {
+    if (js_gettop(J) < 1) {
+        js_pushnull(J);
+        return;
+    }
+
+    if (!js_isstring(J, 1)) {
+        js_pushnull(J);
+        return;
+    }
+
+    const char *path = js_tostring(J, 1);
+
+    image_desc desc;
+    desc.path = path;
+    int tid = desc.tid();
+
+    const image_t *img = image_get(tid);
+
+    if (!img) {
+        js_pushnull(J);
+        return;
+    }
+
+    js_newobject(J);
+    js_pushnumber(J, tid);
+    js_setproperty(J, -2, "tid");
+
+    js_pushnumber(J, img->width);
+    js_setproperty(J, -2, "width");
+    js_pushnumber(J, img->height);
+    js_setproperty(J, -2, "height");
+}
+
 void js_call_event_handlers(const xstring &event_name, const bvariant_map &object) {
     auto it = event_type_handlers.find(event_name);
     if (it == event_type_handlers.end()) {
@@ -351,7 +385,6 @@ xstring __game_version() { return get_version().c_str(); }
 ANK_FUNCTION(__game_version)
 
 void js_register_game_objects(js_State *J) {
-    // do nothing
 }
 
 void js_register_game_functions(js_State *J) {
@@ -359,6 +392,7 @@ void js_register_game_functions(js_State *J) {
     REGISTER_GLOBAL_FUNCTION(J, js_log_warn_native, "__log_warning_native", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_loc_native, "__loc", 2);
     REGISTER_GLOBAL_FUNCTION(J, js_game_load_text, "load_text", 1);
+    REGISTER_GLOBAL_FUNCTION(J, js_game_get_image, "get_image", 1);
     REGISTER_GLOBAL_FUNCTION(J, js_register_console_command, "__register_console_command", 3);
     
     animation_t::global_hashtime = game.frame;

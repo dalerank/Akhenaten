@@ -42,6 +42,7 @@
 #include "game/game.h"
 
 #include "js/js_game.h"
+#include "js/js_events.h"
 #include "dev/debug.h"
 
 uint16_t empire_images_remap[32000] = {0};
@@ -68,6 +69,9 @@ struct object_trade_info {
 };
 
 empire_window g_empire_window;
+
+struct empire_window_draw { vec2i draw_offset; };
+ANK_REGISTER_SCRIPT_EVENT(empire_window_draw, draw_offset);
 
 void empire_window::init() {
     selected_button = 0;
@@ -596,21 +600,7 @@ void empire_window::draw_map() {
 
     scenario_invasion_foreach_warning([&] (vec2i pos, int image_id) {
         ui::eimage(image_id, draw_offset + pos);
-    });
-
-    if (g_city.distant_battle.has_distant_battle()) {
-        const empire_city *city = g_empire.city(g_city.distant_battle.battle_city());
-        if (city) {
-            image_desc battle_icon_desc = image_desc_from_name("pharaoh_general/empire_bits_00001");
-            if (battle_icon_desc.pack != PACK_NONE) {
-                const image_t *siege_icon = image_get(battle_icon_desc);
-                if (siege_icon) {
-                    vec2i siege_icon_pos = draw_offset + city->get_empire_object()->pos + vec2i{ -siege_icon->width / 2, -siege_icon->height / 2 };
-                    ui::eimage(battle_icon_desc, siege_icon_pos);
-                }
-            }
-        }
-    }
+    });    
 
     for (auto &trader: g_empire_traders.traders) {
         if (!trader.is_active) {
@@ -621,6 +611,8 @@ void empire_window::draw_map() {
         const vec2i draw_pos = draw_offset + trader.current_position;
         ui::eimage(image_id, draw_pos);
     }
+
+    ui.draw(empire_window_draw{ draw_offset });
 
     graphics_reset_clip_rectangle();
 }

@@ -19,6 +19,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/crc32.h"
 #include "js/js_game.h"
+#include "js/js.h"
 #include "ui_scope_property.h"
 #include "graphics/elements/scroll_list_panel.h"
 
@@ -737,6 +738,10 @@ ui::element& ui::widget::operator[](pcstr id) {
         logs::error("No element with id:%s", id);
     }
     return (it != elements.end() ? **it : ui::dummy_element);
+}
+
+void ui::widget::draw(pcstr evname, const bvariant_map &js_j) {
+    js_call_event_handlers(evname, js_j);
 }
 
 void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {

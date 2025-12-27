@@ -586,6 +586,17 @@ struct widget {
     inline void image(image_desc img, vec2i pos) { ui::eimage(img, pos); }
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
+    template<typename T>
+    inline void draw(const T& ev) {
+        type_name_holder<T> evname;
+        pcstr evname_str = type_simplified_name(evname.value.data());
+        bvariant_map js_j;
+        js_helper::writer(js_j, ev);
+        draw(evname_str, js_j);
+    }
+
+    void draw(pcstr evname, const bvariant_map &js_j);
+
     inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
     inline void end_widget() { ui::end_widget(); }
     void set_clip_rectangle(vec2i pos, vec2i size);

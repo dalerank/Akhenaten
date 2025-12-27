@@ -48,6 +48,43 @@ function log_warning(message, locals) {
     __log_warning_native(_eformat(message, locals));
 }
 
+// vec2i helper functions with chainable methods
+function vec2i(x, y) {
+    var obj;
+    if (y === undefined) {
+        // If only one argument, assume it's an object with x and y
+        if (typeof x === 'object' && x !== null) {
+            obj = {x: x.x || 0, y: x.y || 0};
+        } else {
+            // If it's a number, return vec2i with both components equal
+            obj = {x: x, y: x};
+        }
+    } else {
+        obj = {x: x, y: y};
+    }
+    
+    // Add chainable methods
+    obj.add = function(other) {
+        var o = vec2i(other);
+        return vec2i(this.x + o.x, this.y + o.y);
+    };
+    
+    obj.sub = function(other) {
+        var o = vec2i(other);
+        return vec2i(this.x - o.x, this.y - o.y);
+    };
+    
+    obj.mul = function(scalar) {
+        return vec2i(this.x * scalar, this.y * scalar);
+    };
+    
+    obj.div = function(scalar) {
+        return vec2i(this.x / scalar, this.y / scalar);
+    };
+    
+    return obj;
+}
+
 var trade_city_sell = {}
 var trade_city_want_sell = {}
 var trade_city_buy = {}
