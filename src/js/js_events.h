@@ -27,14 +27,18 @@
 
 namespace js_helper {
     template<typename T>
-    inline void writer(bvariant_map &js_j, T &js_t);
+    inline void writer(bvariant_map &js_j, const T &js_t);
+}
+
+#define ANK_REGISTER_SCRIPT_EVENT(Type, ...)                                                      \
+namespace js_helper {                                                                             \
+    template<>                                                                                    \
+    inline void writer<Type>(bvariant_map& js_j, const Type& js_t) {                             \
+        ANK_SCRIPT_STRUCT_EXPAND(ANK_SCRIPT_STRUCT_PASTE(ANK_SCRIPT_STRUCT_FROM, __VA_ARGS__));   \
+    }                                                                                             \
 }
 
 #define ANK_SCRIPT_EVENT(Type, ...)                                                               \
-namespace js_helper {                                                                             \
-    template<>                                                                                    \
-    inline void writer<Type>(bvariant_map& js_j, Type& js_t) {                                    \
-        ANK_SCRIPT_STRUCT_EXPAND(ANK_SCRIPT_STRUCT_PASTE(ANK_SCRIPT_STRUCT_FROM, __VA_ARGS__));   \
-    }                                                                                             \
-} void ANK_PERMANENT_CALLBACK(Type, ev) { bvariant_map vmap; js_helper::writer(vmap, ev); js_call_event_handlers(#Type, vmap); }
+    ANK_REGISTER_SCRIPT_EVENT(Type, __VA_ARGS__)                                                  \
+    void ANK_PERMANENT_CALLBACK(Type, ev) { bvariant_map vmap; js_helper::writer(vmap, ev); js_call_event_handlers(#Type, vmap); }
 

@@ -317,6 +317,7 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);
+void js_register_empire_objects(js_State *J);
 void js_register_mission_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
