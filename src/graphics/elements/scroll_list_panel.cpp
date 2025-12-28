@@ -212,7 +212,10 @@ int scrollable_list::input_handle(const mouse* m) {
         if (handled_button_id > 0 && m->left.went_up) {
             unselect();
             // left click callback
-            left_click_callback(-1, -1);
+            if (left_click_callback) {
+                left_click_callback(-1, -1);
+            }
+
             if (left_click_ex_callback) {
                 left_click_ex_callback(nullptr);
             }

@@ -41,5 +41,6 @@ void mods_remount();
 void mods_save();
 void mods_load();
 void mods_refresh_available_list();
+void mods_download_mod_async(xstring name);
 
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled);
