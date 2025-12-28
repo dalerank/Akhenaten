@@ -11,13 +11,18 @@ mods_window {
                                margin{top:20}})
 
         unpack_scripts : large_button({ size[156, 25]
-                                        text:"unpack scripts"
-                                        margin{left:px(40) - 156, top:20}
+                                        text:"Unpack scripts"
+                                        margin{right:-156, top:20}
                                         onclick: platform_unpack_scripts
                                       })
 
-        mods         : scrollable_list({pos[16, 70], size[36, 23], view_items:22, draw_scrollbar_always:true })
-        
+        refresh_mods : large_button({ size[156, 25]
+                                      text:"Check on github"
+                                      margin{right:-156, top:44}
+                                      onclick: mods_refresh_available_list
+                                    })
+
+        mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11, draw_scrollbar_always:true })
         bottom_text  : text({text:"Right click to exit, double click to toggle mod"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
                              multiline:false
@@ -25,4 +30,3 @@ mods_window {
                              margin{bottom:-35}})
     }
 }
-
