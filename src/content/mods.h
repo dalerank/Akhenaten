@@ -9,10 +9,13 @@ struct mod_info {
     xstring path;
     xstring name;
     xstring desc;
+    xstring url;
     uint16_t useridx;
     uint16_t start_index;
     uint16_t entries_num;
     svector<xstring, 16> scripts;
+    uint8_t download_progress = 0;
+    bool downloaded = false;
     bool enabled = false;
 
     bool exist(const xstring& name) const {
@@ -37,5 +40,6 @@ const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();
 void mods_load();
+void mods_refresh_available_list();
 
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled);

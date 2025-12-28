@@ -13,13 +13,13 @@ mods_window {
         unpack_scripts : large_button({ size[156, 25]
                                         text:"Unpack scripts"
                                         margin{right:-156, top:20}
-                                        onclick: platform_unpack_scripts
+                                        onclick: __window_mods_unpack_scripts
                                       })
 
         refresh_mods : large_button({ size[156, 25]
                                       text:"Check on github"
                                       margin{right:-156, top:44}
-                                      onclick: mods_refresh_available_list
+                                      onclick: __window_mods_refresh_available_list
                                     })
 
         mods         : scrollable_list({pos[16, 75], size[36, 23], view_items:11, draw_scrollbar_always:true })
