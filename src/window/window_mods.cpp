@@ -40,27 +40,42 @@ void ui::mods_window::init() {
             const mod_info &mod = mods_find(entry.text);
 
             bstring128 text;
+            bstring128 mod_name;
             if (!mod.downloaded) {
                 if (mod.download_progress > 0) {
                     text.printf("[%d] ", mod.download_progress);
                 } else {
                     text.printf("[n/a] ");
                 }
+
+                mod_name = mod.name.c_str();
+                int num_points = (game.frame % 90) / 30;
+                for (int i = 0; i < num_points; ++i) {
+                    mod_name.append('.');
+                }
             } else {
                 text.printf("[%s] ", mod.enabled ? "ON" : "OFF");
+                mod_name = mod.name.c_str();
             }
             
-            text.append(mod.name.c_str());
+            text.append(mod_name.c_str());
             text_draw(text.c_str(), pos.x, pos.y, font, 0);
         });
 
-        mods->onclick_double_ex_item([] (scrollable_list::entry_data* item) {
-            if (!item) {
+        mods->onclick_double_ex_item([] (scrollable_list::entry_data*entry) {
+            if (!entry) {
                 return;
             }
 
-            mods_toggle(item->text);
-            mods_remount();
+            const mod_info &mod = mods_find(entry->text);
+            if (!mod.downloaded) {
+                if (mod.download_progress == 0) {
+                    mods_download_mod_async(entry->text);
+                }
+            } else {
+                mods_toggle(entry->text);
+                mods_remount();
+            }
         });
     }
 }
