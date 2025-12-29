@@ -94,7 +94,8 @@ int figure::figure_play_phrase_file() {
         prefix.replace_str("figure_", "");
         path.printf("Voice/Walker/%s_random_%02u.wav", prefix.c_str(), phrase_key.c_str(), rand() % 10);
 
-        if (!g_sound.speech_file_exist(path)) {
+        vfs::path tmp;
+        if (!g_sound.speech_file_exist(path, tmp)) {
             // fallback to standart phrase
             path.printf("Voice/Walker/%s_random_01.wav", prefix.c_str(), phrase_key.c_str());
         }

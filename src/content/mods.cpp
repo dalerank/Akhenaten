@@ -233,19 +233,7 @@ void mods_download_mod_async(xstring name) {
         if (!full_path.empty()) {
             mod.entries_num = imagepak::get_entries_num(mod.path);
             imagepak::useridx_update(mod.useridx);
-            imagepak::update_max_imgid(mod.start_index + mod.entries_num);
-            
-            // Extract scripts from mod
-            vfs::ZipArchive archive(full_path);
-            if (archive.isValid()) {
-                const auto& entries = archive.entries();
-                mod.scripts.clear();
-                for (const auto& entry : entries) {
-                    if (vfs::file_has_extension(entry.c_str(), "js")) {
-                        mod.scripts.push_back(entry);
-                    }
-                }
-            }
+            imagepak::update_max_imgid(mod.start_index + mod.entries_num);           
         }
         
         logs::info("Successfully downloaded mod: %s", name.c_str());
@@ -270,7 +258,7 @@ void mods_toggle(xstring name) {
 }
 
 void mods_remount() {
-    for (const auto &it : g_mods_list) {
+    for (auto &it : g_mods_list) {
         if (!it.second.downloaded) {
             continue;
         }
@@ -285,8 +273,10 @@ void mods_remount() {
                 modpack.id = it.second.useridx;
                 modpack.name = it.second.name;
                 modpack.delayed = true;
-                modpack.custom = true;
+                modpack.custom = true;                
             }
+
+            it.second.fill_entries();
 
             for (const auto &s: it.second.scripts) {
                 js_vm_reload_file(s.c_str());
@@ -329,6 +319,7 @@ void mods_init() {
                 mod_info &mod = g_mods_list[mod_name];
                 mod.path.printf("Mods/%s", files->files[i]);
                 mod.name = mod_name;
+                mod.downloaded = true;
                 mod.useridx = imagepak::get_max_useridx() + 1;
                 mod.start_index = imagepak::get_maxseen_imgid() + 1;
                 mod.entries_num = imagepak::get_entries_num(mod.path);
@@ -341,19 +332,7 @@ void mods_init() {
                     continue;
                 }
 
-                vfs::ZipArchive archive(full_path);
-                if (!archive.isValid()) {
-                    continue;
-                }
-
-                const auto &entries = archive.entries();
-                mod.scripts.clear();
-
-                for (const auto &entry : entries) {
-                    if (vfs::file_has_extension(entry.c_str(), "js")) {
-                        mod.scripts.push_back(entry);
-                    }
-                }
+                mod.fill_entries();
             } else {
                 logs::warn("WARN! Duplicate mod %s", mod_name.c_str());
             }
@@ -374,6 +353,52 @@ const mod_info &mods_find(xstring hash) {
     return dummy;
 }
 
+vfs::path mods_exist_audio(pcstr wav_path) {
+    if (!wav_path || !*wav_path) {
+        return {};
+    }
+
+    vfs::path name_lower(wav_path);
+    name_lower.tolower();
+    for (const auto &it : g_mods_list) {
+        if (!it.second.enabled) {
+            continue;
+        }
+
+        if (!it.second.audio_exist(name_lower.c_str())) {
+            continue;
+        }
+
+        return vfs::path(it.second.path.c_str(), "/", name_lower);
+    }
+
+    return {};
+}
+
+mod_reader mods_find_audio(pcstr wav_path) {
+    if (!wav_path || !*wav_path) {
+        return {};
+    }
+
+    for (const auto &it : g_mods_list) {
+        if (!it.second.enabled) {
+            continue;
+        }
+
+        if (!it.second.audio_exist(wav_path)) {
+            continue;
+        }
+
+        vfs::path mod_audio_path(it.second.path.c_str(), "/", wav_path);
+        vfs::reader reader = vfs::file_open(mod_audio_path, "r");
+        if (reader) {
+            return { mod_audio_path.c_str(), reader };
+        }
+    }
+
+    return {};
+}
+
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
     if (!script_path || !*script_path) {
         return {};
@@ -384,7 +409,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
             continue;
         }
 
-        if (!it.second.exist(script_path)) {
+        if (!it.second.script_exist(script_path)) {
             continue;
         }
 
@@ -556,4 +581,22 @@ void mods_refresh_available_list() {
 #else
     popup_dialog::show_ok("Error", "Mods list download not supported on this platform.");
 #endif
+}
+
+void mod_info::fill_entries() {
+    vfs::ZipArchive archive(path.c_str());
+    if (archive.isValid()) {
+        const auto &entries = archive.entries();
+        scripts.clear();
+        sounds.clear();
+        for (const auto &entry : entries) {
+            if (vfs::file_has_extension(entry.c_str(), "js")) {
+                scripts.push_back(entry.tolower());
+            }
+
+            if (vfs::file_has_extension(entry.c_str(), "wav")) {
+                sounds.push_back(entry.tolower());
+            }
+        }
+    }
 }

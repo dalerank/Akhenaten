@@ -4,6 +4,7 @@
 #include "content/dir.h"
 #include "core/flat_map.h"
 #include "content/vfs.h"
+#include "core/hvector.h"
 
 struct mod_info {
     xstring path;
@@ -13,15 +14,23 @@ struct mod_info {
     uint16_t useridx;
     uint16_t start_index;
     uint16_t entries_num;
-    svector<xstring, 16> scripts;
+    hvector<xstring, 32> scripts;
+    hvector<xstring, 32> sounds;
     uint8_t download_progress = 0;
     bool downloaded = false;
     bool enabled = false;
 
-    bool exist(const xstring& name) const {
+    bool script_exist(const xstring& name) const {
         auto it = std::find(scripts.begin(), scripts.end(), name);
         return (it != scripts.end());
     }
+
+    bool audio_exist(const xstring &name) const {
+        auto it = std::find(sounds.begin(), sounds.end(), name);
+        return (it != sounds.end());
+    }
+
+    void fill_entries();
 };
 
 struct mod_reader {
@@ -44,3 +53,6 @@ void mods_refresh_available_list();
 void mods_download_mod_async(xstring name);
 
 mod_reader mods_find_script(pcstr script_path, bool find_in_enabled);
+mod_reader mods_find_audio(pcstr wav_path);
+
+vfs::path mods_exist_audio(pcstr wav_path);

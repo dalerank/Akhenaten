@@ -7,6 +7,7 @@
 #include "reader.h"
 
 #include <filesystem>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -168,17 +169,16 @@ bool file_has_extension(pcstr filename, pcstr extension) {
         return true;
     }
 
-    char c;
-    do {
-        c = *filename;
-        filename++;
-    } while (c != '.' && c);
-
-    if (!c) {
-        filename--;
+    const char *last_c = filename + ::strlen(filename) - 1;
+    while (last_c != filename && *last_c != '.') {
+        last_c--;
     }
 
-    return string_compare_case_insensitive(filename, extension) == 0;
+    if (last_c != filename) {
+        last_c++;
+    }
+
+    return string_compare_case_insensitive(last_c, extension) == 0;
 }
 
 void file_change_extension(char *filename, pcstr new_extension) {
