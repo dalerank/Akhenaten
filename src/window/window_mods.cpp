@@ -49,9 +49,11 @@ void ui::mods_window::init() {
                 }
 
                 mod_name = mod.name.c_str();
-                int num_points = (game.frame % 90) / 30;
-                for (int i = 0; i < num_points; ++i) {
-                    mod_name.append('.');
+                if (mod.download_progress > 0) {
+                    int num_points = (game.frame % 90) / 30;
+                    for (int i = 0; i < num_points; ++i) {
+                        mod_name.append('.');
+                    }
                 }
             } else {
                 text.printf("[%s] ", mod.enabled ? "ON" : "OFF");
@@ -83,6 +85,7 @@ void ui::mods_window::init() {
 void ui::mods_window::update_mods() {
     auto mods = ui["mods"].dcast_scrollable_list();
     if (mods) {
+        mods->clear();
         mods->refill();
     }
 }

@@ -144,7 +144,7 @@ vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
 void* sound_manager_t::load_chunk(pcstr filename) {
     if (filename && *filename) {
         auto format = get_format_from_file(filename);
-        if (format == FILE_FORMAT_MP3) {
+        if (format == FILE_FORMAT_MP3 || format == FILE_FORMAT_WAV) {
             vfs::reader r = load_cached_chunk(filename);
 
             if (!r) {
@@ -164,7 +164,8 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         SDL_RWops* sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
 #else
-        return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
+        verify_no_crash(false && "unsupported format");
+        //return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
     } else {
         return NULL;
