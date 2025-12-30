@@ -25,10 +25,13 @@ city {
     get_battalion : function(index) { 
         return {
             id: index
-            // __property_getter: function(property) { return __city_get_battalion_property(index, property) }
-            @batalion_id { get: function() { return __city_get_battalion_property(index, "batalion_id") } }
-            @figure_type { get: function() { return __city_get_battalion_property(index, "figure_type") } }
-            @num_figures { get: function() { return __city_get_battalion_property(index, "num_figures") } }
+            __property_getter: function(property) { return __city_get_battalion_property(this.id, property) }
+            @batalion_id { }
+            @figure_type { }
+            @num_figures { }
+            @morale      { }
+            @experience  { }
+            @is_at_fort  { }
         }
     }
 

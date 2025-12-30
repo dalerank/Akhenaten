@@ -595,7 +595,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &f->max_total_damage); // 50
         iob->bind(BIND_SIGNATURE_INT8, &f->recent_fight);
         iob->bind____skip(1);
-        iob->bind____skip(2);
+        iob->bind_u16(f->experience);
         iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // --> 8 --> 0 ??????
         iob->bind____skip(4);
         //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);

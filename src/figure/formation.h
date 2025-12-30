@@ -126,6 +126,7 @@ struct formation {
     uint8_t herd_direction;
     uint8_t failed_creation_count;
     uint8_t herd_spawn_delay;
+    uint16_t experience;
 
     struct {
         e_formation_layout layout;
@@ -137,7 +138,10 @@ struct formation {
 
     svector<figure *, max_figures_count> valid_figures();
 };
-ANK_CONFIG_PROPERTY(formation, batalion_id, figure_type, num_figures);
+ANK_CONFIG_PROPERTY(formation, 
+    batalion_id, figure_type, 
+    num_figures, morale, experience,
+    is_at_fort);
 
 struct formations_t {
     void clear_all();
