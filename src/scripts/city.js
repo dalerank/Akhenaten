@@ -1,15 +1,11 @@
 log_info("akhenaten: city.js started")
 
 city {
-    [property]
-    festival_selected_god { get: __city_festival_selected_god }
+    @festival_selected_god { get: __city_festival_selected_god }
+    @population { get: __city_population }
+    @rating_kingdom { get: __city_rating_kingdom }
+    @num_forts { get: __formation_get_num_forts }
 
-    [property]
-    population { get: __city_population }
-
-    [property]
-    rating_kingdom { get: __city_rating_kingdom }
-    
     use_building: __city_use_building
     set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
@@ -25,6 +21,16 @@ city {
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
     start_foreign_army_invasion : __city_start_foreign_army_invasion
+    
+    get_battalion : function(index) { 
+        return {
+            id: index
+            // __property_getter: function(property) { return __city_get_battalion_property(index, property) }
+            @batalion_id { get: function() { return __city_get_battalion_property(index, "batalion_id") } }
+            @figure_type { get: function() { return __city_get_battalion_property(index, "figure_type") } }
+            @num_figures { get: function() { return __city_get_battalion_property(index, "num_figures") } }
+        }
+    }
 
     get_granary : function(building_id) {
         return {
@@ -87,8 +93,7 @@ city {
 
 finance { 
     income {
-        [property]
-        gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
+        @gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
     }
 }
 

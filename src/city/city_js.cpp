@@ -27,3 +27,19 @@ ANK_FUNCTION(__city_player_name)
 
 void __city_use_building(int building_type, bool enabled) { g_building_menu_ctrl.toggle_building((e_building_type)building_type, enabled); }
 ANK_FUNCTION_2(__city_use_building)
+
+int __formation_get_num_forts() { return formation_get_num_forts(); }
+ANK_FUNCTION(__formation_get_num_forts)
+
+std::optional<bvariant> __city_get_battalion_property(int fid, pcstr property) {
+    const auto form = formation_get(g_formations.get_battalion_id_from_index(fid + 1));
+    if (!form) {
+        return {};
+    }
+
+    return archive_helper::get(*form, property, true);
+}
+ANK_FUNCTION_2(__city_get_battalion_property)
+
+void js_register_city_objects(js_State *J) {
+}
