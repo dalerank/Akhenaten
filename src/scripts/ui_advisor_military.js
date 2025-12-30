@@ -46,6 +46,7 @@ function get_morale_str(morale) {
     return __loc(138, 37 + morale / 5)
 }
 
+
 [event=advisor_military_window_draw]
 function advisor_military_window_draw_battalions(window) {     
     if (city.num_forts > 0) {
@@ -62,15 +63,23 @@ function advisor_military_window_draw_battalions(window) {
             ui.image(battalion_image, {x:44, y:82 + 44 * i})
             ui.label(__loc(138, form.batalion_id), vec2i(84, 83 + 44 * i), FONT_NORMAL_WHITE_ON_DARK)
  
-            ui.label("" + form.num_figures + " " + get_figure_type_str(form.figure_type), vec2i(84, 100 + 44 * i), FONT_NORMAL_BLACK_ON_DARK);
-            ui.label(get_morale_str(form.morale), vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered);
+            var num_figures_str = "" + form.num_figures + " " + get_figure_type_str(form.figure_type)
+            ui.label(num_figures_str, vec2i(84, 100 + 44 * i), FONT_NORMAL_BLACK_ON_DARK);
+
+            var morale_str = get_morale_str(form.morale)
+            ui.label(morale_str, vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered);
             
             var experience_level = form.experience / 100
             exp_image.tid += experience_level
             ui.button({ text:"", pos{x:314, y:83 + 44 * i}, size[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
             ui.image(exp_image, { x:317, y:86 + 44 * i})
  
-            ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ]})
+            var clicked = ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ] })
+            if (clicked) {
+                log_info("akhenaten: goto legion " + form.home)
+                city.camera_go_to(form.home)
+                ui.window_city_show()
+            }
             ui.image(goto_legion_image, { x:397, y:86 + 44 * i });
 
             fort_image.tid += (form.is_at_fort ? 1 : 0)

@@ -21,6 +21,7 @@ city {
     rank_title : __city_rank_title
     rank_salary : __city_rank_salary
     start_foreign_army_invasion : __city_start_foreign_army_invasion
+    camera_go_to : __city_camera_go_to
     
     get_battalion : function(index) { 
         return {
