@@ -114,6 +114,59 @@ namespace js_helpers {
         js_pushstring(J, value.c_str());
     }
     
+    inline void js_push_bvariant(js_State *J, const bvariant &val) {
+        switch (val.value_type()) {
+        case bvariant::etype_bool:
+            js_pushboolean(J, val.as_bool());
+            break;
+        case bvariant::etype_int32:
+            js_pushnumber(J, (double)val.as_int32());
+            break;
+        case bvariant::etype_uint32:
+            js_pushnumber(J, (double)val.as_uint32());
+            break;
+        case bvariant::etype_u16:
+            js_pushnumber(J, (double)val.as_u16());
+            break;
+        case bvariant::etype_float:
+            js_pushnumber(J, (double)val.as_float());
+            break;
+        case bvariant::etype_str:
+            js_pushstring(J, val.as_str().c_str());
+            break;
+        case bvariant::etype_ptr:
+            js_pushnull(J);
+            break;
+        case bvariant::etype_vec2i: {
+            js_newobject(J);
+            const vec2i pos = val.as_vec2i();
+            js_pushnumber(J, pos.x);
+            js_setproperty(J, -2, "x");
+            js_pushnumber(J, pos.y);
+            js_setproperty(J, -2, "y");
+            break;
+        }
+        case bvariant::etype_none:
+        default:
+            js_pushundefined(J);
+            break;
+        }
+    }
+    
+    template<>
+    inline void js_push_value<bvariant>(js_State *J, bvariant value) {
+        js_push_bvariant(J, value);
+    }
+    
+    template<>
+    inline void js_push_value<std::optional<bvariant>>(js_State *J, std::optional<bvariant> value) {
+        if (value.has_value()) {
+            js_push_bvariant(J, value.value());
+        } else {
+            js_pushundefined(J);
+        }
+    }
+    
     inline void js_push_void(js_State *J) {
         js_pushundefined(J);
     }
@@ -277,16 +330,13 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
-        type3 param4 = js_helpers::js_to_value<type4>(J, 4); \
+        type4 param4 = js_helpers::js_to_value<type4>(J, 4); \
         constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param1, param2, param3, param4); }); \
     }
 
 #define ANK_FUNCTION_4(func) \
     ANK_FUNCTION_NAMED_4(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type, function_traits<decltype(&func)>::arg<3>::type)
-
-#define ANK_FUNCTION_3(func) \
-    ANK_FUNCTION_NAMED_3(func, func, function_traits<decltype(&func)>::arg<0>::type, function_traits<decltype(&func)>::arg<1>::type, function_traits<decltype(&func)>::arg<2>::type)
 
 #define ANK_FUNCTION_NAMED_5(fname, func, type1, type2, type3, type4, type5) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
@@ -295,8 +345,8 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
-        type3 param4 = js_helpers::js_to_value<type4>(J, 4); \
-        type3 param5 = js_helpers::js_to_value<type5>(J, 5); \
+        type4 param4 = js_helpers::js_to_value<type4>(J, 4); \
+        type5 param5 = js_helpers::js_to_value<type5>(J, 5); \
         constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param1, param2, param3, param4, param5); }); \
     }
@@ -339,6 +389,7 @@ void js_register_game_functions(js_State *J);
 void js_register_game_objects(js_State *J);
 void js_register_empire_objects(js_State *J);
 void js_register_mission_objects(js_State *J);
+void js_register_city_objects(js_State *J);
 void js_register_ui_objects(js_State *J);
 void js_register_mission_vars(const settings_vars_t &vars);
 void js_unref_function(xstring onclick_ref);
