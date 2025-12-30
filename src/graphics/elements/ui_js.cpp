@@ -2,6 +2,8 @@
 #include "js/js.h"
 
 #include "ui.h"
+#include "graphics/elements/generic_button.h"
+#include "window/window_city.h"
 #include "city/city_message.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); }
@@ -10,13 +12,19 @@ ANK_FUNCTION_2(__ui_draw_image);
 void __ui_popup_message(xstring message) { messages::popup(message, 0, 0); }
 ANK_FUNCTION_1(__ui_popup_message)
 
-void __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
-    ui::button(text, pos, size, fonts_vec{ (e_font)font }, flags );
+bool __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
+    const vec2i offset = ui::current_offset();
+    auto &btn = ui::button(text, pos, size, fonts_vec{ (e_font)font }, flags);
+    const bool handled = generic_buttons_handle_mouse(&mouse::ref(), offset, &btn, 1, nullptr);
+    return handled;
 }
 ANK_FUNCTION_5(__ui_draw_button);
 
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); }
 ANK_FUNCTION_3(__ui_draw_label);
+
+void __ui_window_city_show() { window_city_show(); }
+ANK_FUNCTION(__ui_window_city_show)
 
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_ui_objects(js_State *J) {

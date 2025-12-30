@@ -239,6 +239,10 @@ void ui::fill_rect(vec2i offset, vec2i size, color c) {
     ctx.fill_rect(goffset + offset, size, c);
 }
 
+vec2i ui::current_offset() {
+    return g_state.offset();
+}
+
 void ui::begin_frame() {
     assert(g_state.buttons.size() < 1000);
     //assert(g_state._offset.size() == 0);
