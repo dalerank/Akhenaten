@@ -18,19 +18,18 @@ advisor_military_window {
         h5_2         : text({text{group:51, id:18}, pos[304, 58], font:FONT_SMALL_PLAIN})
         
         inner_panel  : inner_panel({pos[32, 70], size[36, 17]})
-        forts_area   : dummy({
-            margin{left:60, bottom:-100}
-            ui {
-                imgb1       : image({path:"pharaoh_general/paneling_00047", pos[0, 10]})
-                enemy_text  : text({pos[30, 10], font:FONT_NORMAL_BLACK_ON_LIGHT})
+        forts_area   : dummy({ margin{left:30, bottom:-90}
+                               ui {
+                                   imgb1       : image({path:"pharaoh_general/paneling_00047", pos[0, 10]})
+                                   enemy_text  : text({pos[30, 10], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-                imgb2       : image({path:"pharaoh_general/paneling_00047", pos[0, 30]})
-                distant_text: text({pos[30, 30], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                                   imgb2       : image({path:"pharaoh_general/paneling_00047", pos[0, 30]})
+                                   distant_text: text({pos[30, 30], font:FONT_NORMAL_BLACK_ON_LIGHT})
 
-                imgb3       : image({path:"pharaoh_general/paneling_00047", pos[0, 50]})
-                forts_text  : text({pos[80, 48], font:FONT_NORMAL_BLACK_ON_LIGHT})
-            }
-        })
+                                   imgb3       : image({path:"pharaoh_general/paneling_00047", pos[0, 50]})
+                                   forts_text  : text({pos[30, 50], font:FONT_NORMAL_BLACK_ON_LIGHT})
+                               }
+                             })
 
         no_legions   : text({text{group:51, id:16}, pos[64, 200], wrap:496, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true})
     }
