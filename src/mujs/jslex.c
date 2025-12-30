@@ -575,6 +575,7 @@ static int jsY_lexx(js_State *J)
 		case '{': jsY_next(J); return '{';
 		case '}': jsY_next(J); return '}';
 		case '~': jsY_next(J); return '~';
+		case '@': jsY_next(J); return '@';
 
 		case '\'':
 		case '"':
