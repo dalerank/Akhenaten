@@ -10,6 +10,34 @@ ANK_FUNCTION_2(__ui_draw_image);
 void __ui_popup_message(xstring message) { messages::popup(message, 0, 0); }
 ANK_FUNCTION_1(__ui_popup_message)
 
-void js_register_ui_objects(js_State *J) {
+void __ui_draw_button(pcstr text, vec2i pos, vec2i size, int font, int flags) {
+    ui::button(text, pos, size, fonts_vec{ (e_font)font }, flags );
+}
+ANK_FUNCTION_5(__ui_draw_button);
 
+void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); }
+ANK_FUNCTION_3(__ui_draw_label);
+
+#define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
+void js_register_ui_objects(js_State *J) {
+    _R(UiFlags_None)
+    _R(UiFlags_Darkened)
+    _R(UiFlags_Grayscale)
+    _R(UiFlags_PanelInner)
+    _R(UiFlags_LabelMultiline)
+    _R(UiFlags_AlignYCentered)
+    _R(UiFlags_NoBody)
+    _R(UiFlags_Rich)
+    _R(UiFlags_Selected)
+    _R(UiFlags_AlignCentered)
+    _R(UiFlags_NoScroll)
+    _R(UiFlags_AlignLeft)
+    _R(UiFlags_AlignXCentered)
+    _R(UiFlags_Readonly)
+    _R(UiFlags_NoBorder)
+    _R(UiFlags_Outline)
+    _R(UiFlags_SplitText)
+    _R(UiFlags_PanelSmall)
+    _R(UiFlags_PanelOuter)
+    _R(UiFlags_ThinBorder)
 }

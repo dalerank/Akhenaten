@@ -14,6 +14,26 @@ ui.image = function(image, pos) {
     } 
 }
 
+ui.button = function(config) {
+    if (!config) {
+        return
+    }
+
+    var flags = UiFlags_None
+    flags |= (config.border === false ? UiFlags_NoBorder : 0)
+    flags |= (config.body === false ? UiFlags_NoBody : 0)
+
+    __ui_draw_button(config.text, config.pos, config.size, config.font, flags)
+}
+
+ui.label = function(text, pos, font) {
+    if (!text || !pos) {
+        return
+    }
+
+    __ui_draw_label(text, pos, font)
+}
+
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
 function sh(v) { return game.screen.h + v}
