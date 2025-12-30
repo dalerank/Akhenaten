@@ -219,6 +219,7 @@ struct element {
 
     int debug_tag;
     xstring id;
+    xstring parent_id;
     vec2i pos;
     vec2i size;
     margini margin = {};

@@ -4,6 +4,7 @@
 
 #include "xstring.h"
 #include "core/vec2i.h"
+#include "grid/point.h"
 
 template <uint32_t size = 16>
 class variant_t {
@@ -20,6 +21,7 @@ public:
         etype_str,
         etype_u16,
         etype_vec2i,
+        etype_tile2i,
         etype_size,
     };
 
@@ -41,6 +43,7 @@ public:
     inline explicit variant_t(const xstring &v) { _value_type = etype_none; assign(v, etype_str); }
     inline explicit variant_t(pcstr v) { _value_type = etype_none; assign(xstring(v), etype_str); }
     inline explicit variant_t(vec2i v) { _value_type = etype_none; assign(v, etype_vec2i); }
+    inline explicit variant_t(tile2i v) { _value_type = etype_none; assign(v, etype_tile2i); }
 
     inline variant_t &operator=(const variant_t &v) {
         if (this == &v) {
@@ -54,6 +57,7 @@ public:
         switch (value_type) {
         case (etype_str): *cast<xstring>() = *v.cast<xstring>(); break;
         case (etype_vec2i): *cast<vec2i>() = *v.cast<vec2i>(); break;
+        case (etype_tile2i): *cast<tile2i>() = *v.cast<tile2i>(); break;
         default:
             if (&_value != &v._value) {
                 memcpy(&_value, &v._value, sizeof(_value));
@@ -82,6 +86,7 @@ public:
         case (etype_float): return (fp_similar(_value.float_value, v._value.float_value));
         case (etype_u16): return (_value.u16_value == v._value.u16_value);
         case (etype_vec2i): return (*cast<vec2i>() == *v.cast<vec2i>());
+        case (etype_tile2i): return (*cast<tile2i>() == *v.cast<tile2i>());
 
         default:
             return (!memcmp(&_value, &v._value, sizeof(_value)));
@@ -97,6 +102,7 @@ public:
     inline variant_t &operator=(void *v) { return assign(v, etype_ptr); }
     inline variant_t &operator=(const xstring &v) { return assign(v, etype_str); }
     inline variant_t &operator=(vec2i v) { return assign(v, etype_vec2i); }
+    inline variant_t &operator=(tile2i v) { return assign(v, etype_tile2i); }
 
     inline bool is_empty() const { return (etype_none == _value_type); }
     inline bool is_null() const {
@@ -122,6 +128,7 @@ public:
     inline bool is_ptr() const { return (etype_ptr == _value_type); }
     inline bool is_str() const { return (etype_str == _value_type); }
     inline bool is_vec2i() const { return (etype_vec2i == _value_type); }
+    inline bool is_tile2i() const { return (etype_tile2i == _value_type); }
     
     inline bool	as_bool() const { verify_no_crash(etype_bool == _value_type); return _value.bool_value; }
     inline uint16_t as_u16() const { verify_no_crash(this->is_u16()); return _value.u16_value; }
@@ -132,6 +139,7 @@ public:
     inline void *as_ptr() const { verify_no_crash(etype_ptr == _value_type); return _value.ptr_value; }
     inline const xstring &as_str() const { verify_no_crash(etype_str == _value_type); return *cast<xstring>(); }
     inline const vec2i &as_vec2i() const { verify_no_crash(etype_vec2i == _value_type); return *cast<vec2i>(); }
+    inline const tile2i &as_tile2i() const { verify_no_crash(etype_tile2i == _value_type); return *cast<tile2i>(); }
 
     inline variant_t &as_bool(bool v) { return assign(v, etype_bool); }
     inline variant_t &as_u16(uint16_t v) { assign(v, etype_u16); return *this; }
@@ -142,6 +150,7 @@ public:
     inline variant_t &as_ptr(void *v) { return assign(v, etype_ptr); }
     inline variant_t &as_str(const xstring &v) { return assign(v, etype_str); }
     inline variant_t &as_vec2i(vec2i v) { return assign(v, etype_vec2i); }
+    inline variant_t &as_tile2i(tile2i v) { return assign(v, etype_tile2i); }
 
     inline bool bool_or_def(const bool def) const { return is_bool() ? as_bool() : def; }
     inline int32_t int32_or_def(const int32_t def) const { return is_int32() ? as_int32() : def; }
@@ -150,6 +159,7 @@ public:
     inline float float_or_def(const float def) const { return is_float() ? as_float() : def; }
     inline const xstring &str_or_def(const xstring &def)	const { return is_str() ? as_str() : def; }
     inline vec2i vec2i_or_def(const vec2i &def) const { return is_vec2i() ? as_vec2i() : def; }
+    inline tile2i tile2i_or_def(const tile2i &def) const { return is_tile2i() ? as_tile2i() : def; }
     inline uint8_t value_type() const { return _value_type; }
 
     using pvoid = void *;
@@ -167,6 +177,7 @@ public:
         case (etype_ptr): new (cast<pvoid>()) pvoid(); break;
         case (etype_str): new (cast<xstring>()) xstring(); break;
         case (etype_vec2i): new (cast<vec2i>()) vec2i(); break;
+        case (etype_tile2i): new (cast<tile2i>()) tile2i(); break;
         }
     }
 
@@ -197,6 +208,12 @@ public:
             result.printf("vec2i[%d,%d]", v.x, v.y);
             break;
         }
+        case (etype_vec2i):
+        {
+            const tile2i &v = as_tile2i();
+            result.printf("tile2i[%d,%d]", v.x(), v.y());
+            break;
+        }
         default:
             verify_no_crash(false);
         };
@@ -220,6 +237,12 @@ public:
         case (etype_vec2i): {
             const vec2i &v = as_vec2i();
             result.printf("%d,%d", v.x, v.y);
+            break;
+        }
+        case (etype_tile2i):
+        {
+            const tile2i &v = as_tile2i();
+            result.printf("%d,%d", v.x(), v.y());
             break;
         }
         default:
@@ -330,6 +353,11 @@ struct bvariant_map {
     inline vec2i vec2i_or_def(const xstring &name, const vec2i &def) const { 
         const auto &v = value(name);
         return v.is_vec2i() ? v.as_vec2i() : def; 
+    }
+
+    inline tile2i tile2i_or_def(const xstring &name, const tile2i &def) const {
+        const auto &v = value(name);
+        return v.is_tile2i() ? v.as_tile2i() : def;
     }
 
     inline uint8_t value_type(const xstring &name) const { 

@@ -141,7 +141,7 @@ struct formation {
 ANK_CONFIG_PROPERTY(formation, 
     batalion_id, figure_type, 
     num_figures, morale, experience,
-    is_at_fort);
+    is_at_fort, home);
 
 struct formations_t {
     void clear_all();

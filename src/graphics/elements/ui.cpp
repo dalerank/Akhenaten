@@ -636,9 +636,9 @@ scrollbar_t &ui::scrollbar(scrollbar_t &scr, vec2i pos, int &value, vec2i size) 
 }
 
 void ui::element::load(archive arch, element *parent, element::items &items) {
-    vec2i parent_offset = parent ? parent->pos : vec2i{0, 0};
     debug_tag = arch.r_int("debug_tag");
-    pos = arch.r_vec2i("pos") + parent_offset;
+    parent_id = parent ? parent->id : xstring();
+    pos = arch.r_vec2i("pos");
     size = arch.r_size2i("size");
     enabled = arch.r_bool("enabled", true);
     fill_width = arch.r_bool("fill_width", false);
@@ -699,11 +699,32 @@ void ui::einner_panel::load(archive arch, element *parent, items &elems) {
 
 void ui::widget::draw(UiFlags flags) {
     vec2i bsize = ui["background"].pxsize();
-    margini current_margin{ 0, 0, bsize.x, bsize.y };
     for (auto &e : elements) {
+        if (!e->enabled) {
+            continue;
+        }
+
+        margini current_margin{ 0, 0, bsize.x, bsize.y };
+        vec2i poffset = { 0, 0 };
+        bool use_poffset = false;
+        if (!e->parent_id.empty()) {
+            const auto &parent = ui[e->parent_id];
+            const vec2i ebsize = parent.pxsize();
+            const vec2i top_offset = g_state._offset.empty() ? vec2i{ 0, 0 } : g_state._offset.top();
+            poffset = top_offset + parent.pos;
+            use_poffset = true;
+            current_margin = { 0, 0, ebsize.x, ebsize.y };
+        }
+
         e->update_pos(current_margin);
-        if (e->enabled) {
-            e->draw(flags);
+        if (use_poffset) {
+            g_state._offset.push(poffset);
+        }
+
+        e->draw(flags);   
+
+        if (use_poffset) {
+            g_state._offset.pop();
         }
     }
 }
