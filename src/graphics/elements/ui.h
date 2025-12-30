@@ -100,6 +100,7 @@ image_button &imgcancel_button(vec2i pos, std::function<void(int, int)> cb);
 arrow_button &arw_button(vec2i pos, bool down, bool tiny = false, UiFlags_ flags = UiFlags_None);
 scrollbar_t &scrollbar(scrollbar_t &scrollbar, vec2i pos, int &value, vec2i size = {-1, -1});
 void fill_rect(vec2i offset, vec2i size, color c);
+vec2i current_offset();
 
 pcstr str(int group, int id);
 pcstr str_from_key(pcstr key);

@@ -9,6 +9,7 @@
 #include "core/vec2i.h"
 #include "core/archive.h"
 #include "core/variant.h"
+#include "grid/point.h"
 
 #include <vector>
 #include <string>
@@ -69,6 +70,19 @@ namespace js_helpers {
         return result;
     }
     
+    template<>
+    inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
+        int x = 0, y = 0;
+        if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+            js_getproperty(J, idx, "x"); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);            
+            js_getproperty(J, idx, "y"); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        } else if (js_isarray(J, idx)) {
+            js_getindex(J, idx, 0); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            js_getindex(J, idx, 1); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        }
+        return tile2i(x, y);
+    }
+    
     template<typename T>
     inline void js_push_value(js_State *J, T value);
     
@@ -107,6 +121,13 @@ namespace js_helpers {
         js_newobject(J);
         js_pushnumber(J, value.x); js_setproperty(J, -2, "x");
         js_pushnumber(J, value.y); js_setproperty(J, -2, "y");
+    }
+    
+    template<>
+    inline void js_push_value<tile2i>(js_State *J, tile2i value) {
+        js_newobject(J);
+        js_pushnumber(J, value.x()); js_setproperty(J, -2, "x");
+        js_pushnumber(J, value.y()); js_setproperty(J, -2, "y");
     }
     
     template<>

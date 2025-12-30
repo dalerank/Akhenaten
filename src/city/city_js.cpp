@@ -41,5 +41,10 @@ std::optional<bvariant> __city_get_battalion_property(int fid, pcstr property) {
 }
 ANK_FUNCTION_2(__city_get_battalion_property)
 
+void __city_camera_go_to(tile2i tile) {
+    camera_go_to_mappoint(tile);
+}
+ANK_FUNCTION_1(__city_camera_go_to)
+
 void js_register_city_objects(js_State *J) {
 }

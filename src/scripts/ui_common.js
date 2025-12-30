@@ -23,7 +23,7 @@ ui.button = function(config) {
     flags |= (config.border === false ? UiFlags_NoBorder : 0)
     flags |= (config.body === false ? UiFlags_NoBody : 0)
 
-    __ui_draw_button(config.text, config.pos, config.size, config.font, flags)
+    return __ui_draw_button(config.text, config.pos, config.size, config.font, flags)
 }
 
 ui.label = function(text, pos, font) {
@@ -33,6 +33,8 @@ ui.label = function(text, pos, font) {
 
     __ui_draw_label(text, pos, font)
 }
+
+ui.window_city_show = __ui_window_city_show
 
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
