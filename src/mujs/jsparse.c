@@ -248,6 +248,16 @@ static js_Ast *propassign(js_State *J, js_AstModifier *modifiers)
 {
 	js_Ast *name, *value, *arg, *body, *prop;
 
+	/* Check if property starts with @ - if so, add [property] modifier */
+	if (jsP_accept(J, '@')) {
+		/* Add property modifier */
+		js_AstModifier *property_mod = js_malloc(J, sizeof(js_AstModifier));
+		property_mod->key = js_intern(J, "property");
+		property_mod->value = js_intern(J, "true");
+		property_mod->next = modifiers;
+		modifiers = property_mod;
+	}
+
 	name = propname(J);
 
 	if (J->lookahead != ':' && name->type == AST_IDENTIFIER) {
