@@ -6,6 +6,7 @@
 #include "grid/point.h"
 #include "core/tokenum.h"
 #include "core/svector.h"
+#include "core/archive.h"
 
 class figure;
 constexpr uint8_t MAX_BATALIONS = 6;
@@ -136,6 +137,7 @@ struct formation {
 
     svector<figure *, max_figures_count> valid_figures();
 };
+ANK_CONFIG_PROPERTY(formation, batalion_id, figure_type, num_figures);
 
 struct formations_t {
     void clear_all();
@@ -146,6 +148,7 @@ struct formations_t {
     std::array<formation, MAX_FORMATIONS> formations;
 
     formation *get_from_herd(int index);
+    formation_id get_battalion_id_from_index(int sequence_index);
 };
 
 extern formations_t g_formations;
@@ -191,8 +194,6 @@ void formation_calculate_batalion_totals();
 
 int formation_get_num_forts();
 int formation_get_max_forts();
-
-int formation_for_legion(int legion_index);
 
 void formation_change_morale(formation* m, int amount);
 bool formation_has_low_morale(formation* m);

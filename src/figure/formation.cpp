@@ -200,12 +200,14 @@ int formation_get_max_forts() {
     return MAX_BATALIONS + (!!game_features::gameplay_enable_extra_forts ? 4 : 0);
 }
 
-int formation_for_legion(int legion_index) {
+formation_id formations_t::get_battalion_id_from_index(int sequence_index) {
     int index = 1;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id) {
-            if (index++ == legion_index)
+        const auto &form = g_formations.formations[i];
+        if (form.in_use && form.own_batalion) {
+            if (index++ == sequence_index) {
                 return i;
+            }
         }
     }
     return 0;
