@@ -345,6 +345,76 @@ static js_Ast *find_object_property(js_Ast *objlist, const char *name)
 	return NULL;
 }
 
+/* Helper functions to create AST nodes */
+static js_Ast *new_ast_node(js_State *J, enum js_AstType type, js_Ast *a, js_Ast *b, js_Ast *c, js_Ast *d, int line)
+{
+	js_Ast *node = js_malloc(J, sizeof *node);
+	node->type = type;
+	node->line = line;
+	node->a = a;
+	node->b = b;
+	node->c = c;
+	node->d = d;
+	node->number = 0;
+	node->string = NULL;
+	node->jumps = NULL;
+	node->casejump = 0;
+	node->modifiers = NULL;
+	node->parent = NULL;
+	if (a) a->parent = node;
+	if (b) b->parent = node;
+	if (c) c->parent = node;
+	if (d) d->parent = node;
+	node->gcnext = J->gcast;
+	J->gcast = node;
+	return node;
+}
+
+static js_Ast *new_str_ast_node(js_State *J, enum js_AstType type, const char *s, int line)
+{
+	js_Ast *node = new_ast_node(J, type, 0, 0, 0, 0, line);
+	node->string = s;
+	return node;
+}
+
+/* Helper to create a getter function that calls __property_getter if it exists */
+static js_Ast *create_property_getter_ast(js_State *J, js_Ast *prop_node, const char *property_name)
+{
+	/* Create AST for: function() { return this.__property_getter ? this.__property_getter("property_name") : undefined; } */
+	int line = prop_node->line;
+	
+	/* this */
+	js_Ast *this_node = new_ast_node(J, EXP_THIS, 0, 0, 0, 0, line);
+	
+	/* this.__property_getter */
+	js_Ast *property_getter_name = new_str_ast_node(J, AST_IDENTIFIER, js_intern(J, "__property_getter"), line);
+	js_Ast *property_getter_member = new_ast_node(J, EXP_MEMBER, this_node, property_getter_name, 0, 0, line);
+	
+	/* "property_name" */
+	js_Ast *prop_name_str = new_str_ast_node(J, EXP_STRING, js_intern(J, property_name), line);
+	
+	/* this.__property_getter("property_name") */
+	js_Ast *prop_name_list = new_ast_node(J, AST_LIST, prop_name_str, 0, 0, 0, line);
+	js_Ast *property_getter_call = new_ast_node(J, EXP_CALL, property_getter_member, prop_name_list, 0, 0, line);
+	
+	/* undefined */
+	js_Ast *undefined_node = new_ast_node(J, EXP_UNDEF, 0, 0, 0, 0, line);
+	
+	/* this.__property_getter ? this.__property_getter("property_name") : undefined */
+	js_Ast *cond_expr = new_ast_node(J, EXP_COND, property_getter_member, property_getter_call, undefined_node, 0, line);
+	
+	/* return ... */
+	js_Ast *return_stmt = new_ast_node(J, STM_RETURN, cond_expr, 0, 0, 0, line);
+	
+	/* function body: { return ... } */
+	js_Ast *body_list = new_ast_node(J, AST_LIST, return_stmt, 0, 0, 0, line);
+	
+	/* function() { ... } */
+	js_Ast *fun_ast = new_ast_node(J, EXP_FUN, NULL, NULL, body_list, 0, line);
+	
+	return fun_ast;
+}
+
 static void cobject(JF, js_Ast *list)
 {
 	js_Ast *head = list;
@@ -356,9 +426,15 @@ static void cobject(JF, js_Ast *list)
 		/* Check if this property has [property] modifier - handle it separately */
 		if (kv->type == EXP_PROP_VAL && kv->modifiers && has_modifier(kv->modifiers, "property")) {
 			/* Check if value is an object literal with get/set */
-			if (kv->b && kv->b->type == EXP_OBJECT && kv->b->a) {
-				js_Ast *getter_prop = find_object_property(kv->b->a, "get");
-				js_Ast *setter_prop = find_object_property(kv->b->a, "set");
+			if (kv->b && kv->b->type == EXP_OBJECT) {
+				js_Ast *getter_prop = NULL;
+				js_Ast *setter_prop = NULL;
+				
+				/* Find getter and setter if object has properties */
+				if (kv->b->a) {
+					getter_prop = find_object_property(kv->b->a, "get");
+					setter_prop = find_object_property(kv->b->a, "set");
+				}
 				
 				/* Emit getter if present */
 				if (getter_prop && getter_prop->b) {
@@ -400,17 +476,29 @@ static void cobject(JF, js_Ast *list)
 					emit(J, F, OP_INITSETTER);
 				}
 				
-				/* If neither getter nor setter found, treat as normal property */
+				/* If neither getter nor setter found, create getter that calls __property_getter */
 				if (!getter_prop && !setter_prop) {
+					const char *property_name;
+					if (prop->type == AST_IDENTIFIER || prop->type == EXP_STRING)
+						property_name = prop->string;
+					else if (prop->type == EXP_NUMBER) {
+						char num_buf[64];
+						snprintf(num_buf, sizeof(num_buf), "%g", prop->number);
+						property_name = js_intern(J, num_buf);
+					} else {
+						jsC_error(J, prop, "invalid property name in object initializer");
+					}
+					
+					/* Emit property name for getter */
 					if (prop->type == AST_IDENTIFIER || prop->type == EXP_STRING)
 						emitstring(J, F, OP_STRING, prop->string);
 					else if (prop->type == EXP_NUMBER)
 						emitnumber(J, F, prop->number);
-					else
-						jsC_error(J, prop, "invalid property name in object initializer");
 					
-					cexp(J, F, kv->b);
-					emit(J, F, OP_INITPROP);
+					/* Create and emit getter function that calls __property_getter */
+					js_Ast *getter_ast = create_property_getter_ast(J, prop, property_name);
+					emitfunction(J, F, newfun(J, getter_ast, NULL, getter_ast->b, getter_ast->c, 0));
+					emit(J, F, OP_INITGETTER);
 				}
 			} else {
 				/* Not an object literal, treat as normal property */

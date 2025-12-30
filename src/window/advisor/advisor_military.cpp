@@ -45,20 +45,8 @@ int ui::advisor_military_window::draw_background(UiFlags flags) {
     else if (g_city.distant_battle.kingdome_army_is_traveling_forth()) { distant_battle_text_id = 14; }
     else if (g_city.distant_battle.months_until_distant_battle() > 0) { distant_battle_text_id = 13; }
 
-    int bullet_x = 60;
-    int text_x = 80;
-    image_desc group_bullet{PACK_GENERAL, 158};
-
-    vec2i pos = ui["forts_area"].pos;
     int num_legions = formation_get_num_forts();
-    if (num_legions <= 0) {
-        ui["enemy_text"].pos.y = pos.y + 10;
-        ui["distant_text"].pos.y = pos.y + 30;
-    } else {
-        // has forts
-        ui["enemy_text"].pos.y = pos.y + 20;
-        ui["distant_text"].pos.y = pos.y + 40;
-
+    if (num_legions > 0) {
         ui["forts_text"].text_var("%s %u %s %s %u", ui::str(8, 46), g_city.military.total_soldiers, 
                                                     ui::str(51, 7), ui::str(8, 48), g_city.military.total_batalions);
     }
