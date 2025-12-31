@@ -103,7 +103,7 @@ bool building_recruiter::create_soldier() {
             f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
         }
     }
-    formation_calculate_figures();
+    g_formations.calculate_figures();
     return formation_id ? 1 : 0;
 }
 

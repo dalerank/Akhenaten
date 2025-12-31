@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "core/archive.h"
+
 struct city_military_t {
     uint8_t total_batalions;
     uint8_t total_soldiers;
@@ -18,8 +20,13 @@ struct city_military_t {
     void start_native_attack();
     void decrease_native_attack_duration();
 };
+ANK_CONFIG_PROPERTY(city_military_t,
+    total_batalions,
+    total_soldiers,
+    kingdome_service_batalions,
+    infantry_batalions,
+    native_attack_duration);
 
 void city_military_dispatch_to_distant_battle(int strength);
-int city_military_distant_battle_kingdome_army_is_traveling_back();
 
 int city_military_distant_battle_kingdome_months_traveled();

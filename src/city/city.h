@@ -32,7 +32,6 @@
 #include "city/city_hotkeys_handler.h"
 #include "grid/bookmark.h"
 #include "building/building_house_demands.h"
-#include "scenario/distant_battle.h"
 
 struct empire_city;
 struct city_overlay;
@@ -49,8 +48,6 @@ struct city_t {
     victory_state_t victory_state;
     city_maintenance_t maintenance;
     e_availability advisors[ADVISOR_MAX];
-
-    distant_battles_t distant_battle;
 
     city_finance_t finance;
     city_resources_t resource;
