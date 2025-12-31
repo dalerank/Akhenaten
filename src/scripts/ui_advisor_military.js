@@ -30,8 +30,6 @@ advisor_military_window {
                                    forts_text  : text({pos[30, 50], font:FONT_NORMAL_BLACK_ON_LIGHT})
                                }
                              })
-
-        no_legions   : text({text{group:51, id:16}, pos[64, 200], wrap:496, font:FONT_NORMAL_BLACK_ON_DARK, multiline:true})
     }
 }
 
@@ -42,13 +40,28 @@ function get_figure_type_str(figure_type) {
     return ""
 }
 
-function get_morale_str(morale) {
-    return __loc(138, 37 + morale / 5)
+[event=advisor_military_window_init]
+function advisor_military_window_init(window) {    
+    var enemy_text_id = 8
+    if (city.figures.enemies) { enemy_text_id = 10 }
+    else if (city.figures.kingdome_soldiers) { enemy_text_id = 11 }
+    // else if (scenario_invasion_exists_upcoming()) { enemy_text_id = 9; }
+
+    var distant_battle_text_id = 12
+    if (empire.active_battle.egyptian_months_to_travel_back > 0) { distant_battle_text_id = 15 }
+    else if (empire.active_battle.egyptian_months_to_travel_forth > 0) { distant_battle_text_id = 14 }
+    else if (empire.active_battle.months_until_battle > 0) { distant_battle_text_id = 13 }
+
+    window.enemy_text.text = __loc(51, enemy_text_id)
+    window.distant_text.text = __loc(51, distant_battle_text_id)
+    
+    var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
+    var total_batalions_str = __loc(51, 8) + " " + city.military.total_batalions
+    window.forts_text.text = total_soldiers_str + " " + __loc(8, 48) + " " + total_batalions_str
 }
 
-
 [event=advisor_military_window_draw]
-function advisor_military_window_draw_battalions(window) {     
+function advisor_military_window_draw(window) {     
     if (city.num_forts > 0) {
         var exp_image = get_image("pharaoh_general/paneling_00537")
         var goto_legion_image = get_image("pharaoh_general/paneling_00531")
@@ -66,7 +79,7 @@ function advisor_military_window_draw_battalions(window) {
             var num_figures_str = "" + form.num_figures + " " + get_figure_type_str(form.figure_type)
             ui.label(num_figures_str, vec2i(84, 100 + 44 * i), FONT_NORMAL_BLACK_ON_DARK);
 
-            var morale_str = get_morale_str(form.morale)
+            var morale_str = __loc(138, 37 + form.morale / 5)
             ui.label(morale_str, vec2i(224, 91 + 44 * i), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered);
             
             var experience_level = form.experience / 100
@@ -74,21 +87,25 @@ function advisor_military_window_draw_battalions(window) {
             ui.button({ text:"", pos{x:314, y:83 + 44 * i}, size[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
             ui.image(exp_image, { x:317, y:86 + 44 * i})
  
-            var clicked = ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ] })
-            if (clicked) {
-                log_info("akhenaten: goto legion " + form.home)
+            var goto_clicked = ui.button({text:"", pos{ x:394, y:83 + 44 * i }, size[ 30, 30 ] })
+            if (goto_clicked) {
                 city.camera_go_to(form.home)
                 ui.window_city_show()
             }
             ui.image(goto_legion_image, { x:397, y:86 + 44 * i });
 
             fort_image.tid += (form.is_at_fort ? 1 : 0)
-            ui.button({text:"", pos:{ x:464, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
+            var back_to_fort_clicked = ui.button({text:"", pos:{ x:464, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
+            if (back_to_fort_clicked) {
+                form.return_home()
+            }
             ui.image(fort_image, { x:467, y:86 + 44 * i });
 
             kingdom_service.tid += (form.empire_service ? 1 : 0)
             ui.button({text:"", pos:{ x:544, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));
         }
+    } else {
+        ui.label(__loc(51, 16), vec2i(64, 200), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered)
     }
 }
