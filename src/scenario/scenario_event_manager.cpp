@@ -16,6 +16,7 @@
 #include "js/js_game.h"
 #include "city/city.h"
 #include "dev/debug.h"
+#include "scenario/distant_battle.h"
 #include "graphics/elements/lang_text.h"
 
 constexpr int MAX_EVENTS = 150;
@@ -351,8 +352,8 @@ void event_manager_t::process_event_distant_battle(const event_ph_t &event, bool
         PHRASE_distant_battle_title_P, template_str, reason,
         event.event_id, 0);
 
-    g_city.distant_battle.init_distant_battle(event.amount.value);
-    g_city.distant_battle.battle.city = event.city_id;
+    g_distant_battle.init_distant_battle(event.amount.value);
+    g_distant_battle.battle.city = event.city_id;
 }
 
 void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
