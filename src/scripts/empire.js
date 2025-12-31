@@ -11,17 +11,23 @@ empire_traders {
 }
 
 empire {
-    has_distant_battle : __empire_has_distant_battle
-    distant_battle_city : __empire_distant_battle_city
-
     get_city : function(city_id) {
         if (!city_id) {
             return null
         }
-
+        
         return {
             id: city_id        
             empire_object: __empire_get_city_empire_object(city_id)
         }
+    }
+    
+    has_distant_battle : __empire_has_distant_battle
+    active_battle {
+        __property_getter: function(property) { return __game_get_active_battle_property(property) }
+        @egyptian_months_to_travel_back { }
+        @kingdome_army_is_traveling_forth { }
+        @months_until_distant_battle { }
+        @city { }
     }
 }
