@@ -59,7 +59,7 @@ void formation_batalion_update_recruit_status(building* b) {
                 too_many--;
             }
         }
-        formation_calculate_figures();
+        g_formations.calculate_figures();
     }
 }
 
@@ -129,7 +129,7 @@ void formation_batalion_return_home(formation* m) {
         return;
     }
 
-    m->is_at_fort = 1;
+    m->is_at_fort = true;
     formation_batalion_restore_layout(m);
     for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
         figure* f = figure_get(m->figures[i]);
@@ -263,7 +263,7 @@ int formation_batalion_curse(void) {
     }
 
     best_legion->cursed_by_seth = 96;
-    formation_calculate_figures();
+    g_formations.calculate_figures();
     return 1;
 }
 
