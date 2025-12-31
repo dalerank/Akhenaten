@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "grid/figure.h"
 #include "core/custom_span.hpp"
+#include "core/archive.h"
 
 struct city_figures_t {
     uint8_t fish_number;
@@ -26,6 +27,8 @@ struct city_figures_t {
 
     int total_invading_enemies() const;
 };
+ANK_CONFIG_PROPERTY(city_figures_t,
+    enemies, kingdome_soldiers)
 
 void figure_clear_all();
 
