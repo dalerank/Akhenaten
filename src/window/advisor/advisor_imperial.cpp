@@ -23,6 +23,7 @@
 #include "window/popup_dialog.h"
 #include "window/set_salary.h"
 #include "graphics/screen.h"
+#include "scenario/distant_battle.h"
 #include "game/game.h"
 
 ui::advisor_imperial_window g_advisor_imperial_window;
@@ -45,8 +46,8 @@ int ui::advisor_imperial_window::get_request_status(int index) {
     } 
     
     if (request.resource == RESOURCE_TROOPS
-         && g_city.distant_battle.months_until_distant_battle() > 0 
-         && !g_city.distant_battle.kingdome_army_is_traveling_forth()) {
+         && g_distant_battle.battle.months_until_battle > 0 
+         && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
 
         if (g_city.military.total_batalions <= 0) {
             return STATUS_NO_LEGIONS_AVAILABLE;
@@ -128,8 +129,8 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
     const vec2i allow_offset = button_request_allow.pos - button_request.pos;
 
     int start_req_index = 0;
-    if (g_city.distant_battle.months_until_distant_battle() > 0
-        && !g_city.distant_battle.kingdome_army_is_traveling_forth()) {
+    if (g_distant_battle.battle.months_until_battle > 0
+        && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
         
         // can send to distant battle
         vec2i request_pos = button_request.pos + vec2i{ 0, 0 * button_request.size.y };
@@ -141,16 +142,16 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
 
         ui.icon(request_pos + icon_offset, RESOURCE_TROOPS);
 
-        bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(g_city.distant_battle.battle_city())->name_id));
+        bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(g_distant_battle.battle.city)->name_id));
         ui.label(distant_battle_text, request_pos + amount_offset, FONT_NORMAL_WHITE_ON_DARK);
 
         int strength_text_id = 75;
-        int enemy_strength = g_city.distant_battle.enemy_strength();
+        int enemy_strength = g_distant_battle.enemy_strength();
         if (enemy_strength < 46) { strength_text_id = 73;}
         else if (enemy_strength < 89) { strength_text_id = 74; } 
 
         bstring128 distant_strenght_text;
-        distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_city.distant_battle.months_until_distant_battle());
+        distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_distant_battle.battle.months_until_battle);
         ui.label(distant_strenght_text, request_pos + saved_offset, FONT_NORMAL_WHITE_ON_DARK);
         start_req_index = 1;
     }

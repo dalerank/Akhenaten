@@ -22,7 +22,7 @@ festival_square_info_window festival_square_infow;
 
 void festival_square_info_window::update_festival_state() {
     if (g_city.festival.is_planned()) {
-        int size = g_city.festival.selected_size();
+        int size = g_city.festival.selected_size;
         int months_left = g_city.festival.months_till_next();
         int planned_month = (game.simtime.month + months_left) % simulation_time_t::months_in_year;
         int festival_text_iffs[] = { 0, 10, 20, 31 };

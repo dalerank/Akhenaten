@@ -38,6 +38,7 @@
 #include "window/resource_settings.h"
 #include "game/game_config.h"
 #include "window/trade_opened.h"
+#include "scenario/distant_battle.h"
 #include "platform/renderer.h"
 #include "game/game.h"
 
@@ -367,11 +368,11 @@ void empire_window::draw_city_info(const empire_object* object) {
 }
 
 void empire_window::draw_kingdome_army_info(const empire_object* object) {
-    if (g_city.distant_battle.kingdome_army_is_traveling()) {
+    if (g_distant_battle.battle.egyptian_months_to_travel_back > 0) {
         if (city_military_distant_battle_kingdome_months_traveled() == object->distant_battle_travel_months) {
             vec2i offset{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68};
             int text_id;
-            if (g_city.distant_battle.kingdome_army_is_traveling_forth())
+            if (g_distant_battle.battle.egyptian_months_to_travel_forth)
                 text_id = 15;
             else {
                 text_id = 16;
@@ -383,8 +384,8 @@ void empire_window::draw_kingdome_army_info(const empire_object* object) {
 }
 
 void empire_window::draw_enemy_army_info(const empire_object* object) {
-    if (g_city.distant_battle.months_until_distant_battle() > 0) {
-        if (g_city.distant_battle.enemy_months_traveled() == object->distant_battle_travel_months) {
+    if (g_distant_battle.battle.months_until_battle > 0) {
+        if (g_distant_battle.enemy_months_traveled() == object->distant_battle_travel_months) {
             lang_text_draw_multiline(sell_res_group, 14, vec2i{(min_pos.x + max_pos.x - 240) / 2, max_pos.y - 68}, 240, FONT_NORMAL_BLACK_ON_LIGHT);
         }
     }
@@ -555,15 +556,15 @@ void empire_window::draw_empire_object(const empire_object &obj) {
     }
 
     if (obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
-        if (g_city.distant_battle.months_until_distant_battle() <= 0)
+        if (g_distant_battle.battle.months_until_battle <= 0)
             return;
 
-        if (g_city.distant_battle.enemy_months_traveled() != obj.distant_battle_travel_months)
+        if (g_distant_battle.enemy_months_traveled() != obj.distant_battle_travel_months)
             return;
     }
     
     if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY) {
-        if (!g_city.distant_battle.kingdome_army_is_traveling())
+        if (!g_distant_battle.kingdome_army_is_traveling())
             return;
 
         if (city_military_distant_battle_kingdome_months_traveled() != obj.distant_battle_travel_months)
@@ -613,7 +614,7 @@ void empire_window::draw_map() {
         ui::eimage(image_id, draw_pos);
     }
 
-    ui.draw(empire_window_draw{ draw_offset });
+    ui.event(empire_window_draw{ draw_offset });
 
     graphics_reset_clip_rectangle();
 }
