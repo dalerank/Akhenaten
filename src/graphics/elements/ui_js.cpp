@@ -26,6 +26,25 @@ ANK_FUNCTION_3(__ui_draw_label);
 void __ui_window_city_show() { window_city_show(); }
 ANK_FUNCTION(__ui_window_city_show)
 
+pcstr __ui_element_get_text(pcstr element_id) {
+    ui::widget* w = ui::get_current_widget();
+    if (w && element_id) {
+        ui::element& elem = (*w)[element_id];
+        return elem.text().c_str();
+    }
+    return "";
+}
+ANK_FUNCTION_1(__ui_element_get_text)
+
+void __ui_element_set_text(pcstr element_id, pcstr text) {
+    ui::widget* w = ui::get_current_widget();
+    if (w && element_id && text) {
+        ui::element& elem = (*w)[element_id];
+        elem.text(text);
+    }
+}
+ANK_FUNCTION_2(__ui_element_set_text)
+
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_ui_objects(js_State *J) {
     _R(UiFlags_None)

@@ -24,6 +24,7 @@
 #include "mujs/jsvalue.h"
 #include "mujs/jscompile.h"
 #include "widget/debug_console.h"
+#include "graphics/elements/ui.h"
 
 #include <vector>
 #include <sstream>
@@ -131,35 +132,33 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         js_getglobal(J, funcname);
         js_pushnull(J); // this
 
-        // Build 1st argument: a plain object with provided properties
         js_newobject(J);
+        
+        // First pass: add regular properties
+        bool has_ui_elements = false;
         for (const auto &kv : object) {
             const xstring &key = kv.first;
             const bvariant &val = kv.second;
+            
+            // Skip UI element markers in first pass
+            bstring64 keystr = key.c_str();
+            if (keystr.starts_with("__ui_elem_")) {
+                has_ui_elements = true;
+                continue;
+            }
 
             switch (val.value_type()) {
-            case bvariant::etype_bool:
-                js_pushboolean(J, val.as_bool());
-                break;
-            case bvariant::etype_int32:
-                js_pushnumber(J, (double)val.as_int32());
-                break;
-            case bvariant::etype_uint32:
-                js_pushnumber(J, (double)val.as_uint32());
-                break;
-            case bvariant::etype_u16:
-                js_pushnumber(J, (double)val.as_u16());
-                break;
-            case bvariant::etype_float:
-                js_pushnumber(J, (double)val.as_float());
-                break;
-            case bvariant::etype_str:
-                js_pushstring(J, val.as_str().c_str());
-                break;
+            case bvariant::etype_bool: js_pushboolean(J, val.as_bool()); break;
+            case bvariant::etype_int32: js_pushnumber(J, (double)val.as_int32()); break;
+            case bvariant::etype_uint32: js_pushnumber(J, (double)val.as_uint32()); break;
+            case bvariant::etype_u16: js_pushnumber(J, (double)val.as_u16()); break;
+            case bvariant::etype_float: js_pushnumber(J, (double)val.as_float()); break;
+            case bvariant::etype_str: js_pushstring(J, val.as_str().c_str()); break;
             case bvariant::etype_ptr:
                 // No direct pointer transport to JS; pass null
                 js_pushnull(J);
                 break;
+
             case bvariant::etype_vec2i:
                 js_newobject(J);
                 {
@@ -177,6 +176,34 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             }
 
             js_setproperty(J, -2, key.c_str());
+        }
+                
+        if (has_ui_elements) {
+            for (const auto &kv : object) {
+                const xstring &key = kv.first;
+                const bvariant &val = kv.second;         
+
+                bstring64 keystr = key.c_str();
+                if (keystr.starts_with("__ui_elem_")) {
+                    xstring element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
+                    
+                    // Call helper function to create proxy object
+                    js_getglobal(J, "ui_create_element_proxy");
+                    verify_no_crash(js_iscallable(J, -1));
+                    js_pushnull(J);  // 'this' context
+                    js_pushstring(J, element_id.c_str());
+
+                    int result = js_pcall(J, 1);
+                    if (result != 0) {
+                        logs::error("JS ui_create_element_proxy() callback error: %s", js_tostring(J, -1));
+                        js_pop(J, 1);
+                        continue;
+                    }
+                    
+                    // Set the element as property (without __ui_elem_ prefix)
+                    js_setproperty(J, -2, element_id.c_str());
+                }
+            }
         }
 
         // Call with 1 argument (the object)

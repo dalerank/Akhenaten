@@ -141,6 +141,7 @@ namespace ui {
         std::vector<universal_button> buttons;
         svector<scrollbar_t*, 32> scrollbars;
         svector<scrollable_list*, 32> scrollable_lists;
+        widget* current_widget = nullptr;
 
         void remove_scrolbar(scrollbar_t *p) {
             auto it = std::find(scrollbars.begin(), scrollbars.end(), p);
@@ -261,6 +262,10 @@ void ui::end_widget() {
     if (!g_state._offset.empty()) {
         g_state._offset.pop();
     }
+}
+
+ui::widget* ui::get_current_widget() {
+    return g_state.current_widget;
 }
 
 bool ui::handle_mouse(const mouse *m) {
@@ -765,8 +770,23 @@ ui::element& ui::widget::operator[](pcstr id) {
     return (it != elements.end() ? **it : ui::dummy_element);
 }
 
-void ui::widget::draw(pcstr evname, const bvariant_map &js_j) {
-    js_call_event_handlers(evname, js_j);
+void ui::widget::event(pcstr evname, const bvariant_map &js_j) {
+    widget* prev_widget = g_state.current_widget;
+    g_state.current_widget = this;
+    
+    bvariant_map enhanced_js_j = js_j;
+    for (const auto &elem : elements) {
+        if (!elem->id.empty()) {
+            bstring64 elmid("__ui_elem_", elem->id.c_str());
+            bstring64 elmkey("__ui_elem:", elem->id.c_str());
+            enhanced_js_j[elmid.c_str()] = bvariant(elmkey);
+        }
+    }
+    
+    js_call_event_handlers(evname, enhanced_js_j);
+    
+    // Restore previous widget
+    g_state.current_widget = prev_widget;
 }
 
 void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {
