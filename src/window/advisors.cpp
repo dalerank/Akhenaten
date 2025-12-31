@@ -163,7 +163,7 @@ void window_advisors::init() {
     g_city.health.update_month();
 
     g_city.resource.calculate_food_stocks_and_supply_wheat();
-    formation_calculate_figures();
+    g_formations.calculate_figures();
 
     g_city.ratings_update_explanations();
 

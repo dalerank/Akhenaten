@@ -58,10 +58,10 @@ int ui::hold_festival_window::draw_background(UiFlags flags) {
             continue;
         }
 
-        ui[god_id].select(god == g_city.festival.selected_god());
+        ui[god_id].select(god == g_city.festival.selected_god);
     }
 
-    ui["festival_type"] = ui::str(58, 30 + g_city.festival.selected_size());
+    ui["festival_type"] = ui::str(58, 30 + g_city.festival.selected_size);
 
     return 0;
 }
