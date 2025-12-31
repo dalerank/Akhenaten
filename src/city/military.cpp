@@ -58,15 +58,11 @@ void city_military_t::decrease_native_attack_duration() {
 
 static auto &city_data = g_city;
 
-void city_military_dispatch_to_distant_battle(int roman_strength) {
-    city_data.distant_battle.battle.egyptian_months_to_travel_forth = scenario_distant_battle_kingdome_travel_months();
-    city_data.distant_battle.battle.egyptian_strength = roman_strength;
-}
-
-int city_military_distant_battle_kingdome_army_is_traveling_back() {
-    return city_data.distant_battle.battle.egyptian_months_to_travel_back > 0;
+void city_military_dispatch_to_distant_battle(int egyptian_strength) {
+    g_distant_battle.battle.egyptian_months_to_travel_forth = scenario_distant_battle_kingdome_travel_months();
+    g_distant_battle.battle.egyptian_strength = egyptian_strength;
 }
 
 int city_military_distant_battle_kingdome_months_traveled() {
-    return city_data.distant_battle.battle.egyptian_months_traveled;
+    return g_distant_battle.battle.egyptian_months_traveled;
 }

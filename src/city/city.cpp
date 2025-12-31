@@ -47,6 +47,7 @@
 #include "scenario/criteria.h"
 #include "graphics/clouds.h"
 #include "city/city_religion_osiris.h"
+#include "scenario/distant_battle.h"
 
 #include <core/string.h>
 #include <string.h>
@@ -74,7 +75,8 @@ void city_t::init() {
     population.monthly.next_index = 0;
     population.monthly.count = 0;
     festival.months_since_festival = 1;
-    festival.selected.size = FESTIVAL_SMALL;
+    festival.selected_size = FESTIVAL_SMALL;
+    g_distant_battle.clear();
     religion.reset();
     buildings.init();
     figure_clear_all();
@@ -1086,10 +1088,10 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(4);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected.god);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected_god);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.festival.selected.size); // ????
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.selected_size); // ????
+    iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned.size);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &data.festival.planned.months_to_go);
@@ -1204,18 +1206,18 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT16, &data.ratings.monument_years_of_monument);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.distant_battle.battle.city);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.distant_battle.battle.enemy_strength);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.distant_battle.battle.egyptian_strength);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.months_until_battle);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.egyptian_months_to_travel_back);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.egyptian_months_to_travel_forth);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.city_foreign_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_distant_battle.battle.city);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_distant_battle.battle.enemy_strength);
+    iob->bind(BIND_SIGNATURE_UINT8, &g_distant_battle.battle.egyptian_strength);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.months_until_battle);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_back);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_forth);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.city_foreign_months_left);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_arches_available);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.total_count);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.won_count);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.enemy_months_traveled);
-    iob->bind(BIND_SIGNATURE_INT8, &data.distant_battle.battle.egyptian_months_traveled);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.total_count);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.won_count);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.enemy_months_traveled);
+    iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_traveled);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_batalions);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.kingdome_service_batalions);
     iob->bind(BIND_SIGNATURE_UINT8, &data.unused.unknown_458e);
