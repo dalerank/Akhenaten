@@ -779,7 +779,7 @@ void ui::widget::event(pcstr evname, const bvariant_map &js_j) {
         if (!elem->id.empty()) {
             bstring64 elmid("__ui_elem_", elem->id.c_str());
             bstring64 elmkey("__ui_elem:", elem->id.c_str());
-            enhanced_js_j[elmid.c_str()] = bvariant(elmkey);
+            enhanced_js_j[elmid.c_str()] = bvariant(elmkey.c_str());
         }
     }
     
