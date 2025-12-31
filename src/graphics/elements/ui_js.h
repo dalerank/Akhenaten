@@ -6,12 +6,12 @@
 namespace ui {
 
     template<typename T>
-    inline void widget::draw(const T &ev) {
+    inline void widget::event(const T &ev) {
         type_name_holder<T> evname;
         pcstr evname_str = type_simplified_name(evname.value.data());
         bvariant_map js_j;
         js_helper::writer(js_j, ev);
-        draw(evname_str, js_j);
+        event(evname_str, js_j);
     }
 
 }

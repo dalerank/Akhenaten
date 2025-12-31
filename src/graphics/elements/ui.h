@@ -589,9 +589,8 @@ struct widget {
     inline void icon(vec2i pos, e_resource img) { ui::icon(pos, img); }
 
     template<typename T>
-    inline void draw(const T &ev);
-
-    void draw(pcstr evname, const bvariant_map &js_j);
+    inline void event(const T &ev);
+    void event(pcstr evname, const bvariant_map &js_j);
 
     inline void begin_widget(vec2i offset, bool relative = false) { check_errors = true; ui::begin_widget(offset, relative); }
     inline void end_widget() { ui::end_widget(); }
@@ -617,6 +616,8 @@ struct widget {
         }
     }
 };
+
+widget *get_current_widget();
 
 } // ui
 
