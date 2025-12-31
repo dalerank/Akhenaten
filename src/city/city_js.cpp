@@ -13,9 +13,6 @@ ANK_FUNCTION_1(__city_rank_salary)
 int __city_rating_kingdom() { return g_city.kingdome.rating; }
 ANK_FUNCTION(__city_rating_kingdom)
 
-int __city_festival_selected_god() { return g_city.festival.selected_god(); }
-ANK_FUNCTION(__city_festival_selected_god)
-
 int __city_population() { return g_city.population.current; }
 ANK_FUNCTION(__city_population)
 
