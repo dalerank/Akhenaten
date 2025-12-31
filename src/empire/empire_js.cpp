@@ -5,12 +5,6 @@
 
 #include "js/js_game.h"
 
-bool __empire_has_distant_battle() { return g_city.distant_battle.has_distant_battle() != 0; }
-ANK_FUNCTION(__empire_has_distant_battle)
-
-int __empire_distant_battle_city() { return g_city.distant_battle.battle_city(); }
-ANK_FUNCTION(__empire_distant_battle_city)
-
 void __empire_get_city_empire_object(js_State *J) {
     if (js_gettop(J) < 1) {
         js_pushnull(J);
