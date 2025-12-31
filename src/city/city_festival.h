@@ -2,15 +2,15 @@
 
 #include <cstdint>
 #include "city/city_religion.h"
+#include "core/archive.h"
 
-enum e_festival_type {
+enum e_festival_type : uint8_t {
     FESTIVAL_NONE = 0,
     FESTIVAL_SMALL = 1,
     FESTIVAL_LARGE = 2,
     FESTIVAL_GRAND = 3,
     FESTIVAL_BAST_SPECIAL = 4,
 };
-
 
 struct event_festival_hold { e_god god; e_festival_type type; };
 
@@ -27,10 +27,8 @@ struct city_festival_t {
         grand_min_minths = 3,
     };
 
-    struct {
-        e_god god;
-        e_festival_type size;
-    } selected;
+    e_god selected_god;
+    e_festival_type selected_size;
     
     uint16_t small_cost;
     uint16_t large_cost;
@@ -44,10 +42,8 @@ struct city_festival_t {
 
     bool is_planned();
     int months_till_next();
-    e_god selected_god();
     xstring selected_god_name();
     void select_god(e_god god_id);
-    int selected_size();
     bool select_size(e_festival_type size);
     void schedule();
     void execute_festival();
@@ -55,4 +51,6 @@ struct city_festival_t {
     void calculate_costs();
     int get_advice();
 };
+ANK_CONFIG_PROPERTY(city_festival_t,
+    selected_god)
 
