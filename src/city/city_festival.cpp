@@ -22,21 +22,13 @@ int city_festival_t::months_till_next() {
     return planned.months_to_go;
 }
 
-e_god city_festival_t::selected_god() {
-    return selected.god;
-}
-
 xstring city_festival_t::selected_god_name() {
-    auto key = (e_god_short)g_city.festival.selected_god();
+    auto key = (e_god_short)g_city.festival.selected_god;
     return bstring16("#god_", e_god_short_tokens.name(key)).c_str();
 }
 
 void city_festival_t::select_god(e_god god_id) {
-    selected.god = god_id;
-}
-
-int city_festival_t::selected_size() {
-    return selected.size;
+    selected_god = god_id;
 }
 
 bool city_festival_t::select_size(e_festival_type size) {
@@ -44,17 +36,17 @@ bool city_festival_t::select_size(e_festival_type size) {
         return false;
     }
 
-    selected.size = size;
+    selected_size = size;
     return true;
 }
 
 void city_festival_t::schedule() {
-    planned.god = selected.god;
-    planned.size = selected.size;
+    planned.god = selected_god;
+    planned.size = selected_size;
 
     uint32_t cost;
     const int population = g_city.population.current;
-    switch (selected.size) {
+    switch (selected_size) {
     case FESTIVAL_SMALL:
         planned.months_to_go = small_min_months + population / 1000 + 1;
         cost = small_cost;
@@ -73,7 +65,7 @@ void city_festival_t::schedule() {
     events::emit(event_finance_request{ efinance_request_festival, cost });
     events::emit(event_festival_hold{ planned.god, planned.size });
 
-    if (selected.size == FESTIVAL_GRAND) {
+    if (selected_size == FESTIVAL_GRAND) {
         events::emit(event_storageyards_remove_resource{ RESOURCE_BEER, grand_alcohol });
     }
 }
@@ -220,8 +212,8 @@ void city_festival_t::calculate_costs() {
 
     if (g_city.resource.yards_stored(RESOURCE_BEER) < grand_alcohol) {
         not_enough_alcohol = true;
-        if (selected.size == FESTIVAL_GRAND) {
-            selected.size = FESTIVAL_LARGE;
+        if (selected_size == FESTIVAL_GRAND) {
+            selected_size = FESTIVAL_LARGE;
         }
     }
 }
