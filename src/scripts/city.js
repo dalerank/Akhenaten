@@ -1,11 +1,26 @@
 log_info("akhenaten: city.js started")
 
 city {
-    @festival_selected_god { get: __city_festival_selected_god }
+    festival {
+        __property_getter: function(property) { return __city_get_festival_property(property) }
+        @selected_god { }        
+    }
     @population { get: __city_population }
     @rating_kingdom { get: __city_rating_kingdom }
     @num_forts { get: __formation_get_num_forts }
 
+    figures {
+        __property_getter: function(property) { return __city_get_figures_property(property) }
+        @enemies { }
+        @kingdome_soldiers { }
+    }
+    
+    military {
+        __property_getter: function(property) { return __city_get_military_property(property) }
+        @total_soldiers { }
+        @total_batalions { }
+    }
+    
     use_building: __city_use_building
     set_goal_tooltip: __scenario_set_goal_tooltip
     set_victory_reason : city_set_victory_reason
@@ -33,6 +48,9 @@ city {
             @morale      { }
             @experience  { }
             @is_at_fort  { }
+            @in_distant_battle {}
+
+            return_home: function() { __formation_batalion_return_to_fort(this.id) }
         }
     }
 
