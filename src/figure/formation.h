@@ -105,7 +105,7 @@ struct formation {
     int16_t missile_attack_formation_id;
 
     /* Legion-related */
-    uint8_t empire_service;        /**< Flag to indicate this batalion is selected for empire service */
+    bool empire_service;        /**< Flag to indicate this batalion is selected for empire service */
     uint8_t in_distant_battle;     /**< Flag to indicate this batalion is away in a distant battle */
     int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
@@ -141,7 +141,8 @@ struct formation {
 ANK_CONFIG_PROPERTY(formation, 
     batalion_id, figure_type, 
     num_figures, morale, experience,
-    is_at_fort, home);
+    is_at_fort, home, in_distant_battle,
+    empire_service);
 
 struct formations_t {
     void clear_all();
@@ -153,6 +154,8 @@ struct formations_t {
 
     formation *get_from_herd(int index);
     formation_id get_battalion_id_from_index(int sequence_index);
+
+    void calculate_figures();
 };
 
 extern formations_t g_formations;
@@ -182,8 +185,6 @@ inline void formations_get(T& arr, F func) {
         }
     });
 }
-
-void formation_toggle_empire_service(int formation_id);
 
 void formation_record_missile_fired(formation* m);
 void formation_record_missile_attack(formation* m, int from_formation_id);
@@ -215,8 +216,6 @@ void formation_clear_figures(void);
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
 
 void formation_move_herds_away(tile2i tile);
-
-void formation_calculate_figures(void);
 
 void formation_update_all();
 int formation_rioter_get_target_building(int* x_tile, int* y_tile);

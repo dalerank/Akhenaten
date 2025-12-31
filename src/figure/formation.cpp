@@ -113,10 +113,6 @@ formation* formation_get(int formation_id) {
     return &g_formations.formations[formation_id];
 }
 
-void formation_toggle_empire_service(int formation_id) {
-    g_formations.formations[formation_id].empire_service = g_formations.formations[formation_id].empire_service ? 0 : 1;
-}
-
 void formation_record_missile_fired(formation* m) {
     m->missile_fired = 6;
 }
@@ -243,7 +239,7 @@ void formation_change_morale(formation* m, int amount) {
 }
 
 void formation_update_morale_after_death(formation* m) {
-    formation_calculate_figures();
+    g_formations.calculate_figures();
     int pct_dead = calc_percentage<int>(1, m->num_figures);
     int morale;
     if (pct_dead < 8)
@@ -427,8 +423,9 @@ void formation_move_herds_away(tile2i tile) {
     }
 }
 
-void formation_calculate_figures(void) {
+void formations_t::calculate_figures() {
     formation_clear_figures();
+
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state != FIGURE_STATE_ALIVE)
@@ -544,7 +541,7 @@ static void set_legion_max_figures(void) {
 void formation_update_all() {
     OZZY_PROFILER_SECTION("Game/Update/Formations");
     formation_calculate_batalion_totals();
-    formation_calculate_figures();
+    g_formations.calculate_figures();
     update_directions();
     formation_batalion_decrease_damage();
 
