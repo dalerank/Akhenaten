@@ -36,6 +36,17 @@ ui.label = function(text, pos, font) {
 
 ui.window_city_show = __ui_window_city_show
 
+function ui_create_element_proxy(elementId) {
+    var proxy = {};
+    Object.defineProperty(proxy, "text", {
+        get: function() { return __ui_element_get_text(elementId); },
+        set: function(v) { __ui_element_set_text(elementId, v); },
+        enumerable: true,
+        configurable: true
+    });
+    return proxy;
+}
+
 function px(i) { return i * 16 }
 function sw(v) { return game.screen.w + v}
 function sh(v) { return game.screen.h + v}
