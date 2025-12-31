@@ -100,7 +100,7 @@ int ui::advisor_religion_window::draw_background(UiFlags flags) {
     ui["fest_months_last"].text_var("%d %s %s", g_city.festival.months_since_festival, ui::str(8, 5), ui::str(58, 15));
 
     if (g_city.festival.is_planned()) {
-        int size = g_city.festival.selected_size();
+        int size = g_city.festival.selected_size;
         int months_left = g_city.festival.months_till_next();
         int planned_month = (game.simtime.month + months_left) % simulation_time_t::months_in_year;
         int festival_text_iffs[] = { 0, 10, 20, 31 };

@@ -16,20 +16,18 @@
 #include "city/city.h"
 #include "scenario/scenario.h"
 
+distant_battles_t g_distant_battle;
+
+void distant_battles_t::clear() {
+    memset(&g_distant_battle, 0, sizeof(distant_battles_t));
+}
+
 int scenario_distant_battle_kingdome_travel_months() {
     return g_scenario.empire.distant_battle_kingdome_travel_months;
 }
 
 int scenario_distant_battle_enemy_travel_months() {
     return g_scenario.empire.distant_battle_enemy_travel_months;
-}
-
-int distant_battles_t::months_until_distant_battle() {
-    return battle.months_until_battle;
-}
-
-int distant_battles_t::kingdome_army_is_traveling_forth() {
-    return battle.egyptian_months_to_travel_forth > 0;
 }
 
 void distant_battles_t::process() {
@@ -43,7 +41,7 @@ void distant_battles_t::process() {
 
             if (should_start_battle) {
                 events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0 });
-                g_city.distant_battle.init_distant_battle(g_scenario.invasions[i].amount);
+                g_distant_battle.init_distant_battle(g_scenario.invasions[i].amount);
                 return;
             }
         }
@@ -54,10 +52,6 @@ void distant_battles_t::process() {
 
 void distant_battles_t::determine_distant_battle_city() {
     battle.city = g_empire.get_city_vulnerable();
-}
-
-int distant_battles_t::battle_city() {
-    return battle.city;
 }
 
 bool distant_battles_t::city_is_egyptian() {

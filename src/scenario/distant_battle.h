@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "core/archive.h"
+
 struct distant_battles_t {
     struct battle_state {
         uint8_t city;
@@ -31,14 +33,19 @@ struct distant_battles_t {
     void process();
     int enemy_strength();
     bool city_is_egyptian();
-    int months_until_distant_battle();
-    int kingdome_army_is_traveling_forth();
 
     void determine_distant_battle_city();
-    int battle_city();
+    void clear();
 
     void process_distant_battle_impl();
 };
+ANK_CONFIG_PROPERTY(distant_battles_t::battle_state,
+    egyptian_months_to_travel_forth, 
+    egyptian_months_to_travel_back,
+    months_until_battle,
+    city)
+
+extern distant_battles_t g_distant_battle;
 
 int scenario_distant_battle_kingdome_travel_months(void);
 int scenario_distant_battle_enemy_travel_months(void);

@@ -9,6 +9,7 @@
 #include "city/city_labor.h"
 #include "city/city_migration.h"
 #include "city/military.h"
+#include "scenario/distant_battle.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
 #include "core/calc.h"
@@ -208,8 +209,8 @@ int ui::advisor_chief_window::draw_background(UiFlags flags) {
         if (g_city.figures.kingdome_soldiers) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (g_city.figures.enemies) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (scenario_invasion_exists_upcoming()) { military_status = {170, FONT_NORMAL_YELLOW}; }
-        else if (g_city.distant_battle.kingdome_army_is_traveling()) { military_status = {170, FONT_NORMAL_BLACK_ON_DARK}; }
-        else if (g_city.distant_battle.months_until_distant_battle() > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
+        else if (g_distant_battle.kingdome_army_is_traveling()) { military_status = {170, FONT_NORMAL_BLACK_ON_DARK}; }
+        else if (g_distant_battle.battle.months_until_battle > 0) { military_status = {170, FONT_NORMAL_YELLOW}; }
         else if (g_city.figures.soldiers > 0) { military_status = {177, FONT_NORMAL_BLACK_ON_DARK}; }
         else { military_status = {171, FONT_NORMAL_BLACK_ON_DARK}; }
 
