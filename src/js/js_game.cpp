@@ -185,7 +185,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
                 bstring64 keystr = key.c_str();
                 if (keystr.starts_with("__ui_elem_")) {
-                    xstring element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
+                    auto element_id = keystr.substr(10, -1); // Remove "__ui_elem_" prefix
                     
                     // Call helper function to create proxy object
                     js_getglobal(J, "ui_create_element_proxy");
