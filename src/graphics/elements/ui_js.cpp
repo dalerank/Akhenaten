@@ -66,5 +66,5 @@ void js_register_ui_objects(js_State *J) {
     _R(UiFlags_SplitText)
     _R(UiFlags_PanelSmall)
     _R(UiFlags_PanelOuter)
-    _R(UiFlags_ThinBorder)
+    _R(UiFlags_ThinBorder) 
 }
