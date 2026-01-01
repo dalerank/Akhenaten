@@ -367,15 +367,8 @@ void font_atlas_regenerate() {
         }
 
         arch.r("font_configs", font_configs);
-
-        // Check if custom font is set (from CLI or config file), otherwise use font from language config
-        const xstring& custom_font = g_args.get_custom_font();
-        if (!custom_font.empty()) {
-            symbols_font = custom_font.c_str();
-        } else {
-            symbols_font = arch.r_string("font");
-        }
-
+        symbols_font = arch.r_string("font");
+ 
         svector<bstring32, 1024> data_str;
         string_to_array_t(data_str, symbols, ',');
         
@@ -422,6 +415,9 @@ void font_atlas_regenerate() {
     });
 
     g_font_data.use_utf_font = (locale_short != "en");
+    if (!g_args.get_custom_font().empty() && !g_font_data.use_utf_font) {
+        g_font_data.use_utf_font = true;
+    }
 
     // Add basic latin characters (ASCII 32-126) to ensure they are always generated from the TTF font
     // This ensures visual consistency between latin and UTF-8 characters
@@ -447,6 +443,9 @@ void font_atlas_regenerate() {
     font_packer.init(utf8_symbols.size() * font_configs.size(), max_texture_sizes);
 
     int cp_index = 0;
+    if (!g_args.get_custom_font().empty()) {
+        symbols_font = g_args.get_custom_font().c_str();
+    }
     vfs::path resolved_font_path = symbols_font.resolve();
     if (!vfs::file_exists(resolved_font_path)) {
         g_font_data.needs_regeneration = false;
