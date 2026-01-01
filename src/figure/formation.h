@@ -156,6 +156,8 @@ struct formations_t {
     formation_id get_battalion_id_from_index(int sequence_index);
 
     void calculate_figures();
+    void dispatch_batalions_to_distant_battle();
+    int dispatch_batalion_to_distant_battle(formation *m);
 };
 
 extern formations_t g_formations;

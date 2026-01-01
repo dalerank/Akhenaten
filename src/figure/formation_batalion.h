@@ -17,8 +17,6 @@ void formation_batalion_move_to(formation* m, tile2i tile);
 
 void formation_batalion_return_home(formation* m);
 
-void formation_batalions_dispatch_to_distant_battle();
-
 void formation_batalions_kill_in_distant_battle(int kill_percentage);
 
 void formation_batalions_return_from_distant_battle();

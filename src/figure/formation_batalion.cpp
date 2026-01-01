@@ -144,43 +144,6 @@ void formation_batalion_return_home(formation* m) {
     }
 }
 
-static int dispatch_soldiers(formation* m) {
-    m->in_distant_battle = 1;
-    m->is_at_fort = 0;
-    for (int fig = 0; fig < m->num_figures; fig++) {
-        if (m->figures[fig] > 0) {
-            figure* f = figure_get(m->figures[fig]);
-            if (!f->is_dead())
-                f->action_state = ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE;
-        }
-    }
-    int strength_factor;
-    if (m->has_military_training)
-        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 3 : 2;
-    else {
-        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 2 : 1;
-    }
-    return strength_factor * m->num_figures;
-}
-
-void formation_batalions_dispatch_to_distant_battle(void) {
-    int num_legions = 0;
-    int roman_strength = 0;
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->batalion_id && m->empire_service && m->num_figures > 0) {
-            roman_strength += dispatch_soldiers(m);
-            num_legions++;
-        }
-    }
-    // Protect from overflow -> only stores 1 unsigned byte
-    if (roman_strength > 255)
-        roman_strength = 255;
-
-    if (num_legions > 0)
-        city_military_dispatch_to_distant_battle(roman_strength);
-}
-
 static void kill_soldiers(formation* m, int kill_percentage) {
     formation_change_morale(m, -75);
     int soldiers_total = 0;
