@@ -122,12 +122,6 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
     const auto &button_request_saved = ui["button_request_saved"];
     const auto &button_request_allow = ui["button_request_allow"];
 
-    const vec2i icon_offset = button_request_icon.pos - button_request.pos;
-    const vec2i amount_offset = button_request_amount.pos - button_request.pos;
-    const vec2i months_offset = button_request_months.pos - button_request.pos;
-    const vec2i saved_offset = button_request_saved.pos - button_request.pos;
-    const vec2i allow_offset = button_request_allow.pos - button_request.pos;
-
     int start_req_index = 0;
     if (g_distant_battle.battle.months_until_battle > 0
         && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
@@ -140,10 +134,10 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
                 window_empire_show();
             });
 
-        ui.icon(request_pos + icon_offset, RESOURCE_TROOPS);
+        ui.icon(request_pos + button_request_icon.pos, RESOURCE_TROOPS);
 
         bstring128 distant_battle_text(ui::str(52, 72), ui::str(21, g_empire.city(g_distant_battle.battle.city)->name_id));
-        ui.label(distant_battle_text, request_pos + amount_offset, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(distant_battle_text, request_pos + button_request_amount.pos, FONT_NORMAL_WHITE_ON_DARK);
 
         int strength_text_id = 75;
         int enemy_strength = g_distant_battle.enemy_strength();
@@ -152,7 +146,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
 
         bstring128 distant_strenght_text;
         distant_strenght_text.printf("%s %s %d", ui::str(52, strength_text_id), ui::str(8, 4), g_distant_battle.battle.months_until_battle);
-        ui.label(distant_strenght_text, request_pos + saved_offset, FONT_NORMAL_WHITE_ON_DARK);
+        ui.label(distant_strenght_text, request_pos + button_request_saved.pos, FONT_NORMAL_WHITE_ON_DARK);
         start_req_index = 1;
     }
 
@@ -166,7 +160,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
             .onclick([this, index] (int, int) {
                 this->handle_request(index);
             });
-        ui.icon(request_pos + icon_offset, request.resource);
+        ui.icon(request_pos + button_request_icon.pos, request.resource);
 
         bstring256 amount_text;
         bstring256 month_to_comply;
@@ -177,10 +171,10 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         int quat = hresource.stack_proper_quantity(request.resource_amount());
 
         amount_text.printf("%u %s", quat, ui::str(23, request.resource));
-        ui.label(amount_text, request_pos + amount_offset, button_request_amount.font());
+        ui.label(amount_text, request_pos + button_request_amount.pos, button_request_amount.font());
 
         month_to_comply.printf("%s %u %s", ui::str(8, 4), request.months_to_comply, ui::str(12, 2));
-        ui.label(month_to_comply, request_pos + months_offset, button_request_months.font());
+        ui.label(month_to_comply, request_pos + button_request_months.pos, button_request_months.font());
 
         e_font allow_font;
         if (request.resource == RESOURCE_DEBEN) {
@@ -200,8 +194,8 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
             allow_font = (city_stored < request_amount) ? button_request_allow.font() : FONT_NORMAL_YELLOW;
         }
 
-        ui.label(saved_resources, request_pos + saved_offset, button_request_saved.font());
-        ui.label(allow_str, request_pos + allow_offset, allow_font);
+        ui.label(saved_resources, request_pos + button_request_saved.pos, button_request_saved.font());
+        ui.label(allow_str, request_pos + button_request_allow.pos, allow_font);
     }
 
     ui["no_requests"].enabled = (num_requests + start_req_index <= 0);
