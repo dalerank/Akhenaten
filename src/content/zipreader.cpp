@@ -133,7 +133,7 @@ namespace vfs {
 
     //! scans for a local header, returns false if there is no more local file header.
     bool ZipArchive::scanZipHeader(bool ignoreGPBits) {
-        xstring entry_name;
+        bstring256 entry_name;
         SZipFileEntry entry;
         entry.Offset = 0;
         memset(&entry.header, 0, sizeof(SZIPFileHeader));
@@ -205,7 +205,7 @@ namespace vfs {
         // move forward length of data
         _data->advance(entry.header.DataDescriptor.CompressedSize);
 
-        _entries.push_back(entry_name);
+        _entries.push_back(entry_name.tolower().c_str());
         _files.push_back(entry);
 
         return true;
