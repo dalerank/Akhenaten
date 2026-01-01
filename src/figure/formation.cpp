@@ -6,6 +6,7 @@
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
 #include "figuretype/figure_enemy.h"
+#include "figuretype/figure_soldier.h"
 #include "figure/formation_enemy.h"
 #include "city/city_animals.h"
 #include "figure/formation_batalion.h"
@@ -40,6 +41,51 @@ formation *formations_t::get_from_herd(int index) {
     }
 
     return &formations[0];
+}
+
+int formations_t::dispatch_batalion_to_distant_battle(formation *m) {
+    m->in_distant_battle = 1;
+    m->is_at_fort = 0;
+
+    for (int fig = 0; fig < m->num_figures; fig++) {
+        if (m->figures[fig] > 0) {
+            figure *f = figure_get(m->figures[fig]);
+            figure_soldier *s = f->dcast_soldier();
+            if (s->is_alive()) {
+                s->send_to_distant_battle();
+            }
+        }
+    }
+
+    int strength_factor;
+    if (m->has_military_training) {
+        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 3 : 2;
+    } else {
+        strength_factor = m->figure_type == FIGURE_STANDARD_BEARER ? 2 : 1;
+    }
+
+    return strength_factor * m->num_figures;
+}
+
+void formations_t::dispatch_batalions_to_distant_battle() {
+    int num_legions = 0;
+    int our_strength = 0;
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && m->own_batalion && m->batalion_id && m->empire_service && m->num_figures > 0) {
+            our_strength += dispatch_batalion_to_distant_battle(m);
+            num_legions++;
+        }
+    }
+
+    // Protect from overflow -> only stores 1 unsigned byte
+    if (our_strength > 255) {
+        our_strength = 255;
+    }
+
+    if (num_legions > 0) {
+        city_military_dispatch_to_distant_battle(our_strength);
+    }
 }
 
 static int get_free_formation(int start_index) {

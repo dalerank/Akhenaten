@@ -108,6 +108,10 @@ void figure_soldier::going_to_standard() {
     advance_action(ACTION_83_SOLDIER_GOING_TO_STANDARD);
 }
 
+void figure_soldier::send_to_distant_battle() {
+    advance_action(ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE);
+}
+
 void figure_soldier::goback_to_fort() {
     if (base.in_attack()) {
         return;

@@ -34,6 +34,7 @@ public:
     virtual void formation_reset_to_initial(const formation *m) override;
 
     virtual void going_to_standard();
+    virtual void send_to_distant_battle();
     virtual void goback_to_fort();
 };
 

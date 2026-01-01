@@ -130,8 +130,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
         vec2i request_pos = button_request.pos + vec2i{ 0, 0 * button_request.size.y };
         ui.button("", request_pos, button_request.size, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
             .onclick([] (int, int) {
-                formation_batalions_dispatch_to_distant_battle();
-                window_empire_show();
+                g_formations.dispatch_batalions_to_distant_battle();
             });
 
         ui.icon(request_pos + button_request_icon.pos, RESOURCE_TROOPS);
