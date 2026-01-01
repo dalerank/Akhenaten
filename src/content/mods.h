@@ -5,12 +5,33 @@
 #include "core/flat_map.h"
 #include "content/vfs.h"
 #include "core/hvector.h"
+#include "core/archive.h"
 
-struct mod_info {
-    xstring path;
+struct mod_entry {
     xstring name;
     xstring desc;
+    xstring version;
+    xstring author;
     xstring url;
+    xstring email;
+};
+ANK_CONFIG_STRUCT(mod_entry,
+    name, desc, version, author, url, email)
+
+struct mod_url {
+    xstring url;
+};
+ANK_CONFIG_STRUCT(mod_url, url)
+
+struct mods_config {
+    std::vector<mod_url> mods_repo;
+    std::vector<mod_entry> mods_list;
+};
+ANK_CONFIG_STRUCT(mods_config,
+    mods_repo, mods_list)
+
+struct mod_info : public mod_entry {
+    vfs::path path;
     uint16_t useridx;
     uint16_t start_index;
     uint16_t entries_num;

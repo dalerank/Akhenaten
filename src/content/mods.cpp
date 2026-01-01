@@ -11,6 +11,7 @@
 #include "content/vfs.h"
 #include "window/popup_dialog.h"
 #include "platform/platform.h"
+#include "core/archive.h"
 #include "game/game.h"
 
 #include <regex>
@@ -23,19 +24,22 @@
 #endif
 
 flat_map<xstring, mod_info, 32> g_mods_list;
+mods_config ANK_VARIABLE_N(g_mods_config, "mods");
 
-void mods_add_remote_file(xstring name, xstring uri) {
+mod_info& mods_add_remote_file(xstring name, xstring uri) {
     auto it = g_mods_list.find(name);
 
     if (it != g_mods_list.end()) {
-        return;
+        return it->second;
     }
 
     auto &new_mod = g_mods_list[name];
+    new_mod.path = "";
     new_mod.downloaded = false;
     new_mod.url = uri;
     new_mod.name = name;
-    new_mod.path = "";
+
+    return new_mod;
 }
 
 vfs::path mods_get_path(xstring name) {
@@ -229,9 +233,9 @@ void mods_download_mod_async(xstring name) {
         mod.useridx = imagepak::get_max_useridx() + 1;
         mod.start_index = imagepak::get_maxseen_imgid() + 1;
         
-        vfs::path full_path = vfs::path::resolve(mod.path.c_str());
+        vfs::path full_path = mod.path.resolve();
         if (!full_path.empty()) {
-            mod.entries_num = imagepak::get_entries_num(mod.path);
+            mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
             imagepak::useridx_update(mod.useridx);
             imagepak::update_max_imgid(mod.start_index + mod.entries_num);           
         }
@@ -322,12 +326,12 @@ void mods_init() {
                 mod.downloaded = true;
                 mod.useridx = imagepak::get_max_useridx() + 1;
                 mod.start_index = imagepak::get_maxseen_imgid() + 1;
-                mod.entries_num = imagepak::get_entries_num(mod.path);
+                mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
 
                 imagepak::useridx_update(mod.useridx);
                 imagepak::update_max_imgid(mod.start_index + mod.entries_num);
 
-                vfs::path full_path = vfs::path::resolve(mod.path.c_str());
+                vfs::path full_path = mod.path.resolve();
                 if (full_path.empty()) {
                     continue;
                 }
@@ -456,11 +460,10 @@ static size_t mods_refresh_available_list_cb(void *contents, size_t size, size_t
 }
 #endif
 
-void mods_refresh_available_list() {
+void mods_refresh_from_remote_repo (pcstr remote_repo) {
 #ifdef GAME_PLATFORM_WIN
     CURLcode res;
     std::string readBuffer;
-    std::string url = "https://api.github.com/repos/dalerank/Akhenaten/contents/mods";
 
     CURL *curl = curl_easy_init();
     if (!curl) {
@@ -469,7 +472,7 @@ void mods_refresh_available_list() {
         return;
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, remote_repo);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mods_refresh_available_list_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -533,8 +536,16 @@ void mods_refresh_available_list() {
         std::regex nameRegex("\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"");
         std::regex urlRegex("\"download_url\"\\s*:\\s*\"([^\"]+)\"");
 
-        std::vector<std::pair<size_t, std::string>> namePositions; // position, name
-        std::vector<std::pair<size_t, std::string>> urlPositions;  // position, url
+        struct pos_name {
+            size_t position;
+            std::string name;
+        };
+        struct pos_url {
+            size_t position;
+            std::string url;
+        };
+        std::vector<pos_name> namePositions; // position, name
+        std::vector<pos_url> urlPositions;  // position, url
 
         std::sregex_iterator nameIter(readBuffer.begin(), readBuffer.end(), nameRegex);
         for (; nameIter != std::sregex_iterator(); ++nameIter) {
@@ -552,8 +563,8 @@ void mods_refresh_available_list() {
         for (const auto &namePair : namePositions) {
             // Find the first URL that comes after this name
             for (const auto &urlPair : urlPositions) {
-                if (urlPair.first > namePair.first) {
-                    modMap[namePair.second] = urlPair.second;
+                if (urlPair.position > namePair.position) {
+                    modMap[namePair.name] = urlPair.url;
                     break;
                 }
             }
@@ -565,7 +576,7 @@ void mods_refresh_available_list() {
         return;
     }
 
-    logs::info("Available mods on GitHub:");
+    logs::info("Available mods on repo: %s", remote_repo);
     for (const auto &pair : modMap) {
         logs::info("* %s|%s", pair.first.c_str(), pair.second.c_str());
         bstring128 mod_name = pair.first.c_str();
@@ -574,8 +585,30 @@ void mods_refresh_available_list() {
     }
     logs::info("Total: %d mod(s)", modMap.size());
 
-    xstring result; result.printf("Found %zu mods on GitHub", modMap.size());
+    xstring result; result.printf("Found %zu mods on %s", modMap.size(), remote_repo);
     popup_dialog::show_ok("Mods", result);
+#endif
+}
+
+void mods_refresh_from_config() {
+    for (const auto &cmod : g_mods_config.mods_list) {
+        auto &mod_info = mods_add_remote_file(cmod.name, cmod.url);
+        mod_info.desc = cmod.desc;
+        mod_info.version = cmod.version;
+        mod_info.author = cmod.author;
+        mod_info.email = cmod.email;
+    }
+}
+
+void mods_refresh_available_list() {
+#ifdef GAME_PLATFORM_WIN
+    if (!g_mods_config.mods_repo.empty()) {
+        mods_refresh_from_remote_repo(g_mods_config.mods_repo.front().url.c_str());
+    } else {
+        popup_dialog::show_ok("Error", "Mods repository URL is not configured.");
+    }
+
+    mods_refresh_from_config();
 
     mods_remount();
 #else

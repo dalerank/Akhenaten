@@ -675,6 +675,9 @@ namespace archive_helper {
     template<>
     inline void reader<image_desc>(archive arch, image_desc &v) { arch.r_desc_impl(v); }
 
+    template<>
+    inline void reader<xstring>(archive arch, xstring &v) { v = arch.to_string(); }
+
     template<typename T> constexpr bool class_has_archive_reader() { return false; }
 }
 
