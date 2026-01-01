@@ -38,10 +38,10 @@ city {
     start_foreign_army_invasion : __city_start_foreign_army_invasion
     camera_go_to : __city_camera_go_to
     
-    get_battalion : function(index) { 
+    get_battalion_by_index : function(index) { 
         return {
-            id: index
-            __property_getter: function(property) { return __city_get_battalion_property(this.id, property) }
+            index: index
+            __property_getter: function(property) { return __city_get_battalion_property(this.index, property) }
             @batalion_id { }
             @figure_type { }
             @num_figures { }
@@ -49,8 +49,10 @@ city {
             @experience  { }
             @is_at_fort  { }
             @in_distant_battle {}
+            @empire_service { }
 
-            return_home: function() { __formation_batalion_return_to_fort(this.id) }
+            return_home: function() { __formation_batalion_idx_return_to_fort(this.index) }
+            set_empire_service: function(v) { __formation_batalion_idx_set_empire_service(this.index, v) }
         }
     }
 

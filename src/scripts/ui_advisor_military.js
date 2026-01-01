@@ -56,8 +56,8 @@ function advisor_military_window_init(window) {
     window.distant_text.text = __loc(51, distant_battle_text_id)
     
     var total_soldiers_str = __loc(8, 46) + " " + city.military.total_soldiers
-    var total_batalions_str = __loc(51, 8) + " " + city.military.total_batalions
-    window.forts_text.text = total_soldiers_str + " " + __loc(8, 48) + " " + total_batalions_str
+    var total_batalions_str =  city.military.total_batalions + " Companies"
+    window.forts_text.text = total_soldiers_str + " in " + total_batalions_str
 }
 
 [event=advisor_military_window_draw]
@@ -68,7 +68,7 @@ function advisor_military_window_draw(window) {
         var fort_image = get_image("pharaoh_general/paneling_00532")
         var kingdom_service = get_image("pharaoh_general/paneling_00534")
         for (var i = 0; i < city.num_forts; i++) {
-            var form = city.get_battalion(i)
+            var form = city.get_battalion_by_index(i)
             
             ui.button({ text:"", pos[40, 77 + 44 * i], size[px(35), 40], font:FONT_NORMAL_BLACK_ON_DARK, border:false, body:false })
 
@@ -102,7 +102,10 @@ function advisor_military_window_draw(window) {
             ui.image(fort_image, { x:467, y:86 + 44 * i });
 
             kingdom_service.tid += (form.empire_service ? 1 : 0)
-            ui.button({text:"", pos:{ x:544, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
+            var kingdom_service_clicked = ui.button({text:"", pos:{ x:544, y:83 + 44 * i }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
+            if (kingdom_service_clicked) {
+                form.set_empire_service(!form.empire_service)
+            }
             ui.image(kingdom_service, vec2i(547, 86 + 44 * i ));
         }
     } else {
