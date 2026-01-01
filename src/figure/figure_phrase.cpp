@@ -89,7 +89,8 @@ int figure::figure_play_phrase_file() {
     }
 
     xstring path;
-    if (phrase_key.empty()) {
+    bool sound_found = false;
+    if (phrase_key.empty() || phrase_key == "empty") {
         bstring32 prefix = params().name;
         prefix.replace_str("figure_", "");
         path.printf("Voice/Walker/%s_random_%02u.wav", prefix.c_str(), phrase_key.c_str(), rand() % 10);

@@ -188,8 +188,8 @@ void mods_download_mod_async(xstring name) {
         curl_easy_setopt(curl, CURLOPT_URL, mod.url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mods_download_write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, download_progress);
-        curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, mods_download_progress_callback);
-        curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, download_progress);
+        curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, mods_download_progress_callback);
+        curl_easy_setopt(curl, CURLOPT_XFERINFODATA, download_progress);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
