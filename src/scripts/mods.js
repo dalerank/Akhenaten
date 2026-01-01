@@ -32,5 +32,14 @@ mods {
             url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_spanish_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
+
+        {
+            name : "pharaoh_polish_voices"
+            desc : "Polish voices for the game"
+            version : "1.0.0"
+            author : "dalerank"
+            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_polish_voices.sgx"
+            email : "dalerankn8@gmail.com"
+        }
     ]
 }
