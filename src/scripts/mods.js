@@ -11,7 +11,16 @@ mods {
             desc : "German voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_german_voices.sgx",
+            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_german_voices.sgx"
+            email : "dalerankn8@gmail.com"
+        }
+
+        {
+            name : "pharaoh_french_voices"
+            desc : "French voices for the game"
+            version : "1.0.0"
+            author : "dalerank"
+            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_french_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
     ]

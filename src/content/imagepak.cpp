@@ -483,6 +483,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
         img.offset_mirror = 0;
 
         vfs::reader file = vfs::file_open(fn);
+        verify_no_crash(file && "file image should exist");
 
         SDL_Surface *surface = nullptr;
         if (file) {
@@ -585,6 +586,7 @@ bool imagepak::load_zip_pak(pcstr pak, int starting_index) {
                 logs::warn("WARN! %s incorrect prefix format for %s, should ends with '_'", datafile.c_str(), name.c_str());
             }
             name.printf("%s%05u.png", prefix.c_str(), i);
+            name = name.tolower();
             load_img(bstring256(datafile, "/", name), i - start_index, tmp_group_id, atlas_rect_id);
             ++atlas_rect_id;
         }
