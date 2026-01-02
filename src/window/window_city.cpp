@@ -162,13 +162,14 @@ static void cycle_legion(void) {
                 legion_id = 1;
 
             const formation* m = formation_get(legion_id);
-            if (m->in_use == 1 && !m->is_herd && m->batalion_id && m->own_batalion) {
+            if (m->in_use && !m->is_herd && m->own_batalion) {
                 if (current_legion_id == 0) {
                     current_legion_id = legion_id;
                     break;
                 }
             }
         }
+
         if (current_legion_id > 0) {
             const formation* m = formation_get(current_legion_id);
             camera_go_to_mappoint(m->home);

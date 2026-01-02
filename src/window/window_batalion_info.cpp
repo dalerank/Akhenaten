@@ -152,8 +152,8 @@ void batalion_info_window::init(object_info &c) {
 
     g_military_data.context_for_callback = &c;
 
-    ui["title"] = ui::str(138, m->batalion_id);
-    ui["batalion_icon"].image(m->batalion_id);
+    ui["title"] = ui::str(138, m->batalion_id - 1);
+    ui["batalion_icon"].image(m->batalion_id - 1);
 
     const int morale = (21.f - m->morale / 5) / 21.f;
     ui["morale_img"].image(morale);

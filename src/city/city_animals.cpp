@@ -361,7 +361,7 @@ void city_animals_t::init() {
 void city_animals_t::remove_all() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->batalion_id) {
+        if (m->in_use && m->is_herd) {
             m->in_use = false;
 
             for (auto f : m->valid_figures()) {
@@ -379,7 +379,7 @@ void city_animals_t::update() {
 
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->batalion_id && m->max_figures > 0) {
+        if (m->in_use && m->is_herd && m->max_figures > 0) {
             update_herd_formation(m);
         }
     }
@@ -388,7 +388,7 @@ void city_animals_t::update() {
 bool city_animals_t::breeding_ground_at(tile2i tile, int size) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->batalion_id) {
+        if (m->in_use && m->is_herd) {
             if (m->tile.x() >= tile.x() && m->tile.x() < tile.x() + size && m->tile.y() >= tile.y() && m->tile.y() < tile.y() + size)
                 return true;
         }

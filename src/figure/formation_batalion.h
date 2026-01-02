@@ -4,7 +4,7 @@
 #include "figure/formation.h"
 
 
-int formation_batalion_recruits_needed();
+bool formation_batalion_recruits_needed();
 
 void formation_batalion_update_recruit_status(building* fort);
 

@@ -14,13 +14,15 @@
 #include "scenario/distant_battle.h"
 #include "building/building_fort.h"
 
-int formation_batalion_recruits_needed(void) {
+bool formation_batalion_recruits_needed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->own_batalion && m->batalion_recruit_type != BATALION_RECRUIT_NONE)
-            return 1;
+        if (m->in_use && m->batalion_id && m->own_batalion && m->batalion_recruit_type != BATALION_RECRUIT_NONE) {
+            return true;
+        }
     }
-    return 0;
+
+    return false;
 }
 
 void formation_batalion_update_recruit_status(building* b) {
@@ -162,8 +164,10 @@ static void kill_soldiers(formation* m, int kill_percentage) {
 void formation_batalions_kill_in_distant_battle(int kill_percentage) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->batalion_id && m->in_distant_battle)
+
+        if (m->in_use && m->own_batalion && m->in_distant_battle) {
             kill_soldiers(m, kill_percentage);
+        }
     }
 }
 
@@ -183,17 +187,18 @@ static void return_soldiers(formation* m) {
 void formation_batalions_return_from_distant_battle(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->batalion_id && m->in_distant_battle)
+        if (m->in_use && m->own_batalion && m->in_distant_battle) {
             return_soldiers(m);
+        }
     }
 }
 
-int formation_batalion_curse(void) {
+int formation_batalion_curse() {
     formation* best_legion = 0;
     int best_legion_weight = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use == 1 && m->batalion_id) {
+        if (m->in_use && m->own_batalion) {
             int weight = m->num_figures;
             if (m->figure_type == FIGURE_STANDARD_BEARER)
                 weight *= 2;
@@ -236,8 +241,9 @@ int formation_batalion_at_building(int grid_offset) {
 void formation_batalion_update(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use != 1 || !m->batalion_id)
+        if (!m->in_use || !m->batalion_id) {
             continue;
+        }
 
         formation_decrease_monthly_counters(m);
         if (g_city.figures.enemies <= 0) {

@@ -145,10 +145,6 @@ void figure_enemy::enemy_leaving() {
 
     if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
         base.routing_try_reroute_counter++;
-        //if (base.routing_try_reroute_counter > 20) {
-        //    poof();
-        //    return;
-        //}
         base.wait_ticks = 20;
         route_remove();
         base.state = FIGURE_STATE_ALIVE;

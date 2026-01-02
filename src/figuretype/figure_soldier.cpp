@@ -110,6 +110,7 @@ void figure_soldier::going_to_standard() {
 }
 
 void figure_soldier::send_to_distant_battle() {
+    base.destination_tile = g_city.map.exit_point;
     advance_action(ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE);
 }
 
@@ -293,16 +294,20 @@ void figure_soldier::figure_action() {
 
     case ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
         base.formation_at_rest = 0;
-        base.destination_tile = g_city.map.exit_point;
-        base.move_ticks(speed_factor);
-        if (direction() == DIR_FIGURE_NONE) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_89_SOLDIER_AT_DISTANT_BATTLE, ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE)) {
             base.action_state = ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
             g_distant_battle.dispatched_army.append_soldier(base.id);
-            route_remove();
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
-        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
+            return;
+        }
+
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            base.routing_try_reroute_counter++;
+            base.wait_ticks = 20;
+            route_remove();
+            base.state = FIGURE_STATE_ALIVE;
+            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.direction = DIR_0_TOP_RIGHT;
         }
 
         break;

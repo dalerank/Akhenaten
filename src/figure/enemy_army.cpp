@@ -85,7 +85,7 @@ void enemy_army_in_city_t::calculate_kingdome_influence() {
         if (m->in_use != 1)
             continue;
 
-        if (m->batalion_id && m->own_batalion) {
+        if (m->own_batalion) {
             // Own batalions
             int figures_num = 0;
             for (int fig = 0; fig < formation::max_figures_count; fig++) {

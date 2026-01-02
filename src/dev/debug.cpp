@@ -757,7 +757,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
         // Check all formations for herds
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation* m = formation_get(i);
-            if (!m->in_use || !m->is_herd || m->batalion_id) {
+            if (!m->in_use || !m->is_herd) {
                 continue;
             }
             
@@ -815,7 +815,7 @@ void draw_debug_animal_spawn_areas(painter &ctx) {
     g_spawn_areas.clear();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (!m->in_use || !m->is_herd || m->batalion_id) {
+        if (!m->in_use || !m->is_herd) {
             continue;
         }
 
