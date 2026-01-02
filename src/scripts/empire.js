@@ -1,4 +1,4 @@
-log_info("akhenaten: city econmoic started")
+log_info("akhenaten: empire started")
 
 empire_city_options {
     text_group_old_names : 195
@@ -6,8 +6,8 @@ empire_city_options {
 }
 
 empire_traders {
-    ship_movement_delay : [2, 5]       
-    land_movement_delay : [1, 4]
+    ship_movement_delay [2, 5]       
+    land_movement_delay [1, 4]
 }
 
 empire {
@@ -18,11 +18,11 @@ empire {
         
         return {
             id: city_id        
-            empire_object: __empire_get_city_empire_object(city_id)
+            empire_object: __empire_get_city_empire_object(this.city_id)
         }
     }
     
-    has_distant_battle : __empire_has_distant_battle
+    @has_distant_battle { get: __empire_has_distant_battle }
     active_battle {
         __property_getter: function(property) { return __game_get_active_battle_property(property) }
         @egyptian_months_to_travel_back { }

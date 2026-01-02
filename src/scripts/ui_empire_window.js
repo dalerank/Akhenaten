@@ -52,13 +52,13 @@ empire_window {
 
 [event=empire_window_draw]
 function empire_window_draw_distant_battle_icon(window) {            
-    if (!empire.has_distant_battle()) {
+    if (!empire.has_distant_battle) {
         return
     }
 
-    var ecity = empire.get_city(empire.distant_battle_city())
+    var ecity = empire.get_city(empire.active_battle.city)
     if (!ecity) {
-        return
+        return 
     }
 
     var battle_icon = get_image("pharaoh_general/empire_bits_00001")

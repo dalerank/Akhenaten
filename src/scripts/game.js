@@ -1,4 +1,4 @@
-log_info("akhenaten: game.js started")
+log_info("akhenaten: game started")
 
 game {
     @absolute_day { get: __game_absolute_day }
