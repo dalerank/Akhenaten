@@ -60,19 +60,6 @@ void config_show_tutorial_properties(bool header) {
         ImGui::TreePop();
     }
 
-    bool vars_open = ImGui::TreeNodeEx("Mission Variables", ImGuiTreeNodeFlags_None, "Mission Variables");
-    if (vars_open) {
-        ImGui::BeginTable("MissionVars", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
-
-        // Iterate through all mission variables
-        g_scenario.vars.foreach_vars([](xstring name, const setting_variant& value) {
-            game_debug_show_property(name.c_str(), value);
-        });
-
-        ImGui::EndTable();
-        ImGui::TreePop();
-    }
-
     bool victory_open = ImGui::TreeNodeEx("Victory Status", ImGuiTreeNodeFlags_None, "Victory Status");
     if (victory_open) {
         ImGui::BeginTable("VictoryStatus", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);

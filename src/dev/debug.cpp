@@ -61,7 +61,6 @@
 #include "game/tutorial.h"
 #include "grid/figure.h"
 #include "platform/renderer.h"
-#include "widget/debug_console.h"
 #include "overlays/city_overlay.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
