@@ -13,6 +13,7 @@
 #include "grid/grid.h"
 #include "game/game_config.h"
 #include "building/building_fort.h"
+#include "scenario/distant_battle.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
 
@@ -70,11 +71,13 @@ int formations_t::dispatch_batalion_to_distant_battle(formation *m) {
 void formations_t::dispatch_batalions_to_distant_battle() {
     int num_legions = 0;
     int our_strength = 0;
+    int num_soldiers = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->own_batalion && m->batalion_id && m->empire_service && m->num_figures > 0) {
             our_strength += dispatch_batalion_to_distant_battle(m);
             num_legions++;
+            num_soldiers += m->num_figures;
         }
     }
 
@@ -84,7 +87,7 @@ void formations_t::dispatch_batalions_to_distant_battle() {
     }
 
     if (num_legions > 0) {
-        city_military_dispatch_to_distant_battle(our_strength);
+        g_distant_battle.dispatch_to_distant_battle(our_strength, num_soldiers);
     }
 }
 
@@ -112,9 +115,9 @@ static int formation_create(e_figure_type figure_type, e_formation_layout layout
     f->batalion_id = formation_id - 10;
     f->morale = 100;
     if (layout == FORMATION_ENEMY_DOUBLE_LINE) {
-        if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT)
+        if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
             f->layout = FORMATION_DOUBLE_LINE_1;
-        else {
+        } else {
             f->layout = FORMATION_DOUBLE_LINE_2;
         }
     } else {
