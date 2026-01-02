@@ -61,6 +61,7 @@ struct empire_window : public autoconfig_window_t<empire_window> {
     void draw_city_info(const empire_object *object);
     void draw_trade_resource(UiFlags flags, e_resource resource, int trade_now, int trade_max, vec2i offset, e_font font);
     void draw_trade_route(int route_id, e_empire_route_state effect);
+    void draw_distant_battle_path();
     void draw_object_tooltip();
     void draw_tooltip(tooltip_context *c);
 };
