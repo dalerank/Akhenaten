@@ -39,6 +39,43 @@ struct {
 
 void js_reset_vm_state();
 
+static void js_vm_log_stacktrace(js_State *J) {
+    // Try to get stack trace from error object if it's an Error
+    if (js_isobject(J, -1)) {
+        if (js_hasproperty(J, -1, "stackTrace")) {
+            js_getproperty(J, -1, "stackTrace");
+            if (js_isstring(J, -1)) {
+                const char *stack_trace = js_tostring(J, -1);
+                logs::info("!!! Stack trace: %s", stack_trace);
+                js_pop(J, 1);
+                return;
+            }
+            js_pop(J, 1);
+        }
+    }
+    
+    // Fallback: try to get stack trace from current state
+    // Access internal trace array (this requires accessing internal structure)
+    // Note: This is implementation-dependent and may break if mujs internals change
+    if (J && J->tracetop >= 0) {
+        logs::info("!!! Call stack:");
+        for (int n = J->tracetop; n >= 0; --n) {
+            const char *name = J->trace[n].name;
+            const char *file = J->trace[n].file;
+            int line = J->trace[n].line;
+            if (line > 0) {
+                if (name && name[0]) {
+                    logs::info("!!!   at %s (%s:%d)", name, file ? file : "<unknown>", line);
+                } else {
+                    logs::info("!!!   at %s:%d", file ? file : "<unknown>", line);
+                }
+            } else {
+                logs::info("!!!   at %s (%s)", name ? name : "<anonymous>", file ? file : "<unknown>");
+            }
+        }
+    }
+}
+
 int js_vm_trypcall(js_State *J, int params) {
     if (vm.have_error) {
         return 0;
@@ -48,6 +85,24 @@ int js_vm_trypcall(js_State *J, int params) {
     if (error) {
         vm.have_error = 1;
         const char *error_msg = js_tostring(vm.J, -1);
+        
+        // Log error type if it's an Error object
+        if (js_isobject(vm.J, -1)) {
+            if (js_hasproperty(vm.J, -1, "name")) {
+                js_getproperty(vm.J, -1, "name");
+                const char *error_name = js_tostring(vm.J, -1);
+                logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
+                js_pop(vm.J, 1);
+            }
+            if (js_hasproperty(vm.J, -1, "message")) {
+                js_getproperty(vm.J, -1, "message");
+                const char *error_message = js_tostring(vm.J, -1);
+                logs::info("!!! Error message: %s", error_message ? error_message : "<empty>");
+                js_pop(vm.J, 1);
+            }
+        }
+        
+        // Log full error message
         const char *cur_symbol = error_msg;
         const char *start_str = cur_symbol;
         bstring256 temp_str;
@@ -63,6 +118,10 @@ int js_vm_trypcall(js_State *J, int params) {
             logs::info("!!! pcall error %s", temp_str.c_str());
         }
         logs::info("!!! pcall error %s", start_str);
+        
+        // Log stack trace (use vm.J as it's the actual state used for pcall)
+        js_vm_log_stacktrace(vm.J);
+        
         vm.error_str = error_msg;
         js_pop(J, 1);
         return 0;
@@ -238,6 +297,14 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
     ok = js_vm_trypcall(vm.J, (int)strlen(szTypes));
     if (!ok) {
         logs::info("Fatal error on call function %s", funcname);
+        if (vm.error_str.len() > 0) {
+            logs::info("Error details: %s", vm.error_str.c_str());
+        } else if (js_gettop(vm.J) > 0) {
+            pcstr error_msg = js_tostring(vm.J, -1);
+            if (error_msg && *error_msg) {
+                logs::info("Error details: %s", error_msg);
+            }
+        }
         return 0;
     }
 
