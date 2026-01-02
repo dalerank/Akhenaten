@@ -17,8 +17,8 @@ empire {
         }
         
         return {
-            id: city_id        
-            empire_object: __empire_get_city_empire_object(this.city_id)
+            city_id: city_id        
+            @empire_object { get: function() { return __empire_get_city_empire_object(this.city_id) } }
         }
     }
     
