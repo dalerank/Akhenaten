@@ -29,7 +29,7 @@ void distant_battles_t::battle_state_t::clear() {
 
 const distant_battles_t::army_path &distant_battles_t::get_path() {
     if (dispatched_army.path.empty()) {
-        const empire_object* capital = g_empire.get_our_city();
+        const empire_object *capital = g_empire.ourcity_object();
         if (!capital || !battle.city) {
             return dispatched_army.path; // Return empty path if invalid
         }

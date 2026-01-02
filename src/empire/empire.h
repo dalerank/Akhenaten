@@ -87,7 +87,7 @@ public:
     int init_distant_battle_travel_months(int object_type);
     const full_empire_object *get_full_object(int object_id) const;
     const empire_object *get_object(int object_id) const;
-    const empire_object *get_our_city() const;
+    const empire_object *ourcity_object() const;
 
     const empire_object *get_battle_icon(int path_id, int year);
     int get_max_invasion_path();

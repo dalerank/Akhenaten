@@ -52,7 +52,6 @@ empire_window {
 
 [event=empire_window_draw]
 function empire_window_draw_distant_battle_icon(window) {    
-    log_info("akhenaten: empire_window_draw_distant_battle_icon started")
     if (!empire.has_distant_battle) {
         return
     }

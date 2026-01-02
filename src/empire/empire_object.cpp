@@ -157,17 +157,12 @@ const empire_object* empire_t::get_object(int object_id) const {
     return &objects[object_id].obj;
 }
 
-const empire_object* empire_t::get_our_city() const {
-    auto& objects = g_empire_objects;
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (objects[i].in_use) {
-            const empire_object* obj = &objects[i].obj;
-            if (obj->type == EMPIRE_OBJECT_CITY && objects[i].city_type == EMPIRE_CITY_PHARAOH_TRADING)
-                return obj;
-        }
-    }
-    verify_no_crash(false && "our city should exist");
-    return nullptr;
+const empire_object* empire_t::ourcity_object() const {
+    auto const &cities = g_empire.get_cities();
+    auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
+
+    verify_no_crash(it != cities.end());
+    return it->get_empire_object();
 }
 
 const empire_object* empire_t::get_battle_icon(int path_id, int year) {
