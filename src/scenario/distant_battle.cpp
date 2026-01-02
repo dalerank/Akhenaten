@@ -31,7 +31,7 @@ const distant_battles_t::army_path &distant_battles_t::get_path() {
     if (dispatched_army.path.empty()) {
         const empire_object *capital = g_empire.ourcity_object();
         if (!capital || !battle.city) {
-            return dispatched_army.path; // Return empty path if invalid
+            return dispatched_army.path;
         }
 
         const empire_city* battle_city = g_empire.city(battle.city);

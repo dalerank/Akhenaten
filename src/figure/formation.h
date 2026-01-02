@@ -156,6 +156,7 @@ struct formations_t {
     formation_id get_battalion_id_from_index(int sequence_index);
 
     void calculate_figures();
+    void calculate_batalion_totals();
     void dispatch_batalions_to_distant_battle();
     int dispatch_batalion_to_distant_battle(formation *m);
 };
@@ -197,8 +198,6 @@ int formation_grid_offset_for_invasion(int invasion_sequence);
 void formation_kingdome_pause(void);
 void formation_kingdome_retreat(void);
 
-void formation_calculate_batalion_totals();
-
 int formation_get_num_forts();
 int formation_get_max_forts();
 
@@ -212,7 +211,6 @@ void formation_decrease_monthly_counters(formation* m);
 void formation_clear_monthly_counters(formation* m);
 
 void formation_set_destination(formation* m, tile2i tile);
-void formation_set_home(formation* m, tile2i tile);
 
 void formation_clear_figures(void);
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
