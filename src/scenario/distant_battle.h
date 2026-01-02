@@ -5,7 +5,7 @@
 #include "core/archive.h"
 
 struct distant_battles_t {
-    struct battle_state {
+    struct battle_state_t {
         uint8_t city;
         int8_t city_foreign_months_left;
         int8_t total_count;
@@ -19,7 +19,20 @@ struct distant_battles_t {
         int8_t egyptian_months_traveled;
     };
 
-    battle_state battle;
+    struct dispatched_army_t {
+        bool active;
+        uint8_t await_soldiers;
+        uint8_t position_index;
+
+        void append_soldier(uint16_t fid) {
+            if (await_soldiers > 0)
+                await_soldiers--;
+        }
+    };
+
+    battle_state_t battle;
+    dispatched_army_t dispatched_army;
+
     void init_distant_battle(int enemy_strength);
     int kingdome_army_is_traveling();
     int enemy_months_traveled();
@@ -33,13 +46,14 @@ struct distant_battles_t {
     void process();
     int enemy_strength();
     bool city_is_egyptian();
+    void dispatch_to_distant_battle(int egyptian_strength, uint8_t soldiers_num);
 
     void determine_distant_battle_city();
     void clear();
 
     void process_distant_battle_impl();
 };
-ANK_CONFIG_PROPERTY(distant_battles_t::battle_state,
+ANK_CONFIG_PROPERTY(distant_battles_t::battle_state_t,
     egyptian_months_to_travel_forth, 
     egyptian_months_to_travel_back,
     months_until_battle,

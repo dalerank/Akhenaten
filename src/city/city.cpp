@@ -1277,12 +1277,12 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.migration.population_cap);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
 
-    iob->bind____skip(4); // (BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
-    iob->bind____skip(36);
-    iob->bind____skip(4);
-    iob->bind____skip(4);
-    iob->bind____skip(64);
-    iob->bind____skip(4);    
+    iob->bind_bool(g_distant_battle.dispatched_army.active);
+    iob->bind_u8(g_distant_battle.dispatched_army.await_soldiers);
+    iob->bind_u8(g_distant_battle.dispatched_army.position_index);
+    iob->bind____skip(1); // (BIND_SIGNATURE_INT32, &data.buildings.temple_complex_id);
+    iob->bind____skip(44);
+    iob->bind____skip(68);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(4);
     iob->bind____skip(8);
