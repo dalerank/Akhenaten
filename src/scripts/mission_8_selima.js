@@ -234,7 +234,7 @@ function mission8_distant_battle_request(ev) {
 	if (ev.years_since_start < 5 || ev.month < 1) {
 		return
 	}
-
+ 
 	mission.distant_battle_requested = true
 	log_info("akhenaten: mission 8 selima:${ev.years_since_start}:${ev.month} distant battle request", {ev:ev})
 

@@ -34,12 +34,12 @@ advisor_imperial_window {
         bottom_panel : inner_panel({pos[64, 324], size[32, 6] })
         player_rank  : header({pos[72, 332], textfn:player_rank_text})            
 
-        donate_to_city : button({pos[320, 330], size[250, 20], 
+        donate_to_city : button({pos[320, 330], size[250, 20]
                                  text{group:52, id:2}, tooltip:"${68.96}", font:FONT_NORMAL_WHITE_ON_DARK 
                                  onclick: window_donate_to_city_show
                                 })
                                 
-        send_gift    : button({pos[320, 352], size[250, 20], 
+        send_gift    : button({pos[320, 352], size[250, 20]
                                text{group:52, id:49}, tooltip:"${68.133}", font:FONT_NORMAL_WHITE_ON_DARK, 
                                onclick: window_gift_to_kingdome_show })
 
