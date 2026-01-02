@@ -207,26 +207,27 @@ bool formation_has_low_morale(formation* m) {
     return m->months_low_morale || m->months_very_low_morale;
 }
 
-void formation_calculate_batalion_totals() {
-    auto &data = g_formations;
-
-    data.num_batalions = 0;
+void formations_t::calculate_batalion_totals() {
+    num_batalions = 0;
 
     g_city.military.clear_infantry_batalions();
-
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use) {
-            if (m->batalion_id) {
-                data.num_batalions++;
-                if (m->figure_type == FIGURE_STANDARD_BEARER)
-                    g_city.military.add_infantry_batalion();
-            }
+        if (!m->in_use) {
+            continue;
+        }
 
-            if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
-                figure* f = figure_get(m->figures[0]);
-                if (f->state == FIGURE_STATE_ALIVE)
-                    formation_set_home(m, f->tile);
+        if (m->batalion_id) {
+            num_batalions++;
+            if (m->figure_type == FIGURE_STANDARD_BEARER) {
+                g_city.military.add_infantry_batalion();
+            }
+        }
+
+        if (m->missile_attack_timeout <= 0 && m->figures[0] && !m->is_herd) {
+            figure* f = figure_get(m->figures[0]);
+            if (f->state == FIGURE_STATE_ALIVE) {
+                m->home = f->tile;
             }
         }
     }
@@ -424,10 +425,6 @@ svector<figure *, formation::max_figures_count> formation::valid_figures() {
     return result;
 }
 
-void formation_set_home(formation* m, tile2i tile) {
-    m->home = tile;
-}
-
 void formation_clear_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations.formations[i];
@@ -589,7 +586,7 @@ static void set_legion_max_figures(void) {
 
 void formation_update_all() {
     OZZY_PROFILER_SECTION("Game/Update/Formations");
-    formation_calculate_batalion_totals();
+    g_formations.calculate_batalion_totals();
     g_formations.calculate_figures();
     update_directions();
     formation_batalion_decrease_damage();

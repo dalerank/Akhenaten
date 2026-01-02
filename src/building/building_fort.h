@@ -33,6 +33,7 @@ public:
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_place_checks() override;
+    virtual void on_destroy() override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t verrsion) override;
@@ -40,6 +41,8 @@ public:
 
     building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }
     formation_id create_batalion();
+    void remove_batalion();
+
     const base_params &base_params_ref() const;
 };
 

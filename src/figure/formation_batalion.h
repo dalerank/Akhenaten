@@ -3,7 +3,6 @@
 #include "building/building.h"
 #include "figure/formation.h"
 
-void formation_batalion_delete_for_fort(building* fort);
 
 int formation_batalion_recruits_needed();
 

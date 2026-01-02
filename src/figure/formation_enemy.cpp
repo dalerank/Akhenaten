@@ -628,8 +628,9 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
 
     if (m->figures[0] > 0) {
         figure* f = figure_get(m->figures[0]);
-        if (f->state == FIGURE_STATE_ALIVE)
-            formation_set_home(m, f->tile);
+        if (f->state == FIGURE_STATE_ALIVE) {
+            m->home = f->tile;
+        }
     }
 
     if (!army->formation_id) {

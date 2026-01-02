@@ -278,16 +278,12 @@ void building::clear_related_data() {
         storage_id = 0;
     }
 
-    if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED)
+    if (type == BUILDING_DISTRIBUTION_CENTER_UNUSED) {
         city_buildings_remove_distribution_center(this);
-
-    if (building_is_fort(type)) {
-        formation_batalion_delete_for_fort(this);
     }
 
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
         city_buildings_remove_triumphal_arch();
-        //building_menu_update(BUILDSET_NORMAL);
     }
 
     dcast()->on_destroy();

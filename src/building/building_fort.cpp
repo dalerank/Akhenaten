@@ -8,6 +8,7 @@
 #include "window/building/common.h"
 #include "construction/build_planner.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_warnings.h"
 #include "graphics/view/view.h"
 #include "graphics/view/lookup.h"
@@ -25,11 +26,22 @@
 #include "game/undo.h"
 
 #include "js/js_game.h"
+#include "dev/debug.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_charioteers);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_archers);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_infantry);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fort_ground);
+
+declare_console_command_p(force_fill_fort) {
+    hvector<building_fort *, 4> forts;
+    for (auto &bldg : city_buildings()) {
+        building_fort *fort = bldg.dcast_fort();
+        if (fort) {
+            forts.push_back(fort);
+        }
+    }
+}
 
 template<typename T>
 const building_fort::base_params &fort_static_params(const building_static_params &params) {
@@ -99,7 +111,7 @@ void building_fort::preview::ghost_preview(build_planner &planer, painter &ctx, 
 }
 
 formation_id building_fort::create_batalion() {
-    formation_calculate_batalion_totals();
+    g_formations.calculate_batalion_totals();
 
     formation *m = formation_get_free(1);
     if (!m->id) {
@@ -177,6 +189,28 @@ void building_fort::on_place_checks() {
 
     const bool has_barracks = g_city.buildings.count_active(BUILDING_RECRUITER) > 0;
     warnings.add_if(!has_barracks, "#needs_recruiter_to_conscript");
+}
+
+void building_fort::remove_batalion() {
+    if (base.formation_id <= 0) {
+        return;
+    }
+
+    formation *m = formation_get(base.formation_id);
+    if (!m->in_use) {
+        return;
+    }
+
+    if (m->standard_figure_id) {
+        figure_get(m->standard_figure_id)->poof();
+    }
+
+    g_formations.clear(base.formation_id);
+    g_formations.calculate_batalion_totals();
+}
+
+void building_fort::on_destroy() {
+    remove_batalion();
 }
 
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

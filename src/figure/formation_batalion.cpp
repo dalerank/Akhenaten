@@ -14,19 +14,6 @@
 #include "scenario/distant_battle.h"
 #include "building/building_fort.h"
 
-void formation_batalion_delete_for_fort(building* fort) {
-    if (fort->formation_id > 0) {
-        formation* m = formation_get(fort->formation_id);
-        if (m->in_use) {
-            if (m->standard_figure_id)
-                figure_get(m->standard_figure_id)->poof();
-
-            g_formations.clear(fort->formation_id);
-            formation_calculate_batalion_totals();
-        }
-    }
-}
-
 int formation_batalion_recruits_needed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
