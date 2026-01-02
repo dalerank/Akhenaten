@@ -30,6 +30,14 @@ int scenario_distant_battle_enemy_travel_months() {
     return g_scenario.empire.distant_battle_enemy_travel_months;
 }
 
+void distant_battles_t::dispatch_to_distant_battle(int egyptian_strength, uint8_t soldiers_num) {
+    battle.egyptian_months_to_travel_forth = scenario_distant_battle_kingdome_travel_months();
+    battle.egyptian_strength = egyptian_strength;
+
+    dispatched_army.active = true;
+    dispatched_army.await_soldiers = soldiers_num;
+}
+
 void distant_battles_t::process() {
     if (!has_distant_battle()) {
         for (int i = 0; i < MAX_INVASIONS; i++) {
@@ -45,6 +53,10 @@ void distant_battles_t::process() {
                 return;
             }
         }
+    }
+
+    if (has_distant_battle() && dispatched_army.await_soldiers == 0) {
+
     }
 
     process_distant_battle_impl();
