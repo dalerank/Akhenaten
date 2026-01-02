@@ -27,6 +27,4 @@ ANK_CONFIG_PROPERTY(city_military_t,
     infantry_batalions,
     native_attack_duration);
 
-void city_military_dispatch_to_distant_battle(int strength);
-
 int city_military_distant_battle_kingdome_months_traveled();
