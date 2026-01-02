@@ -144,7 +144,7 @@ formation_id building_fort::create_batalion() {
     m->layout = FORMATION_DOUBLE_LINE_1;
     m->morale = 50;
     m->is_at_fort = 1;
-    m->batalion_id = m->id - 1;
+    m->batalion_id = m->id;
     m->max_figures = 16;
     verify_no_crash(m->batalion_id <= 9);
 

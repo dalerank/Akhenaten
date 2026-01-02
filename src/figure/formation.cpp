@@ -74,7 +74,7 @@ void formations_t::dispatch_batalions_to_distant_battle() {
     int num_soldiers = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->batalion_id && m->empire_service && m->num_figures > 0) {
+        if (m->in_use && m->own_batalion && m->empire_service && m->num_figures > 0) {
             our_strength += dispatch_batalion_to_distant_battle(m);
             num_legions++;
             num_soldiers += m->num_figures;
@@ -112,7 +112,7 @@ static int formation_create(e_figure_type figure_type, e_formation_layout layout
     f->destination = tile;
     f->in_use = 1;
     f->figure_type = figure_type;
-    f->batalion_id = formation_id - 10;
+    f->batalion_id = formation_id;
     f->morale = 100;
     if (layout == FORMATION_ENEMY_DOUBLE_LINE) {
         if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
@@ -178,10 +178,10 @@ void formation_record_fight(formation* m) {
 int formation_grid_offset_for_invasion(int invasion_sequence) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = &g_formations.formations[i];
-        if (m->in_use == 1 && !m->batalion_id && !m->is_herd && m->invasion_sequence == invasion_sequence) {
-            if (m->home.valid() )
+        if (m->in_use && !m->own_batalion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
+            if (m->home.valid()) {
                 return m->home.grid_offset();
-            else {
+            } else {
                 return 0;
             }
         }
@@ -217,7 +217,7 @@ void formations_t::calculate_batalion_totals() {
             continue;
         }
 
-        if (m->batalion_id) {
+        if (m->own_batalion) {
             num_batalions++;
             if (m->figure_type == FIGURE_STANDARD_BEARER) {
                 g_city.military.add_infantry_batalion();
@@ -236,8 +236,9 @@ void formations_t::calculate_batalion_totals() {
 int formation_get_num_forts() {
     int total = 0;
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id)
+        if (g_formations.formations[i].in_use && g_formations.formations[i].own_batalion) {
             total++;
+        }
     }
     return total;
 }
@@ -312,7 +313,7 @@ static void change_all_morale(int legion, int enemy) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = &g_formations.formations[i];
         if (m->in_use && !m->is_herd) {
-            if (m->batalion_id)
+            if (m->own_batalion)
                 formation_change_morale(m, legion);
             else {
                 formation_change_morale(m, enemy);
@@ -324,10 +325,11 @@ static void change_all_morale(int legion, int enemy) {
 void formation_update_monthly_morale_deployed() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations.formations[i];
-        if (f->in_use != 1 || f->is_herd)
+        if (f->in_use != 1 || f->is_herd) {
             continue;
+        }
 
-        if (f->batalion_id) {
+        if (f->own_batalion) {
             if (!f->is_at_fort && !f->in_distant_battle) {
                 if (f->morale <= 20 && !f->months_low_morale && !f->months_very_low_morale)
                     change_all_morale(-10, 10);
@@ -349,13 +351,13 @@ void formation_update_monthly_morale_deployed() {
     }
 }
 
-void formation_update_monthly_morale_at_rest(void) {
+void formation_update_monthly_morale_at_rest() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = &g_formations.formations[i];
         if (m->in_use != 1 || m->is_herd)
             continue;
 
-        if (m->batalion_id) {
+        if (m->own_batalion) {
             if (m->is_at_fort) {
                 m->months_from_home = 0;
                 m->months_very_low_morale = 0;
@@ -378,10 +380,11 @@ void formation_update_monthly_morale_at_rest(void) {
 }
 
 void formation_decrease_monthly_counters(formation* m) {
-    if (m->batalion_id) {
+    if (m->batalion_id > 0) {
         if (m->cursed_by_seth)
             m->cursed_by_seth--;
     }
+
     if (m->missile_fired)
         m->missile_fired--;
 
@@ -459,8 +462,9 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 void formation_move_herds_away(tile2i tile) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* f = &g_formations.formations[i];
-        if (f->in_use != 1 || f->batalion_id || !f->is_herd || f->num_figures <= 0)
+        if (!f->in_use || !f->is_herd || f->num_figures <= 0) {
             continue;
+        }
 
         if (calc_maximum_distance(tile, f->home) <= 6) {
             g_formations.formations[i].wait_ticks = 50;
@@ -579,7 +583,7 @@ static void update_directions(void) {
 
 static void set_legion_max_figures(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (g_formations.formations[i].in_use && g_formations.formations[i].batalion_id)
+        if (g_formations.formations[i].in_use && g_formations.formations[i].own_batalion)
             g_formations.formations[i].max_figures = 16;
     }
 }
@@ -625,7 +629,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         
         iob->bind(BIND_SIGNATURE_INT16, &f->destination_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &f->standard_figure_id);
-        iob->bind_u8(f->batalion_id);
+        iob->bind____skip(1); // iob->bind_u8(f->batalion_id);
         iob->bind_bool(f->own_batalion);
         iob->bind(BIND_SIGNATURE_UINT8, &f->attack_type);
         iob->bind____skip(1);
