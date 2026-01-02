@@ -17,6 +17,7 @@
 #include "grid/point.h"
 #include "sound/sound.h"
 #include "js/js_game.h"
+#include "scenario/distant_battle.h"
 
 static const vec2i ALTERNATIVE_POINTS[] = {
   {-1, -6}, {0, -1}, {1, -1},  {1, 0},   {1, 1},   {0, 1},   {-1, 1},  {-1, 0},  {-1, -1}, {0, -2},  {1, -2},  {2, -2},
@@ -296,6 +297,7 @@ void figure_soldier::figure_action() {
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
+            g_distant_battle.dispatched_army.append_soldier(base.id);
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
