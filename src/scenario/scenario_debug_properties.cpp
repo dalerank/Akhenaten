@@ -12,14 +12,24 @@ void config_load_scenario_properties(bool header) {
         return;
     }
 
-    bool common_open = ImGui::TreeNodeEx("Scenario", ImGuiTreeNodeFlags_None, "Scenario");
+    bool common_open = ImGui::TreeNodeEx("Mission Variables", ImGuiTreeNodeFlags_None, "Mission Variables");
 
     if (common_open) {
         ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-        g_scenario.vars.foreach_vars([] (xstring name, const setting_variant &var) {
-            game_debug_show_property(name.c_str(), var);
+        struct name_var {
+            pcstr name;
+            const setting_variant *value;
+        };
+        hvector<name_var, 32> sorted_vars;
+        g_scenario.vars.foreach_vars([&] (xstring name, const setting_variant &var) {
+            sorted_vars.push_back({ name.c_str(), &var });
         });
+        std::sort(sorted_vars.begin(), sorted_vars.end(), [] (auto &lhs, auto &rhs) { return strcmp(lhs.name, rhs.name) < 0; });
+
+        for (auto &it: sorted_vars) {
+            game_debug_show_property(it.name, *it.value);
+        }
            
         ImGui::EndTable();
 
