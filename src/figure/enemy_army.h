@@ -20,6 +20,25 @@ struct enemy_army {
     char reserved_[72];
 };
 
+struct enemy_army_in_city_t {
+    int enemy_formations;
+    int enemy_strength;
+    int batlion_formations;
+    int batalion_strength;
+
+    int days_since_pharaoh_influence_calculation;
+
+    void clear(void) {
+        enemy_formations = 0;
+        enemy_strength = 0;
+        batlion_formations = 0;
+        batalion_strength = 0;
+        days_since_pharaoh_influence_calculation = 0;
+    }
+
+    void calculate_kingdome_influence();
+};
+
 struct enemy_armies_t {   
     enum {
         MAX_ENEMY_ARMIES = 120,
@@ -33,7 +52,7 @@ struct enemy_armies_t {
 };
 
 extern enemy_armies_t g_enemy_armies;
-
+extern enemy_army_in_city_t g_enemy_army_in_city;
 
 enemy_army* enemy_army_get_editable(uint8_t invasion_id);
 
@@ -47,7 +66,5 @@ void enemy_army_totals_clear(void);
 void enemy_army_totals_add_batalion_formation(int strength);
 
 void enemy_army_totals_add_enemy_formation(int strength);
-
-void enemy_army_calculate_kingdome_influence();
 
 int enemy_army_is_stronger_than_batalions(void);

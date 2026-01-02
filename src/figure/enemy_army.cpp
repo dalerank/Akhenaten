@@ -6,23 +6,6 @@
 #include "city/city_figures.h"
 #include "grid/enemy_strength.h"
 
-struct enemy_army_in_city_t {
-    int enemy_formations;
-    int enemy_strength;
-    int batlion_formations;
-    int batalion_strength;
-
-    int days_since_pharaoh_influence_calculation;
-
-    void clear(void) {
-        enemy_formations = 0;
-        enemy_strength = 0;
-        batlion_formations = 0;
-        batalion_strength = 0;
-        days_since_pharaoh_influence_calculation = 0;
-    }
-};
-
 enemy_armies_t g_enemy_armies;
 enemy_army_in_city_t g_enemy_army_in_city;
 
@@ -86,12 +69,13 @@ int enemy_army_total_enemy_formations() {
     return g_enemy_army_in_city.enemy_formations;
 }
 
-void enemy_army_calculate_kingdome_influence() {
-    g_enemy_army_in_city.days_since_pharaoh_influence_calculation++;
-    if (g_enemy_army_in_city.days_since_pharaoh_influence_calculation > 4)
-        g_enemy_army_in_city.days_since_pharaoh_influence_calculation = 0;
-    else
+void enemy_army_in_city_t::calculate_kingdome_influence() {
+    days_since_pharaoh_influence_calculation++;
+    if (days_since_pharaoh_influence_calculation > 4) {
+        days_since_pharaoh_influence_calculation = 0;
+    } else {
         return;
+    }
 
     map_soldier_strength_clear();
     map_enemy_strength_clear();
@@ -141,6 +125,7 @@ io_buffer *iob_enemy_armies_stats = new io_buffer([] (io_buffer *iob, size_t ver
     iob->bind_i32(g_enemy_army_in_city.batalion_strength);
     iob->bind_i32(g_enemy_army_in_city.days_since_pharaoh_influence_calculation);
     iob->bind____skip(256);
+
     for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
         iob->bind_u8(g_enemy_armies.data[i].formation_id);
         iob->bind_tile(g_enemy_armies.data[i].home);

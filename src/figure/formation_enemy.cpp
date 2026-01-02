@@ -686,7 +686,7 @@ void formations_t::enemy_update() {
     if (enemy_army_total_enemy_formations() <= 0) {
         enemy_armies_clear_ignore_pharaoh_soldiers();
     } else {
-        enemy_army_calculate_kingdome_influence();
+        g_enemy_army_in_city.calculate_kingdome_influence();
         g_enemy_armies.clear_formations();
 
         attacked_buildings attackd_buildings;

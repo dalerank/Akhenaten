@@ -2,6 +2,7 @@
 
 #include "building/rotation.h"
 #include "figure/formation.h"
+#include "figuretype/figure_soldier.h"
 #include "figure/formation_batalion.h"
 #include "widget/city/building_ghost.h"
 #include "widget/city/ornaments.h"
@@ -39,6 +40,22 @@ declare_console_command_p(force_fill_fort) {
         building_fort *fort = bldg.dcast_fort();
         if (fort) {
             forts.push_back(fort);
+        }
+    }
+
+    for (auto fort : forts) {
+        formation *m = formation_get(m->batalion_id + 1);
+        bool created_soldiers = false;
+        for (int i = m->num_figures; i < m->max_figures; ++i) {
+            figure *f = figure_create(m->figure_type, fort->base.road_access, DIR_0_TOP_RIGHT);
+            f->formation_id = m->id;
+            f->formation_at_rest = 1;
+            f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
+            created_soldiers = true;
+        }
+        
+        if (created_soldiers) {
+            break;
         }
     }
 }
