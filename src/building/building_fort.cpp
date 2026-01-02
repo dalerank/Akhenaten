@@ -44,10 +44,11 @@ declare_console_command_p(force_fill_fort) {
     }
 
     for (auto fort : forts) {
-        formation *m = formation_get(m->batalion_id + 1);
+        formation *m = formation_get(fort->runtime_data().fid + 1);
         bool created_soldiers = false;
         for (int i = m->num_figures; i < m->max_figures; ++i) {
-            figure *f = figure_create(m->figure_type, fort->base.road_access, DIR_0_TOP_RIGHT);
+            figure *f = figure_create(m->figure_type, fort->base.tile.shifted(-1, -1), DIR_0_TOP_RIGHT);
+            m->num_figures++;
             f->formation_id = m->id;
             f->formation_at_rest = 1;
             f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
