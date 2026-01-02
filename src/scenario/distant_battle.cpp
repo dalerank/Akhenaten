@@ -19,19 +19,91 @@
 distant_battles_t g_distant_battle;
 
 void distant_battles_t::clear() {
-    memset(&g_distant_battle, 0, sizeof(distant_battles_t));
+    battle.clear();
+    dispatched_army.clear();
 }
 
-int scenario_distant_battle_kingdome_travel_months() {
-    return g_scenario.empire.distant_battle_kingdome_travel_months;
+void distant_battles_t::battle_state_t::clear() {
+    memset(this, 0, sizeof(battle_state_t));
 }
 
-int scenario_distant_battle_enemy_travel_months() {
-    return g_scenario.empire.distant_battle_enemy_travel_months;
+const distant_battles_t::army_path &distant_battles_t::get_path() {
+    if (dispatched_army.path.empty()) {
+        const empire_object* capital = g_empire.get_our_city();
+        if (!capital || !battle.city) {
+            return dispatched_army.path; // Return empty path if invalid
+        }
+
+        const empire_city* battle_city = g_empire.city(battle.city);
+        if (!battle_city) {
+            return dispatched_army.path;
+        }
+
+        const empire_object* battle_city_obj = battle_city->get_empire_object();
+        if (!battle_city_obj) {
+            return dispatched_army.path;
+        }
+
+        vec2i start = capital->pos;
+        vec2i end = battle_city_obj->pos;
+
+        vec2i direction = end - start;
+        float distance = start.dist(end);
+        
+        if (distance < 1.0f) {
+            dispatched_army.path.push_back(start);
+            dispatched_army.path.push_back(end);
+            return dispatched_army.path;
+        }
+
+        // Calculate number of path points based on distance
+        // More points for longer distances, but cap at reasonable number
+        int num_points = (int)(distance / 50.0f) + 3; // At least 3 points, more for longer distances
+        num_points = std::min<int>(num_points, army_path::capacity());
+        
+        float dir_x = (float)direction.x / distance;
+        float dir_y = (float)direction.y / distance;
+        
+        // Perpendicular to (dir_x, dir_y) is (-dir_y, dir_x)
+        float perp_x = -dir_y;
+        float perp_y = dir_x;
+        
+        // Deviation amplitude - percentage of distance (15% deviation)
+        float deviation_amplitude = distance * 0.15f;
+        dispatched_army.path.push_back(start);
+        
+        for (int i = 1; i < num_points - 1; ++i) {
+            float t = (float)i / (float)(num_points - 1); // 0.0 to 1.0
+            
+            vec2i base_point = start + direction * t;
+            
+            float deviation1 = ::sinf(t * 3.14159f * 2.0f) * deviation_amplitude;
+            float deviation2 = ::sinf(t * 3.14159f * 4.0f) * deviation_amplitude * 0.5f;
+            float total_deviation = deviation1 + deviation2;
+            
+            vec2i deviated_point = base_point + vec2i(
+                (int)(perp_x * total_deviation),
+                (int)(perp_y * total_deviation)
+            );
+            
+            dispatched_army.path.push_back(deviated_point);
+        }
+        
+        dispatched_army.path.push_back(end);
+    }
+
+    return dispatched_army.path;
+}
+
+void distant_battles_t::dispatched_army_t::clear() {
+    active = false;
+    await_soldiers = 0;
+    position_index = 0;
+    path.clear();
 }
 
 void distant_battles_t::dispatch_to_distant_battle(int egyptian_strength, uint8_t soldiers_num) {
-    battle.egyptian_months_to_travel_forth = scenario_distant_battle_kingdome_travel_months();
+    battle.egyptian_months_to_travel_forth = g_scenario.empire.distant_battle_kingdome_travel_months;
     battle.egyptian_strength = egyptian_strength;
 
     dispatched_army.active = true;
@@ -212,8 +284,8 @@ void distant_battles_t::fight_distant_battle() {
 }
 
 void distant_battles_t::update_time_traveled() {
-    int egyptian_travel_months = scenario_distant_battle_kingdome_travel_months();
-    int enemy_travel_months = scenario_distant_battle_enemy_travel_months();
+    int egyptian_travel_months = g_scenario.empire.distant_battle_kingdome_travel_months;
+    int enemy_travel_months = g_scenario.empire.distant_battle_enemy_travel_months;
 
     if (battle.months_until_battle < enemy_travel_months) {
         battle.enemy_months_traveled = enemy_travel_months - battle.months_until_battle + 1;

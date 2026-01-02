@@ -17,17 +17,24 @@ struct distant_battles_t {
         int8_t egyptian_months_to_travel_back;
         int8_t enemy_months_traveled;
         int8_t egyptian_months_traveled;
+
+        void clear();
     };
 
+    using army_path = svector<vec2i, 50>;
     struct dispatched_army_t {
+
         bool active;
         uint8_t await_soldiers;
         uint8_t position_index;
+        army_path path;
 
         void append_soldier(uint16_t fid) {
             if (await_soldiers > 0)
                 await_soldiers--;
         }
+
+        void clear();
     };
 
     battle_state_t battle;
@@ -47,6 +54,7 @@ struct distant_battles_t {
     int enemy_strength();
     bool city_is_egyptian();
     void dispatch_to_distant_battle(int egyptian_strength, uint8_t soldiers_num);
+    const army_path &get_path();
 
     void determine_distant_battle_city();
     void clear();
@@ -60,7 +68,3 @@ ANK_CONFIG_PROPERTY(distant_battles_t::battle_state_t,
     city)
 
 extern distant_battles_t g_distant_battle;
-
-int scenario_distant_battle_kingdome_travel_months(void);
-int scenario_distant_battle_enemy_travel_months(void);
-
