@@ -8,6 +8,5 @@ struct formation_destination {
 };
 
 formation_destination formation_enemy_move_formation_to(const formation* m, tile2i tile);
-void formation_enemy_update(void);
 
 void formation_seth_kill_enemies();

@@ -159,6 +159,8 @@ struct formations_t {
     void calculate_batalion_totals();
     void dispatch_batalions_to_distant_battle();
     int dispatch_batalion_to_distant_battle(formation *m);
+
+    void enemy_update();
 };
 
 extern formations_t g_formations;
