@@ -682,18 +682,18 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
     update_enemy_movement(m, *pharaoh_batalion_distance);
 }
 
-void formation_enemy_update(void) {
+void formations_t::enemy_update() {
     if (enemy_army_total_enemy_formations() <= 0) {
         enemy_armies_clear_ignore_pharaoh_soldiers();
     } else {
         enemy_army_calculate_kingdome_influence();
         g_enemy_armies.clear_formations();
-        
+
         attacked_buildings attackd_buildings;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
-            formation* m = formation_get(i);
+            formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->own_batalion && m->destination_building_id > 0) {
-                building* target = building_get(m->destination_building_id);
+                building *target = building_get(m->destination_building_id);
                 if (target && target->state == BUILDING_STATE_VALID) {
                     building_id bid = target->main()->id;
                     auto result = attackd_buildings.insert({ bid, true });
@@ -705,10 +705,10 @@ void formation_enemy_update(void) {
                 }
             }
         }
-        
+
         int pharaoh_batalion_distance = 0;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
-            formation* m = formation_get(i);
+            formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->own_batalion) {
                 update_enemy_formation(m, &pharaoh_batalion_distance, attackd_buildings);
             }
