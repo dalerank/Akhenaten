@@ -1,11 +1,8 @@
 {
     "id" : "com.github.dalerank.akhenaten",
     "runtime" : "org.freedesktop.Platform",
-    "runtime-version" : "24.08",
+    "runtime-version" : "25.08",
     "sdk" : "org.freedesktop.Sdk",
-    "build-extensions" : [
-        "org.freedesktop.Sdk.Extension.appstream-GLib//24.08"
-    ],
     "command" : "akhenaten",
     "finish-args" : [
         "--filesystem=home",
@@ -20,9 +17,7 @@
             "name" : "akhenaten",
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
-                "-DCMAKE_BUILD_TYPE=Release",
-                "-DOPTION_SYSTEM_FREETYPE=ON",
-                "-DOPTION_SYSTEM_HARFBUZZ=ON"
+                "-DCMAKE_BUILD_TYPE=Release"
             ],
             "sources" : [
                 {
@@ -38,8 +33,8 @@
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/nothings/stb/archive/5736b15f7ea0ffb08dd38af21067c314d6a3aae9.tar.gz",
-                    "sha256" : "d00921d49b06af62aa6bfb97c1b136bec661dd11dd4eecbcb0da1f6da7cedb4c",
+                    "url" : "https://github.com/nothings/stb/archive/f1c79c02822848a9bed4315b12c8c8f3761e1296.tar.gz",
+                    "sha256" : "a39b0f2d96d9b64171ac1fd73295b7c5866f904e653b379da886d050a6900db9",
                     "dest" : "_deps/stb-src",
                     "strip-components" : 1
                 },
@@ -59,36 +54,36 @@
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-2.8.0.tar.gz",
-                    "sha256" : "1146f00815c8ad22c3d48fbe31ae23dc5997936ebf30b4b3aeab6eab7ea1db3e",
+                    "url" : "https://github.com/libsdl-org/SDL_mixer/archive/refs/tags/release-2.8.1.tar.gz",
+                    "sha256" : "63804b4b2ba503865c0853f102231aeff489b1dfc6dea4750a69e2a8ef54b2bb",
                     "dest" : "_deps/SDL2_mixer-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/pnggroup/libpng/archive/refs/tags/v1.6.50.tar.gz",
-                    "sha256" : "71158e53cfdf2877bc99bcab33641d78df3f48e6e0daad030afe9cb8c031aa46",
+                    "url" : "https://github.com/pnggroup/libpng/archive/refs/tags/v1.6.53.tar.gz",
+                    "sha256" : "b20cee717e11416d2f96ccc7d184f63730ca8cb2f03bfd0c4ed77fbc909c0bff",
                     "dest" : "_deps/libpng-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.2.tar.gz",
-                    "sha256" : "994aad785a0aa572538d909b923bf0a64e7bfe5ab3360d8ae0e397c6bb312c04",
+                    "url" : "https://github.com/ocornut/imgui/archive/refs/tags/v1.92.5.tar.gz",
+                    "sha256" : "0eb50fe9aeba1a51f96b5843c7f630a32ed2e9362d693c61b87e4fa870cf826d",
                     "dest" : "_deps/imgui-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/freetype/freetype/archive/refs/tags/VER-2-13-3.tar.gz",
-                    "sha256" : "bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103",
+                    "url" : "https://github.com/freetype/freetype/archive/refs/tags/VER-2-14-1.tar.gz",
+                    "sha256" : "44bd69d1f0750603410cfd4f26f1c5523c5a3a087a2dfa8639b757dc7c6677be",
                     "dest" : "_deps/freetype-src",
                     "strip-components" : 1
                 },
                 {
                     "type" : "archive",
-                    "url" : "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/7.3.0.tar.gz",
-                    "sha256" : "7cefc6cc161e9d5c88210dafc43bc733ca3e383fd3dd4f1e6178f81bd41cfaae",
+                    "url" : "https://github.com/harfbuzz/harfbuzz/archive/refs/tags/12.3.0.tar.gz",
+                    "sha256" : "e93af4816128fc0a02d2e84106fdfe36a3fde01086b723be8f0656a65562ca9e",
                     "dest" : "_deps/harfbuzz-src",
                     "strip-components" : 1
                 },
@@ -176,7 +171,24 @@
                         "cp -r _deps/sdl_mixer_deps/wavpack _deps/SDL2_mixer-src/external/",
                         "cp -r _deps/sdl_mixer_deps/libgme _deps/SDL2_mixer-src/external/"
                     ]
+                },
+                {
+                    "type" : "script",
+                    "commands" : [
+                        "cd /app/share/akhenaten",
+                        "/app/bin/akhenaten.bin"
+                    ],
+                    "dest-filename" : "flatpak-akhenaten-wrapper.sh"
                 }
+            ],
+            "post-install": [
+                "install -Dm644 data/pharaoh_fonts_pack.sgx ${FLATPAK_DEST}/share/akhenaten/data/pharaoh_fonts_pack.sgx",
+                "install -Dm644 data/pharaoh_custom_pack.sgx ${FLATPAK_DEST}/share/akhenaten/data/pharaoh_custom_pack.sgx",
+                "install -Dm644 data/pharaoh_houses_pack.sgx ${FLATPAK_DEST}/share/akhenaten/data/pharaoh_houses_pack.sgx",
+                "install -Dm644 data/neucha.ttf ${FLATPAK_DEST}/share/akhenaten/data/neucha.ttf",
+                "chmod a+x flatpak-akhenaten-wrapper.sh",
+                "mv /app/bin/akhenaten /app/bin/akhenaten.bin",
+                "cp flatpak-akhenaten-wrapper.sh /app/bin/akhenaten"
             ]
         }
     ]
