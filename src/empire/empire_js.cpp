@@ -5,43 +5,29 @@
 
 #include "js/js_game.h"
 
-void __empire_get_city_empire_object(js_State *J) {
-    if (js_gettop(J) < 1) {
-        js_pushnull(J);
-        return;
-    }
-
-    if (!js_isnumber(J, 1)) {
-        js_pushnull(J);
-        return;
-    }
-
-    int cid = js_touint32(J, 1);
-    if (!cid) {
-        js_pushnull(J);
-        return;
-    }
-
+std::optional<bvariant> __empire_get_city_object_property(int cid, pcstr property) {
     const auto *empire_city = g_empire.city(cid);
     if (!empire_city) {
-        js_pushnull(J);
-        return;
+        return {};
     }
 
     const auto *empire_obj = empire_city->get_empire_object();
     verify_no_crash(empire_obj && "empire_obj should exist");
 
-    js_newobject(J); {
-        js_newobject(J); {
-            js_pushnumber(J, empire_obj->pos.x);
-            js_setproperty(J, -2, "x");
-            js_pushnumber(J, empire_obj->pos.y);
-            js_setproperty(J, -2, "y");
-        }
-        js_setproperty(J, -2, "pos");
-    }
+    return archive_helper::get(*empire_obj, property, true);
 }
+ANK_FUNCTION_2(__empire_get_city_object_property)
+
+std::optional<bvariant> __empire_get_ourcity_object_property(pcstr property) {
+    const auto *ourcity_obj = g_empire.ourcity_object();
+    if (!ourcity_obj) {
+        return {};
+    }
+    
+    verify_no_crash(ourcity_obj && "empire_obj should exist");
+    return archive_helper::get(*ourcity_obj, property, true);
+}
+ANK_FUNCTION_1(__empire_get_ourcity_object_property)
 
 void js_register_empire_objects(js_State *J) {
-    REGISTER_GLOBAL_FUNCTION(J, __empire_get_city_empire_object, "__empire_get_city_empire_object", 1);
 }

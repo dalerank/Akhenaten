@@ -194,7 +194,7 @@ void empire_window::draw_distant_battle_path() {
         //return;
     }
 
-    const distant_battles_t::army_path& path = g_distant_battle.get_path();
+    const army_path& path = g_distant_battle.get_path();
     if (path.empty()) {
         return;
     }
@@ -657,7 +657,6 @@ void empire_window::draw_map() {
         ui::eimage(image_id, draw_pos);
     }
 
-    // Draw distant battle army path if army is traveling
     draw_distant_battle_path();
 
     ui.event(empire_window_draw{ draw_offset });

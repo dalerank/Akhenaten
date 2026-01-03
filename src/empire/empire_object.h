@@ -24,6 +24,7 @@ struct empire_object {
     int invasion_path_id;
     int invasion_years;
 };
+ANK_CONFIG_PROPERTY(empire_object, id, type, pos)
 
 #define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
 #define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
