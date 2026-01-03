@@ -133,66 +133,6 @@ void formation_batalion_return_home(formation* m) {
     }
 }
 
-static void kill_soldiers(formation* m, int kill_percentage) {
-    formation_change_morale(m, -75);
-    int soldiers_total = 0;
-    for (int fig = 0; fig < m->num_figures; fig++) {
-        if (m->figures[fig] > 0) {
-            figure* f = figure_get(m->figures[fig]);
-            if (!f->is_dead())
-                soldiers_total++;
-        }
-    }
-    int soldiers_to_kill = calc_adjust_with_percentage(soldiers_total, kill_percentage);
-    if (soldiers_to_kill >= soldiers_total) {
-        m->is_at_fort = 1;
-        m->in_distant_battle = 0;
-    }
-    for (int fig = 0; fig < m->num_figures; fig++) {
-        if (m->figures[fig] > 0) {
-            figure* f = figure_get(m->figures[fig]);
-            if (!f->is_dead()) {
-                if (soldiers_to_kill) {
-                    soldiers_to_kill--;
-                    f->poof();
-                }
-            }
-        }
-    }
-}
-
-void formation_batalions_kill_in_distant_battle(int kill_percentage) {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = formation_get(i);
-
-        if (m->in_use && m->own_batalion && m->in_distant_battle) {
-            kill_soldiers(m, kill_percentage);
-        }
-    }
-}
-
-static void return_soldiers(formation* m) {
-    m->in_distant_battle = 0;
-    for (int fig = 0; fig < m->num_figures; fig++) {
-        if (m->figures[fig] > 0) {
-            figure* f = figure_get(m->figures[fig]);
-            if (!f->is_dead()) {
-                f->action_state = ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
-                f->formation_at_rest = 1;
-            }
-        }
-    }
-}
-
-void formation_batalions_return_from_distant_battle(void) {
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation* m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->in_distant_battle) {
-            return_soldiers(m);
-        }
-    }
-}
-
 int formation_batalion_curse() {
     formation* best_legion = 0;
     int best_legion_weight = 0;

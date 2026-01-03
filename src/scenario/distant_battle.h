@@ -4,6 +4,42 @@
 
 #include "core/archive.h"
 
+struct formation;
+
+using army_path = svector<vec2i, 50>;
+
+struct dispatched_army_t {
+    enum e_state : uint8_t {
+        state_inactive = 0,
+        state_awaiting_soldiers,
+        state_traveling,
+        state_at_battle,
+        state_returning
+    };
+
+    e_state state;
+    uint8_t await_soldiers;
+    uint8_t position_index;
+    uint8_t movement_delay;
+    uint8_t movement_delay_max;
+    vec2i pos;
+    army_path path;
+
+    void append_soldier(uint16_t fid) {
+        if (await_soldiers > 0)
+            await_soldiers--;
+    }
+
+    vec2i get_current_position() const;
+    void formation_batalions_kill_in_distant_battle(int kill_percentage);
+    void formation_batalions_kill_soldiers(formation *m, int kill_percentage);
+    void return_from_distant_battle();
+    void return_soldiers(formation *m);
+    void clear();
+};
+ANK_CONFIG_PROPERTY(dispatched_army_t,
+    state, pos)
+
 struct distant_battles_t {
     struct battle_state_t {
         uint8_t city;
@@ -21,22 +57,6 @@ struct distant_battles_t {
         void clear();
     };
 
-    using army_path = svector<vec2i, 50>;
-    struct dispatched_army_t {
-
-        bool active;
-        uint8_t await_soldiers;
-        uint8_t position_index;
-        army_path path;
-
-        void append_soldier(uint16_t fid) {
-            if (await_soldiers > 0)
-                await_soldiers--;
-        }
-
-        void clear();
-    };
-
     battle_state_t battle;
     dispatched_army_t dispatched_army;
 
@@ -50,7 +70,8 @@ struct distant_battles_t {
     void set_city_vulnerable();
     void set_city_foreign();
     bool player_has_won();
-    void process();
+    void update_month();
+    void update_day();
     int enemy_strength();
     bool city_is_egyptian();
     void dispatch_to_distant_battle(int egyptian_strength, uint8_t soldiers_num);

@@ -72,3 +72,21 @@ function empire_window_draw_distant_battle_icon(window) {
                             
     ui.image(battle_icon, battle_icon_pos)
 }
+
+[event=empire_window_draw]
+function empire_window_draw_dispatched_army_icon(window) {
+    if (empire.dispatched_army.state <= 0) {
+        return
+    }
+    
+    var army_icon = get_image("pharaoh_general/empire_bits_00009")
+    if (!army_icon) {
+        return
+    }
+
+    var army_icon_pos = vec2i(window.draw_offset)
+                            .add(empire.dispatched_army.pos)
+                            .add({x:-army_icon.width / 2, y:-army_icon.height / 2})
+                            
+    ui.image(army_icon, army_icon_pos)
+}

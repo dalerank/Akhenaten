@@ -123,9 +123,7 @@ void ui::advisor_imperial_window::ui_draw_foreground(UiFlags flags) {
     const auto &button_request_allow = ui["button_request_allow"];
 
     int start_req_index = 0;
-    if (g_distant_battle.battle.months_until_battle > 0
-        && !g_distant_battle.battle.egyptian_months_to_travel_forth) {
-        
+    if (g_distant_battle.has_distant_battle() && g_distant_battle.dispatched_army.state == dispatched_army_t::state_inactive) {        
         // can send to distant battle
         vec2i request_pos = button_request.pos + vec2i{ 0, 0 * button_request.size.y };
         ui.button("", request_pos, button_request.size, fonts_vec{ FONT_NORMAL_WHITE_ON_DARK })
