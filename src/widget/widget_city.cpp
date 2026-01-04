@@ -182,6 +182,20 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
     }
 }
 
+void screen_city_t::draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx) {
+    int grid_offset = tile.grid_offset();
+    
+    int building_id = map_building_at(grid_offset);
+
+    color color_mask = force_mask;
+    building *b = building_get(building_id);
+
+    if (building_id && b->is_valid()) {
+        building_impl *bi = b->dcast();
+        bi->draw_postrender_effects(ctx, pixel, tile, color_mask);
+    }    
+}
+
 void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool force) {
     auto figures = map_figures_in_row(tile);
 
@@ -267,62 +281,107 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 
 void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     highlighted_formation = 0;
+
+    // If the game feature for highlighting legions is enabled, check if there's a formation
+    // at the current tile position that should be highlighted
     if (!!game_features::gameui_highlight_legions) {
+        // Get the battalion ID at the current tile position (if any)
         highlighted_formation = formation_batalion_at(current_tile);
+        
+        // If a formation exists but it's currently in a distant battle, don't highlight it
+        // (formations in distant battles should not be highlighted on the main city map)
         if (highlighted_formation > 0 && formation_get(highlighted_formation)->in_distant_battle) {
             highlighted_formation = 0;
         }
     }
 
+    // Store the selected figure ID for use throughout the rendering process
+    // This allows other parts of the rendering to know which figure is currently selected
     this->selected_figure_id = selected_figure_id;
 
     render_ctx.init();
 
+    // Mark tiles for deletion if the deletion tool is active at the current tile
+    // This ensures that buildings/tiles marked for deletion are visually indicated
     g_city_planner.ghost_mark_deleting(current_tile);
 
+    // Clear previous frame's rendering state
+    // Reset all tile render flags and clear the command buffer for image drawing operations
     map_render_clear();
     ImageDraw::clear_render_commands();
 
     clear_mappoint_pixelcoord();
+    
+    // Rebuild the coordinate mapping by iterating through all valid visible map tiles
+    // This updates the pixel positions for each tile based on the current camera view
     city_view_foreach_valid_map_tile(ctx, update_tile_coords);
 
+    // Sort all figures by their Y coordinate for proper depth ordering
+    // This ensures figures are drawn in the correct order (back-to-front) for isometric rendering
     map_figure_sort_by_y();
+    
+    // PHASE 1: Draw flat ground layer and bottom-level elements
+    // This includes terrain, flat buildings, figures that walk on flat tiles, and flat decorations
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_flat(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
         draw_ornaments_flat
     );
 
+    // PHASE 2: Draw terrain height elements (hills, slopes, raised terrain)
+    // This adds the vertical height information to terrain features
     city_view_foreach_valid_map_tile(ctx, 
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
     );
 
+    // Apply all accumulated render commands from phases 1 and 2 to the graphics context
+    // This actually draws the flat and terrain height layers to the screen
     ImageDraw::apply_render_commands(ctx);
 
-    // Experimental: draw debug layer after flat map rendering
+    // PHASE 3: Experimental debug layer - draw animal spawn area indicators
+    // This is a debugging feature to visualize where animals can spawn in the game
     draw_debug_animal_spawn_areas(ctx);
     ImageDraw::apply_render_commands(ctx);
-
        
+    // PHASE 4: Draw height-based elements (buildings, decorations, and figures)
+    // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
+    // These are drawn after flat terrain so they appear on top
     city_view_foreach_valid_map_tile(ctx,
         [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_ornaments_and_animations_height(pixel, tile, ctx); },
         [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_figures(pixel, tile, ctx, false); }
     );
 
+    // Apply all render commands from phase 4
     ImageDraw::apply_render_commands(ctx);
 
+    // Draw the city planner overlay (construction previews, ghost buildings) if no figure is selected
+    // When a figure is selected, we skip the planner drawing to avoid visual clutter
     if (!selected_figure_id) {
         g_city_planner.update(current_tile);
         g_city_planner.draw(ctx);
     }
 
-    // finally, draw these on top of everything else
+    // PHASE 5: post-processing of tiles that require special handling after all main elements are drawn
+    city_view_foreach_valid_map_tile(ctx,
+        [this] (vec2i pixel, tile2i tile, painter &ctx) { draw_postrender_building_effects(pixel, tile, ctx); }
+    );
+
+    ImageDraw::apply_render_commands(ctx);
+
+    // PHASE 6: Draw debug overlays on top of everything else
+    // These debug elements should be visible above all game elements for debugging purposes
     city_view_foreach_valid_map_tile(ctx, draw_debug_tile);
     debug_draw_figures();
 
     ImageDraw::apply_render_commands(ctx);
 
+    // Finalize the rendering by completing any remaining render operations
+    // This ensures all graphics commands are flushed and the frame is ready
+    ImageDraw::finalize_render(ctx);
+
+    // Update and draw cloud effects over the entire scene
+    // Clouds are drawn last so they appear above everything else (or are blended appropriately)
     update_clouds(ctx);
 }
 
@@ -487,7 +546,6 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
             int offset_y = 15 * (img->width / 58);
             command.pixel = pixel - vec2i{ 0, offset_y };
             command.mask = color_mask;
-            command.tag = (building_id == 261);
             command.use_sort_pixel = true;
             command.sort_pixel = pixel;
         }
@@ -546,12 +604,11 @@ void screen_city_t::draw_isometric_terrain_height(vec2i pixel, tile2i tile, pain
         auto& command = ImageDraw::create_command(render_command_t::ert_drawtile_top);
         const image_t *img = image_get(image_id);
         int offset_y = 15 * (img->width / 58) - 1;
-            command.image_id = image_id;
-            command.pixel = pixel - vec2i(0, offset_y );
-            command.mask = color_mask;
-            command.use_sort_pixel = true;
-            command.sort_pixel = pixel;
-        //command.virtual_xorder = TILE_WIDTH_PIXELS;
+        command.image_id = image_id;
+        command.pixel = pixel - vec2i(0, offset_y );
+        command.mask = color_mask;
+        command.use_sort_pixel = true;
+        command.sort_pixel = pixel;
     } 
 
     {
@@ -647,6 +704,7 @@ void screen_city_t::draw_with_overlay(painter &ctx) {
     debug_draw_figures();
 
     ImageDraw::apply_render_commands(ctx);
+    ImageDraw::finalize_render(ctx);
 
     update_clouds(ctx);
 }

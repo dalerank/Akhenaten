@@ -53,6 +53,7 @@ struct screen_city_t {
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx);
+    void draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
     void draw_tooltip(tooltip_context* c);
     void debug_draw_figures();
