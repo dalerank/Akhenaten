@@ -14,7 +14,10 @@ struct dispatched_army_t {
         state_awaiting_soldiers,
         state_traveling,
         state_at_battle,
-        state_returning
+        state_returning,
+        state_returning_win,
+        state_returning_lose,
+        state_returning_destroyed,
     };
 
     e_state state;

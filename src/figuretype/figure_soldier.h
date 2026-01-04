@@ -27,7 +27,7 @@ public:
 
     //virtual bool play_die_sound() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_PAVILION; }
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+    virtual void before_poof() override;
     virtual void update_image(const formation *m, int &dir);
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_SOLDIER; }
     virtual bool play_die_sound() override;

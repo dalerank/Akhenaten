@@ -101,9 +101,8 @@ vec2i dispatched_army_t::get_current_position() const {
         return vec2i{0, 0};
     }
     
-    if (state == state_returning) {
+    if (state >= state_returning) {
         int reverse_index = path.size() - 1 - position_index;
-        reverse_index = std::max(0, std::min(reverse_index, (int)path.size() - 1));
         return path[reverse_index];
     } else {
         uint8_t safe_index = std::min(position_index, (uint8_t)(path.size() - 1));
@@ -132,7 +131,7 @@ void distant_battles_t::dispatch_to_distant_battle(int egyptian_strength, uint8_
 }
 
 void distant_battles_t::update_day() {
-    if (has_distant_battle()) {
+    if (dispatched_army.state != dispatched_army_t::state_inactive) {
         switch (dispatched_army.state) {
         case dispatched_army_t::state_awaiting_soldiers:
             // Wait for all soldiers to join
@@ -169,23 +168,37 @@ void distant_battles_t::update_day() {
                 battle.months_until_battle = 1;
             }
             process_distant_battle_impl();
-            dispatched_army.state = dispatched_army_t::state_returning;
+            dispatched_army.position_index = 0;
+            if (dispatched_army.state == dispatched_army_t::state_traveling) {
+               dispatched_army.state = dispatched_army_t::state_returning;
+            }
             break;
 
-        case dispatched_army_t::state_returning: {
+        case dispatched_army_t::state_returning: 
+        case dispatched_army_t::state_returning_win: 
+        case dispatched_army_t::state_returning_lose: 
+        case dispatched_army_t::state_returning_destroyed: {
                 if (dispatched_army.movement_delay > 0) {
                     dispatched_army.movement_delay--;
                     break;
                 }
 
-                int reverse_index = dispatched_army.path.size() - 1 - dispatched_army.position_index;
-                if (reverse_index > 0) {
+                if (dispatched_army.position_index < dispatched_army.path.size()) {
                     dispatched_army.position_index++;
                     dispatched_army.movement_delay = dispatched_army.movement_delay_max;
                 } else {
-                    dispatched_army.state = dispatched_army_t::state_inactive;
                     dispatched_army.position_index = 0;
+
+                    if (dispatched_army.state == dispatched_army_t::state_returning_win) {
+                        events::emit(event_message{ true, "message_troops_return_victorious", 0, g_city.map.exit_point.grid_offset(), SOURCE_LOCATION });
+                    } else if (dispatched_army.state == dispatched_army_t::state_returning_lose || dispatched_army.state == dispatched_army_t::state_returning_destroyed) {
+                        events::emit(event_message{ true, "message_troops_return_failed", 0, g_city.map.exit_point.grid_offset(), SOURCE_LOCATION });
+                    }
+
+                    dispatched_army.state = dispatched_army_t::state_inactive;
                     dispatched_army.return_from_distant_battle();
+                    dispatched_army.path.clear();
+                    battle.egyptian_months_to_travel_back = 0;
                 }
             }
             break;
@@ -201,6 +214,7 @@ void dispatched_army_t::return_soldiers(formation *m) {
             figure *f = figure_get(m->figures[fig]);
             if (!f->is_dead()) {
                 f->action_state = ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
+                f->wait_ticks = (rand() % 64 + 4);
                 f->formation_at_rest = 1;
             }
         }
@@ -226,7 +240,7 @@ void distant_battles_t::update_month() {
                 && g_scenario.empire.distant_battle_kingdome_travel_months > 4;
 
             if (should_start_battle) {
-                events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0 });
+                events::emit(event_message{ true, "message_kingdome_requests_army", 0, 0, SOURCE_LOCATION });
                 g_distant_battle.init_distant_battle(g_scenario.invasions[i].amount);
                 return;
             }
@@ -292,28 +306,11 @@ int distant_battles_t::enemy_strength() {
     return battle.enemy_strength;
 }
 
-void distant_battles_t::update_aftermath() {
-    if (battle.egyptian_months_to_travel_back > 0) {
-        battle.egyptian_months_to_travel_back--;
-        battle.egyptian_months_traveled = battle.egyptian_months_to_travel_back;
-        if (battle.egyptian_months_to_travel_back <= 0) {
-            if (battle.city_foreign_months_left) {
-                // soldiers return - not in time
-                events::emit(event_message{ true, "message_troops_return_failed", 0, g_city.map.exit_point.grid_offset() });
-            } else {
-                // victorious
-                events::emit(event_message{ true, "message_troops_return_victorious", 0, g_city.map.exit_point.grid_offset() });
-            }
-            battle.egyptian_months_traveled = 0;
-            //formation_batalions_return_from_distant_battle();
-        }
-        return;
-    } 
-    
+void distant_battles_t::update_aftermath() {   
     if (battle.city_foreign_months_left > 0) {
         battle.city_foreign_months_left--;
         if (battle.city_foreign_months_left <= 0) {
-            events::emit(event_message{ true, "message_city_retaken", 0, 0 });
+            events::emit(event_message{ true, "message_city_retaken", 0, 0, SOURCE_LOCATION });
             set_city_vulnerable();
         }
         return;
@@ -400,29 +397,39 @@ bool distant_battles_t::player_has_won() {
 
 void distant_battles_t::fight_distant_battle() {
     if (battle.egyptian_months_to_travel_forth <= 0) {
-        events::emit(event_message{ true, "message_distant_battle_lost_no_troops", 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_no_troops", 0, 0, SOURCE_LOCATION });
+        dispatched_army.state = dispatched_army_t::state_returning;
         g_city.kingdome.change(-50);
         set_city_foreign();
     } else if (battle.egyptian_months_to_travel_forth > 2) {
-        events::emit(event_message{ true, "message_distant_battle_lost_too_late", 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_too_late", 0, 0, SOURCE_LOCATION });
         g_city.kingdome.change(-25);
         set_city_foreign();
         battle.egyptian_months_to_travel_back = battle.egyptian_months_traveled;
+        dispatched_army.state = dispatched_army_t::state_returning;
     } else if (!player_has_won()) {
-        events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0 });
+        events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0, SOURCE_LOCATION });
         g_city.kingdome.change(-10);
         set_city_foreign();
         battle.egyptian_months_traveled = 0;
+        dispatched_army.state = dispatched_army_t::state_returning_destroyed;
         // no return: all soldiers killed
     } else {
-        events::emit(event_message{ true, "message_distant_battle_won", 0, 0 });
+        const auto city = g_empire.city(battle.city);
+        uint16_t rtag = rand() % 0xffff;
+        dispatched_army.state = dispatched_army_t::state_returning_win;
+
+        g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
+        g_scenario.events.execute_event(rtag);
+
         g_city.kingdome.change(25);
-        city_buildings_earn_triumphal_arch();
+        city_buildings_earn_triumphal_obelisk();
 
         battle.won_count++;
         battle.city_foreign_months_left = 0;
-        battle.egyptian_months_to_travel_back = battle.egyptian_months_traveled;
+        battle.egyptian_months_to_travel_back = 0;
     }
+
     battle.months_until_battle = 0;
     battle.enemy_months_traveled = 0;
     battle.egyptian_months_to_travel_forth = 0;
