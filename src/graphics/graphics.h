@@ -38,13 +38,13 @@ enum ImgFlag_ {
     ImgFlag_Grayscale = (1 << 2),
     ImgFlag_Mirrored = (1 << 3),
     ImgFlag_InternalOffset = (1 << 4),
+    ImgFlag_Debug = (1 << 5),
 };
 
 using ImgFlags = uint32_t;
 
 struct render_command_t {
-    enum e_render_type
-    {
+    enum e_render_type : uint8_t {
         ert_none = 0,
         ert_drawtile = 1,
         ert_drawtile_top = 2,
@@ -53,17 +53,19 @@ struct render_command_t {
         ert_sprite = 5,
         ert_ornament = 6,
         ert_from_below = 7,
+        ert_draw_rect = 8,
     };
     e_render_type rtype = ert_none;
+    bool use_sort_pixel = false;
     int32_t image_id = 0;
     int32_t base_id = 0;
-    vec2i pixel = {};
+    vec2i size = {};
     uint32_t mask = COLOR_MASK_NONE;
     float scale = 1.f;
     uint32_t flags = 0;
     uint32_t id = 0;
     uint32_t tag = 0;
-    bool use_sort_pixel = false;
+    vec2i pixel = {};
     vec2i sort_pixel = {};
     std::vector<render_command_t> commands;
 };
@@ -74,8 +76,10 @@ void img_background(painter &ctx, int image_id, float scale = 1.0f, vec2i offset
 
 void apply_render_commands(painter& ctx);
 void execute_render_command(painter& ctx, const render_command_t& command);
+void finalize_render(painter &ctx);
 void clear_render_commands();
 render_command_t& create_command(render_command_t::e_render_type rt);
+render_command_t& create_dcommand(render_command_t::e_render_type rt);
 render_command_t& active_command();
 render_command_t& create_subcommand(render_command_t::e_render_type rt);
 

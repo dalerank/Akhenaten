@@ -8,6 +8,7 @@
 #include <vector>
 
 std::vector<render_command_t> g_render_commands;
+std::vector<render_command_t> g_render_debug_commands;
 
 void graphics_draw_line(vec2i start, vec2i end, color color) {
     g_render.draw_line(start, end, color);
@@ -46,21 +47,21 @@ void ImageDraw::img_background(painter& ctx, int image_id, float scale, vec2i of
 
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {
+    const image_t *img = nullptr;
     switch (command.rtype) {
     case render_command_t::ert_drawtile: {
-            ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
+           img = ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_top: {
-            ctx.isometric_from_drawtile_top(command.image_id, command.pixel, command.mask, command.flags);
+            img = ctx.isometric_from_drawtile_top(command.image_id, command.pixel, command.mask, command.flags);
         }
         break;
 
     case render_command_t::ert_drawtile_full: {
-            ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
+            img = ctx.isometric_from_drawtile(command.image_id, command.pixel, command.mask, command.flags);
 
-            const image_t *img = image_get(command.image_id);
             int offset_y = 15 * (img->width / 58);
             const vec2i pixel = command.pixel - vec2i{ 0, offset_y };
             ctx.isometric_from_drawtile_top(command.image_id, pixel, command.mask, command.flags);
@@ -68,23 +69,27 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
         break;
 
     case render_command_t::ert_generic: {
-            ctx.img_generic(command.image_id, command.pixel, command.mask, command.scale, command.flags);
+            img = ctx.img_generic(command.image_id, command.pixel, command.mask, command.scale, command.flags);
         }
         break;
 
     case render_command_t::ert_ornament: {
-            ctx.img_ornament(command.image_id, command.base_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+            img = ctx.img_ornament(command.image_id, command.base_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
         }
         break;
 
     case render_command_t::ert_sprite: {
-            ctx.img_sprite(command.image_id, command.pixel, command.mask, command.scale, command.flags);
+            img = ctx.img_sprite(command.image_id, command.pixel, command.mask, command.scale, command.flags);
         }
         break;
 
     case render_command_t::ert_from_below: {
-            ctx.img_from_below(command.image_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
+            img = ctx.img_from_below(command.image_id, command.pixel.x, command.pixel.y, command.mask, command.scale);
         }
+        break;
+
+    case render_command_t::ert_draw_rect:
+        ctx.draw_rect(command.pixel, command.size, COLOR_RED);
         break;
     }
 
@@ -95,6 +100,15 @@ void ImageDraw::execute_render_command(painter& ctx, const render_command_t& com
 
 render_command_t& ImageDraw::create_command(render_command_t::e_render_type rt) {
     auto &command = g_render_commands.emplace_back();
+    command.id = g_render_commands.size() - 1;
+    command.rtype = rt;
+    command.use_sort_pixel = false;
+    command.sort_pixel = {};
+    return command;
+}
+
+render_command_t &ImageDraw::create_dcommand(render_command_t::e_render_type rt) {
+    auto &command = g_render_debug_commands.emplace_back();
     command.id = g_render_commands.size() - 1;
     command.rtype = rt;
     command.use_sort_pixel = false;
@@ -140,4 +154,12 @@ void ImageDraw::apply_render_commands(painter& ctx) {
     }
 
     clear_render_commands();
+}
+
+void ImageDraw::finalize_render(painter &ctx) {
+    for (const auto &command : g_render_debug_commands) {
+        execute_render_command(ctx, command);
+    }
+
+    g_render_debug_commands.clear();
 }
