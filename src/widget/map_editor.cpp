@@ -37,7 +37,7 @@ static void draw_flags(vec2i pixel, tile2i point) {
     int figure_id = map_figure_id_get(point);
     while (figure_id) {
         figure* f = figure_get(figure_id);
-        f->city_draw_figure(ctx, 0);
+        f->draw(ctx, 0);
 
         if (figure_id != f->next_figure) {
             figure_id = f->next_figure;

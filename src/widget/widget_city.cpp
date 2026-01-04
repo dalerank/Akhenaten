@@ -175,9 +175,9 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
 
         if (!selected_figure_id) {
             int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
-            f.f->city_draw_figure(ctx, highlight);
+            f.f->draw(ctx, highlight);
         } else if (f.f->id == selected_figure_id) {
-            f.f->city_draw_figure(ctx, 0);
+            f.f->draw(ctx, 0);
         }
     }
 }
@@ -218,9 +218,9 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
 
             if (!selected_figure_id) {
                 int highlight = (f.f->formation_id > 0) && (f.f->formation_id == highlighted_formation);
-                f.f->city_draw_figure(ctx, highlight);
+                f.f->draw(ctx, highlight);
             } else if (f.f->id == selected_figure_id) {
-                f.f->city_draw_figure(ctx, 0);
+                f.f->draw(ctx, 0);
             }
         } 
         
@@ -229,7 +229,7 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, bool fo
                 continue;
             }
 
-            f.f->draw_figure_cart(ctx, f.f->cart_cached_pos, 0);
+            f.f->draw_cart_sprite(ctx, f.f->cart_cached_pos, 0);
         }
     }
 }
@@ -258,9 +258,9 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
 
         if (!selected_figure_id) {
             int highlight = f.f->formation_id > 0 && f.f->formation_id == highlighted_formation;
-            f.f->city_draw_figure(ctx, highlight);
+            f.f->draw(ctx, highlight);
         } else if (f.f->id == selected_figure_id) {
-            f.f->city_draw_figure(ctx, 0);
+            f.f->draw(ctx, 0);
         }
     }
 }
