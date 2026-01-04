@@ -49,26 +49,6 @@ declare_console_command_p(damage_no) {
     });    
 }
 
-// Console command to collapse a specified number of buildings (default 10)
-// Excludes farms from collapse
-declare_console_command_p(collapse_start) {
-    std::string args;
-    is >> args;
-    int count = atoi(!args.empty() ? args.c_str() : "10");
-
-    svector<building *, 1000> buildings;
-    buildings_valid_do([&] (building &b) {
-        if (!b.dcast_farm()) {
-            buildings.push_back(&b);
-        }
-    });
-
-    int step = std::max<int>(1, (int)buildings.size() / count);
-    for (int i = 0; i < buildings.size(); i += step) {
-        buildings[i]->destroy_by_collapse();
-    }
-}
-
 void building_architect_post::spawn_figure() {
     common_spawn_roamer(FIGURE_ARCHITECT, current_params().min_houses_coverage, (e_figure_action)ACTION_60_ENGINEER_CREATED);
 }
