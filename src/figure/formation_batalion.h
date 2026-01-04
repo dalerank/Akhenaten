@@ -22,6 +22,4 @@ formation_id formation_batalion_at(tile2i tile);
 
 int formation_batalion_at_building(int grid_offset);
 
-void formation_batalion_update();
-
 void formation_batalion_decrease_damage();
