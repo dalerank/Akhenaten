@@ -2717,51 +2717,52 @@ building_temple_complex_bast = {
   laborers:[50], fire_risk:[0], damage_risk: [2]
 }
 
-building_temple_complex_altar = {
-  animations : {
-    preview : { pack:PACK_TEMPLE_NILE, id:7},
-    base_n  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
-    base_w  : { pack:PACK_TEMPLE_NILE, id:2 }
-    base_e  : { pack:PACK_TEMPLE_NILE, id:2, offset:0 }
-    base_s  : { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
-    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:0 }
-    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:1 }
+building_temple_complex_altar {
+  animations  {
+    preview { pack:PACK_TEMPLE_NILE, id:7}
+    base_n  { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
+    base_w  { pack:PACK_TEMPLE_NILE, id:2 }
+    base_e  { pack:PACK_TEMPLE_NILE, id:2, offset:0 }
+    base_s  { pack:PACK_TEMPLE_NILE, id:2, offset:3 }
+    fancy_n { pack:PACK_TEMPLE_NILE, id:7, offset:0 }
+    fancy_w { pack:PACK_TEMPLE_NILE, id:7, offset:1 }
   }
 
-  building_size : 3,
-  labor_category : LABOR_CATEGORY_RELIGION,
-  needs : {
+  building_size : 3
+  labor_category : LABOR_CATEGORY_RELIGION
+  needs {
     altar : true
   }
-  damage_proof : true,
-  fire_proof : true,
+  damage_proof : true
+  fire_proof : true
   cost: [ 180, 250, 300, 500, 800 ]
 }
 
-building_temple_complex_oracle = {
-  animations : {
-    preview : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
-    base_n  : { pack:PACK_TEMPLE_NILE, id:3, offset:3 },
-    base_w  : { pack:PACK_TEMPLE_NILE, id:1, offset:0 },
-    base_e  : { pack:PACK_TEMPLE_NILE, id:3 },
-    base_s  : { pack:PACK_TEMPLE_NILE, id:1, offset:3 },
-    fancy_n : { pack:PACK_TEMPLE_NILE, id:7, offset:2 },
-    fancy_w : { pack:PACK_TEMPLE_NILE, id:7, offset:3 },
-  },
+building_temple_complex_oracle {
+  animations {
+    preview { pack:PACK_TEMPLE_NILE, id:7, offset:2 }
+    base_n  { pack:PACK_TEMPLE_NILE, id:3, offset:3 }
+    base_w  { pack:PACK_TEMPLE_NILE, id:1, offset:0 }
+    base_e  { pack:PACK_TEMPLE_NILE, id:3 }
+    base_s  { pack:PACK_TEMPLE_NILE, id:1, offset:3 }
+    fancy_n { pack:PACK_TEMPLE_NILE, id:7, offset:2 }
+    fancy_w { pack:PACK_TEMPLE_NILE, id:7, offset:3 }
+  }
 
-  building_size : 3,
-  labor_category : LABOR_CATEGORY_RELIGION,
-  needs : {
+  building_size : 3
+  labor_category : LABOR_CATEGORY_RELIGION
+  needs {
     oracle : true
   }
-  damage_proof : true,
+
+  damage_proof : true
   fire_proof : true
   cost: [ 180, 250, 300, 500, 800 ]
 }
 
 building_temple_complex_altar_ra = {
   animations : {
-    preview : { pack:PACK_GENERAL, id:42}
+    preview : { pack:PACK_GENERAL, id:42 }
   }
 
   building_size : 3,
