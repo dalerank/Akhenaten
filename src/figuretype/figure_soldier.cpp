@@ -132,6 +132,10 @@ void figure_soldier::goback_to_fort() {
     route_remove();
 }
 
+void figure_soldier::before_poof() {
+    int i = 1;
+}
+
 void figure_soldier::update_image(const formation* m, int &dir) {
     if (action_state() == ACTION_90_SOLDIER_ATTACK) {
         dir = base.attack_direction;
@@ -157,11 +161,11 @@ bool figure_soldier::play_die_sound() {
 }
 
 void figure_soldier::figure_action() {
+    base.set_flag(e_figure_flag_invisible, false);
+
     formation* m = formation_get(base.formation_id);
     g_city.figures_add_soldier();
-    //    terrain_usage = TERRAIN_USAGE_ANY;
-    //    figure_image_increase_offset(12);
-    //    cart_image_id = 0;
+
     if (m->in_use != 1) {
         base.kill();
     }
@@ -313,7 +317,11 @@ void figure_soldier::figure_action() {
         }
 
     case ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
-        base.wait_ticks = 0;
+        if (base.wait_ticks > 0) {
+            base.wait_ticks--;
+            break;
+        }
+
         base.formation_at_rest = 1;
         base.destination_tile = formation_position;
         base.move_ticks(speed_factor);
@@ -328,7 +336,7 @@ void figure_soldier::figure_action() {
 
     case ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
         base.formation_at_rest = 1;
-        base.tile = tile2i::invalid;
+        base.set_flag(e_figure_flag_invisible);
         break;
     }
 
