@@ -203,8 +203,8 @@ void formation_kingdome_retreat(void) {
     }
 }
 
-bool formation_has_low_morale(formation* m) {
-    return m->months_low_morale || m->months_very_low_morale;
+bool formation::has_low_morale() {
+    return months_low_morale || months_very_low_morale;
 }
 
 void formations_t::calculate_batalion_totals() {
@@ -597,7 +597,7 @@ void formation_update_all() {
     formation_batalion_decrease_damage();
 
     set_legion_max_figures();
-    formation_batalion_update();
+    g_formations.batalions_update();
     g_formations.enemy_update();
     g_city_animals.update();
 }

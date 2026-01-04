@@ -17,7 +17,7 @@
 bool formation_batalion_recruits_needed(void) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
-        if (m->in_use && m->batalion_id && m->own_batalion && m->batalion_recruit_type != BATALION_RECRUIT_NONE) {
+        if (m->in_use && m->own_batalion && m->batalion_recruit_type != BATALION_RECRUIT_NONE) {
             return true;
         }
     }
@@ -28,8 +28,10 @@ bool formation_batalion_recruits_needed(void) {
 void formation_batalion_update_recruit_status(building* b) {
     formation* m = formation_get(b->formation_id);
     m->batalion_recruit_type = BATALION_RECRUIT_NONE;
-    if (!m->is_at_fort || m->cursed_by_seth || m->num_figures == m->max_figures)
+    if (!m->is_at_fort || m->cursed_by_seth || m->num_figures == m->max_figures) {
         return;
+    }
+
     if (m->num_figures < m->max_figures) {
         building_fort *fort = b->dcast_fort();
         e_figure_type type = fort->runtime_data().figure_type;
@@ -65,25 +67,30 @@ void formation_batalion_restore_layout(formation* m) {
 }
 
 static int prepare_to_move(formation* m) {
-    if (m->months_very_low_morale || m->months_low_morale > 1)
+    if (m->months_very_low_morale || m->months_low_morale > 1) {
         return 0;
+    }
 
-    if (m->months_low_morale == 1)
+    if (m->months_low_morale == 1) {
         formation_change_morale(m, 10); // yay, we can move!
+    }
 
     return 1;
 }
 
 void formation_batalion_move_to(formation* m, tile2i tile) {
     map_routing_calculate_distances(m->home);
-    if (map_routing_distance(tile) <= 0)
+    if (map_routing_distance(tile) <= 0) {
         return; // unable to route there
+    }
 
-    if (tile == m->home)
+    if (tile == m->home) {
         return; // use formation_legion_return_home
+    }
 
-    if (m->cursed_by_seth)
+    if (m->cursed_by_seth) {
         return;
+    }
 
     m->standard_tile = tile;
     m->is_at_fort = 0;
@@ -178,7 +185,7 @@ int formation_batalion_at_building(int grid_offset) {
     return 0;
 }
 
-void formation_batalion_update(void) {
+void formations_t::batalions_update() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (!m->in_use || !m->batalion_id) {
@@ -191,11 +198,12 @@ void formation_batalion_update(void) {
         }
 
         for (int n = 0; n < formation::max_figures_count; n++) {
-            if (figure_get(m->figures[n])->in_attack())
+            if (figure_get(m->figures[n])->in_attack()) {
                 formation_record_fight(m);
+            }
         }
 
-        if (formation_has_low_morale(m)) {
+        if (m->has_low_morale()) {
             // flee back to fort
             for (int n = 0; n < formation::max_figures_count; n++) {
                 figure_soldier* soldier = figure_get(m->figures[n])->dcast_soldier();

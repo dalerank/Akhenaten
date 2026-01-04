@@ -3,10 +3,12 @@
 #include "core/buffer.h"
 #include "figure/figure_type.h"
 #include "game/game_environment.h"
+#include "building/building_type.h"
 #include "grid/point.h"
 #include "core/tokenum.h"
 #include "core/svector.h"
 #include "core/archive.h"
+#include "core/flat_map.h"
 
 class figure;
 constexpr uint8_t MAX_BATALIONS = 6;
@@ -134,6 +136,7 @@ struct formation {
     } prev;
 
     void set_destination_building(tile2i tile, int building_id);
+    bool has_low_morale();
     const bool valid() const { return id != 0; }
 
     svector<figure *, max_figures_count> valid_figures();
@@ -143,6 +146,8 @@ ANK_CONFIG_PROPERTY(formation,
     num_figures, morale, experience,
     is_at_fort, home, in_distant_battle,
     empire_service);
+
+using attacked_buildings = flat_map<building_id, bool, 32>;
 
 struct formations_t {
     void clear_all();
@@ -159,6 +164,9 @@ struct formations_t {
     void calculate_batalion_totals();
     void dispatch_batalions_to_distant_battle();
     int dispatch_batalion_to_distant_battle(formation *m);
+    void batalions_update();
+
+    void update_enemy_formation(formation *m, int *pharaoh_batalion_distance, attacked_buildings &attackd_buildings);
 
     void enemy_update();
 };
@@ -204,7 +212,6 @@ int formation_get_num_forts();
 int formation_get_max_forts();
 
 void formation_change_morale(formation* m, int amount);
-bool formation_has_low_morale(formation* m);
 void formation_update_morale_after_death(formation* m);
 
 void formation_update_monthly_morale_deployed(void);
