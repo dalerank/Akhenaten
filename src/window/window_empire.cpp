@@ -190,8 +190,8 @@ void empire_window::draw_trade_route(int route_id, e_empire_route_state effect) 
 }
 
 void empire_window::draw_distant_battle_path() {
-    if (!g_distant_battle.kingdome_army_is_traveling()) {
-        //return;
+    if (!g_distant_battle.has_distant_battle()) {
+        return;
     }
 
     const army_path& path = g_distant_battle.get_path();
