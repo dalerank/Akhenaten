@@ -247,7 +247,7 @@ bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
         command.pixel = point + ranim.pos;
         command.mask = color_mask;
         command.use_sort_pixel = true;
-        command.sort_pixel = point - vec2i{ 0, 1 };
+        command.sort_pixel = point + vec2i{ 0, 1 };
 
         tile2i ftile = tile.shifted(3, 0);
         vec2i offset = lookup_tile_to_pixel(ftile);
