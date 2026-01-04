@@ -1,0 +1,44 @@
+log_info("akhenaten: mission 10 saqqara started")
+
+mission10 { // Saqqara
+	start_message : 150, //The tomb of the great pharaoh, 247 = 146 + 99 - 1
+	player_rank : 1
+	next_mission : 11
+	choice_background {pack:PACK_UNLOADED, id:12}
+	choice_image1 {pack:PACK_UNLOADED, id:13, offset:0}
+	choice_image1_pos [192, 144]
+	choice_title [144, 22]
+	initial_funds [7500, 5000, 3750, 2500, 2000]
+	rescue_loans [7500, 5000, 3750, 2500, 2000]
+	house_tax_multipliers [300, 200, 150, 100, 75]
+
+	env {
+		has_animals : true		
+	    hide_nilometer : true
+	    marshland_grow : default_marshland_grow
+	    tree_grow : default_tree_grow
+	}
+
+	buildings [
+                BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD,
+				BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION,
+                BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN,
+				BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
+				BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
+                BUILDING_WOOD_CUTTERS, BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP,
+				BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
+                BUILDING_RECRUITER, BUILDING_WEAPONSMITH, BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_ARCHERS, BUILDING_FORT_INFANTRY,
+                BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
+				BUILDING_TEMPLE_COMPLEX_ORACLE, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_ALTAR,
+				BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
+                BUILDING_SCRIBAL_SCHOOL,
+			  ]
+
+	win_criteria {
+		population {enabled : true, goal : 3500 }
+		culture    {enabled : true, goal : 25 }
+		prosperity {enabled : true, goal : 15 }
+		monuments  {enabled : true, goal : 19 }
+        kingdom    {enabled : true, goal : 50 }
+	}
+}
