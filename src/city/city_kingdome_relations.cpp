@@ -50,7 +50,7 @@ declare_console_command_p(addsavings) {
 }
 
 void kingdome_relation_t::load_scenario(int rank, int load_type ) {
-    rating = scenario_starting_kingdom();
+    rating = g_scenario.starting_kingdom();
     personal_savings = scenario_starting_personal_savings();
     player_rank = rank;
     int salary_rank = rank;
