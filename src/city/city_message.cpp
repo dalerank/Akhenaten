@@ -62,7 +62,8 @@ void message_manager_t::init() {
     init_problem_areas();
 
     events::subscribe([this] (event_message ev) {
-        post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
+        auto& msg = post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
+        msg.src_location = ev.src_location;
     });
 
     events::subscribe([this] (event_message_god ev) {
@@ -146,8 +147,9 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
     auto& data = g_message_manager;
     int id = data.new_message_id();
 
-    if (id < 0)
+    if (id < 0) {
         return;
+    }
 
     data.total_messages++;
     data.current_message_id = id;
@@ -226,9 +228,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
     current_message_id = id;
 
     city_message &msg = messages[id];
-
-    // TODO: remove this hack += 99
-    //message_id += 99;
+    memset(&msg, 0, sizeof(city_message));
 
     msg.MM_text_id = lang_get_message_uid(mm_text);
     msg.is_read = 0;

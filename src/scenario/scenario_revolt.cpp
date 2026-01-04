@@ -32,7 +32,7 @@ void scenario_revolt_process(void) {
         if (game.simtime.year == g_revolt.game_year && game.simtime.month == g_revolt.month) {
             if (g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0) {
                 g_revolt.state = e_event_state_in_progress;
-                events::emit(event_message{ true, "message_revolt_start", 0, 0 });
+                events::emit(event_message{ true, "message_revolt_start", 0, 0, SOURCE_LOCATION });
             } else {
                 g_revolt.state = e_event_state_finished;
             }
@@ -40,7 +40,7 @@ void scenario_revolt_process(void) {
     } else if (g_revolt.state == e_event_state_in_progress) {
         if (g_revolt.end_month == game.simtime.month) {
             g_revolt.state = e_event_state_finished;
-            events::emit(event_message{ true, "message_revolt_finished_finished", 0, 0 });
+            events::emit(event_message{ true, "message_revolt_finished_finished", 0, 0, SOURCE_LOCATION });
         }
     }
 }

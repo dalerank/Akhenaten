@@ -166,7 +166,7 @@ void figure_trade_ship::figure_action() {
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-                events::emit(event_message{ true, "message_navigation_impossible", 0, 0 });
+                events::emit(event_message{ true, "message_navigation_impossible", 0, 0, SOURCE_LOCATION });
                 city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }

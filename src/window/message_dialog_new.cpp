@@ -100,7 +100,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
 
     if (message_id != -1) {
         const city_message& city_msg = city_message_get(this->message_id);
-        if (city_msg.eventmsg_body_id != -1) {
+        if (city_msg.eventmsg_body_id > 0) {
             is_eventmsg = true;
             title_text = g_scenario.events.msg_text(city_msg.eventmsg_title_id, 0);
             body_template = g_scenario.events.msg_text(city_msg.eventmsg_body_id, 0);
