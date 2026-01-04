@@ -110,6 +110,7 @@ enum e_figure_flag {
     e_figure_flag_soldier = 1 << 2,
     e_figure_flag_criminal = 1 << 3,
     e_figure_flag_inattack = 1 << 4,
+    e_figure_flag_invisible = 1 << 5,
 };
 
 class figure {
@@ -272,6 +273,7 @@ public:
     inline bool is_friendly() const { return !!(flags & e_figure_flag_friendly); }
     inline bool is_soldier() const { return !!(flags & e_figure_flag_soldier); }
     inline bool in_attack() const { return !!(flags & e_figure_flag_inattack); }
+    inline bool is_visible() const { return !(flags & e_figure_flag_invisible); }
 
     inline void set_flag(e_figure_flag fl, bool v = true) {
         if (v) { flags |= fl; }
@@ -358,15 +360,16 @@ public:
     int figure_image_direction();
     vec2i tile_pixel_coords();
 
-    void draw_debug();
-    void draw_tooltip(tooltip_context *c) const;
+
     vec2i adjust_pixel_offset(const vec2i pixel);
     vec2i main_sprite_pixel() const;
     vec2i cart_sprite_pixel() const;
     
-    void draw_figure_main(painter &ctx, vec2i pixel, int highlight);
-    void draw_figure_cart(painter &ctx, vec2i pixel, int highlight);
-    void city_draw_figure(painter &ctx, int highlight);
+    void draw_debug();
+    void draw_tooltip(tooltip_context *c) const;
+    void draw_main_sprite(painter &ctx, vec2i pixel, int highlight);
+    void draw_cart_sprite(painter &ctx, vec2i pixel, int highlight);
+    void draw(painter &ctx, int highlight);
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     void advance_figure_tick();
@@ -519,7 +522,7 @@ public:
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
-    virtual void figure_draw(painter &ctx, vec2i pixel, int highlight);
+    virtual void draw_main_sprite(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof() {}
     virtual void poof() { base.poof(); }
     virtual e_overlay get_overlay() const { return OVERLAY_NONE; }

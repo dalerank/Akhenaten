@@ -652,7 +652,7 @@ vec2i figure::cart_sprite_pixel() const {
     return r;
 }
 
-void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
+void figure::draw_cart_sprite(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(cart_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = cart_image_id;
@@ -660,10 +660,6 @@ void figure::draw_figure_cart(painter &ctx, vec2i pixel, int highlight) {
     command.mask = COLOR_MASK_NONE;
 
     is_cart_drawn = true;
-}
-
-void figure_impl::figure_draw(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_figure_main(ctx, base.main_cached_pos, highlight);
 }
 
 figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
@@ -767,6 +763,10 @@ figure_static_params &figure_static_params::ref(e_figure_type e) {
 void figure_impl::advance_action(int action, tile2i t) {
     advance_action(action);
     base.destination_tile = t;
+}
+
+void figure_impl::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
+    base.draw_main_sprite(ctx, base.main_cached_pos, highlight);
 }
 
 void figure_impl::set_destination(building *b, tile2i t) {
@@ -942,7 +942,7 @@ vec2i figure::adjust_pixel_offset(const vec2i pixel) {
     return { pixel.x + offset.x + 29, pixel.y + offset.y + 15 + 8 };
 }
 
-void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
+void figure::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
     const image_t *img = image_get(main_image_id);
     auto& command = ImageDraw::create_subcommand(render_command_t::ert_sprite);
     command.image_id = main_image_id;
@@ -950,7 +950,11 @@ void figure::draw_figure_main(painter &ctx, vec2i pixel, int highlight) {
     command.mask = COLOR_MASK_NONE;
 }
 
-void figure::city_draw_figure(painter &ctx, int highlight) {
+void figure::draw(painter &ctx, int highlight) {
+    if (!is_visible()) {    
+        return;
+    }
+
     // This is to update the sprite's direction when rotating the city view.
     // Unfortunately, because the only thing we have at the time of file loading is
     // the raw sprite image id, it doesn't work if we haven't performed at least a
@@ -964,11 +968,11 @@ void figure::city_draw_figure(painter &ctx, int highlight) {
             break;
 
         default:
-            dcast()->figure_draw(ctx, main_cached_pos, highlight);
+            dcast()->draw_main_sprite(ctx, main_cached_pos, highlight);
             break;
         }
     } else {
-        draw_figure_main(ctx, main_cached_pos, highlight);
+        draw_main_sprite(ctx, main_cached_pos, highlight);
         //if (!is_enemy_image && highlight) {
         //    ImageDraw::img_sprite(ctx, main_image_id, main_cached_pos, COLOR_MASK_LEGION_HIGHLIGHT);
         //}
