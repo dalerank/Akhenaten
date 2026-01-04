@@ -2432,11 +2432,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Nubt",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Village is Born",
-            pos [10, 30]
+
         }
         content {
             text: "@PWelcome to ancient Egypt, land of the Pharaohs! Here you'll participate in the history of one of the greatest civilizations the world has ever seen, in an epic story that spans more than fifteen centuries and two dozen generations. You must lead one family, generation by generation, from its earliest beginnings in Egyptian pre-history, through the dawn of civilization...to the establishment of a unique and powerful empire...and beyond.     @POur story begins more than five thousand years ago, along the banks of the Nile river, in an area known as Nubt.  Here a small confederacy of clans struggles to eke out an existence in the harsh environment. With you at its head, your family leads this small settlement."
@@ -2448,11 +2448,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thinis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Dawn of Civilization",
-            pos [10, 30]
+
         }
         content {
             text: "@PAfter many years, and the passing of a generation, your family has resettled in the area of Thinis, in Upper Egypt. Here, a small band of local rulers is attempting to extend its influence over Lower Egypt, and all lands along the river Nile, and to unite this realm under its own house, with one supreme leader.   @PEstablishing Thinis as a thriving city, like nothing ever seen before, will prove the worthiness of the Thinite confederacy, and help them gain supremacy over Lower Egypt and the other factions vying for power. In time, this will mean providing the population with entertainment, and building wonderful temples to worship the region's patron deity. @PTo build a city this grand will require a substantial supply of cash. You'll find rich deposits of gold ore in Thinis, and harvesting them should be your first priority. "
@@ -2464,11 +2464,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Perwadjyt",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Precarious Nile",
-            pos [10, 30]
+
         }
         content {
             text: "The Thinite nobles still struggle to unite the lands of the Nile under one supreme ruler.  To aid them in their cause, it is hoped that you will endeavor to establish a thriving community at Perwadjyt, in the humid Delta region of Lower Egypt, thus spreading their influence throughout the length of the sacred river.  To support a population larger than that of a village, you must learn to use agriculture. @PEgyptian farmers have begun to exploit the rich, fertile soil deposited by the annual Inundation of the Nile river for growing crops.  The Nile can be hazardous, however.  Many dangers lurk along its banks and in its waters, such as deadly crocodiles, hippopotamuses and malaria-carrying mosquitoes."
@@ -2480,11 +2480,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Nekhen",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "As the people who live along the Nile still struggle to survive in this harsh environment, a local king named Narmer has risen to power.  Though Narmer has dominion over much of this land, full unification of the twin kingdoms has yet to be achieved.  In commemoration of his accession, Narmer wishes your family to establish and govern a new city at Nekhen.  This city will have temples to many of the gods of Egypt and numerous places of entertainment."
@@ -2496,11 +2496,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Men-nefer",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Capital is Founded",
-            pos [10, 30]
+
         }
         content {
             text: "After a lengthy struggle, King Hor-Aha has managed to unite the twin kingdoms of Upper and Lower Egypt, and proclaimed himself Pharaoh over all Egypt!  As a sign of his absolute sovereignty, and the establishment of this, the first dynasty of Egypt, Hor-Aha has ordered the founding of an imposing capital at Men-nefer, from which he may govern this fledgling nation.  Because of your family's many generations of faithful service to this land, Pharaoh has chosen you to be the architect of this splendid city.  Because the capital is the very symbol of our Kingdom, its citizens must enjoy a quality of life heretofore unknown in this land.  To this end you will eventually need to trade with other cities in the realm, and to provide a higher standard of education for at least some of your citizens.  You must also build a sacred mastaba tomb for the city's nobles."
@@ -2512,11 +2512,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Timna",
-            pos [50, 80]
+
         }
         subtitle {
             text: "An Expedition to Sinai",
-            pos [10, 30]
+
         }
         content {
             text: "A new Pharaoh, Den, has taken the throne of Egypt.  Pharaoh is deeply concerned, as enemies have begun to threaten our borders, and our nation lacks adequate supplies of valuable copper needed to create weapons with which to equip our troops.  Pharaoh Den has ordered a mining expedition into the unforgiving land of Sinai, beyond our borders and deep within Bedouin territory.  The area known as Timna is rich in gold and copper ore, as well as precious turquoise gemstones, but it is otherwise barren.  Conditions there will be harsh, and you'll need to import many amenities, perhaps even additional food and fine linen, from Egypt.  Pharaoh will demand frequent shipments from Sinai and will ask you for money, copper, gemstones and weapons.  You can use any surplus of these items to help support the expedition.  Be always on your guard, for the Bedouin of the Sinai desert are formidable adversaries, and they will not willingly allow foreigners to occupy their land, let alone plunder their mineral wealth. @PTo lighten the burden that such living conditions impose on your city's people, build a Pavilion at some busy intersection.  Citizens can relax at the Pavilion's juggling and music stages, and, if you also build a Dance School, this new type of performance will provide great entertainment."
@@ -2528,11 +2528,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Behdet",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Pharaoh's Navy",
-            pos [10, 30]
+
         }
         content {
             text: "Egypt's military troops are now unmatched in the known world, but the new Pharaoh, Khasekhemwy of the second dynasty, now also demands a powerful navy based at Behdet.  Nothing less than a fleet of warships will suffice to allow us dominion over the high seas, but timber is scarce, as our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
@@ -2544,11 +2544,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abedju",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Challenge of the Sea ",
-            pos [10, 30]
+
         }
         content {
             text: "Abedju, the burial place of our forefathers, has grown over the years into a sprawling necropolis of sacred tombs.  Now, most noble men and women wish to make this their eternal resting place.  To honor them, the new Pharaoh Khasekhemwy of the second dynasty has ordered the construction of three sacred mastaba tombs (one of greater size than the other two) for the local nobility.  @PPharaoh has also ordered the creation of a powerful navy, based at Behdet.  Abedju, too must support a modest fleet of combat ships, if our shores are to remain totally secure.  This will not be easy, as timber is scarce, and our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
@@ -2560,11 +2560,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Selima",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Road to Africa",
-            pos [10, 30]
+
         }
         content {
             text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.  @L@PMerchant caravans, travelling oasis by oasis from deep within the African interior, have begun to provide Egypt with many rare and exotic luxury goods, now prized by our people.  Unfortunately these caravans are routinely attacked by warriors from Libya, and even by Bedouin of the Eastern Desert.  To secure these trade routes, Pharaoh Nebka, He of the Sedge and Bee, wishes you to establish a military post at the Selima Oasis, the hub of the caravan trade, far beyond the borders of our realm.   @L@PThere you will find some trees suitable for timber, the sale of which will help you raise money to fund the establishment of this outpost.  To forge weapons, you may obtain copper from our newly established mines at Timna, in the land of Sinai. @L@PFrom the Selima Oasis, you may import ebony from the African nation of Kerma.  Once you have succeeded in establishing this outpost, it shall provide a reliable source of ebony for all the cities in our realm."
@@ -2576,11 +2576,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abu",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Nubian Border",
-            pos [10, 30]
+
         }
         content {
             text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.   @PPharaoh wishes to extend the borders of our realm further south, into Nubia.  He orders that a city be founded at the first cataract of the Nile, on the island of Abu, that we may take advantage of the abundant deposits of gemstones, granite and sandstone to be found there.   @PThe growing necropolis of Abjedu demands these materials for the creation of more and more elaborate tombs for the nobility.  The capital at Men-nefer, too, may have need of bricks for the construction of tombs, and Pharaoh Nebka may approve requests for these and other building materials.   @PPharaoh Nebka has also ordered that one of your peers establish a military post at the Selima Oasis, to secure the caravan routes into the African interior.  Once it has been established, you may look to the Selima outpost as a source of imported ebony, a highly prized luxury good."
@@ -2592,11 +2592,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Saqqara",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "The accession of Pharaoh Djoser to the throne of Egypt has ushered in a new era of wisdom, learning and artistic achievement.  A royal cemetery is to be established at Saqqara, to serve as the eternal resting place for nobles such as Hezyre and Khabausokar, Pharaoh's trusted courtiers.   @PBut this site shall also contain a monument the like of which the world has never seen before.  I, the Pharaoh's royal vizier Imhotep, have conceived a new form of sacred tomb for Pharaoh.  Unlike the low mud brick mastabas of prior Pharaohs, this tomb shall rise toward the heavens, as if it were comprised of several mastabas, placed one on top of the other.  And what's more, this 'stepped pyramid' shall be constructed entirely of stone, that it may endure the passage of the eons.  Deep within, a sarcophagus of solid granite shall hold Pharaoh's body for his eternal rest. @PPriests at the necropolis of Abjedu have perfected the art of using linen to embalm the dead, thus opening the door to everlasting life to all Egyptians.  @POur trading post at the Selima Oasis still thrives, and from there you may import ebony from Africa.  @PPharaoh has given you a generous supply of cash to get started on this project.  Do not let him down."
@@ -2608,11 +2608,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Serabit Khadim",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Bedouin of the East",
-            pos [10, 30]
+
         }
         content {
             text: "Like Den before him, Pharaoh Huni has ordered an expedition into the harsh land of Sinai to acquire turquoise gemstones and copper.  He wishes you to lead this expedition, to a place called Serabit Khadim, where the building remains of an earlier Egyptian outpost may still be found.  Their current condition is unknown, but they may still provide some means of defense for the expedition.   @PYou should be aware that the last such expedition sent to this area never returned.   A later expedition sent to recover them also did not return.  Nevertheless, if we are to arm our soldiers adequately, our Kingdom needs copper for making weapons, and this metal is scarce in our land. @PPrepare yourself, for you will be under constant threat of attack from the Bedouin of the Sinai desert, and from our enemies the Canaanites.  Mine what copper and gemstones you may under these conditions, and be prompt in fulfilling Pharaoh's requests.  You may employ jewelers to use any surplus gemstones to fashion jewelry for the people occupying the settlement."
@@ -2624,11 +2624,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Meidum",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Royal Necropolis",
-            pos [10, 30]
+
         }
         content {
             text: "Pharaoh Huni wishes to spend everlasting eternity in a stepped pyramid, like that of Djoser before him.  He wishes to be surrounded by the tombs of his nobles, and has chosen Meidum, in Lower Egypt, as the site for this royal necropolis.   @PAs a symbol of thanks for the many generations of faithful service provided by your house, Huni has also consented to allow you to be interred at Meidum, in your own tomb.  In doing this, he has also conferred great honor upon your family. @PTo ensure that the wisdom and learning of Egypt is preserved through the ages, Pharaoh Huni also urges the construction of royal libraries.  Once filled with scrolls of papyrus, these will provide higher education to the upper classes.  @PPharaoh has sent another of his faithful courtiers on an expedition to Serabit Khadim, in the harsh land of Sinai, to acquire turquoise gemstones.  If this expedition is a success, you may look forward to importing gemstones from there. Jewelers can use these to fashion jewelry, a valuable luxury good, for the people of your city. @PThe once-thriving city of Behdet has begun to decline, and no longer exports many of the commodities they were once known for."
@@ -2640,11 +2640,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Buhen",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Expansion to Nubia",
-            pos [10, 30]
+
         }
         content {
             text: "Our new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  Pharaoh wishes that our borders be pushed even further south.  He has therefore decreed that we invade Nubia, and establish a fortified city at Buhen, beside the second cataract of the Nile.  There you must also erect a granite obelisk, to serve as a beacon that this area forever belongs to Egypt, and to Pharaoh.  There is no granite to be found so far south, however, so you will need to import it from Abu.   @PAt Buhen you will encounter fierce and seasoned Nubian warriors, who will fight to the death to prevent us from establishing a foothold so far south.  Do not despair, for after rigorous training at a Military Academy, your fighting men may emerge as seasoned veterans themselves.  What's more, our military engineers have perfected the design of several defensive structures, such as fortified Towers, Walls and Gatehouses.  These will prove invaluable in withstanding the onslaught of the Nubian army.  Transport ships may also be employed, to aid in moving your army around by water when necessary.  @PTo the north, we have opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which we are now able to purchase from them.  However, thanks to a recently established Egyptian mining community at Serabit Khadim, in the land of Sinai, we are able to supply our governors with copper at a much more affordable price.  Supplies from Serabit Khadim are often erratic, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can hold out.  @PPharaoh's burial place, a unique and spectacular monument, is currently under construction at Dahshur.  From time to time Pharaoh may request that you contribute some limestone to aid in the completion of this project."
@@ -2656,11 +2656,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "South Dahshur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Snofru's Bent Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "@POur new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  His architects have contrived a tomb even more spectacular than the stepped pyramid of Huni, and Pharoah wishes you to oversee its construction.  You will need to establish a fair sized settlement South of Dahshur, the site for Pharaoh's bent pyramid.  Once in place, this city will provide the workforce necessary to complete this ambitious project. @PThe bent pyramid is to be constructed of a plain stone core, and faced with fine white limestone, that it may forever shine under the desert sun.  You will find sufficient quantities of limestone at Dahshur, but you'll need to import the necessary amount of plain stone for this undertaking. @PPharaoh wishes that our borders be pushed even further south, and to this end he has dispatched military forces to invade Nubia, and to establish a fortified city at Buhen, beside the second cataract of the Nile. @PTo the north, Egypt has opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which are now a major import.  @PPrecious gemstones may be obtained from a recently established Egyptian outpost at Serabit Khadim, in the land of Sinai.  Lately the supply has become erratic, however, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can withstand them."
@@ -2672,11 +2672,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "North Dahshur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The True Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Snofru has brought order to Egypt, and the Kingdom now flourishes under his wise and benevolent rule.  Snofru wishes to undertake another construction project at Dahshur, even more ambitious than the bent pyramid already completed.  Royal architects, surveyors and engineers are confident that they can construct an edifice whose sides rise in one continuous angle, culminating in a perfect peak.  If successful, this will be the first true pyramid, and will be a worthy home for Pharaoh Snofru through all eternity!    @PPharaoh's wife, Queen Hetehpheres, has recently given birth to a son whom they have named 'Khufu'.  Our people look toward the day of his eventual rule with much foreboding, for the seers of Horus, God of the Pharaoh, have predicted that he will show none of his father's benevolence toward our people.  Though he will achieve many great things, they fear he will rule Egypt with unyielding tyranny.  @PYou may acquire wood from Byblos, since carpenters will have to build many ramps to allow workers to reach the summit of this great pyramid."
@@ -2688,11 +2688,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Iunet",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The defense of Egypt",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  @PKhufu has ordered that a Royal Governor be dispatched at once to Iunet, to defend our land against Kushite invaders.  Iunet can support a small fishing industry, which should feed this settlement for a time.  If the Kushites invade by water, however, the river may become unsafe for fishing boats, and shore areas may be better used to support a fleet of warships.  If food becomes scarce, cattle may also be raised to provide meat, though the herds require much straw for fodder, and straw is difficult to grow in this land.  You should seek other cities with which to trade for straw, for you will also need this to make bricks for your mastaba. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Iunet is sure to thrive. @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Iunet from the tyranny of Khufu's authority. @PPharaoh has ordered that countless quarries be dug at On, in the Delta region, to harvest a vast supply of fine white limestone.  Only the gods know what endeavor Pharaoh has planned for the use of this stone.  It is rumored that he is planning a colossal building project on the plateau outside Rostja, that he may usurp the renown his father, the wise and benevolent Snofru has earned from the completion of his two noble pyramids."
@@ -2704,11 +2704,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "On",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Ivory from the East",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  It is rumored that he plans to begin a colossal building project on the plateau outside Rostja, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids.  @PPharaoh Khufu has ordered a cluster of quarries to be dug at Tura, in the Delta region, where rich deposits of fine white limestone have recently been discovered.  You also must build three mastaba tombs for the nobles of this region, so that Pharaoh may honor their devotion.  The quarrying settlement you found shall be named 'On', and shall serve as a plentiful source of fine white limestone for many years...though only the gods know what endeavor Pharaoh has planned for its use. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, On is sure to prosper. @PKhufu has also dispatched a Royal Governor to Iunet, to defend our land against Kushite invaders.  Royal viziers look with pity upon the Governor charged with this difficult and dangerous task.  @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of On from the tyranny of Khufu's authority."
@@ -2720,11 +2720,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Rostja",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Great Pyramid and Sphinx",
-            pos [10, 30]
+
         }
         content {
             text: "Pharaoh Khufu has at last made his plans known, and his boundless aspirations are sure to weigh heavily upon our people.  Pharaoh both curses and blesses your family, for though you have been awarded the status of Nomarch, you have also been charged with carrying out the most ambitious building project ever to be undertaken in our land.   @PPharaoh's eternal resting place shall be a massive pyramid complex, situated far from any city, on the plateau outside Rostja.  His sarcophagus shall be made of solid granite, and his funeral barge of precious Lebanese cedar. Beside Pharaoh's pyramid complex, a smaller pyramid shall also be built for his son prince Khafra, whose tyranny rivals that of his father, though his achievements do not.  Khafra also declares that his image be carved into the living rock at Rostja, upon a huge figure called a 'sphinx', with the body of a lion and the head of a man. @PTo support the massive building effort needed for the completion of this monument, you'll need to establish a large settlement at Rostja.  As such, conditions there may not be overly refined, for your goal is only to complete these three great projects, and to honor Pharaoh.   @PYou will be provided with some of the fine white limestone needed for the outer casing of these pyramids, but you will also need to purchase much of what you'll need with the city's own funds. @PPharaoh is entrusting you, one of his royal Nomarchs, with these three sacred tasks.  You must demonstrate unwavering dedication to Pharaoh and fulfill his wishes...whatever the cost."
@@ -2736,11 +2736,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Bahariya Oasis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Western Desert",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs.  Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes to extend Ra's influence to the very edge of our Kingdom. @PTo accomplish this, you must build a fortified settlement at the Bahariya Oasis, far into the Western Desert. Use what water you can find there wisely, for what little there is to be found so far from the precious Nile is usually coveted by the wild beasts of the desert.  You must also beware of attacks by Libyan warriors, and Bedouin of the desert, which have plagued the desert caravans of late.  Plan your defenses carefully, and make use of whatever resources, such as wood and game, you can find at the oasis."
@@ -2752,11 +2752,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Djedu",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Temple of the Sun",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dyanasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs. Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes that the greatest be located at Djedu, in the humid Delta region of Lower Egypt.  @PLike most of the Delta, Djedu is rich in game, fish and other wildlife and vegetation, but offers few mineral resources.  As such, sandstone needed for construction of the Sun Temple will need to be imported from the quarries at the Dunqul Oasis.  Cattle may be raised here to provide meat, though the herds require much straw for fodder. @PYou'll need to clear land in order to create a suitable location for the Sun Temple.  Be sure to sell enough of the precious timber you may harvest first, for once it is gone you may not be able to acquire more.  Behdet and Abjedu are always in need of wood, and also game, thus trade with them should help to offset the cost of constructing this sacred monument."
@@ -2768,11 +2768,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Dunqul",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Kushite Threat",
-            pos [10, 30]
+
         }
         content {
             text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode, as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Men-nefer, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come. @PPowerful neighbors are moving to take advantage of Egypt's increasing weakness.  The outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kush are demanding tribute, and the slightest provocation could lead to an outright attack. Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PIf Egypt is to survive, you must do what you can to preserve trade routes to keep goods flowing into and out of Egypt.  Keep the hard-won trading post at the Selima oasis open.  Pepy, anticipating his journey to the afterlife, will make frequent requests for stone to build his pyramid, and other cities, short on food, will seek sustenance from you. @PUse your resources carefully.  Valuable wood is plentiful at the oasis, but some of the forest must be destroyed to access the limited water supply."
@@ -2784,11 +2784,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Dakhla",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Caravan Trail",
-            pos [10, 30]
+
         }
         content {
             text: "@P@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Men-nefer, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come.  @POur powerful neighbors are moving to take advantage of our increasing weakness.  Our outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kushite are demanding tribute, and the slightest provocation could lead to an outright attack.  Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PTry to keep Egypt stable by establishing an administrative post at Dakhla Oasis.  The oasis has a large stand of valuable trees, but these trees unfortunately block access to the limited water supply at the oasis.  From this important location, import ebony from the African interior.  Pepy, anticipating his journey to the after-life, will request bricks for the construction of his monument.  Other cities, short on food, will request sustenance from you."
@@ -2800,11 +2800,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thinis ",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Civil War",
-            pos [10, 30]
+
         }
         content {
             text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on his people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Henen-nesw have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Waset.  This family has done much to reunite the south, and now Henen-nesw has engaged Waset in a deadly civil war for control of all of Egypt. @PTo show their benevolence to the people of Egypt, the Inyotefs have entrusted you with rebuilding the newly conquered city of Thinis, one of the oldest cities in Egypt.  Two of Thinis' finest and most ancient buildings have survived the turmoil of its conquest: the Temple Complex of Osiris and the mansion.  The Inyotefs have decreed that should either of these buildings be destroyed, no funds will be squandered on their restoration.  The Waset rulers consider the restoration of Thinis a top priority and have gathered up considerable funds - even in this time of strife - for this purpose.  Return Thinis to its former splendor, and commission a navy and raise a strong army to defend it from the frequent attacks of those loyal to Henen-nesw, including the cities of Sauty, Nekhen and Khmun.  Be careful of the Henen-nesw rulers: they may demand tribute to see if your loyalty - and your debens - can be extorted.  Also watch out for the opportunistic Nubians who seek to take advantage of Egypt's internal struggles."
@@ -2816,11 +2816,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Waset",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Civil War",
-            pos [10, 30]
+
         }
         content {
             text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on the people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Henen-nesw have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Waset.  The family has done much to reunite the south, and now the rulers of Henen-nesw have engaged the rulers of Waset in a deadly civil war for control of all of Egypt. @PThe Inyotefs, busy fighting the Henen-nesw rulers, have entrusted you with building up their home city of Waset.  If the Inyotefs are to succeed in their fight against the Henen-nesw rulers and solidify their reputation in Egypt, Waset must be a touchstone on which other cities rely, providing succor or soldiers to those that request aid.  Waset, which could be the capital should the Inyotefs reign victorious, must be a great city.  Using the scarce resources available to you, build a Sun Temple and pyramid to show Egyptians the glory of the Inyotefs. @PWaset itself is not immune to attack.  The Henen-nesw rulers, and those loyal to them, may threaten your city from time to time, and Henen-nesw may try to extort debens from your city's treasury.  To defend against these considerable risks, build a strong army and navy to defend your city and to come to the defense of other threatened cities."
@@ -2832,11 +2832,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Kebet",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Reunification",
-            pos [10, 30]
+
         }
         content {
             text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of Vizier.  There is no one in all of Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Waset is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Henen-nesw rulers.  To help solidify our new union, I want you to rebuild and defend Kebet.  Kebet should be a glorious city that shows Egypt's citizens what is possible under my rule.   The city comes under frequent attack from remaining loyalist cities, such as Khmun, and you must be sure to defend your city's borders. @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted Vizier. @PI know that I am asking much of you, but there is no one else in Egypt capable of doing this difficult task."
@@ -2848,11 +2848,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Menat Khufu",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Reunification",
-            pos [10, 30]
+
         }
         content {
             text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank vizier.  There is no one else in Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Waset is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Henen-nesw rulers.  To help solidify the newly reunited country, I want you to rebuild and defend Menat Khufu, which was nearly destroyed during the civil war.  Menat Khufu should be a glorious city that shows Egypt's citizens what is possible under my rule.   @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted vizier. @PI have one more noble request: I want you to build granite obelisks to further proclaim all I have done for this land in my lifetime. @PI know that I am asking much of you, but I also know that you are the only one in Egypt capable of doing what I have asked."
@@ -2874,11 +2874,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Iken",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Into Nubia",
-            pos [10, 30]
+
         }
         content {
             text: "Now that Egypt is firmly united under your rule, all of your court, and I, your trusted vizier, recommend that we push the borders of our country south into Nubia.  The dry riverbed at Allaqi is rich with veins of gold, and a mighty city at Iken, with you in residence, will certainly keep the Nubians from trying to attack.  Be careful of the Kushites, however.  They are a much more dangerous adversary than the Nubians and will use their swords to encourage you, O Pharaoh, to leave their kingdom alone. @PTo leave a lasting mark on Nubia, you should build a large obelisk to attest to Egypt's many achievements.  The obelisk will offer compelling evidence to the Nubians of the benefits of Egyptian rule, and be a constant reminder of our presence. @PWhile your direct attention is devoted to Iken, do not forget our intent to establish a thriving port city on the Red Sea at Sawu.  Sawu will need help from you, and will not hesitate to ask for it.  If Sawu can thrive, they will provide Iken with much-needed copper, from which weapons can be forged."
@@ -2890,11 +2890,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Sawu",
-            pos [50, 80]
+
         }
         subtitle {
             text: "On the Shores of the Red Sea",
-            pos [10, 30]
+
         }
         content {
             text: "Now that Egypt is firmly united under your rule, we must develop trade relations with cities throughout the world to increase Egypt's wealth, O King of the Two Lands.  @PAs your people prosper, they demand more exotic items.  Tired of jewelry, an easily obtained luxury good, your people want rare and expensive luxury goods, such as incense.  Your court and I, your trusted vizier, recommend that you establish a Red Sea port at Sawu.  Sawu offers a trade route to distant Pwenet, from which the finest incense in the world may be imported, though at great cost.   @PBeside some modest veins of gold and copper ore, Sawu produces few raw materials of its own, but can thrive as a manufacturer of finished goods.  By importing raw materials from trade partners, and exporting finished products, Sawu shall be able to turn a tidy profit. @PWhile you are busy at Sawu, one of your most valiant Nomarchs is establishing a new trade center in Nubia.  His city, Iken, is likely to come under attack, so my beloved Pharaoh should be prepared to send him any resources he may need. @PUnder your rule, Sawu is sure to be one of the loveliest cities in the kingdom, suitable as a final resting place for you and your family.  As you establish the thriving port, do not neglect preparations for the afterlife.  A mausoleum and small brick pyramid will provide sumptuous quarters for you and your family after your passage to the Field of Reeds."
@@ -2906,11 +2906,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Heh",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Gauntlet",
-            pos [10, 30]
+
         }
         content {
             text: "Most respected Pharaoh, all that your family has fought so hard for is threatened!  The Nubian navy is patrolling the Nile, striking deep into the heart of Egyptian territory, ransacking villages and cities alike.  The Nubians are also boarding trade ships, pirating away goods.   To help your northern cities beat back the foe, you should be prepared to send warships and soldiers to the cities that need them.   @PTo prevent the Nubians from again sailing our waters, your military advisors recommend building a cluster of forts at Heh between the second and third cataracts of the Nile.  The forts will act as a cork, penning the Nubians in to the south.   @PSuccessfully driving out the Nubians rests with conquering the city of Baki.  Baki is rich in resources, and taking it over will cripple the Nubian economy.  Once you have wrested control of Baki away from the Nubians, you can begin importing sandstone from the city for your great mausoleum.  Your mausoleum at Heh will serve as a reminder of your dominance over the unruly Nubians.   @PThere are many challenges before you as you protect Egypt from the Nubians.  Pay heed, O Living Horus, to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
@@ -2922,11 +2922,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Bubastis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The City of Bast",
-            pos [10, 30]
+
         }
         content {
             text: "Most royal Pharaoh, with robust trade routes firmly in place, we should now show Egypt what success and wealth can bring.  Bubastis provides a perfect location for such a city: we can protect our valuable trade routes to the east while paying homage to Bast, who has watched over Egypt. @PBast's city should be like no other in Egypt.  It should be as lovely as the lotus flower, blooming forth with entertainment, schools, libraries and places of worship.  Its citizens should be well-supplied with the finer things, including imported incense.  When complete, Bubastis will be the jewel in the twin crowns. @PWhile you are building this glorious city, pay heed to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
@@ -2938,11 +2938,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Khmun",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Egypt Reclaimed",
-            pos [10, 30]
+
         }
         content {
             text: "Most powerful Pharaoh, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Rowarty.  From Rowarty, they have disrupted many of our trade routes, choking off needed supplies.  We must stop their conquest before it is too late. @PIf it pleases you, Great Pharaoh, we should reclaim the city at Khmun, which has been violated by these foul invaders.  We should also build a strong army and navy, for we may need to supply troops and arms to our compatriots in the north, especially at Rowarty, to help repel the Hyksos incursion.  They will look to you, Child of Ra, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us.  Once we drive the troublesome Hyksos out, our military advisors recommend building a fort in Sinai at Sharuhen to prevent further invasions from the east. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Iken and Heh.  While these lost cities are cause for concern, we must first oust the Hyksos before we can turn our attention southward. @PThese Hyksos are most unholy invaders.  We have just discovered that they have defiled the pyramid here in Khmun.  They have stolen from the pyramid all the burial provisions that the mighty Pharaoh interred here needs in the Field of Reeds.  We should provide a new supply of grave goods so that the Pharaoh buried here can enjoy life everlasting."
@@ -2954,11 +2954,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Sauty",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Egypt Reclaimed",
-            pos [10, 30]
+
         }
         content {
             text: " O King of the Two Lands, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Rowarty.  From Rowarty, they have disrupted many of our trade routes.  We must stop their conquest before it is too late. @PHere at Sauty, we are safe from immediate attack, although the Hyksos have the gall to demand tribute. We may need to supply troops and arms to our compatriots in the north to help repel the Hyksos incursion.  They will look to you, O Mighty Pharaoh, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Iken and Heh. @PIf Egypt is to emerge intact from these turbulent times, much will be required of your generals in the field and on the river.  To inspire your two best generals, you have promised to build each of them a pyramid as spectacular as your own.  Holding your promise in their hearts, they are fiercely combating the foe, calling upon all their strength and sinew.   @PIf it pleases you, Mighty Pharaoh, you should build three magnificent pyramids at Sauty, one for yourself and one for each of your generals.  These three pyramids will take up considerable space, so you will need to surrender some valuable resources in order to accommodate them.  You may also need to extend your city across the Nile to avail yourself of all the resources needed for this city to flourish."
@@ -2970,11 +2970,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Byblos",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Expansion and Conquest",
-            pos [10, 30]
+
         }
         content {
             text: "Egypt has emerged from its recent troubles with a newfound strength.  Byblos, with all its verdant forests and rich sources of copper, is ours!  With your presence, the city is sure to thrive, and a New Kingdom will be established. @PAh, but what an alarming discovery we made after conquering Byblos!  A new, ferocious people, the Hittites, have washed over much of Asia, and some even say that their empire rivals our own for size.  Now, they have turned their eyes toward Byblos, covetous of its riches.  If we are not well prepared for their attack, we could easily lose Byblos to our foe.  @PWhile preparing to meet the Hittites, we must mark Byblos as forever Egyptian.  With your blessing, O Pharaoh, we shall erect a series of three obelisks, two small and one large, proclaiming your sovereignty and fame throughout the far stretches of your empire.  These towering monuments will remind the residents of Byblos with whom their loyalties should lie. @PWhile we occupy ourselves with matters at Byblos, other regions of Egypt are still prone to attack.  Nubians have moved north as far as the first cataract, and we must help our compatriots drive them back.  Reports from Rowarty tell of another mysterious new foe, the Sea People.  Both these enemies must be strongly put down if Egypt is to attain glory.  To show your might, be sure to send troops and warships should they be requested."
@@ -2986,11 +2986,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Baki",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Glory of Egypt",
-            pos [10, 30]
+
         }
         content {
             text: "With the Hyksos successfully expelled from our country, our land is ripe for rebirth, a New Kingdom that outshines past glory.  Most noble Pharaoh, Baki is an ideal place to begin this New Kingdom.  We can use the large amount of gold found there to fund your new vision of Egypt.  @PWhile Egypt is on the brink of greatness, a few nagging problems remain.  Many of Egypt's cities are still recovering from the disruptions caused by the Hyksos and may need Pharaoh's help.  In other regions, Egypt's old enemies still attack us, and a new enemy, the Sea People, has been raiding our northern coast. You must be prepared to defend other Egyptian cities from our foes, both old and new. @PAs Egypt grows in stature, many cities are willing to engage in trade.  Some of these cities are so familiar with our ways, and in awe of your power, that they consider themselves Egyptian, while others are foreign to us and are trading with us for the first time.  For the glory of Egypt, take advantage of all these relationships to provide your people with all the goods they desire. @PTo usher in the new era, your royal architects crave the opportunity to build two pyramids and a stately mausoleum for you, O Pharaoh.  These will surely reflect the wealth and grandeur you have brought to Egypt."
@@ -3002,11 +3002,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Rowarty ",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Sea People",
-            pos [10, 30]
+
         }
         content {
             text: "O Horus of Gold, our hold on Asia is strong and unchallenged, and our borders again stretch far into Nubia.  But the trouble on our northern coast is escalating.  The Sea People have become increasingly aggressive, wantonly raiding our cities.  Only Pharoah's presence will be enough to defeat this fierce and wily adversary.  If you commission a navy, supported by a strong army, surely we shall overcome the Sea People.   @PWhile you work to defeat the Sea People, your brave Nomarchs are leading attacks throughout the world.  If they are successful, Egypt will rule the world from the great Euphrates river in Asia to the sprawling Kushite city of Kerma to the south.  When you and your Nomarchs have met with sweet victory, your dynasty will be recorded as the greatest dynasty ever to keep watch over Egypt. @PMarking your far-reaching influence is a new, distant trade partner, Mycenae.  The king of Mycenae has learned of the splendor and bounty of Egypt, and wishes to engage in trade with us.  If you agree to open this trade route, O Pharaoh, your citizens will surely be provided with exotic goods unlike any they have ever seen. @PTo house your royal family for the afterlife, an awe-inspiring mausoleum and an impressive pair of brick pyramids must be built.  These monuments will remind all who follow of your deeds both on and off the battlefield."
@@ -3018,11 +3018,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Hetepsensusret",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Glory of Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "Benevolent Pharaoh, you have brought peace and prosperity to our nation.  Under your wise and capable rule, Egypt is a strong and glorious country once again.  All Nomarchs are loyal to you, and no threats to our great nation remain. @PHaving accomplished all your family set out to do so many years ago, it is time to memorialize the achievements of your great dynasty.  The only way to accomplish this is to build the grandest pyramid Egypt has ever known, a pyramid even larger than Khufu's, at Rostja.  Others in your noble family have sacrificed much on the long road leading to your rule of Egypt.  They too must be remembered and honored, with a sandstone mausoleum to acknowledge their unwavering support.   @PThe ideal location for these monuments is Hetepsensusret in the rich Fayuum region.  From here, you can attend to all the affairs of state, and respond to any requests for supplies that your cities may ask of you, as you build your great pyramid."
@@ -3034,11 +3034,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Perwadjyt",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Banks of the Nile",
-            pos [10, 30]
+
         }
         content {
             text: "@PWith the aid of your family, the Thinite king Hor-Aha has successfully united the twin kingdoms of Upper and Lower Egypt, proclaimed himself Pharaoh over all Egypt, and founded an imposing capital at Men-nefer.    @PYour clan has relocated once more, this time to the humid Delta region of Lower Egypt, to an area known as Perwadjyt. Canaanite warships have been threatening this region, and you'll likely need to dispatch a few warships of your own, when the time comes. @PYour family has achieved the status of nobility. As such, it is expected that before you pass from this world into the next, you will undertake to complete an exquisite brick tomb - a mastaba - to house your body on its journey into the afterlife. @PHowever, first you must establish some farms along the banks of the Nile, to exploit the rich, fertile soil deposited by the annual Inundation of the river. This will allow your population to grow and prosper, and eventually become large enough to complete this sacred monument. But beware, for many dangers lurk among the life-giving waters of the Nile, such as deadly crocodiles, hippopotamus and malaria-carrying mosquitoes. @L@LFarming along the Nile @PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility. Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by work camps, to tend their fields. Build work camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@LThe annual harvest @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the Inundation, and deliver it to your granaries. Because there is only one harvest per year, make sure to have enough granaries to store a sufficient amount of food for your growing population."
@@ -3386,21 +3386,21 @@ game_messages_en {
             text: "Meadow Farming @LSome land is fertile enough for farming, even though it's not situated on the flood plain.  You can identify such meadow areas by tall, yellow plant growth.  Some farms planted on meadows can produce more than one harvest per year, though the yield is usually somewhat less than that of a floodplain farm. @G59   @L@LIrrigation @LEmploy irrigation to increase the fertility of any farmland. Irrigation ditches on the flood plain can be connected directly to the Nile, but you'll need a Water Lift to elevate the water onto dry land.   @L@LWater Lifts @LWater Lifts can be built on the edge of the flood plain, or on the coast, where you can raise water directly from the river up to dry land. Connect an irrigation ditch to the back of the Water Lift to bring irrigation water to inland farms.  @L@LStonemasons and Carpenters @LTwo new types of Construction Guild will be needed to erect the stepped pyramid: the Stonemasons' Guild and the Carpenters' Guild.  Stonemasons from the Guild wait at the construction site for blocks of stone, hauled there by peasant laborers.  These blockhaulers need ramps to reach the higher levels of the structure.  When it's time for the stepped pyramid to rise another level, a carpenter carries wood from the Guild to the site, and constructs a ramp for the blockhaulers. @L@LPreserving the Dead @LEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen, made by a Weaver, and confers embalming services on houses in the surrounding area."
         }
     }
-    message_company_returns {
-        id: 287,
-        type: 2,
+    message_troops_return_failed {
+        id: 287
+        type: 2
         
         size [30, 20]
         title { text: "Company returns" }
         content { text: "Under cover of night, surviving members of your disgraced company slink back to the comfort of the city's Forts, determined to never again suffer humiliation in battle." }
     }
-    message_heroes_return {
-        id: 288,
-        type: 2,
+    message_troops_return_victorious {
+        id: 288
+        type: 2
         
         size [30, 20]
         title {
-            text: "Heroes return!",
+            text: "Heroes return!"
         }
         content {
             text: "Your victorious soldiers are home from the war. Their numbers might be reduced somewhat since they left, but their comrades' sacrifice was for the good of Egypt! "
@@ -4702,11 +4702,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Naqada",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Village is Born",
-            pos [10, 30]
+
         }
         content {
             text: "@PWelcome to ancient Egypt, land of the Pharaohs! Here you'll participate in the history of one of the greatest civilizations the world has ever seen, in an epic story that spans more than fifteen centuries and two dozen generations. You must lead one family, generation by generation, from its earliest beginnings in Egyptian pre-history, through the dawn of civilization...to the establishment of a unique and powerful empire...and beyond.     @POur story begins more than five thousand years ago, along the banks of the Nile river, in an area known as Naqada.  Here a small confederacy of clans struggles to eke out an existence in the harsh environment. With you at its head, your family leads this small settlement."
@@ -4718,11 +4718,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thinis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Dawn of Civilization",
-            pos [10, 30]
+
         }
         content {
             text: "@PAfter many years, and the passing of a generation, your family has resettled in the area of Thinis, in Upper Egypt. Here, a small band of local rulers is attempting to extend its influence over Lower Egypt, and all lands along the river Nile, and to unite this realm under its own house, with one supreme leader.   @PEstablishing Thinis as a thriving city, like nothing ever seen before, will prove the worthiness of the Thinite confederacy, and help them gain supremacy over Lower Egypt and the other factions vying for power. In time, this will mean providing the population with entertainment, and building wonderful temples to worship the region's patron deity. @PTo build a city this grand will require a substantial supply of cash. You'll find rich deposits of gold ore in Thinis, and harvesting them should be your first priority. "
@@ -4734,7 +4734,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Buto",
-            pos [50, 80]
+
         }
         content {
             text: "The Thinite nobles still struggle to unite the lands of the Nile under one supreme ruler.  To aid them in their cause, it is hoped that you will endeavor to establish a thriving community at Buto, in the humid Delta region of Lower Egypt, thus spreading their influence throughout the length of the sacred river.  To support a population larger than that of a village, you must learn to use agriculture. @PEgyptian farmers have begun to exploit the rich, fertile soil deposited by the annual inundation of the Nile river for growing crops.  The Nile can be hazardous, however.  Many dangers lurk along its banks and in its waters, such as deadly crocodiles, hippopotamuses and malaria-carrying mosquitoes."
@@ -4746,11 +4746,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Hierakonpolis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "As the people who live along the Nile still struggle to survive in this harsh environment, a local king named Narmer has risen to power.  Though Narmer has dominion over much of this land, full unification of the twin kingdoms has yet to be achieved.  In commemoration of his accession, Narmer wishes your family to establish and govern a new city at Hierakonpolis.  This city will have temples to many of the gods of Egypt and numerous places of entertainment."
@@ -4762,11 +4762,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Memphis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Capital is Founded",
-            pos [10, 30]
+
         }
         content {
             text: "After a lengthy struggle, King Hor-Aha has managed to unite the twin kingdoms of Upper and Lower Egypt, and proclaimed himself Pharaoh over all Egypt!  As a sign of his absolute sovereignty, and the establishment of this, the first dynasty of Egypt, Hor-Aha has ordered the founding of an imposing capital at Memphis, from which he may govern this fledgling nation.  Because of your family's many generations of faithful service to this land, Pharaoh has chosen you to be the architect of this splendid city.  Because the capital is the very symbol of our Kingdom, its citizens must enjoy a quality of life heretofore unknown in this land.  To this end you will eventually need to trade with other cities in the realm, and to provide a higher standard of education for at least some of your citizens.  You must also build a sacred mastaba tomb for the city's nobles."
@@ -4777,12 +4777,10 @@ game_messages_en {
         type: 3,
         size [40, 30]
         title {
-            text: "Timna",
-            pos [50, 80]
+            text: "Timna"
         }
         subtitle {
-            text: "An Expedition to Sinai",
-            pos [10, 30]
+            text: "An Expedition to Sinai"
         }
         content {
             text: "A new Pharaoh, Den, has taken the throne of Egypt.  Pharaoh is deeply concerned, as enemies have begun to threaten our borders, and our nation lacks adequate supplies of valuable copper needed to create weapons with which to equip our troops.  Pharaoh Den has ordered a mining expedition into the unforgiving land of Sinai, beyond our borders and deep within Bedouin territory.  The area known as Timna is rich in gold and copper ore, as well as precious turquoise gemstones, but it is otherwise barren.  Conditions there will be harsh, and you'll need to import many amenities, perhaps even additional food and fine linen, from Egypt.  Pharaoh will demand frequent shipments from Sinai and will ask you for money, copper, gemstones and weapons.  You can use any surplus of these items to help support the expedition.  Be always on your guard, for the Bedouin of the Sinai desert are formidable adversaries, and they will not willingly allow foreigners to occupy their land, let alone plunder their mineral wealth. @PTo lighten the burden that such living conditions impose on your city's people, build a Pavilion at some busy intersection.  Citizens can relax at the Pavilion's juggling and music stages, and, if you also build a Dance School, this new type of performance will provide great entertainment. "
@@ -4793,12 +4791,10 @@ game_messages_en {
         type: 3,
         size [40, 30]
         title {
-            text: "Apollinopolis",
-            pos [50, 80]
+            text: "Apollinopolis"
         }
         subtitle {
             text: "Pharaoh's Navy",
-            pos [10, 30]
         }
         content {
             text: "Egypt's military troops are now unmatched in the known world, but the new Pharaoh, Khasekhemwy of the second dynasty, now also demands a powerful navy based at Apollinopolis.  Nothing less than a fleet of warships will suffice to allow us dominion over the high seas, but timber is scarce, as our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
@@ -4810,11 +4806,10 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abydos",
-            pos [50, 80]
         }
         subtitle {
             text: "The Challenge of the Sea ",
-            pos [10, 30]
+
         }
         content {
             text: "Abydos, the burial place of our forefathers, has grown over the years into a sprawling necropolis of sacred tombs.  Now, most noble men and women wish to make this their eternal resting place.  To honor them, the new Pharaoh Khasekhemwy of the second dynasty has ordered the construction of three sacred mastaba tombs (one of greater size than the other two) for the local nobility.  @PPharaoh has also ordered the creation of a powerful navy, based at Apollinopolis.  Abydos, too, must support a modest fleet of combat ships, if our shores are to remain totally secure.  This will not be easy, as timber is scarce, and our climate supports only a few sparse areas of forest.  Cedar may be imported at great cost from Byblos, in the land of Lebanon to the northeast.  Fortunately, exports of our native papyrus will provide a means of offsetting this expense."
@@ -4826,11 +4821,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Selima",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Road to Africa",
-            pos [10, 30]
+
         }
         content {
             text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.  @L@PMerchant caravans, travelling oasis by oasis from deep within the African interior, have begun to provide Egypt with many rare and exotic luxury goods, now prized by our people.  Unfortunately these caravans are routinely attacked by warriors from Libya, and even by Bedouin of the Eastern Desert.  To secure these trade routes, Pharaoh Nebka, He of the Sedge and Bee, wishes you to establish a military post at the Selima Oasis, the hub of the caravan trade, far beyond the borders of our realm.   @L@PThere you will find some trees suitable for timber, the sale of which will help you raise money to fund the establishment of this outpost.  To forge weapons, you may obtain copper from our newly established mines at Timna, in the land of Sinai. @L@PFrom the Selima Oasis, you may import ebony from the African nation of Kerma.  Once you have succeeded in establishing this outpost, it shall provide a reliable source of ebony for all the cities in our realm."
@@ -4842,11 +4837,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Elephantine",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Nubian Border",
-            pos [10, 30]
+
         }
         content {
             text: "@PA new Pharaoh, Nebka, has been proclaimed, heralding the beginning of the third dynasty of Egyptian rulers.  Nebka has brought great organization and structure to Egypt, ordering that all our realm be divided into districts, or nomes, each governed by a local ruler called a 'Nomarch'.  Though this system may seem rigid, under his leadership Egypt has grown and prospered, and made many great achievements in art and architecture.   @PPharaoh wishes to extend the borders of our realm further south, into Nubia.  He orders that a city be founded at the first cataract of the Nile, on the island of Elephantine, that we may take advantage of the abundant deposits of gemstones, granite and sandstone to be found there.   @PThe growing necropolis of Abydos demands these materials for the creation of more and more elaborate tombs for the nobility.  The capital at Memphis, too, may have need of bricks for the construction of tombs, and Pharaoh Nebka may approve requests for these and other building materials.   @PPharaoh Nebka has also ordered that one of your peers establish a military post at the Selima Oasis, to secure the caravan routes into the African interior.  Once it has been established, you may look to the Selima outpost as a source of imported ebony, a highly prized luxury good."
@@ -4858,11 +4853,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Saqqara",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "The accession of Pharaoh Djoser to the throne of Egypt has ushered in a new era of wisdom, learning and artistic achievement.  A royal cemetery is to be established at Saqqara, to serve as the eternal resting place for nobles such as Hezyre and Khabausokar, Pharaoh's trusted courtiers.   @PBut this site shall also contain a monument the like of which the world has never seen before.  I, the Pharaoh's royal vizier Imhotep, have conceived a new form of sacred tomb for Pharaoh.  Unlike the low mud brick mastabas of prior Pharaohs, this tomb shall rise toward the heavens, as if it were comprised of several mastabas, placed one on top of the other.  And what's more, this 'stepped pyramid' shall be constructed entirely of stone, that it may endure the passage of the eons.  Deep within, a sarcophagus of solid granite shall hold Pharaoh's body for his eternal rest. @PPriests at the necropolis of Abydos have perfected the art of using linen to embalm the dead, thus opening the door to everlasting life to all Egyptians.  @POur trading post at the Selima Oasis still thrives, and from there you may import ebony from Africa.  @PPharaoh has given you a generous supply of cash to get started on this project.  Do not let him down."
@@ -4874,11 +4869,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Serabit Khadim",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Bedouin of the East",
-            pos [10, 30]
+
         }
         content {
             text: "Like Den before him, Pharaoh Huni has ordered an expedition into the harsh land of Sinai to acquire turquoise gemstones and copper.  He wishes you to lead this expedition, to a place called Serabit Khadim, where the building remains of an earlier Egyptian outpost may still be found.  Their current condition is unknown, but they may still provide some means of defense for the expedition.   @PYou should be aware that the last such expedition sent to this area never returned.   A later expedition sent to recover them also did not return.  Nevertheless, if we are to arm our soldiers adequately, our Kingdom needs copper for making weapons, and this metal is scarce in our land. @PPrepare yourself, for you will be under constant threat of attack from the Bedouin of the Sinai desert, and from our enemies the Canaanites.  Mine what copper and gemstones you may under these conditions, and be prompt in fulfilling Pharaoh's requests.  You may employ jewelers to use any surplus gemstones to fashion jewelry for the people occupying the settlement."
@@ -4890,11 +4885,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Meidum",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Royal Necropolis",
-            pos [10, 30]
+
         }
         content {
             text: "Pharaoh Huni wishes to spend everlasting eternity in a stepped pyramid, like that of Djoser before him.  He wishes to be surrounded by the tombs of his nobles, and has chosen Meidum, in Lower Egypt, as the site for this royal necropolis.   @PAs a symbol of thanks for the many generations of faithful service provided by your house, Huni has also consented to allow you to be interred at Meidum, in your own tomb.  In doing this, he has conferred great honor upon your family. @PTo ensure that the wisdom and learning of Egypt is preserved through the ages, Pharaoh Huni also urges the construction of royal libraries.  Once filled with scrolls of papyrus, these will provide higher education to the upper classes.  @PPharaoh has sent another of his faithful courtiers on an expedition to Serabit Khadim, in the harsh land of Sinai, to acquire turquoise gemstones.  If this expedition is a success, you may look forward to importing gemstones from there. Jewelers can use these to fashion jewelry, a valuable luxury good, for the people of your city. @PThe once-thriving city of Apollinopolis has begun to decline, and no longer exports many of the commodities they were once known for."
@@ -4906,11 +4901,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Buhen",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Expansion to Nubia",
-            pos [10, 30]
+
         }
         content {
             text: "Our new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  Pharaoh wishes that our borders be pushed even further south.  He has therefore decreed that we invade Nubia, and establish a fortified city at Buhen, beside the second cataract of the Nile.  There you must also erect a granite obelisk, to serve as a beacon that this area forever belongs to Egypt, and to Pharaoh.  There is no granite to be found so far south, however, so you will need to import it from Elephantine.   @PAt Buhen you will encounter fierce and seasoned Nubian warriors, who will fight to the death to prevent us from establishing a foothold so far south.  Do not despair, for after rigorous training at a Military Academy, your fighting men may emerge as seasoned veterans themselves.  What's more, our military engineers have perfected the design of several defensive structures, such as fortified Towers, Walls and Gatehouses.  These will prove invaluable in withstanding the onslaught of the Nubian army.  Transport ships may also be employed, to aid in moving your army around by water when necessary.  @PTo the north, we have opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which we are now able to purchase from them.  However, thanks to a recently established Egyptian mining community at Serabit Khadim, in the land of Sinai, we are able to supply our governors with copper at a much more affordable price.  Supplies from Serabit Khadim are often erratic, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can hold out.  @PPharaoh's burial place, a unique and spectacular monument, is currently under construction at Dahshur.  From time to time Pharaoh may request that you contribute some limestone to aid in the completion of this project."
@@ -4922,11 +4917,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "South Dahshur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Snofru's Bent Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "@POur new Pharaoh, Snofru, is determined that this, the fourth dynasty, be remembered as the greatest ever to rule Egypt.  His architects have contrived a tomb even more spectacular than the stepped pyramid of Huni, and Pharoah wishes you to oversee its construction.  You will need to establish a fair sized settlement South of Dahshur, the site for Pharaoh's bent pyramid.  Once in place, this city will provide the workforce necessary to complete this ambitious project. @PThe bent pyramid is to be constructed of a plain stone core, and faced with fine white limestone, that it may forever shine under the desert sun.  You will find sufficient quantities of limestone at Dahshur, but you'll need to import the necessary amount of plain stone for this undertaking. @PPharaoh wishes that our borders be pushed even further south, and to this end he has dispatched military forces to invade Nubia, and to establish a fortified city at Buhen, beside the second cataract of the Nile. @PTo the north, Egypt has opened relations with Enkomi, on the island of Cyprus.  This land is named for its abundant reserves of copper ore, which are now a major import.  @PPrecious gemstones may be obtained from a recently established Egyptian outpost at Serabit Khadim, in the land of Sinai.  Lately the supply has become erratic, however, due to unrelenting Bedouin and Canaanite attacks against the settlement, and we are uncertain how much longer the Egyptian forces stationed there can withstand them."
@@ -4938,11 +4933,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "North Dahshur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The True Pyramid",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Snofru has brought order to Egypt, and the kingdom now flourishes under his wise and benevolent rule.  Snofru wishes to undertake another construction project at Dahshur, even more ambitious than the bent pyramid already completed.  Royal architects, surveyors and engineers are confident that they can construct an edifice whose sides rise in one continuous angle, culminating in a perfect peak.  If successful, this will be the first true pyramid, and will be a worthy home for Pharaoh Snofru through all eternity!    @PPharaoh's wife, Queen Hetehpheres, has recently given birth to a son whom they have named 'Khufu'.  Our people look toward the day of his eventual rule with much foreboding, for the seers of Horus, God of the Pharaoh, have predicted that he will show none of his father's benevolence toward our people.  Though he will achieve many great things, they fear he will rule Egypt with unyielding tyranny.  @PYou may acquire wood from Byblos, since carpenters will have to build many ramps to allow workers to reach the summit of this great pyramid."
@@ -4954,11 +4949,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Dendera",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The defense of Egypt",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  @PKhufu has ordered that a Royal Governor be dispatched at once to Dendera, to defend our land against Kushite invaders.  Dendera can support a small fishing industry, which should feed this settlement for a time.  If the Kushites invade by water, however, the river may become unsafe for fishing boats, and shore areas may be better used to support a fleet of warships.  If food becomes scarce, cattle may also be raised to provide meat, though the herds require much straw for fodder, and straw is difficult to grow in this land.  You should seek other cities with which to trade for straw, for you will also need this to make bricks for your mastaba. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Dendera is sure to thrive. @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Dendera from the tyranny of Khufu's authority. @PPharaoh has ordered that countless quarries be dug at Heliopolis, in the Delta region, to harvest a vast supply of fine white limestone.  Only the gods know what endeavor Pharaoh has planned for the use of this stone.  It is rumored that he is planning a colossal building project on the plateau outside Giza, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids."
@@ -4970,11 +4965,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Heliopolis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Ivory from the East",
-            pos [10, 30]
+
         }
         content {
             text: "@PPharaoh Khufu has taken the throne, and, as foretold by seers of Horus and Ra, our people have already begun to suffer under his oppression.  It is rumored that he plans to begin a colossal building project on the plateau outside Giza, that he may usurp the renown his father, the wise and benevolent Snofru, has earned from the completion of his two noble pyramids.  @PPharaoh Khufu has ordered a cluster of quarries to be dug at Tura, in the Delta region, where rich deposits of fine white limestone have recently been discovered.  You also must build three mastaba tombs for the nobles of this region, so that Pharaoh may honor their devotion.  The quarrying settlement you found shall be named 'Heliopolis', and shall serve as a plentiful source of fine white limestone for many years...though only the gods know what endeavor Pharaoh has planned for its use. @PThe city of Byblos in Lebanon, land of the cedars, has begun trading with the powerful empires of the east.  These are Assyria and Ur, in the land called 'Mesopotamia', between the two great rivers, and from them the finest ivory may be obtained via Byblos.  With the arrival of rare and exotic luxury goods such as this, Heliopolis is sure to prosper. @PKhufu has also dispatched a Royal Governor to Dendera, to defend our land against Kushite invaders.  Royal viziers look with pity upon the Governor charged with this difficult and dangerous task.  @PIn the capital, the Egyptian people have begun to enjoy a board game called senet.  This game is normally enjoyed over a pitcher of beer, in a public gathering place called a 'Senet House'.  Such places may provide a welcome diversion for the people of Heliopolis from the tyranny of Khufu's authority."
@@ -4986,11 +4981,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Giza",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Great Pyramid and Sphinx",
-            pos [10, 30]
+
         }
         content {
             text: "Pharaoh Khufu has at last made his plans known, and his boundless aspirations are sure to weigh heavily upon our people.  Pharaoh both curses and blesses your family, for though you have been awarded the status of Nomarch, you have also been charged with carrying out the most ambitious building project ever to be undertaken in our land.   @PPharaoh's eternal resting place shall be a massive pyramid complex, situated far from any city, on the plateau outside Giza.  His sarcophagus shall be made of solid granite, and his funeral barge of precious Lebanese cedar. Beside Pharaoh's pyramid complex, a smaller pyramid shall also be built for his son prince Khafra, whose tyranny rivals that of his father, though his achievements do not.  Khafra also declares that his image be carved into the living rock at Giza, upon a huge figure called a 'sphinx', with the body of a lion and the head of a man. @PTo support the massive building effort needed for the completion of this monument, you'll need to establish a large settlement at Giza.  As such, conditions there may not be overly refined, for your goal is only to complete these three great projects, and to honor Pharaoh.   @PYou will be provided with some of the fine white limestone needed for the outer casing of these pyramids, but you will also need to purchase much of what you'll need with the city's own funds. @PPharaoh is entrusting you, one of his royal Nomarchs, with these three sacred tasks.  You must demonstrate unwavering dedication to Pharaoh and fulfill his wishes...whatever the cost."
@@ -5002,11 +4997,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Bahariya Oasis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Western Desert",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs.  Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes to extend Ra's influence to the very edge of our Kingdom. @PTo accomplish this, you must build a fortified settlement at the Bahariya Oasis, far into the Western Desert. Use what water you can find there wisely, for what little there is to be found so far from the precious Nile is usually coveted by the wild beasts of the desert.  You must also beware of attacks by Libyan warriors, and Bedouin of the desert, which have plagued the desert caravans of late.  Plan your defenses carefully, and make use of whatever resources, such as wood and game, you can find at the oasis."
@@ -5018,11 +5013,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abusir",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Temple of the Sun",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe reigns of Khufu and Khafra have come to an end, and with them so too has the fourth dynasty of Egyptian ruling families.  But lady Khentkaues, a distant member of this family, has given birth to a new Pharaoh named 'Userkaf', and so the royal line continues unbroken.  With Userkaf begins the fifth dynasty, an era that promises much change.   @PUserkaf has decentralized the rule of our country somewhat, and has granted more power to local authorities.  Now Nomarchs such as you are free to handle their own affairs. Pharaoh will not attempt the construction of a massive tomb to house him for eternity, for he has another project in mind for you. @PPharaoh has declared Ra, god of the sun and of the kingdom, to be King of the Gods, and intends to proclaim his sovereignty throughout the land.  Many Sun Temples already dot the Egyptian landscape, but Pharaoh wishes that the greatest be located at Abusir, in the humid Delta region of Lower Egypt.  @PLike most of the Delta, Abusir is rich in game, fish and other wildlife and vegetation, but offers few mineral resources.  As such, sandstone needed for construction of the Sun Temple will need to be imported from the quarries at the Dunqul Oasis.  Cattle may be raised here to provide meat, though the herds require much straw for fodder. @PYou'll need to clear land in order to create a suitable location for the Sun Temple.  Be sure to sell enough of the precious timber you may harvest first, for once it is gone you may not be able to acquire more.  Apollinopolis and Abydos are always in need of wood, and also game, thus trade with them should help to offset the cost of constructing this sacred monument."
@@ -5034,11 +5029,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Dunqul",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Kushite Threat",
-            pos [10, 30]
+
         }
         content {
             text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.    @PCentralized authority continues to erode, as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Memphis, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come. @PPowerful neighbors are moving to take advantage of Egypt's increasing weakness.  The outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kush are demanding tribute, and the slightest provocation could lead to an outright attack. Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PIf Egypt is to survive, you must do what you can to preserve trade routes to keep goods flowing into and out of Egypt.  Keep the hard-won trading post at the Selima oasis open.  Pepy, anticipating his journey to the afterlife, will make frequent requests for stone to build his pyramid, and other cities, short on food, will seek sustenance from you. @PUse your resources carefully.  Valuable wood is plentiful at the oasis, but some of the forest must be destroyed to access the limited water supply."
@@ -5050,11 +5045,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Dakhla",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Caravan Trail",
-            pos [10, 30]
+
         }
         content {
             text: "@PPepy has taken the throne, and awarded your family the status of Chancellor, but it has come with a price.   @PCentralized authority continues to erode as local and regional leaders become more powerful.  Harvests in some regions are far below normal, and the specter of famine has begun to appear in Egypt.  Memphis, once a splendid and beautiful city, is beginning to decline.  Seers foretell difficult times to come.  @POur powerful neighbors are moving to take advantage of our increasing weakness.  Our outpost at Buhen is under siege from fearless Kushite soldiers sent from Kerma, the largest non-Egyptian city in Africa.  The Kushite are demanding tribute, and the slightest provocation could lead to an outright attack.  Nubia, too, has issued a call to war and is seeking to reclaim lost land.  @PTry to keep Egypt stable by establishing an administrative post at Dakhla Oasis.  The oasis has a large stand of valuable trees, but these trees unfortunately block access to the limited water supply at the oasis.  From this important location, import ebony from the African interior.  Pepy, anticipating his journey to the after-life, will request bricks for the construction of his monument.  Other cities, short on food, will request sustenance from you."
@@ -5066,11 +5061,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thinis ",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Civil War",
-            pos [10, 30]
+
         }
         content {
             text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on his people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Herakleopolis have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Thebes.  This family has done much to reunite the south, and now Herakleopolis has engaged Thebes in a deadly civil war for control of all of Egypt. @PTo show their benevolence to the people of Egypt, the Inyotefs have entrusted you with rebuilding the newly conquered city of Thinis, one of the oldest cities in Egypt.  Two of Thinis' finest and most ancient buildings have survived the turmoil of its conquest: the Temple Complex of Osiris and the mansion.  The Inyotefs have decreed that should either of these buildings be destroyed, no funds will be squandered on their restoration.  The Theban rulers consider the restoration of Thinis a top priority and have gathered up considerable funds - even in this time of strife - for this purpose.  Return Thinis to its former splendor, and commission a navy and raise a strong army to defend it from the frequent attacks of those loyal to Herakleopolis, including the cities of Lykopolis, Hierakonpolis and Hermopolis.  Be careful of the Herakleopolis rulers: they may demand tribute to see if your loyalty - and your debens -- can be extorted.  Also watch out for the opportunistic Nubians who seek to take advantage of Egypt's internal struggles."
@@ -5082,11 +5077,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thebes",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Civil War",
-            pos [10, 30]
+
         }
         content {
             text: "The old way of life is gone, and most fear that Egypt will never return to its past glory.  Osiris has turned his back on the people, and a series of low Inundations has caused widespread famine.  The power of the pharaohs, once unquestionable, has evaporated, replaced by bickering provincial leaders. @POut of this chaos, two noble families have arisen and are attempting to seize control of the country.  The rulers of Herakleopolis have laid claim to the throne as the rightful heirs.  They are particularly cruel and are doing little to assuage the people's hunger.  To the south, a new family, the Inyotef house, has risen to power in Thebes.  The family has done much to reunite the south, and now the rulers of Herakleopolis have engaged the rulers of Thebes in a deadly civil war for control of all of Egypt. @PThe Inyotefs, busy fighting the Herakleopolis rulers, have entrusted you with building up their home city of Thebes.  If the Inyotefs are to succeed in their fight against the Herakleopolitan rulers and solidify their reputation in Egypt, Thebes must be a touchstone on which other cities rely, providing succor or soldiers to those that request aid.  Thebes, which could be the capital should the Inyotefs reign victorious, must be a great city.  Using the scarce resources available to you, build a Sun Temple and pyramid to show Egyptians the glory of the Inyotefs. @PThebes itself is not immune to attack.  The Herakleopolitan rulers, and those loyal to them, may threaten your city from time to time, and Herakleopolis may try to extort debens from your city's treasury.  To defend against these considerable risks, build a strong army and navy to defend your city and to come to the defense of other threatened cities."
@@ -5098,11 +5093,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Coptos",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Reunification",
-            pos [10, 30]
+
         }
         content {
             text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of Vizier.  There is no one in all of Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Thebes is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Herakleopolitan rulers.  To help solidify our new union, I want you to rebuild and defend Coptos.  Coptos should be a glorious city that shows Egypt's citizens what is possible under my rule.   The city comes under frequent attack from remaining loyalist cities, such as Hermopolis, and you must be sure to defend your city's borders. @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted Vizier. @PI know that I am asking much of you, but there is no one else in Egypt capable of doing this difficult task."
@@ -5114,11 +5109,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Beni Hasan",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Reunification",
-            pos [10, 30]
+
         }
         content {
             text: "Your family's performance during the civil war has not gone unrewarded.  I, Pharaoh Mentuhotep, have awarded your family the rank of vizier.  There is no one else in Egypt that I trust more than you.  Now that the twin kingdoms of Upper and Lower Egypt are reunited and the capital at Thebes is thriving, I need you to help me solidify my position throughout the Kingdom. @PWhile reunited, Egypt is prone to internal skirmishes, particularly in areas that were once loyal to the Herakleopolis rulers.  To help solidify the newly reunited country, I want you to rebuild and defend Beni Hasan, which was nearly destroyed during the civil war.  Beni Hasan should be a glorious city that shows Egypt's citizens what is possible under my rule.   @PFamine still stalks the country, and frequent requests for food will come to you from other cities in the Kingdom.  Respond as quickly as you can to their heart-rending pleas, so that all Egypt will know my benevolence and the dedication of my most trusted vizier. @PI have one more noble request: I want you to build granite obelisks to further proclaim all I have done for this land in my lifetime. @PI know that I am asking much of you, but I also know that you are the only one in Egypt capable of doing what I have asked."
@@ -5130,11 +5125,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Itjtawy",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A New Capital is Founded",
-            pos [10, 30]
+
         }
         content {
             text: "O mighty Pharaoh, Beloved of Ra, how fortunate you must feel.  Your unprecedented rise to the throne of Egypt is the stuff of dreams!  A richer reward could not be fashioned by gods or people. With your family's accession, Egypt can make a new start, and perhaps we can all forget the horrors of the civil war. @PTo mark this new beginning, you should build a fine new capital.  Itjtawy, with its abundant natural resources, is a perfect location.  Using what the land has to offer, you can build a splendid city worthy of your dynasty's valor and dedication. @PTo ensure the feats of your great dynasty are always remembered, you should build two majestic brick pyramids for yourself and your family and a frightening sphinx to guard your tomb.  A family with your achievements deserves no less. @PKeep in mind, though, that some in the country question the legitimacy of your rule.  Many are still suffering the effects of the famine and grumble that you usurped the throne.  If you relieve these people's misery and help them rebuild their homes, you will certainly win their undying loyalty.  You should try to provide for your new subjects as well as you can to prevent these unfortunate people from taken up arms against you."
@@ -5146,11 +5141,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Mirgissa",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Into Nubia",
-            pos [10, 30]
+
         }
         content {
             text: "Now that Egypt is firmly united under your rule, all of your court, and I, your trusted vizier, recommend that we push the borders of our country south into Nubia.  The dry riverbed at Allaqi is rich with veins of gold, and a mighty city at Mirgissa, with you in residence, will certainly keep the Nubians from trying to attack.  Be careful of the Kushites, however.  They are a much more dangerous adversary than the Nubians and will use their swords to encourage you, O Pharaoh, to leave their kingdom alone. @PTo leave a lasting mark on Nubia, you should build a large obelisk to attest to Egypt's many achievements.  The obelisk will offer compelling evidence to the Nubians of the benefits of Egyptian rule, and be a constant reminder of our presence. @PWhile your direct attention is devoted to Mirgissa, do not forget our intent to establish a thriving port city on the Red Sea at Mersa.  Mersa will need help from you, and will not hesitate to ask for it.  If Mersa can thrive, they will provide Mirgissa with much-needed copper, from which weapons can be forged."
@@ -5162,11 +5157,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Mersa Gawasis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "On the Shores of the Red Sea",
-            pos [10, 30]
+
         }
         content {
             text: "Now that Egypt is firmly united under your rule, we must develop trade relations with cities throughout the world to increase Egypt's wealth, O King of the Two Lands.  @PAs your people prosper, they demand more exotic items.  Tired of jewelry, an easily obtained luxury good, your people want rare and expensive luxury goods, such as incense.  Your court and I, your trusted vizier, recommend that you establish a Red Sea port at Mersa.  Mersa offers a trade route to distant Punt, from which the finest incense in the world may be imported, though at great cost.   @PBeside modest veins of gold and copper ore, Mersa produces few raw materials of its own, but can thrive as a manufacturer of finished goods.  By importing raw materials from trade partners, and exporting finished products, Mersa shall be able to turn a tidy profit. @PWhile you are busy establishing Mersa, one of your most valiant Nomarchs is establishing a new trade center in Nubia.  His city, Mirgissa, is likely to come under attack, so my beloved Pharaoh should be prepared to send him any resources he may need. @PUnder your rule, Mersa is sure to be one of the loveliest cities in the Kingdom, suitable as a final resting place for you and your family.  As you establish the thriving port, do not neglect preparations for the afterlife.  A mausoleum and small brick pyramid will provide sumptuous quarters for you and your family after your passage to the Field of Reeds."
@@ -5178,11 +5173,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Semna",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Gauntlet",
-            pos [10, 30]
+
         }
         content {
             text: "Most respected Pharaoh, all that your family has fought so hard for is threatened!  The Nubian navy is patrolling the Nile, striking deep into the heart of Egyptian territory, ransacking villages and cities alike.  The Nubians are also boarding trade ships, pirating away goods.   To help your northern cities beat back the foe, you should be prepared to send warships and soldiers to the cities that need them.   @PTo prevent the Nubians from again sailing our waters, your military advisors recommend building a cluster of forts at Semna between the second and third cataracts of the Nile.  The forts will act as a cork, penning the Nubians in to the south.   @PSuccessfully driving out the Nubians rests with conquering the city of Kuban.  Kuban is rich in resources, and taking it over will cripple the Nubian economy.  Once you have wrested control of Kuban away from the Nubians, you can begin importing sandstone from the city for your great mausoleum.  Your mausoleum at Semna will serve as a reminder of your dominance over the unruly Nubians.   @PThere are many challenges before you as you protect Egypt from the Nubians.  Pay heed, O Living Horus, to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
@@ -5194,11 +5189,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Bubastis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The City of Bast",
-            pos [10, 30]
+
         }
         content {
             text: "Most royal Pharaoh, with robust trade routes firmly in place, we should now show Egypt what success and wealth can bring.  Bubastis provides a perfect location for such a city: we can protect our valuable trade routes to the east while paying homage to Bast, who has watched over Egypt. @PBast's city should be like no other in Egypt.  It should be as lovely as the lotus flower, blooming forth with entertainment, schools, libraries and places of worship.  Its citizens should be well-supplied with the finer things, including imported incense.  When complete, Bubastis will be the jewel in the twin crowns. @PWhile you are building this glorious city, pay heed to the storm rising in the east.  The thundering of horses' hooves are heard throughout Canaan, and lightning-quick chariots are laying waste to all in their path.  These formidable chariots, the likes of which have never been seen anywhere, are driven by the Hyksos warriors.  Already, storm clouds have been spotted on the Egyptian horizon, and you should steel yourself against the impending danger."
@@ -5210,11 +5205,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Hermopolis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Egypt Reclaimed",
-            pos [10, 30]
+
         }
         content {
             text: "Most powerful Pharaoh, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Avaris.  From Avaris, they have disrupted many of our trade routes, choking off needed supplies.  We must stop their conquest before it is too late. @PIf it pleases you, Great Pharaoh, we should reclaim the city at Hermopolis, which has been violated by these foul invaders.  We should also build a strong army and navy, for we may need to supply troops and arms to our compatriots in the north, especially at Avaris, to help repel the Hyksos incursion.  They will look to you, Child of Ra, for support.  But now we too have a new weapon.  Our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us.  Once we drive the troublesome Hyksos out, our military advisors recommend building a fort in Sinai at Sharuhen to prevent further invasions from the east. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Mirgissa and Semna.  While these lost cities are cause for concern, we must first oust the Hyksos before we can turn our attention southward. @PThese Hyksos are most unholy invaders.  We have just discovered that they have defiled the pyramid here in Hermopolis.  They have stolen from the pyramid all the burial provisions that the mighty Pharaoh interred here needs in the Field of Reeds.  We should provide a new supply of grave goods so that the Pharaoh buried here can enjoy life everlasting."
@@ -5226,11 +5221,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Lykopolis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Egypt Reclaimed",
-            pos [10, 30]
+
         }
         content {
             text: " O King of the Two Lands, Egypt cries out for your help.  The menacing Hyksos have invaded our land and have set up their own capital at Avaris.  From Avaris, they have disrupted many of our trade routes.  We must stop their conquest before it is too late. @PHere at Lykopolis, we are safe from immediate attack, although the Hyksos have the gall to demand tribute. We may need to supply troops and arms to our compatriots in the north to help repel the Hyksos incursion.  They will look to you, O Mighty Pharaoh, for support.  But now we too have a new weapon, our wise military leaders have become proficient in the use of the dreaded chariot, and we shall turn it back upon our enemies and drive them before us. @PIf only our trouble was limited to the north!  Reports from our southern border show that the Nubians are once again taking advantage of a distracted Egypt.  They have reclaimed the southern cities of Mirgissa and Semna. @PIf Egypt is to emerge intact from these turbulent times, much will be required of your generals in the field and on the river.  To inspire your two best generals, you have promised to build each of them a pyramid as spectacular as your own.  Holding your promise in their hearts, they are fiercely combating the foe, calling upon all their strength and sinew.   @PIf it pleases you, Mighty Pharaoh, you should build three magnificent pyramids at Lykopolis, one for yourself and one for each of your generals.  These three pyramids will take up considerable space, so you will need to surrender some valuable resources in order to accommodate them.  You may also need to extend your city across the Nile to avail yourself of all the resources needed for this city to flourish."
@@ -5242,11 +5237,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Byblos",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Expansion and Conquest",
-            pos [10, 30]
+
         }
         content {
             text: "Egypt has emerged from its recent troubles with a newfound strength.  Byblos, with all its verdant forests and rich sources of copper, is ours!  With your presence, the city is sure to thrive, and a New Kingdom will be established. @PAh, but what an alarming discovery we made after conquering Byblos!  A new, ferocious people, the Hittites, have washed over much of Asia, and some even say that their empire rivals our own for size.  Now, they have turned their eyes toward Byblos, covetous of its riches.  If we are not well prepared for their attack, we could easily lose Byblos to our foe.  @PWhile preparing to meet the Hittites, we must mark Byblos as forever Egyptian.  With your blessing, O Pharaoh, we shall erect a series of three obelisks, two small and one large, proclaiming your sovereignty and fame throughout the far stretches of your empire.  These towering monuments will remind the residents of Byblos with whom their loyalties should lie. @PWhile we occupy ourselves with matters at Byblos, other regions of Egypt are still prone to attack.  Nubians have moved north as far as the first cataract, and we must help our compatriots drive them back.  Reports from Avaris tell of another mysterious new foe, the Sea People.  Both these enemies must be strongly put down if Egypt is to attain glory.  To show your might, be sure to send troops and warships should they be requested."
@@ -5258,11 +5253,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Kuban",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Glory of Egypt",
-            pos [10, 30]
+
         }
         content {
             text: "With the Hyksos successfully expelled from our country, our land is ripe for rebirth, a New Kingdom that outshines past glory.  Most noble Pharaoh, Kuban is an ideal place to begin this New Kingdom.  We can use the large amount of gold found there to fund your new vision of Egypt.  @PWhile Egypt is on the brink of greatness, a few nagging problems remain.  Many of Egypt's cities are still recovering from the disruptions caused by the Hyksos and may need Pharaoh's help.  In other regions, Egypt's old enemies still attack us, and a new enemy, the Sea People, has been raiding our northern coast. You must be prepared to defend other Egyptian cities from our foes, both old and new. @PAs Egypt grows in stature, many cities are willing to engage in trade.  Some of these cities are so familiar with our ways, and in awe of your power, that they consider themselves Egyptian, while others are foreign to us and are trading with us for the first time.  For the glory of Egypt, take advantage of all these relationships to provide your people with all the goods they desire. @PTo usher in the new era, your royal architects crave the opportunity to build two pyramids and a stately mausoleum for you, O Pharaoh. These will surely reflect the wealth and grandeur you have brought to Egypt."
@@ -5274,11 +5269,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Avaris",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Sea People",
-            pos [10, 30]
+
         }
         content {
             text: "O Horus of Gold, our hold on Asia is strong and unchallenged, and our borders again stretch far into Nubia.  But the trouble on our northern coast is escalating.  The Sea People have become increasingly aggressive, wantonly raiding our cities.  Only Pharoah's presence will be enough to defeat this fierce and wily adversary.  If you commission a navy, supported by a strong army, surely we shall overcome the Sea People.   @PWhile you work to defeat the Sea People, your brave Nomarchs are leading attacks throughout the world.  If they are successful, Egypt will rule the world from the great Euphrates river in Asia to the sprawling Kushite city of Kerma to the south.  When you and your Nomarchs have met with sweet victory, your dynasty will be recorded as the greatest dynasty ever to keep watch over Egypt. @PMarking your far-reaching influence is a new, distant trade partner, Mycenae.  The king of Mycenae has learned of the splendor and bounty of Egypt, and wishes to engage in trade with us.  If you agree to open this trade route, O Pharaoh, your citizens will surely be provided with exotic goods unlike any they have ever seen. @PTo house your royal family for the afterlife, a pair of awe-inspiring mausoleums and an impressive brick pyramid must be built.  These monuments will remind all who follow of your deeds both on and off the battlefield."
@@ -5290,11 +5285,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Kahun",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Glory of Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "Benevolent Pharaoh, you have brought peace and prosperity to our nation.  Under your wise and capable rule, Egypt is a strong and glorious country once again.  All Nomarchs are loyal to you, and no threats to our great nation remain. @PHaving accomplished all your family set out to do so many years ago, it is time to memorialize the achievements of your great dynasty.  The only way to accomplish this is to build the grandest pyramid Egypt has ever known, a pyramid even larger than Khufu's, at Giza.  Others in your noble family have sacrificed much on the long road leading to your rule of Egypt.  They too must be remembered and honored, with a sandstone mausoleum to acknowledge their unwavering support.   @PThe ideal location for these monuments is Kahun in the rich Fayuum region.  From here, you can attend to all the affairs of state, and respond to any requests for supplies that your cities may ask of you, as you build your great pyramid."
@@ -5306,7 +5301,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Buto",
-            pos [50, 80]
+
         }
         content {
             text: "@PWith the aid of your family, the Thinite king Hor-Aha has successfully united the twin kingdoms of Upper and Lower Egypt, proclaimed himself Pharaoh over all Egypt, and founded an imposing capital at Memphis.    @PYour clan has relocated once more, this time to the humid Delta region of Lower Egypt, to an area known as Buto. Canaanite warships have been threatening this region, and you'll likely need to dispatch a few warships of your own, when the time comes. @PYour family has achieved the status of nobility. As such, it is expected that before you pass from this world into the next, you will undertake to complete an exquisite brick tomb - a mastaba - to house your body on its journey into the afterlife. @PHowever, first you must establish some farms along the banks of the Nile, to exploit the rich, fertile soil deposited by the annual Inundation of the river. This will allow your population to grow and prosper, and eventually become large enough to complete this sacred monument. But beware, for many dangers lurk among the life-giving waters of the Nile, such as deadly crocodiles, hippopotamus and malaria-carrying mosquitoes. @L@L Farming along the Nile @PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility. Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by work camps, to tend their fields. Build work camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the Inundation, and deliver it to your granaries. Because there is only one harvest per year, make sure to have enough granaries to store a sufficient amount of food for your growing population."
@@ -5318,11 +5313,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Pi-Yer",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Sea People Land",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe rumblings of distress and discontent to the west have become more ominous recently.  Scouts report that several barbarian tribes speaking strange tongues have arrived on the shores of Kyrenaica to our west.  To make matters worse, these peoples now walk hand-in-hand with Maraye, the son of Did, king of the Libyans and Pharaoh's enemy.   @PWord has now reached Pharaoh Merneptah that these vile people, with all of their women, children and worldly possessions close behind, will soon be headed eastward, toward the fertile Nile delta - our homeland! - in search of a place to settle.  Already there have been minor clashes at the northern oases of Siwi and Farafra.  Your delta town of Pi-yer now stands in their way.  In a short while this slow-moving band of savages could be on your doorsteps.  Pharaoh has decreed that, should they arrive, they must not be allowed to penetrate further! @PYou will need to import wood from which to construct sturdy warships, and copper for weapons.  It is your fortune that the previously troublesome Hittites are now peaceful, thanks to the great victory at Qadesh by Ramses II, sire of the beloved Merneptah. Make your town strong, and brace your loyal troops for mortal combat."
@@ -5334,11 +5329,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Migdol",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Repel the Assyrians",
-            pos [10, 30]
+
         }
         content {
             text: "@PSince the days of the great Shabaka, unifier of Upper and Lower Egypt and sire of Pharaoh Taharqa, conflict with the aggressive Assyrians has been the norm.  While he still lived, Pharaoh Shabaka saw that it was proper to aid our brothers in Palestine who were chaffing under the harsh rule of Assyria.  Beware!  The minions of the heathen king Asarhaddon are again on the march and, as always, their eyes are on the fertile lands of Egypt.  It is now your turn for glory!  As Royal Mayor of Migdol, you will be expected to defend against the series of attacks by these accursed foes.  Located on the eastern rim of the Nile delta, your border fortress is on the front line of Egypt's outer defenses. @PProperly training your soldiers and establishing trading links to secure weapons - or raw materials from which to make your own - will be important. @PDo not falter!  A strong military stand is vital to insure the continued independence of Egypt.  If you can hold out for a mere seven years, victory will be assured.  Taharqa, the great Pharaoh, second son of Shabaka, will be watching!"
@@ -5350,11 +5345,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Tanis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Rebirth of a Navy",
-            pos [10, 30]
+
         }
         content {
             text: "@PFor many generations Egyptians have been suffering under the cruel fist of Persia.  Babylon's grip upon our sacred lands is, however, not as strong as it once was.  While our accursed oppressors have been busy meddling in the politics of Greece, a series of revolts in Egypt has finally managed to loosen the hated Persian yoke.  Now, however, word has reached Pharaoh Achoris that a force commanded by Fleet Admiral Conon (a Greek lackey receiving Persian gold) has been dispatched by Artaxerxes II and is headed for our shores.  Pharaoh Achoris has wisely determined that a strong naval presence in the Nile is needed to thwart this incursion.  As Royal Governor of Tanis for the next ten years, you must build strong ships and train stalwart troops to guard the approaches by water and land. @PYou will need to establish a trade route with Enkomi to import sturdy wood with which to construct a fleet.  Copper can also be imported from Enkomi, on the island of Cyprus.  This trade route is precarious at best, as it runs close to the Levant coast, under control of our foe.  Supplying the Pharaoh with needed supplies should help to supplement your income.   @PBe aware that funds are tight in these troubled times.  To succeed, you must be savvy in business and trade as well as a skillful commander."
@@ -5366,11 +5361,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Alexander the Great",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe great Alexander, son of Phillip II of Macedon and scourge of the Babylonian Empire, blessed the lands of Egypt with his presence.  With his coming, the final corrupt Persian satrap has hastily fled.  After sacrificing to the Apis bull at Memphis, Alexander has been accepted as Pharaoh.  All the people rejoice!  Before setting off on his journey to the Oracle of Amun in the Siwi Oasis, however, our leader decided to found a new city, one that he wishes to someday be the capital of his vast and expanding empire.  In his infinite wisdom, he has appointed you to be this future city's first mayor! @PThe great Alexander has bestowed upon you a generous endowment of funds from which to begin construction, and has given you the services of the esteemed Greek architect Dinocrates.  In a mere dozen years he expects you to have the commercial, cultural and military might of his city developed to high standards, as he has vowed to return.  @POur leader has even taken the time to trace the positions of the two main thoroughfares of his city.  The Canopic Street runs along an east-west axis; the other main avenue is perpendicular to it and heads inland from Cape Lochias southward toward Lake Mariut. @PAs trusted overseer of this project, you should quickly build port facilities and establish lucrative trade routes.  There should be many customers for our products, especially wheat, barley, papyrus and linen.  Do not neglect the cultural aspects of this city, nor its military, however, as there are still roaming vandals that wish to rob Egypt of her wealth."
@@ -5382,11 +5377,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Ptolemy's Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Beacon of Light",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe legacy of Alexander the Great lives on in our proud city. Even though his mortal remains rest in Alexandria's Mausoleum, his great city continues to thrive.  It is up to you, Ptolemy I Soter, to carry on with the job the noble Alexander began.  Since its founding by Alexander barely 30 years ago, the city has become a powerful commercial hub, supplying much-needed foodstuffs and items of luxury to much of the surrounding area.  To further its economic progress and to ensure safe passage of the many ships entering the great harbor, you should construct a massive Lighthouse on Pharos Island, near the mouth of the harbor.  This structure's beacon of light will guide distant seafarers safely into the harbor, ensuring that they do not founder on its tricky shoals. @PImportant as commerce is, however, you cannot ignore the cultural and intellectual advancement of our society.  Under your leadership Alexandria can now become the intellectual capital of the known world as well.  Gather works of knowledge from near and far, and build a great Library in which to keep them.  As sure as ants are attracted to honey, learned scholars from all over will journey to this unrivaled center of knowledge and learning.   @PTo build these great monuments you will need to import a building material, such as white marble, that will be suitable for such great structures.  Enkomi, on the island of Cyprus, is a good source for this material.   @PLastly, do not ignore your military.  There always seems to be unrest in one place or another.  It might be necessary to dispatch troops to distant frontiers to protect Egypt's interests and defend her honor."
@@ -5398,11 +5393,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Maritis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Caesar and Cleopatra",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe indelicate grasp of the Roman Empire grows stronger and reaches farther with each passing day.  Even the deadly political power struggles of Rome have reached our land.  With the recent assassination of Pompey on the shores of Egypt, Julius Caesar now has complete control of Rome's mighty legions and has cast his eyes upon the riches of Egypt - and upon the beauty of our beguiling pharaoh, Cleopatra VII, daughter of Ptolemy XII Auletes.  Our clever leader is not easily outdone on the battlefield of wits, however.  If Caesar desires to use her as a means to further Rome's influence in Egypt, so too does she plan to employ him as an instrument of maintaining the dynastic power of our great land. @PCaesar's arrival in Alexandria with his unpopular Romans has sparked an uprising among its independent minded citizens.  An unruly mob, egged on by Cleopatra's younger brother Ptolemy XIII, has cornered Caesar and his men in the royal quarter of the city.  Bitter street fighting has erupted, claiming many casualties.  In a bid to keep his seaward escape route open, Caesar burned the Egyptian fleet as it lay at anchor in Alexandria's harbor.  Unfortunately the conflagration spread to some shoreline warehouses, burning great quantities of papyrus scrolls belonging to the Great Library.   @PTo break the trap in which he now finds himself, Caesar has summoned the loyal Mithradates and his troops from Syria to effect his rescue.  After successfully storming the border fortress of Migdol, Mithradates has force-marched his men around the apex of the Nile delta so to approach Alexandria from the southeast.  The lead elements of this force are currently encamped on the outskirts of the small village of Maritis, on the eastern shore of Lake Mariut, preparing for the final leg of their journey.  @PThe baleful Ptolemy XIII has learned of the approach of these reinforcements.  In response he has marched the bulk of his more numerous army southeastward out of Alexandria.  A decisive battle on the eastern shore of Lake Mariut is about to ensue.  Can you, commanding Mithradates' Roman legions, defeat Ptolemy's rebellious Egyptian army and break through to Caesar and Cleopatra in Alexandria?  Their fate rests in your hands."
@@ -5414,11 +5409,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Cleopatra's Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Legacy of a Queen",
-            pos [10, 30]
+
         }
         content {
             text: "@PCaesar's bloody death at the points of assassins' daggers cast the Roman world into turmoil and has driven you, our Pharaoh, Cleopatra VII, into grief and mourning.  Gone is your lover, mentor, confidant and powerful ally.  Octavian, his teen-aged adopted great-nephew, has been named as heir but the more experienced Mark Antony, previously a consul to Caesar, has become the nominal head of state, somewhat to the ire of the young Octavian.  Not surprisingly, Caesar's will made no mention of your son by him, Ptolemy Caesar, popularly known as Caesarion. Desiring safety for yourself and your child and, as always, seeking to preserve the power of Egypt, you have departed Rome for Alexandria.  @PDespite all the leagues between Rome and yourself, you cannot leave behind all of its internecine squabbles.  Powerful men still vie for power - your support and the access to the riches of Egypt would be a great asset to any faction.  For you to back a winner in this power struggle is critical; siding with the loser could easily result in the end of Egypt.  The dramatic showdown between the rival Roman factions recently occurred at Philippi where Mark Antony's Caesarians decisively beat the forces of Brutus and Cassius.  Antony, Octavian and Lipidus have now carved up the empire for joint rule, with Antony claiming the eastern portion, which includes Egypt. @PNot long after the battle, Mark Antony summoned you to join him at Tarsus in Asia Minor, so that you might better explain why you had been slow to cast your lot with the Caesarians.  Not one to be summoned like a lapdog, you wisely declined to respond.  After all, you know better than most that it is much better to see a Roman under your own terms and conditions, not his! @PThus you, Pharaoh Cleopatra, have returned home to Alexandria, to Egypt.  It is now time to expand the glory of this magnificent city, founded by the Great Alexander whose tomb is still frequented by visitors.  Alexandria's renowned Great Library continues to attract scholars from all over the world; the bright beacon of the wondrous Pharos Lighthouse still burns so that seafarers can safely make their way through the treacherous waters of the harbor.  Now you can further enrich the beauty of the city by constructing the expansive Caesareum in honor of your former lover and your young son. Additionally, ensure your own successful passage into the afterlife by building another mausoleum so that you can be duly worshipped after your journey into the Field of Reeds.   @PThe next time Mark Antony calls for you, perhaps he will employ a bit more tact?"
@@ -5430,11 +5425,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Actium",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Antony and Cleopatra",
-            pos [10, 30]
+
         }
         content {
             text: "@POh noble Pharaoh Cleopatra VII, consort of Caesar and now Antony, the destiny of Egypt is in your hands, but your hands now nest in those of a Roman, Mark Antony - and he is deeply embroiled in the struggle for control of Rome and its legions.   @PNeeding Egypt's inestimable resources, but also desiring your love and affection, Antony agreed to your demand of marriage.  Unfortunately, word of this new union has scandalized Rome!  As you were aware, Antony was still wed to Octavia, sister of Octavian, legal heir of Caesar and, with Antony, joint wielder of Rome's might.  But with news of the polygamous ways of Antony, this relationship has become severely strained.  Octavian feels that Antony has slurred not only the honor of his sister and his family, but the prestige of Rome as well.  To settle this matter of honor, and to bring to an end the struggle for ultimate control of Rome, Octavian has duly challenged your lover, Antony to do battle.  With this in mind Antony, accompanied by you and your Egyptian fleet, has found a location on the Greek mainland near Actium for a camp.  The site offers a good harbor with many potential berths for your ships.   @PYou must quickly build up your military, especially the naval arm. Octavian has vowed to return in September of the year 31. @PNow your fate and Mark Antony's, as well as the fate of Egypt and Rome, depend once again upon the performance of military might."
@@ -5446,11 +5441,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Thutmose in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Tomb",
-            pos [10, 30]
+
         }
         content {
             text: "@PAfter many brilliant victories on distant battlefields defending the lands and people of Egypt, Pharaoh Thutmose, as all must eventually, has turned his thoughts to preparations for his travel into the afterlife.  To ensure that this journey is successful, Pharaoh wishes you to begin construction of his tomb at your earliest convenience.  Establish a village on the west bank of the Nile to provide a pool of capable workers.  Locate a suitable site for his tomb in the cliffs to the west of the village.  You will need skilled stonemasons to cut the tomb's many chambers from the rock, and talented artisans to plaster and paint the rooms.   @PTo provide light for the workers laboring in the far recesses of the tomb you will need to establish lamp maker shops.   Supply the lampmaker with pottery and imported oil for the fuel.  Plant fields of henna to provide a source of dye for brilliant colors the paint makers will need."
@@ -5462,11 +5457,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Tut in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Death of Tutankhamun",
-            pos [10, 30]
+
         }
         content {
             text: "@PA terrible tragedy has befallen our beloved young Pharaoh, Tutankhamun!  His reign, which once held much promise of glory, has been unmercifully cut short by the hand of fate.  It is time for the workers of Deir el-Medina to again prepare an eternal resting chamber for the Pharaoh.  With his unexpectedly early death, it is imperative that you compel your workers to exert maximum effort.  Tutankhamun's tomb must be fully stocked with provisions for his journey into the afterlife and ready to receive his hallowed remains within a few very short years.  Speed is of the utmost importance!"
@@ -5478,11 +5473,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Seti in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Tomb for a Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "@POur most powerful Pharaoh, Seti, son of Ramses I, has declared that the present is the proper time to begin to prepare for his journey into the afterlife.  To this end you will begin the excavation of his royal tomb in the Valley of the Kings.  No effort is to be spared by your workers in its preparation.  Proper measures must be taken to ensure that, when completed, its craftsmanship will be unrivaled for many years to come. @PBut, as construction on this royal project proceeds, take due precautions against vandals!  Already there have been reports of bands of greedy criminals intent on enriching themselves by defiling the tombs and disturbing the peace of Egypt's eternally resting pharaohs.  Do not let this unholy act disgrace the royal tombs in The Valley or as sure as the sun rises in the east your standing in the Kingdom will be smirched."
@@ -5494,11 +5489,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Sumur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Lands of the Levant",
-            pos [10, 30]
+
         }
         content {
             text: "@PHail royal governor, regent of the Levant and loyal subject of our Pharaoh, the son of Ra.  It is indeed fortunate to live in this time when Egypt's benevolent hand stretches from the far reaches of Nubia to the shores of the Levant.  Infinite is the wisdom of our new Pharaoh, the most revered Ramses II, and great is his vision, for it is he that has dispatched you to rule in this fine land, now part of the ever-expanding domain of Egypt.  @PThis region, while still fraught with dangers, has many riches that must be exploited.  The verdant hills are ripe with tall trees yielding fine wood, ideal for fashioning chariots and useful in many forms of construction.  Seams of copper, while not abundant, can also be found, and will be most useful in fashioning strong weapons.  Wood and copper, so rare in our homeland, will surely be welcomed when shipped back in quantity.  It is therefore entrusted that you will oversee the establishment of a mighty port of commerce from which these valuable commodities can be exported.  Pharaoh and the people of Egypt will be most grateful! @PBut take care!  Ensure that your own trusted soldiers are equipped with fast chariots and strong weapons, for the Hittites, though smitten by Seti, father of Pharaoh, are still dangerous and may challenge our rightful authority in this bountiful land.  A strong military presence in this new territory may be necessary to quell insurrection, and will undoubtedly be most useful in the future. @PFinally, to remind the people of this region to whom they must now pay homage, Pharaoh Ramses II deems it appropriate that you erect an obelisk proclaiming his glories."
@@ -5510,11 +5505,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Qadesh",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Battle of Qadesh",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe land of Amurra, close by the Levantine coast, trembles beneath the hoof and foot of your mighty legions, blessed Pharaoh.  This region may be blessed with rare gems but it is also rich with discord.  Armed Hittites, led by the wretched King Mutwatalli, once again seek to contest control of this land, rightfully ours.  Captured spies speak of how his hostile bands are still far off to the north and thus pose no threat.  But is this to be believed?  Wise is the warrior who does not drop his shield in battle.   @PTo quell such rumors of insurrection you, our most revered Pharaoh, Ramses II, son of Ra, have arrived at the fortress town of Qadesh.  Already camps of two of your feared charioteer companies have been established on its outskirts.  But these are not all.  At your immediate disposal are other veteran troops - namely the experienced troops so recently engaged near Sumur.  But take heed!  It might be advisable to delay deployment of these valuable assets until the need for them is most obvious, for wise also is the warrior who has a bevy of trusted troops to summon at the height of battle. @POnce the miserable foe has been vanquished it will be necessary to revive the stagnant economy of Qadesh so that it too will contribute to the glory of Egypt.  Collect valuable gems and hire skilled jewelers to fabricate exquisite goods for Pharaoh's loyal subjects.  Luxury items of such rare beauty will surely be in much demand!"
@@ -5526,11 +5521,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abu Simbel",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Colossi of Abu Simbel",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe glory of our pharaoh, Ramses II, pervades the land.  So that the legacy of his reign will live forever it has been decreed that a great monument and temple dedicated to his rule be constructed deep in Nubia - and Pharaoh himself has selected the perfect spot for this creation.  From the rose-colored sandstone cliffs overlooking the Nile's west bank at Abu Simbel you will oversee the sculpting of four massive seated figures of His Majesty.  Surfaces of the monument, cut from the living rock, will proclaim the heroic deeds of Pharaoh during his great triumph at the battle of Qadesh.  This massive monument, while heralding the heroics of our leader, will also serve as a reminder to the peoples of Nubia of the greatness and power of Egypt, for, while Nubia is rich in deposits of gold and other rare gems, its people have always sat uneasily under Egyptian dominion.  To this end you should be ever prepared for defense, and be able to dispatch troops should Pharaoh need them. @PSandstone can be exported for construction elsewhere in the kingdom, as can other items that you should be able to produce from the bountiful resources of the region.  Precious little wood can be found, however.  You will no doubt have to establish a trade route to import this commodity, for it will be needed for the immense sculpture's scaffolding."
@@ -5542,11 +5537,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Ramses in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "An Unsurpassed Resting Place",
-            pos [10, 30]
+
         }
         content {
             text: "@PIt has been many long and glorious years since our Pharaoh, the most revered Ramses II, accepted the crook and flail from his father, Seti I.  With the blessings of Ra, he will continue to reign for many more still.  Nevertheless, it is time to begin to cut into the bowels of the earth and prepare the eternal resting place for our vaunted leader.  He has supplied your tomb architect with a plan for the largest tomb yet constructed, surpassing even that of his sire.  It is now up to you to ensure that this royal request is brought to successful completion. @PBut be forewarned!  There is an alarming degree of unrest amongst some independent minded workers and slaves, both locally and in Lower Egypt.  They follow a man that was once raised in the court of our Pharaoh, and have threatened to call their God for divine interference.  They hope that, with such deific help, they can have their way.  Even now priests and holy men are debating the validity of these threats.  While we patiently await their opinions it might be prudent to be prepared for the unexpected."
@@ -5558,11 +5553,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Pi-Yer",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Sea People Land",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe rumblings of distress and discontent to the west have become more ominous recently.  Scouts report that several barbarian tribes speaking strange tongues have arrived on the shores of Kyrenaica to our west.  To make matters worse, these peoples now walk hand-in-hand with Maraye, the son of Did, king of the Libyans and Pharaoh's enemy.   @PWord has now reached Pharaoh Merneptah that these vile people, with all of their women, children and worldly possessions close behind, will soon be headed eastward, toward the fertile Nile delta - our homeland! - in search of a place to settle.  Already there have been minor clashes at the northern oases of Siwi and Farafra.  Your delta town of Pi-yer now stands in their way.  In a short while this slow-moving band of savages could be on your doorsteps.  Pharaoh has decreed that, should they arrive, they must not be allowed to penetrate further! @PYou will need to import wood from which to construct sturdy warships, and copper for weapons.  It is your fortune that the previously troublesome Hittites are now peaceful, thanks to the great victory at Qadesh by Ramses II, sire of the beloved Merneptah. Make your town strong, and brace your loyal troops for mortal combat."
@@ -5574,11 +5569,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Pelusium",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Repel the Assyrians",
-            pos [10, 30]
+
         }
         content {
             text: "@PSince the days of the great Shabaka, unifier of Upper and Lower Egypt and sire of Pharaoh Taharqa, conflict with the aggressive Assyrians has been the norm.  While he still lived, Pharaoh Shabaka saw that it was proper to aid our brothers in Palestine who were chaffing under the harsh rule of Assyria.  Beware!  The minions of the heathen king Asarhaddon are again on the march and, as always, their eyes are on the fertile lands of Egypt.  It is now your turn for glory!  As Royal Mayor of Pelusium, you will be expected to defend against the series of attacks by these accursed foes. Located on the eastern rim of the Nile delta, your border fortress is on the front line of Egypt's outer defenses. @PProperly training your soldiers and establishing trading links to secure weapons - or raw materials from which to make your own - will be important. @PDo not falter!  A strong military stand is vital to insure the continued independence of Egypt.  If you can hold out for a mere seven years, victory will be assured.  Taharqa, the great Pharaoh, second son of Shabaka, will be watching!"
@@ -5590,11 +5585,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Tanis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Rebirth of a Navy",
-            pos [10, 30]
+
         }
         content {
             text: "@PFor many generations Egyptians have been suffering under the cruel fist of Persia.  Babylon's grip upon our sacred lands is, however, not as strong as it once was.  While our accursed oppressors have been busy meddling in the politics of Greece, a series of revolts in Egypt has finally managed to loosen the hated Persian yoke.  Now, however, word has reached Pharaoh Achoris that a force commanded by Fleet Admiral Conon (a Greek lackey receiving Persian gold) has been dispatched by Artaxerxes II and is headed for our shores.  Pharaoh Achoris has wisely determined that a strong naval presence in the Nile is needed to thwart this incursion.  As Royal Governor of Tanis for the next ten years, you must build strong ships and train stalwart troops to guard the approaches by water and land. @PYou will need to establish a trade route with Enkomi to import sturdy wood with which to construct a fleet.  Copper can also be imported from Enkomi, on the island of Cyprus.  This trade route is precarious at best, as it runs close to the Levant coast, under control of our foe.  Supplying the Pharaoh with needed supplies should help to supplement your income.   @PBe aware that funds are tight in these troubled times.  To succeed, you must be savvy in business and trade as well as a skillful commander."
@@ -5606,11 +5601,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Alexander the Great",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe great Alexander, son of Phillip II of Macedon and scourge of the Babylonian empire, blessed the lands of Egypt with his presence.  With his coming, the final corrupt Persian satrap has hastily fled.  After sacrificing to the Apis bull at Memphis, Alexander has been accepted as Pharaoh.  All the people rejoice!  Before setting off on his journey to the Oracle of Amun in the Siwi Oasis, however, our leader decided to found a new city, one that he wishes to someday be the capital of his vast and expanding empire.  In his infinite wisdom, he has appointed you to be this future city's first mayor! @PThe great Alexander has bestowed upon you a generous endowment of funds from which to begin construction, and has given you the services of the esteemed Greek architect Dinocrates.  In a mere dozen years he expects you to have the commercial, cultural and military might of his city developed to high standards, as he has vowed to return.  @POur leader has even taken the time to trace the positions of the two main thoroughfares of his city.  The Canopic Street runs along an east-west axis; the other main avenue is perpendicular to it and heads inland from Cape Lochias southward toward Lake Mariut. @PAs trusted overseer of this project, you should quickly build port facilities and establish lucrative trade routes.  There should be many customers for our products, especially wheat, barley, papyrus and linen.  Do not neglect the cultural aspects of this city, nor its military, however, as there are still roaming vandals that wish to rob Egypt of her wealth."
@@ -5622,11 +5617,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Ptolemy's Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "A Beacon of Light",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe legacy of Alexander the Great lives on in our proud city. Even though his mortal remains rest in Alexandria's Mausoleum, his great city continues to thrive.  It is up to you, Ptolemy I Soter, to carry on with the job the noble Alexander began.  Since its founding by Alexander barely 30 years ago, the city has become a powerful commercial hub, supplying much-needed foodstuffs and items of luxury to much of the surrounding area.  To further its economic progress and to ensure safe passage of the many ships entering the great harbor, you should construct a massive Lighthouse on Pharos Island, near the mouth of the harbor.  This structure's beacon of light will guide distant seafarers safely into the harbor, ensuring that they do not founder on its tricky shoals. @PImportant as commerce is, however, you cannot ignore the cultural and intellectual advancement of our society.  Under your leadership Alexandria can now become the intellectual capital of the known world as well.  Gather works of knowledge from near and far, and build a great Library in which to keep them.  As sure as ants are attracted to honey, learned scholars from all over will journey to this unrivaled center of knowledge and learning.   @PTo build these great monuments you will need to import a building material, such as white marble, that will be suitable for such great structures.  Enkomi, on the island of Cyprus, is a good source for this material.   @PLastly, do not ignore your military.  There always seems to be unrest in one place or another.  It might be necessary to dispatch troops to distant frontiers to protect Egypt's interests and defend her honor."
@@ -5638,11 +5633,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Maritis",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Caesar and Cleopatra",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe indelicate grasp of the Roman Empire grows stronger and reaches farther with each passing day.  Even the deadly political power struggles of Rome have reached our land.  With the recent assassination of Pompey on the shores of Egypt, Julius Caesar now has complete control of Rome's mighty legions and has cast his eyes upon the riches of Egypt - and upon the beauty of our beguiling pharaoh, Cleopatra VII, daughter of Ptolemy XII Auletes.  Our clever leader is not easily outdone on the battlefield of wits, however.  If Caesar desires to use her as a means to further Rome's influence in Egypt, so too does she plan to employ him as an instrument of maintaining the dynastic power of our great land. @PCaesar's arrival in Alexandria with his unpopular Romans has sparked an uprising among its independent minded citizens.  An unruly mob, egged on by Cleopatra's younger brother Ptolemy XIII, has cornered Caesar and his men in the royal quarter of the city.  Bitter street fighting has erupted, claiming many casualties.  In a bid to keep his seaward escape route open, Caesar burned the Egyptian fleet as it lay at anchor in Alexandria's harbor.  Unfortunately the conflagration spread to some shoreline warehouses, burning great quantities of papyrus scrolls belonging to the Great Library.   @PTo break the trap in which he now finds himself, Caesar has summoned the loyal Mithradates and his troops from Syria to effect his rescue. After successfully storming the border fortress of Pelusium, Mithradates has force-marched his men around the apex of the Nile delta so to approach Alexandria from the southeast. The lead elements of this force are currently encamped on the outskirts of the small village of Maritis, on the eastern shore of Lake Mariut, preparing for the final leg of their journey.  @PThe baleful Ptolemy XIII has learned of the approach of these reinforcements.  In response he has marched the bulk of his more numerous army southeastward out of Alexandria.  A decisive battle on the eastern shore of Lake Mariut is about to ensue.  Can you, commanding Mithradates' Roman legions, defeat Ptolemy's rebellious Egyptian army and break through to Caesar and Cleopatra in Alexandria?  Their fate rests in your hands."
@@ -5654,11 +5649,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Cleopatra's Alexandria",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Legacy of a Queen",
-            pos [10, 30]
+
         }
         content {
             text: "@PCaesar's bloody death at the point of assassins' daggers cast the Roman world into turmoil and has driven you, our Pharaoh, Cleopatra VII, into grief and mourning.  Gone is your lover, mentor, confidant and powerful ally.  Octavian, his teen-aged adopted great-nephew, has been named as heir but the more experienced Mark Antony, previously a consul to Caesar, has become the nominal head of state, somewhat to the ire of the young Octavian.  Not surprisingly, Caesar's will made no mention of your son by him, Ptolemy Caesar, popularly known as Caesarion. Desiring safety for yourself and your child and, as always, seeking to preserve the power of Egypt, you have departed Rome for Alexandria.  @PDespite all the leagues between Rome and yourself, you cannot leave behind all of its internecine squabbles.  Powerful men still vie for power - your support and the access to the riches of Egypt would be a great asset to any faction.  For you to back a winner in this power struggle is critical; siding with the loser could easily result in the end of Egypt.  The dramatic showdown between the rival Roman factions recently occurred at Philippi where Mark Antony's Caesarians decisively beat the forces of Brutus and Cassius.  Antony, Octavian and Lipidus have now carved up the empire for joint rule, with Antony claiming the eastern portion, which includes Egypt. @PNot long after the battle, Mark Antony summoned you to join him at Tarsus in Asia Minor, so that you might better explain why you had been slow to cast your lot with the Caesarians.  Not one to be summoned like a lapdog, you wisely declined to respond.  After all, you know better than most that it is much better to see a Roman under your own terms and conditions, not his! @PThus you, Pharaoh Cleopatra, have returned home to Alexandria, to Egypt.  It is now time to expand the glory of this magnificent city, founded by the Great Alexander whose tomb is still frequented by visitors.  Alexandria's renowned Great Library continues to attract scholars from all over the world; the bright beacon of the wondrous Pharos Lighthouse still burns so that seafarers can safely make their way through the treacherous waters of the harbor.  Now you can further enrich the beauty of the city by constructing the expansive Caesareum in honor of your former lover and your young son. Additionally, ensure your own successful passage into the afterlife by building another mausoleum so that you can be duly worshipped after your journey into the Field of Reeds.   @PThe next time Mark Antony calls for you, perhaps he will employ a bit more tact?"
@@ -5670,11 +5665,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Actium",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Antony and Cleopatra",
-            pos [10, 30]
+
         }
         content {
             text: "@POh noble Pharaoh Cleopatra VII, consort of Caesar and now Antony, the destiny of Egypt is in your hands, but your hands now nest in those of a Roman, Mark Antony - and he is deeply embroiled in the struggle for control of Rome and its legions.   @PNeeding Egypt's inestimable resources, but also desiring your love and affection, Antony agreed to your demand of marriage.  Unfortunately, word of this new union has scandalized Rome!  As you were aware, Antony was still wed to Octavia, sister of Octavian, legal heir of Caesar and, with Antony, joint wielder of Rome's might.  But with news of the polygamous ways of Antony, this relationship has become severely strained.  Octavian feels that Antony has slurred not only the honor of his sister and his family, but the prestige of Rome as well.  To settle this matter of honor, and to bring to an end the struggle for ultimate control of Rome, Octavian has duly challenged your lover, Antony to do battle.  With this in mind Antony, accompanied by you and your Egyptian fleet, has found a location on the Greek mainland near Actium for a camp.  The site offers a good harbor with many potential berths for your ships.   @PYou must quickly build up your military, especially the naval arm. Octavian has vowed to return in September of the year 31. @PNow your fate and Mark Antony's, as well as the fate of Egypt and Rome, depend once again upon the performance of military might."
@@ -5686,11 +5681,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Deir el Medina",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The First Tomb",
-            pos [10, 30]
+
         }
         content {
             text: "@PAfter many brilliant victories on distant battlefields defending the lands and people of Egypt, Pharaoh Thutmose, as all must eventually, has turned his thoughts to preparations for his travel into the afterlife.  To ensure that this journey is successful, Pharaoh wishes you to begin construction of his tomb at your earliest convenience.  Establish a village on the west bank of the Nile to provide a pool of capable workers.  Locate a suitable site for his tomb in the cliffs to the west of the village.  You will need skilled stonemasons to cut the tomb's many chambers from the rock, and talented artisans to plaster and paint the rooms.   @PTo provide light for the workers laboring in the far recesses of the tomb you will need to establish lamp maker shops.   Supply the lampmaker with pottery and imported oil for the fuel.  Plant fields of henna to provide a source of dye for brilliant colors the paint makers will need."
@@ -5702,11 +5697,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Tut in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Death of Tutankhamun",
-            pos [10, 30]
+
         }
         content {
             text: "@PA terrible tragedy has befallen our beloved young Pharaoh, Tutankhamun!  His reign, which once held much promise of glory, has been unmercifully cut short by the hand of fate.  It is time for the workers of Deir el-Medina to again prepare an eternal resting chamber for the Pharaoh.  With his unexpectedly early death, it is imperative that you compel your workers to exert maximum effort.  Tutankhamun's tomb must be fully stocked with provisions for his journey into the afterlife and ready to receive his hallowed remains within a few very short years.  Speed is of the utmost importance!"
@@ -5718,11 +5713,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Seti in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Tomb for a Pharaoh",
-            pos [10, 30]
+
         }
         content {
             text: "@POur most powerful Pharaoh, Seti, son of Ramses I, has declared that the present is the proper time to begin to prepare for his journey into the afterlife.  To this end you will begin the excavation of his royal tomb in the Valley of the Kings.  No effort is to be spared by your workers in its preparation.  Proper measures must be taken to ensure that, when completed, its craftsmanship will be unrivaled for many years to come. @PBut, as construction on this royal project proceeds, take due precautions against vandals!  Already there have been reports of bands of greedy criminals intent on enriching themselves by defiling the tombs and disturbing the peace of Egypt's eternally resting pharaohs.  Do not let this unholy act disgrace the royal tombs in The Valley or as sure as the sun rises in the east your standing in the Kingdom will be smirched."
@@ -5734,11 +5729,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Sumur",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Lands of the Levant",
-            pos [10, 30]
+
         }
         content {
             text: "@PHail royal governor, regent of the Levant and loyal subject of our Pharaoh, the son of Ra.  It is indeed fortunate to live in this time when Egypt's benevolent hand stretches from the far reaches of Nubia to the shores of the Levant.  Infinite is the wisdom of our new Pharaoh, the most revered Ramses II, and great is his vision, for it is he that has dispatched you to rule in this fine land, now part of the ever-expanding domain of Egypt.  @PThis region, while still fraught with dangers, has many riches that must be exploited.  The verdant hills are ripe with tall trees yielding fine wood, ideal for fashioning chariots and useful in many forms of construction.  Seams of copper, while not abundant, can also be found, and will be most useful in fashioning strong weapons.  Wood and copper, so rare in our homeland, will surely be welcomed when shipped back in quantity.  It is therefore entrusted that you will oversee the establishment of a mighty port of commerce from which these valuable commodities can be exported.  Pharaoh and the people of Egypt will be most grateful! @PBut take care!  Ensure that your own trusted soldiers are equipped with fast chariots and strong weapons, for the Hittites, though smitten by Seti, father of Pharaoh, are still dangerous and may challenge our rightful authority in this bountiful land.  A strong military presence in this new territory may be necessary to quell insurrection, and will undoubtedly be most useful in the future. @PFinally, to remind the people of this region to whom they must now pay homage, Pharaoh Ramses II deems it appropriate that you erect an obelisk proclaiming his glories."
@@ -5750,11 +5745,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Qadesh",
-            pos [50, 80]
+
         }
         subtitle {
             text: "The Battle of Qadesh",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe land of Amurra, close by the Levantine coast, trembles beneath the hoof and foot of your mighty legions, blessed Pharaoh.  This region may be blessed with rare gems but it is also rich with discord.  Armed Hittites, led by the wretched King Mutwatalli, once again seek to contest control of this land, rightfully ours.  Captured spies speak of how his hostile bands are still far off to the north and thus pose no threat.  But is this to be believed?  Wise is the warrior who does not drop his shield in battle.   @PTo quell such rumors of insurrection you, our most revered Pharaoh, Ramses II, son of Ra, have arrived at the fortress town of Qadesh.  Already camps of two of your feared charioteer companies have been established on its outskirts.  But these are not all.  At your immediate disposal are other veteran troops - namely the experienced troops so recently engaged near Sumur.  But take heed!  It might be advisable to delay deployment of these valuable assets until the need for them is most obvious, for wise also is the warrior who has a bevy of trusted troops to summon at the height of battle. @POnce the miserable foe has been vanquished it will be necessary to revive the stagnant economy of Qadesh so that it too will contribute to the glory of Egypt.  Collect valuable gems and hire skilled jewelers to fabricate exquisite goods for Pharaoh's loyal subjects.  Luxury items of such rare beauty will surely be in much demand!"
@@ -5766,11 +5761,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Abu Simbel",
-            pos [50, 80]
+
         }
         subtitle {
             text: "Colossi of Abu Simbel",
-            pos [10, 30]
+
         }
         content {
             text: "@PThe glory of our pharaoh, Ramses II, pervades the land.  So that the legacy of his reign will live forever it has been decreed that a great monument and temple dedicated to his rule be constructed deep in Nubia - and Pharaoh himself has selected the perfect spot for this creation.  From the rose-colored sandstone cliffs overlooking the Nile's west bank at Abu Simbel you will oversee the sculpting of four massive seated figures of His Majesty.  Surfaces of the monument, cut from the living rock, will proclaim the heroic deeds of Pharaoh during his great triumph at the battle of Qadesh.  This massive monument, while heralding the heroics of our leader, will also serve as a reminder to the peoples of Nubia of the greatness and power of Egypt, for, while Nubia is rich in deposits of gold and other rare gems, its people have always sat uneasily under Egyptian dominion.  To this end you should be ever prepared for defense, and be able to dispatch troops should Pharaoh need them. @PSandstone can be exported for construction elsewhere in the kingdom, as can other items that you should be able to produce from the bountiful resources of the region.  Precious little wood can be found, however.  You will no doubt have to establish a trade route to import this commodity, for it will be needed for the immense sculpture's scaffolding."
@@ -5782,11 +5777,11 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Ramses in the Valley",
-            pos [50, 80]
+
         }
         subtitle {
             text: "An Unsurpassed Resting Place",
-            pos [10, 30]
+
         }
         content {
             text: "@PIt has been many long and glorious years since our Pharaoh, the most revered Ramses II, accepted the crook and flail from his father, Seti I.  With the blessings of Ra, he will continue to reign for many more still.  Nevertheless, it is time to begin to cut into the bowels of the earth and prepare the eternal resting place for our vaunted leader.  He has supplied your tomb architect with a plan for the largest tomb yet constructed, surpassing even that of his sire.  It is now up to you to ensure that this royal request is brought to successful completion. @PBut be forewarned!  There is an alarming degree of unrest amongst some independent minded workers and slaves, both locally and in Lower Egypt.  They follow a man that was once raised in the court of our Pharaoh, and have threatened to call their God for divine interference.  They hope that, with such deific help, they can have their way.  Even now priests and holy men are debating the validity of these threats.  While we patiently await their opinions it might be prudent to be prepared for the unexpected."

@@ -16,8 +16,6 @@ void formation_batalion_move_to(formation* m, tile2i tile);
 
 void formation_batalion_return_home(formation* m);
 
-void formation_batalions_return_from_distant_battle();
-
 int formation_batalion_curse();
 
 formation_id formation_batalion_at(tile2i tile);

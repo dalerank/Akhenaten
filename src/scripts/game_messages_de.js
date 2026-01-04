@@ -3367,7 +3367,7 @@ game_messages_de {
             text: "Wiesenbewirtschaftung @LEinige Landstriche sind fruchtbar genug für die Landwirtschaft, selbst wenn sie nicht im Überschwemmungsgebiet liegen. Sie erkennen solche Wiesen am hohen, gelben Pflanzenwuchs. Einige der Farmen, die auf Wiesengrundstücke gebaut werden, können pro Jahr mehrere Ernten erzielen, obwohl die Erträge in der Regel ein wenig geringer ausfallen als bei einer Farm im Überschwemmungsgebiet. @G59  @L@LBewässerung @LSie können die Fruchtbarkeit jedes Ackerlands durch Bewässerung erhöhen. Bewässerungsgräben im Überschwemmungsgebiet können direkt mit dem Nil verbunden werden, aber für die Wasserversorgung der trockenen Gebiete brauchen Sie einen Wasserheber.  @L@LWasserheber @LWasserheber können entweder am Rand des Überschwemmungsgebiets oder am Ufer gebaut werden, von wo aus Wasser direkt aus dem Fluss auf trockenes Land geleitet werden kann. Verbinden Sie einen Bewässerungsgraben mit der rückwärtigen Seite des Wasserhebers, um so die Bewässerung von Farmen im Binnenland zu organisieren.  @L@LSteinmetze und Zimmerleute @LZwei neue Baugilden werden gebraucht, wenn eine Stufenpyramide errichtet werden soll: eine Steinmetz- und eine Zimmermannsgilde. Steinmetze der Gilde warten an der Baustelle auf Steinblöcke, die von Arbeitern dorthin transportiert werden. Diese Steinzieher benötigen Rampen, um die höheren Stufen des Bauwerks zu erreichen. Wenn es so weit ist, dass eine Stufenpyramide um eine weitere Ebene erweitert werden kann, schafft ein Zimmermann Holz aus seiner Gilde zum Bauplatz und baut dort eine Rampe für die Steinzieher. @L@LEinbalsamierung der Toten @LJede Stadt braucht einige Einbalsamierer, um hygienisch einwandfreie Verhältnisse zu wahren und um ihren betuchteren Bewohnern die angemessenen Begräbnisriten zu ermöglichen. Einbalsamierungshäuser benötigen in Webereien hergestelltes Leinen und bieten den Bewohnern der Umgebung die gewünschten Einbalsamierungsdienste an."
         }
     }
-    message_company_returns {
+    message_troops_return_failed {
         id: 287,
         type: 2,
         
@@ -3375,7 +3375,7 @@ game_messages_de {
         title { text: "Kompanie kehrt zurück" }
         content { text: "Im Schutze der Nacht schleichen sich die überlebenden Mitglieder Ihrer gedemütigten Kompanie in den Schoß ihres Forts zurück. Niemals wieder wollen sie eine solche Niederlage im Kampf erleiden." }
     }
-    message_heroes_return {
+    message_troops_return_victorious {
         id: 288,
         type: 2,
         

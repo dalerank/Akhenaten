@@ -35,6 +35,7 @@ struct dispatched_army_t {
     void formation_batalions_kill_soldiers(formation *m, int kill_percentage);
     void return_from_distant_battle();
     void return_soldiers(formation *m);
+
     void clear();
 };
 ANK_CONFIG_PROPERTY(dispatched_army_t,
