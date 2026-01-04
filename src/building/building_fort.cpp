@@ -21,6 +21,7 @@
 #include "grid/property.h"
 #include "grid/building_tiles.h"
 #include "grid/building.h"
+#include "widget/widget_city.h"
 
 #include "graphics/animation.h"
 #include "city/city_labor.h"
@@ -48,11 +49,12 @@ declare_console_command_p(force_fill_fort) {
         bool created_soldiers = false;
         for (int i = m->num_figures; i < m->max_figures; ++i) {
             figure *f = figure_create(m->figure_type, fort->base.tile.shifted(-1, -1), DIR_0_TOP_RIGHT);
-            m->num_figures++;
+            m->figures[i] = f->id;
             f->formation_id = m->id;
             f->formation_at_rest = 1;
             f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
             created_soldiers = true;
+            m->num_figures++;
         }
         
         if (created_soldiers) {
@@ -231,15 +233,33 @@ void building_fort::on_destroy() {
     remove_batalion();
 }
 
+void building_fort::draw_postrender_effects(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+    // 
+}
+
 bool building_fort::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (map_property_is_draw_tile(tile.grid_offset())) {
         int mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
         const auto &ranim = anim(animkeys().picture);
 
-        auto& command = ImageDraw::create_subcommand(render_command_t::ert_generic);
+        auto& command = ImageDraw::create_command(render_command_t::ert_generic);
         command.image_id = ranim.first_img();
         command.pixel = point + ranim.pos;
         command.mask = color_mask;
+        command.use_sort_pixel = true;
+        command.sort_pixel = point - vec2i{ 0, 1 };
+
+        tile2i ftile = tile.shifted(3, 0);
+        vec2i offset = lookup_tile_to_pixel(ftile);
+        g_screen_city.draw_figures(offset, ftile, ctx, true);
+
+        ftile = tile.shifted(3, -1);
+        offset = lookup_tile_to_pixel(ftile);
+        g_screen_city.draw_figures(offset, ftile, ctx, true);
+
+        ftile = tile.shifted(3, -2);
+        offset = lookup_tile_to_pixel(ftile);
+        g_screen_city.draw_figures(offset, ftile, ctx, true);
     }
 
     return true;
