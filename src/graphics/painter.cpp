@@ -14,10 +14,18 @@ std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
 
 void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
                    double angle, ImgFlags flags, const bool force_linear) {
-    if (!(flags & ImgFlag_Grayscale)) {
+    const bool use_grayscale = !!(flags & ImgFlag_Grayscale);
+    if (!use_grayscale) {
         draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags, force_linear);
     } else {
         draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha), force_linear);
+    }
+
+    const bool debug = !!(flags & ImgFlag_Debug);
+    if (debug) {
+        auto &command = ImageDraw::create_dcommand(render_command_t::ert_draw_rect);
+        command.pixel = pos * global_render_scale;
+        command.size = size * global_render_scale;
     }
 }
 
@@ -136,6 +144,10 @@ void painter::fill_rect(vec2i start, vec2i size, color color) {
     g_render.fill_rect(start, size, color);
 }
 
+void painter::draw_rect(vec2i start, vec2i size, color color) {
+    g_render.draw_rect(start, size, color);
+}
+
 const image_t *painter::img_letter(const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
     if (!color_mask) {
         color_mask = base_color_for_font(font);
@@ -168,9 +180,7 @@ const image_t *painter::isometric_from_drawtile(int image_id, vec2i pos, color c
     if (!img) {
         return nullptr;
     }
-    //    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
-    //        assets_load_unpacked_asset(image_id);
-    //    }
+
     pos.y += HALF_TILE_HEIGHT_PIXELS * (img->isometric_size() + 1) - img->height;
 
     draw_image(img, pos, color_mask, 1.f, flags);
