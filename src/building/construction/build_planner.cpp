@@ -453,7 +453,7 @@ void build_planner::set_graphics_array(custom_span<int> image_set, vec2i size) {
     //    set_graphics_row(row, (*image_array)[row], size_x);
 
     for (int row = 0; row < size.y; ++row) {
-        set_graphics_row(row, make_span(& image_set[row * size.x], size.x), -1);
+        set_graphics_row(row, make_span(& image_set[row * size.x], size.x), 0);
     }
 }
 
