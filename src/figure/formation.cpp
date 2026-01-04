@@ -484,7 +484,7 @@ void formations_t::calculate_figures() {
         if (f->type == FIGURE_RIOTER)
             continue;
 
-        // const bool soldier = !!::smart_cast<figure_soldier>(f);
+        //const bool soldier = !!::smart_cast<figure_soldier>(f);
         if (f->formation_id == 0 /* !soldier && !f->is_enemy() && !f->is_herd() */) {
             continue;
         }

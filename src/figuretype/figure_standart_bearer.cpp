@@ -53,7 +53,7 @@ void figure_standard_bearer::setup_flag_animation() {
     }
 }
 
-void figure_standard_bearer::figure_draw(painter &ctx, vec2i pixel, int hightlight) {
+void figure_standard_bearer::draw_main_sprite(painter &ctx, vec2i pixel, int hightlight) {
     if (formation_get(base.formation_id)->in_distant_battle) {
         return;
     }

@@ -9,7 +9,7 @@ public:
 
     virtual void on_create() override;
     virtual void figure_action() override;
-    virtual void figure_draw(painter &ctx, vec2i pixel, int hightlight) override;
+    virtual void draw_main_sprite(painter &ctx, vec2i pixel, int hightlight) override;
     virtual void before_poof() override;
     virtual void main_image_update() override;
     virtual void update_animation() override;
