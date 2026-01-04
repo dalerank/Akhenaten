@@ -40,6 +40,7 @@ enum e_event_type : uint8_t {
     EVENT_TYPE_TRADE_CITY_UNDER_SIEGE = 29,
     EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING = 30,
     EVENT_TYPE_DISTANT_BATTLE = 31,
+    EVENT_TYPE_DISTANT_BATTLE_WON = 32,
 
     EVENT_TYPE_MAX,
 };
@@ -66,7 +67,6 @@ enum e_event_subtype : uint8_t {
     EVENT_SUBTYPE_MSG_CITY_SAVED = 0,
     EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS = 1,
     EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1,
-    EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON = 1,
     EVENT_SUBTYPE_DISTANT_BATTLE = 2,
     EVENT_SUBTYPE_NEW_TRADE_ROUTE = 2,
     EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST = 2,
@@ -223,6 +223,7 @@ struct event_manager_t {
     void create_trade_city_under_siege(int tag, int months_initial);
     void create_foreign_army_attack_warning(int tag, int8_t sender_faction);
     void create_distant_battle(int tag, pcstr city, vec2i pos);
+    void win_distant_battle(int tag, pcstr city, vec2i pos);
     
     void set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4);
     void set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4);
