@@ -167,9 +167,9 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         verify_no_crash(false && "unsupported format");
         //return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
-    } else {
-        return NULL;
-    }
+    } 
+
+    return NULL;
 }
 
 bool sound_manager_t::load_channel(sound_manager_t::channel_t* channel) {
