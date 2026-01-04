@@ -115,6 +115,15 @@ city {
     }
 }
 
+city.get_random_building = function() {
+    var building_id = __city_get_random_building_id()
+    return {
+        id: building_id
+        add_fire_damage: function(damage) { __building_add_fire_damage(this.id, damage) }
+        add_collapse_damage: function(damage) { __building_add_collapse_damage(this.id, damage) }
+    }
+}
+
 finance { 
     income {
         @gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }

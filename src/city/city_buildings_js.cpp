@@ -30,8 +30,24 @@ bool __city_building_is_tax_collector(int bid) {
 }
 ANK_FUNCTION_1(__city_building_is_tax_collector)
 
+int __city_get_random_building_id() {
+    hvector<building_id, 128> buildings;
+    buildings_valid_do([&] (building &b) {
+        if (b.is_valid()) {
+            buildings.push_back(b.id);
+        }
+    });
+
+    if (buildings.empty()) {
+        return 0;
+    }
+
+    return buildings[rand() % buildings.size()];
+}
+ANK_FUNCTION(__city_get_random_building_id)
+
 int __city_get_random_house_id() {
-    svector<building_id, 128> houses;
+    hvector<building_id, 128> houses;
     buildings_valid_do([&] (building &b) { 
         auto house = b.dcast_house();
         if (house && house->house_population() > 0) {
