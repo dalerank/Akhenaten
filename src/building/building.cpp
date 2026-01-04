@@ -283,7 +283,7 @@ void building::clear_related_data() {
     }
 
     if (type == BUILDING_RESERVED_TRIUMPHAL_ARCH_56) {
-        city_buildings_remove_triumphal_arch();
+        city_buildings_remove_triumphal_obelisk();
     }
 
     dcast()->on_destroy();
@@ -294,26 +294,22 @@ e_overlay building::get_overlay() const {
     return const_cast<building*>(this)->dcast()->get_overlay();
 }
 
-// void building_totals_add_corrupted_house(int unfixable)
-//{
-//     extra.incorrect_houses++;
-//     if (unfixable) {
-//         extra.unfixable_houses++;
-//     }
-// }
-
 bool building::is_defense() {
     return building_is_defense(type);
 }
+
 bool building::is_farm() {
     return building_is_farm(type);
 }
+
 bool building::is_workshop() {
     return building_is_workshop(type);
 }
+
 bool building::is_extractor() {
     return building_is_extractor(type);
 }
+
 bool building::is_monument() {
     return building_is_monument(type);
 }

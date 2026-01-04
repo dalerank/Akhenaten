@@ -86,21 +86,21 @@ void city_buildings_remove_senet_house() {
     g_city.buildings.senet_house_placed = 0;
 }
 
-int city_buildings_triumphal_arch_available(void) {
-    return g_city.buildings.triumphal_arches_available > g_city.buildings.triumphal_arches_placed;
+int city_buildings_triumphal_obelisk_available() {
+    return g_city.buildings.triumphal_obelisk_available > g_city.buildings.triumphal_obelisk_placed;
 }
 
-void city_buildings_build_triumphal_arch(void) {
-    g_city.buildings.triumphal_arches_placed++;
+void city_buildings_build_triumphal_obelisk() {
+    g_city.buildings.triumphal_obelisk_placed++;
 }
 
-void city_buildings_remove_triumphal_arch(void) {
-    if (g_city.buildings.triumphal_arches_placed > 0)
-        g_city.buildings.triumphal_arches_placed--;
+void city_buildings_remove_triumphal_obelisk(void) {
+    if (g_city.buildings.triumphal_obelisk_placed > 0)
+        g_city.buildings.triumphal_obelisk_placed--;
 }
 
-void city_buildings_earn_triumphal_arch(void) {
-    g_city.buildings.triumphal_arches_available++;
+void city_buildings_earn_triumphal_obelisk(void) {
+    g_city.buildings.triumphal_obelisk_available++;
 }
 
 tile2i city_buildings_main_native_meeting_center() {

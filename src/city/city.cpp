@@ -1213,7 +1213,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_back);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_forth);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.city_foreign_months_left);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_arches_available);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_available);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.total_count);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.won_count);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.enemy_months_traveled);
@@ -1222,7 +1222,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.kingdome_service_batalions);
     iob->bind(BIND_SIGNATURE_UINT8, &data.unused.unknown_458e);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_soldiers);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_arches_placed);
+    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_placed);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_citizen);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_soldier);
     iob->bind(BIND_SIGNATURE_INT8, &data.sound.shoot_arrow);
