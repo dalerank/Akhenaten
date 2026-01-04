@@ -296,6 +296,10 @@ struct scenario_data_t {
     void set_campaign_scenario(int scenario_id);
     int is_before_mission(int mission);
 
+    int starting_kingdom() {
+        return settings.starting_kingdom;
+    }
+
     void distant_battle_set_enemy_travel_months(int value);
     void distant_battle_set_kingdome_travel_months(int value) {
         empire.distant_battle_kingdome_travel_months = value;
@@ -312,8 +316,6 @@ ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_lea
 ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, next_mission)
 
 extern scenario_data_t g_scenario;
-
-int scenario_starting_kingdom();
 
 int scenario_starting_personal_savings();
 

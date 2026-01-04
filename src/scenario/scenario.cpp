@@ -177,9 +177,6 @@ int scenario_data_t::is_before_mission(int mission) {
     return !is_custom_map && settings.campaign_mission_rank < mission;
 }
 
-int scenario_starting_kingdom() {
-    return g_scenario.settings.starting_kingdom;
-}
 int scenario_starting_personal_savings() {
     return g_scenario.settings.starting_personal_savings;
 }
