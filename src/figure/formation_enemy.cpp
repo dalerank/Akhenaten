@@ -25,7 +25,6 @@
 
 using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
 using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
-using attacked_buildings = flat_map<building_id, bool, 32>;
 
 struct enemy_attack_priority_t {
     stage_attack_rules food_chain;
@@ -582,7 +581,7 @@ static void update_enemy_movement(formation* m, int roman_distance) {
     }
 }
 
-static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance, attacked_buildings& attackd_buildings) {
+void formations_t::update_enemy_formation(formation* m, int* pharaoh_batalion_distance, attacked_buildings& attackd_buildings) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_batalions()) {
         const auto figure = figure_get<figure_enemy>(m->figure_type);
@@ -615,7 +614,7 @@ static void update_enemy_formation(formation* m, int* pharaoh_batalion_distance,
         }
     }
 
-    if (formation_has_low_morale(m)) {
+    if (m->has_low_morale()) {
         for (figure_id fid : m->figures) {
             figure* f = figure_get(fid);
             if (!f->in_attack() && f->action_state != FIGURE_ACTION_149_CORPSE && f->action_state != FIGURE_ACTION_148_FLEEING) {
