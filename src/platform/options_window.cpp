@@ -101,20 +101,21 @@ void show_options_window(Arguments& args) {
             ImGui::Text("Resolution:");
             static int item_mode_current_idx = 0;
             auto video_modes = get_video_modes();
-            ImGui::BeginListBox("##resolution");
-            int index = 0;
-            for (auto it = video_modes.begin(); it != video_modes.end(); ++it, ++index) {
-                const bool is_selected = (item_mode_current_idx == index);
-                if (ImGui::Selectable(it->str.c_str(), is_selected)) {
-                    item_mode_current_idx = index;
-                    args.set_window_size({it->x, it->y});
-                }
+            if (ImGui::BeginListBox("##resolution")) {
+                int index = 0;
+                for (auto it = video_modes.begin(); it != video_modes.end(); ++it, ++index) {
+                    const bool is_selected = (item_mode_current_idx == index);
+                    if (ImGui::Selectable(it->str.c_str(), is_selected)) {
+                        item_mode_current_idx = index;
+                        args.set_window_size({it->x, it->y});
+                    }
 
-                if (is_selected) {
-                    ImGui::SetItemDefaultFocus();
+                    if (is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
                 }
+                ImGui::EndListBox();
             }
-            ImGui::EndListBox();
 
             bool is_window_mode = args.is_window_mode();
             if (ImGui::Checkbox("Window mode", &is_window_mode)) {
@@ -128,20 +129,21 @@ void show_options_window(Arguments& args) {
             {ImGui::BeginChild("DriverSection");
             ImGui::Text("Driver:");
             static int item_driver_current_idx = 0;
-            ImGui::BeginListBox("##drivers");
-            int index = 0;
-            for (auto it = video_drivers.begin(); it != video_drivers.end(); ++it, ++index) {
-                const bool is_selected = (item_driver_current_idx == index);
-                if (ImGui::Selectable(it->c_str(), is_selected)) {
-                    item_driver_current_idx = index;
-                    args.set_renderer(it->c_str());
-                }
+            if (ImGui::BeginListBox("##drivers")) {
+                int index = 0;
+                for (auto it = video_drivers.begin(); it != video_drivers.end(); ++it, ++index) {
+                    const bool is_selected = (item_driver_current_idx == index);
+                    if (ImGui::Selectable(it->c_str(), is_selected)) {
+                        item_driver_current_idx = index;
+                        args.set_renderer(it->c_str());
+                    }
 
-                if (is_selected) {
-                    ImGui::SetItemDefaultFocus();
+                    if (is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
                 }
+                ImGui::EndListBox();
             }
-            ImGui::EndListBox();
             ImGui::EndChild();} // DriverSection
 
             ImGui::EndChild(); // RenderSection
