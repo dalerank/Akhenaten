@@ -164,6 +164,10 @@ void distant_battles_t::update_day() {
             break;
 
         case dispatched_army_t::state_at_battle:
+            if (battle.months_until_battle > 0) {
+                battle.egyptian_months_to_travel_forth = 1;
+                battle.months_until_battle = 1;
+            }
             process_distant_battle_impl();
             dispatched_army.state = dispatched_army_t::state_returning;
             break;
@@ -301,14 +305,18 @@ void distant_battles_t::update_aftermath() {
                 events::emit(event_message{ true, "message_troops_return_victorious", 0, g_city.map.exit_point.grid_offset() });
             }
             battle.egyptian_months_traveled = 0;
-            formation_batalions_return_from_distant_battle();
+            //formation_batalions_return_from_distant_battle();
         }
-    } else if (battle.city_foreign_months_left > 0) {
+        return;
+    } 
+    
+    if (battle.city_foreign_months_left > 0) {
         battle.city_foreign_months_left--;
         if (battle.city_foreign_months_left <= 0) {
             events::emit(event_message{ true, "message_city_retaken", 0, 0 });
             set_city_vulnerable();
         }
+        return;
     }
 }
 
