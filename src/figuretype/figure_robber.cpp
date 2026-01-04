@@ -20,7 +20,7 @@ void city_show_message_criminal(xstring message_id, int money_stolen, int tile_o
         show_popup_message = true;
     }
 
-    events::emit(event_message{ show_popup_message, "message_tutorial_crime", money_stolen, tile_offset });
+    events::emit(event_message{ show_popup_message, "message_tutorial_crime", money_stolen, tile_offset, SOURCE_LOCATION });
 }
 
 

@@ -220,7 +220,7 @@ void building_mansion::check_theft_from_mansions() {
                 // Use the existing localization message for mansion theft
                 // Show message similar to city_show_message_criminal
                 bool show_popup_message = show_popup;
-                events::emit(event_message{ show_popup_message, "thief_stole_savings", steal_amount, b->tile.grid_offset() });
+                events::emit(event_message{ show_popup_message, "thief_stole_savings", steal_amount, b->tile.grid_offset(), SOURCE_LOCATION });
                 
                 // Only steal from one mansion per check
                 return;

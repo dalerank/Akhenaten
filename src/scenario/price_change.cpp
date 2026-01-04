@@ -28,11 +28,11 @@ void scenario_price_change_process(void) {
         e_resource resource = g_scenario.price_changes[i].resource;
         if (g_scenario.price_changes[i].is_rise) {
             if (trade_price_change(resource, amount))
-                events::emit(event_message{ true, "message_price_increased", amount, resource });
+                events::emit(event_message{ true, "message_price_increased", amount, resource, SOURCE_LOCATION });
 
         } else {
             if (trade_price_change(resource, -amount))
-                events::emit(event_message{ true, "message_price_decreased", amount, resource });
+                events::emit(event_message{ true, "message_price_decreased", amount, resource, SOURCE_LOCATION });
         }
     }
 }

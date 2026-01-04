@@ -115,6 +115,7 @@ struct city_message {
     int unk_11a_i8;
     uint8_t god;
     uint16_t background_img;
+    pcstr src_location = nullptr;
 };
 
 #define MAX_MESSAGES 1000
@@ -128,7 +129,7 @@ struct messages {
     static void god(int god, xstring message_id);
 };
 
-struct event_message { bool use_popup; xstring message_id; int param1; int param2; };
+struct event_message { bool use_popup; xstring message_id; int param1; int param2; pcstr src_location; };
 struct event_message_god { int god; xstring message_id; };
 struct event_message_population { bool use_popup; xstring message_id; };
 

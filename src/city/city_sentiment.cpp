@@ -294,11 +294,11 @@ void city_sentiment_t::update() {
             message_delay = 3;
 
             if (value < 35) {
-                events::emit(event_message{ false, "message_people_angry", 0, 0 });
+                events::emit(event_message{ false, "message_people_angry", 0, 0, SOURCE_LOCATION });
             } else if (value < 40) {
-                events::emit(event_message{ false, "message_city_crime", 0, 0 });
+                events::emit(event_message{ false, "message_city_crime", 0, 0, SOURCE_LOCATION });
             } else {
-                events::emit(event_message{ false, "message_people_disgruntled", 0, 0 });
+                events::emit(event_message{ false, "message_people_disgruntled", 0, 0, SOURCE_LOCATION });
             }
         }
     }

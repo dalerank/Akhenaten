@@ -30,14 +30,14 @@ static const int RANDOM_EVENT_PROBABILITY[128]
 static void raise_wages(void) {
     if (g_scenario.random_events.raise_wages) {
         if (g_city.finance.raise_wages_kingdome())
-            events::emit(event_message{ true, "message_kingdome_raises_wages", 0, 0 });
+            events::emit(event_message{ true, "message_kingdome_raises_wages", 0, 0, SOURCE_LOCATION });
     }
 }
 
 static void lower_wages(void) {
     if (g_scenario.random_events.lower_wages) {
         if (g_city.finance.lower_wages_kingdome())
-            events::emit(event_message{ true, "message_kingdome_lowers_wages", 0, 0 });
+            events::emit(event_message{ true, "message_kingdome_lowers_wages", 0, 0, SOURCE_LOCATION });
     }
 }
 
@@ -46,9 +46,9 @@ static void disrupt_land_trade(void) {
         if (city_trade_has_land_trade_route()) {
             city_trade_start_land_trade_problems(48);
             if (scenario_property_climate() == CLIMATE_DESERT)
-                events::emit(event_message{ true, "message_land_trade_disrupted_sandstorms", 0, 0 });
+                events::emit(event_message{ true, "message_land_trade_disrupted_sandstorms", 0, 0, SOURCE_LOCATION });
             else {
-                events::emit(event_message{ true, "message_land_trade_disrupted_landslides", 0, 0 });
+                events::emit(event_message{ true, "message_land_trade_disrupted_landslides", 0, 0, SOURCE_LOCATION });
             }
         }
     }
@@ -58,7 +58,7 @@ static void disrupt_sea_trade(void) {
     if (g_scenario.random_events.sea_trade_problem) {
         if (city_trade_has_sea_trade_route()) {
             city_trade_start_sea_trade_problems(48);
-            events::emit(event_message{ true, "message_sea_trade_disrupted", 0, 0 });
+            events::emit(event_message{ true, "message_sea_trade_disrupted", 0, 0, SOURCE_LOCATION });
         }
     }
 }
@@ -77,7 +77,7 @@ static void contaminate_water(void) {
                 change = -25;
             }
             g_city.health.change(change);
-            events::emit(event_message{ true, "message_tutorial_major_plagues", 0, 0 });
+            events::emit(event_message{ true, "message_tutorial_major_plagues", 0, 0, SOURCE_LOCATION });
         }
     }
 }
