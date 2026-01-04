@@ -52,6 +52,7 @@ struct painter {
     const image_t *img_letter(const image_t *img, e_font font, int letter_id, int x, int y, color color_mask = COLOR_MASK_NONE, float scale = 1.0f);
 
     void fill_rect(vec2i p, vec2i size, color color);
+    void draw_rect(vec2i p, vec2i size, color color);
 
 protected:
     void draw_grayscale(
