@@ -22,8 +22,9 @@ struct city_buildings_t {
     tile2i distribution_center;
 
     int32_t trade_center_building_id;
-    int8_t triumphal_arches_available;
-    int8_t triumphal_arches_placed;
+
+    int8_t triumphal_obelisk_available;
+    int8_t triumphal_obelisk_placed;
 
     int8_t fishing_boats_requested;
     int8_t warships_requested;
@@ -103,10 +104,10 @@ bool city_buildings_has_senet_house();
 void city_buildings_add_senet_house();
 void city_buildings_remove_senet_house();
 
-int city_buildings_triumphal_arch_available();
-void city_buildings_earn_triumphal_arch();
-void city_buildings_build_triumphal_arch();
-void city_buildings_remove_triumphal_arch();
+int city_buildings_triumphal_obelisk_available();
+void city_buildings_earn_triumphal_obelisk();
+void city_buildings_build_triumphal_obelisk();
+void city_buildings_remove_triumphal_obelisk();
 
 tile2i city_buildings_main_native_meeting_center();
 void city_buildings_set_main_native_meeting_center(int x, int y);

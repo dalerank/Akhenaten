@@ -44,24 +44,20 @@ void add_building(building *b, int orientation, int variant) {
     case BUILDING_HOUSE_ELEGANT_MANOR:
     case BUILDING_HOUSE_STATELY_MANOR:
     case BUILDING_HOUSE_MODEST_ESTATE:
-    case BUILDING_HOUSE_PALATIAL_ESTATE:
-        //add_building_tiles_image(b, params.anim["house"].first_img());
-    {
-        int image_id = params.animations["house"].first_img();
-        map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
-    }
-    break;
+    case BUILDING_HOUSE_PALATIAL_ESTATE: {
+            int image_id = params.animations["house"].first_img();
+            map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+        }
+        break;
 
-    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56:
-        //add_building_tiles_image(b, image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1);
-    {
-        int image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1;
-        map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
-    }
-    map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
-    city_buildings_build_triumphal_arch();
-    g_city_planner.reset();
-    break;
+    case BUILDING_RESERVED_TRIUMPHAL_ARCH_56: {
+            int image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1;
+            map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+            map_terrain_add_triumphal_arch_roads(b->tile.x(), b->tile.y(), orientation);
+            city_buildings_build_triumphal_obelisk();
+            g_city_planner.reset();
+        }
+        break;
 
     default:
         b->dcast()->on_place(orientation, variant);
