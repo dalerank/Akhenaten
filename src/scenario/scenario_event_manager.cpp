@@ -188,6 +188,23 @@ void event_manager_t::create_distant_battle(int tag, pcstr city, vec2i pos) {
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
+void event_manager_t::win_distant_battle(int tag, pcstr city, vec2i pos) {
+    auto &event = g_scenario_events.event_list.emplace_back();
+    int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_DISTANT_BATTLE_WON;
+    event.time.year = game.simtime.years_since_start();
+    event.time.month = game.simtime.month;
+    event.tag_id = tag;
+    const auto city_ptr = g_empire.city(city);
+    event.city_id = city_ptr ? city_ptr->name_id : 0;
+    event.location_fields = { -1, -1, -1, -1 };
+    //event.sender_faction = sender_faction;
+    event.event_id = event_id;
+    event.event_state = e_event_state_initial;
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
 void event_manager_t::execute_event(int tag) {
     auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
 
@@ -491,6 +508,12 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         }
         break;
 
+    case EVENT_TYPE_DISTANT_BATTLE_WON:
+        city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
+            PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
+            id, 0);
+        break;
+
     case EVENT_TYPE_DISTANT_BATTLE:{
             process_event_distant_battle(event, via_event_trigger, chain_action_parent, caller_event_id, caller_event_var);
         }
@@ -513,14 +536,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                                    id, 0);
             break;
 
-        case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_WON:
-            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
-                                   PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
-                                   id, 0);
-            break;
-
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
+            city_message_post_full(true, "message_template_distant_battle_lost", &event, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_reason_A,
                                    id, 0);
             break;
