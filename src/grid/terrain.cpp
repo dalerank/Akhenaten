@@ -348,22 +348,25 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 
 /////
 
-void map_terrain_backup(void) {
+void map_terrain_backup() {
     map_grid_copy(g_terrain_grid, g_terrain_grid_backup);
 }
-void map_terrain_restore(void) {
+
+void map_terrain_restore() {
     map_grid_copy(g_terrain_grid_backup, g_terrain_grid);
 }
-void map_terrain_clear(void) {
+
+void map_terrain_clear() {
     map_grid_clear(g_terrain_grid);
 }
-void map_terrain_init_outside_map(void) {
+
+void map_terrain_init_outside_map() {
     int map_width = scenario_map_data()->width;
     int map_height = scenario_map_data()->height;
-    //    int map_width, map_height;
-    //    map_grid_size(&map_width, &map_height);
+
     int y_start = (GRID_LENGTH - map_height) / 2;
     int x_start = (GRID_LENGTH - map_width) / 2;
+
     for (int y = 0; y < GRID_LENGTH; y++) {
         int y_outside_map = y < y_start || y >= y_start + map_height;
         for (int x = 0; x < GRID_LENGTH; x++) {
