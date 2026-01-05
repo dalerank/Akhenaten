@@ -10,15 +10,13 @@
 #include <unordered_set>
 #include "js/js_game.h"
 #include "game/game.h"
-#include "core/pool.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_librarian);
 
-pool<figure_librarian::building_ids_set, 128> g_building_ids_set_pool;
-
-void ANK_PERMANENT_CALLBACK(event_game_mission_pre_load, ev) {
-    g_building_ids_set_pool.release_all();
-}
+ figure_librarian::building_ids_set_pool_t &figure_librarian::get_building_ids_set_pool() {
+     static building_ids_set_pool_t _inst;
+     return _inst;
+ }
 
 int figure_librarian::provide_service() {
     building* library_building = home();
@@ -34,7 +32,7 @@ int figure_librarian::provide_service() {
     }
 
     int residents_serviced = 0;
-    std::unordered_set<building_id> serviced_houses;
+    flat_map<building_id, bool, 64> serviced_houses;
     tile2i librarian_tile = tile();
 
     auto &d = runtime_data();
@@ -65,17 +63,17 @@ int figure_librarian::provide_service() {
 
 void figure_librarian::on_create() {
     auto &d = runtime_data();
-    d.serviced_houses = g_building_ids_set_pool.create();
+    d.serviced_houses = get_building_ids_set_pool().create();
 }
 
 void figure_librarian::on_destroy() {
     auto &d = runtime_data();    
-    g_building_ids_set_pool.release(d.serviced_houses);
+    get_building_ids_set_pool().release(d.serviced_houses);
 }
 
 void figure_librarian::on_post_load() {
     auto &d = runtime_data();
-    d.serviced_houses = g_building_ids_set_pool.create();
+    d.serviced_houses = get_building_ids_set_pool().create();
 }
 
 sound_key figure_librarian::phrase_key() const {

@@ -61,9 +61,14 @@ namespace events {
     }
 } // namespace events
 
-#define ANK_PERMANENT_CALLBACK(event, a) \
-    tmp_register_permanent_callback_ ##event(); \
-    ANK_DECLARE_CONFIG_ITERATOR(register_permanent_callback_ ##event); \
-    void permanent_callback_ ##event(event a); \
-    void register_permanent_callback_ ##event() { events::subscribe_permanent(permanent_callback_ ##event); } \
-    void permanent_callback_ ##event(event a)
+#define ANK_PERMANENT_CALLBACK_IMPL(event, a, unique_id)                                                                               \
+    tmp_register_permanent_callback_ ##event ##unique_id();                                                                            \
+    ANK_DECLARE_CONFIG_ITERATOR(register_permanent_callback_ ##event ##unique_id);                                                     \
+    void permanent_callback_ ##event ##unique_id(event a);                                                                             \
+    void register_permanent_callback_ ##event ##unique_id() { events::subscribe_permanent(permanent_callback_ ##event ##unique_id ); } \
+    void permanent_callback_ ##event ##unique_id(event a)
+
+#define ANK_PERMANENT_CALLBACK_HELPER0(event, a, unique_id) ANK_PERMANENT_CALLBACK_IMPL(event, a, unique_id)
+#define ANK_PERMANENT_CALLBACK_HELPER1(event, a, unique_id) ANK_PERMANENT_CALLBACK_HELPER0(event, a, ANK_CONFIG_CC1(unique_id, __COUNTER__))
+
+#define ANK_PERMANENT_CALLBACK(event, a) ANK_PERMANENT_CALLBACK_HELPER1(event, a, __LINE__)
