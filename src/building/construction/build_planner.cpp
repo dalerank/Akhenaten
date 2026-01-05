@@ -266,32 +266,12 @@ bool build_planner::attach_temple_upgrade(int upgrade_param, int grid_offset) {
     }
 
     complexd.temple_complex_upgrades |= upgrade_param;
-    map_building_tiles_add_temple_complex_parts(&complex->base);
+    building_temple_complex::map_tiles_add_temple_complex_parts(&complex->base);
 
     events::emit(event_temple_complex_updated{ complex->id() } );
 
     return true;
 }
-
-static tile2i temple_complex_part_target(building* main, int part) {
-    building* b = main;
-    if (part == 1) {
-        b = b->next();
-    } else if (part == 2) {
-       // b = get_temple_complex_front_facing_part(main);
-    }
-
-    int x = b->tile.x();
-    int y = b->tile.y();
-    switch (city_view_orientation() / 2) {
-    case 1:  x += 2; break; // east
-    case 2:  x += 2; y += 2; break; // south
-    case 3:  y += 2; break; // west
-    }
-    return tile2i(x, y);
-}
-
-//////////////////////
 
 int build_planner::can_be_placed() {
     return can_place;
@@ -602,7 +582,7 @@ void build_planner::setup_build_graphics() {
     case BUILDING_TEMPLE_COMPLEX_ORACLE: {
             init_tiles(3, 3);
             e_building_type b_type = building_at(end)->main()->type;
-            int img_id = get_temple_complex_part_image(b_type, additional_req_param1, relative_orientation, 1);
+            int img_id = building_temple_complex::get_temple_complex_part_image(b_type, additional_req_param1, relative_orientation, 1);
             set_tiles_building(img_id, 3);
         }
         break;

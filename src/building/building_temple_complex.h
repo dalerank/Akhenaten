@@ -1,6 +1,9 @@
 #pragma once
 
 #include "building/building.h"
+#include "core/svector.h"
+#include "grid/point.h"
+#include "game/game_pool.h"
 
 struct event_temple_complex_updated { building_id bid; };
 
@@ -10,6 +13,9 @@ enum e_temple_compex_upgrade : uint8_t {
 };
 
 class building_temple_complex : public building_impl {
+    using decoraive_tiles_t = svector<int, 128>;
+    using decoraive_tiles_pool_t = mission_permanent_memory_pool<building_temple_complex::decoraive_tiles_t, 2>;
+
 public:
     building_temple_complex(building &b) : building_impl(b) {}
 
@@ -25,12 +31,15 @@ public:
     struct runtime_data_t {
         uint8_t variant;
         uint8_t temple_complex_upgrades;
-    };
+        // tiles around the complex that are covered by statues, floor tiles, etc.
+        decoraive_tiles_t* decorative_tiles = nullptr;
+    } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void update_count() const override;
     virtual void on_post_load() override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_destroy() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     bool has_upgrade(e_temple_compex_upgrade a) const { return !!(runtime_data().temple_complex_upgrades & a); }
@@ -44,8 +53,12 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
     virtual void update_map_orientation(int orientation) override;
 
-    runtime_data_t &runtime_data() { return *(runtime_data_t *)base.runtime_data; }
-    const runtime_data_t &runtime_data() const { return *(runtime_data_t *)base.runtime_data; }
+    void map_add_tiles(e_building_type type, tile2i north_tile, int orientation, building_temple_complex::decoraive_tiles_t &tiles_list);
+
+    decoraive_tiles_pool_t &get_decorative_tiles_pool();
+
+    static void map_tiles_add_temple_complex_parts(building *b);
+    static int get_temple_complex_part_image(e_building_type type, int part, int orientation, int level);
 };
 
 class building_temple_complex_osiris : public building_temple_complex {
