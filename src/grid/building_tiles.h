@@ -8,8 +8,6 @@ void map_building_tiles_add(int building_id, tile2i tile, int size, int image_id
 
 void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image_id, bool update_only);
 
-void map_building_tiles_add_temple_complex_parts(building* b);
-
 void map_building_tiles_remove(int building_id, tile2i tile);
 void map_building_tiles_set_rubble(int building_id, tile2i tile, int size);
 void map_building_tiles_mark_deleting(int grid_offset);

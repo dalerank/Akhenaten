@@ -146,31 +146,6 @@ void map_add_venue_plaza_tiles(int building_id, int size, tile2i tile, int image
     }
 }
 
-void map_building_tiles_add_temple_complex_parts(building* b) {
-    auto complex = b->dcast_temple_complex();
-    if (!complex) {
-        return;
-    }
-
-    auto &d = complex->runtime_data();
-    int orientation = (5 - (d.variant / 2)) % 4;
-    int orientation_rel = city_view_relative_orientation(orientation);
-    int orientation_binary = (1 + orientation_rel) % 2;
-    int part = 0;                                             // default = main
-    if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
-        part = 1;
-    //else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
-    //    part = 2;
-
-    auto mainc = b->main()->dcast_temple_complex();
-    auto &maind = mainc->runtime_data();
-    int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(maind.temple_complex_upgrades & part));
-    map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
-    if (b->next_part_building_id) {
-        map_building_tiles_add_temple_complex_parts(b->next());
-    }
-}
-
 void map_building_tiles_remove(int building_id, tile2i tile) {
     if (!map_grid_is_inside(tile, 1)) {
         return;

@@ -433,7 +433,7 @@ void buildings_house_in_radius_do(tile2i center, int radius, Processed* processe
 
             if (house) {
                 if (processed_buildings) {
-                    processed_buildings->insert(building_id);
+                    processed_buildings->insert({ building_id, true });
                 }
 
                 func(house);

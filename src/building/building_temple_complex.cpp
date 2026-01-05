@@ -2,13 +2,23 @@
 
 #include "city/city.h"
 #include "game/undo.h"
+#include "game/game.h"
+#include "game/game_events.h"
 #include "grid/building_tiles.h"
 #include "grid/terrain.h"
 #include "grid/image.h"
+#include "grid/tiles.h"
+#include "grid/property.h"
 #include "building/rotation.h"
 #include "graphics/view/lookup.h"
 #include "construction/build_planner.h"
 #include "js/js_game.h"
+#include "game/game_pool.h"
+
+building_temple_complex::decoraive_tiles_pool_t &building_temple_complex::get_decorative_tiles_pool() {
+    static decoraive_tiles_pool_t _inst;
+    return _inst;
+}
 
 tile2i building_part_offset(int orientation, int size) {
     tile2i offset = { 0, 0 };
@@ -144,7 +154,9 @@ void building_temple_complex::preview::setup_preview_graphics(build_planner &pla
     }
 }
 
-void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, int orientation) {
+void building_temple_complex::map_add_tiles(e_building_type type, tile2i north_tile, int orientation, building_temple_complex::decoraive_tiles_t& tiles_list) {
+    tiles_list.clear();
+
     int packid = -1;
     switch (type) {
     case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
@@ -245,8 +257,14 @@ void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, 
           {smst3, til_0, EMPTY______, EMPTY______, EMPTY______, til_0, smst1},
         };
         for (int row = 0; row < 13; row++) {
-            for (int column = 0; column < 7; column++)
-                map_image_set(north_tile.shifted(column, row), TEMPLE_COMPLEX_SCHEME[row][column]);
+            for (int column = 0; column < 7; column++) {
+                tile2i current_tile = north_tile.shifted(column, row);
+                int image_id = TEMPLE_COMPLEX_SCHEME[row][column];
+                if (image_id != EMPTY______) {
+                    map_image_set(current_tile, image_id);
+                    tiles_list.push_back(current_tile.grid_offset());
+                }
+            }
         }
         break;
     }
@@ -262,8 +280,14 @@ void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, 
           {smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2, til_0, til_2, til_3, til_2, til_3},
         };
         for (int row = 0; row < 7; row++) {
-            for (int column = 0; column < 13; column++)
-                map_image_set(north_tile.shifted(column, row), TEMPLE_COMPLEX_SCHEME[row][column]);
+            for (int column = 0; column < 13; column++) {
+                tile2i current_tile = north_tile.shifted(column, row);
+                int image_id = TEMPLE_COMPLEX_SCHEME[row][column];
+                if (image_id != EMPTY______) {
+                    map_image_set(current_tile, image_id);
+                    tiles_list.push_back(current_tile.grid_offset());
+                }
+            }
         }
         break;
     }
@@ -285,8 +309,14 @@ void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, 
           {til_3, lst1A, lst1B, til_1, lst3A, lst3B, til_3},
         };
         for (int row = 0; row < 13; row++) {
-            for (int column = 0; column < 7; column++)
-                map_image_set(north_tile.shifted(column, row), TEMPLE_COMPLEX_SCHEME[row][column]);
+            for (int column = 0; column < 7; column++) {
+                tile2i current_tile = north_tile.shifted(column, row);
+                int image_id = TEMPLE_COMPLEX_SCHEME[row][column];
+                if (image_id != EMPTY______) {
+                    map_image_set(current_tile, image_id);
+                    tiles_list.push_back(current_tile.grid_offset());
+                }
+            }
         }
         break;
     }
@@ -302,8 +332,14 @@ void map_add_temple_complex_base_tiles(e_building_type type, tile2i north_tile, 
           {til_3, til_2, til_3, til_2, til_0, smst2, smst2, til_1, smst2, smst2, til_1, smst2, smst2},
         };
         for (int row = 0; row < 7; row++) {
-            for (int column = 0; column < 13; column++)
-                map_image_set(north_tile.shifted(column, row), TEMPLE_COMPLEX_SCHEME[row][column]);
+            for (int column = 0; column < 13; column++) {
+                tile2i current_tile = north_tile.shifted(column, row);
+                int image_id = TEMPLE_COMPLEX_SCHEME[row][column];
+                if (image_id != EMPTY______) {
+                    map_image_set(current_tile, image_id);
+                    tiles_list.push_back(current_tile.grid_offset());
+                }
+            }
         }
         break;
     }
@@ -318,12 +354,18 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_bast);
 
 void building_temple_complex::on_create(int orientation) {
     runtime_data().variant = (10 - (2 * orientation)) % 8; // ugh!
+    runtime_data().decorative_tiles = get_decorative_tiles_pool().allocate();
     g_city.buildings.track_building(base, false);
 }
 
 void building_temple_complex::on_post_load() {
     const bool is_active = num_workers() > 0;
     g_city.buildings.track_building(base, is_active);
+
+    // save decorative tiles to runtime_data
+    const int city_orientation = city_view_orientation() / 2;
+    runtime_data().decorative_tiles = get_decorative_tiles_pool().allocate();
+    update_map_orientation(city_orientation);
 }
 
 building *add_temple_complex_element(tile2i tile, e_building_type type, int orientation, building *prev) {
@@ -348,6 +390,9 @@ void building_temple_complex::on_place(int orientation, int variant) {
 
     building *altar = add_temple_complex_element(tile().shifted(offset), BUILDING_TEMPLE_COMPLEX_ALTAR, orientation, &base);
     building *oracle = add_temple_complex_element(tile().shifted(offset * 2), BUILDING_TEMPLE_COMPLEX_ORACLE, orientation, altar);
+
+    // save decorative tiles to runtime_data
+    update_map_orientation(orientation);
 }
 
 void building_temple_complex::bind_dynamic(io_buffer *iob, size_t version) {
@@ -412,7 +457,7 @@ void building_temple_complex::update_map_orientation(int orientation) {
 
     // first, add the base tiles
     orientation = (5 - (runtime_data().variant / 2)) % 4;
-    map_add_temple_complex_base_tiles(type(), tile(), orientation);
+    map_add_tiles(type(), tile(), orientation, *runtime_data().decorative_tiles);
     // then, the main building parts
     // map_building_tiles_add_temple_complex_parts(&base);
     building *building_main = &main()->base;
@@ -435,7 +480,103 @@ void building_temple_complex::update_map_orientation(int orientation) {
     }
 }
 
+tile2i temple_complex_part_target(building *main, int part) {
+    building *b = main;
+    if (part == 1) {
+        b = b->next();
+    } else if (part == 2) {
+        // b = get_temple_complex_front_facing_part(main);
+    }
+
+    int x = b->tile.x();
+    int y = b->tile.y();
+    switch (city_view_orientation() / 2) {
+    case 1:  x += 2; break; // east
+    case 2:  x += 2; y += 2; break; // south
+    case 3:  y += 2; break; // west
+    }
+    return tile2i(x, y);
+}
+
+
+int building_temple_complex::get_temple_complex_part_image(e_building_type type, int part, int orientation, int level) {
+    int packid = -1;
+
+    switch (type) {
+    case BUILDING_TEMPLE_COMPLEX_OSIRIS: packid = PACK_TEMPLE_NILE; break;
+    case BUILDING_TEMPLE_COMPLEX_RA: packid = PACK_TEMPLE_RA; break;
+    case BUILDING_TEMPLE_COMPLEX_PTAH: packid = PACK_TEMPLE_PTAH; break;
+    case BUILDING_TEMPLE_COMPLEX_SETH: packid = PACK_TEMPLE_SETH; break;
+    case BUILDING_TEMPLE_COMPLEX_BAST: packid = PACK_TEMPLE_BAST; break;
+        break;
+    default:
+        break;
+    }
+
+    if (packid == -1) {
+        return 0;
+    }
+
+    if (level == 0) {
+        switch (part) {
+        case 0: return image_id_from_group(packid, 1) + 3 * orientation;
+        case 1: return image_id_from_group(packid, 2) + 3 * orientation;
+        case 2: return image_id_from_group(packid, 3) + 3 * orientation;
+        }
+    } else if (level == 1) {
+        switch (part) {
+        case 0: return image_id_from_group(packid, 1) + orientation;
+        case 1: return image_id_from_group(packid, 7) + orientation;
+        case 2: return image_id_from_group(packid, 7) + 2 + orientation;
+        }
+    }
+
+    return 0;
+}
+
+void building_temple_complex::map_tiles_add_temple_complex_parts(building *b) {
+    auto complex = b->dcast_temple_complex();
+    if (!complex) {
+        return;
+    }
+
+    auto &d = complex->runtime_data();
+    int orientation = (5 - (d.variant / 2)) % 4;
+    int orientation_rel = city_view_relative_orientation(orientation);
+    int orientation_binary = (1 + orientation_rel) % 2;
+    int part = 0;                                             // default = main
+    if (b->prev_part_building_id && b->next_part_building_id) // the middle part is ALWAYS the altar
+        part = 1;
+    //else if (b == get_temple_complex_front_facing_part(b)) // front facing part (oracle)
+    //    part = 2;
+
+    auto mainc = b->main()->dcast_temple_complex();
+    auto &maind = mainc->runtime_data();
+    int image_id = get_temple_complex_part_image(b->type, part, orientation_binary, (bool)(maind.temple_complex_upgrades & part));
+    map_building_tiles_add(b->id, b->tile, b->size, image_id, TERRAIN_BUILDING);
+    if (b->next_part_building_id) {
+        map_tiles_add_temple_complex_parts(b->next());
+    }
+}
+
 void building_temple_complex::update_count() const {
     const bool is_active = num_workers() > 0;
     g_city.buildings.track_building(base, is_active);
+}
+
+void building_temple_complex::on_destroy() {
+    if (!is_main()) {
+        return;
+    }
+
+    // remove decorative elements (statues, tiles, etc.) using saved list
+    auto &tiles = *runtime_data().decorative_tiles;
+    verify_no_crash(!tiles.empty());
+    for (auto &t : tiles) {
+        tile2i tile_pos(t);
+        map_terrain_remove(t, TERRAIN_BUILDING);
+        map_tiles_update_region_empty_land(true, tile_pos, tile_pos.shifted(1, 1));
+    }
+
+    get_decorative_tiles_pool().destroy(runtime_data().decorative_tiles);
 }
