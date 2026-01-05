@@ -233,25 +233,30 @@ void game_undo_perform() {
         map_image_restore();
         map_property_restore();
         map_property_clear_constructing_and_deleted();
+
     } else if (building_type_any_of((e_building_type)data.type, make_array(BUILDING_IRRIGATION_DITCH, BUILDING_ROAD, BUILDING_MUD_WALL))) {
         map_terrain_restore();
         map_canal_restore();
         restore_map_images();
+
     } else if (data.type == BUILDING_LOW_BRIDGE || data.type == BUILDING_UNUSED_SHIP_BRIDGE_83) {
         map_terrain_restore();
         map_sprite_restore();
         restore_map_images();
+
     } else if (data.type == BUILDING_PLAZA || data.type == BUILDING_GARDENS) {
         map_terrain_restore();
         map_canal_restore();
         map_property_restore();
         restore_map_images();
+
     } else if (data.num_buildings) {
         if (data.type == BUILDING_WATER_LIFT) {
             map_terrain_restore();
             map_canal_restore();
             restore_map_images();
         }
+
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
                 building* b = building_get(data.buildings[i].id);

@@ -35,7 +35,6 @@ static bool has_burning_ruin_nearby(building* b) {
         return false;
     }
 
-    // Проверяем соседние тайлы вокруг здания
     grid_tiles_sm adjacent_tiles = map_grid_get_adjacent_tiles_sm(b, 1);
     for (const auto& tile : adjacent_tiles) {
         int building_id = map_building_at(tile);
@@ -103,15 +102,19 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 map_building_tiles_mark_deleting(grid_offset);
                 
                 if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                    if (b)
+                    if (b) {
                         items_placed++;
-                } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
+                    }
+
+                } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                     continue;
+
                 } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)
                            || (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)
                            && map_terrain_is(grid_offset, TERRAIN_CLEARABLE)
                            && !map_terrain_exists_tile_in_radius_with_type(tile2i(x, y), 1, 1, TERRAIN_FLOODPLAIN))) {
                     items_placed++;
+
                 }
                 continue;
             }
@@ -146,10 +149,11 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     items_placed++;
                     game_undo_add_building(b);
                 }
+
                 b->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 b->is_deleted = 1;
                 building* space = b;
-                for (int i = 0; i < 99; i++) {
+                for (int i = 0; i < 9; i++) {
                     if (space->prev_part_building_id <= 0)
                         break;
 
@@ -157,11 +161,18 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
+
                 space = b;
                 for (int i = 0; i < 9; i++) {
-                    space = space->next();
-                    if (space->id <= 0)
+                    if (space->next_part_building_id <= 0) {
                         break;
+                    }
+
+                    space = space->next();
+                    if (space->id <= 0) {
+                        break;
+                    }
+
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
@@ -169,6 +180,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 items_placed++;
                 map_canal_remove(grid_offset);
+
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 if (!measure_only && map_bridge_count_figures(grid_offset) > 0)
                     events::emit(event_city_warning{ "#cannot_demolish_bridge_with_people" });
@@ -176,6 +188,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     map_bridge_remove(grid_offset, measure_only);
                     items_placed++;
                 }
+
             } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 if (map_terrain_is(grid_offset, TERRAIN_ROAD))
                     map_property_clear_plaza_or_earthquake(grid_offset);
@@ -186,6 +199,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
             }
         }
     }
+    
     if (!measure_only || !visual_feedback_on_delete) {
         int radius;
         if (area.tmax.x() - area.tmin.x() <= area.tmax.y() - area.tmin.y()) {
