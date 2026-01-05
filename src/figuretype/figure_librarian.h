@@ -1,16 +1,19 @@
 #pragma once
 
 #include "figure/figure.h"
-#include <unordered_set>
+#include "game/game_pool.h"
+#include "core/flat_map.h"
 
 class figure_librarian : public figure_impl {
+    using building_ids_set_t = flat_map<building_id, bool, 64>;
+    using building_ids_set_pool_t = mission_permanent_memory_pool<building_ids_set_t, 32>;
+
 public:
     FIGURE_METAINFO(FIGURE_LIBRARIAN, figure_librarian)
     figure_librarian(figure *f) : figure_impl(f) {}
 
-    using building_ids_set = std::unordered_set<building_id>;
     struct runtime_data_t {
-        building_ids_set* serviced_houses;
+        building_ids_set_t* serviced_houses;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
@@ -20,4 +23,6 @@ public:
     virtual int provide_service() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_LIBRARY; }
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
+
+    building_ids_set_pool_t &get_building_ids_set_pool();
 };
