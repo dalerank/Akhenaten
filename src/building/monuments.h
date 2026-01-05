@@ -77,7 +77,6 @@ bool building_monument_is_finished(const building *b);
 int building_monument_workers_onsite(building *b, e_figure_type figure_type);
 
 int get_monument_part_image(int part, int orientation, int level);
-int get_temple_complex_part_image(e_building_type type, int part, int orientation, int level);
 
 uint32_t map_monuments_get_progress(tile2i tile);
 void map_monuments_set_progress(tile2i tile, uint32_t progress);
