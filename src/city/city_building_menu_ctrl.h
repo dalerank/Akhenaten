@@ -50,6 +50,7 @@ struct building_menu_group {
 };
 
 struct building_menu_ctrl_t {
+    std::array<bool, BUILDING_MAX> type_visible;
     svector<building_menu_group, 30> groups;
     building_menu_group &group(int type) {
         static building_menu_group building_menu_group_dummy;
@@ -92,6 +93,7 @@ struct building_menu_ctrl_t {
         for (auto &group : groups) {
             group.set_all(enabled);
         }
+        std::fill(type_visible.begin(), type_visible.end(), true);
     }
 
     void clear() {
@@ -109,6 +111,12 @@ struct building_menu_ctrl_t {
     int next_index(int submenu, int current_index);
 
     void enable_if_allowed(e_building_type type);
+    inline void set_visible(int type, bool visible) {
+        if (type >= 0 && type < BUILDING_MAX) {
+            type_visible[type] = visible;
+        }
+    }
+    inline bool is_visible(int type) const { return type >= 0 && type < BUILDING_MAX ? type_visible[type] : false; }
     int disable_raw_if_unavailable(int type, e_resource resource);
 
     void update_if(bool expr, const xstring stage) {

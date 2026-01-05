@@ -255,7 +255,7 @@ void building_menu_ctrl_t::update_temple_complexes() {
     if (has_temple_complex) {
         // can't build more than one
         for (const e_building_type type : g_city.buildings.temple_complex_types()) {
-            toggle_building(type, false);
+            set_visible(type, false);
         }
 
         // check if upgrades have been placed
@@ -273,7 +273,7 @@ void building_menu_ctrl_t::update_temple_complexes() {
 
     } else {
         for (const e_building_type type : g_city.buildings.temple_complex_types()) {
-            enable_if_allowed(type);
+            set_visible(type, true);
         }
 
         toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
@@ -295,10 +295,6 @@ void building_menu_ctrl_t::setup_mission() {
 }
 
 void building_menu_ctrl_t::register_callbacks() {
-    events::subscribe([this] (event_temple_complex_updated ev) {
-        update_temple_complexes();
-    });
-
     events::subscribe([this] (event_building_menu_update ev) {
         update(ev.stage);
     });
