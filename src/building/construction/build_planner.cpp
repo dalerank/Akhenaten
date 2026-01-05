@@ -268,8 +268,6 @@ bool build_planner::attach_temple_upgrade(int upgrade_param, int grid_offset) {
     complexd.temple_complex_upgrades |= upgrade_param;
     building_temple_complex::map_tiles_add_temple_complex_parts(&complex->base);
 
-    events::emit(event_temple_complex_updated{ complex->id() } );
-
     return true;
 }
 
@@ -1174,8 +1172,6 @@ void build_planner::construction_finalize() { // confirm final placement
     map_tiles_update_region_empty_land(false, start.shifted(-2, -2), end.shifted(size.x + 2, size.y + 2));
     map_routing_update_land();
     map_routing_update_walls();
-    
-    events::emit(event_temple_complex_updated{});
 
     if (should_recalc_ferry_routes) {
         map_routing_update_ferry_routes();

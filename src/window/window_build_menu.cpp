@@ -154,6 +154,10 @@ void build_menu_widget::draw_menu_buttons() {
         e_building_type type = ctrl->type(selected_submenu, item_index);
         xstring tgroup = loc_title(type, ui::str(28, (uint8_t)type) );
 
+        if (!ctrl->is_visible(type)) {
+            continue;
+        }
+
         const auto &params = building_static_params::get(type);
         if (params.planner_update_rule.unique_building) {
             const bool has_building = g_city.buildings.count_total(type);
@@ -224,6 +228,7 @@ void build_menu_widget::init(int sub_menu) {
     y_offset = y_menu_offsets[num_items];
 
     events::emit(event_city_building_mode{ BUILDING_NONE });
+    ctrl->update_temple_complexes();
     select_submenu(sub_menu);
 }
 
