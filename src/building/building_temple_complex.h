@@ -26,6 +26,12 @@ public:
         virtual int update_building_variant(build_planner &planer) const override { return 0; }
     };
 
+    // Static configuration that is populated from configs for each specific complex
+    struct base_params_t {
+        svector<e_building_type, 4> allowed_altar;
+        svector<e_building_type, 4> allowed_oracle;
+    };
+
     struct runtime_data_t {
         uint8_t variant;
         uint8_t temple_complex_upgrades;
@@ -41,12 +47,12 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
     bool has_upgrade(e_temple_compex_upgrade a) const { return !!(runtime_data().temple_complex_upgrades & a); }
-    bool has_upgrade(e_building_type btype) const;
     void set_upgrade(e_temple_compex_upgrade a) { runtime_data().temple_complex_upgrades |= a; }
+    void build_upgrade(e_temple_compex_upgrade a, e_building_type btype);
 
     building *get_altar() const;
     building *get_oracle() const;
-    building *get_upgrade(e_building_type type) const;
+    building *get_upgrade(e_temple_compex_upgrade type) const;
 
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
     virtual void update_map_orientation(int orientation) override;
@@ -57,39 +63,66 @@ public:
 
     static void map_tiles_add_temple_complex_parts(building *b);
     static int get_temple_complex_part_image(e_building_type type, int part, int orientation, int level);
+
+    virtual const base_params_t &base_params() const = 0;
 };
 
 class building_temple_complex_osiris : public building_temple_complex {
 public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_OSIRIS, building_temple_complex_osiris, building_temple_complex)
 
+    struct static_params : public base_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_OSIRIS; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(building_temple_complex_osiris::static_params, allowed_altar, allowed_oracle)
 
 class building_temple_complex_ra : public building_temple_complex {
 public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_RA, building_temple_complex_ra, building_temple_complex)
 
+    struct static_params : public base_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_RA; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(building_temple_complex_ra::static_params, allowed_altar, allowed_oracle)
   
 class building_temple_complex_ptah : public building_temple_complex {
 public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_PTAH, building_temple_complex_ptah, building_temple_complex)
 
+    struct static_params : public base_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_PTAH; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(building_temple_complex_ptah::static_params, allowed_altar, allowed_oracle)
 
 class building_temple_complex_seth : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth, building_temple_complex)
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth, building_temple_complex)\
+
+    struct static_params : public base_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
 
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_SETH; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(building_temple_complex_seth::static_params, allowed_altar, allowed_oracle)
 
 class building_temple_complex_bast : public building_temple_complex {
 public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_BAST, building_temple_complex_bast, building_temple_complex)    
 
+    struct static_params : public base_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_BAST; }
+    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
 };
+ANK_CONFIG_STRUCT(building_temple_complex_bast::static_params, allowed_altar, allowed_oracle)
