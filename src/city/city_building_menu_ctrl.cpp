@@ -258,26 +258,38 @@ void building_menu_ctrl_t::update_temple_complexes() {
             set_visible(type, false);
         }
 
-        // check if upgrades have been placed
+        // check if temple complex upgrades have been placed
         auto b = building_get_ex<building_temple_complex>(temple_complex_id);
-        const bool temple_has_altar = b && b->has_upgrade(etc_upgrade_altar);
-        toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, !temple_has_altar);
+        if (b) {
+            const bool temple_has_altar = b && b->has_upgrade(etc_upgrade_altar);
+            const auto &allowed_altar = b->base_params().allowed_altar;
+            for (const auto &type : allowed_altar) {
+                set_visible(type, !temple_has_altar);
+            }
 
-        const bool temple_has_oracle = b && b->has_upgrade(etc_upgrade_oracle);
-        toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, !temple_has_oracle);
+            const bool temple_has_oracle = b && b->has_upgrade(etc_upgrade_oracle);
+            const auto &allowed_oracle = b->base_params().allowed_oracle;
+            for (const auto &type : allowed_oracle) {
+                set_visible(type, !temple_has_oracle);
+            }
 
-        // all upgrades have been placed!
-        if (temple_has_altar && temple_has_oracle) {
-            toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
-        }
+            // all upgrades have been placed!
+            if (temple_has_altar && temple_has_oracle) {
+                toggle_building(BUILDING_MENU_TEMPLE_COMPLEX, false);
+            }
+        }    
 
+        // 
     } else {
         for (const e_building_type type : g_city.buildings.temple_complex_types()) {
             set_visible(type, true);
         }
 
-        toggle_building(BUILDING_TEMPLE_COMPLEX_ALTAR, false);
-        toggle_building(BUILDING_TEMPLE_COMPLEX_ORACLE, false);
+        building_static_params::for_each([this] (auto &bsp) { 
+            if (bsp.needs.altar || bsp.needs.oracle) {
+                set_visible(bsp.type, false);
+            }
+        });
     }
 }
 
