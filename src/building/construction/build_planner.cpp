@@ -254,23 +254,6 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     return items_placed;
 }
 
-bool build_planner::attach_temple_upgrade(int upgrade_param, int grid_offset) {
-    auto complex = building_at(grid_offset)->main()->dcast_temple_complex();
-    if (!complex) {
-        return false;
-    }
-
-    auto &complexd = complex->runtime_data();
-    if (complexd.temple_complex_upgrades & upgrade_param) {
-        return false;
-    }
-
-    complexd.temple_complex_upgrades |= upgrade_param;
-    building_temple_complex::map_tiles_add_temple_complex_parts(&complex->base);
-
-    return true;
-}
-
 int build_planner::can_be_placed() {
     return can_place;
 }
@@ -572,23 +555,8 @@ void build_planner::setup_build_flags() {
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &preview = building_planer_renderer::get(build_type);
-    
-    vec2i init_tiles_size;
-    switch (build_type) {
-    case BUILDING_TEMPLE_COMPLEX_ALTAR:
-    case BUILDING_TEMPLE_COMPLEX_ORACLE: {
-            init_tiles(3, 3);
-            e_building_type b_type = building_at(end)->main()->type;
-            int img_id = building_temple_complex::get_temple_complex_part_image(b_type, additional_req_param1, relative_orientation, 1);
-            set_tiles_building(img_id, 3);
-        }
-        break;
-
-    default: // regular buildings 
-        preview.setup_preview_graphics(*this);
-        break;
-    }
+    const auto &preview = building_planer_renderer::get(build_type);   
+    preview.setup_preview_graphics(*this);
 }
 
 void build_planner::update_obstructions_check() {
@@ -1369,13 +1337,6 @@ bool build_planner::place() {
         placement_cost *= place_houses(false, start.x(), start.y(), end.x(), end.y());
         if (placement_cost == 0) {
             events::emit(event_city_warning{ "#must_build_on_cleared_land" });
-            return false;
-        }
-        break;
-
-    case BUILDING_TEMPLE_COMPLEX_ALTAR:
-    case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (!attach_temple_upgrade(additional_req_param1, end.grid_offset())) {
             return false;
         }
         break;
