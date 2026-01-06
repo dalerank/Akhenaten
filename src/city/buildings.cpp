@@ -265,8 +265,7 @@ building_id city_buildings_t::temple_complex_id() {
 bool city_buildings_t::has_temple_complex() {
     bool has_temple_complex = false;
     for (const e_building_type type : _temple_complex_types) {
-        const auto &complexes = tracked_buildings().at(type);
-        has_temple_complex |= !complexes.empty();
+        has_temple_complex |= count_total(type) > 0;
     }
 
     return has_temple_complex;
