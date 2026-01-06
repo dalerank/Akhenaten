@@ -5,8 +5,6 @@
 class building_temple_complex_upgrade : public building_impl {
 public:
     building_temple_complex_upgrade(building &b) : building_impl(b) {}
-
-    virtual void update_map_orientation(int orientation) override;
 };
 
 class building_temple_complex_altar : public building_temple_complex_upgrade {
@@ -19,6 +17,7 @@ public:
 
     building_temple_complex_altar(building &b) : building_temple_complex_upgrade(b) {}
     virtual building_temple_complex_altar *dcast_temple_complex_altar() override { return this; }
+    virtual void update_map_orientation(int orientation) override;
 };
 
 class building_temple_complex_oracle : public building_temple_complex_upgrade {
@@ -32,6 +31,7 @@ public:
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() override { return this; }
 
     virtual void on_place_checks() override;
+    virtual void update_map_orientation(int orientation) override;
 };
 
 class building_temple_complex_altar_amon : public building_temple_complex_altar {
