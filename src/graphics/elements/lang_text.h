@@ -56,6 +56,7 @@ int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offse
 void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, e_font font);
 void lang_text_draw_centered(textid text, int x_offset, int y_offset, int box_width, e_font font);
 void lang_text_draw_centered(pcstr text, int x_offset, int y_offset, int box_width, e_font font);
+void lang_text_draw_centered(xstring text, int x_offset, int y_offset, int box_width, e_font font);
 void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, e_font font, color color);
 
 int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, e_font font, const char* postfix = " ");
