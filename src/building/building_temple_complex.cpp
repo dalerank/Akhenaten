@@ -388,8 +388,8 @@ void building_temple_complex::on_place(int orientation, int variant) {
 
     tile2i offset = building_part_offset(orientation, 3);
 
-    building *altar = add_temple_complex_element(tile().shifted(offset), BUILDING_TEMPLE_COMPLEX_ALTAR, orientation, &base);
-    building *oracle = add_temple_complex_element(tile().shifted(offset * 2), BUILDING_TEMPLE_COMPLEX_ORACLE, orientation, altar);
+    building *altar = add_temple_complex_element(tile().shifted(offset), base_params().allowed_altar.front(), orientation, &base);
+    building *oracle = add_temple_complex_element(tile().shifted(offset * 2), base_params().allowed_oracle.front(), orientation, altar);
 
     // save decorative tiles to runtime_data
     update_map_orientation(orientation);
@@ -403,21 +403,16 @@ void building_temple_complex::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 }
 
-bool building_temple_complex::has_upgrade(e_building_type btype) const {
-    switch (btype) {
-    case BUILDING_TEMPLE_COMPLEX_ALTAR: return has_upgrade(etc_upgrade_altar);
-    case BUILDING_TEMPLE_COMPLEX_ORACLE: return has_upgrade(etc_upgrade_oracle);
-    default:
-        verify_no_crash(false);
-        break;
-    }
-    return false;
+void building_temple_complex::build_upgrade(e_temple_compex_upgrade upgrade_param, e_building_type btype) {
+    auto &d = runtime_data();
+    d.temple_complex_upgrades |= upgrade_param;
+    map_tiles_add_temple_complex_parts(&base);
 }
 
 building *building_temple_complex::get_altar() const {
     building *next = base.next();
     while (next) {
-        if (next->type == BUILDING_TEMPLE_COMPLEX_ALTAR) {
+        if (building_type_any_of(next->type, base_params().allowed_altar)) {
             break;
         }
         next = next->next();
@@ -429,7 +424,7 @@ building *building_temple_complex::get_altar() const {
 building *building_temple_complex::get_oracle() const {
     building *next = base.next();
     while (next) {
-        if (next->type == BUILDING_TEMPLE_COMPLEX_ORACLE) {
+        if (building_type_any_of(next->type, base_params().allowed_oracle)) {
             break;
         }
         next = next->next();
@@ -438,12 +433,12 @@ building *building_temple_complex::get_oracle() const {
     return next;
 }
 
-building *building_temple_complex::get_upgrade(e_building_type type) const {
-    if (type == BUILDING_TEMPLE_COMPLEX_ALTAR) {
+building *building_temple_complex::get_upgrade(e_temple_compex_upgrade type) const {
+    if (type == etc_upgrade_altar) {
         return get_altar();
     } 
     
-    if (type == BUILDING_TEMPLE_COMPLEX_ORACLE) {
+    if (type == etc_upgrade_oracle) {
         return get_oracle();
     } 
 

@@ -182,6 +182,16 @@ xstring building_impl::get_sound() {
 
 const int building_static_params::base_img() const { return first_img(animkeys().base); }
 
+void building_static_params::for_each(std::function<void(const building_static_params &params)> f) {
+    if (building_impl_params) {
+        for (const auto& p: *building_impl_params) {
+            if (p) {
+                f(*p);
+            }
+        }
+    }
+}
+
 void building_static_params::register_model(e_building_type e, const building_static_params &p) {
     if (!building_impl_params) {
         building_impl_params = new std::array<const building_static_params *, BUILDING_MAX>();
