@@ -2678,13 +2678,15 @@ building_temple_complex_altar_anubis {
   // BUILDING_TEMPLE_COMPLEX_ALTAR_ANUBIS
   animations  {
     _pack { pack:PACK_TEMPLE_SETH }
-    preview { id:7}
+    preview { id:7 }
     base_n  { id:2, offset:3 }
-    base_w  { id:2 }
+    base_w  { id:2, offset:0 }
     base_e  { id:2, offset:0 }
     base_s  { id:2, offset:3 }
-    fancy_n { id:7, offset:0 }
-    fancy_w { id:7, offset:1 }
+    fancy_n { id:7, offset:1 }
+    fancy_w { id:7, offset:0 }
+    fancy_e { id:7, offset:0 }
+    fancy_s { id:7, offset:1 }
   }
   build_menu_text [ 189, 6 ]
 
@@ -2707,8 +2709,10 @@ building_temple_complex_oracle_sekhmet {
     base_w  { id:1, offset:0 }
     base_e  { id:3 }
     base_s  { id:1, offset:3 }
-    fancy_n { id:7, offset:2 }
-    fancy_w { id:7, offset:3 }
+    fancy_n { id:7, offset:3 }
+    fancy_w { id:7, offset:2 }
+    fancy_e { id:7, offset:2 }
+    fancy_s { id:7, offset:3 }
   }
   build_menu_text [ 189, 7 ]
 
@@ -2773,8 +2777,10 @@ building_temple_complex_altar_sebek {
     base_w  { id:2 }
     base_e  { id:2, offset:0 }
     base_s  { id:2, offset:3 }
-    fancy_n { id:7, offset:0 }
-    fancy_w { id:7, offset:1 }
+    fancy_n { id:7, offset:1 }
+    fancy_w { id:7, offset:0 }
+    fancy_e { id:7, offset:0 }
+    fancy_s { id:7, offset:1 }
   }
   build_menu_text [ 189, 0 ]
 
@@ -2796,8 +2802,10 @@ building_temple_complex_oracle_min {
     base_w  { id:1, offset:0 }
     base_e  { id:3 }
     base_s  { id:1, offset:3 }
-    fancy_n { id:7, offset:2 }
-    fancy_w { id:7, offset:3 }
+    fancy_n { id:7, offset:3 }
+    fancy_w { id:7, offset:2 }
+    fancy_e { id:7, offset:2 }
+    fancy_s { id:7, offset:3 }
   }
   build_menu_text [ 189, 1 ]
 
@@ -2862,8 +2870,10 @@ building_temple_complex_altar_maat {
     base_w  { id:2 }
     base_e  { id:2, offset:0 }
     base_s  { id:2, offset:3 }
-    fancy_n { id:7, offset:0 }
-    fancy_w { id:7, offset:1 }
+    fancy_n { id:7, offset:1 }
+    fancy_w { id:7, offset:0 }
+    fancy_e { id:7, offset:0 }
+    fancy_s { id:7, offset:1 }
   }
   build_menu_text [ 189, 2 ]
 
@@ -2885,8 +2895,10 @@ building_temple_complex_oracle_horus {
     base_w  { id:1, offset:0 }
     base_e  { id:3 }
     base_s  { id:1, offset:3 }
-    fancy_n { id:7, offset:2 }
-    fancy_w { id:7, offset:3 }
+    fancy_n { id:7, offset:3 }
+    fancy_w { id:7, offset:2 }
+    fancy_e { id:7, offset:2 }
+    fancy_s { id:7, offset:3 }
   }
   build_menu_text [ 189, 3 ]
 
@@ -2951,8 +2963,10 @@ building_temple_complex_altar_isis {
     base_w  { id:2 }
     base_e  { id:2, offset:0 }
     base_s  { id:2, offset:3 }
-    fancy_n { id:7, offset:0 }
-    fancy_w { id:7, offset:1 }
+    fancy_n { id:7, offset:1 }
+    fancy_w { id:7, offset:0 }
+    fancy_e { id:7, offset:0 }
+    fancy_s { id:7, offset:1 }
   }
   build_menu_text [ 189, 8 ]
 
@@ -2974,8 +2988,10 @@ building_temple_complex_oracle_hathor {
     base_w  { id:1, offset:0 }
     base_e  { id:3 }
     base_s  { id:1, offset:3 }
-    fancy_n { id:7, offset:2 }
-    fancy_w { id:7, offset:3 }
+    fancy_n { id:7, offset:3 }
+    fancy_w { id:7, offset:2 }
+    fancy_e { id:7, offset:2 }
+    fancy_s { id:7, offset:3 }
   }
   build_menu_text [ 189, 9 ]
 
