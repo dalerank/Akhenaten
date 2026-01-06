@@ -6,22 +6,28 @@ class building_temple_complex_upgrade : public building_impl {
 public:
     building_temple_complex_upgrade(building &b) : building_impl(b) {}
 
-    struct preview : building_planer_renderer {
-        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
-    };
-
     virtual void update_map_orientation(int orientation) override;
 };
 
 class building_temple_complex_altar : public building_temple_complex_upgrade {
 public:
+    struct preview : building_planer_renderer {
+        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
+    };
+
+
     building_temple_complex_altar(building &b) : building_temple_complex_upgrade(b) {}
     virtual building_temple_complex_altar *dcast_temple_complex_altar() override { return this; }
 };
 
 class building_temple_complex_oracle : public building_temple_complex_upgrade {
 public:
+    struct preview : building_planer_renderer {
+        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
+    };
+
     building_temple_complex_oracle(building &b) : building_temple_complex_upgrade(b) {}
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() override { return this; }
 
