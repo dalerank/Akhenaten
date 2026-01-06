@@ -38,6 +38,7 @@ struct building_static_params {
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
+    xstring build_menu_text;
 
     void archive_unload();
     void initialize();
@@ -48,6 +49,8 @@ struct building_static_params {
     inline const int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }
     const int base_img() const;
 
+    static void for_each(std::function<void(const building_static_params &params)> f);
+
     static void register_model(e_building_type, const building_static_params &);
     static const building_static_params &get(e_building_type);
     static building_static_params &ref(e_building_type e);
@@ -55,6 +58,6 @@ struct building_static_params {
 ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
     fire_proof, damage_proof, animations, laborers, fire_risk, damage_risk, planner_update_rule, needs,
-    cost, desirability, crime,
+    build_menu_text, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, max_service, max_storage_amount,
     meta_id, meta, production_rate, min_houses_coverage)
