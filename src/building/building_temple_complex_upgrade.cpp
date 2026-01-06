@@ -21,7 +21,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_horus);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_isis);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_hathor);
 
-void building_temple_complex_upgrade::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+void building_temple_complex_altar::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
 
     int city_orientation = city_view_orientation() / 2;
@@ -30,16 +30,10 @@ void building_temple_complex_upgrade::preview::ghost_preview(build_planner &plan
 
     int image_id = params.first_img(orienation_key_fancy[orientation]);
     auto complex = building_at_ex<building_temple_complex>(end);
-    if (!complex) {
+    building *upgrade_base = complex ? complex->get_altar() : nullptr;
+    if (!upgrade_base) {
         return;
     }
-    building *upgrade_base = nullptr;
-    if (params.needs.altar) {
-        upgrade_base = complex->get_altar();
-    } else if (params.needs.oracle) {
-        upgrade_base = complex->get_oracle();
-    }
-    verify_no_crash(upgrade_base);
 
     tile2i offset = { 0, 0 };
     int bsize = params.building_size - 1;
@@ -54,30 +48,60 @@ void building_temple_complex_upgrade::preview::ghost_preview(build_planner &plan
     planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
-int building_temple_complex_upgrade::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
+int building_temple_complex_altar::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
     auto complex = building_at(end)->main()->dcast_temple_complex();
     if (!complex) {
         return false;
     }
 
-    const auto &params = building_static_params::get(p.build_type);
-
-    e_temple_compex_upgrade upgrade_param;
-    if (params.needs.altar) {
-        upgrade_param = etc_upgrade_altar;
-    } else if (params.needs.oracle) {
-        upgrade_param = etc_upgrade_oracle;
-    } else {
-        return false;
-    }
-
-    const bool upgrade_exists = complex->has_upgrade(upgrade_param);
+    const bool upgrade_exists = complex->has_upgrade(etc_upgrade_altar);
     if (upgrade_exists) {
         return false;
     }
 
-    complex->build_upgrade(upgrade_param, p.build_type);
+    complex->build_upgrade(etc_upgrade_altar, p.build_type);
+    return true;
+}
 
+void building_temple_complex_oracle::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
+    const auto &params = building_static_params::get(planer.build_type);
+
+    int city_orientation = city_view_orientation() / 2;
+    int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
+    pcstr orienation_key_fancy[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
+
+    int image_id = params.first_img(orienation_key_fancy[orientation]);
+    auto complex = building_at_ex<building_temple_complex>(end);
+    building *upgrade_base = complex ? complex->get_oracle() : nullptr;
+    if (!upgrade_base) {
+        return;
+    }
+
+    tile2i offset = { 0, 0 };
+    int bsize = params.building_size - 1;
+    switch (city_orientation) {
+    case 0: offset = { 0, bsize }; break;
+    case 1: offset = { 0, 0 }; break;
+    case 2: offset = { bsize, -(bsize + params.building_size + 1) }; break;
+    case 3: offset = { bsize, -(bsize + params.building_size - 1) }; break;
+    }
+
+    vec2i pixel_upgrade = lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
+    planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
+}
+
+int building_temple_complex_oracle::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
+    auto complex = building_at(end)->main()->dcast_temple_complex();
+    if (!complex) {
+        return false;
+    }
+
+    const bool upgrade_exists = complex->has_upgrade(etc_upgrade_oracle);
+    if (upgrade_exists) {
+        return false;
+    }
+
+    complex->build_upgrade(etc_upgrade_oracle, p.build_type);
     return true;
 }
 
