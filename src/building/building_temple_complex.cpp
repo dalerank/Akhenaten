@@ -453,25 +453,29 @@ void building_temple_complex::update_map_orientation(int orientation) {
     // first, add the base tiles
     orientation = (5 - (runtime_data().variant / 2)) % 4;
     map_add_tiles(type(), tile(), orientation, *runtime_data().decorative_tiles);
-    // then, the main building parts
-    // map_building_tiles_add_temple_complex_parts(&base);
+
+    building *altar = get_altar();
+    verify_no_crash(altar);
+    altar->dcast()->update_map_orientation(orientation);
+
+    building *oracle = get_oracle();
+    verify_no_crash(oracle);
+    oracle->dcast()->update_map_orientation(orientation);
+
     building *building_main = &main()->base;
     if (building_main) {
         int city_orientation = city_view_orientation() / 2;
         int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
         pcstr orient_key[] = { "main_n", "main_e", "main_s", "main_w" };
         int image_id = anim(orient_key[orientation]).first_img();
+        const bool fancy_oracle = !!(runtime_data().temple_complex_upgrades & etc_upgrade_oracle);
+        if (fancy_oracle && (orientation == 2 || orientation == 3)) {
+            pcstr orient_key[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
+            const auto &params = oracle->params();
+            image_id = params.first_img(orient_key[orientation]);
+        }
+
         map_building_tiles_add(id(), tile(), current_params().building_size, image_id, TERRAIN_BUILDING);
-    }
-
-    building *altar = get_altar();
-    if (altar) {
-        altar->dcast()->update_map_orientation(orientation);
-    }
-
-    building *oracle = get_oracle();
-    if (oracle) {
-        oracle->dcast()->update_map_orientation(orientation);
     }
 }
 

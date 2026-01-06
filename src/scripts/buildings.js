@@ -2798,10 +2798,12 @@ building_temple_complex_oracle_min {
   animations {
     _pack { pack:PACK_TEMPLE_RA }
     preview { id:7, offset:2 }
+
     base_n  { id:3, offset:3 }
     base_w  { id:1, offset:0 }
-    base_e  { id:3 }
+    base_e  { id:3, offset:0 }
     base_s  { id:1, offset:3 }
+    
     fancy_n { id:7, offset:3 }
     fancy_w { id:7, offset:2 }
     fancy_e { id:7, offset:2 }
