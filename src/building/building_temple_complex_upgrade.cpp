@@ -10,10 +10,16 @@
 #include "building/rotation.h"
 #include "js/js_game.h"
 
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle);
-
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_ra);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_amon);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_thoth);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_anubis);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_sekhmet);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_sebek);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_min);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_maat);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_horus);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_isis);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_hathor);
 
 void building_temple_complex_upgrade::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
@@ -21,12 +27,19 @@ void building_temple_complex_upgrade::preview::ghost_preview(build_planner &plan
     int city_orientation = city_view_orientation() / 2;
     int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
     pcstr orienation_key_fancy[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
+
     int image_id = params.first_img(orienation_key_fancy[orientation]);
     auto complex = building_at_ex<building_temple_complex>(end);
     if (!complex) {
         return;
     }
-    building *upgrade_base = complex->get_upgrade(planer.build_type);
+    building *upgrade_base = nullptr;
+    if (params.needs.altar) {
+        upgrade_base = complex->get_altar();
+    } else if (params.needs.oracle) {
+        upgrade_base = complex->get_oracle();
+    }
+    verify_no_crash(upgrade_base);
 
     tile2i offset = { 0, 0 };
     int bsize = params.building_size - 1;
@@ -41,14 +54,45 @@ void building_temple_complex_upgrade::preview::ghost_preview(build_planner &plan
     planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
+int building_temple_complex_upgrade::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
+    auto complex = building_at(end)->main()->dcast_temple_complex();
+    if (!complex) {
+        return false;
+    }
+
+    const auto &params = building_static_params::get(p.build_type);
+
+    e_temple_compex_upgrade upgrade_param;
+    if (params.needs.altar) {
+        upgrade_param = etc_upgrade_altar;
+    } else if (params.needs.oracle) {
+        upgrade_param = etc_upgrade_oracle;
+    } else {
+        return false;
+    }
+
+    const bool upgrade_exists = complex->has_upgrade(upgrade_param);
+    if (upgrade_exists) {
+        return false;
+    }
+
+    complex->build_upgrade(upgrade_param, p.build_type);
+
+    return true;
+}
+
 void building_temple_complex_upgrade::update_map_orientation(int _) {
     int city_orientation = city_view_orientation() / 2;
     int orientation = (building_rotation_global_rotation() + city_orientation) % 4;
-    auto complex = ::smart_cast<building_temple_complex*>(main());
+    auto complex = ::smart_cast<building_temple_complex *>(main());
     pcstr orienation_key_base[] = { "base_n", "base_e", "base_s", "base_w" };
     pcstr orienation_key_fancy[] = { "fancy_n", "fancy_e", "fancy_s", "fancy_w" };
-    pcstr *orientation_key = complex->has_upgrade(type()) ? orienation_key_fancy : orienation_key_base;
-    int image_id = anim(orientation_key[orientation]).first_img() ;
+
+    const bool is_altar = current_params().needs.altar;
+    const auto upgrade_type = is_altar ? etc_upgrade_altar : etc_upgrade_oracle;
+    pcstr *orientation_key = complex->has_upgrade(upgrade_type) ? orienation_key_fancy : orienation_key_base;
+    
+    int image_id = anim(orientation_key[orientation]).first_img();
     map_building_tiles_add(id(), tile(), 3, image_id, TERRAIN_BUILDING);
 }
 
