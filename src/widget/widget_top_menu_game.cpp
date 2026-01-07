@@ -491,7 +491,7 @@ void top_menu_widget_t::file_handle(menu_item &item) {
             g_city_planner.reset();
             const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
             if (is_custom_map) {
-                GamestateIO::load_savegame("autosave_replay.sav");
+                GamestateIO::load_savegame("autosave_replay.svx");
                 window_city_show();
             } else {
                 int scenario_id = g_scenario.campaign_scenario_id();
