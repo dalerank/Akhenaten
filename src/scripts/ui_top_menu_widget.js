@@ -3,6 +3,11 @@ log_info("akhenaten: ui top menu config started")
 function menu_item(config) { return __extend({ type : "menu_item"}, config) }
 function menu_header(config) { return __extend({ type : "menu_header"}, config) }
 
+[event=top_menu_widget_init]
+function top_menu_widget_open_submenu(window) {
+	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
+}
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -21,7 +26,7 @@ top_menu_widget {
 	}
 
 	file {
-		new_game     	: menu_item({text: {group:1, id:1}, onclick: __widget_top_menu_new_game })
+		new_game     	: menu_item({text: {group:1, id:1}, enabled: !game_features.gameui_hide_new_game_top_menu, onclick: __widget_top_menu_new_game })
 		replay_map   	: menu_item({text: {group:1, id:2}, onclick: __widget_top_menu_replay_map })
 		load_game	    : menu_item({text: {group:1, id:3}, onclick: __widget_top_menu_load_map })
 		save_game	    : menu_item({text: {group:1, id:4}, onclick: __widget_top_menu_save_map })
