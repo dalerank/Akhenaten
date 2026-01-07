@@ -85,7 +85,6 @@ struct top_menu_widget_t : autoconfig_window {
     void advisors_handle(menu_item &item);
     void help_handle(menu_item &item);
     void options_handle(menu_item &item);
-    void file_handle(menu_item &item);
     void set_text_for_debug_render();
     void set_text_for_debug_city();
     void set_text_for_autosave();
@@ -467,20 +466,6 @@ void top_menu_widget_t::set_text_for_debug_render() {
     }
 }
 
-void top_menu_widget_t::file_handle(menu_item &item) {
-    if (item.id == "exit_game") { 
-        widget_top_menu_clear_state();
-        popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
-            if (accepted) {
-                widget_top_menu_clear_state();
-                main_menu_screen::show(/*restart_music*/true);
-            } else {
-                window_city_show();
-            }
-        });
-    }
-}
-
 void top_menu_widget_t::options_handle(menu_item &item) {
     if (item.id == "display_options") { 
         widget_top_menu_clear_state();
@@ -547,7 +532,6 @@ void top_menu_widget_t::sub_menu_init() {
     auto *file = headers["file"].dcast_menu_header();
     if (file) {
         file->item("new_game").hidden = !!game_features::gameui_hide_new_game_top_menu;
-        file->onclick([this] (auto &h) { file_handle(h); });
     }
 
     auto *help = headers["help"].dcast_menu_header();

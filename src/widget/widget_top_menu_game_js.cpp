@@ -6,6 +6,7 @@
 #include "window/file_dialog_load.h"
 #include "window/file_dialog_save.h"
 #include "window/file_dialog_delete.h"
+#include "window/main_menu.h"
 #include "window/window_dynasty_menu.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
@@ -81,3 +82,18 @@ pcstr __widget_top_menu_delete_map(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_delete_map)
+
+pcstr __widget_top_menu_exit_game(int, int) {
+    widget_top_menu_clear_state();
+    popup_dialog::show_yesno("#popup_dialog_quit", [] (bool accepted) {
+        if (accepted) {
+            widget_top_menu_clear_state();
+            main_menu_screen::show(/*restart_music*/true);
+        } else {
+            window_city_show();
+        }
+    });
+
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_exit_game)
