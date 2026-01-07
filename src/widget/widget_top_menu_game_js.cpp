@@ -5,6 +5,7 @@
 #include "window/window_city.h"
 #include "window/file_dialog_load.h"
 #include "window/file_dialog_save.h"
+#include "window/file_dialog_delete.h"
 #include "window/window_dynasty_menu.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
@@ -71,3 +72,12 @@ pcstr __widget_top_menu_save_map(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_save_map)
+
+pcstr __widget_top_menu_delete_map(int, int) {
+    widget_top_menu_clear_state();
+    window_city_show();
+    window_file_dialog_delete_show(FILE_TYPE_SAVED_GAME);
+
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_delete_map)

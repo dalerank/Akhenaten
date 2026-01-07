@@ -25,7 +25,7 @@ top_menu_widget {
 		replay_map   	: menu_item({text: {group:1, id:2}, onclick: __widget_top_menu_replay_map })
 		load_game	    : menu_item({text: {group:1, id:3}, onclick: __widget_top_menu_load_map })
 		save_game	    : menu_item({text: {group:1, id:4}, onclick: __widget_top_menu_save_map })
-		delete_game	  	: menu_item({text: {group:1, id:6} })
+		delete_game	  	: menu_item({text: {group:1, id:6}, onclick: __widget_top_menu_delete_map })
 		exit_game	    : menu_item({text: {group:1, id:5} })
 	}
 
