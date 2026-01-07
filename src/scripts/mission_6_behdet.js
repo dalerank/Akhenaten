@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 6 behdet started")
 
 mission6 = { // Behdet
-	start_message : 245, //TUTORIAL_SOLDIERS_AND_FORT, 245 = 146 + 99 - 1
+	start_message : "message_soldiers_and_forts"
 	player_rank : 1
 	next_mission : 8
 	initial_funds [7500, 5000, 3750, 2500, 2000]

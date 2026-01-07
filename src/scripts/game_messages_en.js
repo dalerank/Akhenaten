@@ -3081,7 +3081,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Farming along the Nile",
-            pos [0, 15]
+
         }
         content {
             text: "Farming along the Nile @L@PYou must build farms directly on the flood plain, in order to gain the benefits of its increased fertility.  Unlike most working structures, farms on the flood plain do not need direct access to employees, but do need a steady workforce of peasant laborers, supplied by Work Camps, to tend their fields.  Build Work Camps fairly close to flood plain farms, so peasants won't have to walk too far to reach them. @G56 @L@PEach year the Nile floods its banks, replenishing the depleted soil on the flood plain with rich, fertile mud.  Peasants harvest the annual crop just before the inundation, and deliver it to your Granaries.  Because there is only one harvest per year, make sure your city has enough Granaries to store a sufficient amount of food for your growing population."
@@ -3094,7 +3094,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Developing Culture",
-            pos [0, 15]
+
         }
         content {
             text: "Beer @LYour fellow Egyptians have perfected the art of brewing beer, which has become a very popular libation throughout Egypt!  With a supply of barley received from local farms, brewers will make beer and deliver it to Storage Yards for future distribution by Bazaar workers (as with food and pottery). @L@LMultiple Gods @LThe patron god of this region is Ra, but Osiris and Bast are also worshipped here as local deities.  Make sure this city has more Temples and Shrines dedicated to Ra, but don't neglect the local deities either!  To accommodate your most valued citizens, make sure they have access to temples dedicated to different gods. @L@LMore Entertainment @LSophisticated Egyptians like to listen to music in their leisure time, as well as take in the occasional juggling performance.  While only Jugglers can perform at the small Booth, both Jugglers and Musicians can perform together at a Bandstand. Build a Bandstand at an intersection, and a Conservatory nearby to train Musicians.  Access to multiple types of entertainment greatly enhances the quality of life in any city. @L@LLaw and Order @LA Magistrate patrolling from his Courthouse helps to reduce the risk of crime by hearing grievances and making sure that cooler heads prevail."
@@ -3107,20 +3107,19 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Getting Started",
-            pos [0, 15]
+
         }
         content {
             text: "Begin by planning for areas of housing and industry.  By now you know what the people want, in addition to the basics of food and water.  You must provide some houses with pottery, beer, entertainment and access to religious services before you can think about higher education and trade."
         }
     }
     message_soldiers_and_forts {
-        id: 245,
-        type: 2,
-        message_type: 4,
+        id: 245
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
             text: " Soldiers and Forts",
-            pos [0, 15]
         }
         content {
             text: "To conscript troops, build a Fort and a Recruiter.  The Recruiter will send new conscripts, one by one, to the fort until it is fully occupied.  There are two types of Fort, infantry and archer, and each Fort holds sixteen soldiers, referred to as one 'company'.  If soldiers die in combat, the Recruiter will see to it that replacements are conscripted. @G57 @L@LWeapons @PArchers supply their own bows and arrows, but infantry troops must be outfitted with copper-tipped spears.  With a supply of copper, a Weaponsmith will forge such weapons.  These are then delivered to the Recruiter, so that any new foot soldiers may be suitably equipped. @L@LGoals and Briefings @PFrom now on, your immediate goals will no longer appear at the top of your screen.  Click the 'ankh' symbol on the Control Panel to review your Mission Briefing for goals, then visit your overseers to assess your overall progress."
@@ -3133,7 +3132,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "At the Water's Edge",
-            pos [0, 15]
+
         }
         content {
             text: "Trade on the Water @LTrade may also be conducted by river and sea, if any such water routes currently run to the city.  To open a water trade route, visit the World Map.  To trade along a water route, your city will also need a working Dock. @L@LFishing the Nile @LThe Nile is a plentiful source of fish, a popular food in Egypt.  What's more, a diet comprised of multiple types of foods leads to better health and happiness for your people.  To harvest this rich bounty, you'll need some fishing boats. @L@LBuilding Boats and Ships @LThe Shipwright builds combat ships and fishing boats.  Each boat must be supported by its own Wharf.  Whenever there is a Wharf in need of a vessel, the Shipwright will begin constructing one for it.  Without a waiting Wharf, the Shipwright will not build any ships.   @LAlthough a single Shipwright can supply all the vessels your city needs, multiple Shipwrights will allow you to replace lost vessels much more quickly.  The Shipwright doesn't need any materials to create fishing boats, but he will need a supply of wood to construct military vessels, such as warships and transport ships. @LMilitary vessels, trade ships and fishing boats are broad-beamed and deep-keeled to navigate the Nile and coastal waters. They are not made to sail very narrow channels, and indeed cannot travel up small streams or inlets.  Nothing will stop you from building Shipwrights, Docks or Wharves in such locations, but if you do so, boats cannot travel to or from these facilities, and they will not work. @LAs you scout the shore for suitable maritime sites, bear in mind that all ships need free passage between their port and their destination.  You cannot, for example, build a Fishing Wharf on an inland lake and expect its boats to reach the fishing grounds of the Nile, even if that lake is connected to the Nile by a small stream."
@@ -3146,20 +3145,20 @@ game_messages_en {
         size [40, 30]
         title {
             text: "At the Water's Edge",
-            pos [0, 15]
+
         }
         content {
             text: "Trade on the Water @LTrade may also be conducted by river and sea, if any such water routes currently run to the city.  To open a water trade route, visit the World Map.  To trade along a water route, your city will also need a working Dock. @L@LFishing the Nile @LThe Nile is a plentiful source of fish, a popular food in Egypt.  What's more, a diet comprised of multiple types of foods leads to better health and happiness for your people.  To harvest this rich bounty, you'll need some fishing boats. @L@LBuilding Boats and Ships @LThe Shipwright builds combat ships and fishing boats.  Each boat must be supported by its own Wharf.  Whenever there is a Wharf in need of a vessel, the Shipwright will begin constructing one for it.  Without a waiting Wharf, the Shipwright will not build any ships.   @LAlthough a single Shipwright can supply all the vessels your city needs, multiple Shipwrights will allow you to replace lost vessels much more quickly.  The Shipwright doesn't need any materials to create fishing boats, but he will need a supply of wood to construct military vessels, such as warships and transport ships. @LMilitary vessels, trade ships and fishing boats are broad-beamed and deep-keeled to navigate the Nile and coastal waters. They are not made to sail very narrow channels, and indeed cannot travel up small streams or inlets.  Nothing will stop you from building Shipwrights, Docks or Wharves in such locations, but if you do so, boats cannot travel to or from these facilities, and they will not work. @LAs you scout the shore for suitable maritime sites, bear in mind that all ships need free passage between their port and their destination.  You cannot, for example, build a Fishing Wharf on an inland lake and expect its boats to reach the fishing grounds of the Nile, even if that lake is connected to the Nile by a small stream. @L@LMaking Bricks @LBricks are a somewhat less expensive building material, used in the creation of certain kinds of tombs.  To make bricks, you'll need a Brickworks, and supplies of clay and straw."
         }
     }
-    message_the_finer_things_2 {
+    message_the_finer_things_tutorial {
         id: 248,
         type: 2,
         message_type: 4,
         size [40, 30]
         title {
             text: "The Finer Things",
-            pos [0, 15]
+
         }
         content {
             text: "Temple Complexes @LAs devotion to their patron gods continues to grow, the Egyptian people demand bigger and bigger places of worship.  Most cities will want to erect a Temple Complex to their chosen god, so that they may fully partake of his or her benevolence.  Once built, the Temple Complex may be expanded through the addition of an Oracle and an Altar, each dedicated to other, lesser gods.  These gods, too, will impart certain benefits to the city.   @L@LLuxury Goods @LIn addition to locally made jewelry, the Egyptian people prize certain other luxury goods, which are available only through importation.  A city needs access to more than one type of luxury good in order to become truly civilized.  @L@LHarvesting Timber @G58 @LTimber is a rare and valuable commodity in the arid country of Egypt.  Regions that have forests are truly lucky.  To harvest what usable tree growth may be found, build a Woodcutter, and men will be dispatched to hew timber.  Timber is used to create warships, transport ships, as well as support structures for some monuments."
@@ -3227,7 +3226,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Clean Water",
-            pos [0, 15]
+
         }
         content {
             text: "Well done! You've managed to supply this village's Granary with food. Now the villagers need access to clean water from a Water Supply, which is much preferred over well water.    @L@LWater Supply @L@PLike Wells, these must be built on land with underlying ground water, as indicated by the presence of green grass growing. Water Supplies also need access to employees in nearby housing. @G70   @L@POnce up and running, a Water Supply will dispatch a water carrier to deliver buckets of clean drinking water to all the houses in his immediate vicinity.  Click 'Overlays: Water', to see which houses have access to clean water from a Water Supply, to simple well water, or to no water source at all. @L@LMission Briefing and Objectives @PTo complete this mission, you need to provide six 'sturdy huts' with food from a Bazaar, so they'll evolve into 'meager shanties'.  Click on the scroll icon to review your mission objectives in this and any other mission."
@@ -3251,7 +3250,7 @@ game_messages_en {
         size [40, 30]
         title {
             text: "Monuments and More!",
-            pos [0, 15]
+
         }
         content {
             text: "Since you've made it this far in the demo, it's time for you to sample a little more of what Pharaoh has to offer. Be sure to consult your newly available advisors for more information and help in running your burgeoning city. @L@LMonuments @L@PYou can now start to build your Mastaba tomb! To place the mastaba, click on the 'Religious Structures: Monuments' button.  You'll need a supply of bricks, plus bricklayers and peasant laborers (supplied by Workcamps) to complete this 'monumental' task...and you only have eleven years in which to do it!@G75 @L@LOther Household Amenities @L@PIn addition to pottery, Egyptian households need a supply of beer and linen (plus a few other things not available in this demo!). Beer is made at a Brewery, from barley grown on local farms. Linen is made by a Weaver from flax, another local crop. Like food and pottery, both beer and linen are distributed to houses by the Bazaar. @L@LLaw and Order @L@PA magistrate patrolling from his Courthouse helps to reduce the risk of crime, by hearing grievances and making sure that cooler heads prevail. @L@LHealth and Sanitation @L@PEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen (made by a Weaver), and confers embalming services on houses in the surrounding area. Dentists provide the houses they serve with much desired dental care. @L@LEducation @L@PSchools and Libraries cannot educate the people without papyrus on which to write. Reed Gatherers supply Papyrus Makers with the necessary raw materials, and papyrus is then distributed directly to the city's educational facilities. @G69 @L@LWarships @L@PYou might need to defend your city's shores with sturdy warships. You'll need a Wood Cutter to supply timber to the Shipwright, which fashions these combat vessels for Warship Wharves. @L@LTaxation @L@PAlthough you cannot acquire revenue through trade and exports in this demo, you can squeeze a few debens out of your population through taxation. Build enough Tax Collectors to cover the whole city, and especially its most expensive housing."
@@ -3295,9 +3294,9 @@ game_messages_en {
     }
     
     message_kingdom_road_blocked {
-        id: 279,
-        type: 2,
-        message_type: 1,
+        id: 279
+        type: 2
+        message_type: 1
         
         size [30, 20]
         title { text: "Kingdom Road blocked" }
@@ -3305,9 +3304,9 @@ game_messages_en {
     }
     
     message_wrath_of_ra {
-        id: 280,
-        type: 2,
-        message_type: 1,
+        id: 280
+        type: 2
+        message_type: 1
         
         size [30, 20]
         title { text: "Wrath of Ra" }
@@ -3316,9 +3315,9 @@ game_messages_en {
     }
 
     message_wrath_of_seth {
-        id: 281,
-        type: 2,
-        message_type: 1,
+        id: 281
+        type: 2
+        message_type: 1
         
         size [30, 20]
         title { text: "Wrath of Seth" }
@@ -3327,9 +3326,9 @@ game_messages_en {
     }
 
     message_wrath_of_seth_2 {
-        id: 281,
-        type: 2,
-        message_type: 1,
+        id: 281
+        type: 2
+        message_type: 1
         
         size [30, 20]
         title { text: "Wrath of Seth 2" }
@@ -3338,20 +3337,21 @@ game_messages_en {
     }
 
     message_the_world_map {
-        id: 282,
-        type: 2,
-        message_type: 4,
+        id: 282
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
             text: "The World Map",
-            pos [0, 15]
+
         }
         content {
             text: "The World Map shows the location of your own city, as well as other cities in the world.  Here you can pay to open up trade routes with any cities willing to trade.   @L@LOther Cities  @LCities who wish to engage in trade appear on the map in full color and fly a flag.  Cities that will not trade with your city are muted.  To set up a trade route, click on the city you wish to do business with.   @L@LImporting and Exporting @LOnce you set up a trade route, you'll still need to instruct the Overseer of Commerce as to which resources and commodities you wish to import or export.  You can never import and export the same item at the same time."
         }
     }
+
     message_tutorial_monuments {
-        id: 283,
+        id: 283
         type: 2
         message_type: 4
         size [40, 30]
@@ -3360,32 +3360,33 @@ game_messages_en {
             text: "With a supply of bricks, you're now ready to begin work on the sacred mastaba tomb.  Most monuments require both skilled and unskilled workers.   @L@LConstruction Guilds @LConstruction Guilds supply the skilled labor needed to erect monuments.  The mastaba is made entirely of bricks, and requires only Bricklayers' Guilds to build it.  You can employ as many Bricklayers' Guilds as your economy can support, but make sure you also have enough bricks being delivered to the construction site to keep them busy. @POnce the Bricklayers' Guild has adequate labor, it will dispatch bricklayers to the construction site, where they will wait for a delivery of bricks by unskilled peasant laborers. @L@LPeasant Labor @LOnce there are some bricklayers awaiting supplies at the monument site, gangs of peasant laborers will begin to haul loads of bricks to them.  Because these same laborers also must tend the fields on the flood plain, you may find that work on the monument slows down somewhat when the flood has receded and the peasants return to their fields.  You can construct additional Work Camps, so that any surplus laborers not needed to tend the fields may work on the monument year-round. @G75 @L@LBegin by clicking on the Religious Structures icon, then search for a suitable location in which to place this large building."
         }
     }
+    
     message_the_finer_things {
-        id: 284,
-        type: 2,
-        message_type: 4,
+        id: 284
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
-            text: "The Finer Things",
-            pos [0, 15]
+            text: "The Finer Things"
         }
         content {
             text: "Temple Complexes @LAs devotion to their patron gods continues to grow, the Egyptian people demand bigger and bigger places of worship.  Most cities will want to erect a Temple Complex to their chosen god, so that they may fully partake of his or her benevolence.  Once built, the Temple Complex may be expanded through the addition of an Oracle and an Altar, each dedicated to other, lesser gods.  These gods, too, will impart certain benefits to the city.   @L@LJewelry @LWith a supply of gemstones, Jewelers in your city can fashion jewelry.  Jewelry is one type of valuable luxury good, which the higher social classes in the city demand.  @L@LLuxury Goods @LIn addition to locally made Jewelry, the Egyptian people prize certain other luxury goods, which are available only through importation.  A city needs access to more than one type of luxury good in order to become truly civilized.  @L@LQuarrying Stone @LTo quarry stone, a highly sought after building material, build a quarry next to a rock outcropping.  Quarrymen will deliver stone blocks, one at a time, to the Storage Yard.  Make sure to employ architects to ensure that quarries don't cave in!"
         }
     }
+
     message_innovations {
-        id: 285,
-        type: 2,
-        message_type: 4,
+        id: 285
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
-            text: "Innovations",
-            pos [0, 15]
-        }
+            text: "Innovations"
+        }        
         content {
             text: "Meadow Farming @LSome land is fertile enough for farming, even though it's not situated on the flood plain.  You can identify such meadow areas by tall, yellow plant growth.  Some farms planted on meadows can produce more than one harvest per year, though the yield is usually somewhat less than that of a floodplain farm. @G59   @L@LIrrigation @LEmploy irrigation to increase the fertility of any farmland. Irrigation ditches on the flood plain can be connected directly to the Nile, but you'll need a Water Lift to elevate the water onto dry land.   @L@LWater Lifts @LWater Lifts can be built on the edge of the flood plain, or on the coast, where you can raise water directly from the river up to dry land. Connect an irrigation ditch to the back of the Water Lift to bring irrigation water to inland farms.  @L@LStonemasons and Carpenters @LTwo new types of Construction Guild will be needed to erect the stepped pyramid: the Stonemasons' Guild and the Carpenters' Guild.  Stonemasons from the Guild wait at the construction site for blocks of stone, hauled there by peasant laborers.  These blockhaulers need ramps to reach the higher levels of the structure.  When it's time for the stepped pyramid to rise another level, a carpenter carries wood from the Guild to the site, and constructs a ramp for the blockhaulers. @L@LPreserving the Dead @LEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen, made by a Weaver, and confers embalming services on houses in the surrounding area."
         }
     }
+
     message_troops_return_failed {
         id: 287
         type: 2

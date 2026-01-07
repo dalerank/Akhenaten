@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 10 saqqara started")
 
 mission10 { // Saqqara
-	start_message : 150, //The tomb of the great pharaoh, 247 = 146 + 99 - 1
+	start_message : "message_innovations"
 	player_rank : 1
 	next_mission : 11
 	choice_background {pack:PACK_UNLOADED, id:12}
