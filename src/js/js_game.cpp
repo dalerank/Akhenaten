@@ -446,9 +446,9 @@ void js_register_game_functions(js_State *J) {
 }
 
 void js_unref_function(xstring onclick_ref) {
-    js_State *J = js_vm_state();
-    assert(J);
     if (!onclick_ref.empty()) {
+        js_State *J = js_vm_state();
+        assert(J);
         js_unref(J, onclick_ref .c_str());
     }
 }
@@ -496,7 +496,7 @@ pcstr js_call_function_with_result(xstring js_ref, int param1, int param2) {
             return "";
         }
         
-        pcstr result_str;
+        pcstr result_str = "";
         if (js_isstring(J, -1)) {
             result_str = js_tostring(J, -1);
         } else if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {

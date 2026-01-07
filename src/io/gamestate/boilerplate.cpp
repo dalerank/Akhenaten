@@ -633,7 +633,7 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
     return save_ok;
 }
 
-bool GamestateIO::write_map(const char* filename_short) {
+bool GamestateIO::write_map(pcstr filename_short) {
     return false; // TODO
 
     // concatenate string

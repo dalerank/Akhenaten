@@ -478,6 +478,8 @@ struct emenu_header : public element {
     xstring _tooltip;
     e_font _font;
 
+    ~emenu_header();
+
     virtual void load(archive elem, element *parent, items &elems) override;
             void load_items(archive elem, pcstr section);
     virtual void draw(UiFlags flags) override;

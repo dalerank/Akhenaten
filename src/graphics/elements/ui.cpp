@@ -1321,6 +1321,12 @@ void ui::etext::draw(UiFlags flags) {
     }
 }
 
+ui::emenu_header::~emenu_header() {
+    for (auto &it : impl.items) {
+        js_unref_function(it._js_onclick);
+    }
+}
+
 void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     element::load(arch, parent, elems);
 
@@ -1351,6 +1357,7 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
         }
         item.parameter = elem.r_int("parameter");
         item.hidden = elem.r_bool("hidden");
+        item._js_onclick = elem.r_function("onclick");
         impl.items.push_back(item);
     });
 }

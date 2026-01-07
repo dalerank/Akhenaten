@@ -383,8 +383,10 @@ xstring top_menu_widget_t::menu_handle_mouse(const mouse* m, menu_header* menu, 
     if (m->left.went_up) {
         auto it = std::find_if(menu->items.begin(), menu->items.end(), [&item_id] (auto &it) { return it.id == item_id; });
         if (it != menu->items.end()) {
-            if (it->left_click_handler) {
-                it->left_click_handler(it->parameter);
+            if (!it->_js_onclick.empty()) {
+                js_call_function_with_result(it->_js_onclick, it->parameter, 0);
+            } else if (it->_onclick) {
+                it->_onclick(it->parameter);
             } else if (menu->_onclick) {
                 menu->_onclick(*it);
             }
@@ -466,41 +468,7 @@ void top_menu_widget_t::set_text_for_debug_render() {
 }
 
 void top_menu_widget_t::file_handle(menu_item &item) {
-    if (item.id == "new_game") { 
-        widget_top_menu_clear_state();
-        popup_dialog::show_yesno("#popup_dialog_quit", [] (bool confirmed) {
-            if (!confirmed) {
-                window_city_show();
-                return;
-            }
-
-            g_city_planner.reset();
-            game_undo_disable();
-            g_city.reset_overlay();
-            ui::window_dinasty_menu::show();
-        });
-    }
-    else if (item.id == "replay_map") { 
-        widget_top_menu_clear_state();
-        popup_dialog::show_yesno("#replay_mission", [] (bool confirmed) {
-            if (!confirmed) {
-                window_city_show();
-                return;
-            }
-
-            g_city_planner.reset();
-            const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
-            if (is_custom_map) {
-                GamestateIO::load_savegame("autosave_replay.svx");
-                window_city_show();
-            } else {
-                int scenario_id = g_scenario.campaign_scenario_id();
-                widget_top_menu_clear_state();
-                GamestateIO::load_mission(scenario_id, true);
-            }
-        });
-    }
-    else if (item.id == "load_game") { 
+    if (item.id == "load_game") { 
         widget_top_menu_clear_state();
         g_city_planner.reset();
         window_city_show();
