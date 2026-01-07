@@ -11,3 +11,8 @@ game {
 
     @difficulty { get: __game_difficulty }
 }
+
+game_features {
+    __property_getter: function(property) { return __game_feature_get(property) }
+    @gameui_hide_new_game_top_menu {}
+}
