@@ -39,9 +39,16 @@ ui.window_city_show = __ui_window_city_show
 function ui_create_element_proxy(elementId) {
     var proxy = {};
     Object.defineProperty(proxy, "text", {
-        get: function() { return __ui_element_get_text(elementId); },
-        set: function(v) { __ui_element_set_text(elementId, v); },
-        enumerable: true,
+        get: function() { return __ui_element_get_text(elementId); }
+        set: function(v) { __ui_element_set_text(elementId, v); }
+        enumerable: true
+        configurable: true
+    })
+
+    Object.defineProperty(proxy, "enabled", {
+        get: function() { return __ui_element_get_enabled(elementId); }
+        set: function(v) { __ui_element_set_enabled(elementId, v); }
+        enumerable: true
         configurable: true
     });
     return proxy;

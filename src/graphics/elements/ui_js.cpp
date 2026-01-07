@@ -29,8 +29,7 @@ ANK_FUNCTION(__ui_window_city_show)
 pcstr __ui_element_get_text(pcstr element_id) {
     ui::widget* w = ui::get_current_widget();
     if (w && element_id) {
-        ui::element& elem = (*w)[element_id];
-        return elem.text().c_str();
+        return (*w)[element_id].text().c_str();
     }
     return "";
 }
@@ -39,11 +38,28 @@ ANK_FUNCTION_1(__ui_element_get_text)
 void __ui_element_set_text(pcstr element_id, pcstr text) {
     ui::widget* w = ui::get_current_widget();
     if (w && element_id && text) {
-        ui::element& elem = (*w)[element_id];
-        elem.text(text);
+        (*w)[element_id].text(text);
     }
 }
 ANK_FUNCTION_2(__ui_element_set_text)
+
+bool __ui_element_get_enabled(pcstr element_id) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        return (*w)[element_id].enabled;
+    }
+    return false;
+}
+ANK_FUNCTION_1(__ui_element_get_enabled)
+
+void __ui_element_set_enabled(pcstr element_id, bool v) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        (*w)[element_id].enabled = v;
+    }
+}
+ANK_FUNCTION_2(__ui_element_set_enabled)
+
 
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_ui_objects(js_State *J) {
