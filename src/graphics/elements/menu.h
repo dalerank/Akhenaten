@@ -10,11 +10,12 @@
 struct menu_item {
     short text_group;
     short text_number;
-    void (*left_click_handler)(int) = nullptr;
+    std::function<void(int)> _onclick;
     int parameter;
     int hidden = false;
     xstring text;
     xstring id;
+    xstring _js_onclick;
 };
 
 struct menu_header {
