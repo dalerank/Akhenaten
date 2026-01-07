@@ -468,13 +468,7 @@ void top_menu_widget_t::set_text_for_debug_render() {
 }
 
 void top_menu_widget_t::file_handle(menu_item &item) {
-    if (item.id == "load_game") { 
-        widget_top_menu_clear_state();
-        g_city_planner.reset();
-        window_city_show();
-        window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
-    }
-    else if (item.id == "save_game") { 
+    if (item.id == "save_game") { 
         widget_top_menu_clear_state();
         window_city_show();
         window_file_dialog_save_show(FILE_TYPE_SAVED_GAME);

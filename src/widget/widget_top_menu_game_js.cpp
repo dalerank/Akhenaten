@@ -3,13 +3,14 @@
 #include "js/js_game.h"
 #include "window/popup_dialog.h"
 #include "window/window_city.h"
+#include "window/file_dialog_load.h"
 #include "window/window_dynasty_menu.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
 #include "io/gamestate/boilerplate.h"
 
-void __widget_top_menu_new_game(int, int) {
+pcstr __widget_top_menu_new_game(int, int) {
     widget_top_menu_clear_state();
     popup_dialog::show_yesno("#popup_dialog_quit", [] (bool confirmed) {
         if (!confirmed) {
@@ -22,6 +23,8 @@ void __widget_top_menu_new_game(int, int) {
         g_city.reset_overlay();
         ui::window_dinasty_menu::show();
     });
+
+    return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_new_game)
 
@@ -48,3 +51,13 @@ pcstr __widget_top_menu_replay_map(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_replay_map)
+
+pcstr __widget_top_menu_load_map(int, int) {
+    widget_top_menu_clear_state();
+    g_city_planner.reset();
+    window_city_show();
+    window_file_dialog_load_show(FILE_TYPE_SAVED_GAME);
+
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_load_map)
