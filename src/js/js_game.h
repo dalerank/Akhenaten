@@ -83,6 +83,44 @@ namespace js_helpers {
         return tile2i(x, y);
     }
     
+    template<>
+    inline bvariant js_to_value<bvariant>(js_State *J, int idx) {
+        if (js_isundefined(J, idx)) {
+            return bvariant(); // none
+        } else if (js_isboolean(J, idx)) {
+            return bvariant(js_toboolean(J, idx));
+        } else if (js_isstring(J, idx)) {
+            return bvariant(xstring(js_tostring(J, idx)));
+        } else if (js_isnumber(J, idx) || js_iscnumber(J, idx)) {
+            double num = js_tonumber(J, idx);
+            // Try to preserve integer if possible
+            if (num == (int)num) {
+                return bvariant((int)num);
+            } else {
+                return bvariant((float)num);
+            }
+        } else if (js_isobject(J, idx) && !js_isarray(J, idx)) {
+            // Check if it's a vec2i-like object with x and y properties
+            js_getproperty(J, idx, "x");
+            bool has_x = !js_isundefined(J, -1);
+            js_pop(J, 1);
+            
+            if (has_x) {
+                js_getproperty(J, idx, "x");
+                int x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+                js_pop(J, 1);
+                js_getproperty(J, idx, "y");
+                int y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+                js_pop(J, 1);
+                return bvariant(vec2i(x, y));
+            } else {
+                return bvariant(); // none for other objects
+            }
+        } else {
+            return bvariant(); // none
+        }
+    }
+    
     template<typename T>
     inline void js_push_value(js_State *J, T value);
     

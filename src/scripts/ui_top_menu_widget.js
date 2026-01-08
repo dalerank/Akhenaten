@@ -9,14 +9,17 @@ function top_menu_widget_open_submenu(window) {
 	window.display_options.enabled = !game.screen.is_fullscreen_only
 }
 
-function __widget_top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
-function __widget_top_menu_autosave_options(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
+function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
+function top_menu_autosave_options_toggle(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
 
-function __widget_top_menu_tooltip_text(p1, p2) { return __loc(3, game.tooltips_mode + 2) }
-function __widget_top_menu_toggle_tooltip(p1, p2) { game.tooltips_mode = (game.tooltips_mode + 1) % 3 }
+function top_menu_tooltip_text(p1, p2) { return __loc(3, game.tooltips_mode + 2) }
+function top_menu_tooltip_toggle(p1, p2) { game.tooltips_mode = (game.tooltips_mode + 1) % 3 }
 
-function __widget_top_menu_warnings_text(p1, p2) { return __loc(3, game.warnings ? 6 : 5) }
-function __widget_top_menu_toggle_warnings(p1, p2) { game.warnings = !game.warnings }
+function top_menu_warnings_text(p1, p2) { return __loc(3, game.warnings ? 6 : 5) }
+function top_menu_warnings_toggle(p1, p2) { game.warnings = !game.warnings }
+
+function top_menu_cities_old_text(p1, p2) { return __loc(2, game_features.gameui_empire_city_old_names ? 7 : 8) }
+function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_old_names = !game_features.gameui_empire_city_old_names }
 
 top_menu_widget {
 	offset [10, 6]
@@ -49,23 +52,29 @@ top_menu_widget {
 		sound_options  	: menu_item({text: {group:2, id:2}, onclick: __widget_top_menu_sound_options })
 		speed_options  	: menu_item({text: {group:2, id:3}, onclick: __widget_top_menu_speed_options })
 		difficulty_options: menu_item({ text: {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
+
+		cities_options  : menu_item({text: {group:2, id:7}
+			                         textfn: top_menu_cities_old_text
+									 onclick: top_menu_cities_old_toggle })
+
 		autosave_options: menu_item({text: {group:19, id:51}
-				                     textfn: __widget_top_menu_autosave_options_text
-									 onclick: __widget_top_menu_autosave_options })
+				                     textfn: top_menu_autosave_options_text
+									 onclick: top_menu_autosave_options_toggle })
+									 
 		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
 		enhanced_options: menu_item({text: "Enhanced options", onclick: __widget_top_menu_features })
 	}
 
 	help {
 		help 			: menu_item({text: {group:3, id:1}, onclick: __widget_top_menu_show_help })
-		
+
 		mouse 			: menu_item({text: {group:3, id:2}
-			                         textfn: __widget_top_menu_tooltip_text
-									 onclick: __widget_top_menu_toggle_tooltip })
+			                         textfn: top_menu_tooltip_text
+									 onclick: top_menu_tooltip_toggle })
 
 		warnings 		: menu_item({text: {group:3, id:5}
-			                         textfn: __widget_top_menu_warnings_text
-									 onclick: __widget_top_menu_toggle_warnings })
+			                         textfn: top_menu_warnings_text
+									 onclick: top_menu_warnings_toggle })
 
 		about 			: menu_item({text: {group:3, id:7}, onclick: __widget_top_menu_show_about })
 	}
