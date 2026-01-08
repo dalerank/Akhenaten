@@ -57,7 +57,6 @@ struct top_menu_widget_t : autoconfig_window {
     void help_handle(menu_item &item);
     void set_text_for_debug_render();
     void set_text_for_debug_city();
-    void set_text_for_tooltips();
     void set_text_for_warnings();
     void item_update_text(pcstr path, pcstr text);
     void header_update_text(pcstr header, pcstr text);

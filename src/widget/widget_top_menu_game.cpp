@@ -386,10 +386,6 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget_t::set_text_for_tooltips() {
-    item_update_text("help/mouse", ui::str(3, g_settings.tooltips + 2));
-}
-
 void top_menu_widget_t::set_text_for_warnings() {
     item_update_text("help/warnings", ui::str(3, g_settings.warnings ? 6 : 5));
 }
@@ -413,16 +409,7 @@ void top_menu_widget_t::set_text_for_debug_render() {
 }
 
 void top_menu_widget_t::help_handle(menu_item &item) {
-    if (item.id == "help") { 
-        widget_top_menu_clear_state();
-        window_go_back();
-        window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
-    }
-    else if (item.id == "mouse") { 
-        g_settings.toggle_tooltips();
-        set_text_for_tooltips();
-    }
-    else if (item.id == "warnings") { 
+    if (item.id == "warnings") { 
         g_settings.toggle_warnings();
         set_text_for_warnings();
     }
@@ -464,7 +451,6 @@ void top_menu_widget_t::sub_menu_init() {
 
     set_debug_draw_option(e_debug_show_properties, game.debug_properties);
 
-    set_text_for_tooltips();
     set_text_for_warnings();
     set_text_for_debug_city();
     set_text_for_debug_render();

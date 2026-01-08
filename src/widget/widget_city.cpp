@@ -1194,7 +1194,7 @@ static const figure* get_figure_at_mouse(vec2i mouse_pos) {
 }
 
 void screen_city_t::draw_tooltip(tooltip_context* c) {
-    if (g_settings.tooltips == e_tooltip_show_none) {
+    if (g_settings.tooltips_mode == e_tooltip_mode_none) {
         return;
     }
 

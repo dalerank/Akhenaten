@@ -13,11 +13,13 @@
 #include "window/speed_options.h"
 #include "window/hotkey_config.h"
 #include "window/difficulty_options.h"
+#include "window/message_dialog_new.h"
 #include "window/window_features.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
 #include "game/settings.h"
+#include "graphics/window.h"
 #include "io/gamestate/boilerplate.h"
 
 pcstr __widget_top_menu_new_game(int, int) {
@@ -145,3 +147,11 @@ pcstr __widget_top_menu_features(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_features)
+
+pcstr __widget_top_menu_show_help(int, int) {
+    widget_top_menu_clear_state();
+    window_go_back();
+    window_message_dialog_show("message_dialog_help", -1, window_city_draw_all);
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_show_help)
