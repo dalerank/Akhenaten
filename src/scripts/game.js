@@ -7,6 +7,7 @@ game {
     screen {
         @w { get: __game_screen_width }
         @h { get: __game_screen_height }
+        @is_fullscreen_only { get: __game_is_fullscreen_only }
     }
 
     @difficulty { get: __game_difficulty }
