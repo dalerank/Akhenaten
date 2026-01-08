@@ -1358,6 +1358,7 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
         item.parameter = elem.r_int("parameter");
         item.hidden = elem.r_bool("hidden");
         item._js_onclick = elem.r_function("onclick");
+        item._js_text = elem.r_function("textfn");
         impl.items.push_back(item);
         auto proxy_item = std::make_shared<emenu_header_item_proxy>();
         proxy_item->id = item.id;

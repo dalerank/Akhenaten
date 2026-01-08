@@ -7,12 +7,10 @@ function menu_header(config) { return __extend({ type : "menu_header"}, config) 
 function top_menu_widget_open_submenu(window) {
 	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
 	window.display_options.enabled = !game.screen.is_fullscreen_only
-	window.autosave_options.text = __loc(19, game.monthly_autosave ? 51 : 52)
 }
 
-function __widget_top_menu_autosave_options(p1, p2) {
-    game.monthly_autosave = !game.monthly_autosave
-}
+function __widget_top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
+function __widget_top_menu_autosave_options(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
 
 top_menu_widget {
 	offset [10, 6]
@@ -45,9 +43,11 @@ top_menu_widget {
 		sound_options  	: menu_item({text: {group:2, id:2}, onclick: __widget_top_menu_sound_options })
 		speed_options  	: menu_item({text: {group:2, id:3}, onclick: __widget_top_menu_speed_options })
 		difficulty_options: menu_item({ text: {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
-		autosave_options: menu_item({text: {group:19, id:51}, onclick: __widget_top_menu_autosave_options })
-		hotkeys_options : menu_item({text: "Hotkeys options" })
-		enhanced_options: menu_item({text: "Enhanced options" })
+		autosave_options: menu_item({text: {group:19, id:51}
+				                     textfn: __widget_top_menu_autosave_options_text
+									 onclick: __widget_top_menu_autosave_options })
+		hotkeys_options : menu_item({text: "Hotkeys options", onclick: __widget_top_menu_hotkeys_options })
+		enhanced_options: menu_item({text: "Enhanced options", onclick: __widget_top_menu_features })
 	}
 
 	help {

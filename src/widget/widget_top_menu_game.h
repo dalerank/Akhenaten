@@ -55,7 +55,6 @@ struct top_menu_widget_t : autoconfig_window {
     void sub_menu_init();
     void advisors_handle(menu_item &item);
     void help_handle(menu_item &item);
-    void options_handle(menu_item &item);
     void set_text_for_debug_render();
     void set_text_for_debug_city();
     void set_text_for_tooltips();

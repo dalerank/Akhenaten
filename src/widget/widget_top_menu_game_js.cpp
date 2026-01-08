@@ -11,7 +11,9 @@
 #include "window/display_options.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "window/hotkey_config.h"
 #include "window/difficulty_options.h"
+#include "window/window_features.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
@@ -131,3 +133,15 @@ pcstr __widget_top_menu_difficulty_options(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_difficulty_options)
+
+pcstr __widget_top_menu_hotkeys_options(int, int) {
+    window_hotkey_config_show([] {});
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_hotkeys_options)
+
+pcstr __widget_top_menu_features(int, int) {
+    ui::window_features::show([] {});
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_features)
