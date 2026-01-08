@@ -3244,13 +3244,12 @@ game_messages_en {
         }
     }
     message_tutorial_monuments_and_more {
-        id: 257,
-        type: 2,
-        message_type: 4,
+        id: 257
+        type: 2
+        message_type: 4
         size [40, 30]
         title {
-            text: "Monuments and More!",
-
+            text: "Monuments and More!"
         }
         content {
             text: "Since you've made it this far in the demo, it's time for you to sample a little more of what Pharaoh has to offer. Be sure to consult your newly available advisors for more information and help in running your burgeoning city. @L@LMonuments @L@PYou can now start to build your Mastaba tomb! To place the mastaba, click on the 'Religious Structures: Monuments' button.  You'll need a supply of bricks, plus bricklayers and peasant laborers (supplied by Workcamps) to complete this 'monumental' task...and you only have eleven years in which to do it!@G75 @L@LOther Household Amenities @L@PIn addition to pottery, Egyptian households need a supply of beer and linen (plus a few other things not available in this demo!). Beer is made at a Brewery, from barley grown on local farms. Linen is made by a Weaver from flax, another local crop. Like food and pottery, both beer and linen are distributed to houses by the Bazaar. @L@LLaw and Order @L@PA magistrate patrolling from his Courthouse helps to reduce the risk of crime, by hearing grievances and making sure that cooler heads prevail. @L@LHealth and Sanitation @L@PEvery city needs a few embalmers to ensure sanitation, and to provide its more sophisticated inhabitants with proper burial rites. The Mortuary uses linen (made by a Weaver), and confers embalming services on houses in the surrounding area. Dentists provide the houses they serve with much desired dental care. @L@LEducation @L@PSchools and Libraries cannot educate the people without papyrus on which to write. Reed Gatherers supply Papyrus Makers with the necessary raw materials, and papyrus is then distributed directly to the city's educational facilities. @G69 @L@LWarships @L@PYou might need to defend your city's shores with sturdy warships. You'll need a Wood Cutter to supply timber to the Shipwright, which fashions these combat vessels for Warship Wharves. @L@LTaxation @L@PAlthough you cannot acquire revenue through trade and exports in this demo, you can squeeze a few debens out of your population through taxation. Build enough Tax Collectors to cover the whole city, and especially its most expensive housing."

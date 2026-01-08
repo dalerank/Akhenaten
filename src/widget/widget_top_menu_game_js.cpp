@@ -8,9 +8,14 @@
 #include "window/file_dialog_delete.h"
 #include "window/main_menu.h"
 #include "window/window_dynasty_menu.h"
+#include "window/display_options.h"
+#include "window/sound_options.h"
+#include "window/speed_options.h"
+#include "window/difficulty_options.h"
 #include "city/city.h"
 #include "building/construction/build_planner.h"
 #include "game/undo.h"
+#include "game/settings.h"
 #include "io/gamestate/boilerplate.h"
 
 pcstr __widget_top_menu_new_game(int, int) {
@@ -97,3 +102,32 @@ pcstr __widget_top_menu_exit_game(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_exit_game)
+
+pcstr __widget_top_menu_display_options(int, int) {
+    widget_top_menu_clear_state();
+    ui::display_options_window::show(window_city_show);
+
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_display_options)
+
+pcstr __widget_top_menu_sound_options(int, int) {
+    widget_top_menu_clear_state();
+    window_sound_options_show(window_city_show);
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_sound_options)
+
+pcstr __widget_top_menu_speed_options(int, int) {
+    widget_top_menu_clear_state();
+    window_speed_options_show(window_city_show);
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_speed_options)
+
+pcstr __widget_top_menu_difficulty_options(int, int) {
+    widget_top_menu_clear_state();
+    window_difficulty_options_show(window_city_show);
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_difficulty_options)

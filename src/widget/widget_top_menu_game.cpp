@@ -382,10 +382,6 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget_t::set_text_for_autosave() {
-    item_update_text("options/autosave_options", ui::str(19, g_settings.monthly_autosave ? 51 : 52));
-}
-
 void top_menu_widget_t::set_text_for_tooltips() {
     item_update_text("help/mouse", ui::str(3, g_settings.tooltips + 2));
 }
@@ -413,27 +409,7 @@ void top_menu_widget_t::set_text_for_debug_render() {
 }
 
 void top_menu_widget_t::options_handle(menu_item &item) {
-    if (item.id == "display_options") { 
-        widget_top_menu_clear_state();
-        ui::display_options_window::show(window_city_show); 
-    }
-    else if (item.id == "sound_options") { 
-        widget_top_menu_clear_state();
-        window_sound_options_show(window_city_show);
-    }
-    else if (item.id == "speed_options") { 
-        widget_top_menu_clear_state();
-        window_speed_options_show(window_city_show);
-    }
-    else if (item.id == "difficulty_options") { 
-        widget_top_menu_clear_state();
-        window_difficulty_options_show(window_city_show);
-    }
-    else if (item.id == "autosave_options") {
-        g_settings.toggle_monthly_autosave();
-        set_text_for_autosave();
-    }
-    else if (item.id == "hotkeys_options") { 
+    if (item.id == "hotkeys_options") { 
         window_hotkey_config_show([] {});
     }
     else if (item.id == "enhanced_options") { 
@@ -498,7 +474,6 @@ void top_menu_widget_t::sub_menu_init() {
 
     set_debug_draw_option(e_debug_show_properties, game.debug_properties);
 
-    set_text_for_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
     set_text_for_debug_city();
