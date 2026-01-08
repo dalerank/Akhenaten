@@ -27,3 +27,9 @@ ANK_FUNCTION(__game_tooltips_mode)
 
 void __game_set_tooltips_mode(int v) { g_settings.tooltips_mode = (e_tooltip_mode)v; }
 ANK_FUNCTION_1(__game_set_tooltips_mode)
+
+bool __game_warnings() { return g_settings.warnings; }
+ANK_FUNCTION(__game_warnings)
+
+void __game_set_warnings(bool v) { g_settings.warnings = v; }
+ANK_FUNCTION_1(__game_set_warnings)

@@ -386,10 +386,6 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget_t::set_text_for_warnings() {
-    item_update_text("help/warnings", ui::str(3, g_settings.warnings ? 6 : 5));
-}
-
 void top_menu_widget_t::set_text_for_debug_city() {
     auto *debug = headers["debug"].dcast_menu_header();
     for (int i = 0; i < debug->impl.items.size(); ++i) {
@@ -408,18 +404,6 @@ void top_menu_widget_t::set_text_for_debug_render() {
     }
 }
 
-void top_menu_widget_t::help_handle(menu_item &item) {
-    if (item.id == "warnings") { 
-        g_settings.toggle_warnings();
-        set_text_for_warnings();
-    }
-    else if (item.id == "about") { 
-        widget_top_menu_clear_state();
-        window_go_back();
-        window_message_dialog_show("message_dialog_about", -1, window_city_draw_all);
-    }
-}
-
 void top_menu_widget_t::advisors_handle(menu_item &item) {
     widget_top_menu_clear_state();
     window_go_back();
@@ -428,11 +412,6 @@ void top_menu_widget_t::advisors_handle(menu_item &item) {
 
 void top_menu_widget_t::sub_menu_init() {
     headers.event(top_menu_widget_init{ pos });
-
-    auto *help = headers["help"].dcast_menu_header();
-    if (help) {
-        help->onclick([this] (auto &h) { help_handle(h); });
-    }
 
     auto *advisors = headers["advisors"].dcast_menu_header();
     if (advisors) {
@@ -451,7 +430,6 @@ void top_menu_widget_t::sub_menu_init() {
 
     set_debug_draw_option(e_debug_show_properties, game.debug_properties);
 
-    set_text_for_warnings();
     set_text_for_debug_city();
     set_text_for_debug_render();
 }

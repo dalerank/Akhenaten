@@ -15,6 +15,9 @@ function __widget_top_menu_autosave_options(p1, p2) { game.monthly_autosave = !g
 function __widget_top_menu_tooltip_text(p1, p2) { return __loc(3, game.tooltips_mode + 2) }
 function __widget_top_menu_toggle_tooltip(p1, p2) { game.tooltips_mode = (game.tooltips_mode + 1) % 3 }
 
+function __widget_top_menu_warnings_text(p1, p2) { return __loc(3, game.warnings ? 6 : 5) }
+function __widget_top_menu_toggle_warnings(p1, p2) { game.warnings = !game.warnings }
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -55,11 +58,16 @@ top_menu_widget {
 
 	help {
 		help 			: menu_item({text: {group:3, id:1}, onclick: __widget_top_menu_show_help })
+		
 		mouse 			: menu_item({text: {group:3, id:2}
 			                         textfn: __widget_top_menu_tooltip_text
 									 onclick: __widget_top_menu_toggle_tooltip })
-		warnings 		: menu_item({text: {group:3, id:5} })
-		about 			: menu_item({text: {group:3, id:7} })
+
+		warnings 		: menu_item({text: {group:3, id:5}
+			                         textfn: __widget_top_menu_warnings_text
+									 onclick: __widget_top_menu_toggle_warnings })
+
+		about 			: menu_item({text: {group:3, id:7}, onclick: __widget_top_menu_show_about })
 	}
 
 	advisors {
