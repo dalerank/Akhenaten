@@ -6,8 +6,12 @@ function menu_header(config) { return __extend({ type : "menu_header"}, config) 
 [event=top_menu_widget_init]
 function top_menu_widget_open_submenu(window) {
 	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
-	//window.display_options.enabled = !game.screen.is_fullscreen_only
-	log_info("akhenaten: display options enabled: " + window.display_options.enabled)
+	window.display_options.enabled = !game.screen.is_fullscreen_only
+	window.autosave_options.text = __loc(19, game.monthly_autosave ? 51 : 52)
+}
+
+function __widget_top_menu_autosave_options(p1, p2) {
+    game.monthly_autosave = !game.monthly_autosave
 }
 
 top_menu_widget {
@@ -37,11 +41,11 @@ top_menu_widget {
 	}
 
 	options {
-		display_options	: menu_item({text: {group:2, id:1} })
-		sound_options  	: menu_item({text: {group:2, id:2} })
-		speed_options  	: menu_item({text: {group:2, id:3} })
-		difficulty_options: menu_item({ text: {group:2, id:6} })
-		autosave_options: menu_item({text: {group:19, id:51} })
+		display_options	: menu_item({text: {group:2, id:1}, onclick: __widget_top_menu_display_options })
+		sound_options  	: menu_item({text: {group:2, id:2}, onclick: __widget_top_menu_sound_options })
+		speed_options  	: menu_item({text: {group:2, id:3}, onclick: __widget_top_menu_speed_options })
+		difficulty_options: menu_item({ text: {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
+		autosave_options: menu_item({text: {group:19, id:51}, onclick: __widget_top_menu_autosave_options })
 		hotkeys_options : menu_item({text: "Hotkeys options" })
 		enhanced_options: menu_item({text: "Enhanced options" })
 	}

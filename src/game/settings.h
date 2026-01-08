@@ -61,7 +61,7 @@ struct game_settings {
     int scroll_speed;
     // misc settings
     etooltip_flag tooltips;
-    int monthly_autosave;
+    bool monthly_autosave;
     bool warnings;
     bool gods_enabled;
     bool victory_video;
@@ -126,7 +126,6 @@ struct game_settings {
 
     void toggle_tooltips();
     void toggle_warnings() { warnings = !warnings; }
-    void toggle_monthly_autosave() { monthly_autosave = !monthly_autosave; }
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }
     void toggle_gods_enabled() { gods_enabled = !gods_enabled; }
