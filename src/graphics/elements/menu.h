@@ -13,9 +13,12 @@ struct menu_item {
     std::function<void(int)> _onclick;
     int parameter;
     int hidden = false;
+    
     xstring text;
     xstring id;
+
     xstring _js_onclick;
+    xstring _js_text;
 };
 
 struct menu_header {

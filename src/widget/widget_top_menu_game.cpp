@@ -290,7 +290,11 @@ void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring f
             continue;
         }
         // Set color/font on the menu item mouse hover
-        lang_text_draw(item.text.c_str(), vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
+        pcstr text = item.text.c_str();
+        if (!item._js_text.empty()) {
+            text = js_call_function_with_result(item._js_text, item.parameter, 0);
+        }
+        lang_text_draw(text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
         y_offset += item_height;
     }
 }
@@ -408,15 +412,6 @@ void top_menu_widget_t::set_text_for_debug_render() {
     }
 }
 
-void top_menu_widget_t::options_handle(menu_item &item) {
-    if (item.id == "hotkeys_options") { 
-        window_hotkey_config_show([] {});
-    }
-    else if (item.id == "enhanced_options") { 
-        ui::window_features::show([] {});
-    }
-}
-
 void top_menu_widget_t::help_handle(menu_item &item) {
     if (item.id == "help") { 
         widget_top_menu_clear_state();
@@ -446,11 +441,6 @@ void top_menu_widget_t::advisors_handle(menu_item &item) {
 
 void top_menu_widget_t::sub_menu_init() {
     headers.event(top_menu_widget_init{ pos });
-
-    auto *options = headers["options"].dcast_menu_header();
-    if (options) {
-        options->onclick([this] (auto &h) { options_handle(h); });
-    }
 
     auto *help = headers["help"].dcast_menu_header();
     if (help) {
