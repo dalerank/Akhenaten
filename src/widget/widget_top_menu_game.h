@@ -54,10 +54,8 @@ struct top_menu_widget_t : autoconfig_window {
     void sub_menu_draw_text(const xstring header, const xstring focus_item_id);
     void sub_menu_init();
     void advisors_handle(menu_item &item);
-    void help_handle(menu_item &item);
     void set_text_for_debug_render();
     void set_text_for_debug_city();
-    void set_text_for_warnings();
     void item_update_text(pcstr path, pcstr text);
     void header_update_text(pcstr header, pcstr text);
     xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);

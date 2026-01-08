@@ -6,6 +6,7 @@ game {
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
     @tooltips_mode { get: __game_tooltips_mode, set: __game_set_tooltips_mode }
+    @warnings { get: __game_warnings, set: __game_set_warnings }
 
     screen {
         @w { get: __game_screen_width }
