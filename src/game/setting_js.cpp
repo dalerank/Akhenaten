@@ -21,3 +21,9 @@ ANK_FUNCTION(__game_monthly_autosave)
 
 void __game_set_monthly_autosave(bool v) { g_settings.monthly_autosave = v; }
 ANK_FUNCTION_1(__game_set_monthly_autosave)
+
+int __game_tooltips_mode() { return g_settings.tooltips_mode; }
+ANK_FUNCTION(__game_tooltips_mode)
+
+void __game_set_tooltips_mode(int v) { g_settings.tooltips_mode = (e_tooltip_mode)v; }
+ANK_FUNCTION_1(__game_set_tooltips_mode)

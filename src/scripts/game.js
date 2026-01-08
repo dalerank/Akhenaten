@@ -5,6 +5,7 @@ game {
     @absolute_day { get: __game_absolute_day }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
+    @tooltips_mode { get: __game_tooltips_mode, set: __game_set_tooltips_mode }
 
     screen {
         @w { get: __game_screen_width }

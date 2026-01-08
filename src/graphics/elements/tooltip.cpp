@@ -176,7 +176,7 @@ bool tooltip_context::should_draw_tooltip() {
         return false;
     }
 
-    if (!high_priority && g_settings.tooltips != e_tooltip_show_full) {
+    if (!high_priority && g_settings.tooltips_mode != e_tooltip_mode_full) {
         reset_timer();
         return false;
     }
@@ -197,7 +197,7 @@ void tooltip_handle(const mouse* m, void (*func)(tooltip_context*)) {
 
     context.mpos = *m;
     context.text = "";
-    if (g_settings.tooltips && func) {
+    if (g_settings.tooltips_mode && func) {
         func(&context);
     }
 

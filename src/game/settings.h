@@ -7,10 +7,10 @@
 
 class buffer;
 
-enum e_tooltip_show {
-    e_tooltip_show_none = 0,
-    e_tooltip_show_some = 1,
-    e_tooltip_show_full = 2,
+enum e_tooltip_mode {
+    e_tooltip_mode_none = 0,
+    e_tooltip_mode_some = 1,
+    e_tooltip_mode_full = 2,
     e_tooltip_count,
 };
 using etooltip_flag = uint32_t;
@@ -60,7 +60,7 @@ struct game_settings {
 
     int scroll_speed;
     // misc settings
-    etooltip_flag tooltips;
+    e_tooltip_mode tooltips_mode;
     bool monthly_autosave;
     bool warnings;
     bool gods_enabled;
@@ -124,7 +124,6 @@ struct game_settings {
     void increase_scroll_speed() { scroll_speed = calc_bound(scroll_speed + 10, 0, 100); }
     void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }
 
-    void toggle_tooltips();
     void toggle_warnings() { warnings = !warnings; }
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }
     void toggle_popup_messages(int flag) { popup_messages ^= flag; }

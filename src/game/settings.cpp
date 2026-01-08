@@ -39,7 +39,7 @@ void game_settings::load_default_settings() {
     scroll_speed = 70;
 
     difficulty.set(DIFFICULTY_HARD);
-    tooltips = e_tooltip_show_full;
+    tooltips_mode = e_tooltip_mode_full;
     warnings = true;
     gods_enabled = true;
     victory_video = false;
@@ -66,7 +66,7 @@ void game_settings::load_settings(buffer* buf) {
     last_advisor = buf->read_i32();
     last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4);                      // int save_game_mission_id;
-    tooltips = buf->read_i32();
+    tooltips_mode = (e_tooltip_mode)buf->read_i32();
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
@@ -130,7 +130,7 @@ void game_settings::save() {
     buf->skip(16);
     buf->write_i32(last_advisor);
     buf->skip(4); // int save_game_mission_id;
-    buf->write_i32(tooltips);
+    buf->write_i32(tooltips_mode);
     buf->skip(4); // int starting_kingdom;
     buf->skip(4); // int personal_savings_last_mission;
     buf->skip(4); // int current_mission_id;
@@ -172,11 +172,6 @@ sound_settings* game_settings::get_sound(int type) {
     default:
         return 0;
     }
-}
-
-void game_settings::toggle_tooltips() {
-    auto& data = g_settings;
-    data.tooltips = (data.tooltips + 1) % e_tooltip_count;
 }
 
 void game_settings::set_player_name(const uint8_t* name) {
