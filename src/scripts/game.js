@@ -17,5 +17,7 @@ game {
 
 game_features {
     __property_getter: function(property) { return __game_feature_get(property) }
+    __property_setter: function(property, value) { __game_feature_set(property, value) }
     @gameui_hide_new_game_top_menu {}
+    @gameui_empire_city_old_names {}
 }
