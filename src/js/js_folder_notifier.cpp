@@ -13,14 +13,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include "platform/platform.h"
 
 #include <SDL.h>
 #include <SDL_thread.h>
 #include <filesystem>
 
-#ifdef _WIN32
-#include <Windows.h>
-#else
+#ifndef _WIN32
 #define MAX_PATH 260
 #endif
 
@@ -40,145 +39,14 @@ struct notifier_data_t {
 
 notifier_data_t g_script_notifier;
 
-#ifdef _WIN32
+// Platform-specific implementations are in:
+// - js_folder_notifier_win.cpp (Windows)
+// - js_folder_notifier_macos.cpp (macOS)
+// - js_folder_notifier_linux.cpp (Linux/Android)
+// Fallback implementation for other platforms is below
 
-int js_vm_notifier_watch_directory(const char *lpDir) {
-    DWORD dwWaitStatus;
-    HANDLE dwChangeHandles[2];
-
-    // Watch the directory for file creation and deletion.
-    dwChangeHandles[0] = FindFirstChangeNotification(
-                             lpDir,                         // directory to watch
-                             FALSE,                         // do not watch subtree
-                             FILE_NOTIFY_CHANGE_SIZE); // watch file modify
-
-    if (dwChangeHandles[0] == INVALID_HANDLE_VALUE) {
-        logs::info("FindFirstChangeNotification function failed er=%x", GetLastError());
-        return 0;
-    }
-
-    // Watch the subtree for directory creation and deletion.
-    dwChangeHandles[1] = FindFirstChangeNotification(
-                             lpDir,                         // directory to watch
-                             FALSE,                          // watch the subtree
-                             FILE_NOTIFY_CHANGE_LAST_WRITE);  // watch file size change
-
-    if (dwChangeHandles[1] == INVALID_HANDLE_VALUE) {
-        logs::info("FindFirstChangeNotification function failed er=%x", GetLastError());
-        return 0;
-    }
-
-
-    // Make a final validation check on our handles.
-    if ((dwChangeHandles[0] == NULL) || (dwChangeHandles[1] == NULL)) {
-        logs::info("Unexpected NULL from FindFirstChangeNotification er=%x", GetLastError());
-        return 0;
-    }
-
-    // Change notification is set. Now wait on both notification
-    // handles and refresh accordingly.
-    while (1) {
-        // Wait for notification.
-
-        logs::info("Waiting for notification...", 0, 0);
-
-        dwWaitStatus = WaitForMultipleObjects(2, dwChangeHandles, FALSE, INFINITE);
-
-        switch (dwWaitStatus) {
-            case WAIT_OBJECT_0:
-
-                // A file was created, renamed, or deleted in the directory.
-                // Refresh this directory and restart the notification.
-
-                if ( FindNextChangeNotification(dwChangeHandles[0]) == FALSE ) {
-                    logs::info("FindNextChangeNotification function failed er=%x", GetLastError());
-                    return 0;
-                }
-                return 2;
-                break;
-
-            case WAIT_OBJECT_0 + 1:
-
-                // A directory was created, renamed, or deleted.
-                // Refresh the tree and restart the notification.
-
-                if (FindNextChangeNotification(dwChangeHandles[1]) == FALSE ) {
-                    logs::info("FindNextChangeNotification function failed er=%x", GetLastError());
-                    return 0;
-                }
-                return 3;
-                break;
-
-            case WAIT_TIMEOUT:
-
-                // A timeout occurred, this would happen if some value other
-                // than INFINITE is used in the Wait call and no changes occur.
-                // In a single-threaded environment you might not want an
-                // INFINITE wait.
-
-                logs::info("No changes in the timeout period.");
-                break;
-
-            default:
-                logs::info("Unhandled dwWaitStatus.");
-                return 0;
-        }
-    }
-
-    return 1;
-}
-
-#elif defined(__linux__) || defined(__android__)
-#include <sys/inotify.h>
-#include <unistd.h>
-
-#define EVENT_SIZE  ( sizeof (struct inotify_event) )
-#define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
-int js_vm_notifier_watch_directory(const char *lpDir)
-{
-    int length, i = 0;
-    int fd;
-    int wd;
-    char buffer[BUF_LEN];
-
-    fd = inotify_init();
-
-    if ( fd < 0 ) {
-        logs::info( "WARNING !!! Cant init inotify for %s", lpDir);
-        return 0;
-    }
-
-    wd = inotify_add_watch( fd, lpDir, IN_MODIFY );
-    length = read( fd, buffer, BUF_LEN );
-
-    if ( length < 0 ) {
-        logs::info( "WARNING !!! Cant read inotify event %s", lpDir);
-        return 0;
-    }
-
-    int result = 1;
-    while ( i < length ) {
-        struct inotify_event *event = ( struct inotify_event * ) &buffer[ i ];
-        if ( event->len ) {
-            if ( event->mask & IN_MODIFY ) {
-                if ( event->mask & IN_ISDIR ) {
-                    logs::info( "WARNING !!! The directory was modified %s", event->name);
-                } else {
-                    logs::info( "WARNING !!! The file was modified %s", event->name);
-                    result = 2;
-                    break;
-                }
-            }
-        }
-        i += EVENT_SIZE + event->len;
-    }
-
-    inotify_rm_watch( fd, wd );
-    close( fd );
-
-    return result;
-}
-#else
+#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_MACOSX) && !defined(__APPLE__) && !defined(__linux__) && !defined(__android__)
+// Fallback implementation for other platforms
 int js_vm_notifier_watch_directory(const char *lpDir)
 {
     return 1;
