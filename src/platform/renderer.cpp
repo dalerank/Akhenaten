@@ -6,7 +6,6 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
-#include "platform/platform.h"
 #include "graphics/image_groups.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
@@ -774,6 +773,15 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *b
 
     return nullptr;
 }
+
+bool graphics_renderer_interface::is_fullscreen_only() {
+#if defined(GAME_PLATFORM_ANDROID) || defined(__SWITCH__) || defined(__vita__)
+    return true;
+#else
+    return false;
+#endif
+}
+
 
 float graphics_renderer_interface::scale() {
     return g_renderer_data.global_render_scale;

@@ -119,7 +119,7 @@ int platform_screen_create(const xstring& title, const xstring& renderer, bool f
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     vec2i wsize;
-    if (!fullscreen && system_is_fullscreen_only()) {
+    if (!fullscreen && g_render.is_fullscreen_only()) {
         fullscreen = true;
     }
 
@@ -176,7 +176,7 @@ int platform_screen_create(const xstring& title, const xstring& renderer, bool f
 
     // For emscripten and fullscreen-only platforms, always get the actual window size
     // as the canvas size may differ from the requested size
-    if (system_is_fullscreen_only() || platform.is_emscripten()) {
+    if (g_render.is_fullscreen_only() || platform.is_emscripten()) {
         SDL_GetWindowSize(g_screen.window, &wsize.x, &wsize.y);
     }
 
@@ -284,7 +284,7 @@ void platform_screen_set_fullscreen(void) {
 }
 
 void platform_screen_set_windowed() {
-    if (system_is_fullscreen_only()) {
+    if (g_render.is_fullscreen_only()) {
         return;
     }
     auto wsize = g_settings.display_size;
@@ -305,7 +305,7 @@ void platform_screen_set_windowed() {
 }
 
 void platform_screen_set_window_size(int logical_width, int logical_height) {
-    if (system_is_fullscreen_only()) {
+    if (g_render.is_fullscreen_only()) {
         return;
     }
     int pixel_width = scale_logical_to_pixels(logical_width);
@@ -361,14 +361,6 @@ void system_set_mouse_position(int* x, int* y) {
     SDL_WarpMouseInWindow(g_screen.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
 }
 
-int system_is_fullscreen_only(void) {
-#if defined(GAME_PLATFORM_ANDROID) || defined(__SWITCH__) || defined(__vita__)
-    return 1;
-#else
-    return 0;
-#endif
-}
-
 void system_get_max_resolution(int* width, int* height) {
     SDL_DisplayMode mode;
     int index = SDL_GetWindowDisplayIndex(g_screen.window);
@@ -376,20 +368,3 @@ void system_get_max_resolution(int* width, int* height) {
     *width = scale_pixels_to_logical(mode.w);
     *height = scale_pixels_to_logical(mode.h);
 }
-
-// void platform_screen_render(void) {
-//     if (config_get(CONFIG_UI_ZOOM)) {
-//         SDL_RenderClear(SDL.renderer);
-//         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-//                                         &city_texture_position.renderer.w, &city_texture_position.offset.h);
-//         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-//                                       &city_texture_position.offset.w, &city_texture_position.offset.h);
-//         SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY),
-//                           screen_width() * 4 * 2);
-//         SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset,
-//         &city_texture_position.renderer);
-//     }
-//     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
-//     SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
-//     SDL_RenderPresent(SDL.renderer);
-// }

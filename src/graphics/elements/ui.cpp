@@ -1342,10 +1342,10 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     }
 }
 
-void ui::emenu_header::load_items(archive arch, pcstr section) {
+void ui::emenu_header::load_items(archive arch, pcstr section, element::items& elements) {
     impl.items.clear();
 
-    arch.r_objects(section, [this] (pcstr key, archive elem) {
+    arch.r_objects(section, [&] (pcstr key, archive elem) {
         pcstr type = elem.r_string("type");
         assert(!strcmp(type, "menu_item"));
 
@@ -1359,6 +1359,10 @@ void ui::emenu_header::load_items(archive arch, pcstr section) {
         item.hidden = elem.r_bool("hidden");
         item._js_onclick = elem.r_function("onclick");
         impl.items.push_back(item);
+        auto proxy_item = std::make_shared<emenu_header_item_proxy>();
+        proxy_item->id = item.id;
+        proxy_item->impl = &impl.items.back();
+        elements.push_back(proxy_item);
     });
 }
 

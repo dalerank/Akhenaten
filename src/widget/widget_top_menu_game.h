@@ -35,6 +35,7 @@ struct top_menu_widget_t : autoconfig_window {
 
     top_menu_widget_t() : autoconfig_window("top_menu_widget") {}
 
+    virtual void archive_load(archive arch) override;
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual void draw_foreground(UiFlags flags) override;
     virtual void ui_draw_foreground(UiFlags flags) override {}
@@ -70,16 +71,6 @@ struct top_menu_widget_t : autoconfig_window {
     void debug_opt_text(int opt, bool v);
     void debug_render_text(int opt, const xstring name, bool v);
 
-    virtual void archive_load(archive arch) override {
-        autoconfig_window::archive_load(arch);
-
-        for (auto &header : headers.elements) {
-            auto impl = header->dcast_menu_header();
-            if (impl) {
-                impl->load_items(arch, header->id.c_str());
-            }
-        }
-    }
 
     void menu_item_update(pcstr header, int item, pcstr text);
     void update_date(event_advance_day);

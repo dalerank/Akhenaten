@@ -61,7 +61,7 @@ void js_loc_native(js_State *J) {
 }
 
 void js_game_load_text(js_State *J) {
-    const char *path = js_tostring(J, 1);
+    pcstr path = js_tostring(J, 1);
     char *text = 0;
 
     vfs::reader ftext = vfs::file_open(path, "rt");

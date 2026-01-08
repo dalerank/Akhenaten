@@ -6,17 +6,6 @@
 struct display_size;
 
 /**
- * Center window
- */
-void system_center(void);
-
-/**
- * Returns whether the window must always be fullscreen
- * @return true when only fullscreen can be used, false otherwise
- */
-int system_is_fullscreen_only(void);
-
-/**
  * Set cursor to the specified cursor in @link input/cursor.h @endlink
  * @param cursor_id Cursor to set
  */
@@ -94,8 +83,3 @@ void system_move_mouse_cursor(int delta_x, int delta_y);
  * changed to fit in the window
  */
 void system_set_mouse_position(int* x, int* y);
-
-/**
- * Exit the game
- */
-void system_exit(void);

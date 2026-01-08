@@ -255,6 +255,7 @@ struct element {
     virtual void font(int) {}
     virtual e_font font() const { return FONT_INVALID; }
     virtual e_font font_hover() const { return FONT_INVALID; }
+    virtual void set_enabled(bool v) { enabled = v; }
     virtual void width(int v) { size.x = v; }
     virtual int value() const { return 0; }
     virtual void select(bool v) {}
@@ -473,6 +474,13 @@ struct escrollable_list : public element {
     const scrollable_list* get_panel() const { return panel.get(); }
 };
 
+struct emenu_header_item_proxy : public element {
+    menu_item* impl;
+
+    virtual void text(pcstr text) override { if (impl) { impl->text = text; } }
+    virtual void set_enabled(bool v) override { if (impl) { impl->hidden = !v; enabled = v; } }
+};
+
 struct emenu_header : public element {
     menu_header impl;
     xstring _tooltip;
@@ -481,7 +489,7 @@ struct emenu_header : public element {
     ~emenu_header();
 
     virtual void load(archive elem, element *parent, items &elems) override;
-            void load_items(archive elem, pcstr section);
+            void load_items(archive elem, pcstr section, element::items& elements);
     virtual void draw(UiFlags flags) override;
     virtual void font(int v) override { _font = (e_font)v; }
     virtual void text(pcstr text) override { impl.text = text; }

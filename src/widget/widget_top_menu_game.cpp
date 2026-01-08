@@ -117,6 +117,22 @@ void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
     menu_item_update("debug_render", opt, text);
 }
 
+void top_menu_widget_t::archive_load(archive arch) {
+    autoconfig_window::archive_load(arch);
+
+    svector<ui::emenu_header *, 16> headers_elms;
+    for (auto &header : headers.elements) {
+        auto impl = header->dcast_menu_header();
+        if (impl) {
+            headers_elms.push_back(impl);
+        }
+    }
+
+    for (auto header : headers_elms) {
+        header->load_items(arch, header->id.c_str(), headers.elements);
+    }
+}
+
 void top_menu_widget_t::debug_opt_text(int opt, bool v) {
     struct option { pcstr on, off; };
     static option debug_text_opt[e_debug_opt_size] = {
@@ -453,17 +469,11 @@ void top_menu_widget_t::advisors_handle(menu_item &item) {
 }
 
 void top_menu_widget_t::sub_menu_init() {
-    ui.event(top_menu_widget_init{ pos });
+    headers.event(top_menu_widget_init{ pos });
 
     auto *options = headers["options"].dcast_menu_header();
     if (options) {
-        options->item(0).hidden = system_is_fullscreen_only();
         options->onclick([this] (auto &h) { options_handle(h); });
-    }
-
-    auto *file = headers["file"].dcast_menu_header();
-    if (file) {
-        file->item("new_game").hidden = !!game_features::gameui_hide_new_game_top_menu;
     }
 
     auto *help = headers["help"].dcast_menu_header();

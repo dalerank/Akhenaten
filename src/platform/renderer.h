@@ -104,6 +104,13 @@ struct graphics_renderer_interface {
 
     bool save_texture_to_file(pcstr filename, SDL_Texture* tex, e_file_format file_format = FILE_FORMAT_BMP);
     float scale();
+
+    /**
+     * Returns whether the window must always be fullscreen
+     * @return true when only fullscreen can be used, false otherwise
+     */
+    bool is_fullscreen_only();
+
     SDL_Renderer *renderer();
     SDL_Window *window();
 };

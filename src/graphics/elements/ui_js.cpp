@@ -55,7 +55,7 @@ ANK_FUNCTION_1(__ui_element_get_enabled)
 void __ui_element_set_enabled(pcstr element_id, bool v) {
     ui::widget *w = ui::get_current_widget();
     if (w && element_id) {
-        (*w)[element_id].enabled = v;
+        (*w)[element_id].set_enabled(v);
     }
 }
 ANK_FUNCTION_2(__ui_element_set_enabled)
