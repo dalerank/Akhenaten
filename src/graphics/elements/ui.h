@@ -475,7 +475,11 @@ struct escrollable_list : public element {
 };
 
 struct emenu_header_item_proxy : public element {
-    menu_item* impl;
+    menu_item* impl = nullptr;
+    xstring _onclick_js;
+    xstring _textfn_js;
+
+    ~emenu_header_item_proxy();
 
     virtual void text(pcstr text) override { if (impl) { impl->text = text; } }
     virtual void set_enabled(bool v) override { if (impl) { impl->hidden = !v; enabled = v; } }
@@ -485,6 +489,9 @@ struct emenu_header : public element {
     menu_header impl;
     xstring _tooltip;
     e_font _font;
+
+    xstring _onclick_js;
+    xstring _textfn_js;
 
     ~emenu_header();
 

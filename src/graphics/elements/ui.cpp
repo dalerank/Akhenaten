@@ -1321,10 +1321,14 @@ void ui::etext::draw(UiFlags flags) {
     }
 }
 
+ui::emenu_header_item_proxy::~emenu_header_item_proxy() {
+    js_unref_function(_onclick_js);
+    js_unref_function(_textfn_js);
+}
+
 ui::emenu_header::~emenu_header() {
-    for (auto &it : impl.items) {
-        js_unref_function(it._js_onclick);
-    }
+    js_unref_function(_onclick_js);
+    js_unref_function(_textfn_js);
 }
 
 void ui::emenu_header::load(archive arch, element *parent, items &elems) {
@@ -1336,7 +1340,23 @@ void ui::emenu_header::load(archive arch, element *parent, items &elems) {
     _font = arch.r_type<e_font>("font", FONT_NORMAL_BLACK_ON_LIGHT);
     _tooltip = arch.r_string("tooltip");
 
+    _onclick_js = arch.r_function("onclick");
+    _textfn_js = arch.r_function("textfn");
+
     impl.text = arch.r_string("text");
+
+    if (!!_onclick_js) {
+        impl._onclick = [jsref = _onclick_js] (auto &item) {
+            js_call_function_with_result(jsref, item.parameter, 0);
+        };
+    }
+
+    if (!!_textfn_js) {
+        impl._textfn = [jsref = _textfn_js] () {
+            return js_call_function_with_result(jsref, 0, 0);
+        };
+    }
+
     if (!!impl.text && impl.text[0u] == '#') {
         impl.text = lang_text_from_key(impl.text.c_str());
     }
@@ -1349,7 +1369,10 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
         pcstr type = elem.r_string("type");
         assert(!strcmp(type, "menu_item"));
 
-        menu_item item;
+        _onclick_js = elem.r_function("onclick");
+        _textfn_js = elem.r_function("textfn");
+
+        menu_item& item = impl.items.emplace_back();
         item.id = key;
         item.text = elem.r_string("text");
         if (!!item.text && item.text[0u] == '#') {
@@ -1357,18 +1380,32 @@ void ui::emenu_header::load_items(archive arch, pcstr section, element::items& e
         }
         item.parameter = elem.r_int("parameter");
         item.hidden = elem.r_bool("hidden");
-        item._js_onclick = elem.r_function("onclick");
-        item._js_text = elem.r_function("textfn");
-        impl.items.push_back(item);
         auto proxy_item = std::make_shared<emenu_header_item_proxy>();
         proxy_item->id = item.id;
         proxy_item->impl = &impl.items.back();
         elements.push_back(proxy_item);
+
+        if (!!_onclick_js) {
+            item._onclick = [jsref = _onclick_js] (int param) {
+                js_call_function_with_result(jsref, param, 0);
+            };
+        }
+
+        if (!!_textfn_js) {
+            item._textfn = [jsref = _textfn_js] (int param) {
+                return js_call_function_with_result(jsref, param, 0);
+            };
+        }
     });
 }
 
 void ui::emenu_header::draw(UiFlags flags) {
-    lang_text_draw(impl.text.c_str(), pos, _font);
+    pcstr text = impl.text.c_str();
+    if (impl._textfn) {
+        text = impl._textfn();
+    }
+
+    lang_text_draw(text, pos, _font);
 }
 
 int ui::emenu_header::text_width() {
