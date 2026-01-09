@@ -26,10 +26,6 @@ struct top_menu_widget_t : autoconfig_window {
     int sidebar_offset;
     image_desc background;
 
-    struct {
-        int population = 0;
-    } states;
-
     ui::widget headers;
 
     top_menu_widget_t() : autoconfig_window("top_menu_widget") {}

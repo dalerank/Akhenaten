@@ -1,38 +1,5 @@
 log_info("akhenaten: ui top menu config started")
 
-function menu_item(config) { return __extend({ type : "menu_item"}, config) }
-function menu_header(config) { return __extend({ type : "menu_header"}, config) }
-
-[event=top_menu_widget_init]
-function top_menu_widget_open_submenu(window) {
-	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
-	window.display_options.enabled = !game.screen.is_fullscreen_only
-}
-
-[event=top_menu_widget_draw]
-function top_menu_widget_draw(window) {
-	var treasury = city.finance.treasury;
-	
-    window.funds.font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE
-    window.funds.text_color = treasury < 0 ? COLOR_FONT_RED : COLOR_WHITE
-    window.funds.text = __loc(6, 0) + " " + treasury
-	
-	window.date.text = top_menu_widget.date_str
-}
-
-[event=event_advance_day]
-function top_menu_update_date_text(ev) {
-	var month_str = __loc(25, ev.month);
-    if (ev.year >= 0) {
-    	top_menu_widget.date_str = game.locale_year_before_ad
-			 							? _format("{0} {1} AD", month_str, ev.year)
-			                            : _format("{0} AD {1}", month_str, ev.year);
-
-    }  else {	
-		top_menu_widget.date_str = _format("{0} {1} BC", month_str, -ev.year);
-	}
-}
-
 function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
 function top_menu_autosave_options_toggle(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
 
@@ -63,6 +30,10 @@ function top_menu_debug_buildings_toggle(p1, p2) {
 	mode = (mode == e_debug_render_building) ? e_debug_render_none : e_debug_render_building;
 	game.debug_render_mode = mode;
 }
+
+function top_menu_date_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_date_display", -1) }
+function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_population_display", -1) }
+function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
 
 top_menu_widget {
 	offset [10, 6]
@@ -157,11 +128,52 @@ top_menu_widget {
 
 	ui {
 		background 		: dummy({size[sw(0), 30], fill_width: true})
-		date            : link({pos[0, 2]
-			                    margin{right: -110}, size[117, 20]
-								hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] })
+		date            : link({margin{right: -110}, size[117, 20]
+							    onrclick: top_menu_date_explanation
+								tooltip[68, 63] })
 
-		population   	: link({pos[0, 2], margin{right: -310}, size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] })
-		funds        	: link({pos[0, 2], margin{right: -440}, size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 61] })
+		population   	: link({margin{right: -310}, size[117, 20]
+							    onrclick: top_menu_population_explanation
+								tooltip[68, 62] })
+
+		funds        	: link({margin{right: -440}, size[117, 20]
+							    onrclick: top_menu_funds_explanation
+			                    tooltip[68, 61] })
+	}
+}
+
+[event=top_menu_widget_init]
+function top_menu_widget_open_submenu(window) {
+	window.new_game.enabled = !game_features.gameui_hide_new_game_top_menu
+	window.display_options.enabled = !game.screen.is_fullscreen_only
+}
+
+[event=top_menu_widget_draw]
+function top_menu_widget_draw(window) {
+	var treasury = city.finance.treasury;
+	
+    window.funds.font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE
+    window.funds.text_color = treasury < 0 ? COLOR_FONT_RED : COLOR_WHITE
+    window.funds.text = __loc(6, 0) + " " + treasury
+	
+	window.date.text = top_menu_widget.date_str
+	window.population.text = top_menu_widget.population_str
+}
+
+[event=event_population_changed]
+function top_menu_update_population_text(ev) {
+	top_menu_widget.population_str = __loc(6, 1) + " " + ev.value;
+}
+
+[event=event_advance_day]
+function top_menu_update_date_text(ev) {
+	var month_str = __loc(25, ev.month);
+    if (ev.year >= 0) {
+    	top_menu_widget.date_str = game.locale_year_before_ad
+			 							? _format("{0} {1} AD", month_str, ev.year)
+			                            : _format("{0} AD {1}", month_str, ev.year);
+
+    }  else {	
+		top_menu_widget.date_str = _format("{0} {1} BC", month_str, -ev.year);
 	}
 }

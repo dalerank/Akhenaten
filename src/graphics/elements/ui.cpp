@@ -1445,6 +1445,7 @@ void ui::earrow_button::draw(UiFlags flags) {
 
 ui::egeneric_button::~egeneric_button() {
     js_unref_function(_js_onclick_ref);
+    js_unref_function(_js_onrclick_ref);
     js_unref_function(_js_textfn_ref);
 }
 
@@ -1457,7 +1458,7 @@ void ui::egeneric_button::draw(UiFlags gflags) {
                       | (_selected ? UiFlags_Selected : UiFlags_None)
                       | (readonly ? UiFlags_Readonly : UiFlags_None);
 
-    xstring button_text = _text;
+    pcstr button_text = _text.c_str();
     if (!_js_textfn_ref.empty()) {
         pcstr dynamic_text = js_call_function_with_result(_js_textfn_ref, param1, param2);
         if (dynamic_text && *dynamic_text) {
@@ -1469,24 +1470,21 @@ void ui::egeneric_button::draw(UiFlags gflags) {
     generic_button *btn = nullptr;
     switch (mode) {
     case 0:
-        btn = &ui::button(button_text.c_str(), pos, size, { _font, _font_hover }, flags);
+        btn = &ui::button(button_text, pos, size, { _font, _font_hover }, flags);
         break;
 
     case 1:
-        btn = &ui::large_button(button_text.c_str(), pos, size, _font);
+        btn = &ui::large_button(button_text, pos, size, _font);
         break;
     }
 
     const bool clickable = !darkened && !readonly;
     
     // Set up click handler - prefer JS callback if available, otherwise use C++ callback
-    if (clickable && !_js_onclick_ref.empty()) {
-        btn->onclick([this] (int, int) {
-            js_call_function(_js_onclick_ref);
-        });
-    }
-    if (clickable && _func && _js_onclick_ref.empty()) btn->onclick(_func);
-    if (clickable && _rfunc) btn->onrclick(_rfunc);
+    if (clickable && !!_js_onclick_ref) { btn->onclick([this] (int, int) { js_call_function(_js_onclick_ref); }); }
+    if (clickable && !!_js_onrclick_ref) { btn->onrclick([this] (int, int) { js_call_function(_js_onrclick_ref); }); }
+    if (clickable && _func && !_js_onclick_ref) btn->onclick(_func);
+    if (clickable && _rfunc && !_js_onrclick_ref) btn->onrclick(_rfunc);
 
     const vec2i offset = g_state.offset();
     if (clickable && is_button_hover(*btn, offset)) {
@@ -1506,6 +1504,7 @@ void ui::egeneric_button::load(archive arch, element *parent, items &elems) {
     _hbody = arch.r_bool("hbody", true);
     _split = arch.r_bool("split", false);
     _js_onclick_ref = arch.r_function("onclick");
+    _js_onrclick_ref = arch.r_function("onrclick");
     _js_textfn_ref = arch.r_function("textfn");
     param1 = arch.r_int("param1");
     param2 = arch.r_int("param2");

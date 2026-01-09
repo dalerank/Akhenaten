@@ -66,19 +66,6 @@ void top_menu_widget_t::on_mission_start() {
 }
 
 void top_menu_widget_t::init() {
-    ui["date"].onrclick([] {
-        window_message_dialog_show("message_game_control_date_display", -1, window_city_draw_all);
-    });
-
-    ui["population"].onrclick([] {
-        window_message_dialog_show("message_game_control_population_display", -1, window_city_draw_all);
-    });
-
-    ui["funds"].onrclick([] {
-        window_message_dialog_show("message_game_control_money_display_window", -1, window_city_draw_all);
-    });
-
-    events::subscribe([this] (event_population_changed ev) { states.population = ev.value; });
 }
 
 void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
@@ -359,7 +346,6 @@ void top_menu_widget_t::draw_foreground(UiFlags flags) {
     offset_rotate = s_width - offset_rotate_basic;
 
     // "ui" is the Debens, Population and Date texts
-    ui["population"].text_var("%s %d", ui::str(6, 1), states.population);
     ui.event(top_menu_widget_draw{ pos });
     ui.begin_widget({ 0, 0 });
     ui.draw();
