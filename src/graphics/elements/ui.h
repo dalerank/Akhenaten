@@ -248,6 +248,7 @@ struct element {
     }
     inline void text(int font, pcstr v) { this->font(font); this->text(v); }
     virtual void text_color(color) {}
+    virtual color text_color() const { return 0; }
     virtual void image(int) {}
     virtual void image(const animation_t&) {}
     virtual void image(const image_desc&) {}

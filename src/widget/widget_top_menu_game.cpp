@@ -46,7 +46,9 @@ static void button_rotate_reset(int param1, int param2);
 static void button_rotate_right(int param1, int param2);
 
 struct top_menu_widget_init { vec2i pos; };
+struct top_menu_widget_draw { vec2i pos; };
 ANK_REGISTER_STRUCT_WRITER(top_menu_widget_init, pos);
+ANK_REGISTER_STRUCT_WRITER(top_menu_widget_draw, pos);
 
 top_menu_widget_t ANK_VARIABLE(top_menu_widget);
 
@@ -78,7 +80,6 @@ void top_menu_widget_t::init() {
 
     events::subscribe([this] (event_population_changed ev) { states.population = ev.value; });
     events::subscribe([this] (event_advance_day ev) { update_date(ev); });
-    events::subscribe([this] (event_finance_changed ev) { update_finance(ev); });
 }
 
 void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
@@ -102,14 +103,6 @@ void top_menu_widget_t::update_date(event_advance_day ev) {
     }
 
     ui["date"] = text;
-}
-
-void top_menu_widget_t::update_finance(event_finance_changed ev) {
-    color treasure_color = ev.value < 0 ? COLOR_FONT_RED : COLOR_WHITE;
-    e_font treasure_font = (ev.value >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE);
-    ui["funds"].font(treasure_font);
-    ui["funds"].text_color(treasure_color);
-    ui["funds"].text_var("%s %d", ui::str(6, 0), ev.value);
 }
 
 void top_menu_widget_t::archive_load(archive arch) {
@@ -382,6 +375,7 @@ void top_menu_widget_t::draw_foreground(UiFlags flags) {
 
     // "ui" is the Debens, Population and Date texts
     ui["population"].text_var("%s %d", ui::str(6, 1), states.population);
+    ui.event(top_menu_widget_draw{ pos });
     ui.begin_widget({ 0, 0 });
     ui.draw();
     ui.end_widget();

@@ -21,15 +21,6 @@
 using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
 const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
 
-int __city_finance_income(int type) {
-    switch (type) {
-    case e_finance_value_gold_delivered: return g_city.finance.this_year.income.gold_delivered;
-    }
-
-    return 0;
-}
-ANK_FUNCTION_1(__city_finance_income)
-
 void city_finance_t::init() {
     wages_kingdome = 30;
     wages = 30;

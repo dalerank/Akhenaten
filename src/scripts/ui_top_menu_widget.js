@@ -9,6 +9,15 @@ function top_menu_widget_open_submenu(window) {
 	window.display_options.enabled = !game.screen.is_fullscreen_only
 }
 
+[event=top_menu_widget_draw]
+function top_menu_widget_draw(window) {
+	var treasury = city.finance.treasury;
+	
+    window.funds.font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE
+    window.funds.text_color = treasury < 0 ? COLOR_FONT_RED : COLOR_WHITE
+    window.funds.text = __loc(6, 0) + " " + treasury
+}
+
 function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
 function top_menu_autosave_options_toggle(p1, p2) { game.monthly_autosave = !game.monthly_autosave }
 

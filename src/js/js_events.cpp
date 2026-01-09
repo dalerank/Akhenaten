@@ -2,6 +2,7 @@
 
 #include "game/game_events.h"
 #include "city/city_maintenance.h"
+#include "city/city_finance.h"
 #include "game/mission.h"
 #include "building/building_granary.h"
 #include "building/building_storage_yard.h"
@@ -29,3 +30,4 @@ ANK_SCRIPT_EVENT(event_city_disease, absday)
 ANK_SCRIPT_EVENT(event_warehouse_filled, bid)
 ANK_SCRIPT_EVENT(event_update_mission_goal, mid)
 ANK_SCRIPT_EVENT(event_register_mission_animals, mid)
+ANK_SCRIPT_EVENT(event_finance_changed, value)
