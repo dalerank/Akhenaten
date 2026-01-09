@@ -27,7 +27,7 @@
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 #include "widget/city/ornaments.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 #include "sound/sound_building.h"

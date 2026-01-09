@@ -22,7 +22,6 @@
 #include "widget/widget_minimap.h"
 #include "widget/sidebar/common.h"
 #include "widget/widget_sidebar_extra.h"
-#include "window/advisors.h"
 #include "window/window_build_menu.h"
 #include "window/window_city.h"
 #include "window/window_empire.h"

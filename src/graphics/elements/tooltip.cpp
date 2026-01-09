@@ -13,7 +13,6 @@
 #include "io/gamefiles/lang.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
-#include "window/advisors.h"
 
 #include "graphics/view/lookup.h"
 #include "city/constants.h"
