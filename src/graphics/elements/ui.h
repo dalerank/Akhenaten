@@ -516,6 +516,7 @@ struct egeneric_button : public elabel {
     std::function<void(int, int)> _func, _rfunc;
     xstring _tooltip;
     xstring _js_onclick_ref;  // JS function reference for onclick
+    xstring _js_onrclick_ref;  // JS function reference for onrclick
     xstring _js_textfn_ref;  // JS function reference for text generation
     uint8_t _border;
     bool _hbody;

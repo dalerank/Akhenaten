@@ -35,6 +35,7 @@ ui.label = function(text, pos, font) {
 }
 
 ui.window_city_show = __ui_window_city_show
+ui.window_message_dialog_show = __ui_window_message_dialog_show
 
 function ui_create_element_proxy(elementId) {
     var proxy = {};
@@ -106,13 +107,15 @@ function image_button(config) { return __extend({type:"image_button"}, config) }
 function ok_button(config) { return __extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:0 }, config) }
 function cancel_button(config) { return __extend({type:"image_button", size[39, 26], pack:PACK_GENERAL, id:96, offset:4 }, config) }
 function button(config) { return __extend({type:"generic_button", font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
-function link(config) { return __extend({type:"generic_button", hbody:false, border:false, font : FONT_NORMAL_BLACK_ON_LIGHT}, config) }
+function link(config) { return __extend({type:"generic_button", hbody:false, border:false, font:FONT_NORMAL_BLACK_ON_LIGHT, font_hover:FONT_NORMAL_YELLOW,}, config) }
 function arrowup(config) { return __extend({type:"arrow_button", down:false}, config) }
 function arrowdown(config) { return __extend({type:"arrow_button", down:true}, config) }
 function background(config) { return __extend({type:"background", down:true}, config) }
 function resource_icon(config) { return __extend({ type : "resource_icon"}, config) }
 function large_button(config) { return __extend({ type : "large_button"}, config) }
 function scrollable_list(config) { return __extend({ type : "scrollable_list"}, config) }
+function menu_item(config) { return __extend({ type : "menu_item"}, config) }
+function menu_header(config) { return __extend({ type : "menu_header"}, config) }
 
 function help_button(config) { var i = image_button({margin{left:14, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, onclick: window_show_help }); return __extend(i, config) }
 function close_button(config) { var i = image_button({margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4, onclick: window_go_back }); return __extend(i, config) }

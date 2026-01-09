@@ -4,6 +4,7 @@
 #include "ui.h"
 #include "graphics/elements/generic_button.h"
 #include "window/window_city.h"
+#include "window/message_dialog_new.h"
 #include "city/city_message.h"
 
 void __ui_draw_image(int imgid, vec2i pos) { ui::eimage(imgid, pos); }
@@ -93,6 +94,11 @@ void __ui_element_set_text_color(pcstr element_id, int v) {
     }
 }
 ANK_FUNCTION_2(__ui_element_set_text_color)
+
+void __ui_window_message_dialog_show(pcstr template_name) {
+    window_message_dialog_show(template_name, -1, nullptr);
+}
+ANK_FUNCTION_1(__ui_window_message_dialog_show)
 
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_ui_objects(js_State *J) {
