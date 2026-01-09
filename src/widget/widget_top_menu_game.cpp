@@ -112,11 +112,6 @@ void top_menu_widget_t::update_finance(event_finance_changed ev) {
     ui["funds"].text_var("%s %d", ui::str(6, 0), ev.value);
 }
 
-void top_menu_widget_t::debug_render_text(int opt, const xstring name, bool v) {
-    bstring128 text(v ? "ON " : "OFF", name.c_str() + 3);
-    menu_item_update("debug_render", opt, text);
-}
-
 void top_menu_widget_t::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
 
@@ -130,19 +125,6 @@ void top_menu_widget_t::archive_load(archive arch) {
 
     for (auto header : headers_elms) {
         header->load_items(arch, header->id.c_str(), headers.elements);
-    }
-}
-
-void top_menu_widget_t::debug_render_change_opt(menu_item &item) {
-    int opt = item.parameter;
-    set_debug_render_mode((opt == debug_render_mode()) ? e_debug_render_none : e_debug_render(opt));
-    auto *render = headers["debug_render"].dcast_menu_header();
-    if (!render) {
-        return;
-    }
-
-    for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
     }
 }
 
@@ -332,26 +314,8 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget_t::set_text_for_debug_render() {
-    auto *render = headers["debug_render"].dcast_menu_header();
-    if (!render) {
-        return;
-    }
-
-    for (int i = 0; i < render->impl.items.size(); ++i) {
-        debug_render_text(i, render->impl.items[i].text, debug_render_mode() == render->impl.items[i].parameter);
-    }
-}
-
 void top_menu_widget_t::sub_menu_init() {
     headers.event(top_menu_widget_init{ pos });
-
-    auto *render = headers["debug_render"].dcast_menu_header();
-    if (render) {
-        render->onclick([this] (auto &h) { debug_render_change_opt(h); });
-    }
-
-    set_text_for_debug_render();
 }
 
 void top_menu_widget_t::sub_menu_draw_background(int flags) {
@@ -483,21 +447,4 @@ void widget_top_menu_handle_input(const mouse* m, const hotkeys* h) {
     if (button_id) { /**/ }
     else if (!!top_menu_widget.open_sub_menu) { top_menu_widget.handle_input_submenu(m, h); }
     else { top_menu_widget.ui_handle_mouse(m); }
-}
-
-int widget_top_menu_get_tooltip_text(tooltip_context* c) {
-    auto& data = top_menu_widget;
-    //if (data.focus_menu_id)
-    //    return 50 + data.focus_menu_id;
-    //
-    //int button_id = get_info_id(c->mpos);
-    //if (button_id) {
-    //    button_id += 1;
-    //}
-    //
-    //if (button_id) {
-    //    return 59 + button_id;
-    //}
-
-    return 0;
 }

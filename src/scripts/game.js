@@ -9,14 +9,16 @@ game {
     @warnings { get: __game_warnings, set: __game_set_warnings }
     @debug_properties { get: __game_debug_properties }
     @writing_video { get: __game_writing_video }
+    @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }
     
     screen {
         @w { get: __game_screen_width }
         @h { get: __game_screen_height }
         @is_fullscreen_only { get: __game_is_fullscreen_only }
     }
-    
+
     toggle_writing_video: __game_toggle_writing_video
+    make_screenshot: __game_make_screenshot
 }
 
 game_features {

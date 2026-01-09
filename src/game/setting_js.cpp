@@ -3,6 +3,7 @@
 #include "js/js_game.h"
 #include "game/game.h"
 #include "platform/renderer.h"
+#include "dev/debug.h"
 #include "game/system.h"
 
 int __game_difficulty() { return game_difficulty(); }
@@ -43,3 +44,9 @@ ANK_FUNCTION(__game_writing_video)
 
 void __game_toggle_writing_video() { game.set_write_video(!game.get_write_video()); }
 ANK_FUNCTION(__game_toggle_writing_video)
+
+int __game_debug_render_mode() { return debug_render_mode(); }
+ANK_FUNCTION(__game_debug_render_mode)
+
+void __game_set_debug_render_mode(int mode) { set_debug_render_mode((e_debug_render)mode); }
+ANK_FUNCTION_1(__game_set_debug_render_mode)
