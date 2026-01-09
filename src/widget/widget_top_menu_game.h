@@ -54,15 +54,12 @@ struct top_menu_widget_t : autoconfig_window {
     void sub_menu_draw_text(const xstring header, const xstring focus_item_id);
     void sub_menu_init();
     void set_text_for_debug_render();
-    void set_text_for_debug_city();
     void item_update_text(pcstr path, pcstr text);
     void header_update_text(pcstr header, pcstr text);
     xstring menu_handle_mouse(const mouse *m, menu_header *menu, xstring &focus_item_id);
     xstring get_subitem(const mouse *m, menu_header &menu);
     void calculate_menu_dimensions(menu_header &menu);
     void debug_render_change_opt(menu_item &item);
-    void debug_change_opt(menu_item &item);
-    void debug_opt_text(int opt, bool v);
     void debug_render_text(int opt, const xstring name, bool v);
 
 

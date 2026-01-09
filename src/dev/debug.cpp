@@ -79,10 +79,8 @@ int debug_range_4 = 0;
 int g_debug_figure_id = 0;
 
 game_debug_t g_debug;
-bool g_debug_show_opts[e_debug_opt_size] = { 0 };
 
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
-const token_holder<e_debug_option, e_debug_show_floods, e_debug_opt_size> ANK_CONFIG_ENUM(e_debug_option_tokens);
 
 declare_console_var_int(debugrender, 0);
 declare_console_var_int(debugbuildingid, 0);
@@ -224,14 +222,6 @@ static int north_tile_grid_offset(int x, int y) {
     }
 
     return grid_offset;
-}
-
-bool get_debug_draw_option(int opt) {
-    return g_debug_show_opts[opt];
-}
-
-void set_debug_draw_option(int opt, bool e) {
-    g_debug_show_opts[opt] = e;
 }
 
 void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
@@ -1198,7 +1188,7 @@ void draw_debug_ui(int x, int y) {
     }
 
     /////// FLOODS
-    if (g_debug_show_opts[e_debug_show_floods]) {
+    if (debug_render_mode() == e_debug_render_grass_flood_order) {
         float _c_curr = g_floods.current_cycle();
         float _c_start = g_floods.start_cycle();
         float _c_end = g_floods.end_cycle();

@@ -1,6 +1,7 @@
 #include "settings.h"
 
 #include "js/js_game.h"
+#include "game/game.h"
 #include "platform/renderer.h"
 #include "game/system.h"
 
@@ -33,3 +34,12 @@ ANK_FUNCTION(__game_warnings)
 
 void __game_set_warnings(bool v) { g_settings.warnings = v; }
 ANK_FUNCTION_1(__game_set_warnings)
+
+bool __game_debug_properties() { return game.debug_properties; }
+ANK_FUNCTION(__game_debug_properties)
+
+bool __game_writing_video() { return game.get_write_video(); }
+ANK_FUNCTION(__game_writing_video)
+
+void __game_toggle_writing_video() { game.set_write_video(!game.get_write_video()); }
+ANK_FUNCTION(__game_toggle_writing_video)

@@ -1,6 +1,6 @@
 #include "keyboard_input.h"
 
-#include "game/cheats.h"
+#include "window/console.h"
 #include "game/game.h"
 #include "game/system.h"
 #include "input/mouse.h"
@@ -382,7 +382,7 @@ void platform_handle_key_down(SDL_KeyboardEvent* event) {
     if (!event->repeat && is_alt_down(event)) {
         switch (event->keysym.sym) {
         case SDLK_x:
-            game_cheat_console();
+            window_show_cheat_console(false);
         }
     }
 }

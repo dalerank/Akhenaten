@@ -27,6 +27,12 @@ function top_menu_open_advisor(advisor, p2) {
 	window_advisors_show_advisor(advisor);
 }
 
+function top_menu_show_console(p1, p2) { window_show_cheat_console(true) }
+function top_menu_make_fullscreenshot(p1, p2) { graphics_save_screenshot(1) }
+function top_menu_make_screenshot(p1, p2) { graphics_save_screenshot(0) }
+function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
+function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
+
 top_menu_widget {
 	offset [10, 6]
 	item_height : 20
@@ -101,12 +107,16 @@ top_menu_widget {
 	}
 
 	debug {
-		floods 			: menu_item({text: "", parameter: e_debug_show_floods})
- 		properties		: menu_item({text: "", parameter: e_debug_show_properties})
- 		show_console    : menu_item({text: "", parameter: e_debug_show_console})
- 		make_screenshot : menu_item({text: "", parameter: e_debug_make_screenshot})
- 		make_full_screenshot : menu_item({text: "", parameter: e_debug_make_full_screenshot})
- 		write_video     : menu_item({text: "", parameter: e_debug_write_video})
+ 		properties		: menu_item({textfn: top_menu_debug_properties_text
+									 onclick: __widget_top_menu_toggle_debug_properties })
+
+ 		make_screenshot : menu_item({text: "Make full screenshot", onclick: top_menu_make_fullscreenshot })
+ 		make_full_screenshot : menu_item({text: "Make screenshot", onclick: top_menu_make_screenshot })
+
+ 		write_video     : menu_item({textfn: top_menu_debug_write_video_text
+			                         onclick: game.toggle_video_writing })
+ 		
+		show_console    : menu_item({text: "Cheat console", onclick: top_menu_show_console })
 	}
 
 	debug_render {

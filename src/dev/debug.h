@@ -17,17 +17,6 @@ extern int debug_range_2;
 extern int debug_range_3;
 extern int debug_range_4;
 
-enum e_debug_option {
-    e_debug_show_floods,
-    e_debug_show_properties,
-    e_debug_show_console,
-    e_debug_make_screenshot,
-    e_debug_make_full_screenshot,
-    e_debug_write_video,
-
-    e_debug_opt_size,
-};
-
 enum e_debug_render {
     e_debug_render_none = 0,
     e_debug_render_building = 1,

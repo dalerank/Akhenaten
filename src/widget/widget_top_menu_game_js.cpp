@@ -20,7 +20,9 @@
 #include "game/undo.h"
 #include "game/settings.h"
 #include "graphics/window.h"
+#include "graphics/screenshot.h"
 #include "io/gamestate/boilerplate.h"
+#include "game/game.h"
 
 pcstr __widget_top_menu_new_game(int, int) {
     widget_top_menu_clear_state();
@@ -165,3 +167,19 @@ pcstr __widget_top_menu_show_about(int, int) {
 ANK_FUNCTION_2(__widget_top_menu_show_about)
 
 ANK_FUNCTION(widget_top_menu_clear_state);
+
+pcstr __widget_top_menu_make_screenshot(int p1, int) {
+    widget_top_menu_clear_state();
+    window_go_back();
+    graphics_save_screenshot(p1 ? SCREENSHOT_FULL_CITY : SCREENSHOT_DISPLAY);
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_make_screenshot)
+
+pcstr __widget_top_menu_toggle_debug_properties(int, int) {
+    game.debug_properties = !game.debug_properties;
+    widget_top_menu_clear_state();
+    window_go_back();
+    return "";
+}
+ANK_FUNCTION_2(__widget_top_menu_toggle_debug_properties)
