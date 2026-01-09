@@ -16,7 +16,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <ShlObj.h>
-#else // Linux
+#else
 #include <unistd.h>
 #include <pwd.h>
 #endif
@@ -224,18 +224,8 @@ ANK_REGISTER_ARGUMENT_HANDLER_WITH_DESC(handle_pos, "--pos x,y", "window pos. Ex
 
 void Arguments::parse(int argc, char** argv) {
     xstring data_dir = std::filesystem::current_path().string().c_str();
-#if defined(GAME_PLATFORM_WIN)
-    auto get_steam_path = [] () {
-        DWORD dwType = REG_SZ;
-        HKEY hKey = 0;
-        char value[1024] = {0};
-        DWORD value_length = 1024;
-        RegOpenKeyA(HKEY_CURRENT_USER, "SOFTWARE\\Valve\\Steam", &hKey);
-        RegQueryValueExA(hKey, "SteamPath", NULL, &dwType, (LPBYTE)&value, &value_length);
-        return bstring256(value);
-    };
 
-    bstring256 steam_path = get_steam_path();
+    vfs::path steam_path = platform.get_steam_path();
     if (!steam_path.empty()) {
         vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
         vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
@@ -245,7 +235,7 @@ void Arguments::parse(int argc, char** argv) {
             data_dir = pharaoh_steam_path.c_str();
         }
     }
-#endif
+
     args_["data_directory"] = bvariant(data_dir);    
     const bool file_exists = arguments::load(*this);
     args_["config_file_exists"] = bvariant(file_exists);
