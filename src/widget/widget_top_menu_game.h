@@ -53,7 +53,6 @@ struct top_menu_widget_t : autoconfig_window {
     void sub_menu_draw_background(int flags);
     void sub_menu_draw_text(const xstring header, const xstring focus_item_id);
     void sub_menu_init();
-    void advisors_handle(menu_item &item);
     void set_text_for_debug_render();
     void set_text_for_debug_city();
     void item_update_text(pcstr path, pcstr text);
