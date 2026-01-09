@@ -35,6 +35,7 @@
 #include "window/sound_options.h"
 #include "widget/widget_sidebar.h"
 #include "widget/widget_city.h"
+#include "window/console.h"
 #include "dev/debug.h"
 
 #include "js/js_game.h"
@@ -129,59 +130,6 @@ void top_menu_widget_t::archive_load(archive arch) {
 
     for (auto header : headers_elms) {
         header->load_items(arch, header->id.c_str(), headers.elements);
-    }
-}
-
-void top_menu_widget_t::debug_opt_text(int opt, bool v) {
-    struct option { pcstr on, off; };
-    static option debug_text_opt[e_debug_opt_size] = {
-        {"Floods ON", "Floods OFF"},
-        {"Properties ON", "Properties OFF"},
-        {"Show console", "Show console"},
-        {"Screenshot", "Screenshot"},
-        {"Full Screenshot", "Full Screenshot"},
-        {"Write Video ON", "Write Video OFF"},
-    };
-    const auto &current = debug_text_opt[opt];
-    menu_item_update("debug", opt, v ? current.on : current.off);
-}
-
-void top_menu_widget_t::debug_change_opt(menu_item &item) {
-    int opt = item.parameter;
-    switch (opt) {
-    case e_debug_show_console: 
-        game_cheat_console(true); 
-        break;
-
-    case e_debug_make_screenshot: 
-        widget_top_menu_clear_state();
-        window_go_back();
-        graphics_save_screenshot(SCREENSHOT_DISPLAY);
-        break;
-
-    case e_debug_make_full_screenshot: 
-        widget_top_menu_clear_state();
-        window_go_back();
-        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
-        break;
-
-    case e_debug_show_properties: 
-        game.debug_properties = !game.debug_properties;
-        set_debug_draw_option(opt, game.debug_properties);
-        widget_top_menu_clear_state();
-        window_go_back();
-        debug_opt_text(e_debug_show_properties, game.debug_properties );
-        break;
-
-    case e_debug_write_video: 
-        game.set_write_video(!game.get_write_video());
-        debug_opt_text(e_debug_write_video, game.get_write_video());
-        set_debug_draw_option(opt, game.get_write_video());
-        break;
-
-    default:
-        set_debug_draw_option(opt, !get_debug_draw_option(opt));
-        debug_opt_text(opt, get_debug_draw_option(opt));
     }
 }
 
@@ -384,13 +332,6 @@ void widget_top_menu_clear_state() {
     data.focus_sub_menu_id = "";
 }
 
-void top_menu_widget_t::set_text_for_debug_city() {
-    auto *debug = headers["debug"].dcast_menu_header();
-    for (int i = 0; i < debug->impl.items.size(); ++i) {
-        debug_opt_text(i, get_debug_draw_option(i));
-    }
-}
-
 void top_menu_widget_t::set_text_for_debug_render() {
     auto *render = headers["debug_render"].dcast_menu_header();
     if (!render) {
@@ -405,19 +346,11 @@ void top_menu_widget_t::set_text_for_debug_render() {
 void top_menu_widget_t::sub_menu_init() {
     headers.event(top_menu_widget_init{ pos });
 
-    auto *debug = headers["debug"].dcast_menu_header();
-    if (debug) {
-        debug->onclick([this] (auto &h) { debug_change_opt(h); });
-    }
-
     auto *render = headers["debug_render"].dcast_menu_header();
     if (render) {
         render->onclick([this] (auto &h) { debug_render_change_opt(h); });
     }
 
-    set_debug_draw_option(e_debug_show_properties, game.debug_properties);
-
-    set_text_for_debug_city();
     set_text_for_debug_render();
 }
 

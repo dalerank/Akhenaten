@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "game/cheats.h"
 #include "graphics/graphics.h"
+#include "building/construction/build_planner.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -14,7 +15,10 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "window/window_city.h"
 #include "widget/input_box.h"
+
+#include "js/js_game.h"
 
 static void send_command(int param1, int param2);
 static void button_back(int param1, int param2);
@@ -76,7 +80,7 @@ static void send_command(int param1, int param2) {
 }
 
 void window_console_show() {
-    window_type window = {
+    static window_type window = {
         WINDOW_FILE_DIALOG,
         window_draw_underlying_window,
         draw_foreground,
@@ -86,3 +90,16 @@ void window_console_show() {
     init();
     window_show(&window);
 }
+
+void window_show_cheat_console(bool force) {
+    if (force) {
+        game_cheat_force_activate();
+    }
+
+    if (game_cheat_is_active()) {
+        g_city_planner.reset();
+        window_city_show();
+        window_console_show();
+    }
+}
+ANK_FUNCTION_1(window_show_cheat_console)

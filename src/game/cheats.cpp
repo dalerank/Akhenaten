@@ -32,10 +32,8 @@
 #define stricmp strcasecmp
 #endif
 
-static void game_cheat_show_tooltip(pcstr);
 static void game_cheat_spawn_nobles(pcstr);
 static void game_cheat_clear_progress(pcstr);
-static void game_cheat_add_clay(pcstr);
 
 using cheat_command = void(pcstr);
 
@@ -44,15 +42,12 @@ struct cheat_command_handle {
     cheat_command* command;
 };
 
-static cheat_command_handle g_cheat_commands[] = {{"addclay", game_cheat_add_clay},
-                                                  {"showtooltip", game_cheat_show_tooltip},
-                                                  {"spawnnobles", game_cheat_spawn_nobles},
+static cheat_command_handle g_cheat_commands[] = {{"spawnnobles", game_cheat_spawn_nobles},
                                                   {"clearprogress", game_cheat_clear_progress}
 };
 
 struct cheats_data_t {
     bool is_cheating;
-    int tooltip_enabled;
 };
 
 cheats_data_t g_cheats_data;
@@ -69,6 +64,14 @@ static int parse_word(pcstr string, pstr word) {
     return count + 1;
 }
 
+void game_cheat_force_activate() {
+    g_cheats_data.is_cheating = true;
+}
+
+bool game_cheat_is_active() {
+    return g_cheats_data.is_cheating;
+}
+
 void game_cheat_activate() {
     if (window_is(WINDOW_BUILDING_INFO)) {
         g_cheats_data.is_cheating = (window_building_info_get_type() == BUILDING_WELL);
@@ -77,29 +80,8 @@ void game_cheat_activate() {
     }
 }
 
-int game_cheat_tooltip_enabled(void) {
-    return g_cheats_data.tooltip_enabled;
-}
-
-void game_cheat_console(bool force) {
-    g_cheats_data.is_cheating |= force;
-    if (g_cheats_data.is_cheating) {
-        g_city_planner.reset();
-        window_city_show();
-        window_console_show();
-    }
-}
-
 static void game_cheat_clear_progress(pcstr args) {
     map_monuments_clear();
-}
-
-static void game_cheat_add_clay(pcstr args) {
-    int clay = 0;
-    parse_integer(args ? args : (pcstr )"100", clay);
-    city_resource_add_items(RESOURCE_CLAY, clay);
-
-    events::emit(event_city_warning{ "Added clay" });
 }
 
 static void game_cheat_spawn_nobles(pcstr args) {
@@ -120,12 +102,6 @@ static void game_cheat_spawn_nobles(pcstr args) {
         }
         buildings[i]->create_roaming_figure(FIGURE_NOBLES, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
     }
-}
-
-static void game_cheat_show_tooltip(pcstr args) {
-    parse_integer(args, g_cheats_data.tooltip_enabled);
-
-    events::emit(event_city_warning{ "Show tooltip toggled" });
 }
 
 void game_cheat_parse_command(pcstr command) {
