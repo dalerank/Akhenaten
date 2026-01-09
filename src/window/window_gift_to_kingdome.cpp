@@ -12,7 +12,7 @@
 #include "graphics/window.h"
 #include "graphics/screen.h"
 #include "input/input.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "game/game.h"
 #include "js/js_game.h"
 

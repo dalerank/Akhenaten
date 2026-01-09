@@ -27,7 +27,7 @@
 #include "widget/widget_sidebar.h"
 #include "widget/widget_top_menu_game.h"
 #include "widget/widget_city.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "window/file_dialog.h"
 #include "input/scroll.h"
 

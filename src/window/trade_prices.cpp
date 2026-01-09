@@ -10,7 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "window/autoconfig_window.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"

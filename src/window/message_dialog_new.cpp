@@ -33,7 +33,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "scenario/request.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "window/window_city.h"
 #include "scenario/scenario_invasion.h"
 #include "js/js_game.h"

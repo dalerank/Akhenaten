@@ -1,6 +1,6 @@
 #pragma once
 
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "graphics/elements/ui.h"
 #include "building/building_type.h"
 #include "game/gods.h"
