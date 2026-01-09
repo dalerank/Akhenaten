@@ -168,13 +168,12 @@ ANK_FUNCTION_2(__widget_top_menu_show_about)
 
 ANK_FUNCTION(widget_top_menu_clear_state);
 
-pcstr __widget_top_menu_make_screenshot(int p1, int) {
+void __game_make_screenshot(int mode) {
     widget_top_menu_clear_state();
     window_go_back();
-    graphics_save_screenshot(p1 ? SCREENSHOT_FULL_CITY : SCREENSHOT_DISPLAY);
-    return "";
+    graphics_save_screenshot(mode ? SCREENSHOT_FULL_CITY : SCREENSHOT_DISPLAY);
 }
-ANK_FUNCTION_2(__widget_top_menu_make_screenshot)
+ANK_FUNCTION_1(__game_make_screenshot)
 
 pcstr __widget_top_menu_toggle_debug_properties(int, int) {
     game.debug_properties = !game.debug_properties;

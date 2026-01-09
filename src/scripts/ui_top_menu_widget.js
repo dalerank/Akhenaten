@@ -28,10 +28,17 @@ function top_menu_open_advisor(advisor, p2) {
 }
 
 function top_menu_show_console(p1, p2) { window_show_cheat_console(true) }
-function top_menu_make_fullscreenshot(p1, p2) { graphics_save_screenshot(1) }
-function top_menu_make_screenshot(p1, p2) { graphics_save_screenshot(0) }
+function top_menu_make_fullscreenshot(p1, p2) { game.make_screenshot(1) }
+function top_menu_make_screenshot(p1, p2) { game.make_screenshot(0) }
 function top_menu_debug_properties_text(p1, p2) { return game.debug_properties ? "Properties ON" : "Properties OFF" }
 function top_menu_debug_write_video_text(p1, p2) { return game.debug_write_video ? "Write Video ON" : "Write Video OFF" }
+
+function top_menu_debug_buildings_text(p1, p2) { return game.debug_render_mode == e_debug_render_building ? "Buildings ON" : "Buildings OFF" }
+function top_menu_debug_buildings_toggle(p1, p2) { 
+	var mode = game.debug_render_mode;
+	mode = (mode == e_debug_render_building) ? e_debug_render_none : e_debug_render_building;
+	game.debug_render_mode = mode;
+}
 
 top_menu_widget {
 	offset [10, 6]
@@ -120,7 +127,8 @@ top_menu_widget {
 	}
 
 	debug_render {
-	    buildings 		: menu_item({text:"xxx Buildings", parameter:e_debug_render_building})
+	    buildings 		: menu_item({textfn: top_menu_debug_buildings_text
+									 onclick: top_menu_debug_buildings_toggle })
 	}
 
 	ui {
