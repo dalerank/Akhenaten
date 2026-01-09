@@ -33,6 +33,22 @@ void js_register_game_constants(js_State *J) {
     // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)
 
+    _R(COLOR_FONT_RED)
+    _R(COLOR_FONT_BLUE)
+    _R(COLOR_FONT_YELLOW)
+    _R(COLOR_FONT_ORANGE)
+    _R(COLOR_FONT_ORANGE_LIGHT)
+    _R(COLOR_FONT_LIGHT_GRAY)
+    _R(COLOR_FONT_MEDIUM_GRAY)
+    _R(COLOR_FONT_DARK_RED)
+    _R(COLOR_FONT_SHITTY_BROWN)
+    _R(COLOR_BLACK)
+    _R(COLOR_BLUE)
+    _R(COLOR_RED)
+    _R(COLOR_GREEN)
+    _R(COLOR_YELLOW)
+    _R(COLOR_WHITE)
+
     for (config::EnumIterator *s = config::EnumIterator::tail; s; s = s->next) {
         s->func({});
     }

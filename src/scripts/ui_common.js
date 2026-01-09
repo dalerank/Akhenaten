@@ -50,7 +50,22 @@ function ui_create_element_proxy(elementId) {
         set: function(v) { __ui_element_set_enabled(elementId, v); }
         enumerable: true
         configurable: true
-    });
+    })
+
+    Object.defineProperty(proxy, "font", {
+        get: function() { return __ui_element_get_font(elementId); }
+        set: function(v) { __ui_element_set_font(elementId, v); }
+        enumerable: true
+        configurable: true
+    })
+
+    Object.defineProperty(proxy, "text_color", {
+        get: function() { return __ui_element_get_text_color(elementId); }
+        set: function(v) { __ui_element_set_text_color(elementId, v); }
+        enumerable: true
+        configurable: true
+    })
+
     return proxy;
 }
 

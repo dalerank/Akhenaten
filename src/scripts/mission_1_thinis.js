@@ -108,7 +108,7 @@ function mission1_check_gold_mined(ev) {
         return
     } 
 
-    if (finance.income.gold_delivered < mission.gold_mined) {
+    if (city.finance.income.gold_delivered < mission.gold_mined) {
         return
     }
 

@@ -60,7 +60,6 @@ struct top_menu_widget_t : autoconfig_window {
 
     void menu_item_update(pcstr header, int item, pcstr text);
     void update_date(event_advance_day);
-    void update_finance(event_finance_changed ev);
 };
 ANK_CONFIG_STRUCT(top_menu_widget_t,
     headers, offset, item_height, background, spacing, offset_rotate_basic, sidebar_offset)

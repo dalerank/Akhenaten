@@ -60,6 +60,39 @@ void __ui_element_set_enabled(pcstr element_id, bool v) {
 }
 ANK_FUNCTION_2(__ui_element_set_enabled)
 
+int __ui_element_get_font(pcstr element_id) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        return (*w)[element_id].font();
+    }
+    return FONT_INVALID;
+}
+ANK_FUNCTION_1(__ui_element_get_font)
+
+void __ui_element_set_font(pcstr element_id, int v) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        (*w)[element_id].font(v);
+    }
+}
+ANK_FUNCTION_2(__ui_element_set_font)
+
+int __ui_element_get_text_color(pcstr element_id) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        return (*w)[element_id].text_color();
+    }
+    return COLOR_NULL;
+}
+ANK_FUNCTION_1(__ui_element_get_text_color)
+
+void __ui_element_set_text_color(pcstr element_id, int v) {
+    ui::widget *w = ui::get_current_widget();
+    if (w && element_id) {
+        (*w)[element_id].text_color(v);
+    }
+}
+ANK_FUNCTION_2(__ui_element_set_text_color)
 
 #define _R(name) js_newnumber(J, name); js_setglobal(J, #name);
 void js_register_ui_objects(js_State *J) {
