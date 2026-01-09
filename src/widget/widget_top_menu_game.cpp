@@ -24,7 +24,6 @@
 #include "building/construction/build_planner.h"
 #include "game/system.h"
 #include "window/display_options.h"
-#include "window/advisors.h"
 #include "window/window_city.h"
 #include "window/difficulty_options.h"
 #include "window/window_features.h"
@@ -291,9 +290,10 @@ void top_menu_widget_t::sub_menu_draw_text(const xstring header, const xstring f
         }
         // Set color/font on the menu item mouse hover
         pcstr text = item.text.c_str();
-        if (!item._js_text.empty()) {
-            text = js_call_function_with_result(item._js_text, item.parameter, 0);
+        if (item._textfn) {
+            text = item._textfn(item.parameter);
         }
+
         lang_text_draw(text, vec2i{impl.x_start + 8, y_offset}, item.id == focus_item_id ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT);
         y_offset += item_height;
     }
@@ -332,9 +332,7 @@ xstring top_menu_widget_t::menu_handle_mouse(const mouse* m, menu_header* menu, 
     if (m->left.went_up) {
         auto it = std::find_if(menu->items.begin(), menu->items.end(), [&item_id] (auto &it) { return it.id == item_id; });
         if (it != menu->items.end()) {
-            if (!it->_js_onclick.empty()) {
-                js_call_function_with_result(it->_js_onclick, it->parameter, 0);
-            } else if (it->_onclick) {
+            if (it->_onclick) {
                 it->_onclick(it->parameter);
             } else if (menu->_onclick) {
                 menu->_onclick(*it);
@@ -404,19 +402,8 @@ void top_menu_widget_t::set_text_for_debug_render() {
     }
 }
 
-void top_menu_widget_t::advisors_handle(menu_item &item) {
-    widget_top_menu_clear_state();
-    window_go_back();
-    window_advisors_show_advisor((e_advisor)item.parameter);
-}
-
 void top_menu_widget_t::sub_menu_init() {
     headers.event(top_menu_widget_init{ pos });
-
-    auto *advisors = headers["advisors"].dcast_menu_header();
-    if (advisors) {
-        advisors->onclick([this] (auto &h) { advisors_handle(h); });
-    }
 
     auto *debug = headers["debug"].dcast_menu_header();
     if (debug) {

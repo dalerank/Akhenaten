@@ -163,3 +163,5 @@ pcstr __widget_top_menu_show_about(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_show_about)
+
+ANK_FUNCTION(widget_top_menu_clear_state);
