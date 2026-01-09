@@ -1,8 +1,9 @@
-var _format = function() {
+function _format() {
     var formatted = arguments[0]
     for (var arg in arguments) {
-                if(arg==0)
-                    continue
+        if(arg==0)
+           continue
+        
         formatted = formatted.replace("{" + (arg-1) + "}", arguments[arg])
     }
     return formatted

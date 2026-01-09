@@ -79,7 +79,6 @@ void top_menu_widget_t::init() {
     });
 
     events::subscribe([this] (event_population_changed ev) { states.population = ev.value; });
-    events::subscribe([this] (event_advance_day ev) { update_date(ev); });
 }
 
 void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
@@ -89,20 +88,6 @@ void top_menu_widget_t::menu_item_update(pcstr header, int item, pcstr text) {
     }
 
     menu->item(item).text = text;
-}
-
-void top_menu_widget_t::update_date(event_advance_day ev) {
-    pcstr month_str = ui::str(25, ev.month);
-    bstring32 text;
-    if (ev.year >= 0) {
-        int use_year_ad = locale_year_before_ad();
-        if (use_year_ad) { text.printf("%s %d %s", month_str, ev.year, lang_text_from_key("#AD")); }
-        else { text.printf("%s %s %d", month_str, lang_text_from_key("#AD")); }
-    } else {
-        text.printf("%s %d %s", month_str, -ev.year, lang_text_from_key("#BC"));
-    }
-
-    ui["date"] = text;
 }
 
 void top_menu_widget_t::archive_load(archive arch) {

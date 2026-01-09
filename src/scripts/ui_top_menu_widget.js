@@ -16,6 +16,21 @@ function top_menu_widget_draw(window) {
     window.funds.font = treasury >= 0 ? FONT_NORMAL_BLACK_ON_LIGHT : FONT_NORMAL_BLUE
     window.funds.text_color = treasury < 0 ? COLOR_FONT_RED : COLOR_WHITE
     window.funds.text = __loc(6, 0) + " " + treasury
+	
+	window.date.text = top_menu_widget.date_str
+}
+
+[event=event_advance_day]
+function top_menu_update_date_text(ev) {
+	var month_str = __loc(25, ev.month);
+    if (ev.year >= 0) {
+    	top_menu_widget.date_str = game.locale_year_before_ad
+			 							? _format("{0} {1} AD", month_str, ev.year)
+			                            : _format("{0} AD {1}", month_str, ev.year);
+
+    }  else {	
+		top_menu_widget.date_str = _format("{0} {1} BC", month_str, -ev.year);
+	}
 }
 
 function top_menu_autosave_options_text(p1, p2) { return __loc(19, game.monthly_autosave ? 51 : 52) }
@@ -142,7 +157,10 @@ top_menu_widget {
 
 	ui {
 		background 		: dummy({size[sw(0), 30], fill_width: true})
-		date            : link({pos[0, 2], margin{right: -110}, size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] })
+		date            : link({pos[0, 2]
+			                    margin{right: -110}, size[117, 20]
+								hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 63] })
+
 		population   	: link({pos[0, 2], margin{right: -310}, size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 62] })
 		funds        	: link({pos[0, 2], margin{right: -440}, size[117, 20], hbody:false, border:false, font_hover:FONT_NORMAL_YELLOW, tooltip:[68, 61] })
 	}
