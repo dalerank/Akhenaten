@@ -1,4 +1,4 @@
-#include "advisors.h"
+#include "window_advisors.h"
 
 #include "scenario/scenario.h"
 #include "city/constants.h"
@@ -40,7 +40,6 @@
 #include "game/game_events.h"
 #include "game/game.h"
 #include "io/gamefiles/lang.h"
-#include "js/js_game.h"
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
   MESSAGE_DIALOG_ABOUT,
@@ -253,7 +252,7 @@ void window_advisors_show_checked() {
         events::emit(event_city_warning{ text });
     }
 }
-ANK_FUNCTION(window_advisors_show_checked)
+
 
 int window_advisors_show_advisor(e_advisor advisor) {
     e_availability avail = g_city.is_advisor_available(advisor);

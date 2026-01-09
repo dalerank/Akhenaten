@@ -8,7 +8,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "window/window_empire.h"
 #include "city/constants.h"
 

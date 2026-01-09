@@ -21,7 +21,6 @@
 #include "graphics/text.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
-#include "window/advisors.h"
 #include "game/game.h"
 #include "io/gamefiles/lang.h"
 

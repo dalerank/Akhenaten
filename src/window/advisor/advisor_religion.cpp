@@ -14,8 +14,6 @@
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
 #include "game/game.h"
-
-#include "window/advisors.h"
 #include "window/hold_festival.h"
 
 ui::advisor_religion_window g_advisor_religion_window;

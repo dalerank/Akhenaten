@@ -10,7 +10,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/advisors.h"
 #include "io/gamefiles/lang.h"
 
 set_salary_window g_set_salary_window;

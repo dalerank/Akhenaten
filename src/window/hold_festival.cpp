@@ -12,7 +12,6 @@
 #include "graphics/image_groups.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "window/advisors.h"
 #include "window/message_dialog.h"
 #include "window/window_city.h"
 #include "widget/widget_sidebar.h"

@@ -15,7 +15,6 @@
 #include "graphics/window.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
-#include "window/advisors.h"
 #include "game/game.h"
 #include "core/runtime_item.h"
 

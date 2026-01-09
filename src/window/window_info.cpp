@@ -28,7 +28,7 @@
 #include "grid/terrain.h"
 #include "game/game.h"
 #include "input/input.h"
-#include "window/advisors.h"
+#include "window/window_advisors.h"
 #include "window/building/common.h"
 #include "window/building/culture.h"
 #include "window/building/distribution.h"
