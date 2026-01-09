@@ -59,7 +59,6 @@ struct top_menu_widget_t : autoconfig_window {
     void calculate_menu_dimensions(menu_header &menu);
 
     void menu_item_update(pcstr header, int item, pcstr text);
-    void update_date(event_advance_day);
 };
 ANK_CONFIG_STRUCT(top_menu_widget_t,
     headers, offset, item_height, background, spacing, offset_rotate_basic, sidebar_offset)
