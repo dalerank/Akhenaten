@@ -6,6 +6,7 @@
 #include "js/js_game.h"
 #include "grid/terrain.h"
 #include "grid/soldier_strength.h"
+#include "grid/hyena_strength.h"
 #include "city/city_figures.h"
 #include "game/game_config.h"
 #include "figure/figure.h"
@@ -15,7 +16,11 @@
 
 declare_console_var_bool(allow_span_ostrich, true)
 
-city_animals_t ANK_VARIABLE_N(g_city_animals, "city_animals");
+city_animals_t ANK_VARIABLE_N(g_city_animals, "city_animals")
+
+declare_console_command_p(remove_animals) {
+    g_city_animals.remove_all();
+};
 
 formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
@@ -383,6 +388,9 @@ void city_animals_t::update() {
             update_herd_formation(m);
         }
     }
+    
+    // Update hyena strength grid
+    map_hyena_strength_update();
 }
 
 bool city_animals_t::breeding_ground_at(tile2i tile, int size) {

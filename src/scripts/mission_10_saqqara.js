@@ -44,3 +44,17 @@ mission10 { // Saqqara
         kingdom    {enabled : true, goal : 50 }
 	}
 }
+
+[event=event_register_mission_animals, mission=mission10]
+function mission10_register_animals(ev) {
+	city.remove_animals()
+	
+	city.add_animals_point(0, /*x*/55, /*y*/75, FIGURE_OSTRICH, 5)
+	city.set_animals_area(0, 16)
+
+	city.add_animals_point(1, /*x*/85, /*y*/135, FIGURE_OSTRICH, 5)
+	city.set_animals_area(1, 16)
+
+	city.add_animals_point(1, /*x*/90, /*y*/155, FIGURE_HYENA, 5)
+	city.set_animals_area(1, 16)
+}

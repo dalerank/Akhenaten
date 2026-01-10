@@ -14,6 +14,8 @@ city {
         __property_getter: function(property) { return __city_get_figures_property(property) }
         @enemies { }
         @kingdome_soldiers { }
+
+        remove_figures: __city_remove_figures
     }
 
     finance { 

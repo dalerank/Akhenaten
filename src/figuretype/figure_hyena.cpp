@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "figure/formation_layout.h"
 #include "figuretype/figure_soldier.h"
+#include "grid/hyena_strength.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyena);
@@ -63,6 +64,9 @@ void figure_hyena::on_create() {
 
 void figure_hyena::figure_action() {
     formation *m = formation_get(base.formation_id);
+    if (!m || !m->in_use) {
+        return;
+    }
     g_city.figures.add_animal();
 
     switch (action_state()) {
@@ -72,7 +76,23 @@ void figure_hyena::figure_action() {
             base.wait_ticks = id() & 0x1f;
             base.action_state = ACTION_197_HYENA_MOVING;
             tile2i formation_t = formation_layout_position(FORMATION_HERD, base.index_in_formation);
-            base.destination_tile = m->destination.shifted(formation_t);
+            tile2i target_tile = m->destination.shifted(formation_t);
+            
+            // Check if target tile is within hyena territory
+            // If not, find a tile within territory near the current position
+            int hyena_strength = map_hyena_strength_get(target_tile);
+            if (hyena_strength == 0) {
+                // Find a tile with maximum hyena strength in the area
+                max_hyena_strength_tile max_tile = map_hyena_strength_get_max(tile(), m->reseach_radius > 0 ? m->reseach_radius : 5);
+                if (max_tile.strength > 0) {
+                    target_tile = max_tile.tile;
+                } else {
+                    // If no territory found, stay near formation destination
+                    target_tile = m->destination;
+                }
+            }
+            
+            base.destination_tile = target_tile;
             base.roam_length = 0;
         }
         break;
@@ -85,6 +105,15 @@ void figure_hyena::figure_action() {
             base.wait_ticks = id() & 0x1f;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
+        } else {
+            // Check if we're moving outside territory - if so, stop and rest
+            int current_hyena_strength = map_hyena_strength_get(tile());
+            if (current_hyena_strength == 0) {
+                base.direction = base.previous_tile_direction;
+                base.action_state = ACTION_196_HYENA_AT_REST;
+                base.wait_ticks = id() & 0x1f;
+                route_remove();
+            }
         }
         break;
 
@@ -95,11 +124,8 @@ void figure_hyena::figure_action() {
             if (target_id) {
                 figure *target = figure_get(target_id);
                 base.destination_tile = target->tile;
-                //                    destination_tile.x() = target->tile.x();
-                //                    destination_tile.y() = target->tile.y();
                 base.target_figure_id = target_id;
                 target->targeted_by_figure_id = id();
-                //target_figure_created_sequence = target->created_sequence;
                 route_remove();
             } else {
                 base.direction = base.previous_tile_direction;
@@ -115,6 +141,10 @@ void figure_hyena::figure_action() {
             base.action_state = ACTION_196_HYENA_AT_REST;
             base.wait_ticks = id() & 0x1f;
         }
+        break;
+
+    default:
+        advance_action(ACTION_196_HYENA_AT_REST);
         break;
     }
 }
