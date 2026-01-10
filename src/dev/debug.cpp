@@ -42,6 +42,7 @@
 #include "grid/random.h"
 #include "grid/soldier_strength.h"
 #include "grid/enemy_strength.h"
+#include "grid/hyena_strength.h"
 #include "grid/malaria_risk.h"
 #include "grid/irrigation_value.h"
 #include "widget/city/building_ghost.h"
@@ -729,6 +730,15 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, 0x80000000);
             snprintf((char *)str, 30, "%d", d);
             text_draw(str, x, y + 15, FONT_SMALL_PLAIN, COLOR_LIGHT_RED);
+        }
+        break;
+
+    case e_debug_render_hyena_strength:
+        d = map_hyena_strength_get(grid_offset);
+        if (d) {
+            ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, 0x80000000);
+            snprintf((char *)str, 30, "%d", d);
+            text_draw(str, x, y + 15, FONT_SMALL_PLAIN, COLOR_WHITE);
         }
         break;
 

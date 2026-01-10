@@ -92,6 +92,14 @@ void city_figures_t::add_attacking_native() {
     attacking_natives++;
 }
 
+void city_figures_t::remove_figures(e_figure_type ftype) {
+    for (auto& f: g_figure_data.figures) {
+        if (f->is_valid() && f->type == ftype) {
+            f->poof();
+        }
+    }
+}
+
 void city_t::figures_add_kingdome_soldier() {
     figures.kingdome_soldiers++;
 }

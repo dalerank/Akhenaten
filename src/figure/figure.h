@@ -54,6 +54,7 @@ class figure_festival_guy;
 class figure_ostrich;
 class figure_antelope;
 class figure_hippo;
+class figure_hyena;
 class figure_animal;
 class figure_ballista;
 class figure_market_buyer;
@@ -242,6 +243,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
     ALLOW_SMART_CAST_FIGURE(hippo)
+    ALLOW_SMART_CAST_FIGURE(hyena)
     ALLOW_SMART_CAST_FIGURE(antelope)
     ALLOW_SMART_CAST_FIGURE(animal)
     ALLOW_SMART_CAST_FIGURE(ballista)
@@ -585,6 +587,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
     ALLOW_SMART_CAST_FIGURE_I(antelope)
     ALLOW_SMART_CAST_FIGURE_I(hippo)
+    ALLOW_SMART_CAST_FIGURE_I(hyena)
     ALLOW_SMART_CAST_FIGURE_I(animal)
     ALLOW_SMART_CAST_FIGURE_I(ballista)
     ALLOW_SMART_CAST_FIGURE_I(market_buyer)
@@ -683,6 +686,7 @@ GENERATE_SMART_CAST_FIGURE(festival_guy)
 GENERATE_SMART_CAST_FIGURE(ostrich)
 GENERATE_SMART_CAST_FIGURE(antelope)
 GENERATE_SMART_CAST_FIGURE(hippo)
+GENERATE_SMART_CAST_FIGURE(hyena)
 GENERATE_SMART_CAST_FIGURE(animal)
 GENERATE_SMART_CAST_FIGURE(ballista)
 GENERATE_SMART_CAST_FIGURE(market_buyer)

@@ -2,9 +2,7 @@
 
 #include "js/js_game.h"
 
-void __city_remove_animals() {
-    g_city_animals.remove_all();
-}
+void __city_remove_animals() { g_city_animals.remove_all(); }
 ANK_FUNCTION(__city_remove_animals);
 
 void __city_add_animals_point(int index, int x, int y, int ftype, int num) {

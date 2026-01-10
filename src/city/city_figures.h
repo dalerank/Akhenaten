@@ -25,6 +25,8 @@ struct city_figures_t {
     void add_enemy();
     void add_attacking_native();
 
+    void remove_figures(e_figure_type ftype);
+
     int total_invading_enemies() const;
 };
 ANK_CONFIG_PROPERTY(city_figures_t,
