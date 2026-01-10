@@ -231,7 +231,7 @@ void Arguments::parse(int argc, char** argv) {
         vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
         bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
         if (binary_exist) {
-            logs::info("Steam pharaoh path: %s", pharaoh_steam_path);
+            logs::info("Steam pharaoh path: %s", pharaoh_steam_path.c_str());
             data_dir = pharaoh_steam_path.c_str();
         }
     }
