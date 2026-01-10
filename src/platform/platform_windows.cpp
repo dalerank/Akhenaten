@@ -1,8 +1,13 @@
-#include "platform/platform.h"
-
-#include "content/vfs.h"
+#include "platform.h"
 
 #if defined(GAME_PLATFORM_WIN)
+
+#include "windows.h"
+#include "content/vfs.h"
+
+void platform_t::open_url(pcstr url, pcstr prefix) {
+    ShellExecuteA(0, "Open", url, 0, 0, SW_SHOW);
+}
 
 #include <ShlObj.h>
 
@@ -20,4 +25,4 @@ pcstr platform_t::get_steam_path() {
     return steam_path.c_str();
 };
 
-#endif // GAME_PLATFORM_WIN
+#endif
