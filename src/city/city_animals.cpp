@@ -2,7 +2,7 @@
 
 #include "core/random.h"
 #include "figuretype/figure_animal.h"
-#include "figuretype/figure_hyena.h"
+#include "figuretype/animal_hyena.h"
 #include "js/js_game.h"
 #include "grid/terrain.h"
 #include "grid/soldier_strength.h"
@@ -254,7 +254,7 @@ void city_animals_t::set_herd_figures_to_initial(const formation *m) {
 void city_animals_t::update_herd_formation(formation *m) {
     if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
-        if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_WOLF)) {
+        if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_HYENA)) {
             figure *wolf = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             wolf->action_state = 24;
             wolf->formation_id = m->id;
@@ -309,21 +309,21 @@ void city_animals_t::update_herd_formation(formation *m) {
     int roam_distance;
     int roam_delay;
     int allow_negative_desirability;
-    int terrain_mask = TERRAIN_IMPASSABLE_WOLF;
+    int terrain_mask = TERRAIN_IMPASSABLE_HYENA;
     switch (m->figure_type) {
     case FIGURE_BIRDS:
         roam_distance = 8;
         roam_delay = 20;
         allow_negative_desirability = 0;
         attacking_animals = 0;
-        terrain_mask = TERRAIN_IMPASSABLE_WOLF;
+        terrain_mask = TERRAIN_IMPASSABLE_HYENA;
         break;
     case FIGURE_ANTELOPE:
         roam_distance = 20;
         roam_delay = 4;
         allow_negative_desirability = 0;
         attacking_animals = 0;
-        terrain_mask = TERRAIN_IMPASSABLE_WOLF;
+        terrain_mask = TERRAIN_IMPASSABLE_HYENA;
         break;
     case FIGURE_OSTRICH:
         roam_distance = 16;

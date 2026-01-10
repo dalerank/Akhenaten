@@ -7,7 +7,7 @@
 #include "grid/grid.h"
 #include "grid/routing/routing.h"
 #include "city/city_figures.h"
-#include "figuretype/figure_hyena.h"
+#include "figuretype/animal_hyena.h"
 
 grid_xx g_hyena_strength = {0, FS_UINT8};
 
