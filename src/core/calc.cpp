@@ -31,6 +31,11 @@ int calc_general_direction(tile2i from, tile2i to) {
     return DIR_8_NONE;
 }
 
+int calc_general_direction_safe(tile2i from, tile2i to) {
+    int dir = calc_general_direction(from, to);
+    return (dir != DIR_8_NONE ? dir : DIR_0_TOP_RIGHT);
+}
+
 int calc_missile_shooter_direction(tile2i from, tile2i to) {
     int x_from = from.x();
     int y_from = from.y();

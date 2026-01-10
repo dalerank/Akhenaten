@@ -272,7 +272,7 @@ figure_priest = {
 figure_ostrich {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
-		walk { id:156,max_frames:12 }
+		walk { id:156, max_frames:12 }
 		death { id:157, max_frames:8, duration:3, loop:false }
 		eating { id:159, max_frames:7 }
 		idle { id:160, max_frames:7 }
@@ -285,20 +285,24 @@ figure_ostrich {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
-figure_hyena = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:161, max_frames:12 }
-		attack : { pack:PACK_SPR_MAIN, id:163, max_frames:6 }
-		death : { pack:PACK_SPR_MAIN, id:163, max_frames:8, duration:3, loop:false }
-		idle : { pack:PACK_SPR_MAIN, id:164, max_frames:6 }
-		eating : { pack:PACK_SPR_MAIN, id:165, max_frames:6 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HYENA }
+figure_hyena {
+	animations {
+		_pack { pack:PACK_SPR_MAIN }
+		walk { id:161, max_frames:12 }
+		attack { id:162, max_frames:6 }
+		death { id:163, max_frames:8, duration:3, loop:false }
+		idle { id:164, max_frames:6 }
+		eating { id:165, max_frames:6 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HYENA }
 	}
 
 	category: figure_category_animal
 	max_damage: 100
 	attack_value: 6
 	terrain_usage : TERRAIN_USAGE_ANIMAL
+	max_hungry : 30
+	max_hunting_distance : 12
+	chase_speed_mult : 2
 }
 
 figure_antelope {
@@ -1152,16 +1156,16 @@ figure_emigrant {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
-figure_sled = {
-	animations : {
-		empty : { pack:PACK_SPR_MAIN, id:166, max_frames:1 }
-		stone : { pack:PACK_SPR_MAIN, id:167, max_frames:1 }
-		sandstone : { pack:PACK_SPR_MAIN, id:168, max_frames:1 }
-		granite : { pack:PACK_SPR_MAIN, id:169, max_frames:1 }
-		limestone : { pack:PACK_SPR_MAIN, id:170, max_frames:1 }
-		clay : { pack:PACK_SPR_MAIN, id:171, max_frames:1 }
-		bricks : { pack:PACK_SPR_MAIN, id:172, max_frames:1 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED }
+figure_sled {
+	animations {
+		empty { pack:PACK_SPR_MAIN, id:166, max_frames:1 }
+		stone { pack:PACK_SPR_MAIN, id:167, max_frames:1 }
+		sandstone { pack:PACK_SPR_MAIN, id:168, max_frames:1 }
+		granite { pack:PACK_SPR_MAIN, id:169, max_frames:1 }
+		limestone { pack:PACK_SPR_MAIN, id:170, max_frames:1 }
+		clay { pack:PACK_SPR_MAIN, id:171, max_frames:1 }
+		bricks { pack:PACK_SPR_MAIN, id:172, max_frames:1 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED }
 	}
 
 	category: figure_category_citizen

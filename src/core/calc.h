@@ -105,6 +105,8 @@ inline int calc_distance_with_penalty(_T1 from, _T2 to, int dist_to_entry1, int 
  */
 int calc_general_direction(tile2i from, tile2i to);
 
+int calc_general_direction_safe(tile2i from, tile2i to);
+
 /**
  * Gets the direction for a missile shooter
  * @return Direction
