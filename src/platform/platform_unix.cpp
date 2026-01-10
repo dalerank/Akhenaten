@@ -1,7 +1,9 @@
 #include "platform.h"
-#include "core/log.h"
 
 #if defined(GAME_PLATFORM_LINUX)
+
+#include "core/log.h"
+#include "content/vfs.h"
 
 void platform_t::open_url(pcstr url, pcstr prefix) {
     bstring256 command(prefix, "xdg-open '", url, "'");

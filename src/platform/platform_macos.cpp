@@ -2,14 +2,16 @@
 
 #if defined(GAME_PLATFORM_MACOSX)
 
+#include <pwd.h>
+
+#include "content/vfs.h"
+#include <unistd.h>
+
 void platform_t::open_url(pcstr url, pcstr prefix) {
     bstring256 command("open \"", url, "\" &");
     [[maybe_unused]] auto result = ::system(command.c_str());
     //result;
 }
-
-#include <pwd.h>
-#include <unistd.h>
 
 pcstr platform_t::get_steam_path() {
     const passwd *pw = getpwuid(getuid());
