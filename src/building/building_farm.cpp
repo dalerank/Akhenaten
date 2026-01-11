@@ -233,31 +233,27 @@ void building_farm::draw_farm_worker(painter &ctx, int direction, int action, ve
     command.mask = color_mask;
 }
 
-static const vec2i FARM_TILE_OFFSETS_FLOODPLAIN[9] = {{60, 0}, {90, 15}, {120, 30}, {30, 15}, {60, 30}, {90, 45}, {0, 30}, {30, 45}, {60, 60}};
-static const vec2i FARM_TILE_OFFSETS_MEADOW[5] = {{0, 30}, {30, 45}, {60, 60}, {90, 45}, {120, 30}};
-
-static vec2i farm_tile_coords(vec2i pos, int tile_x, int tile_y) {
-    int tile_id = 3 * abs(tile_y) + abs(tile_x);
-    return pos + FARM_TILE_OFFSETS_FLOODPLAIN[tile_id];
-}
-
 void building_farm::draw_crops(painter &ctx, e_building_type type, int progress, tile2i tile, vec2i point, color color_mask) {
     int image_crops = get_crops_image(type, 0);
-    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { // on floodplains - all
+    const auto &fparams = *(const building_farm_grain::static_params*)&building_static_params::get(type);
+
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) { 
+        // on floodplains - all
         for (int i = 0; i < 9; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 200) / 100));
 
             auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
-            command.pixel = { point.x + FARM_TILE_OFFSETS_FLOODPLAIN[i].x, point.y + FARM_TILE_OFFSETS_FLOODPLAIN[i].y };
+            command.pixel = point + fparams.tile_offsets[i];
             command.mask = color_mask;
         }
-    } else { // on dry meadows
+    } else {
+        // on meadows
         for (int i = 0; i < 5; i++) {
             int growth_offset = fmin(5, fmax(0, (progress - i * 400) / 100));
             auto& command = ImageDraw::create_subcommand(render_command_t::ert_from_below);
             command.image_id = image_crops + growth_offset;
-            command.pixel = { point.x + FARM_TILE_OFFSETS_MEADOW[i].x, point.y + FARM_TILE_OFFSETS_MEADOW[i].y };
+            command.pixel = point + fparams.tile_offsets[i];
             command.mask = color_mask;
         }
     }
@@ -289,56 +285,58 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
             //auto coords = farm_tile_coords(x, y, random_x, random_y);
             //draw_ph_worker(d, 2, animation_offset, coords);
         } else {
+            const auto &fparams = farm_params();
             if (progress < 400)
-                draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, fparams.tile_coord(pos, 1, 1));
             else if (progress < 500)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 0));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 0));
             else if (progress < 600)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 0));
             else if (progress < 700)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 1));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 1));
             else if (progress < 800)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 1));
             else if (progress < 900)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 1));
             else if (progress < 1000)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 2));
             else if (progress < 1100)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 2));
             else if (progress < 1200)
-                draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
+                draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 2));
             else if (progress < 1300)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 0));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 0));
             else if (progress < 1400)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 0));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 0));
             else if (progress < 1500)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 1));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 0, 1));
             else if (progress < 1600)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 1));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 1));
             else if (progress < 1700)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 1));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 1));
             else if (progress < 1800)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 0, 2));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 0, 2));
             else if (progress < 1900)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 1, 2));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 1, 2));
             else if (progress < 2000)
-                draw_farm_worker(ctx, d, 2, farm_tile_coords(pos, 2, 2));
+                draw_farm_worker(ctx, d, 2, fparams.tile_coord(pos, 2, 2));
         }
     } else {
         auto farm = b->dcast_farm();
         const short progress = farm->progress();
+        const auto &fparams = farm_params();
         if (progress < 100)
-            draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, farm_tile_coords(pos, 1, 1));
+            draw_farm_worker(ctx, game.simtime.absolute_tick() % 128 / 16, 1, fparams.tile_coord(pos, 1, 1));
         else if (progress < 400)
-            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 0, 2));
+            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 0, 2));
         else if (progress < 800)
-            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 1, 2));
+            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 1, 2));
         else if (progress < 1200)
-            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 2));
+            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 2));
         else if (progress < 1600)
-            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 1));
+            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 1));
         else if (progress < 2000)
-            draw_farm_worker(ctx, d, 0, farm_tile_coords(pos, 2, 0));
+            draw_farm_worker(ctx, d, 0, fparams.tile_coord(pos, 2, 0));
     }
 }
 
