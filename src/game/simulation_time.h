@@ -12,7 +12,7 @@ enum e_month {
     MONTH_JUNE = 5,
     MONTH_JULY = 6,
     MONTH_AUGUST = 7,
-    MONTH_SEPTEMPTER = 8,
+    MONTH_SEPTEMBER = 8,
     MONTH_OCTOBER = 9,
     MONTH_NOVEMBER = 10,
     MONTH_DECEMBER = 11,
