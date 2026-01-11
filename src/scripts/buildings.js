@@ -141,6 +141,14 @@ building_cattle_ranch {
   damage_risk[2]
 }
 
+building_meadow_farm_tile_offsets = [
+  [0, 30], [30, 45], [60, 60], [90, 45], [120, 30]
+]
+
+building_floodplain_farm_tile_offsets = [
+  [60, 0], [90, 15], [120, 30], [30, 15], [60, 30], [90, 45], [0, 30], [30, 45], [60, 60]
+]
+
 building_meadow_farm_grain {
   animations : {
     _pack { pack:PACK_GENERAL }
@@ -181,6 +189,7 @@ building_meadow_farm_grain {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_grain {
@@ -220,6 +229,7 @@ building_farm_grain {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_chickpeas {
@@ -235,7 +245,7 @@ building_meadow_farm_chickpeas {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:30 }
   }
   output  {
     resource : RESOURCE_CHICKPEAS
@@ -260,21 +270,23 @@ building_meadow_farm_chickpeas {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 
 building_farm_chickpeas {
   animations {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37, offset:0 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:30 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:30 }
   }
   
   output {
@@ -294,13 +306,14 @@ building_farm_chickpeas {
 
   cost[ 8, 10, 15, 20, 50 ]
   desirability { value:[-2], step:[1], step_size:[1], range: [2] }
-  laborers[10],
-  fire_risk[0],
+  laborers[10]
+  fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_lettuce {
-  animations : {
+  animations {
     _pack { pack:PACK_GENERAL }
     preview { id:37, }
     base { id:225, offset:0 }
@@ -312,7 +325,7 @@ building_meadow_farm_lettuce {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:18 }
   }
   output  {
     resource : RESOURCE_LETTUCE
@@ -337,20 +350,22 @@ building_meadow_farm_lettuce {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_lettuce {
   animations {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37, offset:15 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:18 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:18 }
   }
 
   output {
@@ -373,6 +388,7 @@ building_farm_lettuce {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_pomegranates {
@@ -388,7 +404,7 @@ building_meadow_farm_pomegranates {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:24 }
   }
   output  {
     resource : RESOURCE_POMEGRANATES
@@ -413,20 +429,22 @@ building_meadow_farm_pomegranates {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_pomegranates {
   animations : {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37, offset:20 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:24 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:20 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:24 }
   }
 
   output {
@@ -448,6 +466,7 @@ building_farm_pomegranates {
   laborers[12],
   fire_risk[4],
   damage_risk[1]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_barley {
@@ -463,7 +482,7 @@ building_meadow_farm_barley {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:0 }
   }
   output  {
     resource : RESOURCE_BARLEY
@@ -488,20 +507,22 @@ building_meadow_farm_barley {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_barley {
   animations {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37, offset:0 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:0 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:0 }
   }
 
   output {
@@ -523,6 +544,7 @@ building_farm_barley {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_flax {
@@ -538,7 +560,7 @@ building_meadow_farm_flax {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:36 }
   }
   output  {
     resource : RESOURCE_FLAX
@@ -563,20 +585,22 @@ building_meadow_farm_flax {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_flax {
   animations {
-    preview { pack:PACK_GENERAL, id:105, },
-    base { pack:PACK_GENERAL, id:105, offset:0 },
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    farm_house { pack:PACK_GENERAL, id:225 },
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 },
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 },
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6},
-    farmland { pack:PACK_GENERAL, id:37, offset:0 },
-    minimap {pack:PACK_GENERAL, id:149, offset:160},
-    crops { pack:PACK_GENERAL, id:100, offset:36 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:36 }
   }
 
   output {
@@ -599,6 +623,7 @@ building_farm_flax {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_henna {
@@ -614,7 +639,7 @@ building_meadow_farm_henna {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:30 }
   }
   output  {
     resource : RESOURCE_HENNA
@@ -639,19 +664,22 @@ building_meadow_farm_henna {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_henna {
   animations {
-    preview { pack:PACK_GENERAL, id:105, },
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37 }
+    minimap { id:149, offset:160 }
+    crops { id:100, offset:30 }
   }
 
   output {
@@ -673,6 +701,7 @@ building_farm_henna {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_meadow_farm_figs {
@@ -688,7 +717,7 @@ building_meadow_farm_figs {
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
-    crops { id:100, offset:12 }
+    crops { id:100, offset:6 }
   }
   output  {
     resource : RESOURCE_FIGS
@@ -713,20 +742,22 @@ building_meadow_farm_figs {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_meadow_farm_tile_offsets
 }
 
 building_farm_figs {
   animations {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:6 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:1, max_frames:12 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:6 }
   }
 
   output {
@@ -749,6 +780,7 @@ building_farm_figs {
   laborers[10]
   fire_risk[0]
   damage_risk[0]
+  tile_offsets : building_floodplain_farm_tile_offsets
 }
 
 building_burning_ruin = {
