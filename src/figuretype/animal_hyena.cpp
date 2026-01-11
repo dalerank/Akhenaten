@@ -2,6 +2,7 @@
 
 #include "city/city.h"
 #include "figure/formation_layout.h"
+#include "figure/formation.h"
 #include "figuretype/figure_soldier.h"
 #include "figuretype/animal_ostrich.h"
 #include "figuretype/figure_animal.h"
@@ -215,6 +216,33 @@ void figure_hyena::figure_action() {
             base.wait_ticks = 30 + (random_byte() % 20);
         }
         break;
+
+    case ACTION_22_HYENA_RUN_TO_CARRION:
+        base.speed_multiplier = current_params().chase_speed_mult;
+        if (base.destination_tile.valid()) {
+            if (calc_maximum_distance(tile(), base.destination_tile) == 0) {
+                advance_action(ACTION_23_HYENA_EAT_OTHER_FOOD);
+                base.wait_ticks = 30 + (random_byte() % 20);
+                route_remove();
+            } else {
+                do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_23_HYENA_EAT_OTHER_FOOD, ACTION_8_HYENA_RECALCULATE);
+                if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
+                    base.direction = DIR_0_TOP_RIGHT;
+                    advance_action(ACTION_8_HYENA_RECALCULATE);
+                }
+            }
+        } else {
+            advance_action(ACTION_8_HYENA_RECALCULATE);
+        }
+        break;
+
+    case ACTION_23_HYENA_EAT_OTHER_FOOD:
+        base.wait_ticks--;
+        if (base.wait_ticks <= 0) {
+            advance_action(ACTION_8_HYENA_RECALCULATE);
+            d.hungry = rand() % current_params().max_hungry;
+        }
+        break;
        
     case ACTION_20_HYENA_ATTACK: {
             if (base.target_figure_id == INVALID_FIGURE_ID || !prey || prey->is_dead()) {
@@ -228,6 +256,32 @@ void figure_hyena::figure_action() {
                     if (prey->is_dead()) {
                         base.target_figure_id = 0;
                         route_remove();
+                        
+                        int attracted_count = 0;
+                        const int max_attract = 4;
+                        
+                        for (int i = 0; i < formation::max_figures_count && attracted_count < max_attract; i++) {
+                            if (!m->figures[i] || m->figures[i] == id()) {
+                                continue;
+                            }
+                            
+                            figure *other_hyena = figure_get(m->figures[i]);
+                            if (!other_hyena || other_hyena->is_dead() || other_hyena->type != FIGURE_HYENA) {
+                                continue;
+                            }
+                                                      
+                            if (other_hyena->action_state == ACTION_18_HYENA_EATING ||
+                                other_hyena->action_state == ACTION_22_HYENA_RUN_TO_CARRION ||
+                                other_hyena->action_state == ACTION_23_HYENA_EAT_OTHER_FOOD) {
+                                continue;
+                            }
+                            
+                            other_hyena->route_remove();
+                            other_hyena->advance_action(ACTION_22_HYENA_RUN_TO_CARRION);
+                            other_hyena->destination_tile = prey->tile;
+                            attracted_count++;
+                        }
+                        
                         advance_action(ACTION_21_HYENA_SUCCESS_KILL);
                         d.hungry = rand() % current_params().max_hungry;
                         base.wait_ticks = 30 + (random_byte() % 20);
@@ -295,6 +349,7 @@ void figure_hyena::update_animation() {
     case ACTION_12_HYENA_INVESTIGATE:
     case ACTION_10_HYENA_MOVING:
     case ACTION_9_HYENA_CHASE_PREY:
+    case ACTION_22_HYENA_RUN_TO_CARRION:
         anim_key = animkeys().walk;
         break;
 
@@ -305,6 +360,10 @@ void figure_hyena::update_animation() {
     case ACTION_20_HYENA_ATTACK:
     case ACTION_21_HYENA_SUCCESS_KILL:
         anim_key = animkeys().attack;
+        break;
+
+    case ACTION_23_HYENA_EAT_OTHER_FOOD:
+        anim_key = animkeys().eating;
         break;
 
     default:
