@@ -117,40 +117,85 @@ building_fort_ground = {
   fire_risk:[0], damage_risk: [0]
 }
 
-building_cattle_ranch = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:105, },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:0 },
-    work : { pos : [0, 0], pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
-    minimap: {pack:PACK_GENERAL, id:149, offset:160},
+building_cattle_ranch {
+  animations {
+    preview { pack:PACK_GENERAL, id:105, },
+    base { pack:PACK_GENERAL, id:105, offset:0 },
+    work {  pack:PACK_GENERAL, id:105, offset:1, max_frames:12 },
+    minimap { pack:PACK_GENERAL, id:149, offset:160 },
   }
   min_houses_coverage : 100
-  input : {
+  input {
     resource : RESOURCE_STRAW
   }
-  output : {
+  output {
     resource : RESOURCE_MEAT
   }
   building_size : 3
-  meta : { help_id:1, text_id:117 }
+  meta { help_id:1, text_id:117 }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
-  cost : [ 15, 20, 30, 50, 80 ]
-  desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
-  laborers:[12], fire_risk:[1], damage_risk: [2]
+  cost [ 15, 20, 30, 50, 80 ]
+  desirability { value:[-4], step:[1], step_size:[1], range: [4] }
+  laborers[12]
+  fire_risk[1]
+  damage_risk[2]
+}
+
+building_meadow_farm_grain {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_GRAIN
+    resource_second : RESOURCE_STRAW
+  }
+  output_resource_second_rate : 10
+
+  build_menu_text : "Grain Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_JANUARY, MONTH_MAY]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
 }
 
 building_farm_grain {
   animations : {
-    preview { pack:PACK_GENERAL, id:105, }
-    base { pack:PACK_GENERAL, id:105, offset:0 }
-    work { pack:PACK_GENERAL, id:105, offset:1, max_frames:12 }
-    farm_house { pack:PACK_GENERAL, id:225 }
-    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
-    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
-    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
-    farmland { pack:PACK_GENERAL, id:37, offset:0 }
-    minimap {pack:PACK_GENERAL, id:149, offset:160}
-    crops { pack:PACK_GENERAL, id:100, offset:12 }
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:37, offset:0 }
+    work { id:37, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:37, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
   }
   output  {
     resource : RESOURCE_GRAIN
