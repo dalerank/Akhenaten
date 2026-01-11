@@ -118,6 +118,16 @@ struct building_farm_lettuce : public building_floodplain_farm {
 };
 ANK_CONFIG_STRUCT(building_farm_lettuce::static_params, month_harvest);
 
+struct building_meadow_farm_lettuce : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_LETTUCE_MEADOW_FARM, building_meadow_farm_lettuce, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_lettuce::static_params, month_harvest);
+
 struct building_farm_chickpeas : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_CHICKPEAS_FARM, building_farm_chickpeas, building_floodplain_farm);
 
@@ -126,6 +136,16 @@ struct building_farm_chickpeas : public building_floodplain_farm {
     virtual const farm_params_t &farm_params() const override { return current_params(); }
 };
 ANK_CONFIG_STRUCT(building_farm_chickpeas::static_params, month_harvest);
+
+struct building_meadow_farm_chickpeas : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_CHICKPEAS_MEADOW_FARM, building_meadow_farm_chickpeas, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_chickpeas::static_params, month_harvest);
 
 struct building_farm_pomegranates : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_POMEGRANATES_FARM, building_farm_pomegranates, building_floodplain_farm);
@@ -137,6 +157,16 @@ struct building_farm_pomegranates : public building_floodplain_farm {
 };
 ANK_CONFIG_STRUCT(building_farm_pomegranates::static_params, month_harvest);
 
+struct building_meadow_farm_pomegranates : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_POMEGRANATES_MEADOW_FARM, building_meadow_farm_pomegranates, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_pomegranates::static_params, month_harvest);
+
 struct building_farm_barley : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_BARLEY_FARM, building_farm_barley, building_floodplain_farm);
 
@@ -146,6 +176,16 @@ struct building_farm_barley : public building_floodplain_farm {
     virtual const farm_params_t &farm_params() const override { return current_params(); }
 };
 ANK_CONFIG_STRUCT(building_farm_barley::static_params, month_harvest);
+
+struct building_meadow_farm_barley : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_BARLEY_MEADOW_FARM, building_meadow_farm_barley, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_barley::static_params, month_harvest);
 
 struct building_farm_flax : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_FLAX_FARM, building_farm_flax, building_floodplain_farm);
@@ -157,6 +197,16 @@ struct building_farm_flax : public building_floodplain_farm {
 };
 ANK_CONFIG_STRUCT(building_farm_flax::static_params, month_harvest);
 
+struct building_meadow_farm_flax : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_FLAX_MEADOW_FARM, building_meadow_farm_flax, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_flax::static_params, month_harvest);
+
 struct building_farm_henna : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_HENNA_FARM, building_farm_henna, building_floodplain_farm);
 
@@ -167,6 +217,16 @@ struct building_farm_henna : public building_floodplain_farm {
 };
 ANK_CONFIG_STRUCT(building_farm_henna::static_params, month_harvest);
 
+struct building_meadow_farm_henna : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_HENNA_MEADOW_FARM, building_meadow_farm_henna, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_henna::static_params, month_harvest);
+
 struct building_farm_figs : public building_floodplain_farm {
     BUILDING_METAINFO(BUILDING_FIGS_FARM, building_farm_figs, building_floodplain_farm);
 
@@ -176,3 +236,12 @@ struct building_farm_figs : public building_floodplain_farm {
     virtual const farm_params_t &farm_params() const override { return current_params(); }
 };
 ANK_CONFIG_STRUCT(building_farm_figs::static_params, month_harvest);
+
+struct building_meadow_farm_figs : public building_meadow_farm {
+    BUILDING_METAINFO(BUILDING_FIGS_MEADOW_FARM, building_meadow_farm_figs, building_meadow_farm);
+
+    struct static_params : public farm_params_t, public building_static_params {} BUILDING_STATIC_DATA_T;
+
+    virtual const farm_params_t &farm_params() const override { return current_params(); }
+};
+ANK_CONFIG_STRUCT(building_meadow_farm_figs::static_params, month_harvest);

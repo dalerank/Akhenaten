@@ -222,6 +222,47 @@ building_farm_grain {
   damage_risk[0]
 }
 
+building_meadow_farm_chickpeas {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_CHICKPEAS
+  }
+
+  build_menu_text : "Chickpeas Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_APRIL]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
+
 building_farm_chickpeas {
   animations {
     preview { pack:PACK_GENERAL, id:105, }
@@ -258,6 +299,46 @@ building_farm_chickpeas {
   damage_risk[0]
 }
 
+building_meadow_farm_lettuce {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_LETTUCE
+  }
+
+  build_menu_text : "Lettuce Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_APRIL]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
 building_farm_lettuce {
   animations {
     preview { pack:PACK_GENERAL, id:105, }
@@ -287,6 +368,46 @@ building_farm_lettuce {
     meadow : true
   }
 
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
+building_meadow_farm_pomegranates {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_POMEGRANATES
+  }
+
+  build_menu_text : "Pomegranates Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_JUNE, MONTH_NOVEMBER]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
   cost[ 8, 10, 15, 20, 50 ]
   desirability { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers[10]
@@ -329,6 +450,46 @@ building_farm_pomegranates {
   damage_risk[1]
 }
 
+building_meadow_farm_barley {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_BARLEY
+  }
+
+  build_menu_text : "Barley Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_FEBRUARY, MONTH_AUGUST]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
 building_farm_barley {
   animations {
     preview { pack:PACK_GENERAL, id:105, }
@@ -357,6 +518,46 @@ building_farm_barley {
   needs {
     meadow : true
   }
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
+building_meadow_farm_flax {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_FLAX
+  }
+
+  build_menu_text : "Flax Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_DECEMBER]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
   cost[ 8, 10, 15, 20, 50 ]
   desirability { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers[10]
@@ -400,6 +601,46 @@ building_farm_flax {
   damage_risk[0]
 }
 
+building_meadow_farm_henna {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_HENNA
+  }
+
+  build_menu_text : "Henna Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_DECEMBER]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
 building_farm_henna {
   animations {
     preview { pack:PACK_GENERAL, id:105, },
@@ -412,9 +653,11 @@ building_farm_henna {
     farmland { pack:PACK_GENERAL, id:37 }
     minimap {pack:PACK_GENERAL, id:149, offset:160}
   }
+
   output {
     resource : RESOURCE_HENNA
   }
+
   building_size : 3
   fire_proof : true
   damage_proof : true
@@ -427,6 +670,46 @@ building_farm_henna {
   }
   cost [ 8, 10, 15, 20, 50 ]
   desirability { value[-2], step[1], step_size[1], range[2] }
+  laborers[10]
+  fire_risk[0]
+  damage_risk[0]
+}
+
+building_meadow_farm_figs {
+  animations : {
+    _pack { pack:PACK_GENERAL }
+    preview { id:37, }
+    base { id:225, offset:0 }
+    work { id:225, offset:0, max_frames:1 }
+    farm_house { id:225 }
+    tiling { id:118, max_frames:12, duration:6 }
+    seeding { id:119, max_frames:12, duration:6 }
+    harvesting { id:120, max_frames:12, duration:6}
+    farmland { id:225, offset:1 }
+    farmland_watered { id:225, offset:0 }
+    minimap {id:149, offset:160}
+    crops { id:100, offset:12 }
+  }
+  output  {
+    resource : RESOURCE_FIGS
+  }
+
+  build_menu_text : "Figs Meadow Farm"
+
+  building_size : 3
+  month_harvest: [MONTH_SEPTEMBER]
+  fire_proof : true
+  damage_proof : true
+  meta { help_id:90, text_id:112 }
+  progress_max: 2000
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
+
+  needs {
+    meadow : true
+  }
+  
+  cost[ 8, 10, 15, 20, 50 ]
+  desirability { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers[10]
   fire_risk[0]
   damage_risk[0]
@@ -452,7 +735,7 @@ building_farm_figs {
 
   building_size : 3
   fire_proof : true
-  month_harvest: [MONTH_SEPTEMPTER]
+  month_harvest: [MONTH_SEPTEMBER]
   damage_proof : true
   meta { help_id:90, text_id:183 }
   progress_max: 2000

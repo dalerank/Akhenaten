@@ -39,15 +39,28 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_grain);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_grain);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_lettuce);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_chickpeas);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_pomegranates);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_barley);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_flax);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_henna);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_figs);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_lettuce);
 
-declare_console_command(addgrain, game_cheat_add_resource<RESOURCE_GRAIN>);
-declare_console_command_p(farmgrow) {
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_chickpeas);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_chickpeas);
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_pomegranates);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_pomegranates);
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_barley);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_barley);
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_flax);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_flax);
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_henna);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_henna);
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_farm_figs);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_meadow_farm_figs);
+
+declare_console_command(add_grain, game_cheat_add_resource<RESOURCE_GRAIN>);
+declare_console_command_p(farm_grow) {
     std::string args; is >> args;
     int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
 
@@ -381,7 +394,14 @@ e_sound_channel_city building_farm::sound_channel() const {
     case BUILDING_FLAX_FARM:
     case BUILDING_GRAIN_FARM:
     case BUILDING_FIGS_FARM:
+    case BUILDING_BARLEY_MEADOW_FARM:
+    case BUILDING_FLAX_MEADOW_FARM:
     case BUILDING_GRAIN_MEADOW_FARM:
+    case BUILDING_LETTUCE_MEADOW_FARM:
+    case BUILDING_POMEGRANATES_MEADOW_FARM:
+    case BUILDING_CHICKPEAS_MEADOW_FARM:
+    case BUILDING_HENNA_MEADOW_FARM:
+    case BUILDING_FIGS_MEADOW_FARM:
         return SOUND_CHANNEL_CITY_CHICKFARM;
 
     default:
@@ -397,12 +417,19 @@ void building_farm::update_count() const {
         {BUILDING_GRAIN_FARM, RESOURCE_GRAIN},
         {BUILDING_GRAIN_MEADOW_FARM, RESOURCE_GRAIN},
         {BUILDING_BARLEY_FARM, RESOURCE_BARLEY},
+        {BUILDING_BARLEY_MEADOW_FARM, RESOURCE_BARLEY},
         {BUILDING_FLAX_FARM, RESOURCE_FLAX},
+        {BUILDING_FLAX_MEADOW_FARM, RESOURCE_FLAX},
         {BUILDING_LETTUCE_FARM, RESOURCE_LETTUCE},
+        {BUILDING_LETTUCE_MEADOW_FARM, RESOURCE_LETTUCE},
         {BUILDING_POMEGRANATES_FARM, RESOURCE_POMEGRANATES},
+        {BUILDING_POMEGRANATES_MEADOW_FARM, RESOURCE_POMEGRANATES},
         {BUILDING_CHICKPEAS_FARM, RESOURCE_CHICKPEAS},
+        {BUILDING_CHICKPEAS_MEADOW_FARM, RESOURCE_CHICKPEAS},
         {BUILDING_FIGS_FARM, RESOURCE_FIGS},
-        {BUILDING_HENNA_FARM, RESOURCE_HENNA}
+        {BUILDING_FIGS_MEADOW_FARM, RESOURCE_FIGS},
+        {BUILDING_HENNA_FARM, RESOURCE_HENNA},
+        {BUILDING_HENNA_MEADOW_FARM, RESOURCE_HENNA}
     };
     auto it = std::find_if(std::begin(farms), std::end(farms), [btype = type()](auto &t) { return t.first == btype; });
     g_city.buildings.increase_industry_count(it->second, num_workers() > 0);
