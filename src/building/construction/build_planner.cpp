@@ -307,8 +307,8 @@ void build_planner::reset() {
     additional_req_param2 = -1;
     additional_req_param3 = -1;
     can_place = CAN_PLACE;
-    immediate_warning_id = "";
-    extra_warning_id = "";
+    immediate_warning = "";
+    extra_warning = "";
 }
 
 void build_planner::init_tiles(int size_x, int size_y) {
@@ -616,7 +616,7 @@ void build_planner::update_obstructions_check() {
     }
 
     if (tiles_blocked_total > 0) {
-        immediate_warning_id = "#must_build_on_cleared_land";
+        immediate_warning = "#must_build_on_cleared_land";
         can_place = CAN_NOT_BUT_GREEN;
     }
 }
@@ -631,7 +631,7 @@ void build_planner::update_requirements_check() {
     // out of money!
     if (g_city.finance.is_out_of_money()) {
         // TODO: no money needed if building has zero cost?
-        immediate_warning_id = "#out_of_credit";
+        immediate_warning = "#out_of_credit";
         can_place = CAN_NOT_PLACE;
         return;
     }
@@ -647,14 +647,14 @@ void build_planner::update_requirements_check() {
 
     if (special_flags & e_building_flag::Groundwater) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 0, TERRAIN_GROUNDWATER)) {
-            immediate_warning_id = "#needs_groundwater";
+            immediate_warning = "#needs_groundwater";
             can_place = CAN_NOT_PLACE;
         }
     }
     if (special_flags & e_building_flag::NearbyWater) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_WATER)
             && !map_terrain_exists_tile_in_radius_with_type(end, size.x, 3, TERRAIN_FLOODPLAIN)) {
-            immediate_warning_id = "#building_not_next_to_water";
+            immediate_warning = "#building_not_next_to_water";
             can_place = CAN_NOT_PLACE;
         }
     }
@@ -662,42 +662,42 @@ void build_planner::update_requirements_check() {
     if (special_flags & e_building_flag::Meadow) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_MEADOW)
             && !map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_FLOODPLAIN)) {
-            immediate_warning_id = "#build_farms_on_meadow";
+            immediate_warning = "#build_farms_on_meadow";
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & e_building_flag::Rock) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ROCK)) {
-            immediate_warning_id = "#build_next_to_rocky_areas";
+            immediate_warning = "#build_next_to_rocky_areas";
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & e_building_flag::Ore) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ORE)) {
-            immediate_warning_id = "#build_next_to_rocky_areas";
+            immediate_warning = "#build_next_to_rocky_areas";
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & e_building_flag::Trees) {
         if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_SHRUB | TERRAIN_TREE)) {
-            immediate_warning_id = "#build_wood_cutters_next_to_trees";
+            immediate_warning = "#build_wood_cutters_next_to_trees";
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (special_flags & e_building_flag::Walls) {
         if (!map_terrain_all_tiles_in_radius_are(end, size.x, 0, TERRAIN_WALL)) {
-            immediate_warning_id = "#build_towers_on_thick_walls";
+            immediate_warning = "#build_towers_on_thick_walls";
             can_place = CAN_NOT_PLACE;
         }
     }
 
     if (!!(special_flags & e_building_flag::IgnoreNearbyEnemy) == false) {
         if (has_nearby_enemy(start.x(), start.y(), end.x(), end.y())) {
-            immediate_warning_id = "#too_close_to_enemy_troops";
+            immediate_warning = "#too_close_to_enemy_troops";
             can_place = CAN_NOT_PLACE;
         }
     }
@@ -724,7 +724,7 @@ void build_planner::update_requirements_check() {
 
     if (special_flags & e_building_flag::RiverAccess) {
         if (!map_tile_is_connected_to_open_water(end)) {
-            immediate_warning_id = "#inland_lake_has_no_sea_access";
+            immediate_warning = "#inland_lake_has_no_sea_access";
         }
     }
 }
@@ -755,7 +755,7 @@ void build_planner::update_special_case_orientations_check() {
 
         dir_relative = city_view_relative_orientation(result.orientation_absolute);
         if (!result.match) {
-            immediate_warning_id = "#building_not_next_to_water";
+            immediate_warning = "#building_not_next_to_water";
             can_place = CAN_NOT_PLACE;
         } else if (relative_orientation != dir_relative) {
             relative_orientation = dir_relative;
@@ -781,10 +781,10 @@ void build_planner::update_special_case_orientations_check() {
     if (temple_altar || temple_oracle) {
         auto complex = building_at(end)->main()->dcast_temple_complex();
         if (!complex) {
-            immediate_warning_id = "#must_have_completed_temple_first";
+            immediate_warning = "#must_have_completed_temple_first";
             can_place = CAN_NOT_PLACE;
         } else if (complex->has_upgrade((e_temple_compex_upgrade)temple_options) ) {
-            immediate_warning_id = "#must_build_temple_complex_first";
+            immediate_warning = "#must_build_temple_complex_first";
             can_place = CAN_NOT_PLACE;
         } else {
             int dir_absolute = (5 - (complex->runtime_data().variant / 2)) % 4;
@@ -827,7 +827,7 @@ void build_planner::update_unique_only_one_check() {
     }
 
     if (unique_already_placed) {
-        immediate_warning_id = "#only_one_building_of_this_type";
+        immediate_warning = "#only_one_building_of_this_type";
         can_place = CAN_NOT_PLACE;
     }
 }
@@ -929,12 +929,12 @@ void build_planner::construction_record_view_position(vec2i pixel, tile2i point)
 }
 
 void build_planner::dispatch_warnings() {
-    if (!!immediate_warning_id) {
-        events::emit(event_city_warning{ immediate_warning_id.c_str() });
+    if (!!immediate_warning) {
+        events::emit(event_city_warning{ immediate_warning });
     }
 
-    if (!!extra_warning_id) {
-        events::emit(event_city_warning{ extra_warning_id.c_str() });
+    if (!!extra_warning) {
+        events::emit(event_city_warning{ extra_warning });
     }
 }
 
@@ -1081,6 +1081,9 @@ void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int
 void build_planner::construction_finalize() { // confirm final placement
     in_progress = false;
 
+    const auto &preview = building_planer_renderer::get(build_type);
+    can_place = preview.finalize_check(*this, start, end, can_place);
+
     dispatch_warnings();
     if (can_place != CAN_PLACE && !building_is_draggable(build_type)) { // this is the FINAL check!
         return;
@@ -1156,7 +1159,8 @@ void build_planner::update(tile2i cursor_tile) {
     end = cursor_tile;
     update_coord_caches();
 
-    immediate_warning_id = "";
+    immediate_warning = "";
+    extra_warning = "";
     can_place = CAN_PLACE;
     update_obstructions_check();
     update_requirements_check();

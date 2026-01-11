@@ -113,7 +113,6 @@ int building_planer_renderer::construction_update(build_planner &planer, tile2i 
     return 0;
 }
 
-
 void building_planer_renderer::setup_preview_graphics(build_planner &planer) const {
     const auto &params = building_static_params::get(planer.build_type);
     int img_id = params.base_img();

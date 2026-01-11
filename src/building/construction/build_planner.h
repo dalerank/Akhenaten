@@ -55,8 +55,8 @@ class build_planner {
     int additional_req_param3 = -1;
     int can_place = CAN_PLACE;
 
-    xstring immediate_warning_id;
-    xstring extra_warning_id;
+    xstring immediate_warning;
+    xstring extra_warning;
 
     int start_offset_screen_x;
     int start_offset_screen_y;
@@ -82,7 +82,8 @@ class build_planner {
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
-    void set_warning(xstring warning) { immediate_warning_id = warning; }
+    void set_warning(xstring warning) { immediate_warning = warning; }
+    void set_extra_warning(xstring warning) { extra_warning = warning; }
 
     int additional_req_param1 = -1;
 
