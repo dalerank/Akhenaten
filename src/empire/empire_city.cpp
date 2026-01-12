@@ -62,6 +62,24 @@ int empire_city::get_free_slot() const {
 }
 
 void empire_city::archive_load(archive arch) {
+    svector<e_resource, RESOURCES_MAX> sells;
+    arch.r_array_num<e_resource>("sells", sells);
+    if (!sells.empty()) {
+        std::fill_n(sells_resource, RESOURCES_MAX, 0);
+        for (auto r : sells) {
+            sells_resource[r] = true;
+        }
+    }
+
+    svector<e_resource, RESOURCES_MAX> buys;
+    arch.r_array_num<e_resource>("buys", buys);
+    if (!buys.empty()) {
+        std::fill_n(buys_resource, RESOURCES_MAX, 0);
+        for (auto r : buys) {
+            buys_resource[r] = true;
+        }
+    }
+
     check_attributes();
 }
 
