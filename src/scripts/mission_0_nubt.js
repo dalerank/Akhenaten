@@ -53,6 +53,10 @@ function mission0_on_start(ev) {
 	if (mission.tutorial_fire_handled) {
 		city.use_building(BUILDING_FIREHOUSE, true)
 	}
+	
+	if (mission.tutorial_collapsed_handled) {
+		city.use_building(BUILDING_ARCHITECT_POST, true)
+	}
 
 	if (mission.tutorial_gamemeat_stored) {
 		city.use_building(BUILDING_WATER_SUPPLY, true)
