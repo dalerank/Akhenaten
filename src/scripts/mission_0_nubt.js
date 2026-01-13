@@ -22,7 +22,7 @@ mission0 { // Nubt
 	]
 
 	vars {
-		granary_open_population : 160
+		granary_open_population : 150
 		population_cap_firstfire : 0
 		granary_meat_stored : 400
 		victory_last_action_delay : 4
@@ -34,6 +34,7 @@ mission0 { // Nubt
 		tutorial_firehouse_built : false
 		tutorial_granary_opened : false
 		tutorial_gamemeat_stored : false
+		granary_built : false
 		last_action_time : 0
 	}
 }
@@ -50,8 +51,16 @@ function mission0_on_start(ev) {
 		city.use_building(BUILDING_BAZAAR, true)
 	}
 
+	if (mission.granary_built) {
+		city.set_advisor_available(ADVISOR_POPULATION, 1)
+	}
+
 	if (mission.tutorial_fire_handled) {
 		city.use_building(BUILDING_FIREHOUSE, true)
+	}
+	
+	if (mission.tutorial_collapsed_handled) {
+		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
 
 	if (mission.tutorial_gamemeat_stored) {
@@ -154,6 +163,23 @@ function mission0_handle_population_for_granary(ev) {
 	ui.popup_message("message_tutorial_food_or_famine")
 }
 
+[event=event_advance_day, mission=mission0]
+function mission0_on_build_granary(ev) {
+    if (mission.granary_built) {
+        return
+    }
+
+    var granaries_count = city.count_active_buildings(BUILDING_GRANARY)
+    if (granaries_count == 0) {
+        return
+    }
+
+    mission.last_action = game.absolute_day
+    mission.granary_built = true
+
+	city.set_advisor_available(ADVISOR_POPULATION, 1)
+}
+
 [event=event_granary_resource_added, mission=mission0]
 function mission0_on_filled_granary(ev) {
     if (mission.tutorial_gamemeat_stored) {
@@ -178,6 +204,7 @@ function mission0_on_filled_granary(ev) {
 function mission0_handle_victory_state(ev) {
 	city.set_victory_reason("gamemeat_stored", mission.tutorial_gamemeat_stored)
 	city.set_victory_reason("tutorial_granary_opened", mission.tutorial_granary_opened)
+	city.set_victory_reason("granary_built", mission.granary_built)
 	city.set_victory_reason("tutorial_firehouse_built", mission.tutorial_firehouse_built)
 
 	var some_days_after_last_action = (game.absolute_day - mission.last_action_time) > mission.victory_last_action_delay;
