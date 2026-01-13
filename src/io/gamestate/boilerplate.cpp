@@ -261,7 +261,7 @@ static void post_load() {
     }
 
     if (!is_tutorial_mmission) {
-        for (int adv = ADVISOR_NONE; adv < ADVISOR_MAX; ++adv) {
+        for (int adv = ADVISOR_NONE+1; adv < ADVISOR_MAX; ++adv) {
             g_city.set_advisor_available((e_advisor)adv, AVAILABLE);
         }
     }
