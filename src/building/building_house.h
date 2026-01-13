@@ -147,6 +147,24 @@ public:
 };
 
 // --- Individual housing tiers -------------------------------------------------
+// some info shared with vacant lot, so this is unique twice-config class
+
+/**
+ * First and most basic housing tier - crude hut.
+ * 
+ * Characteristics:
+ * - Maximum population: 5 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses (can_merge: true)
+ * - Very low desirability requirements for evolution (-10)
+ * - Requires no services (water, entertainment, religion, education, food)
+ * - High crime risk (5) and fire risk (3)
+ * - Low prosperity level (15)
+ * - Tax multiplier: 2x
+ * 
+ * Evolution: can evolve into sturdy_hut when minimal conditions are met.
+ * Devolution: cant devolve (des setup to -99).
+ */
 class building_house_crude_hut : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_CRUDE_HUT, building_house_crude_hut);
@@ -159,6 +177,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, 
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Second housing tier - sturdy hut.
+ * 
+ * Characteristics:
+ * - Maximum population: 7 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires basic water supply (water: 1)
+ * - Improved desirability requirements for evolution (-7 to -5)
+ * - Crime risk: 4, fire risk: 3
+ * - Prosperity level: 20-15
+ * - Tax multiplier: 2x
+ * 
+ * Evolution: can evolve into meager_shanty when conditions improve.
+ * Devolution: can devolve at desirability below -12.
+ */
 class building_house_sturdy_hut : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_STURDY_HUT, building_house_sturdy_hut);
@@ -171,6 +205,23 @@ public:
 ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Third housing tier - meager shanty.
+ * 
+ * Characteristics:
+ * - Maximum population: 9 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires water supply and food (water: 1, food: 1, food_types: 1)
+ * - Very high fire risk (20) - due to primitive materials
+ * - Desirability requirements for evolution: -2 to 0
+ * - Crime risk: 3
+ * - Prosperity level: 25-20
+ * - Tax multiplier: 3x-2x
+ * 
+ * Evolution: can evolve into common_shanty when conditions improve.
+ * Devolution: can devolve at desirability below -9 to -7.
+ */
 class building_house_meager_shanty : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MEAGER_SHANTY, building_house_meager_shanty);
@@ -183,6 +234,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Fourth housing tier - common shanty.
+ * 
+ * Characteristics:
+ * - Maximum population: 11 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires water supply, food, and religion (water: 1, food: 1, religion: 1)
+ * - Desirability requirements for evolution: 2-4
+ * - Crime risk: 2, fire risk: 4, damage risk: 4
+ * - Prosperity level: 30-25
+ * - Tax multiplier: 3x-2x
+ * 
+ * Evolution: can evolve into rough_cottage when conditions improve.
+ * Devolution: can devolve at desirability below -4 to -2.
+ */
 class building_house_common_shanty : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_SHANTY, building_house_common_shanty);
@@ -195,6 +262,23 @@ public:
 ANK_CONFIG_STRUCT(building_house_common_shanty::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Fifth housing tier - rough cottage.
+ * 
+ * Characteristics:
+ * - Maximum population: 13 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires improved water supply (water: 2), food, and religion
+ * - Desirability requirements for evolution: 6-9
+ * - Crime risk: 1, fire risk: 5, damage risk: 3
+ * - Prosperity level: 35-30
+ * - Tax multiplier: 3x-2x
+ * - Improved food storage (food_storage_multiplier: 5)
+ * 
+ * Evolution: can evolve into ordinary_cottage when conditions improve.
+ * Devolution: can devolve at desirability below 0-2.
+ */
 class building_house_rough_cottage : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ROUGH_COTTAGE, building_house_rough_cottage);
@@ -207,6 +291,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Sixth housing tier - ordinary cottage.
+ * 
+ * Characteristics:
+ * - Maximum population: 15 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 10), improved water supply, food, and religion
+ * - Desirability requirements for evolution: 10-13
+ * - Crime risk: 0, fire risk: 4
+ * - Prosperity level: 40-35
+ * - Tax multiplier: 3x-2x
+ * 
+ * Evolution: can evolve into modest_homestead when conditions improve.
+ * Devolution: can devolve at desirability below 4-7.
+ */
 class building_house_ordinary_cottage : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ORDINARY_COTTAGE, building_house_ordinary_cottage);
@@ -219,6 +319,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Seventh housing tier - modest homestead.
+ * 
+ * Characteristics:
+ * - Maximum population: 16 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 12-20), water supply, food, religion, and pottery (pottery: 1)
+ * - Desirability requirements for evolution: 14-17
+ * - Fire risk: 4, damage risk: 4
+ * - Prosperity level: 45-40
+ * - Tax multiplier: 4x-3x
+ * 
+ * Evolution: can evolve into spacious_homestead when conditions improve.
+ * Devolution: can devolve at desirability below 8-11.
+ */
 class building_house_modest_homestead : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_HOMESTEAD, building_house_modest_homestead);
@@ -231,6 +347,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Eighth housing tier - spacious homestead.
+ * 
+ * Characteristics:
+ * - Maximum population: 17 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 14-25), water supply, food, religion, pottery, and health (health: 1)
+ * - Desirability requirements for evolution: 18-21
+ * - Fire risk: 4, damage risk: 4
+ * - Prosperity level: 55-50
+ * - Tax multiplier: 4x-3x
+ * 
+ * Evolution: can evolve into modest_apartment when conditions improve.
+ * Devolution: can devolve at desirability below 12-15.
+ */
 class building_house_spacious_homestead : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_HOMESTEAD, building_house_spacious_homestead);
@@ -243,6 +375,22 @@ public:
 ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Ninth housing tier - modest apartment.
+ * 
+ * Characteristics:
+ * - Maximum population: 18 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 16-30), water supply, food, religion, pottery, health, and beer (beer: 1)
+ * - Desirability requirements for evolution: 22-26
+ * - Fire risk: 4, damage risk: 5
+ * - Prosperity level: 60-55
+ * - Tax multiplier: 4x-3x
+ * 
+ * Evolution: can evolve into spacious_apartment when conditions improve.
+ * Devolution: can devolve at desirability below 16-19.
+ */
 class building_house_modest_apartment : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_APARTMENT, building_house_modest_apartment);
@@ -255,6 +403,23 @@ public:
 ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Tenth housing tier - spacious apartment.
+ * 
+ * Characteristics:
+ * - Maximum population: 19 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 18-35), water supply, food, religion, pottery, health, beer, and physician (physician: 1)
+ * - Desirability requirements for evolution: 29-33
+ * - Fire risk: 4, damage risk: 5
+ * - Prosperity level: 70-60
+ * - Tax multiplier: 4x-3x
+ * 
+ * Evolution: can evolve into common_residence when conditions improve.
+ *          Can also expand to common_residence via expand_to_common_residence() method.
+ * Devolution: can devolve at desirability below 19-23.
+ */
 class building_house_spacious_apartment : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_APARTMENT, building_house_spacious_apartment);
@@ -268,6 +433,24 @@ public:
 ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Eleventh housing tier - common residence.
+ * 
+ * Characteristics:
+ * - Maximum population: 80 people (significant increase!)
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 20-40), water supply, food, religion, education (education: 1),
+ *   pottery, health, beer, and physician
+ * - Desirability requirements for evolution: 37-41
+ * - Fire risk: 4, damage risk: 4
+ * - Prosperity level: 80-70
+ * - Tax multiplier: 5x-4x
+ * - Improved food storage (food_storage_multiplier: 6)
+ * 
+ * Evolution: can evolve into spacious_residence when conditions improve.
+ * Devolution: can devolve at desirability below 26-30.
+ */
 class building_house_common_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_RESIDENCE, building_house_common_residence);
@@ -280,6 +463,23 @@ public:
 ANK_CONFIG_STRUCT(building_house_common_residence::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Twelfth housing tier - spacious residence.
+ * 
+ * Characteristics:
+ * - Maximum population: 84 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 25-45), water supply, food, religion, education,
+ *   pottery, health, beer, physician, dentist (dentist: 1), and food variety (food_types: 2)
+ * - Desirability requirements for evolution: 45-50
+ * - Fire risk: 4, damage risk: 4
+ * - Prosperity level: 90-80
+ * - Tax multiplier: 5x-4x
+ * 
+ * Evolution: can evolve into elegant_residence when conditions improve.
+ * Devolution: can devolve at desirability below 33-37.
+ */
 class building_house_spacious_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_RESIDENCE, building_house_spacious_residence);
@@ -292,6 +492,23 @@ public:
 ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Thirteenth housing tier - elegant residence.
+ * 
+ * Characteristics:
+ * - Maximum population: 88 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 30-50), water supply, food, religion, education,
+ *   pottery, health, beer, physician, dentist, linen (linen: 1), and food variety
+ * - Desirability requirements for evolution: 50-55
+ * - Fire risk: 3, damage risk: 5
+ * - Prosperity level: 100-90
+ * - Tax multiplier: 6x-5x
+ * 
+ * Evolution: can evolve into fancy_residence when conditions improve.
+ * Devolution: can devolve at desirability below 40-45.
+ */
 class building_house_elegant_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ELEGANT_RESIDENCE, building_house_elegant_residence);
@@ -304,6 +521,24 @@ public:
 ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Fourteenth housing tier - fancy residence.
+ * 
+ * Characteristics:
+ * - Maximum population: 92 people
+ * - Building size: 1x1 tile
+ * - Can merge with adjacent houses
+ * - Requires entertainment (entertainment: 35-55), water supply, food, improved religion (religion: 2),
+ *   education, pottery, health, beer, physician, dentist, linen, and food variety
+ * - Desirability requirements for evolution: 55-60
+ * - Fire risk: 3, damage risk: 5
+ * - Prosperity level: 120-100
+ * - Tax multiplier: 6x-5x
+ * 
+ * Evolution: can evolve into common_manor when conditions improve.
+ *          Can also expand to common_manor via expand_to_common_manor() method.
+ * Devolution: can devolve at desirability below 45-50.
+ */
 class building_house_fancy_residence : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_FANCY_RESIDENCE, building_house_fancy_residence);
@@ -317,6 +552,25 @@ public:
 ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Fifteenth housing tier - common manor (beginning of nobility level).
+ * 
+ * Characteristics:
+ * - Maximum population: 100 people
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses (can_merge: false)
+ * - Requires entertainment (entertainment: 40-60), water supply, food, improved religion,
+ *   education, pottery, health, beer, physician, dentist, linen, jewelry (jewelry: 1), and food variety
+ * - Desirability requirements for evolution: 60-65
+ * - Fire risk: 2, damage risk: 6
+ * - Prosperity level: 650-600 (very high!)
+ * - Tax multiplier: 13x-12x (significantly higher)
+ * 
+ * Evolution: can evolve into spacious_manor when conditions improve.
+ * Devolution: can devolve at desirability below 47-52.
+ *            Also has devolve_to_fancy_residence() method for forced devolution.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ */
 class building_house_common_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_COMMON_MANOR, building_house_common_manor);
@@ -331,6 +585,25 @@ public:
 ANK_CONFIG_STRUCT(building_house_common_manor::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Sixteenth housing tier - spacious manor.
+ * 
+ * Characteristics:
+ * - Maximum population: 108 people
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses
+ * - Requires entertainment (entertainment: 45-65), water supply, food, improved religion,
+ *   education, pottery, improved health (health: 2), beer, physician, dentist,
+ *   linen, jewelry, and food variety
+ * - Desirability requirements for evolution: 64-70
+ * - Fire risk: 2, damage risk: 6
+ * - Prosperity level: 750-700
+ * - Tax multiplier: 14x-13x
+ * 
+ * Evolution: can evolve into elegant_manor when conditions improve.
+ * Devolution: can devolve at desirability below 50-55.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ */
 class building_house_spacious_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_SPACIOUS_MANOR, building_house_spacious_manor);
@@ -344,6 +617,25 @@ public:
 ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Seventeenth housing tier - elegant manor.
+ * 
+ * Characteristics:
+ * - Maximum population: 116 people
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses
+ * - Requires entertainment (entertainment: 50-70), water supply, food, improved religion (religion: 3),
+ *   improved education (education: 2), pottery, improved health, beer, physician,
+ *   dentist, linen, jewelry, and food variety
+ * - Desirability requirements for evolution: 70-76
+ * - Fire risk: 2, damage risk: 6
+ * - Prosperity level: 850-800
+ * - Tax multiplier: 15x-14x
+ * 
+ * Evolution: can evolve into stately_manor when conditions improve.
+ * Devolution: can devolve at desirability below 55-62.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ */
 class building_house_elegant_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_ELEGANT_MANOR, building_house_elegant_manor);
@@ -357,6 +649,26 @@ public:
 ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Eighteenth housing tier - stately manor.
+ * 
+ * Characteristics:
+ * - Maximum population: 124 people
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses
+ * - Requires entertainment (entertainment: 55-80), water supply, food, improved religion (religion: 3),
+ *   improved education, pottery, improved health, beer, physician, dentist,
+ *   linen, jewelry, and food variety
+ * - Desirability requirements for evolution: 75-82
+ * - Fire risk: 2, damage risk: 6
+ * - Prosperity level: 950-900
+ * - Tax multiplier: 16x-15x
+ * 
+ * Evolution: can evolve into modest_estate when conditions improve.
+ *          Can also expand to modest_estate via expand_to_modest_estate() method.
+ * Devolution: can devolve at desirability below 64-70.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ */
 class building_house_stately_manor : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_STATELY_MANOR, building_house_stately_manor);
@@ -371,6 +683,26 @@ public:
 ANK_CONFIG_STRUCT(building_house_stately_manor::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Nineteenth housing tier - modest estate (highest nobility level).
+ * 
+ * Characteristics:
+ * - Maximum population: 184 people (very large!)
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses
+ * - Requires entertainment (entertainment: 65-90), water supply, food, improved religion,
+ *   improved education, pottery, improved health, beer, physician, dentist,
+ *   linen, improved jewelry (jewelry: 2), and food variety
+ * - Desirability requirements for evolution: 85-92
+ * - Fire risk: 2, damage risk: 6
+ * - Prosperity level: 2000-1900 (extremely high!)
+ * - Tax multiplier: 17x-16x
+ * 
+ * Evolution: can evolve into palatial_estate when conditions improve.
+ * Devolution: can devolve at desirability below 65-72.
+ *            Also has devolve_to_statel_manor() method for forced devolution.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ */
 class building_house_modest_estate : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_MODEST_ESTATE, building_house_modest_estate);
@@ -385,6 +717,26 @@ public:
 ANK_CONFIG_STRUCT(building_house_modest_estate::static_params,
     model, can_merge, variants, variants_merged, variants_merged_inside)
 
+/**
+ * Twentieth housing tier - palatial estate (maximum housing level).
+ * 
+ * Characteristics:
+ * - Maximum population: 200 people (maximum!)
+ * - Building size: 1x1 tile
+ * - CANNOT merge with adjacent houses
+ * - Requires entertainment (entertainment: 75-100), water supply, food, improved religion,
+ *   improved education, pottery, improved health, beer, physician, dentist,
+ *   linen, improved jewelry, and extended food variety (food_types: 2-3)
+ * - Desirability requirements for evolution: 100 (maximum - further evolution impossible)
+ * - Fire risk: 1 (minimal!), damage risk: 7
+ * - Prosperity level: 2300-2200 (maximum!)
+ * - Tax multiplier: 18x-17x (maximum!)
+ * 
+ * Evolution: this is the final housing tier, further evolution is impossible.
+ * Devolution: can devolve at desirability below 80-87.
+ * Special features: has monthly update (update_month()) for handling special nobility logic.
+ *                  Represents the highest level of luxury and comfort in the game.
+ */
 class building_house_palatial_estate : public building_house {
 public:
     HOUSE_METAINFO(BUILDING_HOUSE_PALATIAL_ESTATE, building_house_palatial_estate);

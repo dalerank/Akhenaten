@@ -28,7 +28,7 @@ void js_register_game_constants(js_State *J) {
     _R(SOUND_CHANNEL_CITY_HOUSE_SLUM)
  
     // cause it vacant lot id also
-    _R(BUILDING_HOUSE_CRUDE_HUT)
+    _R(BUILDING_HOUSE_VACANT_LOT)
 
     // coz it is eqaul to RESOURCE_MAX
     _R(RESOURCE_DEBEN)

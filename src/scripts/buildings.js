@@ -2535,17 +2535,6 @@ building_mud_wall = {
   }
 }
 
-building_vacant_lot = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:36 },
-    base : { pack:PACK_GENERAL, id:36 },
-  },
-  meta : { help_id:128, text_id:-1 }
-  building_size : 1,
-  desirability : { value:[-2], step:[1], step_size:[1], range: [3] }
-  laborers:[0], fire_risk:[3], damage_risk: [0]
-}
-
 building_senet_house = {
   animations : {
     preview : { pack:PACK_GENERAL, id:17 },

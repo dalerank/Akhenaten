@@ -477,7 +477,7 @@ inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
 
-inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
+inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
 bool building_is_farm(e_building_type type);

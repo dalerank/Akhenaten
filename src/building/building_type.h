@@ -14,7 +14,6 @@ enum e_building_type : uint16_t {
 	BUILDING_WATER_LIFT = 7,
 	BUILDING_IRRIGATION_DITCH = 8,
 	BUILDING_CLEAR_LAND = 9,
-	BUILDING_HOUSE_VACANT_LOT = 10,
 	BUILDING_HOUSE_CRUDE_HUT = 10,
 	BUILDING_HOUSE_STURDY_HUT = 11,
 	BUILDING_HOUSE_MEAGER_SHANTY = 12,
@@ -287,6 +286,7 @@ enum e_building_type : uint16_t {
 	BUILDING_MAX,
 };
 extern const token_holder<e_building_type, BUILDING_NONE, BUILDING_MAX> e_building_type_tokens;
+constexpr e_building_type BUILDING_HOUSE_VACANT_LOT = BUILDING_HOUSE_CRUDE_HUT;
 
 enum e_house_level {
     HOUSE_CRUDE_HUT = 0,
