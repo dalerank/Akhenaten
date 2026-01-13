@@ -25,13 +25,17 @@ mission10 { // Saqqara
                 BUILDING_WATER_SUPPLY, BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_MORTUARY,
 				BUILDING_WATER_LIFT, BUILDING_IRRIGATION_DITCH,
 				BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD, BUILDING_BRICKLAYERS_GUILD,
-				BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE,
+				BUILDING_VILLAGE_PALACE, BUILDING_HUNTING_LODGE, BUILDING_WORK_CAMP,			
 				BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
-                BUILDING_WOOD_CUTTERS, BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP,
+                BUILDING_JEWELS_WORKSHOP, BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP,
 				BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_PERSONAL_MANSION, BUILDING_BAZAAR, BUILDING_GRANARY, BUILDING_STORAGE_YARD,
                 BUILDING_RECRUITER, BUILDING_WEAPONSMITH, BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_ARCHERS, BUILDING_FORT_INFANTRY,
                 BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA,
 				BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_ALTAR_ANUBIS, BUILDING_TEMPLE_COMPLEX_ORACLE_SEKHMET,
+				BUILDING_POMEGRANATES_MEADOW_FARM,
+				BUILDING_STONE_QUARRY, BUILDING_GOLD_MINE,
+				BUILDING_FERRY,
+				BUILDING_MEDIUM_STEPPED_PYRAMID,
 				BUILDING_FESTIVAL_SQUARE, BUILDING_BOOTH, BUILDING_JUGGLER_SCHOOL, BUILDING_BANDSTAND, BUILDING_CONSERVATORY, BUILDING_PAVILLION, BUILDING_DANCE_SCHOOL,
                 BUILDING_SCRIBAL_SCHOOL,
 			  ]
@@ -43,6 +47,71 @@ mission10 { // Saqqara
 		monuments  {enabled : true, goal : 19 }
         kingdom    {enabled : true, goal : 50 }
 	}
+
+	cities [
+		{
+			name : "Nubt"
+			is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell Ebony
+            // buys linen, jewelry
+		}
+
+		{
+			name : "Kerma"
+			is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell Ebony
+            // buys linen, jewelry
+		}
+
+		{
+			name : "Behdet"
+			is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell fish, clay, pottery, beer, flax, papyrus, granite
+            // buys bricks, linen, gems, jewelry, tibmer
+		}
+
+        {
+			name : "Abedju"
+			is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell fish, grain, beer, linen, limestone
+            // buys gamemeat, clay, bricks, wood, papyrus, sunstone, limestone
+		}
+
+        {
+			name : "Men-nefer"
+            is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell chickpeas, pottery, papyrus
+            // buys bricks, barley, beer, jewelry 
+		}
+
+		{
+			name : "Abu"
+            is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            // sell chickpeas, pottery, papyrus
+            // buys bricks, barley, beer, jewelry 
+		}
+
+        {
+			name : "Selima Oasis"
+            is_sea_trade : false
+			max_traders : 1
+			trade_limits : default_trade_limits
+            sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
+            buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_COPPER, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
+		}
+	]
 }
 
 [event=event_register_mission_animals, mission=mission10]
