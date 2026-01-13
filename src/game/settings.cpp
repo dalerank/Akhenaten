@@ -43,7 +43,7 @@ void game_settings::load_default_settings() {
     warnings = true;
     gods_enabled = true;
     victory_video = false;
-    last_advisor = ADVISOR_LABOR;
+    last_advisor = ADVISOR_NONE;
 
     popup_messages = 0;
     pyramid_speedup = false;
@@ -64,7 +64,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->read_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
     last_advisor = buf->read_i32();
-    last_advisor = ADVISOR_TRADE; // debug
+    //last_advisor = ADVISOR_TRADE; // debug
     buf->skip(4);                      // int save_game_mission_id;
     tooltips_mode = (e_tooltip_mode)buf->read_i32();
     buf->skip(4); // int starting_kingdom;
