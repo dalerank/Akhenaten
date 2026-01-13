@@ -32,15 +32,15 @@
 
 declare_console_command_p(house_up) {
     buildings_house_do([] (building_house *house) {
-        e_building_type next_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() + 1);
+        e_building_type next_level = (e_building_type)(BUILDING_HOUSE_CRUDE_HUT + house->house_level() + 1);
         house->change_to(house->base, next_level, true);
     });
 };
 
 declare_console_command_p(house_down) {
     buildings_house_do([] (building_house *house) {
-        e_building_type prev_level = (e_building_type)(BUILDING_HOUSE_VACANT_LOT + house->house_level() - 1);
-        if (prev_level < BUILDING_HOUSE_VACANT_LOT) {
+        e_building_type prev_level = (e_building_type)(BUILDING_HOUSE_CRUDE_HUT + house->house_level() - 1);
+        if (prev_level < BUILDING_HOUSE_CRUDE_HUT) {
             prev_level = BUILDING_HOUSE_VACANT_LOT;
         }
         house->change_to(house->base, prev_level, true);
@@ -346,7 +346,7 @@ resource_list building_house::consume_goods_weekly() {
 
 template<bool use_offset>
 static int house_image_group(int level) {
-    const e_building_type btype = e_building_type(BUILDING_HOUSE_VACANT_LOT + level);
+    const e_building_type btype = e_building_type(BUILDING_HOUSE_CRUDE_HUT + level);
     const auto &params = building_static_params::get(btype);
     const auto anim = params.animations["house"];
     int image_id = image_id_from_group(anim.pack, anim.id);
