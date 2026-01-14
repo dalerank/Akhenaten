@@ -65,14 +65,14 @@ static void draw_foreground(int) {
     lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
     text_draw_percentage(g_settings.scroll_speed, 328, 182, FONT_SMALL_PLAIN);
 
-    arrow_buttons_draw({160, 40}, arrow_buttons, 4);
+    arrow_buttons_draw(/*{160, 40},*/ arrow_buttons, 4);
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 2, &data.focus_button_id)
-        || arrow_buttons_handle_mouse(m_dialog, {160, 40}, arrow_buttons, 4, 0)) {
+        || arrow_buttons_handle_mouse(m_dialog, /*{160, 40},*/ arrow_buttons, 4, 0)) {
         return;
     }
 

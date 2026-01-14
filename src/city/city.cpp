@@ -883,8 +883,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.balance);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.donated);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_income);
-    iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_tax_uncollected);
+    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.estimated_income);
+    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.estimated_uncollected);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_wages);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.expenses.festivals);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.expenses.festivals);
@@ -1390,10 +1390,7 @@ struct cproperty {
 bvariant city_get_property(const xstring &domain, const xstring &name) {
     static cproperty cproperties[] = {
         { tags().city, "tax_percentage", [] (const xstring&) { return bvariant(g_city.finance.tax_percentage); }},
-        { tags().city, "estimated_tax_income", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_income); }},
-        { tags().city, "percentage_taxed_people", [] (const xstring&) { return bvariant(g_city.taxes.percentage_taxed_people); }},
         { tags().city, "personal_savings", [] (const xstring&) { return bvariant(g_city.kingdome.personal_savings); }},
-        { tags().city, "estimated_tax_uncollected", [] (const xstring&) { return bvariant(g_city.finance.estimated_tax_uncollected); }},
         { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
         { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},
         { tags().city, "population_youngs", [] (const xstring&) { return bvariant(g_city.population.academy_age); }},

@@ -734,7 +734,7 @@ namespace archive_helper {                                                      
         call_unload_if_exists(a);                               \
         const bool ok = g_config_arch.r(name, a);               \
         call_init_if_exists(a);                                 \
-        { assert(ok && "Variable not exist in config:" name); } \
+        verify_no_crash_var(ok, "Variable not exist in config: %s", name); \
     }
 
 #define ANK_CONFIG_ARRAY_VARIABLE(a, name) \

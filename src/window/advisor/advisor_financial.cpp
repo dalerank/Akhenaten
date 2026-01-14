@@ -12,8 +12,13 @@
 #include "game/game.h"
 
 #include "js/js_game.h"
+#include "graphics/elements/ui_js.h"
+#include "js/js_events.h"
 
 ui::advisor_financial_window_t ANK_VARIABLE(advisor_financial_window)
+
+struct advisor_financial_window_draw { vec2i pos; };
+ANK_REGISTER_STRUCT_WRITER(advisor_financial_window_draw, pos);
 
 void ui::advisor_financial_window_t::draw_row(pcstr text, int &y, int value_last_year, int value_this_year) {
     auto ftext = ui::format(&g_city, text);
@@ -33,24 +38,9 @@ void ui::advisor_financial_window_t::archive_load(archive arch) {
     line_size_x = arch.r_int("line_size_x");
 }
 
-int ui::advisor_financial_window_t::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
-    const int treasury = g_city.finance.treasury;
-
-    pcstr prefix = (treasury < 0) ? ui::str(60, 3) : ui::str(60, 2);
-    e_font font = (treasury < 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
-    ui["treasury"].text_var("%s %d", prefix, std::abs(treasury));
-    ui["treasury"].font(font);
-
-    ui["dec_tax"].onclick([] { events::emit(event_finance_change_tax{ -1 }); });
-    ui["inc_tax"].onclick([] { events::emit(event_finance_change_tax{ +1 }); });
-
-    return 0;
-}
-
 void ui::advisor_financial_window_t::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
+    ui.event(advisor_financial_window_draw{ pos });
     ui.draw();
 
     const finance_overview& last_year = g_city.finance.last_year;

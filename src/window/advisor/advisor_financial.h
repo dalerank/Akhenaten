@@ -20,7 +20,6 @@ namespace ui {
         virtual int get_tooltip_text() override;
         virtual void ui_draw_foreground(UiFlags flags) override;
         virtual void draw_foreground(UiFlags flags) override {};
-        virtual int draw_background(UiFlags flags) override;
         virtual void init() override {}
 
         advisor_financial_window_t() : advisor_window("advisor_financial_window") {}

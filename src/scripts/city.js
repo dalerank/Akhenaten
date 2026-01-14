@@ -19,11 +19,20 @@ city {
     }
 
     finance { 
+        __property_getter: function(property) { return __city_get_finance_property(property) }
         income {
             @gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
         }
 
-        @treasury { get: function() { return __city_finance_treasury() } }
+        @treasury { }
+        @tax_percentage { set: __city_finance_set_tax_percentage }
+    }
+
+    taxes {
+        __property_getter: function(property) { return __city_get_taxes_property(property) }
+        @percentage_taxed_people { }
+        @estimated_uncollected { }
+        @estimated_income { }
     }
     
     military {

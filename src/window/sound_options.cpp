@@ -107,7 +107,7 @@ static void draw_foreground(int) {
     lang_text_draw_centered(46, city->enabled ? 8 : 7, 64, 256, 224, FONT_NORMAL_BLACK_ON_DARK);
     text_draw_percentage(city->volume, 374, 256, FONT_SMALL_PLAIN);
 
-    arrow_buttons_draw({208, 60}, arrow_buttons, 8);
+    arrow_buttons_draw(/*{208, 60},*/ arrow_buttons, 8);
 
     graphics_reset_dialog();
 }
@@ -116,7 +116,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_sound_options;
     const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 6, &data.focus_button_id)
-        || arrow_buttons_handle_mouse(m_dialog, {208, 60}, arrow_buttons, 8, 0))
+        || arrow_buttons_handle_mouse(m_dialog, /*{208, 60}*/ arrow_buttons, 8, 0))
         return;
 
     if (input_go_back_requested(m, h)) {

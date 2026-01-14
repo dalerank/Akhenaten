@@ -29,14 +29,14 @@ static void draw_foreground(int) {
 
     lang_text_draw_centered(153, g_settings.difficulty() + 1, 70, 142, 244, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw_centered(153, g_settings.gods_enabled ? 7 : 6, 70, 190, 244, FONT_NORMAL_BLACK_ON_LIGHT);
-    arrow_buttons_draw({288, 80}, arrow_buttons, 3);
+    arrow_buttons_draw(/*{288, 80},*/ arrow_buttons, 3);
     lang_text_draw_centered(153, 8, 48, 246, 384, FONT_NORMAL_BLACK_ON_LIGHT);
 
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), {288, 80}, arrow_buttons, 3, 0))
+    if (arrow_buttons_handle_mouse(mouse_in_dialog(m), /*{288, 80}*/ arrow_buttons, 3, 0))
         return;
 
     if (input_go_back_requested(m, h))

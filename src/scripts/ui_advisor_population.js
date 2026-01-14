@@ -18,12 +18,12 @@ advisor_population_graph_history = {
     x_axis_width   : 170
 }
 
-advisor_population_society_history = {
-    y_axis_offset  : [-56, 0]
+advisor_population_society_history {
+    y_axis_offset  [-56, 0]
 	y_axis_label_w : 60 
 	y_axis_height  : 200
 
-    x_axis_offset  : [-20, 215]
+    x_axis_offset  [-20, 215]
     x_axis_width   : 170
 }
 
