@@ -1682,7 +1682,7 @@ game_messages_de {
         subtitle { text: "Geschichte" }
         content { text: "Ein Großteil der wirklich schweren Arbeit wurde im alten Ägypten von Bauern verrichtet. Während der Anbau- und Erntezeit bearbeiteten sie den Boden und brachten die Ernte ein. Während der Überschwemmung wurden dieselben Arbeiter eingezogen, um für den Staat zu arbeiten. Größtenteils arbeiteten sie am Bau von Pyramiden und anderen Gebäuden mit, wurden aber durchaus auch mit dem Unterhalt der Infrastruktur beauftragt, wie z.B. dem Bau und Erhalt von @153Straßen und @154Bewässerungskanälen. @L@LZwar war das kein leichtes Leben, doch wurden die Arbeiter nicht wirklich ausgebeutet. Üblicherweise dauerte ein Arbeitstag acht Stunden. Mittags gab es eine Pause. Die Arbeitswoche dauerte acht Tage. Am Ende dieser Woche hatten die Arbeiter zwei Tage frei. Zusätzlich zu diesen 'Wochenenden' musste auch an Festtagen nicht gearbeitet werden. Ein Arbeiter konnte sich auch frei nehmen, wenn Familienangehörige erkrankten oder es einen Todesfall in der Familie gab. @L@LÜber die Anwesenheit sowie über die Gründe bei Ausfällen gibt es ausführliche Unterlagen. Einige Gründe wären heute allerdings wohl keine akzeptierten Ausreden mehr ... Ein Arbeiter z.B. kam nicht zur Arbeit, weil er mit einem Freund einen trinken gehen wollte. @L@LIm Gegensatz zur landläufigen Meinung wurden Sklaven nur selten für die Arbeit an staatlichen Bauvorhaben eingesetzt. Manchmal setzte man Sklaven in Steinbrüchen ein, größtenteils jedoch dienten sie in Haushalten. @L@LWenn Arbeiter nicht gut behandelt wurden, konnten sie in Streik treten. Während der Herrschaft von Ramses III., etwa im Jahr 1152 v. Chr., legten Arbeiter in Deir el-Medina offiziell die Arbeit nieder, um gegen die Verzögerungen bei der Entlohnung zu protestieren. Der Streik war erfolgreich und das Problem der verspäteten Entlohnung wurde behoben." }
     }
-    message_tutorial_clean_water {
+    message_clean_water {
         id: 156
         
         size [30, 20]
@@ -3202,7 +3202,7 @@ game_messages_de {
             text: "Ihre Bürger sind in Sorge, dass dieser oder jener Gott grollen könnte. Manche hatten gar Visionen von schrecklichen Katastrophen, die bevorstehen würden. Besänftigen Sie mit Tempeln oder Festen zu Ehren der Götter deren Groll, wenn Sie vermeiden wollen, dass sich ihr Zorn in einem Strafgericht über Ihrer Stadt entlädt."
         }
     }
-    message_clean_water {
+    message_tutorial_clean_water {
         id: 255
         type: 2
         message_type: 4
