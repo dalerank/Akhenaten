@@ -27,17 +27,17 @@ struct arrow_button {
     arrow_button &onclick(std::function<void()> f) { return onclick([f] (int, int) { f(); }); }
 };
 
-void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny = false);
-int get_arrow_button(const mouse *m, vec2i pos, arrow_button *buttons, int num_buttons);
-int arrow_buttons_handle_mouse(const mouse* m, vec2i pos, arrow_button* buttons, int num_buttons, int* focus_button_id);
+void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny = false);
+int get_arrow_button(const mouse *m, arrow_button *buttons, int num_buttons);
+int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id);
 
 template<class T>
-bool arrow_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focus_button_id) {
+bool arrow_buttons_handle_mouse(const mouse *m, T &buttons, int &focus_button_id) {
     return buttons.size() > 0 
-        ? arrow_buttons_handle_mouse(m, pos.x, pos.y, &buttons.front(), (int)buttons.size(), &focus_button_id)
+        ? arrow_buttons_handle_mouse(m, &buttons.front(), (int)buttons.size(), &focus_button_id)
         : 0;
 }
 
-inline void arrow_buttons_draw(vec2i pos, arrow_button &button, bool tiny) {
-    arrow_buttons_draw(pos, &button, 1, tiny);
+inline void arrow_buttons_draw(arrow_button &button, bool tiny) {
+    arrow_buttons_draw(&button, 1, tiny);
 }

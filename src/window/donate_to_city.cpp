@@ -88,7 +88,7 @@ static void draw_foreground(int) {
     button_border_draw({ 336, 283 }, { 160, 20 }, data.focus_button_id == 1);
     button_border_draw({ 144, 283 }, { 160, 20 }, data.focus_button_id == 2);
 
-    arrow_buttons_draw({0, 0}, arrow_buttons, 2);
+    arrow_buttons_draw(arrow_buttons, 2);
 
     graphics_reset_dialog();
 }
@@ -98,7 +98,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 7, &data.focus_button_id))
         return;
-    if (arrow_buttons_handle_mouse(m_dialog, {0, 0}, arrow_buttons, 2, &data.focus_arrow_button_id))
+    if (arrow_buttons_handle_mouse(m_dialog, arrow_buttons, 2, &data.focus_arrow_button_id))
         return;
     if (input_go_back_requested(m, h))
         window_advisors_show();

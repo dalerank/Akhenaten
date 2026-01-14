@@ -12,5 +12,18 @@ int __city_finance_income(int type) {
 }
 ANK_FUNCTION_1(__city_finance_income)
 
-int __city_finance_treasury() { return g_city.finance.treasury; }
-ANK_FUNCTION(__city_finance_treasury)
+void __city_finance_set_tax_percentage(int tax) {
+    g_city.finance.change_tax(tax);
+}
+ANK_FUNCTION_1(__city_finance_set_tax_percentage)
+
+std::optional<bvariant> __city_get_finance_property(pcstr property) {
+    return archive_helper::get(g_city.finance, property, true);
+}
+ANK_FUNCTION_1(__city_get_finance_property)
+
+std::optional<bvariant> __city_get_taxes_property(pcstr property) {
+    return archive_helper::get(g_city.taxes, property, true);
+}
+ANK_FUNCTION_1(__city_get_taxes_property)
+

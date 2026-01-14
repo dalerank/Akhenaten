@@ -33,7 +33,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_arrowbutton_options) {
     assert(g_arrow_button_images.arrow_button_tiny_down.valid() && "Incorrect image desc loaded");
 }
 
-void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool tiny) {
+void arrow_buttons_draw(arrow_button* buttons, int num_buttons, bool tiny) {
     painter ctx = game.painter();
     for (int i = 0; i < num_buttons; i++) {
         int image_id = buttons[i].image_id;
@@ -51,14 +51,14 @@ void arrow_buttons_draw(vec2i pos, arrow_button* buttons, int num_buttons, bool 
             image_id += (buttons[i].state & 0xf);
         }
 
-        ctx.img_generic(image_id, pos + vec2i{ buttons[i].x, buttons[i].y });
+        ctx.img_generic(image_id, vec2i{ buttons[i].x, buttons[i].y });
     }
 }
 
-int get_arrow_button(const mouse* m, vec2i pos, arrow_button* buttons, int num_buttons) {
+int get_arrow_button(const mouse* m, arrow_button* buttons, int num_buttons) {
     for (int i = 0; i < num_buttons; i++) {
-        if (pos.x + buttons[i].x <= m->x && pos.x + buttons[i].x + buttons[i].wsize > m->x
-            && pos.y + buttons[i].y <= m->y && pos.y + buttons[i].y + buttons[i].wsize > m->y) {
+        if (buttons[i].x <= m->x && buttons[i].x + buttons[i].wsize > m->x
+            && buttons[i].y <= m->y && buttons[i].y + buttons[i].wsize > m->y) {
             return i + 1;
         }
     }
@@ -66,7 +66,7 @@ int get_arrow_button(const mouse* m, vec2i pos, arrow_button* buttons, int num_b
     return 0;
 }
 
-int arrow_buttons_handle_mouse(const mouse* m, vec2i pos, arrow_button* buttons, int num_buttons, int* focus_button_id) {
+int arrow_buttons_handle_mouse(const mouse* m, arrow_button* buttons, int num_buttons, int* focus_button_id) {
     static time_millis last_time = 0;
 
     time_millis curr_time = time_get_millis();
@@ -87,7 +87,7 @@ int arrow_buttons_handle_mouse(const mouse* m, vec2i pos, arrow_button* buttons,
             btn->repeats = 0;
         }
     }
-    int button_id = get_arrow_button(m, pos, buttons, num_buttons);
+    int button_id = get_arrow_button(m, buttons, num_buttons);
     if (focus_button_id) {
         *focus_button_id = button_id;
     }

@@ -41,11 +41,15 @@ void city_finance_t::init() {
     });
 
     events::subscribe([this] (event_finance_change_tax ev) {
-        tax_percentage = calc_bound(tax_percentage + ev.value, 0, 25);
-
-        update_estimate_taxes();
-        calculate_totals();
+        change_tax(tax_percentage + ev.value);
     });
+}
+
+void city_finance_t::change_tax(int value) {
+    tax_percentage = calc_bound(value, 0, 25);
+
+    update_estimate_taxes();
+    calculate_totals();
 }
 
 void city_finance_t::change_wages(int amount) {
@@ -193,12 +197,12 @@ void city_finance_t::update_estimate_taxes() {
     int estimated_rest_of_year = (12 - game.simtime.month) * (monthly_patricians + monthly_plebs);
 
     this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
-    estimated_tax_income = this_year.income.taxes + estimated_rest_of_year;
+    taxes.estimated_income = this_year.income.taxes + estimated_rest_of_year;
 
     // TODO: fix this calculation
     int uncollected_patricians = calc_adjust_with_percentage<int>(taxes.monthly.uncollected_nobles / 2, tax_percentage);
     int uncollected_plebs = calc_adjust_with_percentage<int>(taxes.monthly.uncollected_citizens / 2, tax_percentage);
-    estimated_tax_uncollected = (game.simtime.month) * (uncollected_patricians + uncollected_plebs) - this_year.income.taxes;
+    taxes.estimated_uncollected = (game.simtime.month) * (uncollected_patricians + uncollected_plebs) - this_year.income.taxes;
 }
 
 void city_finance_t::collect_monthly_taxes() {

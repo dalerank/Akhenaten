@@ -53,7 +53,7 @@ namespace ui {
             switch (type) {
             case generic: return !!generic_buttons_handle_mouse(m, offset, &g_button, 1, &tmp_btn);
             case image: return !!image_buttons_handle_mouse(m, offset, &i_button, 1, &tmp_btn);
-            case arrow: return !!arrow_buttons_handle_mouse(m, offset, &a_button, 1, &tmp_btn);
+            case arrow: return !!arrow_buttons_handle_mouse(m, &a_button, 1, &tmp_btn);
             default:
                 assert(false);
             }
@@ -617,19 +617,19 @@ arrow_button &ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags) {
     const mouse& m = mouse::get();
 
     int size = tiny ? 17 : 24;
-    g_state.buttons.push_back(arrow_button{pos.x, pos.y, -1, size, button_none, 0, 0});
+    g_state.buttons.push_back(arrow_button{offset.x + pos.x, offset.y + pos.y, -1, size, button_none, 0, 0});
     auto &abutton = g_state.buttons.back().a_button;
 
-    const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, offset) || !!(flags & UiFlags_Selected));
+    const bool hovered = !(flags & UiFlags_Darkened) && (is_button_hover(abutton, {0, 0}) || !!(flags & UiFlags_Selected));
     abutton.pressed = hovered && m.left.is_down;
     abutton.state = (hovered ? (abutton.pressed ? 2 : 1) : 0);
     abutton.state |= (down ? 0x10 : 0);
 
-    arrow_buttons_draw(offset, abutton, tiny);
+    arrow_buttons_draw(abutton, tiny);
     const bool darkened = !!(flags & UiFlags_Darkened);
 
     if (darkened) {
-        graphics_shade_rect(offset + pos, vec2i{ size, size }, 0x80);
+        graphics_shade_rect(pos, vec2i{ size, size }, 0x80);
     }
 
     return abutton;

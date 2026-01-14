@@ -264,7 +264,7 @@ void ui::advisor_population_window::draw_society_graph(int full_size, pcstr body
  void ui::advisor_population_window::print_society_info() {
     int avg_tax_per_house = 0;
     if (calculate_total_housing_buildings() > 0) {
-        avg_tax_per_house = g_city.finance.estimated_tax_income / calculate_total_housing_buildings();
+        avg_tax_per_house = g_city.taxes.estimated_income / calculate_total_housing_buildings();
     }
 
     // Housing prosperity cap

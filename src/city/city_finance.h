@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "core/archive.h"
+
 enum e_finance_request_type {
     efinance_request_none = 0,
     efinance_request_festival,
@@ -60,6 +62,8 @@ struct city_taxes_t {
     int32_t taxed_nobles;
     int32_t untaxed_citizens;
     int32_t untaxed_nobles;
+    int32_t estimated_uncollected;
+    int32_t estimated_income;
     int8_t percentage_taxed_citizens;
     int8_t percentage_taxed_nobles;
     int8_t percentage_taxed_people;
@@ -76,6 +80,8 @@ struct city_taxes_t {
         int32_t uncollected_nobles;
     } monthly;
 };
+ANK_CONFIG_PROPERTY(city_taxes_t,
+    percentage_taxed_people, estimated_uncollected, estimated_income)
 
 struct city_finance_t {
     struct treasury_t {
@@ -89,8 +95,6 @@ struct city_finance_t {
     int8_t wages;
     int8_t wages_kingdome;
     int8_t tax_percentage;
-    int32_t estimated_tax_uncollected;
-    int32_t estimated_tax_income;
     int32_t estimated_wages;
     finance_overview last_year;
     finance_overview this_year;
@@ -120,7 +124,10 @@ struct city_finance_t {
     void process_stolen(int stolen);
     void process_construction(int cost);
     void update_interest();
+    void change_tax(int value);
 
     void process_request(event_finance_request request);
     void calculate_totals();
 };
+ANK_CONFIG_PROPERTY(city_finance_t,
+    treasury, tax_percentage)

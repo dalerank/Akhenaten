@@ -263,7 +263,7 @@ static void draw_city_info(const empire_city* city) {
 
 static void draw_panel_buttons(const empire_city* city) {
     auto &data = g_window_empire;
-    arrow_buttons_draw({data.p_min.x + 20, data.p_max.y - 100}, arrow_buttons_empire, 2);
+    arrow_buttons_draw(/*{data.p_min.x + 20, data.p_max.y - 100},*/ arrow_buttons_empire, 2);
 
     if (city)
         draw_city_info(city);
@@ -328,7 +328,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         }
     }
     data.focus_button_id = 0;
-    if (!arrow_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, arrow_buttons_empire, 2, 0)) {
+    if (!arrow_buttons_handle_mouse(m, /*{data.p_min.x + 20, data.p_max.y - 100},*/ arrow_buttons_empire, 2, 0)) {
         if (!generic_buttons_handle_mouse(m, {data.p_min.x + 20, data.p_max.y - 100}, generic_button_ok, 1, &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = g_empire_map.selected_object();

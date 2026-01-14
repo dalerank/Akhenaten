@@ -155,7 +155,7 @@ static void draw_foreground(int) {
     button_border_draw({ 18, 278 }, { 184, 144 }, 0);
     ctx.img_generic(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + g_scenario.image_id, { 20, 280 });
 
-    arrow_buttons_draw({0, 0}, image_arrows, 2);
+    arrow_buttons_draw(image_arrows, 2);
 
     graphics_reset_dialog();
 }
@@ -164,7 +164,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     const mouse* m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &scenario_description_input)
         || generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 10, &data.focus_button_id)
-        || arrow_buttons_handle_mouse(m_dialog, {0, 0}, image_arrows, 2, 0)
+        || arrow_buttons_handle_mouse(m_dialog, image_arrows, 2, 0)
         || widget_sidebar_editor_handle_mouse_attributes(m))
         return;
     if (input_go_back_requested(m, h)) {
