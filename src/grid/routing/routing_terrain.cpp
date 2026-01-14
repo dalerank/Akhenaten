@@ -443,7 +443,6 @@ void map_routing_update_ferry_routes() {
             auto path = make_span(path_data.data(), path_length);
 
             int grid_offset = ppoints.first.grid_offset();
-            //int image_id = image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
             for (const auto &dir : path) {
                 map_terrain_add(grid_offset, TERRAIN_FERRY_ROUTE);
                 map_routing_adjust_tile_in_direction(dir, ppoints.first, grid_offset);

@@ -6,8 +6,10 @@ building_house_crude_hut {
     preview{ id: 36 }
     base{ id: 36 }
     house{ id: 26 }
-    minimap{ id:148 }
+    minimap{ id:148 }    
   }
+
+  meta { help_id:128, text_id:-1 }
 
   building_size : 1
   can_merge : true
@@ -27,6 +29,9 @@ building_house_crude_hut {
 
   desirability { value[-2], step[1], step_size[1], range[3] }
   crime { value[5], step[1], step_size[-1], range[4] }
+
+  laborers[0]
+  cost [ 5, 10, 20, 40, 50 ]
   
   fire_risk[3]
   damage_risk[0]
