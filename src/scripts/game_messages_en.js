@@ -1700,7 +1700,7 @@ game_messages_en {
         subtitle { text: "History" }
         content { text: "Peasants performed most of the hardest labor in ancient Egypt. Peasants tilled the soil and harvested the crops during the growing season. During the Inundation, these same workers were conscripted to do work for the state. Mostly, they worked to build pyramids and other structures, but these workers could also be tasked with maintaining the Egyptian infrastructure, like @153roads and @154Irrigation&Ditches. @L@LWhile the work the peasants performed wasn't easy, they weren't completely abused. The typical workday lasted eight hours with a break at lunch. The work week lasted eight days, with two days off at the end. In addition to these 'weekends,' work stopped for festivals. Workers could also take time off if there was sickness or death in the family. @L@LAttendance was very well documented, as were the reasons for missing work. Some reasons for missing work probably wouldn't be acceptable excuses today. One employee missed work to go drinking with a buddy. @L@LDespite what many people think, slave labor was seldom used on state construction projects. Sometimes, slaves were used in quarries, but for the most part they served in households. @L@LIf workers were not treated well, they could go on strike.  During Ramses III's reign, about 1152 BC, workers at Deir el-Medina formally stopped work to protest the delay of their compensation.  Their strike was successful, and the problem of late compensation was rectified." }
     }
-    message_tutorial_clean_water {
+    message_clean_water {
         id: 156
         
         size [30, 20]
@@ -3219,7 +3219,7 @@ game_messages_en {
             text: "Now that you've built up this city somewhat, it's time to provide education for some citizens.  @L@PSchools and Libraries cannot educate the people without papyrus on which to write. @G69 @PReed Gatherers supply Papyrus Makers with the necessary raw materials, and papyrus is then distributed directly to the city's educational facilities."
         }
     }
-    message_clean_water {
+    message_tutorial_clean_water {
         id: 255
         type: 2
         message_type: 4

@@ -59,20 +59,21 @@ function mission1_on_start(ev) {
 	if (mission.gold_mined_handled) {
 		city.use_building(BUILDING_TEMPLE_BAST, true)
 		city.use_building(BUILDING_SHRINE_BAST, true)
-		city.use_building(BUILDING_FESTIVAL_SQUARE, true)		
+		city.use_building(BUILDING_FESTIVAL_SQUARE, true)
+		city.set_advisor_available(ADVISOR_RELIGION, 1)
 	}
 
 	if (mission.temples_built) {
 		city.use_building(BUILDING_BOOTH, true)
 		city.use_building(BUILDING_JUGGLER_SCHOOL, true)
+		city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	}
 
 	if (mission.tutorial_collapsed_handle) {
 		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
 
-    city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
-	city.set_advisor_available(ADVISOR_RELIGION, 1)
+    city.set_advisor_available(ADVISOR_POPULATION, 1)
 }
 
 [event=event_advance_week, mission=mission1]
@@ -119,6 +120,8 @@ function mission1_check_gold_mined(ev) {
 	city.use_building(BUILDING_SHRINE_BAST, true)
 	city.use_building(BUILDING_FESTIVAL_SQUARE, true)
 
+	city.set_advisor_available(ADVISOR_RELIGION, 1)
+
 	ui.popup_message("message_tutorial_the_gods_of_egypt")
 }
 
@@ -155,6 +158,8 @@ function mission1_on_build_temple(ev) {
 
 	city.use_building(BUILDING_BOOTH, true)
 	city.use_building(BUILDING_JUGGLER_SCHOOL, true)
+
+	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 
     mission.last_action = game.absolute_day
     mission.temples_built = true
