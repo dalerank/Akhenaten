@@ -15,6 +15,12 @@ std::optional<bvariant> __city_finance_expenses(pcstr property, bool this_year) 
 }
 ANK_FUNCTION_2(__city_finance_expenses)
 
+std::optional<bvariant> __city_finance_overview(pcstr property, bool this_year) {
+    auto &year = this_year ? g_city.finance.this_year : g_city.finance.last_year;
+    return archive_helper::get(year, property, true);
+}
+ANK_FUNCTION_2(__city_finance_overview)
+
 int __city_finance_get_treasury() {
     return g_city.finance.treasury;
 }

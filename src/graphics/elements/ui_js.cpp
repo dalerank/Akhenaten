@@ -24,7 +24,7 @@ ANK_FUNCTION_5(__ui_draw_button);
 void __ui_draw_label(pcstr text, vec2i pos, int font) { ui::label(text, pos, (e_font)font); }
 ANK_FUNCTION_3(__ui_draw_label);
 
-void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0); }
+void __ui_draw_line(bool hline, vec2i pos, int size) { ui::line(hline, pos, size, 0xff000000); }
 ANK_FUNCTION_3(__ui_draw_line);
 
 void __ui_window_city_show() { window_city_show(); }
