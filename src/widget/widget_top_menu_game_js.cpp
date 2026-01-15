@@ -126,7 +126,7 @@ ANK_FUNCTION_2(__widget_top_menu_sound_options)
 
 pcstr __widget_top_menu_speed_options(int, int) {
     widget_top_menu_clear_state();
-    window_speed_options_show(window_city_show);
+    speed_options_window::show(window_city_show);
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_speed_options)
