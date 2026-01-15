@@ -44,7 +44,7 @@ city {
             expenses { }
         }
 
-        @treasury { }
+        @treasury { get: __city_finance_get_treasury }
         @tax_percentage { set: __city_finance_set_tax_percentage }
     }
 

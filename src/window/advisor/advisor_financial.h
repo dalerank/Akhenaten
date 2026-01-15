@@ -5,9 +5,7 @@
 
 namespace ui {
 
-    struct advisor_financial_window_t : public advisor_window {
-        advisor_financial_window_t() : advisor_window("advisor_financial_window") {}
-        
+    struct advisor_financial_window : public advisor_window_t<advisor_financial_window> {      
         virtual int handle_mouse(const mouse *m) override { return 0; }
         virtual void ui_draw_foreground(UiFlags flags) override;
         virtual int get_tooltip_text() override { return 0; }
