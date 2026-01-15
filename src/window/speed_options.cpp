@@ -1,119 +1,96 @@
 #include "speed_options.h"
 
 #include "game/settings.h"
-#include "graphics/graphics.h"
-#include "graphics/elements/arrow_button.h"
-#include "graphics/elements/generic_button.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/panel.h"
-#include "graphics/image.h"
-#include "graphics/text.h"
 #include "graphics/window.h"
+#include "graphics/screen.h"
 #include "game/game.h"
 #include "input/input.h"
 
-static void button_ok(int param1, int param2);
-static void button_cancel(int param1, int param2);
+speed_options_window g_speed_options_window;
 
-static void arrow_button_game(int is_down, int param2);
-static void arrow_button_scroll(int is_down, int param2);
-
-static generic_button buttons[] = {
-  {144, 232, 192, 20, button_ok, button_none, 1, 0},
-  {144, 262, 192, 20, button_cancel, button_none, 1, 0},
-};
-
-static arrow_button arrow_buttons[] = {
-  {112, 100, 17, 24, arrow_button_game, 1, 0},
-  {136, 100, 15, 24, arrow_button_game, 0, 0},
-  {112, 136, 17, 24, arrow_button_scroll, 1, 0},
-  {136, 136, 15, 24, arrow_button_scroll, 0, 0},
-};
-
-static struct {
-    int focus_button_id;
-    void (*close_callback)(void);
-
-    int original_game_speed;
-    int original_scroll_speed;
-} data;
-
-static void init(void (*close_callback)()) {
-    data.focus_button_id = 0;
-    data.close_callback = close_callback;
-    data.original_game_speed = game.game_speed;
-    data.original_scroll_speed = g_settings.scroll_speed;
-}
-
-static void draw_foreground(int) {
-    graphics_set_to_dialog();
-
-    outer_panel_draw(vec2i{80, 80}, 20, 14);
-    // ok/cancel labels
-    small_panel_draw({ 144, 232 }, 12, data.focus_button_id == 1 ? 1 : 2);
-    small_panel_draw({ 144, 262 }, 12, data.focus_button_id == 2 ? 1 : 2);
-
-    // title
-    lang_text_draw_centered(45, 0, 96, 92, 288, FONT_LARGE_BLACK_ON_LIGHT);
-    // ok/cancel label texts
-    lang_text_draw_centered(45, 4, 128, 236, 224, FONT_NORMAL_BLACK_ON_DARK);
-    lang_text_draw_centered(45, 1, 128, 266, 224, FONT_NORMAL_BLACK_ON_DARK);
-    // game speed
-    lang_text_draw(45, 2, 112, 146, FONT_SMALL_PLAIN);
-    text_draw_percentage(game.game_speed, 328, 146, FONT_SMALL_PLAIN);
-    // scroll speed
-    lang_text_draw(45, 3, 112, 182, FONT_SMALL_PLAIN);
-    text_draw_percentage(g_settings.scroll_speed, 328, 182, FONT_SMALL_PLAIN);
-
-    arrow_buttons_draw(/*{160, 40},*/ arrow_buttons, 4);
-    graphics_reset_dialog();
-}
-
-static void handle_input(const mouse* m, const hotkeys* h) {
-    const mouse* m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 2, &data.focus_button_id)
-        || arrow_buttons_handle_mouse(m_dialog, /*{160, 40},*/ arrow_buttons, 4, 0)) {
-        return;
+void speed_options_window::close() {
+    if (close_callback) {
+        close_callback();
     }
-
-    if (input_go_back_requested(m, h)) {
-        data.close_callback();
-    }
+    window_go_back();
 }
 
-static void button_ok(int param1, int param2) {
-    data.close_callback();
-}
+void speed_options_window::init() {
+    autoconfig_window::init();
 
-static void button_cancel(int param1, int param2) {
-    game.game_speed = data.original_game_speed;
-    g_settings.scroll_speed = data.original_scroll_speed;
-    data.close_callback();
-}
+    // Set up buttons
+    ui["btn_ok"].onclick([this] {
+        this->close();
+    });
 
-static void arrow_button_game(int is_down, int param2) {
-    if (is_down)
+    ui["btn_cancel"].onclick([this] {
+        game.game_speed = this->original_game_speed;
+        g_settings.scroll_speed = this->original_scroll_speed;
+        this->close();
+    });
+
+    // Set up arrow buttons for game speed
+    ui["arrow_game_down"].onclick([this] (int, int) {
         game.decrease_game_speed();
-    else {
+    });
+
+    ui["arrow_game_up"].onclick([this] (int, int) {
         game.increase_game_speed();
-    }
+    });
+
+    // Set up arrow buttons for scroll speed
+    ui["arrow_scroll_down"].onclick([this] (int, int) {
+        g_settings.decrease_scroll_speed();
+    });
+
+    ui["arrow_scroll_up"].onclick([this] (int, int) {
+        g_settings.increase_scroll_speed();
+    });
 }
 
-static void arrow_button_scroll(int is_down, int param2) {
-    if (is_down)
-        g_settings.decrease_scroll_speed();
-    else {
-        g_settings.increase_scroll_speed();
+void speed_options_window::ui_draw_foreground(UiFlags flags) {
+    ui.begin_widget(pos);
+    ui.draw(flags);
+    
+    // Update dynamic text values
+    ui["game_speed_value"].text_var("%d%%", game.game_speed);
+    ui["scroll_speed_value"].text_var("%d%%", g_settings.scroll_speed);
+    
+    ui.end_widget();
+}
+
+int speed_options_window::ui_handle_mouse(const mouse *m) {
+    int result = autoconfig_window::ui_handle_mouse(m);
+
+    const hotkeys *h = hotkey_state();
+    if (input_go_back_requested(m, h)) {
+        close();
     }
+
+    return result;
+}
+
+int speed_options_window::handle_mouse(const mouse *m) {
+    return 0;
+}
+
+void speed_options_window::show(close_callback_t cb) {
+    static window_type window = {
+        WINDOW_SPEED_OPTIONS,
+        window_draw_underlying_window,
+        [] (int flags) { g_speed_options_window.ui_draw_foreground(flags); },
+        [] (const mouse *m, const hotkeys *h) { g_speed_options_window.ui_handle_mouse(m); }
+    };
+
+    g_speed_options_window.close_callback = cb;
+    g_speed_options_window.original_game_speed = game.game_speed;
+    g_speed_options_window.original_scroll_speed = g_settings.scroll_speed;
+    g_speed_options_window.pos = screen_dialog_offset();
+    g_speed_options_window.init();
+
+    window_show(&window);
 }
 
 void window_speed_options_show(void (*close_callback)(void)) {
-    window_type window = {
-        WINDOW_SPEED_OPTIONS,
-        window_draw_underlying_window,
-        draw_foreground,
-        handle_input
-    };
-    init(close_callback);
-    window_show(&window);
+    speed_options_window::show(close_callback);
 }

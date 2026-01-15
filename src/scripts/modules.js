@@ -12,6 +12,7 @@ import game_messages_en
 import animal_herds
 import gods
 import city
+import city_finance
 import images
 import city_sounds
 import buildings

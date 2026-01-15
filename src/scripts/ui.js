@@ -40,5 +40,6 @@ import ui_market_buyer_window
 import ui_widgets
 import ui_message_dialog
 import ui_display_options_window
+import ui_speed_options_window
 
 
