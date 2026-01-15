@@ -2,8 +2,187 @@
 #include "jsvalue.h"
 #include "jsbuiltin.h"
 
+#include <stdio.h>
+#include <string.h>
+
 #define QQ(X) #X
 #define Q(X) QQ(X)
+
+/* Get a line from source code by line number */
+static const char *jsB_getline(const char *source, int target_line, char *buf, size_t bufsize)
+{
+  if (!source || target_line < 1 || !buf || bufsize < 2) {
+    return NULL;
+  }
+  
+  int current_line = 1;
+  const char *line_start = source;
+  const char *p = source;
+  
+  /* Find the target line */
+  while (*p && current_line < target_line) {
+    if (*p == '\n') {
+      current_line++;
+      line_start = p + 1;
+    }
+    p++;
+  }
+  
+  /* If we didn't reach the target line */
+  if (current_line != target_line) {
+    return NULL;
+  }
+  
+  /* Find the end of the line */
+  const char *line_end = line_start;
+  while (*line_end && *line_end != '\n' && *line_end != '\r') {
+    line_end++;
+  }
+  
+  /* Copy the line to buffer */
+  size_t len = line_end - line_start;
+  if (len >= bufsize - 1) {
+    len = bufsize - 2;
+  }
+  
+  if (len > 0) {
+    memcpy(buf, line_start, len);
+  }
+  buf[len] = '\0';
+  
+  return buf;
+}
+
+/* Read a line from a file */
+static const char *jsB_getline_from_file(const char *filename, int target_line, char *buf, size_t bufsize)
+{
+  if (!filename || target_line < 1 || !buf || bufsize < 2) {
+    return NULL;
+  }
+  
+  FILE *f = fopen(filename, "r");
+  if (!f) {
+    return NULL;
+  }
+  
+  int current_line = 1;
+  
+  while (current_line < target_line && fgets(buf, bufsize, f)) {
+    current_line++;
+  }
+  
+  if (current_line == target_line && fgets(buf, bufsize, f)) {
+    /* Remove trailing newline */
+    size_t len = strlen(buf);
+    while (len > 0 && (buf[len-1] == '\n' || buf[len-1] == '\r')) {
+      buf[--len] = '\0';
+    }
+    fclose(f);
+    return buf;
+  }
+  
+  fclose(f);
+  return NULL;
+}
+
+/* Find the position of property access in a line (simple heuristic) */
+static int jsB_find_property_access_pos(const char *line)
+{
+  const char *last_dot = NULL;
+  const char *p = line;
+  
+  /* Find the last dot before end of meaningful code */
+  while (*p) {
+    if (*p == '.') {
+      last_dot = p;
+    } else if (*p == ';' || *p == '/' || *p == '\n') {
+      break;
+    }
+    p++;
+  }
+  
+  /* If we found a dot, return its position */
+  if (last_dot) {
+    return (int)(last_dot - line);
+  }
+  
+  /* Otherwise, try to find the last identifier before end of line */
+  /* This is a simple heuristic - point to near the end of code */
+  p = line;
+  int last_alphanum = -1;
+  while (*p && *p != ';' && *p != '/' && *p != '\n') {
+    if ((*p >= 'a' && *p <= 'z') || (*p >= 'A' && *p <= 'Z') || (*p >= '0' && *p <= '9')) {
+      last_alphanum = (int)(p - line);
+    }
+    p++;
+  }
+  
+  return last_alphanum > 0 ? last_alphanum : (int)strlen(line) - 1;
+}
+
+/* Format detailed error message with code context */
+static void jsB_format_detailed_error(js_State *J, const char *error_type, const char *value_type, char *outbuf, size_t outsize)
+{
+  char linebuf[512];
+  const char *line_text = NULL;
+  int line_num = 0;
+  const char *filename = NULL;
+  
+  /* Get the current line number and filename from trace */
+  if (J->tracetop >= 0) {
+    line_num = J->trace[J->tracetop].line;
+    filename = J->trace[J->tracetop].file;
+  }
+  
+  /* Try to get the source line */
+  if (filename && line_num > 0) {
+    /* First try from current source if available */
+    if (J->source && J->filename && strcmp(J->filename, filename) == 0) {
+      line_text = jsB_getline(J->source, line_num, linebuf, sizeof(linebuf));
+    }
+    /* If not available, try reading from file */
+    if (!line_text && filename && strcmp(filename, "native") != 0) {
+      line_text = jsB_getline_from_file(filename, line_num, linebuf, sizeof(linebuf));
+    }
+  }
+  
+  /* Format the error message */
+  if (line_text && line_text[0]) {
+    /* Trim leading whitespace for display */
+    const char *trimmed = line_text;
+    int leading_spaces = 0;
+    while (*trimmed == ' ' || *trimmed == '\t') {
+      if (*trimmed == '\t') {
+        leading_spaces += 4;
+      } else {
+        leading_spaces++;
+      }
+      trimmed++;
+    }
+    
+    /* Find approximate position of the error */
+    int error_pos = jsB_find_property_access_pos(trimmed);
+    if (error_pos < 0) error_pos = 0;
+    if (error_pos > (int)strlen(trimmed) - 1) error_pos = strlen(trimmed) - 1;
+    
+    /* Build detailed error message with code context */
+    snprintf(outbuf, outsize,
+             "cannot convert %s to %s\n"
+             "\n"
+             "%s\n"
+             "%*s^\n"
+             "%*s|\n"
+             "%*s+-- %s",
+             value_type, error_type,
+             trimmed,
+             error_pos, "",
+             error_pos, "",
+             error_pos, "", value_type);
+  } else {
+    /* Fallback to simple message */
+    snprintf(outbuf, outsize, "cannot convert %s to %s", value_type, error_type);
+  }
+}
 
 static void jsB_stacktrace(js_State *J, int skip)
 {
@@ -67,6 +246,26 @@ static void js_newerrorx(js_State *J, const char *message, js_Object *prototype)
   js_setproperty(J, -2, "message");
   jsB_stacktrace(J, 0);
   js_setproperty(J, -2, "stackTrace");
+}
+
+/* Create a detailed type error with code context */
+void js_newtypeerror_detailed(js_State *J, const char *value_type, const char *target_type)
+{
+  char detailed_msg[1024];
+  jsB_format_detailed_error(J, target_type, value_type, detailed_msg, sizeof(detailed_msg));
+  
+  js_pushobject(J, jsV_newobject(J, JS_CERROR, J->TypeError_prototype));
+  js_pushstring(J, detailed_msg);
+  js_setproperty(J, -2, "message");
+  jsB_stacktrace(J, 0);
+  js_setproperty(J, -2, "stackTrace");
+}
+
+/* Throw a detailed type error with code context */
+JS_NORETURN void js_typeerror_detailed(js_State *J, const char *value_type, const char *target_type)
+{
+  js_newtypeerror_detailed(J, value_type, target_type);
+  js_throw(J);
 }
 
 #define DERROR(name, Name) \

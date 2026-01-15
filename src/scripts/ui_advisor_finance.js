@@ -5,14 +5,14 @@ function advisor_financial_window_dec_tax() { city.finance.tax_percentage = city
 
 [event=advisor_financial_window_draw]
 function advisor_financial_window_update(window) {
-    var treasury = city.finance.treasury;
-    var prefix = (treasury < 0) ? __loc(60, 3) : __loc(60, 2);
+    var ctreasury = city.finance.treasury
+    var prefix = (ctreasury < 0) ? __loc(60, 3) : __loc(60, 2)
     
-    window.treasury.text = prefix + " " + Math.abs(treasury);
-    window.treasury.font = (treasury < 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK;
+    window.treasury.text = prefix + " " + Math.abs(ctreasury)
+    window.treasury.font = (ctreasury < 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK
 
-    window.tax_value.text = city.finance.tax_percentage + "% " + __loc(60, 4) + " " + __loc(8, 0) + " " + city.taxes.estimated_income;
-    window.tax_payers.text = city.taxes.percentage_taxed_people + "% " + __loc(60, 5) + " " + __loc(60, 22) + " " + city.taxes.estimated_uncollected + " Db";
+    window.tax_value.text = city.finance.tax_percentage + "% " + __loc(60, 4) + " " + __loc(8, 0) + " " + city.taxes.estimated_income
+    window.tax_payers.text = city.taxes.percentage_taxed_people + "% " + __loc(60, 5) + " " + __loc(60, 22) + " " + city.taxes.estimated_uncollected + " Db"
 }
 
 [event=advisor_financial_window_draw]
@@ -50,21 +50,21 @@ function advisor_financial_window_update_incomes(window) {
 function advisor_financial_window_update_expenses(window) {
     var last_year = city.finance.last_year;
     var this_year = city.finance.this_year;
-    
+
     var line_y = 240;
     var row_text_x = 80;
     var row_last_year_x = 290;
     var row_this_year_x = 430;
     var line_start_x = 280;
     var line_size_x = 250;
-    
+
     function draw_row(text, y, value_last_year, value_this_year) {
         ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT);
         ui.label(String(value_last_year), vec2i(row_last_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT);
         ui.label(String(value_this_year), vec2i(row_this_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT);
         return y + 15;
     }
-    
+
     // EXPENSES rows
     line_y = draw_row(__loc(60, 11), line_y, last_year.expenses.imports, this_year.expenses.imports);
     line_y = draw_row(__loc(60, 12), line_y, last_year.expenses.wages, this_year.expenses.wages);
@@ -76,10 +76,10 @@ function advisor_financial_window_update_expenses(window) {
     line_y = draw_row(__loc(60, 22), line_y, last_year.expenses.festivals, this_year.expenses.festivals);
     line_y = draw_row(__loc(60, 23), line_y, last_year.expenses.kingdome, this_year.expenses.kingdome);
     line_y = draw_row(__loc(60, 24), line_y, last_year.expenses.disasters, this_year.expenses.disasters);
-    
+
     ui.line(true, vec2i(line_start_x, line_y), line_size_x);
     line_y += 5;
-    
+
     line_y = draw_row(__loc(60, 17), line_y, last_year.expenses.total, this_year.expenses.total);
     line_y = draw_row(__loc(60, 18), line_y, last_year.net_in_out, this_year.net_in_out);
     line_y = draw_row(__loc(60, 19), line_y, last_year.balance, this_year.balance);

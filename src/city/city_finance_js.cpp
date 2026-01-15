@@ -15,6 +15,11 @@ std::optional<bvariant> __city_finance_expenses(pcstr property, bool this_year) 
 }
 ANK_FUNCTION_2(__city_finance_expenses)
 
+int __city_finance_get_treasury() {
+    return g_city.finance.treasury;
+}
+ANK_FUNCTION(__city_finance_get_treasury)
+
 void __city_finance_set_tax_percentage(int tax) {
     g_city.finance.change_tax(tax);
 }

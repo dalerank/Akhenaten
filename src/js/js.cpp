@@ -76,6 +76,89 @@ static void js_vm_log_stacktrace(js_State *J) {
     }
 }
 
+// Helper function to dump stack values for debugging
+static void js_vm_dump_stack(js_State *J) {
+    int stack_size = js_gettop(J);
+    logs::info("!!! ==================================================");
+    logs::info("!!! Stack Dump (size: %d):", stack_size);
+    logs::info("!!! ==================================================");
+    
+    if (stack_size == 0) {
+        logs::info("!!!   <empty stack>");
+        logs::info("!!! ==================================================");
+        return;
+    }
+    
+    int items_to_show = stack_size < 10 ? stack_size : 10;
+    
+    for (int i = 0; i < items_to_show; i++) {
+        int idx = i - stack_size; // Convert to negative index
+        bstring256 value_desc;
+        
+        if (js_isundefined(J, idx)) {
+            value_desc = "undefined";
+        } else if (js_isnull(J, idx)) {
+            value_desc = "null";
+        } else if (js_isboolean(J, idx)) {
+            value_desc.printf("boolean: %s", js_toboolean(J, idx) ? "true" : "false");
+        } else if (js_isnumber(J, idx)) {
+            value_desc.printf("number: %g", js_tonumber(J, idx));
+        } else if (js_isstring(J, idx)) {
+            const char *str = js_tostring(J, idx);
+            if (str && strlen(str) > 50) {
+                value_desc.printf("string: \"%.50s...\"", str);
+            } else {
+                value_desc.printf("string: \"%s\"", str ? str : "");
+            }
+        } else if (js_isobject(J, idx)) {
+            if (js_isarray(J, idx)) {
+                value_desc.printf("array (length: %d)", js_getlength(J, idx));
+            } else if (js_iscallable(J, idx)) {
+                value_desc = "function";
+            } else {
+                // Try to get some info about the object
+                int prop_count = 0;
+                bstring256 props_preview;
+                
+                // Save stack state
+                int save_top = js_gettop(J);
+                
+                // Try to iterate first few properties
+                js_pushiterator(J, idx, 0);
+                const char *prop_name;
+                while (prop_count < 3 && (prop_name = js_nextiterator(J, -1)) != NULL) {
+                    if (prop_count > 0) {
+                        props_preview.append(", ");
+                    }
+                    props_preview.append(prop_name);
+                    prop_count++;
+                }
+                js_pop(J, 1); // Remove iterator
+                
+                // Restore stack state
+                while (js_gettop(J) > save_top) {
+                    js_pop(J, 1);
+                }
+                
+                if (prop_count > 0) {
+                    value_desc.printf("object {%s, ...}", props_preview.c_str());
+                } else {
+                    value_desc = "object {}";
+                }
+            }
+        } else {
+            value_desc = "<unknown type>";
+        }
+        
+        logs::info("!!!   [%d]: %s", i, value_desc.c_str());
+    }
+    
+    if (stack_size > 10) {
+        logs::info("!!!   ... (%d more items not shown)", stack_size - 10);
+    }
+    logs::info("!!! ==================================================");
+}
+
 int js_vm_trypcall(js_State *J, int params) {
     if (vm.have_error) {
         return 0;
@@ -94,15 +177,9 @@ int js_vm_trypcall(js_State *J, int params) {
                 logs::info("!!! Error type: %s", error_name ? error_name : "<unknown>");
                 js_pop(vm.J, 1);
             }
-            if (js_hasproperty(vm.J, -1, "message")) {
-                js_getproperty(vm.J, -1, "message");
-                const char *error_message = js_tostring(vm.J, -1);
-                logs::info("!!! Error message: %s", error_message ? error_message : "<empty>");
-                js_pop(vm.J, 1);
-            }
         }
         
-        // Log full error message
+        // Log full error message (MuJS now provides detailed context)
         const char *cur_symbol = error_msg;
         const char *start_str = cur_symbol;
         bstring256 temp_str;
@@ -115,12 +192,15 @@ int js_vm_trypcall(js_State *J, int params) {
             temp_str.printf("%.*s", cur_symbol - start_str, start_str);
             start_str = cur_symbol + 1;
             cur_symbol += 2;
-            logs::info("!!! pcall error %s", temp_str.c_str());
+            logs::info("!!! %s", temp_str.c_str());
         }
-        logs::info("!!! pcall error %s", start_str);
+        logs::info("!!! %s", start_str);
         
-        // Log stack trace (use vm.J as it's the actual state used for pcall)
+        // Log stack trace
         js_vm_log_stacktrace(vm.J);
+        
+        // Dump stack values for additional debugging info
+        js_vm_dump_stack(vm.J);
         
         vm.error_str = error_msg;
         js_pop(J, 1);

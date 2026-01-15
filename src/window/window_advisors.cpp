@@ -93,7 +93,7 @@ struct window_advisors : public ui::widget {
         ui::advisor_education_window::instance(),
         ui::advisor_entertainment_window::instance(),
         ui::advisor_religion_window::instance(),
-        ui::advisor_financial_window_t::instance(),
+        ui::advisor_financial_window::instance(),
         ui::advisor_chief_window::instance(),
         ui::advisor_monuments_window::instance(),
         // sub-advisors begin here

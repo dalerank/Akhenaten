@@ -11,6 +11,10 @@ void jsB_initstring(js_State *J);
 void jsB_initregexp(js_State *J);
 void jsB_initerror(js_State *J);
 void jsB_initmath(js_State *J);
+
+/* Detailed error functions */
+void js_newtypeerror_detailed(js_State *J, const char *value_type, const char *target_type);
+JS_NORETURN void js_typeerror_detailed(js_State *J, const char *value_type, const char *target_type);
 void jsB_initjson(js_State *J);
 void jsB_initdate(js_State *J);
 

@@ -2,6 +2,7 @@
 #include "jslex.h"
 #include "jscompile.h"
 #include "jsvalue.h"
+#include "jsbuiltin.h"
 #include "utf.h"
 
 #define JSV_ISSTRING(v) (v->type==JS_TSHRSTR || v->type==JS_TMEMSTR || v->type==JS_TLITSTR)
@@ -333,8 +334,8 @@ js_Object *jsV_toobject(js_State *J, js_Value *v)
 	switch (v->type) {
 	default:
 	case JS_TSHRSTR: return jsV_newstring(J, v->u.shrstr);
-	case JS_TUNDEFINED: js_typeerror(J, "cannot convert undefined to object");
-	case JS_TNULL: js_typeerror(J, "cannot convert null to object");
+	case JS_TUNDEFINED: js_typeerror_detailed(J, "undefined", "object");
+	case JS_TNULL: js_typeerror_detailed(J, "null", "object");
 	case JS_TBOOLEAN: return jsV_newboolean(J, v->u.boolean);
 	case JS_TNUMBER: return jsV_newnumber(J, v->u.number);
 	case JS_TLITSTR: return jsV_newstring(J, v->u.litstr);
