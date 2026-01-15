@@ -1084,8 +1084,8 @@ void build_planner::construction_finalize() { // confirm final placement
     const auto &preview = building_planer_renderer::get(build_type);
     can_place = preview.finalize_check(*this, start, end, can_place);
 
-    dispatch_warnings();
     if (can_place != CAN_PLACE && !building_is_draggable(build_type)) { // this is the FINAL check!
+        dispatch_warnings();
         return;
     }
 
@@ -1101,6 +1101,7 @@ void build_planner::construction_finalize() { // confirm final placement
             map_bridge_reset_building_length();
         }
 
+        dispatch_warnings();
         return;
     }
 
