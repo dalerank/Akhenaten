@@ -26,8 +26,8 @@ void ui::advisor_financial_window::archive_load(archive arch) {
 
 void ui::advisor_financial_window::ui_draw_foreground(UiFlags flags) {
     ui.begin_widget(pos);
-    ui.event(advisor_financial_window_draw{ pos });
     ui.draw();
+    ui.event(advisor_financial_window_draw{ pos });
     ui.end_widget();
 }
 

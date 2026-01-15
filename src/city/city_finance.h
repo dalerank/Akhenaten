@@ -32,20 +32,20 @@ enum e_finance_value {
 struct finance_overview {
     struct income_t {
         int taxes;
-        int exports;
+        uint16_t exports;
         uint16_t gold_delivered;
         int donated;
         int total;
     } income;
 
     struct expenses_t {
-        int imports;
-        int wages;
+        uint16_t imports;
+        uint16_t wages;
         uint16_t construction;
         uint16_t interest;
         uint16_t accountant_salary;
         uint16_t stolen;
-        int tribute;
+        uint16_t tribute;
         uint16_t festivals;
         uint16_t kingdome;
         uint16_t disasters;
@@ -56,11 +56,15 @@ struct finance_overview {
     int net_in_out;
     int balance;
 };
+ANK_CONFIG_PROPERTY(finance_overview,
+    net_in_out, balance)
+
 ANK_CONFIG_PROPERTY(finance_overview::income_t,
-    taxes, exports, donated, gold_delivered)
+    taxes, exports, donated, gold_delivered, total)
     
 ANK_CONFIG_PROPERTY(finance_overview::expenses_t,
-    imports, wages, construction, interest, accountant_salary, stolen, tribute, festivals, kingdome, disasters, mayour_salary, total)
+    imports, wages, construction, interest, accountant_salary,
+    stolen, tribute, festivals, kingdome, disasters, mayour_salary, total)
 
 struct city_taxes_t {
     int32_t taxed_citizens;
@@ -103,7 +107,7 @@ struct city_finance_t {
     int32_t estimated_wages;
     finance_overview last_year;
     finance_overview this_year;
-    int32_t interest_so_far;
+    int16_t interest_so_far;
     int32_t wages_so_far;
     int32_t cheated_money;
     bool tribute_not_paid_last_year;

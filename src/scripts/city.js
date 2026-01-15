@@ -16,37 +16,7 @@ city {
         @kingdome_soldiers { }
 
         remove_figures: __city_remove_figures
-    }
-
-    finance { 
-        __property_getter: function(property) { return __city_get_finance_property(property) }
-        this_year {
-            income { 
-                __property_getter: function(property) { return __city_finance_income(property, true) }
-                taxes { }
-                exports { }
-                donated { }
-                gold_delivered { }
-                total { }
-            }
-            expenses { }
-        }
-        last_year {
-            income { 
-                __property_getter: function(property) { return __city_finance_income(property, false) }
-                taxes { }
-                exports { }
-                donated { }
-                gold_delivered { }
-                total { }
-            }
-            
-            expenses { }
-        }
-
-        @treasury { get: __city_finance_get_treasury }
-        @tax_percentage { set: __city_finance_set_tax_percentage }
-    }
+    }    
 
     taxes {
         __property_getter: function(property) { return __city_get_taxes_property(property) }
@@ -162,6 +132,76 @@ city.create_distant_battle = function(obj) {
         set_param: function(param, value) { __city_request_set_param(this.tag_id, param, value) }
         execute: function() { __city_request_execute(this.tag_id) }
     }
+}
+
+city.finance = { 
+    __property_getter: function(property) { return __city_get_finance_property(property) }
+
+    this_year {
+        __property_getter: function(property) { return __city_finance_overview(property, true) }
+
+        income { 
+            __property_getter: function(property) { return __city_finance_income(property, true) }
+            @taxes { }
+            @exports { }
+            @donated { }
+            @gold_delivered { }
+            @total { }
+        }
+
+        expenses {
+            __property_getter: function(property) { return __city_finance_expenses(property, true) }
+            @imports { }
+            @wages { }
+            @construction { }
+            @interest { }
+            @mayour_salary { }
+            @stolen { }
+            @tribute { }
+            @festivals { }
+            @kingdome { }
+            @disasters { }
+            @total { }
+        }
+
+        @net_in_out { }
+        @balance { }
+    }
+
+    last_year {
+        __property_getter: function(property) { return __city_finance_overview(property, false) }
+
+        income { 
+            __property_getter: function(property) { return __city_finance_income(property, false) }
+            
+            @taxes { }
+            @exports { }
+            @donated { }
+            @gold_delivered { }
+            @total { }
+        }
+
+        expenses {
+            __property_getter: function(property) { return __city_finance_expenses(property, false) }
+            @imports { }
+            @wages { }
+            @construction { }
+            @interest { }
+            @mayour_salary { }
+            @stolen { }
+            @tribute { }
+            @festivals { }
+            @kingdome { }
+            @disasters { }
+            @total { }
+        }
+
+        @net_in_out { }
+        @balance { }
+    }
+
+    @treasury { get: __city_finance_get_treasury }
+    @tax_percentage { set: __city_finance_set_tax_percentage }
 }
 
 crime {
