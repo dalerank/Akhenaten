@@ -13,9 +13,9 @@ function top_menu_cities_old_text(p1, p2) { return __loc(2, game_features.gameui
 function top_menu_cities_old_toggle(p1, p2) { game_features.gameui_empire_city_old_names = !game_features.gameui_empire_city_old_names }
 
 function top_menu_open_advisor(advisor, p2) {
-	widget_top_menu_clear_state();
-	window_go_back();
-	window_advisors_show_advisor(advisor);
+	widget_top_menu_clear_state()
+	window_go_back()
+	window_advisors_show_advisor(advisor)
 }
 
 function top_menu_show_console(p1, p2) { window_show_cheat_console(true) }
@@ -34,6 +34,10 @@ function top_menu_debug_buildings_toggle(p1, p2) {
 function top_menu_date_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_date_display", -1) }
 function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_population_display", -1) }
 function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
+function widget_top_menu_show_speed_options(p1, p2) { 
+	widget_top_menu_clear_state()
+	window_speed_options_show()
+}
 
 top_menu_widget {
 	offset [10, 6]
@@ -64,7 +68,7 @@ top_menu_widget {
 	options {
 		display_options	: menu_item({text {group:2, id:1}, onclick: __widget_top_menu_display_options })
 		sound_options  	: menu_item({text {group:2, id:2}, onclick: __widget_top_menu_sound_options })
-		speed_options  	: menu_item({text {group:2, id:3}, onclick: __widget_top_menu_speed_options })
+		speed_options  	: menu_item({text {group:2, id:3}, onclick: widget_top_menu_show_speed_options })
 		difficulty_options: menu_item({ text {group:2, id:6}, onclick: __widget_top_menu_difficulty_options })
 
 		cities_options  : menu_item({text {group:2, id:7}

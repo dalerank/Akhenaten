@@ -90,7 +90,3 @@ void speed_options_window::show(close_callback_t cb) {
 
     window_show(&window);
 }
-
-void window_speed_options_show(void (*close_callback)(void)) {
-    speed_options_window::show(close_callback);
-}

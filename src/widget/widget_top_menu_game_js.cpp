@@ -124,13 +124,6 @@ pcstr __widget_top_menu_sound_options(int, int) {
 }
 ANK_FUNCTION_2(__widget_top_menu_sound_options)
 
-pcstr __widget_top_menu_speed_options(int, int) {
-    widget_top_menu_clear_state();
-    speed_options_window::show(window_city_show);
-    return "";
-}
-ANK_FUNCTION_2(__widget_top_menu_speed_options)
-
 pcstr __widget_top_menu_difficulty_options(int, int) {
     widget_top_menu_clear_state();
     window_difficulty_options_show(window_city_show);
@@ -182,3 +175,6 @@ pcstr __widget_top_menu_toggle_debug_properties(int, int) {
     return "";
 }
 ANK_FUNCTION_2(__widget_top_menu_toggle_debug_properties)
+
+void window_speed_options_show() { speed_options_window::show(window_city_show); }
+ANK_FUNCTION(window_speed_options_show)

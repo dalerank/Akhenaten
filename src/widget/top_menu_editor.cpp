@@ -217,7 +217,7 @@ static void menu_options_sound(int param) {
 static void menu_options_speed(int param) {
     clear_state();
     window_editor_map_show();
-    window_speed_options_show(window_editor_map_show);
+    speed_options_window::show(window_editor_map_show);
 }
 
 static void menu_help_help(int param) {
