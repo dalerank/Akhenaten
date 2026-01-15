@@ -583,6 +583,15 @@ void ui::panel(vec2i pos, vec2i size, UiFlags flags) {
     }
 }
 
+void ui::line(bool hline, vec2i npos, int size, color c) {
+    const vec2i offset = g_state.offset();
+    if (hline) {
+        graphics_draw_horizontal_line(npos + offset, size, c);
+    } else {
+        graphics_draw_vertical_line(npos + offset, size, c);
+    }
+}
+
 void ui::border(vec2i pos, vec2i size, int type, int color, UiFlags flags) {
     const vec2i offset = g_state.offset();
     graphics_draw_rect(offset + pos, size, color);

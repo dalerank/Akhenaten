@@ -20,8 +20,28 @@ city {
 
     finance { 
         __property_getter: function(property) { return __city_get_finance_property(property) }
-        income {
-            @gold_delivered { get: function() { return __city_finance_income(e_finance_value_gold_delivered) } }
+        this_year {
+            income { 
+                __property_getter: function(property) { return __city_finance_income(property, true) }
+                taxes { }
+                exports { }
+                donated { }
+                gold_delivered { }
+                total { }
+            }
+            expenses { }
+        }
+        last_year {
+            income { 
+                __property_getter: function(property) { return __city_finance_income(property, false) }
+                taxes { }
+                exports { }
+                donated { }
+                gold_delivered { }
+                total { }
+            }
+            
+            expenses { }
         }
 
         @treasury { }

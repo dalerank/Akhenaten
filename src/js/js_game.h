@@ -354,7 +354,7 @@ inline void ank_function_1_callback_impl(js_State* J) {
     // std::decay_t converts function types to function pointer types
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = function_traits<func_ptr_type>;
-    using param_type = typename traits::arg<0>::type;
+    using param_type = typename traits:: template arg<0>::type;
     using return_type = typename traits::return_type;
     
     param_type param = js_helpers::js_to_value<param_type>(J, 1);
@@ -384,8 +384,8 @@ template<auto Func>
 inline void ank_function_2_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = function_traits<func_ptr_type>;
-    using param1_type = typename traits::arg<0>::type;
-    using param2_type = typename traits::arg<1>::type;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
     using return_type = typename traits::return_type;
     
     param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
@@ -416,9 +416,9 @@ template<auto Func>
 inline void ank_function_3_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = function_traits<func_ptr_type>;
-    using param1_type = typename traits::arg<0>::type;
-    using param2_type = typename traits::arg<1>::type;
-    using param3_type = typename traits::arg<2>::type;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
+    using param3_type = typename traits:: template arg<2>::type;
     using return_type = typename traits::return_type;
     
     param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
@@ -450,10 +450,10 @@ template<auto Func>
 inline void ank_function_4_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = function_traits<func_ptr_type>;
-    using param1_type = typename traits::arg<0>::type;
-    using param2_type = typename traits::arg<1>::type;
-    using param3_type = typename traits::arg<2>::type;
-    using param4_type = typename traits::arg<3>::type;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
+    using param3_type = typename traits:: template arg<2>::type;
+    using param4_type = typename traits:: template arg<3>::type;
     using return_type = typename traits::return_type;
     
     param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
@@ -486,11 +486,11 @@ template<auto Func>
 inline void ank_function_5_callback_impl(js_State* J) {
     using func_ptr_type = std::decay_t<decltype(Func)>;
     using traits = function_traits<func_ptr_type>;
-    using param1_type = typename traits::arg<0>::type;
-    using param2_type = typename traits::arg<1>::type;
-    using param3_type = typename traits::arg<2>::type;
-    using param4_type = typename traits::arg<3>::type;
-    using param5_type = typename traits::arg<4>::type;
+    using param1_type = typename traits:: template arg<0>::type;
+    using param2_type = typename traits:: template arg<1>::type;
+    using param3_type = typename traits:: template arg<2>::type;
+    using param4_type = typename traits:: template arg<3>::type;
+    using param5_type = typename traits:: template arg<4>::type;
     using return_type = typename traits::return_type;
     
     param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);

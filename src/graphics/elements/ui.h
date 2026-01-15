@@ -82,6 +82,7 @@ int label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width =
 const image_t *eimage(int imgid, vec2i pos);
 const image_t *eimage(image_desc img, vec2i pos);
 void panel(vec2i pos, vec2i size, UiFlags flags);
+void line(bool hline, vec2i npos, int size, color c);
 void border(vec2i pos, vec2i size, int type, int color, UiFlags flags);
 void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
 void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
