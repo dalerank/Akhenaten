@@ -34,6 +34,14 @@ ui.label = function(text, pos, font) {
     __ui_draw_label(text, pos, font)
 }
 
+ui.line = function(hline, pos, size) {
+    if (!pos) {
+        return
+    }
+
+    __ui_draw_line(hline, pos, size)
+}
+
 ui.window_city_show = __ui_window_city_show
 ui.window_message_dialog_show = __ui_window_message_dialog_show
 

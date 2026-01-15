@@ -30,7 +30,7 @@ enum e_finance_value {
 };
 
 struct finance_overview {
-    struct {
+    struct income_t {
         int taxes;
         int exports;
         uint16_t gold_delivered;
@@ -38,13 +38,13 @@ struct finance_overview {
         int total;
     } income;
 
-    struct {
+    struct expenses_t {
         int imports;
         int wages;
-        int construction;
-        int interest;
-        int accountant_salary;
-        int stolen;
+        uint16_t construction;
+        uint16_t interest;
+        uint16_t accountant_salary;
+        uint16_t stolen;
         int tribute;
         uint16_t festivals;
         uint16_t kingdome;
@@ -56,6 +56,11 @@ struct finance_overview {
     int net_in_out;
     int balance;
 };
+ANK_CONFIG_PROPERTY(finance_overview::income_t,
+    taxes, exports, donated, gold_delivered)
+    
+ANK_CONFIG_PROPERTY(finance_overview::expenses_t,
+    imports, wages, construction, interest, accountant_salary, stolen, tribute, festivals, kingdome, disasters, mayour_salary, total)
 
 struct city_taxes_t {
     int32_t taxed_citizens;
