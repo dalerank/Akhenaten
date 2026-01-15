@@ -334,8 +334,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED(fname, func) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 0); } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(); }); \
     }
@@ -345,8 +347,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED_1(fname, func, type) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 1); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 1);  } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         type param = js_helpers::js_to_value<type>(J, 1); \
         constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
         js_helpers::js_invoke_and_push<is_void>(J, [&]() { return func(param); }); \
@@ -357,8 +361,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED_2(fname, func, type1, type2) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 2); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 2); } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         constexpr bool is_void = (std::is_void_v<function_traits<decltype(&func)>::return_type>); \
@@ -370,8 +376,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED_3(fname, func, type1, type2, type3) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 3); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 3); } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
@@ -384,8 +392,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED_4(fname, func, type1, type2, type3, type4) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 4); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 4); } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
@@ -399,8 +409,10 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
 
 #define ANK_FUNCTION_NAMED_5(fname, func, type1, type2, type3, type4, type5) \
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##fname); \
-    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { static std::once_flag flag; std::call_once(flag, [] (js_State* J) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 5); }, J); } \
-    void permanent_js2cpp_callback_##fname(js_State *J) { \
+    void permanent_js2cpp_callback_##fname(js_State* J); void register_js2cpp_callback_##fname(js_State* J) { \
+        js_getglobal(J, #fname); bool exists = js_iscallable(J, -1); js_pop(J, 1); \
+        if (!exists) { REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##fname, #fname, 5); } \
+    } void permanent_js2cpp_callback_##fname(js_State *J) { \
         type1 param1 = js_helpers::js_to_value<type1>(J, 1); \
         type2 param2 = js_helpers::js_to_value<type2>(J, 2); \
         type3 param3 = js_helpers::js_to_value<type3>(J, 3); \
@@ -418,10 +430,12 @@ struct function_traits<R(C:: *)(Args...) const> : function_traits<R(C:: *)(Args.
     ANK_DECLARE_JSFUNCTION_ITERATOR(register_js2cpp_callback_##func);                   \
     void permanent_js2cpp_callback_##func(js_State* J);                                 \
     void register_js2cpp_callback_##func(js_State* J) {                                 \
-        static std::once_flag flag;                                                     \
-        std::call_once(flag, [] (js_State* J) {                                         \
+        js_getglobal(J, #func);                                                         \
+        bool exists = js_iscallable(J, -1);                                             \
+        js_pop(J, 1);                                                                   \
+        if (!exists) {                                                                  \
             REGISTER_GLOBAL_FUNCTION(J, permanent_js2cpp_callback_##func, #func, 1);    \
-        }, J);                                                                          \
+        }                                                                               \
     }                                                                                   \
     void permanent_js2cpp_callback_##func(js_State *J) {                                \
         bvariant_map params = js_helpers::js_object_to_bvariant_map(J, 1);              \
