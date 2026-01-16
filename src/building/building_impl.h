@@ -144,6 +144,9 @@ public:
     ALLOW_SMART_CAST_BUILDING_I(gatehouse)
     ALLOW_SMART_CAST_BUILDING_I(dancer_school)
     ALLOW_SMART_CAST_BUILDING_I(police_station)
+    ALLOW_SMART_CAST_BUILDING_I(pyramid)
+    ALLOW_SMART_CAST_BUILDING_I(small_stepped_pyramid)
+    ALLOW_SMART_CAST_BUILDING_I(medium_stepped_pyramid)
 
     building_impl *next();
     building_impl *main();

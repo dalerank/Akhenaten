@@ -1543,6 +1543,42 @@ building_small_mastaba_part_side = building_small_mastaba
 building_small_mastaba_part_wall = building_small_mastaba
 building_small_mastaba_part_entrance = building_small_mastaba
 
+building_small_stepped_pyramid {
+  animations {
+    preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
+    base { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
+    base_bricks { pack:PACK_STEPPED_PYRAMID, id:1, offset:0 }
+    empty_land {pack:PACK_TERRAIN, id:10}
+    enter {pack:PACK_GENERAL, id:114}
+  }
+  build_menu_text : "Small Stepped Pyramid"
+  building_size : 2
+  info_title_id [198, 18]
+  fire_proof :  true
+  damage_proof : true
+  meta { help_id:375, text_id:120 }
+  init_tiles [10, 10]
+  // todo
+}
+
+building_medium_stepped_pyramid {
+  animations {
+    preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
+    base { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
+    base_bricks { pack:PACK_STEPPED_PYRAMID, id:1, offset:0 }
+    empty_land {pack:PACK_TERRAIN, id:10}
+    enter {pack:PACK_GENERAL, id:114}
+  }
+  build_menu_text : "Medium Stepped Pyramid"
+  building_size : 2
+  info_title_id [198, 18]
+  fire_proof :  true
+  damage_proof : true
+  meta { help_id:375, text_id:120 }
+  init_tiles [14, 14]
+  // todo
+}
+
 building_artisans_guild = {
   cost: 30
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }

@@ -389,6 +389,9 @@ public:
     ALLOW_SMART_CAST_BUILDING(transport_wharf)
     ALLOW_SMART_CAST_BUILDING(police_station)
     ALLOW_SMART_CAST_BUILDING(mortuary)
+    ALLOW_SMART_CAST_BUILDING(pyramid)
+    ALLOW_SMART_CAST_BUILDING(small_stepped_pyramid)
+    ALLOW_SMART_CAST_BUILDING(medium_stepped_pyramid)
 
     int get_figures_number(e_figure_type ftype);
 

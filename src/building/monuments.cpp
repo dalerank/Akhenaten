@@ -69,6 +69,20 @@ struct monument_small_mastaba : public monument {
     }
 } g_monument_small_mastaba;
 
+struct monument_small_stepped_pyramid : public monument {
+    monument_small_stepped_pyramid() : monument{BUILDING_SMALL_STEPPED_PYRAMID} {
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_STONE, 4800} });
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 2000}, {RESOURCE_STONE, 4000}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1600}, {RESOURCE_STONE, 3200}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 1200}, {RESOURCE_STONE, 2400}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 800}, {RESOURCE_STONE, 1600}});
+        phases.push_back({monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, 400}, {RESOURCE_STONE, 800}});
+        phases.push_back({monument_phase_resource{RESOURCE_NONE, 0}});
+    }
+} g_monument_small_stepped_pyramid;
+
 struct monument_medium_mastaba : public monument {
     monument_medium_mastaba() : monument{ BUILDING_MEDIUM_MASTABA } {
         phases.push_back({ monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_NONE, 0} });
@@ -87,6 +101,7 @@ monument g_monument_invalid;
 const monument *g_monument_types[] = {
     &g_monument_invalid,
     &g_monument_small_mastaba,
+    &g_monument_small_stepped_pyramid,
     &g_monument_medium_mastaba
 };
 
@@ -148,6 +163,7 @@ grid_area building_monument_get_area(building *b) {
 
     switch (b->type) {
     case BUILDING_SMALL_MASTABA: end = main.shifted(3, 9); break;
+    case BUILDING_SMALL_STEPPED_PYRAMID: end = main.shifted(3, 9); break;
     case BUILDING_MEDIUM_MASTABA: end = main.shifted(5, 13); break;
 
     default:
@@ -182,6 +198,10 @@ tile2i building_monument_center_point(building *b) {
         end = main.shifted(3, 9);
         break;
 
+    case BUILDING_SMALL_STEPPED_PYRAMID:
+        end = main.shifted(3, 9);
+        break;
+
     case BUILDING_MEDIUM_MASTABA:
         end = main.shifted(5, 13);
         break;
@@ -196,6 +216,7 @@ tile2i building_monument_center_point(building *b) {
 tile2i building_monument_access_point(building *b) {
     switch (b->type) {
     case BUILDING_SMALL_MASTABA: return b->tile.shifted(0, 10);
+    case BUILDING_SMALL_STEPPED_PYRAMID: return b->tile.shifted(0, 10);
     case BUILDING_MEDIUM_MASTABA: return b->tile.shifted(0, 14);
     default:
         verify_no_crash(false);
@@ -355,6 +376,17 @@ int building_image_get(building *b) {
             }
         }
 
+    case BUILDING_SMALL_STEPPED_PYRAMID:
+        {
+            auto monument = b->dcast_monument();
+            switch (monument->runtime_data().phase) {
+            case MONUMENT_START:
+                return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img();
+            default:
+                return building_static_params::get(BUILDING_SMALL_STEPPED_PYRAMID).base_img() + 1;
+            }
+        }
+
     case BUILDING_MEDIUM_MASTABA:
     case BUILDING_MEDIUM_MASTABA_SIDE:
     case BUILDING_MEDIUM_MASTABA_WALL:
@@ -405,6 +437,7 @@ bool building_monument_is_monument(const building *b) {
 
 bool building_monument_type_is_monument(e_building_type type) {
     return building_type_any_of(type, { BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
+                                      BUILDING_SMALL_STEPPED_PYRAMID,
                                       BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE });
 }
 
@@ -500,6 +533,8 @@ int building_monument_progress(building *b) {
         if (building_monument_is_temple_complex(b->type)) {
             messages::popup("message_monument_complete", 0, b->tile.grid_offset());
         } else if (b->type == BUILDING_SMALL_MASTABA) {
+            messages::popup("message_monument_complete", 0, b->tile.grid_offset());
+        } else if (b->type == BUILDING_SMALL_STEPPED_PYRAMID) {
             messages::popup("message_monument_complete", 0, b->tile.grid_offset());
         }
     }
@@ -707,7 +742,7 @@ bool building_monument_need_workers(building *b) {
         return false;
     }
 
-    if (building_type_none_of(*b, { BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA })) {
+    if (building_type_none_of(*b, { BUILDING_SMALL_MASTABA, BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_MASTABA })) {
         return false;
     }
 
@@ -788,6 +823,7 @@ bool building_monument_need_bricklayers(const building *b) {
 
     switch (b->type) {
     case BUILDING_SMALL_MASTABA:
+    case BUILDING_SMALL_STEPPED_PYRAMID:
     case BUILDING_MEDIUM_MASTABA:
         return (phase >= 2 && phase <= 5 && works_bricklayers < building_monument_needs_bricklayers(b->type, monumentd.phase));
 
