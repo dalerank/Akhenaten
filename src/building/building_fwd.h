@@ -75,6 +75,9 @@ class building_dancer_school;
 class building_police_station;
 class building_dentist;
 class building_mortuary;
+class building_pyramid;
+class building_small_stepped_pyramid;
+class building_medium_stepped_pyramid;
 
 using e_building_flags = uint32_t;
 

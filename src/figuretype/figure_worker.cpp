@@ -13,8 +13,9 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
 
-auto any_mastaba_types = make_array(
+auto any_monument_types = make_array(
     BUILDING_SMALL_MASTABA, BUILDING_SMALL_MASTABA_SIDE, BUILDING_SMALL_MASTABA_WALL, BUILDING_SMALL_MASTABA_ENTRANCE,
+    BUILDING_SMALL_STEPPED_PYRAMID,
     BUILDING_MEDIUM_MASTABA, BUILDING_MEDIUM_MASTABA_SIDE, BUILDING_MEDIUM_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_ENTRANCE
 );
 
@@ -99,7 +100,7 @@ void figure_worker::figure_action() {
                 d.labor_days_left = 96;
             } else if (b_dest->type == BUILDING_PYRAMID) {
                 // todo: MONUMENTSSSS
-            } else if (building_type_any_of(b_dest->type, any_mastaba_types)) {
+            } else if (building_type_any_of(b_dest->type, any_monument_types)) {
                 tile2i tile_need_leveling = mastaba_tile4work(b_dest);
                 if (tile_need_leveling == tile2i{-1, -1}) {
                     poof();

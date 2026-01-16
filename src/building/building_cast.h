@@ -77,6 +77,9 @@ GENERATE_SMART_CAST_BUILDING(dancer_school)
 GENERATE_SMART_CAST_BUILDING(police_station)
 GENERATE_SMART_CAST_BUILDING(dentist)
 GENERATE_SMART_CAST_BUILDING(mortuary)
+GENERATE_SMART_CAST_BUILDING(pyramid)
+GENERATE_SMART_CAST_BUILDING(small_stepped_pyramid)
+GENERATE_SMART_CAST_BUILDING(medium_stepped_pyramid)
 
 template <typename dest_type, typename r_type = std::add_pointer_t<std::remove_pointer_t<dest_type>>>
 inline r_type smart_cast(building *b);
