@@ -16,6 +16,9 @@
 #include "platform/platform.h"
 #include "core/variant.h"
 #include "content/mods.h"
+#include "scenario/scenario.h"
+#include "game/mission.h"
+#include "widget/debug_console.h"
 
 #include <filesystem>
 
@@ -38,6 +41,18 @@ struct {
 } vm;
 
 void js_reset_vm_state();
+
+declare_console_command_p(reload_scripts){
+    os << "Reloading JavaScript VM from scratch..." << std::endl;
+
+    int scenario_id = g_scenario.campaign_scenario_id();
+    mission_id_t missionid(scenario_id);
+
+    js_vm_setup();
+
+    bool reloaded = js_vm_sync(missionid.value());
+    os << (reloaded ? "JavaScript VM reloaded successfully!" : "JavaScript VM reloaded (no files to sync)") << std::endl;
+}
 
 static void js_vm_log_stacktrace(js_State *J) {
     // Try to get stack trace from error object if it's an Error

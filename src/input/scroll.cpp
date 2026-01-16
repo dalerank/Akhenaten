@@ -154,8 +154,9 @@ int scroll_in_progress(void) {
     return data.is_scrolling || data.drag.active;
 }
 
-static int get_scroll_speed_factor(void) {
-    return calc_bound((100 - g_settings.scroll_speed) / 10, 0, 10);
+static int get_scroll_speed_factor() {
+    uint16_t &game_scroll_speed();
+    return calc_bound((100 - game_scroll_speed()) / 10, 0, 10);
 }
 
 int scroll_is_smooth(void) {

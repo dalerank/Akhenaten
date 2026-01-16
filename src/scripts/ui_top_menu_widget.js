@@ -36,6 +36,7 @@ function top_menu_population_explanation(p1, p2) { ui.window_message_dialog_show
 function top_menu_funds_explanation(p1, p2) { ui.window_message_dialog_show("message_game_control_money_display_window", -1) }
 function widget_top_menu_show_speed_options(p1, p2) { 
 	widget_top_menu_clear_state()
+	window_go_back()
 	window_speed_options_show()
 }
 

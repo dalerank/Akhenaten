@@ -416,17 +416,21 @@ void js_register_game_handlers(xstring missionid) {
     logs::info("JS: Found %d functions with modifiers", function_count);
 }
 
-int __game_screen_width() { return screen_width(); }
-ANK_FUNCTION(__game_screen_width);
+int __game_screen_width() { return screen_width(); } ANK_FUNCTION(__game_screen_width);
+int __game_screen_height() { return screen_height(); } ANK_FUNCTION(__game_screen_height)
+int __game_absolute_day() { return game.simtime.absolute_day(true); } ANK_FUNCTION(__game_absolute_day)
+xstring __game_version() { return get_version().c_str(); } ANK_FUNCTION(__game_version)
+void __game_increase_game_speed() { game.increase_game_speed(); } ANK_FUNCTION(__game_increase_game_speed)
+void __game_decrease_game_speed() { game.decrease_game_speed(); } ANK_FUNCTION(__game_decrease_game_speed)
+void __game_increase_scroll_speed() { game.increase_scroll_speed(); } ANK_FUNCTION(__game_increase_scroll_speed)
+void __game_decrease_scroll_speed() { game.decrease_scroll_speed(); } ANK_FUNCTION(__game_decrease_scroll_speed)
+void __game_set_game_speed(int v) { game.game_speed = v; } ANK_FUNCTION_1(__game_set_game_speed)
+void __game_set_scroll_speed(int v) { game.scroll_speed = v; } ANK_FUNCTION_1(__game_set_scroll_speed)
 
-int __game_screen_height() { return screen_height(); }
-ANK_FUNCTION(__game_screen_height)
-
-int __game_absolute_day() { return game.simtime.absolute_day(true); }
-ANK_FUNCTION(__game_absolute_day)
-
-xstring __game_version() { return get_version().c_str(); }
-ANK_FUNCTION(__game_version)
+std::optional<bvariant> __game_get_property(pcstr property) {
+    return archive_helper::get(game, property, true);
+}
+ANK_FUNCTION_1(__game_get_property)
 
 void js_register_game_objects(js_State *J) {
 }
