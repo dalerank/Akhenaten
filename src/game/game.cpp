@@ -71,6 +71,8 @@ declare_console_command_p(nextyear) {
 }
 
 uint16_t &game_speed() { return game.game_speed; }
+uint16_t &game_scroll_speed() { return game.scroll_speed; }
+bool &game_monthly_autosave() { return game.monthly_autosave; }
 
 namespace {
     static const time_millis MILLIS_PER_TICK_PER_SPEED[] = {0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700};
@@ -182,7 +184,7 @@ void game_t::advance_month() {
         advance_year();
     }
 
-    if (g_settings.monthly_autosave) {
+    if (monthly_autosave) {
         bstring256 autosave_file("autosave_month.", saved_game_data_expanded.extension);
         GamestateIO::write_savegame(autosave_file);
     }
@@ -351,6 +353,9 @@ bool game_t::check_valid() {
 
     logs::switch_output(vfs::platform_file_manager_get_base_path());
     update_encoding();
+
+    scroll_speed = 70;
+
     g_settings.load(); // c3.inf
     game_features::load();   // akhenaten.conf
     game_hotkeys::load();    // hotkeys.conf
@@ -469,6 +474,14 @@ void game_t::decrease_game_speed() {
     } else {
         game_speed = calc_bound(game_speed - 10, 10, 100);
     }
+}
+
+void game_t::increase_scroll_speed() { 
+    scroll_speed = calc_bound(scroll_speed + 10, 0, 100); 
+}
+
+void game_t::decrease_scroll_speed() { 
+    scroll_speed = calc_bound(scroll_speed - 10, 0, 100); 
 }
 
 void game_t::before_start_simulation() {

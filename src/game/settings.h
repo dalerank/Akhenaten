@@ -58,10 +58,7 @@ struct game_settings {
     sound_settings sound_speech;
     sound_settings sound_city;
 
-    int scroll_speed;
-    // misc settings
     e_tooltip_mode tooltips_mode;
-    bool monthly_autosave;
     bool warnings;
     bool gods_enabled;
     bool victory_video;
@@ -120,9 +117,6 @@ struct game_settings {
         sound->enabled = enabled;
         sound->volume = calc_bound(volume, 0, 100);
     }
-
-    void increase_scroll_speed() { scroll_speed = calc_bound(scroll_speed + 10, 0, 100); }
-    void decrease_scroll_speed() { scroll_speed = calc_bound(scroll_speed - 10, 0, 100); }
 
     void toggle_warnings() { warnings = !warnings; }
     void toggle_pyramid_speedup() { pyramid_speedup = !pyramid_speedup; }

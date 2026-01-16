@@ -1,7 +1,9 @@
 log_info("akhenaten: game started")
 
 game {
-    @monthly_autosave { get: __game_monthly_autosave, set: __game_set_monthly_autosave }
+    __property_getter: function(property) { return __game_get_property(property) }
+
+    @monthly_autosave { set: __game_set_monthly_autosave }
     @absolute_day { get: __game_absolute_day }
     @version { get: __game_version }
     @difficulty { get: __game_difficulty }
@@ -10,6 +12,8 @@ game {
     @debug_properties { get: __game_debug_properties }
     @writing_video { get: __game_writing_video }
     @debug_render_mode { get: __game_debug_render_mode, set: __game_set_debug_render_mode }
+    @game_speed { set: __game_set_game_speed }
+    @scroll_speed { set: __game_set_scroll_speed }
     
     screen {
         @w { get: __game_screen_width }

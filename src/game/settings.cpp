@@ -36,8 +36,6 @@ void game_settings::load_default_settings() {
     sound_city.enabled = true;
     sound_city.volume = 100;
 
-    scroll_speed = 70;
-
     difficulty.set(DIFFICULTY_HARD);
     tooltips_mode = e_tooltip_mode_full;
     warnings = true;
@@ -48,7 +46,7 @@ void game_settings::load_default_settings() {
     popup_messages = 0;
     pyramid_speedup = false;
 
-    g_settings.clear_personal_savings();
+    clear_personal_savings();
 }
 
 void game_settings::load_settings(buffer* buf) {
@@ -60,7 +58,7 @@ void game_settings::load_settings(buffer* buf) {
     sound_speech.enabled = buf->read_u8();
     buf->skip(6);
     buf->skip(4);
-    scroll_speed = buf->read_i32();
+    int tmp = buf->read_i32();
     buf->read_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
     last_advisor = buf->read_i32();
@@ -73,7 +71,7 @@ void game_settings::load_settings(buffer* buf) {
     buf->skip(4); // int is_custom_scenario;
     sound_city.enabled = buf->read_u8();
     warnings = buf->read_u8();
-    monthly_autosave = buf->read_u8();
+    tmp = buf->read_u8();
     buf->skip(1); // unsigned char autoclear_enabled;
     sound_effects.volume = buf->read_i32();
     sound_music.volume = buf->read_i32();
@@ -125,7 +123,7 @@ void game_settings::save() {
     buf->write_u8(sound_speech.enabled);
     buf->skip(6);
     buf->skip(4);
-    buf->write_i32(scroll_speed);
+    buf->write_i32(0);
     buf->write_raw(player_name.data(), player_name.capacity);
     buf->skip(16);
     buf->write_i32(last_advisor);
@@ -137,7 +135,7 @@ void game_settings::save() {
     buf->skip(4); // int is_custom_scenario;
     buf->write_u8(sound_city.enabled);
     buf->write_u8(warnings);
-    buf->write_u8(monthly_autosave);
+    buf->write_u8(0);
     buf->skip(1); // unsigned char autoclear_enabled;
     buf->write_i32(sound_effects.volume);
     buf->write_i32(sound_music.volume);

@@ -659,6 +659,8 @@ void city_t::houses_reset_demands() {
 }
 
 uint16_t &game_speed();
+uint16_t &game_scroll_speed();
+bool &game_monthly_autosave();
 
 io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_city;
@@ -679,7 +681,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
     iob->bind(BIND_SIGNATURE_UINT16, &game_speed());
-    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT16, &game_scroll_speed());
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);
@@ -707,7 +709,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_amount_per_batch);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.migration.immigration_amount_per_batch);
+    iob->bind(BIND_SIGNATURE_UINT8, &game_monthly_autosave());
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_amount_per_batch);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.emigration_queue_size);
