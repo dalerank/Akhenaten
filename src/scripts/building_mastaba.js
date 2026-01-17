@@ -8,7 +8,7 @@ building_small_mastaba {
       base_bricks { id:1, offset:0 }
       base_grounded { path:"mastaba/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
-      image_stick { id:8 }
+      image_stick { path:"mastaba/pyramid_phase_one_00021" }
       empty_land { path:"mastaba/mastaba_00109" }
       enter { id:114}
     }
@@ -64,7 +64,7 @@ building_small_mastaba {
       base_bricks { id:1, offset:0 }
       base_grounded { path:"mastaba/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
-      image_stick { id:8 }
+      image_stick { path:"mastaba/pyramid_phase_one_00021" }
       empty_land {path:"mastaba/mastaba_00109"}
       enter {id:114}
     }

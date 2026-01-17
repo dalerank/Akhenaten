@@ -415,35 +415,43 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         tile2i left_top = base.tile.shifted(0, 0);
         if (left_top == main->tile && map_monuments_get_progress(left_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_top);
-            auto &command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto &command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
+            command.use_sort_pixel = true;
+            command.sort_pixel = offset + vec2i(0, 1);
         }
         tile2i right_top = base.tile.shifted(1, 0);
         if (right_top == main->tile.shifted(tiles_size.y - 1, 0) && map_monuments_get_progress(right_top) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_top);
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
+            command.use_sort_pixel = true;
+            command.sort_pixel = offset + vec2i(0, 1);
         
         }        
         tile2i left_bottom = base.tile.shifted(0, 1);
         if (left_bottom == main->tile.shifted(0, tiles_size.x - 1) && map_monuments_get_progress(left_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(left_bottom);
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
+            command.use_sort_pixel = true;
+            command.sort_pixel = offset + vec2i(0, 1);
         }        
         tile2i right_bottom = base.tile.shifted(1, 1);
         if (right_bottom == main->tile.shifted(tiles_size.y - 1, tiles_size.x - 1) && map_monuments_get_progress(right_bottom) == 0) {
             vec2i offset = lookup_tile_to_pixel(right_bottom);
-            auto& command = ImageDraw::create_subcommand(render_command_t::ert_drawtile);
+            auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
             command.image_id = image_stick;
             command.pixel = offset;
             command.mask = color_mask;
+            command.use_sort_pixel = true;
+            command.sort_pixel = offset + vec2i(0, 1);
         }
     } else if (monumentd.phase == 1) {
         for (int dy = 0; dy < base.size; dy++) {
