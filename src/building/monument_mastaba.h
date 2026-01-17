@@ -9,12 +9,22 @@
 
 struct painter;
 
+struct mastaba_part {
+    e_building_type type;
+    tile2i offset;
+    building *b;
+    bool base;
+};
+ANK_CONFIG_STRUCT(mastaba_part,
+    type, offset, base)
+
 class building_mastaba : public building_monument {
 public:
     building_mastaba(building &b) : building_monument(b) {}
     virtual building_mastaba *dcast_mastaba() override { return this; }
 
     virtual void on_create(int orientation) override;
+    virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
     virtual void update_count() const override;
     virtual void update_month() override;
@@ -28,6 +38,10 @@ public:
     };
 
     struct base_params {
+        hvector<mastaba_part, 10> config_north;
+        hvector<mastaba_part, 10> config_east;
+        hvector<mastaba_part, 10> config_south;
+        hvector<mastaba_part, 10> config_west;
         vec2i init_tiles;
     };
     
@@ -54,12 +68,12 @@ public:
     struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 
-    virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
-ANK_CONFIG_STRUCT(building_small_mastaba::static_params, init_tiles);
+ANK_CONFIG_STRUCT(building_small_mastaba::static_params, 
+    init_tiles, config_north, config_east, config_south, config_west);
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
@@ -85,12 +99,12 @@ public:
     struct static_params : public base_params, public building_static_params {
     } BUILDING_STATIC_DATA_T;
 
-    virtual void on_place(int orientation, int variant) override;
     virtual void update_day() override;
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
-ANK_CONFIG_STRUCT(building_medium_mastaba::static_params, init_tiles);
+ANK_CONFIG_STRUCT(building_medium_mastaba::static_params,
+    init_tiles, config_north, config_east, config_south, config_west);
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
