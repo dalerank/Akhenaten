@@ -1522,34 +1522,14 @@ building_wood_cutter {
   laborers[8], fire_risk[4], damage_risk[3]
 }
 
-building_small_mastaba = {
-  animations : {
-    preview : { pack:PACK_MASTABA, id:2, offset:7 }
-    base : { pack:PACK_MASTABA, id:2, offset:7 }
-    base_bricks : { pack:PACK_MASTABA, id:1, offset:0 }
-    empty_land : {pack:PACK_TERRAIN, id:10}
-    enter : {pack:PACK_GENERAL, id:114}
-  }
-  building_size : 2
-  info_title_id:[198, 18]
-  fire_proof :  true
-  damage_proof : true
-  meta : { help_id:4, text_id:120 }
-  init_tiles : [10, 4]
-  // todo
-}
-
-building_small_mastaba_part_side = building_small_mastaba
-building_small_mastaba_part_wall = building_small_mastaba
-building_small_mastaba_part_entrance = building_small_mastaba
-
 building_small_stepped_pyramid {
   animations {
-    preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
-    base { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
-    base_bricks { pack:PACK_STEPPED_PYRAMID, id:1, offset:0 }
-    empty_land {pack:PACK_TERRAIN, id:10}
-    enter {pack:PACK_GENERAL, id:114}
+    _pack { pack:PACK_STEPPED_PYRAMID }
+    preview { id:2, offset:7 }
+    base { id:2, offset:7 }
+    base_bricks { id:1, offset:0 }
+    empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+    enter {id:114}
   }
   build_menu_text : "Small Stepped Pyramid"
   building_size : 2
@@ -1563,11 +1543,12 @@ building_small_stepped_pyramid {
 
 building_medium_stepped_pyramid {
   animations {
+    _pack { pack:PACK_STEPPED_PYRAMID }
     preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
-    base { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
-    base_bricks { pack:PACK_STEPPED_PYRAMID, id:1, offset:0 }
-    empty_land {pack:PACK_TERRAIN, id:10}
-    enter {pack:PACK_GENERAL, id:114}
+    base { id:2, offset:7 }
+    base_bricks { id:1, offset:0 }
+    empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+    enter {id:114}
   }
   build_menu_text : "Medium Stepped Pyramid"
   building_size : 2
@@ -1586,19 +1567,20 @@ building_artisans_guild = {
 }
 
 building_medium_mastaba = {
-  animations : {
-    preview : {pack:PACK_MASTABA, id:2, offset:7 },
-    base : {pack:PACK_MASTABA, id:2, offset:7 },
-    base_bricks : {pack:PACK_MASTABA, id:1, offset:0 },
-    empty_land : {pack:PACK_TERRAIN, id:10},
-    enter : {pack:PACK_GENERAL, id:114},
+  animations {    
+    _pack { pack:PACK_MASTABA }
+    preview { id:2, offset:7 },
+    base { id:2, offset:7 },
+    base_bricks { id:1, offset:0 },
+    empty_land {path:"mastaba/mastaba_00109"},
+    enter {id:114},
   },
   building_size : 2,
-  info_title_id:[198, 19],
+  info_title_id [198, 19],
   fire_proof :  true,
   damage_proof : true,
-  meta : { help_id:4, text_id:120 }
-  init_tiles : [14, 6]
+  meta { help_id:4, text_id:120 }
+  init_tiles [14, 6]
 }
 
 building_medium_mastaba_part_side = building_medium_mastaba

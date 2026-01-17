@@ -58,7 +58,7 @@ const building_pyramid::base_params &get_pyramid_params(e_building_type type) {
 
     switch (params.type) {
     case BUILDING_SMALL_STEPPED_PYRAMID: return pyramid_base_params<building_small_stepped_pyramid>(params);
-    // Add more pyramid types here as needed
+    case BUILDING_MEDIUM_STEPPED_PYRAMID: return pyramid_base_params<building_medium_stepped_pyramid>(params);
     }
 
     static building_pyramid::base_params dummy;
@@ -132,13 +132,65 @@ void building_pyramid::preview::ghost_preview(build_planner &planer, painter &ct
 }
 
 void map_pyramid_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
-    // Use the same implementation as map_mastaba_tiles_add
-    // This function can be shared or duplicated if pyramid needs different behavior
-    map_mastaba_tiles_add(building_id, tile, size, image_id, terrain);
+    int x_leftmost, y_leftmost;
+    switch (city_view_orientation()) {
+    case DIR_0_TOP_RIGHT: x_leftmost = 0; y_leftmost = 1; break;
+    case DIR_2_BOTTOM_RIGHT: x_leftmost = y_leftmost = 0; break;
+    case DIR_4_BOTTOM_LEFT: x_leftmost = 1; y_leftmost = 0; break;
+    case DIR_6_TOP_LEFT: x_leftmost = y_leftmost = 1; break;
+    default:
+        return;
+    }
+
+    if (!map_grid_is_inside(tile, size)) {
+        return;
+    }
+
+    int x_proper = x_leftmost * (size - 1);
+    int y_proper = y_leftmost * (size - 1);
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = tile.shifted(dx, dy).grid_offset();
+            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+            map_terrain_add(grid_offset, terrain);
+            map_building_set(grid_offset, building_id);
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, size);
+            map_monuments_set_progress(tile2i(grid_offset), 0);
+            map_image_set(grid_offset, image_id);
+            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == x_proper && dy == y_proper);
+        }
+    }
 }
 
-// Forward declare the bricks image function from mastaba
-extern int building_small_mastabe_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer);
+int building_small_pyramid_get_bricks_image(int orientation, e_building_type type, tile2i tile, tile2i start, tile2i end, int layer) {
+    int image_base_bricks = building_static_params::get(type).first_img("base_bricks");
+
+    int image_id = image_base_bricks + (layer - 1) * 8 + 4;
+    int random = (image_base_bricks + 96 + (layer - 1) + (tile.x() + tile.y()) % 1 * 6);
+    int result = random;
+    if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_ENTRANCE, BUILDING_MEDIUM_MASTABA_ENTRANCE })) {
+        int ids[4] = { image_base_bricks + 110, image_base_bricks + 104, image_base_bricks + 104, image_base_bricks + 109 };
+        int i = (orientation + (city_view_orientation() / 2)) % 4;
+        return ids[i];
+    } else if (building_type_any_of(type, { BUILDING_SMALL_MASTABA_WALL, BUILDING_MEDIUM_MASTABA_WALL })) {
+        return random;
+    } else if (tile.y() == start.y()) { // top corner
+        result = (image_id + 3);
+    } else if (tile.y() == end.shifted(0, -1).y()) {
+        result = (image_id + 1);
+    } else {
+        result = random;
+    }
+
+    if (result < random) {
+        int offset = result - image_id;
+        result = (image_id + (offset + (city_view_orientation() / 2)) % 4);
+        return result;
+    }
+
+    return result;
+}
 
 void building_pyramid::update_images(building *b, int curr_phase, const vec2i size_b) {
     building *main = b->main();
@@ -151,7 +203,7 @@ void building_pyramid::update_images(building *b, int curr_phase, const vec2i si
     while (part) {
         int image_id = 0;
         // Use mastaba bricks image function for now, can be customized later
-        image_id = building_small_mastabe_get_bricks_image(b->orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - 2);
+        image_id = building_small_pyramid_get_bricks_image(b->orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - 2);
         for (int dy = 0; dy < part->size; dy++) {
             for (int dx = 0; dx < part->size; dx++) {
                 int grid_offset = part->tile.shifted(dx, dy).grid_offset();
@@ -249,7 +301,7 @@ bool building_pyramid::draw_ornaments_and_animations_flat_impl(building &base, p
         return false;
     }
 
-    int clear_land_id = building_static_params::get(base.type).first_img("empty_land");
+    int clear_land_id = building_static_params::get(base.type).first_img(animkeys().empty_land);
     int image_grounded = building_static_params::get(base.type).base_img() + 5;
     building *main = base.main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
@@ -607,7 +659,7 @@ void building_small_stepped_pyramid::on_place(int orientation, int variant) {
 
     base.prev_part_building_id = 0;
 
-    int empty_img = base_img() + 108;
+    int empty_img = current_params().first_img(animkeys().empty_land);
     map_pyramid_tiles_add(id(), tile(), base.size, empty_img, TERRAIN_BUILDING);
 
     svector<pyramid_part, 10> parts;

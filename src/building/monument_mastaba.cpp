@@ -50,7 +50,10 @@ struct mastaba_part {
     e_building_type type;
     tile2i offset;
     building *b;
+    bool is_base;
 };
+ANK_CONFIG_STRUCT(mastaba_part,
+    type, offset, is_base)
 
 template<typename T>
 const building_mastaba::base_params &mastaba_base_params(const building_static_params &params) {
@@ -340,7 +343,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(building &base, p
         return false;
     }
 
-    int clear_land_id = first_img("empty_land");
+    int clear_land_id = first_img(animkeys().empty_land);
     int image_grounded = base_img() + 5;
     building *main = base.main();
     color_mask = (color_mask ? color_mask : 0xffffffff);
@@ -675,20 +678,20 @@ void building_small_mastaba::on_place(int orientation, int variant) {
 
     base.prev_part_building_id = 0;
 
-    int empty_img = base_img() + 108;
+    int empty_img = current_params().first_img(animkeys().empty_land);
     map_mastaba_tiles_add(id(), tile(), base.size, empty_img, TERRAIN_BUILDING);
 
     svector<mastaba_part, 10> parts;
     switch (orientation) {
-    case 0: parts = {{ BUILDING_SMALL_MASTABA, {2, 0}},  
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}},     {BUILDING_SMALL_MASTABA_WALL, {2, 2}},
+    case 0: parts = {{ BUILDING_SMALL_MASTABA, {-1, -1}, &base}, { BUILDING_SMALL_MASTABA, {2, 0}},  
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}},     { BUILDING_SMALL_MASTABA_WALL, {2, 2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {2, 4}}, { BUILDING_SMALL_MASTABA_WALL, {0, 4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, 6}},     { BUILDING_SMALL_MASTABA_WALL, {2, 6}},
                      { BUILDING_SMALL_MASTABA_SIDE, {0, 8}},     { BUILDING_SMALL_MASTABA_SIDE, {2, 8}} }; 
           break;
 
-    case 1: parts = {{ BUILDING_SMALL_MASTABA, {-2, 0}},  
-                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}},     {BUILDING_SMALL_MASTABA_WALL, {-2, 2}},
+    case 1: parts = {{ BUILDING_SMALL_MASTABA, {-2, 0}},         { BUILDING_SMALL_MASTABA, {-1, -1}, &base},
+                     { BUILDING_SMALL_MASTABA_WALL, {0, 2}},     { BUILDING_SMALL_MASTABA_WALL, {-2, 2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {0, 4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, 4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, 6}},     { BUILDING_SMALL_MASTABA_WALL, {-2, 6}},
                      { BUILDING_SMALL_MASTABA_SIDE, {0, 8}},     { BUILDING_SMALL_MASTABA_SIDE, {-2, 8}} }; 
@@ -698,7 +701,7 @@ void building_small_mastaba::on_place(int orientation, int variant) {
                      { BUILDING_SMALL_MASTABA_WALL, {0, -2}},     { BUILDING_SMALL_MASTABA_WALL, {-2, -2}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {0, -4}}, { BUILDING_SMALL_MASTABA_WALL, {-2, -4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, -6}},     { BUILDING_SMALL_MASTABA_WALL, {-2, -6}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {-2, 0}} };
+                     { BUILDING_SMALL_MASTABA_SIDE, {-2, 0}},     { BUILDING_SMALL_MASTABA, {-1, -1}, &base} };
           base.type = BUILDING_SMALL_MASTABA_SIDE;
           break;
 
@@ -706,24 +709,20 @@ void building_small_mastaba::on_place(int orientation, int variant) {
                      { BUILDING_SMALL_MASTABA_WALL, {0, -6}},     { BUILDING_SMALL_MASTABA_WALL, {2, -6}},
                      { BUILDING_SMALL_MASTABA_ENTRANCE, {2, -4}}, { BUILDING_SMALL_MASTABA_WALL, {0, -4}},
                      { BUILDING_SMALL_MASTABA_WALL, {0, -2}},     { BUILDING_SMALL_MASTABA_WALL, {2, -2}},
-                     { BUILDING_SMALL_MASTABA_SIDE, {2, 0}} 
-                    };
+                     { BUILDING_SMALL_MASTABA_SIDE, {2, 0}},      { BUILDING_SMALL_MASTABA, {-1, -1}, &base} };
           base.type = BUILDING_SMALL_MASTABA_SIDE;
           break;
     }
 
     for (auto &part : parts) {
+        if (part.b != nullptr) {
+            continue;
+        }
+
         part.b = building_create(part.type,tile().shifted(part.offset), 0);
         game_undo_add_building(part.b);
         tile2i btile_add = tile().shifted(part.offset);
         map_mastaba_tiles_add(part.b->id, btile_add, part.b->size, empty_img, TERRAIN_BUILDING);
-    }
-
-    switch (orientation) {
-    case 0: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, &base}; parts.insert(parts.begin(), main); } break;
-    case 1: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, &base}; parts.insert(parts.begin() + 1, main); } break;
-    case 2: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, &base}; parts.push_back(main); } break;
-    case 3: { mastaba_part main{BUILDING_SMALL_MASTABA, {-1, -1}, &base}; parts.push_back(main); } break;
     }
 
     building* prev_part = nullptr;
