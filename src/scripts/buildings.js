@@ -156,9 +156,9 @@ building_meadow_farm_grain {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -199,9 +199,9 @@ building_farm_grain {
     base { id:37, offset:0 }
     work { id:37, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:0 }
     minimap {id:149, offset:160}
     crops { id:100, offset:12 }
@@ -239,9 +239,9 @@ building_meadow_farm_chickpeas {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -281,9 +281,9 @@ building_farm_chickpeas {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:0 }
     minimap {id:149, offset:160}
     crops { id:100, offset:30 }
@@ -319,9 +319,9 @@ building_meadow_farm_lettuce {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -360,9 +360,9 @@ building_farm_lettuce {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:0 }
     minimap {id:149, offset:160}
     crops { id:100, offset:18 }
@@ -398,9 +398,9 @@ building_meadow_farm_pomegranates {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -439,9 +439,9 @@ building_farm_pomegranates {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:20 }
     minimap {id:149, offset:160}
     crops { id:100, offset:24 }
@@ -476,9 +476,9 @@ building_meadow_farm_barley {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -517,9 +517,9 @@ building_farm_barley {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:0 }
     minimap {id:149, offset:160}
     crops { id:100, offset:0 }
@@ -554,9 +554,9 @@ building_meadow_farm_flax {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -595,9 +595,9 @@ building_farm_flax {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37, offset:0 }
     minimap {id:149, offset:160}
     crops { id:100, offset:36 }
@@ -633,9 +633,9 @@ building_meadow_farm_henna {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -674,9 +674,9 @@ building_farm_henna {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37 }
     minimap { id:149, offset:160 }
     crops { id:100, offset:30 }
@@ -711,9 +711,9 @@ building_meadow_farm_figs {
     base { id:225, offset:0 }
     work { id:225, offset:0, max_frames:1 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:225, offset:1 }
     farmland_watered { id:225, offset:0 }
     minimap {id:149, offset:160}
@@ -752,9 +752,9 @@ building_farm_figs {
     base { id:37, offset:0 }
     work { id:37, offset:1, max_frames:12 }
     farm_house { id:225 }
-    tiling { id:118, max_frames:12, duration:6 }
-    seeding { id:119, max_frames:12, duration:6 }
-    harvesting { id:120, max_frames:12, duration:6}
+    tiling { pack:PACK_SPR_MAIN, id:118, max_frames:12, duration:6 }
+    seeding { pack:PACK_SPR_MAIN, id:119, max_frames:12, duration:6 }
+    harvesting { pack:PACK_SPR_MAIN, id:120, max_frames:12, duration:6}
     farmland { id:37 }
     minimap {id:149, offset:160}
     crops { id:100, offset:6 }
