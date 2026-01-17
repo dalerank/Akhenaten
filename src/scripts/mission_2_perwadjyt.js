@@ -67,6 +67,7 @@ function mission2_on_start(ev) {
 		city.use_building(BUILDING_CLAY_PIT, true)
 		city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 		city.use_building(BUILDING_STORAGE_YARD, true)
+		city.set_advisor_available(ADVISOR_LABOR, 1)
 	}
 
 	if (mission.pottery_step2_stored_handled) {
@@ -76,15 +77,16 @@ function mission2_on_start(ev) {
 		city.use_building(BUILDING_LARGE_STATUE, true)
 		city.use_building(BUILDING_GARDENS, true)
 		city.use_building(BUILDING_PLAZA, true)
+		city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
 	}
 
 	if (mission.disease_handled) {
-       city.use_building(BUILDING_WATER_SUPPLY, true)
 	   city.use_building(BUILDING_APOTHECARY, true)
 	   city.use_building(BUILDING_PHYSICIAN, true)
+	   city.set_advisor_available(ADVISOR_HEALTH, 1)
 	}
 
-	city.set_advisor_available(ADVISOR_LABOR, 1)
+	city.set_advisor_available(ADVISOR_POPULATION, 1)
 	city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	city.set_advisor_available(ADVISOR_RELIGION, 1)
 }
@@ -109,7 +111,9 @@ function mission2_on_filled_granary(ev) {
 	city.use_building(BUILDING_POTTERY_WORKSHOP, true)
 	city.use_building(BUILDING_STORAGE_YARD, true)
 
-	ui.popup_message("message_tutorial_food_and_farming")
+	city.set_advisor_available(ADVISOR_LABOR, 1)
+
+	ui.popup_message("message_tutorial_industry")
 }
 
 [event=event_warehouse_filled, mission=mission2]
@@ -125,8 +129,6 @@ function mission2_warehouse_pottery_1_check(ev) {
 
 	mission.pottery_step1_stored_handled = true
 	mission.last_action_time = game.absolute_day
-
-	ui.popup_message("message_tutorial_industry")
 }
 
 [event=event_warehouse_filled, mission=mission2]
@@ -153,6 +155,7 @@ function mission2_warehouse_pottery_2_check(ev) {
 	city.use_building(BUILDING_LARGE_STATUE, true)
 	city.use_building(BUILDING_GARDENS, true)
 	city.use_building(BUILDING_PLAZA, true)
+	city.use_building(BUILDING_MENU_WATER_CROSSINGS, true)
 
 	ui.popup_message("message_tutorial_municipal_structures")
 }
@@ -169,6 +172,8 @@ function mission2_on_disease(ev) {
 	city.use_building(BUILDING_WATER_SUPPLY, true)
 	city.use_building(BUILDING_APOTHECARY, true)
 	city.use_building(BUILDING_PHYSICIAN, true)
+
+	city.set_advisor_available(ADVISOR_HEALTH, 1)
 
 	ui.popup_message("message_basic_healthcare")
 }
