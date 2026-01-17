@@ -16,6 +16,7 @@ import city_finance
 import images
 import city_sounds
 import buildings
+import building_mastaba
 import overlays
 import building_sounds
 import images
