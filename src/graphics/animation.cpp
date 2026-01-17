@@ -19,8 +19,18 @@ bool animation_t::archive_load(archive arch) {
 }
 
 int animation_t::first_img() const {
-    int image_id = image_id_from_group(pack, id) + offset;   
-    return image_id;
+    if (cached_imgid > 0) {
+        return cached_imgid;
+    }
+
+    if (!path.empty()) {
+        image_desc desc = image_desc_from_name(path);
+        cached_imgid = desc.tid();
+        return cached_imgid;
+    }
+
+    cached_imgid = image_id_from_group(pack, id) + offset;
+    return cached_imgid;
 }
 
 void animation_context::setup(const animation_t &anim) {
@@ -93,6 +103,12 @@ void animations_t::initialize() {
     for (auto &anim : data) {
         if (anim.second.pack == 0) {
             anim.second.pack = defanim.pack;
+        }
+
+        if (!anim.second.path.empty()) {
+            anim.second.pack = 0;
+            anim.second.id = 0;
+            anim.second.offset = 0;
         }
     }
 }
