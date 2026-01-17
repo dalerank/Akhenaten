@@ -71,6 +71,9 @@ const xstring id_anim_t::crops = "crops";
 const xstring id_anim_t::top = "top";
 const xstring id_anim_t::gamemeat = "gamemeat";
 const xstring id_anim_t::empty_land = "empty_land";
+const xstring id_anim_t::base_grounded = "base_grounded";
+const xstring id_anim_t::clear_land = "clear_land";
+const xstring id_anim_t::image_stick = "image_stick";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

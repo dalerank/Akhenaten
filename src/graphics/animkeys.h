@@ -73,6 +73,9 @@ struct id_anim_t {
     static const xstring top;
     static const xstring gamemeat;
     static const xstring empty_land;
+    static const xstring base_grounded;
+    static const xstring clear_land;
+    static const xstring image_stick;
 };
 
 const id_anim_t &animkeys();
