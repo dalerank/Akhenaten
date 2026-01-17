@@ -18,12 +18,14 @@ struct animation_t {
     int16_t pack;
     int16_t id;
     int16_t offset;
+    xstring path;
     int8_t max_frames;
     int8_t duration;
     int8_t start_frame;
     bool can_reverse;
     bool loop = true;
     bool reverse = false;
+    mutable uint16_t cached_imgid = 0;
 
     static int global_hashtime;
 
@@ -31,7 +33,9 @@ struct animation_t {
     image_desc to_desc() const { return { pack, id, offset }; }
     int first_img() const;
 };
-ANK_CONFIG_STRUCT(animation_t, pos, pack, id, offset, max_frames, duration, start_frame, can_reverse, reverse)
+ANK_CONFIG_STRUCT(animation_t, 
+    pos, pack, id, offset, path,
+    max_frames, duration, start_frame, can_reverse, reverse)
 
 struct animation_context {
     xstring key;
