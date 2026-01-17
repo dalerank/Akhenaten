@@ -69,7 +69,7 @@ function mission1_on_start(ev) {
 		city.set_advisor_available(ADVISOR_ENTERTAINMENT, 1)
 	}
 
-	if (mission.tutorial_collapsed_handle) {
+	if (mission.tutorial_collapsed_handled) {
 		city.use_building(BUILDING_ARCHITECT_POST, true)
 	}
 
