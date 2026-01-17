@@ -76,23 +76,44 @@ struct archive {
         pop(1);
     }
 
-    template<typename T>
-    inline void r_stable_array(pcstr name, T &arr);
-
     template<class T>
     inline T r_type(pcstr name, T def = (T)0) { return (T)r_int(name, def); }
 
+    template<bool global, size_t S, typename T = int>
+    inline bool r_sarray_impl(pcstr name, std::array<T, S> &v);
+
     template<size_t S, typename T = int>
-    inline void r_sarray(pcstr name, std::array<T, S> &v);
+    inline bool r_sarray(pcstr name, std::array<T, S> &v) {
+        return r_sarray_impl<false>(name, v);
+    }
 
     template<typename T, std::size_t N>
     inline void r(pcstr name, std::array<T, N>& v) { this->r_sarray<N, T>(name, v); }
 
-    template<typename T, std::size_t N, typename = std::enable_if_t<std::is_enum_v<T> || std::is_arithmetic_v<T>>>
-    inline void r(pcstr name, svector<T, N> &v) { this->r_array_num<T>(name, v); }
+    template<bool global, typename T>
+    inline bool r_vector_impl(pcstr name, T &v, int max_size = -1);
+
+    template<bool blobal, typename T>
+    inline bool r_stable_array_impl(pcstr name, T &arr);
+
+    template<typename T>
+    inline bool r_vector(pcstr name, T &v, int max_size) {
+        return r_vector_impl<false>(name, v, max_size);
+    }
+
+    template<typename T>
+    inline bool r_stable_array(pcstr name, T &arr) {    
+        return r_stable_array_impl<false>(name, arr);
+    }
+
+    template<typename T, std::size_t N>
+    inline void r(pcstr name, svector<T, N> &v) { r_vector_impl<false>(name, v, N); }
 
     template<std::size_t N>
     inline void r(pcstr name, svector<xstring, N> &v) { this->r_array_str(name, v); }
+
+    template<typename T, std::size_t N>
+    inline void r(pcstr name, hvector<T, N> &v) { r_vector_impl<false>(name, v); }
 
     template<typename T>
     void r(T& s);
@@ -180,13 +201,26 @@ struct archive {
         return result;
     }
 
-    template<typename T>
-    inline void r_section(pcstr name, T read_func) {
-        getproperty(-1, name);
+    template<bool global, typename T>
+    inline bool r_section_impl(pcstr name, T read_func) {
+        bool ok = false;
+        if constexpr (global) {
+            getglobal(name);
+        } else {
+            getproperty(-1, name);
+        }
+        
         if (isobject(-1)) {
             read_func(state);
+            ok = true;
         }
         pop(1);
+        return ok;
+    }
+
+    template<typename T>
+    inline bool r_section(pcstr name, T read_func) {
+        return r_section_impl<false>(name, read_func);
     }
 
     template<typename T>
@@ -397,8 +431,20 @@ struct g_archive : public archive {
         return true;
     }
 
+    template<typename T>
+    inline bool r_vector(pcstr name, T &arr, int max_size = -1) {
+        return r_vector_impl<true>(name, arr);
+    }
+
     template<typename T, std::size_t N>
-    inline bool r(pcstr name, svector<T, N> &v);
+    inline bool r(pcstr name, svector<T, N> &v) {
+        return r_vector(name, v, N);
+    }
+
+    template<typename T, std::size_t N>
+    inline bool r(pcstr name, hvector<T, N> &v) {
+        return r_vector(name, v, N);
+    }
 
     template<typename T>
     inline bool r(pcstr name, std::unordered_set<T>& v) {
@@ -431,14 +477,18 @@ struct g_archive : public archive {
     }
 
     template<typename T, std::size_t N>
-    inline bool r(pcstr name, std::array<T, N> &v);
+    inline bool r(pcstr name, std::array<T, N> &v) {
+        return r_sarray_impl<true>(name, v);    
+    }
 
     template<typename T>
-    inline bool r_stable_array(pcstr name, T &arr);
+    inline bool r_stable_array(pcstr name, T &arr) {
+        return r_stable_array_impl<true>(name, arr);
+    }
 
     template<typename T>
     inline bool r(pcstr name, stable_array<T>& arr) {
-        return r_stable_array(name, arr);
+        return r_stable_array_impl<true>(name, arr);
     }
 
     template<typename T>
@@ -446,15 +496,8 @@ struct g_archive : public archive {
         if (!state) {
             return true;
         }
-
-        bool ok = false;
-        getglobal(name);
-        if (isobject(-1)) {
-            read_func(state);
-            ok = true;
-        } 
-        pop(1);
-        return ok;
+        
+        return r_section_impl<true>(name, read_func);
     }
 
     template<typename T>
@@ -796,23 +839,27 @@ inline void archive::r_struct(pcstr name, T &v) {
     });
 }
 
-template<size_t S, typename T>
-inline void archive::r_sarray(pcstr name, std::array<T, S> &v) {
-    getproperty(-1, name);
+template<bool global, size_t N, typename T>
+inline bool archive::r_sarray_impl(pcstr name, std::array<T, N> &v) {
+    if constexpr (global) {
+        getglobal(name);
+    } else {
+        getproperty(-1, name);
+    }
+
     auto it = v.begin();
     if (isarray(-1)) {
         int length = getlength(-1);
-        length = std::min<int>(S, length);
+        length = std::min<int>(N, length);
 
         for (int i = 0; i < length; ++i) {
             getindex(-1, i);
             if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
                 double v = isnumber(-1) ? tonumber(-1) : 0.0;
                 *it = static_cast<T>(v);
-            }
-            else {
+            } else {
                 if (isobject(-1)) {
-                    archive_helper::reader(*this, *it);
+                    archive_helper::reader(archive(state), *it);
                 }
             }
             it = std::next(it);
@@ -820,11 +867,18 @@ inline void archive::r_sarray(pcstr name, std::array<T, S> &v) {
         }
     }
     pop(1);
+    return true;
 }
 
-template<typename T>
-inline void archive::r_stable_array(pcstr name, T &arr) {
-    getproperty(-1, name);
+template<bool global, typename T>
+inline bool archive::r_stable_array_impl(pcstr name, T &arr) {
+    using value_type = typename T::value_type;
+    if constexpr (global) {
+        getglobal(name);
+    } else {
+        getproperty(-1, name);
+    }
+
     if (isarray(-1)) {
         int length = getlength(-1);
         using value_type = typename T::value_type;
@@ -854,6 +908,43 @@ inline void archive::r_stable_array(pcstr name, T &arr) {
         }
     }
     pop(1);
+    return true;
+}
+
+template<bool global, typename T>
+inline bool archive::r_vector_impl(pcstr name, T &v, int max_size) {
+    using value_type = typename T::value_type;
+    v.clear();
+    
+    if constexpr (global) {
+        getglobal(name);
+    } else {
+        getproperty(-1, name);
+    }
+
+    if (isarray(-1)) {
+        int length = getlength(-1);
+        if (max_size > 0) {
+            length = std::min<int>(max_size, length);
+        }
+
+        for (int i = 0; i < length; ++i) {
+            getindex(-1, i);
+            if constexpr (std::is_integral_v<value_type> || std::is_floating_point_v<value_type> || std::is_enum_v<value_type>) {
+                double item = isnumber(-1) ? tonumber(-1) : 0.0;
+                v.push_back(static_cast<value_type>(item));
+            } else {
+                if (isobject(-1)) {
+                    value_type item;
+                    archive_helper::reader(archive(state), item);
+                    v.push_back(std::move(item));
+                }
+            }
+            pop(1);
+        }
+    }
+    pop(1);
+    return true;
 }
 
 template<typename T>
@@ -867,59 +958,6 @@ inline void archive::r(pcstr name, T& v) {
     }
 }
 
-template<typename T, std::size_t N>
-inline bool g_archive::r(pcstr name, svector<T, N> &v) {
-    getglobal(name);
-    v.clear();
-    if (isarray(-1)) {
-        int length = getlength(-1);
-        length = std::min<int>(N, length);
-
-        for (int i = 0; i < length; ++i) {
-            getindex(-1, i);
-            if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                double item = isnumber(-1) ? tonumber(-1) : 0.0;
-                v.push_back(static_cast<T>(item));
-            } else {
-                if (isobject(-1)) {
-                    T item;
-                    archive_helper::reader(archive(state), item);
-                    v.push_back(item);
-                }
-            }
-            pop(1);
-        }
-    }
-    pop(1);
-    return true;
-}
-
-template<typename T, std::size_t N>
-inline bool g_archive::r(pcstr name, std::array<T, N> &v) {
-    getglobal(name);
-    auto it = v.begin();
-    if (isarray(-1)) {
-        int length = getlength(-1);
-        length = std::min<int>(N, length);
-
-        for (int i = 0; i < length; ++i) {
-            getindex(-1, i);
-            if constexpr (std::is_integral_v<T> || std::is_floating_point_v<T> || std::is_enum_v<T>) {
-                double v = isnumber(-1) ? tonumber(-1) : 0.0;
-                *it = static_cast<T>(v);
-            } else {
-                if (isobject(-1)) {
-                    archive_helper::reader(archive(state), *it);
-                }
-            }
-            it = std::next(it);
-            pop(1);
-        }
-    }
-    pop(1);
-    return true;
-}
-
 template<typename T>
 inline bool g_archive::r(pcstr name, T &obj) {
     if (!state) {
@@ -927,24 +965,4 @@ inline bool g_archive::r(pcstr name, T &obj) {
     }
 
     return r_section(name, [&] (archive arch) { arch.r(obj); });
-}
-
-template<typename T>
-inline bool g_archive::r_stable_array(pcstr name, T &arr) {
-    getglobal(name);
-    if (isarray(-1)) {
-        int length = getlength(-1);
-        using value_type = typename T::value_type;
-        for (int i = 0; i < length; ++i) {
-            getindex(-1, i);
-            if (isobject(-1)) {
-                value_type item;
-                archive_helper::reader(archive(state), item);
-                arr[std::hash<value_type>()(item)] = item;
-            }
-            pop(1);
-        }
-    }
-    pop(1);
-    return true;
 }
