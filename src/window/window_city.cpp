@@ -136,9 +136,9 @@ bool window_city_draw_construction_cost_and_size() {
 }
 
 void window_city_draw_foreground(int) {
-    widget_top_menu_draw();
     window_city_draw();
     widget_sidebar_city_draw_foreground();
+    widget_top_menu_draw();
 
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         window_city_draw_paused_and_time_left();
