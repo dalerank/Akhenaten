@@ -79,7 +79,7 @@ class building_pyramid;
 class building_small_stepped_pyramid;
 class building_medium_stepped_pyramid;
 
-using e_building_flags = uint32_t;
+using e_building_need_rules = uint32_t;
 
 struct building_planner_need_rule {
     bool meadow;
@@ -96,6 +96,12 @@ struct building_planner_need_rule {
 };
 ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
     nearby_water, groundwater, shoreline, canals, floodplain_shoreline, water_access)
+
+struct building_flags_rule {
+    bool is_monument;
+};
+ANK_CONFIG_STRUCT(building_flags_rule,
+    is_monument)
 
 struct building_crime_t {
     svector<int8_t, 6> value;

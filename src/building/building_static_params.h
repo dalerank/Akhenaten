@@ -38,6 +38,7 @@ struct building_static_params {
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
+    building_flags_rule flags;
     xstring build_menu_text;
 
     void archive_unload();

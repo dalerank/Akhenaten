@@ -67,9 +67,9 @@ enum e_destroy_reason : uint8_t {
     e_destroy_enemy = 3,
 };
 
-enum e_fancy_state : uint8_t {
-    efancy_normal,
-    efancy_good
+enum e_building_flag : uint8_t {
+    e_building_fancy = 0,
+    e_building_monument = 1,
 };
 
 class building_work_camp;
@@ -142,8 +142,9 @@ private:
 
 public:
     e_building_type type;
-    building_id id;
     e_building_state state;
+
+    building_id id;
     uint8_t size;
     tile2i tile;
     uint8_t orientation;
@@ -159,15 +160,15 @@ public:
     bool has_open_water_access;
     figure_id prev_part_building_id;
     figure_id next_part_building_id;
+
     building_input input;
-    //short stored_amount_first;
-    //short stored_amount_second;
+    building_output output;
+
     bool has_well_access;
     uint8_t num_workers;
     uint8_t max_workers;
-    e_fancy_state fancy_state;
+    sbitarray64 flags;
     e_labor_category labor_category;
-    building_output output;
     uint8_t output_resource_second_rate;
     bool has_road_access;
     uint8_t disease_days;
@@ -227,6 +228,7 @@ public:
 
     inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
     inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
+
     bool is_defense();
     bool is_farm();
     bool is_workshop();
@@ -305,6 +307,9 @@ public:
 
     void mark_plague(int days);
     bool is_ajacent_tile(tile2i t) const;
+
+    void set_flag(e_building_flag flag, bool value) { flags.set(flag, value); }
+    bool get_flag(e_building_flag flag) const { return flags.is_set(flag); }
 
 public:
     building_impl *dcast();

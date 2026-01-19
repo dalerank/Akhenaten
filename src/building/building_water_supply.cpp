@@ -11,14 +11,15 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_supply);
 
 void building_water_supply::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), 4);
-    base.fancy_state = (avg_desirability > 30) ? efancy_good : efancy_normal;
-    const xstring &animkey = (base.fancy_state == efancy_good) ? animkeys().fancy : animkeys().base;
+    const bool is_fancy = avg_desirability > 30;
+    base.set_flag(e_building_fancy, is_fancy);
+    const xstring &animkey = is_fancy ? animkeys().fancy : animkeys().base;
     const animation_t &anim = this->anim(animkey);
     map_building_tiles_add(id(), tile(), 2, anim.first_img(), TERRAIN_BUILDING);
 }
 
 void building_water_supply::update_graphic() {
-    const xstring &animwork = (base.fancy_state == efancy_good) ? animkeys().fancy_work : animkeys().base_work;
+    const xstring &animwork = base.get_flag(e_building_fancy) ? animkeys().fancy_work : animkeys().base_work;
     set_animation(animwork);
 
     building_impl::update_graphic();

@@ -1522,44 +1522,6 @@ building_wood_cutter {
   laborers[8], fire_risk[4], damage_risk[3]
 }
 
-building_small_stepped_pyramid {
-  animations {
-    _pack { pack:PACK_STEPPED_PYRAMID }
-    preview { id:2, offset:7 }
-    base { id:2, offset:7 }
-    base_bricks { id:1, offset:0 }
-    empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
-    enter {id:114}
-  }
-  build_menu_text : "Small Stepped Pyramid"
-  building_size : 2
-  info_title_id [198, 18]
-  fire_proof :  true
-  damage_proof : true
-  meta { help_id:375, text_id:120 }
-  init_tiles [10, 10]
-  // todo
-}
-
-building_medium_stepped_pyramid {
-  animations {
-    _pack { pack:PACK_STEPPED_PYRAMID }
-    preview { pack:PACK_STEPPED_PYRAMID, id:2, offset:7 }
-    base { id:2, offset:7 }
-    base_bricks { id:1, offset:0 }
-    empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
-    enter {id:114}
-  }
-  build_menu_text : "Medium Stepped Pyramid"
-  building_size : 2
-  info_title_id [198, 18]
-  fire_proof :  true
-  damage_proof : true
-  meta { help_id:375, text_id:120 }
-  init_tiles [14, 14]
-  // todo
-}
-
 building_artisans_guild = {
   cost: 30
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }

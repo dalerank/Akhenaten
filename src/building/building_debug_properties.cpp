@@ -81,7 +81,7 @@ void game_debug_show_properties_object(pcstr prefix, building *b) {
         game_debug_show_property("stored_amount_first", b->stored_first().value, true);
         game_debug_show_property("stored_amount_second", b->stored_second().value, true);
         game_debug_show_property("num_workers", b->num_workers);
-        game_debug_show_property("fancy_state", b->fancy_state);
+        //game_debug_show_property("fancy_state", b->fancy_state);
         game_debug_show_property("labor_category", b->labor_category);
         game_debug_show_property("output.resource_first_id", b->output.resource);
         game_debug_show_property("output.resource_second_id", b->output.resource_second);
