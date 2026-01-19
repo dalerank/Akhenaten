@@ -906,7 +906,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     if (!input_coords_in_city(first->current_point.x, first->current_point.y) || type == BUILDING_NONE)
         return;
 
-    if (g_city_planner.has_flag_set(e_building_flag::Draggable)) {
+    if (g_city_planner.has_flag_set(e_building_need_flag::Draggable)) {
         if (!g_city_planner.in_progress) {
             if (first->has_started) {
                 g_city_planner.construction_start(tile);

@@ -6,7 +6,7 @@
 #include "grid/point.h"
 #include "grid/terrain.h"
 
-enum e_building_flag : uint32_t {
+enum e_building_need_flag : uint32_t {
     Groundwater = 1,
     Water = 1 << 1,
     NearbyWater = 1 << 2,

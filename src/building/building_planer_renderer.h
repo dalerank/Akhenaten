@@ -24,7 +24,7 @@ struct building_planer_renderer {
     virtual void ghost_blocked(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const;
     virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
     virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const { return state; }
-    virtual bool is_need_flag(build_planner &p, e_building_flags flag) const;
+    virtual bool is_need_flag(build_planner &p, e_building_need_rules flag) const;
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static const building_planer_renderer &get(e_building_type e);

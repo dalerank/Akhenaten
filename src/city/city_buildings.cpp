@@ -364,11 +364,12 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->output.resource_second); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
-        iob->bind(BIND_SIGNATURE_INT16, &b->fancy_state); // 2
+        iob->bind____skip(2); 
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource);
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource_second);
-        // 59 additional bytes
-        iob->bind____skip(59); // temp for debugging
+        iob->bind(BIND_SIGNATURE_INT64, b->flags.data_ptr());
+        // 51 additional bytes
+        iob->bind____skip(51); // temp for debugging
         //            assert(iob->get_offset() - sind == 264);
         g_all_buildings[i].id = i;
 

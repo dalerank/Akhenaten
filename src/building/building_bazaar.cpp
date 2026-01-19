@@ -255,11 +255,10 @@ void building_bazaar::update_graphic() {
         return;
     }
 
-    base.fancy_state = (g_desirability.get(base.tile) <= current_params().fancy_treshold_desirability) 
-                            ? efancy_normal 
-                            : efancy_good;
+    const bool is_fancy = g_desirability.get(base.tile) <= current_params().fancy_treshold_desirability;
+    base.set_flag(e_building_fancy, is_fancy);
 
-    const xstring& animkey = (base.fancy_state == efancy_normal) ? animkeys().base : animkeys().fancy;
+    const xstring& animkey = is_fancy ? animkeys().base : animkeys().fancy;
     map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
 
     building_impl::update_graphic();
@@ -267,7 +266,7 @@ void building_bazaar::update_graphic() {
 
 void building_bazaar::on_create(int orientation) {
     runtime_data().market_goods = 0;
-    base.fancy_state = efancy_normal;
+    base.set_flag(e_building_fancy, false);
 }
 
 void building_bazaar::spawn_figure() {
@@ -307,7 +306,7 @@ void building_bazaar::spawn_figure() {
 }
 
 bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const xstring& animkey = (base.fancy_state == efancy_normal) ? animkeys().base_work : animkeys().fancy_work;
+    const xstring& animkey = base.get_flag(e_building_fancy) ? animkeys().base_work : animkeys().fancy_work;
     const animation_t &ranim = anim(animkey);
     building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
 

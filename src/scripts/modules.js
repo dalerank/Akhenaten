@@ -17,6 +17,7 @@ import images
 import city_sounds
 import buildings
 import building_mastaba
+import building_pyramid
 import overlays
 import building_sounds
 import images

@@ -10,7 +10,7 @@ building_small_mastaba {
       clear_land { id:2, offset:12 }
       image_stick { path:"mastaba/pyramid_phase_one_00021" }
       empty_land { path:"mastaba/mastaba_00109" }
-      enter { id:114}
+      enter { id:114 }
     }
     building_size : 2
     info_title_id[198, 18]
@@ -18,6 +18,10 @@ building_small_mastaba {
     damage_proof : true
     meta { help_id:4, text_id:120 }
     init_tiles [10, 4]
+
+    flags {
+        is_monument: true
+    }
     
     config_north [
         { type: BUILDING_SMALL_MASTABA,      offset[-1, -1], base:true }, { type: BUILDING_SMALL_MASTABA,      offset[2, 0] },  
@@ -75,6 +79,10 @@ building_small_mastaba {
     damage_proof : true
     meta { help_id:4, text_id:120 }
     init_tiles [14, 6]
+
+    flags {
+        is_monument: true
+    }
 
     config_north [
         { type: BUILDING_MEDIUM_MASTABA, offset[-1, -1], base:true }, { type: BUILDING_MEDIUM_MASTABA,      offset[2, 0] },  { type: BUILDING_MEDIUM_MASTABA_SIDE, offset[4, 0] },

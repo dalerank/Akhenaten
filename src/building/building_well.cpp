@@ -30,8 +30,9 @@ void building_well::preview::ghost_preview(build_planner &planer, painter &ctx, 
 void building_well::update_month() {
     int avg_desirability = g_desirability.get_avg(tile(), current_params().desirability_range_check);
 
-    base.fancy_state = (avg_desirability > current_params().desirability_fancy ? efancy_good : efancy_normal);
-    const xstring animkey = (base.fancy_state == efancy_good) ? animkeys().fancy : animkeys().base;
+    const bool is_fancy = (avg_desirability > current_params().desirability_fancy);
+    base.set_flag(e_building_fancy, is_fancy);
+    const xstring animkey = is_fancy ? animkeys().fancy : animkeys().base;
 
     map_image_set(tile(), anim(animkey));
 }
@@ -49,7 +50,7 @@ void building_well::update_graphic() {
         return;
     }
 
-    const xstring animkey = (base.fancy_state == efancy_normal) ? animkeys().base_work : animkeys().fancy_work;
+    const xstring animkey = base.get_flag(e_building_fancy) ? animkeys().base_work : animkeys().fancy_work;
     set_animation(animkey);
 
     building_impl::update_graphic();
