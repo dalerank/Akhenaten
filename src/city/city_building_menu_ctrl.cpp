@@ -89,7 +89,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
         if (building_is_beautification((e_building_type)type))
             toggle_building(BUILDING_MENU_BEAUTIFICATION);
 
-        if (building_is_water_crossing((e_building_type)type))
+        if (params.flags.is_water_crossing)
             toggle_building(BUILDING_MENU_WATER_CROSSINGS);
 
         if (params.flags.is_monument) {

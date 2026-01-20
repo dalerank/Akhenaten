@@ -810,6 +810,10 @@ building_ferry {
     ferries : true
     relative_orientation: 1
   }
+  flags {
+    is_water_crossing: true
+    is_infrastructure: true
+  }
   fire_proof : true,
   meta { help_id: 85, text_id: 91 }
   labor_category : LABOR_CATEGORY_GOVERNMENT
@@ -1700,6 +1704,9 @@ building_firehouse {
   laborers [6]
   fire_risk [0]
   damage_risk [2]
+  flags {
+    is_infrastructure: true
+  }
 }
 
 building_police_station = {
@@ -1720,6 +1727,9 @@ building_police_station = {
   fire_risk [2]
   damage_risk [2]
   weapon_spot_pos [20, -20]
+  flags {
+    is_infrastructure: true
+  }
 }
 
 building_architect_post {
@@ -1736,6 +1746,9 @@ building_architect_post {
   meta { help_id: 81, text_id: 104 }
   cost [ 6, 12, 25, 40, 60 ]
   laborers[5], fire_risk[2], damage_risk[0]
+  flags {
+    is_infrastructure: true
+  }
 }
 
 building_conservatory {
@@ -1823,6 +1836,32 @@ building_temple_complex_osiris {
 
   allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_AMON ]
   allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_THOTH ]
+}
+
+building_low_bridge {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:100 }
+    base { id:100 }
+    work { pos [20, -30], id:100, offset:1, max_frames:11 }
+  }
+  flags {
+    is_water_crossing: true
+    is_infrastructure: true
+  }
+}
+
+building_ship_bridge {
+  animations {
+    _pack { pack:PACK_GENERAL }
+    preview { id:100 }
+    base { id:100 }
+    work { pos [20, -30], id:100, offset:1, max_frames:11 }
+  }
+  flags {
+    is_water_crossing: true
+    is_infrastructure: true
+  }
 }
 
 building_temple_complex_altar_amon {
