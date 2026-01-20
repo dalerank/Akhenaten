@@ -86,7 +86,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
         if (building_is_guild((e_building_type)type))
             toggle_building(BUILDING_MENU_CONSTURCTION_GUILDS);
 
-        if (building_is_beautification((e_building_type)type))
+        if (params.flags.is_beautification)
             toggle_building(BUILDING_MENU_BEAUTIFICATION);
 
         if (params.flags.is_water_crossing)
