@@ -102,9 +102,11 @@ struct building_flags_rule {
     bool is_extractor;
     bool is_harvester;
     bool is_farm;
+    bool is_fort;
+    bool is_education;
 };
 ANK_CONFIG_STRUCT(building_flags_rule,
-    is_monument, is_extractor, is_harvester, is_farm)
+    is_monument, is_extractor, is_harvester, is_farm, is_fort, is_education)
 
 struct building_crime_t {
     svector<int8_t, 6> value;

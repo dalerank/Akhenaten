@@ -73,6 +73,8 @@ enum e_building_flag : uint8_t {
     e_building_extractor = 2,
     e_building_harvester = 3,
     e_building_farm = 4,
+    e_building_fort = 5,
+    e_building_education = 6,
 };
 
 class building_work_camp;
@@ -234,6 +236,7 @@ public:
 
     bool is_defense();
     bool is_farm() const { return get_flag(e_building_farm); }
+    bool is_fort() const { return get_flag(e_building_fort); }
     bool is_floodplain_farm();
     bool is_workshop();
     bool is_extractor();
@@ -253,7 +256,7 @@ public:
     bool is_infrastructure();
     bool is_administration();
     bool is_religion();
-    bool is_education();
+    bool is_education() const { return get_flag(e_building_education); }
     bool is_military();
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
@@ -491,7 +494,6 @@ inline r_type smart_cast(building *b) {
 }
 
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
-bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
 bool building_is_workshop(int type);
 bool building_is_administration(e_building_type type);
@@ -512,7 +514,6 @@ bool building_is_food_category(e_building_type type);
 bool building_is_infrastructure(e_building_type type);
 bool building_is_religion(e_building_type type);
 bool building_is_entertainment(e_building_type type);
-bool building_is_education(e_building_type type);
 bool building_is_military(e_building_type type);
 
 bool building_is_draggable(e_building_type type);

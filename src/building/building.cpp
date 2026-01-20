@@ -97,6 +97,9 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_monument, params().flags.is_monument);
     set_flag(e_building_extractor, params().flags.is_extractor);
     set_flag(e_building_harvester, params().flags.is_harvester);
+    set_flag(e_building_farm, params().flags.is_farm);
+    set_flag(e_building_fort, params().flags.is_fort);
+    set_flag(e_building_education, params().flags.is_education);
 
     dcast()->on_create(orientation);
 }
@@ -385,9 +388,6 @@ bool building::is_religion() {
     return building_is_religion(type);
 }
 
-bool building::is_education() {
-    return building_is_education(type);
-}
 bool building::is_military() {
     return building_is_military(type);
 }
@@ -848,10 +848,6 @@ bool building::has_figure(int i, int figure_id) const {
 
 ///////////////
 
-bool building_is_fort(int type) {
-    return type == BUILDING_FORT_CHARIOTEERS || type == BUILDING_FORT_ARCHERS || type == BUILDING_FORT_INFANTRY;
-}
-
 bool building_is_defense(e_building_type type) {
     return building_type_any_of(type, { BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER });
 }
@@ -989,12 +985,9 @@ bool building_is_entertainment(e_building_type type) {
     return false;
 }
 
-bool building_is_education(e_building_type type) {
-    return building_type_any_of(type, { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ACADEMY });
-}
-
 bool building_is_military(e_building_type type) {
-    if (building_is_fort(type)) {
+    const auto &params = building_static_params::get(type);
+    if (params.flags.is_fort) {
         return true;
     }
     
