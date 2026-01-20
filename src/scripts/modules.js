@@ -22,6 +22,7 @@ import building_farm
 import building_fort
 import building_education
 import building_palace
+import building_temple
 import overlays
 import building_sounds
 import images
