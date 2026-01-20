@@ -261,7 +261,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_lilac.first_img(); // lilac
             } else if (building_is_military(b->type)) {
                 image_id = terrain_orange.first_img(); // orange
-            } else if (building_is_beautification(b->type)) {
+            } else if (b->is_beautification()) {
                 image_id = terrain_teal.first_img(); // spent teal
             } else if (b->is_monument()) {
                 image_id = image_id_from_group(PACK_GENERAL, 149);// , 210); // dark grey

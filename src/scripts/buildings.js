@@ -997,20 +997,24 @@ building_mortuary {
   damage_risk[2]
 }
 
-building_plaza = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:168 },
-    base : { pack:PACK_GENERAL, id:168 },
+building_plaza {
+  animations {
+    preview { pack:PACK_GENERAL, id:168 },
+    base { pack:PACK_GENERAL, id:168 },
   },
-  planner_update_rule : {
+  planner_update_rule {
     is_draggable : true
   }
+
   fire_proof : true
   damage_proof : true
-  meta : { help_id : 80, text_id : 137 }
+  meta { help_id : 80, text_id : 137 }
   building_size : 1
-  cost : [ 3, 5, 10, 15, 20 ]
-  desirability : { value:[4], step:[1], step_size:[-2], range: [2] }
+  cost [ 3, 5, 10, 15, 20 ]
+  desirability { value[4], step[1], step_size[-2], range[2] }
+  flags {
+    is_beautification: true
+  }
 }
 
 building_garden {
@@ -1046,6 +1050,9 @@ building_garden {
   building_size : 1
   cost [ 3, 5, 10, 15, 20 ]
   desirability { value[3], step[1], step_size[-1], range[3] }
+  flags {
+    is_beautification: true
+  }
 }
 
 building_road {

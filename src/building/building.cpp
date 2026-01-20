@@ -108,6 +108,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_administration, params().flags.is_administration);
     set_flag(e_building_water_crossing, params().flags.is_water_crossing);
     set_flag(e_building_infrastructure, params().flags.is_infrastructure);
+    set_flag(e_building_beautification, params().flags.is_beautification);
 
     dcast()->on_create(orientation);
 }
@@ -361,10 +362,6 @@ bool building::is_temple_complex() const {
 
 bool building::is_guild() const {
     return building_is_guild(type);
-}
-
-bool building::is_beautification() {
-    return building_is_beautification(type);
 }
 
 bool building::is_industry() {
@@ -853,11 +850,6 @@ bool building_is_temple_complex(e_building_type type) {
 
 bool building_is_guild(e_building_type type) {
     return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
-}
-
-bool building_is_beautification(e_building_type type) {
-    const auto &params = building_static_params::get(type);
-    return params.flags.is_statue || type == BUILDING_GARDENS || type == BUILDING_PLAZA;
 }
 
 bool building_is_industry_type(building* b) {
