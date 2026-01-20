@@ -63,7 +63,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
             toggle_building(BUILDING_MENU_INDUSTRY);
         }
 
-        if (building_is_workshop(type)) {
+        if (params.flags.is_workshop) {
             toggle_building(BUILDING_MENU_INDUSTRY);
         }
 

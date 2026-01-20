@@ -36,7 +36,7 @@ void overlay_problems_prepare_building(building* b) {
     } else if (b->type >= BUILDING_BARLEY_FARM && b->type <= BUILDING_CLAY_PIT) {
         if (is_problem_cartpusher(b->get_figure(0)))
             b->show_on_problem_overlay = 1;
-    } else if (building_is_workshop(b->type)) {
+    } else if (b->is_workshop()) {
         if (is_problem_cartpusher(b->get_figure(0)))
             b->show_on_problem_overlay = 1;
         else if (!b->workshop_has_resources())

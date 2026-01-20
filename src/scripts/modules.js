@@ -26,6 +26,7 @@ import building_temple
 import building_shrine
 import building_statue
 import building_mansion
+import building_workshop
 import overlays
 import building_sounds
 import images
