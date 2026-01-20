@@ -74,7 +74,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
         if (building_is_defense((e_building_type)type))
             toggle_building(BUILDING_MENU_DEFENSES);
 
-        if (building_is_shrine((e_building_type)type))
+        if (params.flags.is_shrine)
             toggle_building(BUILDING_MENU_SHRINES);
 
         if (params.flags.is_temple)

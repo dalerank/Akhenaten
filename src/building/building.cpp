@@ -102,6 +102,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_education, params().flags.is_education);
     set_flag(e_building_palace, params().flags.is_palace);
     set_flag(e_building_temple, params().flags.is_temple);
+    set_flag(e_building_shrine, params().flags.is_shrine);
 
     dcast()->on_create(orientation);
 }
@@ -355,12 +356,11 @@ bool building::is_tax_collector() {
 bool building::is_temple_complex() const {
     return building_is_temple_complex(type);
 }
-bool building::is_shrine() const {
-    return building_is_shrine(type);
-}
-bool building::is_guild() {
+
+bool building::is_guild() const {
     return building_is_guild(type);
 }
+
 bool building::is_beautification() {
     return building_is_beautification(type);
 }
@@ -866,9 +866,6 @@ bool building_is_temple_complex(e_building_type type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
 }
 
-bool building_is_shrine(e_building_type type) {
-    return (type >= BUILDING_SHRINE_OSIRIS && type <= BUILDING_SHRINE_BAST);
-}
 bool building_is_guild(e_building_type type) {
     return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
 }
@@ -948,7 +945,7 @@ bool building_is_administration(e_building_type type) {
 
 bool building_is_religion(e_building_type type) {
     const auto &params = building_static_params::get(type);
-    if (params.flags.is_temple || building_is_temple_complex(type) || building_is_shrine(type)) {
+    if (params.flags.is_temple || building_is_temple_complex(type) || params.flags.is_shrine) {
         return true;
     }
 
