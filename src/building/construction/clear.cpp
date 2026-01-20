@@ -141,7 +141,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     house->runtime_data().population = 0;
                 }
 
-                if (building_is_floodplain_farm(*b) && !!game_features::gameplay_change_soil_depletion) {
+                if (b->is_floodplain_farm() && !!game_features::gameplay_change_soil_depletion) {
                     b->dcast_farm()->deplete_soil();
                 }
 

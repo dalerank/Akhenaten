@@ -446,7 +446,7 @@ void figure_cartpusher::figure_before_action() {
     }
 
     building* b = home();
-    if (!building_is_floodplain_farm(*b)
+    if (!b->is_floodplain_farm()
         && (b->state != BUILDING_STATE_VALID || (!b->has_figure(0, id()) && !b->has_figure(1, id())))) {
         poof();
     }
@@ -504,7 +504,7 @@ void figure_cartpusher::figure_action() {
         // the CARTPUSHER figure will never be retrieving goods to carry back.
         // that's job for the WAREHOUSEMAN figure!
         // so there is no need for `cartpusher_do_deliver` action.
-        if (building_is_floodplain_farm(*b)) { // do not return to floodplain farms
+        if (b->is_floodplain_farm()) { // do not return to floodplain farms
             poof();
         } else {
             do_returnhome(TERRAIN_USAGE_ROADS);

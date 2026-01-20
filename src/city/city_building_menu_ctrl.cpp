@@ -54,11 +54,11 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
     // additional buildings / building menus
     if (enabled) {
         const auto &params = building_static_params::get(type);
-        if (building_is_farm((e_building_type)type)) {
+        if (params.flags.is_farm) {
             toggle_building(BUILDING_MENU_FARMS);
         }
 
-        if (params.flags.is_extractor || building_is_harvester((e_building_type)type)) {
+        if (params.flags.is_extractor || params.flags.is_harvester) {
             toggle_building(BUILDING_MENU_RAW_MATERIALS);
             toggle_building(BUILDING_MENU_INDUSTRY);
         }

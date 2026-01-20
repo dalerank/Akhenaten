@@ -578,7 +578,7 @@ void build_planner::update_obstructions_check() {
                 restricted_terrain -= TERRAIN_FLOODPLAIN;
             }
 
-            bool can_blocked_by_floodplain_edge = !building_is_farm(build_type);
+            bool can_blocked_by_floodplain_edge = !params.flags.is_farm;
             if (special_flags & e_building_need_flag::Road
                 || special_flags & e_building_need_flag::Intersection
                 || special_flags & e_building_need_flag::Canals) {

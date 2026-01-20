@@ -35,7 +35,7 @@ inline bool city_overlay_fertility::show_figure(const figure *f) const {
     }
 
     building *b = building_get(f->sender_building_id);
-    return b && building_is_farm(b->type);
+    return b && b->is_farm();
 }
 
 inline void city_overlay_fertility::draw_custom_top(vec2i pixel, tile2i point, painter &ctx) const {
@@ -69,7 +69,7 @@ xstring city_overlay_fertility::get_tooltip(tooltip_context *c, tile2i) const {
 }
 
 xstring city_overlay_fertility::get_tooltip_for_building(tooltip_context *c, const building *b) {
-    if (building_is_farm(b->type)) {
+    if (b->is_farm()) {
         tile2i tile = b->tile;
         int fertility = map_get_fertility_for_farm(tile.grid_offset());
         if (fertility > 80)

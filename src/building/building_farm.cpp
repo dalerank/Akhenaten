@@ -276,7 +276,7 @@ void building_farm::draw_workers(painter &ctx, building* b, tile2i tile, vec2i p
     pos += {30, -15};
     int random_seed = 1234.567f * (1 + game.simtime.day) * map_random_get(b->tile.grid_offset());
     int d = random_seed % 8;
-    if (building_is_floodplain_farm(*b)) {
+    if (b->is_floodplain_farm()) {
         auto farm = b->dcast_farm();
         const short progress = farm->progress();
         if (g_floods.state_is(FLOOD_STATE_IMMINENT)) {
@@ -434,7 +434,7 @@ void building_farm::update_count() const {
 }
 
 void building_farm::spawn_figure() {
-    bool is_floodplain = building_is_floodplain_farm(base);
+    bool is_floodplain = base.is_floodplain_farm();
     if (!is_floodplain && has_road_access()) { // only for meadow farms
         common_spawn_labor_seeker(current_params().min_houses_coverage);
         if (time_to_deliver(false, base.output.resource)) { // UGH!!
@@ -495,7 +495,7 @@ int building_farm::expected_produce() {
 
     float modifier = 1.f;
     const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
-    if (building_is_floodplain_farm(base)) {
+    if (base.is_floodplain_farm()) {
         if (osiris_blessing) {
             modifier = 2.f;
         } else {
@@ -578,7 +578,7 @@ void building_farm::remove_worker(figure_id fid) {
 }
 
 bool building_farm::is_currently_flooded() const {
-    if (!building_is_floodplain_farm(base)) {
+    if (!base.is_floodplain_farm()) {
         return false;
     }
 

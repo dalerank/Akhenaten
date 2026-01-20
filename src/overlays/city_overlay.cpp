@@ -208,7 +208,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
     building* b = building_get(building_id);
     if (show_building(b)) {
         color color_mask = color_mask_building_def(b);
-        if (building_is_farm(b->type)) {
+        if (b->is_farm()) {
             if (is_drawable_farmhouse(tile, city_view_orientation())) {
                 auto& command = ImageDraw::create_command(render_command_t::ert_drawtile);
                 command.image_id = map_image_at(tile);
@@ -228,7 +228,7 @@ void city_overlay::draw_building_footprint(painter &ctx, vec2i pos, tile2i tile,
         }
     } else {
         bool draw = true;
-        if (b->size == 3 && building_is_farm(b->type)) {
+        if (b->size == 3 && b->is_farm()) {
             draw = is_drawable_farm_corner(tile);
         } else if (building_type_any_of(*b, { BUILDING_STORAGE_YARD, BUILDING_STORAGE_ROOM,
                                             BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION, BUILDING_FESTIVAL_SQUARE })) {
@@ -292,7 +292,7 @@ void city_overlay::draw_overlay_building_column(building* b, vec2i pixel, tile2i
     }
 
     bool draw = true;
-    if (building_is_farm(b->type)) {
+    if (b->is_farm()) {
         draw = is_drawable_farm_corner(tile);
     }
 

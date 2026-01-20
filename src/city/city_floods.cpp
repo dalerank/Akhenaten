@@ -101,7 +101,7 @@ void floods_t::reset_farms() {
             continue;
         }
 
-        if (!building_is_floodplain_farm(*it)) {
+        if (!it->is_floodplain_farm()) {
             continue;
         }
 

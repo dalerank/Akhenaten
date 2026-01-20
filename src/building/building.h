@@ -71,6 +71,8 @@ enum e_building_flag : uint8_t {
     e_building_fancy = 0,
     e_building_monument = 1,
     e_building_extractor = 2,
+    e_building_harvester = 3,
+    e_building_farm = 4,
 };
 
 class building_work_camp;
@@ -231,10 +233,12 @@ public:
     inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
 
     bool is_defense();
-    bool is_farm();
+    bool is_farm() const { return get_flag(e_building_farm); }
+    bool is_floodplain_farm();
     bool is_workshop();
     bool is_extractor();
     bool is_monument() const;
+    bool is_harverster() const { return get_flag(e_building_harvester); }
     bool is_palace();
     bool is_tax_collector();
     bool is_temple();
@@ -489,11 +493,7 @@ inline r_type smart_cast(building *b) {
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_fort(int type);
 bool building_is_defense(e_building_type type);
-bool building_is_farm(e_building_type type);
-inline bool building_is_farm(building &b) { return building_is_farm(b.type); }
-bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
-bool building_is_harvester(e_building_type type);
 bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);

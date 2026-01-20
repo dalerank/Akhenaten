@@ -18,6 +18,7 @@ import city_sounds
 import buildings
 import building_mastaba
 import building_pyramid
+import building_farm
 import overlays
 import building_sounds
 import images

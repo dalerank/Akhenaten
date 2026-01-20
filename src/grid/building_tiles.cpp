@@ -157,7 +157,7 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
         return;
 
     building* b = building_get(building_id);
-    if (building_id && building_is_farm(b->type)) {
+    if (building_id && b->is_farm()) {
         size = 3;
     }
 

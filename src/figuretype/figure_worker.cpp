@@ -70,7 +70,7 @@ void figure_worker::figure_action() {
         return;
     }
 
-    if (building_is_floodplain_farm(*b_dest)) {
+    if (b_dest->is_floodplain_farm()) {
         auto &d = b_dest->dcast_farm()->runtime_data();
         if (d.worker_id != id()) {
             poof();
@@ -91,7 +91,7 @@ void figure_worker::figure_action() {
 
     case ACTION_10_WORKER_GOING:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage)) {
-            if (building_is_floodplain_farm(*b_dest)) {
+            if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
                 b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
                 d.work_camp_id = bhome->id;

@@ -63,7 +63,7 @@ public:
     void update_tiles_image();
     bool is_currently_flooded() const;
     void spawn_figure_harvests();
-    inline bool is_floodplain_farm() const { return building_is_floodplain_farm(base); }
+    inline bool is_floodplain_farm() const { return base.is_floodplain_farm(); }
 
     virtual void add_workers(figure_id fid) override;
     virtual void remove_worker(figure_id fid) override;
