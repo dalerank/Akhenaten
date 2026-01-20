@@ -489,7 +489,7 @@ void building_monument_finish_monuments() {
 }
 
 bool building_monument_needs_resources(building *b) {
-    if (!building_is_monument(b->type)) {
+    if (!b->is_monument()) {
         return false;
     }
     
@@ -775,7 +775,7 @@ bool building_monument_need_stonemason(const building *b) {
 }
 
 bool building_monument_need_carpenter(const building *b) {
-    if (!building_is_monument(b->type)) {
+    if (!b->is_monument()) {
         return false;
     }
 
@@ -805,7 +805,7 @@ bool building_monument_need_carpenter(const building *b) {
 }
 
 bool building_monument_need_bricklayers(const building *b) {
-    if (!building_is_monument(b->type)) {
+    if (!b->is_monument()) {
         return false;
     }
 

@@ -27,7 +27,7 @@ void info_window_work_camp::init(object_info &c) {
             figure *f = b->get_figure(0);
             building *b_dest = f->destination();
             if (building_is_farm(b_dest->type)) { reason.id = 5; }// working on floodplains
-            else if (building_is_monument(b_dest->type)) { reason.id = 6; } // working on monuments
+            else if (b_dest->is_monument()) { reason.id = 6; } // working on monuments
             else { reason.id = 4; }; // looking for work
             //                window_building_draw_description(c, group_id, 7); // working on both floodplains and
             //                monuments (unused?)

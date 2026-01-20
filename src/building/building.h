@@ -70,6 +70,7 @@ enum e_destroy_reason : uint8_t {
 enum e_building_flag : uint8_t {
     e_building_fancy = 0,
     e_building_monument = 1,
+    e_building_extractor = 2,
 };
 
 class building_work_camp;
@@ -233,7 +234,7 @@ public:
     bool is_farm();
     bool is_workshop();
     bool is_extractor();
-    bool is_monument();
+    bool is_monument() const;
     bool is_palace();
     bool is_tax_collector();
     bool is_temple();
@@ -492,9 +493,7 @@ bool building_is_farm(e_building_type type);
 inline bool building_is_farm(building &b) { return building_is_farm(b.type); }
 bool building_is_floodplain_farm(building &b);
 bool building_is_workshop(int type);
-bool building_is_extractor(int type);
 bool building_is_harvester(e_building_type type);
-bool building_is_monument(e_building_type type);
 bool building_is_administration(e_building_type type);
 bool building_is_palace(e_building_type type);
 bool building_is_tax_collector(e_building_type type);

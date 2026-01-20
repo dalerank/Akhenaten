@@ -243,7 +243,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
             //    } else if (b->type == BUILDING_FESTIVAL_SQUARE) {
             //        image_id = image_group(IMG_MINIMAP_BRIGHT_TEAL); // bright teal
             //} else 
-            if (building_is_extractor(b->type)) {
+            if (b->is_extractor()) {
                 image_id = terrain_dark_red.first_img(); // dark red
             } else if (building_is_harvester(b->type)) {
                 image_id = terrain_dark_red.first_img(); // dark red
@@ -263,7 +263,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_orange.first_img(); // orange
             } else if (building_is_beautification(b->type)) {
                 image_id = terrain_teal.first_img(); // spent teal
-            } else if (building_is_monument(b->type)) {
+            } else if (b->is_monument()) {
                 image_id = image_id_from_group(PACK_GENERAL, 149);// , 210); // dark grey
             } else {
                 image_id = b->minimap_anim.first_img();
