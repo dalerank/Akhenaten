@@ -26,6 +26,7 @@ building_fort_charioteers {
     desirability { value[-20], step[2], step_size[2], range[6] }
     flags {
         is_fort: true
+        is_military: true
     }
 }
   
@@ -46,6 +47,7 @@ building_fort_infantry {
     desirability { value[-20], step[2], step_size[2], range [6] }
     flags {
         is_fort: true
+        is_military: true
     }
 }
 
@@ -65,6 +67,7 @@ building_fort_archers = {
     desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
     flags {
         is_fort: true
+        is_military: true
     }
 }
 
@@ -77,5 +80,6 @@ building_fort_ground = {
     fire_risk:[0], damage_risk: [0]
     flags {
         is_fort: true
+        is_military: true
     }
 }
