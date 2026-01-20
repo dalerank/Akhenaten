@@ -78,7 +78,8 @@ void building_statue::preview::setup_preview_graphics(build_planner &planer) con
 }
 
 int building_statue::preview::setup_building_variant(e_building_type type, tile2i tile, int variant) const {
-    verify_no_crash(building_is_statue(type));
+    const auto &params = building_static_params::get(type);
+    verify_no_crash(params.flags.is_statue);
 
     const auto &statue_params = get_statue_params(type);
     int size = statue_params.variants.size();
@@ -102,7 +103,7 @@ int building_statue::preview::next_building_variant(e_building_type type, tile2i
 }
 
 int building_statue::preview::update_relative_orientation(build_planner &p, tile2i tile, int global_rotation) const {
-    return global_rotation + 1;;
+    return global_rotation + 1;
 }
 
 int building_statue::preview::update_building_variant(build_planner &planer) const {

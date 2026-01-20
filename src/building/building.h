@@ -79,6 +79,8 @@ enum e_building_flag : uint8_t {
     e_building_temple = 8,
     e_building_shrine = 9,
     e_building_tax_collector = 10,
+    e_building_statue = 11,
+    e_building_administration = 12,
 };
 
 class building_work_camp;
@@ -257,7 +259,7 @@ public:
     bool is_industry();
     bool is_food_category();
     bool is_infrastructure();
-    bool is_administration();
+    bool is_administration() const { return get_flag(e_building_administration); }
     bool is_religion();
     bool is_education() const { return get_flag(e_building_education); }
     bool is_military();
@@ -499,11 +501,9 @@ inline r_type smart_cast(building *b) {
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_defense(e_building_type type);
 bool building_is_workshop(int type);
-bool building_is_administration(e_building_type type);
-bool building_is_governor_mansion(e_building_type type);
+
 bool building_is_temple_complex(e_building_type type);
 bool building_is_guild(e_building_type type);
-bool building_is_statue(e_building_type type);
 bool building_is_beautification(e_building_type type);
 bool building_is_water_crossing(e_building_type type);
 bool building_is_industry_type(building* b);

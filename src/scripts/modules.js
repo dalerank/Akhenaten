@@ -24,6 +24,8 @@ import building_education
 import building_palace
 import building_temple
 import building_shrine
+import building_statue
+import building_mansion
 import overlays
 import building_sounds
 import images
