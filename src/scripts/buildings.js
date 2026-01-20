@@ -117,10 +117,6 @@ building_courthouse {
 }
 
 building_stonemason_guild = {
-  cost: 500
-}
-
-building_stonemason_guild = {
   animations : {
     preview : { pack:PACK_GENERAL, id:88 },
     base : { pack:PACK_GENERAL, id:88 },
@@ -133,6 +129,10 @@ building_stonemason_guild = {
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[12], fire_risk:[0], damage_risk: [1]
+  flags {
+    is_guild: true
+    is_industry: true
+  }
 }
 
 building_bricklayers_guild = {
@@ -152,6 +152,10 @@ building_bricklayers_guild = {
   cost: [ 20, 40, 80, 120, 200 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   max_workers : 1
+  flags {
+    is_guild: true
+    is_industry: true
+  }
 }
 
 building_carpenters_guild = {
@@ -165,6 +169,10 @@ building_carpenters_guild = {
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
+  flags {
+    is_guild: true
+    is_industry: true
+  }
 }
 
 building_dock = {
@@ -190,6 +198,9 @@ building_dock = {
   cost: [ 20, 40, 70, 100, 150 ]
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[12], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_industry: true
+  }
 }
 
 building_military_academy = {
@@ -204,6 +215,9 @@ building_military_academy = {
   cost : [ 240, 300, 500, 1000, 1500 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[25], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_military: true
+  }
 }
 
 building_military_academy_adv = {
@@ -217,6 +231,9 @@ building_military_academy_adv = {
   cost : [ 300, 500, 1000, 1500, 2000 ]
   desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers:[30], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_military: true
+  }
 }
 
 building_juggler_school {
@@ -276,13 +293,21 @@ building_storage_yard = {
   cost: [ 14, 30, 50, 100, 150 ]
   desirability : { value:[-5], step:[2], step_size:[2], range: [3] }
   laborers:[6], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_industry: true
+  }
 }
 
-building_storage_room = {
-  animations : {
-  },
-  building_size : 3,
-  fire_proof : true,
+building_storage_room {
+  animations  {
+  }
+
+  building_size : 3
+  fire_proof : true
+  
+  flags {
+    is_industry: true
+  }
 }
 
 building_bazaar {
@@ -492,6 +517,7 @@ building_reed_gatherer {
   }
   flags {
     is_harvester: true
+    is_industry: true
   }
   building_size : 2
   meta { help_id : 92, text_id : 116 }
@@ -518,6 +544,7 @@ building_wood_cutter {
   }
   flags {
     is_harvester: true
+    is_industry: true
   }
   building_size : 2
   meta { help_id:94, text_id:120 }
@@ -588,6 +615,9 @@ building_recruiter = {
   cost: [ 30, 50, 100, 200, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [3] }
   laborers:[10], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_military: true
+  }
 }
 
 building_bandstand {
@@ -951,6 +981,9 @@ building_shipyard = {
   cost : [ 70, 100, 150, 200, 300 ]
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [1]
+  flags {
+    is_industry: true
+  }
 }
 
 building_dentist {
@@ -1101,6 +1134,7 @@ building_clay_pit {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost[ 8, 15, 30, 50, 100 ]
@@ -1157,6 +1191,7 @@ building_mine_copper {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   cost [ 50, 75, 100, 150, 300 ]
   desirability { value[-12], step[2], step_size[2], range[6] }
@@ -1187,6 +1222,7 @@ building_mine_gems {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   cost [ 50, 75, 100, 150, 300 ]
   desirability { value[-12], step[2], step_size[2], range[6] }
@@ -1215,6 +1251,7 @@ building_sandstone_quarry {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   cost [ 15, 30, 50, 80, 150 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -1238,6 +1275,7 @@ building_marble_quarry {
 
   flags {
     is_extractor: true
+    is_industry: true
   }
 }
 
@@ -1261,6 +1299,7 @@ building_stone_quarry {
 
   flags {
     is_extractor: true
+    is_industry: true
   }
 
   cost [ 15, 30, 50, 80, 150 ]
@@ -1290,6 +1329,7 @@ building_granite_quarry {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   cost [ 20, 40, 80, 150, 200 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -1324,6 +1364,7 @@ building_limestone_quarry {
 
   flags {
     is_extractor: true
+    is_industry: true
   }
 }
 
@@ -1346,6 +1387,7 @@ building_mine_gold {
   }
   flags {
     is_extractor: true
+    is_industry: true
   }
   cost [ 50, 100, 150, 250, 400 ]
   desirability { value[-16], step[2], step_size[3], range[6] }

@@ -109,6 +109,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_water_crossing, params().flags.is_water_crossing);
     set_flag(e_building_infrastructure, params().flags.is_infrastructure);
     set_flag(e_building_beautification, params().flags.is_beautification);
+    set_flag(e_building_guild, params().flags.is_guild);
+    set_flag(e_building_industry, params().flags.is_industry);
 
     dcast()->on_create(orientation);
 }
@@ -358,10 +360,6 @@ bool building::is_monument() const {
 
 bool building::is_temple_complex() const {
     return building_is_temple_complex(type);
-}
-
-bool building::is_guild() const {
-    return building_is_guild(type);
 }
 
 bool building::is_industry() {
@@ -848,10 +846,6 @@ bool building_is_temple_complex(e_building_type type) {
     return (type >= BUILDING_TEMPLE_COMPLEX_OSIRIS && type <= BUILDING_TEMPLE_COMPLEX_BAST);
 }
 
-bool building_is_guild(e_building_type type) {
-    return building_type_any_of(type, { BUILDING_CARPENTERS_GUILD, BUILDING_STONEMASONS_GUILD, BUILDING_BRICKLAYERS_GUILD });
-}
-
 bool building_is_industry_type(building* b) {
     return b->output.resource || b->dcast_industry();
 }
@@ -870,12 +864,15 @@ bool building_is_industry(e_building_type type) {
     if (params.flags.is_farm)
         return true;
 
-    if (building_is_guild(type))
+    if (params.flags.is_guild)
         return true;
+
     if (type == BUILDING_DOCK || type == BUILDING_SHIPWRIGHT)
         return true;
+
     if (type == BUILDING_STORAGE_YARD || type == BUILDING_STORAGE_ROOM)
         return true;
+
     return false;
 }
 
