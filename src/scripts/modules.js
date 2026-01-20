@@ -21,6 +21,7 @@ import building_pyramid
 import building_farm
 import building_fort
 import building_education
+import building_palace
 import overlays
 import building_sounds
 import images
