@@ -85,7 +85,8 @@ enum e_building_flag : uint8_t {
     e_building_infrastructure = 14,
     e_building_beautification = 15,
     e_building_guild = 16,
-    e_building_industry = 17
+    e_building_industry = 17,
+    e_building_workshop = 18
 };
 
 class building_work_camp;
@@ -249,8 +250,8 @@ public:
     bool is_farm() const { return get_flag(e_building_farm); }
     bool is_fort() const { return get_flag(e_building_fort); }
     bool is_floodplain_farm();
-    bool is_workshop();
-    bool is_extractor();
+    bool is_workshop() const { return get_flag(e_building_workshop); }
+    bool is_extractor() const { return get_flag(e_building_extractor); }
     bool is_monument() const;
     bool is_harverster() const { return get_flag(e_building_harvester); }
     bool is_palace() const { return get_flag(e_building_palace); }
@@ -260,7 +261,7 @@ public:
     bool is_guild() const { return get_flag(e_building_guild); }
     bool is_beautification() const { return get_flag(e_building_beautification); }
 
-    bool is_industry();
+    bool is_industry() const { return get_flag(e_building_industry); }
     bool is_food_category();
     bool is_infrastructure() const { return get_flag(e_building_infrastructure); }
     bool is_administration() const { return get_flag(e_building_administration); }
@@ -504,12 +505,8 @@ inline r_type smart_cast(building *b) {
 
 inline bool building_is_house(e_building_type type) { return type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE; }
 bool building_is_defense(e_building_type type);
-bool building_is_workshop(int type);
 
 bool building_is_temple_complex(e_building_type type);
-bool building_is_industry_type(building* b);
-
-bool building_is_industry(e_building_type type);
 bool building_is_food_category(e_building_type type);
 bool building_is_religion(e_building_type type);
 bool building_is_entertainment(e_building_type type);

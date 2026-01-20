@@ -128,7 +128,7 @@ void building_industry::on_create(int orientation) {
 
     auto &d = runtime_data();
     if (d.progress_max <= 0) {
-        const uint16_t maxp = building_is_workshop(type()) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+        const uint16_t maxp = base.is_workshop() ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
         d.progress_max = maxp;
     }
 }

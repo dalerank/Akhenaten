@@ -247,7 +247,7 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
                 image_id = terrain_dark_red.first_img(); // dark red
             } else if (b->is_harverster()) {
                 image_id = terrain_dark_red.first_img(); // dark red
-            } else if(building_is_workshop(b->type)) {
+            } else if(b->is_workshop()) {
                 image_id = terrain_dark_red.first_img(); // dark red
             } else if (building_is_entertainment(b->type)) {
                 image_id = terrain_bright_teal.first_img(); // bright teal

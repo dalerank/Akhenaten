@@ -6,10 +6,6 @@
 #include "grid/sprite.h"
 
 int building::animation_offset(int image_id, int grid_offset, int max_frames, int duration) {
-    if (building_is_workshop(type) && (!workshop_has_resources() || num_workers <= 0)) {
-        return 0;
-    }
-
     if (!dcast()->can_play_animation()) {
         return 0;
     }

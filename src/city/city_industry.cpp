@@ -95,7 +95,7 @@ void city_industry_t::update_production() {
             return;
         }
 
-        if (building_is_workshop(b.type) && !b.workshop_has_resources()) {
+        if (b.is_workshop() && !b.workshop_has_resources()) {
             return;
         }
 
@@ -216,7 +216,7 @@ void building_curse_farms(int big_curse) {
 }
 
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
-    if (b->id > 0 && building_is_workshop(b->type) && b->need_resource(res)) {
+    if (b->id > 0 && b->is_workshop() && b->need_resource(res)) {
         if (b->input.resource == res || b->input.resource_second == res) {
             b->store_resource(b->input.resource, amount);
         } else {
@@ -235,7 +235,7 @@ int building_get_workshop_for_raw_material_with_room(tile2i tile, e_resource res
     int min_dist = INFINITE;
     building* min_building = 0;
     buildings_valid_do([&] (building &b) {
-        if (!building_is_workshop(b.type)) {
+        if (!b.is_workshop()) {
             return;
         }
 
@@ -272,7 +272,7 @@ int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int
     int min_dist = INFINITE;
     building* min_building = nullptr;
     buildings_valid_do([&] (building &b) {
-        if (!building_is_workshop(b.type)) {
+        if (!b.is_workshop()) {
             return;
         }
 
