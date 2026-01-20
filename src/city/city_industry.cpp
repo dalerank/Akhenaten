@@ -91,7 +91,7 @@ void city_industry_t::update_production() {
             return;
         }
 
-        if (building_is_farm(b.type)) {
+        if (b.is_farm()) {
             return;
         }
 
@@ -128,7 +128,7 @@ void building_industry_update_farms(void) {
             b.blessing_days_left--;
         }
 
-        bool is_floodplain = building_is_floodplain_farm(b);
+        bool is_floodplain = b.is_floodplain_farm();
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         int progress_step = (float)fert * get_farm_produce_uptick_per_day(b); // 0.16f
         const bool osiris_blessing = g_city.religion.osiris_double_farm_yield_days > 0;

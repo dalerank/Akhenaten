@@ -266,7 +266,7 @@ static bool category_alias_inited = false;
 static e_labor_category category_alias[255];
 
 e_labor_category category_for_building(building* b) {
-    if (map_terrain_is(b->tile, TERRAIN_FLOODPLAIN) && building_is_farm(*b)) {
+    if (map_terrain_is(b->tile, TERRAIN_FLOODPLAIN) && b->is_farm()) {
         return LABOR_CATEGORY_NONE;
     }
 
@@ -354,7 +354,7 @@ void city_labor_t::calculate_workers_needed_per_category() {
 
         // exception for floodplain farms in Pharaoh
         // it cover by distance from work camp
-        if (building_is_floodplain_farm(b)) {
+        if (b.is_floodplain_farm()) {
             b.labor_category = LABOR_CATEGORY_NONE;
         }
 
@@ -513,7 +513,7 @@ void city_labor_t::allocate_workers_to_non_water_buildings() {
 
     buildings_valid_do([&] (building &b) {
         e_labor_category cat = category_for_building(&b);
-        if (building_is_floodplain_farm(b)) {
+        if (b.is_floodplain_farm()) {
             auto &d = b.dcast_farm()->runtime_data();
             if (d.labor_state <= 0) {
                 b.num_workers = 0;

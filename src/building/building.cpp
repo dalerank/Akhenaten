@@ -96,6 +96,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
 
     set_flag(e_building_monument, params().flags.is_monument);
     set_flag(e_building_extractor, params().flags.is_extractor);
+    set_flag(e_building_harvester, params().flags.is_harvester);
 
     dcast()->on_create(orientation);
 }
@@ -311,8 +312,8 @@ bool building::is_defense() {
     return building_is_defense(type);
 }
 
-bool building::is_farm() {
-    return building_is_farm(type);
+bool building::is_floodplain_farm() {
+    return is_farm() && map_terrain_is(tile, TERRAIN_FLOODPLAIN);
 }
 
 bool building::is_workshop() {
@@ -855,23 +856,10 @@ bool building_is_defense(e_building_type type) {
     return building_type_any_of(type, { BUILDING_BRICK_WALL, BUILDING_BRICK_GATEHOUSE, BUILDING_BRICK_TOWER });
 }
 
-bool building_is_farm(e_building_type type) {
-    return (type >= BUILDING_BARLEY_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM
-           || type == BUILDING_HENNA_FARM;
-}
-
-bool building_is_floodplain_farm(building &b) {
-    return (building_is_farm(b.type) && map_terrain_is(b.tile.grid_offset(), TERRAIN_FLOODPLAIN));
-}
-
 bool building_is_workshop(int type) {
     return (type >= BUILDING_BREWERY_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP)
            || (type >= BUILDING_PAPYRUS_WORKSHOP && type <= BUILDING_CHARIOTS_WORKSHOP) || type == BUILDING_CATTLE_RANCH
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP || type == BUILDING_JEWELS_WORKSHOP;
-}
-
-bool building_is_harvester(e_building_type type) {
-    return (type == BUILDING_REED_GATHERER || type == BUILDING_WOOD_CUTTERS);
 }
 
 bool building_is_palace(e_building_type type) {
@@ -919,12 +907,15 @@ bool building_is_industry(e_building_type type) {
     if (params.flags.is_extractor)
         return true;
 
-    if (building_is_harvester(type))
+    if (params.flags.is_harvester)
         return true;
+
     if (building_is_workshop(type))
         return true;
-    if (building_is_farm(type))
+
+    if (params.flags.is_farm)
         return true;
+
     if (building_is_guild(type))
         return true;
     if (type == BUILDING_DOCK || type == BUILDING_SHIPWRIGHT)
@@ -935,7 +926,8 @@ bool building_is_industry(e_building_type type) {
 }
 
 bool building_is_food_category(e_building_type type) {
-    if (building_is_farm(type)) { // special case for food-producing farms
+    const auto &params = building_static_params::get(type);
+    if (params.flags.is_farm) { // special case for food-producing farms
         return (type >= BUILDING_GRAIN_FARM && type <= BUILDING_CHICKPEAS_FARM) || type == BUILDING_FIGS_FARM;
     }
 

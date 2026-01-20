@@ -100,9 +100,11 @@ ANK_CONFIG_STRUCT(building_planner_need_rule, meadow, rock, ore, altar, oracle,
 struct building_flags_rule {
     bool is_monument;
     bool is_extractor;
+    bool is_harvester;
+    bool is_farm;
 };
 ANK_CONFIG_STRUCT(building_flags_rule,
-    is_monument)
+    is_monument, is_extractor, is_harvester, is_farm)
 
 struct building_crime_t {
     svector<int8_t, 6> value;

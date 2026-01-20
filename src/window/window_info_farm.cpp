@@ -34,7 +34,7 @@ void info_window_farm::init(object_info &c) {
     }
     ui["workers_desc"] = reason;
 
-    if (building_is_floodplain_farm(*b)) {
+    if (b->is_floodplain_farm()) {
         // next flood info
         int month_id = 8; // TODO: fetch flood info
         ui["flood_info"].text_var("%s %s", ui::str(177, 2), ui::str(160, month_id));

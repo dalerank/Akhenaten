@@ -129,7 +129,7 @@ void buildings_valid_do(F func) {
 template<typename T>
 void buildings_valid_farms_do(T func) {
     for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_is_farm(b)) {
+        if (b.is_valid() && b.is_farm()) {
             func(b);
         }
     }

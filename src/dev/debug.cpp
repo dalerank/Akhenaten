@@ -405,7 +405,7 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
 
     case e_debug_render_labor: // LABOR
         if (b_id && map_property_is_draw_tile(grid_offset)
-            && (b->labor_category != LABOR_CATEGORY_NONE || building_is_floodplain_farm(*b))) {
+            && (b->labor_category != LABOR_CATEGORY_NONE || b->is_floodplain_farm())) {
 
             if (b->labor_category != category_for_building(b)) {
                 debug_text(ctx, str, x0, y + 10, 10, "!!", b->labor_category, COLOR_RED); // incorrect category??
@@ -416,13 +416,13 @@ void draw_debug_tile(vec2i pixel, tile2i point, painter &ctx) {
             debug_text(ctx, str, x0, y + 20, 0, "", b->num_workers, COLOR_LIGHT_BLUE);
             debug_text(ctx, str, x1 - 10, y + 20, 4, ":", b->worker_percentage(), COLOR_LIGHT_BLUE);
             //
-            if (building_is_farm(b->type)) {
+            if (b->is_farm()) {
                 const auto farm = b->dcast_farm();
                 debug_text(ctx, str,x1 + 40,y + 20,40,"fert.", map_get_fertility_for_farm(b->tile.grid_offset()),COLOR_FONT_ORANGE_LIGHT);
                 debug_text(ctx, str, x0, y + 30, 0, "", farm->progress(), COLOR_GREEN);
                 debug_text(ctx, str, x1 + 10, y + 30, 4, ":", farm->progress() / 20, COLOR_GREEN);
                 debug_text(ctx, str, x1 + 40, y + 30, 40, "exp.", farm->expected_produce(), COLOR_GREEN);
-                if (building_is_floodplain_farm(*b)) {
+                if (b->is_floodplain_farm()) {
                     auto &d = b->dcast_farm()->runtime_data();
                     debug_text(ctx, str, x0, y + 40, 0, "", d.labor_state, COLOR_WHITE);
                     debug_text(ctx, str, x1, y + 40, 0, "", d.labor_days_left, COLOR_WHITE);
