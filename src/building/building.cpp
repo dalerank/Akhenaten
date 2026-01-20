@@ -103,6 +103,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     set_flag(e_building_palace, params().flags.is_palace);
     set_flag(e_building_temple, params().flags.is_temple);
     set_flag(e_building_shrine, params().flags.is_shrine);
+    set_flag(e_building_tax_collector, params().flags.is_tax_collector);
 
     dcast()->on_create(orientation);
 }
@@ -350,9 +351,6 @@ bool building::is_monument() const {
     }
 }
 
-bool building::is_tax_collector() {
-    return building_is_tax_collector(type);
-}
 bool building::is_temple_complex() const {
     return building_is_temple_complex(type);
 }
@@ -854,10 +852,6 @@ bool building_is_workshop(int type) {
            || type == BUILDING_LAMP_WORKSHOP || type == BUILDING_PAINT_WORKSHOP || type == BUILDING_JEWELS_WORKSHOP;
 }
 
-bool building_is_tax_collector(e_building_type type) {
-    return building_type_any_of(type, { BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED });
-}
-
 bool building_is_governor_mansion(e_building_type type) {
     return (type >= BUILDING_PERSONAL_MANSION && type <= BUILDING_DYNASTY_MANSION);
 }
@@ -932,7 +926,7 @@ bool building_is_infrastructure(e_building_type type) {
 
 bool building_is_administration(e_building_type type) {
     const auto &params = building_static_params::get(type);
-    if (params.flags.is_palace || building_is_tax_collector(type) || building_is_governor_mansion(type)) {
+    if (params.flags.is_palace || params.flags.is_tax_collector || building_is_governor_mansion(type)) {
         return true;
     }
 
