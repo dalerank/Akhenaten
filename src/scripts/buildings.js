@@ -49,74 +49,6 @@ building_large_statue = {
   desirability : { value:[14], step:[2], step_size:[-2], range: [5] }
 }
 
-base_fort_ghost {
-  main_view_offset [[-55, 20], [-55, -35], [-55, -35], [-60, -40]]
-  ground_view_offset [[35, 65], [5, -70], [-200, -55], [-180, 46]]
-  ground_check_offset [[3, -1], [4, -1], [4, 0], [3,  0]
-                       [-1,-4], [0, -4], [0,-3], [-1,-3]
-                       [-4, 0], [-3, 0], [-3,1], [-4, 1]
-                       [0,  3], [1,  3], [1, 4], [0,  4]] 
-}
-
-building_fort_charioteers {
-  animations {
-    _pack {pack: PACK_GENERAL}
-    base {id: 66}
-    ground {id: 66, offset:1}
-    picture {id: 66, offset:3, pos[93, -21]}
-  }
-  ghost : base_fort_ghost
-  labor_category : LABOR_CATEGORY_MILITARY
-  building_size : 3
-  fire_proof : 1
-  damage_proof : 1
-  meta { help_id:87, text_id:89 }
-  cost [ 500, 700, 900, 1300, 2000 ]
-  desirability { value[-20], step[2], step_size[2], range[6] }
-}
-
-building_fort_infantry {
-  animations {
-    _pack { pack: PACK_GENERAL }
-    base { id: 66}
-    ground { id: 66, offset:1}
-    picture { id: 66, offset:4, pos:[93, -21]}
-  }
-  ghost : base_fort_ghost
-  labor_category : LABOR_CATEGORY_MILITARY
-  building_size : 3
-  fire_proof : 1
-  damage_proof : 1
-  meta { help_id:87, text_id:89 }
-  cost [ 200, 300, 500, 800, 1200 ]
-  desirability { value[-20], step[2], step_size[2], range [6] }
-}
-
-building_fort_archers = {
-  animations : {
-    base: {pack: PACK_GENERAL, id: 66},
-    ground: {pack: PACK_GENERAL, id: 66, offset:1},
-    picture: {pack: PACK_GENERAL, id: 66, offset:2, pos:[93, -21]},
-  }
-  ghost : base_fort_ghost
-  labor_category : LABOR_CATEGORY_MILITARY
-  building_size : 3
-  fire_proof : 1
-  damage_proof : 1
-  meta : { help_id:87, text_id:89 }
-  cost : [ 200, 300, 500, 800, 1200 ]
-  desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
-}
-
-building_fort_ground = {
-  labor_category : LABOR_CATEGORY_MILITARY,
-  building_size : 4,
-  fire_proof : 1,
-  damage_proof : 1,
-  desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
-  fire_risk:[0], damage_risk: [0]
-}
-
 building_cattle_ranch {
   animations {
     preview { pack:PACK_GENERAL, id:105, },
@@ -530,25 +462,6 @@ building_temple_bast {
   laborers[8]
   fire_risk[0]
   damage_risk[2]
-}
-
-building_library {
-  animations {
-    preview { pos[0, 0], pack:PACK_GENERAL, id:43 }
-    base { pos[0, 0], pack:PACK_GENERAL, id:43 }
-    work { pos[33, -38], pack:PACK_GENERAL, id:43, offset:1, max_frames:12 }
-  }
-
-  min_houses_coverage : 50
-  meta { help_id: 70, text_id: 87 }
-  labor_category : LABOR_CATEGORY_EDUCATION
-  building_size : 3
-  cost [ 90, 140, 200, 300, 400 ]
-  desirability { value[8], step[2], step_size[-2], range[6] }
-  laborers[20]
-  fire_risk[6]
-  damage_risk[1]
-  max_service: 800
 }
 
 building_military_academy = {
@@ -2064,25 +1977,6 @@ building_paint_workshop {
   damage_risk [1]
 }
 
-building_academy {
-  animations {
-    _pack { pack:PACK_GENERAL }
-    preview { id:44 }
-    base { id:4 }
-    work { pos [36, -4], id:4, offset:1, max_frames:18 }
-  }
-
-  overlay : OVERLAY_EDUCATION
-  labor_category : LABOR_CATEGORY_EDUCATION
-  building_size : 2
-  cost [ 200, 250, 300, 400, 500 ]
-  desirability { value[-3], step[1], step_size[1], range[3] }
-  laborers [20]
-  fire_risk [4]
-  damage_risk [1]
-  max_service: 100
-}
-
 building_physician {
   animations {
     _pack { pack:PACK_GENERAL }
@@ -2238,25 +2132,6 @@ building_hunting_lodge = {
   spawn_delay_default : 30
 }
 
-building_scribal_school = {
-  animations : {
-    preview : { pack:PACK_GENERAL, id:42},
-    base : { pack:PACK_GENERAL, id:42},
-    work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
-    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
-  }
-  input : {
-    resource : RESOURCE_PAPYRUS
-  }
-  meta : { help_id: 68, text_id: 85 }
-  min_houses_coverage : 50
-  building_size : 2
-  labor_category : LABOR_CATEGORY_EDUCATION
-  cost : [ 30, 50, 70, 100, 150 ]
-  desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
-  laborers:[10], fire_risk:[6], damage_risk: [2]
-  max_service: 75
-}
 
 building_temple_complex_osiris {
   animations : {

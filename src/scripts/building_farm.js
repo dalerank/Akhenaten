@@ -1,4 +1,4 @@
-log_info("akhenaten: building mastaba started")
+log_info("akhenaten: building farm started")
 
 building_meadow_farm_tile_offsets = [
     [0, 30], [30, 45], [60, 60], [90, 45], [120, 30]

@@ -67,7 +67,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
             toggle_building(BUILDING_MENU_INDUSTRY);
         }
 
-        if (building_is_fort(type)) {
+        if (params.flags.is_fort) {
             toggle_building(BUILDING_MENU_FORTS);
         }
 
@@ -96,7 +96,7 @@ void building_menu_ctrl_t::toggle_building(e_building_type type, bool enabled) {
             toggle_building(BUILDING_MENU_MONUMENTS);
         }
 
-        if (building_is_education((e_building_type)type)) {
+        if (params.flags.is_education) {
             toggle_building(BUILDING_MENU_EDUCATION);
         }
     }

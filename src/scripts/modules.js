@@ -19,6 +19,8 @@ import buildings
 import building_mastaba
 import building_pyramid
 import building_farm
+import building_fort
+import building_education
 import overlays
 import building_sounds
 import images
